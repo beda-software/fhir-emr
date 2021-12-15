@@ -11,6 +11,11 @@ git submodule update --init
 yarn
 ```
 
+```sh
+docker-compose pull
+docker-compose build
+```
+
 ## Local setup
 ```
 cp .env.tpl .env

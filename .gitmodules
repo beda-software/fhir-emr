@@ -1,6 +1,6 @@
-[submodule "embed/aidbox-sdc"]
-	path = embed/aidbox-sdc
-	url = https://github.com/beda-software/aidbox-sdc.git
 [submodule "embed/sdc-ide"]
 	path = embed/sdc-ide
 	url = https://github.com/ruscoder/sdc-ide.git
+[submodule "backend/embed/aidbox-sdc"]
+	path = backend/embed/aidbox-sdc
+	url = https://github.com/beda-software/aidbox-sdc.git
