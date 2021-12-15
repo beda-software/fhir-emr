@@ -1,0 +1,5 @@
+resourceType: Mapping
+id: test
+body:
+  resourceType: Bundle
+  type: transaction

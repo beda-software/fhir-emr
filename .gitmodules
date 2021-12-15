@@ -1,0 +1,3 @@
+[submodule "backend/embed/aidbox-sdc"]
+	path = backend/embed/aidbox-sdc
+	url = https://github.com/beda-software/aidbox-sdc.git

@@ -1,0 +1,57 @@
+stages:
+  - build_test_release
+  - deploy
+
+variables:
+  CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME
+  BUILD_IMAGE: $CI_REGISTRY_IMAGE:$CI_BUILD_REF
+  CACHE_IMAGE: $CI_REGISTRY_IMAGE:latest
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
+
+services:
+  - docker:19-dind
+
+build_test_release:
+  stage: build_test_release
+  image: tmaier/docker-compose:19
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+  script:
+    # BUILD
+    - echo -e "section_start:`date +%s`:build_section\r\e[0KBuild"
+    - docker pull $CACHE_IMAGE || true
+    - docker build --cache-from $CACHE_IMAGE --tag $BUILD_IMAGE .
+    - docker tag $BUILD_IMAGE $CACHE_IMAGE
+    - docker push $CACHE_IMAGE
+    - echo -e "section_end:`date +%s`:build_section\r\e[0K"
+
+    # TEST
+    - echo -e "section_start:`date +%s`:test_section\r\e[0KTest"
+    - ./run_test.sh
+    - echo -e "section_end:`date +%s`:test_section\r\e[0K"
+
+    # RELEASE
+    - echo -e "section_start:`date +%s`:release_section\r\e[0KRelease"
+    - docker tag $BUILD_IMAGE $CONTAINER_RELEASE_IMAGE
+    - docker push "$CONTAINER_RELEASE_IMAGE"
+    - echo -e "section_end:`date +%s`:release_section\r\e[0K"
+  after_script:
+    - docker-compose -f docker-compose.tests.yaml down
+  artifacts:
+    paths:
+    - ./htmlcov
+  only:
+    - branches
+    - tags
+
+deploy:
+  stage: deploy
+  image: registry.beda.software/ansible_deploy/helm_deploy:3
+  script:
+    - cd ./chart
+    - ./deploy.sh $CI_COMMIT_SHA
+  only:
+    - master
+    - staging
+    - develop

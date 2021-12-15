@@ -1,0 +1,4 @@
+apiVersion: v2
+description: A Helm chart for AidBox
+name: aidbox
+version: 0.0.1

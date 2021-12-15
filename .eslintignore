@@ -1,0 +1,6 @@
+node_modules
+ios
+android
+*.d.ts
+src/services/initialize.ts
+htmlcov

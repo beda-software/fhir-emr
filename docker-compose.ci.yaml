@@ -1,0 +1,15 @@
+version: '3.1'
+services:
+  frontend:
+    image: $BUILD_IMAGE
+    command: ["wait-for-it.sh", "backend:8081", "--strict", "--timeout=0", "--", "yarn", "test", "--runInBand", "--coverage"]
+    depends_on:
+      - backend
+    links:
+      - backend
+    volumes:
+      - ./wait-for-it.sh:/usr/local/bin/wait-for-it.sh
+      - ./mobile/coverage:/app/mobile/coverage
+      - ./web/coverage:/app/web/coverage
+    environment:
+      CI: "true"

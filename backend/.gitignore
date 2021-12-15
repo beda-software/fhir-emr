@@ -1,0 +1,17 @@
+config/jwtRS256.key
+config/jwtRS256.key.pub
+beta
+.cpcache
+.volumes
+app.log
+.idea/
+pom.xml
+ui/*.iml
+*.iml
+.env
+__pycache__/
+.DS_Store
+venv/
+env/
+htmlcov/
+.coverage

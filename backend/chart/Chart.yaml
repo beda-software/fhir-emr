@@ -1,0 +1,5 @@
+apiVersion: v2
+description: GitLab's Auto-deploy Helm Chart
+name: auto-deploy-app
+version: 0.2.9
+icon: https://gitlab.com/gitlab-com/gitlab-artwork/raw/master/logo/logo-square.png

@@ -1,0 +1,14 @@
+replicaCount: 1
+image:
+  repository: healthsamurai/aidboxdb
+  tag: 13.2
+  pullPolicy: IfNotPresent
+
+service:
+  port: 5432
+
+user: postgres
+database: fhir_emr
+
+persistence:
+  size: 10Gi

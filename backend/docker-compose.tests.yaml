@@ -1,0 +1,45 @@
+version: '3.1'
+services:
+  dockerize:
+    image: jwilder/dockerize
+    command: dockerize -wait http://devbox:8080/__healthcheck -timeout 300s
+    depends_on:
+      - devbox
+    links:
+      - devbox
+  backend:
+    image: ${BUILD_IMAGE:-fhir-emr-backend-test}
+    build: .
+    command: ${TEST_COMMAND}
+    env_file:
+    - env_tests
+    environment:
+      APP_FAST_START_MODE: ${APP_FAST_START_MODE}
+    depends_on:
+      - devbox
+    links:
+      - devbox
+    volumes:
+      - .:/app
+      - ./wait-for-it.sh:/usr/local/bin/wait-for-it.sh:cached
+    # Colored logs
+    tty: true
+  devbox:
+    image: "healthsamurai/devbox:stable"
+    depends_on:
+      - devbox-db
+    links:
+      - "devbox-db:database"
+    env_file:
+      - env_tests
+    environment:
+      AIDBOX_LICENSE_ID: ${TESTS_AIDBOX_LICENSE_ID}
+      AIDBOX_LICENSE_KEY: ${TESTS_AIDBOX_LICENSE_KEY}
+    volumes:
+      - ./wait-for-it.sh:/usr/local/bin/wait-for-it.sh:cached
+  devbox-db:
+    image: "healthsamurai/aidboxdb:13.2"
+    environment:
+      POSTGRES_USER:     postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB:       devbox

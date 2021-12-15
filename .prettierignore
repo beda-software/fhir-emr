@@ -1,0 +1,5 @@
+node_modules
+build
+ios
+android
+*.d.ts

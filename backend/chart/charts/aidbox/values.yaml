@@ -1,0 +1,11 @@
+replicaCount: 1
+image:
+  repository: healthsamurai/aidboxone
+  tag: 0.5.0-RC1
+  hash: a60b287ab40bf178b9b03947b04d3a094326de238e50cd3bf691bfabf22de8ad
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  externalPort: 8080
+  internalPort: 8080
