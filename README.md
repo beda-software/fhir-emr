@@ -1,5 +1,17 @@
-## Local setup
+# FHIR EMR
 
+Project for https://github.com/HealthSamurai/xmas-hackathon-2021
+
+### Install
+```sh
+git submodule update --init
+```
+
+```sh
+yarn
+```
+
+## Local setup
 ```
 cp .env.tpl .env
 ```
@@ -10,12 +22,6 @@ cp shared/src/config.local.ts shared/src/config.ts
 ```
 
 This file (`shared/src/config.ts`) is ignored by git. So, feel free to change it.
-
-### Install
-
-```sh
-yarn
-```
 
 ### Start
 
