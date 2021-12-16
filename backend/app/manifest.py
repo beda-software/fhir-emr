@@ -14,7 +14,7 @@ meta_resources = merge_resources(
     {
         "Client": {
             "web": {
-                "auth": {"implicit": {"redirect_uri": "{}/auth".format(config.frocntend_url)}},
+                "auth": {"implicit": {"redirect_uri": "{}/auth".format(config.frontend_url)}},
                 "first_party": True,
                 "grant_types": ["implicit"],
             },
