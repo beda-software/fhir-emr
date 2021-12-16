@@ -12,7 +12,7 @@ import s from './App.module.scss';
 import logo from './images/logo.svg';
 
 export function App() {
-    const [appToken] = React.useState<Token | undefined>();
+    const [appToken] = React.useState<Token | undefined>('mocktocken');
 
     const renderAnonymousRoutes = () => (
         <Switch>
@@ -44,6 +44,23 @@ export function App() {
         return (
             <Switch>
                 <Route path="/app" render={() => <div>App</div>} />
+                <Route path="/patients" render={() => <div>Patients</div>} />
+                <Route path="/encounters" render={() => <div>Encounters</div>} />
+                <Route path="/patient/:id" render={() => <div>patient/:id</div>} />
+                <Route
+                    path="/patient/:id/encounters"
+                    render={() => <div>patient/:id/encounters</div>}
+                />
+                <Route
+                    path="/patient/:id/documents"
+                    render={() => <div>patient/:id/documents</div>}
+                />
+                <Route path="/documents/:id/edit" render={() => <div>documents/:id/edit</div>} />
+                <Route path="/encounters/:id" render={() => <div>Encounters/:id</div>} />
+
+                <Route path="/practitioners" render={() => <div>practitioners</div>} />
+                <Route path="/questionnaires" render={() => <div>questionnaires</div>} />
+                <Route path="/questionnaires/:id" render={() => <div>questionnaires/:id</div>} />
                 <Redirect to={referrer !== '/' ? referrer : '/app'} />
             </Switch>
         );
