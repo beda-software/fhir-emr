@@ -1,6 +1,6 @@
-const path = require('path');
-
 const rewireBabelLoader = require('craco-babel-loader');
+
+const path = require('path');
 
 module.exports = {
     plugins: [

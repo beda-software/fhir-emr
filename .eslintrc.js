@@ -4,7 +4,7 @@ module.exports = {
         'jest/globals': true,
     },
     root: true,
-    extends: ['@react-native-community', 'prettier'],
+    extends: ['prettier'],
     parser: '@typescript-eslint/parser',
     plugins: ['@typescript-eslint', 'jest', 'import'],
     rules: {

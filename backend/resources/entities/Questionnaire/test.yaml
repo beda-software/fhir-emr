@@ -2,10 +2,12 @@ id: test
 resourceType: Questionnaire
 status: active
 item:
-  - type: text
+  - type: decimal
     linkId: test
-  - type: text
+    text: base
+  - type: decimal
     linkId: test2
+    text: double
     calculatedExpression:
       language: text/fhirpath
-      expression: "%QuestionnaireResponse.repeat(item).where(linkId='test').answer.children().string"
+      expression: "%QuestionnaireResponse.repeat(item).where(linkId='test').answer.children().decimal * 2"

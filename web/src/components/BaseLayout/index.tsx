@@ -21,8 +21,8 @@ export function BaseLayout({ children }: Props) {
     );
 }
 
-const wrapperStyle = { height: '100vh' };
+const wrapperStyle: any = { height: '100vh' };
 
-const layoutStyle = { display: 'flex', height: '100%' };
+const layoutStyle: any = { display: 'flex', height: '100%', flexDirection: 'row' };
 
-const contentStyle = { backgroundColor: 'yellow', width: '100%' };
+const contentStyle: any = { backgroundColor: 'yellow', width: '100%' };

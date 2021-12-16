@@ -12,7 +12,6 @@
         "lint": "lerna run --parallel lint"
     },
     "devDependencies": {
-        "@react-native-community/eslint-config": "^3.0.1",
         "@types/node": "^16.11.7",
         "@typescript-eslint/eslint-plugin": "^5.3.1",
         "@typescript-eslint/parser": "^5.3.1",
