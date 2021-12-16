@@ -13,6 +13,10 @@ import { extractErrorCode } from 'aidbox-react/lib/utils/error';
 import { getWelcomeString } from 'shared/src/utils/misc';
 
 import { Button } from 'src/components/Button';
+import { DocumentContainer } from 'src/containers/DocumentContainer';
+import { EncounterList } from 'src/containers/EncounterList';
+import { PatientList } from 'src/containers/PatientList';
+import { QuestionnaireList } from 'src/containers/QuestionnaireList';
 import { getAuthorizeUrl, getToken, getUserInfo, OAuthState } from 'src/services/auth';
 import { parseOAuthState, setToken } from 'src/services/auth';
 import { history } from 'src/services/history';
@@ -79,9 +83,8 @@ export function App() {
 
         return (
             <Switch>
-                <Route path="/app" render={() => <div>App</div>} />
-                <Route path="/patients" render={() => <div>Patients</div>} />
-                <Route path="/encounters" render={() => <div>Encounters</div>} />
+                <Route path="/patients" render={() => <PatientList />} />
+                <Route path="/encounters" render={() => <EncounterList />} />
                 <Route path="/patient/:id" render={() => <div>patient/:id</div>} />
                 <Route
                     path="/patient/:id/encounters"
@@ -94,10 +97,10 @@ export function App() {
                 <Route path="/documents/:id/edit" render={() => <div>documents/:id/edit</div>} />
                 <Route path="/encounters/:id" render={() => <div>Encounters/:id</div>} />
 
-                <Route path="/practitioners" render={() => <div>practitioners</div>} />
-                <Route path="/questionnaires" render={() => <div>questionnaires</div>} />
+                <Route path="/practitioners" render={() => <DocumentContainer />} />
+                <Route path="/questionnaires" render={() => <QuestionnaireList />} />
                 <Route path="/questionnaires/:id" render={() => <div>questionnaires/:id</div>} />
-                <Redirect to={referrer && referrer !== '/' ? referrer : '/app'} />
+                <Redirect to={referrer && referrer !== '/' ? referrer : '/patients'} />
             </Switch>
         );
     };
