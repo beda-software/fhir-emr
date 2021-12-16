@@ -11,6 +11,7 @@ module.exports = {
                     path.resolve('src'),
                     path.resolve('../shared/src'),
                     path.resolve('../node_modules/aidbox-react/src'),
+                    path.resolve('../embed/sdc-ide/shared/src/utils/qrf'),
                 ],
             },
         },

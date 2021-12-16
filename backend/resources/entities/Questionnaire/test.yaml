@@ -4,5 +4,8 @@ status: active
 item:
   - type: text
     linkId: test
-
-    
+  - type: text
+    linkId: test2
+    calculatedExpression:
+      language: text/fhirpath
+      expression: "%QuestionnaireResponse.repeat(item).where(linkId='test').answer.children().string"

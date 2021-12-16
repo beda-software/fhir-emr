@@ -21,6 +21,7 @@ import { getAuthorizeUrl, getToken, getUserInfo, OAuthState } from 'src/services
 import { parseOAuthState, setToken } from 'src/services/auth';
 import { history } from 'src/services/history';
 
+import { Example } from '../Example';
 import s from './App.module.scss';
 import logo from './images/logo.svg';
 
@@ -100,6 +101,8 @@ export function App() {
                 <Route path="/practitioners" render={() => <DocumentContainer />} />
                 <Route path="/questionnaires" render={() => <QuestionnaireList />} />
                 <Route path="/questionnaires/:id" render={() => <div>questionnaires/:id</div>} />
+                <Route path="/example" render={() => <Example />} />
+
                 <Redirect to={referrer && referrer !== '/' ? referrer : '/patients'} />
             </Switch>
         );

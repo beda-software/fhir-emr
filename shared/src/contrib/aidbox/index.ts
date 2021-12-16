@@ -14348,11 +14348,14 @@ export interface QuestionnaireItem {
     /** NOTE: from extension http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemContext */
     /** Deprecated in favour itemPopulationContext */
     itemContext?: Expression;
+    /** NOTE: from extension http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl */
+    /** The type of data entry control or structure that should be used to render the item. */
+    itemControl?: CodeableConcept;
     /** NOTE: from extension http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemPopulationContext */
     /** Specifies a query that identifies the resource (or set of resources for a repeating item) that should be used to populate this Questionnaire or Questionnaire.item on initial population. */
     itemPopulationContext?: Expression;
     /** Unique id for item in questionnaire */
-    linkId?: string;
+    linkId: string;
     /** No more than this many characters */
     maxLength?: integer;
     /** Extensions that cannot be ignored even if unrecognized */

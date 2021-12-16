@@ -11,6 +11,7 @@ export function BaseSider() {
         { title: 'Encouxnters', action: () => navigate.push('./encounters') },
         { title: 'Practitioners', action: () => navigate.push('./practitioners') },
         { title: 'Questionnaires', action: () => navigate.push('./questionnaires') },
+        { title: 'Example', action: () => navigate.push('./example') },
     ];
 
     return (
