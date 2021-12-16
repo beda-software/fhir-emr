@@ -1,14 +1,15 @@
 import React from 'react';
 import { Route, Switch, Router, Redirect } from 'react-router-dom';
+
 import { Token } from 'aidbox-react/src/services/token';
 
 import { getWelcomeString } from 'shared/src/utils/misc';
 
-import { history } from 'src/services/history';
 import { Button } from 'src/components/Button';
+import { history } from 'src/services/history';
 
-import logo from './images/logo.svg';
 import s from './App.module.scss';
+import logo from './images/logo.svg';
 
 export function App() {
     const [appToken] = React.useState<Token | undefined>();
