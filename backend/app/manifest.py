@@ -13,7 +13,11 @@ from app.sdc import manifest as sdc_manifest
 meta_resources = merge_resources(
     {
         "Client": {
-            "SPA": {"secret": "123456", "grant_types": ["password"]},
+            "web": {
+                "auth": {"implicit": {"redirect_uri": "{}/auth".format(config.frocntend_url)}},
+                "first_party": True,
+                "grant_types": ["implicit"],
+            },
             "google-client": {
                 "auth": {
                     "authorization_code": {

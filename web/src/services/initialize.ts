@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/browser';
 
-import { setInstanceBaseURL } from 'aidbox-react/src/services/instance';
+import { setInstanceBaseURL } from 'aidbox-react/lib/services/instance';
 
 import config from 'shared/src/config';
 

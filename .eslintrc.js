@@ -11,7 +11,7 @@ module.exports = {
         'react/jsx-uses-react': 'off',
         'react/react-in-jsx-scope': 'off',
         'react-native/no-inline-styles': 0,
-        'no-restricted-imports': ['error', { patterns: ['aidbox-react/lib'] }],
+        'no-restricted-imports': ['error', { patterns: ['aidbox-react/src'] }],
         'prettier/prettier': 0,
         'import/order': [
             'error',
