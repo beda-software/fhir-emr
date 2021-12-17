@@ -1,4 +1,4 @@
-import { PageHeader } from 'antd';
+import { notification, PageHeader } from 'antd';
 import { useParams } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
@@ -12,8 +12,9 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { BaseLayout } from '../../components/BaseLayout';
 import { QuestionnaireResponseForm } from '../../components/QuestionnaireResponseForm';
-import { useEncounterDetails } from '../EncounterDetails/hooks';
 import { formatHumanDate } from '../../utils/date';
+import { useEncounterDetails } from '../EncounterDetails/hooks';
+import s from './EncounterQR.module.scss';
 
 export function EncounterQR() {
     const { encounterId, questionnaireId } =
@@ -34,27 +35,46 @@ export function EncounterQR() {
     });
 
     return (
-        <BaseLayout bgHeight={30}>
+        <BaseLayout bgHeight={110}>
             <RenderRemoteData remoteData={remoteData}>
                 {({
                     encounterInfo: { encounter, practitioner, practitionerRole, patient },
                     questionnaire,
                 }) => (
-                    <>
+                    <div>
                         <PageHeader title={renderHumanName(patient.name?.[0])} />
-                        <p>услуга: {encounter.serviceType?.coding?.[0].display}</p>
-                        <p>врач: {renderHumanName(practitioner.name?.[0])}</p>
-                        <p>
-                            дата:{' '}
-                            {encounter.period?.start && formatHumanDate(encounter.period?.start)}
-                        </p>
+                        <div className={s.infoContainer}>
+                            <div className={s.infoItemContainer}>
+                                <span className={s.title}>услуга:</span>
+                                <span className={s.text}>
+                                    {encounter.serviceType?.coding?.[0]?.display}
+                                </span>
+                            </div>
+                            <div className={s.infoItemContainer}>
+                                <span className={s.title}>врач:</span>
+                                <span className={s.text}>
+                                    {renderHumanName(practitioner.name?.[0])}
+                                </span>
+                            </div>
+                            <div className={s.infoItemContainer}>
+                                <span className={s.title}>дата:</span>
+                                <span className={s.text}>
+                                    {encounter.period?.start &&
+                                        formatHumanDate(encounter.period?.start)}
+                                </span>
+                            </div>
+                        </div>
                         <h2>{questionnaire.title || questionnaire.name || questionnaire.id}</h2>
-                    </>
+                    </div>
                 )}
             </RenderRemoteData>
 
             <QuestionnaireResponseForm
                 questionnaireLoader={questionnaireIdLoader(questionnaireId)}
+                onSuccess={() => {
+                    window.history.back();
+                    notification.success({ message: 'Документ сохранен' });
+                }}
             />
         </BaseLayout>
     );
