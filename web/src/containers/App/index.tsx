@@ -14,6 +14,7 @@ import { getWelcomeString } from 'shared/src/utils/misc';
 
 import { Button } from 'src/components/Button';
 import { EncounterList } from 'src/containers/EncounterList';
+import { PatientDetails } from 'src/containers/PatientDetails';
 import { PatientList } from 'src/containers/PatientList';
 import { PractitionerList } from 'src/containers/PractitionerList';
 import { QuestionnaireList } from 'src/containers/QuestionnaireList';
@@ -84,15 +85,15 @@ export function App() {
 
         return (
             <Switch>
-                <Route path="/patients" render={() => <PatientList />} />
+                <Route path="/patients" render={() => <PatientList />} exact/>
                 <Route path="/encounters" render={() => <EncounterList />} />
-                <Route path="/patient/:id" render={() => <div>patient/:id</div>} />
+                <Route path="/patients/:id" render={() => <PatientDetails />} exact />
                 <Route
-                    path="/patient/:id/encounters"
+                    path="/patients/:id/encounters"
                     render={() => <div>patient/:id/encounters</div>}
                 />
                 <Route
-                    path="/patient/:id/documents"
+                    path="/patients/:id/documents"
                     render={() => <div>patient/:id/documents</div>}
                 />
                 <Route path="/documents/:id/edit" render={() => <div>documents/:id/edit</div>} />

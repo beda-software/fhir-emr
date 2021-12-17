@@ -19,7 +19,7 @@ export function BaseHeader() {
         { title: 'Пациенты', path: '/patients' },
         { title: 'Врачи', path: '/practitioners' },
         { title: 'Опросники', path: '/questionnaires' },
-        { title: 'Example', path: '/example' },
+        // { title: 'Example', path: '/example' },
     ];
 
     const history = useHistory();
@@ -53,7 +53,7 @@ function renderMenuTitle(routeItem: RouteItem) {
     );
 }
 
-function renderMenu(menuRoutes: RouteItem[]) {
+export function renderMenu(menuRoutes: RouteItem[]) {
     return menuRoutes.map((route) => {
         return (
             <Menu.Item key={route.path}>
