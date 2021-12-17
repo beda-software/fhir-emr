@@ -87,17 +87,11 @@ export function App() {
 
         return (
             <Switch>
-                <Route path="/patients" render={() => <PatientList />} exact/>
-                <Route path="/encounters" render={() => <EncounterList />} exact/>
+                <Route path="/patients" render={() => <PatientList />} exact />
+                <Route path="/encounters" render={() => <EncounterList />} exact />
                 <Route path="/patients/:id" render={() => <PatientDetails />} exact />
-                <Route
-                    path="/patients/:id/encounters"
-                    render={() => <div>patient/:id/encounters</div>}
-                />
-                <Route
-                    path="/patients/:id/documents"
-                    render={() => <div>patient/:id/documents</div>}
-                />
+                <Route path="/patients/:id/encounters" render={() => <PatientDetails />} />
+                <Route path="/patients/:id/documents" render={() => <PatientDetails />} />
                 <Route path="/documents/:id/edit" render={() => <div>documents/:id/edit</div>} />
                 <Route path="/encounters/:encounterId" render={() => <EncounterDetails />} exact />
 

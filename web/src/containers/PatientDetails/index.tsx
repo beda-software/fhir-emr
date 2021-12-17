@@ -1,7 +1,7 @@
 import { Menu, PageHeader } from 'antd';
 import { Button } from 'antd/lib/radio';
-import History from 'history';
-import { useHistory } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useParams, useLocation } from 'react-router-dom';
 
 import { renderMenu, RouteItem } from 'src/components/BaseHeader';
 import { BaseLayout } from 'src/components/BaseLayout';
@@ -9,17 +9,16 @@ import Breadcrumbs from 'src/components/Breadcrumbs';
 import { PatientGeneralInfo } from 'src/components/PatientGeneralInfo';
 
 export const PatientDetails = () => {
+    const location = useLocation();
+    const params: { id: string } = useParams();
+
+    const [currentPath, setCurrentPath] = useState(location.pathname);
+
     const menuItems: RouteItem[] = [
-        { title: 'Общая информация', path: '/patients/:id' },
-        { title: 'Приемы', path: '/patients/:id/encounters' },
-        { title: 'Мед Карта', path: '/patients/:id/documents' },
+        { title: 'Общая информация', path: `/patients/${params.id}` },
+        { title: 'Приемы', path: `/patients/${params.id}/encounters` },
+        { title: 'Мед Карта', path: `/patients/${params.id}/documents` },
     ];
-
-    const history = useHistory();
-
-    const menuDefaultSelectedKeys = getActiveKeys(history, menuItems).map(
-        ({ path, title }) => path || title,
-    );
 
     const generalInfo = [
         [
@@ -36,7 +35,7 @@ export const PatientDetails = () => {
 
     const crumbs = [
         {
-            path: '/',
+            path: '/patients',
             name: 'Пациенты',
         },
         {
@@ -49,38 +48,45 @@ export const PatientDetails = () => {
         },
     ];
 
+    const getCurrentPathEnd = () => {
+        const pathLength = location.pathname.split('/').length;
+        return location.pathname.split('/')[pathLength - 1];
+    };
+
+    const currentPathEnd = getCurrentPathEnd();
+
+    useEffect(() => {
+        setCurrentPath(location.pathname);
+    }, [location]);
+
     return (
         <BaseLayout bgHeight={194}>
             <PageHeader
-                title="Пациенты"
+                title={params.id}
                 extra={[
-                    <span>31.12.1954</span>,
-                    <span>123-123-123 09</span>,
-                    <Button>Редактировать</Button>,
+                    <div style={{display: 'flex', alignItems: 'center'}}>
+                        <div style={{marginRight: 37}}>31.12.1954</div>
+                        <div style={{marginRight: 37}}>123-123-123 09</div>
+                        <Button>Редактировать</Button>
+                    </div>,
                 ]}
                 breadcrumb={<Breadcrumbs crumbs={crumbs} />}
             />
             <Menu
                 mode="horizontal"
                 theme="light"
-                selectedKeys={menuDefaultSelectedKeys}
+                selectedKeys={[currentPath]}
                 style={{ width: 400 }}
             >
                 {renderMenu(menuItems)}
             </Menu>
-            <PatientGeneralInfo generalInfo={generalInfo} />
+            {currentPathEnd === 'encounters' ? (
+                <div>encounters</div>
+            ) : currentPathEnd === 'documents' ? (
+                <div>documents</div>
+            ) : (
+                <PatientGeneralInfo generalInfo={generalInfo} />
+            )}
         </BaseLayout>
     );
 };
-
-function getActiveKeys(history: History.History, menuRoutes: RouteItem[]): RouteItem[] {
-    return menuRoutes.filter(({ path }) => {
-        if (path) {
-            return (
-                history.location.pathname === path ||
-                history.location.pathname.startsWith(`${path}/`)
-            );
-        }
-        return false;
-    });
-}
