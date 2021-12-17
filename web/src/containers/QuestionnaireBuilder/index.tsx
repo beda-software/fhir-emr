@@ -123,7 +123,11 @@ function Content({
                             <GroupItemTemplate />
                             <PrimitiveComponentTemplate />
                         </div>
-                        <DroppableQuestionnaire form={form} setEditablePath={setEditablePath} />
+                        <DroppableQuestionnaire
+                            form={form}
+                            editablePath={editablePath}
+                            setEditablePath={setEditablePath}
+                        />
                     </DndProvider>
                 </Col>
                 <Col span={10}>
@@ -190,9 +194,12 @@ function FieldSettingsForm({ form, path }: FieldSettingsFormType) {
 
 function DroppableQuestionnaire({
     form,
+    editablePath,
     setEditablePath,
 }: {
     form: FormInstance;
+    editablePath: FieldPath | undefined;
+
     setEditablePath: (path: FieldPath) => void;
 }) {
     return (
@@ -224,6 +231,7 @@ function DroppableQuestionnaire({
                             items={formValues.item}
                             parentPath={[]}
                             form={form}
+                            editablePath={editablePath}
                             setEditablePath={setEditablePath}
                         />
                         <Form.Item>
@@ -242,11 +250,14 @@ function QuestionnaireItemComponents({
     items,
     parentPath,
     form,
+    editablePath,
     setEditablePath,
 }: {
     items: Questionnaire['item'];
     parentPath: Array<string | number>;
     form: FormInstance;
+    editablePath: FieldPath | undefined;
+
     setEditablePath: (path: FieldPath) => void;
 }) {
     const [{ isOverCurrent }, drop] = useDrop<DraggableItem, any, any>(() => ({
@@ -324,6 +335,7 @@ function QuestionnaireItemComponents({
                             index={index}
                             parentPath={parentPath}
                             form={form}
+                            editablePath={editablePath}
                             setEditablePath={setEditablePath}
                         />
                     );
@@ -338,16 +350,20 @@ function QuestionnaireItemComponent({
     parentPath,
     form,
     index,
+    editablePath,
     setEditablePath,
 }: {
     item: QuestionnaireItem;
     parentPath: Array<string | number>;
     form: FormInstance;
     index: number;
+    editablePath: FieldPath | undefined;
     setEditablePath: (path: FieldPath) => void;
 }) {
     const dndManager = useDragDropManager();
     const isGlobalDragging = dndManager.getMonitor().isDragging();
+    const currentPath = [...parentPath, 'item', index];
+    const isEditable = isEqual(editablePath, currentPath);
 
     const ref = useRef<HTMLDivElement>(null);
     const [isHovered, setIsHovered] = useState(false);
@@ -360,7 +376,7 @@ function QuestionnaireItemComponent({
             item: {
                 type: 'existing',
                 item,
-                path: [...parentPath, 'item', index],
+                path: currentPath,
                 index,
                 parentPath,
             },
@@ -373,6 +389,17 @@ function QuestionnaireItemComponent({
             return {
                 isOverCurrent: monitor.isOver({ shallow: true }) && monitor.canDrop(),
             };
+        },
+        canDrop(draggableItem) {
+            if (isNewDraggableItem(draggableItem)) {
+                return false;
+            }
+
+            if (!isEqual(draggableItem.parentPath, parentPath)) {
+                return false;
+            }
+
+            return true;
         },
         drop(draggableItem) {
             if (isNewDraggableItem(draggableItem)) {
@@ -411,7 +438,10 @@ function QuestionnaireItemComponent({
         <div
             ref={ref}
             key={item.linkId}
-            onClick={() => setEditablePath([...parentPath, 'item', index])}
+            onClick={(evt) => {
+                evt.stopPropagation();
+                setEditablePath([...parentPath, 'item', index]);
+            }}
             style={{
                 marginLeft: 48,
                 marginRight: 48,
@@ -421,7 +451,8 @@ function QuestionnaireItemComponent({
                     ? { borderColor: 'darkgreen' }
                     : { borderColor: 'transparent' }),
                 ...(isDragging ? { opacity: 0 } : { opacity: 1 }),
-                ...(isOverCurrent ? { backgroundColor: '#F7F9FC' } : {}),
+                ...(isOverCurrent ? { borderColor: 'darkgreen' } : {}),
+                ...(isEditable ? { backgroundColor: '#F7F9FC' } : {}),
             }}
             onMouseOver={(evt) => {
                 evt.stopPropagation();
@@ -443,6 +474,7 @@ function QuestionnaireItemComponent({
                 items={item.item}
                 parentPath={[...parentPath, 'item', index]}
                 form={form}
+                editablePath={editablePath}
                 setEditablePath={setEditablePath}
             />
         </div>
