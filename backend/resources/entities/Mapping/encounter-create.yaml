@@ -1,0 +1,25 @@
+resourceType: Mapping
+id: encounter-create
+body:
+  resourceType: Bundle
+  type: transaction
+  entry:
+    - request:
+        url: /Encounter
+        method: POST
+      resource:
+        resourceType: Encounter
+        status: planned
+        subject:
+          uri: ref to patient
+        class:
+          code: AMB
+        serviceProvider: ref to organization
+        participant:
+          - individual:
+              uri: ref to practitioner
+        period:
+          start: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='date-time').answer.value.dateTime").0
+        serviceType:
+          coding: coding of service
+

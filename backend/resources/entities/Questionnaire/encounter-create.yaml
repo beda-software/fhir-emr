@@ -1,0 +1,22 @@
+id: encounter-create
+resourceType: Questionnaire
+status: active
+mapping:
+  - id: encounter-create
+    resourceType: Mapping
+item:
+  - linkId: organization
+    type: string
+    text: Organization
+  - linkId: patient
+    type: string
+    text: Пациент
+  - linkId: practitioner
+    type: string
+    text: Врач
+  - linkId: service
+    type: string
+    text: Услуга
+  - linkId: date-time
+    type: dateTime
+    text: Дата и время

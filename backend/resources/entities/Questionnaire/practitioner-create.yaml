@@ -1,0 +1,17 @@
+id: practitioner-create
+resourceType: Questionnaire
+status: active
+mapping:
+  - id: practitioner-create
+    resourceType: Mapping
+item:
+  - linkId: last-name
+    type: string
+    text: Фамилия
+    required: true
+  - linkId: first-name
+    type: string
+    text: Имя
+  - linkId: middle-name
+    type: string
+    text: Отчество
