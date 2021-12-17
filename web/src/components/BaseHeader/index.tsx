@@ -31,7 +31,7 @@ export function BaseHeader() {
         <Header style={headerStyle}>
             <LogoImage style={titleStyle} />
             <div style={rightSideStyle}>
-                <Menu mode="horizontal" theme="light" selectedKeys={menuDefaultSelectedKeys}>
+                <Menu mode="horizontal" theme="light" selectedKeys={menuDefaultSelectedKeys} style={{width: 400}}>
                     {renderMenu(menuItems)}
                 </Menu>
                 <Button onClick={() => console.log('exit')} style={exitStyle}>
@@ -80,9 +80,10 @@ const headerStyle = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: '100vw',
+    width: 1080,
     height: '64px',
     backgroundColor: '#ffffff',
+    padding: 0,
 };
 
 const rightSideStyle = { display: 'flex', alignItems: 'center', justifyContent: 'space-between' };
