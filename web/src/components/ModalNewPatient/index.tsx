@@ -2,6 +2,10 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Modal, Button } from 'antd';
 import { useState } from 'react';
 
+import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
+
+import { QuestionnaireResponseForm } from '../QuestionnaireResponseForm';
+
 export const ModalNewPatient = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -23,14 +27,12 @@ export const ModalNewPatient = () => {
                 Новый пациент
             </Button>
             <Modal
-                title="Basic Modal"
+                title="Добавить пациента"
                 visible={isModalVisible}
                 onOk={handleOk}
                 onCancel={handleCancel}
             >
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
+                <QuestionnaireResponseForm questionnaireLoader={questionnaireIdLoader('patient-create')} />
             </Modal>
         </>
     );
