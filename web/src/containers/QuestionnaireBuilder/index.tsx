@@ -55,11 +55,6 @@ interface Props {
     questionnaireId?: string;
 }
 
-interface FieldSettings {
-    onUpdate: () => void;
-    item: QuestionnaireItem;
-}
-
 export function QuestionnaireBuilder({ questionnaireId }: Props) {
     const history = useHistory();
     const [questionnaireRemoteData, manager] = useService<Questionnaire>(async () => {
@@ -171,10 +166,16 @@ function FieldSettingsForm({ form, path }: FieldSettingsFormType) {
             {type !== 'group' && (
                 <Form.Item label="Field type" name={[...path, 'type']}>
                     <Radio.Group>
-                        <Radio.Button value="decimal">Decimal</Radio.Button>
-                        <Radio.Button value="text">Text</Radio.Button>
                         <Radio.Button value="choice">Choice</Radio.Button>
+                        <Radio.Button value="decimal">Decimal</Radio.Button>
+                        <Radio.Button value="integer">Integer</Radio.Button>
+                        <Radio.Button value="boolean">Boolean</Radio.Button>
+                        <Radio.Button value="string">String</Radio.Button>
+                        <Radio.Button value="text">Text</Radio.Button>
                         <Radio.Button value="date">Date</Radio.Button>
+                        <Radio.Button value="dateTime">Datetime</Radio.Button>
+                        <Radio.Button value="time">Time</Radio.Button>
+                        {/* TODO: attachment, reference, quantity */}
                     </Radio.Group>
                 </Form.Item>
             )}
@@ -186,8 +187,17 @@ function FieldSettingsForm({ form, path }: FieldSettingsFormType) {
                     </Radio.Group>
                 </Form.Item>
             )} */}
+            <Form.Item name={[...path, 'required']}>
+                <Checkbox>Required</Checkbox>
+            </Form.Item>
             <Form.Item name={[...path, 'repeats']}>
                 <Checkbox>Repeats</Checkbox>
+            </Form.Item>
+            <Form.Item name={[...path, 'readOnly']}>
+                <Checkbox>Read-only</Checkbox>
+            </Form.Item>
+            <Form.Item name={[...path, 'hidden']}>
+                <Checkbox>Hidden</Checkbox>
             </Form.Item>
         </>
     );
@@ -258,7 +268,6 @@ function QuestionnaireItemComponents({
     parentPath: Array<string | number>;
     form: FormInstance;
     editablePath: FieldPath | undefined;
-
     setEditablePath: (path: FieldPath) => void;
 }) {
     const [{ isOverCurrent }, drop] = useDrop<DraggableItem, any, any>(
