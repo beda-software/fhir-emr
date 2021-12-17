@@ -6,12 +6,25 @@ import { BaseHeader } from 'src/components/BaseHeader';
 
 interface Props {
     children: ReactNode;
+    bgHeight?: number;
 }
 
-export function BaseLayout({ children }: Props) {
+export function BaseLayout({ children, bgHeight }: Props) {
     return (
         <Layout style={wrapperStyle}>
+            {bgHeight ? (
+                <div
+                    style={{
+                        position: 'absolute',
+                        backgroundColor: '#E0EAFF',
+                        width: '100%',
+                        height: bgHeight,
+                        top: 64,
+                    }}
+                />
+            ) : null}
             <BaseHeader />
+
             <Layout style={layoutStyle}>
                 <Content style={contentStyle}>{children}</Content>
             </Layout>
@@ -19,8 +32,13 @@ export function BaseLayout({ children }: Props) {
     );
 }
 
-const wrapperStyle: any = { height: '100vh' };
+const wrapperStyle: any = {
+    height: '100vh',
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: 'white',
+};
 
-const layoutStyle: any = { display: 'flex', height: '100%', flexDirection: 'row' };
+const layoutStyle: any = { display: 'flex', height: '100%', flexDirection: 'row', width: 1080 };
 
-const contentStyle: any = { backgroundColor: 'yellow', width: '100%' };
+const contentStyle: any = { width: '100%' ,backgroundColor:'white'};
