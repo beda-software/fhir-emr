@@ -1,4 +1,4 @@
-import { Input, Form, InputNumber } from 'antd';
+import { Input, Form, InputNumber, Button } from 'antd';
 
 import { setByPath } from 'shared/src/utils/path';
 import {
@@ -20,6 +20,7 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit }: Props) {
 
     return (
         <Form
+            layout="vertical"
             form={form}
             initialValues={formData.formValues}
             onFinish={(values) => onSubmit({ ...formData, formValues: values })}
@@ -47,7 +48,9 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit }: Props) {
                                 parentPath={[]}
                                 context={calcInitialContext(formData.context, formValues)}
                             />
-                            <input type="submit" value="Submit" />
+                            <Button type="primary" htmlType="submit">
+                                Отправить
+                            </Button>
                         </>
                     </QuestionnaireResponseFormProvider>
                 );
@@ -66,7 +69,7 @@ function QuestionText({ parentPath, questionItem }: QuestionItemProps) {
 
     return (
         <Form.Item label={text} name={fieldName}>
-            <Input />
+            <Input style={inputStyle} />
         </Form.Item>
     );
 }
@@ -77,7 +80,7 @@ function QuestionInteger({ parentPath, questionItem }: QuestionItemProps) {
 
     return (
         <Form.Item label={text} name={fieldName}>
-            <InputNumber />
+            <InputNumber style={inputStyle} />
         </Form.Item>
     );
 }
@@ -88,7 +91,9 @@ function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps) {
 
     return (
         <Form.Item label={text} name={fieldName}>
-            <InputNumber />
+            <InputNumber style={inputStyle} />
         </Form.Item>
     );
 }
+
+const inputStyle = { backgroundColor: '#F7F9FC' };
