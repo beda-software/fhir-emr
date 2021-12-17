@@ -1,4 +1,5 @@
 import { User } from '@sentry/types';
+import { Typography, Button } from 'antd';
 import queryString from 'query-string';
 import { useEffect } from 'react';
 import { Route, Switch, Router, Redirect } from 'react-router-dom';
@@ -10,20 +11,17 @@ import { isSuccess, success } from 'aidbox-react/lib/libs/remoteData';
 import { resetInstanceToken, setInstanceToken } from 'aidbox-react/lib/services/instance';
 import { extractErrorCode } from 'aidbox-react/lib/utils/error';
 
-import { getWelcomeString } from 'shared/src/utils/misc';
-
-import { Button } from 'src/components/Button';
 import { EncounterList } from 'src/containers/EncounterList';
 import { PatientList } from 'src/containers/PatientList';
 import { PractitionerList } from 'src/containers/PractitionerList';
 import { QuestionnaireList } from 'src/containers/QuestionnaireList';
+import { LogoImage } from 'src/images/LogoImage';
 import { getAuthorizeUrl, getToken, getUserInfo, OAuthState } from 'src/services/auth';
 import { parseOAuthState, setToken } from 'src/services/auth';
 import { history } from 'src/services/history';
 
 import { Example } from '../Example';
 import s from './App.module.scss';
-import logo from './images/logo.svg';
 
 export function App() {
     const [userResponse] = useService(async () => {
@@ -56,14 +54,18 @@ export function App() {
             <Route path="/signin" exact>
                 <div className={s.container}>
                     <header className={s.header}>
-                        <img src={logo} className={s.logo} alt="logo" />
-                        <p>{getWelcomeString('World')}</p>
+                        <div>
+                            <LogoImage inverse />
+                        </div>
+                        <Typography.Title style={{ color: '#FFF' }}>
+                            Добро пожаловать!
+                        </Typography.Title>
                         <Button
-                            variant="primary"
+                            type="primary"
                             style={{ marginTop: 15 }}
                             onClick={() => authorize()}
                         >
-                            Sign in
+                            Войти
                         </Button>
                     </header>
                 </div>
