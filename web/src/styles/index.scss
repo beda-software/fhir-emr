@@ -11,3 +11,34 @@ body {
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+.ant-page-header-heading {
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.ant-page-header-heading-title {
+    font-size: 38px;
+    line-height: 46px;
+}
+
+.ant-page-header-ghost {
+    background-color: transparent;
+}
+
+.ant-table-container table > thead > tr:first-child th:first-child {
+    border-top-left-radius: 10px;
+}
+
+.ant-table-container table > thead > tr:first-child th:last-child {
+    border-top-right-radius: 10px;
+}
+
+.ant-table-container table {
+    background-color: #e0eaff;
+}
+
+.ant-table-container table tbody {
+    background-color: white;
+}
