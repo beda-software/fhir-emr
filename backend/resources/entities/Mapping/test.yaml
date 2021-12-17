@@ -67,9 +67,18 @@ body:
         method: POST
       resource:
         resourceType: Patient
+        gender: female
         name:
-          - family: Петров
-            given: [ Иван, Николаевич ]
+          - family: Румянцева
+            given: [ Василиса, Андреевна ]
+        birthDate: "1970-06-07"
+        telecom:
+          - system: phone
+            use: mobile
+            value: "+79787787671"
+        identifier:
+          - system: "1.2.643.100.3"
+            value: "254-636-254 26"
       fullUrl: urn:uuid:patient-id-1
     - request:
         url: /Encounter
@@ -114,3 +123,64 @@ body:
               display: Консультация кардиолога первичная
               system: urn:service-type
       fullUrl: urn:uuid:encounter-id-12
+    - request:
+        url: /Patient
+        method: POST
+      resource:
+        resourceType: Patient
+        gender: male
+        name:
+          - family: Петров
+            given: [ Иван, Николаевич ]
+        birthDate: "1976-04-12"
+        telecom:
+          - system: phone
+            use: mobile
+            value: "+79997787671"
+        identifier:
+          - system: "1.2.643.100.3"
+            value: "455-636-254 01"
+      fullUrl: urn:uuid:patient-id-2
+    - request:
+        url: /Encounter
+        method: POST
+      resource:
+        resourceType: Encounter
+        status: planned
+        subject:
+          uri: urn:uuid:patient-id-2
+        class:
+          code: AMB
+        participant:
+          - individual:
+              uri: urn:uuid:practitioner-id-2
+        period:
+          start: '2021-12-17T08:00:00Z'
+        serviceType:
+          coding:
+            - code: cardiology-consultation-primary
+              display: Консультация кардиолога первичная
+              system: urn:service-type
+      fullUrl: urn:uuid:encounter-id-21
+    - request:
+        url: /Encounter
+        method: POST
+      resource:
+        resourceType: Encounter
+        status: finished
+        subject:
+          uri: urn:uuid:patient-id-2
+        participant:
+          - individual:
+              uri: urn:uuid:practitioner-id-2
+        class:
+          code: AMB
+        period:
+          start: '2021-12-17T14:00:00Z'
+          end: '2021-12-17T14:30:00Z'
+        serviceType:
+          coding:
+            - code: cardiology-consultation-primary
+              display: Консультация кардиолога первичная
+              system: urn:service-type
+      fullUrl: urn:uuid:encounter-id-22
