@@ -1,4 +1,4 @@
-import { Avatar, Button, Menu } from 'antd';
+import { Button, Menu } from 'antd';
 import { Header } from 'antd/lib/layout/layout';
 import History from 'history';
 import { Link, useHistory } from 'react-router-dom';
@@ -80,6 +80,7 @@ const headerStyle = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
+    width: '100vw',
     height: '64px',
     backgroundColor: '#ffffff',
 };
