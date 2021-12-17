@@ -1,3 +1,4 @@
+import { DeleteFilled, DragOutlined } from '@ant-design/icons';
 import {
     Button,
     Checkbox,
@@ -6,9 +7,11 @@ import {
     FormInstance,
     Input,
     notification,
+    PageHeader,
     Radio,
     Row,
     Select,
+    Typography,
 } from 'antd';
 import cloneDeep from 'lodash/cloneDeep';
 import isEqual from 'lodash/isEqual';
@@ -28,6 +31,8 @@ import { Questionnaire, QuestionnaireItem } from 'shared/src/contrib/aidbox';
 import { getByPath, setByPath, unsetByPath } from 'shared/src/utils/path';
 
 import { BaseLayout } from 'src/components/BaseLayout';
+
+const { Title } = Typography;
 
 const ItemTypes = {
     GROUP: 'group',
@@ -78,7 +83,7 @@ export function QuestionnaireBuilder({ questionnaireId }: Props) {
     };
 
     return (
-        <BaseLayout>
+        <BaseLayout bgHeight={126}>
             <RenderRemoteData remoteData={questionnaireRemoteData}>
                 {(questionnaire) => <Content questionnaire={questionnaire} onSubmit={onSubmit} />}
             </RenderRemoteData>
@@ -104,20 +109,61 @@ function Content({
             initialValues={questionnaire}
             onFinish={(values) => onSubmit({ ...questionnaire, ...values })}
         >
-            <Row gutter={20}>
-                <Col span={14}>
+            <Row justify="space-between">
+                <Col>
+                    <PageHeader title="Опросник" />
+                </Col>
+                <Col>
+                    <Form.Item
+                        name="name"
+                        label="Название"
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            height: '100%',
+                        }}
+                    >
+                        <Input />
+                    </Form.Item>
+                </Col>
+                <Col>
+                    <Form.Item
+                        name="status"
+                        label="Статус"
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            height: '100%',
+                        }}
+                    >
+                        <Select
+                            options={[
+                                { value: 'draft', label: 'Draft' },
+                                { value: 'active', label: 'Active' },
+                            ]}
+                        />
+                    </Form.Item>
+                </Col>
+            </Row>
+            <Row gutter={20} style={{ backgroundColor: '#F7F9FC' }}>
+                <Col flex={1} style={{ padding: 0 }}>
                     <DndProvider backend={HTML5Backend}>
                         <div
                             style={{
-                                width: 500,
-                                height: 100,
+                                backgroundColor: '#ffffff',
+                                flex: 1,
+                                height: 72,
                                 display: 'flex',
                                 flexDirection: 'row',
-                                justifyContent: 'space-between',
+                                justifyContent: 'center',
+                                alignItems: 'center',
                             }}
                         >
                             <GroupItemTemplate />
                             <PrimitiveComponentTemplate />
+                            <div style={{ marginLeft: 8 }}>Перетяните элемент в форму</div>
                         </div>
                         <DroppableQuestionnaire
                             form={form}
@@ -126,7 +172,7 @@ function Content({
                         />
                     </DndProvider>
                 </Col>
-                <Col span={10}>
+                <Col style={{ width: 384, padding: 0 }}>
                     <FieldSettingsForm path={editablePath} form={form} />
                 </Col>
             </Row>
@@ -156,15 +202,30 @@ function FieldSettingsForm({ form, path }: FieldSettingsFormType) {
     }
     const type = form.getFieldValue([...path, 'type']);
     return (
-        <>
-            <Form.Item label="linkId" name={[...path, 'linkId']}>
+        <div
+            style={{
+                padding: 32,
+                backgroundColor: '#ffffff',
+                flex: 1,
+                boxShadow: 'inset 1px 0px 0px #F0F0F0',
+            }}
+        >
+            <Row justify="space-between">
+                <Col>
+                    <Title level={5}>Параметры элемента</Title>
+                </Col>
+                <Col>
+                    <Button type="primary" icon={<DeleteFilled />} size="small" danger />
+                </Col>
+            </Row>
+            <Form.Item label="link ID" name={[...path, 'linkId']}>
                 <Input />
             </Form.Item>
-            <Form.Item label="label" name={[...path, 'text']}>
+            <Form.Item label="Название" name={[...path, 'text']}>
                 <Input />
             </Form.Item>
             {type !== 'group' && (
-                <Form.Item label="Field type" name={[...path, 'type']}>
+                <Form.Item label="Тип поля" name={[...path, 'type']}>
                     <Radio.Group>
                         <Radio.Button value="choice">Choice</Radio.Button>
                         <Radio.Button value="decimal">Decimal</Radio.Button>
@@ -188,18 +249,18 @@ function FieldSettingsForm({ form, path }: FieldSettingsFormType) {
                 </Form.Item>
             )} */}
             <Form.Item name={[...path, 'required']}>
-                <Checkbox>Required</Checkbox>
+                <Checkbox>Обязательное</Checkbox>
             </Form.Item>
             <Form.Item name={[...path, 'repeats']}>
-                <Checkbox>Repeats</Checkbox>
+                <Checkbox>Повторяющийся</Checkbox>
             </Form.Item>
             <Form.Item name={[...path, 'readOnly']}>
                 <Checkbox>Read-only</Checkbox>
             </Form.Item>
             <Form.Item name={[...path, 'hidden']}>
-                <Checkbox>Hidden</Checkbox>
+                <Checkbox>Скрытое</Checkbox>
             </Form.Item>
-        </>
+        </div>
     );
 }
 
@@ -214,46 +275,36 @@ function DroppableQuestionnaire({
     setEditablePath: (path: FieldPath) => void;
 }) {
     return (
-        <Form.Item shouldUpdate>
-            {() => {
-                const formValues = form.getFieldsValue();
-                console.log('value', formValues);
+        <div style={{ margin: 40, background: '#ffffff', borderRadius: 10 }}>
+            <Form.Item shouldUpdate>
+                {() => {
+                    const formValues = form.getFieldsValue();
+                    console.log('value', formValues);
 
-                return (
-                    <div>
-                        <Form.Item>
-                            <Button htmlType="submit" type="primary">
-                                Сохранить
-                            </Button>
-                        </Form.Item>
-                        <Form.Item name="name" label="Название">
-                            <Input />
-                        </Form.Item>
-
-                        <Form.Item name="status" label="Статус">
-                            <Select
-                                options={[
-                                    { value: 'draft', label: 'Draft' },
-                                    { value: 'active', label: 'Active' },
-                                ]}
+                    return (
+                        <div>
+                            <Form.Item>
+                                <Button htmlType="submit" type="primary">
+                                    Сохранить
+                                </Button>
+                            </Form.Item>
+                            <QuestionnaireItemComponents
+                                items={formValues.item}
+                                parentPath={[]}
+                                form={form}
+                                editablePath={editablePath}
+                                setEditablePath={setEditablePath}
                             />
-                        </Form.Item>
-                        <QuestionnaireItemComponents
-                            items={formValues.item}
-                            parentPath={[]}
-                            form={form}
-                            editablePath={editablePath}
-                            setEditablePath={setEditablePath}
-                        />
-                        <Form.Item>
-                            <Button htmlType="submit" type="primary">
-                                Сохранить
-                            </Button>
-                        </Form.Item>
-                    </div>
-                );
-            }}
-        </Form.Item>
+                            <Form.Item>
+                                <Button htmlType="submit" type="primary">
+                                    Сохранить
+                                </Button>
+                            </Form.Item>
+                        </div>
+                    );
+                }}
+            </Form.Item>
+        </div>
     );
 }
 
@@ -517,7 +568,16 @@ function GroupItemTemplate() {
         item: { type: 'new', item: { type: 'group' } },
     }));
 
-    return <div ref={drag}>Group</div>;
+    return (
+        <Button
+            ref={drag}
+            style={{ background: '#00C1D4', color: '#ffffff', border: 0, marginRight: 16 }}
+            type="primary"
+            icon={<DragOutlined />}
+        >
+            Новая группа
+        </Button>
+    );
 }
 
 function PrimitiveComponentTemplate() {
@@ -529,5 +589,14 @@ function PrimitiveComponentTemplate() {
         item: { type: 'new', item: { type: 'text' } },
     }));
 
-    return <div ref={drag}>Primitive</div>;
+    return (
+        <Button
+            ref={drag}
+            style={{ background: '#3366FF', color: '#ffffff', border: 0, marginRight: 16 }}
+            type="primary"
+            icon={<DragOutlined />}
+        >
+            Новый элемент
+        </Button>
+    );
 }
