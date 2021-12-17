@@ -1,5 +1,6 @@
 import { PageHeader, Button, Table, Input } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
+import { useHistory } from 'react-router-dom';
 
 import { useService } from 'aidbox-react/lib/hooks/service';
 import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
@@ -53,6 +54,8 @@ export function PatientList() {
         ),
     );
 
+    const navigate = useHistory();
+
     return (
         <BaseLayout bgHeight={281}>
             <PageHeader title="Пациенты" extra={[<ModalNewPatient />]} />
@@ -77,6 +80,17 @@ export function PatientList() {
                 dataSource={isSuccess(patientsResponse) ? patientsResponse.data : []}
                 columns={columns}
                 loading={isLoading(patientsResponse)}
+                onRow={(record) => {
+                    return {
+                        onClick: () =>
+                            navigate.push({
+                                pathname: `/patients/${record.id}`,
+                                state: {
+                                    record,
+                                },
+                            }),
+                    };
+                }}
             />
         </BaseLayout>
     );
