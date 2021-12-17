@@ -1,0 +1,16 @@
+resourceType: Mapping
+id: practitioner-create
+body:
+  resourceType: Bundle
+  type: transaction
+  entry:
+    - request:
+        url: /Practitioner
+        method: POST
+      resource:
+        resourceType: Practitioner
+        name:
+          - given:
+              - $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='first-name').answer.value.string").0
+              - $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='middle-name').answer.value.string").0
+            family: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='last-name').answer.value.string").0

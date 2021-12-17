@@ -1,0 +1,16 @@
+id: practitioner-role-create
+resourceType: Questionnaire
+status: active
+mapping:
+  - id: practitioner-role-create
+    resourceType: Mapping
+item:
+  - linkId: organization
+    type: string
+    text: Organization
+  - linkId: practitioner
+    type: string
+    text: Специалист
+  - linkId: specialty
+    type: string
+    text: Специальность
