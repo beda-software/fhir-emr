@@ -1,7 +1,7 @@
-import { PlusOutlined } from '@ant-design/icons';
 import { PageHeader, Button, Table, Input } from 'antd';
 
 import { BaseLayout } from 'src/components/BaseLayout';
+import { ModalNewPractitioner } from 'src/components/ModalNewPractitioner';
 
 const dataSource = [
     {
@@ -9,14 +9,14 @@ const dataSource = [
         fullname: 'Волыхов Андрей Александрович',
         specialty: 'Хирург',
         position: 'Заведующий отделением, практикующий врач',
-        date: '12.12.2021'
+        date: '12.12.2021',
     },
     {
         key: '2',
         fullname: 'Вассерман Анатолий Александрович',
         specialty: 'Оториноларинголог',
         position: 'Главный врач, практикующий врач',
-        date: '12.12.2021'
+        date: '12.12.2021',
     },
 ];
 
@@ -25,19 +25,19 @@ const columns = [
         title: 'ФИО',
         dataIndex: 'fullname',
         key: 'fullname',
-        width: '35%'
+        width: '35%',
     },
     {
         title: 'Специальность',
         dataIndex: 'specialty',
         key: 'specialty',
-        width: '20%'
+        width: '20%',
     },
     {
         title: 'Должность',
         dataIndex: 'position',
         key: 'position',
-        width: '25%'
+        width: '25%',
     },
     {
         title: 'Дата приема',
@@ -49,14 +49,7 @@ const columns = [
 export function PractitionerList() {
     return (
         <BaseLayout bgHeight={281}>
-            <PageHeader
-                title="Врачи"
-                extra={[
-                    <Button icon={<PlusOutlined />} type="primary">
-                        Новый врач
-                    </Button>,
-                ]}
-            />
+            <PageHeader title="Врачи" extra={[<ModalNewPractitioner />]} />
             <div
                 style={{
                     position: 'relative',

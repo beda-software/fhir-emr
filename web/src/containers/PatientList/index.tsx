@@ -1,4 +1,4 @@
-import { PlusOutlined } from '@ant-design/icons';
+
 import { PageHeader, Button, Table, Input } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 
@@ -11,6 +11,7 @@ import { Patient } from 'shared/src/contrib/aidbox';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { BaseLayout } from 'src/components/BaseLayout';
+import { ModalNewPatient } from 'src/components/ModalNewPatient';
 
 const columns: ColumnsType<Patient> = [
     {
@@ -34,9 +35,7 @@ export function PatientList() {
             <PageHeader
                 title="Пациенты"
                 extra={[
-                    <Button icon={<PlusOutlined />} type="primary">
-                        Новый пациент
-                    </Button>,
+                    <ModalNewPatient />,
                 ]}
             />
             <div

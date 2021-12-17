@@ -1,4 +1,3 @@
-import { PlusOutlined } from '@ant-design/icons';
 import { DatePicker, PageHeader, Button, Table, Input } from 'antd';
 
 import { BaseLayout } from 'src/components/BaseLayout';
@@ -9,14 +8,14 @@ const dataSource = [
         patient: 'Волыхов Андрей Александрович',
         encounter: 'Волыхов Андрей Александрович',
         status: 'запланирован',
-        date: '12.12.2021'
+        date: '12.12.2021',
     },
     {
         key: '2',
         patient: 'Волыхов Андрей Александрович',
         encounter: 'Волыхов Андрей Александрович',
         status: 'запланирован',
-        date: '12.12.2021'
+        date: '12.12.2021',
     },
 ];
 
@@ -48,14 +47,7 @@ const { RangePicker } = DatePicker;
 export function EncounterList() {
     return (
         <BaseLayout bgHeight={281}>
-            <PageHeader
-                title="Приемы"
-                extra={[
-                    <Button icon={<PlusOutlined />} type="primary">
-                        Новый прием
-                    </Button>,
-                ]}
-            />
+            <PageHeader title="Приемы" />
             <div
                 style={{
                     position: 'relative',
