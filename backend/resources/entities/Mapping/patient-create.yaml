@@ -1,0 +1,18 @@
+resourceType: Mapping
+id: patient-create
+body:
+  resourceType: Bundle
+  type: transaction
+  entry:
+    - request:
+        url: /Patient
+        method: POST
+      resource:
+        resourceType: Patient
+        name:
+          - given:
+              - $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='first-name').answer.value.string").0
+              - $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='middle-name').answer.value.string").0
+            family: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='last-name').answer.value.string").0
+        birthDate: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='birth-date').answer.value.date").0
+        gender: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='gender').answer.value.string").0
