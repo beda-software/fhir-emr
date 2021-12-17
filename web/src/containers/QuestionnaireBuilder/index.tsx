@@ -1,5 +1,17 @@
-import { Button, Form, FormInstance, Input, notification, Select } from 'antd';
+import {
+    Button,
+    Checkbox,
+    Col,
+    Form,
+    FormInstance,
+    Input,
+    notification,
+    Radio,
+    Row,
+    Select,
+} from 'antd';
 import isEqual from 'lodash/isEqual';
+import { useState } from 'react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useHistory } from 'react-router';
@@ -40,6 +52,11 @@ interface Props {
     questionnaireId?: string;
 }
 
+interface FieldSettings {
+    onUpdate: () => void;
+    item: QuestionnaireItem;
+}
+
 export function QuestionnaireBuilder({ questionnaireId }: Props) {
     const history = useHistory();
     const [questionnaireRemoteData, manager] = useService<Questionnaire>(async () => {
@@ -64,30 +81,16 @@ export function QuestionnaireBuilder({ questionnaireId }: Props) {
 
     return (
         <BaseLayout>
-            <DndProvider backend={HTML5Backend}>
-                <div
-                    style={{
-                        width: 500,
-                        height: 100,
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                    }}
-                >
-                    <GroupItemTemplate />
-                    <PrimitiveComponentTemplate />
-                </div>
-                <RenderRemoteData remoteData={questionnaireRemoteData}>
-                    {(questionnaire) => (
-                        <DroppableQuestionnaire questionnaire={questionnaire} onSubmit={onSubmit} />
-                    )}
-                </RenderRemoteData>
-            </DndProvider>
+            <RenderRemoteData remoteData={questionnaireRemoteData}>
+                {(questionnaire) => <Content questionnaire={questionnaire} onSubmit={onSubmit} />}
+            </RenderRemoteData>
         </BaseLayout>
     );
 }
 
-function DroppableQuestionnaire({
+type FieldPath = Array<string | number>;
+
+function Content({
     questionnaire,
     onSubmit,
 }: {
@@ -95,52 +98,140 @@ function DroppableQuestionnaire({
     onSubmit: (values: Questionnaire) => Promise<any>;
 }) {
     const [form] = Form.useForm<Questionnaire>();
-
+    const [editablePath, setEditablePath] = useState<FieldPath>();
     return (
         <Form<Questionnaire>
             form={form}
             initialValues={questionnaire}
             onFinish={(values) => onSubmit({ ...questionnaire, ...values })}
         >
-            <Form.Item shouldUpdate>
-                {() => {
-                    const formValues = form.getFieldsValue();
-                    console.log('value', formValues);
-
-                    return (
-                        <div>
-                            <Form.Item>
-                                <Button htmlType="submit" type="primary">
-                                    Сохранить
-                                </Button>
-                            </Form.Item>
-                            <Form.Item name="name" label="Название">
-                                <Input />
-                            </Form.Item>
-
-                            <Form.Item name="status" label="Статус">
-                                <Select
-                                    options={[
-                                        { value: 'draft', label: 'Draft' },
-                                        { value: 'active', label: 'Active' },
-                                    ]}
-                                />
-                            </Form.Item>
-                            <QuestionnaireItemComponents
-                                items={formValues.item}
-                                parentPath={[]}
-                                form={form}
-                            />
-                            <Form.Item>
-                                <Button htmlType="submit" type="primary">
-                                    Сохранить
-                                </Button>
-                            </Form.Item>
+            <Row gutter={20}>
+                <Col span={14}>
+                    <DndProvider backend={HTML5Backend}>
+                        <div
+                            style={{
+                                width: 500,
+                                height: 100,
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                            }}
+                        >
+                            <GroupItemTemplate />
+                            <PrimitiveComponentTemplate />
                         </div>
-                    );
-                }}
-            </Form.Item>
+                        <DroppableQuestionnaire form={form} setEditablePath={setEditablePath} />
+                    </DndProvider>
+                </Col>
+                <Col span={10}>
+                    <FieldSettingsForm path={editablePath} form={form} />
+                </Col>
+            </Row>
         </Form>
+    );
+}
+
+interface FieldSettingsFormType {
+    // type:
+    //     | 'group'
+    //     | 'boolean'
+    //     | 'decimal'
+    //     | 'integer'
+    //     | 'date'
+    //     | 'dateTime'
+    //     | 'time'
+    //     | 'string'
+    //     | 'text'
+    //     | 'choice';
+    form: FormInstance;
+    path?: FieldPath;
+}
+
+function FieldSettingsForm({ form, path }: FieldSettingsFormType) {
+    if (path === undefined) {
+        return null;
+    }
+    const type = form.getFieldValue([...path, 'type']);
+    return (
+        <>
+            <Form.Item label="linkId" name={[...path, 'linkId']}>
+                <Input />
+            </Form.Item>
+            <Form.Item label="label" name={[...path, 'text']}>
+                <Input />
+            </Form.Item>
+            {type !== 'group' && (
+                <Form.Item label="Field type" name={[...path, 'type']}>
+                    <Radio.Group>
+                        <Radio.Button value="decimal">Decimal</Radio.Button>
+                        <Radio.Button value="text">Text</Radio.Button>
+                        <Radio.Button value="choice">Choice</Radio.Button>
+                        <Radio.Button value="date">Date</Radio.Button>
+                    </Radio.Group>
+                </Form.Item>
+            )}
+            {/* {type === 'choice' && (
+                <Form.Item label="Answer" name="answerType">
+                    <Radio.Group>
+                        <Radio.Button value="answerOptions">Options</Radio.Button>
+                        <Radio.Button value="answerValueSet">ValueSet</Radio.Button>
+                    </Radio.Group>
+                </Form.Item>
+            )} */}
+            <Form.Item name={[...path, 'repeats']}>
+                <Checkbox>Repeats</Checkbox>
+            </Form.Item>
+        </>
+    );
+}
+
+function DroppableQuestionnaire({
+    form,
+    setEditablePath,
+}: {
+    form: FormInstance;
+    setEditablePath: (path: FieldPath) => void;
+}) {
+    return (
+        <Form.Item shouldUpdate>
+            {() => {
+                const formValues = form.getFieldsValue();
+                console.log('value', formValues);
+
+                return (
+                    <div>
+                        <Form.Item>
+                            <Button htmlType="submit" type="primary">
+                                Сохранить
+                            </Button>
+                        </Form.Item>
+                        <Form.Item name="name" label="Название">
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item name="status" label="Статус">
+                            <Select
+                                options={[
+                                    { value: 'draft', label: 'Draft' },
+                                    { value: 'active', label: 'Active' },
+                                ]}
+                            />
+                        </Form.Item>
+                        <QuestionnaireItemComponents
+                            items={formValues.item}
+                            parentPath={[]}
+                            form={form}
+                            setEditablePath={setEditablePath}
+                        />
+                        <Form.Item>
+                            <Button htmlType="submit" type="primary">
+                                Сохранить
+                            </Button>
+                        </Form.Item>
+                    </div>
+                );
+            }}
+        </Form.Item>
     );
 }
 
@@ -148,10 +239,12 @@ function QuestionnaireItemComponents({
     items,
     parentPath,
     form,
+    setEditablePath,
 }: {
     items: Questionnaire['item'];
     parentPath: Array<string | number>;
     form: FormInstance;
+    setEditablePath: (path: FieldPath) => void;
 }) {
     const [{ isOverCurrent }, drop] = useDrop<DraggableItem, any, any>(() => ({
         accept: [ItemTypes.GROUP, ItemTypes.PRIMITIVE],
@@ -227,6 +320,7 @@ function QuestionnaireItemComponents({
                             index={index}
                             parentPath={parentPath}
                             form={form}
+                            setEditablePath={setEditablePath}
                         />
                     );
                 })}
@@ -240,11 +334,13 @@ function QuestionnaireItemComponent({
     parentPath,
     form,
     index,
+    setEditablePath,
 }: {
     item: QuestionnaireItem;
     parentPath: Array<string | number>;
     form: FormInstance;
     index: number;
+    setEditablePath: (path: FieldPath) => void;
 }) {
     const [{ isDragging }, drag] = useDrag<ExistingDraggableItem, any, any>(
         () => ({
@@ -258,12 +354,18 @@ function QuestionnaireItemComponent({
     );
 
     return (
-        <div ref={drag} key={item.linkId} style={{ marginLeft: 48, marginRight: 48 }}>
+        <div
+            ref={drag}
+            key={item.linkId}
+            onClick={() => setEditablePath([...parentPath, 'item', index])}
+            style={{ marginLeft: 48, marginRight: 48 }}
+        >
             {item.linkId} {item.text} {item.type}
             <QuestionnaireItemComponents
                 items={item.item}
                 parentPath={[...parentPath, 'item', index]}
                 form={form}
+                setEditablePath={setEditablePath}
             />
         </div>
     );
