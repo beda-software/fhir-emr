@@ -10,6 +10,7 @@ import {
     Row,
     Select,
 } from 'antd';
+import cloneDeep from 'lodash/cloneDeep';
 import isEqual from 'lodash/isEqual';
 import { useRef, useState } from 'react';
 import { DndProvider, useDrag, useDragDropManager, useDrop } from 'react-dnd';
@@ -260,54 +261,57 @@ function QuestionnaireItemComponents({
 
     setEditablePath: (path: FieldPath) => void;
 }) {
-    const [{ isOverCurrent }, drop] = useDrop<DraggableItem, any, any>(() => ({
-        accept: [ItemTypes.GROUP, ItemTypes.PRIMITIVE],
+    const [{ isOverCurrent }, drop] = useDrop<DraggableItem, any, any>(
+        () => ({
+            accept: [ItemTypes.GROUP, ItemTypes.PRIMITIVE],
 
-        drop: (item, monitor) => {
-            const didDrop = monitor.didDrop();
+            drop: (item, monitor) => {
+                const didDrop = monitor.didDrop();
 
-            if (didDrop) {
-                return;
-            }
+                if (didDrop) {
+                    return;
+                }
 
-            const values = form.getFieldsValue();
-            if (isNewDraggableItem(item)) {
-                form.setFieldsValue(
-                    setByPath(
-                        values,
-                        [...parentPath, 'item'],
-                        [
-                            ...getByPath(values, [...parentPath, 'item'], []),
-                            { linkId: uuid4(), ...item.item },
-                        ],
-                    ),
-                );
-            } else {
-                form.setFieldsValue(
-                    unsetByPath(
+                const values = form.getFieldsValue();
+                if (isNewDraggableItem(item)) {
+                    form.setFieldsValue(
                         setByPath(
                             values,
                             [...parentPath, 'item'],
-                            [...getByPath(values, [...parentPath, 'item'], []), item.item],
+                            [
+                                ...getByPath(values, [...parentPath, 'item'], []),
+                                { linkId: uuid4(), ...item.item },
+                            ],
                         ),
-                        item.path,
-                    ),
-                );
-            }
-        },
-        canDrop: (item) => {
-            if (!isNewDraggableItem(item)) {
-                if (isEqual(item.path, parentPath)) {
-                    return false;
+                    );
+                } else {
+                    form.setFieldsValue(
+                        unsetByPath(
+                            setByPath(
+                                values,
+                                [...parentPath, 'item'],
+                                [...getByPath(values, [...parentPath, 'item'], []), item.item],
+                            ),
+                            item.path,
+                        ),
+                    );
                 }
-            }
+            },
+            canDrop: (item) => {
+                if (!isNewDraggableItem(item)) {
+                    if (isEqual(item.path, parentPath)) {
+                        return false;
+                    }
+                }
 
-            return true;
-        },
-        collect: (monitor) => ({
-            isOverCurrent: monitor.isOver({ shallow: true }) && monitor.canDrop(),
+                return true;
+            },
+            collect: (monitor) => ({
+                isOverCurrent: monitor.isOver({ shallow: true }) && monitor.canDrop(),
+            }),
         }),
-    }));
+        [items, parentPath],
+    );
     const backgroundColor = isOverCurrent ? '#F7F9FC' : 'white';
 
     return (
@@ -383,54 +387,68 @@ function QuestionnaireItemComponent({
         }),
         [item, parentPath, index],
     );
-    const [{ isOverCurrent }, drop] = useDrop<DraggableItem, any, any>({
-        accept: [ItemTypes.GROUP, ItemTypes.PRIMITIVE],
-        collect(monitor) {
-            return {
-                isOverCurrent: monitor.isOver({ shallow: true }) && monitor.canDrop(),
-            };
-        },
-        canDrop(draggableItem) {
-            if (isNewDraggableItem(draggableItem)) {
-                return false;
-            }
+    const [{ isOverCurrent }, drop] = useDrop<DraggableItem, any, any>(
+        {
+            accept: [ItemTypes.GROUP, ItemTypes.PRIMITIVE],
+            collect(monitor) {
+                return {
+                    isOverCurrent: monitor.isOver({ shallow: true }) && monitor.canDrop(),
+                };
+            },
+            canDrop(draggableItem) {
+                if (isNewDraggableItem(draggableItem)) {
+                    return false;
+                }
 
-            if (!isEqual(draggableItem.parentPath, parentPath)) {
-                return false;
-            }
+                if (!isEqual(draggableItem.parentPath, parentPath)) {
+                    return false;
+                }
 
-            return true;
-        },
-        drop(draggableItem) {
-            if (isNewDraggableItem(draggableItem)) {
-                return;
-            }
+                return true;
+            },
+            drop(draggableItem, monitor) {
+                if (monitor.didDrop()) {
+                    return;
+                }
+                if (isNewDraggableItem(draggableItem)) {
+                    return;
+                }
 
-            if (!isEqual(draggableItem.parentPath, parentPath)) {
-                return;
-            }
-            const values = form.getFieldsValue();
-            const items = getByPath(values, [...parentPath, 'item']) as Array<any>;
-            const dragIndex = draggableItem.index;
-            const hoverIndex = index;
+                if (!isEqual(draggableItem.parentPath, parentPath)) {
+                    return;
+                }
+                const values = form.getFieldsValue();
+                const items = getByPath(values, [...parentPath, 'item']) as Array<any>;
+                const dragIndex = draggableItem.index;
+                const hoverIndex = index;
+                function insert(items: any[], fromIndex: number, toIndex: number) {
+                    let newItems = cloneDeep(items);
+                    const fromElem = newItems[fromIndex];
 
-            form.setFieldsValue(
-                setByPath(
-                    values,
-                    [...parentPath, 'item'],
-                    items.map((curItem, curIndex) => {
-                        if (curIndex === dragIndex) {
-                            return items[hoverIndex];
+                    if (fromIndex > toIndex) {
+                        for (let i = fromIndex; i > toIndex; i--) {
+                            newItems[i] = newItems[i - 1];
                         }
-                        if (curIndex === hoverIndex) {
-                            return items[dragIndex];
+                    } else {
+                        for (let i = fromIndex; i < toIndex; i++) {
+                            newItems[i] = newItems[i + 1];
                         }
-                        return curItem;
-                    }),
-                ),
-            );
+                    }
+                    newItems[toIndex] = fromElem;
+
+                    return newItems;
+                }
+                form.setFieldsValue(
+                    setByPath(
+                        values,
+                        [...parentPath, 'item'],
+                        insert(items, dragIndex, hoverIndex),
+                    ),
+                );
+            },
         },
-    });
+        [item, parentPath, index],
+    );
 
     drag(drop(ref));
 
