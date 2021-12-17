@@ -1,5 +1,7 @@
 id: encounter-create
 resourceType: Questionnaire
+name: encounter-create
+title: Создание приема
 status: active
 mapping:
   - id: encounter-create

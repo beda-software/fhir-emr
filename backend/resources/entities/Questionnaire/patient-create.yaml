@@ -1,5 +1,7 @@
 id: patient-create
 resourceType: Questionnaire
+name: patient-create
+title: Создание пациента
 status: active
 mapping:
   - id: patient-create

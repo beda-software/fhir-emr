@@ -1,5 +1,7 @@
 id: practitioner-create
 resourceType: Questionnaire
+name: practitioner-create
+title: Создание специалиста
 status: active
 mapping:
   - id: practitioner-create

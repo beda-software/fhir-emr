@@ -1,5 +1,7 @@
 id: practitioner-role-create
 resourceType: Questionnaire
+name: practitioner-role-create
+title: Создание должности специалиста
 status: active
 mapping:
   - id: practitioner-role-create
