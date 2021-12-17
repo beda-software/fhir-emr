@@ -21,6 +21,7 @@ import { getAuthorizeUrl, getToken, getUserInfo, OAuthState } from 'src/services
 import { parseOAuthState, setToken } from 'src/services/auth';
 import { history } from 'src/services/history';
 
+import { EncounterDetails } from '../EncounterDetails';
 import s from './App.module.scss';
 
 export function App() {
