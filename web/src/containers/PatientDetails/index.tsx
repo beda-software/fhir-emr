@@ -5,6 +5,8 @@ import { useHistory } from 'react-router-dom';
 
 import { renderMenu, RouteItem } from 'src/components/BaseHeader';
 import { BaseLayout } from 'src/components/BaseLayout';
+import Breadcrumbs from 'src/components/Breadcrumbs';
+import { PatientGeneralInfo } from 'src/components/PatientGeneralInfo';
 
 export const PatientDetails = () => {
     const menuItems: RouteItem[] = [
@@ -32,6 +34,21 @@ export const PatientDetails = () => {
         ],
     ];
 
+    const crumbs = [
+        {
+            path: '/',
+            name: 'Пациенты',
+        },
+        {
+            path: '/patients/тут-будет-айди',
+            name: 'Друзь Александр',
+        },
+        {
+            path: '/patients/тут-будет-айди',
+            name: 'Общая информация',
+        },
+    ];
+
     return (
         <BaseLayout bgHeight={194}>
             <PageHeader
@@ -41,6 +58,7 @@ export const PatientDetails = () => {
                     <span>123-123-123 09</span>,
                     <Button>Редактировать</Button>,
                 ]}
+                breadcrumb={<Breadcrumbs crumbs={crumbs} />}
             />
             <Menu
                 mode="horizontal"
@@ -50,30 +68,7 @@ export const PatientDetails = () => {
             >
                 {renderMenu(menuItems)}
             </Menu>
-            <div style={infoContainerStyle}>
-                <div
-                    style={{
-                        display: 'flex',
-                        width: '100%',
-                        justifyContent: 'space-around',
-                    }}
-                >
-                    {generalInfo.map((el, index) => {
-                        return (
-                            <div>
-                                {generalInfo[index].map((el, index) => {
-                                    return (
-                                        <div key={index} style={{ marginBottom: 16 }}>
-                                            <h3>{el.title}</h3>
-                                            <div>{el.value}</div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
+            <PatientGeneralInfo generalInfo={generalInfo} />
         </BaseLayout>
     );
 };
@@ -89,11 +84,3 @@ function getActiveKeys(history: History.History, menuRoutes: RouteItem[]): Route
         return false;
     });
 }
-
-const infoContainerStyle = {
-    width: 1080,
-    backgroundColor: '#ffffff',
-    padding: '32px 40px',
-    boxShadow: '0px 6px 16px #E6EBF5',
-    marginTop: 54,
-};
