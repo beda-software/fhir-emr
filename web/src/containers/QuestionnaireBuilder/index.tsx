@@ -11,8 +11,8 @@ import {
     Select,
 } from 'antd';
 import isEqual from 'lodash/isEqual';
-import { useState } from 'react';
-import { DndProvider, useDrag, useDrop } from 'react-dnd';
+import { useRef, useState } from 'react';
+import { DndProvider, useDrag, useDragDropManager, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useHistory } from 'react-router';
 
@@ -41,6 +41,8 @@ type ExistingDraggableItem = {
     item: QuestionnaireItem;
     type: 'existing';
     path: Array<string | number>;
+    parentPath: Array<string | number>;
+    index: number;
 };
 type DraggableItem = NewDraggableItem | ExistingDraggableItem;
 
@@ -101,6 +103,7 @@ function Content({
     const [editablePath, setEditablePath] = useState<FieldPath>();
     return (
         <Form<Questionnaire>
+            layout="vertical"
             form={form}
             initialValues={questionnaire}
             onFinish={(values) => onSubmit({ ...questionnaire, ...values })}
@@ -248,6 +251,7 @@ function QuestionnaireItemComponents({
 }) {
     const [{ isOverCurrent }, drop] = useDrop<DraggableItem, any, any>(() => ({
         accept: [ItemTypes.GROUP, ItemTypes.PRIMITIVE],
+
         drop: (item, monitor) => {
             const didDrop = monitor.didDrop();
 
@@ -293,17 +297,17 @@ function QuestionnaireItemComponents({
             isOverCurrent: monitor.isOver({ shallow: true }) && monitor.canDrop(),
         }),
     }));
-    const backgroundColor = isOverCurrent ? 'darkgreen' : 'white';
+    const backgroundColor = isOverCurrent ? '#F7F9FC' : 'white';
 
     return (
         <Form.Item name={[...parentPath, 'item']}>
             <div
                 ref={drop}
                 style={{
-                    minHeight: 50,
+                    minHeight: isOverCurrent ? 50 : 0,
                     width: '100%',
                     borderWidth: 1,
-                    borderColor: 'black',
+                    borderColor: isOverCurrent ? 'black' : 'transparent',
                     borderStyle: 'dashed',
                     backgroundColor,
                 }}
@@ -342,25 +346,99 @@ function QuestionnaireItemComponent({
     index: number;
     setEditablePath: (path: FieldPath) => void;
 }) {
+    const dndManager = useDragDropManager();
+    const isGlobalDragging = dndManager.getMonitor().isDragging();
+
+    const ref = useRef<HTMLDivElement>(null);
+    const [isHovered, setIsHovered] = useState(false);
     const [{ isDragging }, drag] = useDrag<ExistingDraggableItem, any, any>(
         () => ({
             type: item.type === 'group' ? ItemTypes.GROUP : ItemTypes.PRIMITIVE,
             collect: (monitor) => ({
                 isDragging: !!monitor.isDragging(),
             }),
-            item: { type: 'existing', item, path: [...parentPath, 'item', index] },
+            item: {
+                type: 'existing',
+                item,
+                path: [...parentPath, 'item', index],
+                index,
+                parentPath,
+            },
         }),
         [item, parentPath, index],
     );
+    const [{ isOverCurrent }, drop] = useDrop<DraggableItem, any, any>({
+        accept: [ItemTypes.GROUP, ItemTypes.PRIMITIVE],
+        collect(monitor) {
+            return {
+                isOverCurrent: monitor.isOver({ shallow: true }) && monitor.canDrop(),
+            };
+        },
+        drop(draggableItem) {
+            if (isNewDraggableItem(draggableItem)) {
+                return;
+            }
+
+            if (!isEqual(draggableItem.parentPath, parentPath)) {
+                return;
+            }
+            const values = form.getFieldsValue();
+            const items = getByPath(values, [...parentPath, 'item']) as Array<any>;
+            const dragIndex = draggableItem.index;
+            const hoverIndex = index;
+
+            form.setFieldsValue(
+                setByPath(
+                    values,
+                    [...parentPath, 'item'],
+                    items.map((curItem, curIndex) => {
+                        if (curIndex === dragIndex) {
+                            return items[hoverIndex];
+                        }
+                        if (curIndex === hoverIndex) {
+                            return items[dragIndex];
+                        }
+                        return curItem;
+                    }),
+                ),
+            );
+        },
+    });
+
+    drag(drop(ref));
 
     return (
         <div
-            ref={drag}
+            ref={ref}
             key={item.linkId}
             onClick={() => setEditablePath([...parentPath, 'item', index])}
-            style={{ marginLeft: 48, marginRight: 48 }}
+            style={{
+                marginLeft: 48,
+                marginRight: 48,
+                borderWidth: 1,
+                borderStyle: 'solid',
+                ...(isHovered && !isGlobalDragging
+                    ? { borderColor: 'darkgreen' }
+                    : { borderColor: 'transparent' }),
+                ...(isDragging ? { opacity: 0 } : { opacity: 1 }),
+                ...(isOverCurrent ? { backgroundColor: '#F7F9FC' } : {}),
+            }}
+            onMouseOver={(evt) => {
+                evt.stopPropagation();
+                setIsHovered(true);
+            }}
+            onMouseOut={(evt) => {
+                evt.stopPropagation();
+                setIsHovered(false);
+            }}
         >
-            {item.linkId} {item.text} {item.type}
+            {item.type === 'group' ? (
+                <b>{item.text || item.linkId}</b>
+            ) : (
+                <Form.Item label={item.text || item.linkId}>
+                    <Input />
+                </Form.Item>
+            )}
             <QuestionnaireItemComponents
                 items={item.item}
                 parentPath={[...parentPath, 'item', index]}
@@ -372,7 +450,7 @@ function QuestionnaireItemComponent({
 }
 
 function GroupItemTemplate() {
-    const [{ isDragging }, drag] = useDrag<NewDraggableItem, any, any>(() => ({
+    const [{}, drag] = useDrag<NewDraggableItem, any, any>(() => ({
         type: ItemTypes.GROUP,
         collect: (monitor) => ({
             isDragging: !!monitor.isDragging(),
@@ -384,7 +462,7 @@ function GroupItemTemplate() {
 }
 
 function PrimitiveComponentTemplate() {
-    const [{ isDragging }, drag] = useDrag<NewDraggableItem, any, any>(() => ({
+    const [{}, drag] = useDrag<NewDraggableItem, any, any>(() => ({
         type: ItemTypes.PRIMITIVE,
         collect: (monitor) => ({
             isDragging: !!monitor.isDragging(),
