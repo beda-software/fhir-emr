@@ -1,21 +1,18 @@
 import { PageHeader } from 'antd';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
-import { mapSuccess } from 'aidbox-react/lib/services/service';
+import { sequenceMap } from 'aidbox-react/lib/services/service';
 
-import {
-    Encounter,
-    Patient,
-    Practitioner,
-    PractitionerRole,
-    Questionnaire,
-    QuestionnaireResponse,
-} from 'shared/src/contrib/aidbox';
+import { Encounter, Patient, Practitioner, PractitionerRole } from 'shared/src/contrib/aidbox';
+import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { BaseLayout } from '../../components/BaseLayout';
+import { QuestionnaireListWidget } from '../../components/QuestionnaireListWidget';
+import { useQuestionnaireList } from '../../components/QuestionnaireListWidget/hooks';
+import { QuestionnaireResponseList } from '../../components/QuestionnaireResponseList';
+import { useQuestionnaireResponseDataList } from '../../components/QuestionnaireResponseList/hooks';
+import { formatHumanDateTime } from '../../utils/date';
 import { useEncounterDetails } from './hooks';
 
 export function EncounterDetails() {
@@ -23,39 +20,50 @@ export function EncounterDetails() {
 
     const encounterInfoRD = useEncounterDetails(encounterId);
 
-    const [questionnaireResponseListRD] = useService(async () => {
-        const response = await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {});
-        return mapSuccess(
-            response,
-            (bundle) => extractBundleResources(bundle).QuestionnaireResponse,
-        );
+    const questionnaireResponseDataListRD = useQuestionnaireResponseDataList({
+        encounter: encounterId,
     });
 
-    const [questionnaireListRD] = useService(async () => {
-        const response = await getFHIRResources<Questionnaire>('Questionnaire', {});
-        return mapSuccess(response, (bundle) => extractBundleResources(bundle).Questionnaire);
+    const questionnaireListRD = useQuestionnaireList({});
+
+    const remoteData = sequenceMap({
+        encounterInfo: encounterInfoRD,
+        questionnaireResponseDataList: questionnaireResponseDataListRD,
+        questionnaireList: questionnaireListRD,
     });
 
     return (
         <BaseLayout bgHeight={30}>
-            <PageHeader title="Приемы" />
-            <RenderRemoteData remoteData={encounterInfoRD}>
-                {({ encounter, practitioner, practitionerRole, patient }) => (
-                    <EncounterInfo
-                        encounter={encounter}
-                        practitioner={practitioner}
-                        practitionerRole={practitionerRole}
-                        patient={patient}
-                    />
+            <RenderRemoteData remoteData={remoteData}>
+                {({
+                    encounterInfo: { encounter, practitioner, practitionerRole, patient },
+                    questionnaireResponseDataList,
+                    questionnaireList,
+                }) => (
+                    <>
+                        <PageHeader
+                            title={encounter.serviceType?.coding?.[0]?.display || 'Консультация'}
+                        />
+                        <div style={{ display: 'flex', flexDirection: 'row' }}>
+                            <div style={{ width: '60%' }}>
+                                <QuestionnaireResponseList
+                                    questionnaireResponseDataList={questionnaireResponseDataList}
+                                />
+                            </div>
+                            <div style={{ marginLeft: '40px' }}>
+                                <div style={{ marginBottom: '50px' }}>
+                                    <EncounterInfo
+                                        encounter={encounter}
+                                        practitioner={practitioner}
+                                        practitionerRole={practitionerRole}
+                                        patient={patient}
+                                    />
+                                </div>
+                                <QuestionnaireListWidget questionnaireList={questionnaireList} />
+                            </div>
+                        </div>
+                    </>
                 )}
-            </RenderRemoteData>
-            <RenderRemoteData remoteData={questionnaireResponseListRD}>
-                {(questionnaireResponseList) => (
-                    <EncounterQResponseList questionnaireResponseList={questionnaireResponseList} />
-                )}
-            </RenderRemoteData>
-            <RenderRemoteData remoteData={questionnaireListRD}>
-                {(questionnaireList) => <TemplateList questionnaireList={questionnaireList} />}
             </RenderRemoteData>
         </BaseLayout>
     );
@@ -69,61 +77,28 @@ interface Props {
 }
 
 function EncounterInfo(props: Props) {
-    const { encounter, practitioner, practitionerRole, patient } = props;
+    const { encounter, practitioner, patient } = props;
     return (
         <div>
             <h2>Информация о приеме</h2>
             <div>
-                <p>Запланирован</p>
-                <p>{encounter.period?.start}</p>
+                <span>Дата и время:</span>
+                <span>
+                    {encounter.period?.start && formatHumanDateTime(encounter.period?.start)}
+                </span>
             </div>
             <div>
-                <p>Врач</p>
-                <p>{practitioner?.id}</p>
+                <span>Врач:</span>
+                <span>{renderHumanName(practitioner?.name?.[0])}</span>
             </div>
             <div>
-                <p>Роль</p>
-                <p>{practitionerRole?.id}</p>
+                <span>Услуга:</span>
+                <span>{encounter.serviceType?.coding?.[0]?.display}</span>
             </div>
             <div>
-                <p>Пациент</p>
-                <p>{patient?.id}</p>
+                <span>Пациент:</span>
+                <span>{renderHumanName(patient?.name?.[0])}</span>
             </div>
-        </div>
-    );
-}
-
-interface EQRLProps {
-    questionnaireResponseList: QuestionnaireResponse[];
-}
-
-function EncounterQResponseList(props: EQRLProps) {
-    const { questionnaireResponseList } = props;
-    return (
-        <div>
-            <h2>Документы</h2>
-            {questionnaireResponseList.map((qr) => (
-                <p>{qr.id}</p>
-            ))}
-        </div>
-    );
-}
-
-interface TemplatesProps {
-    questionnaireList: Questionnaire[];
-}
-
-function TemplateList(props: TemplatesProps) {
-    const { encounterId } = useParams<{ encounterId: string }>();
-    const { questionnaireList } = props;
-    return (
-        <div>
-            <h2>Шаблоны</h2>
-            {questionnaireList.map((q) => (
-                <p key={q.id}>
-                    <Link to={`/encounters/${encounterId}/qr/${q.id}`}>{q.id}</Link>
-                </p>
-            ))}
         </div>
     );
 }
