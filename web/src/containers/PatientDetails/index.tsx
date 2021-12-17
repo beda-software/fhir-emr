@@ -13,6 +13,7 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 import { renderMenu, RouteItem } from 'src/components/BaseHeader';
 import { BaseLayout } from 'src/components/BaseLayout';
 import Breadcrumbs from 'src/components/Breadcrumbs';
+import { PatientEncounter } from 'src/components/PatientEncounter';
 import { PatientGeneralInfo } from 'src/components/PatientGeneralInfo';
 
 export const PatientDetails = () => {
@@ -112,7 +113,7 @@ export const PatientDetails = () => {
                         {renderMenu(menuItems)}
                     </Menu>
                     {currentPathEnd === 'encounters' ? (
-                        <div>encounters</div>
+                        <PatientEncounter patientId={params.id} />
                     ) : currentPathEnd === 'documents' ? (
                         <div>documents</div>
                     ) : (
