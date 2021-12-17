@@ -98,7 +98,7 @@ export function App() {
                     render={() => <div>patient/:id/documents</div>}
                 />
                 <Route path="/documents/:id/edit" render={() => <div>documents/:id/edit</div>} />
-                <Route path="/encounters/:id" render={() => <div>Encounters/:id</div>} />
+                <Route path="/encounters/:encounterId" render={() => <EncounterDetails />} exact />
 
                 <Route path="/practitioners" render={() => <PractitionerList />} />
                 <Route path="/questionnaires" render={() => <QuestionnaireList />} />
