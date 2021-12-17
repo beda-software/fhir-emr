@@ -113,7 +113,7 @@ export function App() {
                 />
                 <Route path="/questionnaires/:id" render={() => <div>questionnaires/:id</div>} />
 
-                <Redirect to={referrer && referrer !== '/' ? referrer : '/patients'} />
+                <Redirect to={referrer && referrer !== '/' ? referrer : '/encounters'} />
             </Switch>
         );
     };
