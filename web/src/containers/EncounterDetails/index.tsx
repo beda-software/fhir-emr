@@ -1,7 +1,7 @@
 import { PageHeader } from 'antd';
 import { useParams, Link } from 'react-router-dom';
 
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData/index';
+import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
 import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess } from 'aidbox-react/lib/services/service';
@@ -16,34 +16,12 @@ import {
 } from 'shared/src/contrib/aidbox';
 
 import { BaseLayout } from '../../components/BaseLayout';
+import { useEncounterDetails } from './hooks';
 
 export function EncounterDetails() {
     const { encounterId } = useParams<{ encounterId: string }>();
 
-    if (!encounterId) {
-        return <p>No encounter id</p>;
-    }
-
-    const [encouunterInfoRD] = useService(async () => {
-        const response = await getFHIRResources<
-            Encounter | PractitionerRole | Practitioner | Patient
-        >('Encounter', {
-            _id: encounterId,
-            _include: [
-                'Encounter:subject',
-                'Encounter:participant:PractitionerRole',
-                'PractitionerRole:practitioner:Practitioner',
-            ],
-        });
-        return mapSuccess(response, (bundle) => {
-            const sourceMap = extractBundleResources(bundle);
-            const encounter = sourceMap.Encounter[0];
-            const patient = sourceMap.Patient[0];
-            const practitioner = sourceMap.Practitioner[0];
-            const practitionerRole = sourceMap.PractitionerRole[0];
-            return { encounter, practitioner, practitionerRole, patient };
-        });
-    });
+    const encounterInfoRD = useEncounterDetails(encounterId);
 
     const [questionnaireResponseListRD] = useService(async () => {
         const response = await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {});
@@ -61,7 +39,7 @@ export function EncounterDetails() {
     return (
         <BaseLayout bgHeight={30}>
             <PageHeader title="Приемы" />
-            <RenderRemoteData remoteData={encouunterInfoRD}>
+            <RenderRemoteData remoteData={encounterInfoRD}>
                 {({ encounter, practitioner, practitionerRole, patient }) => (
                     <EncounterInfo
                         encounter={encounter}
@@ -136,13 +114,14 @@ interface TemplatesProps {
 }
 
 function TemplateList(props: TemplatesProps) {
+    const { encounterId } = useParams<{ encounterId: string }>();
     const { questionnaireList } = props;
     return (
         <div>
             <h2>Шаблоны</h2>
             {questionnaireList.map((q) => (
                 <p key={q.id}>
-                    <Link to={`/${q.id}`}>{q.id}</Link>
+                    <Link to={`/encounters/${encounterId}/qr/${q.id}`}>{q.id}</Link>
                 </p>
             ))}
         </div>

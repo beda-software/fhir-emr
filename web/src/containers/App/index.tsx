@@ -15,6 +15,7 @@ import { EncounterList } from 'src/containers/EncounterList';
 import { PatientDetails } from 'src/containers/PatientDetails';
 import { PatientList } from 'src/containers/PatientList';
 import { PractitionerList } from 'src/containers/PractitionerList';
+import { QuestionnaireBuilder } from 'src/containers/QuestionnaireBuilder';
 import { QuestionnaireList } from 'src/containers/QuestionnaireList';
 import { LogoImage } from 'src/images/LogoImage';
 import { getAuthorizeUrl, getToken, getUserInfo, OAuthState } from 'src/services/auth';
@@ -22,6 +23,7 @@ import { parseOAuthState, setToken } from 'src/services/auth';
 import { history } from 'src/services/history';
 
 import { EncounterDetails } from '../EncounterDetails';
+import { EncounterQR } from '../EncounterQR';
 import s from './App.module.scss';
 
 export function App() {
@@ -94,9 +96,15 @@ export function App() {
                 <Route path="/patients/:id/documents" render={() => <PatientDetails />} />
                 <Route path="/documents/:id/edit" render={() => <div>documents/:id/edit</div>} />
                 <Route path="/encounters/:encounterId" render={() => <EncounterDetails />} exact />
+                <Route
+                    path="/encounters/:encounterId/qr/:questionnaireId"
+                    render={() => <EncounterQR />}
+                    exact
+                />
 
-                <Route path="/practitioners" render={() => <PractitionerList />} />
-                <Route path="/questionnaires" render={() => <QuestionnaireList />} />
+                <Route path="/practitioners" render={() => <PractitionerList />} exact />
+                <Route path="/questionnaires" render={() => <QuestionnaireList />} exact />
+                <Route path="/questionnaires/builder" render={() => <QuestionnaireBuilder />} />
                 <Route path="/questionnaires/:id" render={() => <div>questionnaires/:id</div>} />
 
                 <Redirect to={referrer && referrer !== '/' ? referrer : '/patients'} />
