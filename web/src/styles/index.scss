@@ -11,6 +11,11 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+@font-face {
+    font-family: 'Manrope';
+    src: local('Manrope'), url(./fonts/Manrope.ttf) format('truetype');
+}
+
 .ant-page-header-heading {
     align-items: center;
     margin-top: 20px;
