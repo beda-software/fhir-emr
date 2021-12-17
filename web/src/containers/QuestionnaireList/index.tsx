@@ -6,7 +6,7 @@ import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess } from 'aidbox-react/lib/services/service';
 
-import { Patient, Questionnaire } from 'shared/src/contrib/aidbox';
+import { Questionnaire } from 'shared/src/contrib/aidbox';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { BaseLayout } from 'src/components/BaseLayout';
@@ -36,8 +36,11 @@ const columns: ColumnsType<Questionnaire> = [
                     >
                         {() => (
                             <QuestionnaireResponseForm
-                                readOnly
                                 questionnaireLoader={questionnaireIdLoader(resource.id!)}
+                                launchContextParameters={resource.launchContext?.map((lc) => ({
+                                    name: lc.name!,
+                                    value: { string: 'undefined' },
+                                }))}
                             />
                         )}
                     </ModalTrigger>{' '}
@@ -75,7 +78,7 @@ export function QuestionnaireList() {
                 <Input.Search placeholder="Найти опросник" style={{ width: 264 }} />
                 <Button>Сбросить</Button>
             </div>
-            <Table<Patient>
+            <Table<Questionnaire>
                 rowKey={(p) => p.id!}
                 dataSource={isSuccess(questionnairesResponse) ? questionnairesResponse.data : []}
                 columns={columns}

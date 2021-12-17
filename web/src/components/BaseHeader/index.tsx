@@ -29,7 +29,6 @@ export function BaseHeader() {
         { title: 'Пациенты', path: '/patients' },
         { title: 'Врачи', path: '/practitioners' },
         { title: 'Опросники', path: '/questionnaires' },
-        // { title: 'Example', path: '/example' },
     ];
 
     const history = useHistory();

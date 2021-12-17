@@ -1,6 +1,5 @@
 import { Input, Form, InputNumber, Button } from 'antd';
 
-import { setByPath } from 'shared/src/utils/path';
 import {
     calcInitialContext,
     GroupItemProps,
@@ -33,9 +32,7 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly }: 
                 return (
                     <QuestionnaireResponseFormProvider
                         formValues={formValues}
-                        setFormValue={(name, value) =>
-                            form.setFieldsValue(setByPath(formValues, name, value))
-                        }
+                        setFormValues={form.setFieldsValue}
                         groupItemComponent={Group}
                         questionItemComponents={{
                             text: QuestionText,
