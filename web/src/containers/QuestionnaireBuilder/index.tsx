@@ -1,8 +1,14 @@
-import { Button, Form, FormInstance, Input } from 'antd';
+import { Button, Form, FormInstance, Input, notification, Select } from 'antd';
 import isEqual from 'lodash/isEqual';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { useHistory } from 'react-router';
 
+import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
+import { useService } from 'aidbox-react/lib/hooks/service';
+import { isSuccess, success } from 'aidbox-react/lib/libs/remoteData';
+import { getFHIRResource, saveFHIRResource } from 'aidbox-react/lib/services/fhir';
+import { formatError } from 'aidbox-react/lib/utils/error';
 import { uuid4 } from 'aidbox-react/lib/utils/uuid';
 
 import { Questionnaire, QuestionnaireItem } from 'shared/src/contrib/aidbox';
@@ -30,7 +36,32 @@ function isNewDraggableItem(item: DraggableItem): item is NewDraggableItem {
     return item.type === 'new';
 }
 
-export function QuestionnaireBuilder() {
+interface Props {
+    questionnaireId?: string;
+}
+
+export function QuestionnaireBuilder({ questionnaireId }: Props) {
+    const history = useHistory();
+    const [questionnaireRemoteData, manager] = useService<Questionnaire>(async () => {
+        if (questionnaireId) {
+            return await getFHIRResource<Questionnaire>({
+                resourceType: 'Questionnaire',
+                id: questionnaireId,
+            });
+        }
+        return success({ resourceType: 'Questionnaire', status: 'draft' });
+    });
+    const onSubmit = async (resource: Questionnaire) => {
+        const saveResponse = await saveFHIRResource(resource);
+        if (isSuccess(saveResponse)) {
+            manager.set(saveResponse.data);
+            history.replace(`/questionnaires/${saveResponse.data.id}/edit`);
+            notification.success({ message: 'Опросник сохранен' });
+        } else {
+            notification.error({ message: formatError(saveResponse.error) });
+        }
+    };
+
     return (
         <BaseLayout>
             <DndProvider backend={HTML5Backend}>
@@ -46,51 +77,69 @@ export function QuestionnaireBuilder() {
                     <GroupItemTemplate />
                     <PrimitiveComponentTemplate />
                 </div>
-                <DroppableQuestionnaire />
+                <RenderRemoteData remoteData={questionnaireRemoteData}>
+                    {(questionnaire) => (
+                        <DroppableQuestionnaire questionnaire={questionnaire} onSubmit={onSubmit} />
+                    )}
+                </RenderRemoteData>
             </DndProvider>
         </BaseLayout>
     );
 }
 
-const questionnaire: Questionnaire = {
-    resourceType: 'Questionnaire',
-    status: 'draft',
-    item: [],
-};
-
-function DroppableQuestionnaire() {
+function DroppableQuestionnaire({
+    questionnaire,
+    onSubmit,
+}: {
+    questionnaire: Questionnaire;
+    onSubmit: (values: Questionnaire) => Promise<any>;
+}) {
     const [form] = Form.useForm<Questionnaire>();
 
     return (
         <Form<Questionnaire>
             form={form}
             initialValues={questionnaire}
-            onFinish={(values) => console.log('final', { ...questionnaire, ...values })}
+            onFinish={(values) => onSubmit({ ...questionnaire, ...values })}
         >
-            {() => {
-                const formValues = form.getFieldsValue();
-                console.log('value', formValues);
+            <Form.Item shouldUpdate>
+                {() => {
+                    const formValues = form.getFieldsValue();
+                    console.log('value', formValues);
 
-                return (
-                    <div>
-                        <Form.Item>
-                            <Button htmlType="submit" type="primary">
-                                Сохранить
-                            </Button>
-                        </Form.Item>
-                        <QuestionnaireItemComponents
-                            items={formValues.item}
-                            parentPath={[]}
-                            form={form}
-                        />
-                        <Form.Item>
-                            <Button htmlType="submit" type="primary">
-                                Сохранить
-                            </Button>
-                        </Form.Item>
-                    </div>
-                );
-            }}
+                    return (
+                        <div>
+                            <Form.Item>
+                                <Button htmlType="submit" type="primary">
+                                    Сохранить
+                                </Button>
+                            </Form.Item>
+                            <Form.Item name="name" label="Название">
+                                <Input />
+                            </Form.Item>
+
+                            <Form.Item name="status" label="Статус">
+                                <Select
+                                    options={[
+                                        { value: 'draft', label: 'Draft' },
+                                        { value: 'active', label: 'Active' },
+                                    ]}
+                                />
+                            </Form.Item>
+                            <QuestionnaireItemComponents
+                                items={formValues.item}
+                                parentPath={[]}
+                                form={form}
+                            />
+                            <Form.Item>
+                                <Button htmlType="submit" type="primary">
+                                    Сохранить
+                                </Button>
+                            </Form.Item>
+                        </div>
+                    );
+                }}
+            </Form.Item>
         </Form>
     );
 }

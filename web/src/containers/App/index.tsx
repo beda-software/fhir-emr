@@ -105,6 +105,12 @@ export function App() {
                 <Route path="/practitioners" render={() => <PractitionerList />} exact />
                 <Route path="/questionnaires" render={() => <QuestionnaireList />} exact />
                 <Route path="/questionnaires/builder" render={() => <QuestionnaireBuilder />} />
+                <Route
+                    path="/questionnaires/:id/edit"
+                    render={(routeParams) => (
+                        <QuestionnaireBuilder questionnaireId={routeParams.match.params.id} />
+                    )}
+                />
                 <Route path="/questionnaires/:id" render={() => <div>questionnaires/:id</div>} />
 
                 <Redirect to={referrer && referrer !== '/' ? referrer : '/patients'} />
