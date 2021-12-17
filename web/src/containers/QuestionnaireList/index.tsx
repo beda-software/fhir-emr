@@ -1,5 +1,6 @@
 import { PageHeader, Button, Table, Input } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
+import { Link } from 'react-router-dom';
 
 import { useService } from 'aidbox-react/lib/hooks/service';
 import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
@@ -10,7 +11,6 @@ import { Questionnaire } from 'shared/src/contrib/aidbox';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { BaseLayout } from 'src/components/BaseLayout';
-import { ModalNewQuestionnaire } from 'src/components/ModalNewQuestionnaire';
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 
@@ -44,7 +44,9 @@ const columns: ColumnsType<Questionnaire> = [
                             />
                         )}
                     </ModalTrigger>{' '}
-                    <Button type="link">Редактировать</Button>
+                    <Link to={`/questionnaires/${resource.id}/edit`}>
+                        <Button type="link">Редактировать</Button>
+                    </Link>
                 </>
             );
         },
@@ -61,7 +63,14 @@ export function QuestionnaireList() {
 
     return (
         <BaseLayout bgHeight={281}>
-            <PageHeader title="Опросники" extra={[<ModalNewQuestionnaire />]} />
+            <PageHeader
+                title="Опросники"
+                extra={[
+                    <Link to="/questionnaires/builder">
+                        <Button type="primary">Новый опросник</Button>
+                    </Link>,
+                ]}
+            />
             <div
                 style={{
                     position: 'relative',
