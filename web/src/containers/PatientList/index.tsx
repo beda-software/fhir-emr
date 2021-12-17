@@ -1,4 +1,3 @@
-
 import { PageHeader, Button, Table, Input } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 
@@ -15,10 +14,40 @@ import { ModalNewPatient } from 'src/components/ModalNewPatient';
 
 const columns: ColumnsType<Patient> = [
     {
-        title: 'Name',
+        title: 'Пациент',
         dataIndex: 'name',
         key: 'name',
         render: (_text, resource) => renderHumanName(resource.name?.[0]),
+    },
+    {
+        title: 'Дата рождения',
+        dataIndex: 'birthDate',
+        key: 'birthDate',
+        render: (_text, resource) => {
+            console.log(resource.birthDate);
+            return resource.birthDate;
+        },
+    },
+    {
+        title: 'СНИЛС',
+        dataIndex: 'identifier',
+        key: 'identifier',
+        render: (_text, resource) => {
+            console.log(resource.identifier?.[0].value);
+            return resource.identifier?.[0].value;
+        },
+    },
+    {
+        title: 'Действия',
+        dataIndex: 'actions',
+        key: 'actions',
+        render: (_text, resource) => {
+            return (
+                <Button type="link" block>
+                    Редактировать
+                </Button>
+            );
+        },
     },
 ];
 
@@ -32,12 +61,7 @@ export function PatientList() {
 
     return (
         <BaseLayout bgHeight={281}>
-            <PageHeader
-                title="Пациенты"
-                extra={[
-                    <ModalNewPatient />,
-                ]}
-            />
+            <PageHeader title="Пациенты" extra={[<ModalNewPatient />]} />
             <div
                 style={{
                     position: 'relative',
