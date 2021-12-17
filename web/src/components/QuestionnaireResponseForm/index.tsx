@@ -15,11 +15,12 @@ import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireR
 interface Props extends QuestionnaireResponseFormProps {
     onSuccess?: (resource: any) => void;
     onFailure?: (error: any) => void;
+    readOnly?: boolean;
 }
 
 export function QuestionnaireResponseForm(props: Props) {
     const { response, handleSave } = useQuestionnaireResponseFormData(props);
-    const { onSuccess, onFailure } = props;
+    const { onSuccess, onFailure, readOnly } = props;
 
     const onSubmit = async (formData: QuestionnaireResponseFormData) => {
         const saveResponse = await handleSave(formData);
@@ -51,7 +52,11 @@ export function QuestionnaireResponseForm(props: Props) {
     return (
         <RenderRemoteData remoteData={response}>
             {(formData) => (
-                <BaseQuestionnaireResponseForm formData={formData} onSubmit={onSubmit} />
+                <BaseQuestionnaireResponseForm
+                    formData={formData}
+                    onSubmit={onSubmit}
+                    readOnly={readOnly}
+                />
             )}
         </RenderRemoteData>
     );

@@ -8,14 +8,16 @@ import {
     QuestionItems,
     QuestionnaireResponseFormData,
     QuestionnaireResponseFormProvider,
+    useQuestionnaireResponseFormContext,
 } from 'shared/src/utils/qrf';
 
 interface Props {
     formData: QuestionnaireResponseFormData;
     onSubmit: (formData: QuestionnaireResponseFormData) => Promise<any>;
+    readOnly?: boolean;
 }
 
-export function BaseQuestionnaireResponseForm({ formData, onSubmit }: Props) {
+export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly }: Props) {
     const [form] = Form.useForm();
 
     return (
@@ -41,6 +43,7 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit }: Props) {
                             decimal: QuestionDecimal,
                             integer: QuestionInteger,
                         }}
+                        readOnly={readOnly}
                     >
                         <>
                             <QuestionItems
@@ -48,9 +51,11 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit }: Props) {
                                 parentPath={[]}
                                 context={calcInitialContext(formData.context, formValues)}
                             />
-                            <Button type="primary" htmlType="submit">
-                                Отправить
-                            </Button>
+                            {!readOnly && (
+                                <Button type="primary" htmlType="submit">
+                                    Отправить
+                                </Button>
+                            )}
                         </>
                     </QuestionnaireResponseFormProvider>
                 );
@@ -64,34 +69,37 @@ function Group(_props: GroupItemProps) {
 }
 
 function QuestionText({ parentPath, questionItem }: QuestionItemProps) {
-    const { linkId, text } = questionItem;
+    const qrfContext = useQuestionnaireResponseFormContext();
+    const { linkId, text, readOnly } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
 
     return (
         <Form.Item label={text} name={fieldName}>
-            <Input style={inputStyle} />
+            <Input style={inputStyle} readOnly={readOnly || qrfContext.readOnly} />
         </Form.Item>
     );
 }
 
 function QuestionInteger({ parentPath, questionItem }: QuestionItemProps) {
-    const { linkId, text } = questionItem;
+    const qrfContext = useQuestionnaireResponseFormContext();
+    const { linkId, text, readOnly } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'integer'];
 
     return (
         <Form.Item label={text} name={fieldName}>
-            <InputNumber style={inputStyle} />
+            <InputNumber style={inputStyle} readOnly={readOnly || qrfContext.readOnly} />
         </Form.Item>
     );
 }
 
 function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps) {
-    const { linkId, text } = questionItem;
+    const qrfContext = useQuestionnaireResponseFormContext();
+    const { linkId, text, readOnly } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'decimal'];
 
     return (
         <Form.Item label={text} name={fieldName}>
-            <InputNumber style={inputStyle} />
+            <InputNumber style={inputStyle} readOnly={readOnly || qrfContext.readOnly} />
         </Form.Item>
     );
 }
