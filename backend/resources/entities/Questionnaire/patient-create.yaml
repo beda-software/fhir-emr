@@ -8,6 +8,7 @@ item:
   - linkId: patient-id
     type: string
     text: patientId
+    hidden: true
   - linkId: last-name
     type: string
     text: Фамилия

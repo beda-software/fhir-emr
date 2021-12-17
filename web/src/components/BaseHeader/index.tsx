@@ -3,8 +3,11 @@ import { Header } from 'antd/lib/layout/layout';
 import History from 'history';
 import { Link, useHistory } from 'react-router-dom';
 
+import { resetInstanceToken } from 'aidbox-react/lib/services/instance';
+
 import { AvatarImage } from 'src/images/AvatarImage';
 import { LogoImage } from 'src/images/LogoImage';
+import { logout } from 'src/services/auth';
 
 export interface RouteItem {
     path: string;
@@ -14,6 +17,13 @@ export interface RouteItem {
 }
 
 export function BaseHeader() {
+    const doLogout = async () => {
+        await logout();
+        resetInstanceToken();
+        localStorage.clear();
+        window.location.href = '/';
+    };
+
     const menuItems: RouteItem[] = [
         { title: 'Приемы', path: '/encounters' },
         { title: 'Пациенты', path: '/patients' },
@@ -31,10 +41,15 @@ export function BaseHeader() {
         <Header style={headerStyle}>
             <LogoImage style={titleStyle} />
             <div style={rightSideStyle}>
-                <Menu mode="horizontal" theme="light" selectedKeys={menuDefaultSelectedKeys} style={{width: 400}}>
+                <Menu
+                    mode="horizontal"
+                    theme="light"
+                    selectedKeys={menuDefaultSelectedKeys}
+                    style={{ width: 400 }}
+                >
                     {renderMenu(menuItems)}
                 </Menu>
-                <Button onClick={() => console.log('exit')} style={exitStyle}>
+                <Button onClick={doLogout} style={exitStyle}>
                     Выйти
                 </Button>
                 <AvatarImage style={avatarStyle} />

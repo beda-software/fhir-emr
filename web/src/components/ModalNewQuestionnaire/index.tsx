@@ -6,22 +6,22 @@ import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-f
 import { ModalTrigger } from '../ModalTrigger';
 import { QuestionnaireResponseForm } from '../QuestionnaireResponseForm';
 
-export const ModalNewPatient = () => {
+export const ModalNewQuestionnaire = () => {
     return (
         <ModalTrigger
-            title="Добавить пациента"
+            title="Добавить опросник"
             trigger={
                 <Button icon={<PlusOutlined />} type="primary">
-                    Новый пациент
+                    Новый опросник
                 </Button>
             }
         >
             {({ closeModal }) => (
                 <QuestionnaireResponseForm
-                    questionnaireLoader={questionnaireIdLoader('patient-create')}
+                    questionnaireLoader={questionnaireIdLoader('questionnaire-create')}
                     onSuccess={() => {
                         closeModal();
-                        notification.success({ message: 'Пациент успешно создан' });
+                        notification.success({ message: 'Опросник успешно создан' });
                     }}
                 />
             )}
