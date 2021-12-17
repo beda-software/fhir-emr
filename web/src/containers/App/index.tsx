@@ -13,9 +13,9 @@ import { extractErrorCode } from 'aidbox-react/lib/utils/error';
 import { getWelcomeString } from 'shared/src/utils/misc';
 
 import { Button } from 'src/components/Button';
-import { DocumentContainer } from 'src/containers/DocumentContainer';
 import { EncounterList } from 'src/containers/EncounterList';
 import { PatientList } from 'src/containers/PatientList';
+import { PractitionerList } from 'src/containers/PractitionerList';
 import { QuestionnaireList } from 'src/containers/QuestionnaireList';
 import { getAuthorizeUrl, getToken, getUserInfo, OAuthState } from 'src/services/auth';
 import { parseOAuthState, setToken } from 'src/services/auth';
@@ -98,7 +98,7 @@ export function App() {
                 <Route path="/documents/:id/edit" render={() => <div>documents/:id/edit</div>} />
                 <Route path="/encounters/:id" render={() => <div>Encounters/:id</div>} />
 
-                <Route path="/practitioners" render={() => <DocumentContainer />} />
+                <Route path="/practitioners" render={() => <PractitionerList />} />
                 <Route path="/questionnaires" render={() => <QuestionnaireList />} />
                 <Route path="/questionnaires/:id" render={() => <div>questionnaires/:id</div>} />
                 <Route path="/example" render={() => <Example />} />
