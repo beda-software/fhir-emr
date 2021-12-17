@@ -1,0 +1,60 @@
+id: cardiology-example
+resourceType: Questionnaire
+name: cardiology-example
+title: Консультация кардиолога
+status: active
+mapping:
+  - id: encounter-create
+    resourceType: Mapping
+item:
+  - linkId: complaints
+    type: text
+    text: Жалобы
+  - linkId: examination-objective
+    type: text
+    text: Объективно
+  - linkId: observations-data
+    type: text
+    text: Данные инструментальных обследований
+  - linkId: lab-data
+    type: text
+    text: Данные лабораторных обследований
+  - linkId: group-ds
+    type: group
+    text: Диагноз
+    item:
+      - linkId: ds-main
+        type: group
+        text: Основной
+        item:
+          - linkId: ds-main-icd-10
+            type: choice
+            text: МКБ-10
+            answerOption:
+              - value:
+                  Coding:
+                    system: http://hl7.org/fhir/sid/icd-10
+                    code: "i-20"
+                    display: "I20 Стенокардия [грудная жаба]"
+              - value:
+                  Coding:
+                    system: http://hl7.org/fhir/sid/icd-10
+                    code: "i-21"
+                    display: "I21 Острый инфаркт миокарда"
+              - value:
+                  Coding:
+                    system: http://hl7.org/fhir/sid/icd-10
+                    code: "i-25"
+                    display: "I25 Хроническая ишемическая болезнь сердца"
+          - linkId: ds-main-text
+            type: text
+            text: Описание
+      - linkId: ds-supplimentary
+        type: text
+        text: Дополнительный
+      - linkId: ds-add
+        type: text
+        text: Сопутствующий
+      - linkId: ds-background
+        type: text
+        text: Фоновый
