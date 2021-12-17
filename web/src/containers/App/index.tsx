@@ -22,6 +22,7 @@ import { getAuthorizeUrl, getToken, getUserInfo, OAuthState } from 'src/services
 import { parseOAuthState, setToken } from 'src/services/auth';
 import { history } from 'src/services/history';
 
+import { EncounterDetails } from '../EncounterDetails';
 import s from './App.module.scss';
 
 export function App() {
@@ -99,7 +100,7 @@ export function App() {
                     render={() => <div>patient/:id/documents</div>}
                 />
                 <Route path="/documents/:id/edit" render={() => <div>documents/:id/edit</div>} />
-                <Route path="/encounters/:id" render={() => <div>Encounters/:id</div>} />
+                <Route path="/encounters/:encounterId" render={() => <EncounterDetails />} exact />
 
                 <Route path="/practitioners" render={() => <PractitionerList />} exact />
                 <Route path="/questionnaires" render={() => <QuestionnaireList />} exact />
