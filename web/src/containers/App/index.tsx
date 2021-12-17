@@ -15,6 +15,7 @@ import { EncounterList } from 'src/containers/EncounterList';
 import { PatientDetails } from 'src/containers/PatientDetails';
 import { PatientList } from 'src/containers/PatientList';
 import { PractitionerList } from 'src/containers/PractitionerList';
+import { QuestionnaireBuilder } from 'src/containers/QuestionnaireBuilder';
 import { QuestionnaireList } from 'src/containers/QuestionnaireList';
 import { LogoImage } from 'src/images/LogoImage';
 import { getAuthorizeUrl, getToken, getUserInfo, OAuthState } from 'src/services/auth';
@@ -107,8 +108,9 @@ export function App() {
                     exact
                 />
 
-                <Route path="/practitioners" render={() => <PractitionerList />} />
-                <Route path="/questionnaires" render={() => <QuestionnaireList />} />
+                <Route path="/practitioners" render={() => <PractitionerList />} exact />
+                <Route path="/questionnaires" render={() => <QuestionnaireList />} exact />
+                <Route path="/questionnaires/builder" render={() => <QuestionnaireBuilder />} />
                 <Route path="/questionnaires/:id" render={() => <div>questionnaires/:id</div>} />
 
                 <Redirect to={referrer && referrer !== '/' ? referrer : '/patients'} />
