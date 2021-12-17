@@ -23,19 +23,13 @@ const columns: ColumnsType<Patient> = [
         title: 'Дата рождения',
         dataIndex: 'birthDate',
         key: 'birthDate',
-        render: (_text, resource) => {
-            console.log(resource.birthDate);
-            return resource.birthDate;
-        },
+        render: (_text, resource) => resource.birthDate,
     },
     {
         title: 'СНИЛС',
         dataIndex: 'identifier',
         key: 'identifier',
-        render: (_text, resource) => {
-            console.log(resource.identifier?.[0].value);
-            return resource.identifier?.[0].value;
-        },
+        render: (_text, resource) => resource.identifier?.[0].value,
     },
     {
         title: 'Действия',
