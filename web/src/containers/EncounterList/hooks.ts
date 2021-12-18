@@ -26,10 +26,14 @@ export function useEncounterList(searchParams: SearchParams) {
             const encounters = sourceMap.Encounter;
             const patients = sourceMap.Patient;
             const practitioners = sourceMap.Practitioner;
+            const practitionerRoles = sourceMap.PractitionerRole;
             return encounters.map((encounter) => {
                 const patient = patients.find((p) => p.id === encounter.subject?.id);
+                const practitionerRole = practitionerRoles.find(
+                    (pR) => pR.id === encounter.participant?.[0].individual?.id,
+                );
                 const practitioner = practitioners.find(
-                    (p) => p.id === encounter.participant?.[0].individual?.id,
+                    (p) => p.id === practitionerRole?.practitioner?.id,
                 );
                 return {
                     key: encounter.id,

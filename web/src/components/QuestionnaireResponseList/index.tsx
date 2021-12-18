@@ -31,7 +31,7 @@ export function QuestionnaireResponseList(props: Props) {
                         }}
                     >
                         <span>{questionnaireResponse.id}</span>
-                        <span>Автор</span>
+                        <span>Бурда Борис</span>
                         <span>
                             {questionnaireResponse.meta?.createdAt &&
                                 formatHumanDateTime(questionnaireResponse.meta?.createdAt)}

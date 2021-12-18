@@ -14,7 +14,9 @@ export function QuestionnaireListWidget(props: Props) {
             <h2>Шаблоны</h2>
             {questionnaireList.map((q) => (
                 <p key={q.id}>
-                    <Link to={`/encounters/${encounterId}/qr/${q.id}`}>{q.id}</Link>
+                    <Link to={`/encounters/${encounterId}/qr/${q.id}`}>
+                        {q.title || q.name || q.id}
+                    </Link>
                 </p>
             ))}
         </div>
