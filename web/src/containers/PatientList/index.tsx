@@ -39,7 +39,7 @@ const columns: ColumnsType<Patient> = [
         render: (_text, resource) => {
             return (
                 <Button type="link" block>
-                    Редактировать
+                    Просмотр
                 </Button>
             );
         },

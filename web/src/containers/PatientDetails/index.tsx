@@ -1,5 +1,4 @@
-import { Menu, PageHeader } from 'antd';
-import { Button } from 'antd/lib/radio';
+import { Menu, PageHeader, Button, notification } from 'antd';
 import { useEffect, useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 
@@ -8,13 +7,16 @@ import { useService } from 'aidbox-react/lib/hooks/service';
 import { getFHIRResource } from 'aidbox-react/lib/services/fhir';
 
 import { Patient } from 'shared/src/contrib/aidbox';
+import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { renderMenu, RouteItem } from 'src/components/BaseHeader';
 import { BaseLayout } from 'src/components/BaseLayout';
 import Breadcrumbs from 'src/components/Breadcrumbs';
+import { ModalTrigger } from 'src/components/ModalTrigger';
 import { PatientEncounter } from 'src/components/PatientEncounter';
 import { PatientGeneralInfo } from 'src/components/PatientGeneralInfo';
+import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 
 export const PatientDetails = () => {
     const location = useLocation<any>();
@@ -22,7 +24,7 @@ export const PatientDetails = () => {
 
     const [currentPath, setCurrentPath] = useState(location.pathname);
 
-    const [patientResponse] = useService(
+    const [patientResponse, manager] = useService(
         async () => await getFHIRResource<Patient>({ resourceType: 'Patient', id: params.id }),
     );
 
@@ -32,22 +34,29 @@ export const PatientDetails = () => {
         { title: 'Мед Карта', path: `/patients/${params.id}/documents` },
     ];
 
-    const generalInfo = (patient: Patient) => [
+    const getGeneralInfo = (patient: Patient) => [
         [
             { title: 'Дата рождения', value: patient.birthDate },
             {
                 title: 'СНИЛС',
                 value:
-                    patient.identifier?.[0].system === 'snils'
+                    patient.identifier?.[0].system === '1.2.643.100.3'
                         ? patient.identifier?.[0].value
-                        : 'Снилс отсутсвует',
+                        : 'Отсутсвует',
             },
-            { title: 'Паспортные данные', value: 'Паспортные данные' },
+            { title: 'Паспортные данные', value: 'Отсутствуют' },
         ],
         [{ title: 'Мобильный телефон', value: patient.telecom?.[0].value }],
         [
-            { title: 'Дата рождения', value: patient.birthDate },
-            { title: 'Пол', value: patient.gender },
+            {
+                title: 'Пол',
+                value:
+                    patient.gender == 'male'
+                        ? 'Мужской'
+                        : patient.gender === 'female'
+                        ? 'Женский'
+                        : 'Отсутсвует',
+            },
         ],
     ];
 
@@ -91,36 +100,66 @@ export const PatientDetails = () => {
 
     return (
         <RenderRemoteData remoteData={patientResponse}>
-            {(patient) => (
-                <BaseLayout bgHeight={194}>
-                    <PageHeader
-                        title={renderHumanName(patient.name?.[0])}
-                        extra={[
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <div style={{ marginRight: 37 }}>31.12.1954</div>
-                                <div style={{ marginRight: 37 }}>123-123-123 09</div>
-                                <Button>Редактировать</Button>
-                            </div>,
-                        ]}
-                        breadcrumb={<Breadcrumbs crumbs={crumbs(patient)} />}
-                    />
-                    <Menu
-                        mode="horizontal"
-                        theme="light"
-                        selectedKeys={[currentPath]}
-                        style={{ width: 400 }}
-                    >
-                        {renderMenu(menuItems)}
-                    </Menu>
-                    {currentPathEnd === 'encounters' ? (
-                        <PatientEncounter patientId={params.id} />
-                    ) : currentPathEnd === 'documents' ? (
-                        <div>documents</div>
-                    ) : (
-                        <PatientGeneralInfo generalInfo={generalInfo(patient)} />
-                    )}
-                </BaseLayout>
-            )}
+            {(patient) => {
+                const generalInfo = getGeneralInfo(patient);
+                return (
+                    <BaseLayout bgHeight={194}>
+                        <PageHeader
+                            title={renderHumanName(patient.name?.[0])}
+                            extra={[
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <div style={{ marginRight: 37 }}>{patient.birthDate}</div>
+                                    <div style={{ marginRight: 37 }}>
+                                        {patient.identifier?.[0]?.value}
+                                    </div>
+                                    <ModalTrigger
+                                        title="Редактирование пациента"
+                                        trigger={
+                                            <Button type="link" block>
+                                                Редактировать
+                                            </Button>
+                                        }
+                                    >
+                                        {({ closeModal }) => (
+                                            <QuestionnaireResponseForm
+                                                questionnaireLoader={questionnaireIdLoader(
+                                                    'patient-edit',
+                                                )}
+                                                launchContextParameters={[
+                                                    { name: 'Patient', resource: patient },
+                                                ]}
+                                                onSuccess={() => {
+                                                    notification.success({
+                                                        message: 'Пациент сохранен',
+                                                    });
+                                                    manager.reload();
+                                                    closeModal();
+                                                }}
+                                            />
+                                        )}
+                                    </ModalTrigger>
+                                </div>,
+                            ]}
+                            breadcrumb={<Breadcrumbs crumbs={crumbs(patient)} />}
+                        />
+                        <Menu
+                            mode="horizontal"
+                            theme="light"
+                            selectedKeys={[currentPath]}
+                            style={{ width: 400 }}
+                        >
+                            {renderMenu(menuItems)}
+                        </Menu>
+                        {currentPathEnd === 'encounters' ? (
+                            <PatientEncounter patientId={params.id} />
+                        ) : currentPathEnd === 'documents' ? (
+                            <div>documents</div>
+                        ) : (
+                            <PatientGeneralInfo generalInfo={generalInfo} />
+                        )}
+                    </BaseLayout>
+                );
+            }}
         </RenderRemoteData>
     );
 };
