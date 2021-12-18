@@ -212,7 +212,6 @@ function FieldSettingsForm({ form, path, hideSettingsForm }: FieldSettingsFormTy
     const removeField = useCallback(() => {
         if (path !== undefined) {
             form.setFieldsValue(unsetByPath(form.getFieldsValue(), path));
-            console.log(unsetByPath(form.getFieldsValue(), path));
             hideSettingsForm();
         }
     }, [form.setFieldsValue, path]);
@@ -291,16 +290,32 @@ function FieldSettingsForm({ form, path, hideSettingsForm }: FieldSettingsFormTy
                     </Radio.Group>
                 </Form.Item>
             )} */}
-            <Form.Item name={[...path, 'required']} style={{ marginBottom: 4 }}>
+            <Form.Item
+                name={[...path, 'required']}
+                valuePropName="checked"
+                style={{ marginBottom: 4 }}
+            >
                 <Checkbox>Обязательное</Checkbox>
             </Form.Item>
-            <Form.Item name={[...path, 'repeats']} style={{ marginBottom: 4 }}>
+            <Form.Item
+                name={[...path, 'repeats']}
+                style={{ marginBottom: 4 }}
+                valuePropName="checked"
+            >
                 <Checkbox>Повторяющийся</Checkbox>
             </Form.Item>
-            <Form.Item name={[...path, 'readOnly']} style={{ marginBottom: 4 }}>
+            <Form.Item
+                name={[...path, 'readOnly']}
+                style={{ marginBottom: 4 }}
+                valuePropName="checked"
+            >
                 <Checkbox>Read-only</Checkbox>
             </Form.Item>
-            <Form.Item name={[...path, 'hidden']} style={{ marginBottom: 4 }}>
+            <Form.Item
+                name={[...path, 'hidden']}
+                style={{ marginBottom: 4 }}
+                valuePropName="checked"
+            >
                 <Checkbox>Скрытое</Checkbox>
             </Form.Item>
         </div>
@@ -331,7 +346,6 @@ function DroppableQuestionnaire({
             <Form.Item shouldUpdate>
                 {() => {
                     const formValues = form.getFieldsValue();
-                    console.log('value', formValues);
 
                     return (
                         <div>
