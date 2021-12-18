@@ -1,5 +1,6 @@
 import { DeleteFilled, DragOutlined, SaveOutlined } from '@ant-design/icons';
 import {
+    Affix,
     Button,
     Checkbox,
     Col,
@@ -83,7 +84,7 @@ export function QuestionnaireBuilder({ questionnaireId }: Props) {
     };
 
     return (
-        <BaseLayout bgHeight={126} style={{ backgroundColor: '#F7F9FC' }}>
+        <BaseLayout bgHeight={126} style={{ backgroundColor: '#F7F9FC', height: 'auto' }}>
             <RenderRemoteData remoteData={questionnaireRemoteData}>
                 {(questionnaire) => <Content questionnaire={questionnaire} onSubmit={onSubmit} />}
             </RenderRemoteData>
@@ -117,7 +118,6 @@ function Content({
                 <Col>
                     <Form.Item
                         name="name"
-                        label="Название"
                         style={{
                             flexDirection: 'row',
                             alignItems: 'center',
@@ -125,13 +125,12 @@ function Content({
                             height: '100%',
                         }}
                     >
-                        <Input />
+                        <Input placeholder="Название" />
                     </Form.Item>
                 </Col>
                 <Col>
                     <Form.Item
                         name="status"
-                        label="Статус"
                         style={{
                             flexDirection: 'row',
                             alignItems: 'center',
@@ -140,6 +139,7 @@ function Content({
                         }}
                     >
                         <Select
+                            placeholder="Статус"
                             options={[
                                 { value: 'draft', label: 'Draft' },
                                 { value: 'active', label: 'Active' },
@@ -148,24 +148,26 @@ function Content({
                     </Form.Item>
                 </Col>
             </Row>
-            <Row gutter={20} style={{ backgroundColor: '#F7F9FC', maxHeight: '100vh' }}>
+            <Row gutter={20} style={{ backgroundColor: '#F7F9FC' }}>
                 <Col flex={1} style={{ padding: 0, overflow: 'scroll' }}>
                     <DndProvider backend={HTML5Backend}>
-                        <div
-                            style={{
-                                backgroundColor: '#ffffff',
-                                flex: 1,
-                                height: 72,
-                                display: 'flex',
-                                flexDirection: 'row',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <GroupItemTemplate />
-                            <PrimitiveComponentTemplate />
-                            <div style={{ marginLeft: 8 }}>Перетяните элемент в форму</div>
-                        </div>
+                        <Affix offsetTop={0}>
+                            <div
+                                style={{
+                                    backgroundColor: '#ffffff',
+                                    flex: 1,
+                                    height: 72,
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <GroupItemTemplate />
+                                <PrimitiveComponentTemplate />
+                                <div style={{ marginLeft: 8 }}>Перетяните элемент в форму</div>
+                            </div>
+                        </Affix>
                         <DroppableQuestionnaire
                             form={form}
                             editablePath={editablePath}
@@ -174,7 +176,9 @@ function Content({
                     </DndProvider>
                 </Col>
                 <Col style={{ width: 384, padding: 0 }}>
-                    <FieldSettingsForm path={editablePath} form={form} />
+                    <Affix offsetTop={0}>
+                        <FieldSettingsForm path={editablePath} form={form} />
+                    </Affix>
                 </Col>
             </Row>
         </Form>
