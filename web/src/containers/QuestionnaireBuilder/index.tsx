@@ -318,7 +318,16 @@ function DroppableQuestionnaire({
     setEditablePath: (path: FieldPath) => void;
 }) {
     return (
-        <div style={{ margin: 40, background: '#ffffff', borderRadius: 10 }}>
+        <div
+            style={{
+                margin: 40,
+                background: '#ffffff',
+                borderRadius: 10,
+                marginBottom: 80,
+                padding: 24,
+                overflow: 'hidden',
+            }}
+        >
             <Form.Item shouldUpdate>
                 {() => {
                     const formValues = form.getFieldsValue();
