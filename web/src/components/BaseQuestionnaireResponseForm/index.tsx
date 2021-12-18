@@ -66,8 +66,15 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly }: 
     );
 }
 
-function Group(_props: GroupItemProps) {
-    return null;
+function Group({ parentPath, questionItem, context }: GroupItemProps) {
+    const { linkId, text, item } = questionItem;
+    const fieldName = [...parentPath, linkId];
+
+    return (
+        <Form.Item label={<b>{text}</b>} name={fieldName}>
+            <QuestionItems questionItems={item!} parentPath={fieldName} context={context[0]} />
+        </Form.Item>
+    );
 }
 
 function QuestionString({ parentPath, questionItem }: QuestionItemProps) {
