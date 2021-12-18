@@ -83,7 +83,7 @@ export function QuestionnaireBuilder({ questionnaireId }: Props) {
     };
 
     return (
-        <BaseLayout bgHeight={126}>
+        <BaseLayout bgHeight={126} style={{ backgroundColor: '#F7F9FC' }}>
             <RenderRemoteData remoteData={questionnaireRemoteData}>
                 {(questionnaire) => <Content questionnaire={questionnaire} onSubmit={onSubmit} />}
             </RenderRemoteData>
@@ -110,6 +110,7 @@ function Content({
             form={form}
             initialValues={questionnaire}
             onFinish={(values) => onSubmit({ ...questionnaire, ...values })}
+            style={{ backgroundColor: '#F7F9FC' }}
         >
             <Row justify="space-between">
                 <Col>
@@ -149,8 +150,8 @@ function Content({
                     </Form.Item>
                 </Col>
             </Row>
-            <Row gutter={20} style={{ backgroundColor: '#F7F9FC' }}>
-                <Col flex={1} style={{ padding: 0 }}>
+            <Row gutter={20} style={{ backgroundColor: '#F7F9FC', maxHeight: '100vh' }}>
+                <Col flex={1} style={{ padding: 0, overflow: 'scroll' }}>
                     <DndProvider backend={HTML5Backend}>
                         <div
                             style={{

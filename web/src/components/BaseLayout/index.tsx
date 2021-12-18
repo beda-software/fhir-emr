@@ -7,11 +7,12 @@ import { BaseHeader } from 'src/components/BaseHeader';
 interface Props {
     children: ReactNode;
     bgHeight?: number;
+    style?: React.CSSProperties;
 }
 
-export function BaseLayout({ children, bgHeight }: Props) {
+export function BaseLayout({ children, bgHeight, style }: Props) {
     return (
-        <Layout style={wrapperStyle}>
+        <Layout style={{ ...wrapperStyle, ...(style ?? {}) }}>
             {bgHeight ? (
                 <div
                     style={{
@@ -41,4 +42,4 @@ const wrapperStyle: any = {
 
 const layoutStyle: any = { display: 'flex', height: '100%', flexDirection: 'row', width: 1080 };
 
-const contentStyle: any = { width: '100%' ,backgroundColor:'white'};
+const contentStyle: any = { width: '100%', backgroundColor: 'white' };
