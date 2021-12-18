@@ -1,4 +1,4 @@
-import { DeleteFilled, DragOutlined } from '@ant-design/icons';
+import { DeleteFilled, DragOutlined, SaveOutlined } from '@ant-design/icons';
 import {
     Button,
     Checkbox,
@@ -321,11 +321,6 @@ function DroppableQuestionnaire({
 
                     return (
                         <div>
-                            <Form.Item>
-                                <Button htmlType="submit" type="primary">
-                                    Сохранить
-                                </Button>
-                            </Form.Item>
                             <QuestionnaireItemComponents
                                 items={formValues.item}
                                 parentPath={[]}
@@ -333,11 +328,38 @@ function DroppableQuestionnaire({
                                 editablePath={editablePath}
                                 setEditablePath={setEditablePath}
                             />
-                            <Form.Item>
-                                <Button htmlType="submit" type="primary">
-                                    Сохранить
-                                </Button>
-                            </Form.Item>
+                            <div
+                                style={{
+                                    position: 'fixed',
+                                    zIndex: 10,
+                                    // width: '100%',
+                                    backgroundColor: '#ffffff',
+                                    height: 60,
+                                    bottom: 0,
+                                    left: 0,
+                                    right: 0,
+                                    boxShadow: 'inset 0px 1px 0px #F0F0F0',
+                                }}
+                            >
+                                <Row style={{ justifyContent: 'center' }}>
+                                    <Col
+                                        style={{
+                                            width: 1080,
+                                        }}
+                                    >
+                                        <Form.Item>
+                                            <Button
+                                                htmlType="submit"
+                                                type="primary"
+                                                icon={<SaveOutlined />}
+                                                style={{ marginTop: 15 }}
+                                            >
+                                                Сохранить
+                                            </Button>
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
+                            </div>
                         </div>
                     );
                 }}
