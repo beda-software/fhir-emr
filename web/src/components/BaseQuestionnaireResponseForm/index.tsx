@@ -67,7 +67,7 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly }: 
 
 function Group({ parentPath, questionItem, context }: GroupItemProps) {
     const { linkId, text, item } = questionItem;
-    const fieldName = [...parentPath, linkId];
+    const fieldName = [...parentPath, linkId, 'items'];
 
     return (
         <Form.Item label={<b>{text}</b>} name={fieldName}>
