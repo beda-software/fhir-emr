@@ -15,7 +15,7 @@ import {
 } from 'antd';
 import cloneDeep from 'lodash/cloneDeep';
 import isEqual from 'lodash/isEqual';
-import { useCallback, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { DndProvider, useDrag, useDragDropManager, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useHistory } from 'react-router';
@@ -92,8 +92,6 @@ export function QuestionnaireBuilder({ questionnaireId }: Props) {
 }
 
 type FieldPath = Array<string | number>;
-
-const inputStyles = { backgroundColor: '#F7F9FC' };
 
 function Content({
     questionnaire,
@@ -176,11 +174,7 @@ function Content({
                     </DndProvider>
                 </Col>
                 <Col style={{ width: 384, padding: 0 }}>
-                    <FieldSettingsForm
-                        path={editablePath}
-                        form={form}
-                        hideSettingsForm={() => setEditablePath(undefined)}
-                    />
+                    <FieldSettingsForm path={editablePath} form={form} />
                 </Col>
             </Row>
         </Form>
@@ -201,17 +195,9 @@ interface FieldSettingsFormType {
     //     | 'choice';
     form: FormInstance;
     path?: FieldPath;
-    hideSettingsForm: () => void;
 }
 
-function FieldSettingsForm({ form, path, hideSettingsForm }: FieldSettingsFormType) {
-    const removeField = useCallback(() => {
-        if (path !== undefined) {
-            form.setFieldsValue(unsetByPath(form.getFieldsValue(), path));
-            console.log(unsetByPath(form.getFieldsValue(), path));
-            hideSettingsForm();
-        }
-    }, [form.setFieldsValue, path]);
+function FieldSettingsForm({ form, path }: FieldSettingsFormType) {
     if (path === undefined) {
         return null;
     }
@@ -230,51 +216,27 @@ function FieldSettingsForm({ form, path, hideSettingsForm }: FieldSettingsFormTy
                     <Title level={5}>Параметры элемента</Title>
                 </Col>
                 <Col>
-                    <Button
-                        type="primary"
-                        icon={<DeleteFilled />}
-                        onClick={removeField}
-                        size="small"
-                        danger
-                    />
+                    <Button type="primary" icon={<DeleteFilled />} size="small" danger />
                 </Col>
             </Row>
             <Form.Item label="link ID" name={[...path, 'linkId']}>
-                <Input style={inputStyles} />
+                <Input />
             </Form.Item>
             <Form.Item label="Название" name={[...path, 'text']}>
-                <Input style={inputStyles} />
+                <Input />
             </Form.Item>
             {type !== 'group' && (
                 <Form.Item label="Тип поля" name={[...path, 'type']}>
                     <Radio.Group>
-                        <Radio.Button value="choice" style={{ marginBottom: 4 }}>
-                            Choice
-                        </Radio.Button>
-                        <Radio.Button value="decimal" style={{ marginBottom: 4 }}>
-                            Decimal
-                        </Radio.Button>
-                        <Radio.Button value="integer" style={{ marginBottom: 4 }}>
-                            Integer
-                        </Radio.Button>
-                        <Radio.Button value="boolean" style={{ marginBottom: 4 }}>
-                            Boolean
-                        </Radio.Button>
-                        <Radio.Button value="string" style={{ marginBottom: 4 }}>
-                            String
-                        </Radio.Button>
-                        <Radio.Button value="text" style={{ marginBottom: 4 }}>
-                            Text
-                        </Radio.Button>
-                        <Radio.Button value="date" style={{ marginBottom: 4 }}>
-                            Date
-                        </Radio.Button>
-                        <Radio.Button value="dateTime" style={{ marginBottom: 4 }}>
-                            Datetime
-                        </Radio.Button>
-                        <Radio.Button value="time" style={{ marginBottom: 4 }}>
-                            Time
-                        </Radio.Button>
+                        <Radio.Button value="choice">Choice</Radio.Button>
+                        <Radio.Button value="decimal">Decimal</Radio.Button>
+                        <Radio.Button value="integer">Integer</Radio.Button>
+                        <Radio.Button value="boolean">Boolean</Radio.Button>
+                        <Radio.Button value="string">String</Radio.Button>
+                        <Radio.Button value="text">Text</Radio.Button>
+                        <Radio.Button value="date">Date</Radio.Button>
+                        <Radio.Button value="dateTime">Datetime</Radio.Button>
+                        <Radio.Button value="time">Time</Radio.Button>
                         {/* TODO: attachment, reference, quantity */}
                     </Radio.Group>
                 </Form.Item>
@@ -287,16 +249,16 @@ function FieldSettingsForm({ form, path, hideSettingsForm }: FieldSettingsFormTy
                     </Radio.Group>
                 </Form.Item>
             )} */}
-            <Form.Item name={[...path, 'required']} style={{ marginBottom: 4 }}>
+            <Form.Item name={[...path, 'required']}>
                 <Checkbox>Обязательное</Checkbox>
             </Form.Item>
-            <Form.Item name={[...path, 'repeats']} style={{ marginBottom: 4 }}>
+            <Form.Item name={[...path, 'repeats']}>
                 <Checkbox>Повторяющийся</Checkbox>
             </Form.Item>
-            <Form.Item name={[...path, 'readOnly']} style={{ marginBottom: 4 }}>
+            <Form.Item name={[...path, 'readOnly']}>
                 <Checkbox>Read-only</Checkbox>
             </Form.Item>
-            <Form.Item name={[...path, 'hidden']} style={{ marginBottom: 4 }}>
+            <Form.Item name={[...path, 'hidden']}>
                 <Checkbox>Скрытое</Checkbox>
             </Form.Item>
         </div>
@@ -582,15 +544,15 @@ function QuestionnaireItemComponent({
                 setEditablePath([...parentPath, 'item', index]);
             }}
             style={{
-                marginLeft: 48,
-                marginRight: 48,
+                marginTop: 24,
+                marginBottom: 24,
                 borderWidth: 1,
                 borderStyle: 'solid',
                 ...(isHovered && !isGlobalDragging
-                    ? { borderColor: 'darkgreen' }
+                    ? { borderColor: 'rgb(51, 102, 255)' }
                     : { borderColor: 'transparent' }),
                 ...(isDragging ? { opacity: 0 } : { opacity: 1 }),
-                ...(isOverCurrent ? { borderColor: 'darkgreen' } : {}),
+                ...(isOverCurrent ? { borderColor: 'rgb(51, 102, 255)' } : {}),
                 ...(isEditable ? { backgroundColor: '#F7F9FC' } : {}),
             }}
             onMouseOver={(evt) => {
@@ -609,13 +571,15 @@ function QuestionnaireItemComponent({
                     <Input />
                 </Form.Item>
             )}
-            <QuestionnaireItemComponents
-                items={item.item}
-                parentPath={[...parentPath, 'item', index]}
-                form={form}
-                editablePath={editablePath}
-                setEditablePath={setEditablePath}
-            />
+            <div style={{ marginLeft: 48, marginRight: 48 }}>
+                <QuestionnaireItemComponents
+                    items={item.item}
+                    parentPath={[...parentPath, 'item', index]}
+                    form={form}
+                    editablePath={editablePath}
+                    setEditablePath={setEditablePath}
+                />
+            </div>
         </div>
     );
 }
