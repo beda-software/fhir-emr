@@ -1,5 +1,7 @@
 import { Input, Form, InputNumber, Button } from 'antd';
+import TextArea from 'antd/lib/input/TextArea';
 
+import { unsetByPath } from 'shared/src/utils/path';
 import {
     calcInitialContext,
     GroupItemProps,
@@ -36,7 +38,7 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly }: 
                         groupItemComponent={Group}
                         questionItemComponents={{
                             text: QuestionText,
-                            string: QuestionText,
+                            string: QuestionString,
                             decimal: QuestionDecimal,
                             integer: QuestionInteger,
                         }}
@@ -65,7 +67,7 @@ function Group(_props: GroupItemProps) {
     return null;
 }
 
-function QuestionText({ parentPath, questionItem }: QuestionItemProps) {
+function QuestionString({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
     const { linkId, text, readOnly } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
@@ -73,6 +75,17 @@ function QuestionText({ parentPath, questionItem }: QuestionItemProps) {
     return (
         <Form.Item label={text} name={fieldName}>
             <Input style={inputStyle} readOnly={readOnly || qrfContext.readOnly} />
+        </Form.Item>
+    );
+}
+
+function QuestionText({ parentPath, questionItem }: QuestionItemProps) {
+    const qrfContext = useQuestionnaireResponseFormContext();
+    const { linkId, text, readOnly } = questionItem;
+    const fieldName = [...parentPath, linkId, 0, 'value', 'text'];
+    return (
+        <Form.Item label={text} name={fieldName}>
+            <TextArea rows={4} style={inputStyle} readOnly={readOnly || qrfContext.readOnly} />
         </Form.Item>
     );
 }
