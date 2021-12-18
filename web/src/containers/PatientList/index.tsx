@@ -47,7 +47,7 @@ const columns: ColumnsType<Patient> = [
 ];
 
 export function PatientList() {
-    const [patientsResponse] = useService(async () =>
+    const [patientsResponse, manager] = useService(async () =>
         mapSuccess(
             await getFHIRResources<Patient>('Patient', {}),
             (bundle) => extractBundleResources(bundle).Patient,
@@ -58,7 +58,7 @@ export function PatientList() {
 
     return (
         <BaseLayout bgHeight={281}>
-            <PageHeader title="Пациенты" extra={[<ModalNewPatient />]} />
+            <PageHeader title="Пациенты" extra={[<ModalNewPatient onSuccess={manager.reload} />]} />
             <div
                 style={{
                     position: 'relative',

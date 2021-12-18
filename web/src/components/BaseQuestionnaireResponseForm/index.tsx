@@ -41,6 +41,9 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly }: 
                             string: QuestionString,
                             decimal: QuestionDecimal,
                             integer: QuestionInteger,
+                            date: QuestionDateTime,
+                            dateTime: QuestionDateTime,
+                            time: QuestionDateTime,
                         }}
                         readOnly={readOnly}
                     >
@@ -110,6 +113,18 @@ function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps) {
     return (
         <Form.Item label={text} name={fieldName}>
             <InputNumber style={inputStyle} readOnly={readOnly || qrfContext.readOnly} />
+        </Form.Item>
+    );
+}
+
+function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps) {
+    const qrfContext = useQuestionnaireResponseFormContext();
+    const { linkId, text, readOnly, type } = questionItem;
+    const fieldName = [...parentPath, linkId, 0, 'value', type];
+
+    return (
+        <Form.Item label={text} name={fieldName}>
+            <Input style={inputStyle} readOnly={readOnly || qrfContext.readOnly} />
         </Form.Item>
     );
 }

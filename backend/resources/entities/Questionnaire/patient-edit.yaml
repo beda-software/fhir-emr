@@ -64,4 +64,4 @@ item:
     text: Телефон
     initialExpression:
       language: text/fhirpath
-      expression: "%Patient.telecom.where(system='phone').value"
+      expression: "%Patient.telecom.where(system='mobile').value"
