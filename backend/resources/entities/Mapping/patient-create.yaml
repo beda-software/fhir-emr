@@ -4,7 +4,7 @@ body:
   $let:
     patientId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patient-id').answer.value.string").0
     firstName: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='first-name').answer.value.string").0
-    middleName: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='muddle-name').answer.value.string").0
+    middleName: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='middle-name').answer.value.string").0
     lastName: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='last-name').answer.value.string").0
     birthDate: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='birth-date').answer.value.date").0
     gender: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='gender').answer.value.string").0
