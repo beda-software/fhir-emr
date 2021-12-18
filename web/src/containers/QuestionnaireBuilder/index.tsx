@@ -399,16 +399,16 @@ function QuestionnaireItemComponents({
 
                 const values = form.getFieldsValue();
                 if (isNewDraggableItem(item)) {
+                    const items = getByPath(values, [...parentPath, 'item'], []);
+                    const newIndex = items.length;
                     form.setFieldsValue(
                         setByPath(
                             values,
                             [...parentPath, 'item'],
-                            [
-                                ...getByPath(values, [...parentPath, 'item'], []),
-                                { linkId: uuid4(), ...item.item },
-                            ],
+                            [...items, { linkId: uuid4(), ...item.item }],
                         ),
                     );
+                    setEditablePath([...parentPath, 'item', newIndex]);
                 } else {
                     form.setFieldsValue(
                         unsetByPath(
