@@ -4,9 +4,11 @@ import {
     Button,
     Checkbox,
     Col,
+    DatePicker,
     Form,
     FormInstance,
     Input,
+    InputNumber,
     notification,
     PageHeader,
     Radio,
@@ -460,7 +462,7 @@ function QuestionnaireItemComponents({
         }),
         [items, parentPath],
     );
-    const backgroundColor = isOverCurrent ? '#F7F9FC' : 'white';
+    const backgroundColor = isOverCurrent ? '#F7F9FC' : 'transparent';
 
     return (
         <Form.Item name={[...parentPath, 'item']}>
@@ -600,6 +602,67 @@ function QuestionnaireItemComponent({
 
     drag(drop(ref));
 
+    const markRequired = (name: string, required?: boolean) => {
+        if (required) {
+            return `${name} *`;
+        }
+
+        return name;
+    };
+
+    const markRepeatable = (name: string, repeats?: boolean) => {
+        if (repeats) {
+            return `${name} (repeats)`;
+        }
+
+        return name;
+    };
+
+    const markHidden = (name: string, hidden?: boolean) => {
+        if (hidden) {
+            return `${name} (hidden)`;
+        }
+
+        return name;
+    };
+
+    const getInputComponent = (item: QuestionnaireItem) => {
+        if (item.type === 'boolean') {
+            return Checkbox;
+        }
+
+        if (item.type === 'text') {
+            return Input.TextArea;
+        }
+
+        if (item.type === 'date' || item.type === 'dateTime' || item.type === 'time') {
+            return DatePicker;
+        }
+
+        if (item.type === 'number' || item.type === 'decimal') {
+            return InputNumber;
+        }
+
+        return Input;
+    };
+    const renderInput = (item: QuestionnaireItem) => {
+        const Component = getInputComponent(item);
+        const label = markRequired(
+            markRepeatable(item.text || item.linkId, item.repeats),
+            item.required,
+        );
+        return (
+            <Form.Item label={item.type !== 'boolean' ? label : null}>
+                <Component
+                    readOnly={item.readOnly}
+                    style={item.hidden ? { backgroundColor: '#eee' } : {}}
+                >
+                    {item.type === 'boolean' ? label : null}
+                </Component>
+            </Form.Item>
+        );
+    };
+
     return (
         <div
             ref={ref}
@@ -618,7 +681,7 @@ function QuestionnaireItemComponent({
                     : { borderColor: 'transparent' }),
                 ...(isDragging ? { opacity: 0 } : { opacity: 1 }),
                 ...(isOverCurrent ? { borderColor: 'rgb(51, 102, 255)' } : {}),
-                ...(isEditable ? { backgroundColor: '#F7F9FC' } : {}),
+                ...(isEditable ? { backgroundColor: '#F7F9FC' } : { backgroundColor: 'white' }),
             }}
             onMouseOver={(evt) => {
                 evt.stopPropagation();
@@ -630,11 +693,17 @@ function QuestionnaireItemComponent({
             }}
         >
             {item.type === 'group' ? (
-                <b>{item.text || item.linkId}</b>
+                <b>
+                    {markRequired(
+                        markHidden(
+                            markRepeatable(item.text || item.linkId, item.repeats),
+                            item.hidden,
+                        ),
+                        item.required,
+                    )}
+                </b>
             ) : (
-                <Form.Item label={item.text || item.linkId}>
-                    <Input />
-                </Form.Item>
+                renderInput(item)
             )}
             <div style={{ marginLeft: 48, marginRight: 48 }}>
                 <QuestionnaireItemComponents
