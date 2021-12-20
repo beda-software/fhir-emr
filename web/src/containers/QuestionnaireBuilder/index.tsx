@@ -462,14 +462,8 @@ function QuestionnaireItemComponents({
                     setEditablePath(undefined);
                 }
             },
-            canDrop: (item) => {
-                if (!isNewDraggableItem(item)) {
-                    if (isEqual(item.path, parentPath)) {
-                        return false;
-                    }
-                }
-
-                return true;
+            canDrop: () => {
+                return !items?.length;
             },
             collect: (monitor) => ({
                 isOverCurrent: monitor.isOver({ shallow: true }) && monitor.canDrop(),
@@ -490,7 +484,7 @@ function QuestionnaireItemComponents({
                     minHeight: isOverCurrent ? 50 : 0,
                     width: '100%',
                     borderWidth: 1,
-                    borderColor: isOverCurrent ? 'black' : 'transparent',
+                    borderColor: isOverCurrent ? 'rgb(51, 102, 255)' : 'transparent',
                     borderStyle: 'dashed',
                     backgroundColor,
                 }}
@@ -563,33 +557,16 @@ function QuestionnaireItemComponent({
                     isOverCurrent: monitor.isOver({ shallow: true }) && monitor.canDrop(),
                 };
             },
-            canDrop(draggableItem) {
-                if (isNewDraggableItem(draggableItem)) {
-                    return false;
-                }
 
-                if (!isEqual(draggableItem.parentPath, parentPath)) {
-                    return false;
-                }
-
-                return true;
-            },
             drop(draggableItem, monitor) {
                 if (monitor.didDrop()) {
                     return;
                 }
-                if (isNewDraggableItem(draggableItem)) {
-                    return;
-                }
 
-                if (!isEqual(draggableItem.parentPath, parentPath)) {
-                    return;
-                }
                 const values = form.getFieldsValue();
                 const items = getByPath(values, [...parentPath, 'item']) as Array<any>;
-                const dragIndex = draggableItem.index;
                 const hoverIndex = index;
-                function insert(items: any[], fromIndex: number, toIndex: number) {
+                function insertAndRemove(items: any[], fromIndex: number, toIndex: number) {
                     let newItems = cloneDeep(items);
                     const fromElem = newItems[fromIndex];
 
@@ -606,14 +583,45 @@ function QuestionnaireItemComponent({
 
                     return newItems;
                 }
-                form.setFieldsValue(
-                    setByPath(
-                        values,
-                        [...parentPath, 'item'],
-                        insert(items, dragIndex, hoverIndex),
-                    ),
-                );
-                setEditablePath([...parentPath, 'item', hoverIndex]);
+                function insert(items: any[], newItem: any, toIndex: number) {
+                    let newItems = cloneDeep(items);
+                    newItems.splice(toIndex, 0, newItem);
+
+                    return newItems;
+                }
+                if (isNewDraggableItem(draggableItem)) {
+                    form.setFieldsValue(
+                        setByPath(
+                            values,
+                            [...parentPath, 'item'],
+                            insert(items, { linkId: uuid4(), ...draggableItem.item }, hoverIndex),
+                        ),
+                    );
+                } else {
+                    const dragIndex = draggableItem.index;
+                    if (isEqual(draggableItem.parentPath, parentPath)) {
+                        form.setFieldsValue(
+                            setByPath(
+                                values,
+                                [...parentPath, 'item'],
+                                insertAndRemove(items, dragIndex, hoverIndex),
+                            ),
+                        );
+                    } else {
+                        form.setFieldsValue(
+                            unsetByPath(
+                                setByPath(
+                                    values,
+                                    [...parentPath, 'item'],
+                                    insert(items, draggableItem.item, hoverIndex),
+                                ),
+                                draggableItem.path,
+                            ),
+                        );
+                    }
+                }
+                setEditablePath(undefined);
+                // setEditablePath([...parentPath, 'item', hoverIndex]);
             },
         },
         [item, parentPath, index],
@@ -691,10 +699,8 @@ function QuestionnaireItemComponent({
                 setEditablePath([...parentPath, 'item', index]);
             }}
             style={{
-                marginTop: 24,
-                marginBottom: 24,
                 borderWidth: 1,
-                borderStyle: 'solid',
+                borderStyle: isOverCurrent ? 'dashed' : 'solid',
                 ...(isHovered && !isGlobalDragging
                     ? { borderColor: 'rgb(51, 102, 255)' }
                     : { borderColor: 'transparent' }),
