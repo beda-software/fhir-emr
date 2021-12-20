@@ -423,9 +423,10 @@ function QuestionnaireItemComponents({
                 }
 
                 const values = form.getFieldsValue();
+                const items = getByPath(values, [...parentPath, 'item'], []);
+                const newIndex = items.length;
+
                 if (isNewDraggableItem(item)) {
-                    const items = getByPath(values, [...parentPath, 'item'], []);
-                    const newIndex = items.length;
                     form.setFieldsValue(
                         setByPath(
                             values,
@@ -433,19 +434,15 @@ function QuestionnaireItemComponents({
                             [...items, { linkId: uuid4(), ...item.item }],
                         ),
                     );
-                    setEditablePath([...parentPath, 'item', newIndex]);
                 } else {
                     form.setFieldsValue(
                         unsetByPath(
-                            setByPath(
-                                values,
-                                [...parentPath, 'item'],
-                                [...getByPath(values, [...parentPath, 'item'], []), item.item],
-                            ),
+                            setByPath(values, [...parentPath, 'item'], [...items, item.item]),
                             item.path,
                         ),
                     );
                 }
+                setEditablePath([...parentPath, 'item', newIndex]);
             },
             canDrop: (item) => {
                 if (!isNewDraggableItem(item)) {
@@ -595,6 +592,7 @@ function QuestionnaireItemComponent({
                         insert(items, dragIndex, hoverIndex),
                     ),
                 );
+                setEditablePath([...parentPath, 'item', hoverIndex]);
             },
         },
         [item, parentPath, index],
