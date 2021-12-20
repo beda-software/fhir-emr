@@ -63,6 +63,20 @@ interface Props {
     questionnaireId?: string;
 }
 
+function cleanUpQuestionnaire(questionnaire: Questionnaire) {
+    function cleanUpItems(item: Questionnaire['item']): Questionnaire['item'] {
+        return item?.reduce((acc, qItem) => {
+            if (!qItem.linkId) {
+                return acc;
+            }
+
+            return [...acc, { ...qItem, item: cleanUpItems(qItem.item) }];
+        }, [] as QuestionnaireItem[]);
+    }
+
+    return { ...questionnaire, item: cleanUpItems(questionnaire.item) };
+}
+
 export function QuestionnaireBuilder({ questionnaireId }: Props) {
     const history = useHistory();
     const [questionnaireRemoteData, manager] = useService<Questionnaire>(async () => {
@@ -74,8 +88,9 @@ export function QuestionnaireBuilder({ questionnaireId }: Props) {
         }
         return success({ resourceType: 'Questionnaire', status: 'draft' });
     });
+
     const onSubmit = async (resource: Questionnaire) => {
-        const saveResponse = await saveFHIRResource(resource);
+        const saveResponse = await saveFHIRResource(cleanUpQuestionnaire(resource));
         if (isSuccess(saveResponse)) {
             manager.set(saveResponse.data);
             history.replace(`/questionnaires/${saveResponse.data.id}/edit`);
@@ -94,7 +109,7 @@ export function QuestionnaireBuilder({ questionnaireId }: Props) {
     );
 }
 
-type FieldPath = Array<string | number>;
+type FieldPath = Array<string | number> | undefined;
 
 const inputStyles = { backgroundColor: '#F7F9FC' };
 
@@ -434,6 +449,8 @@ function QuestionnaireItemComponents({
                             [...items, { linkId: uuid4(), ...item.item }],
                         ),
                     );
+                    // TODO: fix editable path for deleted item
+                    setEditablePath([...parentPath, 'item', newIndex]);
                 } else {
                     form.setFieldsValue(
                         unsetByPath(
@@ -441,8 +458,9 @@ function QuestionnaireItemComponents({
                             item.path,
                         ),
                     );
+                    // TODO: fix editable path for deleted item
+                    setEditablePath(undefined);
                 }
-                setEditablePath([...parentPath, 'item', newIndex]);
             },
             canDrop: (item) => {
                 if (!isNewDraggableItem(item)) {
@@ -462,7 +480,10 @@ function QuestionnaireItemComponents({
     const backgroundColor = isOverCurrent ? '#F7F9FC' : 'transparent';
 
     return (
-        <Form.Item name={[...parentPath, 'item']}>
+        <Form.Item
+            name={[...parentPath, 'item']}
+            style={!isOverCurrent && !items?.length ? { height: 0 } : {}}
+        >
             <div
                 ref={drop}
                 style={{
