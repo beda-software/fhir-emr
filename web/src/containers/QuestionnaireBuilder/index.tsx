@@ -557,7 +557,6 @@ function QuestionnaireItemComponent({
                     isOverCurrent: monitor.isOver({ shallow: true }) && monitor.canDrop(),
                 };
             },
-
             drop(draggableItem, monitor) {
                 if (monitor.didDrop()) {
                     return;
@@ -609,13 +608,17 @@ function QuestionnaireItemComponent({
                         );
                     } else {
                         form.setFieldsValue(
-                            unsetByPath(
-                                setByPath(
-                                    values,
-                                    [...parentPath, 'item'],
-                                    insert(items, draggableItem.item, hoverIndex),
+                            setByPath(
+                                values,
+                                [...parentPath, 'item'],
+                                insert(
+                                    getByPath(unsetByPath(values, draggableItem.path), [
+                                        ...parentPath,
+                                        'item',
+                                    ]),
+                                    draggableItem.item,
+                                    hoverIndex,
                                 ),
-                                draggableItem.path,
                             ),
                         );
                     }
