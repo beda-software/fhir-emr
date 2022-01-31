@@ -10,7 +10,7 @@
 
 ### Design
 
--   [Figma](<https://www.figma.com/file/2bxMDfG3lRPEZpRwDC4gTB/SaaS-EMR-System-(Copy)?node-id=134249%3A191258>)
+-   [Figma](<https://www.figma.com/file/2bxMDfG3lRPEZpRwDC4gTB/SaaS-EMR-System>)
 
 ## Benefits
 
