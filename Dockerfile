@@ -21,4 +21,5 @@ ADD . /app
 ARG TIER
 RUN cp shared/src/config.${TIER}.ts shared/src/config.ts
 
+RUN yarn compile
 RUN yarn build

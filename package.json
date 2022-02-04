@@ -9,9 +9,16 @@
         "start:web": "lerna run start --parallel --scope web",
         "build": "lerna run --parallel build",
         "typecheck": "lerna run --parallel typecheck",
-        "lint": "lerna run --parallel lint"
+        "lint": "lerna run --parallel lint",
+        "extract": "lingui extract",
+        "compile": "lingui compile"
     },
     "devDependencies": {
+        "@babel/preset-env": "^7.14.1",
+        "@babel/preset-react": "^7.13.13",
+        "@lingui/babel-preset-react": "^2.9.2",
+        "@lingui/cli": "^3.8.10",
+        "@lingui/macro": "^3.8.10",
         "@types/node": "^16.11.7",
         "@typescript-eslint/eslint-plugin": "^5.3.1",
         "@typescript-eslint/parser": "^5.3.1",
@@ -26,6 +33,9 @@
         "prettier": "^2.4.1",
         "rimraf": "^3.0.2",
         "typescript": "^4.5.4"
+    },
+    "dependencies": {
+        "@lingui/react": "^3.8.10"
     },
     "workspaces": {
         "packages": [
