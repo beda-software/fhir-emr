@@ -31,3 +31,8 @@ backend/.coverage
 backend/gunicorn.pid
 
 .history
+
+# Locale files
+shared/src/locale/**/*.ts
+shared/src/locale/**/*.js
+

@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro';
 import { User } from '@sentry/types';
 import { Typography, Button } from 'antd';
 import queryString from 'query-string';
@@ -60,15 +61,13 @@ export function App() {
                         <div>
                             <LogoImage inverse />
                         </div>
-                        <Typography.Title style={{ color: '#FFF' }}>
-                            Добро пожаловать!
-                        </Typography.Title>
+                        <Typography.Title style={{ color: '#FFF' }}>{t`Welcome`}</Typography.Title>
                         <Button
                             type="primary"
                             style={{ marginTop: 15 }}
                             onClick={() => authorize()}
                         >
-                            Войти
+                            {t`Log in`}
                         </Button>
                     </header>
                 </div>

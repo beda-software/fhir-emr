@@ -11,12 +11,9 @@
         "typecheck": "lerna run --parallel typecheck",
         "lint": "lerna run --parallel lint",
         "extract": "lingui extract",
-        "compile": "lingui compile"
+        "compile": "lingui compile --typescript"
     },
     "devDependencies": {
-        "@babel/preset-env": "^7.14.1",
-        "@babel/preset-react": "^7.13.13",
-        "@lingui/babel-preset-react": "^2.9.2",
         "@lingui/cli": "^3.8.10",
         "@lingui/macro": "^3.8.10",
         "@types/node": "^16.11.7",
