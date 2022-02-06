@@ -76,7 +76,7 @@ function Group({ parentPath, questionItem, context }: GroupItemProps) {
     );
 }
 
-function QuestionString({ parentPath, questionItem }: QuestionItemProps) {
+export function QuestionString({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
     const { linkId, text, readOnly } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
@@ -99,7 +99,7 @@ function QuestionText({ parentPath, questionItem }: QuestionItemProps) {
     );
 }
 
-function QuestionInteger({ parentPath, questionItem }: QuestionItemProps) {
+export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
     const { linkId, text, readOnly } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'integer'];
@@ -123,7 +123,7 @@ function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps) {
     );
 }
 
-function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps) {
+export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
     const { linkId, text, readOnly, type } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', type];
