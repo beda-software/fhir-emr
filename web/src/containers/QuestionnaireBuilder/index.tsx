@@ -21,7 +21,7 @@ import isEqual from 'lodash/isEqual';
 import { useCallback, useRef, useState } from 'react';
 import { DndProvider, useDrag, useDragDropManager, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
