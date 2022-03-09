@@ -78,6 +78,7 @@ git submodule update --init
 
 ```sh
 yarn
+yarn compile
 ```
 
 ```sh
