@@ -19,19 +19,24 @@ import { PatientGeneralInfo } from 'src/components/PatientGeneralInfo';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 
 export const PatientDetails = () => {
-    const location = useLocation<any>();
-    const params: { id: string } = useParams();
+    const location = useLocation();
+    const { id } = useParams();
+
+    if (!id) {
+        console.error('id is undefined');
+        return <div>id is undefined</div>;
+    }
 
     const [currentPath, setCurrentPath] = useState(location.pathname);
 
     const [patientResponse, manager] = useService(
-        async () => await getFHIRResource<Patient>({ resourceType: 'Patient', id: params.id }),
+        async () => await getFHIRResource<Patient>({ resourceType: 'Patient', id: id }),
     );
 
     const menuItems: RouteItem[] = [
-        { title: 'Общая информация', path: `/patients/${params.id}` },
-        { title: 'Приемы', path: `/patients/${params.id}/encounters` },
-        { title: 'Мед Карта', path: `/patients/${params.id}/documents` },
+        { title: 'Общая информация', path: `/patients/${id}` },
+        { title: 'Приемы', path: `/patients/${id}/encounters` },
+        { title: 'Мед Карта', path: `/patients/${id}/documents` },
     ];
 
     const getGeneralInfo = (patient: Patient) => [
@@ -78,11 +83,11 @@ export const PatientDetails = () => {
             name: 'Пациенты',
         },
         {
-            path: `/patients/${params.id}`,
+            path: `/patients/${id}`,
             name: renderHumanName(patient.name?.[0]),
         },
         {
-            path: `/patients/${params.id}`,
+            path: `/patients/${id}`,
             name: getCurrentPathName(),
         },
     ];
@@ -151,7 +156,7 @@ export const PatientDetails = () => {
                             {renderMenu(menuItems)}
                         </Menu>
                         {currentPathEnd === 'encounters' ? (
-                            <PatientEncounter patientId={params.id} />
+                            <PatientEncounter patientId={id} />
                         ) : currentPathEnd === 'documents' ? (
                             <div>documents</div>
                         ) : (

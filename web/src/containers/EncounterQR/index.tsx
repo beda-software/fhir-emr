@@ -20,6 +20,16 @@ export function EncounterQR() {
     const { encounterId, questionnaireId } =
         useParams<{ encounterId: string; questionnaireId: string }>();
 
+    if (!encounterId) {
+        console.error('encounterId is undefined');
+        return <div>encounterId is undefined</div>;
+    }
+
+    if (!questionnaireId) {
+        console.error('questionnaireId is undefined');
+        return <div>questionnaireId is undefined</div>;
+    }
+
     const encounterInfoRD = useEncounterDetails(encounterId);
 
     const [questionnaireRD] = useService(async () => {

@@ -1,10 +1,8 @@
 import { t } from '@lingui/macro';
-import { User } from '@sentry/types';
 import { Typography, Button } from 'antd';
 import queryString from 'query-string';
 import { useEffect } from 'react';
-import { Route, Switch, Router, Redirect } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { Route, Routes, Navigate, BrowserRouter } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
@@ -21,7 +19,6 @@ import { QuestionnaireList } from 'src/containers/QuestionnaireList';
 import { LogoImage } from 'src/images/LogoImage';
 import { getAuthorizeUrl, getToken, getUserInfo, OAuthState } from 'src/services/auth';
 import { parseOAuthState, setToken } from 'src/services/auth';
-import { history } from 'src/services/history';
 
 import { EncounterDetails } from '../EncounterDetails';
 import { EncounterQR } from '../EncounterQR';
@@ -50,89 +47,107 @@ export function App() {
         return response;
     });
 
-    const renderAnonymousRoutes = () => (
-        <Switch>
-            <Route path="/auth" exact>
-                <Auth />
-            </Route>
-            <Route path="/signin" exact>
-                <div className={s.container}>
-                    <header className={s.header}>
-                        <div>
-                            <LogoImage inverse />
-                        </div>
-                        <Typography.Title style={{ color: '#FFF' }}>{t`Welcome`}</Typography.Title>
-                        <Button
-                            type="primary"
-                            style={{ marginTop: 15 }}
-                            onClick={() => authorize()}
-                        >
-                            {t`Log in`}
-                        </Button>
-                    </header>
-                </div>
-            </Route>
-            <Route path="/reset-password" exact render={() => <div>Reset password</div>} />
-            <Route path="/set-password/:code" exact render={() => <div>Set password</div>} />
-            <Redirect
-                to={{
-                    pathname: '/signin',
-                    state: { referrer: history.location.pathname },
-                }}
-            />
-        </Switch>
-    );
-
-    const renderAuthenticatedRoutes = () => {
-        const referrer = history?.location?.state?.referrer;
-
-        return (
-            <Switch>
-                <Route path="/patients" render={() => <PatientList />} exact />
-                <Route path="/encounters" render={() => <EncounterList />} exact />
-                <Route path="/patients/:id" render={() => <PatientDetails />} exact />
-                <Route path="/patients/:id/encounters" render={() => <PatientDetails />} />
-                <Route path="/patients/:id/documents" render={() => <PatientDetails />} />
-                <Route path="/documents/:id/edit" render={() => <div>documents/:id/edit</div>} />
-                <Route path="/encounters/:encounterId" render={() => <EncounterDetails />} exact />
-                <Route
-                    path="/encounters/:encounterId/qr/:questionnaireId"
-                    render={() => <EncounterQR />}
-                    exact
-                />
-
-                <Route path="/practitioners" render={() => <PractitionerList />} exact />
-                <Route path="/questionnaires" render={() => <QuestionnaireList />} exact />
-                <Route path="/questionnaires/builder" render={() => <QuestionnaireBuilder />} />
-                <Route
-                    path="/questionnaires/:id/edit"
-                    render={(routeParams) => (
-                        <QuestionnaireBuilder questionnaireId={routeParams.match.params.id} />
-                    )}
-                />
-                <Route path="/questionnaires/:id" render={() => <div>questionnaires/:id</div>} />
-
-                <Redirect to={referrer && referrer !== '/' ? referrer : '/encounters'} />
-            </Switch>
-        );
-    };
-
-    const renderRoutes = (user: User | null) => {
-        if (user) {
-            return renderAuthenticatedRoutes();
-        }
-
-        return renderAnonymousRoutes();
-    };
-
     return (
-        <Router history={history}>
-            <Switch>
-                <RenderRemoteData remoteData={userResponse}>
-                    {(data) => renderRoutes(data)}
-                </RenderRemoteData>
-            </Switch>
-        </Router>
+        <BrowserRouter>
+            <RenderRemoteData remoteData={userResponse}>
+                {(user) => {
+                    if (user) {
+                        return (
+                            <Routes>
+                                <Route path="*" element={<Navigate to="/encounters" />} />
+                                <Route path="/patients" element={<PatientList />} />
+                                <Route path="/encounters" element={<EncounterList />} />
+                                <Route path="/patients/:id" element={<PatientDetails />} />
+                                <Route
+                                    path="/patients/:id/encounters/*"
+                                    element={<PatientDetails />}
+                                />
+                                <Route
+                                    path="/patients/:id/documents/*"
+                                    element={<PatientDetails />}
+                                />
+                                <Route
+                                    path="/documents/:id/edit/*"
+                                    element={<div>documents/:id/edit</div>}
+                                />
+                                <Route
+                                    path="/encounters/:encounterId"
+                                    element={<EncounterDetails />}
+                                />
+                                <Route
+                                    path="/encounters/:encounterId/qr/:questionnaireId"
+                                    element={<EncounterQR />}
+                                />
+                                <Route path="/practitioners" element={<PractitionerList />} />
+                                <Route path="/questionnaires" element={<QuestionnaireList />} />
+                                <Route
+                                    path="/questionnaires/builder/*"
+                                    element={<QuestionnaireBuilder />}
+                                />
+                                <Route
+                                    path="/questionnaires/:id/edit/*"
+                                    element={(routeParams: {
+                                        match: { params: { id: string | undefined } };
+                                    }) => (
+                                        <QuestionnaireBuilder
+                                            questionnaireId={routeParams.match.params.id}
+                                        />
+                                    )}
+                                />
+                                <Route
+                                    path="/questionnaires/:id/*"
+                                    element={<div>questionnaires/:id</div>}
+                                />
+                            </Routes>
+                        );
+                    } else {
+                        return (
+                            <Routes>
+                                <Route path="/auth/*" element={<Auth />} />
+                                <Route
+                                    path="/signin/*"
+                                    element={
+                                        <div className={s.container}>
+                                            <header className={s.header}>
+                                                <div>
+                                                    <LogoImage inverse />
+                                                </div>
+                                                <Typography.Title
+                                                    style={{ color: '#FFF' }}
+                                                >{t`Welcome`}</Typography.Title>
+                                                <Button
+                                                    type="primary"
+                                                    style={{ marginTop: 15 }}
+                                                    onClick={() => authorize()}
+                                                >
+                                                    {t`Log in`}
+                                                </Button>
+                                            </header>
+                                        </div>
+                                    }
+                                />
+                                <Route path="/reset-password" element={<div>Reset password</div>} />
+                                <Route
+                                    path="/set-password/:code"
+                                    element={<div>Set password</div>}
+                                />
+                                <Route
+                                    path="about/*"
+                                    element={
+                                        <Navigate
+                                            to="/signin"
+                                            state={{ referrer: location.pathname }}
+                                            replace
+                                        />
+                                    }
+                                />
+                                <Route path="*" element={<Navigate to="/signin" />} />
+                            </Routes>
+                        );
+                    }
+                }}
+            </RenderRemoteData>
+        </BrowserRouter>
     );
 }
 
@@ -141,8 +156,6 @@ function authorize(state?: OAuthState) {
 }
 
 export function Auth() {
-    const location = useLocation();
-
     useEffect(() => {
         const queryParams = queryString.parse(location.hash);
         if (queryParams.access_token) {
@@ -152,6 +165,5 @@ export function Auth() {
             window.location.href = state.nextUrl ?? '/';
         }
     }, [location.hash]);
-
     return null;
 }

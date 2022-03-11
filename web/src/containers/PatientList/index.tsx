@@ -1,6 +1,6 @@
 import { PageHeader, Button, Table, Input } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { useService } from 'aidbox-react/lib/hooks/service';
 import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
@@ -54,7 +54,7 @@ export function PatientList() {
         ),
     );
 
-    const navigate = useHistory();
+    const navigate = useNavigate();
 
     return (
         <BaseLayout bgHeight={281}>
@@ -83,8 +83,7 @@ export function PatientList() {
                 onRow={(record) => {
                     return {
                         onClick: () =>
-                            navigate.push({
-                                pathname: `/patients/${record.id}`,
+                            navigate(`/patients/${record.id}`, {
                                 state: {
                                     record,
                                 },

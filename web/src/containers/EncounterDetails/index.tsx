@@ -18,6 +18,11 @@ import { useEncounterDetails } from './hooks';
 export function EncounterDetails() {
     const { encounterId } = useParams<{ encounterId: string }>();
 
+    if (!encounterId) {
+        console.error('encounterId is undefined');
+        return <div>encounterId is undefined</div>;
+    }
+
     const encounterInfoRD = useEncounterDetails(encounterId);
 
     const questionnaireResponseDataListRD = useQuestionnaireResponseDataList({

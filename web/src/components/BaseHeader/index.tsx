@@ -1,7 +1,6 @@
 import { Button, Menu } from 'antd';
 import { Header } from 'antd/lib/layout/layout';
-import History from 'history';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, Location, useLocation } from 'react-router-dom';
 
 import { resetInstanceToken } from 'aidbox-react/lib/services/instance';
 
@@ -31,8 +30,9 @@ export function BaseHeader() {
         { title: 'Опросники', path: '/questionnaires' },
     ];
 
-    const history = useHistory();
-    const menuDefaultSelectedKeys = getActiveKeys(history, menuItems).map(
+    const location = useLocation();
+
+    const menuDefaultSelectedKeys = getActiveKeys(location, menuItems).map(
         ({ path, title }) => path || title,
     );
 
@@ -77,13 +77,10 @@ export function renderMenu(menuRoutes: RouteItem[]) {
     });
 }
 
-function getActiveKeys(history: History.History, menuRoutes: RouteItem[]): RouteItem[] {
+function getActiveKeys(location: Location, menuRoutes: RouteItem[]): RouteItem[] {
     return menuRoutes.filter(({ path }) => {
         if (path) {
-            return (
-                history.location.pathname === path ||
-                history.location.pathname.startsWith(`${path}/`)
-            );
+            return location.pathname === path || location.pathname.startsWith(`${path}/`);
         }
 
         return false;

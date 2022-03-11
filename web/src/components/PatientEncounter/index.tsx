@@ -1,5 +1,5 @@
 import { Table } from 'antd';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
@@ -28,7 +28,7 @@ const columns = [
 ];
 
 export const PatientEncounter = ({ patientId }: Props) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const encounterDataListRD = useEncounterList({ subject: patientId });
 
     return (
@@ -41,7 +41,7 @@ export const PatientEncounter = ({ patientId }: Props) => {
                         onRow={(record, rowIndex) => {
                             return {
                                 onClick: (event) => {
-                                    history.push(`/encounters/${record.key}`);
+                                    navigate(`/encounters/${record.key}`);
                                 },
                             };
                         }}
