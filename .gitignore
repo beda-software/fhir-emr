@@ -36,3 +36,5 @@ backend/gunicorn.pid
 shared/src/locale/**/*.ts
 shared/src/locale/**/*.js
 
+.clj-kondo/
+.lsp/

@@ -1,0 +1,25 @@
+{ns box
+ import #{aidbox.rest heal.forms heal.workflows}
+
+ box
+ {:zen/tags #{aidbox/system}
+  :zen/desc "test server"
+  :services {:seed-fixtures seed-fixtures
+             :sdc sdc-service}}
+
+ sdc-service
+ {:zen/tags  #{aidbox/service}
+  :engine    aidbox.sdc/service
+  :versioning {:enabled false}}
+
+ seed-fixtures
+ {:zen/tags  #{aidbox/service}
+  :engine    aidbox/seed
+  :files     ["seeds.ndjson.gz"]
+  :resources
+  {:Client
+   {:web
+    {:auth
+     {:implicit {:redirect_uri "http://localhost:3000/auth"}}
+      :first_party true,
+      :grant_types [:implicit]}}}}}

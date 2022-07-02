@@ -35,6 +35,7 @@ services:
       - .env
     volumes:
       - ./config:/var/config:cached
+      - ./zrc:/zrc
   devbox-db:
     image: "healthsamurai/aidboxdb:13.2"
     environment:
