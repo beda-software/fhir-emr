@@ -1,23 +1,30 @@
-version: '3.1'
+version: '3.9'
 services:
-  backend:
-    build: ./backend
-    command: ["wait-for-it.sh", "devbox:8080", "--strict", "--timeout=0", "--", "./run_gunicorn.sh"]
-    restart: unless-stopped 
+  sdc:
+    image: bedasoftware/aidbox-sdc:latest
+    command:
+      [
+        "pipenv",
+        "run",
+        "gunicorn",
+        "main:create_app",
+        "--worker-class",
+        "aiohttp.worker.GunicornWebWorker",
+        "-b",
+        "0.0.0.0:8081",
+        "--reload"
+      ]
     depends_on:
-      - devbox
+      devbox-healthcheck:
+        condition: service_healthy
     links:
       - devbox
     env_file:
-      - .env
-    volumes:
-      - ./backend:/app:cached
-      - ./config:/var/config:cached
-      - ./wait-for-it.sh:/usr/local/bin/wait-for-it.sh:cached
+      - .env.sdc
     # Colored logs
     tty: true
   devbox:
-    image: "healthsamurai/devbox:stable"
+    image: "healthsamurai/devbox:edge"
     depends_on:
       - devbox-db
     links:
@@ -34,3 +41,15 @@ services:
       POSTGRES_USER:     postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB:       devbox
+  devbox-healthcheck:
+    image: curlimages/curl
+    entrypoint: /bin/sleep 10000
+    links:
+      - devbox
+    depends_on:
+      - devbox
+    healthcheck:
+      test: curl --fail http://devbox:8080/__healthcheck || exit 1
+      interval: 1s
+      timeout: 20s
+      retries: 100

@@ -1,4 +1,0 @@
-apiVersion: v2
-description: A Helm chart for aidboxdb
-name: aidboxdb
-version: 0.0.1
