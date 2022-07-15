@@ -1,0 +1,3 @@
+[submodule "embed/sdc-ide"]
+	path = embed/sdc-ide
+	url = https://github.com/beda-software/sdc-ide.git

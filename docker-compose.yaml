@@ -1,56 +1,63 @@
 version: '3.9'
 services:
-  sdc:
-    image: bedasoftware/aidbox-sdc:latest
-    command:
-      [
-        "pipenv",
-        "run",
-        "gunicorn",
-        "main:create_app",
-        "--worker-class",
-        "aiohttp.worker.GunicornWebWorker",
-        "-b",
-        "0.0.0.0:8081",
-        "--reload"
-      ]
-    depends_on:
-      devbox-healthcheck:
-        condition: service_healthy
-    links:
-      - devbox
-    env_file:
-      - .env.sdc
-    # Colored logs
-    tty: true
-  devbox:
-    image: "healthsamurai/devbox:edge"
-    depends_on:
-      - devbox-db
-    links:
-      - "devbox-db:database"
-    ports:
-      - "8080:8080"
-    env_file:
-      - .env
-    volumes:
-      - ./config:/var/config:cached
-      - ./zrc:/zrc
-  devbox-db:
-    image: "healthsamurai/aidboxdb:13.2"
-    environment:
-      POSTGRES_USER:     postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB:       devbox
-  devbox-healthcheck:
-    image: curlimages/curl
-    entrypoint: /bin/sleep 10000
-    links:
-      - devbox
-    depends_on:
-      - devbox
-    healthcheck:
-      test: curl --fail http://devbox:8080/__healthcheck || exit 1
-      interval: 1s
-      timeout: 20s
-      retries: 100
+    sdc-ide:
+        image: bedasoftware/sdc-ide:master
+        depends_on:
+            devbox-healthcheck:
+                condition: service_healthy
+        ports:
+            - '5000:5000'
+    sdc:
+        image: bedasoftware/aidbox-sdc:latest
+        command:
+            [
+                'pipenv',
+                'run',
+                'gunicorn',
+                'main:create_app',
+                '--worker-class',
+                'aiohttp.worker.GunicornWebWorker',
+                '-b',
+                '0.0.0.0:8081',
+                '--reload',
+            ]
+        depends_on:
+            devbox-healthcheck:
+                condition: service_healthy
+        links:
+            - devbox
+        env_file:
+            - .env.sdc
+        # Colored logs
+        tty: true
+    devbox:
+        image: 'healthsamurai/devbox:edge'
+        depends_on:
+            - devbox-db
+        links:
+            - 'devbox-db:database'
+        ports:
+            - '8080:8080'
+        env_file:
+            - .env
+        volumes:
+            - ./config:/var/config:cached
+            - ./zrc:/zrc
+    devbox-db:
+        image: 'healthsamurai/aidboxdb:13.2'
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: devbox
+    devbox-healthcheck:
+        image: curlimages/curl
+        entrypoint: /bin/sleep 10000
+        links:
+            - devbox
+        depends_on:
+            - devbox
+        healthcheck:
+            test: curl --fail http://devbox:8080/__healthcheck || exit 1
+            interval: 1s
+            timeout: 20s
+            retries: 100

@@ -1,6 +1,5 @@
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
-import { ConfigProvider } from 'antd';
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
