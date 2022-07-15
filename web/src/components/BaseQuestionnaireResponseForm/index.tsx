@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro';
 import { Input, Form, InputNumber, Button, Select } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
-
 import {
     calcInitialContext,
     GroupItemProps,
@@ -10,7 +9,7 @@ import {
     QuestionnaireResponseFormData,
     QuestionnaireResponseFormProvider,
     useQuestionnaireResponseFormContext,
-} from 'shared/src/utils/qrf';
+} from 'sdc-qrf';
 
 interface Props {
     formData: QuestionnaireResponseFormData;

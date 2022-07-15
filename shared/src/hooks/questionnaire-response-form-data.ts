@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { mapFormToResponse, mapResponseToForm, QuestionnaireResponseFormData } from 'sdc-qrf';
 
 import { useService } from 'aidbox-react/lib/hooks/service';
 import { isFailure, isSuccess, RemoteDataResult, success } from 'aidbox-react/lib/libs/remoteData';
@@ -13,9 +14,8 @@ import {
     ParametersParameter,
     Patient,
 } from '../contrib/aidbox';
-import { mapFormToResponse, mapResponseToForm, QuestionnaireResponseFormData } from '../utils/qrf';
 
-export type { QuestionnaireResponseFormData } from '../utils/qrf';
+export type { QuestionnaireResponseFormData } from 'sdc-qrf';
 
 export type QuestionnaireResponseFormSaveResponse = {
     questionnaireResponse: QuestionnaireResponse;
