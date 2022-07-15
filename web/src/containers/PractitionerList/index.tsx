@@ -1,4 +1,5 @@
-import { PageHeader, Button, Table, Input } from 'antd';
+import { t, Trans } from '@lingui/macro';
+import { PageHeader, Button, Table, Input, Empty } from 'antd';
 
 import { BaseLayout } from 'src/components/BaseLayout';
 import { ModalNewPractitioner } from 'src/components/ModalNewPractitioner';
@@ -22,25 +23,25 @@ const dataSource = [
 
 const columns = [
     {
-        title: 'ФИО',
+        title: <Trans>Fullname</Trans>,
         dataIndex: 'fullname',
         key: 'fullname',
         width: '35%',
     },
     {
-        title: 'Специальность',
+        title: <Trans>Speciality</Trans>,
         dataIndex: 'specialty',
         key: 'specialty',
         width: '20%',
     },
     {
-        title: 'Должность',
+        title: <Trans>Position</Trans>,
         dataIndex: 'position',
         key: 'position',
         width: '25%',
     },
     {
-        title: 'Дата приема',
+        title: <Trans>Appointment date</Trans>,
         dataIndex: 'date',
         key: 'date',
     },
@@ -49,7 +50,7 @@ const columns = [
 export function PractitionerList() {
     return (
         <BaseLayout bgHeight={281}>
-            <PageHeader title="Врачи" extra={[<ModalNewPractitioner />]} />
+            <PageHeader title={t`Practitioners`} extra={[<ModalNewPractitioner />]} />
             <div
                 style={{
                     position: 'relative',
@@ -63,10 +64,25 @@ export function PractitionerList() {
                     justifyContent: 'space-between',
                 }}
             >
-                <Input.Search placeholder="Поиск по имени" style={{ width: 264 }} />
-                <Button>Сбросить</Button>
+                <Input.Search placeholder={t`Search by name`} style={{ width: 264 }} />
+                <Button>
+                    <Trans>Reset</Trans>
+                </Button>
             </div>
-            <Table dataSource={dataSource} columns={columns} />
+            <Table
+                locale={{
+                    emptyText: (
+                        <>
+                            <Empty
+                                description={<Trans>No data</Trans>}
+                                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                            />
+                        </>
+                    ),
+                }}
+                dataSource={dataSource}
+                columns={columns}
+            />
         </BaseLayout>
     );
 }

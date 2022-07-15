@@ -1,4 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
+import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
 
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
@@ -9,10 +10,10 @@ import { QuestionnaireResponseForm } from '../QuestionnaireResponseForm';
 export const ModalNewPatient = ({ onSuccess }: { onSuccess: () => void }) => {
     return (
         <ModalTrigger
-            title="Добавить пациента"
+            title={t`Add patient`}
             trigger={
                 <Button icon={<PlusOutlined />} type="primary">
-                    Новый пациент
+                    <Trans>Add patient</Trans>
                 </Button>
             }
         >
@@ -21,7 +22,7 @@ export const ModalNewPatient = ({ onSuccess }: { onSuccess: () => void }) => {
                     questionnaireLoader={questionnaireIdLoader('patient-create')}
                     onSuccess={() => {
                         closeModal();
-                        notification.success({ message: 'Пациент успешно создан' });
+                        notification.success({ message: t`Patient successfully created` });
                         onSuccess();
                     }}
                 />

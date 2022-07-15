@@ -1,3 +1,4 @@
+import { t, Trans } from '@lingui/macro';
 import { Menu, PageHeader, Button, notification } from 'antd';
 import { useEffect, useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
@@ -29,53 +30,53 @@ export const PatientDetails = () => {
     );
 
     const menuItems: RouteItem[] = [
-        { title: 'Общая информация', path: `/patients/${params.id}` },
-        { title: 'Приемы', path: `/patients/${params.id}/encounters` },
-        { title: 'Мед Карта', path: `/patients/${params.id}/documents` },
+        { title: t`General information`, path: `/patients/${params.id}` },
+        { title: t`Encounters`, path: `/patients/${params.id}/encounters` },
+        { title: t`Documents`, path: `/patients/${params.id}/documents` },
     ];
 
     const getGeneralInfo = (patient: Patient) => [
         [
-            { title: 'Дата рождения', value: patient.birthDate },
+            { title: t`Birth date`, value: patient.birthDate },
             {
-                title: 'СНИЛС',
+                title: t`SSN`,
                 value:
                     patient.identifier?.[0].system === '1.2.643.100.3'
                         ? patient.identifier?.[0].value
-                        : 'Отсутсвует',
+                        : t`Missing`,
             },
-            { title: 'Паспортные данные', value: 'Отсутствуют' },
+            { title: t`Passport data`, value: t`Missing` },
         ],
-        [{ title: 'Мобильный телефон', value: patient.telecom?.[0].value }],
+        [{ title: t`Phone number`, value: patient.telecom?.[0].value }],
         [
             {
-                title: 'Пол',
+                title: t`Sex`,
                 value:
                     patient.gender == 'male'
-                        ? 'Мужской'
+                        ? t`Male`
                         : patient.gender === 'female'
-                        ? 'Женский'
-                        : 'Отсутсвует',
+                        ? t`Female`
+                        : t`Missing`,
             },
         ],
     ];
 
     const getCurrentPathName = () => {
         if (currentPathEnd === 'encounters') {
-            return 'Приемы';
+            return t`Encounters`;
         }
 
         if (currentPathEnd === 'documents') {
-            return 'Документы';
+            return t`Documents`;
         }
 
-        return 'Общая информация';
+        return t`General information`;
     };
 
     const crumbs = (patient: Patient) => [
         {
             path: '/patients',
-            name: 'Пациенты',
+            name: t`Patients`,
         },
         {
             path: `/patients/${params.id}`,
@@ -113,10 +114,10 @@ export const PatientDetails = () => {
                                         {patient.identifier?.[0]?.value}
                                     </div>
                                     <ModalTrigger
-                                        title="Редактирование пациента"
+                                        title={t`Edit patient`}
                                         trigger={
                                             <Button type="link" block>
-                                                Редактировать
+                                                <Trans>Edit</Trans>
                                             </Button>
                                         }
                                     >
@@ -130,7 +131,7 @@ export const PatientDetails = () => {
                                                 ]}
                                                 onSuccess={() => {
                                                     notification.success({
-                                                        message: 'Пациент сохранен',
+                                                        message: t`Patient saved`,
                                                     });
                                                     manager.reload();
                                                     closeModal();
@@ -153,7 +154,9 @@ export const PatientDetails = () => {
                         {currentPathEnd === 'encounters' ? (
                             <PatientEncounter patientId={params.id} />
                         ) : currentPathEnd === 'documents' ? (
-                            <div>documents</div>
+                            <div>
+                                <Trans>documents</Trans>
+                            </div>
                         ) : (
                             <PatientGeneralInfo generalInfo={generalInfo} />
                         )}

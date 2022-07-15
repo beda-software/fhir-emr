@@ -1,4 +1,5 @@
-import { Table } from 'antd';
+import { Trans } from '@lingui/macro';
+import { Empty, Table } from 'antd';
 import { useHistory } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
@@ -36,6 +37,16 @@ export const PatientEncounter = ({ patientId }: Props) => {
             <RenderRemoteData remoteData={encounterDataListRD}>
                 {(tableData) => (
                     <Table
+                        locale={{
+                            emptyText: (
+                                <>
+                                    <Empty
+                                        description={<Trans>No data</Trans>}
+                                        image={Empty.PRESENTED_IMAGE_SIMPLE}
+                                    />
+                                </>
+                            ),
+                        }}
                         dataSource={tableData}
                         columns={columns}
                         onRow={(record, rowIndex) => {

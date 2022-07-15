@@ -1,4 +1,5 @@
-import { Input, Form, InputNumber, Button } from 'antd';
+import { Trans } from '@lingui/macro';
+import { Input, Form, InputNumber, Button, Select } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 
 import {
@@ -43,6 +44,7 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly }: 
                             date: QuestionDateTime,
                             dateTime: QuestionDateTime,
                             time: QuestionDateTime,
+                            choice: QuestionChoice,
                         }}
                         readOnly={readOnly}
                     >
@@ -54,7 +56,7 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly }: 
                             />
                             {!readOnly && (
                                 <Button type="primary" htmlType="submit">
-                                    Отправить
+                                    <Trans>Send</Trans>
                                 </Button>
                             )}
                         </>
@@ -131,6 +133,39 @@ export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps
     return (
         <Form.Item label={text} name={fieldName}>
             <Input style={inputStyle} readOnly={readOnly || qrfContext.readOnly} />
+        </Form.Item>
+    );
+}
+
+export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) {
+    const qrfContext = useQuestionnaireResponseFormContext();
+    const { linkId, text, readOnly, repeats, answerOption, answerValueSet } = questionItem;
+    const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
+
+    if (repeats) {
+        return <div>Unsupported repeated choice</div>;
+    }
+
+    if (!answerOption?.[0]?.value?.string) {
+        return <div>Unsupported option type</div>;
+    }
+
+    if (answerValueSet) {
+        return <div>Unsupported option type</div>;
+    }
+
+    return (
+        <Form.Item label={text} name={fieldName}>
+            <Select style={inputStyle} disabled={readOnly || qrfContext.readOnly}>
+                {answerOption?.map((answerOption) => (
+                    <Select.Option
+                        key={answerOption.value!.string!}
+                        value={answerOption.value!.string!}
+                    >
+                        {answerOption.value!.string!}
+                    </Select.Option>
+                ))}
+            </Select>
         </Form.Item>
     );
 }

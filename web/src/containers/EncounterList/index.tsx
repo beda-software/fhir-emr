@@ -1,4 +1,5 @@
-import { DatePicker, PageHeader, Button, Table, Input } from 'antd';
+import { t, Trans } from '@lingui/macro';
+import { DatePicker, PageHeader, Button, Table, Input, Empty } from 'antd';
 import { useHistory } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
@@ -9,22 +10,22 @@ import { useEncounterList } from './hooks';
 
 const columns = [
     {
-        title: 'Пациент',
+        title: <Trans>Patient</Trans>,
         dataIndex: 'patient',
         key: 'patient',
     },
     {
-        title: 'Врач',
+        title: <Trans>Practitioner</Trans>,
         dataIndex: 'practitioner',
         key: 'practitioner',
     },
     {
-        title: 'Статус',
+        title: <Trans>Status</Trans>,
         dataIndex: 'status',
         key: 'status',
     },
     {
-        title: 'Дата приема',
+        title: <Trans>Appointment date</Trans>,
         dataIndex: 'date',
         key: 'date',
     },
@@ -39,7 +40,7 @@ export function EncounterList() {
 
     return (
         <BaseLayout bgHeight={281}>
-            <PageHeader title="Приемы" />
+            <PageHeader title={t`Encounters`} />
             <div
                 style={{
                     position: 'relative',
@@ -53,25 +54,41 @@ export function EncounterList() {
                     justifyContent: 'space-between',
                 }}
             >
-                <Input.Search placeholder="Поиск по пациенту" style={{ width: 264 }} />
-                <Input.Search placeholder="Поиск по врачу" style={{ width: 264 }} />
-                <RangePicker />
-                <Button type="primary">Сбросить</Button>
+                <Input.Search placeholder={t`Search by patient`} style={{ width: 264 }} />
+                <Input.Search placeholder={t`Search by practitioner`} style={{ width: 264 }} />
+
+                <RangePicker placeholder={[t`Start date`, t`End date`]} />
+
+                <Button type="primary">
+                    <Trans>Reset</Trans>
+                </Button>
             </div>
             <RenderRemoteData remoteData={encounterDataListRD}>
-                {(tableData) => (
-                    <Table
-                        dataSource={tableData}
-                        columns={columns}
-                        onRow={(record, rowIndex) => {
-                            return {
-                                onClick: (event) => {
-                                    history.push(`/encounters/${record.key}`);
-                                },
-                            };
-                        }}
-                    />
-                )}
+                {(tableData) => {
+                    return (
+                        <Table
+                            locale={{
+                                emptyText: (
+                                    <>
+                                        <Empty
+                                            description={<Trans>No data</Trans>}
+                                            image={Empty.PRESENTED_IMAGE_SIMPLE}
+                                        />
+                                    </>
+                                ),
+                            }}
+                            dataSource={tableData}
+                            columns={columns}
+                            onRow={(record, rowIndex) => {
+                                return {
+                                    onClick: (event) => {
+                                        history.push(`/encounters/${record.key}`);
+                                    },
+                                };
+                            }}
+                        />
+                    );
+                }}
             </RenderRemoteData>
         </BaseLayout>
     );

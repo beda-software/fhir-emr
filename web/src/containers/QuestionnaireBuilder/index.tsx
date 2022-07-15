@@ -1,4 +1,5 @@
 import { DeleteFilled, DragOutlined, SaveOutlined } from '@ant-design/icons';
+import { t, Trans } from '@lingui/macro';
 import {
     Affix,
     Button,
@@ -132,7 +133,7 @@ function Content({
         >
             <Row justify="space-between">
                 <Col>
-                    <PageHeader title="Опросник" />
+                    <PageHeader title={t`Questionnaire`} />
                 </Col>
                 <Col>
                     <Form.Item
@@ -144,7 +145,12 @@ function Content({
                             height: '100%',
                         }}
                     >
-                        <Input placeholder="Название" />
+                        <Input
+                            placeholder={t({
+                                id: 'msg.QuestionnaireNamePlaceholder',
+                                message: `Name`,
+                            })}
+                        />
                     </Form.Item>
                 </Col>
                 <Col>
@@ -160,8 +166,8 @@ function Content({
                         <Select
                             placeholder="Статус"
                             options={[
-                                { value: 'draft', label: 'Draft' },
-                                { value: 'active', label: 'Active' },
+                                { value: 'draft', label: t`Draft` },
+                                { value: 'active', label: t`Active` },
                             ]}
                         />
                     </Form.Item>
@@ -184,7 +190,9 @@ function Content({
                             >
                                 <GroupItemTemplate />
                                 <PrimitiveComponentTemplate />
-                                <div style={{ marginLeft: 8 }}>Перетяните элемент в форму</div>
+                                <div style={{ marginLeft: 8 }}>
+                                    <Trans>Drag items into the field</Trans>
+                                </div>
                             </div>
                         </Affix>
                         <DroppableQuestionnaire
@@ -266,7 +274,7 @@ function FieldSettingsForm({ form, path, hideSettingsForm }: FieldSettingsFormTy
                 <Input style={inputStyles} />
             </Form.Item>
             {type !== 'group' && (
-                <Form.Item label="Тип поля" name={[...path, 'type']}>
+                <Form.Item label={t`Field type`} name={[...path, 'type']}>
                     <Radio.Group>
                         <Radio.Button value="choice" style={{ marginBottom: 4 }}>
                             Choice
@@ -399,7 +407,9 @@ function DroppableQuestionnaire({
                                                 icon={<SaveOutlined />}
                                                 style={{ marginTop: 15 }}
                                             >
-                                                Сохранить
+                                                <span>
+                                                    <Trans>Save</Trans>
+                                                </span>
                                             </Button>
                                         </Form.Item>
                                     </Col>
@@ -762,7 +772,7 @@ function GroupItemTemplate() {
             type="primary"
             icon={<DragOutlined />}
         >
-            Новая группа
+            <Trans>Add group</Trans>
         </Button>
     );
 }
@@ -783,7 +793,7 @@ function PrimitiveComponentTemplate() {
             type="primary"
             icon={<DragOutlined />}
         >
-            Новый элемент
+            <Trans>Add questionnaire item</Trans>
         </Button>
     );
 }

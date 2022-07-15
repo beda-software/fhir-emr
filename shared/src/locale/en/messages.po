@@ -13,10 +13,264 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: web/src/containers/PatientList/index.tsx:37
+#: web/src/containers/QuestionnaireList/index.tsx:28
+msgid "Actions"
+msgstr ""
+
+#: web/src/containers/QuestionnaireBuilder/index.tsx:170
+msgid "Active"
+msgstr ""
+
+#: web/src/containers/QuestionnaireBuilder/index.tsx:775
+msgid "Add group"
+msgstr ""
+
+#: web/src/components/ModalNewPatient/index.tsx:13
+#: web/src/components/ModalNewPatient/index.tsx:16
+msgid "Add patient"
+msgstr ""
+
+#: web/src/components/ModalNewPractitioner/index.tsx:28
+#: web/src/components/ModalNewPractitioner/index.tsx:31
+msgid "Add practitioner"
+msgstr ""
+
+#: web/src/containers/QuestionnaireList/index.tsx:79
+msgid "Add questionnaire"
+msgstr ""
+
+#: web/src/containers/QuestionnaireBuilder/index.tsx:796
+msgid "Add questionnaire item"
+msgstr ""
+
+#: web/src/containers/EncounterList/index.tsx:28
+#: web/src/containers/PractitionerList/index.tsx:44
+msgid "Appointment date"
+msgstr ""
+
+#: web/src/containers/PatientDetails/index.tsx:40
+#: web/src/containers/PatientList/index.tsx:25
+msgid "Birth date"
+msgstr ""
+
+#: web/src/containers/PatientDetails/index.tsx:35
+#: web/src/containers/PatientDetails/index.tsx:70
+msgid "Documents"
+msgstr ""
+
+#: web/src/containers/QuestionnaireBuilder/index.tsx:169
+msgid "Draft"
+msgstr ""
+
+#: web/src/containers/QuestionnaireBuilder/index.tsx:194
+msgid "Drag items into the field"
+msgstr ""
+
+#: web/src/containers/PatientDetails/index.tsx:120
+#: web/src/containers/QuestionnaireList/index.tsx:55
+msgid "Edit"
+msgstr ""
+
+#: web/src/containers/PatientDetails/index.tsx:117
+msgid "Edit patient"
+msgstr ""
+
+#: web/src/components/BaseHeader/index.tsx:55
+#: web/src/containers/EncounterList/index.tsx:43
+#: web/src/containers/PatientDetails/index.tsx:34
+#: web/src/containers/PatientDetails/index.tsx:66
+msgid "Encounters"
+msgstr ""
+
+#: web/src/containers/EncounterList/index.tsx:60
+msgid "End date"
+msgstr ""
+
+#: web/src/containers/PatientDetails/index.tsx:58
+msgid "Female"
+msgstr ""
+
+#: web/src/containers/QuestionnaireBuilder/index.tsx:277
+msgid "Field type"
+msgstr ""
+
+#: web/src/containers/PatientList/index.tsx:79
+msgid "Find patient"
+msgstr ""
+
+#: web/src/containers/QuestionnaireList/index.tsx:97
+msgid "Find questionnaire"
+msgstr ""
+
+#: web/src/containers/PractitionerList/index.tsx:26
+msgid "Fullname"
+msgstr ""
+
+#: web/src/containers/PatientDetails/index.tsx:33
+#: web/src/containers/PatientDetails/index.tsx:73
+msgid "General information"
+msgstr ""
+
 #: web/src/containers/App/index.tsx:70
 msgid "Log in"
+msgstr ""
+
+#: web/src/components/BaseHeader/index.tsx:79
+msgid "Log out"
+msgstr ""
+
+#: web/src/containers/PatientDetails/index.tsx:56
+msgid "Male"
+msgstr ""
+
+#: web/src/containers/PatientDetails/index.tsx:46
+#: web/src/containers/PatientDetails/index.tsx:48
+#: web/src/containers/PatientDetails/index.tsx:59
+msgid "Missing"
+msgstr ""
+
+#: web/src/containers/PatientList/index.tsx:19
+msgid "Name"
+msgstr ""
+
+#: web/src/components/PatientEncounter/index.tsx:44
+#: web/src/containers/EncounterList/index.tsx:74
+#: web/src/containers/PatientList/index.tsx:89
+#: web/src/containers/PractitionerList/index.tsx:77
+#: web/src/containers/QuestionnaireList/index.tsx:107
+msgid "No data"
+msgstr ""
+
+#: web/src/containers/PatientList/index.tsx:43
+#: web/src/containers/QuestionnaireList/index.tsx:38
+msgid "Open"
+msgstr ""
+
+#: web/src/containers/PatientDetails/index.tsx:48
+msgid "Passport data"
+msgstr ""
+
+#: web/src/containers/EncounterList/index.tsx:13
+msgid "Patient"
+msgstr ""
+
+#: web/src/containers/PatientDetails/index.tsx:134
+msgid "Patient saved"
+msgstr ""
+
+#: web/src/components/ModalNewPatient/index.tsx:25
+msgid "Patient successfully created"
+msgstr ""
+
+#: web/src/components/BaseHeader/index.tsx:56
+#: web/src/containers/PatientDetails/index.tsx:79
+#: web/src/containers/PatientList/index.tsx:63
+msgid "Patients"
+msgstr ""
+
+#: web/src/containers/PatientDetails/index.tsx:50
+msgid "Phone number"
+msgstr ""
+
+#: web/src/containers/PractitionerList/index.tsx:38
+msgid "Position"
+msgstr ""
+
+#: web/src/containers/EncounterList/index.tsx:18
+msgid "Practitioner"
+msgstr ""
+
+#: web/src/components/BaseHeader/index.tsx:57
+#: web/src/containers/PractitionerList/index.tsx:53
+msgid "Practitioners"
+msgstr ""
+
+#: web/src/containers/QuestionnaireBuilder/index.tsx:136
+msgid "Questionnaire"
+msgstr ""
+
+#: web/src/containers/QuestionnaireBuilder/index.tsx:149
+#~ msgid "QuestionnaireNamePlaceholder"
+#~ msgstr ""
+
+#: web/src/components/BaseHeader/index.tsx:58
+#: web/src/containers/QuestionnaireList/index.tsx:75
+msgid "Questionnaires"
+msgstr ""
+
+#: web/src/containers/EncounterList/index.tsx:63
+#: web/src/containers/PatientList/index.tsx:81
+#: web/src/containers/PractitionerList/index.tsx:69
+#: web/src/containers/QuestionnaireList/index.tsx:99
+msgid "Reset"
+msgstr ""
+
+#: web/src/containers/App/index.tsx:80
+msgid "Reset password"
+msgstr ""
+
+#: web/src/containers/PatientDetails/index.tsx:42
+#~ msgid "SNN"
+#~ msgstr ""
+
+#: web/src/containers/PatientDetails/index.tsx:42
+#: web/src/containers/PatientList/index.tsx:31
+msgid "SSN"
+msgstr ""
+
+#: web/src/containers/QuestionnaireBuilder/index.tsx:411
+msgid "Save"
+msgstr ""
+
+#: web/src/containers/PractitionerList/index.tsx:67
+msgid "Search by name"
+msgstr ""
+
+#: web/src/containers/EncounterList/index.tsx:57
+msgid "Search by patient"
+msgstr ""
+
+#: web/src/containers/EncounterList/index.tsx:58
+msgid "Search by practitioner"
+msgstr ""
+
+#: web/src/components/BaseQuestionnaireResponseForm/index.tsx:58
+msgid "Send"
+msgstr ""
+
+#: web/src/containers/App/index.tsx:89
+msgid "Set password"
+msgstr ""
+
+#: web/src/containers/PatientDetails/index.tsx:53
+msgid "Sex"
+msgstr ""
+
+#: web/src/containers/PractitionerList/index.tsx:32
+msgid "Speciality"
+msgstr ""
+
+#: web/src/containers/EncounterList/index.tsx:60
+msgid "Start date"
+msgstr ""
+
+#: web/src/containers/EncounterList/index.tsx:23
+msgid "Status"
 msgstr ""
 
 #: web/src/containers/App/index.tsx:64
 msgid "Welcome"
 msgstr ""
+
+#: web/src/containers/PatientDetails/index.tsx:158
+msgid "documents"
+msgstr ""
+
+#: web/src/containers/QuestionnaireList/index.tsx:21
+msgid "msg.QuestionnaireName"
+msgstr "Name"
+
+#: web/src/containers/QuestionnaireBuilder/index.tsx:149
+msgid "msg.QuestionnaireNamePlaceholder"
+msgstr "Name"

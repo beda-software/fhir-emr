@@ -1,4 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
+import { t, Trans } from '@lingui/macro';
 import { Modal, Button } from 'antd';
 import { useState } from 'react';
 
@@ -24,10 +25,10 @@ export const ModalNewPractitioner = () => {
     return (
         <>
             <Button icon={<PlusOutlined />} type="primary" onClick={showModal}>
-                Добавить врача
+                <Trans>Add practitioner</Trans>
             </Button>
             <Modal
-                title="Добавить врача"
+                title={t`Add practitioner`}
                 visible={isModalVisible}
                 onOk={handleOk}
                 onCancel={handleCancel}

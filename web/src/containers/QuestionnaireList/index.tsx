@@ -1,4 +1,6 @@
-import { PageHeader, Button, Table, Input } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { t, Trans } from '@lingui/macro';
+import { PageHeader, Button, Table, Input, Empty } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { Link } from 'react-router-dom';
 
@@ -16,14 +18,14 @@ import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseF
 
 const columns: ColumnsType<Questionnaire> = [
     {
-        title: 'Название',
+        title: <Trans id="msg.QuestionnaireName">Name</Trans>,
         dataIndex: 'name',
         key: 'name',
         render: (_text, resource) => resource.name || resource.id,
     },
 
     {
-        title: 'Действия',
+        title: <Trans>Actions</Trans>,
         width: 300,
         dataIndex: 'actions',
         key: 'actions',
@@ -31,7 +33,11 @@ const columns: ColumnsType<Questionnaire> = [
             return (
                 <>
                     <ModalTrigger
-                        trigger={<Button type="link">Просмотр</Button>}
+                        trigger={
+                            <Button type="link">
+                                <Trans>Open</Trans>
+                            </Button>
+                        }
                         title={resource.name || resource.id!}
                     >
                         {() => (
@@ -45,7 +51,9 @@ const columns: ColumnsType<Questionnaire> = [
                         )}
                     </ModalTrigger>{' '}
                     <Link to={`/questionnaires/${resource.id}/edit`}>
-                        <Button type="link">Редактировать</Button>
+                        <Button type="link">
+                            <Trans>Edit</Trans>
+                        </Button>
                     </Link>
                 </>
             );
@@ -64,10 +72,12 @@ export function QuestionnaireList() {
     return (
         <BaseLayout bgHeight={281}>
             <PageHeader
-                title="Опросники"
+                title={t`Questionnaires`}
                 extra={[
                     <Link to="/questionnaires/builder">
-                        <Button type="primary">Новый опросник</Button>
+                        <Button icon={<PlusOutlined />} type="primary">
+                            <Trans>Add questionnaire</Trans>
+                        </Button>
                     </Link>,
                 ]}
             />
@@ -84,10 +94,22 @@ export function QuestionnaireList() {
                     justifyContent: 'space-between',
                 }}
             >
-                <Input.Search placeholder="Найти опросник" style={{ width: 264 }} />
-                <Button>Сбросить</Button>
+                <Input.Search placeholder={t`Find questionnaire`} style={{ width: 264 }} />
+                <Button>
+                    <Trans>Reset</Trans>
+                </Button>
             </div>
             <Table<Questionnaire>
+                locale={{
+                    emptyText: (
+                        <>
+                            <Empty
+                                description={<Trans>No data</Trans>}
+                                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                            />
+                        </>
+                    ),
+                }}
                 rowKey={(p) => p.id!}
                 dataSource={isSuccess(questionnairesResponse) ? questionnairesResponse.data : []}
                 columns={columns}

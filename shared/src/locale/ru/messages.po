@@ -13,10 +13,256 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: web/src/containers/PatientList/index.tsx:37
+#: web/src/containers/QuestionnaireList/index.tsx:28
+msgid "Actions"
+msgstr "Действия"
+
+#: web/src/containers/QuestionnaireBuilder/index.tsx:170
+msgid "Active"
+msgstr "Активный"
+
+#: web/src/containers/QuestionnaireBuilder/index.tsx:775
+msgid "Add group"
+msgstr "Добавить группу"
+
+#: web/src/components/ModalNewPatient/index.tsx:13
+#: web/src/components/ModalNewPatient/index.tsx:16
+msgid "Add patient"
+msgstr "Добавить пациенда"
+
+#: web/src/components/ModalNewPractitioner/index.tsx:28
+#: web/src/components/ModalNewPractitioner/index.tsx:31
+msgid "Add practitioner"
+msgstr "Добавить врача"
+
+#: web/src/containers/QuestionnaireList/index.tsx:79
+msgid "Add questionnaire"
+msgstr "Добавить опросник"
+
+#: web/src/containers/QuestionnaireBuilder/index.tsx:796
+msgid "Add questionnaire item"
+msgstr "Добавить поле опросника"
+
+#: web/src/containers/EncounterList/index.tsx:28
+#: web/src/containers/PractitionerList/index.tsx:44
+msgid "Appointment date"
+msgstr "Дата приема"
+
+#: web/src/containers/PatientDetails/index.tsx:40
+#: web/src/containers/PatientList/index.tsx:25
+msgid "Birth date"
+msgstr "Дата рождения"
+
+#: web/src/containers/PatientDetails/index.tsx:35
+#: web/src/containers/PatientDetails/index.tsx:70
+msgid "Documents"
+msgstr "Документы"
+
+#: web/src/containers/QuestionnaireBuilder/index.tsx:169
+msgid "Draft"
+msgstr "Черновик"
+
+#: web/src/containers/QuestionnaireBuilder/index.tsx:194
+msgid "Drag items into the field"
+msgstr "Переместите элементы в поле"
+
+#: web/src/containers/PatientDetails/index.tsx:120
+#: web/src/containers/QuestionnaireList/index.tsx:55
+msgid "Edit"
+msgstr "Редактировать"
+
+#: web/src/containers/PatientDetails/index.tsx:117
+msgid "Edit patient"
+msgstr "Редактировать пациента"
+
+#: web/src/components/BaseHeader/index.tsx:55
+#: web/src/containers/EncounterList/index.tsx:43
+#: web/src/containers/PatientDetails/index.tsx:34
+#: web/src/containers/PatientDetails/index.tsx:66
+msgid "Encounters"
+msgstr "Приемы"
+
+#: web/src/containers/EncounterList/index.tsx:60
+msgid "End date"
+msgstr "Конец периода"
+
+#: web/src/containers/PatientDetails/index.tsx:58
+msgid "Female"
+msgstr "Женский"
+
+#: web/src/containers/QuestionnaireBuilder/index.tsx:277
+msgid "Field type"
+msgstr "Тип поля"
+
+#: web/src/containers/PatientList/index.tsx:79
+msgid "Find patient"
+msgstr "Найти пациента"
+
+#: web/src/containers/QuestionnaireList/index.tsx:97
+msgid "Find questionnaire"
+msgstr "Найти опросник"
+
+#: web/src/containers/PractitionerList/index.tsx:26
+msgid "Fullname"
+msgstr "ФИО"
+
+#: web/src/containers/PatientDetails/index.tsx:33
+#: web/src/containers/PatientDetails/index.tsx:73
+msgid "General information"
+msgstr "Основная информация"
+
 #: web/src/containers/App/index.tsx:70
 msgid "Log in"
 msgstr "Войти"
 
+#: web/src/components/BaseHeader/index.tsx:79
+msgid "Log out"
+msgstr "Выйти"
+
+#: web/src/containers/PatientDetails/index.tsx:56
+msgid "Male"
+msgstr "Мужской"
+
+#: web/src/containers/PatientDetails/index.tsx:46
+#: web/src/containers/PatientDetails/index.tsx:48
+#: web/src/containers/PatientDetails/index.tsx:59
+msgid "Missing"
+msgstr "Отсутствует"
+
+#: web/src/containers/PatientList/index.tsx:19
+msgid "Name"
+msgstr "Имя"
+
+#: web/src/components/PatientEncounter/index.tsx:44
+#: web/src/containers/EncounterList/index.tsx:74
+#: web/src/containers/PatientList/index.tsx:89
+#: web/src/containers/PractitionerList/index.tsx:77
+#: web/src/containers/QuestionnaireList/index.tsx:107
+msgid "No data"
+msgstr "Нет данных"
+
+#: web/src/containers/PatientList/index.tsx:43
+#: web/src/containers/QuestionnaireList/index.tsx:38
+msgid "Open"
+msgstr "Открыть"
+
+#: web/src/containers/PatientDetails/index.tsx:48
+msgid "Passport data"
+msgstr "Паспортные данные"
+
+#: web/src/containers/EncounterList/index.tsx:13
+msgid "Patient"
+msgstr "Пациент"
+
+#: web/src/containers/PatientDetails/index.tsx:134
+msgid "Patient saved"
+msgstr "Пациент сохранен"
+
+#: web/src/components/ModalNewPatient/index.tsx:25
+msgid "Patient successfully created"
+msgstr "Пациент успешно создан"
+
+#: web/src/components/BaseHeader/index.tsx:56
+#: web/src/containers/PatientDetails/index.tsx:79
+#: web/src/containers/PatientList/index.tsx:63
+msgid "Patients"
+msgstr "Пациенты"
+
+#: web/src/containers/PatientDetails/index.tsx:50
+msgid "Phone number"
+msgstr "Номер телефона"
+
+#: web/src/containers/PractitionerList/index.tsx:38
+msgid "Position"
+msgstr "Должность"
+
+#: web/src/containers/EncounterList/index.tsx:18
+msgid "Practitioner"
+msgstr "Врач"
+
+#: web/src/components/BaseHeader/index.tsx:57
+#: web/src/containers/PractitionerList/index.tsx:53
+msgid "Practitioners"
+msgstr "Врачи"
+
+#: web/src/containers/QuestionnaireBuilder/index.tsx:136
+msgid "Questionnaire"
+msgstr "Опросник"
+
+#: web/src/components/BaseHeader/index.tsx:58
+#: web/src/containers/QuestionnaireList/index.tsx:75
+msgid "Questionnaires"
+msgstr "Опросники"
+
+#: web/src/containers/EncounterList/index.tsx:63
+#: web/src/containers/PatientList/index.tsx:81
+#: web/src/containers/PractitionerList/index.tsx:69
+#: web/src/containers/QuestionnaireList/index.tsx:99
+msgid "Reset"
+msgstr "Сбросить"
+
+#: web/src/containers/App/index.tsx:80
+msgid "Reset password"
+msgstr "Сбросить пароль"
+
+#: web/src/containers/PatientDetails/index.tsx:42
+#: web/src/containers/PatientList/index.tsx:31
+msgid "SSN"
+msgstr "СНИЛС"
+
+#: web/src/containers/QuestionnaireBuilder/index.tsx:411
+msgid "Save"
+msgstr "Сохранить"
+
+#: web/src/containers/PractitionerList/index.tsx:67
+msgid "Search by name"
+msgstr "Поиск по имени"
+
+#: web/src/containers/EncounterList/index.tsx:57
+msgid "Search by patient"
+msgstr "Поиск по пациенту"
+
+#: web/src/containers/EncounterList/index.tsx:58
+msgid "Search by practitioner"
+msgstr "Поиск по врачу"
+
+#: web/src/components/BaseQuestionnaireResponseForm/index.tsx:58
+msgid "Send"
+msgstr "Отправить"
+
+#: web/src/containers/App/index.tsx:89
+msgid "Set password"
+msgstr "Задать пароль"
+
+#: web/src/containers/PatientDetails/index.tsx:53
+msgid "Sex"
+msgstr "Пол"
+
+#: web/src/containers/PractitionerList/index.tsx:32
+msgid "Speciality"
+msgstr "Специальность"
+
+#: web/src/containers/EncounterList/index.tsx:60
+msgid "Start date"
+msgstr "Начало периода"
+
+#: web/src/containers/EncounterList/index.tsx:23
+msgid "Status"
+msgstr "Статус"
+
 #: web/src/containers/App/index.tsx:64
 msgid "Welcome"
 msgstr "Добро пожаловать"
+
+#: web/src/containers/PatientDetails/index.tsx:158
+msgid "documents"
+msgstr "документы"
+
+#: web/src/containers/QuestionnaireList/index.tsx:21
+msgid "msg.QuestionnaireName"
+msgstr "Название"
+
+#: web/src/containers/QuestionnaireBuilder/index.tsx:149
+msgid "msg.QuestionnaireNamePlaceholder"
+msgstr "Название"

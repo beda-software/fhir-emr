@@ -1,4 +1,5 @@
-import { PageHeader, Button, Table, Input } from 'antd';
+import { t, Trans } from '@lingui/macro';
+import { PageHeader, Button, Table, Input, Empty } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { useHistory } from 'react-router-dom';
 
@@ -15,31 +16,31 @@ import { ModalNewPatient } from 'src/components/ModalNewPatient';
 
 const columns: ColumnsType<Patient> = [
     {
-        title: 'Пациент',
+        title: <Trans>Name</Trans>,
         dataIndex: 'name',
         key: 'name',
         render: (_text, resource) => renderHumanName(resource.name?.[0]),
     },
     {
-        title: 'Дата рождения',
+        title: <Trans>Birth date</Trans>,
         dataIndex: 'birthDate',
         key: 'birthDate',
         render: (_text, resource) => resource.birthDate,
     },
     {
-        title: 'СНИЛС',
+        title: <Trans>SSN</Trans>,
         dataIndex: 'identifier',
         key: 'identifier',
         render: (_text, resource) => resource.identifier?.[0].value,
     },
     {
-        title: 'Действия',
+        title: <Trans>Actions</Trans>,
         dataIndex: 'actions',
         key: 'actions',
         render: (_text, resource) => {
             return (
                 <Button type="link" block>
-                    Просмотр
+                    <Trans>Open</Trans>
                 </Button>
             );
         },
@@ -58,7 +59,10 @@ export function PatientList() {
 
     return (
         <BaseLayout bgHeight={281}>
-            <PageHeader title="Пациенты" extra={[<ModalNewPatient onSuccess={manager.reload} />]} />
+            <PageHeader
+                title={t`Patients`}
+                extra={[<ModalNewPatient onSuccess={manager.reload} />]}
+            />
             <div
                 style={{
                     position: 'relative',
@@ -72,10 +76,22 @@ export function PatientList() {
                     justifyContent: 'space-between',
                 }}
             >
-                <Input.Search placeholder="Найти пациента" style={{ width: 264 }} />
-                <Button>Сбросить</Button>
+                <Input.Search placeholder={t`Find patient`} style={{ width: 264 }} />
+                <Button>
+                    <Trans>Reset</Trans>
+                </Button>
             </div>
             <Table<Patient>
+                locale={{
+                    emptyText: (
+                        <>
+                            <Empty
+                                description={<Trans>No data</Trans>}
+                                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                            />
+                        </>
+                    ),
+                }}
                 rowKey={(p) => p.id!}
                 dataSource={isSuccess(patientsResponse) ? patientsResponse.data : []}
                 columns={columns}

@@ -1,4 +1,4 @@
-import { t } from '@lingui/macro';
+import { t, Trans } from '@lingui/macro';
 import { User } from '@sentry/types';
 import { Typography, Button } from 'antd';
 import queryString from 'query-string';
@@ -72,8 +72,24 @@ export function App() {
                     </header>
                 </div>
             </Route>
-            <Route path="/reset-password" exact render={() => <div>Reset password</div>} />
-            <Route path="/set-password/:code" exact render={() => <div>Set password</div>} />
+            <Route
+                path="/reset-password"
+                exact
+                render={() => (
+                    <div>
+                        <Trans>Reset password</Trans>
+                    </div>
+                )}
+            />
+            <Route
+                path="/set-password/:code"
+                exact
+                render={() => (
+                    <div>
+                        <Trans>Set password</Trans>
+                    </div>
+                )}
+            />
             <Redirect
                 to={{
                     pathname: '/signin',

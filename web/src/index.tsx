@@ -1,7 +1,11 @@
-import React from 'react';
+import { i18n } from '@lingui/core';
+import { I18nProvider } from '@lingui/react';
+import { ConfigProvider } from 'antd';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
 import 'src/services/initialize';
+import { dynamicActivate, getCurrentLocale } from 'shared/src/services/i18n';
 
 import { App } from 'src/containers/App';
 import 'src/styles/index.scss';
@@ -9,9 +13,23 @@ import 'shared/src/services/i18n';
 
 import * as serviceWorker from './serviceWorker';
 
+const I18nApp = () => {
+    useEffect(() => {
+        dynamicActivate(getCurrentLocale());
+    }, []);
+
+    return (
+        <>
+            <I18nProvider i18n={i18n}>
+                <App />
+            </I18nProvider>
+        </>
+    );
+};
+
 ReactDOM.render(
     <React.StrictMode>
-        <App />
+        <I18nApp />
     </React.StrictMode>,
     document.getElementById('root'),
 );
