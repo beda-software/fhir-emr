@@ -76,7 +76,7 @@ msgstr ""
 msgid "Edit patient"
 msgstr ""
 
-#: web/src/components/BaseHeader/index.tsx:55
+#: web/src/components/BaseHeader/index.tsx:56
 #: web/src/containers/EncounterList/index.tsx:43
 #: web/src/containers/PatientDetails/index.tsx:34
 #: web/src/containers/PatientDetails/index.tsx:66
@@ -116,7 +116,7 @@ msgstr ""
 msgid "Log in"
 msgstr ""
 
-#: web/src/components/BaseHeader/index.tsx:79
+#: web/src/components/BaseHeader/index.tsx:80
 msgid "Log out"
 msgstr ""
 
@@ -163,7 +163,7 @@ msgstr ""
 msgid "Patient successfully created"
 msgstr ""
 
-#: web/src/components/BaseHeader/index.tsx:56
+#: web/src/components/BaseHeader/index.tsx:57
 #: web/src/containers/PatientDetails/index.tsx:79
 #: web/src/containers/PatientList/index.tsx:63
 msgid "Patients"
@@ -181,7 +181,7 @@ msgstr ""
 msgid "Practitioner"
 msgstr ""
 
-#: web/src/components/BaseHeader/index.tsx:57
+#: web/src/components/BaseHeader/index.tsx:58
 #: web/src/containers/PractitionerList/index.tsx:53
 msgid "Practitioners"
 msgstr ""
@@ -194,7 +194,7 @@ msgstr ""
 #~ msgid "QuestionnaireNamePlaceholder"
 #~ msgstr ""
 
-#: web/src/components/BaseHeader/index.tsx:58
+#: web/src/components/BaseHeader/index.tsx:59
 #: web/src/containers/QuestionnaireList/index.tsx:75
 msgid "Questionnaires"
 msgstr ""
@@ -235,7 +235,7 @@ msgstr ""
 msgid "Search by practitioner"
 msgstr ""
 
-#: web/src/components/BaseQuestionnaireResponseForm/index.tsx:58
+#: web/src/components/BaseQuestionnaireResponseForm/index.tsx:54
 msgid "Send"
 msgstr ""
 

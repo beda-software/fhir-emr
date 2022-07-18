@@ -14,8 +14,8 @@
         "compile": "lingui compile --typescript"
     },
     "devDependencies": {
-        "@lingui/cli": "^3.8.10",
-        "@lingui/macro": "^3.8.10",
+        "@lingui/cli": "^3.14.0",
+        "@lingui/macro": "^3.14.0",
         "@types/node": "^16.11.7",
         "@typescript-eslint/eslint-plugin": "^5.3.1",
         "@typescript-eslint/parser": "^5.3.1",
@@ -32,7 +32,7 @@
         "typescript": "^4.5.4"
     },
     "dependencies": {
-        "@lingui/react": "^3.8.10"
+        "@lingui/react": "^3.14.0"
     },
     "workspaces": {
         "packages": [

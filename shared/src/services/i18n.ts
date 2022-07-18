@@ -20,7 +20,11 @@ export const setCurrentLocale = (locale: string) => {
 };
 
 export async function dynamicActivate(locale: string) {
-    const { messages } = await import(`shared/src/locale/${locale}/messages`);
-    i18n.load(locale, messages);
+    try {
+        const { messages } = await import(`shared/src/locale/${locale}/messages`);
+        i18n.load(locale, messages);
+    } catch(err){
+        console.error(err);
+    }
     i18n.activate(locale);
 }
