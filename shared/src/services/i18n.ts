@@ -1,7 +1,7 @@
 import { i18n } from '@lingui/core';
 import { en, ru } from 'make-plural/plurals';
-import {messages as ruMessages} from '../locale/en/messages';
-import {messages as enMessages} from '../locale/ru/messages';
+import {messages as enMessages} from '../locale/en/messages';
+import {messages as ruMessages} from '../locale/ru/messages';
 
 const localMap = {
     en: enMessages,
