@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
 import 'src/services/initialize';
+
 import { dynamicActivate, getCurrentLocale } from 'shared/src/services/i18n';
 
 import { App } from 'src/containers/App';
@@ -18,11 +19,9 @@ const I18nApp = () => {
     }, []);
 
     return (
-        <>
-            <I18nProvider i18n={i18n}>
-                <App />
-            </I18nProvider>
-        </>
+        <I18nProvider i18n={i18n}>
+            <App />
+        </I18nProvider>
     );
 };
 

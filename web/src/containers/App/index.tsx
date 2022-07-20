@@ -3,7 +3,13 @@ import { User } from '@sentry/types';
 import { Typography, Button } from 'antd';
 import queryString from 'query-string';
 import { useEffect } from 'react';
-import { Route, Switch, Router, Redirect } from 'react-router-dom';
+import {
+    Route,
+    unstable_HistoryRouter as HistoryRouter,
+    Routes,
+    Navigate,
+    useParams,
+} from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
@@ -51,85 +57,73 @@ export function App() {
     });
 
     const renderAnonymousRoutes = () => (
-        <Switch>
-            <Route path="/auth" exact>
-                <Auth />
-            </Route>
-            <Route path="/signin" exact>
-                <div className={s.container}>
-                    <header className={s.header}>
-                        <div>
-                            <LogoImage inverse />
-                        </div>
-                        <Typography.Title style={{ color: '#FFF' }}>{t`Welcome`}</Typography.Title>
-                        <Button
-                            type="primary"
-                            style={{ marginTop: 15 }}
-                            onClick={() => authorize()}
-                        >
-                            {t`Log in`}
-                        </Button>
-                    </header>
-                </div>
-            </Route>
+        <Routes>
+            <Route path="/auth" element={<Auth />} />
+            <Route
+                path="/signin"
+                element={
+                    <div className={s.container}>
+                        <header className={s.header}>
+                            <div>
+                                <LogoImage inverse />
+                            </div>
+                            <Typography.Title
+                                style={{ color: '#FFF' }}
+                            >{t`Welcome`}</Typography.Title>
+                            <Button
+                                type="primary"
+                                style={{ marginTop: 15 }}
+                                onClick={() => authorize()}
+                            >
+                                {t`Log in`}
+                            </Button>
+                        </header>
+                    </div>
+                }
+            />
+
             <Route
                 path="/reset-password"
-                exact
-                render={() => (
+                element={
                     <div>
                         <Trans>Reset password</Trans>
                     </div>
-                )}
+                }
             />
             <Route
                 path="/set-password/:code"
-                exact
-                render={() => (
+                element={
                     <div>
                         <Trans>Set password</Trans>
                     </div>
-                )}
+                }
             />
-            <Redirect
-                to={{
-                    pathname: '/signin',
-                    state: { referrer: history.location.pathname },
-                }}
-            />
-        </Switch>
+        </Routes>
     );
 
     const renderAuthenticatedRoutes = () => {
-        const referrer = history?.location?.state?.referrer;
+        const referrer = history.location.pathname;
 
         return (
-            <Switch>
-                <Route path="/patients" render={() => <PatientList />} exact />
-                <Route path="/encounters" render={() => <EncounterList />} exact />
-                <Route path="/patients/:id" render={() => <PatientDetails />} exact />
-                <Route path="/patients/:id/encounters" render={() => <PatientDetails />} />
-                <Route path="/patients/:id/documents" render={() => <PatientDetails />} />
-                <Route path="/documents/:id/edit" render={() => <div>documents/:id/edit</div>} />
-                <Route path="/encounters/:encounterId" render={() => <EncounterDetails />} exact />
+            <Routes>
+                <Route path="/" element={<PatientList />} />
+                <Route path="/patients" element={<PatientList />} />
+                <Route path="/encounters" element={<EncounterList />} />
+                <Route path="/patients/:id" element={<PatientDetails />} />
+                <Route path="/patients/:id/encounters" element={<PatientDetails />} />
+                <Route path="/patients/:id/documents" element={<PatientDetails />} />
+                <Route path="/documents/:id/edit" element={<div>documents/:id/edit</div>} />
+                <Route path="/encounters/:encounterId" element={<EncounterDetails />} />
                 <Route
                     path="/encounters/:encounterId/qr/:questionnaireId"
-                    render={() => <EncounterQR />}
-                    exact
+                    element={<EncounterQR />}
                 />
-
-                <Route path="/practitioners" render={() => <PractitionerList />} exact />
-                <Route path="/questionnaires" render={() => <QuestionnaireList />} exact />
-                <Route path="/questionnaires/builder" render={() => <QuestionnaireBuilder />} />
-                <Route
-                    path="/questionnaires/:id/edit"
-                    render={(routeParams) => (
-                        <QuestionnaireBuilder questionnaireId={routeParams.match.params.id} />
-                    )}
-                />
-                <Route path="/questionnaires/:id" render={() => <div>questionnaires/:id</div>} />
-
-                <Redirect to={referrer && referrer !== '/' ? referrer : '/encounters'} />
-            </Switch>
+                <Route path="/practitioners" element={<PractitionerList />} />
+                <Route path="/questionnaires" element={<QuestionnaireList />} />
+                <Route path="/questionnaires/builder" element={<QuestionnaireBuilder />} />
+                <Route path="/questionnaires/:id/edit" element={<QuestionnaireBuilder />} />
+                <Route path="/questionnaires/:id" element={<div>questionnaires/:id</div>} />
+            </Routes>
         );
     };
 
@@ -142,13 +136,9 @@ export function App() {
     };
 
     return (
-        <Router history={history}>
-            <Switch>
-                <RenderRemoteData remoteData={userResponse}>
-                    {(data) => renderRoutes(data)}
-                </RenderRemoteData>
-            </Switch>
-        </Router>
+        <RenderRemoteData remoteData={userResponse}>
+            {(data) => <HistoryRouter history={history}>{renderRoutes(data)}</HistoryRouter>}
+        </RenderRemoteData>
     );
 }
 

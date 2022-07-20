@@ -17,12 +17,13 @@ import {
     Select,
     Typography,
 } from 'antd';
+import { tr } from 'date-fns/locale';
 import cloneDeep from 'lodash/cloneDeep';
 import isEqual from 'lodash/isEqual';
 import { useCallback, useRef, useState } from 'react';
 import { DndProvider, useDrag, useDragDropManager, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { useHistory } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
@@ -78,15 +79,19 @@ function cleanUpQuestionnaire(questionnaire: Questionnaire) {
     return { ...questionnaire, item: cleanUpItems(questionnaire.item) };
 }
 
-export function QuestionnaireBuilder({ questionnaireId }: Props) {
-    const history = useHistory();
+export function QuestionnaireBuilder() {
+    const navigate = useNavigate();
+
+    const params = useParams();
+
     const [questionnaireRemoteData, manager] = useService<Questionnaire>(async () => {
-        if (questionnaireId) {
+        if (params.id) {
             return await getFHIRResource<Questionnaire>({
                 resourceType: 'Questionnaire',
-                id: questionnaireId,
+                id: params.id,
             });
         }
+
         return success({ resourceType: 'Questionnaire', status: 'draft' });
     });
 
@@ -94,7 +99,7 @@ export function QuestionnaireBuilder({ questionnaireId }: Props) {
         const saveResponse = await saveFHIRResource(cleanUpQuestionnaire(resource));
         if (isSuccess(saveResponse)) {
             manager.set(saveResponse.data);
-            history.replace(`/questionnaires/${saveResponse.data.id}/edit`);
+            navigate(`/questionnaires/${saveResponse.data.id}/edit`, { replace: true });
             notification.success({ message: 'Опросник сохранен' });
         } else {
             notification.error({ message: formatError(saveResponse.error) });

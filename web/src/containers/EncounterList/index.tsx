@@ -1,6 +1,6 @@
 import { t, Trans } from '@lingui/macro';
 import { DatePicker, PageHeader, Button, Table, Input, Empty } from 'antd';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
@@ -34,7 +34,7 @@ const columns = [
 const { RangePicker } = DatePicker;
 
 export function EncounterList() {
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const encounterDataListRD = useEncounterList({});
 
@@ -82,7 +82,7 @@ export function EncounterList() {
                             onRow={(record, rowIndex) => {
                                 return {
                                     onClick: (event) => {
-                                        history.push(`/encounters/${record.key}`);
+                                        navigate(`/encounters/${record.key}`);
                                     },
                                 };
                             }}
