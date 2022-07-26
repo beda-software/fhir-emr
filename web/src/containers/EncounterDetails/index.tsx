@@ -18,7 +18,7 @@ import { useEncounterDetails } from './hooks';
 export function EncounterDetails() {
     const { encounterId } = useParams<{ encounterId: string }>();
 
-    const encounterInfoRD = useEncounterDetails(encounterId);
+    const encounterInfoRD = useEncounterDetails(encounterId!);
 
     const questionnaireResponseDataListRD = useQuestionnaireResponseDataList({
         encounter: encounterId,

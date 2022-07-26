@@ -3,13 +3,7 @@ import { User } from '@sentry/types';
 import { Typography, Button } from 'antd';
 import queryString from 'query-string';
 import { useEffect } from 'react';
-import {
-    Route,
-    unstable_HistoryRouter as HistoryRouter,
-    Routes,
-    Navigate,
-    useParams,
-} from 'react-router-dom';
+import { Route, unstable_HistoryRouter as HistoryRouter, Routes, Navigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
@@ -59,29 +53,7 @@ export function App() {
     const renderAnonymousRoutes = () => (
         <Routes>
             <Route path="/auth" element={<Auth />} />
-            <Route
-                path="/signin"
-                element={
-                    <div className={s.container}>
-                        <header className={s.header}>
-                            <div>
-                                <LogoImage inverse />
-                            </div>
-                            <Typography.Title
-                                style={{ color: '#FFF' }}
-                            >{t`Welcome`}</Typography.Title>
-                            <Button
-                                type="primary"
-                                style={{ marginTop: 15 }}
-                                onClick={() => authorize()}
-                            >
-                                {t`Log in`}
-                            </Button>
-                        </header>
-                    </div>
-                }
-            />
-
+            <Route path="/signin" element={<Signin />} />
             <Route
                 path="/reset-password"
                 element={
@@ -98,15 +70,20 @@ export function App() {
                     </div>
                 }
             />
+            <Route
+                path="*"
+                element={
+                    <>
+                        <Navigate to="/signin" replace={true} />
+                    </>
+                }
+            />
         </Routes>
     );
 
     const renderAuthenticatedRoutes = () => {
-        const referrer = history.location.pathname;
-
         return (
             <Routes>
-                <Route path="/" element={<PatientList />} />
                 <Route path="/patients" element={<PatientList />} />
                 <Route path="/encounters" element={<EncounterList />} />
                 <Route path="/patients/:id" element={<PatientDetails />} />
@@ -123,6 +100,7 @@ export function App() {
                 <Route path="/questionnaires/builder" element={<QuestionnaireBuilder />} />
                 <Route path="/questionnaires/:id/edit" element={<QuestionnaireBuilder />} />
                 <Route path="/questionnaires/:id" element={<div>questionnaires/:id</div>} />
+                <Route path="*" element={<Navigate to="/encounters" />} />
             </Routes>
         );
     };
@@ -151,6 +129,7 @@ export function Auth() {
 
     useEffect(() => {
         const queryParams = queryString.parse(location.hash);
+
         if (queryParams.access_token) {
             setToken(queryParams.access_token as string);
             const state = parseOAuthState(queryParams.state as string | undefined);
@@ -160,4 +139,20 @@ export function Auth() {
     }, [location.hash]);
 
     return null;
+}
+
+export function Signin() {
+    return (
+        <div className={s.container}>
+            <header className={s.header}>
+                <div>
+                    <LogoImage inverse />
+                </div>
+                <Typography.Title style={{ color: '#FFF' }}>{t`Welcome`}</Typography.Title>
+                <Button type="primary" style={{ marginTop: 15 }} onClick={() => authorize()}>
+                    {t`Log in`}
+                </Button>
+            </header>
+        </div>
+    );
 }

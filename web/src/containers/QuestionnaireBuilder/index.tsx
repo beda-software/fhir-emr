@@ -17,7 +17,6 @@ import {
     Select,
     Typography,
 } from 'antd';
-import { tr } from 'date-fns/locale';
 import cloneDeep from 'lodash/cloneDeep';
 import isEqual from 'lodash/isEqual';
 import { useCallback, useRef, useState } from 'react';
@@ -61,9 +60,9 @@ function isNewDraggableItem(item: DraggableItem): item is NewDraggableItem {
     return item.type === 'new';
 }
 
-interface Props {
-    questionnaireId?: string;
-}
+// interface Props {
+//     questionnaireId?: string;
+// }
 
 function cleanUpQuestionnaire(questionnaire: Questionnaire) {
     function cleanUpItems(item: Questionnaire['item']): Questionnaire['item'] {

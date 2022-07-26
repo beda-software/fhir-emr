@@ -12,17 +12,17 @@ interface Props {
 
 const columns = [
     {
-        title: 'Врач',
+        title: <Trans>Practitioner</Trans>,
         dataIndex: 'practitioner',
         key: 'practitioner',
     },
     {
-        title: 'Статус',
+        title: <Trans>Status</Trans>,
         dataIndex: 'status',
         key: 'status',
     },
     {
-        title: 'Дата приема',
+        title: <Trans>Appointment date</Trans>,
         dataIndex: 'date',
         key: 'date',
     },
