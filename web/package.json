@@ -28,6 +28,7 @@
         "react-dom": "^18.2.0",
         "react-hook-form": "7.22.1",
         "react-router-dom": "^6.3.0",
+        "react-phone-input-2": "^2.15.1",
         "react-scripts": "^5.0.1",
         "shared": "0.0.1",
         "ts-jest": "^27.1.1",

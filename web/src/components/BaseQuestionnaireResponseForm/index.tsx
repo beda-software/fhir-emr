@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro';
 import { Input, Form, InputNumber, Button, Select } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
+import PhoneInput from 'react-phone-input-2';
 import {
     calcInitialContext,
     GroupItemProps,
@@ -10,6 +11,8 @@ import {
     QuestionnaireResponseFormProvider,
     useQuestionnaireResponseFormContext,
 } from 'sdc-qrf';
+
+import 'react-phone-input-2/lib/style.css';
 
 interface Props {
     formData: QuestionnaireResponseFormData;
@@ -40,6 +43,7 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly }: 
                     dateTime: QuestionDateTime,
                     time: QuestionDateTime,
                     choice: QuestionChoice,
+                    phoneNumber: QuestionPhoneNumber,
                 }}
                 readOnly={readOnly}
             >
@@ -159,6 +163,24 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
                     </Select.Option>
                 ))}
             </Select>
+        </Form.Item>
+    );
+}
+
+export function QuestionPhoneNumber({ parentPath, questionItem }: QuestionItemProps) {
+    const qrfContext = useQuestionnaireResponseFormContext();
+    const { linkId, text, readOnly, type, hidden } = questionItem;
+    const fieldName = [...parentPath, linkId, 0, 'value', type];
+
+    return (
+        <Form.Item label={text} name={fieldName} hidden={hidden}>
+            <PhoneInput
+                country={'us'}
+                value={this.state.phone}
+                onChange={(phone) => this.setState({ phone })}
+                style={inputStyle}
+                readOnly={readOnly || qrfContext.readOnly}
+            />
         </Form.Item>
     );
 }

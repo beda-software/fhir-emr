@@ -4,37 +4,37 @@ name: patient-create
 title: Создание пациента
 status: active
 mapping:
-  - id: patient-create
-    resourceType: Mapping
+    - id: patient-create
+      resourceType: Mapping
 item:
-  - linkId: patient-id
-    type: string
-    text: patientId
-    hidden: true
-  - linkId: last-name
-    type: string
-    text: Фамилия
-    required: true
-  - linkId: first-name
-    type: string
-    text: Имя
-  - linkId: middle-name
-    type: string
-    text: Отчество
-  - linkId: birth-date
-    type: date
-    text: Дата рождения
-  - linkId: gender
-    type: choice
-    text: Пол
-    answerOption:
-      - value:
-          string: male
-      - value:
-          string: female
-  - linkId: snils
-    type: string
-    text: СНИЛС
-  - linkId: mobile
-    type: string
-    text: Телефон
+    - linkId: patient-id
+      type: string
+      text: patientId
+      hidden: true
+    - linkId: last-name
+      type: string
+      text: Фамилия
+      required: true
+    - linkId: first-name
+      type: string
+      text: Имя
+    - linkId: middle-name
+      type: string
+      text: Отчество
+    - linkId: birth-date
+      type: date
+      text: Дата рождения
+    - linkId: gender
+      type: choice
+      text: Пол
+      answerOption:
+          - value:
+                string: male
+          - value:
+                string: female
+    - linkId: snils
+      type: string
+      text: СНИЛС
+    - linkId: mobile
+      type: phoneNumber
+      text: Телефон
