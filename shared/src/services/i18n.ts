@@ -1,5 +1,12 @@
 import { i18n } from '@lingui/core';
 import { en, ru } from 'make-plural/plurals';
+import {messages as enMessages} from '../locale/en/messages';
+import {messages as ruMessages} from '../locale/ru/messages';
+
+const localMap = {
+    en: enMessages,
+    ru: ruMessages,
+}
 
 export const locales = {
     en: 'EN',
@@ -19,8 +26,10 @@ export const setCurrentLocale = (locale: string) => {
     localStorage.setItem('locale', locale);
 };
 
-export async function dynamicActivate(locale: string) {
-    const { messages } = await import(`shared/src/locale/${locale}/messages`);
-    i18n.load(locale, messages);
+export function dynamicActivate(locale: string) {
+    const messages = localMap[locale];
+    if(messages){
+        i18n.load(locale, messages);
+    }
     i18n.activate(locale);
 }

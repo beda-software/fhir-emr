@@ -19,7 +19,7 @@ interface Props {
 
 export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly }: Props) {
     const [form] = Form.useForm();
-
+    const formValues = form.getFieldsValue();
     return (
         <Form
             layout="vertical"
@@ -27,41 +27,35 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly }: 
             initialValues={formData.formValues}
             onFinish={(values) => onSubmit({ ...formData, formValues: values })}
         >
-            {() => {
-                const formValues = form.getFieldsValue();
-
-                return (
-                    <QuestionnaireResponseFormProvider
-                        formValues={formValues}
-                        setFormValues={form.setFieldsValue}
-                        groupItemComponent={Group}
-                        questionItemComponents={{
-                            text: QuestionText,
-                            string: QuestionString,
-                            decimal: QuestionDecimal,
-                            integer: QuestionInteger,
-                            date: QuestionDateTime,
-                            dateTime: QuestionDateTime,
-                            time: QuestionDateTime,
-                            choice: QuestionChoice,
-                        }}
-                        readOnly={readOnly}
-                    >
-                        <>
-                            <QuestionItems
-                                questionItems={formData.context.questionnaire.item!}
-                                parentPath={[]}
-                                context={calcInitialContext(formData.context, formValues)}
-                            />
-                            {!readOnly && (
-                                <Button type="primary" htmlType="submit">
-                                    <Trans>Send</Trans>
-                                </Button>
-                            )}
-                        </>
-                    </QuestionnaireResponseFormProvider>
-                );
-            }}
+            <QuestionnaireResponseFormProvider
+                formValues={formValues}
+                setFormValues={form.setFieldsValue}
+                groupItemComponent={Group}
+                questionItemComponents={{
+                    text: QuestionText,
+                    string: QuestionString,
+                    decimal: QuestionDecimal,
+                    integer: QuestionInteger,
+                    date: QuestionDateTime,
+                    dateTime: QuestionDateTime,
+                    time: QuestionDateTime,
+                    choice: QuestionChoice,
+                }}
+                readOnly={readOnly}
+            >
+                <>
+                    <QuestionItems
+                        questionItems={formData.context.questionnaire.item!}
+                        parentPath={[]}
+                        context={calcInitialContext(formData.context, formValues)}
+                    />
+                    {!readOnly && (
+                        <Button type="primary" htmlType="submit">
+                            <Trans>Send</Trans>
+                        </Button>
+                    )}
+                </>
+            </QuestionnaireResponseFormProvider>
         </Form>
     );
 }
