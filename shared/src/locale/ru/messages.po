@@ -76,7 +76,7 @@ msgstr "Редактировать"
 msgid "Edit patient"
 msgstr "Редактировать пациента"
 
-#: web/src/components/BaseHeader/index.tsx:55
+#: web/src/components/BaseHeader/index.tsx:56
 #: web/src/containers/EncounterList/index.tsx:43
 #: web/src/containers/PatientDetails/index.tsx:34
 #: web/src/containers/PatientDetails/index.tsx:66
@@ -116,7 +116,7 @@ msgstr "Основная информация"
 msgid "Log in"
 msgstr "Войти"
 
-#: web/src/components/BaseHeader/index.tsx:79
+#: web/src/components/BaseHeader/index.tsx:80
 msgid "Log out"
 msgstr "Выйти"
 
@@ -163,7 +163,7 @@ msgstr "Пациент сохранен"
 msgid "Patient successfully created"
 msgstr "Пациент успешно создан"
 
-#: web/src/components/BaseHeader/index.tsx:56
+#: web/src/components/BaseHeader/index.tsx:57
 #: web/src/containers/PatientDetails/index.tsx:79
 #: web/src/containers/PatientList/index.tsx:63
 msgid "Patients"
@@ -181,7 +181,7 @@ msgstr "Должность"
 msgid "Practitioner"
 msgstr "Врач"
 
-#: web/src/components/BaseHeader/index.tsx:57
+#: web/src/components/BaseHeader/index.tsx:58
 #: web/src/containers/PractitionerList/index.tsx:53
 msgid "Practitioners"
 msgstr "Врачи"
@@ -190,7 +190,7 @@ msgstr "Врачи"
 msgid "Questionnaire"
 msgstr "Опросник"
 
-#: web/src/components/BaseHeader/index.tsx:58
+#: web/src/components/BaseHeader/index.tsx:59
 #: web/src/containers/QuestionnaireList/index.tsx:75
 msgid "Questionnaires"
 msgstr "Опросники"
@@ -227,7 +227,7 @@ msgstr "Поиск по пациенту"
 msgid "Search by practitioner"
 msgstr "Поиск по врачу"
 
-#: web/src/components/BaseQuestionnaireResponseForm/index.tsx:58
+#: web/src/components/BaseQuestionnaireResponseForm/index.tsx:54
 msgid "Send"
 msgstr "Отправить"
 
