@@ -60,8 +60,11 @@ item:
           language: text/fhirpath
           expression: "%Patient.identifier.where(system='1.2.643.100.3').value"
     - linkId: mobile
-      type: phoneNumber
+      type: string
       text: Телефон
+      itemControl:
+          coding:
+              - code: phoneWidget
       initialExpression:
           language: text/fhirpath
           expression: "%Patient.telecom.where(system='mobile').value"

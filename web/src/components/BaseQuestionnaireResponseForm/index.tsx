@@ -44,7 +44,9 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly }: 
                     dateTime: QuestionDateTime,
                     time: QuestionDateTime,
                     choice: QuestionChoice,
-                    phoneNumber: QuestionPhoneNumber,
+                }}
+                itemControlQuestionItemComponents={{
+                    phoneWidget: QuestionPhoneWidget,
                 }}
                 readOnly={readOnly}
             >
@@ -168,7 +170,7 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
     );
 }
 
-export function QuestionPhoneNumber({ parentPath, questionItem }: QuestionItemProps) {
+export function QuestionPhoneWidget({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
     const { linkId, text, readOnly, hidden } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];

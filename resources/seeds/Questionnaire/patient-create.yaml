@@ -36,5 +36,8 @@ item:
       type: string
       text: СНИЛС
     - linkId: mobile
-      type: phoneNumber
+      type: string
       text: Телефон
+      itemControl:
+          coding:
+              - code: phoneWidget
