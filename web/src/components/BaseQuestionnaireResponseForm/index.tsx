@@ -1,6 +1,8 @@
 import { Trans } from '@lingui/macro';
 import { Input, Form, InputNumber, Button, Select } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
+import { useState } from 'react';
+import PhoneInput from 'react-phone-input-2';
 import {
     calcInitialContext,
     GroupItemProps,
@@ -10,6 +12,8 @@ import {
     QuestionnaireResponseFormProvider,
     useQuestionnaireResponseFormContext,
 } from 'sdc-qrf';
+
+import 'react-phone-input-2/lib/style.css';
 
 interface Props {
     formData: QuestionnaireResponseFormData;
@@ -41,6 +45,9 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly }: 
                     time: QuestionDateTime,
                     choice: QuestionChoice,
                 }}
+                itemControlQuestionItemComponents={{
+                    phoneWidget: QuestionPhoneWidget,
+                }}
                 readOnly={readOnly}
             >
                 <>
@@ -61,11 +68,11 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly }: 
 }
 
 function Group({ parentPath, questionItem, context }: GroupItemProps) {
-    const { linkId, text, item } = questionItem;
+    const { linkId, text, item, hidden } = questionItem;
     const fieldName = [...parentPath, linkId, 'items'];
 
     return (
-        <Form.Item label={<b>{text}</b>} name={fieldName}>
+        <Form.Item label={<b>{text}</b>} name={fieldName} hidden={hidden}>
             <QuestionItems questionItems={item!} parentPath={fieldName} context={context[0]} />
         </Form.Item>
     );
@@ -73,11 +80,11 @@ function Group({ parentPath, questionItem, context }: GroupItemProps) {
 
 export function QuestionString({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
-    const { linkId, text, readOnly } = questionItem;
+    const { linkId, text, readOnly, hidden } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
 
     return (
-        <Form.Item label={text} name={fieldName}>
+        <Form.Item label={text} name={fieldName} hidden={hidden}>
             <Input style={inputStyle} readOnly={readOnly || qrfContext.readOnly} />
         </Form.Item>
     );
@@ -85,10 +92,10 @@ export function QuestionString({ parentPath, questionItem }: QuestionItemProps) 
 
 function QuestionText({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
-    const { linkId, text, readOnly } = questionItem;
+    const { linkId, text, readOnly, hidden } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'text'];
     return (
-        <Form.Item label={text} name={fieldName}>
+        <Form.Item label={text} name={fieldName} hidden={hidden}>
             <TextArea rows={4} style={inputStyle} readOnly={readOnly || qrfContext.readOnly} />
         </Form.Item>
     );
@@ -96,11 +103,11 @@ function QuestionText({ parentPath, questionItem }: QuestionItemProps) {
 
 export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
-    const { linkId, text, readOnly } = questionItem;
+    const { linkId, text, readOnly, hidden } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'integer'];
 
     return (
-        <Form.Item label={text} name={fieldName}>
+        <Form.Item label={text} name={fieldName} hidden={hidden}>
             <InputNumber style={inputStyle} readOnly={readOnly || qrfContext.readOnly} />
         </Form.Item>
     );
@@ -108,11 +115,11 @@ export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps)
 
 function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
-    const { linkId, text, readOnly } = questionItem;
+    const { linkId, text, readOnly, hidden } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'decimal'];
 
     return (
-        <Form.Item label={text} name={fieldName}>
+        <Form.Item label={text} name={fieldName} hidden={hidden}>
             <InputNumber style={inputStyle} readOnly={readOnly || qrfContext.readOnly} />
         </Form.Item>
     );
@@ -120,11 +127,11 @@ function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps) {
 
 export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
-    const { linkId, text, readOnly, type } = questionItem;
+    const { linkId, text, readOnly, type, hidden } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', type];
 
     return (
-        <Form.Item label={text} name={fieldName}>
+        <Form.Item label={text} name={fieldName} hidden={hidden}>
             <Input style={inputStyle} readOnly={readOnly || qrfContext.readOnly} />
         </Form.Item>
     );
@@ -132,7 +139,7 @@ export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps
 
 export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
-    const { linkId, text, readOnly, repeats, answerOption, answerValueSet } = questionItem;
+    const { linkId, text, readOnly, repeats, answerOption, answerValueSet, hidden } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
 
     if (repeats) {
@@ -148,7 +155,7 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
     }
 
     return (
-        <Form.Item label={text} name={fieldName}>
+        <Form.Item label={text} name={fieldName} hidden={hidden}>
             <Select style={inputStyle} disabled={readOnly || qrfContext.readOnly}>
                 {answerOption?.map((answerOption) => (
                     <Select.Option
@@ -159,6 +166,24 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
                     </Select.Option>
                 ))}
             </Select>
+        </Form.Item>
+    );
+}
+
+export function QuestionPhoneWidget({ parentPath, questionItem }: QuestionItemProps) {
+    const qrfContext = useQuestionnaireResponseFormContext();
+    const { linkId, text, readOnly, hidden } = questionItem;
+    const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
+    const [phoneNumber, setPhoneNumber] = useState('');
+
+    return (
+        <Form.Item label={text} name={fieldName} hidden={hidden}>
+            <PhoneInput
+                country={'us'}
+                value={phoneNumber}
+                onChange={(phone) => setPhoneNumber(phone)}
+                disabled={readOnly || qrfContext.readOnly}
+            />
         </Form.Item>
     );
 }

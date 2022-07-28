@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro';
 import { Empty, Table } from 'antd';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
@@ -12,24 +12,24 @@ interface Props {
 
 const columns = [
     {
-        title: 'Врач',
+        title: <Trans>Practitioner</Trans>,
         dataIndex: 'practitioner',
         key: 'practitioner',
     },
     {
-        title: 'Статус',
+        title: <Trans>Status</Trans>,
         dataIndex: 'status',
         key: 'status',
     },
     {
-        title: 'Дата приема',
+        title: <Trans>Appointment date</Trans>,
         dataIndex: 'date',
         key: 'date',
     },
 ];
 
 export const PatientEncounter = ({ patientId }: Props) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const encounterDataListRD = useEncounterList({ subject: patientId });
 
     return (
@@ -52,7 +52,7 @@ export const PatientEncounter = ({ patientId }: Props) => {
                         onRow={(record, rowIndex) => {
                             return {
                                 onClick: (event) => {
-                                    history.push(`/encounters/${record.key}`);
+                                    navigate(`/encounters/${record.key}`);
                                 },
                             };
                         }}

@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro';
 import { Alert, notification, PageHeader } from 'antd';
 import { useParams } from 'react-router-dom';
 
@@ -20,12 +21,12 @@ export function EncounterQR() {
     const { encounterId, questionnaireId } =
         useParams<{ encounterId: string; questionnaireId: string }>();
 
-    const encounterInfoRD = useEncounterDetails(encounterId);
+    const encounterInfoRD = useEncounterDetails(encounterId!);
 
     const [questionnaireRD] = useService(async () => {
         return await getFHIRResource<Questionnaire>({
             resourceType: 'Questionnaire',
-            id: questionnaireId,
+            id: questionnaireId!,
         });
     });
 
@@ -78,10 +79,10 @@ export function EncounterQR() {
             </RenderRemoteData>
 
             <QuestionnaireResponseForm
-                questionnaireLoader={questionnaireIdLoader(questionnaireId)}
+                questionnaireLoader={questionnaireIdLoader(questionnaireId!)}
                 onSuccess={() => {
                     window.history.back();
-                    notification.success({ message: 'Документ сохранен' });
+                    notification.success({ message: t`Document is saved` });
                 }}
             />
         </BaseLayout>
