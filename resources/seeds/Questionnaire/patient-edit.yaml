@@ -4,64 +4,64 @@ name: Редактирование пациента
 title: Редактирование пациента
 status: active
 launchContext:
-  - name: Patient
-    type: Patient
+    - name: Patient
+      type: Patient
 mapping:
-  - id: patient-create
-    resourceType: Mapping
+    - id: patient-create
+      resourceType: Mapping
 item:
-  - linkId: patient-id
-    type: string
-    text: patientId
-    readOnly: true
-    initialExpression:
-      language: text/fhirpath
-      expression: "%Patient.id"
-  - linkId: last-name
-    type: string
-    text: Фамилия
-    required: true
-    initialExpression:
-      language: text/fhirpath
-      expression: "%Patient.name.family"
-  - linkId: first-name
-    type: string
-    text: Имя
-    initialExpression:
-      language: text/fhirpath
-      expression: "%Patient.name.given[0]"
-  - linkId: middle-name
-    type: string
-    text: Отчество
-    initialExpression:
-      language: text/fhirpath
-      expression: "%Patient.name.given[1]"
-  - linkId: birth-date
-    type: date
-    text: Дата рождения
-    initialExpression:
-      language: text/fhirpath
-      expression: "%Patient.birthDate"
-  - linkId: gender
-    type: choice
-    text: Пол
-    answerOption:
-      - value:
-          string: male
-      - value:
-          string: female
-    initialExpression:
-      language: text/fhirpath
-      expression: "%Patient.gender"
-  - linkId: snils
-    type: string
-    text: СНИЛС
-    initialExpression:
-      language: text/fhirpath
-      expression: "%Patient.identifier.where(system='1.2.643.100.3').value"
-  - linkId: mobile
-    type: string
-    text: Телефон
-    initialExpression:
-      language: text/fhirpath
-      expression: "%Patient.telecom.where(system='mobile').value"
+    - linkId: patient-id
+      type: string
+      text: patientId
+      readOnly: true
+      initialExpression:
+          language: text/fhirpath
+          expression: '%Patient.id'
+    - linkId: last-name
+      type: string
+      text: Фамилия
+      required: true
+      initialExpression:
+          language: text/fhirpath
+          expression: '%Patient.name.family'
+    - linkId: first-name
+      type: string
+      text: Имя
+      initialExpression:
+          language: text/fhirpath
+          expression: '%Patient.name.given[0]'
+    - linkId: middle-name
+      type: string
+      text: Отчество
+      initialExpression:
+          language: text/fhirpath
+          expression: '%Patient.name.given[1]'
+    - linkId: birth-date
+      type: date
+      text: Дата рождения
+      initialExpression:
+          language: text/fhirpath
+          expression: '%Patient.birthDate'
+    - linkId: gender
+      type: choice
+      text: Пол
+      answerOption:
+          - value:
+                string: male
+          - value:
+                string: female
+      initialExpression:
+          language: text/fhirpath
+          expression: '%Patient.gender'
+    - linkId: snils
+      type: string
+      text: СНИЛС
+      initialExpression:
+          language: text/fhirpath
+          expression: "%Patient.identifier.where(system='1.2.643.100.3').value"
+    - linkId: mobile
+      type: phoneNumber
+      text: Телефон
+      initialExpression:
+          language: text/fhirpath
+          expression: "%Patient.telecom.where(system='mobile').value"
