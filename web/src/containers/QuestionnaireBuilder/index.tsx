@@ -60,10 +60,6 @@ function isNewDraggableItem(item: DraggableItem): item is NewDraggableItem {
     return item.type === 'new';
 }
 
-// interface Props {
-//     questionnaireId?: string;
-// }
-
 function cleanUpQuestionnaire(questionnaire: Questionnaire) {
     function cleanUpItems(item: Questionnaire['item']): Questionnaire['item'] {
         return item?.reduce((acc, qItem) => {
