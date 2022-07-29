@@ -20,13 +20,13 @@ import { PatientGeneralInfo } from 'src/components/PatientGeneralInfo';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 
 export const PatientDetails = () => {
-    const location = useLocation<any>();
-    const params: { id: string } = useParams();
+    const location = useLocation();
+    const params = useParams<{ id: string }>();
 
-    const [currentPath, setCurrentPath] = useState(location.pathname);
+    const [currentPath, setCurrentPath] = useState(location?.pathname);
 
     const [patientResponse, manager] = useService(
-        async () => await getFHIRResource<Patient>({ resourceType: 'Patient', id: params.id }),
+        async () => await getFHIRResource<Patient>({ resourceType: 'Patient', id: params.id! }),
     );
 
     const menuItems: RouteItem[] = [
@@ -89,14 +89,14 @@ export const PatientDetails = () => {
     ];
 
     const getCurrentPathEnd = () => {
-        const pathLength = location.pathname.split('/').length;
-        return location.pathname.split('/')[pathLength - 1];
+        const pathLength = location?.pathname.split('/').length;
+        return location?.pathname.split('/')[pathLength - 1];
     };
 
     const currentPathEnd = getCurrentPathEnd();
 
     useEffect(() => {
-        setCurrentPath(location.pathname);
+        setCurrentPath(location?.pathname);
     }, [location]);
 
     return (
@@ -152,7 +152,7 @@ export const PatientDetails = () => {
                             {renderMenu(menuItems)}
                         </Menu>
                         {currentPathEnd === 'encounters' ? (
-                            <PatientEncounter patientId={params.id} />
+                            <PatientEncounter patientId={params.id!} />
                         ) : currentPathEnd === 'documents' ? (
                             <div>
                                 <Trans>documents</Trans>

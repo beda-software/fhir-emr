@@ -1,9 +1,8 @@
 import { t, Trans } from '@lingui/macro';
 import { Button, Menu, Radio } from 'antd';
 import { Header } from 'antd/lib/layout/layout';
-import History from 'history';
 import _ from 'lodash';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { resetInstanceToken } from 'aidbox-react/lib/services/instance';
 
@@ -59,8 +58,7 @@ export function BaseHeader() {
         { title: t`Questionnaires`, path: '/questionnaires' },
     ];
 
-    const history = useHistory();
-    const menuDefaultSelectedKeys = getActiveKeys(history, menuItems).map(
+    const menuDefaultSelectedKeys = getActiveKeys(menuItems).map(
         ({ path, title }) => path || title,
     );
 
@@ -107,13 +105,10 @@ export function renderMenu(menuRoutes: RouteItem[]) {
     });
 }
 
-function getActiveKeys(history: History.History, menuRoutes: RouteItem[]): RouteItem[] {
+function getActiveKeys(menuRoutes: RouteItem[]): RouteItem[] {
     return menuRoutes.filter(({ path }) => {
         if (path) {
-            return (
-                history.location.pathname === path ||
-                history.location.pathname.startsWith(`${path}/`)
-            );
+            return location.pathname === path || location.pathname.startsWith(`${path}/`);
         }
 
         return false;
