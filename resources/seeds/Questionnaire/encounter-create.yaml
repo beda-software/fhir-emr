@@ -1,7 +1,7 @@
 id: encounter-create
 resourceType: Questionnaire
 name: encounter-create
-title: Создание приема
+title: Encounter create
 status: active
 mapping:
   - id: encounter-create
@@ -12,13 +12,13 @@ item:
     text: Organization
   - linkId: patient
     type: string
-    text: Пациент
+    text: Patient
   - linkId: practitioner
     type: string
-    text: Врач
+    text: Practitioner
   - linkId: service
     type: string
-    text: Услуга
+    text: Service
   - linkId: date-time
     type: dateTime
-    text: Дата и время
+    text: Date time

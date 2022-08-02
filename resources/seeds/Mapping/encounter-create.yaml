@@ -22,4 +22,3 @@ body:
           start: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='date-time').answer.value.dateTime").0
         serviceType:
           coding: coding of service
-

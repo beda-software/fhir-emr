@@ -1,43 +1,43 @@
 id: patient-create
 resourceType: Questionnaire
 name: patient-create
-title: Создание пациента
+title: Patient create
 status: active
 mapping:
-    - id: patient-create
-      resourceType: Mapping
+  - id: patient-create
+    resourceType: Mapping
 item:
-    - linkId: patient-id
-      type: string
-      text: patientId
-      hidden: true
-    - linkId: last-name
-      type: string
-      text: Фамилия
-      required: true
-    - linkId: first-name
-      type: string
-      text: Имя
-    - linkId: middle-name
-      type: string
-      text: Отчество
-    - linkId: birth-date
-      type: date
-      text: Дата рождения
-    - linkId: gender
-      type: choice
-      text: Пол
-      answerOption:
-          - value:
-                string: male
-          - value:
-                string: female
-    - linkId: snils
-      type: string
-      text: СНИЛС
-    - linkId: mobile
-      type: string
-      text: Телефон
-      itemControl:
-          coding:
-              - code: phoneWidget
+  - linkId: patient-id
+    type: string
+    text: patientId
+    hidden: true
+  - linkId: last-name
+    type: string
+    text: Last-name
+    required: true
+  - linkId: first-name
+    type: string
+    text: First name
+  - linkId: middle-name
+    type: string
+    text: Middle name
+  - linkId: birth-date
+    type: date
+    text: Birth date
+  - linkId: gender
+    type: choice
+    text: Gender
+    answerOption:
+      - value:
+          string: male
+      - value:
+          string: female
+  - linkId: snils
+    type: string
+    text: SNN
+  - linkId: mobile
+    type: string
+    text: Phone number
+    itemControl:
+      coding:
+        - code: phoneWidget
