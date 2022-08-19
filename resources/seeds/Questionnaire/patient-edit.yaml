@@ -55,13 +55,13 @@ item:
       expression: "%Patient.gender"
   - linkId: snils
     type: string
-    text: SNN
+    text: SSN
     initialExpression:
       language: text/fhirpath
       expression: "%Patient.identifier.where(system='1.2.643.100.3').value"
   - linkId: mobile
     type: string
-    text: Mobile
+    text: Phone number
     itemControl:
       coding:
         - code: phoneWidget

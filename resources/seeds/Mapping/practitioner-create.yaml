@@ -1,16 +1,32 @@
 resourceType: Mapping
 id: practitioner-create
 body:
-  resourceType: Bundle
-  type: transaction
-  entry:
-    - request:
-        url: /Practitioner
-        method: POST
-      resource:
-        resourceType: Practitioner
+  $let:
+    firstName: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='first-name').answer.value.string").0
+    middleName: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='middle-name').answer.value.string").0
+    familyName: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='last-name').answer.value.string").0
+    specialty: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='specialty').answer.value").0
+  $body:
+    resourceType: Bundle
+    type: transaction
+    entry:
+      - request:
+          resourceType: Practitioner
+          method: POST
         name:
           - given:
-              - $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='first-name').answer.value.string").0
-              - $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='middle-name').answer.value.string").0
-            family: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='last-name').answer.value.string").0
+              - $ firstName
+              - $ middleName
+            family: $ lastName
+      - $map: $ specialty
+        $as: specialtyItem
+        $body:
+          request:
+            url: /PractitionerRole
+            method: POST
+          resource:
+            resourceType: PractitionerRole
+            specialty:
+              - coding:
+                  - code: $ specialtyItem
+                    display: $ specialtyItem

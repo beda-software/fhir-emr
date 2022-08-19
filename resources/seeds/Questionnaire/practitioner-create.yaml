@@ -1,19 +1,25 @@
 id: practitioner-create
 resourceType: Questionnaire
-name: Создание специалиста
-title: Создание специалиста
+name: practitioner create
+title: Practitioner create
 status: active
 mapping:
   - id: practitioner-create
     resourceType: Mapping
 item:
-  - linkId: last-name
-    type: string
-    text: Фамилия
-    required: true
   - linkId: first-name
     type: string
-    text: Имя
+    text: First name
   - linkId: middle-name
     type: string
-    text: Отчество
+    text: Middle name
+  - linkId: last-name
+    type: string
+    text: Last name
+    required: true
+  - text: Specialty
+    type: string
+    linkId: specialty
+    itemControl:
+      coding:
+        - code: multiSelect
