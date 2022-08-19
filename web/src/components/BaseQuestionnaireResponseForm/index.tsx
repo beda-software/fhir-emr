@@ -1,7 +1,9 @@
 import { Trans } from '@lingui/macro';
-import { Input, Form, InputNumber, Button, Select } from 'antd';
+import { Input, Form, InputNumber, Button, Select, DatePicker } from 'antd';
+import { PickerProps } from 'antd/lib/date-picker/generatePicker';
 import TextArea from 'antd/lib/input/TextArea';
-import { useState } from 'react';
+import moment, { Moment } from 'moment';
+import { useCallback, useMemo, useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import {
     calcInitialContext,
@@ -125,14 +127,31 @@ function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps) {
     );
 }
 
+export function DateTimePickerWrapper({ value, onChange }: PickerProps<moment.Moment>) {
+    const newValue = useMemo(() => (value ? moment(value) : value), [value]);
+    const newOnChange = useCallback(
+        (value: Moment | null, dateString: string) => {
+            if (value) {
+                value.toJSON = () => {
+                    return value.format('YYYY-MM-DD');
+                };
+            }
+            onChange && onChange(value, dateString);
+        },
+        [onChange],
+    );
+
+    return <DatePicker onChange={newOnChange} format="YYYY-MM-DD" value={newValue} />;
+}
+
 export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
-    const { linkId, text, readOnly, type, hidden } = questionItem;
+    const { linkId, text, type, hidden } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', type];
 
     return (
         <Form.Item label={text} name={fieldName} hidden={hidden}>
-            <Input style={inputStyle} readOnly={readOnly || qrfContext.readOnly} />
+            <DateTimePickerWrapper />
         </Form.Item>
     );
 }
