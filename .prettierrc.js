@@ -7,10 +7,4 @@ module.exports = {
     arrowParens: 'always',
     printWidth: 100,
     jsxSingleQuote: false,
-    overrides: {
-        files: '*.yaml',
-        options: {
-            tabWidth: 2,
-        },
-    },
 };
