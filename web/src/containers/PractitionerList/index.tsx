@@ -1,8 +1,21 @@
 import { t, Trans } from '@lingui/macro';
 import { PageHeader, Button, Table, Input, Empty } from 'antd';
+import { ColumnsType } from 'antd/lib/table';
+import { useNavigate } from 'react-router-dom';
+
+import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
+import { useService } from 'aidbox-react/lib/hooks/service';
+import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
+import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
+import { mapSuccess } from 'aidbox-react/lib/services/service';
+
+import { Patient, Practitioner, PractitionerRole } from 'shared/src/contrib/aidbox';
+import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { BaseLayout } from 'src/components/BaseLayout';
 import { ModalNewPractitioner } from 'src/components/ModalNewPractitioner';
+
+import { usePractitionersList } from './hooks';
 
 const dataSource = [
     {
@@ -23,31 +36,40 @@ const dataSource = [
 
 const columns = [
     {
-        title: <Trans>Fullname</Trans>,
-        dataIndex: 'fullname',
-        key: 'fullname',
+        title: <Trans>Name</Trans>,
+        dataIndex: 'practitionerName',
+        key: 'practitionerName',
         width: '35%',
     },
     {
         title: <Trans>Speciality</Trans>,
-        dataIndex: 'specialty',
-        key: 'specialty',
+        dataIndex: 'practitionerRoleList',
+        key: 'practitionerRoleList',
         width: '20%',
     },
     {
-        title: <Trans>Position</Trans>,
-        dataIndex: 'position',
-        key: 'position',
+        title: <Trans>Date</Trans>,
+        dataIndex: 'practitionerCreatedDate',
+        key: 'practitionerCreatedDate',
         width: '25%',
     },
+    // {
+    //     title: <Trans>Appointment date</Trans>,
+    //     dataIndex: 'date',
+    //     key: 'date',
+    // },
     {
-        title: <Trans>Appointment date</Trans>,
-        dataIndex: 'date',
-        key: 'date',
+        title: 'id',
+        dataIndex: 'id',
+        key: 'id',
     },
 ];
 
 export function PractitionerList() {
+    const navigate = useNavigate();
+
+    const practitionersDataListRD = usePractitionersList();
+
     return (
         <BaseLayout bgHeight={281}>
             <PageHeader title={t`Practitioners`} extra={[<ModalNewPractitioner />]} />
@@ -69,20 +91,35 @@ export function PractitionerList() {
                     <Trans>Reset</Trans>
                 </Button>
             </div>
-            <Table
-                locale={{
-                    emptyText: (
-                        <>
-                            <Empty
-                                description={<Trans>No data</Trans>}
-                                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                            />
-                        </>
-                    ),
+            <RenderRemoteData remoteData={practitionersDataListRD}>
+                {(tableData) => {
+                    return (
+                        <Table
+                            locale={{
+                                emptyText: (
+                                    <>
+                                        <Empty
+                                            description={<Trans>No data</Trans>}
+                                            image={Empty.PRESENTED_IMAGE_SIMPLE}
+                                        />
+                                    </>
+                                ),
+                            }}
+                            dataSource={tableData}
+                            columns={columns}
+                            onRow={(record, rowIndex) => {
+                                return {
+                                    onClick: (event) => {
+                                        navigate(`/practitioners/${record.id}`, {
+                                            state: { record },
+                                        });
+                                    },
+                                };
+                            }}
+                        />
+                    );
                 }}
-                dataSource={dataSource}
-                columns={columns}
-            />
+            </RenderRemoteData>
         </BaseLayout>
     );
 }

@@ -50,6 +50,10 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly }: 
                 itemControlQuestionItemComponents={{
                     phoneWidget: QuestionPhoneWidget,
                 }}
+                itemControlGroupItemComponents={{
+                    multiSelect: MultipleSelect,
+                    multiSelects: Group,
+                }}
                 readOnly={readOnly}
             >
                 <>
@@ -74,7 +78,7 @@ function Group({ parentPath, questionItem, context }: GroupItemProps) {
     const fieldName = [...parentPath, linkId, 'items'];
 
     return (
-        <Form.Item label={<b>{text}</b>} name={fieldName} hidden={hidden}>
+        <Form.Item label={<b>{text}</b>} name={fieldName} hidden={false}>
             <QuestionItems questionItems={item!} parentPath={fieldName} context={context[0]} />
         </Form.Item>
     );
@@ -203,6 +207,31 @@ export function QuestionPhoneWidget({ parentPath, questionItem }: QuestionItemPr
                 onChange={(phone) => setPhoneNumber(phone)}
                 disabled={readOnly || qrfContext.readOnly}
             />
+        </Form.Item>
+    );
+}
+
+function MultipleSelect({ parentPath, questionItem, context }: GroupItemProps) {
+    const qrfContext = useQuestionnaireResponseFormContext();
+    const { linkId, text, readOnly, hidden } = questionItem;
+    const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
+    const [selectedItems, setSelectedItems] = useState(['']);
+    const children: Array<any> = [];
+    const handleChange = (value: string[]) => {
+        console.log('selected', value);
+        setSelectedItems(value);
+    };
+
+    return (
+        <Form.Item label={text} name={fieldName} hidden={hidden}>
+            <Select
+                mode="tags"
+                style={{ width: '100%' }}
+                placeholder="Tags Mode"
+                onChange={handleChange}
+            >
+                {children}
+            </Select>
         </Form.Item>
     );
 }
