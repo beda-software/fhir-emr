@@ -1,6 +1,20 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { i18n } from '@lingui/core';
+import { I18nProvider } from '@lingui/react';
+import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { en, ru } from 'make-plural';
 
 import { BaseQuestionnaireResponseForm } from './index';
+
+export const locales = {
+    en: 'EN',
+    ru: 'RU',
+};
+
+i18n.loadLocaleData({
+    en: { plurals: en },
+    ru: { plurals: ru },
+});
+i18n.activate('en');
 
 export default {
     title: 'BaseQuestionnaireResponseForm',
@@ -11,7 +25,9 @@ export default {
 } as ComponentMeta<typeof BaseQuestionnaireResponseForm>;
 
 const Template: ComponentStory<typeof BaseQuestionnaireResponseForm> = (args) => (
-    <BaseQuestionnaireResponseForm {...args} />
+    <I18nProvider i18n={i18n}>
+        <BaseQuestionnaireResponseForm {...args} />
+    </I18nProvider>
 );
 
 export const Example = Template.bind({});
@@ -27,28 +43,28 @@ Example.args = {
                         linkId: 'patient-id',
                     },
                     {
-                        text: 'Фамилия',
+                        text: 'Last name',
                         type: 'string',
                         linkId: 'last-name',
                         required: true,
                     },
                     {
-                        text: 'Имя',
+                        text: 'First name',
                         type: 'string',
                         linkId: 'first-name',
                     },
                     {
-                        text: 'Отчество',
+                        text: 'Middle name',
                         type: 'string',
                         linkId: 'middle-name',
                     },
                     {
-                        text: 'Дата рождения',
+                        text: 'Birth date',
                         type: 'date',
                         linkId: 'birth-date',
                     },
                     {
-                        text: 'Пол',
+                        text: 'Gender',
                         type: 'choice',
                         linkId: 'gender',
                         answerOption: [
@@ -65,18 +81,18 @@ Example.args = {
                         ],
                     },
                     {
-                        text: 'СНИЛС',
+                        text: 'SSN',
                         type: 'string',
-                        linkId: 'snils',
+                        linkId: 'ssn',
                     },
                     {
-                        text: 'Телефон',
+                        text: 'Mobile phone',
                         type: 'string',
                         linkId: 'mobile',
                     },
                 ],
                 name: 'patient-create',
-                title: 'Создание пациента',
+                title: 'Patient create',
                 status: 'active',
                 mapping: [
                     {
@@ -103,31 +119,31 @@ Example.args = {
                     },
                     {
                         linkId: 'last-name',
-                        text: 'Фамилия',
+                        text: 'Last name',
                     },
                     {
                         linkId: 'first-name',
-                        text: 'Имя',
+                        text: 'First name',
                     },
                     {
                         linkId: 'middle-name',
-                        text: 'Отчество',
+                        text: 'Middle name',
                     },
                     {
                         linkId: 'birth-date',
-                        text: 'Дата рождения',
+                        text: 'Birth date',
                     },
                     {
                         linkId: 'gender',
-                        text: 'Пол',
+                        text: 'Gender',
                     },
                     {
-                        linkId: 'snils',
-                        text: 'СНИЛС',
+                        linkId: 'ssn',
+                        text: 'SSN',
                     },
                     {
                         linkId: 'mobile',
-                        text: 'Телефон',
+                        text: 'Mobile phone',
                     },
                 ],
             },
