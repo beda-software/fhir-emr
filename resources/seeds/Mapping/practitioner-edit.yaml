@@ -1,13 +1,16 @@
 resourceType: Mapping
 id: practitioner-create
+$let:
+  practitionerId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-id').answer.value.string").0
+  practitionerRoleId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-role-id').answer.value.string")
 body:
   type: transaction
   entry:
     $call: concat
     $args:
       - - request:
-            url: /Practitioner
-            method: POST
+            url: $ "/Practitioner/" + practitionerId
+            method: PUT
           fullUrl: urn:uuid:practitioner-id
           resource:
             resourceType: Practitioner
@@ -21,7 +24,7 @@ body:
         $body:
           request:
             url: /PractitionerRole
-            method: POST
+            method: PUT
           resource:
             specialty:
               - coding:

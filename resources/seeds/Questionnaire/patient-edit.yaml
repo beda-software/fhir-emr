@@ -8,7 +8,7 @@ launchContext:
     type: Patient
 mapping:
   - id: patient-create
-    resourceType: MappingZ
+    resourceType: Mapping
 item:
   - linkId: patient-id
     type: string

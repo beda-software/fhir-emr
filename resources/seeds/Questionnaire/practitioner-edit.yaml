@@ -1,25 +1,49 @@
-id: practitioner-create
+id: practitioner-edit
 resourceType: Questionnaire
-name: practitioner create
-title: Practitioner create
+name: practitioner edit
+title: Practitioner edit
 status: active
+launchContext:
+  - name: Practitioner
+    type: Practitioner
+  - name: PractitionerRole
+    type: PractitionerRole
 mapping:
-  - id: practitioner-create
+  - id: practitioner-edit
     resourceType: Mapping
 item:
+  - linkId: practitioner-id
+    type: string
+    text: practitionerId
+    readOnly: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Practitioner.id"
   - linkId: first-name
     type: string
     text: First name
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Practitioner.name.given[0]"
   - linkId: middle-name
     type: string
     text: Middle name
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Practitioner.name.given[1]"
   - linkId: last-name
     type: string
     text: Last name
     required: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Practitioner.name.family"
   - text: Specialty
     type: choice
     linkId: specialty
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Practitioner.specialty"
     answerOption:
       - value:
           Coding:

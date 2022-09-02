@@ -1,0 +1,60 @@
+.tableSectionContainer {
+    background-color: #fafcff !important;
+}
+
+.tableContainer {
+    :global .ant-table {
+        background-color: transparent !important;
+
+        .ant-table-container {
+            border-radius: 10px !important;
+        }
+
+        table {
+            background-color: white !important;
+            border-radius: 10px !important;
+            overflow: hidden !important;
+            box-shadow: 0px 6px 16px #e6ebf5 !important;
+        }
+
+        .ant-table-thead {
+            .ant-table-cell {
+                background-color: #f7f9fd;
+            }
+        }
+
+        .ant-table-tbody {
+            background-color: transparent !important;
+        }
+
+        .ant-table-row:last-child {
+            .ant-table-cell:first-child {
+                border-bottom-left-radius: 10px;
+            }
+            .ant-table-cell:last-child {
+                border-bottom-right-radius: 10px;
+            }
+        }
+    }
+}
+
+.searchBar {
+    position: relative;
+    padding: 16px;
+    height: 64px;
+    border-radius: 10px;
+    background-color: #c0d4ff;
+    margin-bottom: 36px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    input,
+    button {
+        border-color: white !important;
+    }
+
+    button {
+        border-left-color: #e4e9f2 !important;
+    }
+}

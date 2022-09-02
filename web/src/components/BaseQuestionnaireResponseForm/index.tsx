@@ -1,10 +1,12 @@
 import { Trans } from '@lingui/macro';
-import { Input, Form, InputNumber, Button, Select, DatePicker } from 'antd';
+import { Input, Form, InputNumber, Button, DatePicker } from 'antd';
 import { PickerProps } from 'antd/lib/date-picker/generatePicker';
 import TextArea from 'antd/lib/input/TextArea';
 import moment, { Moment } from 'moment';
 import { useCallback, useMemo, useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
+import Select from 'react-select';
+import { StateManagerProps } from 'react-select/dist/declarations/src/stateManager';
 import {
     calcInitialContext,
     GroupItemProps,
@@ -50,10 +52,6 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly }: 
                 itemControlQuestionItemComponents={{
                     phoneWidget: QuestionPhoneWidget,
                 }}
-                itemControlGroupItemComponents={{
-                    multiSelect: MultipleSelect,
-                    multiSelects: Group,
-                }}
                 readOnly={readOnly}
             >
                 <>
@@ -78,7 +76,7 @@ function Group({ parentPath, questionItem, context }: GroupItemProps) {
     const fieldName = [...parentPath, linkId, 'items'];
 
     return (
-        <Form.Item label={<b>{text}</b>} name={fieldName} hidden={false}>
+        <Form.Item label={<b>{text}</b>} name={fieldName} hidden={hidden}>
             <QuestionItems questionItems={item!} parentPath={fieldName} context={context[0]} />
         </Form.Item>
     );
@@ -154,41 +152,8 @@ export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps
     const fieldName = [...parentPath, linkId, 0, 'value', type];
 
     return (
-        <Form.Item label={text} name={fieldName} hidden={hidden}>
+        <Form.Item label={text} name={fieldName} hidden={hidden || qrfContext.readOnly}>
             <DateTimePickerWrapper />
-        </Form.Item>
-    );
-}
-
-export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) {
-    const qrfContext = useQuestionnaireResponseFormContext();
-    const { linkId, text, readOnly, repeats, answerOption, answerValueSet, hidden } = questionItem;
-    const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
-
-    if (repeats) {
-        return <div>Unsupported repeated choice</div>;
-    }
-
-    if (!answerOption?.[0]?.value?.string) {
-        return <div>Unsupported option type</div>;
-    }
-
-    if (answerValueSet) {
-        return <div>Unsupported option type</div>;
-    }
-
-    return (
-        <Form.Item label={text} name={fieldName} hidden={hidden}>
-            <Select style={inputStyle} disabled={readOnly || qrfContext.readOnly}>
-                {answerOption?.map((answerOption) => (
-                    <Select.Option
-                        key={answerOption.value!.string!}
-                        value={answerOption.value!.string!}
-                    >
-                        {answerOption.value!.string!}
-                    </Select.Option>
-                ))}
-            </Select>
         </Form.Item>
     );
 }
@@ -211,27 +176,47 @@ export function QuestionPhoneWidget({ parentPath, questionItem }: QuestionItemPr
     );
 }
 
-function MultipleSelect({ parentPath, questionItem, context }: GroupItemProps) {
-    const qrfContext = useQuestionnaireResponseFormContext();
-    const { linkId, text, readOnly, hidden } = questionItem;
-    const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
-    const [selectedItems, setSelectedItems] = useState(['']);
-    const children: Array<any> = [];
-    const handleChange = (value: string[]) => {
-        console.log('selected', value);
-        setSelectedItems(value);
-    };
+export function QuestionSelectWrapper({ value, onChange, options }: StateManagerProps<any>) {
+    const newValue = useMemo(() => {
+        if (value) {
+            return value.map((answerItem: any) => ({
+                label: answerItem.value.Coding.display,
+                value: answerItem.value,
+            }));
+        } else {
+            return [];
+        }
+    }, [value]);
+    const newOnChange = useCallback(
+        (values: any, option: any) => {
+            onChange && onChange(values, option);
+        },
+        [onChange],
+    );
+
+    return (
+        <Select
+            isMulti
+            options={options?.map((c: any) => {
+                return {
+                    label: c.value?.Coding.display,
+                    value: c.value,
+                };
+            })}
+            onChange={newOnChange}
+            value={newValue}
+        />
+    );
+}
+
+function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) {
+    const { linkId, text, answerOption, hidden } = questionItem;
+    const fieldName = [...parentPath, linkId];
+    const children = answerOption ? answerOption : [];
 
     return (
         <Form.Item label={text} name={fieldName} hidden={hidden}>
-            <Select
-                mode="tags"
-                style={{ width: '100%' }}
-                placeholder="Tags Mode"
-                onChange={handleChange}
-            >
-                {children}
-            </Select>
+            <QuestionSelectWrapper options={children} />
         </Form.Item>
     );
 }

@@ -1,125 +1,115 @@
+import { EditTwoTone, PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
-import { PageHeader, Button, Table, Input, Empty } from 'antd';
-import { ColumnsType } from 'antd/lib/table';
-import { useNavigate } from 'react-router-dom';
+import { PageHeader, Button, Table, Input, Empty, Tag } from 'antd';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
-import { mapSuccess } from 'aidbox-react/lib/services/service';
-
-import { Patient, Practitioner, PractitionerRole } from 'shared/src/contrib/aidbox';
-import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { BaseLayout } from 'src/components/BaseLayout';
 import { ModalNewPractitioner } from 'src/components/ModalNewPractitioner';
 
-import { usePractitionersList } from './hooks';
-
-const dataSource = [
-    {
-        key: '1',
-        fullname: 'Волыхов Андрей Александрович',
-        specialty: 'Хирург',
-        position: 'Заведующий отделением, практикующий врач',
-        date: '12.12.2021',
-    },
-    {
-        key: '2',
-        fullname: 'Вассерман Анатолий Александрович',
-        specialty: 'Оториноларинголог',
-        position: 'Главный врач, практикующий врач',
-        date: '12.12.2021',
-    },
-];
+import { PractitionerListRowData, usePractitionersList } from './hooks';
+import s from './PractitionerList.module.scss';
 
 const columns = [
     {
         title: <Trans>Name</Trans>,
         dataIndex: 'practitionerName',
         key: 'practitionerName',
-        width: '35%',
+        width: '20%',
     },
     {
         title: <Trans>Speciality</Trans>,
         dataIndex: 'practitionerRoleList',
         key: 'practitionerRoleList',
-        width: '20%',
+        width: '30%',
+        render: (tags: string[]) => (
+            <>
+                {tags.map((tag) => (
+                    <Tag key={tag}>{tag}</Tag>
+                ))}
+            </>
+        ),
     },
     {
         title: <Trans>Date</Trans>,
         dataIndex: 'practitionerCreatedDate',
         key: 'practitionerCreatedDate',
-        width: '25%',
+        width: '5%',
     },
-    // {
-    //     title: <Trans>Appointment date</Trans>,
-    //     dataIndex: 'date',
-    //     key: 'date',
-    // },
     {
-        title: 'id',
-        dataIndex: 'id',
-        key: 'id',
+        title: <Trans>Actions</Trans>,
+        dataIndex: 'practitionerResource',
+        key: 'actions',
+        width: '5%',
+        render: (practitionerResource: any, rowData: PractitionerListRowData) => {
+            const { practitionerRoleList, practitionerRolesResource } = rowData;
+            return (
+                <>
+                    <ModalNewPractitioner
+                        modalTitle="Edit Practitioner"
+                        buttonType="link"
+                        buttonText={t`Edit`}
+                        icon={<EditTwoTone />}
+                        questionnaire="practitioner-edit"
+                        practitionerResource={practitionerResource}
+                        practitionerRoleList={practitionerRoleList}
+                        practitionerRolesResource={practitionerRolesResource}
+                    />
+                </>
+            );
+        },
     },
 ];
 
 export function PractitionerList() {
-    const navigate = useNavigate();
-
     const practitionersDataListRD = usePractitionersList();
 
     return (
         <BaseLayout bgHeight={281}>
-            <PageHeader title={t`Practitioners`} extra={[<ModalNewPractitioner />]} />
-            <div
-                style={{
-                    position: 'relative',
-                    padding: 16,
-                    height: 64,
-                    borderRadius: 10,
-                    backgroundColor: '#C0D4FF',
-                    marginBottom: 36,
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                }}
-            >
-                <Input.Search placeholder={t`Search by name`} style={{ width: 264 }} />
-                <Button>
-                    <Trans>Reset</Trans>
-                </Button>
+            <div className={s.tableSectionContainer}>
+                <PageHeader
+                    title={t`Practitioners`}
+                    extra={[
+                        <ModalNewPractitioner
+                            modalTitle="Add New Practitioner"
+                            buttonText={t`Add New Practitioner`}
+                            icon={<PlusOutlined />}
+                            buttonType="primary"
+                            questionnaire="practitioner-create"
+                        />,
+                    ]}
+                />
+                <div className={s.searchBar}>
+                    <Input.Search placeholder={t`Search by name`} style={{ width: 264 }} />
+                    <Button>
+                        <Trans>Reset</Trans>
+                    </Button>
+                </div>
+
+                <RenderRemoteData remoteData={practitionersDataListRD}>
+                    {(tableData) => {
+                        return (
+                            <div className={s.tableContainer}>
+                                <Table
+                                    bordered
+                                    locale={{
+                                        emptyText: (
+                                            <>
+                                                <Empty
+                                                    description={<Trans>No data</Trans>}
+                                                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                                                />
+                                            </>
+                                        ),
+                                    }}
+                                    dataSource={tableData}
+                                    columns={columns}
+                                />
+                            </div>
+                        );
+                    }}
+                </RenderRemoteData>
             </div>
-            <RenderRemoteData remoteData={practitionersDataListRD}>
-                {(tableData) => {
-                    return (
-                        <Table
-                            locale={{
-                                emptyText: (
-                                    <>
-                                        <Empty
-                                            description={<Trans>No data</Trans>}
-                                            image={Empty.PRESENTED_IMAGE_SIMPLE}
-                                        />
-                                    </>
-                                ),
-                            }}
-                            dataSource={tableData}
-                            columns={columns}
-                            onRow={(record, rowIndex) => {
-                                return {
-                                    onClick: (event) => {
-                                        navigate(`/practitioners/${record.id}`, {
-                                            state: { record },
-                                        });
-                                    },
-                                };
-                            }}
-                        />
-                    );
-                }}
-            </RenderRemoteData>
         </BaseLayout>
     );
 }

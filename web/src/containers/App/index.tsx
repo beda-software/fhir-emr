@@ -95,7 +95,14 @@ export function App() {
                     path="/encounters/:encounterId/qr/:questionnaireId"
                     element={<EncounterQR />}
                 />
-                <Route path="/practitioners" element={<PractitionerList />} />
+                <Route
+                    path="/practitioners"
+                    element={
+                        <div className={s.sectionContainer}>
+                            <PractitionerList />
+                        </div>
+                    }
+                />
                 <Route path="/questionnaires" element={<QuestionnaireList />} />
                 <Route path="/questionnaires/builder" element={<QuestionnaireBuilder />} />
                 <Route path="/questionnaires/:id/edit" element={<QuestionnaireBuilder />} />
@@ -114,9 +121,11 @@ export function App() {
     };
 
     return (
-        <RenderRemoteData remoteData={userResponse}>
-            {(data) => <HistoryRouter history={history}>{renderRoutes(data)}</HistoryRouter>}
-        </RenderRemoteData>
+        <div className={s.globalSectionContainer}>
+            <RenderRemoteData remoteData={userResponse}>
+                {(data) => <HistoryRouter history={history}>{renderRoutes(data)}</HistoryRouter>}
+            </RenderRemoteData>
+        </div>
     );
 }
 
