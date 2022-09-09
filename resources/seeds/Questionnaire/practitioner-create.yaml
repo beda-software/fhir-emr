@@ -1,12 +1,16 @@
 id: practitioner-create
 resourceType: Questionnaire
-name: practitioner create
+name: practitioner-create
 title: Practitioner create
 status: active
 mapping:
   - id: practitioner-create
     resourceType: Mapping
 item:
+  - linkId: last-name
+    type: string
+    text: Last name
+    required: true
   - linkId: first-name
     type: string
     text: First name

@@ -16,7 +16,7 @@ export const LastName = Template.bind({});
 LastName.args = {
     parentPath: [],
     questionItem: {
-        text: 'Фамилия',
+        text: 'Last name',
         type: 'string',
         linkId: 'last-name',
         required: true,
@@ -27,7 +27,7 @@ export const FirstName = Template.bind({});
 FirstName.args = {
     parentPath: [],
     questionItem: {
-        text: 'Имя',
+        text: 'First name',
         type: 'string',
         linkId: 'first-name',
     },
@@ -37,7 +37,7 @@ export const MiddleName = Template.bind({});
 MiddleName.args = {
     parentPath: [],
     questionItem: {
-        text: 'Отчество',
+        text: 'Middle name',
         type: 'string',
         linkId: 'middle-name',
     },

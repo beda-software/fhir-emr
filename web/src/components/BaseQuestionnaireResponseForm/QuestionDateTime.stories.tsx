@@ -16,7 +16,7 @@ export const DateOfBirth = Template.bind({});
 DateOfBirth.args = {
     parentPath: [],
     questionItem: {
-        text: 'Дата рождения',
+        text: 'Birth date',
         type: 'date',
         linkId: 'birth-date',
     },

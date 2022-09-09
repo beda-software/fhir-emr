@@ -13,7 +13,7 @@ item:
     hidden: true
   - linkId: last-name
     type: string
-    text: Last-name
+    text: Last name
     required: true
   - linkId: first-name
     type: string
@@ -32,9 +32,9 @@ item:
           string: male
       - value:
           string: female
-  - linkId: snils
+  - linkId: ssn
     type: string
-    text: SNN
+    text: SSN
   - linkId: mobile
     type: string
     text: Phone number

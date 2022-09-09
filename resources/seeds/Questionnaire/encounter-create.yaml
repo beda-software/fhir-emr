@@ -1,7 +1,7 @@
 id: encounter-create
 resourceType: Questionnaire
 name: encounter-create
-title: Encounter create
+title: Create new encounter
 status: active
 mapping:
   - id: encounter-create
@@ -13,7 +13,7 @@ item:
   - linkId: patient
     type: string
     text: Patient
-  - linkId: practitioner-list
+  - linkId: practitioner
     type: string
     text: Practitioner
   - linkId: service
@@ -21,4 +21,4 @@ item:
     text: Service
   - linkId: date-time
     type: dateTime
-    text: Date time
+    text: Date and time

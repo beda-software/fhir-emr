@@ -1,6 +1,6 @@
 id: patient-edit
 resourceType: Questionnaire
-name: Edit patient
+name: edit-patient
 title: Edit patient
 status: active
 launchContext:
@@ -53,7 +53,7 @@ item:
     initialExpression:
       language: text/fhirpath
       expression: "%Patient.gender"
-  - linkId: snils
+  - linkId: ssn
     type: string
     text: SSN
     initialExpression:

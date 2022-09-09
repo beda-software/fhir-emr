@@ -18,8 +18,10 @@ import { useEncounterDetails } from '../EncounterDetails/hooks';
 import s from './EncounterQR.module.scss';
 
 export function EncounterQR() {
-    const { encounterId, questionnaireId } =
-        useParams<{ encounterId: string; questionnaireId: string }>();
+    const { encounterId, questionnaireId } = useParams<{
+        encounterId: string;
+        questionnaireId: string;
+    }>();
 
     const encounterInfoRD = useEncounterDetails(encounterId!);
 
@@ -53,19 +55,19 @@ export function EncounterQR() {
                             <PageHeader title={renderHumanName(patient.name?.[0])} />
                             <div className={s.infoContainer}>
                                 <div className={s.infoItemContainer}>
-                                    <span className={s.title}>услуга:</span>
+                                    <span className={s.title}>service:</span>
                                     <span className={s.text}>
                                         {encounter.serviceType?.coding?.[0]?.display}
                                     </span>
                                 </div>
                                 <div className={s.infoItemContainer}>
-                                    <span className={s.title}>врач:</span>
+                                    <span className={s.title}>practitioner:</span>
                                     <span className={s.text}>
                                         {renderHumanName(practitioner.name?.[0])}
                                     </span>
                                 </div>
                                 <div className={s.infoItemContainer}>
-                                    <span className={s.title}>дата:</span>
+                                    <span className={s.title}>date:</span>
                                     <span className={s.text}>
                                         {encounter.period?.start &&
                                             formatHumanDate(encounter.period?.start)}
