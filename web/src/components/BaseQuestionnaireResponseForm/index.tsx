@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro';
-import { Input, Form, InputNumber, Button, DatePicker, Select as ANTDSelect } from 'antd';
+import { Button, DatePicker, Form, Input, InputNumber, Select as ANTDSelect } from 'antd';
 import { PickerProps } from 'antd/lib/date-picker/generatePicker';
 import TextArea from 'antd/lib/input/TextArea';
 import { isArray } from 'lodash';
@@ -167,7 +167,6 @@ export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps
     const qrfContext = useQuestionnaireResponseFormContext();
     const { linkId, text, type, hidden } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', type];
-    console.log('type', type);
     return (
         <Form.Item label={text} name={fieldName} hidden={hidden || qrfContext.readOnly}>
             <DateTimePickerWrapper type={type} />
@@ -251,23 +250,51 @@ export function QuestionSelectWrapper({
     );
 }
 
+class Option {}
+
+interface ChoiceQuestionSelectProps {
+    value: any;
+    onChange: (option: Option | null) => void;
+    options: any;
+}
+
+function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
+    const { value, onChange, options } = props;
+
+    const selectOptions = options?.map((c: any) => {
+        return {
+            label: c.value?.Coding.display,
+            value: c.value,
+        };
+    });
+
+    const newOnChange = (selectValue: any) => {
+        onChange(selectValue.value);
+    };
+
+    const selectValue = {
+        label: value?.Coding.display,
+        value,
+    };
+
+    return (
+        <>
+            <Select options={selectOptions} onChange={newOnChange} value={selectValue} />
+        </>
+    );
+}
+
 function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
     const { linkId, text, answerOption, readOnly, hidden, repeats } = questionItem;
-    const children = answerOption ? answerOption : [];
 
     if (answerOption?.[0]?.value?.Coding) {
-        const fieldName = () => {
-            if (repeats) {
-                return [...parentPath, linkId];
-            }
-
-            return [...parentPath, linkId, 0];
-        };
+        const fieldName = repeats ? [...parentPath, linkId] : [...parentPath, linkId, 0, 'value'];
 
         return (
-            <Form.Item label={text} name={fieldName()} hidden={hidden}>
-                <QuestionSelectWrapper isMulti={repeats} options={children} />
+            <Form.Item label={text} name={fieldName} hidden={hidden}>
+                <ChoiceQuestionSelect options={answerOption} />
+                {/*<QuestionSelectWrapper isMulti={repeats} options={children} />*/}
             </Form.Item>
         );
     }

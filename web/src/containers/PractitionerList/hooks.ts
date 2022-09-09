@@ -19,7 +19,7 @@ export interface PractitionerListRowData {
 }
 
 export function usePractitionersList() {
-    const [practitionerDataListRD] = useService<PractitionerListRowData[]>(async () => {
+    const [practitionerDataListRD, manager] = useService<PractitionerListRowData[]>(async () => {
         const response = await getFHIRResources<PractitionerRole | Practitioner>(
             'PractitionerRole',
             {
@@ -52,7 +52,7 @@ export function usePractitionersList() {
             });
         });
     });
-    return practitionerDataListRD;
+    return { practitionerDataListRD, practitionerListReload: manager.reload };
 }
 
 function practitionerRoleToStringArray(practitionerRolesList: PractitionerRole[]): string[] {

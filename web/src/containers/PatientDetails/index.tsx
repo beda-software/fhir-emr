@@ -103,7 +103,6 @@ export const PatientDetails = () => {
         <RenderRemoteData remoteData={patientResponse}>
             {(patient) => {
                 const generalInfo = getGeneralInfo(patient);
-                console.log('patient: ', patient);
                 return (
                     <BaseLayout bgHeight={194}>
                         <PageHeader

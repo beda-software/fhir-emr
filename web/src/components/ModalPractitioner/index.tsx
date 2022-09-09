@@ -19,7 +19,7 @@ interface Props {
     practitionerListReload: () => void;
 }
 
-export function ModalNewPractitioner(props: Props) {
+export function ModalPractitioner(props: Props) {
     const {
         buttonText,
         icon,

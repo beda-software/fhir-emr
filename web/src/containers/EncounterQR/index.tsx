@@ -18,10 +18,11 @@ import { useEncounterDetails } from '../EncounterDetails/hooks';
 import s from './EncounterQR.module.scss';
 
 export function EncounterQR() {
-    const { encounterId, questionnaireId } = useParams<{
-        encounterId: string;
-        questionnaireId: string;
-    }>();
+    const { encounterId, questionnaireId } =
+        useParams<{
+            encounterId: string;
+            questionnaireId: string;
+        }>();
 
     const encounterInfoRD = useEncounterDetails(encounterId!);
 
@@ -36,8 +37,6 @@ export function EncounterQR() {
         encounterInfo: encounterInfoRD,
         questionnaire: questionnaireRD,
     });
-
-    console.log('encounterInfoRD', encounterInfoRD);
 
     return (
         <BaseLayout bgHeight={110}>

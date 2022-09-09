@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Modal, Button, Form, notification } from 'antd';
+import { Button, Form, Modal, notification } from 'antd';
 import { useState } from 'react';
 import Select from 'react-select';
 import { QuestionItemProps } from 'sdc-qrf';
@@ -40,12 +40,16 @@ export const ModalNewEncounter = ({ patient, reloadEncounter }: Props) => {
             <Button icon={<PlusOutlined />} type="primary" onClick={showModal}>
                 Create Encounter
             </Button>
-            <Modal title="Create Encounter" visible={isModalVisible} footer={null}>
+            <Modal
+                title="Create Encounter"
+                visible={isModalVisible}
+                onCancel={() => setIsModalVisible(false)}
+                footer={null}
+            >
                 <QuestionnaireResponseForm
                     questionnaireLoader={questionnaireIdLoader('encounter-create')}
                     customWidgets={{
                         'practitioner-list': (passProps) => {
-                            console.log('passProps', passProps);
                             return <PractitionerListWidget {...passProps} />;
                         },
                     }}
@@ -89,8 +93,6 @@ function PractitionerListWidget({ parentPath, questionItem }: QuestionItemProps)
 
     const { text, hidden, linkId } = questionItem;
     const fieldName = [...parentPath, linkId, 0];
-
-    console.log('practitonerRoleSelectOptionsRD', practitonerRoleSelectOptionsRD);
 
     return (
         <RenderRemoteData remoteData={practitonerRoleSelectOptionsRD}>

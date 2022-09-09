@@ -1,68 +1,17 @@
 import { EditTwoTone, PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
-import { PageHeader, Button, Table, Input, Empty, Tag } from 'antd';
+import { Button, Empty, Input, PageHeader, Table, Tag } from 'antd';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
 import { BaseLayout } from 'src/components/BaseLayout';
-import { ModalNewPractitioner } from 'src/components/ModalNewPractitioner';
+import { ModalPractitioner } from 'src/components/ModalPractitioner';
 
 import { PractitionerListRowData, usePractitionersList } from './hooks';
 import s from './PractitionerList.module.scss';
 
-const columns = [
-    {
-        title: <Trans>Name</Trans>,
-        dataIndex: 'practitionerName',
-        key: 'practitionerName',
-        width: '20%',
-    },
-    {
-        title: <Trans>Speciality</Trans>,
-        dataIndex: 'practitionerRoleList',
-        key: 'practitionerRoleList',
-        width: '30%',
-        render: (tags: string[]) => (
-            <>
-                {tags.map((tag) => (
-                    <Tag key={tag}>{tag}</Tag>
-                ))}
-            </>
-        ),
-    },
-    {
-        title: <Trans>Date</Trans>,
-        dataIndex: 'practitionerCreatedDate',
-        key: 'practitionerCreatedDate',
-        width: '5%',
-    },
-    {
-        title: <Trans>Actions</Trans>,
-        dataIndex: 'practitionerResource',
-        key: 'actions',
-        width: '5%',
-        render: (practitionerResource: any, rowData: PractitionerListRowData) => {
-            const { practitionerRoleList, practitionerRolesResource } = rowData;
-            return (
-                <>
-                    <ModalNewPractitioner
-                        modalTitle="Edit Practitioner"
-                        buttonType="link"
-                        buttonText={t`Edit`}
-                        icon={<EditTwoTone />}
-                        questionnaire="practitioner-edit"
-                        practitionerResource={practitionerResource}
-                        practitionerRoleList={practitionerRoleList}
-                        practitionerRolesResource={practitionerRolesResource}
-                    />
-                </>
-            );
-        },
-    },
-];
-
 export function PractitionerList() {
-    const practitionersDataListRD = usePractitionersList();
+    const { practitionerDataListRD, practitionerListReload } = usePractitionersList();
 
     return (
         <BaseLayout bgHeight={281}>
@@ -70,12 +19,14 @@ export function PractitionerList() {
                 <PageHeader
                     title={t`Practitioners`}
                     extra={[
-                        <ModalNewPractitioner
+                        <ModalPractitioner
+                            key={'new'}
                             modalTitle="Add New Practitioner"
                             buttonText={t`Add New Practitioner`}
                             icon={<PlusOutlined />}
+                            questionnaireId="practitioner-create"
                             buttonType="primary"
-                            questionnaire="practitioner-create"
+                            practitionerListReload={practitionerListReload}
                         />,
                     ]}
                 />
@@ -86,7 +37,7 @@ export function PractitionerList() {
                     </Button>
                 </div>
 
-                <RenderRemoteData remoteData={practitionersDataListRD}>
+                <RenderRemoteData remoteData={practitionerDataListRD}>
                     {(tableData) => {
                         return (
                             <div className={s.tableContainer}>
@@ -103,7 +54,66 @@ export function PractitionerList() {
                                         ),
                                     }}
                                     dataSource={tableData}
-                                    columns={columns}
+                                    columns={[
+                                        {
+                                            title: <Trans>Name</Trans>,
+                                            dataIndex: 'practitionerName',
+                                            key: 'practitionerName',
+                                            width: '20%',
+                                        },
+                                        {
+                                            title: <Trans>Speciality</Trans>,
+                                            dataIndex: 'practitionerRoleList',
+                                            key: 'practitionerRoleList',
+                                            width: '30%',
+                                            render: (tags: string[]) => (
+                                                <>
+                                                    {tags.map((tag) => (
+                                                        <Tag key={tag}>{tag}</Tag>
+                                                    ))}
+                                                </>
+                                            ),
+                                        },
+                                        {
+                                            title: <Trans>Date</Trans>,
+                                            dataIndex: 'practitionerCreatedDate',
+                                            key: 'practitionerCreatedDate',
+                                            width: '5%',
+                                        },
+                                        {
+                                            title: <Trans>Actions</Trans>,
+                                            dataIndex: 'practitionerResource',
+                                            key: 'actions',
+                                            width: '5%',
+                                            render: (
+                                                practitionerResource: any,
+                                                rowData: PractitionerListRowData,
+                                            ) => {
+                                                const { practitionerRolesResource } = rowData;
+                                                return (
+                                                    <>
+                                                        <ModalPractitioner
+                                                            key={'edit'}
+                                                            modalTitle="Edit Practitioner"
+                                                            buttonType="link"
+                                                            buttonText={t`Edit`}
+                                                            icon={<EditTwoTone />}
+                                                            questionnaireId="practitioner-edit"
+                                                            practitionerResource={
+                                                                practitionerResource
+                                                            }
+                                                            practitionerRole={
+                                                                practitionerRolesResource?.[0]
+                                                            }
+                                                            practitionerListReload={
+                                                                practitionerListReload
+                                                            }
+                                                        />
+                                                    </>
+                                                );
+                                            },
+                                        },
+                                    ]}
                                 />
                             </div>
                         );
