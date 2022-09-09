@@ -80,23 +80,23 @@ function EncounterInfo(props: Props) {
     const { encounter, practitioner, patient } = props;
     return (
         <div>
-            <h2>Информация о приеме</h2>
+            <h2>Encounter details</h2>
             <div>
-                <span>Дата и время:</span>
+                <span>Date and time:</span>
                 <span>
                     {encounter.period?.start && formatHumanDateTime(encounter.period?.start)}
                 </span>
             </div>
             <div>
-                <span>Врач:</span>
+                <span>Practitioner:</span>
                 <span>{renderHumanName(practitioner?.name?.[0])}</span>
             </div>
             <div>
-                <span>Услуга:</span>
+                <span>Service:</span>
                 <span>{encounter.serviceType?.coding?.[0]?.display}</span>
             </div>
             <div>
-                <span>Пациент:</span>
+                <span>Patient:</span>
                 <span>{renderHumanName(patient?.name?.[0])}</span>
             </div>
         </div>

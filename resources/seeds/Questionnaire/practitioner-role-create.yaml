@@ -1,7 +1,7 @@
 id: practitioner-role-create
 resourceType: Questionnaire
 name: practitioner-role-create
-title: Создание должности специалиста
+title: Create practitioner role
 status: active
 mapping:
   - id: practitioner-role-create
@@ -12,7 +12,7 @@ item:
     text: Organization
   - linkId: practitioner
     type: string
-    text: Специалист
+    text: Practitioner
   - linkId: specialty
     type: string
-    text: Специальность
+    text: Speciality

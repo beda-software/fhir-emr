@@ -8,7 +8,7 @@ body:
     lastName: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='last-name').answer.value.string").0
     birthDate: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='birth-date').answer.value.date").0
     gender: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='gender').answer.value.string").0
-    snils: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='snils').answer.value.string").0
+    snils: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='ssn').answer.value.string").0
     mobile: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='mobile').answer.value.string").0
   $body:
     resourceType: Bundle
@@ -26,7 +26,7 @@ body:
           resourceType: Patient
           identifier:
             - system: "1.2.643.100.3"
-              value: $ snils
+              value: $ ssn
           telecom:
             - system: mobile
               value: $ mobile

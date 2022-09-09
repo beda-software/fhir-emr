@@ -1,7 +1,7 @@
 id: practitioner-create
 resourceType: Questionnaire
-name: Создание специалиста
-title: Создание специалиста
+name: practitioner-create
+title: Practitioner create
 status: active
 mapping:
   - id: practitioner-create
@@ -9,11 +9,11 @@ mapping:
 item:
   - linkId: last-name
     type: string
-    text: Фамилия
+    text: Last name
     required: true
   - linkId: first-name
     type: string
-    text: Имя
+    text: First name
   - linkId: middle-name
     type: string
-    text: Отчество
+    text: Middle name

@@ -1,7 +1,7 @@
 id: patient-create
 resourceType: Questionnaire
 name: patient-create
-title: Создание пациента
+title: Patient create
 status: active
 mapping:
   - id: patient-create
@@ -13,28 +13,28 @@ item:
     hidden: true
   - linkId: last-name
     type: string
-    text: Фамилия
+    text: Last name
     required: true
   - linkId: first-name
     type: string
-    text: Имя
+    text: First name
   - linkId: middle-name
     type: string
-    text: Отчество
+    text: Middle name
   - linkId: birth-date
     type: date
-    text: Дата рождения
+    text: Birth date
   - linkId: gender
     type: choice
-    text: Пол
+    text: Gender
     answerOption:
       - value:
           string: male
       - value:
           string: female
-  - linkId: snils
+  - linkId: ssn
     type: string
-    text: СНИЛС
+    text: SSN
   - linkId: mobile
     type: string
-    text: Телефон
+    text: Mobile phone
