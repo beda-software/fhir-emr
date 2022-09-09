@@ -17,10 +17,6 @@ item:
   - linkId: middle-name
     type: string
     text: Middle name
-  - linkId: last-name
-    type: string
-    text: Last name
-    required: true
   - text: Specialty
     type: choice
     linkId: specialty

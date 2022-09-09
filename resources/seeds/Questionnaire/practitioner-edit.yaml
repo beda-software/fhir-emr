@@ -1,72 +1,79 @@
-id: practitioner-edit
-resourceType: Questionnaire
-name: practitioner edit
-title: Practitioner edit
-status: active
 launchContext:
   - name: Practitioner
     type: Practitioner
   - name: PractitionerRole
     type: PractitionerRole
-mapping:
-  - id: practitioner-edit
-    resourceType: Mapping
+name: practitioner edit
 item:
-  - linkId: practitioner-id
+  - text: practitionerId
     type: string
-    text: practitionerId
+    linkId: practitioner-id
     readOnly: true
     initialExpression:
       language: text/fhirpath
-      expression: "%Practitioner.id"
-  - linkId: first-name
+      expression: '%Practitioner.id'
+  - text: practitionerRoleId
     type: string
-    text: First name
+    linkId: practitioner-role-id
+    readOnly: true
     initialExpression:
       language: text/fhirpath
-      expression: "%Practitioner.name.given[0]"
-  - linkId: middle-name
+      expression: '%PractitionerRole.id'
+  - text: First name
     type: string
-    text: Middle name
+    linkId: first-name
     initialExpression:
       language: text/fhirpath
-      expression: "%Practitioner.name.given[1]"
-  - linkId: last-name
+      expression: '%Practitioner.name.given[0]'
+  - text: Middle name
     type: string
-    text: Last name
+    linkId: middle-name
+    initialExpression:
+      language: text/fhirpath
+      expression: '%Practitioner.name.given[1]'
+  - text: Last name
+    type: string
+    linkId: last-name
     required: true
     initialExpression:
       language: text/fhirpath
-      expression: "%Practitioner.name.family"
+      expression: '%Practitioner.name.family'
   - text: Specialty
     type: choice
     linkId: specialty
-    initialExpression:
-      language: text/fhirpath
-      expression: "%Practitioner.specialty"
     answerOption:
       - value:
           Coding:
-            code: "394577000"
+            code: '394577000'
             system: http://snomed.info/sct
             display: Anesthetics
       - value:
           Coding:
-            code: "394579002"
+            code: '394579002'
             system: http://snomed.info/sct
             display: Cardiology
       - value:
           Coding:
-            code: "394582007"
+            code: '394582007'
             system: http://snomed.info/sct
             display: Dermatology
       - value:
           Coding:
-            code: "394583002"
+            code: '394583002'
             system: http://snomed.info/sct
             display: Endocrinology
       - value:
           Coding:
-            code: "419772000"
+            code: '419772000'
             system: http://snomed.info/sct
             display: Family practice
+    initialExpression:
+      language: text/fhirpath
+      expression: '%PractitionerRole.specialty[0].coding'
+mapping:
+  - id: practitioner-edit
+    resourceType: Mapping
+resourceType: Questionnaire
+title: Practitioner edit
+status: active
+id: practitioner-edit

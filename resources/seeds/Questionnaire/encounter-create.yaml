@@ -1,24 +1,44 @@
 id: encounter-create
 resourceType: Questionnaire
-name: encounter-create
-title: Create new encounter
+title: Encounter create
 status: active
-mapping:
-  - id: encounter-create
-    resourceType: Mapping
+launchContext:
+  - name: Patient
+    type: Patient
+name: encounter-create
 item:
-  - linkId: organization
+  - text: PatientId
     type: string
-    text: Organization
-  - linkId: patient
+    linkId: patientId
+    readOnly: true
+    initialExpression:
+      language: text/fhirpath
+      expression: '%Patient.id'
+  - text: PatientName
     type: string
-    text: Patient
-  - linkId: practitioner
-    type: string
-    text: Practitioner
-  - linkId: service
-    type: string
-    text: Service
-  - linkId: date-time
+    linkId: patientName
+    readOnly: true
+    initialExpression:
+      language: text/fhirpath
+      expression: '%Patient.name.given[0] & '' '' & %Patient.name.family'
+  - text: Practitioner
+    type: choice
+    linkId: practitioner-list
+  - text: Service
+    type: choice
+    linkId: service
+    repeats: false
+    answerOption:
+      - value:
+          Coding:
+            code: HH
+            system: http://terminology.hl7.org/CodeSystem/v3-ActCode
+            display: home health
+      - value:
+          Coding:
+            code: AMB
+            system: http://terminology.hl7.org/CodeSystem/v3-ActCode
+            display: ambulatory
+  - text: Date time
     type: dateTime
-    text: Date and time
+    linkId: date-time
