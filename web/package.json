@@ -31,14 +31,15 @@
         "react-dnd-html5-backend": "^14.0.2",
         "react-dom": "^18.2.0",
         "react-hook-form": "7.22.1",
-        "react-router-dom": "^6.3.0",
         "react-phone-input-2": "^2.15.1",
+        "react-router-dom": "^6.3.0",
         "react-scripts": "^5.0.1",
         "react-select": "^5.0.0",
+        "sass": "^1.54.9",
+        "sdc-qrf": "^0.0.5",
         "shared": "0.0.1",
         "ts-jest": "^27.1.1",
-        "typescript": "^4.5.4",
-        "sdc-qrf": "^0.0.5"
+        "typescript": "^4.5.4"
     },
     "scripts": {
         "start": "craco start",
