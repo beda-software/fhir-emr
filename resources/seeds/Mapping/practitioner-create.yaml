@@ -1,23 +1,28 @@
-resourceType: Mapping
-id: practitioner-create
 body:
   type: transaction
   entry:
-    $call: concat
     $args:
-      - - request:
+      - - fullUrl: urn:uuid:practitioner-id
+          request:
             url: /Practitioner
             method: POST
-          fullUrl: urn:uuid:practitioner-id
           resource:
-            resourceType: Practitioner
             name:
               - given:
-                  - $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='first-name').answer.value.string").0
-                  - $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='middle-name').answer.value.string").0
-                family: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='last-name').answer.value.string").0
-      - $map: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='specialty').answer")
-        $as: specialtyItem
+                  - >-
+                    $
+                    fhirpath("QuestionnaireResponse.repeat(item).where(linkId='first-name').answer.value.string").0
+                  - >-
+                    $
+                    fhirpath("QuestionnaireResponse.repeat(item).where(linkId='middle-name').answer.value.string").0
+                family: >-
+                  $
+                  fhirpath("QuestionnaireResponse.repeat(item).where(linkId='last-name').answer.value.string").0
+            resourceType: Practitioner
+      - $as: specialtyItem
+        $map: >-
+          $
+          fhirpath("QuestionnaireResponse.repeat(item).where(linkId='specialty').answer")
         $body:
           request:
             url: /PractitionerRole
@@ -26,6 +31,9 @@ body:
             specialty:
               - coding:
                   - $ specialtyItem.value.Coding
-            resourceType: practitionerRole
             practitioner:
               uri: urn:uuid:practitioner-id
+            resourceType: practitionerRole
+    $call: concat
+id: practitioner-create
+resourceType: Mapping

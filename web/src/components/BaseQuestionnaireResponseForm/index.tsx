@@ -1,7 +1,8 @@
 import { Trans } from '@lingui/macro';
-import { Input, Form, InputNumber, Button, DatePicker } from 'antd';
+import { Input, Form, InputNumber, Button, DatePicker, Select as ANTDSelect } from 'antd';
 import { PickerProps } from 'antd/lib/date-picker/generatePicker';
 import TextArea from 'antd/lib/input/TextArea';
+import { isArray } from 'lodash';
 import moment, { Moment } from 'moment';
 import { useCallback, useMemo, useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
@@ -9,6 +10,7 @@ import Select from 'react-select';
 import { StateManagerProps } from 'react-select/dist/declarations/src/stateManager';
 import {
     calcInitialContext,
+    CustomWidgetsMapping,
     GroupItemProps,
     QuestionItemProps,
     QuestionItems,
@@ -18,14 +20,21 @@ import {
 } from 'sdc-qrf';
 
 import 'react-phone-input-2/lib/style.css';
+import { formatFHIRDate, formatFHIRDateTime } from 'aidbox-react/lib/utils/date';
 
 interface Props {
     formData: QuestionnaireResponseFormData;
     onSubmit: (formData: QuestionnaireResponseFormData) => Promise<any>;
     readOnly?: boolean;
+    customWidgets?: CustomWidgetsMapping;
 }
 
-export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly }: Props) {
+export function BaseQuestionnaireResponseForm({
+    formData,
+    onSubmit,
+    readOnly,
+    customWidgets,
+}: Props) {
     const [form] = Form.useForm();
     const formValues = form.getFieldsValue();
     return (
@@ -53,6 +62,7 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly }: 
                     phoneWidget: QuestionPhoneWidget,
                 }}
                 readOnly={readOnly}
+                customWidgets={customWidgets}
             >
                 <>
                     <QuestionItems
@@ -129,31 +139,38 @@ function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps) {
     );
 }
 
-export function DateTimePickerWrapper({ value, onChange }: PickerProps<moment.Moment>) {
+type DateTimePickerWrapperProps = PickerProps<moment.Moment> & { type: string };
+
+export function DateTimePickerWrapper({ value, onChange, type }: DateTimePickerWrapperProps) {
     const newValue = useMemo(() => (value ? moment(value) : value), [value]);
+    const format = type === 'date' ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm';
+    const showTime = type === 'date' ? false : true;
+    const formatFunction = type === 'date' ? formatFHIRDate : formatFHIRDateTime;
+
     const newOnChange = useCallback(
         (value: Moment | null, dateString: string) => {
             if (value) {
                 value.toJSON = () => {
-                    return value.format('YYYY-MM-DD');
+                    return formatFunction(value);
                 };
             }
             onChange && onChange(value, dateString);
         },
         [onChange],
     );
-
-    return <DatePicker onChange={newOnChange} format="YYYY-MM-DD" value={newValue} />;
+    return (
+        <DatePicker showTime={showTime} onChange={newOnChange} format={format} value={newValue} />
+    );
 }
 
 export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
     const { linkId, text, type, hidden } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', type];
-
+    console.log('type', type);
     return (
         <Form.Item label={text} name={fieldName} hidden={hidden || qrfContext.readOnly}>
-            <DateTimePickerWrapper />
+            <DateTimePickerWrapper type={type} />
         </Form.Item>
     );
 }
@@ -176,13 +193,24 @@ export function QuestionPhoneWidget({ parentPath, questionItem }: QuestionItemPr
     );
 }
 
-export function QuestionSelectWrapper({ value, onChange, options }: StateManagerProps<any>) {
+export function QuestionSelectWrapper({
+    value,
+    onChange,
+    options,
+    isMulti,
+}: StateManagerProps<any>) {
     const newValue = useMemo(() => {
         if (value) {
-            return value.map((answerItem: any) => ({
-                label: answerItem.value.Coding.display,
-                value: answerItem.value,
-            }));
+            if (isArray(value)) {
+                return value.map((answerItem: any) => ({
+                    label: answerItem.value.Coding.display,
+                    value: answerItem.value,
+                }));
+            }
+            return {
+                label: value.value.Coding.display,
+                value: value.value,
+            };
         } else {
             return [];
         }
@@ -193,10 +221,24 @@ export function QuestionSelectWrapper({ value, onChange, options }: StateManager
         },
         [onChange],
     );
+    if (isMulti) {
+        return (
+            <Select
+                isMulti
+                options={options?.map((c: any) => {
+                    return {
+                        label: c.value?.Coding.display,
+                        value: c.value,
+                    };
+                })}
+                onChange={newOnChange}
+                value={newValue}
+            />
+        );
+    }
 
     return (
         <Select
-            isMulti
             options={options?.map((c: any) => {
                 return {
                     label: c.value?.Coding.display,
@@ -210,13 +252,39 @@ export function QuestionSelectWrapper({ value, onChange, options }: StateManager
 }
 
 function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) {
-    const { linkId, text, answerOption, hidden } = questionItem;
-    const fieldName = [...parentPath, linkId];
+    const qrfContext = useQuestionnaireResponseFormContext();
+    const { linkId, text, answerOption, readOnly, hidden, repeats } = questionItem;
     const children = answerOption ? answerOption : [];
 
+    if (answerOption?.[0]?.value?.Coding) {
+        const fieldName = () => {
+            if (repeats) {
+                return [...parentPath, linkId];
+            }
+
+            return [...parentPath, linkId, 0];
+        };
+
+        return (
+            <Form.Item label={text} name={fieldName()} hidden={hidden}>
+                <QuestionSelectWrapper isMulti={repeats} options={children} />
+            </Form.Item>
+        );
+    }
+
+    const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
     return (
-        <Form.Item label={text} name={fieldName} hidden={hidden}>
-            <QuestionSelectWrapper options={children} />
+        <Form.Item label={text} name={fieldName}>
+            <ANTDSelect style={inputStyle} disabled={readOnly || qrfContext.readOnly}>
+                {answerOption?.map((answerOption) => (
+                    <ANTDSelect.Option
+                        label={answerOption.value!.string!}
+                        value={answerOption.value!.string!}
+                    >
+                        {answerOption.value!.string!}
+                    </ANTDSelect.Option>
+                ))}
+            </ANTDSelect>
         </Form.Item>
     );
 }

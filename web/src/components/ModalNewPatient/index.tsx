@@ -7,7 +7,7 @@ import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-f
 import { ModalTrigger } from '../ModalTrigger';
 import { QuestionnaireResponseForm } from '../QuestionnaireResponseForm';
 
-export const ModalNewPatient = ({ onSuccess }: { onSuccess: () => void }) => {
+export const ModalNewPatient = () => {
     return (
         <ModalTrigger
             title={t`Add patient`}
@@ -23,7 +23,6 @@ export const ModalNewPatient = ({ onSuccess }: { onSuccess: () => void }) => {
                     onSuccess={() => {
                         closeModal();
                         notification.success({ message: t`Patient successfully created` });
-                        onSuccess();
                     }}
                 />
             )}

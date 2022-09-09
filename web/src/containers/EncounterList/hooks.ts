@@ -10,7 +10,7 @@ import { formatHumanDateTime } from '../../utils/date';
 import { getEncounterStatus } from '../../utils/format';
 
 export function useEncounterList(searchParams: SearchParams) {
-    const [encounterDataListRD] = useService(async () => {
+    const [encounterDataListRD, manager] = useService(async () => {
         const response = await getFHIRResources<
             Encounter | PractitionerRole | Practitioner | Patient
         >('Encounter', {
@@ -27,6 +27,7 @@ export function useEncounterList(searchParams: SearchParams) {
             const patients = sourceMap.Patient;
             const practitioners = sourceMap.Practitioner;
             const practitionerRoles = sourceMap.PractitionerRole;
+
             return encounters.map((encounter) => {
                 const patient = patients.find((p) => p.id === encounter.subject?.id);
                 const practitionerRole = practitionerRoles.find(
@@ -45,5 +46,5 @@ export function useEncounterList(searchParams: SearchParams) {
             });
         });
     });
-    return encounterDataListRD;
+    return { encounterDataListRD, reloadEncounter: manager.reload };
 }

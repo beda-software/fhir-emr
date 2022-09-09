@@ -13,7 +13,7 @@ item:
   - linkId: patient
     type: string
     text: Patient
-  - linkId: practitioner
+  - linkId: practitioner-list
     type: string
     text: Practitioner
   - linkId: service

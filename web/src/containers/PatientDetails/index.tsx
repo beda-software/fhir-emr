@@ -103,6 +103,7 @@ export const PatientDetails = () => {
         <RenderRemoteData remoteData={patientResponse}>
             {(patient) => {
                 const generalInfo = getGeneralInfo(patient);
+                console.log('patient: ', patient);
                 return (
                     <BaseLayout bgHeight={194}>
                         <PageHeader
@@ -152,7 +153,7 @@ export const PatientDetails = () => {
                             {renderMenu(menuItems)}
                         </Menu>
                         {currentPathEnd === 'encounters' ? (
-                            <PatientEncounter patientId={params.id!} />
+                            <PatientEncounter patient={patient} />
                         ) : currentPathEnd === 'documents' ? (
                             <div>
                                 <Trans>documents</Trans>
