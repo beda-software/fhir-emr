@@ -1,4 +1,4 @@
-import { notification, Select } from 'antd';
+import { notification } from 'antd';
 import { CustomWidgetsMapping } from 'sdc-qrf';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';

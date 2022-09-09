@@ -48,7 +48,7 @@ const columns: ColumnsType<Patient> = [
 ];
 
 export function PatientList() {
-    const [patientsResponse, manager] = useService(async () =>
+    const [patientsResponse] = useService(async () =>
         mapSuccess(
             await getFHIRResources<Patient>('Patient', {}),
             (bundle) => extractBundleResources(bundle).Patient,

@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro';
-import { DatePicker, PageHeader, Button, Table, Input, Empty } from 'antd';
+import { Button, DatePicker, Empty, Input, PageHeader, Table } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
@@ -36,7 +36,7 @@ const { RangePicker } = DatePicker;
 export function EncounterList() {
     const navigate = useNavigate();
 
-    const encounterDataListRD = useEncounterList({});
+    const { encounterDataListRD } = useEncounterList({});
 
     return (
         <BaseLayout bgHeight={281}>

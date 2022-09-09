@@ -9,7 +9,7 @@ import { useService } from 'aidbox-react/lib/hooks/service';
 import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess } from 'aidbox-react/lib/services/service';
 
-import { Patient, PatientLink, Practitioner, PractitionerRole } from 'shared/src/contrib/aidbox';
+import { Patient, Practitioner, PractitionerRole } from 'shared/src/contrib/aidbox';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
