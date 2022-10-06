@@ -4,10 +4,14 @@ import { useNavigate } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
+import { Patient } from 'shared/src/contrib/aidbox';
+
 import { useEncounterList } from 'src/containers/EncounterList/hooks';
 
+import { ModalNewEncounter } from '../ModalNewEncounter';
+
 interface Props {
-    patientId: string;
+    patient: Patient;
 }
 
 const columns = [
@@ -28,12 +32,13 @@ const columns = [
     },
 ];
 
-export const PatientEncounter = ({ patientId }: Props) => {
+export const PatientEncounter = ({ patient }: Props) => {
     const navigate = useNavigate();
-    const encounterDataListRD = useEncounterList({ subject: patientId });
+    const { encounterDataListRD, reloadEncounter } = useEncounterList({ subject: patient.id });
 
     return (
         <div style={infoContainerStyle}>
+            <ModalNewEncounter patient={patient} reloadEncounter={reloadEncounter} />
             <RenderRemoteData remoteData={encounterDataListRD}>
                 {(tableData) => (
                     <Table

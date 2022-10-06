@@ -1,25 +1,44 @@
-resourceType: Mapping
-id: encounter-create
 body:
-  resourceType: Bundle
-  type: transaction
-  entry:
-    - request:
-        url: /Encounter
-        method: POST
-      resource:
-        resourceType: Encounter
-        status: planned
-        subject:
-          uri: ref to patient
-        class:
-          code: AMB
-        serviceProvider: ref to organization
-        participant:
-          - individual:
-              uri: ref to practitioner
-        period:
-          start: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='date-time').answer.value.dateTime").0
-        serviceType:
-          coding: coding of service
-
+  $let:
+    service: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='service').answer.value.Coding").0
+    patientId: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.value.string").0
+    startDate: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='date-time').answer.value.dateTime").0
+    patientName: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.value.string").0
+    practitioner: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-list').answer.value.Coding").0
+  $body:
+    type: transaction
+    entry:
+      - request:
+          url: /Encounter
+          method: POST
+        resource:
+          class:
+            code: $ service.code
+            system: $ service.system
+            display: $ service.display
+          period:
+            start: $ startDate
+          status: planned
+          subject:
+            id: $ patientId
+            display: $ patientName
+            resourceType: Patient
+          participant:
+            - individual:
+                id: $ practitioner.id
+                display: $ practitioner.display
+                resourceType: $ practitioner.code
+          resourceType: Encounter
+    resourceType: Bundle
+id: encounter-create
+resourceType: Mapping

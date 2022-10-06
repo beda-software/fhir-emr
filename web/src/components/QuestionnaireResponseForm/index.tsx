@@ -1,13 +1,14 @@
 import { notification } from 'antd';
+import { CustomWidgetsMapping } from 'sdc-qrf';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { formatError } from 'aidbox-react/lib/utils/error';
 
 import {
-    useQuestionnaireResponseFormData,
-    QuestionnaireResponseFormProps,
     QuestionnaireResponseFormData,
+    QuestionnaireResponseFormProps,
+    useQuestionnaireResponseFormData,
 } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
@@ -16,11 +17,12 @@ interface Props extends QuestionnaireResponseFormProps {
     onSuccess?: (resource: any) => void;
     onFailure?: (error: any) => void;
     readOnly?: boolean;
+    customWidgets?: CustomWidgetsMapping;
 }
 
 export function QuestionnaireResponseForm(props: Props) {
     const { response, handleSave } = useQuestionnaireResponseFormData(props);
-    const { onSuccess, onFailure, readOnly } = props;
+    const { onSuccess, onFailure, readOnly, customWidgets } = props;
 
     const onSubmit = async (formData: QuestionnaireResponseFormData) => {
         const saveResponse = await handleSave(formData);
@@ -56,6 +58,7 @@ export function QuestionnaireResponseForm(props: Props) {
                     formData={formData}
                     onSubmit={onSubmit}
                     readOnly={readOnly}
+                    customWidgets={customWidgets}
                 />
             )}
         </RenderRemoteData>

@@ -152,7 +152,7 @@ export const PatientDetails = () => {
                             {renderMenu(menuItems)}
                         </Menu>
                         {currentPathEnd === 'encounters' ? (
-                            <PatientEncounter patientId={params.id!} />
+                            <PatientEncounter patient={patient} />
                         ) : currentPathEnd === 'documents' ? (
                             <div>
                                 <Trans>documents</Trans>

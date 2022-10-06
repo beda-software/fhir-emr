@@ -1,11 +1,10 @@
 body:
-  type: transaction
-  entry:
+  $let:
     $args:
       - - fullUrl: urn:uuid:practitioner-id
           request:
-            url: /Practitioner
-            method: POST
+            url: $ "/Practitioner/" + practitionerId
+            method: PUT
           resource:
             name:
               - given:
@@ -25,15 +24,20 @@ body:
           fhirpath("QuestionnaireResponse.repeat(item).where(linkId='specialty').answer")
         $body:
           request:
-            url: /PractitionerRole
-            method: POST
+            url: $ "/PractitionerRole/" + practitionerRoleId
+            method: PUT
           resource:
             specialty:
               - coding:
                   - $ specialtyItem.value.Coding
-            practitioner:
-              uri: urn:uuid:practitioner-id
             resourceType: practitionerRole
     $call: concat
-id: practitioner-create
+    practitionerId: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-id').answer.value.string").0
+    practitionerRoleId: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-role-id').answer.value.string").0
+  type: transaction
+id: practitioner-edit
 resourceType: Mapping

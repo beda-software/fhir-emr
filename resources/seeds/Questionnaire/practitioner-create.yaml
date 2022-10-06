@@ -1,7 +1,7 @@
 id: practitioner-create
 resourceType: Questionnaire
-name: Создание специалиста
-title: Создание специалиста
+name: practitioner-create
+title: Practitioner create
 status: active
 mapping:
   - id: practitioner-create
@@ -9,11 +9,40 @@ mapping:
 item:
   - linkId: last-name
     type: string
-    text: Фамилия
+    text: Last name
     required: true
   - linkId: first-name
     type: string
-    text: Имя
+    text: First name
   - linkId: middle-name
     type: string
-    text: Отчество
+    text: Middle name
+  - text: Specialty
+    type: choice
+    linkId: specialty
+    answerOption:
+      - value:
+          Coding:
+            code: "394577000"
+            system: http://snomed.info/sct
+            display: Anesthetics
+      - value:
+          Coding:
+            code: "394579002"
+            system: http://snomed.info/sct
+            display: Cardiology
+      - value:
+          Coding:
+            code: "394582007"
+            system: http://snomed.info/sct
+            display: Dermatology
+      - value:
+          Coding:
+            code: "394583002"
+            system: http://snomed.info/sct
+            display: Endocrinology
+      - value:
+          Coding:
+            code: "419772000"
+            system: http://snomed.info/sct
+            display: Family practice

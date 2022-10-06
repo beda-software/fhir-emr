@@ -1,7 +1,7 @@
 id: cardiology-example
 resourceType: Questionnaire
 name: cardiology-example
-title: Консультация кардиолога
+title: Cardiologist consultation
 status: active
 mapping:
   - id: encounter-create
@@ -9,52 +9,43 @@ mapping:
 item:
   - linkId: complaints
     type: text
-    text: Жалобы
+    text: Primary compliant
   - linkId: examination-objective
     type: text
-    text: Объективно
+    text: Physical exam findings
   - linkId: observations-data
     type: text
-    text: Данные инструментальных обследований
+    text: Radiographic findings
   - linkId: lab-data
     type: text
-    text: Данные лабораторных обследований
+    text: Laboratory data
   - linkId: group-ds
     type: group
-    text: Диагноз
+    text: Diagnosis
     item:
       - linkId: ds-main
         type: group
-        text: Основной
+        text: Main
         item:
-          - linkId: ds-main-icd-10
+          - linkId: ds-icd-11
             type: choice
-            text: МКБ-10
+            text: ICD-11
             answerOption:
               - value:
                   Coding:
-                    system: http://hl7.org/fhir/sid/icd-10
-                    code: "i-20"
-                    display: "I20 Стенокардия [грудная жаба]"
+                    system: http://id.who.int/icd/release/11/mms
+                    code: "BA40"
+                    display: "BA40 Angina pectoris"
               - value:
                   Coding:
-                    system: http://hl7.org/fhir/sid/icd-10
-                    code: "i-21"
-                    display: "I21 Острый инфаркт миокарда"
+                    system: http://id.who.int/icd/release/11/mms
+                    code: "BA41"
+                    display: "BA41 Acute myocardial infarction"
               - value:
                   Coding:
-                    system: http://hl7.org/fhir/sid/icd-10
-                    code: "i-25"
-                    display: "I25 Хроническая ишемическая болезнь сердца"
-          - linkId: ds-main-text
+                    system: https://icd.who.int/browse11/l-m/en
+                    code: "BA42"
+                    display: "BA42 Subsequent myocardial infarction"
+          - linkId: ds-text
             type: text
-            text: Описание
-      - linkId: ds-supplimentary
-        type: text
-        text: Дополнительный
-      - linkId: ds-add
-        type: text
-        text: Сопутствующий
-      - linkId: ds-background
-        type: text
-        text: Фоновый
+            text: Description

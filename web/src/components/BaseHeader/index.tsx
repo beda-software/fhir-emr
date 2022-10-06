@@ -36,8 +36,10 @@ function LocaleSwitcher() {
                 dynamicActivate(e.target.value);
             }}
         >
-            {Object.entries(locales).map(([value, label]) => (
-                <Radio.Button value={value}>{label}</Radio.Button>
+            {Object.entries(locales).map(([value, label], index) => (
+                <Radio.Button key={index} value={value}>
+                    {label}
+                </Radio.Button>
             ))}
         </Radio.Group>
     );

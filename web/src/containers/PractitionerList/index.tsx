@@ -1,88 +1,125 @@
+import { EditTwoTone, PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
-import { PageHeader, Button, Table, Input, Empty } from 'antd';
+import { Button, Empty, Input, PageHeader, Table, Tag } from 'antd';
+
+import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
 import { BaseLayout } from 'src/components/BaseLayout';
-import { ModalNewPractitioner } from 'src/components/ModalNewPractitioner';
+import { ModalPractitioner } from 'src/components/ModalPractitioner';
 
-const dataSource = [
-    {
-        key: '1',
-        fullname: 'Волыхов Андрей Александрович',
-        specialty: 'Хирург',
-        position: 'Заведующий отделением, практикующий врач',
-        date: '12.12.2021',
-    },
-    {
-        key: '2',
-        fullname: 'Вассерман Анатолий Александрович',
-        specialty: 'Оториноларинголог',
-        position: 'Главный врач, практикующий врач',
-        date: '12.12.2021',
-    },
-];
-
-const columns = [
-    {
-        title: <Trans>Fullname</Trans>,
-        dataIndex: 'fullname',
-        key: 'fullname',
-        width: '35%',
-    },
-    {
-        title: <Trans>Speciality</Trans>,
-        dataIndex: 'specialty',
-        key: 'specialty',
-        width: '20%',
-    },
-    {
-        title: <Trans>Position</Trans>,
-        dataIndex: 'position',
-        key: 'position',
-        width: '25%',
-    },
-    {
-        title: <Trans>Appointment date</Trans>,
-        dataIndex: 'date',
-        key: 'date',
-    },
-];
+import { PractitionerListRowData, usePractitionersList } from './hooks';
+import s from './PractitionerList.module.scss';
 
 export function PractitionerList() {
+    const { practitionerDataListRD, practitionerListReload } = usePractitionersList();
+
     return (
         <BaseLayout bgHeight={281}>
-            <PageHeader title={t`Practitioners`} extra={[<ModalNewPractitioner />]} />
-            <div
-                style={{
-                    position: 'relative',
-                    padding: 16,
-                    height: 64,
-                    borderRadius: 10,
-                    backgroundColor: '#C0D4FF',
-                    marginBottom: 36,
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                }}
-            >
-                <Input.Search placeholder={t`Search by name`} style={{ width: 264 }} />
-                <Button>
-                    <Trans>Reset</Trans>
-                </Button>
+            <div className={s.tableSectionContainer}>
+                <PageHeader
+                    title={t`Practitioners`}
+                    extra={[
+                        <ModalPractitioner
+                            key={'new'}
+                            modalTitle="Add New Practitioner"
+                            buttonText={t`Add New Practitioner`}
+                            icon={<PlusOutlined />}
+                            questionnaireId="practitioner-create"
+                            buttonType="primary"
+                            practitionerListReload={practitionerListReload}
+                        />,
+                    ]}
+                />
+                <div className={s.searchBar}>
+                    <Input.Search placeholder={t`Search by name`} style={{ width: 264 }} />
+                    <Button>
+                        <Trans>Reset</Trans>
+                    </Button>
+                </div>
+
+                <RenderRemoteData remoteData={practitionerDataListRD}>
+                    {(tableData) => {
+                        return (
+                            <div className={s.tableContainer}>
+                                <Table
+                                    bordered
+                                    locale={{
+                                        emptyText: (
+                                            <>
+                                                <Empty
+                                                    description={<Trans>No data</Trans>}
+                                                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                                                />
+                                            </>
+                                        ),
+                                    }}
+                                    dataSource={tableData}
+                                    columns={[
+                                        {
+                                            title: <Trans>Name</Trans>,
+                                            dataIndex: 'practitionerName',
+                                            key: 'practitionerName',
+                                            width: '20%',
+                                        },
+                                        {
+                                            title: <Trans>Speciality</Trans>,
+                                            dataIndex: 'practitionerRoleList',
+                                            key: 'practitionerRoleList',
+                                            width: '30%',
+                                            render: (tags: string[]) => (
+                                                <>
+                                                    {tags.map((tag) => (
+                                                        <Tag key={tag}>{tag}</Tag>
+                                                    ))}
+                                                </>
+                                            ),
+                                        },
+                                        {
+                                            title: <Trans>Date</Trans>,
+                                            dataIndex: 'practitionerCreatedDate',
+                                            key: 'practitionerCreatedDate',
+                                            width: '5%',
+                                        },
+                                        {
+                                            title: <Trans>Actions</Trans>,
+                                            dataIndex: 'practitionerResource',
+                                            key: 'actions',
+                                            width: '5%',
+                                            render: (
+                                                practitionerResource: any,
+                                                rowData: PractitionerListRowData,
+                                            ) => {
+                                                const { practitionerRolesResource } = rowData;
+                                                return (
+                                                    <>
+                                                        <ModalPractitioner
+                                                            key={'edit'}
+                                                            modalTitle="Edit Practitioner"
+                                                            buttonType="link"
+                                                            buttonText={t`Edit`}
+                                                            icon={<EditTwoTone />}
+                                                            questionnaireId="practitioner-edit"
+                                                            practitionerResource={
+                                                                practitionerResource
+                                                            }
+                                                            practitionerRole={
+                                                                practitionerRolesResource?.[0]
+                                                            }
+                                                            practitionerListReload={
+                                                                practitionerListReload
+                                                            }
+                                                        />
+                                                    </>
+                                                );
+                                            },
+                                        },
+                                    ]}
+                                />
+                            </div>
+                        );
+                    }}
+                </RenderRemoteData>
             </div>
-            <Table
-                locale={{
-                    emptyText: (
-                        <>
-                            <Empty
-                                description={<Trans>No data</Trans>}
-                                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                            />
-                        </>
-                    ),
-                }}
-                dataSource={dataSource}
-                columns={columns}
-            />
         </BaseLayout>
     );
 }
