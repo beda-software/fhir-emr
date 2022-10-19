@@ -1,0 +1,24 @@
+{ns questionnaire-profile
+ import #{hl7-fhir-uv-sdc.sdc-questionnaire hl7-fhir-r4-core.CodeableConcept}
+
+ QuestionnaireProfile
+ {:zen/tags #{zen.fhir/profile-schema zen/schema}
+  :confirms #{hl7-fhir-uv-sdc.sdc-questionnaire/schema}
+  :zen.fhir/type "Questionnaire"
+  :zen.fhir/profileUri "https://beda.software/fhir-emr-questionnaire"
+  :type zen/map
+  :zen.fhir/version "0.5.23"
+  :keys {:item {:type zen/vector
+                :every {:type zen/map
+                        :keys {:itemControl {:confirms #{hl7-fhir-r4-core.CodeableConcept/schema}
+                                             :fhir/extensionUri "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl"}
+                               :sliderStepValue {:type zen/number
+                                                 :fhir/extensionUri "http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue"}
+                               :start {:type zen/number
+                                       :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/slider-start"}
+                               :stop {:type zen/number
+                                      :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/slider-stop"}
+                               :startLabel {:type zen/string
+                                            :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/slider-start-label"}
+                               :stopLabel {:type zen/string
+                                           :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/slider-stop-label"}}}}}}}

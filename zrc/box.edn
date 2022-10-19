@@ -1,5 +1,5 @@
 {ns box
- import #{aidbox.rest}
+ import #{aidbox.rest questionnaire-profile}
 
  box
  {:zen/tags #{aidbox/system}

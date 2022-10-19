@@ -1,17 +1,22 @@
 module.exports = {
     env: {
-        browser: true,
         'jest/globals': true,
+        browser: true,
+        serviceworker: true,
+    },
+    globals: {
+        HTMLButtonElement: 'readonly',
+        JSX: true,
     },
     root: true,
-    extends: ['prettier'],
+    extends: ['@react-native-community', 'prettier'],
     parser: '@typescript-eslint/parser',
     plugins: ['@typescript-eslint', 'jest', 'import'],
     rules: {
         'react/jsx-uses-react': 'off',
         'react/react-in-jsx-scope': 'off',
         'react-native/no-inline-styles': 0,
-        'no-restricted-imports': ['error', { patterns: ['aidbox-react/src'] }],
+        'no-restricted-imports': ['error', { patterns: ['shared/lib', 'aidbox-react/src'] }],
         'prettier/prettier': 0,
         'import/order': [
             'error',

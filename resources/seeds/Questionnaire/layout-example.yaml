@@ -1,0 +1,11 @@
+id: layout-example
+resourceType: Questionnaire
+title: Advanced layout
+status: active
+name: encounter-create
+item:
+- text: Item-1
+  type: display
+  linkId: patientId
+  
+ 
