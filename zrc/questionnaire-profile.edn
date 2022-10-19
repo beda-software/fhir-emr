@@ -21,4 +21,8 @@
                                :startLabel {:type zen/string
                                             :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/slider-start-label"}
                                :stopLabel {:type zen/string
-                                           :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/slider-stop-label"}}}}}}}
+                                           :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/slider-stop-label"}
+                               :helpText {:type zen/string
+                                          :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/help-text"}
+                               :adjustLastToRight {:type zen/boolean
+                                                   :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/adjust-last-to-left"}}}}}}}

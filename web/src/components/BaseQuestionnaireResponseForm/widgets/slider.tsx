@@ -10,12 +10,13 @@ interface QuestionSliderExtensions {
     startLabel?: string;
     stopLabel?: string;
     sliderStepValue?: number;
+    helpText?: string;
 }
 
 export function QuestionSlider({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
     const { linkId, text, readOnly, hidden } = questionItem;
-    const { start, stop, startLabel, stopLabel, sliderStepValue } =
+    const { start, stop, startLabel, stopLabel, sliderStepValue, helpText } =
         questionItem as QuestionSliderExtensions;
     const fieldName = [...parentPath, linkId, 0, 'value', 'integer'];
     if (typeof start === 'undefined' || typeof stop === 'undefined') {
@@ -37,6 +38,7 @@ export function QuestionSlider({ parentPath, questionItem }: QuestionItemProps) 
                 max={stop}
                 step={sliderStepValue ?? 1}
             />
+            <span>{helpText}</span>
         </Form.Item>
     );
 }

@@ -5,3 +5,4 @@ export * from './number';
 export * from './phone';
 export * from './string';
 export * from './slider';
+export * from './radio';

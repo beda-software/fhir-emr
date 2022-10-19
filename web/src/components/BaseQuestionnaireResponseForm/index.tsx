@@ -17,6 +17,7 @@ import {
     QuestionInteger,
     QuestionPhone,
     QuestionSlider,
+    QuestionSolidRadio,
     QuestionString,
     QuestionText,
 } from './widgets';
@@ -60,6 +61,7 @@ export function BaseQuestionnaireResponseForm({
                 itemControlQuestionItemComponents={{
                     phoneWidget: QuestionPhone,
                     slider: QuestionSlider,
+                    'solid-radio-button': QuestionSolidRadio,
                 }}
                 readOnly={readOnly}
                 customWidgets={customWidgets}
