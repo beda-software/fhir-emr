@@ -10,7 +10,9 @@ import {
 
 import 'react-phone-input-2/lib/style.css';
 import {
+    Col,
     Group,
+    PairInput,
     QuestionChoice,
     QuestionDateTime,
     QuestionDecimal,
@@ -20,6 +22,7 @@ import {
     QuestionSolidRadio,
     QuestionString,
     QuestionText,
+    Row,
 } from './widgets';
 
 interface Props {
@@ -48,6 +51,11 @@ export function BaseQuestionnaireResponseForm({
                 formValues={formValues}
                 setFormValues={form.setFieldsValue}
                 groupItemComponent={Group}
+                itemControlGroupItemComponents={{
+                    col: Col,
+                    row: Row,
+                    'pair-input': PairInput,
+                }}
                 questionItemComponents={{
                     text: QuestionText,
                     string: QuestionString,

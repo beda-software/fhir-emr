@@ -25,4 +25,7 @@
                                :helpText {:type zen/string
                                           :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/help-text"}
                                :adjustLastToRight {:type zen/boolean
-                                                   :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/adjust-last-to-left"}}}}}}}
+                                                   :fhir/extensionuri "https://beda.software/fhir-emr-questionnaire/adjust-last-to-right"}
+                               :unit {:type zen/string
+                                      :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/unit"}
+                               }}}}}}
