@@ -1,5 +1,5 @@
-import { Form } from "antd";
-import { GroupItemProps, QuestionItems } from "sdc-qrf";
+import { Form } from 'antd';
+import { GroupItemProps, QuestionItems } from 'sdc-qrf';
 
 export function Group({ parentPath, questionItem, context }: GroupItemProps) {
     const { linkId, text, item, hidden } = questionItem;
@@ -11,4 +11,3 @@ export function Group({ parentPath, questionItem, context }: GroupItemProps) {
         </Form.Item>
     );
 }
-

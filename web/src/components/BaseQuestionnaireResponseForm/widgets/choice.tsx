@@ -3,10 +3,7 @@ import { isArray } from 'lodash';
 import { useCallback, useMemo } from 'react';
 import Select from 'react-select';
 import { StateManagerProps } from 'react-select/dist/declarations/src/stateManager';
-import {
-    QuestionItemProps,
-    useQuestionnaireResponseFormContext,
-} from 'sdc-qrf';
+import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
 const inputStyle = { backgroundColor: '#F7F9FC' };
 
@@ -133,4 +130,3 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
         </Form.Item>
     );
 }
-

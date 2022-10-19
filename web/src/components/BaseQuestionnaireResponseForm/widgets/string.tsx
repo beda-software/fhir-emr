@@ -1,7 +1,6 @@
 import { Form, Input } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
-import { QuestionItemProps, useQuestionnaireResponseFormContext } from "sdc-qrf";
-
+import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
 const inputStyle = { backgroundColor: '#F7F9FC' };
 
@@ -27,4 +26,3 @@ export function QuestionText({ parentPath, questionItem }: QuestionItemProps) {
         </Form.Item>
     );
 }
-

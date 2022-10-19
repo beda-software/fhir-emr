@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro';
-import { Button, Form} from 'antd';
+import { Button, Form } from 'antd';
 import {
     calcInitialContext,
     CustomWidgetsMapping,
@@ -9,7 +9,17 @@ import {
 } from 'sdc-qrf';
 
 import 'react-phone-input-2/lib/style.css';
-import { Group, QuestionChoice, QuestionDateTime, QuestionDecimal, QuestionInteger, QuestionPhone, QuestionSlider, QuestionString, QuestionText } from './widgets';
+import {
+    Group,
+    QuestionChoice,
+    QuestionDateTime,
+    QuestionDecimal,
+    QuestionInteger,
+    QuestionPhone,
+    QuestionSlider,
+    QuestionString,
+    QuestionText,
+} from './widgets';
 
 interface Props {
     formData: QuestionnaireResponseFormData;

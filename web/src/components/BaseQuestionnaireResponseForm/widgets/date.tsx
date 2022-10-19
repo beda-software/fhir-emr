@@ -1,11 +1,10 @@
 import { Form, DatePicker } from 'antd';
-import { PickerProps } from "antd/lib/date-picker/generatePicker";
-import moment, { Moment } from "moment";
-import { useCallback, useMemo } from "react";
-import { QuestionItemProps, useQuestionnaireResponseFormContext } from "sdc-qrf";
+import { PickerProps } from 'antd/lib/date-picker/generatePicker';
+import moment, { Moment } from 'moment';
+import { useCallback, useMemo } from 'react';
+import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
 import { formatFHIRDate, formatFHIRDateTime } from 'aidbox-react/lib/utils/date';
-
 
 export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
@@ -41,5 +40,3 @@ function DateTimePickerWrapper({ value, onChange, type }: DateTimePickerWrapperP
         <DatePicker showTime={showTime} onChange={newOnChange} format={format} value={newValue} />
     );
 }
-
-

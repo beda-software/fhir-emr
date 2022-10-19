@@ -1,9 +1,9 @@
-import { QuestionItemProps, useQuestionnaireResponseFormContext } from "sdc-qrf";
+import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
 import { Form } from 'antd';
 
 import 'react-phone-input-2/lib/style.css';
 
-import { useState } from "react";
+import { useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 
 export function QuestionPhone({ parentPath, questionItem }: QuestionItemProps) {
@@ -23,4 +23,3 @@ export function QuestionPhone({ parentPath, questionItem }: QuestionItemProps) {
         </Form.Item>
     );
 }
-

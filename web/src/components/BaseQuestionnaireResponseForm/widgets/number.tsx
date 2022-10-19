@@ -1,9 +1,7 @@
 import { Form, InputNumber } from 'antd';
-import { QuestionItemProps, useQuestionnaireResponseFormContext } from "sdc-qrf";
-
+import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
 const inputStyle = { backgroundColor: '#F7F9FC' };
-
 
 export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
@@ -28,4 +26,3 @@ export function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps)
         </Form.Item>
     );
 }
-
