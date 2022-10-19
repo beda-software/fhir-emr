@@ -13,6 +13,7 @@ import {
     Col,
     Group,
     PairInput,
+    QuestionBoolean,
     QuestionChoice,
     QuestionDateTime,
     QuestionDecimal,
@@ -65,6 +66,7 @@ export function BaseQuestionnaireResponseForm({
                     dateTime: QuestionDateTime,
                     time: QuestionDateTime,
                     choice: QuestionChoice,
+                    boolean: QuestionBoolean,
                 }}
                 itemControlQuestionItemComponents={{
                     phoneWidget: QuestionPhone,
