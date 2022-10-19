@@ -19,7 +19,7 @@ export function QuestionString({ parentPath, questionItem }: QuestionItemProps) 
 export function QuestionText({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
     const { linkId, text, readOnly, hidden } = questionItem;
-    const fieldName = [...parentPath, linkId, 0, 'value', 'text'];
+    const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
     return (
         <Form.Item label={text} name={fieldName} hidden={hidden}>
             <TextArea rows={4} style={inputStyle} readOnly={readOnly || qrfContext.readOnly} />
