@@ -1,0 +1,23 @@
+url: https://beda.software/fhir-emr-blood-pressure
+item:
+  - item:
+      - text: Systolic
+        type: decimal
+        linkId: systolic
+      - text: Diastolic
+        type: decimal
+        linkId: diastolic
+    text: Blood pressure
+    type: group
+    unit: mmHg
+    linkId: Blood pressure
+    itemControl:
+      coding:
+        - code: pair-input
+meta:
+  profile:
+    - https://beda.software/fhir-emr-questionnaire
+name: Blood pressure
+status: draft
+id: blood-pressure
+resourceType: Questionnaire
