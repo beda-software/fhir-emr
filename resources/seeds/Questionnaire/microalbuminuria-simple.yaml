@@ -1,19 +1,12 @@
 url: https://beda.software/questionnaire/microalbuminuria
 item:
-  - item:
-      - item:
-          - text: Last date
-            type: date
-            linkId: date
-          - text: Result
-            type: decimal
-            unit: mg/dL
-            linkId: result
-        type: group
-        linkId: result-line
-    text: Microalbuminuria
-    type: group
-    linkId: microalbuminuria
+  - text: Last date
+    type: date
+    linkId: date
+  - text: Result
+    type: decimal
+    unit: mg/dL
+    linkId: result
   - text: Commment
     type: text
     linkId: comment
