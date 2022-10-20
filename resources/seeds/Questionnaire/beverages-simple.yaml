@@ -1,12 +1,7 @@
 url: https://beda.software/fhir-emr-questionnaire
 item:
   - linkId: slider
-    start: 1
     type: decimal
-    stop: 20
-    helpText: How many beverages you are consuming per day?
-    stopLabel: 20+
-    sliderStepValue: 2
     text: Frequency per week
   - text: Beverage
     type: choice
@@ -24,7 +19,6 @@ item:
           Coding:
             code: none
             display: None
-    adjustLastToRight: true
 meta:
   profile:
     - https://beda.software/fhir-emr-questionnaire
