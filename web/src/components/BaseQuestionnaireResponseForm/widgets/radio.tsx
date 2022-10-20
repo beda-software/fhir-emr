@@ -11,7 +11,6 @@ export function QuestionSolidRadio({ parentPath, questionItem }: QuestionItemPro
     const qrfContext = useQuestionnaireResponseFormContext();
     const { linkId, text, answerOption, readOnly } = questionItem;
     const { adjustLastToRight } = questionItem as SolidRadioButton;
-    console.log(adjustLastToRight);
     const [options, rightOption] = useMemo(() => {
         const options = (answerOption ?? []).map((o) => o.value!.Coding!);
         if (adjustLastToRight) {
