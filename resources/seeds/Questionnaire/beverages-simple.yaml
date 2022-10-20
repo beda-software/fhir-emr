@@ -1,9 +1,6 @@
 url: https://beda.software/fhir-emr-questionnaire
 item:
   - linkId: slider
-    itemControl:
-      coding:
-        - code: slider
     start: 1
     type: decimal
     stop: 20
@@ -14,9 +11,6 @@ item:
   - text: Beverage
     type: choice
     linkId: beverage-type
-    itemControl:
-      coding:
-        - code: solid-radio-button
     answerOption:
       - value:
           Coding:
@@ -34,7 +28,7 @@ item:
 meta:
   profile:
     - https://beda.software/fhir-emr-questionnaire
-name: Beverages
+name: Beverages simple
 status: draft
-id: beverages
+id: beverages-simple
 resourceType: Questionnaire

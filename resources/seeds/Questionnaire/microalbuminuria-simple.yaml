@@ -11,9 +11,6 @@ item:
             linkId: result
         type: group
         linkId: result-line
-        itemControl:
-          coding:
-            - code: row
     text: Microalbuminuria
     type: group
     linkId: microalbuminuria
@@ -23,7 +20,7 @@ item:
 meta:
   profile:
     - https://beda.software/fhir-emr-questionnaire
-name: Microalbuminuria
+name: Microalbuminuria Simple
 status: draft
-id: microalbuminuria
+id: microalbuminuria-simple
 resourceType: Questionnaire

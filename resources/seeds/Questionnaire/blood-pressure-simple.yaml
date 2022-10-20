@@ -1,0 +1,20 @@
+blood-pressure-simple.yamlurl: https://beda.software/fhir-emr-blood-pressure
+item:
+  - item:
+      - text: Systolic
+        type: decimal
+        linkId: systolic
+      - text: Diastolic
+        type: decimal
+        linkId: diastolic
+    text: Blood pressure
+    type: group
+    unit: mmHg
+    linkId: Blood pressure
+meta:
+  profile:
+    - https://beda.software/fhir-emr-questionnaire
+name: Blood pressure simple
+status: draft
+id: blood-pressure-simple
+resourceType: Questionnaire
