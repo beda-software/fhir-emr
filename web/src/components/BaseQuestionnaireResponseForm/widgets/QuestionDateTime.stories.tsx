@@ -3,7 +3,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { QuestionDateTime } from './index';
 
 export default {
-    title: 'QuestionDateTime',
+    title: 'widget/QuestionDateTime',
     component: QuestionDateTime,
     parameters: {
         storyshots: { disable: true },

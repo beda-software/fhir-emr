@@ -5,11 +5,6 @@ import { en, ru } from 'make-plural';
 
 import { BaseQuestionnaireResponseForm } from './index';
 
-export const locales = {
-    en: 'EN',
-    ru: 'RU',
-};
-
 i18n.loadLocaleData({
     en: { plurals: en },
     ru: { plurals: ru },
@@ -17,7 +12,7 @@ i18n.loadLocaleData({
 i18n.activate('en');
 
 export default {
-    title: 'BaseQuestionnaireResponseForm',
+    title: 'Form/QuestionnaireResponseForm',
     component: BaseQuestionnaireResponseForm,
     parameters: {
         storyshots: { disable: true },

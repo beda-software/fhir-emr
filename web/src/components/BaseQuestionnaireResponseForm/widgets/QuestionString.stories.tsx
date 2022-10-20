@@ -3,7 +3,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { QuestionString } from './index';
 
 export default {
-    title: 'QuestionString',
+    title: 'widget/QuestionString',
     component: QuestionString,
     parameters: {
         storyshots: { disable: true },

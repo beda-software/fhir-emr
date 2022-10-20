@@ -1,16 +1,16 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import { QuestionInteger } from './index';
+import { QuestionPhone } from './index';
 
 export default {
-    title: 'widget/QuestionInteger',
-    component: QuestionInteger,
+    title: 'widget/QuestionPhone',
+    component: QuestionPhone,
     parameters: {
         storyshots: { disable: true },
     },
-} as ComponentMeta<typeof QuestionInteger>;
+} as ComponentMeta<typeof QuestionPhone>;
 
-const Template: ComponentStory<typeof QuestionInteger> = (args) => <QuestionInteger {...args} />;
+const Template: ComponentStory<typeof QuestionPhone> = (args) => <QuestionPhone {...args} />;
 
 export const Example = Template.bind({});
 Example.args = {

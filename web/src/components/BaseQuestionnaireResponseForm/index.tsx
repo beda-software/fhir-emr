@@ -25,6 +25,7 @@ import {
     QuestionText,
     Row,
 } from './widgets';
+import { Display } from './widgets/display';
 
 interface Props {
     formData: QuestionnaireResponseFormData;
@@ -67,6 +68,7 @@ export function BaseQuestionnaireResponseForm({
                     time: QuestionDateTime,
                     choice: QuestionChoice,
                     boolean: QuestionBoolean,
+                    display: Display,
                 }}
                 itemControlQuestionItemComponents={{
                     phoneWidget: QuestionPhone,
