@@ -1,6 +1,20 @@
 import { GroupItemProps, QuestionItems } from 'sdc-qrf';
 import s from './group.module.scss';
 
+const styles = {
+    row: {
+        display: 'flex',
+        flexDirection: 'row',
+        gap: '10px',
+    },
+
+    col: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '10px',
+    },
+}
+
 function Flex({ parentPath, questionItem, context, kind }: GroupItemProps & { kind: string }) {
     const { linkId, item, text, repeats } = questionItem;
     if (repeats === true) {
@@ -9,7 +23,7 @@ function Flex({ parentPath, questionItem, context, kind }: GroupItemProps & { ki
     return (
         <div className={s.groupContainer}>
             <p>{text}</p>
-            <div className={kind}>
+            <div style={styles[kind] ?? {}}>
                 {item && (
                     <QuestionItems
                         questionItems={item}
@@ -23,13 +37,13 @@ function Flex({ parentPath, questionItem, context, kind }: GroupItemProps & { ki
 }
 
 export function Group(props: GroupItemProps) {
-    return <Flex {...props} kind={s.group} />;
+    return <Flex {...props} kind='group' />;
 }
 
 export function Col(props: GroupItemProps) {
-    return <Flex {...props} kind={s.col} />;
+    return <Flex {...props} kind='col' />;
 }
 
 export function Row(props: GroupItemProps) {
-    return <Flex {...props} kind={s.row} />;
+    return <Flex {...props} kind='row' />;
 }
