@@ -3,6 +3,7 @@
           hl7-fhir-r4-core.CodeableConcept
           hl7-fhir-r4-core.integer
           hl7-fhir-r4-core.boolean
+          hl7-fhir-r4-core.Reference
           hl7-fhir-r4-core.string}
 
  QuestionnaireProfile
@@ -12,9 +13,14 @@
   :zen.fhir/profileUri "https://beda.software/fhir-emr-questionnaire"
   :type zen/map
   :zen.fhir/version "0.5.23"
-  :keys {:item {:type zen/vector
+  :keys {:mapping {:type zen/vector
+                   :every {:confirms #{hl7-fhir-r4-core.Reference/schema}}
+                   :fhir/extensionUri "http://beda.software/fhir-extensions/questionnaire-mapper"}
+         :item {:type zen/vector
                 :every {:type zen/map
-                        :keys {:itemControl {:confirms #{hl7-fhir-r4-core.CodeableConcept/schema}
+                        :keys {:hidden {:confirms #{hl7-fhir-r4-core.boolean/schema}
+                                        :fhir/extensionUri "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden"}
+                               :itemControl {:confirms #{hl7-fhir-r4-core.CodeableConcept/schema}
                                              :fhir/extensionUri "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl"}
                                :sliderStepValue {:confirms #{hl7-fhir-r4-core.integer/schema}
                                                  :fhir/extensionUri "http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue"}
@@ -28,6 +34,7 @@
                                            :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/slider-stop-label"}
                                :helpText {:confirms #{hl7-fhir-r4-core.string/schema}
                                           :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/help-text"}
+
                                :adjustLastToRight {:confirms #{hl7-fhir-r4-core.boolean/schema}
                                                    :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/adjust-last-to-right"}
                                :unit {:confirms #{hl7-fhir-r4-core.string/schema}

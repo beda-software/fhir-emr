@@ -1,4 +1,5 @@
 id: patient-create
+url: https://beda.software/fhir-emr/questionnaire-patient-create
 resourceType: Questionnaire
 name: patient-create
 title: Patient create
@@ -41,3 +42,6 @@ item:
     itemControl:
       coding:
         - code: phoneWidget
+meta:
+  profile:
+    - https://beda.software/fhir-emr-questionnaire
