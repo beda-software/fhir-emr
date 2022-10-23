@@ -6,12 +6,14 @@ const styles = {
         display: 'flex',
         flexDirection: 'row',
         gap: '10px',
+        alignItems: 'center',
     },
 
     col: {
         display: 'flex',
         flexDirection: 'column',
         gap: '10px',
+        alignItems: 'center',
     },
 }
 
