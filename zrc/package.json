@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "@zen-lang/hl7-fhir-uv-sdc": "^0.5.23"
+    "@zen-lang/hl7-fhir-uv-sdc": "^0.5.25-1"
   }
 }
