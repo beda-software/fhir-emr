@@ -61,7 +61,7 @@ The app uses [SDC](http://hl7.org/fhir/uv/sdc/2019May/index.html)
 
 ```
 cp .env.tpl .env
-# Set aidbox license id and key in .env
+# Get aidbox license at https://aidbox.app/ and place licence JWT to .env
 ```
 
 ### Local setup
