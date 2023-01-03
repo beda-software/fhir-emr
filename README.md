@@ -98,6 +98,17 @@ yarn start           # start watch all workspaces
 yarn test            # launch tests for all workspaces
 ```
 
+## Build seeds
+
+To see the changes that were added to `resources/seeds` follow next steps
+
+```sh
+docker-compose -f docker-compose.seeds.yaml up
+docker-compose restart devbox
+```
+
 ## Project History
 
 Project for https://github.com/HealthSamurai/xmas-hackathon-2021
+
+

@@ -1,0 +1,12 @@
+FROM python:3.9
+RUN mkdir -p /app/resources
+
+COPY /resources/Pipfile /app/resources
+COPY /resources/Pipfile.lock /app/resources
+COPY /resources/main.py /app/resources
+WORKDIR /app/resources
+
+RUN pip install pipenv
+RUN pipenv install
+
+CMD ["pipenv", "run", "python", "./main.py"]

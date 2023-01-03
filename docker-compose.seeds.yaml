@@ -1,0 +1,8 @@
+services:
+  build-seeds:
+    build:
+      context: .
+      dockerfile: Dockerfile.seeds
+    volumes:
+      - ./zrc:/app/zrc
+      - ./resources/seeds:/app/resources/seeds
