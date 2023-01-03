@@ -2,6 +2,9 @@ id: encounter-create
 resourceType: Questionnaire
 title: Encounter create
 status: active
+mapping:
+  - id: encounter-create
+    resourceType: Mapping
 launchContext:
   - name: Patient
     type: Patient
