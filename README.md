@@ -103,8 +103,7 @@ yarn test            # launch tests for all workspaces
 To see the changes that were added to `resources/seeds` follow next steps
 
 ```sh
-docker-compose -f docker-compose.seeds.yaml up
-docker-compose restart devbox
+make seeds
 ```
 
 ## Project History
