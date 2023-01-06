@@ -43,7 +43,7 @@
     },
     "scripts": {
         "start": "craco start",
-        "build": "craco build",
+        "build": "DISABLE_ESLINT_PLUGIN=true craco build",
         "test": "react-scripts test --watchAll=false",
         "eject": "react-scripts eject",
         "typecheck": "tsc",

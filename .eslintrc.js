@@ -1,6 +1,6 @@
 module.exports = {
     env: {
-        'jest/globals': true,
+        // 'jest/globals': true,
         browser: true,
         serviceworker: true,
     },
@@ -9,13 +9,12 @@ module.exports = {
         JSX: true,
     },
     root: true,
-    extends: ['@react-native-community', 'prettier'],
+    extends: ['react-app', 'prettier'],
     parser: '@typescript-eslint/parser',
-    plugins: ['@typescript-eslint', 'jest', 'import'],
+    plugins: ['@typescript-eslint', 'import'],
     rules: {
         'react/jsx-uses-react': 'off',
         'react/react-in-jsx-scope': 'off',
-        'react-native/no-inline-styles': 0,
         'no-restricted-imports': ['error', { patterns: ['shared/lib', 'aidbox-react/src'] }],
         'prettier/prettier': 0,
         'import/order': [
