@@ -1,0 +1,192 @@
+id: gad7
+resourceType: Questionnaire
+name: GAD-7
+status: active
+item:
+    - text: Over the last two weeks, how often have you been bothered by the following problems?
+      type: group
+      linkId: gad-7
+      item:
+          - linkId: 69725-0
+            text: Feeling nervous, anxious, or on edge
+            required: true
+            type: choice
+            answerOption:
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6568-5'
+                          display: 'Not at all'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6569-3'
+                          display: 'Several days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6570-1'
+                          display: 'More than half the days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6571-9'
+                          display: 'Nearly every day'
+          - linkId: 68509-9
+            text: Not being able to stop or control worrying
+            required: true
+            type: choice
+            answerOption:
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6568-5'
+                          display: 'Not at all'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6569-3'
+                          display: 'Several days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6570-1'
+                          display: 'More than half the days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6571-9'
+                          display: 'Nearly every day'
+          - linkId: 69733-4
+            text: Worrying too much about different things
+            required: true
+            type: choice
+            answerOption:
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6568-5'
+                          display: 'Not at all'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6569-3'
+                          display: 'Several days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6570-1'
+                          display: 'More than half the days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6571-9'
+                          display: 'Nearly every day'
+          - linkId: 69734-2
+            text: Trouble relaxing
+            required: true
+            type: choice
+            answerOption:
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6568-5'
+                          display: 'Not at all'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6569-3'
+                          display: 'Several days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6570-1'
+                          display: 'More than half the days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6571-9'
+                          display: 'Nearly every day'
+          - linkId: 69735-9
+            text: Being so restless that it is hard to sit still
+            required: true
+            type: choice
+            answerOption:
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6568-5'
+                          display: 'Not at all'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6569-3'
+                          display: 'Several days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6570-1'
+                          display: 'More than half the days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6571-9'
+                          display: 'Nearly every day'
+          - linkId: 69689-8
+            text: Becoming easily annoyed or irritable
+            required: true
+            type: choice
+            answerOption:
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6568-5'
+                          display: 'Not at all'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6569-3'
+                          display: 'Several days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6570-1'
+                          display: 'More than half the days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6571-9'
+                          display: 'Nearly every day'
+          - linkId: 69736-7
+            text: Feeling afraid, as if something awful might happen
+            required: true
+            type: choice
+            answerOption:
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6568-5'
+                          display: 'Not at all'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6569-3'
+                          display: 'Several days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6570-1'
+                          display: 'More than half the days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6571-9'
+                          display: 'Nearly every day'
+          - linkId: 70274-6
+            text: GAD-7 Anxiety Severity Score
+            required: true
+            type: integer
+            readOnly: true
+            calculatedExpression:
+                language: text/fhirpath
+                expression: QuestionnaireResponse.item.item.answer.children().children().where(code='LA6569-3').count() + QuestionnaireResponse.item.item.answer.children().children().where(code='LA6570-1').count() * 2 + QuestionnaireResponse.item.item.answer.children().children().where(code='LA6571-9').count() * 3
