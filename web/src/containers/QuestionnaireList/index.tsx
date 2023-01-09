@@ -114,7 +114,7 @@ export function QuestionnaireList() {
                     </Button>
                 </div>
             </BasePageHeader>
-            <BasePageContent style={{ marginTop: '-55px' }}>
+            <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
                 <Table<Questionnaire>
                     locale={{
                         emptyText: (

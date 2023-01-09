@@ -37,8 +37,10 @@ export const PatientEncounter = ({ patient }: Props) => {
     const { encounterDataListRD, reloadEncounter } = useEncounterList({ subject: patient.id });
 
     return (
-        <div style={infoContainerStyle}>
-            <ModalNewEncounter patient={patient} reloadEncounter={reloadEncounter} />
+        <>
+            <div>
+                <ModalNewEncounter patient={patient} reloadEncounter={reloadEncounter} />
+            </div>
             <RenderRemoteData remoteData={encounterDataListRD}>
                 {(tableData) => (
                     <Table
@@ -64,14 +66,6 @@ export const PatientEncounter = ({ patient }: Props) => {
                     />
                 )}
             </RenderRemoteData>
-        </div>
+        </>
     );
-};
-
-const infoContainerStyle = {
-    width: 1080,
-    backgroundColor: '#ffffff',
-    padding: '32px 40px',
-    boxShadow: '0px 6px 16px #E6EBF5',
-    marginTop: 54,
 };

@@ -48,7 +48,7 @@ export function EncounterDetails() {
                                 }
                             />
                         </BasePageHeader>
-                        <BasePageContent style={{ padding: '40px 0'}}>
+                        <BasePageContent>
                             <div style={{ display: 'flex', flexDirection: 'row' }}>
                                 <div style={{ width: '60%' }}>
                                     <QuestionnaireResponseList

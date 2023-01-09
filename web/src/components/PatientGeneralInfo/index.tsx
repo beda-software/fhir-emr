@@ -30,5 +30,4 @@ const infoContainerStyle = {
     backgroundColor: '#ffffff',
     padding: '32px 40px',
     boxShadow: '0px 6px 16px #E6EBF5',
-    marginTop: 54,
 };

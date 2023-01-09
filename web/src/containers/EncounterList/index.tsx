@@ -64,7 +64,7 @@ export function EncounterList() {
                     </Button>
                 </div>
             </BasePageHeader>
-            <BasePageContent style={{ marginTop: '-55px' }}>
+            <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
                 <RenderRemoteData remoteData={encounterDataListRD}>
                     {(tableData) => {
                         return (

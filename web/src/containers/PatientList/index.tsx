@@ -79,7 +79,7 @@ export function PatientList() {
                     </Button>
                 </div>
             </BasePageHeader>
-            <BasePageContent style={{ marginTop: '-55px' }}>
+            <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
                 <Table<Patient>
                     locale={{
                         emptyText: (

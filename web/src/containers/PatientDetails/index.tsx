@@ -1,7 +1,7 @@
 import { t, Trans } from '@lingui/macro';
 import { Menu, PageHeader, Button, notification } from 'antd';
 import { useEffect, useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, Link } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
@@ -17,7 +17,10 @@ import { ModalTrigger } from 'src/components/ModalTrigger';
 import { PatientEncounter } from 'src/components/PatientEncounter';
 import { PatientGeneralInfo } from 'src/components/PatientGeneralInfo';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
-import { renderMenu, RouteItem } from 'src/components/BaseLayout/Header';
+import { RouteItem } from 'src/components/BaseLayout/Header';
+
+import s from './PatientDetails.module.scss';
+import { PatientDocuments } from './PatientDocuments';
 
 export const PatientDetails = () => {
     const location = useLocation();
@@ -30,7 +33,7 @@ export const PatientDetails = () => {
     );
 
     const menuItems: RouteItem[] = [
-        { title: t`General information`, path: `/patients/${params.id}` },
+        { title: t`Demographics`, path: `/patients/${params.id}` },
         { title: t`Encounters`, path: `/patients/${params.id}/encounters` },
         { title: t`Documents`, path: `/patients/${params.id}/documents` },
     ];
@@ -99,6 +102,18 @@ export const PatientDetails = () => {
         setCurrentPath(location?.pathname);
     }, [location]);
 
+    const renderMenu = () => {
+        return (
+            <Menu mode="horizontal" theme="light" selectedKeys={[currentPath]} className={s.menu}>
+                {menuItems.map((route) => (
+                    <Menu.Item key={route.path}>
+                        <Link to={route.path}>{route.title}</Link>
+                    </Menu.Item>
+                ))}
+            </Menu>
+        );
+    };
+
     return (
         <RenderRemoteData remoteData={patientResponse}>
             {(patient) => {
@@ -144,25 +159,13 @@ export const PatientDetails = () => {
                                 ]}
                                 breadcrumb={<Breadcrumbs crumbs={crumbs(patient)} />}
                             />
-                            <Menu
-                                mode="horizontal"
-                                theme="light"
-                                selectedKeys={[currentPath]}
-                                style={{
-                                    width: 400,
-                                    background: '0',
-                                }}
-                            >
-                                {renderMenu(menuItems)}
-                            </Menu>
+                            {renderMenu()}
                         </BasePageHeader>
                         <BasePageContent>
                             {currentPathEnd === 'encounters' ? (
                                 <PatientEncounter patient={patient} />
                             ) : currentPathEnd === 'documents' ? (
-                                <div>
-                                    <Trans>documents</Trans>
-                                </div>
+                                <PatientDocuments patient={patient} />
                             ) : (
                                 <PatientGeneralInfo generalInfo={generalInfo} />
                             )}
