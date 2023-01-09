@@ -17,6 +17,7 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 import { AvatarImage } from 'src/images/AvatarImage';
 import { LogoImage } from 'src/images/LogoImage';
 import { logout } from 'src/services/auth';
+import s from './Header.module.scss';
 
 export interface RouteItem {
     path: string;
@@ -45,7 +46,7 @@ function LocaleSwitcher() {
     );
 }
 
-export function BaseHeader() {
+export function AppHeader() {
     const doLogout = async () => {
         await logout();
         resetInstanceToken();
@@ -65,24 +66,26 @@ export function BaseHeader() {
     );
 
     return (
-        <Header style={headerStyle}>
-            <LogoImage style={titleStyle} />
-            <div style={rightSideStyle}>
-                <Menu
-                    mode="horizontal"
-                    theme="light"
-                    selectedKeys={menuDefaultSelectedKeys}
-                    style={{ width: 400 }}
-                >
-                    {renderMenu(menuItems)}
-                </Menu>
-                <Button onClick={doLogout} style={exitStyle}>
-                    <Trans>Log out</Trans>
-                </Button>
-                <AvatarImage style={avatarStyle} />
+        <Header className={s.header}>
+            <div className={s.headerContent}>
+                <LogoImage style={titleStyle} />
+                <div style={rightSideStyle}>
+                    <Menu
+                        mode="horizontal"
+                        theme="light"
+                        selectedKeys={menuDefaultSelectedKeys}
+                        style={{ width: 400 }}
+                    >
+                        {renderMenu(menuItems)}
+                    </Menu>
+                    <Button onClick={doLogout} style={exitStyle}>
+                        <Trans>Log out</Trans>
+                    </Button>
+                    <AvatarImage style={avatarStyle} />
 
-                <span style={titleStyle}>{renderHumanName()}</span>
-                <LocaleSwitcher />
+                    <span style={titleStyle}>{renderHumanName()}</span>
+                    <LocaleSwitcher />
+                </div>
             </div>
         </Header>
     );
@@ -116,16 +119,6 @@ function getActiveKeys(menuRoutes: RouteItem[]): RouteItem[] {
         return false;
     });
 }
-
-const headerStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: 1080,
-    height: '64px',
-    backgroundColor: '#ffffff',
-    padding: 0,
-};
 
 const rightSideStyle = { display: 'flex', alignItems: 'center', justifyContent: 'space-between' };
 

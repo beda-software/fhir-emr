@@ -11,18 +11,17 @@ import { Questionnaire } from 'shared/src/contrib/aidbox';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
-import { BaseLayout } from '../../components/BaseLayout';
+import { BaseLayout, BasePageContent, BasePageHeader } from '../../components/BaseLayout';
 import { QuestionnaireResponseForm } from '../../components/QuestionnaireResponseForm';
 import { formatHumanDate } from '../../utils/date';
 import { useEncounterDetails } from '../EncounterDetails/hooks';
 import s from './EncounterQR.module.scss';
 
 export function EncounterQR() {
-    const { encounterId, questionnaireId } =
-        useParams<{
-            encounterId: string;
-            questionnaireId: string;
-        }>();
+    const { encounterId, questionnaireId } = useParams<{
+        encounterId: string;
+        questionnaireId: string;
+    }>();
 
     const encounterInfoRD = useEncounterDetails(encounterId!);
 
@@ -39,7 +38,7 @@ export function EncounterQR() {
     });
 
     return (
-        <BaseLayout bgHeight={110}>
+        <BaseLayout>
             <RenderRemoteData remoteData={remoteData}>
                 {({
                     encounterInfo: { encounter, practitioner, practitionerRole, patient },
@@ -50,42 +49,47 @@ export function EncounterQR() {
                         return <Alert type={'error'} message={'Practitioner is undefined'} />;
                     }
                     return (
-                        <div>
-                            <PageHeader title={renderHumanName(patient.name?.[0])} />
-                            <div className={s.infoContainer}>
-                                <div className={s.infoItemContainer}>
-                                    <span className={s.title}>service:</span>
-                                    <span className={s.text}>
-                                        {encounter.serviceType?.coding?.[0]?.display}
-                                    </span>
+                        <>
+                            <BasePageHeader>
+                                <PageHeader title={renderHumanName(patient.name?.[0])} />
+                            </BasePageHeader>
+                            <BasePageContent>
+                                <div className={s.infoContainer}>
+                                    <div className={s.infoItemContainer}>
+                                        <span className={s.title}>service:</span>
+                                        <span className={s.text}>
+                                            {encounter.serviceType?.coding?.[0]?.display}
+                                        </span>
+                                    </div>
+                                    <div className={s.infoItemContainer}>
+                                        <span className={s.title}>practitioner:</span>
+                                        <span className={s.text}>
+                                            {renderHumanName(practitioner.name?.[0])}
+                                        </span>
+                                    </div>
+                                    <div className={s.infoItemContainer}>
+                                        <span className={s.title}>date:</span>
+                                        <span className={s.text}>
+                                            {encounter.period?.start &&
+                                                formatHumanDate(encounter.period?.start)}
+                                        </span>
+                                    </div>
                                 </div>
-                                <div className={s.infoItemContainer}>
-                                    <span className={s.title}>practitioner:</span>
-                                    <span className={s.text}>
-                                        {renderHumanName(practitioner.name?.[0])}
-                                    </span>
-                                </div>
-                                <div className={s.infoItemContainer}>
-                                    <span className={s.title}>date:</span>
-                                    <span className={s.text}>
-                                        {encounter.period?.start &&
-                                            formatHumanDate(encounter.period?.start)}
-                                    </span>
-                                </div>
-                            </div>
-                            <h2>{questionnaire.title || questionnaire.name || questionnaire.id}</h2>
-                        </div>
+                                <h2>
+                                    {questionnaire.title || questionnaire.name || questionnaire.id}
+                                </h2>
+                                <QuestionnaireResponseForm
+                                    questionnaireLoader={questionnaireIdLoader(questionnaireId!)}
+                                    onSuccess={() => {
+                                        window.history.back();
+                                        notification.success({ message: t`Document is saved` });
+                                    }}
+                                />
+                            </BasePageContent>
+                        </>
                     );
                 }}
             </RenderRemoteData>
-
-            <QuestionnaireResponseForm
-                questionnaireLoader={questionnaireIdLoader(questionnaireId!)}
-                onSuccess={() => {
-                    window.history.back();
-                    notification.success({ message: t`Document is saved` });
-                }}
-            />
         </BaseLayout>
     );
 }

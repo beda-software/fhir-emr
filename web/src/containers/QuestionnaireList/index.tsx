@@ -13,7 +13,7 @@ import config from 'shared/src/config';
 import { Questionnaire } from 'shared/src/contrib/aidbox';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
-import { BaseLayout } from 'src/components/BaseLayout';
+import { BaseLayout, BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 
@@ -84,51 +84,56 @@ export function QuestionnaireList() {
     );
 
     return (
-        <BaseLayout bgHeight={281}>
-            <PageHeader
-                title={t`Questionnaires`}
-                extra={[
-                    <Link to="/questionnaires/builder">
-                        <Button icon={<PlusOutlined />} type="primary">
-                            <Trans>Add questionnaire</Trans>
-                        </Button>
-                    </Link>,
-                ]}
-            />
-            <div
-                style={{
-                    position: 'relative',
-                    padding: 16,
-                    height: 64,
-                    borderRadius: 10,
-                    backgroundColor: '#C0D4FF',
-                    marginBottom: 36,
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                }}
-            >
-                <Input.Search placeholder={t`Find questionnaire`} style={{ width: 264 }} />
-                <Button>
-                    <Trans>Reset</Trans>
-                </Button>
-            </div>
-            <Table<Questionnaire>
-                locale={{
-                    emptyText: (
-                        <>
-                            <Empty
-                                description={<Trans>No data</Trans>}
-                                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                            />
-                        </>
-                    ),
-                }}
-                rowKey={(p) => p.id!}
-                dataSource={isSuccess(questionnairesResponse) ? questionnairesResponse.data : []}
-                columns={columns}
-                loading={isLoading(questionnairesResponse)}
-            />
+        <BaseLayout>
+            <BasePageHeader style={{ padding: '0 0 92px' }}>
+                <PageHeader
+                    title={t`Questionnaires`}
+                    extra={[
+                        <Link to="/questionnaires/builder">
+                            <Button icon={<PlusOutlined />} type="primary">
+                                <Trans>Add questionnaire</Trans>
+                            </Button>
+                        </Link>,
+                    ]}
+                />
+                <div
+                    style={{
+                        position: 'relative',
+                        padding: 16,
+                        height: 64,
+                        borderRadius: 10,
+                        backgroundColor: '#C0D4FF',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                    }}
+                >
+                    <Input.Search placeholder={t`Find questionnaire`} style={{ width: 264 }} />
+                    <Button>
+                        <Trans>Reset</Trans>
+                    </Button>
+                </div>
+            </BasePageHeader>
+            <BasePageContent style={{ marginTop: '-55px' }}>
+                <Table<Questionnaire>
+                    locale={{
+                        emptyText: (
+                            <>
+                                <Empty
+                                    description={<Trans>No data</Trans>}
+                                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                                />
+                            </>
+                        ),
+                    }}
+                    rowKey={(p) => p.id!}
+                    dataSource={
+                        isSuccess(questionnairesResponse) ? questionnairesResponse.data : []
+                    }
+                    columns={columns}
+                    loading={isLoading(questionnairesResponse)}
+                />
+            </BasePageContent>
         </BaseLayout>
     );
 }

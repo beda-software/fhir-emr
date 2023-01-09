@@ -7,9 +7,10 @@ import 'src/services/initialize';
 
 import { dynamicActivate, getCurrentLocale } from 'shared/src/services/i18n';
 
-import { App } from 'src/containers/App';
 import 'src/styles/index.scss';
 import 'shared/src/services/i18n';
+
+import { App } from 'src/containers/App';
 
 import * as serviceWorker from './serviceWorker';
 

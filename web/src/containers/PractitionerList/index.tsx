@@ -4,7 +4,7 @@ import { Button, Empty, Input, PageHeader, Table, Tag } from 'antd';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
-import { BaseLayout } from 'src/components/BaseLayout';
+import { BaseLayout, BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { ModalPractitioner } from 'src/components/ModalPractitioner';
 
 import { PractitionerListRowData, usePractitionersList } from './hooks';
@@ -14,8 +14,8 @@ export function PractitionerList() {
     const { practitionerDataListRD, practitionerListReload } = usePractitionersList();
 
     return (
-        <BaseLayout bgHeight={281}>
-            <div className={s.tableSectionContainer}>
+        <BaseLayout>
+            <BasePageHeader style={{ padding: '0 0 92px' }}>
                 <PageHeader
                     title={t`Practitioners`}
                     extra={[
@@ -36,90 +36,87 @@ export function PractitionerList() {
                         <Trans>Reset</Trans>
                     </Button>
                 </div>
-
+            </BasePageHeader>
+            <BasePageContent style={{ marginTop: '-55px' }}>
                 <RenderRemoteData remoteData={practitionerDataListRD}>
                     {(tableData) => {
                         return (
-                            <div className={s.tableContainer}>
-                                <Table
-                                    bordered
-                                    locale={{
-                                        emptyText: (
+                            <Table
+                                bordered
+                                locale={{
+                                    emptyText: (
+                                        <>
+                                            <Empty
+                                                description={<Trans>No data</Trans>}
+                                                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                                            />
+                                        </>
+                                    ),
+                                }}
+                                dataSource={tableData}
+                                columns={[
+                                    {
+                                        title: <Trans>Name</Trans>,
+                                        dataIndex: 'practitionerName',
+                                        key: 'practitionerName',
+                                        width: '20%',
+                                    },
+                                    {
+                                        title: <Trans>Speciality</Trans>,
+                                        dataIndex: 'practitionerRoleList',
+                                        key: 'practitionerRoleList',
+                                        width: '30%',
+                                        render: (tags: string[]) => (
                                             <>
-                                                <Empty
-                                                    description={<Trans>No data</Trans>}
-                                                    image={Empty.PRESENTED_IMAGE_SIMPLE}
-                                                />
+                                                {tags.map((tag) => (
+                                                    <Tag key={tag}>{tag}</Tag>
+                                                ))}
                                             </>
                                         ),
-                                    }}
-                                    dataSource={tableData}
-                                    columns={[
-                                        {
-                                            title: <Trans>Name</Trans>,
-                                            dataIndex: 'practitionerName',
-                                            key: 'practitionerName',
-                                            width: '20%',
-                                        },
-                                        {
-                                            title: <Trans>Speciality</Trans>,
-                                            dataIndex: 'practitionerRoleList',
-                                            key: 'practitionerRoleList',
-                                            width: '30%',
-                                            render: (tags: string[]) => (
+                                    },
+                                    {
+                                        title: <Trans>Date</Trans>,
+                                        dataIndex: 'practitionerCreatedDate',
+                                        key: 'practitionerCreatedDate',
+                                        width: '5%',
+                                    },
+                                    {
+                                        title: <Trans>Actions</Trans>,
+                                        dataIndex: 'practitionerResource',
+                                        key: 'actions',
+                                        width: '5%',
+                                        render: (
+                                            practitionerResource: any,
+                                            rowData: PractitionerListRowData,
+                                        ) => {
+                                            const { practitionerRolesResource } = rowData;
+                                            return (
                                                 <>
-                                                    {tags.map((tag) => (
-                                                        <Tag key={tag}>{tag}</Tag>
-                                                    ))}
+                                                    <ModalPractitioner
+                                                        key={'edit'}
+                                                        modalTitle="Edit Practitioner"
+                                                        buttonType="link"
+                                                        buttonText={t`Edit`}
+                                                        icon={<EditTwoTone />}
+                                                        questionnaireId="practitioner-edit"
+                                                        practitionerResource={practitionerResource}
+                                                        practitionerRole={
+                                                            practitionerRolesResource?.[0]
+                                                        }
+                                                        practitionerListReload={
+                                                            practitionerListReload
+                                                        }
+                                                    />
                                                 </>
-                                            ),
+                                            );
                                         },
-                                        {
-                                            title: <Trans>Date</Trans>,
-                                            dataIndex: 'practitionerCreatedDate',
-                                            key: 'practitionerCreatedDate',
-                                            width: '5%',
-                                        },
-                                        {
-                                            title: <Trans>Actions</Trans>,
-                                            dataIndex: 'practitionerResource',
-                                            key: 'actions',
-                                            width: '5%',
-                                            render: (
-                                                practitionerResource: any,
-                                                rowData: PractitionerListRowData,
-                                            ) => {
-                                                const { practitionerRolesResource } = rowData;
-                                                return (
-                                                    <>
-                                                        <ModalPractitioner
-                                                            key={'edit'}
-                                                            modalTitle="Edit Practitioner"
-                                                            buttonType="link"
-                                                            buttonText={t`Edit`}
-                                                            icon={<EditTwoTone />}
-                                                            questionnaireId="practitioner-edit"
-                                                            practitionerResource={
-                                                                practitionerResource
-                                                            }
-                                                            practitionerRole={
-                                                                practitionerRolesResource?.[0]
-                                                            }
-                                                            practitionerListReload={
-                                                                practitionerListReload
-                                                            }
-                                                        />
-                                                    </>
-                                                );
-                                            },
-                                        },
-                                    ]}
-                                />
-                            </div>
+                                    },
+                                ]}
+                            />
                         );
                     }}
                 </RenderRemoteData>
-            </div>
+            </BasePageContent>
         </BaseLayout>
     );
 }

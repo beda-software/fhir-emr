@@ -1,0 +1,14 @@
+.header {
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+}
+
+.headerContent {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1080px;
+    height: 64px;
+}

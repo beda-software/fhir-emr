@@ -1,45 +1,35 @@
 import { Layout } from 'antd';
-import { Content } from 'antd/lib/layout/layout';
 import { ReactNode } from 'react';
 
-import { BaseHeader } from 'src/components/BaseHeader';
+import { AppHeader } from './Header';
+import s from './BaseLayout.module.scss';
 
 interface Props {
     children: ReactNode;
-    bgHeight?: number;
     style?: React.CSSProperties;
 }
 
-export function BaseLayout({ children, bgHeight, style }: Props) {
+export function BaseLayout({ children, style }: Props) {
     return (
-        <Layout style={{ ...wrapperStyle, ...(style ?? {}) }}>
-            {bgHeight ? (
-                <div
-                    style={{
-                        position: 'absolute',
-                        backgroundColor: '#E0EAFF',
-                        width: '100%',
-                        height: bgHeight,
-                        top: 64,
-                    }}
-                />
-            ) : null}
-            <BaseHeader />
-
-            <Layout style={layoutStyle}>
-                <Content style={contentStyle}>{children}</Content>
-            </Layout>
+        <Layout className={s.container} style={style}>
+            <AppHeader />
+            {children}
         </Layout>
     );
 }
 
-const wrapperStyle: any = {
-    height: '100vh',
-    display: 'flex',
-    alignItems: 'center',
-    backgroundColor: 'white',
-};
+export function BasePageHeader(props: React.HTMLAttributes<HTMLDivElement>) {
+    return (
+        <div className={s.pageHeaderWrapper}>
+            <div className={s.pageHeader} {...props} />
+        </div>
+    );
+}
 
-const layoutStyle: any = { display: 'flex', height: '100%', flexDirection: 'row', width: 1080 };
-
-const contentStyle: any = { width: '100%', backgroundColor: 'white' };
+export function BasePageContent(props: React.HTMLAttributes<HTMLDivElement>) {
+    return (
+        <div className={s.pageContentWrapper}>
+            <div className={s.pageContent} {...props} />
+        </div>
+    );
+}

@@ -7,7 +7,7 @@ import { sequenceMap } from 'aidbox-react/lib/services/service';
 import { Encounter, Patient, Practitioner, PractitionerRole } from 'shared/src/contrib/aidbox';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
-import { BaseLayout } from '../../components/BaseLayout';
+import { BaseLayout, BasePageContent, BasePageHeader } from '../../components/BaseLayout';
 import { QuestionnaireListWidget } from '../../components/QuestionnaireListWidget';
 import { useQuestionnaireList } from '../../components/QuestionnaireListWidget/hooks';
 import { QuestionnaireResponseList } from '../../components/QuestionnaireResponseList';
@@ -33,7 +33,7 @@ export function EncounterDetails() {
     });
 
     return (
-        <BaseLayout bgHeight={30}>
+        <BaseLayout>
             <RenderRemoteData remoteData={remoteData}>
                 {({
                     encounterInfo: { encounter, practitioner, practitionerRole, patient },
@@ -41,27 +41,37 @@ export function EncounterDetails() {
                     questionnaireList,
                 }) => (
                     <>
-                        <PageHeader
-                            title={encounter.serviceType?.coding?.[0]?.display || 'Консультация'}
-                        />
-                        <div style={{ display: 'flex', flexDirection: 'row' }}>
-                            <div style={{ width: '60%' }}>
-                                <QuestionnaireResponseList
-                                    questionnaireResponseDataList={questionnaireResponseDataList}
-                                />
-                            </div>
-                            <div style={{ marginLeft: '40px' }}>
-                                <div style={{ marginBottom: '50px' }}>
-                                    <EncounterInfo
-                                        encounter={encounter}
-                                        practitioner={practitioner}
-                                        practitionerRole={practitionerRole}
-                                        patient={patient}
+                        <BasePageHeader>
+                            <PageHeader
+                                title={
+                                    encounter.serviceType?.coding?.[0]?.display || 'Консультация'
+                                }
+                            />
+                        </BasePageHeader>
+                        <BasePageContent style={{ padding: '40px 0'}}>
+                            <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                <div style={{ width: '60%' }}>
+                                    <QuestionnaireResponseList
+                                        questionnaireResponseDataList={
+                                            questionnaireResponseDataList
+                                        }
                                     />
                                 </div>
-                                <QuestionnaireListWidget questionnaireList={questionnaireList} />
+                                <div style={{ marginLeft: '40px' }}>
+                                    <div style={{ marginBottom: '50px' }}>
+                                        <EncounterInfo
+                                            encounter={encounter}
+                                            practitioner={practitioner}
+                                            practitionerRole={practitionerRole}
+                                            patient={patient}
+                                        />
+                                    </div>
+                                    <QuestionnaireListWidget
+                                        questionnaireList={questionnaireList}
+                                    />
+                                </div>
                             </div>
-                        </div>
+                        </BasePageContent>
                     </>
                 )}
             </RenderRemoteData>

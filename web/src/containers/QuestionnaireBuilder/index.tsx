@@ -34,7 +34,7 @@ import { uuid4 } from 'aidbox-react/lib/utils/uuid';
 import { Questionnaire, QuestionnaireItem } from 'shared/src/contrib/aidbox';
 import { getByPath, setByPath, unsetByPath } from 'shared/src/utils/path';
 
-import { BaseLayout } from 'src/components/BaseLayout';
+import { BaseLayout, BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 
 const { Title } = Typography;
 
@@ -102,7 +102,7 @@ export function QuestionnaireBuilder() {
     };
 
     return (
-        <BaseLayout bgHeight={126} style={{ backgroundColor: '#F7F9FC', height: 'auto' }}>
+        <BaseLayout>
             <RenderRemoteData remoteData={questionnaireRemoteData}>
                 {(questionnaire) => <Content questionnaire={questionnaire} onSubmit={onSubmit} />}
             </RenderRemoteData>
@@ -131,87 +131,91 @@ function Content({
             onFinish={(values) => onSubmit({ ...questionnaire, ...values })}
             style={{ backgroundColor: '#F7F9FC' }}
         >
-            <Row justify="space-between">
-                <Col>
-                    <PageHeader title={t`Questionnaire`} />
-                </Col>
-                <Col>
-                    <Form.Item
-                        name="name"
-                        style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            height: '100%',
-                        }}
-                    >
-                        <Input
-                            placeholder={t({
-                                id: 'msg.QuestionnaireNamePlaceholder',
-                                message: `Name`,
-                            })}
-                        />
-                    </Form.Item>
-                </Col>
-                <Col>
-                    <Form.Item
-                        name="status"
-                        style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            height: '100%',
-                        }}
-                    >
-                        <Select
-                            placeholder="Статус"
-                            options={[
-                                { value: 'draft', label: t`Draft` },
-                                { value: 'active', label: t`Active` },
-                            ]}
-                        />
-                    </Form.Item>
-                </Col>
-            </Row>
-            <Row gutter={20} style={{ backgroundColor: '#F7F9FC' }}>
-                <Col flex={1} style={{ padding: 0, overflow: 'scroll' }}>
-                    <DndProvider backend={HTML5Backend}>
-                        <Affix offsetTop={0}>
-                            <div
-                                style={{
-                                    backgroundColor: '#ffffff',
-                                    flex: 1,
-                                    height: 72,
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <GroupItemTemplate />
-                                <PrimitiveComponentTemplate />
-                                <div style={{ marginLeft: 8 }}>
-                                    <Trans>Drag items into the field</Trans>
+            <BasePageHeader>
+                <Row justify="space-between">
+                    <Col>
+                        <PageHeader title={t`Questionnaire`} />
+                    </Col>
+                    <Col>
+                        <Form.Item
+                            name="name"
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                height: '100%',
+                            }}
+                        >
+                            <Input
+                                placeholder={t({
+                                    id: 'msg.QuestionnaireNamePlaceholder',
+                                    message: `Name`,
+                                })}
+                            />
+                        </Form.Item>
+                    </Col>
+                    <Col>
+                        <Form.Item
+                            name="status"
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                height: '100%',
+                            }}
+                        >
+                            <Select
+                                placeholder="Статус"
+                                options={[
+                                    { value: 'draft', label: t`Draft` },
+                                    { value: 'active', label: t`Active` },
+                                ]}
+                            />
+                        </Form.Item>
+                    </Col>
+                </Row>
+            </BasePageHeader>
+            <BasePageContent>
+                <Row gutter={20} style={{ backgroundColor: '#F7F9FC' }}>
+                    <Col flex={1} style={{ padding: 0, overflow: 'scroll' }}>
+                        <DndProvider backend={HTML5Backend}>
+                            <Affix offsetTop={0}>
+                                <div
+                                    style={{
+                                        backgroundColor: '#ffffff',
+                                        flex: 1,
+                                        height: 72,
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <GroupItemTemplate />
+                                    <PrimitiveComponentTemplate />
+                                    <div style={{ marginLeft: 8 }}>
+                                        <Trans>Drag items into the field</Trans>
+                                    </div>
                                 </div>
-                            </div>
+                            </Affix>
+                            <DroppableQuestionnaire
+                                form={form}
+                                editablePath={editablePath}
+                                setEditablePath={setEditablePath}
+                            />
+                        </DndProvider>
+                    </Col>
+                    <Col style={{ width: 384, padding: 0 }}>
+                        <Affix offsetTop={0}>
+                            <FieldSettingsForm
+                                path={editablePath}
+                                form={form}
+                                hideSettingsForm={() => setEditablePath(undefined)}
+                            />
                         </Affix>
-                        <DroppableQuestionnaire
-                            form={form}
-                            editablePath={editablePath}
-                            setEditablePath={setEditablePath}
-                        />
-                    </DndProvider>
-                </Col>
-                <Col style={{ width: 384, padding: 0 }}>
-                    <Affix offsetTop={0}>
-                        <FieldSettingsForm
-                            path={editablePath}
-                            form={form}
-                            hideSettingsForm={() => setEditablePath(undefined)}
-                        />
-                    </Affix>
-                </Col>
-            </Row>
+                    </Col>
+                </Row>
+            </BasePageContent>
         </Form>
     );
 }

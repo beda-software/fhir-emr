@@ -121,11 +121,9 @@ export function App() {
     };
 
     return (
-        <div className={s.globalSectionContainer}>
-            <RenderRemoteData remoteData={userResponse}>
-                {(data) => <HistoryRouter history={history}>{renderRoutes(data)}</HistoryRouter>}
-            </RenderRemoteData>
-        </div>
+        <RenderRemoteData remoteData={userResponse}>
+            {(data) => <HistoryRouter history={history}>{renderRoutes(data)}</HistoryRouter>}
+        </RenderRemoteData>
     );
 }
 
