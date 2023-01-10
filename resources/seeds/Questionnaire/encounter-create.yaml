@@ -13,7 +13,7 @@ item:
   - text: PatientId
     type: string
     linkId: patientId
-    readOnly: true
+    hidden: true
     initialExpression:
       language: text/fhirpath
       expression: '%Patient.id'
