@@ -23,6 +23,7 @@ jobs:
         runs-on: ubuntu-latest
         env:
             BUILD_IMAGE: bedasoftware/fhir-emr:master
+            DISABLE_ESLINT_PLUGIN: true
         steps:
             - uses: actions/checkout@v2
             - uses: actions/setup-node@v3
@@ -30,7 +31,7 @@ jobs:
                   node-version: 16
             - name: Install deps
               run: yarn
-            - run: yarn build:web
+            - run: cd web && yarn build
             - name: Set up Docker Buildx
               id: buildx
               uses: docker/setup-buildx-action@v1
