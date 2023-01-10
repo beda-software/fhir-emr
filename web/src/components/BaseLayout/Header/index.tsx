@@ -75,9 +75,8 @@ export function AppHeader() {
                         theme="light"
                         selectedKeys={menuDefaultSelectedKeys}
                         style={{ width: 400 }}
-                    >
-                        {renderMenu(menuItems)}
-                    </Menu>
+                        items={renderMenu(menuItems)}
+                    />
                     <Button onClick={doLogout} style={exitStyle}>
                         <Trans>Log out</Trans>
                     </Button>
@@ -101,13 +100,10 @@ function renderMenuTitle(routeItem: RouteItem) {
 }
 
 export function renderMenu(menuRoutes: RouteItem[]) {
-    return menuRoutes.map((route) => {
-        return (
-            <Menu.Item key={route.path}>
-                <Link to={route.path}>{renderMenuTitle(route)}</Link>
-            </Menu.Item>
-        );
-    });
+    return menuRoutes.map((route) => ({
+        key: route.path,
+        label: <Link to={route.path}>{renderMenuTitle(route)}</Link>,
+    }));
 }
 
 function getActiveKeys(menuRoutes: RouteItem[]): RouteItem[] {

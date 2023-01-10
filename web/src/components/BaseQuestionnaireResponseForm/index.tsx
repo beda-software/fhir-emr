@@ -42,6 +42,7 @@ export function BaseQuestionnaireResponseForm({
 }: Props) {
     const [form] = Form.useForm();
     const formValues = form.getFieldsValue();
+
     return (
         <Form
             layout="vertical"
@@ -84,10 +85,13 @@ export function BaseQuestionnaireResponseForm({
                         parentPath={[]}
                         context={calcInitialContext(formData.context, formValues)}
                     />
+
                     {!readOnly && (
-                        <Button type="primary" htmlType="submit">
-                            <Trans>Send</Trans>
-                        </Button>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            <Button type="primary" htmlType="submit">
+                                <Trans>Save</Trans>
+                            </Button>
+                        </div>
                     )}
                 </>
             </QuestionnaireResponseFormProvider>

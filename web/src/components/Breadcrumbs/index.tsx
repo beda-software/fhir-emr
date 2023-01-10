@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 interface Props {
@@ -17,12 +18,10 @@ const Breadcrumbs = ({ crumbs }: Props) => {
                 key + 1 === crumbs.length ? (
                     <span key={key}>{name}</span>
                 ) : (
-                    <>
-                        <Link key={key} to={path}>
-                            {name}
-                        </Link>
+                    <React.Fragment key={key}>
+                        <Link to={path}>{name}</Link>
                         <span> {'>'} </span>
-                    </>
+                    </React.Fragment>
                 ),
             )}
         </div>

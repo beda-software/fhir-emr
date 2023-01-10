@@ -1,7 +1,7 @@
 import { t, Trans } from '@lingui/macro';
 import { Menu, PageHeader, Button, notification } from 'antd';
 import { useEffect, useState } from 'react';
-import { useParams, useLocation, Link } from 'react-router-dom';
+import { useParams, useLocation, Link, Outlet, Route, Routes } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
@@ -21,6 +21,7 @@ import { RouteItem } from 'src/components/BaseLayout/Header';
 
 import s from './PatientDetails.module.scss';
 import { PatientDocuments } from './PatientDocuments';
+import { PatientDocument } from './PatientDocument';
 
 export const PatientDetails = () => {
     const location = useLocation();
@@ -104,13 +105,16 @@ export const PatientDetails = () => {
 
     const renderMenu = () => {
         return (
-            <Menu mode="horizontal" theme="light" selectedKeys={[currentPath]} className={s.menu}>
-                {menuItems.map((route) => (
-                    <Menu.Item key={route.path}>
-                        <Link to={route.path}>{route.title}</Link>
-                    </Menu.Item>
-                ))}
-            </Menu>
+            <Menu
+                mode="horizontal"
+                theme="light"
+                selectedKeys={[currentPath.split('/').slice(0, 4).join('/')]}
+                className={s.menu}
+                items={menuItems.map((route) => ({
+                    key: route.path,
+                    label: <Link to={route.path}>{route.title}</Link>,
+                }))}
+            />
         );
     };
 
@@ -124,7 +128,10 @@ export const PatientDetails = () => {
                             <PageHeader
                                 title={renderHumanName(patient.name?.[0])}
                                 extra={[
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <div
+                                        style={{ display: 'flex', alignItems: 'center' }}
+                                        key="patient-details__extra"
+                                    >
                                         <div style={{ marginRight: 37 }}>{patient.birthDate}</div>
                                         <div style={{ marginRight: 37 }}>
                                             {patient.identifier?.[0]?.value}
@@ -162,13 +169,33 @@ export const PatientDetails = () => {
                             {renderMenu()}
                         </BasePageHeader>
                         <BasePageContent>
-                            {currentPathEnd === 'encounters' ? (
-                                <PatientEncounter patient={patient} />
-                            ) : currentPathEnd === 'documents' ? (
-                                <PatientDocuments patient={patient} />
-                            ) : (
-                                <PatientGeneralInfo generalInfo={generalInfo} />
-                            )}
+                            <Routes>
+                                <Route
+                                    path="/"
+                                    element={
+                                        <>
+                                            <Outlet />
+                                        </>
+                                    }
+                                >
+                                    <Route
+                                        path="/"
+                                        element={<PatientGeneralInfo generalInfo={generalInfo} />}
+                                    />
+                                    <Route
+                                        path="/encounters"
+                                        element={<PatientEncounter patient={patient} />}
+                                    />
+                                    <Route
+                                        path="/documents"
+                                        element={<PatientDocuments patient={patient} />}
+                                    />
+                                    <Route
+                                        path="/documents/new/:questionnaireId"
+                                        element={<PatientDocument patient={patient} />}
+                                    />
+                                </Route>
+                            </Routes>
                         </BasePageContent>
                     </BaseLayout>
                 );

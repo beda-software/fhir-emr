@@ -5,6 +5,7 @@ import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/servi
 import { mapSuccess } from 'aidbox-react/lib/services/service';
 import { Button, Modal, ModalProps, Radio, Space, Spin } from 'antd';
 import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { Patient, Questionnaire } from 'shared/src/contrib/aidbox';
 
@@ -20,6 +21,9 @@ const questionnaireIds = 'gad-7,phq2phq9,allergies';
 
 export const ChooseDocumentToCreateModal = (props: Props) => {
     const [questionnaireId, setQuestionnaireId] = useState();
+    const location = useLocation();
+    const navigate = useNavigate();
+    const routeToOpen = `${location.pathname}/new/${questionnaireId}`;
     const [questionnairesResponse] = useService(async () =>
         mapSuccess(
             await getFHIRResources<Questionnaire>('Questionnaire', {
@@ -37,7 +41,12 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
                     <Button key="back" onClick={props.onCancel}>
                         Cancel
                     </Button>,
-                    <Button key="back" onClick={() => {}} type="primary">
+                    <Button
+                        key="create"
+                        disabled={!questionnaireId}
+                        onClick={() => navigate(routeToOpen)}
+                        type="primary"
+                    >
                         Create
                     </Button>,
                 ]}

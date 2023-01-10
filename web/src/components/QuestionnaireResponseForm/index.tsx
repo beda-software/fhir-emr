@@ -20,7 +20,7 @@ interface Props extends QuestionnaireResponseFormProps {
     customWidgets?: CustomWidgetsMapping;
 }
 
-export function QuestionnaireResponseForm(props: Props) {
+export function useQuestionnaireResponseForm(props: Props) {
     const { response, handleSave } = useQuestionnaireResponseFormData(props);
     const { onSuccess, onFailure, readOnly, customWidgets } = props;
 
@@ -51,6 +51,13 @@ export function QuestionnaireResponseForm(props: Props) {
             }
         }
     };
+
+    return { response, onSubmit, readOnly, customWidgets };
+}
+
+export function QuestionnaireResponseForm(props: Props) {
+    const { response, onSubmit, readOnly, customWidgets } = useQuestionnaireResponseForm(props);
+
     return (
         <RenderRemoteData remoteData={response}>
             {(formData) => (

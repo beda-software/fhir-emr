@@ -86,9 +86,7 @@ export function App() {
             <Routes>
                 <Route path="/patients" element={<PatientList />} />
                 <Route path="/encounters" element={<EncounterList />} />
-                <Route path="/patients/:id" element={<PatientDetails />} />
-                <Route path="/patients/:id/encounters" element={<PatientDetails />} />
-                <Route path="/patients/:id/documents" element={<PatientDetails />} />
+                <Route path="/patients/:id/*" element={<PatientDetails />} />
                 <Route path="/documents/:id/edit" element={<div>documents/:id/edit</div>} />
                 <Route path="/encounters/:encounterId" element={<EncounterDetails />} />
                 <Route
