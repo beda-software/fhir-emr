@@ -29,6 +29,8 @@ jobs:
             - uses: actions/setup-node@v3
               with:
                   node-version: 16
+            - name: Prepare config
+              run: cp shared/src/config.production.ts shared/src/config.ts
             - name: Install deps
               run: yarn
             - run: yarn compile
