@@ -67,22 +67,23 @@ export function AppHeader() {
 
     return (
         <Header className={s.header}>
-            <div className={s.headerContent}>
-                <LogoImage style={titleStyle} />
-                <div style={rightSideStyle}>
+            <div className={s.content}>
+                <LogoImage className={s.logo} />
+                <div className={s.contentLeft}>
                     <Menu
                         mode="horizontal"
                         theme="light"
                         selectedKeys={menuDefaultSelectedKeys}
-                        style={{ width: 400 }}
                         items={renderMenu(menuItems)}
+                        className={s.menu}
                     />
-                    <Button onClick={doLogout} style={exitStyle}>
+                    <Button onClick={doLogout} size="small" className={s.logout}>
                         <Trans>Log out</Trans>
                     </Button>
-                    <AvatarImage style={avatarStyle} />
-
-                    <span style={titleStyle}>{renderHumanName()}</span>
+                    <div className={s.user}>
+                        <AvatarImage />
+                        <span>{renderHumanName()}</span>
+                    </div>
                     <LocaleSwitcher />
                 </div>
             </div>
@@ -115,13 +116,3 @@ function getActiveKeys(menuRoutes: RouteItem[]): RouteItem[] {
         return false;
     });
 }
-
-const rightSideStyle = { display: 'flex', alignItems: 'center', justifyContent: 'space-between' };
-
-const exitStyle = { marginLeft: 52 };
-
-const avatarStyle = { marginLeft: 20, marginRight: 8 };
-
-const titleStyle = {
-    cursor: 'pointer',
-};

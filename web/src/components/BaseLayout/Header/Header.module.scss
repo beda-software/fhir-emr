@@ -4,11 +4,44 @@
     justify-content: center;
 }
 
-.headerContent {
+.content {
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: space-between;
     max-width: 1080px;
     height: 64px;
+}
+
+.logo {
+    cursor: pointer;
+}
+
+.contentLeft {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
+}
+
+.menu {
+    flex: 1;
+    justify-content: flex-end;
+    margin-right: 12px;
+    border-bottom: 0;
+    height: 64px;
+}
+
+.logout {
+    font-size: 12px;
+    line-height: 20px;
+    font-weight: 500;
+    padding: 1px 8px;
+}
+
+.user {
+    display: flex;
+    gap: 8px;
+    align-items: center;
 }
