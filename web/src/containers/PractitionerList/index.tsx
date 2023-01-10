@@ -1,6 +1,6 @@
 import { EditTwoTone, PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
-import { Button, Empty, Input, PageHeader, Table, Tag } from 'antd';
+import { Button, Empty, Input, PageHeader, Tag } from 'antd';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
@@ -9,6 +9,7 @@ import { ModalPractitioner } from 'src/components/ModalPractitioner';
 
 import { PractitionerListRowData, usePractitionersList } from './hooks';
 import s from './PractitionerList.module.scss';
+import { Table } from 'src/components/Table';
 
 export function PractitionerList() {
     const { practitionerDataListRD, practitionerListReload } = usePractitionersList();

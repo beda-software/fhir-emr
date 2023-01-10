@@ -1,6 +1,6 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
-import { Button, Empty, Input, PageHeader, Table } from 'antd';
+import { Button, Empty, Input, PageHeader } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { Link } from 'react-router-dom';
 
@@ -16,6 +16,7 @@ import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-f
 import { BaseLayout, BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { Table } from 'src/components/Table';
 
 const columns: ColumnsType<Questionnaire> = [
     {

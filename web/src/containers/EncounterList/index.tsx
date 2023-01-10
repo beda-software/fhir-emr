@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro';
-import { Button, DatePicker, Empty, Input, PageHeader, Table } from 'antd';
+import { Button, DatePicker, Empty, Input, PageHeader } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
@@ -7,6 +7,7 @@ import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { BaseLayout, BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 
 import { useEncounterList } from './hooks';
+import { Table } from 'src/components/Table';
 
 const columns = [
     {

@@ -3,7 +3,6 @@ import { getReference, WithId } from 'aidbox-react/lib/services/fhir';
 import Title from 'antd/lib/typography/Title';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Patient } from 'shared/src/contrib/aidbox';
-import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 
 import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
@@ -19,8 +18,7 @@ export function PatientDocument(props: Props) {
     const navigate = useNavigate();
 
     const { response, onSubmit, readOnly, customWidgets } = useQuestionnaireResponseForm({
-        questionnaireLoader: questionnaireIdLoader(params.questionnaireId!),
-        // questionnaireLoader: { type: 'id', questionnaireId: params.questionnaireId! },
+        questionnaireLoader: { type: 'raw-id', questionnaireId: params.questionnaireId! },
         // launchContextParameters: [{ name: 'Patient', resource: patient }],
         initialQuestionnaireResponse: {
             source: getReference(patient),

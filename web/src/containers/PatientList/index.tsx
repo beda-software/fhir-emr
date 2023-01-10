@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro';
-import { PageHeader, Button, Table, Input, Empty } from 'antd';
+import { PageHeader, Button, Input, Empty } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,6 +13,8 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { BaseLayout, BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { ModalNewPatient } from 'src/components/ModalNewPatient';
+import { Table } from 'src/components/Table';
+import { formatHumanDate } from 'src/utils/date';
 
 const columns: ColumnsType<Patient> = [
     {
@@ -25,13 +27,16 @@ const columns: ColumnsType<Patient> = [
         title: <Trans>Birth date</Trans>,
         dataIndex: 'birthDate',
         key: 'birthDate',
-        render: (_text, resource) => resource.birthDate,
+        render: (_text, resource) =>
+            resource.birthDate ? formatHumanDate(resource.birthDate) : null,
+        width: '25%',
     },
     {
         title: <Trans>SSN</Trans>,
         dataIndex: 'identifier',
         key: 'identifier',
         render: (_text, resource) => resource.identifier?.[0].value,
+        width: '25%',
     },
     {
         title: <Trans>Actions</Trans>,
@@ -39,11 +44,12 @@ const columns: ColumnsType<Patient> = [
         key: 'actions',
         render: (_text, resource) => {
             return (
-                <Button type="link" block>
+                <Button type="link" style={{ padding: 0 }}>
                     <Trans>Open</Trans>
                 </Button>
             );
         },
+        width: 200,
     },
 ];
 

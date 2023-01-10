@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro';
-import { Empty, Table } from 'antd';
+import { Empty } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
@@ -9,6 +9,7 @@ import { Patient } from 'shared/src/contrib/aidbox';
 import { useEncounterList } from 'src/containers/EncounterList/hooks';
 
 import { ModalNewEncounter } from '../ModalNewEncounter';
+import { Table } from '../Table';
 
 interface Props {
     patient: Patient;
