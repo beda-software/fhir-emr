@@ -8,6 +8,7 @@
         "start": "lerna run --parallel start",
         "start:web": "lerna run start --parallel --scope web",
         "build": "lerna run --parallel build",
+        "build:web": "lerna run --parallel --scope web build",
         "typecheck": "lerna run --parallel typecheck",
         "lint": "lerna run --parallel lint",
         "extract": "lingui extract",

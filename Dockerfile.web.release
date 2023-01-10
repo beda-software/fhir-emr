@@ -1,8 +1,8 @@
-FROM node:12.16.1
+FROM node:lts
 
 RUN yarn global add serve
 RUN mkdir /app
-COPY --from=builder /app/web/build /app/
+COPY web/build /app
 WORKDIR /app
 
 EXPOSE 5000
