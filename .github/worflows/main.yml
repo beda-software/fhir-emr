@@ -58,7 +58,7 @@ jobs:
                   SOURCE: './zrc/'
                   REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
                   REMOTE_USER: ${{ secrets.REMOTE_USER }}
-                  TARGET: '/root/fhir-emr-zrc'
+                  TARGET: '~/fhir-emr-zrc'
             - name: Restart
               uses: appleboy/ssh-action@master
               with:
@@ -68,6 +68,6 @@ jobs:
                   port: 22
                   script_stop: true
                   script: |
-                      cd /root/web
+                      cd ~/web
                       make restart
                       echo Current branch is ${{ github.ref }}
