@@ -1,4 +1,5 @@
 import { notification } from 'antd';
+import _ from 'lodash';
 import { CustomWidgetsMapping } from 'sdc-qrf';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
@@ -22,10 +23,18 @@ interface Props extends QuestionnaireResponseFormProps {
 
 export function useQuestionnaireResponseForm(props: Props) {
     const { response, handleSave } = useQuestionnaireResponseFormData(props);
-    const { onSuccess, onFailure, readOnly, customWidgets } = props;
+    const { onSuccess, onFailure, readOnly, customWidgets, initialQuestionnaireResponse } = props;
 
     const onSubmit = async (formData: QuestionnaireResponseFormData) => {
-        const saveResponse = await handleSave(formData);
+        const saveResponse = await handleSave(
+            _.merge({}, formData, {
+                context: {
+                    questionnaireResponse: {
+                        questionnaire: initialQuestionnaireResponse?.questionnaire,
+                    },
+                },
+            }),
+        );
 
         if (isSuccess(saveResponse)) {
             if (saveResponse.data.extracted) {

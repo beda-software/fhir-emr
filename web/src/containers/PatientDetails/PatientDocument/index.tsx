@@ -1,11 +1,15 @@
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { getReference, WithId } from 'aidbox-react/lib/services/fhir';
 import Title from 'antd/lib/typography/Title';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Patient } from 'shared/src/contrib/aidbox';
-import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 
+import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
+import { getReference, WithId } from 'aidbox-react/lib/services/fhir';
+
+import { Patient } from 'shared/src/contrib/aidbox';
+import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
+
+import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+
 import s from './PatientDocument.module.scss';
 
 interface Props {
@@ -18,10 +22,11 @@ export function PatientDocument(props: Props) {
     const navigate = useNavigate();
 
     const { response, onSubmit, readOnly, customWidgets } = useQuestionnaireResponseForm({
-        questionnaireLoader: { type: 'raw-id', questionnaireId: params.questionnaireId! },
+        questionnaireLoader: questionnaireIdLoader(params.questionnaireId!),
         // launchContextParameters: [{ name: 'Patient', resource: patient }],
         initialQuestionnaireResponse: {
             source: getReference(patient),
+            questionnaire: params.questionnaireId!,
         },
         onSuccess: () => navigate(`/patients/${patient.id}/documents`),
     });
