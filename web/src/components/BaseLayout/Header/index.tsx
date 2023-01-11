@@ -1,7 +1,7 @@
+import { DownOutlined, GlobalOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
-import { Button, Menu, Radio } from 'antd';
+import { Dropdown, Menu } from 'antd';
 import { Header } from 'antd/lib/layout/layout';
-import _ from 'lodash';
 import { Link } from 'react-router-dom';
 
 import { resetInstanceToken } from 'aidbox-react/lib/services/instance';
@@ -17,6 +17,7 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 import { AvatarImage } from 'src/images/AvatarImage';
 import { LogoImage } from 'src/images/LogoImage';
 import { logout } from 'src/services/auth';
+
 import s from './Header.module.scss';
 
 export interface RouteItem {
@@ -28,21 +29,30 @@ export interface RouteItem {
 
 function LocaleSwitcher() {
     const currentLocale = getCurrentLocale();
+    const localesList = Object.entries(locales);
+    const items = localesList.map(([value, label]) => ({
+        label: <div>{label}</div>,
+        key: value,
+    }));
+
+    const onChangeLocale = ({ key }: { key: string }) => {
+        setCurrentLocale(key);
+        dynamicActivate(key);
+    };
+
     return (
-        <Radio.Group
-            value={currentLocale}
-            size="small"
-            onChange={(e) => {
-                setCurrentLocale(e.target.value);
-                dynamicActivate(e.target.value);
-            }}
+        <Dropdown
+            menu={{ items, onClick: onChangeLocale }}
+            trigger={['click']}
+            className={s.locale}
+            placement="bottomRight"
         >
-            {Object.entries(locales).map(([value, label], index) => (
-                <Radio.Button key={index} value={value}>
-                    {label}
-                </Radio.Button>
-            ))}
-        </Radio.Group>
+            <a onClick={(e) => e.preventDefault()} className={s.currentLocale}>
+                <GlobalOutlined className={s.localeIcon} />
+                {locales[currentLocale]}
+                <DownOutlined className={s.localeArrow} />
+            </a>
+        </Dropdown>
     );
 }
 
@@ -65,6 +75,36 @@ export function AppHeader() {
         ({ path, title }) => path || title,
     );
 
+    const renderUserMenu = () => {
+        const userMenu = [
+            {
+                label: t`Log out`,
+                key: 'logout',
+            },
+        ];
+
+        const onUserMenuClick = ({ key }: { key: string }) => {
+            if (key === 'logout') {
+                doLogout();
+            }
+        };
+
+        return (
+            <Dropdown
+                menu={{ items: userMenu, onClick: onUserMenuClick }}
+                trigger={['click']}
+                placement="bottomLeft"
+                arrow
+            >
+                <a onClick={(e) => e.preventDefault()} className={s.user}>
+                    <AvatarImage className={s.avatar} />
+                    <span>{renderHumanName()}</span>
+                    <DownOutlined className={s.localeArrow} />
+                </a>
+            </Dropdown>
+        );
+    };
+
     return (
         <Header className={s.header}>
             <div className={s.content}>
@@ -77,13 +117,7 @@ export function AppHeader() {
                         items={renderMenu(menuItems)}
                         className={s.menu}
                     />
-                    <Button onClick={doLogout} size="small" className={s.logout}>
-                        <Trans>Log out</Trans>
-                    </Button>
-                    <div className={s.user}>
-                        <AvatarImage />
-                        <span>{renderHumanName()}</span>
-                    </div>
+                    {renderUserMenu()}
                     <LocaleSwitcher />
                 </div>
             </div>

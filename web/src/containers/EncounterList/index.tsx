@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro';
-import { Button, DatePicker, Empty, Input, PageHeader } from 'antd';
+import { Button, DatePicker, Empty, Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
@@ -8,6 +8,7 @@ import { BaseLayout, BasePageContent, BasePageHeader } from 'src/components/Base
 
 import { useEncounterList } from './hooks';
 import { Table } from 'src/components/Table';
+import Title from 'antd/es/typography/Title';
 
 const columns = [
     {
@@ -41,8 +42,10 @@ export function EncounterList() {
 
     return (
         <BaseLayout>
-            <BasePageHeader style={{ padding: '0 0 92px' }}>
-                <PageHeader title={t`Encounters`} />
+            <BasePageHeader style={{ paddingTop: 40, paddingBottom: 92 }}>
+                <Title style={{ marginBottom: 40 }}>
+                    <Trans>Encounters</Trans>
+                </Title>
                 <div
                     style={{
                         position: 'relative',

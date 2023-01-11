@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro';
-import { Alert, notification, PageHeader } from 'antd';
+import { Alert, notification } from 'antd';
 import { useParams } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
@@ -16,6 +16,7 @@ import { QuestionnaireResponseForm } from '../../components/QuestionnaireRespons
 import { formatHumanDate } from '../../utils/date';
 import { useEncounterDetails } from '../EncounterDetails/hooks';
 import s from './EncounterQR.module.scss';
+import Title from 'antd/es/typography/Title';
 
 export function EncounterQR() {
     const { encounterId, questionnaireId } = useParams<{
@@ -51,7 +52,7 @@ export function EncounterQR() {
                     return (
                         <>
                             <BasePageHeader>
-                                <PageHeader title={renderHumanName(patient.name?.[0])} />
+                                <Title>{renderHumanName(patient.name?.[0])}</Title>
                             </BasePageHeader>
                             <BasePageContent>
                                 <div className={s.infoContainer}>

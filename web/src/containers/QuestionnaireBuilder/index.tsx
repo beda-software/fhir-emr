@@ -11,7 +11,6 @@ import {
     Input,
     InputNumber,
     notification,
-    PageHeader,
     Radio,
     Row,
     Select,
@@ -134,7 +133,9 @@ function Content({
             <BasePageHeader>
                 <Row justify="space-between">
                     <Col>
-                        <PageHeader title={t`Questionnaire`} />
+                        <Title>
+                            <Trans>Questionnaire</Trans>
+                        </Title>
                     </Col>
                     <Col>
                         <Form.Item

@@ -58,7 +58,7 @@ export function ModalTrigger(props: Props) {
                 destroyOnClose
             >
                 <Layout>
-                    <Content style={{ padding: 16, backgroundColor: 'white' }}>
+                    <Content style={{ backgroundColor: 'white' }}>
                         {showModal && children({ closeModal })}
                     </Content>
                 </Layout>

@@ -1,6 +1,6 @@
 import { EditTwoTone, PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
-import { Button, Empty, Input, PageHeader, Tag } from 'antd';
+import { Button, Col, Empty, Input, Row, Tag } from 'antd';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
@@ -10,16 +10,21 @@ import { ModalPractitioner } from 'src/components/ModalPractitioner';
 import { PractitionerListRowData, usePractitionersList } from './hooks';
 import s from './PractitionerList.module.scss';
 import { Table } from 'src/components/Table';
+import Title from 'antd/es/typography/Title';
 
 export function PractitionerList() {
     const { practitionerDataListRD, practitionerListReload } = usePractitionersList();
 
     return (
         <BaseLayout>
-            <BasePageHeader style={{ padding: '0 0 92px' }}>
-                <PageHeader
-                    title={t`Practitioners`}
-                    extra={[
+            <BasePageHeader style={{ paddingTop: 40, paddingBottom: 92 }}>
+                <Row justify="space-between" align="middle" style={{ marginBottom: 40 }}>
+                    <Col>
+                        <Title style={{ marginBottom: 0 }}>
+                            <Trans>Practitioners</Trans>
+                        </Title>
+                    </Col>
+                    <Col>
                         <ModalPractitioner
                             key={'new'}
                             modalTitle="Add New Practitioner"
@@ -28,9 +33,9 @@ export function PractitionerList() {
                             questionnaireId="practitioner-create"
                             buttonType="primary"
                             practitionerListReload={practitionerListReload}
-                        />,
-                    ]}
-                />
+                        />
+                    </Col>
+                </Row>
                 <div className={s.searchBar}>
                     <Input.Search placeholder={t`Search by name`} style={{ width: 264 }} />
                     <Button>

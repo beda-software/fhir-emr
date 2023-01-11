@@ -1,19 +1,22 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-interface Props {
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
     crumbs: {
         path: string;
         name: string;
     }[];
 }
 
-const Breadcrumbs = ({ crumbs }: Props) => {
+const Breadcrumbs = (props: Props) => {
+    const { crumbs } = props;
+
     if (crumbs.length <= 1) {
         return null;
     }
+
     return (
-        <div>
+        <div {...props} style={{ marginBottom: 24 }}>
             {crumbs.map(({ name, path }, key) =>
                 key + 1 === crumbs.length ? (
                     <span key={key}>{name}</span>

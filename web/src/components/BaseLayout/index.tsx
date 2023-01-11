@@ -1,8 +1,8 @@
 import { Layout } from 'antd';
 import { ReactNode } from 'react';
 
-import { AppHeader } from './Header';
 import s from './BaseLayout.module.scss';
+import { AppHeader } from './Header';
 
 interface Props {
     children: ReactNode;

@@ -1,6 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
-import { Button, Empty, Input, PageHeader } from 'antd';
+import { Button, Col, Empty, Input, Row } from 'antd';
+import Title from 'antd/es/typography/Title';
 import { ColumnsType } from 'antd/lib/table';
 import { Link } from 'react-router-dom';
 
@@ -86,17 +87,21 @@ export function QuestionnaireList() {
 
     return (
         <BaseLayout>
-            <BasePageHeader style={{ padding: '0 0 92px' }}>
-                <PageHeader
-                    title={t`Questionnaires`}
-                    extra={[
+            <BasePageHeader style={{ paddingTop: 40, paddingBottom: 92 }}>
+                <Row justify="space-between" align="middle" style={{ marginBottom: 40 }}>
+                    <Col>
+                        <Title style={{ marginBottom: 0 }}>
+                            <Trans>Questionnaires</Trans>
+                        </Title>
+                    </Col>
+                    <Col>
                         <Link to="/questionnaires/builder">
                             <Button icon={<PlusOutlined />} type="primary">
-                                <Trans>Add questionnaire</Trans>
+                                <span><Trans>Add questionnaire</Trans></span>
                             </Button>
-                        </Link>,
-                    ]}
-                />
+                        </Link>
+                    </Col>
+                </Row>
                 <div
                     style={{
                         position: 'relative',

@@ -1,4 +1,3 @@
-import { PageHeader } from 'antd';
 import { useParams } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
@@ -14,6 +13,8 @@ import { QuestionnaireResponseList } from '../../components/QuestionnaireRespons
 import { useQuestionnaireResponseDataList } from '../../components/QuestionnaireResponseList/hooks';
 import { formatHumanDateTime } from '../../utils/date';
 import { useEncounterDetails } from './hooks';
+import { Trans } from '@lingui/macro';
+import Title from 'antd/es/typography/Title';
 
 export function EncounterDetails() {
     const { encounterId } = useParams<{ encounterId: string }>();
@@ -42,11 +43,11 @@ export function EncounterDetails() {
                 }) => (
                     <>
                         <BasePageHeader>
-                            <PageHeader
-                                title={
-                                    encounter.serviceType?.coding?.[0]?.display || 'Консультация'
-                                }
-                            />
+                            <Title>
+                                {encounter.serviceType?.coding?.[0]?.display || (
+                                    <Trans>Encounter</Trans>
+                                )}
+                            </Title>
                         </BasePageHeader>
                         <BasePageContent>
                             <div style={{ display: 'flex', flexDirection: 'row' }}>

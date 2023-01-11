@@ -49,7 +49,7 @@ export function ModalPractitioner(props: Props) {
             title={modalTitle}
             trigger={
                 <Button icon={icon} type={buttonType}>
-                    <Trans>{buttonText}</Trans>
+                    <span><Trans>{buttonText}</Trans></span>
                 </Button>
             }
         >

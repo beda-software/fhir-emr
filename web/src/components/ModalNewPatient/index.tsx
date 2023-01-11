@@ -16,7 +16,7 @@ export const ModalNewPatient = (props: ModalNewPatientProps) => {
             title={t`Add patient`}
             trigger={
                 <Button icon={<PlusOutlined />} type="primary">
-                    <Trans>Add patient</Trans>
+                    <span><Trans>Add patient</Trans></span>
                 </Button>
             }
         >

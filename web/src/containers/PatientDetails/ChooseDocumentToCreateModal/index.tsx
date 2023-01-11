@@ -1,11 +1,12 @@
 import { LoadingOutlined } from '@ant-design/icons';
+import { Button, Modal, ModalProps, Radio, Space, Spin } from 'antd';
+import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
 import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess } from 'aidbox-react/lib/services/service';
-import { Button, Modal, ModalProps, Radio, Space, Spin } from 'antd';
-import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 
 import { Patient, Questionnaire } from 'shared/src/contrib/aidbox';
 
@@ -38,7 +39,7 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
             <Modal
                 title="Create document"
                 footer={[
-                    <Button key="back" onClick={props.onCancel}>
+                    <Button key="back" onClick={(e: any) => props.onCancel?.(e)}>
                         Cancel
                     </Button>,
                     <Button
