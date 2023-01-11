@@ -1,19 +1,24 @@
-.searchBar {
+:local .container {
     position: relative;
     padding: 16px;
-    height: 64px;
     border-radius: 10px;
     background-color: #c0d4ff;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    gap: 32px;
 
-    input,
-    button {
+    input {
         border-color: white !important;
     }
 
-    button {
+    :global .ant-input-search button {
+        border-color: white !important;
         border-left-color: #e4e9f2 !important;
+    }
+
+    :global .ant-input-search,
+    :global .ant-picker {
+        width: 264px;
     }
 }

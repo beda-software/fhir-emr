@@ -17,6 +17,7 @@ import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-f
 import { BaseLayout, BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { SearchBar } from 'src/components/SearchBar';
 import { Table } from 'src/components/Table';
 
 const columns: ColumnsType<Questionnaire> = [
@@ -102,23 +103,12 @@ export function QuestionnaireList() {
                         </Link>
                     </Col>
                 </Row>
-                <div
-                    style={{
-                        position: 'relative',
-                        padding: 16,
-                        height: 64,
-                        borderRadius: 10,
-                        backgroundColor: '#C0D4FF',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                    }}
-                >
-                    <Input.Search placeholder={t`Find questionnaire`} style={{ width: 264 }} />
+                <SearchBar>
+                    <Input.Search placeholder={t`Find questionnaire`} />
                     <Button>
                         <Trans>Reset</Trans>
                     </Button>
-                </div>
+                </SearchBar>
             </BasePageHeader>
             <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
                 <Table<Questionnaire>

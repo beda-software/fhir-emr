@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import s from './Breadcrumbs.module.scss';
+
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
     crumbs: {
         path: string;
@@ -16,14 +18,18 @@ const Breadcrumbs = (props: Props) => {
     }
 
     return (
-        <div {...props} style={{ marginBottom: 24 }}>
+        <div className={s.container} {...props}>
             {crumbs.map(({ name, path }, key) =>
                 key + 1 === crumbs.length ? (
-                    <span key={key}>{name}</span>
+                    <span key={key} className={s.currentPage}>
+                        {name}
+                    </span>
                 ) : (
                     <React.Fragment key={key}>
-                        <Link to={path}>{name}</Link>
-                        <span> {'>'} </span>
+                        <Link to={path} className={s.prevPage}>
+                            {name}
+                        </Link>
+                        <span className={s.arrow}>{'>'}</span>
                     </React.Fragment>
                 ),
             )}

@@ -1,16 +1,17 @@
 import { EditTwoTone, PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, Col, Empty, Input, Row, Tag } from 'antd';
+import Title from 'antd/es/typography/Title';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
 import { BaseLayout, BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { ModalPractitioner } from 'src/components/ModalPractitioner';
+import { SearchBar } from 'src/components/SearchBar';
+import { Table } from 'src/components/Table';
 
 import { PractitionerListRowData, usePractitionersList } from './hooks';
-import s from './PractitionerList.module.scss';
-import { Table } from 'src/components/Table';
-import Title from 'antd/es/typography/Title';
+
 
 export function PractitionerList() {
     const { practitionerDataListRD, practitionerListReload } = usePractitionersList();
@@ -36,12 +37,12 @@ export function PractitionerList() {
                         />
                     </Col>
                 </Row>
-                <div className={s.searchBar}>
-                    <Input.Search placeholder={t`Search by name`} style={{ width: 264 }} />
+                <SearchBar>
+                    <Input.Search placeholder={t`Search by name`} />
                     <Button>
                         <Trans>Reset</Trans>
                     </Button>
-                </div>
+                </SearchBar>
             </BasePageHeader>
             <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
                 <RenderRemoteData remoteData={practitionerDataListRD}>

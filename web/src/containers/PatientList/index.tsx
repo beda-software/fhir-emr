@@ -14,6 +14,7 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { BaseLayout, BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { ModalNewPatient } from 'src/components/ModalNewPatient';
+import { SearchBar } from 'src/components/SearchBar';
 import { Table } from 'src/components/Table';
 import { formatHumanDate } from 'src/utils/date';
 
@@ -77,23 +78,12 @@ export function PatientList() {
                         <ModalNewPatient onCreate={manager.reload} />
                     </Col>
                 </Row>
-                <div
-                    style={{
-                        position: 'relative',
-                        padding: 16,
-                        height: 64,
-                        borderRadius: 10,
-                        backgroundColor: '#C0D4FF',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                    }}
-                >
-                    <Input.Search placeholder={t`Find patient`} style={{ width: 264 }} />
+                <SearchBar>
+                    <Input.Search placeholder={t`Find patient`} />
                     <Button>
                         <Trans>Reset</Trans>
                     </Button>
-                </div>
+                </SearchBar>
             </BasePageHeader>
             <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
                 <Table<Patient>

@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro';
-import { Button, DatePicker, Empty, Input } from 'antd';
+import { Button, Col, DatePicker, Empty, Input, Row } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
@@ -9,6 +9,7 @@ import { BaseLayout, BasePageContent, BasePageHeader } from 'src/components/Base
 import { useEncounterList } from './hooks';
 import { Table } from 'src/components/Table';
 import Title from 'antd/es/typography/Title';
+import { SearchBar } from 'src/components/SearchBar';
 
 const columns = [
     {
@@ -46,27 +47,23 @@ export function EncounterList() {
                 <Title style={{ marginBottom: 40 }}>
                     <Trans>Encounters</Trans>
                 </Title>
-                <div
-                    style={{
-                        position: 'relative',
-                        padding: 16,
-                        height: 64,
-                        borderRadius: 10,
-                        backgroundColor: '#C0D4FF',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                    }}
-                >
-                    <Input.Search placeholder={t`Search by patient`} style={{ width: 264 }} />
-                    <Input.Search placeholder={t`Search by practitioner`} style={{ width: 264 }} />
-
-                    <RangePicker placeholder={[t`Start date`, t`End date`]} />
+                <SearchBar>
+                    <Row gutter={32}>
+                        <Col>
+                            <Input.Search placeholder={t`Search by patient`} />
+                        </Col>
+                        <Col>
+                            <Input.Search placeholder={t`Search by practitioner`} />
+                        </Col>
+                        <Col>
+                            <RangePicker placeholder={[t`Start date`, t`End date`]} />
+                        </Col>
+                    </Row>
 
                     <Button type="primary">
                         <Trans>Reset</Trans>
                     </Button>
-                </div>
+                </SearchBar>
             </BasePageHeader>
             <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
                 <RenderRemoteData remoteData={encounterDataListRD}>

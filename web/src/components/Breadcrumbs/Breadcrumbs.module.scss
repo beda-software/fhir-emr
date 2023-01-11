@@ -1,0 +1,21 @@
+.container {
+    margin-bottom: 24px;
+    display: flex;
+    gap: 8px;
+    color: rgba(11, 24, 40, 0.45);
+    font-size: 14px;
+    line-height: 22px;
+}
+
+.currentPage {
+    color: rgba(0, 0, 0, 0.85);
+}
+
+.prevPage {
+    color: rgba(11, 24, 40, 0.45);
+
+    &:hover {
+        color: rgba(11, 24, 40, 0.45);
+        text-decoration: underline;
+    }
+}
