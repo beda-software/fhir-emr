@@ -13,9 +13,11 @@ import {
 } from 'sdc-qrf';
 
 import 'react-phone-input-2/lib/style.css';
+import s from './BaseQuestionnaireResponseForm.module.scss';
 import {
     Col,
     Group,
+    InlineChoice,
     PairInput,
     QuestionBoolean,
     QuestionChoice,
@@ -53,6 +55,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
             form={form}
             initialValues={formData.formValues}
             onFinish={(values) => onSubmit({ ...formData, formValues: values })}
+            className={s.form}
         >
             <QuestionnaireResponseFormProvider
                 formValues={formValues}
@@ -81,6 +84,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                     phoneWidget: QuestionPhone,
                     slider: QuestionSlider,
                     'solid-radio-button': QuestionSolidRadio,
+                    'inline-choice': InlineChoice,
                     ...props.itemControlQuestionItemComponents,
                 }}
                 readOnly={readOnly}

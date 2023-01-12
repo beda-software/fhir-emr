@@ -24,7 +24,9 @@ export function PatientDocument(props: PatientDocumentProps) {
                 <RenderRemoteData remoteData={response}>
                     {(formData) => (
                         <>
-                            <Title level={3}>{formData.context.questionnaire.name}</Title>
+                            <Title level={3} style={{ marginBottom: 32 }}>
+                                {formData.context.questionnaire.name}
+                            </Title>
                             <Component
                                 formData={formData}
                                 onSubmit={onSubmit}

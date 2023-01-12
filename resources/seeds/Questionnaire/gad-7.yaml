@@ -11,6 +11,9 @@ item:
             text: Feeling nervous, anxious, or on edge
             required: true
             type: choice
+            itemControl:
+                coding:
+                    - code: inline-choice
             answerOption:
                 - value:
                       Coding:
@@ -36,6 +39,9 @@ item:
             text: Not being able to stop or control worrying
             required: true
             type: choice
+            itemControl:
+                coding:
+                    - code: inline-choice
             answerOption:
                 - value:
                       Coding:
@@ -61,6 +67,9 @@ item:
             text: Worrying too much about different things
             required: true
             type: choice
+            itemControl:
+                coding:
+                    - code: inline-choice
             answerOption:
                 - value:
                       Coding:
@@ -86,6 +95,9 @@ item:
             text: Trouble relaxing
             required: true
             type: choice
+            itemControl:
+                coding:
+                    - code: inline-choice
             answerOption:
                 - value:
                       Coding:
@@ -111,6 +123,9 @@ item:
             text: Being so restless that it is hard to sit still
             required: true
             type: choice
+            itemControl:
+                coding:
+                    - code: inline-choice
             answerOption:
                 - value:
                       Coding:
@@ -136,6 +151,9 @@ item:
             text: Becoming easily annoyed or irritable
             required: true
             type: choice
+            itemControl:
+                coding:
+                    - code: inline-choice
             answerOption:
                 - value:
                       Coding:
@@ -161,6 +179,9 @@ item:
             text: Feeling afraid, as if something awful might happen
             required: true
             type: choice
+            itemControl:
+                coding:
+                    - code: inline-choice
             answerOption:
                 - value:
                       Coding:

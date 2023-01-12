@@ -16,6 +16,9 @@ item:
             text: Little interest or pleasure in doing things
             required: true
             type: choice
+            itemControl:
+                coding:
+                    - code: inline-choice
             answerOption:
                 - value:
                       Coding:
@@ -41,6 +44,9 @@ item:
             text: Feeling down, depressed, or hopeless
             required: true
             type: choice
+            itemControl:
+                coding:
+                    - code: inline-choice
             answerOption:
                 - value:
                       Coding:
@@ -74,6 +80,9 @@ item:
                   text: Trouble falling or staying asleep, or sleeping too much
                   required: true
                   type: choice
+                  itemControl:
+                    coding:
+                        - code: inline-choice
                   answerOption:
                       - value:
                             Coding:
@@ -99,6 +108,9 @@ item:
                   text: Feeling tired or having little energy
                   required: true
                   type: choice
+                  itemControl:
+                    coding:
+                        - code: inline-choice
                   answerOption:
                       - value:
                             Coding:
@@ -124,6 +136,9 @@ item:
                   text: Poor appetite or overeating
                   required: true
                   type: choice
+                  itemControl:
+                    coding:
+                        - code: inline-choice
                   answerOption:
                       - value:
                             Coding:
@@ -149,6 +164,9 @@ item:
                   text: Feeling bad about yourself-or that you are a failure or have let yourself or your family down
                   required: true
                   type: choice
+                  itemControl:
+                    coding:
+                        - code: inline-choice
                   answerOption:
                       - value:
                             Coding:
@@ -174,6 +192,9 @@ item:
                   text: Trouble concentrating on things, such as reading the newspaper or watching television
                   required: true
                   type: choice
+                  itemControl:
+                    coding:
+                        - code: inline-choice
                   answerOption:
                       - value:
                             Coding:
@@ -199,6 +220,9 @@ item:
                   text: Moving or speaking so slowly that other people could have noticed. Or the opposite-being so fidgety or restless that you have been moving around a lot more than usual
                   required: true
                   type: choice
+                  itemControl:
+                    coding:
+                        - code: inline-choice
                   answerOption:
                       - value:
                             Coding:
@@ -224,6 +248,9 @@ item:
                   text: Thoughts that you would be better off dead, or of hurting yourself in some way
                   required: true
                   type: choice
+                  itemControl:
+                    coding:
+                        - code: inline-choice
                   answerOption:
                       - value:
                             Coding:
