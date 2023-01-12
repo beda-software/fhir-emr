@@ -1,11 +1,9 @@
 import { t, Trans } from '@lingui/macro';
 import { Button, Form, notification } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
-import { useState } from 'react';
 import { QRFContextData, QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
 import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
-import { getByPath } from 'shared/src/utils/path';
 
 import {
     BaseQuestionnaireResponseForm,
@@ -46,9 +44,8 @@ const fillValues: { [linkId: string]: string } = {
 function QuestionField(props: QuestionFieldProps) {
     const { linkId, text, readOnly } = props.questionItem;
 
+    const fillText = fillValues[linkId];
     const onFill = () => {
-        const fillText = fillValues[linkId];
-
         if (fillText && props.onChange) {
             props.onChange(fillText);
         } else {
@@ -61,14 +58,16 @@ function QuestionField(props: QuestionFieldProps) {
             <div className={s.inputContainer}>
                 <div className={s.inputHeader}>
                     <span className={s.label}>{text}</span>
-                    <Button type="primary" onClick={onFill}>
+                    <Button type="primary" onClick={onFill} disabled={props.value === fillText}>
                         <Trans>Fill</Trans>
                     </Button>
                 </div>
                 <TextArea
                     autoSize
+                    allowClear
                     value={props.value}
                     readOnly={readOnly || props.qrfContext.readOnly}
+                    onChange={(e) => props.onChange?.(e.currentTarget.value)}
                 />
             </div>
         </>
@@ -79,6 +78,7 @@ function QuestionTextWithFill({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
     const { linkId, hidden } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
+
     return (
         <Form.Item name={fieldName} hidden={hidden}>
             <QuestionField qrfContext={qrfContext} questionItem={questionItem} />
