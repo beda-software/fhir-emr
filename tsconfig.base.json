@@ -57,7 +57,8 @@
 
         "skipLibCheck": true /* Skip type checking of declaration files. */,
         "forceConsistentCasingInFileNames": true /* Report errors if a program tries to include a file by a casing different from the casing on disk */,
-        "resolveJsonModule": true /* Allows importing modules with a ‘.json’ extension */
+        "resolveJsonModule": true /* Allows importing modules with a ‘.json’ extension */,
+        "noUncheckedIndexedAccess": true
     },
     "exclude": ["node_modules", "babel.config.js", "metro.config.js", "jest.config.js"]
 }
