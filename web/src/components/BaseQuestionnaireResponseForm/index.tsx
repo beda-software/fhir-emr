@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro';
 import { Button, Form } from 'antd';
+import { useState } from 'react';
 import {
     calcInitialContext,
     CustomWidgetsMapping,
@@ -47,7 +48,7 @@ export interface BaseQuestionnaireResponseFormProps {
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
     const { formData, onSubmit, readOnly } = props;
     const [form] = Form.useForm();
-    const formValues = form.getFieldsValue();
+    const [formValues, setFormValues] = useState(formData.formValues);
 
     return (
         <Form
@@ -56,9 +57,10 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
             initialValues={formData.formValues}
             onFinish={(values) => onSubmit({ ...formData, formValues: values })}
             className={s.form}
+            onValuesChange={(changedValues, values) => setFormValues(values)}
         >
             <QuestionnaireResponseFormProvider
-                formValues={formValues}
+                formValues={formData.formValues}
                 setFormValues={form.setFieldsValue}
                 groupItemComponent={Group}
                 itemControlGroupItemComponents={{
