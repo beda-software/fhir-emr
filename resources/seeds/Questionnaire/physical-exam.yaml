@@ -2,6 +2,10 @@ resourceType: Questionnaire
 id: physical-exam
 status: active
 name: Physical exam
+launchContext:
+  - name: Patient
+    type: Patient
+    description: Patient is answering the questionnaire
 item:
   - type: group
     linkId: physical-exam-group
@@ -107,6 +111,9 @@ item:
           - system: "http://loinc.org"
             code: "71399-0"
             display: "CMS - genitourinary exam - female panel"
+        enableWhenExpression:
+          language: text/fhirpath
+          expression: "%Patient.gender = 'female'"
       - text: Genitourinary
         linkId: genitourinary-male
         type: text
@@ -114,6 +121,9 @@ item:
           - system: "http://loinc.org"
             code: "71398-2"
             display: "CMS - genitourinary exam - male panel"
+        enableWhenExpression:
+          language: text/fhirpath
+          expression: "%Patient.gender = 'male'"
       - text: Rectal
         linkId: rectal
         type: text
