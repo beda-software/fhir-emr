@@ -13,12 +13,6 @@ item:
           - system: "http://loinc.org"
             code: "71389-1"
             display: "CMS - constitutional exam panel"
-        initial:
-          - value:
-              string: >
-                Well nourished, well developed, awake and alert,
-                resting comfortably in no acute distress,
-                cooperative on exam
       - text: HEENT
         linkId: heent
         type: text
@@ -26,12 +20,6 @@ item:
           - system: "http://loinc.org"
             code: "71392-5"
             display: "CMS - ear-nose-mouth-throat exam panel"
-        initial:
-          - value:
-              string: >
-                NCAT, PERRL, normal conjunctivae, nonicteric sclerae,
-                bilateral EAC/TM clear, no nasal discharge, OP clear,
-                moist mucous membranes
       - text: Neck
         linkId: neck
         type: text
@@ -39,9 +27,6 @@ item:
           - system: "http://loinc.org"
             code: "71393-3"
             display: "CMS - neck exam panel"
-        initial:
-          - value:
-              string: Supple, normal ROM, no lymphadenopathy/masses, nontender
       - text: Cardiovascular
         linkId: cardiovascular
         type: text
@@ -49,9 +34,6 @@ item:
           - system: "http://loinc.org"
             code: "71395-8"
             display: "CMS - cardiovascular exam panel"
-        initial:
-          - value:
-              string: RRR, normal S1/S2, no murmurs/gallops/rub
       - text: Pulmonary
         linkId: pulmonary
         type: text
@@ -59,11 +41,6 @@ item:
           - system: "http://loinc.org"
             code: "71394-1"
             display: "CMS - respiratory exam panel"
-        initial:
-          - value:
-              string: >
-                No respiratory distress, lungs CTAB:
-                no rales, rhonchi, or wheeze
       - text: Abdominal
         linkId: abdominal
         type: text
@@ -71,11 +48,6 @@ item:
           - system: "http://loinc.org"
             code: "71397-4"
             display: "CMS - gastrointestinal - abdomen exam panel"
-        initial:
-          - value:
-              string: >
-                Soft and non-tender with no guarding or rebound;
-                +BS normoactive, no tympany on auscultation
       - text: Musculoskeletal
         linkId: musculoskeletal
         type: text
@@ -83,9 +55,6 @@ item:
           - system: "http://loinc.org"
             code: "71402-2"
             display: "CMS - musculoskeletal exam panel"
-        initial:
-          - value:
-              string: Normal ROM of UE and LE, normal bulk and tone
       - text: Extremities
         linkId: extremities
         type: text
@@ -93,11 +62,6 @@ item:
           - system: "http://loinc.org"
             code: "71401-4"
             display: "CMS - extremities exam panel"
-        initial:
-          - value:
-              string: >
-                Pulses intact with normal cap refill,
-                no LE pitting edema or calf tenderness
       - text: Neurologic
         linkId: neurologic
         type: text
@@ -105,12 +69,6 @@ item:
           - system: "http://loinc.org"
             code: "71404-8"
             display: "CMS - neurologic exam panel"
-        initial:
-          - value:
-              string: >
-                AAOx3, converses normally. CN II - XII grossly intact.
-                Gait and coordination intact. 5+ BL UE/LE strength,
-                no gross motor or sensory defects
       - text: Psychiatric
         linkId: psychiatric
         type: text
@@ -118,11 +76,6 @@ item:
           - system: "http://loinc.org"
             code: "71405-5"
             display: "CMS - psychiatric exam panel"
-        initial:
-          - value:
-              string: >
-                Normal mood and affect.
-                Judgement/competence is appropriate
       - text: Skin
         linkId: skin
         type: text
@@ -130,11 +83,6 @@ item:
           - system: "http://loinc.org"
             code: "71403-0"
             display: "CMS - skin exam panel"
-        initial:
-          - value:
-              string: >
-                Warm, dry, and intact. No rashes, dermatoses,
-                petechiae, or lesions
       - text: Monofilament
         linkId: monofilament
         type: text
@@ -142,11 +90,6 @@ item:
           - system: "http://loinc.org"
             code: "32473-1"
             display: "Physical findings.sensation"
-        initial:
-          - value:
-              string: >
-                Normal sensation bilaterally on soles
-                of feet with 10g monofilament
       - text: Other Systems (optional)
         linkId: other-systems-optional
         type: display
@@ -157,11 +100,6 @@ item:
           - system: "http://loinc.org"
             code: "71396-6"
             display: "CMS - breast exam panel"
-        initial:
-          - value:
-              string: >
-                The chest wall is symmetric, without deformity,
-                and is atraumatic in appearance
       - text: Genitourinary
         linkId: genitourinary-female
         type: text
@@ -169,9 +107,6 @@ item:
           - system: "http://loinc.org"
             code: "71399-0"
             display: "CMS - genitourinary exam - female panel"
-        initial:
-          - value:
-              string: External genitalia without erythema, exudate or discharge
       - text: Genitourinary
         linkId: genitourinary-male
         type: text
@@ -179,12 +114,6 @@ item:
           - system: "http://loinc.org"
             code: "71398-2"
             display: "CMS - genitourinary exam - male panel"
-        initial:
-          - value:
-              string: >
-                Penis without lesions. No urethral discharge.
-                Testes normal size without masses or tenderness.
-                No scrotal masses. No hernia
       - text: Rectal
         linkId: rectal
         type: text
@@ -192,12 +121,7 @@ item:
           - system: "http://loinc.org"
             code: "8708-0"
             display: "Phys find Rectum"
-        initial:
-          - value:
-              string: >
-                Normal external anus and normal tone.
-                No palpable masses, normal mucosa, brown stool.
-                Hemoccult negative
+
       - text: Lymphatic
         linkId: lymphatic
         type: text
@@ -205,9 +129,3 @@ item:
           - system: "http://loinc.org"
             code: "71400-6"
             display: "CMS - lymphatic exam panel"
-        initial:
-          - value:
-              string: >
-                No enlarged lymph nodes of occipital, pre- and postauricular,
-                submandibular, anterior or posterior cervical,
-                or supraclavicular identified
