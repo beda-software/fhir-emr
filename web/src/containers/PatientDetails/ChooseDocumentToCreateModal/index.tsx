@@ -18,7 +18,7 @@ function Spinner() {
     return <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />;
 }
 
-const questionnaireIds = 'gad-7,phq2phq9,allergies';
+const questionnaireIds = 'gad-7,phq2phq9,allergies,physical-exam';
 
 export const ChooseDocumentToCreateModal = (props: Props) => {
     const [questionnaireId, setQuestionnaireId] = useState();

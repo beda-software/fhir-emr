@@ -3,6 +3,10 @@ import { Button, Form } from 'antd';
 import {
     calcInitialContext,
     CustomWidgetsMapping,
+    GroupItemComponent,
+    ItemControlGroupItemComponentMapping,
+    ItemControlQuestionItemComponentMapping,
+    QuestionItemComponentMapping,
     QuestionItems,
     QuestionnaireResponseFormData,
     QuestionnaireResponseFormProvider,
@@ -27,19 +31,19 @@ import {
 } from './widgets';
 import { Display } from './widgets/display';
 
-interface Props {
+export interface BaseQuestionnaireResponseFormProps {
     formData: QuestionnaireResponseFormData;
     onSubmit: (formData: QuestionnaireResponseFormData) => Promise<any>;
     readOnly?: boolean;
     customWidgets?: CustomWidgetsMapping;
+    itemControlQuestionItemComponents?: ItemControlQuestionItemComponentMapping;
+    itemControlGroupItemComponents?: ItemControlGroupItemComponentMapping;
+    questionItemComponents?: QuestionItemComponentMapping;
+    groupItemComponent?: GroupItemComponent;
 }
 
-export function BaseQuestionnaireResponseForm({
-    formData,
-    onSubmit,
-    readOnly,
-    customWidgets,
-}: Props) {
+export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
+    const { formData, onSubmit, readOnly } = props;
     const [form] = Form.useForm();
     const formValues = form.getFieldsValue();
 
@@ -58,6 +62,7 @@ export function BaseQuestionnaireResponseForm({
                     col: Col,
                     row: Row,
                     'pair-input': PairInput,
+                    ...props.itemControlGroupItemComponents,
                 }}
                 questionItemComponents={{
                     text: QuestionText,
@@ -70,14 +75,16 @@ export function BaseQuestionnaireResponseForm({
                     choice: QuestionChoice,
                     boolean: QuestionBoolean,
                     display: Display,
+                    ...props.questionItemComponents,
                 }}
                 itemControlQuestionItemComponents={{
                     phoneWidget: QuestionPhone,
                     slider: QuestionSlider,
                     'solid-radio-button': QuestionSolidRadio,
+                    ...props.itemControlQuestionItemComponents,
                 }}
                 readOnly={readOnly}
-                customWidgets={customWidgets}
+                customWidgets={props.customWidgets}
             >
                 <>
                     <QuestionItems

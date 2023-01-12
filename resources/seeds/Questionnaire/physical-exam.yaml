@@ -1,0 +1,141 @@
+resourceType: Questionnaire
+id: physical-exam
+status: active
+name: Physical exam
+launchContext:
+  - name: Patient
+    type: Patient
+    description: Patient is answering the questionnaire
+item:
+  - type: group
+    linkId: physical-exam-group
+    item:
+      - text: General
+        linkId: general
+        type: text
+        code:
+          - system: "http://loinc.org"
+            code: "71389-1"
+            display: "CMS - constitutional exam panel"
+      - text: HEENT
+        linkId: heent
+        type: text
+        code:
+          - system: "http://loinc.org"
+            code: "71392-5"
+            display: "CMS - ear-nose-mouth-throat exam panel"
+      - text: Neck
+        linkId: neck
+        type: text
+        code:
+          - system: "http://loinc.org"
+            code: "71393-3"
+            display: "CMS - neck exam panel"
+      - text: Cardiovascular
+        linkId: cardiovascular
+        type: text
+        code:
+          - system: "http://loinc.org"
+            code: "71395-8"
+            display: "CMS - cardiovascular exam panel"
+      - text: Pulmonary
+        linkId: pulmonary
+        type: text
+        code:
+          - system: "http://loinc.org"
+            code: "71394-1"
+            display: "CMS - respiratory exam panel"
+      - text: Abdominal
+        linkId: abdominal
+        type: text
+        code:
+          - system: "http://loinc.org"
+            code: "71397-4"
+            display: "CMS - gastrointestinal - abdomen exam panel"
+      - text: Musculoskeletal
+        linkId: musculoskeletal
+        type: text
+        code:
+          - system: "http://loinc.org"
+            code: "71402-2"
+            display: "CMS - musculoskeletal exam panel"
+      - text: Extremities
+        linkId: extremities
+        type: text
+        code:
+          - system: "http://loinc.org"
+            code: "71401-4"
+            display: "CMS - extremities exam panel"
+      - text: Neurologic
+        linkId: neurologic
+        type: text
+        code:
+          - system: "http://loinc.org"
+            code: "71404-8"
+            display: "CMS - neurologic exam panel"
+      - text: Psychiatric
+        linkId: psychiatric
+        type: text
+        code:
+          - system: "http://loinc.org"
+            code: "71405-5"
+            display: "CMS - psychiatric exam panel"
+      - text: Skin
+        linkId: skin
+        type: text
+        code:
+          - system: "http://loinc.org"
+            code: "71403-0"
+            display: "CMS - skin exam panel"
+      - text: Monofilament
+        linkId: monofilament
+        type: text
+        code:
+          - system: "http://loinc.org"
+            code: "32473-1"
+            display: "Physical findings.sensation"
+      - text: Other Systems (optional)
+        linkId: other-systems-optional
+        type: display
+      - text: Chest
+        linkId: chest
+        type: text
+        code:
+          - system: "http://loinc.org"
+            code: "71396-6"
+            display: "CMS - breast exam panel"
+      - text: Genitourinary
+        linkId: genitourinary-female
+        type: text
+        code:
+          - system: "http://loinc.org"
+            code: "71399-0"
+            display: "CMS - genitourinary exam - female panel"
+        enableWhenExpression:
+          language: text/fhirpath
+          expression: "%Patient.gender = 'female'"
+      - text: Genitourinary
+        linkId: genitourinary-male
+        type: text
+        code:
+          - system: "http://loinc.org"
+            code: "71398-2"
+            display: "CMS - genitourinary exam - male panel"
+        enableWhenExpression:
+          language: text/fhirpath
+          expression: "%Patient.gender = 'male'"
+      - text: Rectal
+        linkId: rectal
+        type: text
+        code:
+          - system: "http://loinc.org"
+            code: "8708-0"
+            display: "Phys find Rectum"
+
+      - text: Lymphatic
+        linkId: lymphatic
+        type: text
+        code:
+          - system: "http://loinc.org"
+            code: "71400-6"
+            display: "CMS - lymphatic exam panel"
