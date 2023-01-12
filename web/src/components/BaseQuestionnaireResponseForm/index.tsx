@@ -27,7 +27,7 @@ import {
 } from './widgets';
 import { Display } from './widgets/display';
 
-interface Props {
+export interface BaseQuestionnaireResponseFormProps {
     formData: QuestionnaireResponseFormData;
     onSubmit: (formData: QuestionnaireResponseFormData) => Promise<any>;
     readOnly?: boolean;
@@ -39,7 +39,7 @@ export function BaseQuestionnaireResponseForm({
     onSubmit,
     readOnly,
     customWidgets,
-}: Props) {
+}: BaseQuestionnaireResponseFormProps) {
     const [form] = Form.useForm();
     const formValues = form.getFieldsValue();
 
