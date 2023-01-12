@@ -1,0 +1,18 @@
+.inputContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.inputHeader {
+    display: flex;
+    margin-bottom: 12px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.label {
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 22px;
+    color: rgba(0, 0, 0, 0.85);
+}
