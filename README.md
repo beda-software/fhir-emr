@@ -10,7 +10,7 @@
 
 ### Design
 
--   [Figma](<https://www.figma.com/file/2bxMDfG3lRPEZpRwDC4gTB/SaaS-EMR-System>)
+-   [Figma](https://www.figma.com/file/2bxMDfG3lRPEZpRwDC4gTB/SaaS-EMR-System)
 
 ## Benefits
 
@@ -62,6 +62,7 @@ The app uses [SDC](http://hl7.org/fhir/uv/sdc/2019May/index.html)
 ```
 cp .env.tpl .env
 # Get aidbox license at https://aidbox.app/ and place licence JWT to .env
+# Set FHIR_EMR_AUTH_URL="http://localhost:3000/auth" in .env
 ```
 
 ### Local setup
@@ -109,5 +110,3 @@ make seeds
 ## Project History
 
 Project for https://github.com/HealthSamurai/xmas-hackathon-2021
-
-
