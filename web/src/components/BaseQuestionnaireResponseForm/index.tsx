@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro';
 import { Button, Form } from 'antd';
+import { useState } from 'react';
 import {
     calcInitialContext,
     CustomWidgetsMapping,
@@ -13,9 +14,11 @@ import {
 } from 'sdc-qrf';
 
 import 'react-phone-input-2/lib/style.css';
+import s from './BaseQuestionnaireResponseForm.module.scss';
 import {
     Col,
     Group,
+    InlineChoice,
     PairInput,
     QuestionBoolean,
     QuestionChoice,
@@ -45,7 +48,7 @@ export interface BaseQuestionnaireResponseFormProps {
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
     const { formData, onSubmit, readOnly } = props;
     const [form] = Form.useForm();
-    const formValues = form.getFieldsValue();
+    const [formValues, setFormValues] = useState(formData.formValues);
 
     return (
         <Form
@@ -53,9 +56,11 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
             form={form}
             initialValues={formData.formValues}
             onFinish={(values) => onSubmit({ ...formData, formValues: values })}
+            className={s.form}
+            onValuesChange={(changedValues, values) => setFormValues(values)}
         >
             <QuestionnaireResponseFormProvider
-                formValues={formValues}
+                formValues={formData.formValues}
                 setFormValues={form.setFieldsValue}
                 groupItemComponent={Group}
                 itemControlGroupItemComponents={{
@@ -81,6 +86,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                     phoneWidget: QuestionPhone,
                     slider: QuestionSlider,
                     'solid-radio-button': QuestionSolidRadio,
+                    'inline-choice': InlineChoice,
                     ...props.itemControlQuestionItemComponents,
                 }}
                 readOnly={readOnly}

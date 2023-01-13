@@ -115,6 +115,7 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
     }
 
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
+
     return (
         <Form.Item label={text} name={fieldName}>
             <ANTDSelect style={inputStyle} disabled={readOnly || qrfContext.readOnly}>

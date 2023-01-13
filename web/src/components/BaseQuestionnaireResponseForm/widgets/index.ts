@@ -1,4 +1,5 @@
 export * from './choice';
+export * from './inline-choice';
 export * from './date';
 export * from './group';
 export * from './number';

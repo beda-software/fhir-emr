@@ -7,6 +7,9 @@ item:
       text: Type
       required: true
       type: choice
+      itemControl:
+        coding:
+            - code: inline-choice
       answerOption:
           - value:
                 Coding:
@@ -27,6 +30,9 @@ item:
       text: Reaction
       type: choice
       repeats: true
+      itemControl:
+        coding:
+            - code: inline-choice
       answerOption:
           - value:
                 Coding:
@@ -61,6 +67,9 @@ item:
     - linkId: substance-drug
       text: Substance
       type: choice
+      itemControl:
+        coding:
+            - code: inline-choice
       enableWhen:
         - question: type
           operator: "="
@@ -97,6 +106,9 @@ item:
     - linkId: substance-food
       text: Substance
       type: choice
+      itemControl:
+        coding:
+            - code: inline-choice
       enableWhen:
         - question: type
           operator: "="
@@ -138,6 +150,9 @@ item:
     - linkId: substance-environmental
       text: Substance
       type: choice
+      itemControl:
+        coding:
+            - code: inline-choice
       enableWhen:
         - question: type
           operator: "="
