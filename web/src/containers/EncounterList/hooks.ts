@@ -31,7 +31,7 @@ export function useEncounterList(searchParams: SearchParams) {
             return encounters.map((encounter) => {
                 const patient = patients.find((p) => p.id === encounter.subject?.id);
                 const practitionerRole = practitionerRoles.find(
-                    (pR) => pR.id === encounter.participant?.[0].individual?.id,
+                    (pR) => pR.id === encounter.participant?.[0]!.individual?.id,
                 );
                 const practitioner = practitioners.find(
                     (p) => p.id === practitionerRole?.practitioner?.id,

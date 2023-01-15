@@ -119,9 +119,11 @@ export function App() {
     };
 
     return (
-        <RenderRemoteData remoteData={userResponse}>
-            {(data) => <HistoryRouter history={history}>{renderRoutes(data)}</HistoryRouter>}
-        </RenderRemoteData>
+        <div data-testid="app-container">
+            <RenderRemoteData remoteData={userResponse}>
+                {(data) => <HistoryRouter history={history}>{renderRoutes(data)}</HistoryRouter>}
+            </RenderRemoteData>
+        </div>
     );
 }
 

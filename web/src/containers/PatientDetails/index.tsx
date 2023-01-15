@@ -46,13 +46,13 @@ export const PatientDetails = () => {
             {
                 title: t`SSN`,
                 value:
-                    patient.identifier?.[0].system === '1.2.643.100.3'
+                    patient.identifier?.[0]!.system === '1.2.643.100.3'
                         ? patient.identifier?.[0].value
                         : t`Missing`,
             },
             { title: t`Passport data`, value: t`Missing` },
         ],
-        [{ title: t`Phone number`, value: patient.telecom?.[0].value }],
+        [{ title: t`Phone number`, value: patient.telecom?.[0]!.value }],
         [
             {
                 title: t`Sex`,
@@ -123,9 +123,10 @@ export const PatientDetails = () => {
         <RenderRemoteData remoteData={patientResponse}>
             {(patient) => {
                 const generalInfo = getGeneralInfo(patient);
-                const phoneNumber = (patient.telecom || []).filter(
-                    ({ system }) => system === 'mobile',
-                )[0].value;
+                const phoneNumber =
+                    patient.telecom && patient.telecom.length > 0
+                        ? patient.telecom.filter(({ system }) => system === 'mobile')[0]!.value
+                        : undefined;
 
                 return (
                     <BaseLayout>

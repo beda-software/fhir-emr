@@ -31,7 +31,7 @@ function Flex({ parentPath, questionItem, context, kind }: GroupItemProps & { ki
                     <QuestionItems
                         questionItems={item}
                         parentPath={[...parentPath, linkId, 'items']}
-                        context={context[0]}
+                        context={context[0]!}
                     />
                 )}
             </div>

@@ -35,7 +35,7 @@ interface RadioItemsProps {
     value?: Coding;
     onChange?: (e: any) => void;
     options: Coding[];
-    rightOption: Coding | null;
+    rightOption?: Coding | null;
     disabled?: boolean;
 }
 
@@ -49,7 +49,7 @@ function RadioItems({ value, onChange, options, rightOption, disabled }: RadioIt
                     </Radio.Button>
                 ))}
             </Radio.Group>
-            {rightOption !== null ? (
+            {rightOption ? (
                 <Radio.Group value={value} onChange={onChange} disabled={disabled}>
                     <Radio.Button key={rightOption.code} value={rightOption.code}>
                         {rightOption.display}
