@@ -1,5 +1,6 @@
 import Title from 'antd/lib/typography/Title';
 import { useParams } from 'react-router-dom';
+import { calcInitialContext, QuestionItems, QuestionnaireResponseFormProvider } from 'sdc-qrf';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
@@ -8,6 +9,11 @@ import { getFHIRResource, WithId } from 'aidbox-react/lib/services/fhir';
 import { Patient, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
 import { usePatientDocument } from '../PatientDocument/usePatientDocument';
+import s from './PatientDocumentDetails.module.scss';
+import { QuestionChoice } from './widgets/choice';
+import { Group } from './widgets/group';
+import { QuestionInteger } from './widgets/integer';
+import { QuestionText } from './widgets/string';
 
 interface Props {
     patient: WithId<Patient>;
@@ -39,15 +45,44 @@ function PatientDocumentDetailsReadonly(props: {
     });
 
     return (
-        <RenderRemoteData remoteData={response}>
-            {(formData) => (
-                <>
-                    <Title level={3} style={{ marginBottom: 32 }}>
-                        Patient Document Details readonly view will be here
-                    </Title>
-                </>
-            )}
-        </RenderRemoteData>
+        <div className={s.container}>
+            <div className={s.content}>
+                <RenderRemoteData remoteData={response}>
+                    {(formData) => (
+                        <>
+                            <Title level={3} className={s.title}>
+                                {formData.context.questionnaire.name}
+                            </Title>
+                            <QuestionnaireResponseFormProvider
+                                formValues={formData.formValues}
+                                setFormValues={() => {}}
+                                groupItemComponent={Group}
+                                questionItemComponents={{
+                                    text: QuestionText,
+                                    string: QuestionText,
+                                    integer: QuestionInteger,
+                                    choice: QuestionChoice,
+                                }}
+                                itemControlQuestionItemComponents={{
+                                    'inline-choice': QuestionChoice,
+                                }}
+                            >
+                                <>
+                                    <QuestionItems
+                                        questionItems={formData.context.questionnaire.item!}
+                                        parentPath={[]}
+                                        context={calcInitialContext(
+                                            formData.context,
+                                            formData.formValues,
+                                        )}
+                                    />
+                                </>
+                            </QuestionnaireResponseFormProvider>
+                        </>
+                    )}
+                </RenderRemoteData>
+            </div>
+        </div>
     );
 }
 

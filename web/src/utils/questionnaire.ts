@@ -1,12 +1,12 @@
 import { QuestionnaireItemAnswerOptionValue } from 'shared/src/contrib/aidbox';
 
-export function getDisplay(value: QuestionnaireItemAnswerOptionValue): string | number {
-    if (value.Coding) {
-        return value.Coding.display ?? '';
+export function getDisplay(value?: QuestionnaireItemAnswerOptionValue): string | number | null {
+    if (!value) {
+        return null;
     }
 
-    if (value.string) {
-        return value.string;
+    if (value.Coding) {
+        return value.Coding.display ?? '';
     }
 
     if (value.string) {

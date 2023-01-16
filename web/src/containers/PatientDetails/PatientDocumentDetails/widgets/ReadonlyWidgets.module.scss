@@ -1,0 +1,39 @@
+.container {
+    border-top: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.question {
+    padding: 9px 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+    gap: 4px 16px;
+    margin: 0;
+    font-size: 14px;
+    line-height: 22px;
+
+    &:first-of-type {
+        border-top: 1px solid rgba(0, 0, 0, 0.03);
+    }
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.questionText {
+    font-weight: bold;
+    margin: 0;
+}
+
+.answer {
+    display: block;
+    min-width: 40%;
+    max-width: 40%;
+}
