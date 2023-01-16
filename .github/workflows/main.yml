@@ -15,15 +15,13 @@ jobs:
                   node-version: 16
             - name: Prepare config
               run: cp shared/src/config.local.ts shared/src/config.ts
+            - name: Prepare secrets
+              run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
             - name: Install deps
               run: yarn
             - run: yarn compile
             - name: Check types
               run: yarn typecheck
-            - name: Prepare secrets
-              run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
-            - run: echo box_features_terminology_import_sync=true >> .env
-            - run: tail -n +3 .env.tpl >> .env
             - name: Run aidbox
               run: make up
             - name: Show logs
