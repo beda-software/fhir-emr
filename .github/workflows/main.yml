@@ -28,7 +28,7 @@ jobs:
               run: yarn test
             - run: yarn build:web
     Release:
-        # needs: Test
+        needs: Test
         runs-on: ubuntu-latest
         env:
             BUILD_IMAGE: bedasoftware/fhir-emr:master
