@@ -38,16 +38,14 @@ const I18nApp = () => {
     );
 };
 
-const container = document.getElementById('root');
-if (container) {
-    const root = createRoot(container);
+const container = document.getElementById('root')!;
+const root = createRoot(container);
 
-    root.render(
-        <React.StrictMode>
-            <I18nApp />
-        </React.StrictMode>,
-    );
-}
+root.render(
+    <React.StrictMode>
+        <I18nApp />
+    </React.StrictMode>,
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

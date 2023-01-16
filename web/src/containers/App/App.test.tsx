@@ -1,11 +1,13 @@
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 
 import { App } from './';
 
 test('Renders welcome text', async () => {
-    const { findByTestId } = render(<App />);
+    const { getByTestId } = render(<App />);
 
-    const textElement = await findByTestId('app-container');
+    const textElement = getByTestId('app-container');
 
-    expect(textElement).toBeInTheDocument();
+    await waitFor(() => {
+        expect(textElement).toBeInTheDocument();
+    });
 });
