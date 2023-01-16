@@ -37,7 +37,7 @@ const columns: ColumnsType<Patient> = [
         title: <Trans>SSN</Trans>,
         dataIndex: 'identifier',
         key: 'identifier',
-        render: (_text, resource) => resource.identifier?.[0].value,
+        render: (_text, resource) => resource.identifier?.[0]!.value,
         width: '25%',
     },
     {

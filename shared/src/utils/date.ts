@@ -174,10 +174,10 @@ export function parseDateToMomentComponents(dateStr: string) {
     const components = dateStr.slice(0, 10).split('-');
 
     return {
-        year: components.length >= 1 ? parseInt(components[0], 10) : undefined,
+        year: components.length >= 1 ? parseInt(components[0]!, 10) : undefined,
         // Month starts from 0 (Jan)
-        month: components.length >= 2 ? parseInt(components[1], 10) - 1 : undefined,
+        month: components.length >= 2 ? parseInt(components[1]!, 10) - 1 : undefined,
         // Date starts from 1
-        date: components.length >= 3 ? parseInt(components[2], 10) : undefined,
+        date: components.length >= 3 ? parseInt(components[2]!, 10) : undefined,
     };
 }

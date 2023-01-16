@@ -84,7 +84,7 @@ function PractitionerListWidget({ parentPath, questionItem }: QuestionItemProps)
                         },
                     },
                     label: `${renderHumanName(practitioner?.name?.[0])}, ${
-                        pR.specialty?.[0].coding?.[0].display
+                        pR.specialty?.[0]!.coding?.[0]!.display
                     }`,
                 };
             });

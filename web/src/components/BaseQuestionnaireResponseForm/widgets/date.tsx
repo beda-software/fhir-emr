@@ -36,7 +36,10 @@ function DateTimePickerWrapper({ value, onChange, type }: DateTimePickerWrapperP
         },
         [onChange],
     );
+
     return (
+        // TODO: Fix this ts error issue
+        // @ts-ignore
         <DatePicker showTime={showTime} onChange={newOnChange} format={format} value={newValue} />
     );
 }

@@ -15,6 +15,7 @@ import { formatHumanDateTime } from '../../utils/date';
 import { useEncounterDetails } from './hooks';
 import { Trans } from '@lingui/macro';
 import Title from 'antd/es/typography/Title';
+import { Alert } from 'antd';
 
 export function EncounterDetails() {
     const { encounterId } = useParams<{ encounterId: string }>();
@@ -40,41 +41,63 @@ export function EncounterDetails() {
                     encounterInfo: { encounter, practitioner, practitionerRole, patient },
                     questionnaireResponseDataList,
                     questionnaireList,
-                }) => (
-                    <>
-                        <BasePageHeader>
-                            <Title>
-                                {encounter.serviceType?.coding?.[0]?.display || (
-                                    <Trans>Encounter</Trans>
-                                )}
-                            </Title>
-                        </BasePageHeader>
-                        <BasePageContent>
-                            <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                <div style={{ width: '60%' }}>
-                                    <QuestionnaireResponseList
-                                        questionnaireResponseDataList={
-                                            questionnaireResponseDataList
-                                        }
-                                    />
-                                </div>
-                                <div style={{ marginLeft: '40px' }}>
-                                    <div style={{ marginBottom: '50px' }}>
-                                        <EncounterInfo
-                                            encounter={encounter}
-                                            practitioner={practitioner}
-                                            practitionerRole={practitionerRole}
-                                            patient={patient}
+                }) => {
+                    if (!practitioner) {
+                        console.error('Practitioner is undefined');
+                        return <Alert type={'error'} message={'Practitioner is undefined'} />;
+                    }
+
+                    if (!practitionerRole) {
+                        console.error('Practitioner role is undefined');
+                        return <Alert type={'error'} message={'Practitioner role is undefined'} />;
+                    }
+
+                    if (!patient) {
+                        console.error('Patient is undefined');
+                        return <Alert type={'error'} message={'Patient is undefined'} />;
+                    }
+
+                    if (!encounter) {
+                        console.error('Encounter is undefined');
+                        return <Alert type={'error'} message={'Encounter is undefined'} />;
+                    }
+
+                    return (
+                        <>
+                            <BasePageHeader>
+                                <Title>
+                                    {encounter.serviceType?.coding?.[0]?.display || (
+                                        <Trans>Encounter</Trans>
+                                    )}
+                                </Title>
+                            </BasePageHeader>
+                            <BasePageContent>
+                                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                    <div style={{ width: '60%' }}>
+                                        <QuestionnaireResponseList
+                                            questionnaireResponseDataList={
+                                                questionnaireResponseDataList
+                                            }
                                         />
                                     </div>
-                                    <QuestionnaireListWidget
-                                        questionnaireList={questionnaireList}
-                                    />
+                                    <div style={{ marginLeft: '40px' }}>
+                                        <div style={{ marginBottom: '50px' }}>
+                                            <EncounterInfo
+                                                encounter={encounter}
+                                                practitioner={practitioner}
+                                                practitionerRole={practitionerRole}
+                                                patient={patient}
+                                            />
+                                        </div>
+                                        <QuestionnaireListWidget
+                                            questionnaireList={questionnaireList}
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                        </BasePageContent>
-                    </>
-                )}
+                            </BasePageContent>
+                        </>
+                    );
+                }}
             </RenderRemoteData>
         </BaseLayout>
     );

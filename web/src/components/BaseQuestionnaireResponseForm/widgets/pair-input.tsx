@@ -21,6 +21,10 @@ export function PairInput({ parentPath, questionItem }: GroupItemProps) {
     const [firstItem, secondItem] = questionItem.item;
     const { unit } = questionItem as PairInputItem;
 
+    if (!firstItem || !secondItem) {
+        return null;
+    }
+
     return (
         <div className={s.row}>
             <Form.Item name={getFiedName(parentPath, firstItem)} hidden={firstItem.hidden}>

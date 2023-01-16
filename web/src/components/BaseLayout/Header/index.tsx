@@ -1,5 +1,5 @@
 import { DownOutlined, GlobalOutlined } from '@ant-design/icons';
-import { t, Trans } from '@lingui/macro';
+import { t } from '@lingui/macro';
 import { Dropdown, Menu } from 'antd';
 import { Header } from 'antd/lib/layout/layout';
 import { Link } from 'react-router-dom';

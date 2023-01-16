@@ -41,14 +41,22 @@ export function EncounterQR() {
     return (
         <BaseLayout>
             <RenderRemoteData remoteData={remoteData}>
-                {({
-                    encounterInfo: { encounter, practitioner, practitionerRole, patient },
-                    questionnaire,
-                }) => {
+                {({ encounterInfo: { encounter, practitioner, patient }, questionnaire }) => {
                     if (!practitioner) {
                         console.error('Practitioner is undefined');
                         return <Alert type={'error'} message={'Practitioner is undefined'} />;
                     }
+
+                    if (!patient) {
+                        console.error('Patient is undefined');
+                        return <Alert type={'error'} message={'Patient is undefined'} />;
+                    }
+
+                    if (!encounter) {
+                        console.error('Encounter is undefined');
+                        return <Alert type={'error'} message={'Encounter is undefined'} />;
+                    }
+
                     return (
                         <>
                             <BasePageHeader>

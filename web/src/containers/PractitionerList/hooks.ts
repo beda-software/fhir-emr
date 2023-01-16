@@ -44,7 +44,7 @@ export function usePractitionersList() {
                     practitionerName: renderHumanName(practitioner.name?.[0]),
                     practitionerRoleList: practitionerRoleToStringArray(practitionerRolesList),
                     practitionerCreatedDate: formatHumanDate(
-                        practitionerRolesList[0].meta?.createdAt as string,
+                        practitionerRolesList[0]!.meta?.createdAt as string,
                     ),
                     practitionerRolesList: practitionerRoles,
                 };
@@ -58,7 +58,7 @@ export function usePractitionersList() {
 function practitionerRoleToStringArray(practitionerRolesList: PractitionerRole[]): string[] {
     const practitionerSpecialtyList: string[] = [];
     practitionerRolesList.forEach((pR) => {
-        const pRL = pR.specialty?.[0].coding?.[0].display;
+        const pRL = pR.specialty?.[0]!.coding?.[0]!.display;
         if (pRL !== undefined) {
             practitionerSpecialtyList.push(pRL);
         }
