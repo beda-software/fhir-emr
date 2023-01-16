@@ -19,6 +19,8 @@ jobs:
               run: yarn typecheck
             - name: Prepare secrets
               run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
+            - run: echo box_features_terminology_import_sync=true >> .env
+            - run: tail -n +3 .env.tpl >> .env
             - name: Run aidbox
               run: make up
             - name: Show logs
