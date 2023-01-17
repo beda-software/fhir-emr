@@ -42,7 +42,7 @@ export const ModalNewEncounter = ({ patient, reloadEncounter }: Props) => {
             </Button>
             <Modal
                 title="Create Encounter"
-                visible={isModalVisible}
+                open={isModalVisible}
                 onCancel={() => setIsModalVisible(false)}
                 footer={null}
             >

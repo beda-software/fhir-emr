@@ -1,4 +1,7 @@
-import { QuestionnaireItemAnswerOptionValue } from 'shared/src/contrib/aidbox';
+import {
+    QuestionnaireItemAnswerOption,
+    QuestionnaireItemAnswerOptionValue,
+} from 'shared/src/contrib/aidbox';
 
 export function getDisplay(value?: QuestionnaireItemAnswerOptionValue): string | number | null {
     if (!value) {
@@ -20,4 +23,12 @@ export function getDisplay(value?: QuestionnaireItemAnswerOptionValue): string |
     console.warn(`There is not implementation for getDisplay of ${JSON.stringify(value)}`);
 
     return '';
+}
+
+export function getArrayDisplay(options?: QuestionnaireItemAnswerOption[]): string | null {
+    if (!options) {
+        return null;
+    }
+
+    return options.map((v: QuestionnaireItemAnswerOption) => getDisplay(v.value)).join(', ');
 }

@@ -8,7 +8,7 @@ export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps)
     const qrfContext = useQuestionnaireResponseFormContext();
     const { linkId, text, hidden } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'integer'];
-    const valueDisplay = _.get(qrfContext.formValues, fieldName);
+    const valueDisplay: number | undefined = _.get(qrfContext.formValues, fieldName);
 
     if (hidden) {
         return null;
@@ -17,7 +17,9 @@ export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps)
     return (
         <p className={classNames(s.question, s.row)}>
             <span className={s.questionText}>{text}</span>
-            <span className={s.answer}>{valueDisplay || 'No answer provided'}</span>
+            <span className={s.answer}>
+                {typeof valueDisplay !== 'undefined' ? valueDisplay : '-'}
+            </span>
         </p>
     );
 }

@@ -5,6 +5,7 @@ import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 
+import { AnxietyScore, DepressionScore } from '../PatientDocumentDetails/widgets/score';
 import s from './PatientDocument.module.scss';
 import { PhysicalExam } from './PhysicalExam';
 import { PatientDocumentProps, usePatientDocument } from './usePatientDocument';
@@ -38,6 +39,10 @@ export function PatientDocument(props: PatientDocumentProps) {
                                 onSubmit={onSubmit}
                                 readOnly={readOnly}
                                 customWidgets={customWidgets}
+                                itemControlQuestionItemComponents={{
+                                    'anxiety-score': AnxietyScore,
+                                    'depression-score': DepressionScore,
+                                }}
                             />
                         </>
                     )}
