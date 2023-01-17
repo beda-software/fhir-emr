@@ -55,13 +55,13 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
             layout="vertical"
             form={form}
             initialValues={formData.formValues}
-            onFinish={(values) => onSubmit({ ...formData, formValues: values })}
+            onFinish={() => onSubmit({ ...formData, formValues })}
             className={s.form}
             onValuesChange={(changedValues, values) => setFormValues(values)}
         >
             <QuestionnaireResponseFormProvider
-                formValues={formData.formValues}
-                setFormValues={form.setFieldsValue}
+                formValues={formValues}
+                setFormValues={setFormValues}
                 groupItemComponent={Group}
                 itemControlGroupItemComponents={{
                     col: Col,
@@ -100,7 +100,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                     />
 
                     {!readOnly && (
-                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <div className={s.footer}>
                             <Button type="primary" htmlType="submit">
                                 <Trans>Save</Trans>
                             </Button>

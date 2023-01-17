@@ -1,4 +1,5 @@
 import Title from 'antd/lib/typography/Title';
+import { useParams } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
@@ -9,8 +10,13 @@ import { PhysicalExam } from './PhysicalExam';
 import { PatientDocumentProps, usePatientDocument } from './usePatientDocument';
 
 export function PatientDocument(props: PatientDocumentProps) {
-    const { response, onSubmit, readOnly, customWidgets, questionnaireId } =
-        usePatientDocument(props);
+    const params = useParams<{ questionnaireId: string }>();
+    const questionnaireId = params.questionnaireId!;
+    const { response, onSubmit, readOnly, customWidgets } = usePatientDocument({
+        ...props,
+        questionnaireId,
+    });
+
     const questionnaireResponseFormComponent = {
         'physical-exam': PhysicalExam,
     };

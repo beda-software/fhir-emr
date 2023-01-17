@@ -19,7 +19,7 @@ export function InlineChoice({ parentPath, questionItem }: QuestionItemProps) {
                 <Checkbox.Group disabled={readOnly || qrfContext.readOnly}>
                     <Space direction="vertical">
                         {answerOption?.map((answerOption) => (
-                            <Checkbox value={answerOption}>
+                            <Checkbox value={answerOption} key={JSON.stringify(answerOption)}>
                                 {getDisplay(answerOption.value!)}
                             </Checkbox>
                         ))}
@@ -35,7 +35,9 @@ export function InlineChoice({ parentPath, questionItem }: QuestionItemProps) {
                 <Radio.Group disabled={readOnly || qrfContext.readOnly}>
                     <Space direction="vertical">
                         {answerOption?.map((answerOption) => (
-                            <Radio value={answerOption}>{getDisplay(answerOption.value!)}</Radio>
+                            <Radio value={answerOption} key={JSON.stringify(answerOption)}>
+                                {getDisplay(answerOption.value!)}
+                            </Radio>
                         ))}
                     </Space>
                 </Radio.Group>

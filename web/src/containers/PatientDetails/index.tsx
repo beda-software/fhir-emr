@@ -22,6 +22,7 @@ import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseF
 
 import s from './PatientDetails.module.scss';
 import { PatientDocument } from './PatientDocument';
+import { PatientDocumentDetails } from './PatientDocumentDetails';
 import { PatientDocuments } from './PatientDocuments';
 
 export const PatientDetails = () => {
@@ -67,11 +68,11 @@ export const PatientDetails = () => {
     ];
 
     const getCurrentPathName = () => {
-        if (currentPathEnd === 'encounters') {
+        if (location?.pathname.indexOf('encounters') !== -1) {
             return t`Encounters`;
         }
 
-        if (currentPathEnd === 'documents') {
+        if (location?.pathname.indexOf('documents') !== -1) {
             return t`Documents`;
         }
 
@@ -92,13 +93,6 @@ export const PatientDetails = () => {
             name: getCurrentPathName(),
         },
     ];
-
-    const getCurrentPathEnd = () => {
-        const pathLength = location?.pathname.split('/').length;
-        return location?.pathname.split('/')[pathLength - 1];
-    };
-
-    const currentPathEnd = getCurrentPathEnd();
 
     useEffect(() => {
         setCurrentPath(location?.pathname);
@@ -208,6 +202,10 @@ export const PatientDetails = () => {
                                     <Route
                                         path="/documents/new/:questionnaireId"
                                         element={<PatientDocument patient={patient} />}
+                                    />
+                                    <Route
+                                        path="/documents/:qrId"
+                                        element={<PatientDocumentDetails patient={patient} />}
                                     />
                                 </Route>
                             </Routes>
