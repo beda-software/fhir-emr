@@ -7,11 +7,6 @@ item:
       type: group
       linkId: phq2phq9
       item:
-          - linkId: phq2-total-score
-            text: PHQ2 Total score
-            hidden: true
-            required: true
-            type: integer
           - linkId: 44250-9
             text: Little interest or pleasure in doing things
             required: true
@@ -68,213 +63,213 @@ item:
                           system: 'http://loinc.org'
                           code: 'LA6571-9'
                           display: 'Nearly every day'
-          - type: group
-            linkId: phq9
-            enableWhen:
-                - question: 55758-7
-                  operator: '>='
-                  answer:
-                      integer: 3
-            item:
-                - linkId: 44259-0
-                  text: Trouble falling or staying asleep, or sleeping too much
-                  required: true
-                  type: choice
-                  itemControl:
-                    coding:
-                        - code: inline-choice
-                  answerOption:
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6568-5'
-                                display: 'Not at all'
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6569-3'
-                                display: 'Several days'
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6570-1'
-                                display: 'More than half the days'
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6571-9'
-                                display: 'Nearly every day'
-                - linkId: 44254-1
-                  text: Feeling tired or having little energy
-                  required: true
-                  type: choice
-                  itemControl:
-                    coding:
-                        - code: inline-choice
-                  answerOption:
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6568-5'
-                                display: 'Not at all'
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6569-3'
-                                display: 'Several days'
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6570-1'
-                                display: 'More than half the days'
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6571-9'
-                                display: 'Nearly every day'
-                - linkId: 44251-7
-                  text: Poor appetite or overeating
-                  required: true
-                  type: choice
-                  itemControl:
-                    coding:
-                        - code: inline-choice
-                  answerOption:
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6568-5'
-                                display: 'Not at all'
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6569-3'
-                                display: 'Several days'
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6570-1'
-                                display: 'More than half the days'
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6571-9'
-                                display: 'Nearly every day'
-                - linkId: 44258-2
-                  text: Feeling bad about yourself-or that you are a failure or have let yourself or your family down
-                  required: true
-                  type: choice
-                  itemControl:
-                    coding:
-                        - code: inline-choice
-                  answerOption:
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6568-5'
-                                display: 'Not at all'
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6569-3'
-                                display: 'Several days'
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6570-1'
-                                display: 'More than half the days'
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6571-9'
-                                display: 'Nearly every day'
-                - linkId: 44252-5
-                  text: Trouble concentrating on things, such as reading the newspaper or watching television
-                  required: true
-                  type: choice
-                  itemControl:
-                    coding:
-                        - code: inline-choice
-                  answerOption:
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6568-5'
-                                display: 'Not at all'
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6569-3'
-                                display: 'Several days'
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6570-1'
-                                display: 'More than half the days'
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6571-9'
-                                display: 'Nearly every day'
-                - linkId: 44253-3
-                  text: Moving or speaking so slowly that other people could have noticed. Or the opposite-being so fidgety or restless that you have been moving around a lot more than usual
-                  required: true
-                  type: choice
-                  itemControl:
-                    coding:
-                        - code: inline-choice
-                  answerOption:
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6568-5'
-                                display: 'Not at all'
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6569-3'
-                                display: 'Several days'
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6570-1'
-                                display: 'More than half the days'
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6571-9'
-                                display: 'Nearly every day'
-                - linkId: 44260-8
-                  text: Thoughts that you would be better off dead, or of hurting yourself in some way
-                  required: true
-                  type: choice
-                  itemControl:
-                    coding:
-                        - code: inline-choice
-                  answerOption:
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6568-5'
-                                display: 'Not at all'
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6569-3'
-                                display: 'Several days'
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6570-1'
-                                display: 'More than half the days'
-                      - value:
-                            Coding:
-                                system: 'http://loinc.org'
-                                code: 'LA6571-9'
-                                display: 'Nearly every day'
+          - linkId: 44259-0
+            text: Trouble falling or staying asleep, or sleeping too much
+            required: true
+            type: choice
+            itemControl:
+                coding:
+                    - code: inline-choice
+            answerOption:
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6568-5'
+                          display: 'Not at all'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6569-3'
+                          display: 'Several days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6570-1'
+                          display: 'More than half the days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6571-9'
+                          display: 'Nearly every day'
+          - linkId: 44254-1
+            text: Feeling tired or having little energy
+            required: true
+            type: choice
+            itemControl:
+                coding:
+                    - code: inline-choice
+            answerOption:
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6568-5'
+                          display: 'Not at all'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6569-3'
+                          display: 'Several days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6570-1'
+                          display: 'More than half the days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6571-9'
+                          display: 'Nearly every day'
+          - linkId: 44251-7
+            text: Poor appetite or overeating
+            required: true
+            type: choice
+            itemControl:
+                coding:
+                    - code: inline-choice
+            answerOption:
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6568-5'
+                          display: 'Not at all'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6569-3'
+                          display: 'Several days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6570-1'
+                          display: 'More than half the days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6571-9'
+                          display: 'Nearly every day'
+          - linkId: 44258-2
+            text: Feeling bad about yourself-or that you are a failure or have let yourself or your family down
+            required: true
+            type: choice
+            itemControl:
+                coding:
+                    - code: inline-choice
+            answerOption:
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6568-5'
+                          display: 'Not at all'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6569-3'
+                          display: 'Several days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6570-1'
+                          display: 'More than half the days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6571-9'
+                          display: 'Nearly every day'
+          - linkId: 44252-5
+            text: Trouble concentrating on things, such as reading the newspaper or watching television
+            required: true
+            type: choice
+            itemControl:
+                coding:
+                    - code: inline-choice
+            answerOption:
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6568-5'
+                          display: 'Not at all'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6569-3'
+                          display: 'Several days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6570-1'
+                          display: 'More than half the days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6571-9'
+                          display: 'Nearly every day'
+          - linkId: 44253-3
+            text: Moving or speaking so slowly that other people could have noticed. Or the opposite-being so fidgety or restless that you have been moving around a lot more than usual
+            required: true
+            type: choice
+            itemControl:
+                coding:
+                    - code: inline-choice
+            answerOption:
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6568-5'
+                          display: 'Not at all'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6569-3'
+                          display: 'Several days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6570-1'
+                          display: 'More than half the days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6571-9'
+                          display: 'Nearly every day'
+          - linkId: 44260-8
+            text: Thoughts that you would be better off dead, or of hurting yourself in some way
+            required: true
+            type: choice
+            itemControl:
+                coding:
+                    - code: inline-choice
+            answerOption:
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6568-5'
+                          display: 'Not at all'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6569-3'
+                          display: 'Several days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6570-1'
+                          display: 'More than half the days'
+                - value:
+                      Coding:
+                          system: 'http://loinc.org'
+                          code: 'LA6571-9'
+                          display: 'Nearly every day'
           - linkId: phq9-total-score
             text: PHQ2/PHQ-9 Depression Severity Score
             required: true
             type: integer
             readOnly: true
-          
+            itemControl:
+                coding:
+                    - code: depression-score
+            calculatedExpression:
+                language: text/fhirpath
+                expression:
+                    "%QuestionnaireResponse.item.item.answer.children().children().where(code='LA6569-3').count()
+                    + %QuestionnaireResponse.item.item.answer.children().children().where(code='LA6570-1').count() * 2
+                    + %QuestionnaireResponse.item.item.answer.children().children().where(code='LA6571-9').count() * 3"

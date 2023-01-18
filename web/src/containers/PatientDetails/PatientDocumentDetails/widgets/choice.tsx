@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import _ from 'lodash';
 import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
-import { getDisplay } from 'src/utils/questionnaire';
+import { getArrayDisplay, getDisplay } from 'src/utils/questionnaire';
 
 import s from './ReadonlyWidgets.module.scss';
 
@@ -16,12 +16,12 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
 
     if (repeats) {
         const fieldName = [...parentPath, linkId];
-        const valueDisplay = getDisplay(_.get(qrfContext.formValues, fieldName)?.value);
+        const valueDisplay = getArrayDisplay(_.get(qrfContext.formValues, fieldName));
 
         return (
             <p className={classNames(s.question, s.row)}>
                 <span className={s.questionText}>{text}</span>
-                <span className={s.answer}>{valueDisplay || 'No answer provided'}</span>
+                <span className={s.answer}>{valueDisplay || '-'}</span>
             </p>
         );
     } else {
@@ -31,7 +31,7 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
         return (
             <p className={classNames(s.question, s.row)}>
                 <span className={s.questionText}>{text}</span>
-                <span className={s.answer}>{valueDisplay || 'No answer provided'}</span>
+                <span className={s.answer}>{valueDisplay || '-'}</span>
             </p>
         );
     }

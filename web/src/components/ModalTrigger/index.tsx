@@ -50,7 +50,7 @@ export function ModalTrigger(props: Props) {
                 },
             })}
             <Modal
-                visible={showModal}
+                open={showModal}
                 title={title}
                 onCancel={onCancel}
                 onOk={onSubmit}

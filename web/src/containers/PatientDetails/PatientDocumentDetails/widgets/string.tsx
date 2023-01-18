@@ -17,7 +17,7 @@ export function QuestionText({ parentPath, questionItem }: QuestionItemProps) {
     return (
         <p className={classNames(s.question, s.column)}>
             <span className={s.questionText}>{text}</span>
-            <span>{valueDisplay || 'No answer provided'}</span>
+            <span>{valueDisplay || '-'}</span>
         </p>
     );
 }

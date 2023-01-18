@@ -208,6 +208,9 @@ item:
             required: true
             type: integer
             readOnly: true
+            itemControl:
+                coding:
+                    - code: anxiety-score
             calculatedExpression:
                 language: text/fhirpath
-                expression: QuestionnaireResponse.item.item.answer.children().children().where(code='LA6569-3').count() + QuestionnaireResponse.item.item.answer.children().children().where(code='LA6570-1').count() * 2 + QuestionnaireResponse.item.item.answer.children().children().where(code='LA6571-9').count() * 3
+                expression: "%QuestionnaireResponse.item.item.answer.children().children().where(code='LA6569-3').count() + %QuestionnaireResponse.item.item.answer.children().children().where(code='LA6570-1').count() * 2 + %QuestionnaireResponse.item.item.answer.children().children().where(code='LA6571-9').count() * 3"

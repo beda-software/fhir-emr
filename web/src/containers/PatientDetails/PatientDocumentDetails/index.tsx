@@ -13,6 +13,7 @@ import s from './PatientDocumentDetails.module.scss';
 import { QuestionChoice } from './widgets/choice';
 import { Group } from './widgets/group';
 import { QuestionInteger } from './widgets/integer';
+import { AnxietyScore, DepressionScore } from './widgets/score';
 import { QuestionText } from './widgets/string';
 
 interface Props {
@@ -65,6 +66,8 @@ function PatientDocumentDetailsReadonly(props: {
                                 }}
                                 itemControlQuestionItemComponents={{
                                     'inline-choice': QuestionChoice,
+                                    'anxiety-score': AnxietyScore,
+                                    'depression-score': DepressionScore,
                                 }}
                             >
                                 <>
