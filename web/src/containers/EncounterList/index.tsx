@@ -31,7 +31,7 @@ const columns = [
     },
     {
         title: <Trans>Appointment date</Trans>,
-        dataIndex: 'date',
+        dataIndex: 'humanReadableDate',
         key: 'date',
     },
 ];

@@ -1,7 +1,9 @@
+import { parseFHIRDateTime } from 'aidbox-react/lib/utils/date';
 import { useCallback, useMemo, useState } from 'react';
 
 import {
     ColumnFilterValue,
+    DateColumnFilterValue,
     PopulatedSearchData,
     PopulateSearchProp,
     SearchBarData,
@@ -13,14 +15,14 @@ export function useSearchBar<T extends SearchBarItem>(props: SearchBarProps<T>):
     const { columns, data } = props;
 
     const defaultFiltersValues = useMemo(() => {
-        return columns.map((column) => ({ value: '', column }));
+        return columns.map((column) => ({ column }));
     }, [columns]);
 
     const [columnsFilterValues, setColumnsFilterValues] =
         useState<ColumnFilterValue<T>[]>(defaultFiltersValues);
 
     const onChangeColumnFilter = useCallback(
-        (value: string, id: string) => {
+        (value: DateColumnFilterValue | string, id: string) => {
             setColumnsFilterValues((prevFilterValue) => {
                 const newFilterValue = [...prevFilterValue];
 
@@ -53,13 +55,15 @@ export function useSearchBar<T extends SearchBarItem>(props: SearchBarProps<T>):
                 : undefined;
 
             if (filterValue.column.type === 'string') {
-                if (filterValue.value) {
+                const stringFilterValue = filterValue.value ? (filterValue.value as string) : '';
+
+                if (stringFilterValue) {
                     if (populatedResultData) {
                         resultData = populatedResultData.reduce((result: T[], itemData) => {
                             if (
                                 itemData.searchProp
                                     .toLowerCase()
-                                    .includes(filterValue.value.toLowerCase())
+                                    .includes(stringFilterValue.toLowerCase())
                             ) {
                                 return [...result, itemData.item];
                             }
@@ -75,10 +79,29 @@ export function useSearchBar<T extends SearchBarItem>(props: SearchBarProps<T>):
                             return itemSearchProp
                                 ? itemSearchProp
                                       .toLowerCase()
-                                      .includes(filterValue.value.toLowerCase())
+                                      .includes(stringFilterValue.toLowerCase())
                                 : false;
                         });
                     }
+                }
+            }
+
+            if (filterValue.column.type === 'date') {
+                const dateFilterValue = filterValue.value
+                    ? (filterValue.value as DateColumnFilterValue)
+                    : [];
+
+                if (dateFilterValue.length === 2) {
+                    const searchPropKey = filterValue.column.key as string;
+
+                    resultData = resultData.filter((item) => {
+                        const itemSearchProp =
+                            typeof item[searchPropKey] === 'string'
+                                ? parseFHIRDateTime(item[searchPropKey])
+                                : (item[searchPropKey] as moment.Moment);
+
+                        return itemSearchProp.isBetween(dateFilterValue[0], dateFilterValue[1]);
+                    });
                 }
             }
         }

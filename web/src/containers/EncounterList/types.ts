@@ -4,4 +4,5 @@ export interface EncounterData {
     practitioner: string;
     status: string;
     date: string | undefined;
+    humanReadableDate: string | undefined;
 }

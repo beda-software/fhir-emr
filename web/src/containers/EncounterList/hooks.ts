@@ -52,7 +52,9 @@ export function useEncounterList(searchParams: SearchParams): EncountersListData
                     patient: renderHumanName(patient?.name?.[0]),
                     practitioner: renderHumanName(practitioner?.name?.[0]),
                     status: getEncounterStatus(encounter.status),
-                    date: encounter?.period?.start && formatHumanDateTime(encounter?.period?.start),
+                    date: encounter?.period?.start,
+                    humanReadableDate:
+                        encounter?.period?.start && formatHumanDateTime(encounter?.period?.start),
                 };
             });
         });

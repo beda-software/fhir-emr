@@ -1,6 +1,6 @@
-import { ColumnFilterValue } from '../types';
+import { ColumnFilterValue, DateColumnFilterValue } from '../types';
 
 export interface SearchBarColumnProps<T> {
     columnFilterValue: ColumnFilterValue<T>;
-    onChange: (value: string, key: string) => void;
+    onChange: (value: DateColumnFilterValue | string, key: string) => void;
 }

@@ -36,14 +36,16 @@ export interface SearchBarProps<T> {
     data: T[];
 }
 
+export type DateColumnFilterValue = [moment.Moment, moment.Moment];
+
 export interface ColumnFilterValue<T> {
-    value: string;
     column: SearchBarColumn<T>;
+    value?: DateColumnFilterValue | string;
 }
 
 export interface SearchBarData<T> {
     columnsFilterValues: ColumnFilterValue<T>[];
     filteredData: T[];
-    onChangeColumnFilter: (value: string, key: string) => void;
+    onChangeColumnFilter: (value: DateColumnFilterValue | string, key: string) => void;
     onResetFilters: () => void;
 }
