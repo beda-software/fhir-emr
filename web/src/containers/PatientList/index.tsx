@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro';
-import { Button, Input, Empty, Row, Col } from 'antd';
+import { Button, Empty, Row, Col } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { ColumnsType } from 'antd/lib/table';
 import { useNavigate } from 'react-router-dom';
@@ -17,6 +17,7 @@ import { ModalNewPatient } from 'src/components/ModalNewPatient';
 import { SearchBar } from 'src/components/SearchBar';
 import { Table } from 'src/components/Table';
 import { formatHumanDate } from 'src/utils/date';
+import { useSearchBar } from 'src/components/SearchBar/hooks';
 
 const columns: ColumnsType<Patient> = [
     {
@@ -65,6 +66,19 @@ export function PatientList() {
 
     const navigate = useNavigate();
 
+    const { columnsFilterValues, filteredData, onChangeColumnFilter, onResetFilters } =
+        useSearchBar<Patient>({
+            columns: [
+                {
+                    id: 'patient',
+                    type: 'string',
+                    key: (patientSearchItem) => renderHumanName(patientSearchItem.name?.[0]),
+                    placeholder: t`Find patient`,
+                },
+            ],
+            data: isSuccess(patientsResponse) ? patientsResponse.data : [],
+        });
+
     return (
         <BaseLayout>
             <BasePageHeader style={{ paddingTop: 40, paddingBottom: 92 }}>
@@ -78,12 +92,13 @@ export function PatientList() {
                         <ModalNewPatient onCreate={manager.reload} />
                     </Col>
                 </Row>
-                <SearchBar>
-                    <Input.Search placeholder={t`Find patient`} />
-                    <Button>
-                        <Trans>Reset</Trans>
-                    </Button>
-                </SearchBar>
+
+                <SearchBar
+                    columnsFilterValues={columnsFilterValues}
+                    filteredData={filteredData}
+                    onChangeColumnFilter={onChangeColumnFilter}
+                    onResetFilters={onResetFilters}
+                />
             </BasePageHeader>
             <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
                 <Table<Patient>
@@ -98,7 +113,7 @@ export function PatientList() {
                         ),
                     }}
                     rowKey={(p) => p.id!}
-                    dataSource={isSuccess(patientsResponse) ? patientsResponse.data : []}
+                    dataSource={filteredData}
                     columns={columns}
                     loading={isLoading(patientsResponse)}
                     onRow={(record) => {

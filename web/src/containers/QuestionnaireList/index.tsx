@@ -1,6 +1,6 @@
+import { Button, Col, Empty, Row } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
-import { Button, Col, Empty, Input, Row } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { ColumnsType } from 'antd/lib/table';
 import { Link } from 'react-router-dom';
@@ -19,6 +19,7 @@ import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { SearchBar } from 'src/components/SearchBar';
 import { Table } from 'src/components/Table';
+import { useSearchBar } from 'src/components/SearchBar/hooks';
 
 const columns: ColumnsType<Questionnaire> = [
     {
@@ -86,6 +87,19 @@ export function QuestionnaireList() {
         ),
     );
 
+    const { columnsFilterValues, filteredData, onChangeColumnFilter, onResetFilters } =
+        useSearchBar<Questionnaire>({
+            columns: [
+                {
+                    id: 'questionnaire',
+                    type: 'string',
+                    key: 'name',
+                    placeholder: t`Find questionnaire`,
+                },
+            ],
+            data: isSuccess(questionnairesResponse) ? questionnairesResponse.data : [],
+        });
+
     return (
         <BaseLayout>
             <BasePageHeader style={{ paddingTop: 40, paddingBottom: 92 }}>
@@ -98,17 +112,20 @@ export function QuestionnaireList() {
                     <Col>
                         <Link to="/questionnaires/builder">
                             <Button icon={<PlusOutlined />} type="primary">
-                                <span><Trans>Add questionnaire</Trans></span>
+                                <span>
+                                    <Trans>Add questionnaire</Trans>
+                                </span>
                             </Button>
                         </Link>
                     </Col>
                 </Row>
-                <SearchBar>
-                    <Input.Search placeholder={t`Find questionnaire`} />
-                    <Button>
-                        <Trans>Reset</Trans>
-                    </Button>
-                </SearchBar>
+
+                <SearchBar
+                    columnsFilterValues={columnsFilterValues}
+                    filteredData={filteredData}
+                    onChangeColumnFilter={onChangeColumnFilter}
+                    onResetFilters={onResetFilters}
+                />
             </BasePageHeader>
             <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
                 <Table<Questionnaire>
@@ -123,9 +140,7 @@ export function QuestionnaireList() {
                         ),
                     }}
                     rowKey={(p) => p.id!}
-                    dataSource={
-                        isSuccess(questionnairesResponse) ? questionnairesResponse.data : []
-                    }
+                    dataSource={filteredData}
                     columns={columns}
                     loading={isLoading(questionnairesResponse)}
                 />

@@ -1,15 +1,17 @@
+import { Empty } from 'antd';
+import Title from 'antd/es/typography/Title';
 import { t, Trans } from '@lingui/macro';
-import { Button, Col, DatePicker, Empty, Input, Row } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
+import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 
 import { BaseLayout, BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
+import { Table } from 'src/components/Table';
+import { SearchBar } from 'src/components/SearchBar';
+import { useSearchBar } from 'src/components/SearchBar/hooks';
 
 import { useEncounterList } from './hooks';
-import { Table } from 'src/components/Table';
-import Title from 'antd/es/typography/Title';
-import { SearchBar } from 'src/components/SearchBar';
+import { EncounterData } from './types';
 
 const columns = [
     {
@@ -29,17 +31,40 @@ const columns = [
     },
     {
         title: <Trans>Appointment date</Trans>,
-        dataIndex: 'date',
+        dataIndex: 'humanReadableDate',
         key: 'date',
     },
 ];
-
-const { RangePicker } = DatePicker;
 
 export function EncounterList() {
     const navigate = useNavigate();
 
     const { encounterDataListRD } = useEncounterList({});
+
+    const { columnsFilterValues, filteredData, onChangeColumnFilter, onResetFilters } =
+        useSearchBar<EncounterData>({
+            columns: [
+                {
+                    id: 'encounterPatient',
+                    type: 'string',
+                    key: 'patient',
+                    placeholder: t`Search by patient`,
+                },
+                {
+                    id: 'encounterPractitioner',
+                    type: 'string',
+                    key: 'practitioner',
+                    placeholder: t`Search by practitioner`,
+                },
+                {
+                    id: 'encounterDate',
+                    type: 'date',
+                    key: 'date',
+                    placeholder: [t`Start date`, t`End date`],
+                },
+            ],
+            data: isSuccess(encounterDataListRD) ? encounterDataListRD.data : [],
+        });
 
     return (
         <BaseLayout>
@@ -47,52 +72,36 @@ export function EncounterList() {
                 <Title style={{ marginBottom: 40 }}>
                     <Trans>Encounters</Trans>
                 </Title>
-                <SearchBar>
-                    <Row gutter={32}>
-                        <Col>
-                            <Input.Search placeholder={t`Search by patient`} />
-                        </Col>
-                        <Col>
-                            <Input.Search placeholder={t`Search by practitioner`} />
-                        </Col>
-                        <Col>
-                            <RangePicker placeholder={[t`Start date`, t`End date`]} />
-                        </Col>
-                    </Row>
 
-                    <Button type="primary">
-                        <Trans>Reset</Trans>
-                    </Button>
-                </SearchBar>
+                <SearchBar
+                    columnsFilterValues={columnsFilterValues}
+                    filteredData={filteredData}
+                    onChangeColumnFilter={onChangeColumnFilter}
+                    onResetFilters={onResetFilters}
+                />
             </BasePageHeader>
             <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
-                <RenderRemoteData remoteData={encounterDataListRD}>
-                    {(tableData) => {
-                        return (
-                            <Table
-                                locale={{
-                                    emptyText: (
-                                        <>
-                                            <Empty
-                                                description={<Trans>No data</Trans>}
-                                                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                                            />
-                                        </>
-                                    ),
-                                }}
-                                dataSource={tableData}
-                                columns={columns}
-                                onRow={(record, rowIndex) => {
-                                    return {
-                                        onClick: (event) => {
-                                            navigate(`/encounters/${record.key}`);
-                                        },
-                                    };
-                                }}
-                            />
-                        );
+                <Table
+                    locale={{
+                        emptyText: (
+                            <>
+                                <Empty
+                                    description={<Trans>No data</Trans>}
+                                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                                />
+                            </>
+                        ),
                     }}
-                </RenderRemoteData>
+                    dataSource={filteredData}
+                    columns={columns}
+                    onRow={(record) => {
+                        return {
+                            onClick: () => {
+                                navigate(`/encounters/${record.key}`);
+                            },
+                        };
+                    }}
+                />
             </BasePageContent>
         </BaseLayout>
     );

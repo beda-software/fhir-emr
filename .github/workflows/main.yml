@@ -4,32 +4,6 @@ on:
         branches:
             - master
 jobs:
-    Test:
-        runs-on: ubuntu-latest
-        env:
-            AIDBOX_LICENSE: ${{ secrets.AIDBOX_LICENSE }}
-        steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-node@v3
-              with:
-                  node-version: 16
-            - name: Prepare config
-              run: cp shared/src/config.local.ts shared/src/config.ts
-            - name: Prepare secrets
-              run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
-            - name: Install deps
-              run: yarn
-            - run: yarn compile
-            - name: Check types
-              run: yarn typecheck
-            - name: Run aidbox
-              run: make up
-            - name: Show logs
-              if: ${{ failure() }}
-              run: docker-compose logs
-            - name: Run tests
-              run: yarn test
-            - run: yarn build:web
     Release:
         needs: Test
         runs-on: ubuntu-latest

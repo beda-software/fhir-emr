@@ -1,4 +1,5 @@
 import { useService } from 'aidbox-react/lib/hooks/service';
+import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
 import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
 import { SearchParams } from 'aidbox-react/lib/services/search';
 import { mapSuccess } from 'aidbox-react/lib/services/service';
@@ -6,11 +7,18 @@ import { mapSuccess } from 'aidbox-react/lib/services/service';
 import { Encounter, Patient, Practitioner, PractitionerRole } from 'shared/src/contrib/aidbox';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
-import { formatHumanDateTime } from '../../utils/date';
-import { getEncounterStatus } from '../../utils/format';
+import { formatHumanDateTime } from 'src/utils/date';
+import { getEncounterStatus } from 'src/utils/format';
 
-export function useEncounterList(searchParams: SearchParams) {
-    const [encounterDataListRD, manager] = useService(async () => {
+import { EncounterData } from './types';
+
+interface EncountersListData {
+    encounterDataListRD: RemoteData<EncounterData[]>;
+    reloadEncounter: () => void;
+}
+
+export function useEncounterList(searchParams: SearchParams): EncountersListData {
+    const [encounterDataListRD, manager] = useService<EncounterData[]>(async () => {
         const response = await getFHIRResources<
             Encounter | PractitionerRole | Practitioner | Patient
         >('Encounter', {
@@ -21,6 +29,7 @@ export function useEncounterList(searchParams: SearchParams) {
                 'PractitionerRole:practitioner:Practitioner',
             ],
         });
+
         return mapSuccess(response, (bundle) => {
             const sourceMap = extractBundleResources(bundle);
             const encounters = sourceMap.Encounter;
@@ -33,18 +42,23 @@ export function useEncounterList(searchParams: SearchParams) {
                 const practitionerRole = practitionerRoles.find(
                     (pR) => pR.id === encounter.participant?.[0]!.individual?.id,
                 );
+
                 const practitioner = practitioners.find(
                     (p) => p.id === practitionerRole?.practitioner?.id,
                 );
+
                 return {
                     key: encounter.id,
                     patient: renderHumanName(patient?.name?.[0]),
                     practitioner: renderHumanName(practitioner?.name?.[0]),
                     status: getEncounterStatus(encounter.status),
-                    date: encounter?.period?.start && formatHumanDateTime(encounter?.period?.start),
+                    date: encounter?.period?.start,
+                    humanReadableDate:
+                        encounter?.period?.start && formatHumanDateTime(encounter?.period?.start),
                 };
             });
         });
     });
+
     return { encounterDataListRD, reloadEncounter: manager.reload };
 }
