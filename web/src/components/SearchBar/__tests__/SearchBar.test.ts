@@ -1,5 +1,6 @@
-import moment from 'moment';
 import { act, renderHook, waitFor } from '@testing-library/react';
+import moment from 'moment';
+
 import { withRootAccess } from 'aidbox-react/lib/utils/tests';
 
 import { Patient } from 'shared/src/contrib/aidbox';
@@ -107,9 +108,9 @@ describe('SearchBar filters testing', () => {
                 ),
         );
         const encounterData1 = {
-            key: encounter1.id,
-            patient: renderHumanName(patient1.name?.[0]),
-            practitioner: renderHumanName(practitioner1?.name?.[0]),
+            id: encounter1.id,
+            patient: patient1,
+            practitioner: practitioner1,
             status: getEncounterStatus(encounter1.status),
             date: encounter1?.period?.start,
             humanReadableDate:
@@ -138,9 +139,9 @@ describe('SearchBar filters testing', () => {
                 ),
         );
         const encounterData2 = {
-            key: encounter2.id,
-            patient: renderHumanName(patient2.name?.[0]),
-            practitioner: renderHumanName(practitioner2?.name?.[0]),
+            id: encounter2.id,
+            patient: patient2,
+            practitioner: practitioner2,
             status: getEncounterStatus(encounter2.status),
             date: encounter2?.period?.start,
             humanReadableDate:
@@ -153,13 +154,13 @@ describe('SearchBar filters testing', () => {
                     {
                         id: 'encounterPatient',
                         type: 'string',
-                        key: 'patient',
+                        key: (resource) => renderHumanName(resource.patient?.name?.[0]),
                         placeholder: 'Search by patient',
                     },
                     {
                         id: 'encounterPractitioner',
                         type: 'string',
-                        key: 'practitioner',
+                        key: (resource) => renderHumanName(resource.practitioner?.name?.[0]),
                         placeholder: 'Search by practitioner',
                     },
                 ],

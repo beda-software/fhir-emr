@@ -1,9 +1,9 @@
-import { Button, Row } from 'antd';
 import { Trans } from '@lingui/macro';
+import { Button, Row } from 'antd';
 
+import s from './SearchBar.module.scss';
 import { SearchBarColumn } from './SearchBarColumn';
 import { SearchBarData, SearchBarItem } from './types';
-import s from './SearchBar.module.scss';
 
 export function SearchBar<T extends SearchBarItem>(props: SearchBarData<T>) {
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = props;

@@ -53,13 +53,13 @@ export function EncounterList() {
                 {
                     id: 'encounterPatient',
                     type: 'string',
-                    key: 'patient',
+                    key: (resource) => renderHumanName(resource.patient?.name?.[0]),
                     placeholder: t`Search by patient`,
                 },
                 {
                     id: 'encounterPractitioner',
                     type: 'string',
-                    key: 'practitioner',
+                    key: (resource) => renderHumanName(resource.practitioner?.name?.[0]),
                     placeholder: t`Search by practitioner`,
                 },
                 {
