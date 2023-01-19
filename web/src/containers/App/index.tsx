@@ -88,7 +88,6 @@ export function App() {
                 <Route path="/encounters" element={<EncounterList />} />
                 <Route path="/patients/:id/*" element={<PatientDetails />} />
                 <Route path="/documents/:id/edit" element={<div>documents/:id/edit</div>} />
-                <Route path="/encounters/:encounterId" element={<EncounterDetails />} />
                 <Route
                     path="/encounters/:encounterId/qr/:questionnaireId"
                     element={<EncounterQR />}

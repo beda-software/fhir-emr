@@ -1,14 +1,16 @@
+import { t, Trans } from '@lingui/macro';
 import { Empty } from 'antd';
 import Title from 'antd/es/typography/Title';
-import { t, Trans } from '@lingui/macro';
 import { useNavigate } from 'react-router-dom';
 
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 
+import { renderHumanName } from 'shared/src/utils/fhir';
+
 import { BaseLayout, BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
-import { Table } from 'src/components/Table';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
+import { Table } from 'src/components/Table';
 
 import { useEncounterList } from './hooks';
 import { EncounterData } from './types';
@@ -18,11 +20,15 @@ const columns = [
         title: <Trans>Patient</Trans>,
         dataIndex: 'patient',
         key: 'patient',
+        render: (_text: any, resource: EncounterData) =>
+            renderHumanName(resource.patient?.name?.[0]),
     },
     {
         title: <Trans>Practitioner</Trans>,
         dataIndex: 'practitioner',
         key: 'practitioner',
+        render: (_text: any, resource: EncounterData) =>
+            renderHumanName(resource.practitioner?.name?.[0]),
     },
     {
         title: <Trans>Status</Trans>,
@@ -81,7 +87,7 @@ export function EncounterList() {
                 />
             </BasePageHeader>
             <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
-                <Table
+                <Table<EncounterData>
                     locale={{
                         emptyText: (
                             <>
@@ -97,7 +103,7 @@ export function EncounterList() {
                     onRow={(record) => {
                         return {
                             onClick: () => {
-                                navigate(`/encounters/${record.key}`);
+                                navigate(`/patients/${record.patient?.id}/encounters/${record.id}`);
                             },
                         };
                     }}

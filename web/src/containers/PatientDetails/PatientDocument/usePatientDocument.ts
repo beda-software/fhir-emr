@@ -10,10 +10,12 @@ import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireRespon
 export interface PatientDocumentProps {
     patient: WithId<Patient>;
     questionnaireResponse?: WithId<QuestionnaireResponse>;
+    questionnaireId?: string;
+    encounterId?: string;
 }
 
 export function usePatientDocument(props: PatientDocumentProps & { questionnaireId: string }) {
-    const { patient, questionnaireResponse, questionnaireId } = props;
+    const { patient, questionnaireResponse, questionnaireId, encounterId } = props;
     const navigate = useNavigate();
 
     const data = useQuestionnaireResponseForm({
@@ -21,9 +23,10 @@ export function usePatientDocument(props: PatientDocumentProps & { questionnaire
         launchContextParameters: [{ name: 'Patient', resource: patient }],
         initialQuestionnaireResponse: questionnaireResponse || {
             source: getReference(patient),
+            encounter: encounterId ? { resourceType: 'Encounter', id: encounterId } : undefined,
             questionnaire: questionnaireId,
         },
-        onSuccess: () => navigate(`/patients/${patient.id}/documents`),
+        onSuccess: () => navigate(-1),
     });
 
     return { ...data, questionnaireId };

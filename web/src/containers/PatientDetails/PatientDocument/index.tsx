@@ -11,11 +11,12 @@ import { PhysicalExam } from './PhysicalExam';
 import { PatientDocumentProps, usePatientDocument } from './usePatientDocument';
 
 export function PatientDocument(props: PatientDocumentProps) {
-    const params = useParams<{ questionnaireId: string }>();
-    const questionnaireId = params.questionnaireId!;
+    const params = useParams<{ questionnaireId: string; encounterId?: string }>();
+    const questionnaireId = props.questionnaireId || params.questionnaireId!;
     const { response, onSubmit, readOnly, customWidgets } = usePatientDocument({
         ...props,
         questionnaireId,
+        encounterId: params.encounterId,
     });
 
     const questionnaireResponseFormComponent = {

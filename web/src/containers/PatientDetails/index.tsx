@@ -20,6 +20,7 @@ import { PatientEncounter } from 'src/components/PatientEncounter';
 import { PatientGeneralInfo } from 'src/components/PatientGeneralInfo';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 
+import { EncounterDetails } from '../EncounterDetails';
 import s from './PatientDetails.module.scss';
 import { PatientDocument } from './PatientDocument';
 import { PatientDocumentDetails } from './PatientDocumentDetails';
@@ -196,6 +197,18 @@ export const PatientDetails = () => {
                                         element={<PatientEncounter patient={patient} />}
                                     />
                                     <Route
+                                        path="/encounters/:encounterId"
+                                        element={<EncounterDetails patient={patient} />}
+                                    />
+                                    <Route
+                                        path="/encounters/:encounterId/new/:questionnaireId"
+                                        element={<PatientDocument patient={patient} />}
+                                    />
+                                    <Route
+                                        path="/encounters/:encounterId/:qrId/*"
+                                        element={<PatientDocumentDetails patient={patient} />}
+                                    />
+                                    <Route
                                         path="/documents"
                                         element={<PatientDocuments patient={patient} />}
                                     />
@@ -204,7 +217,7 @@ export const PatientDetails = () => {
                                         element={<PatientDocument patient={patient} />}
                                     />
                                     <Route
-                                        path="/documents/:qrId"
+                                        path="/documents/:qrId/*"
                                         element={<PatientDocumentDetails patient={patient} />}
                                     />
                                 </Route>

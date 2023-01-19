@@ -1,7 +1,11 @@
+import { WithId } from "aidbox-react/lib/services/fhir";
+
+import { Patient, Practitioner } from "shared/src/contrib/aidbox";
+
 export interface EncounterData {
-    key: string;
-    patient: string;
-    practitioner: string;
+    id: string;
+    patient?: WithId<Patient>;
+    practitioner?: WithId<Practitioner>;
     status: string;
     date: string | undefined;
     humanReadableDate: string | undefined;
