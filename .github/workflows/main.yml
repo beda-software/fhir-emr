@@ -1,11 +1,14 @@
 name: main
 on:
-    push:
-        branches:
-            - master
+    workflow_run:
+        workflows:
+            - test
+        branches: master
+        types:
+            - completed
+
 jobs:
     Release:
-        needs: Test
         runs-on: ubuntu-latest
         env:
             BUILD_IMAGE: bedasoftware/fhir-emr:master
