@@ -10,12 +10,6 @@ item:
   - type: group
     linkId: physical-exam-group
     item:
-      - linkId: patient-gender
-        type: string
-        hidden: True
-        initialExpression:
-          language: text/fhirpath
-          expression: "%Patient.gender"
       - text: General
         linkId: general
         type: text
@@ -120,11 +114,6 @@ item:
         enableWhenExpression:
           language: text/fhirpath
           expression: "%Patient.gender = 'female'"
-        enableWhen:
-          - question: patient-gender
-            operator: "="
-            answer:
-              string: female
       - text: Genitourinary
         linkId: genitourinary-male
         type: text
@@ -135,11 +124,6 @@ item:
         enableWhenExpression:
           language: text/fhirpath
           expression: "%Patient.gender = 'male'"
-        enableWhen:
-          - question: patient-gender
-            operator: "="
-            answer:
-              string: male
       - text: Rectal
         linkId: rectal
         type: text
