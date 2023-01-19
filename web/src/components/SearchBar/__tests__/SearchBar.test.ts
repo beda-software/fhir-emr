@@ -9,7 +9,6 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 import { EncounterData } from 'src/containers/EncounterList/types';
 import { createEncounter, createPatient, createPractitioner } from 'src/setupTests';
 import { formatHumanDateTime } from 'src/utils/date';
-import { getEncounterStatus } from 'src/utils/format';
 
 import { useSearchBar } from '../hooks';
 
@@ -111,7 +110,7 @@ describe('SearchBar filters testing', () => {
             id: encounter1.id,
             patient: patient1,
             practitioner: practitioner1,
-            status: getEncounterStatus(encounter1.status),
+            status: encounter1.status,
             date: encounter1?.period?.start,
             humanReadableDate:
                 encounter1?.period?.start && formatHumanDateTime(encounter1?.period?.start),
@@ -142,7 +141,7 @@ describe('SearchBar filters testing', () => {
             id: encounter2.id,
             patient: patient2,
             practitioner: practitioner2,
-            status: getEncounterStatus(encounter2.status),
+            status: encounter2.status,
             date: encounter2?.period?.start,
             humanReadableDate:
                 encounter2?.period?.start && formatHumanDateTime(encounter2?.period?.start),
