@@ -1,4 +1,5 @@
 import Title from 'antd/lib/typography/Title';
+import { useContext, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
@@ -6,6 +7,7 @@ import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 
 import { AnxietyScore, DepressionScore } from '../PatientDocumentDetails/widgets/score';
+import { PatientHeaderContext } from '../PatientHeader/context';
 import s from './PatientDocument.module.scss';
 import { PhysicalExam } from './PhysicalExam';
 import { PatientDocumentProps, usePatientDocument } from './usePatientDocument';
@@ -18,6 +20,14 @@ export function PatientDocument(props: PatientDocumentProps) {
         questionnaireId,
         encounterId: params.encounterId,
     });
+
+    const { setTitle } = useContext(PatientHeaderContext);
+
+    useEffect(() => {
+        if (params.encounterId) {
+            setTitle('Consultation');
+        }
+    }, [setTitle, params.encounterId]);
 
     const questionnaireResponseFormComponent = {
         'physical-exam': PhysicalExam,

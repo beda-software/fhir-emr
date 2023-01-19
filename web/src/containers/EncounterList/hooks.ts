@@ -7,7 +7,6 @@ import { mapSuccess } from 'aidbox-react/lib/services/service';
 import { Encounter, Patient, Practitioner, PractitionerRole } from 'shared/src/contrib/aidbox';
 
 import { formatHumanDateTime } from 'src/utils/date';
-import { getEncounterStatus } from 'src/utils/format';
 
 import { EncounterData } from './types';
 
@@ -50,7 +49,7 @@ export function useEncounterList(searchParams: SearchParams): EncountersListData
                     id: encounter.id,
                     patient,
                     practitioner,
-                    status: getEncounterStatus(encounter.status),
+                    status: encounter.status,
                     date: encounter?.period?.start,
                     humanReadableDate:
                         encounter?.period?.start && formatHumanDateTime(encounter?.period?.start),

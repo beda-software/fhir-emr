@@ -15,7 +15,7 @@ import { EncounterDetails } from '../EncounterDetails';
 import { PatientDocument } from './PatientDocument';
 import { PatientDocumentDetails } from './PatientDocumentDetails';
 import { PatientDocuments } from './PatientDocuments';
-import { PatientHeader } from './PatientHeader';
+import { PatientHeader, PatientHeaderContextProvider } from './PatientHeader';
 
 export const PatientDetails = () => {
     const params = useParams<{ id: string }>();
@@ -56,7 +56,7 @@ export const PatientDetails = () => {
                 const generalInfo = getGeneralInfo(patient);
 
                 return (
-                    <>
+                    <PatientHeaderContextProvider patient={patient}>
                         <PatientHeader patient={patient} reload={manager.reload} />
                         <BasePageContent>
                             <Routes>
@@ -103,7 +103,7 @@ export const PatientDetails = () => {
                                 </Route>
                             </Routes>
                         </BasePageContent>
-                    </>
+                    </PatientHeaderContextProvider>
                 );
             }}
         </RenderRemoteData>

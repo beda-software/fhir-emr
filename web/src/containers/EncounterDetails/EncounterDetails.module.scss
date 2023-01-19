@@ -1,0 +1,15 @@
+.title {
+    margin: 0;
+    position: relative;
+
+    &:after {
+        content: '';
+        position: absolute;
+        display: block;
+        left: 0;
+        right: 0;
+        bottom: -20px;
+        height: 1px;
+        background-color: rgba(0, 0, 0, 0.03);
+    }
+}

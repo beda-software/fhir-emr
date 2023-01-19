@@ -1,7 +1,7 @@
 import { t, Trans } from '@lingui/macro';
 import { Menu, Button, notification, Row, Col } from 'antd';
 import Title from 'antd/es/typography/Title';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
 
 import { Patient } from 'shared/src/contrib/aidbox';
@@ -14,6 +14,7 @@ import Breadcrumbs from 'src/components/Breadcrumbs';
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 
+import { PatientHeaderContext } from './context';
 import s from './PatientHeader.module.scss';
 
 interface Props {
@@ -21,18 +22,50 @@ interface Props {
     reload: () => void;
 }
 
+export function PatientHeaderContextProvider(
+    props: React.HTMLAttributes<HTMLDivElement> & { patient: Patient },
+) {
+    const { children, patient } = props;
+    const [pageTitle, setPageTitle] = useState(renderHumanName(patient.name?.[0]));
+    const [showMenu, setShowMenu] = useState(false);
+
+    return (
+        <PatientHeaderContext.Provider
+            value={{ title: pageTitle, setTitle: (v) => setPageTitle(v), showMenu,
+                setShowMenu: (v) => setShowMenu(v) }}
+        >
+            {children}
+        </PatientHeaderContext.Provider>
+    );
+}
+
 export function PatientHeader(props: Props) {
     const { patient, reload } = props;
     const location = useLocation();
     const params = useParams<{ id: string }>();
+    const { title, setTitle, showMenu, setShowMenu } = useContext(PatientHeaderContext);
 
-    const [currentPath, setCurrentPath] = useState(location?.pathname);
-
-    const menuItems: RouteItem[] = [
+    const menuItems: RouteItem[] = useMemo(() => ([
         { title: t`Demographics`, path: `/patients/${params.id}` },
         { title: t`Encounters`, path: `/patients/${params.id}/encounters` },
         { title: t`Documents`, path: `/patients/${params.id}/documents` },
-    ];
+    ]), [params.id]);
+
+    useEffect(() => {
+        setTitle(renderHumanName(patient.name?.[0]));
+    }, [setTitle, patient.name]);
+
+    useEffect(() => {
+        const paths = menuItems.map((i) => i.path);
+
+        if (paths.includes(location.pathname)) {
+            setShowMenu(true);
+        } else {
+            setShowMenu(false);
+        }
+    }, [setShowMenu, location.pathname, menuItems]);
+
+    const [currentPath, setCurrentPath] = useState(location?.pathname);
 
     const phoneNumber =
         patient.telecom && patient.telecom.length > 0
@@ -90,7 +123,7 @@ export function PatientHeader(props: Props) {
             <Breadcrumbs crumbs={crumbs(patient)} />
             <Row justify="space-between" align="middle" style={{ marginBottom: 21 }}>
                 <Col>
-                    <Title style={{ marginBottom: 0 }}>{renderHumanName(patient.name?.[0])}</Title>
+                    <Title style={{ marginBottom: 0 }}>{title}</Title>
                 </Col>
                 <Col
                     flex={1}
@@ -127,7 +160,7 @@ export function PatientHeader(props: Props) {
                     </ModalTrigger>
                 </Col>
             </Row>
-            {renderMenu()}
+            {showMenu && renderMenu()}
         </BasePageHeader>
     );
 }
