@@ -1,5 +1,6 @@
 import { t } from '@lingui/macro';
 import { Alert, notification } from 'antd';
+import Title from 'antd/es/typography/Title';
 import { useParams } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
@@ -11,12 +12,11 @@ import { Questionnaire } from 'shared/src/contrib/aidbox';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
-import { BaseLayout, BasePageContent, BasePageHeader } from '../../components/BaseLayout';
+import { BasePageContent, BasePageHeader } from '../../components/BaseLayout';
 import { QuestionnaireResponseForm } from '../../components/QuestionnaireResponseForm';
 import { formatHumanDate } from '../../utils/date';
 import { useEncounterDetails } from '../EncounterDetails/hooks';
 import s from './EncounterQR.module.scss';
-import Title from 'antd/es/typography/Title';
 
 export function EncounterQR() {
     const { encounterId, questionnaireId } = useParams<{
@@ -39,7 +39,7 @@ export function EncounterQR() {
     });
 
     return (
-        <BaseLayout>
+        <>
             <RenderRemoteData remoteData={remoteData}>
                 {({ encounterInfo: { encounter, practitioner, patient }, questionnaire }) => {
                     if (!practitioner) {
@@ -99,6 +99,6 @@ export function EncounterQR() {
                     );
                 }}
             </RenderRemoteData>
-        </BaseLayout>
+        </>
     );
 }

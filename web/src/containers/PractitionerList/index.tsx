@@ -5,11 +5,11 @@ import Title from 'antd/es/typography/Title';
 
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 
-import { BaseLayout, BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
+import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { ModalPractitioner } from 'src/components/ModalPractitioner';
 import { SearchBar } from 'src/components/SearchBar';
-import { Table } from 'src/components/Table';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
+import { Table } from 'src/components/Table';
 
 import { PractitionerListRowData, usePractitionersList } from './hooks';
 
@@ -30,7 +30,7 @@ export function PractitionerList() {
         });
 
     return (
-        <BaseLayout>
+        <>
             <BasePageHeader style={{ paddingTop: 40, paddingBottom: 92 }}>
                 <Row justify="space-between" align="middle" style={{ marginBottom: 40 }}>
                     <Col>
@@ -122,6 +122,6 @@ export function PractitionerList() {
                     ]}
                 />
             </BasePageContent>
-        </BaseLayout>
+        </>
     );
 }

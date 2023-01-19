@@ -2,7 +2,7 @@ import { DownOutlined, GlobalOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 import { Dropdown, Menu } from 'antd';
 import { Header } from 'antd/lib/layout/layout';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import { resetInstanceToken } from 'aidbox-react/lib/services/instance';
 
@@ -64,6 +64,8 @@ export function AppHeader() {
         window.location.href = '/';
     };
 
+    const location = useLocation();
+
     const menuItems: RouteItem[] = [
         { title: t`Encounters`, path: '/encounters' },
         { title: t`Patients`, path: '/patients' },
@@ -71,9 +73,7 @@ export function AppHeader() {
         { title: t`Questionnaires`, path: '/questionnaires' },
     ];
 
-    const menuDefaultSelectedKeys = getActiveKeys(menuItems).map(
-        ({ path, title }) => path || title,
-    );
+    const activeMenu = `/${location.pathname.split('/')[1]}`;
 
     const renderUserMenu = () => {
         const userMenu = [
@@ -113,7 +113,7 @@ export function AppHeader() {
                     <Menu
                         mode="horizontal"
                         theme="light"
-                        selectedKeys={menuDefaultSelectedKeys}
+                        selectedKeys={[activeMenu!]}
                         items={renderMenu(menuItems)}
                         className={s.menu}
                     />
@@ -139,14 +139,4 @@ export function renderMenu(menuRoutes: RouteItem[]) {
         key: route.path,
         label: <Link to={route.path}>{renderMenuTitle(route)}</Link>,
     }));
-}
-
-function getActiveKeys(menuRoutes: RouteItem[]): RouteItem[] {
-    return menuRoutes.filter(({ path }) => {
-        if (path) {
-            return location.pathname === path || location.pathname.startsWith(`${path}/`);
-        }
-
-        return false;
-    });
 }

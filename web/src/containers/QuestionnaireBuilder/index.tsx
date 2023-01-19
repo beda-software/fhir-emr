@@ -33,7 +33,7 @@ import { uuid4 } from 'aidbox-react/lib/utils/uuid';
 import { Questionnaire, QuestionnaireItem } from 'shared/src/contrib/aidbox';
 import { getByPath, setByPath, unsetByPath } from 'shared/src/utils/path';
 
-import { BaseLayout, BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
+import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 
 const { Title } = Typography;
 
@@ -101,11 +101,9 @@ export function QuestionnaireBuilder() {
     };
 
     return (
-        <BaseLayout>
-            <RenderRemoteData remoteData={questionnaireRemoteData}>
-                {(questionnaire) => <Content questionnaire={questionnaire} onSubmit={onSubmit} />}
-            </RenderRemoteData>
-        </BaseLayout>
+        <RenderRemoteData remoteData={questionnaireRemoteData}>
+            {(questionnaire) => <Content questionnaire={questionnaire} onSubmit={onSubmit} />}
+        </RenderRemoteData>
     );
 }
 

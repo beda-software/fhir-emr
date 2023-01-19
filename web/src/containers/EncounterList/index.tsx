@@ -7,7 +7,7 @@ import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 
 import { renderHumanName } from 'shared/src/utils/fhir';
 
-import { BaseLayout, BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
+import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { Table } from 'src/components/Table';
@@ -73,7 +73,7 @@ export function EncounterList() {
         });
 
     return (
-        <BaseLayout>
+        <>
             <BasePageHeader style={{ paddingTop: 40, paddingBottom: 92 }}>
                 <Title style={{ marginBottom: 40 }}>
                     <Trans>Encounters</Trans>
@@ -109,6 +109,6 @@ export function EncounterList() {
                     }}
                 />
             </BasePageContent>
-        </BaseLayout>
+        </>
     );
 }

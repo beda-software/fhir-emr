@@ -1,6 +1,6 @@
-import { Button, Col, Empty, Row } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
+import { Button, Col, Empty, Row } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { ColumnsType } from 'antd/lib/table';
 import { Link } from 'react-router-dom';
@@ -14,12 +14,12 @@ import config from 'shared/src/config';
 import { Questionnaire } from 'shared/src/contrib/aidbox';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
-import { BaseLayout, BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
+import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { SearchBar } from 'src/components/SearchBar';
-import { Table } from 'src/components/Table';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
+import { Table } from 'src/components/Table';
 
 const columns: ColumnsType<Questionnaire> = [
     {
@@ -101,7 +101,7 @@ export function QuestionnaireList() {
         });
 
     return (
-        <BaseLayout>
+        <>
             <BasePageHeader style={{ paddingTop: 40, paddingBottom: 92 }}>
                 <Row justify="space-between" align="middle" style={{ marginBottom: 40 }}>
                     <Col>
@@ -145,6 +145,6 @@ export function QuestionnaireList() {
                     loading={isLoading(questionnairesResponse)}
                 />
             </BasePageContent>
-        </BaseLayout>
+        </>
     );
 }

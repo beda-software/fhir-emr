@@ -12,7 +12,7 @@ import { Patient } from 'shared/src/contrib/aidbox';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
-import { BaseLayout, BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
+import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { RouteItem } from 'src/components/BaseLayout/Header';
 import Breadcrumbs from 'src/components/Breadcrumbs';
 import { ModalTrigger } from 'src/components/ModalTrigger';
@@ -124,7 +124,7 @@ export const PatientDetails = () => {
                         : undefined;
 
                 return (
-                    <BaseLayout>
+                    <>
                         <BasePageHeader style={{ paddingBottom: 0 }}>
                             <Breadcrumbs crumbs={crumbs(patient)} />
                             <Row
@@ -223,7 +223,7 @@ export const PatientDetails = () => {
                                 </Route>
                             </Routes>
                         </BasePageContent>
-                    </BaseLayout>
+                    </>
                 );
             }}
         </RenderRemoteData>

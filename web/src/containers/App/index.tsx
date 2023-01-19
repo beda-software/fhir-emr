@@ -12,6 +12,7 @@ import { isSuccess, success } from 'aidbox-react/lib/libs/remoteData';
 import { resetInstanceToken, setInstanceToken } from 'aidbox-react/lib/services/instance';
 import { extractErrorCode } from 'aidbox-react/lib/utils/error';
 
+import { BaseLayout } from 'src/components/BaseLayout';
 import { EncounterList } from 'src/containers/EncounterList';
 import { PatientDetails } from 'src/containers/PatientDetails';
 import { PatientList } from 'src/containers/PatientList';
@@ -23,7 +24,6 @@ import { getAuthorizeUrl, getToken, getUserInfo, OAuthState } from 'src/services
 import { parseOAuthState, setToken } from 'src/services/auth';
 import { history } from 'src/services/history';
 
-import { EncounterDetails } from '../EncounterDetails';
 import { EncounterQR } from '../EncounterQR';
 import s from './App.module.scss';
 
@@ -83,29 +83,31 @@ export function App() {
 
     const renderAuthenticatedRoutes = () => {
         return (
-            <Routes>
-                <Route path="/patients" element={<PatientList />} />
-                <Route path="/encounters" element={<EncounterList />} />
-                <Route path="/patients/:id/*" element={<PatientDetails />} />
-                <Route path="/documents/:id/edit" element={<div>documents/:id/edit</div>} />
-                <Route
-                    path="/encounters/:encounterId/qr/:questionnaireId"
-                    element={<EncounterQR />}
-                />
-                <Route
-                    path="/practitioners"
-                    element={
-                        <div className={s.sectionContainer}>
-                            <PractitionerList />
-                        </div>
-                    }
-                />
-                <Route path="/questionnaires" element={<QuestionnaireList />} />
-                <Route path="/questionnaires/builder" element={<QuestionnaireBuilder />} />
-                <Route path="/questionnaires/:id/edit" element={<QuestionnaireBuilder />} />
-                <Route path="/questionnaires/:id" element={<div>questionnaires/:id</div>} />
-                <Route path="*" element={<Navigate to="/encounters" />} />
-            </Routes>
+            <BaseLayout>
+                <Routes>
+                    <Route path="/patients" element={<PatientList />} />
+                    <Route path="/encounters" element={<EncounterList />} />
+                    <Route path="/patients/:id/*" element={<PatientDetails />} />
+                    <Route path="/documents/:id/edit" element={<div>documents/:id/edit</div>} />
+                    <Route
+                        path="/encounters/:encounterId/qr/:questionnaireId"
+                        element={<EncounterQR />}
+                    />
+                    <Route
+                        path="/practitioners"
+                        element={
+                            <div className={s.sectionContainer}>
+                                <PractitionerList />
+                            </div>
+                        }
+                    />
+                    <Route path="/questionnaires" element={<QuestionnaireList />} />
+                    <Route path="/questionnaires/builder" element={<QuestionnaireBuilder />} />
+                    <Route path="/questionnaires/:id/edit" element={<QuestionnaireBuilder />} />
+                    <Route path="/questionnaires/:id" element={<div>questionnaires/:id</div>} />
+                    <Route path="*" element={<Navigate to="/encounters" />} />
+                </Routes>
+            </BaseLayout>
         );
     };
 

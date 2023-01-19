@@ -12,12 +12,12 @@ import { mapSuccess } from 'aidbox-react/lib/services/service';
 import { Patient } from 'shared/src/contrib/aidbox';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
-import { BaseLayout, BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
+import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { ModalNewPatient } from 'src/components/ModalNewPatient';
 import { SearchBar } from 'src/components/SearchBar';
+import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { Table } from 'src/components/Table';
 import { formatHumanDate } from 'src/utils/date';
-import { useSearchBar } from 'src/components/SearchBar/hooks';
 
 const columns: ColumnsType<Patient> = [
     {
@@ -80,7 +80,7 @@ export function PatientList() {
         });
 
     return (
-        <BaseLayout>
+        <>
             <BasePageHeader style={{ paddingTop: 40, paddingBottom: 92 }}>
                 <Row justify="space-between" align="middle" style={{ marginBottom: 40 }}>
                     <Col>
@@ -124,6 +124,6 @@ export function PatientList() {
                     }}
                 />
             </BasePageContent>
-        </BaseLayout>
+        </>
     );
 }
