@@ -37,5 +37,8 @@ backend/gunicorn.pid
 shared/src/locale/**/*.ts
 shared/src/locale/**/*.js
 
+# Built seeds
+zrc/seeds.ndjson.gz
+
 .clj-kondo/
 .lsp/
