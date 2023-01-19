@@ -5,15 +5,12 @@ import { mapSuccess } from 'aidbox-react/lib/services/service';
 import { Practitioner, PractitionerRole } from 'shared/src/contrib/aidbox';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
-import { formatHumanDate } from 'src/utils/date';
-
 export interface PractitionerListRowData {
     key: string;
     id: string;
     practitionerResource: Practitioner;
     practitionerName: string;
     practitionerRoleList: Array<string>;
-    practitionerCreatedDate: string;
     practitionerRolesList: PractitionerRole[];
     practitionerRolesResource: Array<any>;
 }
@@ -43,9 +40,6 @@ export function usePractitionersList() {
                     practitionerRolesResource: practitionerRolesList,
                     practitionerName: renderHumanName(practitioner.name?.[0]),
                     practitionerRoleList: practitionerRoleToStringArray(practitionerRolesList),
-                    practitionerCreatedDate: formatHumanDate(
-                        practitionerRolesList[0]!.meta?.createdAt as string,
-                    ),
                     practitionerRolesList: practitionerRoles,
                 };
                 return rowData;

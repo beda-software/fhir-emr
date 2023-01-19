@@ -93,12 +93,6 @@ export function PractitionerList() {
                             ),
                         },
                         {
-                            title: <Trans>Date</Trans>,
-                            dataIndex: 'practitionerCreatedDate',
-                            key: 'practitionerCreatedDate',
-                            width: '5%',
-                        },
-                        {
                             title: <Trans>Actions</Trans>,
                             dataIndex: 'practitionerResource',
                             key: 'actions',
