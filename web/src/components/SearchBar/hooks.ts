@@ -60,11 +60,9 @@ export function useSearchBar<T extends SearchBarItem>(props: SearchBarProps<T>):
                 if (stringFilterValue) {
                     if (populatedResultData) {
                         resultData = populatedResultData.reduce((result: T[], itemData) => {
-                            if (
-                                itemData.searchProp
-                                    .toLowerCase()
-                                    .includes(stringFilterValue.toLowerCase())
-                            ) {
+                            const itemSearchProp = itemData.searchProp as string;
+
+                            if (itemSearchProp.includes(stringFilterValue.toLowerCase())) {
                                 return [...result, itemData.item];
                             }
 
@@ -94,14 +92,26 @@ export function useSearchBar<T extends SearchBarItem>(props: SearchBarProps<T>):
                 if (dateFilterValue.length === 2) {
                     const searchPropKey = filterValue.column.key as string;
 
-                    resultData = resultData.filter((item) => {
-                        const itemSearchProp =
-                            typeof item[searchPropKey] === 'string'
-                                ? parseFHIRDateTime(item[searchPropKey])
-                                : (item[searchPropKey] as moment.Moment);
+                    if (populatedResultData) {
+                        resultData = populatedResultData.reduce((result: T[], itemData) => {
+                            const itemSearchProp = itemData.searchProp as moment.Moment;
 
-                        return itemSearchProp.isBetween(dateFilterValue[0], dateFilterValue[1]);
-                    });
+                            if (itemSearchProp.isBetween(dateFilterValue[0], dateFilterValue[1])) {
+                                return [...result, itemData.item];
+                            }
+
+                            return [...result];
+                        }, []);
+                    } else {
+                        resultData = resultData.filter((item) => {
+                            const itemSearchProp =
+                                typeof item[searchPropKey] === 'string'
+                                    ? parseFHIRDateTime(item[searchPropKey])
+                                    : (item[searchPropKey] as moment.Moment);
+
+                            return itemSearchProp.isBetween(dateFilterValue[0], dateFilterValue[1]);
+                        });
+                    }
                 }
             }
         }

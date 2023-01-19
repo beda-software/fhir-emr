@@ -3,13 +3,23 @@ import { Encounter, Patient, Questionnaire } from 'shared/src/contrib/aidbox';
 import { EncounterData } from 'src/containers/EncounterList/types';
 import { PractitionerListRowData } from 'src/containers/PractitionerList/hooks';
 
-export type PopulateSearchProp<T> = (item: T) => string;
+export type SearchBarItem =
+    | Patient
+    | Encounter
+    | Questionnaire
+    | EncounterData
+    | PractitionerListRowData;
 
 export interface PopulatedSearchData<T> {
-    searchProp: string;
+    searchProp: string | moment.Moment;
     item: T;
 }
 
+export interface SearchBarProps<T> {
+    columns: SearchBarColumn<T>[];
+    data: T[];
+}
+export type PopulateSearchProp<T> = (item: T) => string;
 export type SearchBarColumn<T> =
     | {
           id: string;
@@ -24,20 +34,7 @@ export type SearchBarColumn<T> =
           placeholder: [string, string];
       };
 
-export type SearchBarItem =
-    | Patient
-    | Encounter
-    | Questionnaire
-    | EncounterData
-    | PractitionerListRowData;
-
-export interface SearchBarProps<T> {
-    columns: SearchBarColumn<T>[];
-    data: T[];
-}
-
 export type DateColumnFilterValue = [moment.Moment, moment.Moment];
-
 export interface ColumnFilterValue<T> {
     column: SearchBarColumn<T>;
     value?: DateColumnFilterValue | string;
