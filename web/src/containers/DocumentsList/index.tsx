@@ -53,7 +53,7 @@ function useColumns(
             //     key: 'created-by',
             // },
             {
-                title: <Trans>Creation date</Trans>,
+                title: <Trans>Date</Trans>,
                 dataIndex: 'creation-date',
                 key: 'creation-date',
                 render: (_text, resource) =>

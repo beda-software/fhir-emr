@@ -1,7 +1,7 @@
 import { format, parseISO } from 'date-fns';
 
-const DATE_TIME_FORMAT = 'dd.MM.yyyy HH:mm';
-const DATE_FORMAT = 'dd.MM.yyyy';
+const DATE_TIME_FORMAT = 'dd/MM/yyyy HH:mm';
+const DATE_FORMAT = 'dd/MM/yyyy';
 const TIME_FORMAT = 'hh:mm';
 
 const formatFHIRDate = (date: string, formatType: string) => {
