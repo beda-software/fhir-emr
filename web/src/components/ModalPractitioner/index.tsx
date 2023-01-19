@@ -1,4 +1,4 @@
-import { t, Trans } from '@lingui/macro';
+import { t } from '@lingui/macro';
 import { Button, notification } from 'antd';
 import { BaseButtonProps } from 'antd/lib/button/button';
 
@@ -49,7 +49,7 @@ export function ModalPractitioner(props: Props) {
             title={modalTitle}
             trigger={
                 <Button icon={icon} type={buttonType}>
-                    <span><Trans>{buttonText}</Trans></span>
+                    <span>{buttonText}</span>
                 </Button>
             }
         >
