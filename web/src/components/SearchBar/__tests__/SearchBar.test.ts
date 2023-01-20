@@ -12,19 +12,34 @@ import { formatHumanDateTime } from 'src/utils/date';
 
 import { useSearchBar } from '../hooks';
 
+const PATIENTS_ADDITION_DATA = [
+    {
+        name: [
+            {
+                given: ['Doe'],
+                family: 'John',
+            },
+        ],
+        birthDate: '2000-01-01',
+    },
+    {
+        name: [
+            {
+                given: ['Ivan', 'Ivanovich'],
+                family: 'Ivanov',
+            },
+        ],
+        birthDate: '2000-02-01',
+    },
+];
+
 describe('SearchBar filters testing', () => {
     test('String one filters', async () => {
         const patient1 = await withRootAccess(
-            async () =>
-                await createPatient({
-                    name: [{ family: 'Patient family test1', given: ['Patient name test1'] }],
-                }),
+            async () => await createPatient(PATIENTS_ADDITION_DATA[0]),
         );
         const patient2 = await withRootAccess(
-            async () =>
-                await createPatient({
-                    name: [{ family: 'Patient family test2', given: ['Patient name test2'] }],
-                }),
+            async () => await createPatient(PATIENTS_ADDITION_DATA[1]),
         );
 
         const { result } = renderHook(() =>
@@ -42,7 +57,7 @@ describe('SearchBar filters testing', () => {
         );
 
         act(() => {
-            result.current.onChangeColumnFilter('test3', 'patient');
+            result.current.onChangeColumnFilter('test', 'patient');
         });
         await waitFor(() => {
             expect(result.current.filteredData.length).toBe(0);
@@ -56,21 +71,21 @@ describe('SearchBar filters testing', () => {
         });
 
         act(() => {
-            result.current.onChangeColumnFilter('test1', 'patient');
+            result.current.onChangeColumnFilter('doe', 'patient');
         });
         await waitFor(() => {
             expect(result.current.filteredData.length).toBe(1);
         });
 
         act(() => {
-            result.current.onChangeColumnFilter('test2', 'patient');
+            result.current.onChangeColumnFilter('iva', 'patient');
         });
         await waitFor(() => {
             expect(result.current.filteredData.length).toBe(1);
         });
 
         act(() => {
-            result.current.onChangeColumnFilter('test', 'patient');
+            result.current.onChangeColumnFilter('o', 'patient');
         });
         await waitFor(() => {
             expect(result.current.filteredData.length).toBe(2);
@@ -86,17 +101,12 @@ describe('SearchBar filters testing', () => {
 
     test('String multiple filters', async () => {
         const patient1 = await withRootAccess(
-            async () =>
-                await createPatient({
-                    name: [{ family: 'Patient family test1', given: ['Patient name test1'] }],
-                }),
+            async () => await createPatient(PATIENTS_ADDITION_DATA[0]),
         );
         const practitioner1 = await withRootAccess(
             async () =>
                 await createPractitioner({
-                    name: [
-                        { family: 'Practitioner family test1', given: ['Practitioner name test1'] },
-                    ],
+                    name: [{ family: 'Victorov', given: ['Victor', 'Victorovich'] }],
                 }),
         );
         const encounter1 = await withRootAccess(
@@ -117,17 +127,12 @@ describe('SearchBar filters testing', () => {
         };
 
         const patient2 = await withRootAccess(
-            async () =>
-                await createPatient({
-                    name: [{ family: 'Patient family test2', given: ['Patient name test2'] }],
-                }),
+            async () => await createPatient(PATIENTS_ADDITION_DATA[1]),
         );
         const practitioner2 = await withRootAccess(
             async () =>
                 await createPractitioner({
-                    name: [
-                        { family: 'Practitioner family test2', given: ['Practitioner name test2'] },
-                    ],
+                    name: [{ family: 'Jackson', given: ['Mickle'] }],
                 }),
         );
         const encounter2 = await withRootAccess(
@@ -168,28 +173,28 @@ describe('SearchBar filters testing', () => {
         );
 
         act(() => {
-            result.current.onChangeColumnFilter('test3', 'encounterPatient');
+            result.current.onChangeColumnFilter('test', 'encounterPatient');
         });
         await waitFor(() => {
             expect(result.current.filteredData.length).toBe(0);
         });
 
         act(() => {
-            result.current.onChangeColumnFilter('test2', 'encounterPatient');
+            result.current.onChangeColumnFilter('doe', 'encounterPatient');
         });
         await waitFor(() => {
             expect(result.current.filteredData.length).toBe(1);
         });
 
         act(() => {
-            result.current.onChangeColumnFilter('test2', 'encounterPractitioner');
+            result.current.onChangeColumnFilter('vict', 'encounterPractitioner');
         });
         await waitFor(() => {
             expect(result.current.filteredData.length).toBe(1);
         });
 
         act(() => {
-            result.current.onChangeColumnFilter('test3', 'encounterPractitioner');
+            result.current.onChangeColumnFilter('test', 'encounterPractitioner');
         });
         await waitFor(() => {
             expect(result.current.filteredData.length).toBe(0);
@@ -203,7 +208,7 @@ describe('SearchBar filters testing', () => {
         });
 
         act(() => {
-            result.current.onChangeColumnFilter('test1', 'encounterPractitioner');
+            result.current.onChangeColumnFilter('jackson', 'encounterPractitioner');
         });
         await waitFor(() => {
             expect(result.current.filteredData.length).toBe(1);
@@ -212,18 +217,10 @@ describe('SearchBar filters testing', () => {
 
     test('Date filters', async () => {
         const patient1 = await withRootAccess(
-            async () =>
-                await createPatient({
-                    name: [{ family: 'Patient family test1', given: ['Patient name test1'] }],
-                    birthDate: '2000-01-01',
-                }),
+            async () => await createPatient(PATIENTS_ADDITION_DATA[0]),
         );
         const patient2 = await withRootAccess(
-            async () =>
-                await createPatient({
-                    name: [{ family: 'Patient family test2', given: ['Patient name test2'] }],
-                    birthDate: '2000-02-01',
-                }),
+            async () => await createPatient(PATIENTS_ADDITION_DATA[1]),
         );
 
         const { result } = renderHook(() =>

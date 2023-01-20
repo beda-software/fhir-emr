@@ -63,7 +63,11 @@ export function useSearchBar<T extends SearchBarItem>(props: SearchBarProps<T>):
                         resultData = populatedResultData.reduce((result: T[], itemData) => {
                             const itemSearchProp = itemData.searchProp as string;
 
-                            if (itemSearchProp.includes(stringFilterValue.toLowerCase())) {
+                            if (
+                                itemSearchProp
+                                    .toLowerCase()
+                                    .includes(stringFilterValue.toLowerCase())
+                            ) {
                                 return [...result, itemData.item];
                             }
 
