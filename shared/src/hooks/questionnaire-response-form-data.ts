@@ -1,5 +1,11 @@
 import moment from 'moment';
-import { mapFormToResponse, mapResponseToForm, QuestionnaireResponseFormData } from 'sdc-qrf';
+import {
+    mapFormToResponse,
+    mapResponseToForm,
+    QuestionnaireResponseFormData,
+    calcInitialContext,
+    removeDisabledAnswers,
+} from 'sdc-qrf';
 
 import { useService } from 'aidbox-react/lib/hooks/service';
 import { isFailure, isSuccess, RemoteDataResult, success } from 'aidbox-react/lib/libs/remoteData';
@@ -179,10 +185,16 @@ export function useQuestionnaireResponseFormData(
     ): Promise<RemoteDataResult<QuestionnaireResponseFormSaveResponse>> => {
         const { formValues, context } = qrFormData;
         const { questionnaireResponse, questionnaire } = context;
+        const itemContext = calcInitialContext(qrFormData.context, formValues);
+        const enabledQuestionsFormValues = removeDisabledAnswers(
+            questionnaire,
+            formValues,
+            itemContext,
+        );
 
         const qrWithoutAttachments = {
             ...questionnaireResponse,
-            ...mapFormToResponse(formValues, questionnaire),
+            ...mapFormToResponse(enabledQuestionsFormValues, questionnaire),
             status: 'completed',
             authored: formatFHIRDateTime(moment()),
         };

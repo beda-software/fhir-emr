@@ -20,7 +20,7 @@ export function QuestionText({ parentPath, questionItem }: QuestionItemProps) {
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
     return (
         <Form.Item label={text} name={fieldName} hidden={hidden}>
-            <TextArea rows={4} readOnly={readOnly || qrfContext.readOnly} />
+            <TextArea rows={1} readOnly={readOnly || qrfContext.readOnly} />
         </Form.Item>
     );
 }

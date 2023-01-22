@@ -1,0 +1,216 @@
+resourceType: Questionnaire
+id: review-of-systems
+status: active
+name: Review of Systems
+item:
+  - linkId: provider-viewed-confirmation
+    type: boolean
+    text: >
+      Provider reviewed all systems and state
+      that all are WNL except as noted below
+    code:
+      - system: http://loinc.org
+        code: 71406-3
+        display: CMS - review of systems panel
+    initial:
+      - value:
+          boolean: false
+  - linkId: abnormal-systems-group
+    type: group
+    text: Select abnormal systems
+    enableWhen:
+      - question: provider-viewed-confirmation
+        operator: "="
+        answer:
+          boolean: true
+    item:
+      - linkId: general
+        text: General
+        type: boolean
+        code:
+          system: http://loinc.org
+          code: 71407-1
+          display: CMS - constitutional symptoms panel
+      - linkId: general-comment
+        type: text
+        code:
+          system: http://loinc.org
+          code: 71407-1-comment
+          display: CMS - constitutional symptoms panel - comment
+        enableWhen:
+          - question: general
+            operator: "="
+            answer:
+              boolean: true
+      - linkId: heent
+        text: HEENT
+        type: boolean
+        code:
+          system: http://loinc.org
+          code: 71409-7
+          display: CMS - ear-nose-mouth-throat panel
+      - linkId: heent-comment
+        type: text
+        code:
+          system: http://loinc.org
+          code: 71409-7-comment
+          display: CMS - ear-nose-mouth-throat panel - comment
+        enableWhen:
+          - question: heent
+            operator: "="
+            answer:
+              boolean: true
+      - linkId: cardiovascular
+        text: Cardiovascular
+        type: boolean
+        code:
+          system: http://loinc.org
+          code: 71410-5
+          display: CMS - cardiovascular panel
+      - linkId: cardiovascular-comment
+        type: text
+        code:
+          system: http://loinc.org
+          code: 71410-5-comment
+          display: CMS - cardiovascular panel - comment
+        enableWhen:
+          - question: cardiovascular
+            operator: "="
+            answer:
+              boolean: true
+      - linkId: respiratory
+        text: Respiratory
+        type: boolean
+        code:
+          system: http://loinc.org
+          code: 71411-3
+          display: CMS - respiratory panel
+      - linkId: respiratory-comment
+        type: text
+        code:
+          system: http://loinc.org
+          code: 71411-3-comment
+          display: CMS - respiratory panel - comment
+        enableWhen:
+          - question: respiratory
+            operator: "="
+            answer:
+              boolean: true
+      - linkId: gastrointestinal
+        text: Gastrointestinal
+        type: boolean
+        code:
+          system: http://loinc.org
+          code: 71412-1
+          display: CMS - gastrointestinal panel
+      - linkId: gastrointestinal-comment
+        type: text
+        code:
+          system: http://loinc.org
+          code: 71412-1-comment
+          display: CMS - gastrointestinal panel - comment
+        enableWhen:
+          - question: gastrointestinal
+            operator: "="
+            answer:
+              boolean: true
+      - linkId: genitourinary
+        text: Genitourinary
+        type: boolean
+        code:
+          system: http://loinc.org
+          code: 71413-9
+          display: CMS - genitourinary panel
+      - linkId: genitourinary-comment
+        type: text
+        code:
+          system: http://loinc.org
+          code: 71413-9-comment
+          display: CMS - genitourinary panel - comment
+        enableWhen:
+          - question: genitourinary
+            operator: "="
+            answer:
+              boolean: true
+      - linkId: musculoskeletal
+        text: Musculoskeletal
+        type: boolean
+        code:
+          system: http://loinc.org
+          code: 71414-7
+          display: CMS - musculoskeletal panel
+      - linkId: musculoskeletal-comment
+        type: text
+        code:
+          system: http://loinc.org
+          code: 71414-7-comment
+          display: CMS - musculoskeletal panel - comment
+        enableWhen:
+          - question: musculoskeletal
+            operator: "="
+            answer:
+              boolean: true
+      - linkId: neurologic
+        text: Neurologic
+        type: boolean
+        code:
+          system: http://loinc.org
+          code: 71416-2
+          display: CMS - neurological panel
+      - linkId: neurologic-comment
+        type: text
+        code:
+          system: http://loinc.org
+          code: 71416-2-comment
+          display: CMS - neurological panel - comment
+        enableWhen:
+          - question: neurologic
+            operator: "="
+            answer:
+              boolean: true
+      - linkId: psychiatric
+        text: Psychiatric
+        type: boolean
+        code:
+          system: http://loinc.org
+          code: 71417-0
+          display: CMS - psychiatric panel
+      - linkId: psychiatric-comment
+        type: text
+        code:
+          system: http://loinc.org
+          code: 71417-0-comment
+          display: CMS - psychiatric panel - comment
+        enableWhen:
+          - question: psychiatric
+            operator: "="
+            answer:
+              boolean: true
+      - linkId: skin
+        text: Skin
+        type: boolean
+        code:
+          system: http://loinc.org
+          code: 71415-4
+          display: CMS - integumentary panel
+      - linkId: skin-comment
+        type: text
+        code:
+          system: http://loinc.org
+          code: 71415-4-comment
+          display: CMS - integumentary panel - comment
+        enableWhen:
+          - question: skin
+            operator: "="
+            answer:
+              boolean: true
+      - linkId: other
+        text: Other
+        type: boolean
+      - linkId: other-comment
+        type: text
+        enableWhen:
+          - question: other
+            operator: "="
+            answer:
+              boolean: true
