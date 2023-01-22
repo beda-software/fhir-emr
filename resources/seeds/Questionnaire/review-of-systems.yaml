@@ -92,7 +92,7 @@ item:
           code: 71411-3-comment
           display: CMS - respiratory panel - comment
         enableWhen:
-          - question: cardiovascular
+          - question: respiratory
             operator: "="
             answer:
               boolean: true

@@ -7,8 +7,8 @@ export function QuestionBoolean({ parentPath, questionItem }: QuestionItemProps)
     const fieldName = [...parentPath, linkId, 0, 'value', 'boolean'];
 
     return (
-        <Form.Item label={text} name={fieldName} hidden={hidden} valuePropName="checked">
-            <Checkbox disabled={readOnly || qrfContext.readOnly} />
+        <Form.Item name={fieldName} hidden={hidden} valuePropName="checked">
+            <Checkbox disabled={readOnly || qrfContext.readOnly}>{text}</Checkbox>
         </Form.Item>
     );
 }
