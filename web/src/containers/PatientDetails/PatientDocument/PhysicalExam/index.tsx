@@ -45,7 +45,7 @@ const fillValues: { [linkId: string]: string } = {
 
 function QuestionField(props: QuestionFieldProps) {
     const { value, onChange, disabled } = props;
-    const { linkId, text, readOnly } = props.questionItem;
+    const { linkId, text } = props.questionItem;
 
     const fillText = fillValues[linkId];
     const onFill = () => {

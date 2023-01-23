@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
@@ -13,7 +13,6 @@ export function useFieldController(fieldName: any, questionItem: QuestionnaireIt
     const { field } = useController({
         control: control,
         name: fieldName.join('.'),
-        // defaultValue: [repeats ? [] : undefined]
         ...(repeats ? { defaultValue: [] } : {}),
     });
 
