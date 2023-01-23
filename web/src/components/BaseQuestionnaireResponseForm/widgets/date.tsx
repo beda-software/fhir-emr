@@ -1,6 +1,8 @@
-import { Form, DatePicker } from 'antd';
+import { Form } from 'antd';
+import generatePicker from 'antd/es/date-picker/generatePicker';
 import { PickerProps } from 'antd/lib/date-picker/generatePicker';
 import moment, { Moment } from 'moment';
+import momentGenerateConfig from 'rc-picker/lib/generate/moment';
 import { useCallback, useMemo } from 'react';
 import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
@@ -39,12 +41,13 @@ function DateTimePickerWrapper({ value, onChange, type }: DateTimePickerWrapperP
             }
             onChange && onChange(value, dateString);
         },
-        [onChange],
+        [onChange, formatFunction],
     );
 
+    // https://ant.design/docs/react/use-custom-date-library
+    const DatePicker = generatePicker<moment.Moment>(momentGenerateConfig);
+
     return (
-        // TODO: Fix this ts error issue
-        // @ts-ignore
         <DatePicker showTime={showTime} onChange={newOnChange} format={format} value={newValue} />
     );
 }
