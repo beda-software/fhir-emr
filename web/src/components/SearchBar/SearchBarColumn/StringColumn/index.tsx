@@ -1,10 +1,9 @@
-import { t } from '@lingui/macro';
 import { Col, Input } from 'antd';
 
 import { useStringColumn } from './hooks';
-import { SearchBarColumnProps } from '../types';
+import { SearchBarColumnStringTypeProps } from '../types';
 
-export function StringColumn<T>(props: SearchBarColumnProps<T>) {
+export function StringColumn<T>(props: SearchBarColumnStringTypeProps<T>) {
     const { columnFilterValue } = props;
 
     const { onColumnChange } = useStringColumn<T>(props);
@@ -12,8 +11,8 @@ export function StringColumn<T>(props: SearchBarColumnProps<T>) {
     return (
         <Col>
             <Input.Search
-                placeholder={t`${columnFilterValue.column.placeholder}`}
-                value={columnFilterValue.value as string}
+                placeholder={columnFilterValue.column.placeholder}
+                value={columnFilterValue.value}
                 onChange={onColumnChange}
             />
         </Col>

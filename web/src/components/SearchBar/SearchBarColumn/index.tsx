@@ -1,15 +1,19 @@
 import { DateColumn } from './DateColumn';
 import { StringColumn } from './StringColumn';
-import { SearchBarColumnProps } from './types';
+import {
+    SearchBarColumnDateTypeProps,
+    SearchBarColumnProps,
+    SearchBarColumnStringTypeProps,
+} from './types';
 
 export function SearchBarColumn<T>(props: SearchBarColumnProps<T>) {
     const { columnFilterValue } = props;
 
     switch (columnFilterValue.column.type) {
         case 'string':
-            return <StringColumn {...props} />;
+            return <StringColumn<T> {...(props as SearchBarColumnStringTypeProps<T>)} />;
         case 'date':
-            return <DateColumn {...props} />;
+            return <DateColumn<T> {...(props as SearchBarColumnDateTypeProps<T>)} />;
         default:
             return null;
     }

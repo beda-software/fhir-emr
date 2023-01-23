@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
 
-import { SearchBarColumnProps } from '../types';
+import { SearchBarColumnStringTypeProps } from '../types';
 
-export function useStringColumn<T>(props: SearchBarColumnProps<T>) {
+export function useStringColumn<T>(props: SearchBarColumnStringTypeProps<T>) {
     const { onChange, columnFilterValue } = props;
 
     const onColumnChange = useCallback(

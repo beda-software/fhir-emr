@@ -20,24 +20,33 @@ export interface SearchBarProps<T> {
     data: T[];
 }
 export type PopulateSearchProp<T> = (item: T) => string;
-export type SearchBarColumn<T> =
-    | {
-          id: string;
-          type: 'string';
-          key: PopulateSearchProp<T> | string;
-          placeholder: string;
-      }
-    | {
-          id: string;
-          type: 'date';
-          key: PopulateSearchProp<T> | string;
-          placeholder: [string, string];
-      };
+export type SearchBarStringColumn<T> = {
+    id: string;
+    type: 'string';
+    key: PopulateSearchProp<T> | string;
+    placeholder: string;
+};
+export type SearchBarDateColumn<T> = {
+    id: string;
+    type: 'date';
+    key: PopulateSearchProp<T> | string;
+    placeholder: [string, string];
+};
 
 export type DateColumnFilterValue = [moment.Moment, moment.Moment];
+
+export type SearchBarColumn<T> = SearchBarStringColumn<T> | SearchBarDateColumn<T>;
 export interface ColumnFilterValue<T> {
     column: SearchBarColumn<T>;
     value?: DateColumnFilterValue | string;
+}
+export interface StringTypeColumnFilterValue<T> {
+    column: SearchBarStringColumn<T>;
+    value?: string;
+}
+export interface DateTypeColumnFilterValue<T> {
+    column: SearchBarDateColumn<T>;
+    value?: DateColumnFilterValue;
 }
 
 export interface SearchBarData<T> {

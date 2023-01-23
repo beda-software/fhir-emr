@@ -1,15 +1,13 @@
-import { t } from '@lingui/macro';
 import { Col } from 'antd';
 
-import { DateColumnFilterValue } from 'src/components/SearchBar/types';
 import { DatePicker } from 'src/components/DatePicker';
 
 import { useDateColumn } from './hooks';
-import { SearchBarColumnProps } from '../types';
+import { SearchBarColumnDateTypeProps } from '../types';
 
 const { RangePicker } = DatePicker;
 
-export function DateColumn<T>(props: SearchBarColumnProps<T>) {
+export function DateColumn<T>(props: SearchBarColumnDateTypeProps<T>) {
     const { columnFilterValue } = props;
 
     const { onColumnChange } = useDateColumn<T>(props);
@@ -17,8 +15,8 @@ export function DateColumn<T>(props: SearchBarColumnProps<T>) {
     return (
         <Col>
             <RangePicker
-                placeholder={[t`Start date`, t`End date`]}
-                value={columnFilterValue.value as DateColumnFilterValue}
+                placeholder={columnFilterValue.column.placeholder}
+                value={columnFilterValue.value}
                 onChange={onColumnChange}
             />
         </Col>
