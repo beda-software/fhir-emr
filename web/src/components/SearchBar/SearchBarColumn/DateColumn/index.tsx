@@ -1,10 +1,11 @@
 import { t } from '@lingui/macro';
-import { Col, DatePicker } from 'antd';
+import { Col } from 'antd';
 
 import { DateColumnFilterValue } from 'src/components/SearchBar/types';
+import { DatePicker } from 'src/components/DatePicker';
 
-import { SearchBarColumnProps } from '../types';
 import { useDateColumn } from './hooks';
+import { SearchBarColumnProps } from '../types';
 
 const { RangePicker } = DatePicker;
 
@@ -17,8 +18,6 @@ export function DateColumn<T>(props: SearchBarColumnProps<T>) {
         <Col>
             <RangePicker
                 placeholder={[t`Start date`, t`End date`]}
-                // TODO: Update antd to make it works with moment date types instead of dayjs
-                // @ts-ignore
                 value={columnFilterValue.value as DateColumnFilterValue}
                 onChange={onColumnChange}
             />

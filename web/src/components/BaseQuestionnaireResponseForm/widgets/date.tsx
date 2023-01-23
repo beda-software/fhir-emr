@@ -1,8 +1,6 @@
 import { Form } from 'antd';
-import generatePicker from 'antd/es/date-picker/generatePicker';
 import { PickerProps } from 'antd/lib/date-picker/generatePicker';
 import moment, { Moment } from 'moment';
-import momentGenerateConfig from 'rc-picker/lib/generate/moment';
 import { useCallback, useMemo } from 'react';
 import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
@@ -12,6 +10,7 @@ import {
     formatFHIRDate,
     formatFHIRDateTime,
 } from 'aidbox-react/lib/utils/date';
+import { DatePicker } from 'src/components/DatePicker';
 
 export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
@@ -43,9 +42,6 @@ function DateTimePickerWrapper({ value, onChange, type }: DateTimePickerWrapperP
         },
         [onChange, formatFunction],
     );
-
-    // https://ant.design/docs/react/use-custom-date-library
-    const DatePicker = generatePicker<moment.Moment>(momentGenerateConfig);
 
     return (
         <DatePicker showTime={showTime} onChange={newOnChange} format={format} value={newValue} />
