@@ -59,11 +59,6 @@ item:
                     system: 'http://snomed.ct'
                     code: '422400008'
                     display: 'Vomiting'
-          - value:
-                Coding:
-                    system: 'http://snomed.ct'
-                    code: '782197009'
-                    display: 'Other'
     - linkId: substance-drug
       text: Substance
       type: choice
