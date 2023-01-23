@@ -3,6 +3,6 @@ seeds:
 	docker-compose restart devbox
 
 up:
-	docker-compose pull
+	docker-compose pull --quiet
 	docker-compose build
 	docker-compose up -d

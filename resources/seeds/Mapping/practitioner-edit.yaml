@@ -1,43 +1,45 @@
-body:
-  $let:
-    $args:
-      - - fullUrl: urn:uuid:practitioner-id
-          request:
-            url: $ "/Practitioner/" + practitionerId
-            method: PUT
-          resource:
-            name:
-              - given:
-                  - >-
-                    $
-                    fhirpath("QuestionnaireResponse.repeat(item).where(linkId='first-name').answer.value.string").0
-                  - >-
-                    $
-                    fhirpath("QuestionnaireResponse.repeat(item).where(linkId='middle-name').answer.value.string").0
-                family: >-
-                  $
-                  fhirpath("QuestionnaireResponse.repeat(item).where(linkId='last-name').answer.value.string").0
-            resourceType: Practitioner
-      - $as: specialtyItem
-        $map: >-
-          $
-          fhirpath("QuestionnaireResponse.repeat(item).where(linkId='specialty').answer")
-        $body:
-          request:
-            url: $ "/PractitionerRole/" + practitionerRoleId
-            method: PUT
-          resource:
-            specialty:
-              - coding:
-                  - $ specialtyItem.value.Coding
-            resourceType: practitionerRole
-    $call: concat
-    practitionerId: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-id').answer.value.string").0
-    practitionerRoleId: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-role-id').answer.value.string").0
-  type: transaction
 id: practitioner-edit
 resourceType: Mapping
+body:
+  resourceType: Bundle
+  type: transaction
+  entry:
+    $let:
+      practitionerId: >-
+        $
+        fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-id').answer.value.string").0
+      practitionerRoleId: >-
+        $
+        fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-role-id').answer.value.string").0
+    $body:
+      $args:
+        - - fullUrl: urn:uuid:practitioner-id
+            request:
+              url: $ "/Practitioner/" + practitionerId
+              method: PUT
+            resource:
+              name:
+                - given:
+                    - >-
+                      $
+                      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='first-name').answer.value.string").0
+                    - >-
+                      $
+                      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='middle-name').answer.value.string").0
+                  family: >-
+                    $
+                    fhirpath("QuestionnaireResponse.repeat(item).where(linkId='last-name').answer.value.string").0
+              resourceType: Practitioner
+        - $as: specialtyItem
+          $map: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='specialty').answer")
+          $body:
+            request:
+              url: $ "/PractitionerRole/" + practitionerRoleId
+              method: PATCH
+            resource:
+              specialty:
+                - coding:
+                    - $ specialtyItem.value.Coding
+      $call: concat

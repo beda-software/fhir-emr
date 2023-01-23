@@ -1,4 +1,4 @@
-import { Form, DatePicker } from 'antd';
+import { Form } from 'antd';
 import { PickerProps } from 'antd/lib/date-picker/generatePicker';
 import moment, { Moment } from 'moment';
 import { useCallback, useMemo } from 'react';
@@ -10,6 +10,7 @@ import {
     formatFHIRDate,
     formatFHIRDateTime,
 } from 'aidbox-react/lib/utils/date';
+import { DatePicker } from 'src/components/DatePicker';
 
 import { useFieldController } from '../hooks';
 
@@ -47,7 +48,7 @@ function DateTimePickerWrapper({ value, onChange, type, disabled }: DateTimePick
             }
             onChange && onChange(value, dateString);
         },
-        [onChange],
+        [onChange, formatFunction],
     );
 
     return (
