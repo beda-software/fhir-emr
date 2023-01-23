@@ -13,6 +13,7 @@ import { Patient, Practitioner, PractitionerRole } from 'shared/src/contrib/aidb
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
+import { useFieldController } from '../BaseQuestionnaireResponseForm/hooks';
 import { QuestionnaireResponseForm } from '../QuestionnaireResponseForm';
 
 interface Props {
@@ -91,14 +92,19 @@ function PractitionerListWidget({ parentPath, questionItem }: QuestionItemProps)
         });
     });
 
-    const { text, hidden, linkId } = questionItem;
+    const { text, linkId } = questionItem;
     const fieldName = [...parentPath, linkId, 0];
+    const { value, onChange, hidden } = useFieldController(fieldName, questionItem);
 
     return (
         <RenderRemoteData remoteData={practitonerRoleSelectOptionsRD}>
             {(practitonerRoleSelectOptions) => (
-                <Form.Item label={text} name={fieldName} hidden={hidden}>
-                    <Select options={practitonerRoleSelectOptions} />
+                <Form.Item label={text} hidden={hidden}>
+                    <Select
+                        options={practitonerRoleSelectOptions}
+                        value={value}
+                        onChange={onChange}
+                    />
                 </Form.Item>
             )}
         </RenderRemoteData>

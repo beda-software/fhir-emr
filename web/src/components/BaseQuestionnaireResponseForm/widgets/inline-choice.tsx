@@ -1,46 +1,56 @@
 import { Checkbox, Form, Radio, Space } from 'antd';
-import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
+import _ from 'lodash';
+import { QuestionItemProps } from 'sdc-qrf';
+
+import { QuestionnaireItemAnswerOption } from 'shared/src/contrib/aidbox';
 
 import { getDisplay } from 'src/utils/questionnaire';
 
-export function InlineChoice({ parentPath, questionItem }: QuestionItemProps) {
-    const qrfContext = useQuestionnaireResponseFormContext();
-    const { linkId, text, answerOption, readOnly, hidden, repeats } = questionItem;
+import { useFieldController } from '../hooks';
 
-    if (hidden) {
-        return null;
-    }
+export function InlineChoice({ parentPath, questionItem }: QuestionItemProps) {
+    const { linkId, text, answerOption, hidden, repeats } = questionItem;
+    const fieldName = repeats ? [...parentPath, linkId] : [...parentPath, linkId, 0];
+    const { value, onChange, disabled } = useFieldController(fieldName, questionItem);
 
     if (repeats) {
-        const fieldName = [...parentPath, linkId];
+        const arrayValue = (value || []) as QuestionnaireItemAnswerOption[];
 
         return (
-            <Form.Item label={text} name={fieldName}>
-                <Checkbox.Group disabled={readOnly || qrfContext.readOnly}>
-                    <Space direction="vertical">
-                        {answerOption?.map((answerOption) => (
-                            <Checkbox value={answerOption} key={JSON.stringify(answerOption)}>
-                                {getDisplay(answerOption.value!)}
-                            </Checkbox>
-                        ))}
-                    </Space>
-                </Checkbox.Group>
+            <Form.Item label={text} hidden={hidden}>
+                <Space direction="vertical">
+                    {answerOption?.map((answerOption) => (
+                        <Checkbox
+                            checked={
+                                arrayValue.findIndex((v) =>
+                                    _.isEqual(v?.value, answerOption.value),
+                                ) !== -1
+                            }
+                            key={JSON.stringify(answerOption)}
+                            disabled={disabled}
+                            onChange={() => onChange(answerOption)}
+                        >
+                            {getDisplay(answerOption.value!)}
+                        </Checkbox>
+                    ))}
+                </Space>
             </Form.Item>
         );
     } else {
-        const fieldName = [...parentPath, linkId, 0];
-
         return (
-            <Form.Item label={text} name={fieldName}>
-                <Radio.Group disabled={readOnly || qrfContext.readOnly}>
-                    <Space direction="vertical">
-                        {answerOption?.map((answerOption) => (
-                            <Radio value={answerOption} key={JSON.stringify(answerOption)}>
-                                {getDisplay(answerOption.value!)}
-                            </Radio>
-                        ))}
-                    </Space>
-                </Radio.Group>
+            <Form.Item label={text} hidden={hidden}>
+                <Space direction="vertical">
+                    {answerOption?.map((answerOption) => (
+                        <Radio
+                            key={JSON.stringify(answerOption)}
+                            checked={_.isEqual(value?.value, answerOption.value)}
+                            disabled={disabled}
+                            onChange={() => onChange(answerOption)}
+                        >
+                            {getDisplay(answerOption.value!)}
+                        </Radio>
+                    ))}
+                </Space>
             </Form.Item>
         );
     }

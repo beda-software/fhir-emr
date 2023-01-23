@@ -1,9 +1,14 @@
 import { Form, Select as ANTDSelect } from 'antd';
+import _ from 'lodash';
 import { isArray } from 'lodash';
 import { useCallback, useMemo } from 'react';
 import Select from 'react-select';
 import { StateManagerProps } from 'react-select/dist/declarations/src/stateManager';
-import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
+import { QuestionItemProps } from 'sdc-qrf';
+
+import { getDisplay } from 'src/utils/questionnaire';
+
+import { useFieldController } from '../hooks';
 
 const inputStyle = { backgroundColor: '#F7F9FC' };
 
@@ -100,31 +105,42 @@ function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
 }
 
 export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) {
-    const qrfContext = useQuestionnaireResponseFormContext();
-    const { linkId, text, answerOption, readOnly, hidden, repeats } = questionItem;
+    const { linkId, text, answerOption, repeats } = questionItem;
+    let fieldName = [...parentPath, linkId, 0, 'value', 'string'];
 
     if (answerOption?.[0]?.value?.Coding) {
-        const fieldName = repeats ? [...parentPath, linkId] : [...parentPath, linkId, 0, 'value'];
+        if (repeats) {
+            fieldName = [...parentPath, linkId];
+        } else {
+            fieldName = [...parentPath, linkId, 0, 'value'];
+        }
+    }
 
+    const { value, onChange, disabled, hidden } = useFieldController(fieldName, questionItem);
+
+    if (answerOption?.[0]?.value?.Coding) {
         return (
-            <Form.Item label={text} name={fieldName} hidden={hidden}>
-                <ChoiceQuestionSelect options={answerOption} />
+            <Form.Item label={text} hidden={hidden}>
+                <ChoiceQuestionSelect options={answerOption} value={value} onChange={onChange} />
                 {/*<QuestionSelectWrapper isMulti={repeats} options={children} />*/}
             </Form.Item>
         );
     }
 
-    const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
-
     return (
-        <Form.Item label={text} name={fieldName}>
-            <ANTDSelect style={inputStyle} disabled={readOnly || qrfContext.readOnly}>
+        <Form.Item label={text} hidden={hidden}>
+            <ANTDSelect
+                style={inputStyle}
+                disabled={disabled}
+                value={value}
+                onChange={(v) => onChange(v)}
+            >
                 {answerOption?.map((answerOption) => (
                     <ANTDSelect.Option
-                        label={answerOption.value!.string!}
-                        value={answerOption.value!.string!}
+                        key={JSON.stringify(answerOption)}
+                        value={answerOption.value?.string}
                     >
-                        {answerOption.value!.string!}
+                        {getDisplay(answerOption.value!)}
                     </ANTDSelect.Option>
                 ))}
             </ANTDSelect>

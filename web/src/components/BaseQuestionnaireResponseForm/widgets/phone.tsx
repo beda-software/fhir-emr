@@ -1,24 +1,23 @@
-import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
-import { Form } from 'antd';
-
 import 'react-phone-input-2/lib/style.css';
 
-import { useState } from 'react';
+import { Form } from 'antd';
 import PhoneInput from 'react-phone-input-2';
+import { QuestionItemProps } from 'sdc-qrf';
+
+import { useFieldController } from '../hooks';
 
 export function QuestionPhone({ parentPath, questionItem }: QuestionItemProps) {
-    const qrfContext = useQuestionnaireResponseFormContext();
-    const { linkId, text, readOnly, hidden } = questionItem;
+    const { linkId, text } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
-    const [phoneNumber, setPhoneNumber] = useState('');
+    const { value, onChange, disabled, hidden } = useFieldController(fieldName, questionItem);
 
     return (
-        <Form.Item label={text} name={fieldName} hidden={hidden}>
+        <Form.Item label={text} hidden={hidden}>
             <PhoneInput
                 country={'us'}
-                value={phoneNumber}
-                onChange={(phone) => setPhoneNumber(phone)}
-                disabled={readOnly || qrfContext.readOnly}
+                value={value}
+                onChange={(phone) => onChange(phone)}
+                disabled={disabled}
             />
         </Form.Item>
     );

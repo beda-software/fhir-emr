@@ -1,5 +1,7 @@
 import { Form, InputNumber } from 'antd';
-import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
+import { QuestionItemProps } from 'sdc-qrf';
+
+import { useFieldController } from '../hooks';
 
 const inputStyle = { backgroundColor: '#F7F9FC' };
 
@@ -8,34 +10,38 @@ interface NumericItem {
 }
 
 export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps) {
-    const qrfContext = useQuestionnaireResponseFormContext();
-    const { linkId, text, readOnly, hidden } = questionItem;
+    const { linkId, text } = questionItem;
     const { unit } = questionItem as NumericItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'integer'];
+    const { value, onChange, disabled, hidden } = useFieldController(fieldName, questionItem);
 
     return (
-        <Form.Item label={text} name={fieldName} hidden={hidden}>
+        <Form.Item label={text} hidden={hidden}>
             <InputNumber
                 addonAfter={unit}
                 style={inputStyle}
-                readOnly={readOnly || qrfContext.readOnly}
+                disabled={disabled}
+                onChange={onChange}
+                value={value}
             />
         </Form.Item>
     );
 }
 
 export function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps) {
-    const qrfContext = useQuestionnaireResponseFormContext();
-    const { linkId, text, readOnly, hidden } = questionItem;
+    const { linkId, text } = questionItem;
     const { unit } = questionItem as NumericItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'decimal'];
+    const { value, onChange, disabled, hidden } = useFieldController(fieldName, questionItem);
 
     return (
-        <Form.Item label={text} name={fieldName} hidden={hidden}>
+        <Form.Item label={text} hidden={hidden}>
             <InputNumber
                 addonAfter={unit}
                 style={inputStyle}
-                readOnly={readOnly || qrfContext.readOnly}
+                disabled={disabled}
+                onChange={onChange}
+                value={value}
             />
         </Form.Item>
     );

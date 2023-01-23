@@ -1,15 +1,17 @@
 import { Form, Radio } from 'antd';
 import { useMemo } from 'react';
-import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
+import { QuestionItemProps } from 'sdc-qrf';
+
 import { Coding } from 'shared/src/contrib/aidbox';
+
+import { useFieldController } from '../hooks';
 
 interface SolidRadioButton {
     adjustLastToRight?: boolean;
 }
 
 export function QuestionSolidRadio({ parentPath, questionItem }: QuestionItemProps) {
-    const qrfContext = useQuestionnaireResponseFormContext();
-    const { linkId, text, answerOption, readOnly } = questionItem;
+    const { linkId, text, answerOption } = questionItem;
     const { adjustLastToRight } = questionItem as SolidRadioButton;
     const [options, rightOption] = useMemo(() => {
         const options = (answerOption ?? []).map((o) => o.value!.Coding!);
@@ -20,12 +22,16 @@ export function QuestionSolidRadio({ parentPath, questionItem }: QuestionItemPro
     }, [answerOption, adjustLastToRight]);
 
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
+    const { value, onChange, disabled, hidden } = useFieldController(fieldName, questionItem);
+
     return (
-        <Form.Item label={text} name={fieldName}>
+        <Form.Item label={text} hidden={hidden}>
             <RadioItems
                 options={options}
                 rightOption={rightOption}
-                disabled={readOnly || qrfContext.readOnly}
+                disabled={disabled}
+                value={value}
+                onChange={onChange}
             />
         </Form.Item>
     );

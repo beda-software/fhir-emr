@@ -1,26 +1,29 @@
 import { Form, Input } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
-import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
+import { QuestionItemProps } from 'sdc-qrf';
+
+import { useFieldController } from '../hooks';
 
 export function QuestionString({ parentPath, questionItem }: QuestionItemProps) {
-    const qrfContext = useQuestionnaireResponseFormContext();
-    const { linkId, text, readOnly, hidden } = questionItem;
+    const { linkId, text } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
+    const { value, onChange, disabled, hidden } = useFieldController(fieldName, questionItem);
 
     return (
-        <Form.Item label={text} name={fieldName} hidden={hidden}>
-            <Input readOnly={readOnly || qrfContext.readOnly} />
+        <Form.Item label={text} hidden={hidden}>
+            <Input value={value} disabled={disabled} onChange={onChange} />
         </Form.Item>
     );
 }
 
 export function QuestionText({ parentPath, questionItem }: QuestionItemProps) {
-    const qrfContext = useQuestionnaireResponseFormContext();
-    const { linkId, text, readOnly, hidden } = questionItem;
+    const { linkId, text } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
+    const { value, onChange, disabled, hidden } = useFieldController(fieldName, questionItem);
+
     return (
-        <Form.Item label={text} name={fieldName} hidden={hidden}>
-            <TextArea rows={1} readOnly={readOnly || qrfContext.readOnly} />
+        <Form.Item label={text} hidden={hidden}>
+            <TextArea value={value} rows={1} disabled={disabled} onChange={onChange} />
         </Form.Item>
     );
 }

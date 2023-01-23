@@ -1,25 +1,46 @@
-import { GroupItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
-import { Form, InputNumber } from 'antd';
+import { Form, InputNumber, InputNumberProps } from 'antd';
+import { GroupItemProps } from 'sdc-qrf';
+
 import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
 
-const inputStyle = { backgroundColor: '#F7F9FC' };
+import { useFieldController } from '../hooks';
 import s from './group.module.scss';
 
-function getFiedName(parentPath: string[], item: QuestionnaireItem) {
+const inputStyle = { backgroundColor: '#F7F9FC' };
+
+function getFieldName(parentPath: string[], item: QuestionnaireItem) {
     return [...parentPath, item.linkId, 0, 'value', item.type];
 }
 
-interface PairInputItem {
-    unit?: string;
+interface PairInputItemProps extends InputNumberProps {
+    parentPath: string[];
+    questionItem: QuestionnaireItem;
+}
+
+function PairInputItem(props: PairInputItemProps) {
+    const { parentPath, questionItem, ...other } = props;
+    const fieldName = getFieldName(parentPath, questionItem);
+    const { value, onChange, disabled, hidden } = useFieldController(fieldName, questionItem);
+
+    return (
+        <Form.Item hidden={hidden}>
+            <InputNumber
+                {...other}
+                style={inputStyle}
+                disabled={disabled}
+                value={value}
+                onChange={onChange}
+            />
+        </Form.Item>
+    );
 }
 
 export function PairInput({ parentPath, questionItem }: GroupItemProps) {
-    const qrfContext = useQuestionnaireResponseFormContext();
     if (typeof questionItem.item === 'undefined' || questionItem.item.length !== 2) {
         return <p>Pair input require exactly two children</p>;
     }
     const [firstItem, secondItem] = questionItem.item;
-    const { unit } = questionItem as PairInputItem;
+    const { unit } = questionItem as { unit?: string };
 
     if (!firstItem || !secondItem) {
         return null;
@@ -27,20 +48,16 @@ export function PairInput({ parentPath, questionItem }: GroupItemProps) {
 
     return (
         <div className={s.row}>
-            <Form.Item name={getFiedName(parentPath, firstItem)} hidden={firstItem.hidden}>
-                <InputNumber
-                    addonBefore={questionItem.text}
-                    style={inputStyle}
-                    readOnly={firstItem.readOnly || qrfContext.readOnly}
-                />
-            </Form.Item>
-            <Form.Item name={getFiedName(parentPath, secondItem)} hidden={secondItem.hidden}>
-                <InputNumber
-                    addonAfter={unit}
-                    style={inputStyle}
-                    readOnly={secondItem.readOnly || qrfContext.readOnly}
-                />
-            </Form.Item>
+            <PairInputItem
+                parentPath={parentPath}
+                questionItem={firstItem}
+                addonBefore={questionItem.text}
+            />
+            <PairInputItem
+                parentPath={parentPath}
+                questionItem={secondItem}
+                addonAfter={unit}
+            />
         </div>
     );
 }

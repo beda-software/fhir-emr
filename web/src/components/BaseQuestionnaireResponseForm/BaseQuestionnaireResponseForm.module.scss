@@ -2,6 +2,24 @@
     :global .ant-form-item-label {
         font-weight: bold;
     }
+
+    :global .ant-form-item-row {
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    :global .ant-form-item-label {
+        text-align: start;
+        margin-bottom: 12px;
+
+        label {
+            height: auto;
+
+            &:after {
+                display: none;
+            }
+        }
+    }
 }
 
 .footer {

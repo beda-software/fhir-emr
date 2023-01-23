@@ -1,9 +1,10 @@
 import { Trans } from '@lingui/macro';
-import { Button, Form } from 'antd';
-import { useState } from 'react';
+import { Button } from 'antd';
+import { FormProvider, useForm } from 'react-hook-form';
 import {
     calcInitialContext,
     CustomWidgetsMapping,
+    FormItems,
     GroupItemComponent,
     ItemControlGroupItemComponentMapping,
     ItemControlQuestionItemComponentMapping,
@@ -46,68 +47,72 @@ export interface BaseQuestionnaireResponseFormProps {
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
-    const { formData, onSubmit, readOnly } = props;
-    const [form] = Form.useForm();
-    const [formValues, setFormValues] = useState(formData.formValues);
+    const { onSubmit, formData, readOnly } = props;
+    const methods = useForm<FormItems>({
+        defaultValues: formData.formValues,
+    });
+    const { setValue, handleSubmit, watch } = methods;
+
+    const formValues = watch();
 
     return (
-        <Form
-            layout="vertical"
-            form={form}
-            initialValues={formData.formValues}
-            onFinish={() => onSubmit({ ...formData, formValues })}
-            className={s.form}
-            onValuesChange={(changedValues, values) => setFormValues(values)}
-        >
-            <QuestionnaireResponseFormProvider
-                formValues={formValues}
-                setFormValues={setFormValues}
-                groupItemComponent={Group}
-                itemControlGroupItemComponents={{
-                    col: Col,
-                    row: Row,
-                    'pair-input': PairInput,
-                    ...props.itemControlGroupItemComponents,
-                }}
-                questionItemComponents={{
-                    text: QuestionText,
-                    string: QuestionString,
-                    decimal: QuestionDecimal,
-                    integer: QuestionInteger,
-                    date: QuestionDateTime,
-                    dateTime: QuestionDateTime,
-                    time: QuestionDateTime,
-                    choice: QuestionChoice,
-                    boolean: QuestionBoolean,
-                    display: Display,
-                    ...props.questionItemComponents,
-                }}
-                itemControlQuestionItemComponents={{
-                    phoneWidget: QuestionPhone,
-                    slider: QuestionSlider,
-                    'solid-radio-button': QuestionSolidRadio,
-                    'inline-choice': InlineChoice,
-                    ...props.itemControlQuestionItemComponents,
-                }}
-                readOnly={readOnly}
-                customWidgets={props.customWidgets}
+        <FormProvider {...methods}>
+            <form
+                onSubmit={handleSubmit(() => onSubmit({ ...formData, formValues }))}
+                className={s.form}
             >
-                <>
-                    <QuestionItems
-                        questionItems={formData.context.questionnaire.item!}
-                        parentPath={[]}
-                        context={calcInitialContext(formData.context, formValues)}
-                    />
+                <QuestionnaireResponseFormProvider
+                    formValues={formValues}
+                    setFormValues={(values, fieldPath, value) =>
+                        setValue(fieldPath.join('.'), value)
+                    }
+                    groupItemComponent={Group}
+                    itemControlGroupItemComponents={{
+                        col: Col,
+                        row: Row,
+                        'pair-input': PairInput,
+                        ...props.itemControlGroupItemComponents,
+                    }}
+                    questionItemComponents={{
+                        text: QuestionText,
+                        string: QuestionString,
+                        decimal: QuestionDecimal,
+                        integer: QuestionInteger,
+                        date: QuestionDateTime,
+                        dateTime: QuestionDateTime,
+                        time: QuestionDateTime,
+                        choice: QuestionChoice,
+                        boolean: QuestionBoolean,
+                        display: Display,
+                        ...props.questionItemComponents,
+                    }}
+                    itemControlQuestionItemComponents={{
+                        phoneWidget: QuestionPhone,
+                        slider: QuestionSlider,
+                        'solid-radio-button': QuestionSolidRadio,
+                        'inline-choice': InlineChoice,
+                        ...props.itemControlQuestionItemComponents,
+                    }}
+                    readOnly={readOnly}
+                    customWidgets={props.customWidgets}
+                >
+                    <>
+                        <QuestionItems
+                            questionItems={formData.context.questionnaire.item!}
+                            parentPath={[]}
+                            context={calcInitialContext(formData.context, formValues)}
+                        />
 
-                    {!readOnly && (
-                        <div className={s.footer}>
-                            <Button type="primary" htmlType="submit">
-                                <Trans>Save</Trans>
-                            </Button>
-                        </div>
-                    )}
-                </>
-            </QuestionnaireResponseFormProvider>
-        </Form>
+                        {!readOnly && (
+                            <div className={s.footer}>
+                                <Button type="primary" htmlType="submit">
+                                    <Trans>Save</Trans>
+                                </Button>
+                            </div>
+                        )}
+                    </>
+                </QuestionnaireResponseFormProvider>
+            </form>
+        </FormProvider>
     );
 }
