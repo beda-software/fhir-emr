@@ -12,10 +12,11 @@ export interface PatientDocumentProps {
     questionnaireResponse?: WithId<QuestionnaireResponse>;
     questionnaireId?: string;
     encounterId?: string;
+    onSuccess?: () => void;
 }
 
 export function usePatientDocument(props: PatientDocumentProps & { questionnaireId: string }) {
-    const { patient, questionnaireResponse, questionnaireId, encounterId } = props;
+    const { patient, questionnaireResponse, questionnaireId, encounterId, onSuccess } = props;
     const navigate = useNavigate();
 
     const data = useQuestionnaireResponseForm({
@@ -26,7 +27,7 @@ export function usePatientDocument(props: PatientDocumentProps & { questionnaire
             encounter: encounterId ? { resourceType: 'Encounter', id: encounterId } : undefined,
             questionnaire: questionnaireId,
         },
-        onSuccess: () => navigate(-1),
+        onSuccess: onSuccess ? onSuccess : () => navigate(-1),
     });
 
     return { ...data, questionnaireId };

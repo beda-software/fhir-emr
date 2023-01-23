@@ -1,37 +1,33 @@
 import classNames from 'classnames';
 import _ from 'lodash';
-import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
+import { QuestionItemProps } from 'sdc-qrf';
 
+import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { getArrayDisplay, getDisplay } from 'src/utils/questionnaire';
 
 import s from './ReadonlyWidgets.module.scss';
 
 export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) {
-    const qrfContext = useQuestionnaireResponseFormContext();
     const { linkId, text, repeats, hidden } = questionItem;
+    const fieldName = repeats ? [...parentPath, linkId] : [...parentPath, linkId, 0];
+    const { value } = useFieldController(fieldName, questionItem);
 
     if (hidden) {
         return null;
     }
 
     if (repeats) {
-        const fieldName = [...parentPath, linkId];
-        const valueDisplay = getArrayDisplay(_.get(qrfContext.formValues, fieldName));
-
         return (
             <p className={classNames(s.question, s.row)}>
                 <span className={s.questionText}>{text}</span>
-                <span className={s.answer}>{valueDisplay || '-'}</span>
+                <span className={s.answer}>{getArrayDisplay(value) || '-'}</span>
             </p>
         );
     } else {
-        const fieldName = [...parentPath, linkId, 0];
-        const valueDisplay = getDisplay(_.get(qrfContext.formValues, fieldName)?.value);
-
         return (
             <p className={classNames(s.question, s.row)}>
                 <span className={s.questionText}>{text}</span>
-                <span className={s.answer}>{valueDisplay || '-'}</span>
+                <span className={s.answer}>{getDisplay(value?.value) || '-'}</span>
             </p>
         );
     }

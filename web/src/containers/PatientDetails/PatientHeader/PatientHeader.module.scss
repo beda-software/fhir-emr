@@ -1,8 +1,18 @@
 .menu {
+    position: relative;
     background: 0;
     display: flex;
     margin: 0 -20px;
     border-bottom: 0;
     padding-bottom: 1px;
-    border-top: 1px solid rgba(0, 0, 0, 0.03);
+
+    &:before {
+        content: '';
+        display: block;
+        position: absolute;
+        left: 20px;
+        right: 20px;
+        height: 1px;
+        background-color: rgba(0, 0, 0, 0.03);
+    }
 }

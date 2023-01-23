@@ -10,6 +10,19 @@
     padding: 24px 32px;
 }
 
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 16px;
+}
+
 .title {
-    margin-bottom: 16px;
+    margin: 0!important;
+}
+
+.editButton {
+    font-weight: 600;
+    padding: 0;
 }

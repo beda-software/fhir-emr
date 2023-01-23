@@ -1,8 +1,12 @@
+import { Trans } from '@lingui/macro';
+import { Button } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import { ReactElement, useContext, useEffect } from 'react';
-import { Outlet, Route, Routes, useParams } from 'react-router-dom';
+import { FormProvider, useForm } from 'react-hook-form';
+import { Outlet, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
     calcInitialContext,
+    FormItems,
     QuestionItems,
     QuestionnaireResponseFormData,
     QuestionnaireResponseFormProvider,
@@ -32,7 +36,7 @@ function usePatientDocumentDetails() {
     const params = useParams<{ qrId: string }>();
     const qrId = params.qrId!;
 
-    const [response] = useService(
+    const [response, manager] = useService(
         async () =>
             await getFHIRResource<QuestionnaireResponse>({
                 resourceType: 'QuestionnaireResponse',
@@ -40,13 +44,19 @@ function usePatientDocumentDetails() {
             }),
     );
 
-    return { response };
+    return { response, manager };
 }
 
 function PatientDocumentDetailsReadonly(props: { formData: QuestionnaireResponseFormData }) {
+    const location = useLocation();
+    const navigate = useNavigate();
     const { formData } = props;
-    // const location = useLocation();
-    // const navigate = useNavigate();
+    const methods = useForm<FormItems>({
+        defaultValues: formData.formValues,
+    });
+    const { watch } = methods;
+
+    const formValues = watch();
 
     return (
         <div className={s.container}>
@@ -55,38 +65,45 @@ function PatientDocumentDetailsReadonly(props: { formData: QuestionnaireResponse
                     <Title level={4} className={s.title}>
                         {formData.context.questionnaire.name}
                     </Title>
-                    {/* <Button
+                    <Button
                         type="link"
                         onClick={() => navigate(`${location.pathname}/edit`)}
                         className={s.editButton}
                     >
                         <Trans>Edit</Trans>
-                    </Button> */}
+                    </Button>
                 </div>
-                <QuestionnaireResponseFormProvider
-                    formValues={formData.formValues}
-                    setFormValues={() => {}}
-                    groupItemComponent={Group}
-                    questionItemComponents={{
-                        text: QuestionText,
-                        string: QuestionText,
-                        integer: QuestionInteger,
-                        choice: QuestionChoice,
-                    }}
-                    itemControlQuestionItemComponents={{
-                        'inline-choice': QuestionChoice,
-                        'anxiety-score': AnxietyScore,
-                        'depression-score': DepressionScore,
-                    }}
-                >
-                    <>
-                        <QuestionItems
-                            questionItems={formData.context.questionnaire.item!}
-                            parentPath={[]}
-                            context={calcInitialContext(formData.context, formData.formValues)}
-                        />
-                    </>
-                </QuestionnaireResponseFormProvider>
+                <FormProvider {...methods}>
+                    <form>
+                        <QuestionnaireResponseFormProvider
+                            formValues={formValues}
+                            setFormValues={() => {}}
+                            groupItemComponent={Group}
+                            questionItemComponents={{
+                                text: QuestionText,
+                                string: QuestionText,
+                                integer: QuestionInteger,
+                                choice: QuestionChoice,
+                            }}
+                            itemControlQuestionItemComponents={{
+                                'inline-choice': QuestionChoice,
+                                'anxiety-score': AnxietyScore,
+                                'depression-score': DepressionScore,
+                            }}
+                        >
+                            <>
+                                <QuestionItems
+                                    questionItems={formData.context.questionnaire.item!}
+                                    parentPath={[]}
+                                    context={calcInitialContext(
+                                        formData.context,
+                                        formValues,
+                                    )}
+                                />
+                            </>
+                        </QuestionnaireResponseFormProvider>
+                    </form>
+                </FormProvider>
             </div>
         </div>
     );
@@ -115,6 +132,7 @@ export function PatientDocumentDetails(props: Props) {
     const { response } = usePatientDocumentDetails();
     const params = useParams<{ encounterId?: string }>();
     const { setTitle } = useContext(PatientHeaderContext);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (params.encounterId) {
@@ -147,6 +165,7 @@ export function PatientDocumentDetails(props: Props) {
                                             patient={patient}
                                             questionnaireResponse={qr}
                                             questionnaireId={qr.questionnaire}
+                                            onSuccess={() => navigate(-2)}
                                         />
                                     }
                                 />
