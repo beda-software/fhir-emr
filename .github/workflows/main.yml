@@ -1,4 +1,4 @@
-name: main
+name: Release & Deploy
 on:
     workflow_run:
         workflows: [test]
