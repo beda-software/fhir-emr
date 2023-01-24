@@ -12,10 +12,11 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 import { useEncounterList } from 'src/containers/EncounterList/hooks';
 import { PatientHeaderContext } from 'src/containers/PatientDetails/PatientHeader/context';
 
-import { EncounterData, EncountersTable } from '../EncountersTable';
+import { EncountersTable } from '../EncountersTable';
 import { EncounterStatusBadge } from '../EncounterStatusBadge';
 import { ModalNewEncounter } from '../ModalNewEncounter';
 import { Spinner } from '../Spinner';
+import { EncounterData } from '../EncountersTable/types';
 
 interface Props {
     patient: Patient;

@@ -3,21 +3,9 @@ import { Empty } from 'antd';
 import { ColumnsType, TableProps } from 'antd/lib/table';
 import { useNavigate } from 'react-router-dom';
 
-import { WithId } from 'aidbox-react/lib/services/fhir';
-
-import { Patient, Practitioner } from 'shared/src/contrib/aidbox';
-
 import { Table } from '../Table';
 import s from './EncountersTable.module.scss';
-
-export interface EncounterData {
-    id: string;
-    patient?: WithId<Patient>;
-    practitioner?: WithId<Practitioner>;
-    status: string;
-    date: string | undefined;
-    humanReadableDate: string | undefined;
-}
+import { EncounterData } from './types';
 
 interface EncountersTableProps {
     columns: ColumnsType<EncounterData>;

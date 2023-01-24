@@ -1,7 +1,7 @@
 import { Encounter, Patient, Questionnaire } from 'shared/src/contrib/aidbox';
 
-import { EncounterData } from 'src/containers/EncounterList/types';
 import { PractitionerListRowData } from 'src/containers/PractitionerList/hooks';
+import { EncounterData } from 'src/components/EncountersTable/types';
 
 export type SearchBarItem =
     | Patient

@@ -5,10 +5,9 @@ import { SearchParams } from 'aidbox-react/lib/services/search';
 import { mapSuccess } from 'aidbox-react/lib/services/service';
 
 import { Encounter, Patient, Practitioner, PractitionerRole } from 'shared/src/contrib/aidbox';
+import { EncounterData } from 'src/components/EncountersTable/types';
 
 import { formatHumanDateTime } from 'src/utils/date';
-
-import { EncounterData } from './types';
 
 interface EncountersListData {
     encounterDataListRD: RemoteData<EncounterData[]>;
@@ -36,7 +35,9 @@ export function useEncounterList(searchParams: SearchParams): EncountersListData
             const practitionerRoles = sourceMap.PractitionerRole;
 
             return encounters.map((encounter) => {
-                const patient: WithId<Patient> | undefined = patients.find((p) => p.id === encounter.subject?.id);
+                const patient: WithId<Patient> | undefined = patients.find(
+                    (p) => p.id === encounter.subject?.id,
+                );
                 const practitionerRole = practitionerRoles.find(
                     (pR) => pR.id === encounter.participant?.[0]!.individual?.id,
                 );
