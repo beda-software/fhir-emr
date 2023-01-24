@@ -46,6 +46,8 @@ export const ModalNewEncounter = ({ patient, reloadEncounter }: Props) => {
                 open={isModalVisible}
                 onCancel={() => setIsModalVisible(false)}
                 footer={null}
+                destroyOnClose
+                maskClosable={false}
             >
                 <QuestionnaireResponseForm
                     questionnaireLoader={questionnaireIdLoader('encounter-create')}

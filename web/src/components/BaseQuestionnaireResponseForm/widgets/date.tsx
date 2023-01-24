@@ -4,12 +4,7 @@ import moment, { Moment } from 'moment';
 import { useCallback, useMemo } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 
-import {
-    FHIRDateFormat,
-    FHIRDateTimeFormat,
-    formatFHIRDate,
-    formatFHIRDateTime,
-} from 'aidbox-react/lib/utils/date';
+import { FHIRDateFormat, formatFHIRDate, formatFHIRDateTime } from 'aidbox-react/lib/utils/date';
 
 import { DatePicker } from 'src/components/DatePicker';
 
@@ -36,7 +31,7 @@ type DateTimePickerWrapperProps = PickerProps<moment.Moment> & { type: string };
 
 function DateTimePickerWrapper({ value, onChange, type, disabled }: DateTimePickerWrapperProps) {
     const newValue = useMemo(() => (value ? moment(value) : value), [value]);
-    const format = type === 'date' ? FHIRDateFormat : FHIRDateTimeFormat;
+    const format = type === 'date' ? FHIRDateFormat : 'YYYY-MM-DD HH:mm';
     const showTime = type === 'date' ? false : { format: 'HH:mm' };
     const formatFunction = type === 'date' ? formatFHIRDate : formatFHIRDateTime;
 
