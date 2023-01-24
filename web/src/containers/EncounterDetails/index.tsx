@@ -3,9 +3,9 @@ import { Trans } from '@lingui/macro';
 import { Button } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { useContext, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { Patient } from 'shared/src/contrib/aidbox';
-import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { DocumentsList } from 'src/containers/DocumentsList';
 
@@ -19,15 +19,19 @@ interface Props {
 
 export const EncounterDetails = ({ patient }: Props) => {
     const [modalOpened, setModalOpened] = useState(false);
-    const { setTitle } = useContext(PatientHeaderContext);
+    const { setBreadcrumbs } = useContext(PatientHeaderContext);
+    const location = useLocation();
 
     useEffect(() => {
-        setTitle('Consultation');
-    }, [setTitle]);
+        setBreadcrumbs({ [location?.pathname]: 'Consultation' });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <>
-            <Title level={3} className={s.title}>{renderHumanName(patient.name?.[0])}</Title>
+            <Title level={3} className={s.title}>
+                Consultation
+            </Title>
             <div style={{ display: 'flex', gap: 32 }}>
                 <Button icon={<PlusOutlined />} type="primary" onClick={() => setModalOpened(true)}>
                     <span>

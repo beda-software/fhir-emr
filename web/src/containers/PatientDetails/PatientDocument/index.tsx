@@ -1,8 +1,9 @@
 import Title from 'antd/lib/typography/Title';
 import { useContext, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
+import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 
@@ -11,6 +12,7 @@ import { PatientHeaderContext } from '../PatientHeader/context';
 import s from './PatientDocument.module.scss';
 import { PhysicalExam } from './PhysicalExam';
 import { PatientDocumentProps, usePatientDocument } from './usePatientDocument';
+
 
 export function PatientDocument(props: PatientDocumentProps) {
     const params = useParams<{ questionnaireId: string; encounterId?: string }>();
@@ -21,20 +23,24 @@ export function PatientDocument(props: PatientDocumentProps) {
         encounterId: params.encounterId,
     });
 
-    const { setTitle } = useContext(PatientHeaderContext);
-
-    useEffect(() => {
-        if (params.encounterId) {
-            setTitle('Consultation');
-        }
-    }, [setTitle, params.encounterId]);
-
     const questionnaireResponseFormComponent = {
         'physical-exam': PhysicalExam,
     };
 
     const Component =
         questionnaireResponseFormComponent[questionnaireId] ?? BaseQuestionnaireResponseForm;
+
+    const { setBreadcrumbs } = useContext(PatientHeaderContext);
+    const location = useLocation();
+
+    useEffect(() => {
+        if (isSuccess(response)) {
+            setBreadcrumbs({
+                [location?.pathname]: response.data.context.questionnaire?.name || '',
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [response]);
 
     return (
         <div className={s.container}>

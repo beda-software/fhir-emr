@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro';
 import { Empty } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useContext, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
@@ -9,6 +10,7 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { useEncounterList } from 'src/containers/EncounterList/hooks';
 import { EncounterData } from 'src/containers/EncounterList/types';
+import { PatientHeaderContext } from 'src/containers/PatientDetails/PatientHeader/context';
 
 import { ModalNewEncounter } from '../ModalNewEncounter';
 import { Table } from '../Table';
@@ -40,6 +42,14 @@ const columns = [
 export const PatientEncounter = ({ patient }: Props) => {
     const navigate = useNavigate();
     const { encounterDataListRD, reloadEncounter } = useEncounterList({ subject: patient.id });
+
+    const { setBreadcrumbs } = useContext(PatientHeaderContext);
+    const location = useLocation();
+
+    useEffect(() => {
+        setBreadcrumbs({ [location?.pathname]: 'Encounters' });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <>

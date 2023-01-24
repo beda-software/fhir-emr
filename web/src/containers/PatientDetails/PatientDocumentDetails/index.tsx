@@ -58,6 +58,15 @@ function PatientDocumentDetailsReadonly(props: { formData: QuestionnaireResponse
 
     const formValues = watch();
 
+    const { setBreadcrumbs } = useContext(PatientHeaderContext);
+
+    useEffect(() => {
+        setBreadcrumbs({
+            [location?.pathname]: formData.context.questionnaire?.name || '',
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     return (
         <div className={s.container}>
             <div className={s.content}>
@@ -95,10 +104,7 @@ function PatientDocumentDetailsReadonly(props: { formData: QuestionnaireResponse
                                 <QuestionItems
                                     questionItems={formData.context.questionnaire.item!}
                                     parentPath={[]}
-                                    context={calcInitialContext(
-                                        formData.context,
-                                        formValues,
-                                    )}
+                                    context={calcInitialContext(formData.context, formValues)}
                                 />
                             </>
                         </QuestionnaireResponseFormProvider>
@@ -130,15 +136,7 @@ function PatientDocumentDetailsFormData(props: {
 export function PatientDocumentDetails(props: Props) {
     const { patient } = props;
     const { response } = usePatientDocumentDetails();
-    const params = useParams<{ encounterId?: string }>();
-    const { setTitle } = useContext(PatientHeaderContext);
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if (params.encounterId) {
-            setTitle('Consultation');
-        }
-    }, [setTitle, params.encounterId]);
 
     return (
         <RenderRemoteData remoteData={response}>
