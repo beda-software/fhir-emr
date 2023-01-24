@@ -6,13 +6,13 @@ import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
+import { Spinner } from 'src/components/Spinner';
 
 import { AnxietyScore, DepressionScore } from '../PatientDocumentDetails/widgets/score';
 import { PatientHeaderContext } from '../PatientHeader/context';
 import s from './PatientDocument.module.scss';
 import { PhysicalExam } from './PhysicalExam';
 import { PatientDocumentProps, usePatientDocument } from './usePatientDocument';
-
 
 export function PatientDocument(props: PatientDocumentProps) {
     const params = useParams<{ questionnaireId: string; encounterId?: string }>();
@@ -46,7 +46,7 @@ export function PatientDocument(props: PatientDocumentProps) {
     return (
         <div className={s.container}>
             <div className={s.content}>
-                <RenderRemoteData remoteData={response}>
+                <RenderRemoteData remoteData={response} renderLoading={Spinner}>
                     {(formData) => (
                         <>
                             <Title level={3} style={{ marginBottom: 32 }}>

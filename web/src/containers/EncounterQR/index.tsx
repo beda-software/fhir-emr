@@ -12,6 +12,8 @@ import { Questionnaire } from 'shared/src/contrib/aidbox';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
+import { Spinner } from 'src/components/Spinner';
+
 import { BasePageContent, BasePageHeader } from '../../components/BaseLayout';
 import { QuestionnaireResponseForm } from '../../components/QuestionnaireResponseForm';
 import { formatHumanDate } from '../../utils/date';
@@ -40,7 +42,7 @@ export function EncounterQR() {
 
     return (
         <>
-            <RenderRemoteData remoteData={remoteData}>
+            <RenderRemoteData remoteData={remoteData} renderLoading={Spinner}>
                 {({ encounterInfo: { encounter, practitioner, patient }, questionnaire }) => {
                     if (!practitioner) {
                         console.error('Practitioner is undefined');

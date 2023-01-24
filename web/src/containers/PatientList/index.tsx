@@ -16,6 +16,7 @@ import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { ModalNewPatient } from 'src/components/ModalNewPatient';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
+import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 import { formatHumanDate } from 'src/utils/date';
 
@@ -115,7 +116,7 @@ export function PatientList() {
                     rowKey={(p) => p.id!}
                     dataSource={filteredData}
                     columns={columns}
-                    loading={isLoading(patientsResponse)}
+                    loading={isLoading(patientsResponse) && { indicator: SpinIndicator }}
                     onRow={(record) => {
                         return {
                             onClick: () =>

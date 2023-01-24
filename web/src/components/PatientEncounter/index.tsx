@@ -15,6 +15,7 @@ import { PatientHeaderContext } from 'src/containers/PatientDetails/PatientHeade
 import { EncounterData, EncountersTable } from '../EncountersTable';
 import { EncounterStatusBadge } from '../EncounterStatusBadge';
 import { ModalNewEncounter } from '../ModalNewEncounter';
+import { Spinner } from '../Spinner';
 
 interface Props {
     patient: Patient;
@@ -61,7 +62,7 @@ export const PatientEncounter = ({ patient }: Props) => {
             <div>
                 <ModalNewEncounter patient={patient} reloadEncounter={reloadEncounter} />
             </div>
-            <RenderRemoteData remoteData={encounterDataListRD}>
+            <RenderRemoteData remoteData={encounterDataListRD} renderLoading={Spinner}>
                 {(tableData) => <EncountersTable columns={columns} dataSource={tableData} />}
             </RenderRemoteData>
         </>

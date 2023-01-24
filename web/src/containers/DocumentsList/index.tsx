@@ -10,6 +10,7 @@ import { WithId } from 'aidbox-react/lib/services/fhir';
 import { Encounter, Patient, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
 import { Empty } from 'src/components/Empty';
+import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 import { formatHumanDate } from 'src/utils/date';
 
@@ -106,7 +107,7 @@ export const DocumentsList = ({ patient }: Props) => {
             rowKey={(p) => p.id!}
             dataSource={isSuccess(response) ? response.data.QuestionnaireResponse : []}
             columns={columns}
-            loading={isLoading(response)}
+            loading={isLoading(response) && { indicator: SpinIndicator }}
         />
     );
 };

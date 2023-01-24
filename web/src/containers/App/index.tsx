@@ -13,6 +13,7 @@ import { resetInstanceToken, setInstanceToken } from 'aidbox-react/lib/services/
 import { extractErrorCode } from 'aidbox-react/lib/utils/error';
 
 import { BaseLayout } from 'src/components/BaseLayout';
+import { Spinner } from 'src/components/Spinner';
 import { EncounterList } from 'src/containers/EncounterList';
 import { PatientDetails } from 'src/containers/PatientDetails';
 import { PatientList } from 'src/containers/PatientList';
@@ -121,7 +122,7 @@ export function App() {
 
     return (
         <div data-testid="app-container">
-            <RenderRemoteData remoteData={userResponse}>
+            <RenderRemoteData remoteData={userResponse} renderLoading={Spinner}>
                 {(data) => <HistoryRouter history={history}>{renderRoutes(data)}</HistoryRouter>}
             </RenderRemoteData>
         </div>

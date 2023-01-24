@@ -34,6 +34,7 @@ import { Questionnaire, QuestionnaireItem } from 'shared/src/contrib/aidbox';
 import { getByPath, setByPath, unsetByPath } from 'shared/src/utils/path';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
+import { Spinner } from 'src/components/Spinner';
 
 const { Title } = Typography;
 
@@ -101,7 +102,7 @@ export function QuestionnaireBuilder() {
     };
 
     return (
-        <RenderRemoteData remoteData={questionnaireRemoteData}>
+        <RenderRemoteData remoteData={questionnaireRemoteData} renderLoading={Spinner}>
             {(questionnaire) => <Content questionnaire={questionnaire} onSubmit={onSubmit} />}
         </RenderRemoteData>
     );
