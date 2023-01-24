@@ -28,7 +28,7 @@ body:
             display: $ service.display
           period:
             start: $ startDate
-          status: planned
+          status: in-progress
           subject:
             id: $ patientId
             display: $ patientName

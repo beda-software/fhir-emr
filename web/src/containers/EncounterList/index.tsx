@@ -1,19 +1,18 @@
 import { t, Trans } from '@lingui/macro';
-import { Empty } from 'antd';
 import Title from 'antd/es/typography/Title';
-import { useNavigate } from 'react-router-dom';
 
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
+import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
 
 import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
+import { EncounterData, EncountersTable } from 'src/components/EncountersTable';
+import { EncounterStatusBadge } from 'src/components/EncounterStatusBadge';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
-import { Table } from 'src/components/Table';
+import { Spinner } from 'src/components/Spinner';
 
 import { useEncounterList } from './hooks';
-import { EncounterData } from './types';
 
 const columns = [
     {
@@ -34,6 +33,9 @@ const columns = [
         title: <Trans>Status</Trans>,
         dataIndex: 'status',
         key: 'status',
+        render: (_text: any, resource: EncounterData) => (
+            <EncounterStatusBadge status={resource.status} />
+        ),
     },
     {
         title: <Trans>Appointment date</Trans>,
@@ -43,8 +45,6 @@ const columns = [
 ];
 
 export function EncounterList() {
-    const navigate = useNavigate();
-
     const { encounterDataListRD } = useEncounterList({});
 
     const { columnsFilterValues, filteredData, onChangeColumnFilter, onResetFilters } =
@@ -87,27 +87,10 @@ export function EncounterList() {
                 />
             </BasePageHeader>
             <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
-                <Table<EncounterData>
-                    locale={{
-                        emptyText: (
-                            <>
-                                <Empty
-                                    description={<Trans>No data</Trans>}
-                                    image={Empty.PRESENTED_IMAGE_SIMPLE}
-                                />
-                            </>
-                        ),
-                    }}
-                    dataSource={filteredData}
-                    columns={columns}
-                    onRow={(record) => {
-                        return {
-                            onClick: () => {
-                                navigate(`/patients/${record.patient?.id}/encounters/${record.id}`);
-                            },
-                        };
-                    }}
-                />
+                {isLoading(encounterDataListRD) ? <Spinner /> : null}
+                {isSuccess(encounterDataListRD) ? (
+                    <EncountersTable columns={columns} dataSource={filteredData} />
+                ) : null}
             </BasePageContent>
         </>
     );

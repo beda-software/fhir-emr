@@ -15,6 +15,7 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { useFieldController } from '../BaseQuestionnaireResponseForm/hooks';
 import { QuestionnaireResponseForm } from '../QuestionnaireResponseForm';
+import { Spinner } from '../Spinner';
 
 interface Props {
     patient: Patient;
@@ -46,6 +47,8 @@ export const ModalNewEncounter = ({ patient, reloadEncounter }: Props) => {
                 open={isModalVisible}
                 onCancel={() => setIsModalVisible(false)}
                 footer={null}
+                destroyOnClose
+                maskClosable={false}
             >
                 <QuestionnaireResponseForm
                     questionnaireLoader={questionnaireIdLoader('encounter-create')}
@@ -97,7 +100,7 @@ function PractitionerListWidget({ parentPath, questionItem }: QuestionItemProps)
     const { value, onChange, hidden } = useFieldController(fieldName, questionItem);
 
     return (
-        <RenderRemoteData remoteData={practitonerRoleSelectOptionsRD}>
+        <RenderRemoteData remoteData={practitonerRoleSelectOptionsRD} renderLoading={Spinner}>
             {(practitonerRoleSelectOptions) => (
                 <Form.Item label={text} hidden={hidden}>
                     <Select

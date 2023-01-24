@@ -1,15 +1,18 @@
 import React from 'react';
 
+export interface BreadCrumb {
+    name: string;
+    path?: string;
+}
+
 interface PatientHeaderContextProps {
     title: string;
-    setTitle: (title: string) => void;
-    showMenu: boolean;
-    setShowMenu: (v: boolean) => void;
+    breadcrumbs: BreadCrumb[];
+    setBreadcrumbs: (v: { [x: string]: string }) => void;
 }
 
 export const PatientHeaderContext = React.createContext<PatientHeaderContextProps>({
     title: '',
-    setTitle: () => {},
-    showMenu: false,
-    setShowMenu: () => {},
+    breadcrumbs: [],
+    setBreadcrumbs: () => {},
 });

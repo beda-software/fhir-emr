@@ -1,29 +1,31 @@
-export const PatientGeneralInfo = ({ generalInfo }: any) => (
-    <div style={infoContainerStyle}>
-        <div
-            style={{
-                display: 'flex',
-                width: '100%',
-                justifyContent: 'space-around',
-            }}
-        >
-            {generalInfo.map((el: any, index: any) => {
-                return (
-                    <div>
-                        {generalInfo[index].map((el: any, index: any) => {
-                            return (
-                                <div key={index} style={{ marginBottom: 16 }}>
-                                    <h3>{el.title}</h3>
-                                    <div>{el.value}</div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                );
-            })}
+export function PatientGeneralInfo({ generalInfo }: any) {
+    return (
+        <div style={infoContainerStyle}>
+            <div
+                style={{
+                    display: 'flex',
+                    width: '100%',
+                    justifyContent: 'space-around',
+                }}
+            >
+                {generalInfo.map((el: any, index: any) => {
+                    return (
+                        <div key={`generalInfo-${index}`}>
+                            {generalInfo[index].map((el: any, index: any) => {
+                                return (
+                                    <div key={index} style={{ marginBottom: 16 }}>
+                                        <h3>{el.title}</h3>
+                                        <div>{el.value}</div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    );
+                })}
+            </div>
         </div>
-    </div>
-);
+    );
+}
 
 const infoContainerStyle = {
     width: 1080,

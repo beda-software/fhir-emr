@@ -10,6 +10,7 @@ import { Patient } from 'shared/src/contrib/aidbox';
 import { BasePageContent } from 'src/components/BaseLayout';
 import { PatientEncounter } from 'src/components/PatientEncounter';
 import { PatientGeneralInfo } from 'src/components/PatientGeneralInfo';
+import { Spinner } from 'src/components/Spinner';
 
 import { EncounterDetails } from '../EncounterDetails';
 import { PatientDocument } from './PatientDocument';
@@ -51,7 +52,7 @@ export const PatientDetails = () => {
     ];
 
     return (
-        <RenderRemoteData remoteData={patientResponse}>
+        <RenderRemoteData remoteData={patientResponse} renderLoading={Spinner}>
             {(patient) => {
                 const generalInfo = getGeneralInfo(patient);
 

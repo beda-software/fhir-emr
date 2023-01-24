@@ -4,12 +4,8 @@ import moment, { Moment } from 'moment';
 import { useCallback, useMemo } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 
-import {
-    FHIRDateFormat,
-    FHIRDateTimeFormat,
-    formatFHIRDate,
-    formatFHIRDateTime,
-} from 'aidbox-react/lib/utils/date';
+import { FHIRDateFormat, formatFHIRDate, formatFHIRDateTime } from 'aidbox-react/lib/utils/date';
+
 import { DatePicker } from 'src/components/DatePicker';
 
 import { useFieldController } from '../hooks';
@@ -35,8 +31,8 @@ type DateTimePickerWrapperProps = PickerProps<moment.Moment> & { type: string };
 
 function DateTimePickerWrapper({ value, onChange, type, disabled }: DateTimePickerWrapperProps) {
     const newValue = useMemo(() => (value ? moment(value) : value), [value]);
-    const format = type === 'date' ? FHIRDateFormat : FHIRDateTimeFormat;
-    const showTime = type === 'date' ? false : true;
+    const format = type === 'date' ? FHIRDateFormat : 'YYYY-MM-DD HH:mm';
+    const showTime = type === 'date' ? false : { format: 'HH:mm' };
     const formatFunction = type === 'date' ? formatFHIRDate : formatFHIRDateTime;
 
     const newOnChange = useCallback(
@@ -52,8 +48,6 @@ function DateTimePickerWrapper({ value, onChange, type, disabled }: DateTimePick
     );
 
     return (
-        // TODO: Fix this ts error issue
-        // @ts-ignore
         <DatePicker
             showTime={showTime}
             onChange={newOnChange}

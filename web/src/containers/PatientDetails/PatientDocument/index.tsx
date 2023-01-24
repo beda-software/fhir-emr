@@ -1,10 +1,12 @@
 import Title from 'antd/lib/typography/Title';
 import { useContext, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
+import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
+import { Spinner } from 'src/components/Spinner';
 
 import { AnxietyScore, DepressionScore } from '../PatientDocumentDetails/widgets/score';
 import { PatientHeaderContext } from '../PatientHeader/context';
@@ -20,14 +22,7 @@ export function PatientDocument(props: PatientDocumentProps) {
         questionnaireId,
         encounterId: params.encounterId,
     });
-
-    const { setTitle } = useContext(PatientHeaderContext);
-
-    useEffect(() => {
-        if (params.encounterId) {
-            setTitle('Consultation');
-        }
-    }, [setTitle, params.encounterId]);
+    const navigate = useNavigate();
 
     const questionnaireResponseFormComponent = {
         'physical-exam': PhysicalExam,
@@ -36,10 +31,22 @@ export function PatientDocument(props: PatientDocumentProps) {
     const Component =
         questionnaireResponseFormComponent[questionnaireId] ?? BaseQuestionnaireResponseForm;
 
+    const { setBreadcrumbs } = useContext(PatientHeaderContext);
+    const location = useLocation();
+
+    useEffect(() => {
+        if (isSuccess(response)) {
+            setBreadcrumbs({
+                [location?.pathname]: response.data.context.questionnaire?.name || '',
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [response]);
+
     return (
         <div className={s.container}>
             <div className={s.content}>
-                <RenderRemoteData remoteData={response}>
+                <RenderRemoteData remoteData={response} renderLoading={Spinner}>
                     {(formData) => (
                         <>
                             <Title level={3} style={{ marginBottom: 32 }}>
@@ -54,6 +61,7 @@ export function PatientDocument(props: PatientDocumentProps) {
                                     'anxiety-score': AnxietyScore,
                                     'depression-score': DepressionScore,
                                 }}
+                                onCancel={() => navigate(-1)}
                             />
                         </>
                     )}

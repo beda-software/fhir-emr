@@ -44,10 +44,11 @@ export interface BaseQuestionnaireResponseFormProps {
     itemControlGroupItemComponents?: ItemControlGroupItemComponentMapping;
     questionItemComponents?: QuestionItemComponentMapping;
     groupItemComponent?: GroupItemComponent;
+    onCancel?: () => {};
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
-    const { onSubmit, formData, readOnly } = props;
+    const { onSubmit, formData, readOnly, onCancel } = props;
     const methods = useForm<FormItems>({
         defaultValues: formData.formValues,
     });
@@ -102,9 +103,13 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                             parentPath={[]}
                             context={calcInitialContext(formData.context, formValues)}
                         />
-
                         {!readOnly && (
                             <div className={s.footer}>
+                                {onCancel && (
+                                    <Button key="back" onClick={onCancel}>
+                                        <Trans>Cancel</Trans>
+                                    </Button>
+                                )}
                                 <Button type="primary" htmlType="submit">
                                     <Trans>Save</Trans>
                                 </Button>

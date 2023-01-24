@@ -19,6 +19,7 @@ import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
+import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 
 const columns: ColumnsType<Questionnaire> = [
@@ -142,7 +143,7 @@ export function QuestionnaireList() {
                     rowKey={(p) => p.id!}
                     dataSource={filteredData}
                     columns={columns}
-                    loading={isLoading(questionnairesResponse)}
+                    loading={isLoading(questionnairesResponse) && { indicator: SpinIndicator }}
                 />
             </BasePageContent>
         </>

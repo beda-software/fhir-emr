@@ -1,5 +1,5 @@
-import { LoadingOutlined } from '@ant-design/icons';
-import { Button, Modal, ModalProps, Radio, Space, Spin } from 'antd';
+import { Trans } from '@lingui/macro';
+import { Button, Modal, ModalProps, Radio, Space } from 'antd';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -10,12 +10,10 @@ import { mapSuccess } from 'aidbox-react/lib/services/service';
 
 import { Patient, Questionnaire } from 'shared/src/contrib/aidbox';
 
+import { Spinner } from 'src/components/Spinner';
+
 interface Props extends ModalProps {
     patient: Patient;
-}
-
-function Spinner() {
-    return <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />;
 }
 
 const questionnaireIds = 'gad-7,phq2phq9,allergies,physical-exam,review-of-systems';
@@ -40,7 +38,7 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
                 title="Create document"
                 footer={[
                     <Button key="back" onClick={(e: any) => props.onCancel?.(e)}>
-                        Cancel
+                        <Trans>Cancel</Trans>
                     </Button>,
                     <Button
                         key="create"

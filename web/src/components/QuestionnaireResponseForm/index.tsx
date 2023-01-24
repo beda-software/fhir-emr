@@ -14,6 +14,8 @@ import {
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 
+import { Spinner } from '../Spinner';
+
 interface Props extends QuestionnaireResponseFormProps {
     onSuccess?: (resource: any) => void;
     onFailure?: (error: any) => void;
@@ -68,7 +70,7 @@ export function QuestionnaireResponseForm(props: Props) {
     const { response, onSubmit, readOnly, customWidgets } = useQuestionnaireResponseForm(props);
 
     return (
-        <RenderRemoteData remoteData={response}>
+        <RenderRemoteData remoteData={response} renderLoading={Spinner}>
             {(formData) => (
                 <BaseQuestionnaireResponseForm
                     formData={formData}

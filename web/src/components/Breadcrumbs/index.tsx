@@ -5,7 +5,7 @@ import s from './Breadcrumbs.module.scss';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
     crumbs: {
-        path: string;
+        path?: string;
         name: string;
     }[];
 }
@@ -20,7 +20,7 @@ const Breadcrumbs = (props: Props) => {
     return (
         <div className={s.container} {...props}>
             {crumbs.map(({ name, path }, key) =>
-                key + 1 === crumbs.length ? (
+                key + 1 === crumbs.length || !path ? (
                     <span key={key} className={s.currentPage}>
                         {name}
                     </span>
