@@ -2,13 +2,12 @@ name: main
 on:
     workflow_run:
         workflows: [test]
-        branches:
-            - master
-        types:
-            - completed
+        branches: [master]
+        types: [completed]
 
 jobs:
     Release:
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
         runs-on: ubuntu-latest
         env:
             BUILD_IMAGE: bedasoftware/fhir-emr:master
@@ -38,9 +37,9 @@ jobs:
                   -f Dockerfile.web.release
                   --push -t ${{ env.BUILD_IMAGE }} .
     Deploy:
+        if: github.ref == 'refs/heads/master' && ${{ github.event.workflow_run.conclusion == 'success' }}
         needs: Release
         runs-on: ubuntu-latest
-        if: github.ref == 'refs/heads/master'
         steps:
             - uses: actions/checkout@v2
             - name: Deploy to Server
