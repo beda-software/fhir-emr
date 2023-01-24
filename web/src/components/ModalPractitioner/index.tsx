@@ -62,6 +62,7 @@ export function ModalPractitioner(props: Props) {
                         closeModal();
                         notification.success({ message: t`Practitioner successfully created` });
                     }}
+                    onCancel={closeModal}
                 />
             )}
         </ModalTrigger>

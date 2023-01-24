@@ -13,10 +13,10 @@ import { useEncounterList } from 'src/containers/EncounterList/hooks';
 import { PatientHeaderContext } from 'src/containers/PatientDetails/PatientHeader/context';
 
 import { EncountersTable } from '../EncountersTable';
+import { EncounterData } from '../EncountersTable/types';
 import { EncounterStatusBadge } from '../EncounterStatusBadge';
 import { ModalNewEncounter } from '../ModalNewEncounter';
 import { Spinner } from '../Spinner';
-import { EncounterData } from '../EncountersTable/types';
 
 interface Props {
     patient: Patient;

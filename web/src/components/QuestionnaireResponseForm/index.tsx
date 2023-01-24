@@ -21,11 +21,19 @@ interface Props extends QuestionnaireResponseFormProps {
     onFailure?: (error: any) => void;
     readOnly?: boolean;
     customWidgets?: CustomWidgetsMapping;
+    onCancel?: () => void;
 }
 
 export function useQuestionnaireResponseForm(props: Props) {
     const { response, handleSave } = useQuestionnaireResponseFormData(props);
-    const { onSuccess, onFailure, readOnly, customWidgets, initialQuestionnaireResponse } = props;
+    const {
+        onSuccess,
+        onFailure,
+        readOnly,
+        customWidgets,
+        initialQuestionnaireResponse,
+        onCancel,
+    } = props;
 
     const onSubmit = async (formData: QuestionnaireResponseFormData) => {
         const saveResponse = await handleSave(
@@ -63,11 +71,12 @@ export function useQuestionnaireResponseForm(props: Props) {
         }
     };
 
-    return { response, onSubmit, readOnly, customWidgets };
+    return { response, onSubmit, readOnly, customWidgets, onCancel };
 }
 
 export function QuestionnaireResponseForm(props: Props) {
-    const { response, onSubmit, readOnly, customWidgets } = useQuestionnaireResponseForm(props);
+    const { response, onSubmit, readOnly, customWidgets, onCancel } =
+        useQuestionnaireResponseForm(props);
 
     return (
         <RenderRemoteData remoteData={response} renderLoading={Spinner}>
@@ -77,6 +86,7 @@ export function QuestionnaireResponseForm(props: Props) {
                     onSubmit={onSubmit}
                     readOnly={readOnly}
                     customWidgets={customWidgets}
+                    onCancel={onCancel}
                 />
             )}
         </RenderRemoteData>

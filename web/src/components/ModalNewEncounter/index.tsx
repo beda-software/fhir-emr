@@ -16,6 +16,7 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 import { useFieldController } from '../BaseQuestionnaireResponseForm/hooks';
 import { QuestionnaireResponseForm } from '../QuestionnaireResponseForm';
 import { Spinner } from '../Spinner';
+import { t, Trans } from '@lingui/macro';
 
 interface Props {
     patient: Patient;
@@ -40,10 +41,10 @@ export const ModalNewEncounter = ({ patient, reloadEncounter }: Props) => {
     return (
         <>
             <Button icon={<PlusOutlined />} type="primary" onClick={showModal}>
-                Create Encounter
+                <span><Trans>Create Encounter</Trans></span>
             </Button>
             <Modal
-                title="Create Encounter"
+                title={t`Create Encounter`}
                 open={isModalVisible}
                 onCancel={() => setIsModalVisible(false)}
                 footer={null}
@@ -59,6 +60,7 @@ export const ModalNewEncounter = ({ patient, reloadEncounter }: Props) => {
                     }}
                     onSuccess={handleSuccess}
                     launchContextParameters={[{ name: 'Patient', resource: patient }]}
+                    onCancel={() => setIsModalVisible(false)}
                 />
             </Modal>
         </>

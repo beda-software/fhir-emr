@@ -28,6 +28,7 @@ export const ModalNewPatient = (props: ModalNewPatientProps) => {
                         notification.success({ message: t`Patient successfully created` });
                         props.onCreate()
                     }}
+                    onCancel={closeModal}
                 />
             )}
         </ModalTrigger>

@@ -6,9 +6,9 @@ import { withRootAccess } from 'aidbox-react/lib/utils/tests';
 import { Patient } from 'shared/src/contrib/aidbox';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
+import { EncounterData } from 'src/components/EncountersTable/types';
 import { createEncounter, createPatient, createPractitioner } from 'src/setupTests';
 import { formatHumanDateTime } from 'src/utils/date';
-import { EncounterData } from 'src/components/EncountersTable/types';
 
 import { useSearchBar } from '../hooks';
 

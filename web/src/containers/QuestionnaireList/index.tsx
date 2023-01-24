@@ -46,13 +46,14 @@ const columns: ColumnsType<Questionnaire> = [
                         }
                         title={resource.name || resource.id!}
                     >
-                        {() => (
+                        {({ closeModal }) => (
                             <QuestionnaireResponseForm
                                 questionnaireLoader={questionnaireIdLoader(resource.id!)}
                                 launchContextParameters={resource.launchContext?.map((lc) => ({
                                     name: lc.name!,
                                     value: { string: 'undefined' },
                                 }))}
+                                onCancel={closeModal}
                             />
                         )}
                     </ModalTrigger>{' '}

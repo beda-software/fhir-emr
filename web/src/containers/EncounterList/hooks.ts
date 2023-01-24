@@ -5,8 +5,8 @@ import { SearchParams } from 'aidbox-react/lib/services/search';
 import { mapSuccess } from 'aidbox-react/lib/services/service';
 
 import { Encounter, Patient, Practitioner, PractitionerRole } from 'shared/src/contrib/aidbox';
-import { EncounterData } from 'src/components/EncountersTable/types';
 
+import { EncounterData } from 'src/components/EncountersTable/types';
 import { formatHumanDateTime } from 'src/utils/date';
 
 interface EncountersListData {

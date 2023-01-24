@@ -153,6 +153,7 @@ export function PatientHeader(props: Props) {
                                     reload();
                                     closeModal();
                                 }}
+                                onCancel={closeModal}
                             />
                         )}
                     </ModalTrigger>

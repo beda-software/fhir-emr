@@ -44,7 +44,7 @@ export interface BaseQuestionnaireResponseFormProps {
     itemControlGroupItemComponents?: ItemControlGroupItemComponentMapping;
     questionItemComponents?: QuestionItemComponentMapping;
     groupItemComponent?: GroupItemComponent;
-    onCancel?: () => {};
+    onCancel?: () => void;
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
