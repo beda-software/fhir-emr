@@ -1,6 +1,6 @@
 import Title from 'antd/lib/typography/Title';
 import { useContext, useEffect } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
@@ -22,6 +22,7 @@ export function PatientDocument(props: PatientDocumentProps) {
         questionnaireId,
         encounterId: params.encounterId,
     });
+    const navigate = useNavigate();
 
     const questionnaireResponseFormComponent = {
         'physical-exam': PhysicalExam,
@@ -60,6 +61,7 @@ export function PatientDocument(props: PatientDocumentProps) {
                                     'anxiety-score': AnxietyScore,
                                     'depression-score': DepressionScore,
                                 }}
+                                onCancel={() => navigate(-1)}
                             />
                         </>
                     )}
