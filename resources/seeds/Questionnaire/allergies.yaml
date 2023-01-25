@@ -2,7 +2,27 @@ id: allergies
 resourceType: Questionnaire
 name: Allergies
 status: active
+mapping:
+  - id: allergy-create
+    resourceType: Mapping
+launchContext:
+  - name: Patient
+    type: Patient
 item:
+    - text: PatientId
+      type: string
+      linkId: patientId
+      hidden: true
+      initialExpression:
+        language: text/fhirpath
+        expression: '%Patient.id'
+    - text: PatientName
+      type: string
+      linkId: patientName
+      hidden: true
+      initialExpression:
+        language: text/fhirpath
+        expression: '%Patient.name.given[0] & '' '' & %Patient.name.family'
     - linkId: type
       text: Type
       required: true
@@ -13,17 +33,17 @@ item:
       answerOption:
           - value:
                 Coding:
-                    system: 'http://snomed.ct'
+                    system: 'http://hl7.org/fhir/allergy-intolerance-category'
                     code: '418634005'
                     display: 'Drug'
           - value:
                 Coding:
-                    system: 'http://snomed.ct'
+                    system: 'http://hl7.org/fhir/allergy-intolerance-category'
                     code: '414285001'
                     display: 'Food'
           - value:
                 Coding:
-                    system: 'http://snomed.ct'
+                    system: 'http://hl7.org/fhir/allergy-intolerance-category'
                     code: '426232007'
                     display: 'Environmental'
     - linkId: reaction
@@ -179,4 +199,14 @@ item:
     - linkId: notes
       text: Notes
       type: string
+    - text: Active
+      type: string
+      linkId: status
+      hidden: true
+      initial:
+        - value:
+            Coding:
+                system: 'http://terminology.hl7.org/ValueSet/allergyintolerance-clinical'
+                code: 'active'
+                display: 'Active'
     
