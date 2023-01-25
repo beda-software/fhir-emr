@@ -1,0 +1,84 @@
+resourceType: Questionnaire
+id: edit-appointment
+status: active
+# mapping:
+#   - id: new-appointment-extract
+#     resourceType: Mapping
+launchContext:
+  - name: CurrentAppointmentId
+    type: string
+    description: The edited appointment ID
+contained:
+  - resourceType: Bundle
+    id: CurrentAppointmentBundle
+    type: searchset
+    entry:
+      - request:
+          method: GET
+          url: /Appointment?_id={{%CurrentAppointmentId}}
+sourceQueries:
+  - localRef: "Bundle#CurrentAppointmentBundle"
+item:
+  - type: group
+    linkId: root-group
+    item:
+      - text: Current Appointment ID
+        type: string
+        linkId: current-appointment-id
+        hidden: true
+        initialExpression:
+          language: text/fhirpath
+          expression: "%CurrentAppointmentId"
+      - text: Practitioner
+        type: reference
+        required: true
+        linkId: practitioner-role
+        initialExpression:
+          language: text/fhirpath
+          expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(resourceType='PractitionerRole')"
+      - text: Type
+        type: choice
+        required: true
+        linkId: service-type
+        answerValueSet: "appointment-type"
+        enableBehavior: any
+        enableWhen:
+          - question: practitioner-role
+            operator: "exists"
+            answer:
+              boolean: true
+      - text: Patient
+        type: reference
+        required: true
+        linkId: patient
+        initialExpression:
+          language: text/fhirpath
+          expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(resourceType='Patient')"
+      - text: Location
+        type: reference
+        required: true
+        linkId: location
+        readOnly: true
+        enableBehavior: any
+        initialExpression:
+          language: text/fhirpath
+          expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(resourceType='Location')"
+        enableWhen:
+          - question: patient
+            operator: "exists"
+            answer:
+              boolean: true
+      - text: Appointment date
+        required: true
+        type: date
+        linkId: appointment-date
+        initialExpression:
+          language: text/fhirpath
+          expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.start.substring(0,10)"
+      - text: Start datetime
+        required: true
+        type: dateTime
+        linkId: start-datetime
+        initialExpression:
+          language: text/fhirpath
+          expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.start"
