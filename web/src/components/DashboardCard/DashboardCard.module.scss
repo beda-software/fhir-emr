@@ -40,3 +40,27 @@
     font-size: 14px;
     line-height: 22px;
 }
+
+.tableHeader {
+    font-weight: 700;
+}
+
+.tableRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: inset 0px 1px 0px #f0f0f0;
+
+    &:first-child {
+        box-shadow: none;
+    }
+}
+
+.tableCell {
+    padding: 13px 12px;
+    box-shadow: inset 1px 0px 0px #f0f0f0;
+
+    &:first-child {
+        box-shadow: none;
+    }
+}
