@@ -1,7 +1,6 @@
 import { t, Trans } from '@lingui/macro';
-import { Button, Empty, Row, Col } from 'antd';
+import { Button, Empty, Row, Col, notification } from 'antd';
 import Title from 'antd/es/typography/Title';
-import { ColumnsType } from 'antd/lib/table';
 import { useNavigate } from 'react-router-dom';
 
 import { useService } from 'aidbox-react/lib/hooks/service';
@@ -10,52 +9,18 @@ import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/servi
 import { mapSuccess } from 'aidbox-react/lib/services/service';
 
 import { Patient } from 'shared/src/contrib/aidbox';
+import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { ModalNewPatient } from 'src/components/ModalNewPatient';
+import { ModalTrigger } from 'src/components/ModalTrigger';
+import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 import { formatHumanDate } from 'src/utils/date';
-
-const columns: ColumnsType<Patient> = [
-    {
-        title: <Trans>Name</Trans>,
-        dataIndex: 'name',
-        key: 'name',
-        render: (_text, resource) => renderHumanName(resource.name?.[0]),
-    },
-    {
-        title: <Trans>Birth date</Trans>,
-        dataIndex: 'birthDate',
-        key: 'birthDate',
-        render: (_text, resource) =>
-            resource.birthDate ? formatHumanDate(resource.birthDate) : null,
-        width: '25%',
-    },
-    {
-        title: <Trans>SSN</Trans>,
-        dataIndex: 'identifier',
-        key: 'identifier',
-        render: (_text, resource) => resource.identifier?.[0]!.value,
-        width: '25%',
-    },
-    {
-        title: <Trans>Actions</Trans>,
-        dataIndex: 'actions',
-        key: 'actions',
-        render: (_text, resource) => {
-            return (
-                <Button type="link" style={{ padding: 0 }}>
-                    <Trans>Open</Trans>
-                </Button>
-            );
-        },
-        width: 200,
-    },
-];
 
 export function PatientList() {
     const [patientsResponse, manager] = useService(async () =>
@@ -115,14 +80,80 @@ export function PatientList() {
                     }}
                     rowKey={(p) => p.id!}
                     dataSource={filteredData}
-                    columns={columns}
+                    columns={[
+                        {
+                            title: <Trans>Name</Trans>,
+                            dataIndex: 'name',
+                            key: 'name',
+                            render: (_text, resource) => renderHumanName(resource.name?.[0]),
+                        },
+                        {
+                            title: <Trans>Birth date</Trans>,
+                            dataIndex: 'birthDate',
+                            key: 'birthDate',
+                            render: (_text, resource) =>
+                                resource.birthDate ? formatHumanDate(resource.birthDate) : null,
+                            width: '25%',
+                        },
+                        {
+                            title: <Trans>SSN</Trans>,
+                            dataIndex: 'identifier',
+                            key: 'identifier',
+                            render: (_text, resource) => resource.identifier?.[0]!.value,
+                            width: '25%',
+                        },
+                        {
+                            title: <Trans>Actions</Trans>,
+                            dataIndex: 'actions',
+                            key: 'actions',
+                            render: (_text, resource) => {
+                                return (
+                                    <>
+                                        <Button
+                                            type="link"
+                                            style={{ padding: 0 }}
+                                            onClick={() =>
+                                                navigate(`/patients/${resource.id}`, {
+                                                    state: { resource },
+                                                })
+                                            }
+                                        >
+                                            <Trans>Open</Trans>
+                                        </Button>
+                                        <ModalTrigger
+                                            title={t`Edit patient`}
+                                            trigger={
+                                                <Button type="link">
+                                                    <Trans>Edit</Trans>
+                                                </Button>
+                                            }
+                                        >
+                                            {({ closeModal }) => (
+                                                <QuestionnaireResponseForm
+                                                    questionnaireLoader={questionnaireIdLoader(
+                                                        'patient-edit',
+                                                    )}
+                                                    launchContextParameters={[
+                                                        { name: 'Patient', resource },
+                                                    ]}
+                                                    onSuccess={() => {
+                                                        notification.success({
+                                                            message: t`Patient saved`,
+                                                        });
+                                                        manager.reload();
+                                                        closeModal();
+                                                    }}
+                                                    onCancel={closeModal}
+                                                />
+                                            )}
+                                        </ModalTrigger>
+                                    </>
+                                );
+                            },
+                            width: 200,
+                        },
+                    ]}
                     loading={isLoading(patientsResponse) && { indicator: SpinIndicator }}
-                    onRow={(record) => {
-                        return {
-                            onClick: () =>
-                                navigate(`/patients/${record.id}`, { state: { record } }),
-                        };
-                    }}
                 />
             </BasePageContent>
         </>
