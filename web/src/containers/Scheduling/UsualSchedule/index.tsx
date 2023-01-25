@@ -1,9 +1,3 @@
-import {
-    daysMapping,
-    fromAvailableTime,
-    toAvailableTime,
-} from 'aidbox-scheduling-client/lib/available-time';
-import { useUsualSchedule } from 'aidbox-scheduling-client/lib/hooks';
 import { Button, Checkbox, Col, notification, PageHeader, Row, TimePicker } from 'antd';
 import moment from 'moment';
 import React from 'react';
@@ -19,6 +13,9 @@ import { formatFHIRTime } from 'shared/src/utils/date';
 import { PageContent } from 'src/components/PageContent';
 import { RenderRemoteData } from 'src/components/RenderRemoteData';
 import { SmartButton } from 'src/components/SmartButton';
+
+import { daysMapping, fromAvailableTime, toAvailableTime } from '../available-time';
+import { useUsualSchedule } from '../hooks';
 
 function FreshUsualSchedule({
     practitionerRole: initialPractitionerRole,

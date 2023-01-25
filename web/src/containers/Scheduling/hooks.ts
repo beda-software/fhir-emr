@@ -6,11 +6,11 @@ export function useUsualSchedule(initialSchedulesByDay: DaySchedules) {
   const [schedulesByDay, setSchedulesByDay] = React.useState<DaySchedules>(initialSchedulesByDay);
   const setScheduleByDay = (day: string, fn: (schedule: DaySchedule) => DaySchedule) => {
     setSchedulesByDay((schedules) => {
-      const schedule = schedules[day] || {};
+      const schedule = schedules[day];
 
       return {
         ...schedules,
-        [day]: fn(schedule),
+        ...(schedule ? {[day]: fn(schedule)} : {}),
       };
     });
   };

@@ -3,95 +3,115 @@ import { Period, PractitionerRoleAvailableTime } from 'shared/src/contrib/aidbox
 export type ScheduleBreak = Period & { removed?: boolean };
 export type DaySchedule = Period & { breaks: ScheduleBreak[] };
 export type DaySchedules = {
-  [day: string]: DaySchedule;
+    [day: string]: DaySchedule;
 };
 export const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 export const daysMapping: { [x: string]: string } = {
-  mon: 'Monday',
-  tue: 'Tuesday',
-  wed: 'Wednesday',
-  thu: 'Thursday',
-  fri: 'Friday',
-  sat: 'Saturday',
-  sun: 'Sunday',
+    mon: 'Monday',
+    tue: 'Tuesday',
+    wed: 'Wednesday',
+    thu: 'Thursday',
+    fri: 'Friday',
+    sat: 'Saturday',
+    sun: 'Sunday',
 };
 
 export function fromAvailableTime(availableTimes: PractitionerRoleAvailableTime[]): DaySchedules {
-  const availableTimesByDay = availableTimes.reduce(
-    (acc, availableTime) =>
-      (availableTime.daysOfWeek || []).reduce(
-        (dayAcc, day) => ({
-          ...dayAcc,
-          [day]: [
-            ...(dayAcc[day] || []),
-            {
-              start: availableTime.availableStartTime,
-              end: availableTime.availableEndTime,
-            },
-          ],
-        }),
-        acc,
-      ),
-    {} as { [day: string]: Period[] },
-  );
-
-  return Object.keys(availableTimesByDay).reduce((acc, day) => {
-    const sortedDayAvailableTimes = availableTimesByDay[day].sort((a, b) =>
-      a.start!.localeCompare(b.start!),
+    const availableTimesByDay = availableTimes.reduce(
+        (acc, availableTime) =>
+            (availableTime.daysOfWeek || []).reduce(
+                (dayAcc, day) => ({
+                    ...dayAcc,
+                    [day]: [
+                        ...(dayAcc[day] || []),
+                        {
+                            start: availableTime.availableStartTime,
+                            end: availableTime.availableEndTime,
+                        },
+                    ],
+                }),
+                acc,
+            ),
+        {} as { [day: string]: Period[] },
     );
 
-    let breaks: ScheduleBreak[] = [];
-    if (sortedDayAvailableTimes.length > 1) {
-      for (let i = 0; i < sortedDayAvailableTimes.length - 1; i++) {
-        breaks.push({
-          start: sortedDayAvailableTimes[i].end,
-          end: sortedDayAvailableTimes[i + 1].start,
-        });
-      }
-    }
+    return Object.keys(availableTimesByDay).reduce((acc, day) => {
+        const dayAvailableTime = availableTimesByDay[day];
+        if (!dayAvailableTime) {
+            return acc;
+        }
 
-    const startPeriod = sortedDayAvailableTimes[0];
-    const endPeriod = sortedDayAvailableTimes[sortedDayAvailableTimes.length - 1];
+        const sortedDayAvailableTimes = dayAvailableTime.sort((a, b) =>
+            a.start!.localeCompare(b.start!),
+        );
 
-    return {
-      ...acc,
-      [day]: { start: startPeriod.start, end: endPeriod.end, breaks },
-    };
-  }, {} as DaySchedules);
+        let breaks: ScheduleBreak[] = [];
+        if (sortedDayAvailableTimes.length > 1) {
+            for (let i = 0; i < sortedDayAvailableTimes.length - 1; i++) {
+                const periodStart = sortedDayAvailableTimes[i]?.end;
+                const periodEnd = sortedDayAvailableTimes[i + 1]?.start;
+                if (periodStart && periodEnd) {
+                    breaks.push({
+                        start: periodStart,
+                        end: periodEnd,
+                    });
+                }
+            }
+        }
+
+        const startPeriod = sortedDayAvailableTimes[0];
+        const endPeriod = sortedDayAvailableTimes[sortedDayAvailableTimes.length - 1];
+
+        return {
+            ...acc,
+            ...(startPeriod && endPeriod
+                ? { [day]: { start: startPeriod.start, end: endPeriod.end, breaks } }
+                : {}),
+        };
+    }, {} as DaySchedules);
 }
 
 export function toAvailableTime(schedulesByDay: DaySchedules): PractitionerRoleAvailableTime[] {
-  return Object.keys(schedulesByDay).reduce((acc, day) => {
-    const schedule = schedulesByDay[day];
+    return Object.keys(schedulesByDay).reduce((acc, day) => {
+        const schedule = schedulesByDay[day];
 
-    const sortedBreaks = (schedule.breaks || [])
-      .filter(({ removed }) => !removed)
-      .sort((a, b) => a.start!.localeCompare(b.start!));
+        if (!schedule) {
+            return acc;
+        }
 
-    let start = schedule.start;
-    let end;
+        const sortedBreaks = (schedule.breaks || [])
+            .filter(({ removed }) => !removed)
+            .sort((a, b) => a.start!.localeCompare(b.start!));
 
-    for (let i = 0; i < sortedBreaks.length; i++) {
-      const currentBreak = sortedBreaks[i];
-      end = currentBreak.start;
+        let start = schedule.start;
+        let end;
 
-      acc.push({
-        daysOfWeek: [day],
-        availableStartTime: start,
-        availableEndTime: end,
-      });
+        for (let i = 0; i < sortedBreaks.length; i++) {
+            const currentBreak = sortedBreaks[i];
 
-      start = currentBreak.end;
-    }
+            if (!currentBreak) {
+                continue;
+            }
 
-    end = schedule.end;
+            end = currentBreak.start;
 
-    acc.push({
-      daysOfWeek: [day],
-      availableStartTime: start,
-      availableEndTime: end,
-    });
+            acc.push({
+                daysOfWeek: [day],
+                availableStartTime: start,
+                availableEndTime: end,
+            });
 
-    return acc;
-  }, [] as PractitionerRoleAvailableTime[]);
+            start = currentBreak.end;
+        }
+
+        end = schedule.end;
+
+        acc.push({
+            daysOfWeek: [day],
+            availableStartTime: start,
+            availableEndTime: end,
+        });
+
+        return acc;
+    }, [] as PractitionerRoleAvailableTime[]);
 }
