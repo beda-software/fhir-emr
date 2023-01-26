@@ -1,16 +1,17 @@
 import { Layout, Modal } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
 
-import {
-    inMemorySaveService,
-    useQuestionnaireResponseFormData,
-} from 'shared/src/hooks/questionnaire-response-form-data';
-import { sharedPractitionerRole } from 'shared/src/sharedPractitionerRole';
+import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
-import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
-import { RenderRemoteData } from 'src/components/RenderRemoteData';
+import { PractitionerRole } from 'shared/src/contrib/aidbox';
+import { inMemorySaveService } from 'shared/src/hooks/questionnaire-response-form-data';
+// import { sharedPractitionerRole } from 'shared/src/sharedPractitionerRole';
+
+import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
+import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 
 interface Props {
+    practitionerRole: PractitionerRole;
     appointmentId: string;
     onSubmit: () => void;
     onClose: () => void;
@@ -18,34 +19,26 @@ interface Props {
 }
 
 export function EditAppointmentModal(props: Props) {
-    const { showModal, onClose, appointmentId } = props;
-    const [practitionerRole] = sharedPractitionerRole.useSharedState();
-    const { response, handleSave } = useQuestionnaireResponseFormData(
-        {
-            questionnaireLoader: { type: 'id', questionnaireId: 'edit-appointment' },
-            questionnaireResponseSaveService: inMemorySaveService,
-            launchContextParameters: [
-                { name: 'CurrentAppointmentId', value: { string: appointmentId } },
-                { name: 'OrganizationId', value: { string: practitionerRole.organization?.id } },
-            ],
-        },
-        [appointmentId],
-    );
+    const { showModal, onClose, appointmentId, practitionerRole } = props;
+    // const [practitionerRole] = sharedPractitionerRole.useSharedState();
+    const { response, onSubmit } = useQuestionnaireResponseForm({
+        questionnaireLoader: { type: 'id', questionnaireId: 'edit-appointment' },
+        questionnaireResponseSaveService: inMemorySaveService,
+        launchContextParameters: [
+            { name: 'CurrentAppointmentId', value: { string: appointmentId } },
+            { name: 'OrganizationId', value: { string: practitionerRole.organization?.id } },
+        ],
+    });
 
     return (
-        <Modal
-            visible={showModal}
-            title="Edit Appointment"
-            onOk={props.onSubmit}
-            onCancel={onClose}
-        >
+        <Modal open={showModal} title="Edit Appointment" onOk={props.onSubmit} onCancel={onClose}>
             <Layout>
                 <Content style={{ padding: 16, backgroundColor: 'white' }}>
                     <RenderRemoteData remoteData={response}>
                         {(formData) => (
-                            <QuestionnaireResponseForm
+                            <BaseQuestionnaireResponseForm
                                 formData={formData}
-                                handleSave={handleSave}
+                                onSubmit={onSubmit}
                             />
                         )}
                     </RenderRemoteData>

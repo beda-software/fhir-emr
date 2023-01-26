@@ -1,20 +1,23 @@
-// eslint-disable-next-line import/order
-import FullCalendar, { EventContentArg } from '@fullcalendar/react'; // import it first
+import { EventContentArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import FullCalendar from '@fullcalendar/react'; // import it first
 import timeGridPlugin from '@fullcalendar/timegrid';
-import { PageHeader } from 'antd';
+import { Trans } from '@lingui/macro';
+import Title from 'antd/es/typography/Title';
+
+import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
 import { PractitionerRole } from 'shared/src/contrib/aidbox';
 
-import { PageContent } from 'src/components/PageContent';
-import { RenderRemoteData } from 'src/components/RenderRemoteData';
-import './fullCalendar.css';
-import { useAppointmentEvents } from 'src/containers/Scheduling/ScheduleCalendar/hooks/useAppointmentEvents';
-import { useCalendarOptions } from 'src/containers/Scheduling/ScheduleCalendar/hooks/useCalendarOptions';
-import { useScheduleCalendar } from 'src/containers/Scheduling/ScheduleCalendar/hooks/useScheduleCalendar';
+import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
+
+// import './fullCalendar.css';
 
 import { EditAppointmentModal } from './components/EditAppointmentModal';
+import { useAppointmentEvents } from './hooks/useAppointmentEvents';
+import { useCalendarOptions } from './hooks/useCalendarOptions';
+import { useScheduleCalendar } from './hooks/useScheduleCalendar';
 
 interface Props {
     practitionerRole: PractitionerRole;
@@ -34,56 +37,64 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
     } = useAppointmentEvents(practitionerRole);
 
     return (
-        <PageContent header={<PageHeader title="Schedule calendar" ghost={false} />}>
-            <RenderRemoteData remoteData={remoteResponses}>
-                {({ businessHours, calendarSlots }) => (
-                    <>
-                        <FullCalendar
-                            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-                            nowIndicator={true}
-                            headerToolbar={{
-                                left: 'prev,next today openSettings',
-                                center: 'title',
-                                right: 'timeGridWeek,timeGridDay',
-                            }}
-                            customButtons={{
-                                openSettings: {
-                                    text: 'Settings',
-                                    // icon: 'settings',
-                                    click: () => {
-                                        // eslint-disable-next-line no-alert
-                                        alert('Open settings modal');
+        <>
+            <BasePageHeader>
+                <Title>
+                    <Trans>Schedule calendar</Trans>
+                </Title>
+            </BasePageHeader>
+            <BasePageContent>
+                <RenderRemoteData remoteData={remoteResponses}>
+                    {({ businessHours, calendarSlots }) => (
+                        <>
+                            <FullCalendar
+                                plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                                nowIndicator={true}
+                                headerToolbar={{
+                                    left: 'prev,next today openSettings',
+                                    center: 'title',
+                                    right: 'timeGridWeek,timeGridDay',
+                                }}
+                                customButtons={{
+                                    openSettings: {
+                                        text: 'Settings',
+                                        // icon: 'settings',
+                                        click: () => {
+                                            // eslint-disable-next-line no-alert
+                                            alert('Open settings modal');
+                                        },
                                     },
-                                },
-                            }}
-                            businessHours={businessHours}
-                            initialView="timeGridWeek"
-                            editable={true}
-                            selectable={true}
-                            selectMirror={true}
-                            dayMaxEvents={true}
-                            initialEvents={calendarSlots}
-                            eventContent={renderEventContent}
-                            eventChange={handleEventChange}
-                            eventClick={handleEventClick}
-                            select={handleGridSelect}
-                            {...calendarOptions}
-                        />
-                        <EditAppointmentModal
-                            appointmentId={editModalData.clickedAppointmentId}
-                            showModal={editModalData.showEditAppointmentModal}
-                            onSubmit={() => {}}
-                            onClose={() =>
-                                setEditModalData((data) => ({
-                                    ...data,
-                                    showEditAppointmentModal: false,
-                                }))
-                            }
-                        />
-                    </>
-                )}
-            </RenderRemoteData>
-        </PageContent>
+                                }}
+                                businessHours={businessHours}
+                                initialView="timeGridWeek"
+                                editable={true}
+                                selectable={true}
+                                selectMirror={true}
+                                dayMaxEvents={true}
+                                initialEvents={calendarSlots}
+                                eventContent={renderEventContent}
+                                eventChange={handleEventChange}
+                                eventClick={handleEventClick}
+                                select={handleGridSelect}
+                                {...calendarOptions}
+                            />
+                            <EditAppointmentModal
+                                practitionerRole={practitionerRole}
+                                appointmentId={editModalData.clickedAppointmentId}
+                                showModal={editModalData.showEditAppointmentModal}
+                                onSubmit={() => {}}
+                                onClose={() =>
+                                    setEditModalData((data) => ({
+                                        ...data,
+                                        showEditAppointmentModal: false,
+                                    }))
+                                }
+                            />
+                        </>
+                    )}
+                </RenderRemoteData>
+            </BasePageContent>
+        </>
     );
 }
 

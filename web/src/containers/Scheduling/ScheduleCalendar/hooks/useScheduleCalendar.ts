@@ -1,21 +1,22 @@
-import { days } from 'aidbox-scheduling-client/lib/available-time';
 import moment from 'moment';
 import React from 'react';
 
-import { useService } from 'aidbox-react/src/hooks/service';
+import { useService } from 'aidbox-react/lib/hooks/service';
 import {
     extractBundleResources,
     getAllFHIRResources,
     getFHIRResource,
     getIncludedResource,
     getReference,
-} from 'aidbox-react/src/services/fhir';
-import { mapSuccess, sequenceMap } from 'aidbox-react/src/services/service';
+} from 'aidbox-react/lib/services/fhir';
+import { mapSuccess, sequenceMap } from 'aidbox-react/lib/services/service';
 
 import { Appointment, Patient, PractitionerRole } from 'shared/src/contrib/aidbox/index';
 import { extractAppointmentPatient } from 'shared/src/utils/appointment';
 import { formatFHIRDateTime } from 'shared/src/utils/date';
 import { renderHumanName } from 'shared/src/utils/fhir';
+
+import { days } from '../../available-time';
 
 export function useScheduleCalendar(practitionerRole: PractitionerRole) {
     const [businessHoursRD] = useService(async () => {
