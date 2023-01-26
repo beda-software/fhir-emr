@@ -106,7 +106,7 @@ export function PractitionerList() {
                             ) => {
                                 const { practitionerRolesResource } = rowData;
                                 return (
-                                    <>
+                                    <div style={{ display: 'flex', alignItems: 'center' }}>
                                         <ModalPractitioner
                                             key={'edit'}
                                             modalTitle="Edit Practitioner"
@@ -122,7 +122,8 @@ export function PractitionerList() {
                                         <Link to={`${practitionerResource.id}/schedule`}>
                                             <span style={{ color: 'black' }}>Schedule</span>
                                         </Link>
-                                    </>
+                                        <div style={{ width: '8px' }} />
+                                    </div>
                                 );
                             },
                         },
