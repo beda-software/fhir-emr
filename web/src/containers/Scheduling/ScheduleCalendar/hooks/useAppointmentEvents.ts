@@ -10,6 +10,7 @@ import {
     AidboxReference,
     Appointment,
     CodeableConcept,
+    InternalReference,
     Location,
     Patient,
     PractitionerRole,
@@ -65,11 +66,11 @@ export function useAppointmentEvents(practitionerRole: PractitionerRole) {
             resourceType: 'Patient',
         };
 
-        const locationReference: AidboxReference<Location> = {
-            id: 'dfbc7669-08c1-4566-9254-a4946ad5efa9',
-            display: '102 Hobson Street, Auckland',
-            resourceType: 'Location',
-        };
+        // const locationReference: InternalReference<Location> = {
+        //     id: 'dfbc7669-08c1-4566-9254-a4946ad5efa9',
+        //     display: '102 Hobson Street, Auckland',
+        //     resourceType: 'Location',
+        // };
 
         const response = await saveFHIRResource<Appointment>({
             resourceType: 'Appointment',
@@ -85,10 +86,10 @@ export function useAppointmentEvents(practitionerRole: PractitionerRole) {
                     actor: getReference(practitionerRole),
                     status: 'accepted',
                 },
-                {
-                    actor: locationReference,
-                    status: 'accepted',
-                },
+                // {
+                //     actor: locationReference,
+                //     status: 'accepted',
+                // },
             ],
             status: 'booked',
         });
