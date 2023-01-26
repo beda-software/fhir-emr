@@ -32,11 +32,12 @@
 
 .cards {
     display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
     flex-wrap: wrap;
-    flex-direction: column;
     gap: 24px;
 }
 
 .card {
-    width: 50%;
+    width: 528px;
 }
