@@ -11,7 +11,7 @@ launchContext:
 contained:
   - resourceType: Bundle
     id: CurrentAppointmentBundle
-    type: searchset
+    type: transaction
     entry:
       - request:
           method: GET

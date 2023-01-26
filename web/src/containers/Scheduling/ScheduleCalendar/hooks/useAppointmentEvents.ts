@@ -1,10 +1,10 @@
-import { DateSelectArg, EventChangeArg, EventClickArg } from '@fullcalendar/react';
+import { DateSelectArg, EventChangeArg, EventClickArg } from '@fullcalendar/core';
 import { notification } from 'antd';
 import React from 'react';
 
-import { isSuccess } from 'aidbox-react/src/libs/remoteData';
-import { getReference, patchFHIRResource, saveFHIRResource } from 'aidbox-react/src/services/fhir';
-import { formatError } from 'aidbox-react/src/utils/error';
+import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
+import { getReference, patchFHIRResource, saveFHIRResource } from 'aidbox-react/lib/services/fhir';
+import { formatError } from 'aidbox-react/lib/utils/error';
 
 import {
     AidboxReference,

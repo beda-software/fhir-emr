@@ -1,4 +1,4 @@
-import { CalendarOptions } from '@fullcalendar/common';
+import { CalendarOptions } from '@fullcalendar/core';
 import React from 'react';
 
 export function useCalendarOptions() {
