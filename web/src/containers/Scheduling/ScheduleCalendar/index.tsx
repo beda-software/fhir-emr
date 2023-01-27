@@ -13,6 +13,7 @@ import { PractitionerRole } from 'shared/src/contrib/aidbox';
 // import './fullCalendar.css';
 
 import { EditAppointmentModal } from './components/EditAppointmentModal';
+import { NewAppointmentModal } from './components/NewAppointmentModal';
 import { useAppointmentEvents } from './hooks/useAppointmentEvents';
 import { useCalendarOptions } from './hooks/useCalendarOptions';
 import { useScheduleCalendar } from './hooks/useScheduleCalendar';
@@ -32,6 +33,9 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
         handleGridSelect,
         editModalData,
         setEditModalData,
+        newModalData,
+        handleOkNewAppointment,
+        handleCancelNewAppointment,
     } = useAppointmentEvents(practitionerRole);
 
     return (
@@ -84,6 +88,13 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
                                     showEditAppointmentModal: false,
                                 }))
                             }
+                        />
+                        ,
+                        <NewAppointmentModal
+                            practitionerRole={practitionerRole}
+                            isModalOpen={newModalData.showNewAppointmentModal}
+                            handleOk={handleOkNewAppointment}
+                            handleCancel={handleCancelNewAppointment}
                         />
                     </>
                 )}

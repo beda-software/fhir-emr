@@ -1,6 +1,6 @@
 import { DateSelectArg, EventChangeArg, EventClickArg } from '@fullcalendar/core';
 import { notification } from 'antd';
-import React from 'react';
+import { useState } from 'react';
 
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { getReference, patchFHIRResource, saveFHIRResource } from 'aidbox-react/lib/services/fhir';
@@ -20,11 +20,29 @@ interface EditModalData {
     clickedAppointmentId: string;
     showEditAppointmentModal: boolean;
 }
+
+interface NewModalData {
+    appointmentDate: {
+        start: Date | null;
+        end: Date | null;
+    };
+    showNewAppointmentModal: boolean;
+}
+
 export function useAppointmentEvents(practitionerRole: PractitionerRole) {
-    const [editModalData, setEditModalData] = React.useState<EditModalData>({
+    const [editModalData, setEditModalData] = useState<EditModalData>({
         clickedAppointmentId: 'undefined',
         showEditAppointmentModal: false,
     });
+
+    const [newModalData, setNewModalData] = useState<NewModalData>({
+        appointmentDate: {
+            start: null,
+            end: null,
+        },
+        showNewAppointmentModal: false,
+    });
+
     function handleEventChange({ event }: EventChangeArg) {
         // TODO: show confirm modal and discard event change if rejected
         const { id, start, end } = event;
@@ -40,11 +58,13 @@ export function useAppointmentEvents(practitionerRole: PractitionerRole) {
     }
 
     function handleGridSelect({ start, end }: DateSelectArg) {
-        alert('Create new event modal is shown here');
-        createAppointment({
-            start: formatFHIRDateTime(start!),
-            end: formatFHIRDateTime(end!),
-        }).then();
+        setNewModalData({
+            appointmentDate: {
+                start,
+                end,
+            },
+            showNewAppointmentModal: true,
+        });
     }
 
     async function createAppointment({ start, end }: Partial<Appointment>) {
@@ -99,6 +119,28 @@ export function useAppointmentEvents(practitionerRole: PractitionerRole) {
         }
     }
 
+    async function handleOkNewAppointment() {
+        if (newModalData.appointmentDate.start && newModalData.appointmentDate.end) {
+            await createAppointment({
+                start: formatFHIRDateTime(newModalData.appointmentDate.start),
+                end: formatFHIRDateTime(newModalData.appointmentDate.end),
+            });
+            setNewModalData((state) => ({
+                ...state,
+                showNewAppointmentModal: false,
+            }));
+        } else {
+            console.error('the start and end date does not exist');
+        }
+    }
+
+    async function handleCancelNewAppointment() {
+        setNewModalData((data) => ({
+            ...data,
+            showNewAppointmentModal: false,
+        }));
+    }
+
     // TODO: support update patient, practitioner, service for Appointment
     async function updateAppointment({
         id,
@@ -124,5 +166,8 @@ export function useAppointmentEvents(practitionerRole: PractitionerRole) {
         handleGridSelect,
         editModalData,
         setEditModalData,
+        newModalData,
+        handleOkNewAppointment,
+        handleCancelNewAppointment
     };
 }
