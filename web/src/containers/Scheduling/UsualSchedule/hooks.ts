@@ -34,15 +34,25 @@ export function useUsualSchedule(initialSchedulesByDay: DaySchedules) {
 
     const toggleSchedule = (day: string) => {
         setSchedulesByDay((schedules) => {
-            const newSchedules = Object.assign({}, schedules);
-
-            delete newSchedules[day];
-
+            const newSchedules = {
+                [day]: {
+                    start: '08:00:00',
+                    end: '17:00:00',
+                    breaks: [],
+                },
+                ...schedules,
+            };
+            if (schedules[day]) {
+                delete newSchedules[day];
+            }
             return newSchedules;
         });
     };
+
     const changeScheduleStart = (day: string, value: string | undefined) => {
-        setScheduleByDay(day, (schedule) => ({ ...schedule, start: value }));
+        setScheduleByDay(day, (schedule) => {
+            return { ...schedule, start: value };
+        });
     };
     const changeScheduleEnd = (day: string, value: string | undefined) => {
         setScheduleByDay(day, (schedule) => ({ ...schedule, end: value }));
