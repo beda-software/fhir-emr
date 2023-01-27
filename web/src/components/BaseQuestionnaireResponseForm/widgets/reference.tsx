@@ -21,6 +21,8 @@ import { getAnswerCode, getAnswerDisplay } from 'shared/src/utils/questionnaire'
 
 import { AsyncSelectField } from 'src/components/AsyncSelectField';
 
+import { useFieldController } from '../hooks';
+
 type AnswerReferenceProps<R extends Resource, IR extends Resource> = QuestionItemProps & {
     overrideGetDisplay?: (resource: R, includedResources: ResourcesMap<R | IR>) => string;
     overrideGetLabel?: (
@@ -124,12 +126,14 @@ function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource =
     const { text, repeats, linkId, required, readOnly } = questionItem;
     const qrfContext = useQuestionnaireResponseFormContext();
 
-    const fieldPath = [...parentPath, questionItem.linkId!];
+    const fieldName = [...parentPath, questionItem.linkId!];
+
+    const {} = useFieldController(fieldName, questionItem);
 
     return (
         <AsyncSelectField<QuestionnaireItemAnswerOption>
             key={`answer-choice-${deps.join('-')}`}
-            fieldPath={fieldPath}
+            fieldPath={fieldName}
             testId={linkId!}
             label={text}
             loadOptions={loadOptions}

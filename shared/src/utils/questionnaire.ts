@@ -1,20 +1,20 @@
 import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer } from '../contrib/aidbox';
 
 export function getAnswerDisplay(
-    o: QuestionnaireItemAnswerOption['value'] | QuestionnaireResponseItemAnswer['value'],
+    value: QuestionnaireItemAnswerOption['value'] | QuestionnaireResponseItemAnswer['value'],
 ) {
-    if (o?.Coding) {
-        return o.Coding.display!;
+    if (value?.Coding) {
+        return value.Coding.display!;
     }
-    if (o?.string) {
-        return o.string;
-    }
-
-    if (o?.Reference) {
-        return o.Reference.display ?? '';
+    if (value?.string) {
+        return value.string;
     }
 
-    return JSON.stringify(o);
+    if (value?.Reference) {
+        return value.Reference.display ?? '';
+    }
+
+    return JSON.stringify(value);
 }
 
 export function getAnswerCode(
