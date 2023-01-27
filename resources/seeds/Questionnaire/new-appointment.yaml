@@ -1,0 +1,87 @@
+resourceType: Questionnaire
+id: new-appointment
+status: active
+mapping:
+  - id: new-appointment-extract
+    resourceType: Mapping
+launchContext:
+  - name: LaunchPatient
+    type: Patient
+    description: Patient resource
+  - name: LaunchPractitionerRole
+    type: PractitionerRole
+    description: PractitionerRole resource
+item:
+- type: group
+  linkId: root-group
+  item:
+  - text: Predefined Practitioner Id
+    type: string
+    linkId: predefined-practitioner-role-id
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%LaunchPractitionerRole.where($this != 'undefined').id"
+  - text: Practitioner
+    type: reference
+    required: true
+    linkId: practitioner-role
+    enableWhen:
+      - question: predefined-practitioner-role-id
+        operator: "exists"
+        answer:
+          boolean: false
+  - text: Type
+    type: choice
+    required: true
+    linkId: service-type
+    answerValueSet: 'appointment-type'
+    enableBehavior: any
+    enableWhen:
+      - question: predefined-practitioner-role-id
+        operator: "exists"
+        answer:
+          boolean: true
+      - question: practitioner-role
+        operator: "exists"
+        answer:
+          boolean: true
+  - text: Predefined Patient Id
+    type: string
+    linkId: predefined-patient-id
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%LaunchPatient.where($this != 'undefined').id"
+  - text: Patient
+    type: reference
+    required: true
+    linkId: patient
+    enableWhen:
+      - question: predefined-patient-id
+        operator: "exists"
+        answer:
+          boolean: false
+  - text: Location
+    type: reference
+    required: true
+    linkId: location
+    readOnly: true
+    enableBehavior: any
+    enableWhen:
+      - question: predefined-patient-id
+        operator: "exists"
+        answer:
+          boolean: true
+      - question: patient
+        operator: "exists"
+        answer:
+          boolean: true
+  - text: Appointment date
+    required: true
+    type: date
+    linkId: appointment-date
+  - text: Start datetime
+    required: true
+    type: dateTime
+    linkId: start-datetime

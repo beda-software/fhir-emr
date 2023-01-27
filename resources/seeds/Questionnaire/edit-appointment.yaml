@@ -8,10 +8,13 @@ launchContext:
   - name: CurrentAppointmentId
     type: string
     description: The edited appointment ID
+  - name: OrganizationId
+    type: string
+    description: The organization ID
 contained:
   - resourceType: Bundle
     id: CurrentAppointmentBundle
-    type: transaction
+    type: searchset
     entry:
       - request:
           method: GET
@@ -31,16 +34,31 @@ item:
           expression: "%CurrentAppointmentId"
       - text: Practitioner
         type: reference
+        referenceResource:
+          - PractitionerRole
         required: true
         linkId: practitioner-role
+        answerExpression:
+          language: application/x-fhir-query
+          expression: "PractitionerRole?organization={{%OrganizationId}}&location:missing=false&_assoc=practitioner"
+        choiceColumn:
+          - forDisplay: true
+            path: "practitioner.resource.name.given.first() + ' ' + practitioner.resource.name.family"
         initialExpression:
           language: text/fhirpath
           expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(resourceType='PractitionerRole')"
       - text: Type
-        type: choice
+        type: reference
         required: true
         linkId: service-type
-        answerValueSet: "appointment-type"
+        referenceResource:
+          - HealthcareService
+        answerExpression:
+          language: application/x-fhir-query
+          expression: "HealthcareService?organization={{%OrganizationId}}&_has:PractitionerRole:service:id={{%QuestionnaireResponse.repeat(item).where(linkId='practitioner-role').answer.value.children().id}}"
+        choiceColumn:
+          - forDisplay: true
+            path: "name"
         enableBehavior: any
         enableWhen:
           - question: practitioner-role
