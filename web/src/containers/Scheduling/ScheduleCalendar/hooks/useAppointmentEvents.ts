@@ -7,11 +7,10 @@ import { getReference, patchFHIRResource, saveFHIRResource } from 'aidbox-react/
 import { formatError } from 'aidbox-react/lib/utils/error';
 
 import {
-    AidboxReference,
     Appointment,
     CodeableConcept,
     InternalReference,
-    Location,
+    // Location,
     Patient,
     PractitionerRole,
 } from 'shared/src/contrib/aidbox/index';
@@ -60,7 +59,7 @@ export function useAppointmentEvents(practitionerRole: PractitionerRole) {
             ],
         };
 
-        const patientReference: AidboxReference<Patient> = {
+        const patientReference: InternalReference<Patient> = {
             id: '37b9ef13-5dd4-4e2e-a859-ab44a78f21f5',
             display: 'John Murphy',
             resourceType: 'Patient',

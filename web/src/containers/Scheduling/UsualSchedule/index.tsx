@@ -16,7 +16,7 @@ import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { DatePicker } from 'src/components/DatePicker';
 
 import { daysMapping, fromAvailableTime, toAvailableTime } from '../available-time';
-import { useUsualSchedule } from '../hooks';
+import { useUsualSchedule } from './hooks';
 
 function FreshUsualSchedule({
     practitionerRole: initialPractitionerRole,
