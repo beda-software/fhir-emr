@@ -1,0 +1,41 @@
+resourceType: Mapping
+id: new-appointment-extract
+body:
+  $let:
+    locationReference: $ fhirpath("QuestionnaireResponse.item.repeat(item).where(linkId='location').answer.children().Reference").0
+    predefinedPatientId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='predefined-patient-id').answer.children().string").0
+    selectedPatientReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patient').answer.children().Reference").0
+    predefinedPractitionerRoleId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='predefined-practitioner-role-id').answer.children().string").0
+    selectedPractitionerRoleReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-role').answer.children().Reference").0
+    startDateTime: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='start-datetime').answer.children().dateTime").0
+    serviceTypeCoding: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='service-type').answer.children().Coding").0
+  $body:
+    $let:
+      practitionerRoleId: $ predefinedPractitionerRoleId || selectedPractitionerRoleReference.id
+      patientId: $ predefinedPatientId || selectedPatientReference.id
+    $body:
+      resourceType: Bundle
+      type: transaction
+      entry:
+        - request:
+            url: /Appointment/$book
+            method: POST
+          resource:
+            resourceType: Appointment
+            participant:
+              - actor:
+                  resourceType: Patient
+                  id: $ patientId
+                status: accepted
+              - actor:
+                  resourceType: PractitionerRole
+                  id: $ practitionerRoleId
+                status: accepted
+              - actor: $ locationReference
+                status: accepted
+            serviceType:
+              - text: $ serviceTypeCoding.display
+                coding:
+                  - $ serviceTypeCoding
+            status: pending
+            start: $ startDateTime
