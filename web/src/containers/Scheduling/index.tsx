@@ -1,36 +1,20 @@
-import { Tabs } from 'antd';
+import { Col, Row, Tabs } from 'antd';
 import type { TabsProps } from 'antd';
-import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import Title from 'antd/es/typography/Title';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { findFHIRResource } from 'aidbox-react/lib/services/fhir';
 
-import { PractitionerRole } from 'shared/src/contrib/aidbox';
+import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 
+import { useScheduling } from './hooks';
 import { ScheduleCalendar } from './ScheduleCalendar';
 import { UsualSchedule } from './UsualSchedule';
 
-function useScheduling(practitionerId: string) {
-    const [response] = useService(async () => {
-        return await findFHIRResource<PractitionerRole>('PractitionerRole', {
-            practitioner: practitionerId,
-        });
-    });
-
-    return { response };
-}
 export function Scheduling() {
-    const params = useParams<{ practitionerId: string }>();
-    const practitionerId = params.practitionerId!;
-    const { response } = useScheduling(practitionerId);
-    const [activeTab, setActiveTab] = useState('calendar');
-    const onTabChange = (key: string) => {
-        setActiveTab(key);
-    };
+    const { response, onTabChange, activeTab } = useScheduling();
+
     const tabs: TabsProps['items'] = [
         {
             key: 'calendar',
@@ -42,26 +26,45 @@ export function Scheduling() {
         },
     ];
     return (
-        <>
-            <BasePageHeader>
-                <Tabs items={tabs} onChange={onTabChange} defaultActiveKey="calendar"></Tabs>
-            </BasePageHeader>
-            <BasePageContent>
-                <RenderRemoteData remoteData={response}>
-                    {(practitionerRole) => {
-                        return (
+        <RenderRemoteData remoteData={response}>
+            {({ practitioner, practitionerRoles }) => {
+                return (
+                    <>
+                        <BasePageHeader style={{ paddingBottom: 0 }}>
+                            <Row
+                                justify="space-between"
+                                align="middle"
+                                style={{ marginBottom: 40 }}
+                            >
+                                <Col>
+                                    <Title style={{ marginBottom: 0 }}>
+                                        {renderHumanName(practitioner.name?.[0])}
+                                    </Title>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <Tabs
+                                        items={tabs}
+                                        onChange={onTabChange}
+                                        defaultActiveKey="calendar"
+                                    ></Tabs>
+                                </Col>
+                            </Row>
+                        </BasePageHeader>
+                        <BasePageContent>
                             <>
                                 {activeTab === 'calendar' ? (
-                                    <ScheduleCalendar practitionerRole={practitionerRole} />
+                                    <ScheduleCalendar practitionerRole={practitionerRoles[0]!} />
                                 ) : null}
                                 {activeTab === 'editor' ? (
-                                    <UsualSchedule practitionerRole={practitionerRole} />
+                                    <UsualSchedule practitionerRole={practitionerRoles[0]!} />
                                 ) : null}
                             </>
-                        );
-                    }}
-                </RenderRemoteData>
-            </BasePageContent>
-        </>
+                        </BasePageContent>
+                    </>
+                );
+            }}
+        </RenderRemoteData>
     );
 }
