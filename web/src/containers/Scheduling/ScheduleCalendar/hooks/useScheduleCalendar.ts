@@ -20,13 +20,14 @@ import { days } from '../../available-time';
 
 export function useScheduleCalendar(practitionerRole: PractitionerRole) {
     const [businessHoursRD] = useService(async () => {
-        const response = await getFHIRResource<PractitionerRole>(getReference(practitionerRole));
-        return mapSuccess(response, (practRole) =>
-            practRole.availableTime?.map((item) => ({
-                daysOfWeek: item.daysOfWeek!.map((dow) => days.indexOf(dow) + 1),
-                startTime: item.availableStartTime,
-                endTime: item.availableEndTime,
-            })),
+        return mapSuccess(
+            await getFHIRResource<PractitionerRole>(getReference(practitionerRole)),
+            (resource) =>
+                resource.availableTime?.map((item) => ({
+                    daysOfWeek: item.daysOfWeek!.map((dow) => days.indexOf(dow) + 1),
+                    startTime: item.availableStartTime,
+                    endTime: item.availableEndTime,
+                })),
         );
     }, []);
 
