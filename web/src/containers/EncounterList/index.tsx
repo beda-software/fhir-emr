@@ -14,6 +14,7 @@ import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { Spinner } from 'src/components/Spinner';
 
 import { useEncounterList } from './hooks';
+import { EncounterListFilters, EncounterListFilterValues } from './types';
 
 const columns = [
     {
@@ -46,32 +47,29 @@ const columns = [
 ];
 
 export function EncounterList() {
-    const { encounterDataListRD } = useEncounterList({});
+    const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
+        columns: [
+            {
+                id: 'patient',
+                type: 'string',
+                placeholder: t`Search by patient`,
+            },
+            {
+                id: 'practitioner',
+                type: 'string',
+                placeholder: t`Search by practitioner`,
+            },
+            {
+                id: 'date',
+                type: 'date',
+                placeholder: [t`Start date`, t`End date`],
+            },
+        ] as EncounterListFilters,
+    });
 
-    const { columnsFilterValues, filteredData, onChangeColumnFilter, onResetFilters } =
-        useSearchBar<EncounterData>({
-            columns: [
-                {
-                    id: 'encounterPatient',
-                    type: 'string',
-                    key: (resource) => renderHumanName(resource.patient?.name?.[0]),
-                    placeholder: t`Search by patient`,
-                },
-                {
-                    id: 'encounterPractitioner',
-                    type: 'string',
-                    key: (resource) => renderHumanName(resource.practitioner?.name?.[0]),
-                    placeholder: t`Search by practitioner`,
-                },
-                {
-                    id: 'encounterDate',
-                    type: 'date',
-                    key: 'date',
-                    placeholder: [t`Start date`, t`End date`],
-                },
-            ],
-            data: isSuccess(encounterDataListRD) ? encounterDataListRD.data : [],
-        });
+    const { encounterDataListRD } = useEncounterList(
+        columnsFilterValues as EncounterListFilterValues,
+    );
 
     return (
         <>
@@ -82,7 +80,6 @@ export function EncounterList() {
 
                 <SearchBar
                     columnsFilterValues={columnsFilterValues}
-                    filteredData={filteredData}
                     onChangeColumnFilter={onChangeColumnFilter}
                     onResetFilters={onResetFilters}
                 />
@@ -90,7 +87,7 @@ export function EncounterList() {
             <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
                 {isLoading(encounterDataListRD) ? <Spinner /> : null}
                 {isSuccess(encounterDataListRD) ? (
-                    <EncountersTable columns={columns} dataSource={filteredData} />
+                    <EncountersTable columns={columns} dataSource={encounterDataListRD.data} />
                 ) : null}
             </BasePageContent>
         </>

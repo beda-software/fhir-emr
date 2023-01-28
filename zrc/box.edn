@@ -22,4 +22,11 @@
     {:auth
      {:implicit {:redirect_uri #env FHIR_EMR_AUTH_URL}}
      :first_party true,
-     :grant_types [:implicit]}}}}}
+     :grant_types [:implicit]}
+
+    :testAuth {:grant_types [:password]
+               :secret "123456"}}
+
+   :AccessPolicy {:test-wildcard-policy
+                  {:engine "allow"
+                   :link   [{:resourceType "User"}]}}}}}

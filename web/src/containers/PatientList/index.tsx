@@ -3,10 +3,7 @@ import { Button, Empty, Row, Col, notification } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { useNavigate } from 'react-router-dom';
 
-import { useService } from 'aidbox-react/lib/hooks/service';
 import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
-import { mapSuccess } from 'aidbox-react/lib/services/service';
 
 import { Patient } from 'shared/src/contrib/aidbox';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
@@ -21,29 +18,26 @@ import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 import { formatHumanDate } from 'src/utils/date';
+import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
+
+import { usePatientList } from './hooks';
 
 export function PatientList() {
-    const [patientsResponse, manager] = useService(async () =>
-        mapSuccess(
-            await getFHIRResources<Patient>('Patient', {}),
-            (bundle) => extractBundleResources(bundle).Patient,
-        ),
-    );
-
     const navigate = useNavigate();
 
-    const { columnsFilterValues, filteredData, onChangeColumnFilter, onResetFilters } =
-        useSearchBar<Patient>({
-            columns: [
-                {
-                    id: 'patient',
-                    type: 'string',
-                    key: (patientSearchItem) => renderHumanName(patientSearchItem.name?.[0]),
-                    placeholder: t`Find patient`,
-                },
-            ],
-            data: isSuccess(patientsResponse) ? patientsResponse.data : [],
-        });
+    const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
+        columns: [
+            {
+                id: 'patient',
+                type: 'string',
+                placeholder: t`Find patient`,
+            },
+        ],
+    });
+
+    const { patientsResponse, patientsResponseManager } = usePatientList(
+        columnsFilterValues as StringTypeColumnFilterValue[],
+    );
 
     return (
         <>
@@ -55,13 +49,12 @@ export function PatientList() {
                         </Title>
                     </Col>
                     <Col>
-                        <ModalNewPatient onCreate={manager.reload} />
+                        <ModalNewPatient onCreate={patientsResponseManager.reload} />
                     </Col>
                 </Row>
 
                 <SearchBar
                     columnsFilterValues={columnsFilterValues}
-                    filteredData={filteredData}
                     onChangeColumnFilter={onChangeColumnFilter}
                     onResetFilters={onResetFilters}
                 />
@@ -79,7 +72,7 @@ export function PatientList() {
                         ),
                     }}
                     rowKey={(p) => p.id!}
-                    dataSource={filteredData}
+                    dataSource={isSuccess(patientsResponse) ? patientsResponse.data : []}
                     columns={[
                         {
                             title: <Trans>Name</Trans>,
@@ -140,7 +133,7 @@ export function PatientList() {
                                                         notification.success({
                                                             message: t`Patient saved`,
                                                         });
-                                                        manager.reload();
+                                                        patientsResponseManager.reload();
                                                         closeModal();
                                                     }}
                                                     onCancel={closeModal}

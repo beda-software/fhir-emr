@@ -5,10 +5,7 @@ import Title from 'antd/es/typography/Title';
 import { ColumnsType } from 'antd/lib/table';
 import { Link } from 'react-router-dom';
 
-import { useService } from 'aidbox-react/lib/hooks/service';
 import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
-import { mapSuccess } from 'aidbox-react/lib/services/service';
 
 import config from 'shared/src/config';
 import { Questionnaire } from 'shared/src/contrib/aidbox';
@@ -21,6 +18,9 @@ import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
+import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
+
+import { useQuestionnaireList } from './hooks';
 
 const columns: ColumnsType<Questionnaire> = [
     {
@@ -82,25 +82,19 @@ const columns: ColumnsType<Questionnaire> = [
 ];
 
 export function QuestionnaireList() {
-    const [questionnairesResponse] = useService(async () =>
-        mapSuccess(
-            await getFHIRResources<Questionnaire>('Questionnaire', {}),
-            (bundle) => extractBundleResources(bundle).Questionnaire,
-        ),
-    );
+    const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
+        columns: [
+            {
+                id: 'questionnaire',
+                type: 'string',
+                placeholder: t`Find questionnaire`,
+            },
+        ],
+    });
 
-    const { columnsFilterValues, filteredData, onChangeColumnFilter, onResetFilters } =
-        useSearchBar<Questionnaire>({
-            columns: [
-                {
-                    id: 'questionnaire',
-                    type: 'string',
-                    key: 'name',
-                    placeholder: t`Find questionnaire`,
-                },
-            ],
-            data: isSuccess(questionnairesResponse) ? questionnairesResponse.data : [],
-        });
+    const { questionnaireResponse } = useQuestionnaireList(
+        columnsFilterValues as StringTypeColumnFilterValue[],
+    );
 
     return (
         <>
@@ -124,7 +118,6 @@ export function QuestionnaireList() {
 
                 <SearchBar
                     columnsFilterValues={columnsFilterValues}
-                    filteredData={filteredData}
                     onChangeColumnFilter={onChangeColumnFilter}
                     onResetFilters={onResetFilters}
                 />
@@ -142,9 +135,9 @@ export function QuestionnaireList() {
                         ),
                     }}
                     rowKey={(p) => p.id!}
-                    dataSource={filteredData}
+                    dataSource={isSuccess(questionnaireResponse) ? questionnaireResponse.data : []}
                     columns={columns}
-                    loading={isLoading(questionnairesResponse) && { indicator: SpinIndicator }}
+                    loading={isLoading(questionnaireResponse) && { indicator: SpinIndicator }}
                 />
             </BasePageContent>
         </>

@@ -10,24 +10,24 @@ import { ModalPractitioner } from 'src/components/ModalPractitioner';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { Table } from 'src/components/Table';
+import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 
 import { PractitionerListRowData, usePractitionersList } from './hooks';
 
 export function PractitionerList() {
-    const { practitionerDataListRD, practitionerListReload } = usePractitionersList();
+    const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
+        columns: [
+            {
+                id: 'practitioner',
+                type: 'string',
+                placeholder: t`Search by name`,
+            },
+        ],
+    });
 
-    const { columnsFilterValues, filteredData, onChangeColumnFilter, onResetFilters } =
-        useSearchBar<PractitionerListRowData>({
-            columns: [
-                {
-                    id: 'practitioner',
-                    type: 'string',
-                    key: 'practitionerName',
-                    placeholder: t`Search by name`,
-                },
-            ],
-            data: isSuccess(practitionerDataListRD) ? practitionerDataListRD.data : [],
-        });
+    const { practitionerDataListRD, practitionerListReload } = usePractitionersList(
+        columnsFilterValues as StringTypeColumnFilterValue[],
+    );
 
     return (
         <>
@@ -53,7 +53,6 @@ export function PractitionerList() {
 
                 <SearchBar
                     columnsFilterValues={columnsFilterValues}
-                    filteredData={filteredData}
                     onChangeColumnFilter={onChangeColumnFilter}
                     onResetFilters={onResetFilters}
                 />
@@ -71,7 +70,9 @@ export function PractitionerList() {
                             </>
                         ),
                     }}
-                    dataSource={filteredData}
+                    dataSource={
+                        isSuccess(practitionerDataListRD) ? practitionerDataListRD.data : []
+                    }
                     columns={[
                         {
                             title: <Trans>Name</Trans>,
