@@ -1,4 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
+import { t, Trans } from '@lingui/macro';
 import { Button, Form, Modal, notification } from 'antd';
 import { useState } from 'react';
 import Select from 'react-select';
@@ -16,7 +17,6 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 import { useFieldController } from '../BaseQuestionnaireResponseForm/hooks';
 import { QuestionnaireResponseForm } from '../QuestionnaireResponseForm';
 import { Spinner } from '../Spinner';
-import { t, Trans } from '@lingui/macro';
 
 interface Props {
     patient: Patient;

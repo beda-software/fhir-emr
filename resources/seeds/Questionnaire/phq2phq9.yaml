@@ -2,7 +2,27 @@ id: phq2phq9
 resourceType: Questionnaire
 name: PHQ-2/PHQ-9 Depression Screening
 status: active
+mapping:
+    - id: phq2phq9-extract
+      resourceType: Mapping
+launchContext:
+    - name: Patient
+      type: Patient
 item:
+    - text: PatientId
+      type: string
+      linkId: patientId
+      hidden: true
+      initialExpression:
+          language: text/fhirpath
+          expression: '%Patient.id'
+    - text: PatientName
+      type: string
+      linkId: patientName
+      hidden: true
+      initialExpression:
+          language: text/fhirpath
+          expression: "%Patient.name.given[0] & ' ' & %Patient.name.family"
     - text: 'Over the past 2 weeks, how often have you been bothered by:'
       type: group
       linkId: phq2phq9

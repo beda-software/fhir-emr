@@ -1,0 +1,45 @@
+body:
+    $let:
+        patientId: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.value.string").0
+        patientName: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.value.string").0
+        score: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='anxiety-score').answer.value.integer").0
+    $body:
+        type: transaction
+        entry:
+            - request:
+                  url: /Observation
+                  method: POST
+              resource:
+                  status: final
+                  subject:
+                      id: $ patientId
+                      display: $ patientName
+                      resourceType: Patient
+                  code:
+                      coding:
+                          - code: '70274-6'
+                            display: 'GAD-7 Anxiety Severity Score'
+                            system: 'http://loinc.org'
+                  value:
+                      integer: $ score
+                  interpretation:
+                      - text:
+                            $if: $ score <= 4
+                            $then: 'Minimal anxiety'
+                            $else:
+                                $if: $ score <= 9
+                                $then: 'Mild anxiety'
+                                $else:
+                                    $if: $ score <= 14
+                                    $then: 'Moderate anxiety'
+                                    $else: 'Severe anxiety'
+                  resourceType: Observation
+        resourceType: Bundle
+id: gad-7-extract
+resourceType: Mapping

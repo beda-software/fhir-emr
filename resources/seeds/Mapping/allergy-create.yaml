@@ -1,0 +1,73 @@
+body:
+    $let:
+        status: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='status').answer.value.Coding").0
+        patientId: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.value.string").0
+        patientName: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.value.string").0
+        category: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='type').answer.value.Coding.code").0
+        reaction: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='reaction').answer.value.Coding")
+        notes: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='notes').answer.value.string").0
+        substanceDrug: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='substance-drug').answer.value.Coding").0
+        substanceFood: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='substance-food').answer.value.Coding").0
+        substanceEnvironmental: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='substance-environmental').answer.value.Coding").0
+    $body:
+        type: transaction
+        entry:
+            - request:
+                  url: /AllergyIntolerance
+                  method: POST
+              resource:
+                  clinicalStatus:
+                      coding:
+                          - $ status
+                  verificationStatus:
+                      coding:
+                          - code: 'confirmed'
+                            display: 'Confirmed'
+                            system: 'http://terminology.hl7.org/CodeSystem/allergyintolerance-verification'
+                  patient:
+                      id: $ patientId
+                      display: $ patientName
+                      resourceType: Patient
+                  category:
+                      - $switch: $ category
+                        418634005: drug
+                        414285001: food
+                        426232007: environmental
+                  code:
+                    coding:
+                      - $ substanceDrug || substanceFood || substanceEnvironmental
+                  reaction:
+                    - $if: $ reaction
+                      manifestation:
+                        $map: $ reaction
+                        $as: item
+                        $body:
+                          coding:
+                            - $ item
+                      substance:
+                        coding:
+                          - $ substanceDrug || substanceFood || substanceEnvironmental
+                  note:
+                      - text: $ notes
+                  resourceType: AllergyIntolerance
+        resourceType: Bundle
+id: allergy-create
+resourceType: Mapping

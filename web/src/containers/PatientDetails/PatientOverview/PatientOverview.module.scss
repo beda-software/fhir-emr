@@ -1,0 +1,43 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.detailsRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 13px 16px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.detailItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+.detailsTitle {
+    color: #0b182873;
+}
+
+.editButton {
+    padding: 0;
+    font-weight: 700;
+}
+
+.cards {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+
+.card {
+    width: 528px;
+}
