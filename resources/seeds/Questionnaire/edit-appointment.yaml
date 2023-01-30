@@ -1,9 +1,9 @@
 resourceType: Questionnaire
 id: edit-appointment
 status: active
-# mapping:
-#   - id: new-appointment-extract
-#     resourceType: Mapping
+mapping:
+  - id: new-appointment-extract
+    resourceType: Mapping
 launchContext:
   - name: CurrentAppointmentId
     type: string
@@ -47,24 +47,39 @@ item:
         initialExpression:
           language: text/fhirpath
           expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(resourceType='PractitionerRole')"
-      # - text: Type
-      #   type: reference
-      #   required: true
-      #   linkId: service-type
-      #   referenceResource:
-      #     - HealthcareService
-      #   answerExpression:
-      #     language: application/x-fhir-query
-      #     expression: "HealthcareService?organization={{%OrganizationId}}&_has:PractitionerRole:service:id={{%QuestionnaireResponse.repeat(item).where(linkId='practitioner-role').answer.value.children().id}}"
-      #   choiceColumn:
-      #     - forDisplay: true
-      #       path: "name"
-      #   enableBehavior: any
-      #   enableWhen:
-      #     - question: practitioner-role
-      #       operator: "exists"
-      #       answer:
-              # boolean: true
+      - text: Type
+        # type: reference
+        type: choice
+        required: true
+        linkId: service-type
+        # referenceResource:
+        #   - HealthcareService
+        # answerExpression:
+        #   language: application/x-fhir-query
+        #   expression: "HealthcareService?organization={{%OrganizationId}}&_has:PractitionerRole:service:id={{%QuestionnaireResponse.repeat(item).where(linkId='practitioner-role').answer.value.children().id}}"
+        # choiceColumn:
+        #   - forDisplay: true
+        #     path: "name"
+        answerOption:
+          - value:
+              Coding:
+                system: http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type
+                code: consultation
+                display: The first appointment
+          - value:
+              Coding:
+                system: http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type
+                code: follow-up
+                display: A follow up visit
+        initialExpression:
+          language: text/fhirpath
+          expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.serviceType.coding"
+        enableBehavior: any
+        enableWhen:
+          - question: practitioner-role
+            operator: "exists"
+            answer:
+              boolean: true
       - text: Patient
         type: reference
         required: true
@@ -72,20 +87,26 @@ item:
         initialExpression:
           language: text/fhirpath
           expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(resourceType='Patient')"
-      - text: Location
-        type: reference
-        required: true
-        linkId: location
-        readOnly: true
-        enableBehavior: any
-        initialExpression:
-          language: text/fhirpath
-          expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(resourceType='Location')"
-        enableWhen:
-          - question: patient
-            operator: "exists"
-            answer:
-              boolean: true
+        answerExpression:
+          language: application/x-fhir-query
+          expression: "Patient"
+        choiceColumn:
+          - forDisplay: true
+            path: "name.given.first() + ' ' + name.family"
+      # - text: Location
+      #   type: reference
+      #   required: true
+      #   linkId: location
+      #   readOnly: true
+      #   enableBehavior: any
+      #   initialExpression:
+      #     language: text/fhirpath
+      #     expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(resourceType='Location')"
+      #   enableWhen:
+      #     - question: patient
+      #       operator: "exists"
+      #       answer:
+      #         boolean: true
       - text: Appointment date
         required: true
         type: date

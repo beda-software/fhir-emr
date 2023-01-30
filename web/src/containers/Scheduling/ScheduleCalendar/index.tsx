@@ -29,7 +29,6 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
     const { remoteResponses, slotsManager } = useScheduleCalendar(practitionerRole);
 
     const {
-        handleEventChange,
         handleEventClick,
         handleGridSelect,
         editModalData,
@@ -73,36 +72,40 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
                             dayMaxEvents={true}
                             initialEvents={calendarSlots}
                             eventContent={renderEventContent}
-                            eventChange={handleEventChange}
                             eventClick={handleEventClick}
                             select={handleGridSelect}
                             {...calendarOptions}
                         />
-                        <EditAppointmentModal
-                            practitionerRole={practitionerRole}
-                            appointmentId={editModalData.clickedAppointmentId}
-                            showModal={editModalData.showEditAppointmentModal}
-                            onSubmit={() => {}}
-                            onClose={() =>
-                                setEditModalData((data) => ({
-                                    ...data,
-                                    showEditAppointmentModal: false,
-                                }))
-                            }
-                        />
+                        {editModalData.showEditAppointmentModal && (
+                            <EditAppointmentModal
+                                key={`edit-modal-${editModalData.clickedAppointmentId}`}
+                                practitionerRole={practitionerRole}
+                                appointmentId={editModalData.clickedAppointmentId}
+                                showModal={editModalData.showEditAppointmentModal}
+                                onSubmit={() => {}}
+                                onClose={() =>
+                                    setEditModalData((data) => ({
+                                        ...data,
+                                        showEditAppointmentModal: false,
+                                    }))
+                                }
+                            />
+                        )}
                         ,
-                        <NewAppointmentModal
-                            practitionerRole={practitionerRole}
-                            isModalOpen={newModalData.showNewAppointmentModal}
-                            onOk={() => {
-                                handleOkNewAppointment();
-                                slotsManager.reload();
-                                notification.success({
-                                    message: t`Appointment successfully added`,
-                                });
-                            }}
-                            onCancel={handleCancelNewAppointment}
-                        />
+                        {newModalData.showNewAppointmentModal && (
+                            <NewAppointmentModal
+                                practitionerRole={practitionerRole}
+                                isModalOpen={newModalData.showNewAppointmentModal}
+                                onOk={() => {
+                                    handleOkNewAppointment();
+                                    slotsManager.reload();
+                                    notification.success({
+                                        message: t`Appointment successfully added`,
+                                    });
+                                }}
+                                onCancel={handleCancelNewAppointment}
+                            />
+                        )}
                     </>
                 )}
             </RenderRemoteData>

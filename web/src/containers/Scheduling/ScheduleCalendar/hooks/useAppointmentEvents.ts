@@ -1,20 +1,7 @@
 import { DateSelectArg, EventChangeArg, EventClickArg } from '@fullcalendar/core';
-import { notification } from 'antd';
 import { useState } from 'react';
 
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import { getReference, patchFHIRResource, saveFHIRResource } from 'aidbox-react/lib/services/fhir';
-import { formatError } from 'aidbox-react/lib/utils/error';
-
-import {
-    Appointment,
-    CodeableConcept,
-    InternalReference,
-    // Location,
-    Patient,
-    PractitionerRole,
-} from 'shared/src/contrib/aidbox/index';
-import { formatFHIRDateTime } from 'shared/src/utils/date';
+import { PractitionerRole } from 'shared/src/contrib/aidbox/index';
 
 interface EditModalData {
     clickedAppointmentId: string;
@@ -43,21 +30,20 @@ export function useAppointmentEvents(practitionerRole: PractitionerRole) {
         showNewAppointmentModal: false,
     });
 
-    function handleEventChange({ event }: EventChangeArg) {
-        // TODO: show confirm modal and discard event change if rejected
-        const { id, start, end } = event;
-        updateAppointment({
-            id,
-            start: formatFHIRDateTime(start!),
-            end: formatFHIRDateTime(end!),
-        }).then();
-    }
+    // function handleEventChange({ event }: EventChangeArg) {
+    //     // TODO: show confirm modal and discard event change if rejected
+    //     const { id, start, end } = event;
+    // }
 
     function handleEventClick(e: EventClickArg) {
+        console.log('handleEventClick');
+
         setEditModalData({ clickedAppointmentId: e.event.id, showEditAppointmentModal: true });
     }
 
     function handleGridSelect({ start, end }: DateSelectArg) {
+        console.log('handleGridSelect');
+
         setNewModalData({
             appointmentDate: {
                 start,
@@ -81,27 +67,7 @@ export function useAppointmentEvents(practitionerRole: PractitionerRole) {
         }));
     }
 
-    // TODO: support update patient, practitioner, service for Appointment
-    async function updateAppointment({
-        id,
-        start,
-        end,
-    }: Required<Pick<Appointment, 'id' | 'start' | 'end'>>) {
-        const response = await patchFHIRResource<Appointment>({
-            resourceType: 'Appointment',
-            id,
-            start,
-            end,
-        });
-        if (isSuccess(response)) {
-            notification.success({ message: 'Successfully updated' });
-        } else {
-            notification.error({ message: formatError(response.error) });
-        }
-    }
-
     return {
-        handleEventChange,
         handleEventClick,
         handleGridSelect,
         editModalData,

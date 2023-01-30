@@ -20,18 +20,22 @@ interface Props {
 
 export function EditAppointmentModal(props: Props) {
     const { showModal, onClose, appointmentId, practitionerRole } = props;
+    console.log('appointmentId', appointmentId);
+
     // const [practitionerRole] = sharedPractitionerRole.useSharedState();
     const { response, onSubmit } = useQuestionnaireResponseForm({
         questionnaireLoader: { type: 'id', questionnaireId: 'edit-appointment' },
         questionnaireResponseSaveService: inMemorySaveService,
         launchContextParameters: [
             { name: 'CurrentAppointmentId', value: { string: appointmentId } },
-            { name: 'OrganizationId', value: { string: practitionerRole.organization?.id } },
+            // { name: 'OrganizationId', value: { string: practitionerRole.organization?.id } },
         ],
+        onSuccess: props.onSubmit,
+        onCancel: onClose,
     });
 
     return (
-        <Modal open={showModal} title="Edit Appointment" onOk={props.onSubmit} onCancel={onClose}>
+        <Modal open={showModal} title="Edit Appointment" footer={null}>
             <Layout>
                 <Content style={{ padding: 16, backgroundColor: 'white' }}>
                     <RenderRemoteData remoteData={response}>
