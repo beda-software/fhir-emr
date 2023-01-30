@@ -1,4 +1,4 @@
-import { ContactsOutlined, ExperimentOutlined } from '@ant-design/icons';
+import { AlertOutlined, ContactsOutlined, ExperimentOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
 import _ from 'lodash';
@@ -8,7 +8,7 @@ import { useService } from 'aidbox-react/lib/hooks/service';
 import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess, resolveMap } from 'aidbox-react/lib/services/service';
 
-import { AllergyIntolerance, Patient } from 'shared/src/contrib/aidbox';
+import { AllergyIntolerance, Observation, Patient } from 'shared/src/contrib/aidbox';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { DashboardCard, DashboardCardTable } from 'src/components/DashboardCard';
@@ -37,6 +37,9 @@ interface OverviewCard<T = any> {
     getKey: (r: T) => string;
 }
 
+const depressionSeverityCode = '44261-6';
+const anxietySeverityCode = '70274-6';
+
 function prepareAllergies(allergies: AllergyIntolerance[]): OverviewCard<AllergyIntolerance> {
     return {
         title: t`Allergies`,
@@ -53,6 +56,28 @@ function prepareAllergies(allergies: AllergyIntolerance[]): OverviewCard<Allergy
                 title: t`Date`,
                 key: 'date',
                 render: (r: AllergyIntolerance) => formatHumanDate(r.meta?.createdAt!),
+                width: 200,
+            },
+        ],
+    };
+}
+
+function prepareObservations(observations: Observation[]): OverviewCard<Observation> {
+    return {
+        title: t`Conditions`,
+        icon: <AlertOutlined />,
+        data: observations,
+        getKey: (r: Observation) => r.id!,
+        columns: [
+            {
+                title: t`Name`,
+                key: 'name',
+                render: (r: Observation) => r.interpretation?.[0]?.text,
+            },
+            {
+                title: t`Date`,
+                key: 'date',
+                render: (r: Observation) => formatHumanDate(r.meta?.createdAt!),
                 width: 200,
             },
         ],
@@ -96,10 +121,16 @@ function usePatientOverview(props: Props) {
                         patient: patient.id,
                         _sort: ['-lastUpdated'],
                     }),
+                    observationsBundle: getFHIRResources<Observation>('Observation', {
+                        patient: patient.id,
+                        _sort: ['-lastUpdated'],
+                        code: [`${depressionSeverityCode},${anxietySeverityCode}`],
+                    }),
                 }),
-                ({ allergiesBundle }) => {
+                ({ allergiesBundle, observationsBundle }) => {
                     const allergies = extractBundleResources(allergiesBundle).AllergyIntolerance;
-                    const cards = [prepareAllergies(allergies)];
+                    const observations = extractBundleResources(observationsBundle).Observation;
+                    const cards = [prepareAllergies(allergies), prepareObservations(observations)];
 
                     return { cards: cards.filter((i) => i.data.length) };
                 },

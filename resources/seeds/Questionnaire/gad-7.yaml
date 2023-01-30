@@ -2,7 +2,27 @@ id: gad7
 resourceType: Questionnaire
 name: GAD-7
 status: active
+mapping:
+    - id: gad-7-extract
+      resourceType: Mapping
+launchContext:
+    - name: Patient
+      type: Patient
 item:
+    - text: PatientId
+      type: string
+      linkId: patientId
+      hidden: true
+      initialExpression:
+          language: text/fhirpath
+          expression: '%Patient.id'
+    - text: PatientName
+      type: string
+      linkId: patientName
+      hidden: true
+      initialExpression:
+          language: text/fhirpath
+          expression: "%Patient.name.given[0] & ' ' & %Patient.name.family"
     - text: Over the last two weeks, how often have you been bothered by the following problems?
       type: group
       linkId: gad-7
@@ -203,7 +223,7 @@ item:
                           system: 'http://loinc.org'
                           code: 'LA6571-9'
                           display: 'Nearly every day'
-          - linkId: 70274-6
+          - linkId: anxiety-score
             text: GAD-7 Anxiety Severity Score
             required: true
             type: integer
