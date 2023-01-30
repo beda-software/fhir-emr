@@ -1,17 +1,17 @@
-import Icon from '@ant-design/icons';
+// import Icon from '@ant-design/icons';
 import { Form } from 'antd';
 import { Rule } from 'antd/lib/form';
 import _ from 'lodash';
-import { CSSProperties, createContext, useContext } from 'react';
+import { createContext, useContext } from 'react';
 import { ActionMeta, SingleValue, MultiValue } from 'react-select';
 import AsyncSelectOriginal from 'react-select/async';
 
 // import s from '../../QuestionnaireResponseForm/fields/fields.module.scss';
-import { ReactComponent as ArrowSvg } from './images/arrowDropdown.svg';
+// import { ReactComponent as ArrowSvg } from './images/arrowDropdown.svg';
 
-const ArrowIcon = (props: { className?: string; style?: CSSProperties }) => (
-    <Icon className={props.className} style={props.style} component={ArrowSvg} />
-);
+// const ArrowIcon = (props: { className?: string; style?: CSSProperties }) => (
+//     <Icon className={props.className} style={props.style} component={ArrowSvg} />
+// );
 
 interface Props<T> {
     fieldPath: (string | number)[];
@@ -59,10 +59,7 @@ export function AsyncSelectField<T>(props: Props<T>) {
 
     return (
         <Form.Item
-            {...formItemProps}
             extra={helpText}
-            name={fieldPath}
-            rules={rules}
             data-testid={testId}
             label={
                 <span>
@@ -87,13 +84,13 @@ export function AsyncSelectField<T>(props: Props<T>) {
                 isMulti={isMulti}
                 components={{
                     IndicatorSeparator: () => null,
-                    DropdownIndicator: () => (
-                        <ArrowIcon
-                            style={{
-                                fontSize: 8,
-                            }}
-                        />
-                    ),
+                    // DropdownIndicator: () => (
+                    //     <ArrowIcon
+                    //         style={{
+                    //             fontSize: 8,
+                    //         }}
+                    //     />
+                    // ),
                 }}
                 menuPortalTarget={document.body}
             />

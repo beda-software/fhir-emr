@@ -67,71 +67,11 @@ export function useAppointmentEvents(practitionerRole: PractitionerRole) {
         });
     }
 
-    async function createAppointment({ start, end }: Partial<Appointment>) {
-        const serviceType: CodeableConcept = {
-            text: 'First Appointment',
-            coding: [
-                {
-                    code: 'code',
-                    system: 'todo',
-                    display: 'First Appointment',
-                },
-            ],
-        };
-
-        const patientReference: InternalReference<Patient> = {
-            id: '37b9ef13-5dd4-4e2e-a859-ab44a78f21f5',
-            display: 'John Murphy',
-            resourceType: 'Patient',
-        };
-
-        // const locationReference: InternalReference<Location> = {
-        //     id: 'dfbc7669-08c1-4566-9254-a4946ad5efa9',
-        //     display: '102 Hobson Street, Auckland',
-        //     resourceType: 'Location',
-        // };
-
-        const response = await saveFHIRResource<Appointment>({
-            resourceType: 'Appointment',
-            start,
-            end,
-            serviceType: [serviceType],
-            participant: [
-                {
-                    actor: patientReference,
-                    status: 'accepted',
-                },
-                {
-                    actor: getReference(practitionerRole),
-                    status: 'accepted',
-                },
-                // {
-                //     actor: locationReference,
-                //     status: 'accepted',
-                // },
-            ],
-            status: 'booked',
-        });
-        if (isSuccess(response)) {
-            notification.success({ message: 'Successfully created' });
-        } else {
-            notification.error({ message: formatError(response.error) });
-        }
-    }
-
-    async function handleOkNewAppointment() {
-        if (newModalData.appointmentDate.start && newModalData.appointmentDate.end) {
-            await createAppointment({
-                start: formatFHIRDateTime(newModalData.appointmentDate.start),
-                end: formatFHIRDateTime(newModalData.appointmentDate.end),
-            });
-            setNewModalData((state) => ({
-                ...state,
-                showNewAppointmentModal: false,
-            }));
-        } else {
-            console.error('the start and end date does not exist');
-        }
+    function handleOkNewAppointment() {
+        setNewModalData((state) => ({
+            ...state,
+            showNewAppointmentModal: false,
+        }));
     }
 
     async function handleCancelNewAppointment() {
@@ -168,6 +108,6 @@ export function useAppointmentEvents(practitionerRole: PractitionerRole) {
         setEditModalData,
         newModalData,
         handleOkNewAppointment,
-        handleCancelNewAppointment
+        handleCancelNewAppointment,
     };
 }

@@ -34,6 +34,11 @@ body:
             practitioner:
               uri: urn:uuid:practitioner-id
             resourceType: practitionerRole
+            healthcareService:
+              - id: consultation
+                resourceType: HealthcareService
+              - id: follow-up
+                resourceType: HealthcareService
     $call: concat
 id: practitioner-create
 resourceType: Mapping

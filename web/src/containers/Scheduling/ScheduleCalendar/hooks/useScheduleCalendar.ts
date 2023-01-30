@@ -35,7 +35,7 @@ export function useScheduleCalendar(practitionerRole: PractitionerRole) {
     const periodStart = formatFHIRDateTime(moment().startOf('day').subtract(1, 'months'));
     const periodEnd = formatFHIRDateTime(moment().endOf('day').add(1, 'months'));
 
-    const [calendarSlotsRD] = useService(async () => {
+    const [calendarSlotsRD, slotsManager] = useService(async () => {
         const response = await getAllFHIRResources<Appointment | Patient>('Appointment', {
             actor: practitionerRole.id,
             _include: 'Appointment:patient',
@@ -66,5 +66,5 @@ export function useScheduleCalendar(practitionerRole: PractitionerRole) {
         [businessHoursRD, calendarSlotsRD],
     );
 
-    return { remoteResponses };
+    return { remoteResponses, slotsManager };
 }

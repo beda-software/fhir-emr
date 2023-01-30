@@ -8,13 +8,13 @@ launchContext:
   - name: CurrentAppointmentId
     type: string
     description: The edited appointment ID
-  - name: OrganizationId
-    type: string
-    description: The organization ID
+  # - name: OrganizationId
+  #   type: string
+  #   description: The organization ID
 contained:
   - resourceType: Bundle
     id: CurrentAppointmentBundle
-    type: searchset
+    type: transaction
     entry:
       - request:
           method: GET
@@ -40,31 +40,31 @@ item:
         linkId: practitioner-role
         answerExpression:
           language: application/x-fhir-query
-          expression: "PractitionerRole?organization={{%OrganizationId}}&location:missing=false&_assoc=practitioner"
+          expression: "PractitionerRole?_assoc=practitioner"
         choiceColumn:
           - forDisplay: true
             path: "practitioner.resource.name.given.first() + ' ' + practitioner.resource.name.family"
         initialExpression:
           language: text/fhirpath
           expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(resourceType='PractitionerRole')"
-      - text: Type
-        type: reference
-        required: true
-        linkId: service-type
-        referenceResource:
-          - HealthcareService
-        answerExpression:
-          language: application/x-fhir-query
-          expression: "HealthcareService?organization={{%OrganizationId}}&_has:PractitionerRole:service:id={{%QuestionnaireResponse.repeat(item).where(linkId='practitioner-role').answer.value.children().id}}"
-        choiceColumn:
-          - forDisplay: true
-            path: "name"
-        enableBehavior: any
-        enableWhen:
-          - question: practitioner-role
-            operator: "exists"
-            answer:
-              boolean: true
+      # - text: Type
+      #   type: reference
+      #   required: true
+      #   linkId: service-type
+      #   referenceResource:
+      #     - HealthcareService
+      #   answerExpression:
+      #     language: application/x-fhir-query
+      #     expression: "HealthcareService?organization={{%OrganizationId}}&_has:PractitionerRole:service:id={{%QuestionnaireResponse.repeat(item).where(linkId='practitioner-role').answer.value.children().id}}"
+      #   choiceColumn:
+      #     - forDisplay: true
+      #       path: "name"
+      #   enableBehavior: any
+      #   enableWhen:
+      #     - question: practitioner-role
+      #       operator: "exists"
+      #       answer:
+              # boolean: true
       - text: Patient
         type: reference
         required: true

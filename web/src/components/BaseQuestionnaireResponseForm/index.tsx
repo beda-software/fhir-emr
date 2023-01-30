@@ -34,6 +34,7 @@ import {
     Row,
 } from './widgets';
 import { Display } from './widgets/display';
+import { QuestionReference } from './widgets/reference';
 
 export interface BaseQuestionnaireResponseFormProps {
     formData: QuestionnaireResponseFormData;
@@ -85,6 +86,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                         choice: QuestionChoice,
                         boolean: QuestionBoolean,
                         display: Display,
+                        reference: QuestionReference,
                         ...props.questionItemComponents,
                     }}
                     itemControlQuestionItemComponents={{

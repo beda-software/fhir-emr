@@ -2,7 +2,7 @@ resourceType: Mapping
 id: new-appointment-extract
 body:
   $let:
-    locationReference: $ fhirpath("QuestionnaireResponse.item.repeat(item).where(linkId='location').answer.children().Reference").0
+    # locationReference: $ fhirpath("QuestionnaireResponse.item.repeat(item).where(linkId='location').answer.children().Reference").0
     predefinedPatientId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='predefined-patient-id').answer.children().string").0
     selectedPatientReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patient').answer.children().Reference").0
     predefinedPractitionerRoleId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='predefined-practitioner-role-id').answer.children().string").0
@@ -31,8 +31,8 @@ body:
                   resourceType: PractitionerRole
                   id: $ practitionerRoleId
                 status: accepted
-              - actor: $ locationReference
-                status: accepted
+              # - actor: $ locationReference
+              #   status: accepted
             serviceType:
               - text: $ serviceTypeCoding.display
                 coding:

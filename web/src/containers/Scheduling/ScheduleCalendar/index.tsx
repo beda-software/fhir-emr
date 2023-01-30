@@ -3,7 +3,8 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import FullCalendar from '@fullcalendar/react'; // import it first
 import timeGridPlugin from '@fullcalendar/timegrid';
-import { Trans } from '@lingui/macro';
+import { t, Trans } from '@lingui/macro';
+import { notification } from 'antd';
 import Title from 'antd/es/typography/Title';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
@@ -25,7 +26,7 @@ interface Props {
 export function ScheduleCalendar({ practitionerRole }: Props) {
     const { calendarOptions } = useCalendarOptions();
 
-    const { remoteResponses } = useScheduleCalendar(practitionerRole);
+    const { remoteResponses, slotsManager } = useScheduleCalendar(practitionerRole);
 
     const {
         handleEventChange,
@@ -93,8 +94,14 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
                         <NewAppointmentModal
                             practitionerRole={practitionerRole}
                             isModalOpen={newModalData.showNewAppointmentModal}
-                            handleOk={handleOkNewAppointment}
-                            handleCancel={handleCancelNewAppointment}
+                            onOk={() => {
+                                handleOkNewAppointment();
+                                slotsManager.reload();
+                                notification.success({
+                                    message: t`Appointment successfully added`,
+                                });
+                            }}
+                            onCancel={handleCancelNewAppointment}
                         />
                     </>
                 )}

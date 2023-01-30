@@ -8355,6 +8355,9 @@ export interface HealthcareService {
     text?: Narrative;
     /** Type of service that may be delivered or performed */
     type?: CodeableConcept[];
+    /** NOTE: from extension urn:extensions:healthcare-service-duration */
+    /** Length of service in minutes */
+    duration?: decimal;
 }
 
 export interface HealthcareServiceAvailableTime {

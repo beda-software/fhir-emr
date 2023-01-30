@@ -1,10 +1,9 @@
+import { Form } from 'antd';
 import fhirpath from 'fhirpath';
+import _ from 'lodash';
 import { ActionMeta, MultiValue, SingleValue } from 'react-select';
-import {
-    parseFhirQueryExpression,
-    QuestionItemProps,
-    useQuestionnaireResponseFormContext,
-} from 'sdc-qrf';
+import AsyncSelect from 'react-select/async';
+import { parseFhirQueryExpression, QuestionItemProps } from 'sdc-qrf';
 
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { ResourcesMap } from 'aidbox-react/lib/services/fhir';
@@ -18,8 +17,6 @@ import {
 } from 'shared/src/contrib/aidbox';
 import { loadResourceOptions } from 'shared/src/services/questionnaire';
 import { getAnswerCode, getAnswerDisplay } from 'shared/src/utils/questionnaire';
-
-import { AsyncSelectField } from 'src/components/AsyncSelectField';
 
 import { useFieldController } from '../hooks';
 
@@ -36,16 +33,17 @@ function useAnswerReference<R extends Resource = any, IR extends Resource = any>
     context,
     overrideGetDisplay,
 }: AnswerReferenceProps<R, IR>) {
-    const { linkId, repeats, required, answerExpression, choiceColumn } = questionItem;
-    const getDisplay =
-        overrideGetDisplay ??
-        ((resource: R) => fhirpath.evaluate(resource, choiceColumn![0]!.path, context)[0]);
-
+    const { linkId, repeats, required, answerExpression, choiceColumn, text } = questionItem;
     const rootFieldPath = [...parentPath, linkId];
     const fieldPath = [...rootFieldPath, ...(repeats ? [] : ['0'])];
     const rootFieldName = rootFieldPath.join('.');
 
     const fieldName = fieldPath.join('.');
+    const fieldController = useFieldController(fieldPath, questionItem);
+
+    const getDisplay =
+        overrideGetDisplay ??
+        ((resource: R) => fhirpath.evaluate(resource, choiceColumn![0]!.path, context)[0]);
 
     // TODO: add support for fhirpath and application/x-fhir-query
     const [resourceType, searchParams] = parseFhirQueryExpression(
@@ -66,6 +64,13 @@ function useAnswerReference<R extends Resource = any, IR extends Resource = any>
 
         return [];
     };
+
+    const debouncedLoadOptions = _.debounce(
+        (searchText: string, callback: (options: QuestionnaireItemAnswerOption[]) => void) => {
+            (async () => callback(await loadOptions(searchText)))();
+        },
+        500,
+    );
 
     const onChange = (
         _value:
@@ -101,12 +106,15 @@ function useAnswerReference<R extends Resource = any, IR extends Resource = any>
     return {
         rootFieldName,
         fieldName,
-        loadOptions,
+        debouncedLoadOptions,
         onChange,
         validate,
         searchParams,
         resourceType,
         deps,
+        fieldController,
+        text,
+        repeats,
     };
 }
 
@@ -121,30 +129,20 @@ function buildRules(props: QuestionnaireItem) {
 function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource = any>(
     props: AnswerReferenceProps<R, IR>,
 ) {
-    const { questionItem, parentPath } = props;
-    const { loadOptions, onChange, deps } = useAnswerReference(props);
-    const { text, repeats, linkId, required, readOnly } = questionItem;
-    const qrfContext = useQuestionnaireResponseFormContext();
-
-    const fieldName = [...parentPath, questionItem.linkId!];
-
-    const {} = useFieldController(fieldName, questionItem);
+    const { debouncedLoadOptions, fieldController, text, repeats } = useAnswerReference(props);
 
     return (
-        <AsyncSelectField<QuestionnaireItemAnswerOption>
-            key={`answer-choice-${deps.join('-')}`}
-            fieldPath={fieldName}
-            testId={linkId!}
-            label={text}
-            loadOptions={loadOptions}
-            isMulti={!!repeats}
-            rules={buildRules(questionItem)}
-            getOptionLabel={(option) => (props.overrideGetLabel ?? getAnswerDisplay)(option.value)}
-            getOptionValue={(option) => getAnswerCode(option.value)}
-            onChange={onChange}
-            readOnly={qrfContext.readOnly || readOnly}
-            required={required}
-        />
+        <Form.Item hidden={fieldController.hidden} label={text}>
+            <AsyncSelect<QuestionnaireItemAnswerOption>
+                onChange={fieldController.onChange}
+                value={fieldController.value}
+                loadOptions={debouncedLoadOptions}
+                defaultOptions
+                getOptionLabel={(option) => getAnswerDisplay(option.value)}
+                getOptionValue={(option) => getAnswerCode(option.value)}
+                isMulti={!repeats ? false : undefined}
+            />
+        </Form.Item>
     );
 }
 
