@@ -35,7 +35,7 @@ export function EditAppointmentModal(props: Props) {
     });
 
     return (
-        <Modal open={showModal} title="Edit Appointment" footer={null}>
+        <Modal open={showModal} title="Edit Appointment" footer={null} onCancel={onClose}>
             <Layout>
                 <Content style={{ padding: 16, backgroundColor: 'white' }}>
                     <RenderRemoteData remoteData={response}>
