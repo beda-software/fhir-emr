@@ -1,4 +1,4 @@
-import { DateSelectArg, EventChangeArg, EventClickArg } from '@fullcalendar/core';
+import { DateSelectArg, EventClickArg } from '@fullcalendar/core';
 import { useState } from 'react';
 
 import { PractitionerRole } from 'shared/src/contrib/aidbox/index';

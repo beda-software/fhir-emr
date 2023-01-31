@@ -36,17 +36,17 @@ export const SelectImplementationProvider = SelectContext.Provider;
 export function AsyncSelectField<T>(props: Props<T>) {
     const {
         readOnly,
-        fieldPath,
+        // fieldPath,
         label,
         required,
         placeholder = 'Select...',
         helpText,
-        formItemProps,
+        // formItemProps,
         loadOptions,
         getOptionLabel,
         getOptionValue,
         isMulti,
-        rules,
+        // rules,
         testId,
     } = props;
 

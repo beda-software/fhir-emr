@@ -10,7 +10,7 @@ import { ResourcesMap } from 'aidbox-react/lib/services/fhir';
 import { buildQueryParams } from 'aidbox-react/lib/services/instance';
 
 import {
-    QuestionnaireItem,
+    // QuestionnaireItem,
     QuestionnaireItemAnswerOption,
     QuestionnaireResponseItemAnswer,
     Resource,
@@ -118,13 +118,13 @@ function useAnswerReference<R extends Resource = any, IR extends Resource = any>
     };
 }
 
-function buildRules(props: QuestionnaireItem) {
-    const { required } = props;
-    if (required) {
-        return [{ required: true, message: 'This field is required' }];
-    }
-    return [];
-}
+// function buildRules(props: QuestionnaireItem) {
+//     const { required } = props;
+//     if (required) {
+//         return [{ required: true, message: 'This field is required' }];
+//     }
+//     return [];
+// }
 
 function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource = any>(
     props: AnswerReferenceProps<R, IR>,

@@ -19,7 +19,7 @@ interface Props {
 }
 
 export function EditAppointmentModal(props: Props) {
-    const { showModal, onClose, appointmentId, practitionerRole } = props;
+    const { showModal, onClose, appointmentId } = props;
     console.log('appointmentId', appointmentId);
 
     // const [practitionerRole] = sharedPractitionerRole.useSharedState();
