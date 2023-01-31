@@ -15,7 +15,7 @@ export function useQuestionnaireList(filterValues: StringTypeColumnFilterValue[]
 
         return mapSuccess(
             await getFHIRResources<Questionnaire>('Questionnaire', {
-                name: questionnaireFilterValue!.value,
+                ...(questionnaireFilterValue ? { name: questionnaireFilterValue.value } : {}),
             }),
             (bundle) => extractBundleResources(bundle).Questionnaire,
         );

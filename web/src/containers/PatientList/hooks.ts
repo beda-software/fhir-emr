@@ -15,7 +15,7 @@ export function usePatientList(filterValues: StringTypeColumnFilterValue[]) {
 
         return mapSuccess(
             await getFHIRResources<Patient>('Patient', {
-                name: patientFilterValue!.value,
+                ...(patientFilterValue ? { name: patientFilterValue.value } : {}),
             }),
             (bundle) => extractBundleResources(bundle).Patient,
         );
