@@ -24,7 +24,7 @@ interface Props {
 }
 
 export function ScheduleCalendar({ practitionerRole }: Props) {
-    const { calendarOptions } = useCalendarOptions();    
+    const { calendarOptions } = useCalendarOptions();
 
     const { remoteResponses, slotsManager } = useScheduleCalendar(practitionerRole);
 
@@ -82,7 +82,16 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
                                 practitionerRole={practitionerRole}
                                 appointmentId={editModalData.clickedAppointmentId}
                                 showModal={editModalData.showEditAppointmentModal}
-                                onSubmit={() => {}}
+                                onSubmit={() => {
+                                    setEditModalData({
+                                        clickedAppointmentId: 'undefined',
+                                        showEditAppointmentModal: false,
+                                    });
+                                    slotsManager.reload();
+                                    notification.success({
+                                        message: t`Appointment successfully rescheduled`,
+                                    });
+                                }}
                                 onClose={() =>
                                     setEditModalData((data) => ({
                                         ...data,

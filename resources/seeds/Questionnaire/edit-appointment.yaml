@@ -2,15 +2,12 @@ resourceType: Questionnaire
 id: edit-appointment
 status: active
 mapping:
-  - id: new-appointment-extract
+  - id: edit-appointment-extract
     resourceType: Mapping
 launchContext:
   - name: CurrentAppointmentId
     type: string
     description: The edited appointment ID
-  # - name: OrganizationId
-  #   type: string
-  #   description: The organization ID
 contained:
   - resourceType: Bundle
     id: CurrentAppointmentBundle
