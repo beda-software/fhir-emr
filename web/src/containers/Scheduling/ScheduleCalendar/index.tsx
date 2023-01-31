@@ -24,7 +24,7 @@ interface Props {
 }
 
 export function ScheduleCalendar({ practitionerRole }: Props) {
-    const { calendarOptions } = useCalendarOptions();
+    const { calendarOptions } = useCalendarOptions();    
 
     const { remoteResponses, slotsManager } = useScheduleCalendar(practitionerRole);
 
@@ -95,7 +95,7 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
                         {newModalData.showNewAppointmentModal && (
                             <NewAppointmentModal
                                 practitionerRole={practitionerRole}
-                                isModalOpen={newModalData.showNewAppointmentModal}
+                                newModalData={newModalData}
                                 onOk={() => {
                                     handleOkNewAppointment();
                                     slotsManager.reload();

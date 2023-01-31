@@ -4,18 +4,23 @@ import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
 import { PractitionerRole } from 'shared/src/contrib/aidbox';
 import { inMemorySaveService } from 'shared/src/hooks/questionnaire-response-form-data';
+import { formatFHIRDateTime } from 'shared/src/utils/date';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import type { NewModalData } from 'src/containers/Scheduling/ScheduleCalendar/hooks/useAppointmentEvents';
 
 interface NewAppointmentModalProps {
     practitionerRole: PractitionerRole;
-    isModalOpen: boolean;
+    newModalData: NewModalData;
     onOk?: () => void;
     onCancel?: () => void;
 }
 
 export function NewAppointmentModal(props: NewAppointmentModalProps) {
+    const appointmentDate = props.newModalData.appointmentDate.start
+        ? formatFHIRDateTime(props.newModalData.appointmentDate.start)
+        : formatFHIRDateTime(new Date());
     const { response, onSubmit, readOnly, onCancel } = useQuestionnaireResponseForm({
         onSuccess: props.onOk,
         onCancel: props.onCancel,
@@ -30,10 +35,21 @@ export function NewAppointmentModal(props: NewAppointmentModalProps) {
                 name: 'practitionerRole',
                 resource: props.practitionerRole,
             },
+            {
+                name: 'dateTime',
+                value: {
+                    string: appointmentDate,
+                },
+            },
         ],
     });
     return (
-        <Modal title="New Appointment" open={props.isModalOpen} footer={null} onCancel={onCancel}>
+        <Modal
+            title="New Appointment"
+            open={props.newModalData.showNewAppointmentModal}
+            footer={null}
+            onCancel={onCancel}
+        >
             <RenderRemoteData remoteData={response}>
                 {(formData) => {
                     return (

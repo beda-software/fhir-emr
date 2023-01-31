@@ -8,7 +8,7 @@ interface EditModalData {
     showEditAppointmentModal: boolean;
 }
 
-interface NewModalData {
+export interface NewModalData {
     appointmentDate: {
         start: Date | null;
         end: Date | null;

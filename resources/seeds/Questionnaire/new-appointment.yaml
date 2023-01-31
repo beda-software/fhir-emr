@@ -139,3 +139,7 @@ item:
         required: true
         type: dateTime
         linkId: start-datetime
+        initialExpression:
+          language: text/fhirpath
+          expression: "%QuestionnaireResponse.item.item[2].answer.value.date"
+          # QuestionnaireResponse.item.item[2].answer.value.date
