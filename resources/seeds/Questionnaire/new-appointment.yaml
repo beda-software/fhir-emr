@@ -11,6 +11,12 @@ launchContext:
   - name: practitionerRole
     type: PractitionerRole
     description: PractitionerRole resource
+  - name: appointmentStartDate
+    type: string
+    description: Appointment date passing from calendar
+  - name: appointmentStartDateTime
+    type: string
+    description: Appointment datetime passing from calendar
 contained:
   - resourceType: Bundle
     id: PractitionerRoleWithPractitioner
@@ -135,11 +141,13 @@ item:
         required: true
         type: date
         linkId: appointment-date
+        initialExpression:
+          language: text/fhirpath
+          expression: "%appointmentStartDate"
       - text: Start time
         required: true
         type: dateTime
         linkId: start-datetime
         initialExpression:
           language: text/fhirpath
-          expression: "%QuestionnaireResponse.item.item[2].answer.value.date"
-          # QuestionnaireResponse.item.item[2].answer.value.date
+          expression: "%appointmentStartDateTime"

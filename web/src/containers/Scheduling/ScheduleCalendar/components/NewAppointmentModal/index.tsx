@@ -4,7 +4,7 @@ import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
 import { PractitionerRole } from 'shared/src/contrib/aidbox';
 import { inMemorySaveService } from 'shared/src/hooks/questionnaire-response-form-data';
-import { formatFHIRDateTime } from 'shared/src/utils/date';
+import { formatFHIRDate, formatFHIRDateTime } from 'shared/src/utils/date';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
@@ -18,9 +18,12 @@ interface NewAppointmentModalProps {
 }
 
 export function NewAppointmentModal(props: NewAppointmentModalProps) {
-    const appointmentDate = props.newModalData.appointmentDate.start
-        ? formatFHIRDateTime(props.newModalData.appointmentDate.start)
-        : formatFHIRDateTime(new Date());
+    const appointmentStartDate = props.newModalData.appointmentDate.start
+    ? formatFHIRDate(props.newModalData.appointmentDate.start)
+    : formatFHIRDate(new Date());
+    const appointmentStartDateTime = props.newModalData.appointmentDate.start
+    ? formatFHIRDateTime(props.newModalData.appointmentDate.start)
+    : formatFHIRDateTime(new Date())
     const { response, onSubmit, readOnly, onCancel } = useQuestionnaireResponseForm({
         onSuccess: props.onOk,
         onCancel: props.onCancel,
@@ -36,9 +39,15 @@ export function NewAppointmentModal(props: NewAppointmentModalProps) {
                 resource: props.practitionerRole,
             },
             {
-                name: 'dateTime',
+                name: 'appointmentStartDate',
                 value: {
-                    string: appointmentDate,
+                    string: appointmentStartDate,
+                },
+            },
+            {
+                name: 'appointmentStartDateTime',
+                value: {
+                    string: appointmentStartDateTime,
                 },
             },
         ],
