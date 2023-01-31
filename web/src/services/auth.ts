@@ -1,4 +1,5 @@
 import { service } from 'aidbox-react/lib/services/service';
+import { Token } from 'aidbox-react/lib/services/token';
 
 import config from 'shared/src/config';
 import { User } from 'shared/src/contrib/aidbox';
@@ -35,6 +36,29 @@ export function setToken(token: string) {
 
 export function removeToken() {
     window.localStorage.removeItem('token');
+}
+
+interface LoginBody {
+    email: string;
+    password: string;
+}
+
+type TokenResponse = {
+    userinfo: User;
+} & Token;
+
+export async function login(data: LoginBody) {
+    return await service<TokenResponse>({
+        url: '/auth/token',
+        method: 'POST',
+        data: {
+            username: data.email,
+            password: data.password,
+            client_id: 'testAuth',
+            client_secret: '123456',
+            grant_type: 'password',
+        },
+    });
 }
 
 export function logout() {

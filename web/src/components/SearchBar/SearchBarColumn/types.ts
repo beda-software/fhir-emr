@@ -6,16 +6,16 @@ import {
 } from '../types';
 
 export type SearchBarColumnProps<T> = {
-    columnFilterValue: ColumnFilterValue<T>;
+    columnFilterValue: ColumnFilterValue;
     onChange: (value: DateColumnFilterValue | string, key: string) => void;
 };
 
-export interface SearchBarColumnStringTypeProps<T> {
-    columnFilterValue: StringTypeColumnFilterValue<T>;
+export interface SearchBarColumnStringTypeProps {
+    columnFilterValue: StringTypeColumnFilterValue;
     onChange: (value: string, key: string) => void;
 }
 
-export interface SearchBarColumnDateTypeProps<T> {
-    columnFilterValue: DateTypeColumnFilterValue<T>;
+export interface SearchBarColumnDateTypeProps {
+    columnFilterValue: DateTypeColumnFilterValue;
     onChange: (value: DateColumnFilterValue, key: string) => void;
 }

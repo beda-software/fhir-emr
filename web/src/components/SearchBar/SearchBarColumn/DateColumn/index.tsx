@@ -7,7 +7,7 @@ import { SearchBarColumnDateTypeProps } from '../types';
 
 const { RangePicker } = DatePicker;
 
-export function DateColumn<T>(props: SearchBarColumnDateTypeProps<T>) {
+export function DateColumn<T>(props: SearchBarColumnDateTypeProps) {
     const { columnFilterValue } = props;
 
     const { onColumnChange } = useDateColumn<T>(props);

@@ -11,9 +11,9 @@ export function SearchBarColumn<T>(props: SearchBarColumnProps<T>) {
 
     switch (columnFilterValue.column.type) {
         case 'string':
-            return <StringColumn<T> {...(props as SearchBarColumnStringTypeProps<T>)} />;
+            return <StringColumn<T> {...(props as SearchBarColumnStringTypeProps)} />;
         case 'date':
-            return <DateColumn<T> {...(props as SearchBarColumnDateTypeProps<T>)} />;
+            return <DateColumn<T> {...(props as SearchBarColumnDateTypeProps)} />;
         default:
             return null;
     }

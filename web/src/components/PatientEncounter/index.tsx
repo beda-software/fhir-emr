@@ -48,7 +48,9 @@ const columns: ColumnsType<EncounterData> = [
 ];
 
 export const PatientEncounter = ({ patient }: Props) => {
-    const { encounterDataListRD, reloadEncounter } = useEncounterList({ subject: patient.id });
+    const { encounterDataListRD, reloadEncounter } = useEncounterList(undefined, {
+        subject: patient.id,
+    });
 
     const { setBreadcrumbs } = useContext(PatientHeaderContext);
     const location = useLocation();
