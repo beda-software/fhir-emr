@@ -122,28 +122,6 @@ item:
         choiceColumn:
           - forDisplay: true
             path: "name.given.first() + ' ' + name.family"
-      # - text: Location
-      #   type: reference
-      #   required: true
-      #   linkId: location
-      #   readOnly: true
-      #   enableBehavior: any
-      #   enableWhen:
-      #     - question: predefined-patient-id
-      #       operator: "exists"
-      #       answer:
-      #         boolean: true
-      #     - question: patient
-      #       operator: "exists"
-      #       answer:
-      #         boolean: true
-      - text: Appointment date
-        required: true
-        type: date
-        linkId: appointment-date
-        initialExpression:
-          language: text/fhirpath
-          expression: "%appointmentStartDate"
       - text: Start time
         required: true
         type: dateTime

@@ -92,27 +92,6 @@ item:
         choiceColumn:
           - forDisplay: true
             path: "name.given.first() + ' ' + name.family"
-      # - text: Location
-      #   type: reference
-      #   required: true
-      #   linkId: location
-      #   readOnly: true
-      #   enableBehavior: any
-      #   initialExpression:
-      #     language: text/fhirpath
-      #     expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(resourceType='Location')"
-      #   enableWhen:
-      #     - question: patient
-      #       operator: "exists"
-      #       answer:
-      #         boolean: true
-      - text: Appointment date
-        required: true
-        type: date
-        linkId: appointment-date
-        initialExpression:
-          language: text/fhirpath
-          expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.start.substring(0,10)"
       - text: Start datetime
         required: true
         type: dateTime
