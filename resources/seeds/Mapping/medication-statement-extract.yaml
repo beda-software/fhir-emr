@@ -1,0 +1,58 @@
+body:
+    $let:
+        encounterId: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='encounterId').answer.value.string").0
+        patientId: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.value.string").0
+        patientName: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.value.string").0
+        medication: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='medication').answer.value.Coding").0
+        startDate: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='start-date').answer.value.date").0
+        endDate: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='end-date').answer.value.date").0
+        dosage: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='dosage').answer.value.string").0
+        notes: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='notes').answer.value.string").0
+    $body:
+        type: transaction
+        entry:
+            - request:
+                  url: /MedicationStatement
+                  method: POST
+              resource:
+                  status: active
+                  subject:
+                      id: $ patientId
+                      display: $ patientName
+                      resourceType: Patient
+                  context:
+                      $if: encounterId
+                      id: $ encounterId
+                      resourceType: Encounter
+                  medication:
+                      CodeableConcept:
+                          coding:
+                              - $ medication
+                  dosage:
+                      - text: $ dosage
+                  note:
+                      - text: $ note
+                  effective:
+                      Period:
+                          start: $ startDate
+                          end: $ endDate
+                  resourceType: MedicationStatement
+        resourceType: Bundle
+id: medication-statement-extract
+resourceType: Mapping

@@ -1,0 +1,42 @@
+body:
+    $let:
+        encounterId: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='encounterId').answer.value.string").0
+        patientId: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.value.string").0
+        patientName: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.value.string").0
+        vaccineCode: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='vaccine-code').answer.value.Coding").0
+        dateOfInjection: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='date-of-injection').answer.value.date").0
+    $body:
+        type: transaction
+        entry:
+            - request:
+                  url: /Immunization
+                  method: POST
+              resource:
+                  status: completed
+                  patient:
+                      id: $ patientId
+                      display: $ patientName
+                      resourceType: Patient
+                  encounter:
+                      $if: encounterId
+                      id: $ encounterId
+                      resourceType: Encounter
+                  vaccineCode:
+                      coding:
+                          - $ vaccineCode
+                  occurrence:
+                      dateTime: $ dateOfInjection
+                  resourceType: Immunization
+        resourceType: Bundle
+id: immunization-extract
+resourceType: Mapping

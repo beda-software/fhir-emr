@@ -1,4 +1,9 @@
-import { AlertOutlined, ContactsOutlined, ExperimentOutlined } from '@ant-design/icons';
+import {
+    AlertOutlined,
+    ContactsOutlined,
+    ExperimentOutlined,
+    HeartOutlined,
+} from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
 import _ from 'lodash';
@@ -8,7 +13,13 @@ import { useService } from 'aidbox-react/lib/hooks/service';
 import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess, resolveMap } from 'aidbox-react/lib/services/service';
 
-import { AllergyIntolerance, Observation, Patient } from 'shared/src/contrib/aidbox';
+import {
+    AllergyIntolerance,
+    Immunization,
+    MedicationStatement,
+    Observation,
+    Patient,
+} from 'shared/src/contrib/aidbox';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { DashboardCard, DashboardCardTable } from 'src/components/DashboardCard';
@@ -17,6 +28,7 @@ import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseF
 import { Spinner } from 'src/components/Spinner';
 import { formatHumanDate, getPersonAge } from 'src/utils/date';
 
+import medicationIcon from './images/medication.svg';
 import s from './PatientOverview.module.scss';
 
 interface Props {
@@ -84,6 +96,55 @@ function prepareObservations(observations: Observation[]): OverviewCard<Observat
     };
 }
 
+function prepareImmunizations(observations: Immunization[]): OverviewCard<Immunization> {
+    return {
+        title: t`Immunization`,
+        icon: <HeartOutlined />,
+        data: observations,
+        getKey: (r: Immunization) => r.id!,
+        columns: [
+            {
+                title: t`Name`,
+                key: 'name',
+                render: (r: Immunization) => r.vaccineCode.coding?.[0]?.display,
+            },
+            {
+                title: t`Date`,
+                key: 'date',
+                render: (r: Immunization) =>
+                    r.occurrence?.dateTime ? formatHumanDate(r.occurrence?.dateTime) : '',
+                width: 200,
+            },
+        ],
+    };
+}
+
+function prepareMedications(
+    observations: MedicationStatement[],
+): OverviewCard<MedicationStatement> {
+    return {
+        title: t`Active Medications`,
+        icon: <img src={medicationIcon} />,
+        data: observations,
+        getKey: (r: MedicationStatement) => r.id!,
+        columns: [
+            {
+                title: t`Name`,
+                key: 'name',
+                render: (r: MedicationStatement) =>
+                    r.medication?.CodeableConcept?.coding?.[0]?.display,
+            },
+            {
+                title: t`Dosage`,
+                key: 'date',
+                render: (r: MedicationStatement) =>
+                    r.dosage?.[0]?.text ? r.dosage?.[0]?.text : '',
+                width: 200,
+            },
+        ],
+    };
+}
+
 function usePatientOverview(props: Props) {
     const { patient } = props;
 
@@ -126,11 +187,35 @@ function usePatientOverview(props: Props) {
                         _sort: ['-lastUpdated'],
                         code: [`${depressionSeverityCode},${anxietySeverityCode}`],
                     }),
+                    immunizationsBundle: getFHIRResources<Immunization>('Immunization', {
+                        patient: patient.id,
+                        _sort: ['-lastUpdated'],
+                    }),
+                    medicationsBundle: getFHIRResources<MedicationStatement>(
+                        'MedicationStatement',
+                        {
+                            patient: patient.id,
+                            _sort: ['-lastUpdated'],
+                        },
+                    ),
                 }),
-                ({ allergiesBundle, observationsBundle }) => {
+                ({
+                    allergiesBundle,
+                    observationsBundle,
+                    immunizationsBundle,
+                    medicationsBundle,
+                }) => {
                     const allergies = extractBundleResources(allergiesBundle).AllergyIntolerance;
                     const observations = extractBundleResources(observationsBundle).Observation;
-                    const cards = [prepareAllergies(allergies), prepareObservations(observations)];
+                    const immunizations = extractBundleResources(immunizationsBundle).Immunization;
+                    const medications =
+                        extractBundleResources(medicationsBundle).MedicationStatement;
+                    const cards = [
+                        prepareObservations(observations),
+                        prepareMedications(medications),
+                        prepareAllergies(allergies),
+                        prepareImmunizations(immunizations),
+                    ];
 
                     return { cards: cards.filter((i) => i.data.length) };
                 },
@@ -144,44 +229,58 @@ function usePatientOverview(props: Props) {
 export function PatientOverview(props: Props) {
     const { response, details } = usePatientOverview(props);
 
+    const renderCards = (cards: OverviewCard[]) => {
+        return cards.map((card) => (
+            <DashboardCard title={card.title} icon={card.icon} key={`cards-${card.title}`}>
+                <DashboardCardTable
+                    title={card.title}
+                    data={card.data}
+                    columns={card.columns}
+                    getKey={card.getKey}
+                />
+            </DashboardCard>
+        ));
+    };
+
     return (
         <div className={s.container}>
             <RenderRemoteData remoteData={response} renderLoading={Spinner}>
-                {({ cards }) => (
-                    <>
-                        <DashboardCard
-                            title={t`General Information`}
-                            extra={<EditPatient {...props} />}
-                            icon={<ContactsOutlined />}
-                        >
-                            <div className={s.detailsRow}>
-                                {details.map(({ title, value }, index) => (
-                                    <div key={`patient-details__${index}`} className={s.detailItem}>
-                                        <div className={s.detailsTitle}>{title}</div>
-                                        <div className={s.detailsValue}>{value || '-'}</div>
-                                    </div>
-                                ))}
+                {({ cards }) => {
+                    const leftColCards = _.filter(
+                        cards,
+                        (c: OverviewCard, index: number) => index % 2 === 0,
+                    ) as OverviewCard[];
+                    const rightColCards = _.filter(
+                        cards,
+                        (c: OverviewCard, index: number) => index % 2 !== 0,
+                    ) as OverviewCard[];
+
+                    return (
+                        <>
+                            <DashboardCard
+                                title={t`General Information`}
+                                extra={<EditPatient {...props} />}
+                                icon={<ContactsOutlined />}
+                            >
+                                <div className={s.detailsRow}>
+                                    {details.map(({ title, value }, index) => (
+                                        <div
+                                            key={`patient-details__${index}`}
+                                            className={s.detailItem}
+                                        >
+                                            <div className={s.detailsTitle}>{title}</div>
+                                            <div className={s.detailsValue}>{value || '-'}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </DashboardCard>
+                            <div className={s.cards}>
+                                <div className={s.column}>{renderCards(leftColCards)}</div>
+                                <div className={s.column}>{renderCards(rightColCards)}</div>
                             </div>
-                        </DashboardCard>
-                        <div className={s.cards}>
-                            {cards.map((card) => (
-                                <DashboardCard
-                                    title={card.title}
-                                    icon={card.icon}
-                                    key={`cards-${card.title}`}
-                                    className={s.card}
-                                >
-                                    <DashboardCardTable
-                                        title={card.title}
-                                        data={card.data}
-                                        columns={card.columns}
-                                        getKey={card.getKey}
-                                    />
-                                </DashboardCard>
-                            ))}
-                        </div>
-                    </>
-                )}
+                        </>
+                    );
+                }}
             </RenderRemoteData>
         </div>
     );

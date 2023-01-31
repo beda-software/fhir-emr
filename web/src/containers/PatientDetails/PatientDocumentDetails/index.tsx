@@ -14,11 +14,7 @@ import {
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
-import {
-    extractBundleResources,
-    getFHIRResources,
-    WithId,
-} from 'aidbox-react/lib/services/fhir';
+import { extractBundleResources, getFHIRResources, WithId } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess } from 'aidbox-react/lib/services/service';
 
 import { Encounter, Patient, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
@@ -30,6 +26,7 @@ import { usePatientDocument } from '../PatientDocument/usePatientDocument';
 import { PatientHeaderContext } from '../PatientHeader/context';
 import s from './PatientDocumentDetails.module.scss';
 import { QuestionChoice } from './widgets/choice';
+import { QuestionDateTime } from './widgets/date';
 import { Group } from './widgets/group';
 import { QuestionInteger } from './widgets/integer';
 import { AnxietyScore, DepressionScore } from './widgets/score';
@@ -110,6 +107,8 @@ function PatientDocumentDetailsReadonly(props: {
                                 string: QuestionText,
                                 integer: QuestionInteger,
                                 choice: QuestionChoice,
+                                date: QuestionDateTime,
+                                dateTime: QuestionDateTime,
                             }}
                             itemControlQuestionItemComponents={{
                                 'inline-choice': QuestionChoice,
