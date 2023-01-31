@@ -1,0 +1,10 @@
+resourceType: HealthcareService
+active: true
+type:
+  - text: The first appointment
+    coding:
+      - code: consultation
+        system: http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type
+        display: The first appointment
+appointmentRequired: true
+duration: 45

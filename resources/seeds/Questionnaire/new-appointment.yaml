@@ -1,0 +1,131 @@
+resourceType: Questionnaire
+id: new-appointment
+status: active
+mapping:
+  - id: new-appointment-extract
+    resourceType: Mapping
+launchContext:
+  - name: patient
+    type: Patient
+    description: Patient resource
+  - name: practitionerRole
+    type: PractitionerRole
+    description: PractitionerRole resource
+  - name: appointmentStartDate
+    type: string
+    description: Appointment date passing from calendar
+  - name: appointmentStartDateTime
+    type: string
+    description: Appointment datetime passing from calendar
+contained:
+  - resourceType: Bundle
+    id: PractitionerRoleWithPractitioner
+    type: transaction
+    entry:
+      - request:
+          method: GET
+          url: /PractitionerRole?_id={{%practitionerRole.id}}&_include=practitioner
+sourceQueries:
+  - localRef: "Bundle#PractitionerRoleWithPractitioner"
+item:
+  - type: group
+    linkId: root-group
+    item:
+      - text: Predefined Practitioner role
+        type: string
+        linkId: predefined-practitioner-role-id
+        hidden: true
+        initialExpression:
+          language: text/fhirpath
+          expression: >-
+            %PractitionerRoleWithPractitioner.entry.resource
+            .entry.resource.where(resourceType='PractitionerRole').id
+      - text: Predefined practitioner role display
+        type: string
+        linkId: predefined-practitioner-role-display
+        hidden: true
+        itemContext:
+          language: text/fhirpath
+          expression: >-
+            %PractitionerRoleWithPractitioner.entry.resource
+            .entry.resource.where(resourceType='Practitioner')
+        initialExpression:
+          language: text/fhirpath
+          expression: >-
+            name.given.first() + ' ' + name.family + ' - '
+            + %PractitionerRoleWithPractitioner.entry.resource
+            .entry.resource.where(resourceType='PractitionerRole').specialty.first().coding.display
+      - text: Practitioner
+        type: reference
+        required: true
+        linkId: practitioner-role
+        enableWhen:
+          - question: predefined-practitioner-role-id
+            operator: "exists"
+            answer:
+              boolean: false
+        answerExpression:
+          language: application/x-fhir-query
+          expression: "PractitionerRole?_assoc=practitioner"
+        choiceColumn:
+          - forDisplay: true
+            path: >-
+              practitioner.resource.name.given.first() + ' ' + 
+              practitioner.resource.name.family + ' - ' + specialty.first().coding.display
+      - text: Type
+        type: choice
+        required: true
+        linkId: service-type
+        answerValueSet: "appointment-type"
+        enableBehavior: any
+        enableWhen:
+          - question: predefined-practitioner-role-id
+            operator: "exists"
+            answer:
+              boolean: true
+          - question: practitioner-role
+            operator: "exists"
+            answer:
+              boolean: true
+        answerOption:
+          - value:
+              Coding:
+                system: http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type
+                code: consultation
+                display: The first appointment
+          - value:
+              Coding:
+                system: http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type
+                code: follow-up
+                display: A follow up visit
+      - text: Predefined Patient Id
+        type: string
+        linkId: predefined-patient-id
+        hidden: true
+        initialExpression:
+          language: text/fhirpath
+          expression: "%patient.where($this != 'undefined').id"
+      - text: Patient
+        type: reference
+        required: true
+        linkId: patient
+        referenceResource:
+          - Patient
+        enableWhen:
+          - question: predefined-patient-id
+            operator: "exists"
+            answer:
+              boolean: false
+        answerExpression:
+          language: application/x-fhir-query
+          expression: "Patient"
+        choiceColumn:
+          - forDisplay: true
+            path: "name.given.first() + ' ' + name.family"
+      - text: Start time
+        required: true
+        type: dateTime
+        linkId: start-datetime
+        initialExpression:
+          language: text/fhirpath
+          expression: "%appointmentStartDateTime"

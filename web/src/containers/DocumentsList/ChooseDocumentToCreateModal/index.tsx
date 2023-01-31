@@ -16,7 +16,8 @@ interface Props extends ModalProps {
     patient: Patient;
 }
 
-const questionnaireIds = 'gad-7,phq2phq9,allergies,physical-exam,review-of-systems';
+const questionnaireIds =
+    'gad-7,phq2phq9,allergies,physical-exam,review-of-systems,immunization,medication';
 
 export const ChooseDocumentToCreateModal = (props: Props) => {
     const [questionnaireId, setQuestionnaireId] = useState();

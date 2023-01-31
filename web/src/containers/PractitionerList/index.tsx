@@ -2,8 +2,11 @@ import { EditTwoTone, PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Col, Empty, Row, Tag } from 'antd';
 import Title from 'antd/es/typography/Title';
+import { Link } from 'react-router-dom';
 
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
+
+import { Practitioner } from 'shared/src/contrib/aidbox';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { ModalPractitioner } from 'src/components/ModalPractitioner';
@@ -99,12 +102,12 @@ export function PractitionerList() {
                             key: 'actions',
                             width: '5%',
                             render: (
-                                practitionerResource: any,
+                                practitionerResource: Practitioner,
                                 rowData: PractitionerListRowData,
                             ) => {
                                 const { practitionerRolesResource } = rowData;
                                 return (
-                                    <>
+                                    <div style={{ display: 'flex', alignItems: 'center' }}>
                                         <ModalPractitioner
                                             key={'edit'}
                                             modalTitle="Edit Practitioner"
@@ -116,7 +119,12 @@ export function PractitionerList() {
                                             practitionerRole={practitionerRolesResource?.[0]}
                                             practitionerListReload={practitionerListReload}
                                         />
-                                    </>
+                                        <div style={{ width: '8px' }} />
+                                        <Link to={`${practitionerResource.id}/schedule`}>
+                                            <span style={{ color: 'black' }}>Schedule</span>
+                                        </Link>
+                                        <div style={{ width: '8px' }} />
+                                    </div>
                                 );
                             },
                         },

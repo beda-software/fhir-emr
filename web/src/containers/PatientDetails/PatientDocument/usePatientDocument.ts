@@ -21,7 +21,12 @@ export function usePatientDocument(props: PatientDocumentProps & { questionnaire
 
     const data = useQuestionnaireResponseForm({
         questionnaireLoader: questionnaireIdLoader(questionnaireId),
-        launchContextParameters: [{ name: 'Patient', resource: patient }],
+        launchContextParameters: [
+            { name: 'Patient', resource: patient },
+            ...(encounterId
+                ? [{ name: 'Encounter', resource: { resourceType: 'Encounter', id: encounterId } }]
+                : []),
+        ],
         initialQuestionnaireResponse: questionnaireResponse || {
             source: getReference(patient),
             encounter: encounterId ? { resourceType: 'Encounter', id: encounterId } : undefined,

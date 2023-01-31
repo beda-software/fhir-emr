@@ -70,3 +70,11 @@ services:
         volumes:
             - ./zrc:/app/zrc
             - ./resources/seeds:/app/resources/seeds
+    scheduling:
+        image: bedasoftware/aidbox-scheduling-node-app
+        depends_on:
+            devbox-healthcheck:
+                condition: service_healthy
+        env_file:
+            - .env.scheduling
+            - .env.aidbox
