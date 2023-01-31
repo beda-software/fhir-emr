@@ -11,17 +11,44 @@ launchContext:
   - name: practitionerRole
     type: PractitionerRole
     description: PractitionerRole resource
+contained:
+  - resourceType: Bundle
+    id: PractitionerRoleWithPractitioner
+    type: transaction
+    entry:
+      - request:
+          method: GET
+          url: /PractitionerRole?_id={{%practitionerRole.id}}&_include=practitioner
+sourceQueries:
+  - localRef: "Bundle#PractitionerRoleWithPractitioner"
 item:
   - type: group
     linkId: root-group
     item:
-      - text: Predefined Practitioner role Id
+      - text: Predefined Practitioner role
         type: string
         linkId: predefined-practitioner-role-id
         hidden: true
         initialExpression:
           language: text/fhirpath
-          expression: "%practitionerRole.where($this != 'undefined').id"
+          expression: >-
+            %PractitionerRoleWithPractitioner.entry.resource
+            .entry.resource.where(resourceType='PractitionerRole').id
+      - text: Predefined practitioner role display
+        type: string
+        linkId: predefined-practitioner-role-display
+        hidden: true
+        itemContext:
+          language: text/fhirpath
+          expression: >-
+            %PractitionerRoleWithPractitioner.entry.resource
+            .entry.resource.where(resourceType='Practitioner')
+        initialExpression:
+          language: text/fhirpath
+          expression: >-
+            name.given.first() + ' ' + name.family + ' - '
+            + %PractitionerRoleWithPractitioner.entry.resource
+            .entry.resource.where(resourceType='PractitionerRole').specialty.first().coding.display
       - text: Practitioner
         type: reference
         required: true
@@ -36,7 +63,9 @@ item:
           expression: "PractitionerRole?_assoc=practitioner"
         choiceColumn:
           - forDisplay: true
-            path: "practitioner.resource.name.given.first() + ' ' + practitioner.resource.name.family"
+            path: >-
+              practitioner.resource.name.given.first() + ' ' + 
+              practitioner.resource.name.family + ' - ' + specialty.first().coding.display
       - text: Type
         type: choice
         required: true

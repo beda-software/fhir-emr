@@ -2,8 +2,8 @@ resourceType: Mapping
 id: new-appointment-extract
 body:
   $let:
-    # locationReference: $ fhirpath("QuestionnaireResponse.item.repeat(item).where(linkId='location').answer.children().Reference").0
     predefinedPatientId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='predefined-patient-id').answer.children().string").0
+    predefinedPractitionerRoleDisplay: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='predefined-practitioner-role-display').answer.children().string").0
     selectedPatientReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patient').answer.children().Reference").0
     predefinedPractitionerRoleId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='predefined-practitioner-role-id').answer.children().string").0
     selectedPractitionerRoleReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-role').answer.children().Reference").0
@@ -24,15 +24,26 @@ body:
             resourceType: Appointment
             participant:
               - actor:
-                  resourceType: Patient
-                  id: $ patientId
+                  $if: $ selectedPatientReference
+                  $then:
+                    resourceType: Patient
+                    id: $ selectedPatientReference.id
+                    display: $ selectedPatientReference.display
+                  $else:
+                    id: $ patientId
+                    resourceType: Patient
                 status: accepted
               - actor:
-                  resourceType: PractitionerRole
-                  id: $ practitionerRoleId
+                  $if: $ selectedPractitionerRoleReference
+                  $then:
+                    resourceType: PractitionerRole
+                    id: $ selectedPractitionerRoleReference.id
+                    display: $ selectedPractitionerRoleReference.display
+                  $else:
+                    resourceType: PractitionerRole
+                    id: $ practitionerRoleId
+                    display: $ predefinedPractitionerRoleDisplay
                 status: accepted
-              # - actor: $ locationReference
-              #   status: accepted
             serviceType:
               - text: $ serviceTypeCoding.display
                 coding:

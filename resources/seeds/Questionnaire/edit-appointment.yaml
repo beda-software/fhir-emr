@@ -43,7 +43,9 @@ item:
           expression: "PractitionerRole?_assoc=practitioner"
         choiceColumn:
           - forDisplay: true
-            path: "practitioner.resource.name.given.first() + ' ' + practitioner.resource.name.family"
+            path: >-
+              practitioner.resource.name.given.first() + ' ' + 
+              practitioner.resource.name.family + ' - ' + specialty.first().coding.display
         initialExpression:
           language: text/fhirpath
           expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(resourceType='PractitionerRole')"
