@@ -26,6 +26,7 @@ import { parseOAuthState, setToken } from 'src/services/auth';
 import { history } from 'src/services/history';
 
 import { EncounterQR } from '../EncounterQR';
+import { Scheduling } from '../Scheduling';
 import s from './App.module.scss';
 
 export function App() {
@@ -101,6 +102,10 @@ export function App() {
                                 <PractitionerList />
                             </div>
                         }
+                    />
+                    <Route
+                        path="/practitioners/:practitionerId/schedule"
+                        element={<Scheduling />}
                     />
                     <Route path="/questionnaires" element={<QuestionnaireList />} />
                     <Route path="/questionnaires/builder" element={<QuestionnaireBuilder />} />

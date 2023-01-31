@@ -1,5 +1,4 @@
 import { Form, Select as ANTDSelect } from 'antd';
-import _ from 'lodash';
 import { isArray } from 'lodash';
 import { useCallback, useMemo } from 'react';
 import Select from 'react-select';
