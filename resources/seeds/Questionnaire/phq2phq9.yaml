@@ -2,6 +2,9 @@ id: phq2phq9
 resourceType: Questionnaire
 name: PHQ-2/PHQ-9 Depression Screening
 status: active
+subjectType:
+  - Encounter
+  - Patient
 mapping:
     - id: phq2phq9-extract
       resourceType: Mapping

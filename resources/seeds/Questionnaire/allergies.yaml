@@ -2,6 +2,9 @@ id: allergies
 resourceType: Questionnaire
 name: Allergies
 status: active
+subjectType:
+  - Encounter
+  - Patient
 mapping:
   - id: allergy-create
     resourceType: Mapping

@@ -2,6 +2,8 @@ resourceType: Questionnaire
 id: review-of-systems
 status: active
 name: Review of Systems
+subjectType:
+  - Encounter
 item:
   - linkId: provider-viewed-confirmation
     type: boolean
