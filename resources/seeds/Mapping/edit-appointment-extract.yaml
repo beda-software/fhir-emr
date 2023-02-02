@@ -9,7 +9,7 @@ body:
     serviceTypeCoding: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='service-type').answer.children().Coding").0
   $body:
     resourceType: Bundle
-    type: transaction
+    type: batch
     entry:
       - request:
           url: $ "/Appointment/" + currentAppointmentId
