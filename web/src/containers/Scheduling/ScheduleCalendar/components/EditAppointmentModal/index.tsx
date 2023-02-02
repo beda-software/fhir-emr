@@ -5,7 +5,6 @@ import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
 import { PractitionerRole } from 'shared/src/contrib/aidbox';
 import { inMemorySaveService } from 'shared/src/hooks/questionnaire-response-form-data';
-// import { sharedPractitionerRole } from 'shared/src/sharedPractitionerRole';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
@@ -20,15 +19,12 @@ interface Props {
 
 export function EditAppointmentModal(props: Props) {
     const { showModal, onClose, appointmentId } = props;
-    console.log('appointmentId', appointmentId);
 
-    // const [practitionerRole] = sharedPractitionerRole.useSharedState();
     const { response, onSubmit } = useQuestionnaireResponseForm({
         questionnaireLoader: { type: 'id', questionnaireId: 'edit-appointment' },
         questionnaireResponseSaveService: inMemorySaveService,
         launchContextParameters: [
             { name: 'CurrentAppointmentId', value: { string: appointmentId } },
-            // { name: 'OrganizationId', value: { string: practitionerRole.organization?.id } },
         ],
         onSuccess: props.onSubmit,
         onCancel: onClose,

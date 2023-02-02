@@ -11,8 +11,6 @@ import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
 import { PractitionerRole } from 'shared/src/contrib/aidbox';
 
-// import './fullCalendar.css';
-
 import { EditAppointmentModal } from './components/EditAppointmentModal';
 import { NewAppointmentModal } from './components/NewAppointmentModal';
 import { useAppointmentEvents } from './hooks/useAppointmentEvents';
