@@ -124,11 +124,14 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
 
 function renderEventContent(eventContent: EventContentArg) {
     const titleMaxLength = eventContent.view.type === 'timeGridWeek' ? 20 : 100;
+    const status = eventContent.event.extendedProps.status;
     return (
         <>
             <b>{eventContent.event.title.substr(0, titleMaxLength)}</b>
             <br />
             <i>{eventContent.timeText}</i>
+            <br />
+            {status === 'cancelled' && <i>{status}</i>}
         </>
     );
 }

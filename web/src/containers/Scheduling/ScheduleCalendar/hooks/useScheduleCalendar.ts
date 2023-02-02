@@ -52,6 +52,8 @@ export function useScheduleCalendar(practitionerRole: PractitionerRole) {
                     title: patient?.name?.[0] ? renderHumanName(patient.name[0]) : appointment.id,
                     start: appointment.start!,
                     end: appointment.end!,
+                    status: appointment.status,
+                    color: appointment.status === 'cancelled' ? '#F6BF26' : '#1677FF',
                 };
             });
         });
