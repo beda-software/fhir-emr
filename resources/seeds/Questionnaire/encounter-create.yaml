@@ -3,45 +3,56 @@ resourceType: Questionnaire
 title: Encounter create
 status: active
 mapping:
-  - id: encounter-create
-    resourceType: Mapping
+    - id: encounter-create
+      resourceType: Mapping
 launchContext:
-  - name: Patient
-    type: Patient
+    - name: Patient
+      type: Patient
 name: encounter-create
 item:
-  - text: PatientId
-    type: string
-    linkId: patientId
-    hidden: true
-    initialExpression:
-      language: text/fhirpath
-      expression: '%Patient.id'
-  - text: PatientName
-    type: string
-    linkId: patientName
-    readOnly: true
-    initialExpression:
-      language: text/fhirpath
-      expression: '%Patient.name.given[0] & '' '' & %Patient.name.family'
-  - text: Practitioner
-    type: choice
-    linkId: practitioner-list
-  - text: Service
-    type: choice
-    linkId: service
-    repeats: false
-    answerOption:
-      - value:
-          Coding:
-            code: HH
-            system: http://terminology.hl7.org/CodeSystem/v3-ActCode
-            display: home health
-      - value:
-          Coding:
-            code: AMB
-            system: http://terminology.hl7.org/CodeSystem/v3-ActCode
-            display: ambulatory
-  - text: Date time
-    type: dateTime
-    linkId: date-time
+    - text: PatientId
+      type: string
+      linkId: patientId
+      hidden: true
+      initialExpression:
+          language: text/fhirpath
+          expression: '%Patient.id'
+    - text: PatientName
+      type: string
+      linkId: patientName
+      readOnly: true
+      initialExpression:
+          language: text/fhirpath
+          expression: "%Patient.name.given[0] & ' ' & %Patient.name.family"
+    - text: Practitioner
+      type: choice
+      linkId: practitioner-list
+    - text: Service
+      type: choice
+      linkId: service
+      repeats: false
+      answerOption:
+          - value:
+                Coding:
+                    code: HH
+                    system: http://terminology.hl7.org/CodeSystem/v3-ActCode
+                    display: home health
+          - value:
+                Coding:
+                    code: AMB
+                    system: http://terminology.hl7.org/CodeSystem/v3-ActCode
+                    display: ambulatory
+    - text: Date
+      type: date
+      linkId: date
+    - text: Time
+      type: group
+      linkId: Time period
+      itemControl:
+          coding:
+              - code: time-range-picker
+      item:
+          - type: time
+            linkId: start-time
+          - type: time
+            linkId: end-time
