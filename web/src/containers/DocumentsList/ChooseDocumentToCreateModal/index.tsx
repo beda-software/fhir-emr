@@ -14,12 +14,11 @@ import { Spinner } from 'src/components/Spinner';
 
 interface Props extends ModalProps {
     patient: Patient;
+    subjectType?: string;
 }
 
-const questionnaireIds =
-    'gad-7,phq2phq9,allergies,physical-exam,review-of-systems,immunization,medication';
-
 export const ChooseDocumentToCreateModal = (props: Props) => {
+    const { subjectType } = props;
     const [questionnaireId, setQuestionnaireId] = useState();
     const location = useLocation();
     const navigate = useNavigate();
@@ -27,7 +26,7 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
     const [questionnairesResponse] = useService(async () =>
         mapSuccess(
             await getFHIRResources<Questionnaire>('Questionnaire', {
-                id: questionnaireIds,
+                'subject-type': subjectType ? [subjectType] : [],
             }),
             (bundle) => extractBundleResources(bundle).Questionnaire,
         ),

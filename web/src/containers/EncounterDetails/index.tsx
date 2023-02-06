@@ -100,6 +100,7 @@ export const EncounterDetails = ({ patient }: Props) => {
                     open={modalOpened}
                     onCancel={() => setModalOpened(false)}
                     patient={patient}
+                    subjectType="Encounter"
                 />
             </div>
 

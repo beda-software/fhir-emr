@@ -37,6 +37,7 @@ export const PatientDocuments = ({ patient }: Props) => {
                     open={modalOpened}
                     onCancel={() => setModalOpened(false)}
                     patient={patient}
+                    subjectType='Patient'
                 />
             </div>
 

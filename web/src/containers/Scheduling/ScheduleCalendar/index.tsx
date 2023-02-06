@@ -11,8 +11,6 @@ import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
 import { PractitionerRole } from 'shared/src/contrib/aidbox';
 
-// import './fullCalendar.css';
-
 import { EditAppointmentModal } from './components/EditAppointmentModal';
 import { NewAppointmentModal } from './components/NewAppointmentModal';
 import { useAppointmentEvents } from './hooks/useAppointmentEvents';
@@ -124,11 +122,14 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
 
 function renderEventContent(eventContent: EventContentArg) {
     const titleMaxLength = eventContent.view.type === 'timeGridWeek' ? 20 : 100;
+    const status = eventContent.event.extendedProps.status;
     return (
         <>
             <b>{eventContent.event.title.substr(0, titleMaxLength)}</b>
             <br />
             <i>{eventContent.timeText}</i>
+            <br />
+            {status === 'cancelled' && <i>{status}</i>}
         </>
     );
 }

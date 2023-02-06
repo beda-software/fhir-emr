@@ -2,6 +2,9 @@ id: gad7
 resourceType: Questionnaire
 name: GAD-7
 status: active
+subjectType:
+  - Encounter
+  - Patient
 mapping:
     - id: gad-7-extract
       resourceType: Mapping

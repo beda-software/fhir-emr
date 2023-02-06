@@ -2,6 +2,8 @@ resourceType: Questionnaire
 id: physical-exam
 status: active
 name: Physical exam
+subjectType:
+  - Encounter
 launchContext:
   - name: Patient
     type: Patient

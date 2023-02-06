@@ -2,6 +2,9 @@ id: immunization
 resourceType: Questionnaire
 name: Immunization
 status: active
+subjectType:
+  - Encounter
+  - Patient
 launchContext:
     - name: Patient
       type: Patient

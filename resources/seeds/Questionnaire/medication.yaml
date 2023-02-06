@@ -2,6 +2,9 @@ id: medication
 resourceType: Questionnaire
 name: Medication
 status: active
+subjectType:
+  - Encounter
+  - Patient
 launchContext:
     - name: Patient
       type: Patient

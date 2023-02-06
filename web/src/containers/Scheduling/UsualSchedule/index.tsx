@@ -61,7 +61,6 @@ function FreshUsualSchedule({
                     Save
                 </Button>
             </BasePageHeader>
-            {/* subTitle="Please edit your time of availability" */}
             <BasePageContent>
                 <div style={{ width: 600 }}>
                     {days.map((day) => {
