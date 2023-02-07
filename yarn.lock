@@ -5787,11 +5787,6 @@ antd@^5.1.4:
     scroll-into-view-if-needed "^3.0.3"
     throttle-debounce "^5.0.0"
 
-antlr4@~4.8.0:
-  version "4.8.0"
-  resolved "https://registry.yarnpkg.com/antlr4/-/antlr4-4.8.0.tgz#f938ec171be7fc2855cd3a533e87647185b32b6a"
-  integrity sha512-en/MxQ4OkPgGJQ3wD/muzj1uDnFSzdFIhc2+c6bHZokWkuBb6RRvFjpWhPxWLbgQvaEzldJZ0GSQpfSAaE3hqg==
-
 antlr4@~4.9.3:
   version "4.9.3"
   resolved "https://registry.yarnpkg.com/antlr4/-/antlr4-4.9.3.tgz#268b844ff8ce97d022399a05d4b37aa6ab4047b2"
@@ -9351,21 +9346,21 @@ fetch-retry@^5.0.2:
   resolved "https://registry.yarnpkg.com/fetch-retry/-/fetch-retry-5.0.3.tgz#edfa3641892995f9afee94f25b168827aa97fe3d"
   integrity sha512-uJQyMrX5IJZkhoEUBQ3EjxkeiZkppBd5jS/fMTJmfZxLSiaQjv2zD0kTvuvkSH89uFvgSlB6ueGpjD3HWN7Bxw==
 
-fhirpath@2.10.1:
-  version "2.10.1"
-  resolved "https://registry.yarnpkg.com/fhirpath/-/fhirpath-2.10.1.tgz#2bab2f71000984c8bce295104bccbe4222fad7d8"
-  integrity sha512-vZZ4Uwg4lzp0u86RhwMvmeQH2uXsoVkoVTyPGfl0BRJrlvDkiXz8+7kG79NaYwgLaG59TGmjfzSwgstzkJNJEA==
-  dependencies:
-    "@lhncbc/ucum-lhc" "^4.1.3"
-    antlr4 "~4.8.0"
-    commander "^2.18.0"
-    date-fns "^1.30.1"
-    js-yaml "^3.13.1"
-
 fhirpath@^2.14.5:
   version "2.14.5"
   resolved "https://registry.yarnpkg.com/fhirpath/-/fhirpath-2.14.5.tgz#40af7307a0b3c3cf5f614aac4a144dc7eba7df1f"
   integrity sha512-2syBSoiFb0imxa++D4nx5yZAyadjERc6zS84cO+W2zYiC+hYBUcCxe2sgh3oMshkI3VWlpa1Jx9SnAv6liIdZw==
+  dependencies:
+    "@lhncbc/ucum-lhc" "^4.1.3"
+    antlr4 "~4.9.3"
+    commander "^2.18.0"
+    date-fns "^1.30.1"
+    js-yaml "^3.13.1"
+
+fhirpath@^3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/fhirpath/-/fhirpath-3.3.1.tgz#cda17acd62243e3dac24e4b54f65dd5a37fee937"
+  integrity sha512-uWSLPs8VBQsn3aGUs52KaXXPGQLATbz+0FbqxmLCz84uK58nWKBSznwQHmiZY0K5L2ioiZ9GXvRtMrb+OqVzjw==
   dependencies:
     "@lhncbc/ucum-lhc" "^4.1.3"
     antlr4 "~4.9.3"
