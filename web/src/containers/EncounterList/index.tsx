@@ -1,5 +1,6 @@
 import { t, Trans } from '@lingui/macro';
 import Title from 'antd/es/typography/Title';
+import { useNavigate } from 'react-router-dom';
 
 import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
 
@@ -16,37 +17,9 @@ import { Spinner } from 'src/components/Spinner';
 import { useEncounterList } from './hooks';
 import { EncounterListFilters, EncounterListFilterValues } from './types';
 
-const columns = [
-    {
-        title: <Trans>Patient</Trans>,
-        dataIndex: 'patient',
-        key: 'patient',
-        render: (_text: any, resource: EncounterData) =>
-            renderHumanName(resource.patient?.name?.[0]),
-    },
-    {
-        title: <Trans>Practitioner</Trans>,
-        dataIndex: 'practitioner',
-        key: 'practitioner',
-        render: (_text: any, resource: EncounterData) =>
-            renderHumanName(resource.practitioner?.name?.[0]),
-    },
-    {
-        title: <Trans>Status</Trans>,
-        dataIndex: 'status',
-        key: 'status',
-        render: (_text: any, resource: EncounterData) => (
-            <EncounterStatusBadge status={resource.status} />
-        ),
-    },
-    {
-        title: <Trans>Appointment date</Trans>,
-        dataIndex: 'humanReadableDate',
-        key: 'date',
-    },
-];
-
 export function EncounterList() {
+    const navigate = useNavigate();
+
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
         columns: [
             {
@@ -70,6 +43,56 @@ export function EncounterList() {
     const { encounterDataListRD } = useEncounterList(
         columnsFilterValues as EncounterListFilterValues,
     );
+
+    const columns = [
+        {
+            title: <Trans>Patient</Trans>,
+            dataIndex: 'patient',
+            key: 'patient',
+            render: (_text: any, resource: EncounterData) =>
+                renderHumanName(resource.patient?.name?.[0]),
+        },
+        {
+            title: <Trans>Practitioner</Trans>,
+            dataIndex: 'practitioner',
+            key: 'practitioner',
+            render: (_text: any, resource: EncounterData) =>
+                renderHumanName(resource.practitioner?.name?.[0]),
+        },
+        {
+            title: <Trans>Status</Trans>,
+            dataIndex: 'status',
+            key: 'status',
+            render: (_text: any, resource: EncounterData) => (
+                <EncounterStatusBadge status={resource.status} />
+            ),
+        },
+        {
+            title: <Trans>Actions</Trans>,
+            dataIndex: 'actions',
+            key: 'action',
+            render: (_text: any, resource: EncounterData) => (
+                <div>
+                    <div
+                        onClick={() => {
+                            navigate(`/patients/${resource.patient?.id}/encounters/${resource.id}`);
+                        }}
+                        style={{ cursor: 'pointer' }}
+                    >
+                        Open 
+                    </div>
+                    <div
+                        onClick={() => {
+                            navigate(`/encounters/${resource.id}/video`);
+                        }}
+                        style={{ cursor: 'pointer' }}
+                    >
+                        Video call
+                    </div>
+                </div>
+            ),
+        },
+    ];
 
     return (
         <>

@@ -15,18 +15,19 @@ import { extractErrorCode } from 'aidbox-react/lib/utils/error';
 import { BaseLayout } from 'src/components/BaseLayout';
 import { Spinner } from 'src/components/Spinner';
 import { EncounterList } from 'src/containers/EncounterList';
+import { EncounterQR } from 'src/containers/EncounterQR';
 import { PatientDetails } from 'src/containers/PatientDetails';
 import { PatientList } from 'src/containers/PatientList';
 import { PractitionerList } from 'src/containers/PractitionerList';
 import { QuestionnaireBuilder } from 'src/containers/QuestionnaireBuilder';
 import { QuestionnaireList } from 'src/containers/QuestionnaireList';
+import { Scheduling } from 'src/containers/Scheduling';
+import { VideoCall } from 'src/containers/VideoCall';
 import { LogoImage } from 'src/images/LogoImage';
 import { getAuthorizeUrl, getToken, getUserInfo, OAuthState } from 'src/services/auth';
 import { parseOAuthState, setToken } from 'src/services/auth';
 import { history } from 'src/services/history';
 
-import { EncounterQR } from '../EncounterQR';
-import { Scheduling } from '../Scheduling';
 import s from './App.module.scss';
 
 export function App() {
@@ -95,6 +96,7 @@ export function App() {
                         path="/encounters/:encounterId/qr/:questionnaireId"
                         element={<EncounterQR />}
                     />
+                    <Route path="/encounters/:encounterId/video" element={<VideoCall />} />
                     <Route
                         path="/practitioners"
                         element={
