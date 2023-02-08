@@ -1,41 +1,36 @@
 import { FHIRTimeFormat } from 'aidbox-react/lib/utils/date';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { GroupItemProps } from 'sdc-qrf';
 
 import { RangeValue } from 'src/components/TimePicker/types';
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 
-import { TimeRangePickerGroupItemProps, ValueString } from './types';
-
 export function useTimeRangePickerControl(props: GroupItemProps) {
-    const { questionItem, parentPath } = props;
+    const { questionItem } = props;
 
-    const [startTime, setStartTime] = useState<ValueString | undefined>(undefined);
-    const [endTime, setEndTime] = useState<ValueString | undefined>(undefined);
+    const startTimeItem = questionItem.item![0]!;
+    const startTimeItemFieldName = [questionItem.linkId, 'items', startTimeItem.linkId, 0];
+    const { onChange: startTimeOnChange, value: startTimeFieldValue } = useFieldController(
+        startTimeItemFieldName,
+        startTimeItem,
+    );
 
-    const fieldName = [...parentPath, questionItem.linkId];
+    const endTimeItem = questionItem.item![1]!;
+    const endTimeItemFieldName = [questionItem.linkId, 'items', endTimeItem.linkId, 0];
+    const { onChange: endTimeOnChange, value: endTimeFieldValue } = useFieldController(
+        endTimeItemFieldName,
+        endTimeItem,
+    );
 
     const onTimeRangeChange = useCallback(
         (rangeValue: RangeValue) => {
             if (rangeValue) {
-                setStartTime({ value: { string: rangeValue[0]!.format(FHIRTimeFormat) } });
-                setEndTime({ value: { string: rangeValue[1]!.format(FHIRTimeFormat) } });
+                startTimeOnChange({ value: { string: rangeValue[0]!.format(FHIRTimeFormat) } });
+                endTimeOnChange({ value: { string: rangeValue[1]!.format(FHIRTimeFormat) } });
             }
         },
-        [setStartTime, setEndTime],
+        [startTimeOnChange, endTimeOnChange],
     );
 
-    return { onTimeRangeChange, fieldName, startTime, endTime };
-}
-
-export function useTimeRangePickerGroupItem(props: TimeRangePickerGroupItemProps) {
-    const { questionItem, parentPath, value } = props;
-
-    const fieldName = [...parentPath, 'items', questionItem.linkId, 0];
-
-    const { onChange } = useFieldController(fieldName, questionItem);
-
-    useEffect(() => {
-        onChange(value);
-    }, [value]);
+    return { onTimeRangeChange, startTimeFieldValue, endTimeFieldValue };
 }

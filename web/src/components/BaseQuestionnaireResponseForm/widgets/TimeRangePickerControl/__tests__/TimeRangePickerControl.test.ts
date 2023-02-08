@@ -5,15 +5,43 @@ import { FHIRTimeFormat } from 'aidbox-react/lib/utils/date';
 
 import { useTimeRangePickerControl } from '../hooks';
 
+const mockControllerFieldOnChange = jest.fn();
+jest.mock('react-hook-form', () => ({
+    useFormContext: () => ({
+        control: {},
+    }),
+    useController: () => ({
+        field: { value: 'test', onChange: mockControllerFieldOnChange },
+    }),
+}));
+
 describe('TimeRangePickerControl', () => {
-    it('returns correct start and end time when range is changed', () => {
+    test('returns correct start and end time when range is changed', () => {
         const start = moment('01-01-2023');
         const end = moment('20-01-2023');
 
         const timeRangePickerControlProps: GroupItemProps = {
             questionItem: {
+                item: [
+                    {
+                        type: 'time',
+                        linkId: 'start-time',
+                    },
+                    {
+                        type: 'time',
+                        linkId: 'end-time',
+                    },
+                ],
+                text: 'Time',
                 type: 'group',
-                linkId: 'timeRangePicker',
+                linkId: 'Time period',
+                itemControl: {
+                    coding: [
+                        {
+                            code: 'time-range-picker',
+                        },
+                    ],
+                },
             },
             context: [],
             parentPath: [],
@@ -25,9 +53,12 @@ describe('TimeRangePickerControl', () => {
             result.current.onTimeRangeChange([start, end]);
         });
 
-        expect(result.current.startTime).toEqual({
+        expect(mockControllerFieldOnChange).toHaveBeenCalledTimes(2);
+        expect(mockControllerFieldOnChange).toHaveBeenCalledWith({
             value: { string: start.format(FHIRTimeFormat) },
         });
-        expect(result.current.endTime).toEqual({ value: { string: end.format(FHIRTimeFormat) } });
+        expect(mockControllerFieldOnChange).toHaveBeenCalledWith({
+            value: { string: end.format(FHIRTimeFormat) },
+        });
     });
 });
