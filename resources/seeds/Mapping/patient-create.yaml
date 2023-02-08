@@ -1,8 +1,8 @@
 body:
     $let:
-        snils: >-
+        ssn: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='snils').answer.value.string").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='ssn').answer.value.string").0
         gender: >-
             $
             fhirpath("QuestionnaireResponse.repeat(item).where(linkId='gender').answer.value.string").0
@@ -47,7 +47,7 @@ body:
                         system: mobile
                   birthDate: $ birthDate
                   identifier:
-                      - value: $ snils
+                      - value: $ ssn
                         system: 1.2.643.100.3
                   resourceType: Patient
         resourceType: Bundle
