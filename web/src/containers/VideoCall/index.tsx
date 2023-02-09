@@ -79,7 +79,7 @@ export function VideoCall() {
                     }}
                     interfaceConfigOverwrite={{}}
                     userInfo={{
-                        displayName: practitionerName,
+                        displayName: practitionerName.split('-').join(' '),
                         email: practitionerEmail,
                     }}
                     onApiReady={(externalApi) => {}}
