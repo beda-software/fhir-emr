@@ -13,12 +13,12 @@ export function VideoCall() {
     const location = useLocation();
     const state = location.state as { encounterData: EncounterData };
     const encounter = state.encounterData;
-    const practitionerName = `${encounter.practitioner?.name?.[0]?.given?.[0]} ${encounter.practitioner?.name?.[0]?.given?.[1]}`;
+    const practitionerName = `${encounter.practitioner?.name?.[0]?.given?.[0]}-${encounter.practitioner?.name?.[0]?.given?.[1]}`;
     const practitionerEmail = `${
         encounter.practitioner?.telecom?.find((t: ContactPoint) => t.system === 'email')?.value
     }`;
-    const patientName = `${encounter.patient?.name?.[0]?.given?.[0]} ${encounter.patient?.name?.[0]?.given?.[1]}`;
-    const roomName = [practitionerName, 'and', patientName].join(' ');
+    const patientName = `${encounter.patient?.name?.[0]?.given?.[0]}-${encounter.patient?.name?.[0]?.given?.[1]}`;
+    const roomName = [practitionerName, 'and', patientName].join('-');
     return (
         <>
             <BasePageHeader style={{ paddingBottom: 0 }}>
