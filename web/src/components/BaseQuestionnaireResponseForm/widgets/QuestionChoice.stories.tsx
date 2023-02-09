@@ -1,6 +1,7 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import { QuestionChoice } from './index';
+import { StoryQuestionDecorator } from './utils-stories';
 
 export default {
     title: 'widget/QuestionChoice',
@@ -8,6 +9,13 @@ export default {
     parameters: {
         storyshots: { disable: true },
     },
+    decorators: [
+        (Story) => (
+            <StoryQuestionDecorator>
+                <Story />
+            </StoryQuestionDecorator>
+        ),
+    ],
 } as ComponentMeta<typeof QuestionChoice>;
 
 const Template: ComponentStory<typeof QuestionChoice> = (args) => <QuestionChoice {...args} />;

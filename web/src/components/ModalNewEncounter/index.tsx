@@ -41,7 +41,9 @@ export const ModalNewEncounter = ({ patient, reloadEncounter }: Props) => {
     return (
         <>
             <Button icon={<PlusOutlined />} type="primary" onClick={showModal}>
-                <span><Trans>Create Encounter</Trans></span>
+                <span>
+                    <Trans>Create Encounter</Trans>
+                </span>
             </Button>
             <Modal
                 title={t`Create Encounter`}
@@ -67,7 +69,7 @@ export const ModalNewEncounter = ({ patient, reloadEncounter }: Props) => {
     );
 };
 
-function PractitionerListWidget({ parentPath, questionItem }: QuestionItemProps) {
+export function PractitionerListWidget({ parentPath, questionItem }: QuestionItemProps) {
     const [practitonerRoleSelectOptionsRD] = useService(async () => {
         const bundle = await getFHIRResources<PractitionerRole | Practitioner>('PractitionerRole', {
             _include: ['PractitionerRole:practitioner:Practitioner'],

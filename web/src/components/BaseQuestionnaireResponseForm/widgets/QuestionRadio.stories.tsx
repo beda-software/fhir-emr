@@ -1,6 +1,7 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import { QuestionSolidRadio } from './index';
+import { StoryQuestionDecorator } from './utils-stories';
 
 export default {
     title: 'widget/QuestionRadio',
@@ -8,6 +9,13 @@ export default {
     parameters: {
         storyshots: { disable: true },
     },
+    decorators: [
+        (Story) => (
+            <StoryQuestionDecorator>
+                <Story />
+            </StoryQuestionDecorator>
+        ),
+    ],
 } as ComponentMeta<typeof QuestionSolidRadio>;
 
 const Template: ComponentStory<typeof QuestionSolidRadio> = (args) => <QuestionSolidRadio {...args} />;

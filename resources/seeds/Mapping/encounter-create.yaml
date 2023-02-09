@@ -1,44 +1,51 @@
 body:
-  $let:
-    service: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='service').answer.value.Coding").0
-    patientId: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.value.string").0
-    startDate: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='date-time').answer.value.dateTime").0
-    patientName: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.value.string").0
-    practitioner: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-list').answer.value.Coding").0
-  $body:
-    type: transaction
-    entry:
-      - request:
-          url: /Encounter
-          method: POST
-        resource:
-          class:
-            code: $ service.code
-            system: $ service.system
-            display: $ service.display
-          period:
-            start: $ startDate
-          status: in-progress
-          subject:
-            id: $ patientId
-            display: $ patientName
-            resourceType: Patient
-          participant:
-            - individual:
-                id: $ practitioner.id
-                display: $ practitioner.display
-                resourceType: $ practitioner.code
-          resourceType: Encounter
-    resourceType: Bundle
+    $let:
+        service: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='service').answer.value.Coding").0
+        patientId: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.value.string").0
+        startDate: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='date').answer.value.date").0
+        startTime: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='start-time').answer.value.string").0
+        endTime: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='end-time').answer.value.string").0
+        patientName: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.value.string").0
+        practitioner: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-list').answer.value.Coding").0
+    $body:
+        type: transaction
+        entry:
+            - request:
+                  url: /Encounter
+                  method: POST
+              resource:
+                  class:
+                      code: $ service.code
+                      system: $ service.system
+                      display: $ service.display
+                  period:
+                      start: $ startDate + 'T' + startTime
+                      end: $ startDate + 'T' + endTime
+                  status: in-progress
+                  subject:
+                      id: $ patientId
+                      display: $ patientName
+                      resourceType: Patient
+                  participant:
+                      - individual:
+                            id: $ practitioner.id
+                            display: $ practitioner.display
+                            resourceType: $ practitioner.code
+                  resourceType: Encounter
+        resourceType: Bundle
 id: encounter-create
 resourceType: Mapping

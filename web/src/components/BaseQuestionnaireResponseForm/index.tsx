@@ -21,6 +21,7 @@ import {
     Group,
     InlineChoice,
     PairInput,
+    TimeRangePickerControl,
     QuestionBoolean,
     QuestionChoice,
     QuestionDateTime,
@@ -73,6 +74,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                         col: Col,
                         row: Row,
                         'pair-input': PairInput,
+                        'time-range-picker': TimeRangePickerControl,
                         ...props.itemControlGroupItemComponents,
                     }}
                     questionItemComponents={{
