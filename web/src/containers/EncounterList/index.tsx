@@ -1,6 +1,6 @@
 import { t, Trans } from '@lingui/macro';
 import Title from 'antd/es/typography/Title';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
 
@@ -18,8 +18,6 @@ import { useEncounterList } from './hooks';
 import { EncounterListFilters, EncounterListFilterValues } from './types';
 
 export function EncounterList() {
-    const navigate = useNavigate();
-
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
         columns: [
             {
