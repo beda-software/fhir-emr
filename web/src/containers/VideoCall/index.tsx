@@ -1,16 +1,24 @@
 import { JitsiMeeting } from '@jitsi/react-sdk';
 import { Col, Row } from 'antd';
 import Title from 'antd/es/typography/Title';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+import { ContactPoint } from 'shared/src/contrib/aidbox';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
-import { Spinner } from 'src/components/Spinner';
+import { EncounterData } from 'src/components/EncountersTable/types';
 
 export function VideoCall() {
     const navigate = useNavigate();
-    const [showVideoWindow, setShowVideoWindow] = useState(true);
-
+    const location = useLocation();
+    const state = location.state as { encounterData: EncounterData };
+    const encounter = state.encounterData;
+    const practitionerName = `${encounter.practitioner?.name?.[0]?.given?.[0]} ${encounter.practitioner?.name?.[0]?.given?.[1]}`;
+    const practitionerEmail = `${
+        encounter.practitioner?.telecom?.find((t: ContactPoint) => t.system === 'email')?.value
+    }`;
+    const patientName = `${encounter.patient?.name?.[0]?.given?.[0]} ${encounter.patient?.name?.[0]?.given?.[1]}`;
+    const roomName = [practitionerName, 'and', patientName].join(' ');
     return (
         <>
             <BasePageHeader style={{ paddingBottom: 0 }}>
@@ -21,37 +29,67 @@ export function VideoCall() {
                 </Row>
             </BasePageHeader>
             <BasePageContent>
-                {showVideoWindow ? (
-                    <JitsiMeeting
-                        domain={'localhost:8443'}
-                        roomName="PleaseUseAGoodRoomName"
-                        configOverwrite={{
-                            startWithAudioMuted: true,
-                            disableModeratorIndicator: true,
-                            startScreenSharing: true,
-                            enableEmailInStats: false,
-                            // toolbarButtons: ['fullscreen'],// TODO https://github.com/jitsi/jitsi-meet/blob/master/interface_config.js
-                        }}
-                        interfaceConfigOverwrite={{
-                            DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
-                            defaultLogoUrl: '',
-                        }}
-                        userInfo={{
-                            displayName: 'YOUR_USERNAME',
-                            email: 'email',
-                        }}
-                        onApiReady={(externalApi) => {}}
-                        getIFrameRef={(iframeRef) => {
-                            iframeRef.style.height = '400px';
-                        }}
-                        onReadyToClose={() => {
-                            setShowVideoWindow(false);
-                            navigate(`/encounters/`);
-                        }}
-                    />
-                ) : (
-                    <Spinner />
-                )}
+                <JitsiMeeting
+                    domain={'localhost:8443'}
+                    roomName={roomName}
+                    configOverwrite={{
+                        startWithAudioMuted: true,
+                        disableModeratorIndicator: true,
+                        startScreenSharing: true,
+                        enableEmailInStats: false,
+                        toolbarButtons: [
+                            'camera',
+                            'chat',
+                            'closedcaptions',
+                            'desktop',
+                            'download',
+                            // 'embedmeeting',
+                            'etherpad',
+                            'feedback',
+                            'filmstrip',
+                            'fullscreen',
+                            'hangup',
+                            'help',
+                            'highlight',
+                            'invite',
+                            'linktosalesforce',
+                            'livestreaming',
+                            'microphone',
+                            'noisesuppression',
+                            'participants-pane',
+                            'profile',
+                            // 'raisehand',
+                            'recording',
+                            // 'security',
+                            'select-background',
+                            'settings',
+                            'shareaudio',
+                            'sharedvideo',
+                            'shortcuts',
+                            // 'stats',
+                            'tileview',
+                            'toggle-camera',
+                            'videoquality',
+                            'whiteboard',
+                        ],
+                        analytics: {
+                            disabled: true,
+                        },
+                        readOnlyName: true,
+                    }}
+                    interfaceConfigOverwrite={{}}
+                    userInfo={{
+                        displayName: practitionerName,
+                        email: practitionerEmail,
+                    }}
+                    onApiReady={(externalApi) => {}}
+                    getIFrameRef={(iframeRef) => {
+                        iframeRef.style.height = '700px';
+                    }}
+                    onReadyToClose={() => {
+                        navigate(`/encounters/`);
+                    }}
+                />
             </BasePageContent>
         </>
     );

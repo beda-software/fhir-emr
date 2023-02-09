@@ -1,6 +1,6 @@
 import { t, Trans } from '@lingui/macro';
 import Title from 'antd/es/typography/Title';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
 
@@ -73,22 +73,18 @@ export function EncounterList() {
             key: 'action',
             render: (_text: any, resource: EncounterData) => (
                 <div>
-                    <div
-                        onClick={() => {
-                            navigate(`/patients/${resource.patient?.id}/encounters/${resource.id}`);
-                        }}
-                        style={{ cursor: 'pointer' }}
+                    <Link
+                        to={`/patients/${resource.patient?.id}/encounters/${resource.id}`}
+                        style={{ marginRight: 10 }}
                     >
-                        Open 
-                    </div>
-                    <div
-                        onClick={() => {
-                            navigate(`/encounters/${resource.id}/video`);
-                        }}
-                        style={{ cursor: 'pointer' }}
+                        Open
+                    </Link>
+                    <Link
+                        to={`/encounters/${resource.id}/video`}
+                        state={{ encounterData: resource }}
                     >
                         Video call
-                    </div>
+                    </Link>
                 </div>
             ),
         },
