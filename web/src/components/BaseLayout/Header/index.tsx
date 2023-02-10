@@ -17,9 +17,9 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 import { AvatarImage } from 'src/images/AvatarImage';
 import { LogoImage } from 'src/images/LogoImage';
 import { logout } from 'src/services/auth';
+import { sharedAuthorisedPractitioner } from 'src/sharedState';
 
 import s from './Header.module.scss';
-import { sharedAuthorisedPractitioner } from 'src/sharedState';
 
 export interface RouteItem {
     path: string;
