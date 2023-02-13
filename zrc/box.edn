@@ -4,7 +4,8 @@
  box
  {:zen/tags #{aidbox/system}
   :zen/desc "test server"
-  :services {:seed-fixtures seed-fixtures
+  :services {:seed seed
+             :seed-fixtures seed-fixtures
              :sdc sdc-service}}
 
  sdc-service
@@ -12,10 +13,14 @@
   :engine    aidbox.sdc/service
   :versioning {:enabled false}}
 
+ seed
+ {:zen/tags  #{aidbox/service}
+  :engine    aidbox/seed
+  :files ["seeds.ndjson.gz"]}
+
  seed-fixtures
  {:zen/tags  #{aidbox/service}
   :engine    aidbox/seed-v2
-  :files ["seeds.ndjson.gz"]
   :resources
   {:Client {:web {:auth {:implicit {:redirect_uri #env FHIR_EMR_AUTH_URL}}
                   :first_party true
