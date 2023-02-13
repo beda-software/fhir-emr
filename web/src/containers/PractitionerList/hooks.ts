@@ -71,7 +71,7 @@ export function usePractitionersList(filterValues: StringTypeColumnFilterValue[]
         });
     }, [debouncedFilterValues]);
 
-    return { practitionerDataListRD, practitionerListReload: manager.reload };
+    return { practitionerDataListRD, practitionerListReload: manager.softReloadAsync };
 }
 
 function practitionerRoleToStringArray(practitionerRolesList: PractitionerRole[]): string[] {

@@ -85,6 +85,7 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
                                         clickedAppointmentId: 'undefined',
                                         showEditAppointmentModal: false,
                                     });
+                                    // softReloadAsync is not used here, because otherwise the display of appointments in the table will not be updated
                                     slotsManager.reload();
                                     notification.success({
                                         message: t`Appointment successfully rescheduled`,
@@ -105,6 +106,7 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
                                 newModalData={newModalData}
                                 onOk={() => {
                                     handleOkNewAppointment();
+                                    //slotsManager.softReloadAsync is not used here, because otherwise the display of appointments in the table will not be updated
                                     slotsManager.reload();
                                     notification.success({
                                         message: t`Appointment successfully added`,

@@ -49,7 +49,7 @@ export function PatientList() {
                         </Title>
                     </Col>
                     <Col>
-                        <ModalNewPatient onCreate={patientsResponseManager.reload} />
+                        <ModalNewPatient onCreate={patientsResponseManager.softReloadAsync} />
                     </Col>
                 </Row>
 
@@ -133,7 +133,7 @@ export function PatientList() {
                                                         notification.success({
                                                             message: t`Patient saved`,
                                                         });
-                                                        patientsResponseManager.reload();
+                                                        patientsResponseManager.softReloadAsync();
                                                         closeModal();
                                                     }}
                                                     onCancel={closeModal}

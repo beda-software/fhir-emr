@@ -45,7 +45,7 @@ export const PatientDetails = () => {
                                         element={
                                             <PatientOverview
                                                 patient={patient}
-                                                reload={manager.reload}
+                                                reload={manager.softReloadAsync}
                                             />
                                         }
                                     />
