@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro';
-import { Button, Modal, ModalProps, Radio, Space } from 'antd';
-import { useState } from 'react';
+import { Button, Modal, ModalProps, notification, Radio, Space } from 'antd';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
@@ -32,6 +32,12 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
         ),
     );
 
+    useEffect(() => {
+        if (!props.patient.name && props.open) {
+            notification.info({ message: 'The patient does not have a name' });
+        }
+    }, [props.open, props.patient.name]);
+
     return (
         <>
             <Modal
@@ -42,7 +48,7 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
                     </Button>,
                     <Button
                         key="create"
-                        disabled={!questionnaireId}
+                        disabled={!questionnaireId || !props.patient.name}
                         onClick={() => navigate(routeToOpen)}
                         type="primary"
                     >
