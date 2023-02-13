@@ -13,7 +13,9 @@ jobs:
             - name: Prepare config
               run: cp shared/src/config.local.ts shared/src/config.ts
             - name: Prepare secrets
-              run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
+              run: |
+                echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
+                echo FHIR_EMR_AUTH_URL="http://localhost:3000/auth" >> .env
             - name: Install deps
               run: yarn
             - run: yarn compile
