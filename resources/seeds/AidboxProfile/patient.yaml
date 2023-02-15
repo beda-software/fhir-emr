@@ -1,0 +1,9 @@
+resourceType: AidboxProfile
+id: custom-patient-constraint
+bind:
+  id: Patient
+  resourceType: Entity
+schema:
+  type: object
+  required:
+    - name
