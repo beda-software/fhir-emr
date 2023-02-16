@@ -24,14 +24,16 @@ describe('DateTimeSLot utils test', () => {
                     availableEndTime: '17:00:00',
                     availableStartTime: '16:30:00',
                 },
-            ]
-        }
-        jest.useFakeTimers().setSystemTime(new Date('2023-02-15T13:00:00.000Z'));
+            ],
+        };
+        const currentDateSpy = jest
+            .spyOn(Date, 'now')
+            .mockImplementation(() => new Date('2023-02-15T13:00:00.000Z').getTime());
 
         expect(getTimeSlots(practitionerRole, appointments, slotDuration)).toEqual(
             groupedTimeSlots,
         );
-        jest.clearAllTimers();
+        currentDateSpy.mockRestore();
     });
 });
 
