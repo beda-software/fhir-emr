@@ -34,13 +34,6 @@ export function EncountersTable(props: EncountersTableProps) {
             rowKey={(record) => record.id}
             dataSource={isSuccess(encounterDataListRD) ? encounterDataListRD.data : []}
             columns={props.columns}
-            onRow={(record) => {
-                return {
-                    onClick: () => {
-                        navigate(`/patients/${record.patient?.id}/encounters/${record.id}`);
-                    },
-                };
-            }}
             loading={isLoading(encounterDataListRD) && { indicator: SpinIndicator }}
         />
     );

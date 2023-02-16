@@ -3,7 +3,9 @@ import { Col, Row } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import config from 'shared/src/config';
 import { ContactPoint } from 'shared/src/contrib/aidbox';
+import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { EncounterData } from 'src/components/EncountersTable/types';
@@ -13,11 +15,11 @@ export function VideoCall() {
     const location = useLocation();
     const state = location.state as { encounterData: EncounterData };
     const encounter = state.encounterData;
-    const practitionerName = `${encounter.practitioner?.name?.[0]?.given?.[0]}-${encounter.practitioner?.name?.[0]?.given?.[1]}`;
+    const practitionerName = renderHumanName(encounter.practitioner?.name?.[0]);
     const practitionerEmail = `${
         encounter.practitioner?.telecom?.find((t: ContactPoint) => t.system === 'email')?.value
     }`;
-    const patientName = `${encounter.patient?.name?.[0]?.given?.[0]}-${encounter.patient?.name?.[0]?.given?.[1]}`;
+    const patientName = renderHumanName(encounter.patient?.name?.[0]);
     const roomName = [practitionerName, 'and', patientName].join('-');
     return (
         <>
@@ -30,7 +32,7 @@ export function VideoCall() {
             </BasePageHeader>
             <BasePageContent>
                 <JitsiMeeting
-                    domain={'localhost:8443'}
+                    domain={config.jitsiMeetServer}
                     roomName={roomName}
                     configOverwrite={{
                         startWithAudioMuted: true,
@@ -82,7 +84,7 @@ export function VideoCall() {
                         displayName: practitionerName.split('-').join(' '),
                         email: practitionerEmail,
                     }}
-                    onApiReady={(externalApi) => {}}
+                    // onApiReady={(externalApi) => {}}
                     getIFrameRef={(iframeRef) => {
                         iframeRef.style.height = '700px';
                     }}
