@@ -4,8 +4,6 @@ import moment from 'moment';
 import { useContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-
 import { Patient } from 'shared/src/contrib/aidbox';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
@@ -16,7 +14,6 @@ import { EncountersTable } from '../EncountersTable';
 import { EncounterData } from '../EncountersTable/types';
 import { EncounterStatusBadge } from '../EncounterStatusBadge';
 import { ModalNewEncounter } from '../ModalNewEncounter';
-import { Spinner } from '../Spinner';
 
 interface Props {
     patient: Patient;
@@ -65,9 +62,7 @@ export const PatientEncounter = ({ patient }: Props) => {
             <div>
                 <ModalNewEncounter patient={patient} reloadEncounter={reloadEncounter} />
             </div>
-            <RenderRemoteData remoteData={encounterDataListRD} renderLoading={Spinner}>
-                {(tableData) => <EncountersTable columns={columns} dataSource={tableData} />}
-            </RenderRemoteData>
+            <EncountersTable columns={columns} remoteData={encounterDataListRD} />
         </>
     );
 };

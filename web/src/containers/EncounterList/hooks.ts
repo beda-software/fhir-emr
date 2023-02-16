@@ -135,5 +135,5 @@ export function useEncounterList(
         });
     }, [debouncedFilterValues]);
 
-    return { encounterDataListRD, reloadEncounter: manager.reload };
+    return { encounterDataListRD, reloadEncounter: manager.softReloadAsync };
 }

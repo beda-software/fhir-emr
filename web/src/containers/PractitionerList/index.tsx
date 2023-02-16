@@ -4,7 +4,7 @@ import { Col, Empty, Row, Tag } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { Link } from 'react-router-dom';
 
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
+import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
 
 import { Practitioner } from 'shared/src/contrib/aidbox';
 
@@ -12,8 +12,9 @@ import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { ModalPractitioner } from 'src/components/ModalPractitioner';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
-import { Table } from 'src/components/Table';
 import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
+import { SpinIndicator } from 'src/components/Spinner';
+import { Table } from 'src/components/Table';
 
 import { PractitionerListRowData, usePractitionersList } from './hooks';
 
@@ -129,6 +130,7 @@ export function PractitionerList() {
                             },
                         },
                     ]}
+                    loading={isLoading(practitionerDataListRD) && { indicator: SpinIndicator }}
                 />
             </BasePageContent>
         </>

@@ -15,10 +15,10 @@ import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
+import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 import { formatHumanDate } from 'src/utils/date';
-import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 
 import { usePatientList } from './hooks';
 
@@ -49,7 +49,7 @@ export function PatientList() {
                         </Title>
                     </Col>
                     <Col>
-                        <ModalNewPatient onCreate={patientsResponseManager.reload} />
+                        <ModalNewPatient onCreate={patientsResponseManager.softReloadAsync} />
                     </Col>
                 </Row>
 
@@ -133,7 +133,7 @@ export function PatientList() {
                                                         notification.success({
                                                             message: t`Patient saved`,
                                                         });
-                                                        patientsResponseManager.reload();
+                                                        patientsResponseManager.softReloadAsync();
                                                         closeModal();
                                                     }}
                                                     onCancel={closeModal}

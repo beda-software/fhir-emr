@@ -25,7 +25,7 @@ item:
       hidden: true
       initialExpression:
           language: text/fhirpath
-          expression: "%Patient.name.given[0] & ' ' & %Patient.name.family"
+          expression: "%Patient.name.given[0] + ' ' + %Patient.name.family"
     - text: 'Over the past 2 weeks, how often have you been bothered by:'
       type: group
       linkId: phq2phq9

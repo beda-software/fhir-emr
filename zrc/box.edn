@@ -4,7 +4,8 @@
  box
  {:zen/tags #{aidbox/system}
   :zen/desc "test server"
-  :services {:seed-fixtures seed-fixtures
+  :services {:seed seed
+             :seed-fixtures seed-fixtures
              :sdc sdc-service}}
 
  sdc-service
@@ -12,21 +13,31 @@
   :engine    aidbox.sdc/service
   :versioning {:enabled false}}
 
- seed-fixtures
+ seed
  {:zen/tags  #{aidbox/service}
   :engine    aidbox/seed
-  :files     ["seeds.ndjson.gz"]
+  :files ["seeds.ndjson.gz"]}
+
+ seed-fixtures
+ {:zen/tags  #{aidbox/service}
+  :engine    aidbox/seed-v2
   :resources
-  {:Client
-   {:web
-    {:auth
-     {:implicit {:redirect_uri #env FHIR_EMR_AUTH_URL}}
-     :first_party true,
-     :grant_types [:implicit]}
-
-    :testAuth {:grant_types [:password]
-               :secret "123456"}}
-
-   :AccessPolicy {:test-wildcard-policy
-                  {:engine "allow"
-                   :link   [{:resourceType "User"}]}}}}}
+  {:Client {:web {:auth {:implicit {:redirect_uri #env FHIR_EMR_AUTH_URL}}
+                  :first_party true
+                  :grant_types [:implicit]}
+            :testAuth {:grant_types [:password]
+                       :secret "123456"}}
+   :AccessPolicy {:test-wildcard-policy {:engine "allow" :link [{:resourceType "User"}]}
+                  :admin-policy {:engine "json-schema"
+                                 :roleName "admin"
+                                 :schema {:required ["user" "role"]
+                                          :properties
+                                          {:role
+                                           {:required ["links"]
+                                            :properties
+                                            {:links
+                                             {:required "practitioner"}}}}}}}
+   :Practitioner {:admin {:name [{:given ["Alex"], :family "Admin"}]}}
+   :Role {:admin {:name "admin"
+                  :user {:id "admin" :resourceType "User"}
+                  :links {:practitioner {:id "admin" :resourceType "Practitioner"}}}}}}}

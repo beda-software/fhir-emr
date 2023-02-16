@@ -17,6 +17,7 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 import { AvatarImage } from 'src/images/AvatarImage';
 import { LogoImage } from 'src/images/LogoImage';
 import { logout } from 'src/services/auth';
+import { sharedAuthorisedPractitioner } from 'src/sharedState';
 
 import s from './Header.module.scss';
 
@@ -89,6 +90,9 @@ export function AppHeader() {
             }
         };
 
+        const practitionerData = sharedAuthorisedPractitioner.getSharedState();
+        const practitionerName = practitionerData?.name?.[0];
+
         return (
             <Dropdown
                 menu={{ items: userMenu, onClick: onUserMenuClick }}
@@ -98,7 +102,7 @@ export function AppHeader() {
             >
                 <a onClick={(e) => e.preventDefault()} className={s.user}>
                     <AvatarImage className={s.avatar} />
-                    <span>{renderHumanName()}</span>
+                    <span>{renderHumanName(practitionerName)}</span>
                     <DownOutlined className={s.localeArrow} />
                 </a>
             </Dropdown>

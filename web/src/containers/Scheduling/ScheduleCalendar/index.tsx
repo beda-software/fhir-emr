@@ -85,6 +85,7 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
                                         clickedAppointmentId: 'undefined',
                                         showEditAppointmentModal: false,
                                     });
+                                    // slotsManager.softReloadAsync is not used here, because otherwise the display of appointments in the table will not be updated
                                     slotsManager.reload();
                                     notification.success({
                                         message: t`Appointment successfully rescheduled`,

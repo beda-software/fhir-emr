@@ -8,9 +8,12 @@ import { useLocation } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
-import { isSuccess, success } from 'aidbox-react/lib/libs/remoteData';
+import { isSuccess, RemoteDataResult, success } from 'aidbox-react/lib/libs/remoteData';
+import { getFHIRResource } from 'aidbox-react/lib/services/fhir';
 import { resetInstanceToken, setInstanceToken } from 'aidbox-react/lib/services/instance';
 import { extractErrorCode } from 'aidbox-react/lib/utils/error';
+
+import { Practitioner } from 'shared/src/contrib/aidbox';
 
 import { BaseLayout } from 'src/components/BaseLayout';
 import { Spinner } from 'src/components/Spinner';
@@ -27,6 +30,7 @@ import { LogoImage } from 'src/images/LogoImage';
 import { getAuthorizeUrl, getToken, getUserInfo, OAuthState } from 'src/services/auth';
 import { parseOAuthState, setToken } from 'src/services/auth';
 import { history } from 'src/services/history';
+import { sharedAuthorisedPractitioner } from 'src/sharedState';
 
 import s from './App.module.scss';
 
@@ -39,9 +43,19 @@ export function App() {
 
         setInstanceToken({ access_token: appToken, token_type: 'Bearer' });
 
-        const response = await getUserInfo();
+        const response: RemoteDataResult = await getUserInfo();
 
         if (isSuccess(response)) {
+            const practitionerId = response.data.role[0].links.practitioner.id;
+            const practitionerResponse = await getFHIRResource<Practitioner>({
+                resourceType: 'Practitioner',
+                id: practitionerId,
+            });
+            if (isSuccess(practitionerResponse)) {
+                sharedAuthorisedPractitioner.setSharedState(practitionerResponse.data);
+            } else {
+                console.error(practitionerResponse.error);
+            }
         } else {
             if (extractErrorCode(response.error) !== 'network_error') {
                 resetInstanceToken();

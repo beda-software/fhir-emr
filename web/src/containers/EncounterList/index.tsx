@@ -2,8 +2,6 @@ import { t, Trans } from '@lingui/macro';
 import Title from 'antd/es/typography/Title';
 import { Link } from 'react-router-dom';
 
-import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
-
 import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
@@ -12,7 +10,6 @@ import { EncounterData } from 'src/components/EncountersTable/types';
 import { EncounterStatusBadge } from 'src/components/EncounterStatusBadge';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
-import { Spinner } from 'src/components/Spinner';
 
 import { useEncounterList } from './hooks';
 import { EncounterListFilters, EncounterListFilterValues } from './types';
@@ -102,10 +99,7 @@ export function EncounterList() {
                 />
             </BasePageHeader>
             <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
-                {isLoading(encounterDataListRD) ? <Spinner /> : null}
-                {isSuccess(encounterDataListRD) ? (
-                    <EncountersTable columns={columns} dataSource={encounterDataListRD.data} />
-                ) : null}
+                <EncountersTable columns={columns} remoteData={encounterDataListRD} />
             </BasePageContent>
         </>
     );

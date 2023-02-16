@@ -124,6 +124,7 @@ function prepareMedications(
 ): OverviewCard<MedicationStatement> {
     return {
         title: t`Active Medications`,
+        // eslint-disable-next-line jsx-a11y/alt-text
         icon: <img src={medicationIcon} />,
         data: observations,
         getKey: (r: MedicationStatement) => r.id!,
