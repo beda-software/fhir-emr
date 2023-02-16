@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro';
 import { Empty } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
-import { useNavigate } from 'react-router-dom';
 
 import { isLoading, isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
 
@@ -15,8 +14,6 @@ interface EncountersTableProps {
 }
 
 export function EncountersTable(props: EncountersTableProps) {
-    const navigate = useNavigate();
-
     const encounterDataListRD = props.remoteData;
 
     return (
