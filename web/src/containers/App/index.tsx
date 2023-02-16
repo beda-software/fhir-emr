@@ -29,6 +29,7 @@ import { parseOAuthState, setToken } from 'src/services/auth';
 import { history } from 'src/services/history';
 import { sharedAuthorisedPractitioner } from 'src/sharedState';
 
+import { PublicAppointment } from '../Appointment/PublicAppointment';
 import { EncounterQR } from '../EncounterQR';
 import { Scheduling } from '../Scheduling';
 import s from './App.module.scss';
@@ -101,6 +102,7 @@ export function App() {
         return (
             <BaseLayout>
                 <Routes>
+                    <Route path="/public/appointment" element={<PublicAppointment />} />
                     <Route path="/patients" element={<PatientList />} />
                     <Route path="/encounters" element={<EncounterList />} />
                     <Route path="/patients/:id/*" element={<PatientDetails />} />

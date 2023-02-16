@@ -1,0 +1,50 @@
+id: public-appointment
+resourceType: Questionnaire
+name: Appointment
+status: active
+mapping:
+    - id: public-appointment-extract
+      resourceType: Mapping
+item:
+    - linkId: first-name
+      type: string
+      text: First name
+      required: true
+    - linkId: last-name
+      type: string
+      text: Last name
+      required: true
+    - linkId: mobile
+      type: string
+      text: Phone number
+      itemControl:
+          coding:
+              - code: phoneWidget
+    - text: Practitioner
+      type: choice
+      linkId: practitioner-role
+      required: true
+      itemControl:
+          coding:
+              - code: practitioner-role
+    - text: Type
+      linkId: service-type
+      type: choice
+      hidden: true
+      required: true
+      initial:
+          - value:
+                Coding:
+                    system: http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type
+                    code: consultation
+                    display: The first appointment
+    - linkId: date-time-slot
+      text: Date and Time
+      type: dateTime
+      required: true
+      itemControl:
+          coding:
+              - code: date-time-slot
+meta:
+    profile:
+        - https://beda.software/fhir-emr-questionnaire

@@ -17,7 +17,7 @@ import { PatientDocumentProps, usePatientDocument } from './usePatientDocument';
 export function PatientDocument(props: PatientDocumentProps) {
     const params = useParams<{ questionnaireId: string; encounterId?: string }>();
     const questionnaireId = props.questionnaireId || params.questionnaireId!;
-    const { response, onSubmit, readOnly, customWidgets } = usePatientDocument({
+    const { response, onSubmit, readOnly } = usePatientDocument({
         ...props,
         questionnaireId,
         encounterId: params.encounterId,
@@ -56,7 +56,6 @@ export function PatientDocument(props: PatientDocumentProps) {
                                 formData={formData}
                                 onSubmit={onSubmit}
                                 readOnly={readOnly}
-                                customWidgets={customWidgets}
                                 itemControlQuestionItemComponents={{
                                     'anxiety-score': AnxietyScore,
                                     'depression-score': DepressionScore,

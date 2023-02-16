@@ -3,7 +3,6 @@ import { Button } from 'antd';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
     calcInitialContext,
-    CustomWidgetsMapping,
     FormItems,
     GroupItemComponent,
     ItemControlGroupItemComponentMapping,
@@ -33,6 +32,7 @@ import {
     QuestionString,
     QuestionText,
     Row,
+    PractitionerRoleList,
 } from './widgets';
 import { Display } from './widgets/display';
 import { QuestionReference } from './widgets/reference';
@@ -41,7 +41,6 @@ export interface BaseQuestionnaireResponseFormProps {
     formData: QuestionnaireResponseFormData;
     onSubmit: (formData: QuestionnaireResponseFormData) => Promise<any>;
     readOnly?: boolean;
-    customWidgets?: CustomWidgetsMapping;
     itemControlQuestionItemComponents?: ItemControlQuestionItemComponentMapping;
     itemControlGroupItemComponents?: ItemControlGroupItemComponentMapping;
     questionItemComponents?: QuestionItemComponentMapping;
@@ -96,10 +95,10 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                         slider: QuestionSlider,
                         'solid-radio-button': QuestionSolidRadio,
                         'inline-choice': InlineChoice,
+                        'practitioner-role': PractitionerRoleList,
                         ...props.itemControlQuestionItemComponents,
                     }}
                     readOnly={readOnly}
-                    customWidgets={props.customWidgets}
                 >
                     <>
                         <QuestionItems

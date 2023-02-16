@@ -1,52 +1,55 @@
 resourceType: Mapping
 id: new-appointment-extract
 body:
-  $let:
-    predefinedPatientId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='predefined-patient-id').answer.children().string").0
-    predefinedPractitionerRoleDisplay: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='predefined-practitioner-role-display').answer.children().string").0
-    selectedPatientReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patient').answer.children().Reference").0
-    predefinedPractitionerRoleId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='predefined-practitioner-role-id').answer.children().string").0
-    selectedPractitionerRoleReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-role').answer.children().Reference").0
-    startDateTime: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='start-datetime').answer.children().dateTime").0
-    serviceTypeCoding: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='service-type').answer.children().Coding").0
-  $body:
     $let:
-      practitionerRoleId: $ predefinedPractitionerRoleId || selectedPractitionerRoleReference.id
-      patientId: $ predefinedPatientId || selectedPatientReference.id
+        predefinedPatientId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='predefined-patient-id').answer.children().string").0
+        predefinedPractitionerRoleDisplay: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='predefined-practitioner-role-display').answer.children().string").0
+        selectedPatientReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patient').answer.children().Reference").0
+        predefinedPractitionerRoleId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='predefined-practitioner-role-id').answer.children().string").0
+        selectedPractitionerRoleReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-role').answer.children().Reference").0
+        startDateTime: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='start-datetime').answer.children().dateTime").0
+        serviceTypeCoding: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='service-type').answer.children().Coding").0
     $body:
-      resourceType: Bundle
-      type: transaction
-      entry:
-        - request:
-            url: /Appointment/$book
-            method: POST
-          resource:
-            resourceType: Appointment
-            participant:
-              - actor:
-                  $if: $ selectedPatientReference
-                  $then:
-                    resourceType: Patient
-                    id: $ selectedPatientReference.id
-                    display: $ selectedPatientReference.display
-                  $else:
-                    id: $ patientId
-                    resourceType: Patient
-                status: accepted
-              - actor:
-                  $if: $ selectedPractitionerRoleReference
-                  $then:
-                    resourceType: PractitionerRole
-                    id: $ selectedPractitionerRoleReference.id
-                    display: $ selectedPractitionerRoleReference.display
-                  $else:
-                    resourceType: PractitionerRole
-                    id: $ practitionerRoleId
-                    display: $ predefinedPractitionerRoleDisplay
-                status: accepted
-            serviceType:
-              - text: $ serviceTypeCoding.display
-                coding:
-                  - $ serviceTypeCoding
-            status: pending
-            start: $ startDateTime
+        $let:
+            practitionerRoleId: $ predefinedPractitionerRoleId || selectedPractitionerRoleReference.id
+            patientId: $ predefinedPatientId || selectedPatientReference.id
+        $body:
+            resourceType: Bundle
+            type: transaction
+            entry:
+                - request:
+                      url: /Appointment/$book
+                      method: POST
+                  resource:
+                      resourceType: Bundle
+                      entry:
+                          - resource:
+                                resourceType: Appointment
+                                participant:
+                                    - actor:
+                                          $if: $ selectedPatientReference
+                                          $then:
+                                              resourceType: Patient
+                                              id: $ selectedPatientReference.id
+                                              display: $ selectedPatientReference.display
+                                          $else:
+                                              id: $ patientId
+                                              resourceType: Patient
+                                      status: accepted
+                                    - actor:
+                                          $if: $ selectedPractitionerRoleReference
+                                          $then:
+                                              resourceType: PractitionerRole
+                                              id: $ selectedPractitionerRoleReference.id
+                                              display: $ selectedPractitionerRoleReference.display
+                                          $else:
+                                              resourceType: PractitionerRole
+                                              id: $ practitionerRoleId
+                                              display: $ predefinedPractitionerRoleDisplay
+                                      status: accepted
+                                serviceType:
+                                    - text: $ serviceTypeCoding.display
+                                      coding:
+                                          - $ serviceTypeCoding
+                                status: pending
+                                start: $ startDateTime

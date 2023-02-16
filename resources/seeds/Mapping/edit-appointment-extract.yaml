@@ -1,40 +1,43 @@
 resourceType: Mapping
 id: edit-appointment-extract
 body:
-  $let:
-    currentAppointmentId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='current-appointment-id').answer.children().string").0
-    selectedPatientReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patient').answer.children().Reference").0
-    selectedPractitionerRoleReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-role').answer.children().Reference").0
-    startDateTime: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='start-datetime').answer.children().dateTime").0
-    serviceTypeCoding: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='service-type').answer.children().Coding").0
-  $body:
-    resourceType: Bundle
-    type: batch
-    entry:
-      - request:
-          url: $ "/Appointment/" + currentAppointmentId
-          method: PATCH
-        resource:
-          status: cancelled
-      - request:
-          url: /Appointment/$book
-          method: POST
-        resource:
-          resourceType: Appointment
-          participant:
-            - actor:
-                resourceType: Patient
-                id: $ selectedPatientReference.id
-                display: $ selectedPatientReference.display
-              status: accepted
-            - actor:
-                resourceType: PractitionerRole
-                id: $ selectedPractitionerRoleReference.id
-                display: $ selectedPractitionerRoleReference.display
-              status: accepted
-          serviceType:
-            - text: $ serviceTypeCoding.display
-              coding:
-                - $ serviceTypeCoding
-          status: pending
-          start: $ startDateTime
+    $let:
+        currentAppointmentId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='current-appointment-id').answer.children().string").0
+        selectedPatientReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patient').answer.children().Reference").0
+        selectedPractitionerRoleReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-role').answer.children().Reference").0
+        startDateTime: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='start-datetime').answer.children().dateTime").0
+        serviceTypeCoding: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='service-type').answer.children().Coding").0
+    $body:
+        resourceType: Bundle
+        type: batch
+        entry:
+            - request:
+                  url: $ "/Appointment/" + currentAppointmentId
+                  method: PATCH
+              resource:
+                  status: cancelled
+            - request:
+                  url: /Appointment/$book
+                  method: POST
+              resource:
+                  resourceType: Bundle
+                  entry:
+                      - resource:
+                            resourceType: Appointment
+                            participant:
+                                - actor:
+                                      resourceType: Patient
+                                      id: $ selectedPatientReference.id
+                                      display: $ selectedPatientReference.display
+                                  status: accepted
+                                - actor:
+                                      resourceType: PractitionerRole
+                                      id: $ selectedPractitionerRoleReference.id
+                                      display: $ selectedPractitionerRoleReference.display
+                                  status: accepted
+                            serviceType:
+                                - text: $ serviceTypeCoding.display
+                                  coding:
+                                      - $ serviceTypeCoding
+                            status: pending
+                            start: $ startDateTime

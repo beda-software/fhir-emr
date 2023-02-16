@@ -1,6 +1,6 @@
 import { notification } from 'antd';
 import _ from 'lodash';
-import { CustomWidgetsMapping } from 'sdc-qrf';
+import { ItemControlGroupItemComponentMapping, ItemControlQuestionItemComponentMapping } from 'sdc-qrf';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
@@ -20,7 +20,8 @@ interface Props extends QuestionnaireResponseFormProps {
     onSuccess?: (resource: any) => void;
     onFailure?: (error: any) => void;
     readOnly?: boolean;
-    customWidgets?: CustomWidgetsMapping;
+    itemControlQuestionItemComponents?: ItemControlQuestionItemComponentMapping;
+    itemControlGroupItemComponents?: ItemControlGroupItemComponentMapping;
     onCancel?: () => void;
 }
 
@@ -30,7 +31,6 @@ export function useQuestionnaireResponseForm(props: Props) {
         onSuccess,
         onFailure,
         readOnly,
-        customWidgets,
         initialQuestionnaireResponse,
         onCancel,
     } = props;
@@ -71,11 +71,11 @@ export function useQuestionnaireResponseForm(props: Props) {
         }
     };
 
-    return { response, onSubmit, readOnly, customWidgets, onCancel };
+    return { response, onSubmit, readOnly, onCancel };
 }
 
 export function QuestionnaireResponseForm(props: Props) {
-    const { response, onSubmit, readOnly, customWidgets, onCancel } =
+    const { response, onSubmit, readOnly, onCancel } =
         useQuestionnaireResponseForm(props);
 
     return (
@@ -85,8 +85,8 @@ export function QuestionnaireResponseForm(props: Props) {
                     formData={formData}
                     onSubmit={onSubmit}
                     readOnly={readOnly}
-                    customWidgets={customWidgets}
                     onCancel={onCancel}
+                    {...props}
                 />
             )}
         </RenderRemoteData>
