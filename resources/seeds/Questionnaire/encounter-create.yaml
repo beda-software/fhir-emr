@@ -23,7 +23,7 @@ item:
       readOnly: true
       initialExpression:
           language: text/fhirpath
-          expression: "%Patient.name.given[0] & ' ' & %Patient.name.family"
+          expression: "%Patient.name.given[0] + ' ' + %Patient.name.family"
     - text: Practitioner
       type: choice
       linkId: practitioner-list

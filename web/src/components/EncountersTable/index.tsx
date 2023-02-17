@@ -1,13 +1,11 @@
 import { Trans } from '@lingui/macro';
 import { Empty } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
-import { useNavigate } from 'react-router-dom';
 
 import { isLoading, isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
 
 import { SpinIndicator } from '../Spinner';
 import { Table } from '../Table';
-import s from './EncountersTable.module.scss';
 import { EncounterData } from './types';
 
 interface EncountersTableProps {
@@ -16,8 +14,6 @@ interface EncountersTableProps {
 }
 
 export function EncountersTable(props: EncountersTableProps) {
-    const navigate = useNavigate();
-
     const encounterDataListRD = props.remoteData;
 
     return (
@@ -35,14 +31,6 @@ export function EncountersTable(props: EncountersTableProps) {
             rowKey={(record) => record.id}
             dataSource={isSuccess(encounterDataListRD) ? encounterDataListRD.data : []}
             columns={props.columns}
-            onRow={(record) => {
-                return {
-                    onClick: () => {
-                        navigate(`/patients/${record.patient?.id}/encounters/${record.id}`);
-                    },
-                };
-            }}
-            rowClassName={s.row}
             loading={isLoading(encounterDataListRD) && { indicator: SpinIndicator }}
         />
     );

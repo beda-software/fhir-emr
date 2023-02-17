@@ -14,6 +14,7 @@ import {
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
+import { failure, isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { extractBundleResources, getFHIRResources, WithId } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess } from 'aidbox-react/lib/services/service';
 
@@ -40,8 +41,8 @@ function usePatientDocumentDetails() {
     const params = useParams<{ qrId: string }>();
     const qrId = params.qrId!;
 
-    const [response, manager] = useService(async () =>
-        mapSuccess(
+    const [response, manager] = useService(async () => {
+        const mappedResponse = mapSuccess(
             await getFHIRResources<QuestionnaireResponse | Encounter>('QuestionnaireResponse', {
                 id: qrId,
                 _include: ['QuestionnaireResponse:encounter:Encounter'],
@@ -50,8 +51,12 @@ function usePatientDocumentDetails() {
                 questionnaireResponse: extractBundleResources(bundle).QuestionnaireResponse[0]!,
                 encounter: extractBundleResources(bundle).Encounter[0],
             }),
-        ),
-    );
+        );
+        if (isSuccess(mappedResponse) && !mappedResponse.data.questionnaireResponse) {
+            return failure(`The document does not exist`);
+        }
+        return mappedResponse;
+    });
 
     return { response, manager };
 }
@@ -155,7 +160,11 @@ export function PatientDocumentDetails(props: Props) {
     const navigate = useNavigate();
 
     return (
-        <RenderRemoteData remoteData={response} renderLoading={Spinner}>
+        <RenderRemoteData
+            remoteData={response}
+            renderLoading={Spinner}
+            renderFailure={(error) => <div>{error}</div>}
+        >
             {({ questionnaireResponse, encounter }) => (
                 <PatientDocumentDetailsFormData
                     questionnaireResponse={questionnaireResponse}

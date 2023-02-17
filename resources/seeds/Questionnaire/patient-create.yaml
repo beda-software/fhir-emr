@@ -19,6 +19,7 @@ item:
     - linkId: first-name
       type: string
       text: First name
+      required: true
     - linkId: middle-name
       type: string
       text: Middle name

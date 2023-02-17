@@ -9,4 +9,6 @@ export default {
 
     webSentryDSN: null,
     mobileSentryDSN: null,
+
+    jitsiMeetServer: 'http://localhost:8443',
 };
