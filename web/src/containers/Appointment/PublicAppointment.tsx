@@ -20,7 +20,7 @@ export function PublicAppointment() {
         <>
             <BasePageHeader>
                 <Title>
-                    <Trans>Appointment</Trans>
+                    <Trans>Appointment booking</Trans>
                 </Title>
             </BasePageHeader>
             <BasePageContent style={{ alignItems: 'center' }}>
