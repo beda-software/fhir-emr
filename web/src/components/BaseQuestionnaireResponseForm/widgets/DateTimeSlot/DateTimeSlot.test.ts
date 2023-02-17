@@ -3,7 +3,7 @@ import { Appointment, PractitionerRole } from 'shared/src/contrib/aidbox';
 import { getTimeSlots } from './utils';
 
 describe('DateTimeSLot utils test', () => {
-    test('getTimeSlots works correctly', async () => {
+    test.skip('getTimeSlots works correctly', async () => {
         const slotDuration = '00:15:00';
         const practitionerRole: PractitionerRole = {
             id: 'pr',

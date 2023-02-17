@@ -164,12 +164,6 @@ export function filterBusyTimeSlots(
     });
 }
 
-export function filterPassedTimeSlots(timeSlots: string[]) {
-    return timeSlots.filter((timeSlot) =>
-        parseFHIRDateTime(timeSlot).isSameOrBefore(moment(), 'minutes'),
-    );
-}
-
 export const dayNames = [
     'Monday',
     'Tuesday',

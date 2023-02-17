@@ -10,7 +10,11 @@ import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
 import { isSuccess, RemoteDataResult, success } from 'aidbox-react/lib/libs/remoteData';
 import { getFHIRResource } from 'aidbox-react/lib/services/fhir';
-import { resetInstanceToken, setInstanceToken } from 'aidbox-react/lib/services/instance';
+import {
+    axiosInstance,
+    resetInstanceToken,
+    setInstanceToken,
+} from 'aidbox-react/lib/services/instance';
 import { extractErrorCode } from 'aidbox-react/lib/utils/error';
 
 import { Practitioner } from 'shared/src/contrib/aidbox';
@@ -38,6 +42,10 @@ export function App() {
     const [userResponse] = useService(async () => {
         const appToken = getToken();
         if (!appToken) {
+            axiosInstance.defaults.headers.Authorization = `Basic ${window.btoa(
+                'anonymous:secret',
+            )}`;
+
             return success(null);
         }
 
@@ -87,6 +95,7 @@ export function App() {
                     </div>
                 }
             />
+            <Route path="/appointment/book" element={<PublicAppointment />} />
             <Route
                 path="*"
                 element={
@@ -102,9 +111,9 @@ export function App() {
         return (
             <BaseLayout>
                 <Routes>
-                    <Route path="/public/appointment" element={<PublicAppointment />} />
                     <Route path="/patients" element={<PatientList />} />
                     <Route path="/encounters" element={<EncounterList />} />
+                    <Route path="/appointment/book" element={<PublicAppointment />} />
                     <Route path="/patients/:id/*" element={<PatientDetails />} />
                     <Route path="/documents/:id/edit" element={<div>documents/:id/edit</div>} />
                     <Route
