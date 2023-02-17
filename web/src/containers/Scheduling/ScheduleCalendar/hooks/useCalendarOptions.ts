@@ -1,5 +1,9 @@
-import { CalendarOptions } from '@fullcalendar/core';
+import { CalendarOptions as FullCalendarCalendarOptions  } from '@fullcalendar/core';
 import React from 'react';
+
+interface CalendarOptions extends FullCalendarCalendarOptions {
+    slotDuration: string;
+}
 
 export function useCalendarOptions() {
     // TODO: use settings page and form to change calendar settings

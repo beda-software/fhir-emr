@@ -108,9 +108,9 @@ describe('createEncounter', () => {
                 'practitioner-list': [
                     {
                         value: {
-                            Coding: {
+                            Reference: {
                                 id: practitionerRole.id,
-                                code: 'PractitionerRole',
+                                resourceType: 'PractitionerRole',
                                 display: practitionerName,
                             },
                         },

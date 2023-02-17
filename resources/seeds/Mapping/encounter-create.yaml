@@ -20,7 +20,7 @@ body:
             fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.value.string").0
         practitioner: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-list').answer.value.Coding").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-list').answer.value.Reference").0
     $body:
         type: transaction
         entry:
@@ -44,7 +44,7 @@ body:
                       - individual:
                             id: $ practitioner.id
                             display: $ practitioner.display
-                            resourceType: $ practitioner.code
+                            resourceType: $ practitioner.resourceType
                   resourceType: Encounter
         resourceType: Bundle
 id: encounter-create
