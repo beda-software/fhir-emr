@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro';
-import { Button, notification } from 'antd';
+import { Button } from 'antd';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
     calcInitialContext,
@@ -57,28 +57,31 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
 
     const formValues = watch();
 
-    const submit = () => {
-        const requiredFields = formData.context.questionnaire
-            .item!.filter((item) => item.required)
-            .map((item) => item.linkId);
+    // const submit = () => {
+    //     const requiredFields = formData.context.questionnaire
+    //         .item!.filter((item) => item.required)
+    //         .map((item) => item.linkId);
 
-        const hasEmptyField = requiredFields.some((field) => {
-            const value = formValues[field]?.[0].value?.string;
-            const isEmpty = value === undefined || value.trim() === '';
-            return !value || isEmpty;
-        });
+    //     const hasEmptyField = requiredFields.some((field) => {
+    //         const value = formValues[field]?.[0].value?.string;
+    //         const isEmpty = value === undefined || value.trim() === '';
+    //         return !value || isEmpty;
+    //     });
 
-        if (hasEmptyField) {
-            notification.error({ message: 'Fill the required fields' });
-            return;
-        }
+    //     if (hasEmptyField) {
+    //         notification.error({ message: 'Fill the required fields' });
+    //         return;
+    //     }
 
-        onSubmit({ ...formData, formValues });
-    };
+    //     onSubmit({ ...formData, formValues });
+    // };
 
     return (
         <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(submit)} className={s.form}>
+            <form
+                onSubmit={handleSubmit(() => onSubmit({ ...formData, formValues }))}
+                className={s.form}
+            >
                 <QuestionnaireResponseFormProvider
                     formValues={formValues}
                     setFormValues={(values, fieldPath, value) =>
