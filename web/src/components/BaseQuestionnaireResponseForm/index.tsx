@@ -1,5 +1,7 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Trans } from '@lingui/macro';
-import { Button, notification } from 'antd';
+import { Button } from 'antd';
+import { useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
     calcInitialContext,
@@ -13,8 +15,11 @@ import {
     QuestionnaireResponseFormData,
     QuestionnaireResponseFormProvider,
 } from 'sdc-qrf';
+import * as yup from 'yup';
 
 import 'react-phone-input-2/lib/style.css';
+import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
+
 import s from './BaseQuestionnaireResponseForm.module.scss';
 import {
     Col,
@@ -51,29 +56,22 @@ export interface BaseQuestionnaireResponseFormProps {
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
     const { onSubmit, formData, readOnly, onCancel } = props;
+
+    const schema: yup.AnyObjectSchema = useMemo(
+        () => questionnaireToValidationSchema(formData.context.questionnaire),
+        [formData.context.questionnaire],
+    );
+
     const methods = useForm<FormItems>({
         defaultValues: formData.formValues,
+        resolver: yupResolver(schema),
+        mode: 'onBlur',
     });
     const { setValue, handleSubmit, watch } = methods;
 
     const formValues = watch();
 
     const submit = () => {
-        const requiredFields = formData.context.questionnaire
-            .item!.filter((item) => item.required)
-            .map((item) => item.linkId);
-
-        const hasEmptyField = requiredFields.some((field) => {
-            const value = formValues[field]?.[0].value?.string;
-            const isEmpty = value === undefined || value.trim() === '';
-            return !value || isEmpty;
-        });
-
-        if (hasEmptyField) {
-            notification.error({ message: 'Fill the required fields' });
-            return;
-        }
-
         onSubmit({ ...formData, formValues });
     };
 
