@@ -37,41 +37,33 @@ export function getArrayDisplay(options?: QuestionnaireItemAnswerOption[]): stri
 }
 
 export function questionnaireToValidationSchema(questionnaire: Questionnaire) {
-    const s: Record<string, yup.AnySchema> = {};
-
-    if (questionnaire.item === undefined) return yup.object(s) as yup.AnyObjectSchema;
-
+    const validationSchema: Record<string, yup.AnySchema> = {};
+    if (questionnaire.item === undefined)
+        return yup.object(validationSchema) as yup.AnyObjectSchema;
     questionnaire.item.forEach((item) => {
         if (item.type === 'string') {
-            s[item.linkId] = yup
-                .array()
-                .of(
-                    yup.object({
-                        value: yup.object({
-                            string: item.required ? yup.string().required() : yup.string(),
-                        }),
-                    }),
-                )
-                .required() as unknown as yup.AnySchema;
+            let stringSchema = yup.string();
+            if (item.required) stringSchema = stringSchema.required();
+            if (item.maxLength && item.maxLength > 0)
+                stringSchema = stringSchema.max(item.maxLength);
+            validationSchema[item.linkId] = createSchemaArray(
+                yup.object({ string: stringSchema }),
+            ).required() as unknown as yup.AnySchema;
         } else if (item.type === 'integer') {
-            s[item.linkId] = yup
-                .array()
-                .of(
-                    yup.object({
-                        value: yup.object({
-                            integer: item.required
-                                ? yup.number().min(1).max(9007199254740991).required()
-                                : yup.number().min(1).max(9007199254740991),
-                        }),
-                    }),
-                )
-                .required() as unknown as yup.AnySchema;
+            let numberSchema = yup.number();
+            if (item.required) numberSchema = numberSchema.required();
+            validationSchema[item.linkId] = createSchemaArray(
+                yup.object({ integer: numberSchema }),
+            ).required() as unknown as yup.AnySchema;
         } else {
-            (s[item.linkId] as any) = item.required
+            (validationSchema[item.linkId] as any) = item.required
                 ? yup.mixed().required()
                 : yup.mixed().nullable();
         }
     });
+    return yup.object(validationSchema).required() as yup.AnyObjectSchema;
+}
 
-    return yup.object(s).required() as yup.AnyObjectSchema;
+function createSchemaArray(value: yup.ObjectSchema<any>) {
+    return yup.array().of(yup.object({ value }));
 }
