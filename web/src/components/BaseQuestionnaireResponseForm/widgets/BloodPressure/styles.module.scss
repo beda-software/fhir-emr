@@ -1,0 +1,22 @@
+.row {
+    display: flex;
+}
+
+.inputWrapper {
+    flex: auto;
+}
+
+.splitterWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.splitter {
+    position: relative;
+    bottom: 22px;
+    margin: 0 8px 0 8px;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 22px;
+}

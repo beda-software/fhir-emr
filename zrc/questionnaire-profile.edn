@@ -34,7 +34,9 @@
                            :adjustLastToRight {:confirms #{hl7-fhir-r4-core.boolean/schema}
                                                :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/adjust-last-to-right"}
                            :unit {:confirms #{hl7-fhir-r4-core.string/schema}
-                                  :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/unit"}}}
+                                  :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/unit"}
+                           :inlineChoiceDirection {:confirms #{hl7-fhir-r4-core.string/schema}
+                                                   :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/inline-choice-direction"}}}
 
  QuestionnaireProfile
  {:zen/tags #{zen.fhir/profile-schema zen/schema}

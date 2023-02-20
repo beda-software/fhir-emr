@@ -3,7 +3,7 @@ import { QuestionItemProps } from 'sdc-qrf';
 
 import { useFieldController } from '../hooks';
 
-const inputStyle = { backgroundColor: '#F7F9FC' };
+const inputStyle = { backgroundColor: '#FFFFFF', width: '100%' };
 
 interface NumericItem {
     unit?: string;

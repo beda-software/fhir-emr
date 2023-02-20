@@ -1,0 +1,130 @@
+id: vitals-create
+name: Vitals create
+resourceType: Questionnaire
+status: active
+subjectType:
+    - Encounter
+    - Patient
+mapping:
+    - id: vitals-create
+      resourceType: Mapping
+launchContext:
+    - name: Patient
+      type: Patient
+contained:
+    - resourceType: Bundle
+      id: HeightObservationBundle
+      type: transaction
+      entry:
+          - request:
+                method: GET
+                url: /Observation?patient={{%Patient.id}}&code=8302-2&_count=1&_sort=-createdAt
+sourceQueries:
+    - localRef: 'Bundle#HeightObservationBundle'
+
+item:
+    - text: PatientId
+      type: string
+      linkId: patientId
+      hidden: true
+      initialExpression:
+          language: text/fhirpath
+          expression: '%Patient.id'
+    - text: PatientName
+      type: string
+      linkId: patientName
+      hidden: true
+      initialExpression:
+          language: text/fhirpath
+          expression: "%Patient.name.given[0] & ' ' & %Patient.name.family"
+    - text: EncounterId
+      type: string
+      linkId: encounterId
+      hidden: true
+      initialExpression:
+          language: text/fhirpath
+          expression: '%Encounter.id'
+
+    - type: decimal
+      linkId: height
+      text: Height
+      initialExpression:
+          language: text/fhirpath
+          expression: '%HeightObservationBundle.entry[0].resource.value.Quantity.value'
+
+    - type: decimal
+      linkId: weight
+      text: Weight
+    - type: decimal
+      linkId: temperature
+      text: Temperature
+    - type: decimal
+      linkId: oxygen-saturation
+      text: Oxygen saturation
+    - type: decimal
+      linkId: pulse-rate
+      text: Pulse rate
+    - type: decimal
+      linkId: respiratory-rate
+      text: Respiratory Rate
+    - text: Blood Pressure
+      type: group
+      linkId: blood-pressure
+      item:
+          - type: group
+            linkId: blood-pressure-values
+            itemControl:
+                coding:
+                    - code: blood-pressure
+            unit: mmHg
+            item:
+                - type: decimal
+                  text: BP systolic
+                  linkId: blood-pressure-systolic
+                - type: decimal
+                  text: BP diastolic
+                  linkId: blood-pressure-diastolic
+
+          - linkId: blood-pressure-positions
+            text: Positions
+            type: choice
+            itemControl:
+                coding:
+                    - code: inline-choice
+            inlineChoiceDirection: horizontal
+            answerOption:
+                - value:
+                      Coding:
+                          code: sitting
+                          display: Sitting
+                - value:
+                      Coding:
+                          code: lying
+                          display: Lying
+                - value:
+                      Coding:
+                          code: standing
+                          display: Standing
+
+          - linkId: blood-pressure-arm
+            text: Arm
+            type: choice
+            itemControl:
+                coding:
+                    - code: inline-choice
+            inlineChoiceDirection: horizontal
+            answerOption:
+                - value:
+                      Coding:
+                          code: biceps-left
+                          display: Biceps left
+                - value:
+                      Coding:
+                          code: biceps-right
+                          display: Biceps right
+    # - type: decimal
+    #   linkId: bmi
+    #   text: BMI
+    #   itemControl:
+    #       coding:
+    #           - code: bmi

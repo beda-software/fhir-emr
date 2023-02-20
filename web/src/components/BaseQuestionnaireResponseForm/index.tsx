@@ -19,7 +19,6 @@ import {
     Col,
     Group,
     InlineChoice,
-    PairInput,
     TimeRangePickerControl,
     QuestionBoolean,
     QuestionChoice,
@@ -33,6 +32,7 @@ import {
     QuestionText,
     Row,
     PractitionerRoleList,
+    BloodPressure,
 } from './widgets';
 import { Display } from './widgets/display';
 import { QuestionReference } from './widgets/reference';
@@ -91,7 +91,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                     itemControlGroupItemComponents={{
                         col: Col,
                         row: Row,
-                        'pair-input': PairInput,
+                        'blood-pressure': BloodPressure,
                         'time-range-picker': TimeRangePickerControl,
                         ...props.itemControlGroupItemComponents,
                     }}

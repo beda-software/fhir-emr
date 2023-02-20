@@ -5,7 +5,8 @@ if [ -f ".env" ]; then
 fi
 
 docker-compose -f docker-compose.tests.yaml pull
-docker-compose -f docker-compose.tests.yaml up -d
+docker-compose -f docker-compose.tests.yaml build
+docker-compose -f docker-compose.tests.yaml up --force-recreate -d
 
 yarn test $@ --runInBand
 exit $?
