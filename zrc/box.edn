@@ -30,56 +30,11 @@
             :anonymous {:grant_types [:basic]
                         :secret "secret"}}
    :AccessPolicy {:test-wildcard-policy {:engine "allow" :link [{:resourceType "User"}]}
-                  :admin-policy {:engine "json-schema"
-                                 :roleName "admin"
-                                 :schema {:required ["user" "role"]
-                                          :properties
-                                          {:role
-                                           {:required ["links"]
-                                            :properties
-                                            {:links
-                                             {:required "practitioner"}}}}}}
+                  :admin-policy {:engine "allow"
+                                 :roleName "admin"}
                   :public-appointment-policy
-                  {:engine "json-schema"
-                   :link [{:resourceType "Client" :id "anonymous"}]
-                   :schema {:oneOf [{:properties
-                                     {:request-method {:constant "get"}
-                                      :uri {:constant "/Questionnaire/public-appointment/$assemble"}}}
-                                    {:properties
-                                     {:request-method {:constant "post"}
-                                      :uri {:constant "/Questionnaire/$populate"}}}
-                                    {:properties
-                                     {:request-method {:constant "post"}
-                                      :uri {:constant "/Questionnaire/$extract"}}}
-                                    {:properties
-                                     {:request-method {:constant "post"}
-                                      :uri {:constant "/QuestionnaireResponse/$constraint-check"}}}
-                                    {:properties
-                                     {:request-method {:constant "post"}
-                                      :uri {:constant "/Mapping/public-appointment-extract/$apply"}}}
-                                    {:properties
-                                     {:request-method {:constant "post"}
-                                      :uri {:constant "/QuestionnaireResponse"}}}
-                                    {:properties
-                                     {:request-method {:constant "get"}
-                                      :uri {:constant "/Questionnaire"}
-                                      :params {:allOf [{:properties {:_count {:constant "2"}}}
-                                                       {:properties {:_id {:constant "public-appointment"}}}]}}}
-                                    {:properties
-                                     {:request-method {:constant "get"}
-                                      :params {:required ["resource/type" "resource/id"]
-                                               :properties {:resource/type {:constant "PractitionerRole"}}}}}
-                                    {:properties
-                                     {:request-method {:constant "get"}
-                                      :uri {:constant "/PractitionerRole"}
-                                      :params {:allOf [{:properties {:_include {:constant "PractitionerRole:practitioner:Practitioner"}}}]}}}
-                                    {:properties
-                                     {:request-method {:constant "get"}
-                                      :uri {:constant "/Appointment"}
-                                      :params {:allOf [{:required ["actor"]
-                                                        :properties {:actor {:minLength 1}}}
-                                                       {:required ["date"]
-                                                        :properties {:date {:minLength 1}}}]}}}]}}}
+                  {:engine "allow"
+                   :link [{:resourceType "Client" :id "anonymous"}]}}
    :Practitioner {:admin {:name [{:given ["Alex"], :family "Admin"}]}}
    :Role {:admin {:name "admin"
                   :user {:id "admin" :resourceType "User"}
