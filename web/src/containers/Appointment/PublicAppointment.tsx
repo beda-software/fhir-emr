@@ -7,7 +7,7 @@ import { uuid4 } from 'aidbox-react/lib/utils/uuid';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
-import { DateTimeSlot } from 'src/components/BaseQuestionnaireResponseForm/widgets';
+import { DateTimeSlotPicker } from 'src/components/BaseQuestionnaireResponseForm/widgets';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { history } from 'src/services/history';
 
@@ -35,7 +35,7 @@ export function PublicAppointment() {
                         }}
                         itemControlQuestionItemComponents={{
                             'date-time-slot': (props) => (
-                                <DateTimeSlot
+                                <DateTimeSlotPicker
                                     {...props}
                                     practitionerRolePath={practitionerRolePath}
                                 />
