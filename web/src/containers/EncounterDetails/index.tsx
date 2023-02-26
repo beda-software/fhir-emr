@@ -5,6 +5,7 @@ import Title from 'antd/es/typography/Title';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 
+import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { getFHIRResource, saveFHIRResource } from 'aidbox-react/lib/services/fhir';
@@ -12,6 +13,7 @@ import { formatError } from 'aidbox-react/lib/utils/error';
 
 import { Encounter, Patient } from 'shared/src/contrib/aidbox';
 
+import { Spinner } from 'src/components/Spinner';
 import { DocumentsList } from 'src/containers/DocumentsList';
 
 import { ChooseDocumentToCreateModal } from '../DocumentsList/ChooseDocumentToCreateModal';
@@ -56,8 +58,6 @@ export const EncounterDetails = ({ patient }: Props) => {
     const { setBreadcrumbs } = useContext(PatientHeaderContext);
     const location = useLocation();
     const { response, completeEncounter } = useEncounterDetails();
-    const isEncounterCompleted = isSuccess(response) && response.data.status === 'completed';
-    const actionsDisabled = !isSuccess(response) || isEncounterCompleted;
 
     useEffect(() => {
         setBreadcrumbs({ [location?.pathname]: 'Consultation' });
@@ -69,42 +69,51 @@ export const EncounterDetails = ({ patient }: Props) => {
             <Title level={3} className={s.title}>
                 <Trans>Consultation</Trans>
             </Title>
-            <div style={{ display: 'flex', gap: 32 }}>
-                {!isEncounterCompleted ? (
-                    <Button
-                        icon={<PlusOutlined />}
-                        type="primary"
-                        onClick={() => setModalOpened(true)}
-                        disabled={actionsDisabled}
-                    >
-                        <span>
-                            <Trans>Create document</Trans>
-                        </span>
-                    </Button>
-                ) : null}
-                <Button
-                    icon={<CheckOutlined />}
-                    type="primary"
-                    onClick={() => completeEncounter()}
-                    disabled={actionsDisabled}
-                >
-                    <span>
-                        {isEncounterCompleted ? (
-                            <Trans>Encounter completed</Trans>
-                        ) : (
-                            <Trans>Complete encounter</Trans>
-                        )}
-                    </span>
-                </Button>
-                <ChooseDocumentToCreateModal
-                    open={modalOpened}
-                    onCancel={() => setModalOpened(false)}
-                    patient={patient}
-                    subjectType="Encounter"
-                />
-            </div>
+            <RenderRemoteData remoteData={response} renderLoading={Spinner}>
+                {(encounter) => {
+                    const isEncounterCompleted = encounter.status === 'completed';
 
-            <DocumentsList patient={patient} />
+                    return (
+                        <>
+                            <div style={{ display: 'flex', gap: 32 }}>
+                                {!isEncounterCompleted ? (
+                                    <Button
+                                        icon={<PlusOutlined />}
+                                        type="primary"
+                                        onClick={() => setModalOpened(true)}
+                                    >
+                                        <span>
+                                            <Trans>Create document</Trans>
+                                        </span>
+                                    </Button>
+                                ) : null}
+                                <Button
+                                    icon={<CheckOutlined />}
+                                    type="primary"
+                                    onClick={() => completeEncounter()}
+                                >
+                                    <span>
+                                        {isEncounterCompleted ? (
+                                            <Trans>Encounter completed</Trans>
+                                        ) : (
+                                            <Trans>Complete encounter</Trans>
+                                        )}
+                                    </span>
+                                </Button>
+                                <ChooseDocumentToCreateModal
+                                    open={modalOpened}
+                                    onCancel={() => setModalOpened(false)}
+                                    patient={patient}
+                                    subjectType="Encounter"
+                                    encounter={encounter}
+                                />
+                            </div>
+
+                            <DocumentsList patient={patient} />
+                        </>
+                    );
+                }}
+            </RenderRemoteData>
         </>
     );
 };

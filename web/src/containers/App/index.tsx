@@ -37,16 +37,13 @@ import { history } from 'src/services/history';
 import { sharedAuthorisedPractitioner } from 'src/sharedState';
 
 import { PublicAppointment } from '../Appointment/PublicAppointment';
+import { PatientQuestionnaire } from '../PatientQuestionnaire';
 import s from './App.module.scss';
 
 export function App() {
     const [userResponse] = useService(async () => {
         const appToken = getToken();
         if (!appToken) {
-            axiosInstance.defaults.headers.Authorization = `Basic ${window.btoa(
-                'anonymous:secret',
-            )}`;
-
             return success(null);
         }
 
@@ -97,6 +94,7 @@ export function App() {
                 }
             />
             <Route path="/appointment/book" element={<PublicAppointment />} />
+            <Route path="/questionnaire" element={<PatientQuestionnaire />} />
             <Route
                 path="*"
                 element={
@@ -115,6 +113,7 @@ export function App() {
                     <Route path="/patients" element={<PatientList />} />
                     <Route path="/encounters" element={<EncounterList />} />
                     <Route path="/appointment/book" element={<PublicAppointment />} />
+                    <Route path="/questionnaire" element={<PatientQuestionnaire />} />
                     <Route path="/patients/:id/*" element={<PatientDetails />} />
                     <Route path="/documents/:id/edit" element={<div>documents/:id/edit</div>} />
                     <Route
