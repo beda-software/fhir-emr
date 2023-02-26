@@ -10,11 +10,7 @@ import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
 import { isSuccess, RemoteDataResult, success } from 'aidbox-react/lib/libs/remoteData';
 import { getFHIRResource } from 'aidbox-react/lib/services/fhir';
-import {
-    axiosInstance,
-    resetInstanceToken,
-    setInstanceToken,
-} from 'aidbox-react/lib/services/instance';
+import { resetInstanceToken, setInstanceToken } from 'aidbox-react/lib/services/instance';
 import { extractErrorCode } from 'aidbox-react/lib/utils/error';
 
 import { Practitioner } from 'shared/src/contrib/aidbox';
