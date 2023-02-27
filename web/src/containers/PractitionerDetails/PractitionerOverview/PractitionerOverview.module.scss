@@ -1,0 +1,59 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.card {
+    width: 528px;
+}
+
+.details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.detailItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    font-weight: 500;
+    border-bottom: 1px solid #f0f0f0;
+
+    &:last-child {
+        border-bottom: 0;
+    }
+}
+
+.detailsTitle {
+    flex: 1;
+    color: #0b182873;
+    padding: 13px 12px;
+}
+
+.detailsValue {
+    width: 200px;
+    padding: 13px 12px;
+    border-left: 1px solid #f0f0f0;
+}
+
+.editButton {
+    padding: 0;
+    font-weight: 700;
+}
+
+.cards {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.column {
+    width: 528px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}

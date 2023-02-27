@@ -24,7 +24,6 @@ import { PatientList } from 'src/containers/PatientList';
 import { PractitionerList } from 'src/containers/PractitionerList';
 import { QuestionnaireBuilder } from 'src/containers/QuestionnaireBuilder';
 import { QuestionnaireList } from 'src/containers/QuestionnaireList';
-import { Scheduling } from 'src/containers/Scheduling';
 import { VideoCall } from 'src/containers/VideoCall';
 import { LogoImage } from 'src/images/LogoImage';
 import { getAuthorizeUrl, getToken, getUserInfo, OAuthState } from 'src/services/auth';
@@ -34,6 +33,7 @@ import { sharedAuthorisedPractitioner } from 'src/sharedState';
 
 import { PublicAppointment } from '../Appointment/PublicAppointment';
 import { PatientQuestionnaire } from '../PatientQuestionnaire';
+import { PractitionerDetails } from '../PractitionerDetails';
 import s from './App.module.scss';
 
 export function App() {
@@ -117,18 +117,8 @@ export function App() {
                         element={<EncounterQR />}
                     />
                     <Route path="/encounters/:encounterId/video" element={<VideoCall />} />
-                    <Route
-                        path="/practitioners"
-                        element={
-                            <div className={s.sectionContainer}>
-                                <PractitionerList />
-                            </div>
-                        }
-                    />
-                    <Route
-                        path="/practitioners/:practitionerId/schedule"
-                        element={<Scheduling />}
-                    />
+                    <Route path="/practitioners" element={<PractitionerList />} />
+                    <Route path="/practitioners/:id/*" element={<PractitionerDetails />} />
                     <Route path="/questionnaires" element={<QuestionnaireList />} />
                     <Route path="/questionnaires/builder" element={<QuestionnaireBuilder />} />
                     <Route path="/questionnaires/:id/edit" element={<QuestionnaireBuilder />} />

@@ -49,6 +49,7 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
                         <Trans>Cancel</Trans>
                     </Button>,
                     <Button
+                        key="share-link"
                         disabled={!questionnaireId}
                         onClick={() => {
                             const questionnaireParams = _.compact([
@@ -67,7 +68,7 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
                             onCloseModal();
                         }}
                     >
-                        <Trans>Copy link</Trans>
+                        <Trans>Share link</Trans>
                     </Button>,
                     <Button
                         key="create"
