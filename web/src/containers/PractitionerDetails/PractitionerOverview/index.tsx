@@ -94,7 +94,7 @@ export function PractitionerOverview(props: Props) {
                     {details.map(({ title, value }, index) => (
                         <div key={`practitioner-details__${index}`} className={s.detailItem}>
                             <div className={s.detailsTitle}>{title}</div>
-                            <div className={s.detailsValue}>{value || '-'}</div>
+                            <div className={s.detailsValue}>{value}</div>
                         </div>
                     ))}
                 </div>
