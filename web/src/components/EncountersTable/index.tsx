@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro';
-import { Empty } from 'antd';
+import { Empty, TablePaginationConfig } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 
 import { isLoading, isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
@@ -11,6 +11,12 @@ import { EncounterData } from './types';
 interface EncountersTableProps {
     columns: ColumnsType<EncounterData>;
     remoteData: RemoteData<EncounterData[]>;
+    handleTableChange: (pagination: TablePaginationConfig) => Promise<void>;
+    pagination: {
+        current: number;
+        pageSize: number;
+        total: number | undefined;
+    };
 }
 
 export function EncountersTable(props: EncountersTableProps) {
@@ -28,6 +34,8 @@ export function EncountersTable(props: EncountersTableProps) {
                     </>
                 ),
             }}
+            pagination={props.pagination}
+            onChange={props.handleTableChange}
             rowKey={(record) => record.id}
             dataSource={isSuccess(encounterDataListRD) ? encounterDataListRD.data : []}
             columns={props.columns}

@@ -35,7 +35,7 @@ export function EncounterList() {
         ] as EncounterListFilters,
     });
 
-    const { encounterDataListRD } = useEncounterList(
+    const { encounterDataListRD, handleTableChange, pagination } = useEncounterList(
         columnsFilterValues as EncounterListFilterValues,
     );
 
@@ -99,7 +99,12 @@ export function EncounterList() {
                 />
             </BasePageHeader>
             <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
-                <EncountersTable columns={columns} remoteData={encounterDataListRD} />
+                <EncountersTable
+                    columns={columns}
+                    remoteData={encounterDataListRD}
+                    handleTableChange={handleTableChange}
+                    pagination={pagination}
+                />
             </BasePageContent>
         </>
     );

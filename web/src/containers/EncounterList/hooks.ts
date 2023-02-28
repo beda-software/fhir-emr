@@ -1,6 +1,9 @@
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { isSuccess, RemoteData, success } from 'aidbox-react/lib/libs/remoteData';
-import { extractBundleResources, getFHIRResources, WithId } from 'aidbox-react/lib/services/fhir';
+import { TablePaginationConfig } from 'antd';
+import { useEffect, useState } from 'react';
+
+import { usePager } from 'aidbox-react/lib/hooks/pager';
+import { isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
+import { extractBundleResources } from 'aidbox-react/lib/services/fhir';
 import { SearchParams } from 'aidbox-react/lib/services/search';
 import { mapSuccess } from 'aidbox-react/lib/services/service';
 import { formatFHIRDateTime } from 'aidbox-react/lib/utils/date';
@@ -14,8 +17,14 @@ import { useDebounce } from 'src/utils/debounce';
 import { EncounterListFilterValues } from './types';
 
 interface EncountersListData {
-    encounterDataListRD: RemoteData<EncounterData[]>;
+    encounterDataListRD: RemoteData<EncounterData[], any>;
     reloadEncounter: () => void;
+    handleTableChange: (pagination: TablePaginationConfig) => Promise<void>;
+    pagination: {
+        current: number;
+        pageSize: number;
+        total: number | undefined;
+    };
 }
 
 export function useEncounterList(
@@ -24,116 +33,98 @@ export function useEncounterList(
 ): EncountersListData {
     const debouncedFilterValues = useDebounce(filterValues, 300);
 
-    const [encounterDataListRD, manager] = useService<EncounterData[]>(async () => {
-        const patientFilterValue = debouncedFilterValues
-            ? debouncedFilterValues[0].value
-            : undefined;
-        const practitionerFilterValue = debouncedFilterValues
-            ? debouncedFilterValues[1].value
-            : undefined;
-        const dateFilterValue = debouncedFilterValues ? debouncedFilterValues[2].value : undefined;
+    const [pageSize, setPageSize] = useState(10);
 
-        const patientsBundleResponse = patientFilterValue
-            ? await getFHIRResources<Patient>('Patient', {
-                  name: patientFilterValue,
-              })
-            : success(undefined);
-        const patients =
-            isSuccess(patientsBundleResponse) && patientsBundleResponse.data
-                ? extractBundleResources<Patient>(patientsBundleResponse.data).Patient
-                : [];
+    const handleTableChange = async (pagination: TablePaginationConfig) => {
+        if (typeof pagination.current !== 'number') return;
 
-        const practitionersBundleResponse = practitionerFilterValue
-            ? await getFHIRResources<Practitioner>('Practitioner', {
-                  name: practitionerFilterValue,
-              })
-            : success(undefined);
-        const practitioners =
-            isSuccess(practitionersBundleResponse) && practitionersBundleResponse.data
-                ? extractBundleResources<Practitioner>(practitionersBundleResponse.data)
-                      .Practitioner
-                : [];
+        if (pagination.pageSize && pagination.pageSize !== pageSize) {
+            pagerManager.loadPage(pagination.current);
+            setPageSize(pagination.pageSize);
+        } else {
+            pagerManager.loadPage(pagination.current);
+        }
+    };
 
-        const practitionerRolesBundleResponse =
-            practitioners && practitioners.length > 0
-                ? await getFHIRResources<PractitionerRole>('PractitionerRole', {
-                      practitioner: practitioners.map((practitioner) => practitioner.id).join(','),
-                  })
-                : success(undefined);
-        const practitionerRoles =
-            isSuccess(practitionerRolesBundleResponse) && practitionerRolesBundleResponse.data
-                ? extractBundleResources<PractitionerRole>(practitionerRolesBundleResponse.data)
-                      .PractitionerRole
-                : [];
+    const patientFilterValue = filterValues?.[0]?.value ?? undefined;
+    const practitionerFilterValue = filterValues?.[1]?.value ?? undefined;
+    const dateFilterValue = filterValues?.[2]?.value ?? undefined;
 
-        const filteredResourcesAreFound =
-            (!patientFilterValue || patients.length > 0) &&
-            (!practitionerFilterValue || practitionerRoles.length > 0);
+    const dateParameter = dateFilterValue
+        ? [
+              `ge${formatFHIRDateTime(dateFilterValue[0])}`,
+              `le${formatFHIRDateTime(dateFilterValue[1])}`,
+          ]
+        : undefined;
 
-        const response = filteredResourcesAreFound
-            ? await getFHIRResources<Encounter | PractitionerRole | Practitioner | Patient>(
-                  'Encounter',
-                  {
-                      ...searchParams,
-                      _include: [
-                          'Encounter:subject',
-                          'Encounter:participant:PractitionerRole',
-                          'PractitionerRole:practitioner:Practitioner',
-                      ],
-                      subject:
-                          patients !== undefined
-                              ? patients.map((patient) => `Patient/${patient.id}`).join(',')
-                              : undefined,
-                      participant:
-                          practitionerRoles !== undefined
-                              ? practitionerRoles
-                                    .map((role) => `PractitionerRole/${role.id}`)
-                                    .join(',')
-                              : undefined,
-                      date: dateFilterValue
-                          ? [
-                                `ge${formatFHIRDateTime(dateFilterValue[0])}`,
-                                `le${formatFHIRDateTime(dateFilterValue[1])}`,
-                            ]
-                          : undefined,
-                  },
-              )
-            : success(undefined);
+    const queryParameters = {
+        ...searchParams,
+        _include: [
+            'Encounter:subject',
+            'Encounter:participant:PractitionerRole',
+            'PractitionerRole:practitioner:Practitioner',
+        ],
+        '.participant.0.individual.display': practitionerFilterValue,
+        'subject:Patient.name': patientFilterValue,
+        date: dateParameter,
+        _sort: '-_lastUpdated',
+    };
 
-        return mapSuccess(response, (bundle) => {
-            const sourceMap = bundle
-                ? extractBundleResources(bundle)
-                : { Encounter: [], Patient: [], Practitioner: [], PractitionerRole: [] };
+    const [resourceResponse, pagerManager] = usePager<
+        Encounter | PractitionerRole | Practitioner | Patient
+    >('Encounter', pageSize, queryParameters);
 
-            const encounters = sourceMap.Encounter;
-            const patients = sourceMap.Patient;
-            const practitioners = sourceMap.Practitioner;
-            const practitionerRoles = sourceMap.PractitionerRole;
-
-            return encounters.map((encounter) => {
-                const patient: WithId<Patient> | undefined = patients.find(
-                    (p) => p.id === encounter.subject?.id,
-                );
-                const practitionerRole = practitionerRoles.find(
-                    (pR) => pR.id === encounter.participant?.[0]!.individual?.id,
-                );
-
-                const practitioner: WithId<Practitioner> | undefined = practitioners.find(
-                    (p) => p.id === practitionerRole?.practitioner?.id,
-                );
-
-                return {
-                    id: encounter.id,
-                    patient,
-                    practitioner,
-                    status: encounter.status,
-                    date: encounter?.period?.start,
-                    humanReadableDate:
-                        encounter?.period?.start && formatHumanDateTime(encounter?.period?.start),
-                };
-            });
-        });
+    useEffect(() => {
+        pagerManager.reload();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedFilterValues]);
 
-    return { encounterDataListRD, reloadEncounter: manager.softReloadAsync };
+    const encounterData = mapSuccess(resourceResponse, (bundle) => {
+        const sourceMap = bundle
+            ? extractBundleResources(bundle)
+            : { Encounter: [], Patient: [], Practitioner: [], PractitionerRole: [] };
+
+        const {
+            Encounter: encounters,
+            Patient: patients,
+            Practitioner: practitioners,
+            PractitionerRole: practitionerRoles,
+        } = sourceMap;
+
+        return encounters.map((encounter) => {
+            const patient = patients.find((patient) => patient.id === encounter.subject?.id);
+
+            const practitionerRole = practitionerRoles.find(
+                (practitionerRole) =>
+                    practitionerRole.id === encounter.participant?.[0]!.individual?.id,
+            );
+
+            const practitioner = practitioners.find(
+                (practitioner) => practitioner.id === practitionerRole?.practitioner?.id,
+            );
+
+            return {
+                id: encounter.id!,
+                patient,
+                practitioner,
+                status: encounter.status,
+                date: encounter?.period?.start,
+                humanReadableDate:
+                    encounter?.period?.start && formatHumanDateTime(encounter?.period?.start),
+            };
+        });
+    });
+
+    const pagination = {
+        current: pagerManager.currentPage,
+        pageSize: pageSize,
+        total: isSuccess(resourceResponse) ? resourceResponse.data.total : 0,
+    };
+
+    return {
+        encounterDataListRD: encounterData,
+        reloadEncounter: pagerManager.reload,
+        handleTableChange,
+        pagination,
+    };
 }
