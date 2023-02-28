@@ -10,11 +10,7 @@ import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
 import { isSuccess, RemoteDataResult, success } from 'aidbox-react/lib/libs/remoteData';
 import { getFHIRResource } from 'aidbox-react/lib/services/fhir';
-import {
-    axiosInstance,
-    resetInstanceToken,
-    setInstanceToken,
-} from 'aidbox-react/lib/services/instance';
+import { resetInstanceToken, setInstanceToken } from 'aidbox-react/lib/services/instance';
 import { extractErrorCode } from 'aidbox-react/lib/utils/error';
 
 import { Practitioner } from 'shared/src/contrib/aidbox';
@@ -28,7 +24,6 @@ import { PatientList } from 'src/containers/PatientList';
 import { PractitionerList } from 'src/containers/PractitionerList';
 import { QuestionnaireBuilder } from 'src/containers/QuestionnaireBuilder';
 import { QuestionnaireList } from 'src/containers/QuestionnaireList';
-import { Scheduling } from 'src/containers/Scheduling';
 import { VideoCall } from 'src/containers/VideoCall';
 import { LogoImage } from 'src/images/LogoImage';
 import { getAuthorizeUrl, getToken, getUserInfo, OAuthState } from 'src/services/auth';
@@ -37,16 +32,14 @@ import { history } from 'src/services/history';
 import { sharedAuthorisedPractitioner } from 'src/sharedState';
 
 import { PublicAppointment } from '../Appointment/PublicAppointment';
+import { PatientQuestionnaire } from '../PatientQuestionnaire';
+import { PractitionerDetails } from '../PractitionerDetails';
 import s from './App.module.scss';
 
 export function App() {
     const [userResponse] = useService(async () => {
         const appToken = getToken();
         if (!appToken) {
-            axiosInstance.defaults.headers.Authorization = `Basic ${window.btoa(
-                'anonymous:secret',
-            )}`;
-
             return success(null);
         }
 
@@ -97,6 +90,7 @@ export function App() {
                 }
             />
             <Route path="/appointment/book" element={<PublicAppointment />} />
+            <Route path="/questionnaire" element={<PatientQuestionnaire />} />
             <Route
                 path="*"
                 element={
@@ -115,6 +109,7 @@ export function App() {
                     <Route path="/patients" element={<PatientList />} />
                     <Route path="/encounters" element={<EncounterList />} />
                     <Route path="/appointment/book" element={<PublicAppointment />} />
+                    <Route path="/questionnaire" element={<PatientQuestionnaire />} />
                     <Route path="/patients/:id/*" element={<PatientDetails />} />
                     <Route path="/documents/:id/edit" element={<div>documents/:id/edit</div>} />
                     <Route
@@ -122,18 +117,8 @@ export function App() {
                         element={<EncounterQR />}
                     />
                     <Route path="/encounters/:encounterId/video" element={<VideoCall />} />
-                    <Route
-                        path="/practitioners"
-                        element={
-                            <div className={s.sectionContainer}>
-                                <PractitionerList />
-                            </div>
-                        }
-                    />
-                    <Route
-                        path="/practitioners/:practitionerId/schedule"
-                        element={<Scheduling />}
-                    />
+                    <Route path="/practitioners" element={<PractitionerList />} />
+                    <Route path="/practitioners/:id/*" element={<PractitionerDetails />} />
                     <Route path="/questionnaires" element={<QuestionnaireList />} />
                     <Route path="/questionnaires/builder" element={<QuestionnaireBuilder />} />
                     <Route path="/questionnaires/:id/edit" element={<QuestionnaireBuilder />} />

@@ -28,13 +28,18 @@
             :testAuth {:grant_types [:password]
                        :secret "123456"}
             :anonymous {:grant_types [:basic]
-                        :secret "secret"}}
+                        :secret "secret"}
+            :patient-questionnaire {:grant_types [:basic]
+                                    :secret "secret"}}
    :AccessPolicy {:test-wildcard-policy {:engine "allow" :link [{:resourceType "User"}]}
                   :admin-policy {:engine "allow"
                                  :roleName "admin"}
                   :public-appointment-policy
                   {:engine "allow"
-                   :link [{:resourceType "Client" :id "anonymous"}]}}
+                   :link [{:resourceType "Client" :id "anonymous"}]}
+                  :patient-questionnaire-policy
+                  {:engine "allow"
+                   :link [{:resourceType "Client" :id "patient-questionnaire"}]}}
    :Practitioner {:admin {:name [{:given ["Alex"], :family "Admin"}]}}
    :Role {:admin {:name "admin"
                   :user {:id "admin" :resourceType "User"}

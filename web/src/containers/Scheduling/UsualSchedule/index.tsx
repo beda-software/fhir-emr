@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro';
 import { Button, Checkbox, Col, notification, Row } from 'antd';
+import Title from 'antd/es/typography/Title';
 import moment from 'moment';
 import React from 'react';
 
@@ -12,7 +13,7 @@ import { formatError } from 'aidbox-react/lib/utils/error';
 import { PractitionerRole } from 'shared/src/contrib/aidbox';
 import { formatFHIRTime } from 'shared/src/utils/date';
 
-import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
+import { BasePageContent } from 'src/components/BaseLayout';
 import { DatePicker } from 'src/components/DatePicker';
 
 import { daysMapping, fromAvailableTime, toAvailableTime } from '../available-time';
@@ -53,171 +54,182 @@ function FreshUsualSchedule({
     };
 
     return (
-        <>
-            <BasePageHeader>
-                <Trans>Usual schedule</Trans>
-                {/* TODO: bring the SmartButton component */}
-                <Button type="primary" onClick={() => submit()} key="save-usual-schedule-button">
-                    Save
-                </Button>
-            </BasePageHeader>
-            <BasePageContent>
-                <div style={{ width: 600 }}>
-                    {days.map((day) => {
-                        const certainDaySchedule = schedulesByDay[day];
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div style={{ width: 600 }}>
+                <Title level={2}>
+                    <Trans>Availability</Trans>
+                </Title>
+                <BasePageContent>
+                    <div>
+                        {days.map((day) => {
+                            const certainDaySchedule = schedulesByDay[day];
 
-                        return (
-                            <React.Fragment key={day}>
-                                <Row gutter={16} style={{ marginBottom: 16 }}>
-                                    <Col span={6}>
-                                        <Checkbox
-                                            checked={!!schedulesByDay[day]}
-                                            onChange={() => toggleSchedule(day)}
-                                        >
-                                            {daysMapping[day]}
-                                        </Checkbox>
-                                    </Col>
-                                    <Col span={5}>
-                                        <DatePicker
-                                            picker="time"
-                                            value={
-                                                certainDaySchedule?.start
-                                                    ? moment(certainDaySchedule.start, 'HH:mm')
-                                                    : undefined
-                                            }
-                                            placeholder=""
-                                            format="HH:mm"
-                                            showNow={false}
-                                            showSecond={false}
-                                            minuteStep={5}
-                                            onSelect={(value) => {
-                                                changeScheduleStart(
-                                                    day,
-                                                    value ? formatFHIRTime(value) : undefined,
-                                                );
-                                            }}
-                                        />
-                                    </Col>
-                                    <Col span={1}>—</Col>
-                                    <Col span={5}>
-                                        <DatePicker
-                                            picker="time"
-                                            value={
-                                                certainDaySchedule?.end
-                                                    ? moment(certainDaySchedule.end, 'HH:mm')
-                                                    : undefined
-                                            }
-                                            placeholder=""
-                                            format="HH:mm"
-                                            showNow={false}
-                                            showSecond={false}
-                                            minuteStep={5}
-                                            onSelect={(value) => {
-                                                changeScheduleEnd(
-                                                    day,
-                                                    value ? formatFHIRTime(value) : undefined,
-                                                );
-                                            }}
-                                        />
-                                    </Col>
-                                    <Col span={7}>
-                                        <Button type="primary" onClick={() => addBreak(day)}>
-                                            Add break
-                                        </Button>
-                                    </Col>
-                                </Row>
-                                <Row style={{ marginBottom: 16 }}>
-                                    <Col span={24}>
-                                        {schedulesByDay?.[day]?.breaks?.map(
-                                            (currentBreak, index) => {
-                                                if (currentBreak.removed) {
-                                                    return null;
+                            return (
+                                <React.Fragment key={day}>
+                                    <Row gutter={16} style={{ marginBottom: 16 }}>
+                                        <Col span={6}>
+                                            <Checkbox
+                                                checked={!!schedulesByDay[day]}
+                                                onChange={() => toggleSchedule(day)}
+                                            >
+                                                {daysMapping[day]}
+                                            </Checkbox>
+                                        </Col>
+                                        <Col span={5}>
+                                            <DatePicker
+                                                picker="time"
+                                                value={
+                                                    certainDaySchedule?.start
+                                                        ? moment(certainDaySchedule.start, 'HH:mm')
+                                                        : undefined
                                                 }
+                                                placeholder=""
+                                                format="HH:mm"
+                                                showNow={false}
+                                                showSecond={false}
+                                                minuteStep={5}
+                                                onSelect={(value) => {
+                                                    changeScheduleStart(
+                                                        day,
+                                                        value ? formatFHIRTime(value) : undefined,
+                                                    );
+                                                }}
+                                            />
+                                        </Col>
+                                        <Col span={1}>—</Col>
+                                        <Col span={5}>
+                                            <DatePicker
+                                                picker="time"
+                                                value={
+                                                    certainDaySchedule?.end
+                                                        ? moment(certainDaySchedule.end, 'HH:mm')
+                                                        : undefined
+                                                }
+                                                placeholder=""
+                                                format="HH:mm"
+                                                showNow={false}
+                                                showSecond={false}
+                                                minuteStep={5}
+                                                onSelect={(value) => {
+                                                    changeScheduleEnd(
+                                                        day,
+                                                        value ? formatFHIRTime(value) : undefined,
+                                                    );
+                                                }}
+                                            />
+                                        </Col>
+                                        <Col span={7} style={{ display: 'flex', justifyContent: 'flex-end'}}>
+                                            <Button type="primary" onClick={() => addBreak(day)}>
+                                                Add break
+                                            </Button>
+                                        </Col>
+                                    </Row>
+                                    <Row style={{ marginBottom: 16 }}>
+                                        <Col span={24}>
+                                            {schedulesByDay?.[day]?.breaks?.map(
+                                                (currentBreak, index) => {
+                                                    if (currentBreak.removed) {
+                                                        return null;
+                                                    }
 
-                                                return (
-                                                    <Row
-                                                        key={day + index}
-                                                        gutter={16}
-                                                        style={{ marginBottom: 16 }}
-                                                    >
-                                                        <Col span={6}>Break</Col>
-                                                        <Col span={5}>
-                                                            <DatePicker
-                                                                picker="time"
-                                                                value={
-                                                                    currentBreak.start
-                                                                        ? moment(
-                                                                              currentBreak.start,
-                                                                              'HH:mm',
-                                                                          )
-                                                                        : undefined
-                                                                }
-                                                                format="HH:mm"
-                                                                placeholder=""
-                                                                showNow={false}
-                                                                showSecond={false}
-                                                                minuteStep={5}
-                                                                onSelect={(value) => {
-                                                                    changeBreakStart(
-                                                                        day,
-                                                                        index,
-                                                                        value
-                                                                            ? formatFHIRTime(value)
-                                                                            : undefined,
-                                                                    );
-                                                                }}
-                                                            />
-                                                        </Col>
-                                                        <Col span={1}>—</Col>
-                                                        <Col span={5}>
-                                                            <DatePicker
-                                                                picker="time"
-                                                                value={
-                                                                    currentBreak.end
-                                                                        ? moment(
-                                                                              currentBreak.end,
-                                                                              'HH:mm',
-                                                                          )
-                                                                        : undefined
-                                                                }
-                                                                placeholder=""
-                                                                format="HH:mm"
-                                                                showNow={false}
-                                                                showSecond={false}
-                                                                minuteStep={5}
-                                                                onSelect={(value) => {
-                                                                    changeBreakEnd(
-                                                                        day,
-                                                                        index,
-                                                                        value
-                                                                            ? formatFHIRTime(value)
-                                                                            : undefined,
-                                                                    );
-                                                                }}
-                                                            />
-                                                        </Col>
-                                                        <Col span={7}>
-                                                            <Button
-                                                                type="ghost"
-                                                                onClick={() =>
-                                                                    removeBreak(day, index)
-                                                                }
-                                                            >
-                                                                Remove
-                                                            </Button>
-                                                        </Col>
-                                                    </Row>
-                                                );
-                                            },
-                                        )}
-                                    </Col>
-                                </Row>
-                            </React.Fragment>
-                        );
-                    })}
-                </div>
-            </BasePageContent>
-        </>
+                                                    return (
+                                                        <Row
+                                                            key={day + index}
+                                                            gutter={16}
+                                                            style={{ marginBottom: 16 }}
+                                                        >
+                                                            <Col span={6}>Break</Col>
+                                                            <Col span={5}>
+                                                                <DatePicker
+                                                                    picker="time"
+                                                                    value={
+                                                                        currentBreak.start
+                                                                            ? moment(
+                                                                                  currentBreak.start,
+                                                                                  'HH:mm',
+                                                                              )
+                                                                            : undefined
+                                                                    }
+                                                                    format="HH:mm"
+                                                                    placeholder=""
+                                                                    showNow={false}
+                                                                    showSecond={false}
+                                                                    minuteStep={5}
+                                                                    onSelect={(value) => {
+                                                                        changeBreakStart(
+                                                                            day,
+                                                                            index,
+                                                                            value
+                                                                                ? formatFHIRTime(
+                                                                                      value,
+                                                                                  )
+                                                                                : undefined,
+                                                                        );
+                                                                    }}
+                                                                />
+                                                            </Col>
+                                                            <Col span={1}>—</Col>
+                                                            <Col span={5}>
+                                                                <DatePicker
+                                                                    picker="time"
+                                                                    value={
+                                                                        currentBreak.end
+                                                                            ? moment(
+                                                                                  currentBreak.end,
+                                                                                  'HH:mm',
+                                                                              )
+                                                                            : undefined
+                                                                    }
+                                                                    placeholder=""
+                                                                    format="HH:mm"
+                                                                    showNow={false}
+                                                                    showSecond={false}
+                                                                    minuteStep={5}
+                                                                    onSelect={(value) => {
+                                                                        changeBreakEnd(
+                                                                            day,
+                                                                            index,
+                                                                            value
+                                                                                ? formatFHIRTime(
+                                                                                      value,
+                                                                                  )
+                                                                                : undefined,
+                                                                        );
+                                                                    }}
+                                                                />
+                                                            </Col>
+                                                            <Col span={7}>
+                                                                <Button
+                                                                    type="ghost"
+                                                                    onClick={() =>
+                                                                        removeBreak(day, index)
+                                                                    }
+                                                                >
+                                                                    Remove
+                                                                </Button>
+                                                            </Col>
+                                                        </Row>
+                                                    );
+                                                },
+                                            )}
+                                        </Col>
+                                    </Row>
+                                </React.Fragment>
+                            );
+                        })}
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end'}}>
+                        <Button
+                            type="primary"
+                            onClick={() => submit()}
+                            key="save-usual-schedule-button"
+                        >
+                            Save
+                        </Button>
+                    </div>
+                </BasePageContent>
+            </div>
+        </div>
     );
 }
 
