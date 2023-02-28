@@ -1,8 +1,8 @@
-import { Outlet, Route, Routes, useParams } from 'react-router-dom';
+import { Outlet, Route, Routes, useNavigate, useParams } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
-import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
+import { extractBundleResources, getFHIRResources, WithId } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess } from 'aidbox-react/lib/services/service';
 
 import { Practitioner, PractitionerRole } from 'shared/src/contrib/aidbox';
@@ -10,13 +10,14 @@ import { Practitioner, PractitionerRole } from 'shared/src/contrib/aidbox';
 import { BasePageContent } from 'src/components/BaseLayout';
 import { Spinner } from 'src/components/Spinner';
 
+import { Availability } from '../Scheduling/Availability';
 import { ScheduleCalendar } from '../Scheduling/ScheduleCalendar';
-import { UsualSchedule } from '../Scheduling/UsualSchedule';
 import { PractitionerHeader } from './PractitionerHeader';
 import { PractitionerOverview } from './PractitionerOverview';
 
 export const PractitionerDetails = () => {
     const params = useParams<{ id: string }>();
+    const navigate = useNavigate();
 
     const [response, manager] = useService(async () => {
         return mapSuccess(
@@ -70,7 +71,18 @@ export const PractitionerDetails = () => {
                                     <Route
                                         path="/availability"
                                         element={
-                                            <UsualSchedule practitionerRole={practitionerRole} />
+                                            <Availability
+                                                practitionerRole={practitionerRole}
+                                                onSave={(updatedPR: WithId<PractitionerRole>) => {
+                                                    navigate(
+                                                        `/practitioners/${practitioner.id}/scheduling`,
+                                                    );
+                                                    manager.set({
+                                                        practitioner,
+                                                        practitionerRole: updatedPR,
+                                                    });
+                                                }}
+                                            />
                                         }
                                     />
                                 </Route>
