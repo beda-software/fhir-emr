@@ -32,9 +32,8 @@ export function PractitionerList() {
         ],
     });
 
-    const { practitionerDataListRD, practitionerListReload } = usePractitionersList(
-        columnsFilterValues as StringTypeColumnFilterValue[],
-    );
+    const { practitionerDataListRD, practitionerListReload, pagination, handleTableChange } =
+        usePractitionersList(columnsFilterValues as StringTypeColumnFilterValue[]);
 
     return (
         <>
@@ -83,6 +82,8 @@ export function PractitionerList() {
             </BasePageHeader>
             <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
                 <Table
+                    pagination={pagination}
+                    onChange={handleTableChange}
                     bordered
                     locale={{
                         emptyText: (

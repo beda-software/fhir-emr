@@ -1,3 +1,7 @@
+import { TablePaginationConfig } from 'antd';
+import { useEffect, useState } from 'react';
+
+import { usePager } from 'aidbox-react/lib/hooks/pager';
 import { useService } from 'aidbox-react/lib/hooks/service';
 import { isSuccess, success } from 'aidbox-react/lib/libs/remoteData';
 import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
@@ -21,19 +25,43 @@ export interface PractitionerListRowData {
 export function usePractitionersList(filterValues: StringTypeColumnFilterValue[]) {
     const debouncedFilterValues = useDebounce(filterValues, 300);
 
-    const [practitionerDataListRD, manager] = useService<PractitionerListRowData[]>(async () => {
-        const practitionerFilterValue = debouncedFilterValues[0];
+    const [pageSize, setPageSize] = useState(10);
 
-        const practitionersBundleResponse = practitionerFilterValue
-            ? await getFHIRResources<Practitioner>('Practitioner', {
-                  name: practitionerFilterValue.value,
-              })
-            : success(undefined);
-        const practitioners =
-            isSuccess(practitionersBundleResponse) && practitionersBundleResponse.data
-                ? extractBundleResources<Practitioner>(practitionersBundleResponse.data)
-                      .Practitioner
-                : [];
+    const handleTableChange = async (pagination: TablePaginationConfig) => {
+        if (typeof pagination.current !== 'number') return;
+
+        if (pagination.pageSize && pagination.pageSize !== pageSize) {
+            pagerManager.loadPage(pagination.current);
+            setPageSize(pagination.pageSize);
+        } else {
+            pagerManager.loadPage(pagination.current);
+        }
+    };
+
+    const practitionerFilterValue = debouncedFilterValues[0];
+
+    const [resourceResponse, pagerManager] = usePager<Practitioner>('Practitioner', pageSize, {
+        _sort: '-_lastUpdated',
+        ...(practitionerFilterValue ? { name: practitionerFilterValue.value } : {}),
+    });
+
+    useEffect(() => {
+        pagerManager.reload();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [debouncedFilterValues]);
+
+    const pagination = {
+        current: pagerManager.currentPage,
+        pageSize: pageSize,
+        total: isSuccess(resourceResponse) ? resourceResponse.data.total : 0,
+    };
+
+    const [practitionerDataListRD] = useService<PractitionerListRowData[]>(async () => {
+        const practitionersResponse = mapSuccess(
+            resourceResponse,
+            (bundle) => extractBundleResources(bundle).Practitioner,
+        );
+        const practitioners = isSuccess(practitionersResponse) ? practitionersResponse.data : [];
 
         const filteredResourcesAreFound = !practitionerFilterValue || practitioners.length > 0;
 
@@ -67,9 +95,14 @@ export function usePractitionersList(filterValues: StringTypeColumnFilterValue[]
                 return rowData;
             });
         });
-    }, [debouncedFilterValues]);
+    }, [debouncedFilterValues, resourceResponse]);
 
-    return { practitionerDataListRD, practitionerListReload: manager.softReloadAsync };
+    return {
+        practitionerDataListRD,
+        practitionerListReload: pagerManager.reload,
+        pagination,
+        handleTableChange,
+    };
 }
 
 function practitionerRoleToStringArray(practitionerRolesList: PractitionerRole[]): string[] {
