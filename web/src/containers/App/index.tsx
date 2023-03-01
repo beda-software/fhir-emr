@@ -25,7 +25,7 @@ import { PractitionerList } from 'src/containers/PractitionerList';
 import { QuestionnaireBuilder } from 'src/containers/QuestionnaireBuilder';
 import { QuestionnaireList } from 'src/containers/QuestionnaireList';
 import { VideoCall } from 'src/containers/VideoCall';
-import { LogoImage } from 'src/images/LogoImage';
+import logo from 'src/images/logo-white.svg';
 import { getAuthorizeUrl, getToken, getUserInfo, OAuthState } from 'src/services/auth';
 import { parseOAuthState, setToken } from 'src/services/auth';
 import { history } from 'src/services/history';
@@ -171,9 +171,7 @@ export function Signin() {
     return (
         <div className={s.container}>
             <header className={s.header}>
-                <div>
-                    <LogoImage inverse />
-                </div>
+                <img src={logo} alt="" />
                 <Typography.Title style={{ color: '#FFF' }}>{t`Welcome`}</Typography.Title>
                 <Button type="primary" style={{ marginTop: 15 }} onClick={() => authorize()}>
                     {t`Log in`}
