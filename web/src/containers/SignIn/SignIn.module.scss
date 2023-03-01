@@ -1,6 +1,8 @@
 .container {
-    background-color: #3366ff;
     min-height: 100vh;
+    position: relative;
+    padding-bottom: 64px;
+    background-color: #3366ff;
     display: flex;
     flex-direction: column;
     align-items: center;

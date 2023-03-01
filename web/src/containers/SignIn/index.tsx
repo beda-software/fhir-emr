@@ -2,6 +2,7 @@ import { t } from '@lingui/macro';
 import { Button } from 'antd';
 import Title from 'antd/lib/typography/Title';
 
+import { AppFooter } from 'src/components/BaseLayout/Footer';
 import logo from 'src/images/logo-white.svg';
 import { getAuthorizeUrl, OAuthState } from 'src/services/auth';
 
@@ -26,6 +27,7 @@ export function SignIn() {
                     {t`Password`}: password
                 </div>
             </div>
+            <AppFooter type="light" />
         </div>
     );
 }
