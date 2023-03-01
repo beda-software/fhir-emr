@@ -1,4 +1,4 @@
-import { t, Trans } from '@lingui/macro';
+import { t } from '@lingui/macro';
 import { Button } from 'antd';
 import Title from 'antd/lib/typography/Title';
 
@@ -20,12 +20,10 @@ export function SignIn() {
                 {t`Log in`}
             </Button>
             <div className={s.message}>
-                <b>
-                    <Trans>On the next page, please, use the following credentials</Trans>
-                </b>
+                <b>{t`On the next page, please, use the following credentials`}</b>
                 <div>
-                    <Trans>Username</Trans>: admin <br />
-                    <Trans>Password</Trans>: password
+                    {t`Username`}: admin <br />
+                    {t`Password`}: password
                 </div>
             </div>
         </div>
