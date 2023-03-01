@@ -93,7 +93,7 @@ export function usePractitionersList(filterValues: StringTypeColumnFilterValue[]
                     practitionerRoleList: practitionerRoleToStringArray(practitionerRolesList),
                 };
                 return rowData;
-            });
+            }).reverse();
         });
     }, [debouncedFilterValues, resourceResponse]);
 
