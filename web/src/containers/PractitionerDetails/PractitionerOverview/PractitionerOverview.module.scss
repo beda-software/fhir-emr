@@ -42,17 +42,3 @@
     padding: 0;
     font-weight: 700;
 }
-
-.cards {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 24px;
-}
-
-.column {
-    width: 528px;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-}

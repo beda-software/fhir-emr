@@ -1,9 +1,30 @@
-import React from 'react';
+import _ from 'lodash';
+import React, { useCallback, useMemo } from 'react';
 
-import { days, DaySchedule, DaySchedules, ScheduleBreak } from '../available-time';
+import { PractitionerRole } from 'shared/src/contrib/aidbox';
 
-export function useUsualSchedule(initialSchedulesByDay: DaySchedules) {
-    const [schedulesByDay, setSchedulesByDay] = React.useState<DaySchedules>(initialSchedulesByDay);
+import {
+    days,
+    DaySchedule,
+    DaySchedules,
+    fromAvailableTime,
+    ScheduleBreak,
+} from '../available-time';
+
+interface Props {
+    practitionerRole: PractitionerRole;
+}
+
+export function useAvailability({ practitionerRole }: Props) {
+    const initialSchedule = useMemo(
+        () => fromAvailableTime(practitionerRole.availableTime || []),
+        [practitionerRole],
+    );
+    const [schedule, setSchedulesByDay] = React.useState<DaySchedules>(initialSchedule);
+    const scheduleHasChanges = useMemo(
+        () => !_.isEqual(initialSchedule, schedule),
+        [initialSchedule, schedule],
+    );
     const setScheduleByDay = (day: string, fn: (schedule: DaySchedule) => DaySchedule) => {
         setSchedulesByDay((schedules) => {
             const schedule = schedules[day];
@@ -73,9 +94,13 @@ export function useUsualSchedule(initialSchedulesByDay: DaySchedules) {
         setBreakByDay(day, index, (currentBreak) => ({ ...currentBreak, end: value }));
     };
 
+    const reset = useCallback(() => {
+        setSchedulesByDay(initialSchedule);
+    }, [initialSchedule]);
+
     return {
         days,
-        schedulesByDay,
+        schedule,
         addBreak,
         removeBreak,
         toggleSchedule,
@@ -83,5 +108,7 @@ export function useUsualSchedule(initialSchedulesByDay: DaySchedules) {
         changeScheduleEnd,
         changeBreakStart,
         changeBreakEnd,
+        reset,
+        scheduleHasChanges,
     };
 }

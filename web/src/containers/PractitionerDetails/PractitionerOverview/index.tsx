@@ -21,7 +21,6 @@ interface Props {
 
 function usePractitionerOverview(props: Props) {
     const { practitioner, practitionerRole } = props;
-    console.log('practitionerRole', practitionerRole)
 
     let details = [
         {
