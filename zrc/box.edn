@@ -1,12 +1,16 @@
 {ns box
- import #{aidbox.rest questionnaire-profile}
+ import #{aidbox.rest questionnaire-profile
+          aidbox.search-parameter.v1
+          aidbox
+          aidbox.repository.v1}
 
  box
  {:zen/tags #{aidbox/system}
   :zen/desc "test server"
   :services {:seed seed
              :seed-fixtures seed-fixtures
-             :sdc sdc-service}}
+             :sdc sdc-service
+             :repositories repositories}}
 
  sdc-service
  {:zen/tags  #{aidbox/service}
@@ -43,4 +47,23 @@
    :Practitioner {:admin {:name [{:given ["Alex"], :family "Admin"}]}}
    :Role {:admin {:name "admin"
                   :user {:id "admin" :resourceType "User"}
-                  :links {:practitioner {:id "admin" :resourceType "Practitioner"}}}}}}}
+                  :links {:practitioner {:id "admin" :resourceType "Practitioner"}}}}}}
+
+ encounter-participant-display
+ {:zen/tags #{aidbox.search-parameter.v1/search-parameter}
+  :name "participant-display"
+  :type :string
+  :resource {:resourceType "Entity" :id "Encounter"}
+  :expression [["participant", "individual", "display"]]}
+
+ encounter-repository
+ {:zen/tags #{aidbox.repository.v1/repository}
+  :resourceType "Encounter"
+  :extra-parameter-sources :all ; allow to use SearchParameters from outside of repo
+  :search-parameters #{encounter-participant-display}}
+
+ repositories
+ {:zen/tags #{aidbox/service}
+  :engine aidbox.repository.v1/engine
+  :repositories #{encounter-repository}
+  :load-default true}}

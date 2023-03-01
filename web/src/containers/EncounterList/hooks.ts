@@ -64,7 +64,7 @@ export function useEncounterList(
             'Encounter:participant:PractitionerRole',
             'PractitionerRole:practitioner:Practitioner',
         ],
-        '.participant.0.individual.display': practitionerFilterValue,
+        'participant-display': practitionerFilterValue,
         'subject:Patient.name': patientFilterValue,
         date: dateParameter,
         _sort: '-_lastUpdated',
