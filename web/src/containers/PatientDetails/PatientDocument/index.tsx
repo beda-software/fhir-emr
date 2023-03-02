@@ -1,4 +1,5 @@
 import Title from 'antd/lib/typography/Title';
+import _ from 'lodash';
 import { useContext, useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
@@ -16,11 +17,12 @@ import { PatientDocumentProps, usePatientDocument } from './usePatientDocument';
 
 export function PatientDocument(props: PatientDocumentProps) {
     const params = useParams<{ questionnaireId: string; encounterId?: string }>();
+    const encounterId = props.encounterId || params.encounterId;
     const questionnaireId = props.questionnaireId || params.questionnaireId!;
-    const { response, onSubmit, readOnly, customWidgets } = usePatientDocument({
+    const { response, onSubmit, readOnly } = usePatientDocument({
         ...props,
         questionnaireId,
-        encounterId: params.encounterId,
+        encounterId,
     });
     const navigate = useNavigate();
 
@@ -49,14 +51,13 @@ export function PatientDocument(props: PatientDocumentProps) {
                 <RenderRemoteData remoteData={response} renderLoading={Spinner}>
                     {(formData) => (
                         <>
-                            <Title level={3} style={{ marginBottom: 32 }}>
-                                {formData.context.questionnaire.name}
-                            </Title>
+                            <div className={s.header}>
+                                <Title level={3}>{formData.context.questionnaire.name}</Title>
+                            </div>
                             <Component
                                 formData={formData}
                                 onSubmit={onSubmit}
                                 readOnly={readOnly}
-                                customWidgets={customWidgets}
                                 itemControlQuestionItemComponents={{
                                     'anxiety-score': AnxietyScore,
                                     'depression-score': DepressionScore,

@@ -1,24 +1,27 @@
-import { EditTwoTone, PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
-import { Col, Empty, Row, Tag } from 'antd';
+import { Button, Col, Empty, notification, Row } from 'antd';
 import Title from 'antd/es/typography/Title';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
 
 import { Practitioner } from 'shared/src/contrib/aidbox';
+import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
-import { ModalPractitioner } from 'src/components/ModalPractitioner';
+import { ModalTrigger } from 'src/components/ModalTrigger';
+import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 
-import { PractitionerListRowData, usePractitionersList } from './hooks';
+import { usePractitionersList } from './hooks';
 
 export function PractitionerList() {
+    const navigate = useNavigate();
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
         columns: [
             {
@@ -43,15 +46,32 @@ export function PractitionerList() {
                         </Title>
                     </Col>
                     <Col>
-                        <ModalPractitioner
-                            key={'new'}
-                            modalTitle="Add New Practitioner"
-                            buttonText={t`Add New Practitioner`}
-                            icon={<PlusOutlined />}
-                            questionnaireId="practitioner-create"
-                            buttonType="primary"
-                            practitionerListReload={practitionerListReload}
-                        />
+                        <ModalTrigger
+                            title={t`Create practitioner`}
+                            trigger={
+                                <Button icon={<PlusOutlined />} type="primary">
+                                    <span>
+                                        <Trans>Add new practitioner</Trans>
+                                    </span>
+                                </Button>
+                            }
+                        >
+                            {({ closeModal }) => (
+                                <QuestionnaireResponseForm
+                                    questionnaireLoader={questionnaireIdLoader(
+                                        'practitioner-create',
+                                    )}
+                                    onSuccess={() => {
+                                        practitionerListReload();
+                                        closeModal();
+                                        notification.success({
+                                            message: t`Practitioner successfully created`,
+                                        });
+                                    }}
+                                    onCancel={closeModal}
+                                />
+                            )}
+                        </ModalTrigger>
                     </Col>
                 </Row>
 
@@ -85,47 +105,30 @@ export function PractitionerList() {
                             width: '20%',
                         },
                         {
-                            title: <Trans>Speciality</Trans>,
+                            title: <Trans>Specialty</Trans>,
                             dataIndex: 'practitionerRoleList',
                             key: 'practitionerRoleList',
                             width: '30%',
-                            render: (tags: string[]) => (
-                                <>
-                                    {tags.map((tag) => (
-                                        <Tag key={tag}>{tag}</Tag>
-                                    ))}
-                                </>
-                            ),
+                            render: (specialties: string[]) => specialties.join(', '),
                         },
                         {
                             title: <Trans>Actions</Trans>,
                             dataIndex: 'practitionerResource',
                             key: 'actions',
                             width: '5%',
-                            render: (
-                                practitionerResource: Practitioner,
-                                rowData: PractitionerListRowData,
-                            ) => {
-                                const { practitionerRolesResource } = rowData;
+                            render: (practitioner: Practitioner) => {
                                 return (
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <ModalPractitioner
-                                            key={'edit'}
-                                            modalTitle="Edit Practitioner"
-                                            buttonType="link"
-                                            buttonText={t`Edit`}
-                                            icon={<EditTwoTone />}
-                                            questionnaireId="practitioner-edit"
-                                            practitionerResource={practitionerResource}
-                                            practitionerRole={practitionerRolesResource?.[0]}
-                                            practitionerListReload={practitionerListReload}
-                                        />
-                                        <div style={{ width: '8px' }} />
-                                        <Link to={`${practitionerResource.id}/schedule`}>
-                                            <span style={{ color: 'black' }}>Schedule</span>
-                                        </Link>
-                                        <div style={{ width: '8px' }} />
-                                    </div>
+                                    <Button
+                                        type="link"
+                                        style={{ padding: 0 }}
+                                        onClick={() =>
+                                            navigate(`/practitioners/${practitioner.id}`, {
+                                                state: { practitioner },
+                                            })
+                                        }
+                                    >
+                                        <Trans>Open</Trans>
+                                    </Button>
                                 );
                             },
                         },

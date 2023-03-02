@@ -1,6 +1,6 @@
+import type { PickerTimeProps, RangePickerTimeProps } from 'antd/es/date-picker/generatePicker';
 import moment from 'moment';
 import { forwardRef } from 'react';
-import type { PickerTimeProps, RangePickerTimeProps } from 'antd/es/date-picker/generatePicker';
 
 import { DatePicker } from 'src/components/DatePicker';
 

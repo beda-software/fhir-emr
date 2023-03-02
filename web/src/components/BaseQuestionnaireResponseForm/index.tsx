@@ -5,7 +5,6 @@ import { useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
     calcInitialContext,
-    CustomWidgetsMapping,
     FormItems,
     GroupItemComponent,
     ItemControlGroupItemComponentMapping,
@@ -38,6 +37,7 @@ import {
     QuestionString,
     QuestionText,
     Row,
+    PractitionerRoleList,
 } from './widgets';
 import { Display } from './widgets/display';
 import { QuestionReference } from './widgets/reference';
@@ -46,7 +46,6 @@ export interface BaseQuestionnaireResponseFormProps {
     formData: QuestionnaireResponseFormData;
     onSubmit: (formData: QuestionnaireResponseFormData) => Promise<any>;
     readOnly?: boolean;
-    customWidgets?: CustomWidgetsMapping;
     itemControlQuestionItemComponents?: ItemControlQuestionItemComponentMapping;
     itemControlGroupItemComponents?: ItemControlGroupItemComponentMapping;
     questionItemComponents?: QuestionItemComponentMapping;
@@ -71,13 +70,12 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
 
     const formValues = watch();
 
-    const submit = () => {
-        onSubmit({ ...formData, formValues });
-    };
-
     return (
         <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(submit)} className={s.form}>
+            <form
+                onSubmit={handleSubmit(() => onSubmit({ ...formData, formValues }))}
+                className={s.form}
+            >
                 <QuestionnaireResponseFormProvider
                     formValues={formValues}
                     setFormValues={(values, fieldPath, value) =>
@@ -110,10 +108,10 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                         slider: QuestionSlider,
                         'solid-radio-button': QuestionSolidRadio,
                         'inline-choice': InlineChoice,
+                        'practitioner-role': PractitionerRoleList,
                         ...props.itemControlQuestionItemComponents,
                     }}
                     readOnly={readOnly}
-                    customWidgets={props.customWidgets}
                 >
                     <>
                         <QuestionItems

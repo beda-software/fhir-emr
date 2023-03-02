@@ -27,6 +27,9 @@ item:
     - text: Practitioner
       type: choice
       linkId: practitioner-list
+      itemControl:
+          coding:
+              - code: practitioner-role
     - text: Service
       type: choice
       linkId: service

@@ -1,0 +1,43 @@
+body:
+    $let:
+        firstName: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='first-name').answer.value.string").0
+        lastName: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='last-name').answer.value.string").0
+        mobile: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='mobile').answer.value.string").0
+        practitionerRole: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-role').answer.value.Reference").0
+        startDateTime: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='date-time-slot').answer.value.dateTime").0
+        serviceTypeCoding: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='service-type').answer.children().Coding").0
+    $body:
+        type: transaction
+        entry:
+            - request:
+                  url: /Appointment/$book
+                  method: POST
+              resource:
+                  resourceType: Bundle
+                  entry:
+                      - resource:
+                            resourceType: Patient
+                            name:
+                                - given:
+                                      - $ firstName
+                                  family: $ lastName
+                            telecom:
+                                - value: $ mobile
+                                  system: mobile
+                      - resource:
+                            resourceType: Appointment
+                            participant:
+                                - actor:
+                                      resourceType: PractitionerRole
+                                      id: $ practitionerRole.id
+                                      display: $ practitionerRole.display
+                                  status: accepted
+                            status: proposed
+                            start: $ startDateTime
+                            serviceType:
+                                - text: $ serviceTypeCoding.display
+                                  coding:
+                                      - $ serviceTypeCoding
+        resourceType: Bundle
+id: public-appointment-extract
+resourceType: Mapping

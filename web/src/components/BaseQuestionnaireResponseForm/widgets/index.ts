@@ -11,3 +11,5 @@ export * from './pair-input';
 export * from './boolean';
 export * from './group';
 export * from './TimeRangePickerControl';
+export * from './DateTimeSlotPicker';
+export * from './PractitionerRoleList';
