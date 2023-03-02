@@ -8,7 +8,13 @@ import { SearchParams } from 'aidbox-react/lib/services/search';
 import { mapSuccess } from 'aidbox-react/lib/services/service';
 import { formatFHIRDateTime } from 'aidbox-react/lib/utils/date';
 
-import { Encounter, Patient, Practitioner, PractitionerRole } from 'shared/src/contrib/aidbox';
+import {
+    Encounter,
+    Patient,
+    Practitioner,
+    PractitionerRole,
+    Resource,
+} from 'shared/src/contrib/aidbox';
 
 import { EncounterData } from 'src/components/EncountersTable/types';
 import { formatHumanDateTime } from 'src/utils/date';
@@ -32,19 +38,6 @@ export function useEncounterList(
     searchParams: SearchParams = {},
 ): EncountersListData {
     const debouncedFilterValues = useDebounce(filterValues, 300);
-
-    const [pageSize, setPageSize] = useState(10);
-
-    const handleTableChange = async (pagination: TablePaginationConfig) => {
-        if (typeof pagination.current !== 'number') return;
-
-        if (pagination.pageSize && pagination.pageSize !== pageSize) {
-            pagerManager.loadPage(pagination.current);
-            setPageSize(pagination.pageSize);
-        } else {
-            pagerManager.loadPage(pagination.current);
-        }
-    };
 
     const patientFilterValue = filterValues?.[0]?.value ?? undefined;
     const practitionerFilterValue = filterValues?.[1]?.value ?? undefined;
@@ -70,14 +63,10 @@ export function useEncounterList(
         _sort: '-_lastUpdated',
     };
 
-    const [resourceResponse, pagerManager] = usePager<
-        Encounter | PractitionerRole | Practitioner | Patient
-    >('Encounter', pageSize, queryParameters);
-
-    useEffect(() => {
-        pagerManager.reload();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [debouncedFilterValues]);
+    const { resourceResponse, pagerManager, handleTableChange, pagination } = usePagerExtended<
+        Encounter | PractitionerRole | Practitioner | Patient,
+        EncounterListFilterValues
+    >('Encounter', queryParameters, debouncedFilterValues);
 
     const encounterData = mapSuccess(resourceResponse, (bundle) => {
         const sourceMap = bundle
@@ -115,16 +104,44 @@ export function useEncounterList(
         });
     });
 
-    const pagination = {
-        current: pagerManager.currentPage,
-        pageSize: pageSize,
-        total: isSuccess(resourceResponse) ? resourceResponse.data.total : 0,
-    };
-
     return {
         encounterDataListRD: encounterData,
         reloadEncounter: pagerManager.reload,
         handleTableChange,
         pagination,
     };
+}
+
+export function usePagerExtended<T extends Resource, F = unknown>(
+    resourceType: string,
+    searchParams?: SearchParams,
+    debouncedFilterValues?: F,
+) {
+    const [pageSize, setPageSize] = useState(10);
+
+    const [resourceResponse, pagerManager] = usePager<T>(resourceType, pageSize, searchParams);
+
+    const handleTableChange = async (pagination: TablePaginationConfig) => {
+        if (typeof pagination.current !== 'number') return;
+
+        if (pagination.pageSize && pagination.pageSize !== pageSize) {
+            pagerManager.loadPage(pagination.current);
+            setPageSize(pagination.pageSize);
+        } else {
+            pagerManager.loadPage(pagination.current);
+        }
+    };
+
+    const pagination = {
+        current: pagerManager.currentPage,
+        pageSize: pageSize,
+        total: isSuccess(resourceResponse) ? resourceResponse.data.total : 0,
+    };
+
+    useEffect(() => {
+        pagerManager.reload();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [debouncedFilterValues]);
+
+    return { resourceResponse, pagerManager, handleTableChange, pagination };
 }
