@@ -1,6 +1,5 @@
-import { t, Trans } from '@lingui/macro';
+import { Trans } from '@lingui/macro';
 import { User } from '@sentry/types';
-import { Typography, Button } from 'antd';
 import queryString from 'query-string';
 import { useEffect } from 'react';
 import { Route, unstable_HistoryRouter as HistoryRouter, Routes, Navigate } from 'react-router-dom';
@@ -25,8 +24,7 @@ import { PractitionerList } from 'src/containers/PractitionerList';
 import { QuestionnaireBuilder } from 'src/containers/QuestionnaireBuilder';
 import { QuestionnaireList } from 'src/containers/QuestionnaireList';
 import { VideoCall } from 'src/containers/VideoCall';
-import { LogoImage } from 'src/images/LogoImage';
-import { getAuthorizeUrl, getToken, getUserInfo, OAuthState } from 'src/services/auth';
+import { getToken, getUserInfo } from 'src/services/auth';
 import { parseOAuthState, setToken } from 'src/services/auth';
 import { history } from 'src/services/history';
 import { sharedAuthorisedPractitioner } from 'src/sharedState';
@@ -34,7 +32,7 @@ import { sharedAuthorisedPractitioner } from 'src/sharedState';
 import { PublicAppointment } from '../Appointment/PublicAppointment';
 import { PatientQuestionnaire } from '../PatientQuestionnaire';
 import { PractitionerDetails } from '../PractitionerDetails';
-import s from './App.module.scss';
+import { SignIn } from '../SignIn';
 
 export function App() {
     const [userResponse] = useService(async () => {
@@ -72,7 +70,7 @@ export function App() {
     const renderAnonymousRoutes = () => (
         <Routes>
             <Route path="/auth" element={<Auth />} />
-            <Route path="/signin" element={<Signin />} />
+            <Route path="/signin" element={<SignIn />} />
             <Route
                 path="/reset-password"
                 element={
@@ -146,10 +144,6 @@ export function App() {
     );
 }
 
-function authorize(state?: OAuthState) {
-    window.location.href = getAuthorizeUrl(state);
-}
-
 export function Auth() {
     const location = useLocation();
 
@@ -165,20 +159,4 @@ export function Auth() {
     }, [location.hash]);
 
     return null;
-}
-
-export function Signin() {
-    return (
-        <div className={s.container}>
-            <header className={s.header}>
-                <div>
-                    <LogoImage inverse />
-                </div>
-                <Typography.Title style={{ color: '#FFF' }}>{t`Welcome`}</Typography.Title>
-                <Button type="primary" style={{ marginTop: 15 }} onClick={() => authorize()}>
-                    {t`Log in`}
-                </Button>
-            </header>
-        </div>
-    );
 }

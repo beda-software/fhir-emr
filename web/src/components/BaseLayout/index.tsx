@@ -2,6 +2,7 @@ import { Layout } from 'antd';
 import { ReactNode } from 'react';
 
 import s from './BaseLayout.module.scss';
+import { AppFooter } from './Footer';
 import { AppHeader } from './Header';
 
 interface Props {
@@ -14,6 +15,7 @@ export function BaseLayout({ children, style }: Props) {
         <Layout className={s.container} style={style}>
             <AppHeader />
             {children}
+            <AppFooter />
         </Layout>
     );
 }

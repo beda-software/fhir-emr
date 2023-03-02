@@ -15,7 +15,7 @@ import {
 import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { AvatarImage } from 'src/images/AvatarImage';
-import { LogoImage } from 'src/images/LogoImage';
+import logo from 'src/images/logo.svg';
 import { logout } from 'src/services/auth';
 import { sharedAuthorisedPractitioner } from 'src/sharedState';
 
@@ -112,7 +112,9 @@ export function AppHeader() {
     return (
         <Header className={s.header}>
             <div className={s.content}>
-                <LogoImage className={s.logo} />
+                <Link to="/">
+                    <img src={logo} alt="" />
+                </Link>
                 <div className={s.contentLeft}>
                     <Menu
                         mode="horizontal"
