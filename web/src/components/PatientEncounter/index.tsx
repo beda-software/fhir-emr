@@ -45,9 +45,10 @@ const columns: ColumnsType<EncounterData> = [
 ];
 
 export const PatientEncounter = ({ patient }: Props) => {
-    const { encounterDataListRD, reloadEncounter } = useEncounterList(undefined, {
-        subject: patient.id,
-    });
+    const { encounterDataListRD, reloadEncounter, handleTableChange, pagination } =
+        useEncounterList(undefined, {
+            subject: patient.id,
+        });
 
     const { setBreadcrumbs } = useContext(PatientHeaderContext);
     const location = useLocation();
@@ -65,6 +66,8 @@ export const PatientEncounter = ({ patient }: Props) => {
             <EncountersTable
                 columns={columns}
                 remoteData={encounterDataListRD}
+                handleTableChange={handleTableChange}
+                pagination={pagination}
                 onRowEnabled={true}
             />
         </>

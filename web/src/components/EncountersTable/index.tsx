@@ -13,8 +13,8 @@ import { EncounterData } from './types';
 interface EncountersTableProps {
     columns: ColumnsType<EncounterData>;
     remoteData: RemoteData<EncounterData[]>;
-    handleTableChange?: (pagination: TablePaginationConfig) => Promise<void>;
-    pagination?: {
+    handleTableChange: (pagination: TablePaginationConfig) => Promise<void>;
+    pagination: {
         current: number;
         pageSize: number;
         total: number | undefined;
