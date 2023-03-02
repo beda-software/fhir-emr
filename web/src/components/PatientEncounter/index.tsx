@@ -62,7 +62,11 @@ export const PatientEncounter = ({ patient }: Props) => {
             <div>
                 <ModalNewEncounter patient={patient} reloadEncounter={reloadEncounter} />
             </div>
-            <EncountersTable columns={columns} remoteData={encounterDataListRD} />
+            <EncountersTable
+                columns={columns}
+                remoteData={encounterDataListRD}
+                onRowEnabled={true}
+            />
         </>
     );
 };
