@@ -129,8 +129,8 @@ describe('Encounter list filters testing', () => {
         );
         if (isSuccess(result.current.encounterDataListRD)) {
             expect(result.current.encounterDataListRD.data.length).toEqual(2);
-            expect(result.current.encounterDataListRD.data[0]?.id).toEqual(encounterData1.id);
-            expect(result.current.encounterDataListRD.data[1]?.id).toEqual(encounterData2.id);
+            expect(result.current.encounterDataListRD.data[0]?.id).toEqual(encounterData2.id);
+            expect(result.current.encounterDataListRD.data[1]?.id).toEqual(encounterData1.id);
         }
 
         act(() => {

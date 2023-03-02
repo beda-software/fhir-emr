@@ -67,8 +67,8 @@ describe('Patient list filters testing', () => {
         );
         if (isSuccess(result.current.patientsResponse)) {
             expect(result.current.patientsResponse.data.length).toEqual(2);
-            expect(result.current.patientsResponse.data[0]?.id).toEqual(patient1.id);
-            expect(result.current.patientsResponse.data[1]?.id).toEqual(patient2.id);
+            expect(result.current.patientsResponse.data[0]?.id).toEqual(patient2.id);
+            expect(result.current.patientsResponse.data[1]?.id).toEqual(patient1.id);
         }
 
         act(() => {
