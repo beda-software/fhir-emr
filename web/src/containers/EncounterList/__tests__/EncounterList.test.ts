@@ -1,7 +1,8 @@
-import moment from 'moment';
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { getReference } from 'aidbox-react/lib/services/fhir';
+import moment from 'moment';
+
 import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
+import { getReference } from 'aidbox-react/lib/services/fhir';
 
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import {
