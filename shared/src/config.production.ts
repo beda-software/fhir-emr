@@ -4,7 +4,7 @@ export default {
     ...commonConfig,
 
     tier: 'production',
-    baseURL: 'https://aidbox.emr.beda.software',
+    baseURL: 'https://aidbox.fhir-emr.beda.software',
     sdcIdeUrl: 'https://sdc.beda.software',
 
     webSentryDSN: null,
