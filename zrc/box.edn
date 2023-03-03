@@ -47,7 +47,25 @@
    :Practitioner {:admin {:name [{:given ["Alex"], :family "Admin"}]}}
    :Role {:admin {:name "admin"
                   :user {:id "admin" :resourceType "User"}
-                  :links {:practitioner {:id "admin" :resourceType "Practitioner"}}}}}}
+                  :links {:practitioner {:id "admin" :resourceType "Practitioner"}}}}
+   :AidboxProfile {:custom-patient-constraint
+                   {:bind
+                    {:id "Patient"
+                     :resourceType "Entity"}
+                    :schema {:type "object"
+                             :required ["name"]
+                             :properties
+                             {:name
+                              {:type "array"
+                               :minItems 1
+                               :items {:type "object"
+                                       :required ["given" "family"]
+                                       :properties
+                                       {:given
+                                        {:type "array"
+                                         :minItems 1
+                                         :items {:type "string"}}
+                                        :family {:type "string"}}}}}}}}}}
 
  encounter-participant-display
  {:zen/tags #{aidbox.search-parameter.v1/search-parameter}
