@@ -1,6 +1,8 @@
 .container {
     min-height: 100vh;
     background-color: #fafcff;
+    padding-bottom: 64px;
+    position: relative;
 }
 
 .pageHeaderWrapper {
@@ -30,5 +32,3 @@
     padding: 40px 0;
     gap: 40px;
 }
-
-

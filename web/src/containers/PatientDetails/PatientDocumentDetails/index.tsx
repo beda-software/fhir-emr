@@ -15,7 +15,12 @@ import {
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
 import { failure, isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import { extractBundleResources, getFHIRResources, WithId } from 'aidbox-react/lib/services/fhir';
+import {
+    extractBundleResources,
+    getFHIRResources,
+    getReference,
+    WithId,
+} from 'aidbox-react/lib/services/fhir';
 import { mapSuccess } from 'aidbox-react/lib/services/service';
 
 import { Encounter, Patient, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
@@ -141,9 +146,10 @@ function PatientDocumentDetailsFormData(props: {
     patient: WithId<Patient>;
     children: (props: { formData: QuestionnaireResponseFormData }) => ReactElement;
 }) {
-    const { questionnaireResponse, children } = props;
+    const { questionnaireResponse, children, patient } = props;
     const { response } = usePatientDocument({
         ...props,
+        patient: getReference(patient),
         questionnaireId: questionnaireResponse.questionnaire!,
     });
 
@@ -193,7 +199,7 @@ export function PatientDocumentDetails(props: Props) {
                                     path="/edit"
                                     element={
                                         <PatientDocument
-                                            patient={patient}
+                                            patient={getReference(patient)}
                                             questionnaireResponse={questionnaireResponse}
                                             questionnaireId={questionnaireResponse.questionnaire}
                                             onSuccess={() => navigate(-2)}

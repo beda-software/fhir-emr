@@ -1,24 +1,27 @@
-import { Trans } from '@lingui/macro';
-import { Button, Modal, ModalProps, Radio, Space } from 'antd';
-import { useState } from 'react';
+import { t, Trans } from '@lingui/macro';
+import { Button, Modal, ModalProps, notification, Radio, Space } from 'antd';
+import _ from 'lodash';
+import { useCallback, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
-import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
+import { extractBundleResources, getFHIRResources, WithId } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess } from 'aidbox-react/lib/services/service';
 
-import { Patient, Questionnaire } from 'shared/src/contrib/aidbox';
+import { Encounter, Patient, Questionnaire } from 'shared/src/contrib/aidbox';
 
 import { Spinner } from 'src/components/Spinner';
 
 interface Props extends ModalProps {
     patient: Patient;
     subjectType?: string;
+    encounter?: WithId<Encounter>;
+    onCancel: () => void;
 }
 
 export const ChooseDocumentToCreateModal = (props: Props) => {
-    const { subjectType } = props;
+    const { subjectType, patient, encounter, onCancel } = props;
     const [questionnaireId, setQuestionnaireId] = useState();
     const location = useLocation();
     const navigate = useNavigate();
@@ -32,13 +35,40 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
         ),
     );
 
+    const onCloseModal = useCallback(() => {
+        onCancel();
+        setQuestionnaireId(undefined)
+    }, [onCancel])
+
     return (
         <>
             <Modal
                 title="Create document"
                 footer={[
-                    <Button key="back" onClick={(e: any) => props.onCancel?.(e)}>
+                    <Button key="back" onClick={onCloseModal}>
                         <Trans>Cancel</Trans>
+                    </Button>,
+                    <Button
+                        key="share-link"
+                        disabled={!questionnaireId}
+                        onClick={() => {
+                            const questionnaireParams = _.compact([
+                                `patient=${patient.id}`,
+                                `questionnaire=${questionnaireId}`,
+                                encounter?.id ? `encounter=${encounter.id}` : null,
+                            ]);
+                            navigator.clipboard.writeText(
+                                `${window.location.origin}/questionnaire?${questionnaireParams.join(
+                                    '&',
+                                )}`,
+                            );
+                            notification.success({
+                                message: t`The link was copied to clipboard`,
+                            });
+                            onCloseModal();
+                        }}
+                    >
+                        <Trans>Share link</Trans>
                     </Button>,
                     <Button
                         key="create"
@@ -46,7 +76,7 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
                         onClick={() => navigate(routeToOpen)}
                         type="primary"
                     >
-                        Create
+                        <Trans>Create</Trans>
                     </Button>,
                 ]}
                 {...props}

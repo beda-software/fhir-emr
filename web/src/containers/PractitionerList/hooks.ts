@@ -15,7 +15,6 @@ export interface PractitionerListRowData {
     practitionerResource: Practitioner;
     practitionerName: string;
     practitionerRoleList: Array<string>;
-    practitionerRolesList: PractitionerRole[];
     practitionerRolesResource: Array<any>;
 }
 
@@ -64,7 +63,6 @@ export function usePractitionersList(filterValues: StringTypeColumnFilterValue[]
                     practitionerRolesResource: practitionerRolesList,
                     practitionerName: renderHumanName(practitioner.name?.[0]),
                     practitionerRoleList: practitionerRoleToStringArray(practitionerRolesList),
-                    practitionerRolesList: practitionerRoles,
                 };
                 return rowData;
             });

@@ -18,6 +18,7 @@ ADD . /app
 
 ARG TIER
 RUN cp shared/src/config.${TIER}.ts shared/src/config.ts
+RUN cp web/public/index.${TIER}.html web/public/index.html
 
 RUN yarn compile
 RUN yarn build

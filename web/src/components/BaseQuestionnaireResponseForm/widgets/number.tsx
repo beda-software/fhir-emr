@@ -10,7 +10,7 @@ interface NumericItem {
 }
 
 export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps) {
-    const { linkId, text } = questionItem;
+    const { linkId, text, required } = questionItem;
     const { unit } = questionItem as NumericItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'integer'];
     const { value, onChange, disabled, hidden } = useFieldController(fieldName, questionItem);
@@ -23,6 +23,7 @@ export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps)
                 disabled={disabled}
                 onChange={onChange}
                 value={value}
+                required={required}
             />
         </Form.Item>
     );

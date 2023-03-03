@@ -10,7 +10,7 @@ export function useFieldController(fieldName: any, questionItem: QuestionnaireIt
     const { readOnly, hidden, repeats } = questionItem;
     const { control } = useFormContext();
 
-    const { field } = useController({
+    const { field, fieldState } = useController({
         control: control,
         name: fieldName.join('.'),
         ...(repeats ? { defaultValue: [] } : {}),
@@ -37,5 +37,5 @@ export function useFieldController(fieldName: any, questionItem: QuestionnaireIt
         [repeats, field],
     );
 
-    return { ...field, onChange, hidden, disabled: readOnly || qrfContext.readOnly };
+    return { ...field, fieldState, onChange, hidden, disabled: readOnly || qrfContext.readOnly };
 }

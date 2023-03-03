@@ -28,14 +28,31 @@
             :testAuth {:grant_types [:password]
                        :secret "123456"}
             :anonymous {:grant_types [:basic]
-                        :secret "secret"}}
+                        :secret "secret"}
+            :patient-questionnaire {:grant_types [:basic]
+                                    :secret "secret"}}
    :AccessPolicy {:test-wildcard-policy {:engine "allow" :link [{:resourceType "User"}]}
                   :admin-policy {:engine "allow"
                                  :roleName "admin"}
                   :public-appointment-policy
                   {:engine "allow"
-                   :link [{:resourceType "Client" :id "anonymous"}]}}
+                   :link [{:resourceType "Client" :id "anonymous"}]}
+                  :patient-questionnaire-policy
+                  {:engine "allow"
+                   :link [{:resourceType "Client" :id "patient-questionnaire"}]}}
    :Practitioner {:admin {:name [{:given ["Alex"], :family "Admin"}]}}
    :Role {:admin {:name "admin"
                   :user {:id "admin" :resourceType "User"}
-                  :links {:practitioner {:id "admin" :resourceType "Practitioner"}}}}}}}
+                  :links {:practitioner {:id "admin" :resourceType "Practitioner"}}}}
+   :AidboxProfile {:custom-patient-constraint {:bind {:id "Patient"
+                                                      :resourceType "Entity"}
+                                               :schema {:type "object"
+                                                        :required ["name"]
+                                                        :properties {:name {:type "array"
+                                                                            :minItems 1
+                                                                            :items {:type "object"
+                                                                                    :required ["given" "family"]
+                                                                                    :properties {:given {:type "array"
+                                                                                                         :minItems 1
+                                                                                                         :items {:type "string"}}
+                                                                                                 :family {:type "string"}}}}}}}}}}}
