@@ -4,9 +4,8 @@ import { mapSuccess } from 'aidbox-react/lib/services/service';
 import { Patient } from 'shared/src/contrib/aidbox';
 
 import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
+import { usePagerExtended } from 'src/hooks/pager';
 import { useDebounce } from 'src/utils/debounce';
-
-import { usePagerExtended } from '../EncounterList/hooks';
 
 export function usePatientList(filterValues: StringTypeColumnFilterValue[]) {
     const debouncedFilterValues = useDebounce(filterValues, 300);
@@ -18,8 +17,10 @@ export function usePatientList(filterValues: StringTypeColumnFilterValue[]) {
         ...(patientFilterValue ? { name: patientFilterValue.value } : {}),
     };
 
-    const { resourceResponse, pagerManager, handleTableChange, pagination } =
-        usePagerExtended<Patient, StringTypeColumnFilterValue[]>('Patient', queryParameters, debouncedFilterValues);
+    const { resourceResponse, pagerManager, handleTableChange, pagination } = usePagerExtended<
+        Patient,
+        StringTypeColumnFilterValue[]
+    >('Patient', queryParameters, debouncedFilterValues);
 
     const patientsResponse = mapSuccess(
         resourceResponse,

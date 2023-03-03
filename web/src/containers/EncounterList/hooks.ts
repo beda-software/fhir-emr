@@ -1,22 +1,15 @@
 import { TablePaginationConfig } from 'antd';
-import { useEffect, useState } from 'react';
 
-import { usePager } from 'aidbox-react/lib/hooks/pager';
-import { isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
+import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
 import { extractBundleResources } from 'aidbox-react/lib/services/fhir';
 import { SearchParams } from 'aidbox-react/lib/services/search';
 import { mapSuccess } from 'aidbox-react/lib/services/service';
 import { formatFHIRDateTime } from 'aidbox-react/lib/utils/date';
 
-import {
-    Encounter,
-    Patient,
-    Practitioner,
-    PractitionerRole,
-    Resource,
-} from 'shared/src/contrib/aidbox';
+import { Encounter, Patient, Practitioner, PractitionerRole } from 'shared/src/contrib/aidbox';
 
 import { EncounterData } from 'src/components/EncountersTable/types';
+import { usePagerExtended } from 'src/hooks/pager';
 import { formatHumanDateTime } from 'src/utils/date';
 import { useDebounce } from 'src/utils/debounce';
 
@@ -110,38 +103,4 @@ export function useEncounterList(
         handleTableChange,
         pagination,
     };
-}
-
-export function usePagerExtended<T extends Resource, F = unknown>(
-    resourceType: string,
-    searchParams?: SearchParams,
-    debouncedFilterValues?: F,
-) {
-    const [pageSize, setPageSize] = useState(10);
-
-    const [resourceResponse, pagerManager] = usePager<T>(resourceType, pageSize, searchParams);
-
-    const handleTableChange = async (pagination: TablePaginationConfig) => {
-        if (typeof pagination.current !== 'number') return;
-
-        if (pagination.pageSize && pagination.pageSize !== pageSize) {
-            pagerManager.loadPage(pagination.current);
-            setPageSize(pagination.pageSize);
-        } else {
-            pagerManager.loadPage(pagination.current);
-        }
-    };
-
-    const pagination = {
-        current: pagerManager.currentPage,
-        pageSize: pageSize,
-        total: isSuccess(resourceResponse) ? resourceResponse.data.total : 0,
-    };
-
-    useEffect(() => {
-        pagerManager.reload();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [debouncedFilterValues]);
-
-    return { resourceResponse, pagerManager, handleTableChange, pagination };
 }

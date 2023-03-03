@@ -7,9 +7,8 @@ import { Practitioner, PractitionerRole } from 'shared/src/contrib/aidbox';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
+import { usePagerExtended } from 'src/hooks/pager';
 import { useDebounce } from 'src/utils/debounce';
-
-import { usePagerExtended } from '../EncounterList/hooks';
 
 export interface PractitionerListRowData {
     key: string;

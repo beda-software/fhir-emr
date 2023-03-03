@@ -4,9 +4,8 @@ import { mapSuccess } from 'aidbox-react/lib/services/service';
 import { Questionnaire } from 'shared/src/contrib/aidbox';
 
 import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
+import { usePagerExtended } from 'src/hooks/pager';
 import { useDebounce } from 'src/utils/debounce';
-
-import { usePagerExtended } from '../EncounterList/hooks';
 
 export function useQuestionnaireList(filterValues: StringTypeColumnFilterValue[]) {
     const debouncedFilterValues = useDebounce(filterValues, 300);
