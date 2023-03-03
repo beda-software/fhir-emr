@@ -1,25 +1,31 @@
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
+import { extractBundleResources } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess } from 'aidbox-react/lib/services/service';
 
 import { Questionnaire } from 'shared/src/contrib/aidbox';
 
 import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
+import { usePagerExtended } from 'src/hooks/pager';
 import { useDebounce } from 'src/utils/debounce';
 
 export function useQuestionnaireList(filterValues: StringTypeColumnFilterValue[]) {
     const debouncedFilterValues = useDebounce(filterValues, 300);
 
-    const [questionnaireResponse, questionnaireResponseManager] = useService(async () => {
-        const questionnaireFilterValue = debouncedFilterValues[0];
+    const questionnaireFilterValue = debouncedFilterValues[0];
 
-        return mapSuccess(
-            await getFHIRResources<Questionnaire>('Questionnaire', {
-                ...(questionnaireFilterValue ? { name: questionnaireFilterValue.value } : {}),
-            }),
-            (bundle) => extractBundleResources(bundle).Questionnaire,
-        );
-    }, [debouncedFilterValues]);
+    const queryParameters = {
+        _sort: '-_lastUpdated',
+        ...(questionnaireFilterValue ? { name: questionnaireFilterValue.value } : {}),
+    };
 
-    return { questionnaireResponse, questionnaireResponseManager };
+    const { resourceResponse, pagerManager, handleTableChange, pagination } = usePagerExtended<
+        Questionnaire,
+        StringTypeColumnFilterValue[]
+    >('Questionnaire', queryParameters, debouncedFilterValues);
+
+    const questionnaireListRD = mapSuccess(
+        resourceResponse,
+        (bundle) => extractBundleResources(bundle).Questionnaire,
+    );
+
+    return { pagination, questionnaireListRD, pagerManager, handleTableChange };
 }

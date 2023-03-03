@@ -35,7 +35,7 @@ export function PatientList() {
         ],
     });
 
-    const { patientsResponse, patientsResponseManager } = usePatientList(
+    const { patientsResponse, pagerManager, pagination, handleTableChange } = usePatientList(
         columnsFilterValues as StringTypeColumnFilterValue[],
     );
 
@@ -49,7 +49,7 @@ export function PatientList() {
                         </Title>
                     </Col>
                     <Col>
-                        <ModalNewPatient onCreate={patientsResponseManager.softReloadAsync} />
+                        <ModalNewPatient onCreate={pagerManager.reload} />
                     </Col>
                 </Row>
 
@@ -61,6 +61,8 @@ export function PatientList() {
             </BasePageHeader>
             <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
                 <Table<Patient>
+                    pagination={pagination}
+                    onChange={handleTableChange}
                     locale={{
                         emptyText: (
                             <>
@@ -133,7 +135,7 @@ export function PatientList() {
                                                         notification.success({
                                                             message: t`Patient saved`,
                                                         });
-                                                        patientsResponseManager.softReloadAsync();
+                                                        pagerManager.reload();
                                                         closeModal();
                                                     }}
                                                     onCancel={closeModal}

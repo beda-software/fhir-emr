@@ -16,9 +16,9 @@ import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
+import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
-import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 
 import { useQuestionnaireList } from './hooks';
 
@@ -92,9 +92,8 @@ export function QuestionnaireList() {
         ],
     });
 
-    const { questionnaireResponse } = useQuestionnaireList(
-        columnsFilterValues as StringTypeColumnFilterValue[],
-    );
+    const { pagination, questionnaireListRD, handleTableChange } =
+        useQuestionnaireList(columnsFilterValues as StringTypeColumnFilterValue[]);
 
     return (
         <>
@@ -124,6 +123,8 @@ export function QuestionnaireList() {
             </BasePageHeader>
             <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
                 <Table<Questionnaire>
+                    pagination={pagination}
+                    onChange={handleTableChange}
                     locale={{
                         emptyText: (
                             <>
@@ -135,9 +136,9 @@ export function QuestionnaireList() {
                         ),
                     }}
                     rowKey={(p) => p.id!}
-                    dataSource={isSuccess(questionnaireResponse) ? questionnaireResponse.data : []}
+                    dataSource={isSuccess(questionnaireListRD) ? questionnaireListRD.data : []}
                     columns={columns}
-                    loading={isLoading(questionnaireResponse) && { indicator: SpinIndicator }}
+                    loading={isLoading(questionnaireListRD) && { indicator: SpinIndicator }}
                 />
             </BasePageContent>
         </>

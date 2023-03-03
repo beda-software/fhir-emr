@@ -5595,10 +5595,10 @@ aggregate-error@^3.0.0:
     clean-stack "^2.0.0"
     indent-string "^4.0.0"
 
-aidbox-react@^1.3.3:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/aidbox-react/-/aidbox-react-1.4.0.tgz#94324eec02f86b63ecb361c6ad09960a6e2e927d"
-  integrity sha512-1SZahD50IJaijXCDSmf39Fsgqdk0wqaA4i7IJcXB/SKib1WgY6w2k80gsW8rxafOqRY4UEPHOyKO+TaXeHhfEw==
+aidbox-react@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/aidbox-react/-/aidbox-react-1.7.0.tgz#33a8676b5d40c01d9d06ba32673dc908c0e05efb"
+  integrity sha512-ocLa6UMtuwAR0FKdz4IcqpEZzLRT1eySK7HqboNgzPQZiuUw7GxASlzqK1EMm/GC4HlNFFqt7y0dWqdXW2RkJQ==
   dependencies:
     axios "^0.21.2"
     moment "^2.29.1"
