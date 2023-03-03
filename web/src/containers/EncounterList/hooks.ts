@@ -1,4 +1,5 @@
 import { TablePaginationConfig } from 'antd';
+import { useMemo } from 'react';
 
 import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
 import { extractBundleResources } from 'aidbox-react/lib/services/fhir';
@@ -61,41 +62,43 @@ export function useEncounterList(
         EncounterListFilterValues
     >('Encounter', queryParameters, debouncedFilterValues);
 
-    const encounterData = mapSuccess(resourceResponse, (bundle) => {
-        const sourceMap = bundle
-            ? extractBundleResources(bundle)
-            : { Encounter: [], Patient: [], Practitioner: [], PractitionerRole: [] };
+    const encounterData = useMemo(() => {
+        return mapSuccess(resourceResponse, (bundle) => {
+            const sourceMap = bundle
+                ? extractBundleResources(bundle)
+                : { Encounter: [], Patient: [], Practitioner: [], PractitionerRole: [] };
 
-        const {
-            Encounter: encounters,
-            Patient: patients,
-            Practitioner: practitioners,
-            PractitionerRole: practitionerRoles,
-        } = sourceMap;
+            const {
+                Encounter: encounters,
+                Patient: patients,
+                Practitioner: practitioners,
+                PractitionerRole: practitionerRoles,
+            } = sourceMap;
 
-        return encounters.map((encounter) => {
-            const patient = patients.find((patient) => patient.id === encounter.subject?.id);
+            return encounters.map((encounter) => {
+                const patient = patients.find((patient) => patient.id === encounter.subject?.id);
 
-            const practitionerRole = practitionerRoles.find(
-                (practitionerRole) =>
-                    practitionerRole.id === encounter.participant?.[0]!.individual?.id,
-            );
+                const practitionerRole = practitionerRoles.find(
+                    (practitionerRole) =>
+                        practitionerRole.id === encounter.participant?.[0]!.individual?.id,
+                );
 
-            const practitioner = practitioners.find(
-                (practitioner) => practitioner.id === practitionerRole?.practitioner?.id,
-            );
+                const practitioner = practitioners.find(
+                    (practitioner) => practitioner.id === practitionerRole?.practitioner?.id,
+                );
 
-            return {
-                id: encounter.id!,
-                patient,
-                practitioner,
-                status: encounter.status,
-                date: encounter?.period?.start,
-                humanReadableDate:
-                    encounter?.period?.start && formatHumanDateTime(encounter?.period?.start),
-            };
+                return {
+                    id: encounter.id!,
+                    patient,
+                    practitioner,
+                    status: encounter.status,
+                    date: encounter?.period?.start,
+                    humanReadableDate:
+                        encounter?.period?.start && formatHumanDateTime(encounter?.period?.start),
+                };
+            });
         });
-    });
+    }, [resourceResponse]);
 
     return {
         encounterDataListRD: encounterData,
