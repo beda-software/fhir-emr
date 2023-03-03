@@ -53,7 +53,7 @@ export function useScheduleCalendar(practitionerRole: PractitionerRole) {
                     start: appointment.start!,
                     end: appointment.end!,
                     status: appointment.status,
-                    color: appointment.status === 'cancelled' ? '#F6BF26' : '#1677FF',
+                    color: appointment.status === 'cancelled' ? '#F6BF26' : '#3366FF',
                 };
             });
         });
