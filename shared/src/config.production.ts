@@ -9,5 +9,5 @@ export default {
 
     webSentryDSN: null,
     mobileSentryDSN: null,
-    jitsiMeetServer: 'jitsi.fhir-emr.beda.software',
+    jitsiMeetServer: 'video.emr.beda.software/',
 };
