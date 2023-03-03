@@ -18,7 +18,7 @@ describe('Practitioner list filters testing', () => {
         await loginAdminUser();
     });
 
-    test.skip('String filters', async () => {
+    test('String filters', async () => {
         const { practitionerRole: _practitionerRole1, practitioner: practitioner1 } =
             await createPractitionerRole(PRACTITIONER_ADDITION_DATA[0]!);
         const { practitionerRole: _practitionerRole2, practitioner: practitioner2 } =
@@ -49,15 +49,14 @@ describe('Practitioner list filters testing', () => {
 
         await waitFor(
             () => {
-                expect(isSuccess(result.current.practitionerDataListRD)).toBeTruthy();
+                if (!isSuccess(result.current.practitionerDataListRD)) return false;
+                expect(result.current.practitionerDataListRD.data.length).toEqual(2);
+                expect(result.current.practitionerDataListRD.data[0]?.id).toEqual(practitioner1.id);
+                expect(result.current.practitionerDataListRD.data[1]?.id).toEqual(practitioner2.id);
+                return true;
             },
             { timeout: 30000 },
         );
-        if (isSuccess(result.current.practitionerDataListRD)) {
-            expect(result.current.practitionerDataListRD.data.length).toEqual(2);
-            expect(result.current.practitionerDataListRD.data[0]?.id).toEqual(practitioner1.id);
-            expect(result.current.practitionerDataListRD.data[1]?.id).toEqual(practitioner2.id);
-        }
 
         act(() => {
             result.current.onChangeColumnFilter('victor', 'practitioner');
