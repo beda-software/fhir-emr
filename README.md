@@ -1,5 +1,7 @@
 # Beda EMR
 
+![beda-emr-logo](https://user-images.githubusercontent.com/6428960/222070888-a97e2d97-7eb0-4cb3-8310-5fdb7b56aa10.svg)
+
 Clean and powerful frontend for Electronic Medical Records.
 
 Open-source. Customizable. Leverages HL7 [FHIR](https://hl7.org/fhir/R4/) standard as data model.
