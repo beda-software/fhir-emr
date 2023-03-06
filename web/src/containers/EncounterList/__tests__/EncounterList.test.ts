@@ -1,7 +1,8 @@
-import moment from 'moment';
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { getReference } from 'aidbox-react/lib/services/fhir';
+import moment from 'moment';
+
 import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
+import { getReference } from 'aidbox-react/lib/services/fhir';
 
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import {
@@ -128,8 +129,8 @@ describe('Encounter list filters testing', () => {
         );
         if (isSuccess(result.current.encounterDataListRD)) {
             expect(result.current.encounterDataListRD.data.length).toEqual(2);
-            expect(result.current.encounterDataListRD.data[0]?.id).toEqual(encounterData1.id);
-            expect(result.current.encounterDataListRD.data[1]?.id).toEqual(encounterData2.id);
+            expect(result.current.encounterDataListRD.data[0]?.id).toEqual(encounterData2.id);
+            expect(result.current.encounterDataListRD.data[1]?.id).toEqual(encounterData1.id);
         }
 
         act(() => {

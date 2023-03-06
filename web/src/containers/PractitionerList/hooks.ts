@@ -7,6 +7,7 @@ import { Practitioner, PractitionerRole } from 'shared/src/contrib/aidbox';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
+import { usePagerExtended } from 'src/hooks/pager';
 import { useDebounce } from 'src/utils/debounce';
 
 export interface PractitionerListRowData {
@@ -21,19 +22,24 @@ export interface PractitionerListRowData {
 export function usePractitionersList(filterValues: StringTypeColumnFilterValue[]) {
     const debouncedFilterValues = useDebounce(filterValues, 300);
 
-    const [practitionerDataListRD, manager] = useService<PractitionerListRowData[]>(async () => {
-        const practitionerFilterValue = debouncedFilterValues[0];
+    const practitionerFilterValue = debouncedFilterValues[0];
 
-        const practitionersBundleResponse = practitionerFilterValue
-            ? await getFHIRResources<Practitioner>('Practitioner', {
-                  name: practitionerFilterValue.value,
-              })
-            : success(undefined);
-        const practitioners =
-            isSuccess(practitionersBundleResponse) && practitionersBundleResponse.data
-                ? extractBundleResources<Practitioner>(practitionersBundleResponse.data)
-                      .Practitioner
-                : [];
+    const queryParameters = {
+        _sort: '-_lastUpdated',
+        ...(practitionerFilterValue ? { name: practitionerFilterValue.value } : {}),
+    };
+
+    const { resourceResponse, pagerManager, handleTableChange, pagination } = usePagerExtended<
+        Practitioner,
+        StringTypeColumnFilterValue[]
+    >('Practitioner', queryParameters, debouncedFilterValues);
+
+    const [practitionerDataListRD] = useService<PractitionerListRowData[]>(async () => {
+        const practitionersResponse = mapSuccess(
+            resourceResponse,
+            (bundle) => extractBundleResources(bundle).Practitioner,
+        );
+        const practitioners = isSuccess(practitionersResponse) ? practitionersResponse.data : [];
 
         const filteredResourcesAreFound = !practitionerFilterValue || practitioners.length > 0;
 
@@ -52,24 +58,31 @@ export function usePractitionersList(filterValues: StringTypeColumnFilterValue[]
             const practitioners = sourceMap.Practitioner;
             const practitionerRoles = sourceMap.PractitionerRole;
 
-            return practitioners.map((practitioner) => {
-                const practitionerRolesList = practitionerRoles.filter(
-                    (pR) => pR.practitioner?.id === practitioner.id,
-                );
-                const rowData: PractitionerListRowData = {
-                    key: practitioner.id,
-                    id: practitioner.id,
-                    practitionerResource: practitioner,
-                    practitionerRolesResource: practitionerRolesList,
-                    practitionerName: renderHumanName(practitioner.name?.[0]),
-                    practitionerRoleList: practitionerRoleToStringArray(practitionerRolesList),
-                };
-                return rowData;
-            });
+            return practitioners
+                .map((practitioner) => {
+                    const practitionerRolesList = practitionerRoles.filter(
+                        (pR) => pR.practitioner?.id === practitioner.id,
+                    );
+                    const rowData: PractitionerListRowData = {
+                        key: practitioner.id,
+                        id: practitioner.id,
+                        practitionerResource: practitioner,
+                        practitionerRolesResource: practitionerRolesList,
+                        practitionerName: renderHumanName(practitioner.name?.[0]),
+                        practitionerRoleList: practitionerRoleToStringArray(practitionerRolesList),
+                    };
+                    return rowData;
+                })
+                .reverse();
         });
-    }, [debouncedFilterValues]);
+    }, [debouncedFilterValues, resourceResponse]);
 
-    return { practitionerDataListRD, practitionerListReload: manager.softReloadAsync };
+    return {
+        practitionerDataListRD,
+        practitionerListReload: pagerManager.reload,
+        pagination,
+        handleTableChange,
+    };
 }
 
 function practitionerRoleToStringArray(practitionerRolesList: PractitionerRole[]): string[] {

@@ -16,6 +16,7 @@ import { NewAppointmentModal } from './components/NewAppointmentModal';
 import { useAppointmentEvents } from './hooks/useAppointmentEvents';
 import { useCalendarOptions } from './hooks/useCalendarOptions';
 import { useScheduleCalendar } from './hooks/useScheduleCalendar';
+import s from './ScheduleCalendar.module.scss';
 
 interface Props {
     practitionerRole: PractitionerRole;
@@ -38,85 +39,95 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
 
     return (
         <>
-            <Title level={2}>
+            <Title level={3} className={s.title}>
                 <Trans>Schedule calendar</Trans>
             </Title>
-            <RenderRemoteData remoteData={remoteResponses}>
-                {({ businessHours, calendarSlots }) => (
-                    <>
-                        <FullCalendar
-                            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-                            nowIndicator={true}
-                            headerToolbar={{
-                                left: 'prev,next today openSettings',
-                                center: 'title',
-                                right: 'timeGridWeek,timeGridDay',
-                            }}
-                            customButtons={{
-                                openSettings: {
-                                    text: 'Settings',
-                                    // icon: 'settings',
-                                    click: () => {
-                                        // eslint-disable-next-line no-alert
-                                        alert('Open settings modal');
-                                    },
-                                },
-                            }}
-                            businessHours={businessHours}
-                            initialView="timeGridWeek"
-                            editable={true}
-                            selectable={true}
-                            selectMirror={true}
-                            dayMaxEvents={true}
-                            initialEvents={calendarSlots}
-                            eventContent={renderEventContent}
-                            eventClick={handleEventClick}
-                            select={handleGridSelect}
-                            {...calendarOptions}
-                        />
-                        {editModalData.showEditAppointmentModal && (
-                            <EditAppointmentModal
-                                key={`edit-modal-${editModalData.clickedAppointmentId}`}
-                                practitionerRole={practitionerRole}
-                                appointmentId={editModalData.clickedAppointmentId}
-                                showModal={editModalData.showEditAppointmentModal}
-                                onSubmit={() => {
-                                    setEditModalData({
-                                        clickedAppointmentId: 'undefined',
-                                        showEditAppointmentModal: false,
-                                    });
-                                    // slotsManager.softReloadAsync is not used here, because otherwise the display of appointments in the table will not be updated
-                                    slotsManager.reload();
-                                    notification.success({
-                                        message: t`Appointment successfully rescheduled`,
-                                    });
+            <div className={s.calendar}>
+                <RenderRemoteData remoteData={remoteResponses}>
+                    {({ businessHours, calendarSlots }) => (
+                        <>
+                            <FullCalendar
+                                plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                                nowIndicator={true}
+                                headerToolbar={{
+                                    left: 'prev,next today',
+                                    center: 'title',
+                                    right: 'timeGridWeek,timeGridDay',
                                 }}
-                                onClose={() =>
-                                    setEditModalData((data) => ({
-                                        ...data,
-                                        showEditAppointmentModal: false,
-                                    }))
-                                }
-                            />
-                        )}
-                        ,
-                        {newModalData.showNewAppointmentModal && (
-                            <NewAppointmentModal
-                                practitionerRole={practitionerRole}
-                                newModalData={newModalData}
-                                onOk={() => {
-                                    handleOkNewAppointment();
-                                    slotsManager.reload();
-                                    notification.success({
-                                        message: t`Appointment successfully added`,
-                                    });
+                                businessHours={businessHours}
+                                initialView="timeGridWeek"
+                                editable={true}
+                                selectable={true}
+                                selectMirror={true}
+                                dayMaxEvents={true}
+                                initialEvents={calendarSlots}
+                                eventContent={renderEventContent}
+                                eventClick={handleEventClick}
+                                select={handleGridSelect}
+                                buttonText={{
+                                    today: t`Today`,
+                                    week: t`Week`,
+                                    day: t`Day`,
                                 }}
-                                onCancel={handleCancelNewAppointment}
+                                dayHeaderFormat={{
+                                    weekday: 'short',
+                                    day: 'numeric',
+                                    month: 'short',
+                                }}
+                                stickyHeaderDates={true}
+                                allDaySlot={false}
+                                contentHeight={650}
+                                slotLabelFormat={{
+                                    timeStyle: 'short',
+                                }}
+                                // titleFormat={{
+                                //     hour12: true,
+                                // }}
+                                {...calendarOptions}
                             />
-                        )}
-                    </>
-                )}
-            </RenderRemoteData>
+                            {editModalData.showEditAppointmentModal && (
+                                <EditAppointmentModal
+                                    key={`edit-modal-${editModalData.clickedAppointmentId}`}
+                                    practitionerRole={practitionerRole}
+                                    appointmentId={editModalData.clickedAppointmentId}
+                                    showModal={editModalData.showEditAppointmentModal}
+                                    onSubmit={() => {
+                                        setEditModalData({
+                                            clickedAppointmentId: 'undefined',
+                                            showEditAppointmentModal: false,
+                                        });
+                                        // slotsManager.softReloadAsync is not used here, because otherwise the display of appointments in the table will not be updated
+                                        slotsManager.reload();
+                                        notification.success({
+                                            message: t`Appointment successfully rescheduled`,
+                                        });
+                                    }}
+                                    onClose={() =>
+                                        setEditModalData((data) => ({
+                                            ...data,
+                                            showEditAppointmentModal: false,
+                                        }))
+                                    }
+                                />
+                            )}
+                            {newModalData.showNewAppointmentModal && (
+                                <NewAppointmentModal
+                                    practitionerRole={practitionerRole}
+                                    newModalData={newModalData}
+                                    onOk={() => {
+                                        handleOkNewAppointment();
+                                        slotsManager.reload();
+                                        notification.success({
+                                            message: t`Appointment successfully added`,
+                                        });
+                                    }}
+                                    onCancel={handleCancelNewAppointment}
+                                />
+                            )}
+                        </>
+                    )}
+                </RenderRemoteData>
+            </div>
         </>
     );
 }
