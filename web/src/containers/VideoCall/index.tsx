@@ -9,6 +9,7 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { EncounterData } from 'src/components/EncountersTable/types';
+import { sharedJitsiAuthToken } from 'src/sharedState';
 
 export function VideoCall() {
     const navigate = useNavigate();
@@ -21,6 +22,8 @@ export function VideoCall() {
     }`;
     const patientName = renderHumanName(encounter.patient?.name?.[0]);
     const roomName = [practitionerName, 'and', patientName].join('-');
+    const jwtAuthToken = sharedJitsiAuthToken.getSharedState();
+
     return (
         <>
             <BasePageHeader style={{ paddingBottom: 0 }}>
@@ -34,8 +37,10 @@ export function VideoCall() {
                 <JitsiMeeting
                     domain={config.jitsiMeetServer}
                     roomName={roomName}
+                    jwt={jwtAuthToken}
                     configOverwrite={{
                         startWithAudioMuted: true,
+                        startWithVideoMuted: true,
                         disableModeratorIndicator: true,
                         startScreenSharing: true,
                         enableEmailInStats: false,
@@ -78,6 +83,7 @@ export function VideoCall() {
                             disabled: true,
                         },
                         readOnlyName: true,
+                        notifications: [undefined],
                     }}
                     interfaceConfigOverwrite={{}}
                     userInfo={{
