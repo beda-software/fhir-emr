@@ -1,16 +1,14 @@
-# FHIR EMR
+# Beda EMR
 
--   Open Source
--   Electronic Medical Record System
--   Build on top of [FHIR](https://hl7.org/fhir/R4/)
+Clean and powerful frontend for Electronic Medical Records.
 
-### Project Status
+Open-source. Customizable. Leverages HL7 [FHIR](https://hl7.org/fhir/R4/) standard as data model.
 
--   Development
+__Project Status__: _development_
 
-### Design
+__Promo web page__: [beda.software/emr](https://beda.software/emr)
 
--   [Figma](https://www.figma.com/file/2bxMDfG3lRPEZpRwDC4gTB/SaaS-EMR-System)
+__Design__: [Figma](https://www.figma.com/file/2bxMDfG3lRPEZpRwDC4gTB/SaaS-EMR-System)
 
 ## Benefits
 
@@ -26,14 +24,22 @@
 
 ## Features
 
--   Patient management
--   Encounter management
--   Practitioner management
+-   Patients management
+-   Practitioners management
+-   Appointment and Encounters (visits management, scheduling)
+-   Treatment notes
+-   Patient medical information
+-   Medication management
+-   Telemedicine
 -   EMR Questionnaire form builder
 -   Electronic Medical Records
     -   based on Questionnaire and QuestionnaireResponse resources
     -   Questionnaire population, initial and calculated expressions
     -   extraction FHIR data from QuestionnaireResponse on save
+
+### Demo
+
+[emr.beda.software](https://emr.beda.software/)
 
 ### UI Questionnaire Builder
 
