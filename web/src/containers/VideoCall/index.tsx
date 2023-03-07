@@ -21,7 +21,9 @@ export function VideoCall() {
         encounter.practitioner?.telecom?.find((t: ContactPoint) => t.system === 'email')?.value
     }`;
     const patientName = renderHumanName(encounter.patient?.name?.[0]);
-    const roomName = [practitionerName, 'and', patientName].join('-');
+    const roomName = [...practitionerName.split(' '), ...patientName.split(' ')]
+        .join('-')
+        .toLowerCase();
     const jwtAuthToken = sharedJitsiAuthToken.getSharedState();
 
     return (
@@ -41,58 +43,17 @@ export function VideoCall() {
                     configOverwrite={{
                         startWithAudioMuted: true,
                         startWithVideoMuted: true,
-                        disableModeratorIndicator: true,
-                        startScreenSharing: true,
-                        enableEmailInStats: false,
-                        toolbarButtons: [
-                            'camera',
-                            'chat',
-                            'closedcaptions',
-                            'desktop',
-                            'download',
-                            // 'embedmeeting',
-                            'etherpad',
-                            'feedback',
-                            'filmstrip',
-                            'fullscreen',
-                            'hangup',
-                            'help',
-                            'highlight',
-                            'invite',
-                            'linktosalesforce',
-                            'livestreaming',
-                            'microphone',
-                            'noisesuppression',
-                            'participants-pane',
-                            'profile',
-                            // 'raisehand',
-                            'recording',
-                            // 'security',
-                            'select-background',
-                            'settings',
-                            'shareaudio',
-                            'sharedvideo',
-                            'shortcuts',
-                            // 'stats',
-                            'tileview',
-                            'toggle-camera',
-                            'videoquality',
-                            'whiteboard',
-                        ],
                         analytics: {
                             disabled: true,
                         },
                         readOnlyName: true,
-                        notifications: [undefined],
                     }}
-                    interfaceConfigOverwrite={{}}
                     userInfo={{
                         displayName: practitionerName.split('-').join(' '),
                         email: practitionerEmail,
                     }}
-                    // onApiReady={(externalApi) => {}}
                     getIFrameRef={(iframeRef) => {
-                        iframeRef.style.height = '700px';
+                        iframeRef.style.height = '500px';
                     }}
                     onReadyToClose={() => {
                         navigate(`/encounters/`);
