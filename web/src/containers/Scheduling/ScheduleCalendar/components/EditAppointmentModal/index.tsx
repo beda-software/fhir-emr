@@ -1,12 +1,10 @@
-import { Layout, Modal } from 'antd';
-import { Content } from 'antd/lib/layout/layout';
-
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
 import { PractitionerRole } from 'shared/src/contrib/aidbox';
 import { inMemorySaveService } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
+import { Modal } from 'src/components/Modal';
 import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 
 interface Props {
@@ -32,18 +30,11 @@ export function EditAppointmentModal(props: Props) {
 
     return (
         <Modal open={showModal} title="Edit Appointment" footer={null} onCancel={onClose}>
-            <Layout>
-                <Content style={{ padding: 16, backgroundColor: 'white' }}>
-                    <RenderRemoteData remoteData={response}>
-                        {(formData) => (
-                            <BaseQuestionnaireResponseForm
-                                formData={formData}
-                                onSubmit={onSubmit}
-                            />
-                        )}
-                    </RenderRemoteData>
-                </Content>
-            </Layout>
+            <RenderRemoteData remoteData={response}>
+                {(formData) => (
+                    <BaseQuestionnaireResponseForm formData={formData} onSubmit={onSubmit} />
+                )}
+            </RenderRemoteData>
         </Modal>
     );
 }

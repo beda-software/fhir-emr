@@ -98,33 +98,24 @@ h3.title {
 
     :global .fc-timegrid-event-harness-inset .fc-timegrid-event {
         margin: 0 -3px 0 -2px;
-        padding: 0 16px;
         font-size: 14px;
         line-height: 22px;
         border: 0;
-
-        .fc-event-main {
-            > * {
-                display: block;
-            }
-
-            br {
-                display: none;
-            }
-
-            > b:first-child {
-                white-space: nowrap;
-                text-overflow: ellipsis;
-                overflow: hidden;
-            }
-        }
-
-        i {
-            font-style: normal;
-        }
     }
 
     :global .fc-timegrid-slot-label-cushion {
         text-transform: lowercase;
     }
+}
+
+.event {
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.eventName {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }

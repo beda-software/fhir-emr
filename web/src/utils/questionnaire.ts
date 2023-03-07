@@ -23,6 +23,10 @@ export function getDisplay(value?: QuestionnaireItemAnswerOptionValue): string |
         return value.integer;
     }
 
+    if (value.Reference && value.Reference.display) {
+        return value.Reference.display;
+    }
+
     console.warn(`There is not implementation for getDisplay of ${JSON.stringify(value)}`);
 
     return '';

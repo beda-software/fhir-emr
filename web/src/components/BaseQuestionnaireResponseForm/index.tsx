@@ -1,6 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Trans } from '@lingui/macro';
 import { Button } from 'antd';
+import classNames from 'classnames';
 import { useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
@@ -74,7 +75,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         <FormProvider {...methods}>
             <form
                 onSubmit={handleSubmit(() => onSubmit({ ...formData, formValues }))}
-                className={s.form}
+                className={classNames(s.form, 'app-form')}
             >
                 <QuestionnaireResponseFormProvider
                     formValues={formValues}
@@ -114,13 +115,15 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                     readOnly={readOnly}
                 >
                     <>
-                        <QuestionItems
-                            questionItems={formData.context.questionnaire.item!}
-                            parentPath={[]}
-                            context={calcInitialContext(formData.context, formValues)}
-                        />
+                        <div className={classNames(s.content, 'form__content')}>
+                            <QuestionItems
+                                questionItems={formData.context.questionnaire.item!}
+                                parentPath={[]}
+                                context={calcInitialContext(formData.context, formValues)}
+                            />
+                        </div>
                         {!readOnly && (
-                            <div className={s.footer}>
+                            <div className={classNames(s.footer, 'form__footer')}>
                                 {onCancel && (
                                     <Button key="back" onClick={onCancel}>
                                         <Trans>Cancel</Trans>

@@ -1,0 +1,50 @@
+.modal {
+    :global .ant-modal-content {
+        padding: 0;
+    }
+
+    :global .ant-modal-header {
+        padding: 16px 24px;
+        box-shadow: inset 0px -1px 0px #f0f0f0;
+        margin-bottom: 0;
+    }
+
+    :global .ant-modal-title {
+        font-size: 16px;
+        line-height: 24px;
+        font-weight: 500;
+    }
+
+    :global .ant-modal-close {
+        top: 16px;
+        right: 24px;
+    }
+
+    :global .ant-modal-body {
+        padding: 24px 24px 0 24px;
+    }
+
+    :global .form__question {
+        flex-direction: column;
+        align-items: flex-start;
+        border: 0;
+        gap: 9px;
+        padding: 0;
+        margin-bottom: 20px;
+
+        &:first-of-type {
+            border: 0;
+        }
+    }
+
+    :global .form__footer,
+    :global .ant-modal-footer {
+        padding: 10px 16px;
+        margin-top: 30px;
+        box-shadow: inset 0px 1px 0px #f0f0f0;
+    }
+
+    :global .form__footer {
+        margin: 30px -24px 0;
+    }
+}
