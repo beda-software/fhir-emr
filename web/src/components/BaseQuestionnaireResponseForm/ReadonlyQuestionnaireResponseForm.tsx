@@ -15,13 +15,20 @@ import { QuestionInteger } from './readonly-widgets/integer';
 import { QuestionReference } from './readonly-widgets/reference';
 import { AnxietyScore, DepressionScore } from './readonly-widgets/score';
 import { QuestionText } from './readonly-widgets/string';
+import { TimeRangePickerControl } from './readonly-widgets/TimeRangePickerControl';
 
 interface Props extends Partial<QRFContextData> {
     formData: QuestionnaireResponseFormData;
 }
 
 export function ReadonlyQuestionnaireResponseForm(props: Props) {
-    const { formData, questionItemComponents, itemControlQuestionItemComponents, ...other } = props;
+    const {
+        formData,
+        questionItemComponents,
+        itemControlQuestionItemComponents,
+        itemControlGroupItemComponents,
+        ...other
+    } = props;
     const methods = useForm<FormItems>({
         defaultValues: formData.formValues,
     });
@@ -37,6 +44,10 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
                     formValues={formValues}
                     setFormValues={() => {}}
                     groupItemComponent={Group}
+                    itemControlGroupItemComponents={{
+                        'time-range-picker': TimeRangePickerControl,
+                        ...itemControlGroupItemComponents,
+                    }}
                     questionItemComponents={{
                         text: QuestionText,
                         string: QuestionText,

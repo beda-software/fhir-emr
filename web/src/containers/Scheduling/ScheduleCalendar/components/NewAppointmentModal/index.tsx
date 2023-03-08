@@ -7,6 +7,7 @@ import { formatFHIRDate, formatFHIRDateTime } from 'shared/src/utils/date';
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { Modal } from 'src/components/Modal';
 import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { Spinner } from 'src/components/Spinner';
 
 interface NewAppointmentModalProps {
     practitionerRole: PractitionerRole;
@@ -52,7 +53,7 @@ export function NewAppointmentModal(props: NewAppointmentModalProps) {
     });
     return (
         <Modal title="New Appointment" open={showModal} footer={null} onCancel={onCancel}>
-            <RenderRemoteData remoteData={response}>
+            <RenderRemoteData remoteData={response} renderLoading={Spinner}>
                 {(formData) => {
                     return (
                         <BaseQuestionnaireResponseForm

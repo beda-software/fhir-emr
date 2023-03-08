@@ -105,7 +105,7 @@ describe('createEncounter', () => {
                         ],
                     },
                 },
-                'practitioner-list': [
+                'practitioner-role': [
                     {
                         value: {
                             Reference: {

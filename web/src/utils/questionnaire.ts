@@ -1,3 +1,4 @@
+import moment from 'moment';
 import * as yup from 'yup';
 
 import {
@@ -5,6 +6,7 @@ import {
     QuestionnaireItemAnswerOption,
     QuestionnaireItemAnswerOptionValue,
 } from 'shared/src/contrib/aidbox';
+import { FHIRTime } from 'shared/src/utils/date';
 
 export function getDisplay(value?: QuestionnaireItemAnswerOptionValue): string | number | null {
     if (!value) {
@@ -17,6 +19,10 @@ export function getDisplay(value?: QuestionnaireItemAnswerOptionValue): string |
 
     if (value.string) {
         return value.string;
+    }
+
+    if (value.time) {
+        return moment(value.time, FHIRTime).format('HH:mm');
     }
 
     if (value.integer) {

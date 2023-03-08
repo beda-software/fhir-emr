@@ -3,7 +3,7 @@ resourceType: Questionnaire
 title: Encounter create
 status: active
 mapping:
-    - id: encounter-create
+    - id: encounter-create-extract
       resourceType: Mapping
 launchContext:
     - name: Patient
@@ -25,11 +25,19 @@ item:
           language: text/fhirpath
           expression: "%Patient.name.given[0] + ' ' + %Patient.name.family"
     - text: Practitioner
-      type: choice
-      linkId: practitioner-list
-      itemControl:
-          coding:
-              - code: practitioner-role
+      type: reference
+      referenceResource:
+          - PractitionerRole
+      required: true
+      linkId: practitioner-role
+      answerExpression:
+          language: application/x-fhir-query
+          expression: 'PractitionerRole?_assoc=practitioner'
+      choiceColumn:
+          - forDisplay: true
+            path: >-
+                practitioner.resource.name.given.first() + ' ' +
+                practitioner.resource.name.family + ' - ' + specialty.first().coding.display
     - text: Service
       type: choice
       linkId: service

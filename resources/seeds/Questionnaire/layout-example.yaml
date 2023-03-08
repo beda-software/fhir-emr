@@ -2,7 +2,7 @@ id: layout-example
 resourceType: Questionnaire
 title: Advanced layout
 status: active
-name: encounter-create
+name: layout-example
 item:
 - text: Item-1
   type: display

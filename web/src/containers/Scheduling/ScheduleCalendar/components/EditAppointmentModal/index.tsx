@@ -6,6 +6,7 @@ import { inMemorySaveService } from 'shared/src/hooks/questionnaire-response-for
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { Modal } from 'src/components/Modal';
 import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { Spinner } from 'src/components/Spinner';
 
 interface Props {
     practitionerRole: PractitionerRole;
@@ -30,7 +31,7 @@ export function EditAppointmentModal(props: Props) {
 
     return (
         <Modal open={showModal} title="Edit Appointment" footer={null} onCancel={onClose}>
-            <RenderRemoteData remoteData={response}>
+            <RenderRemoteData remoteData={response} renderLoading={Spinner}>
                 {(formData) => (
                     <BaseQuestionnaireResponseForm formData={formData} onSubmit={onSubmit} />
                 )}
