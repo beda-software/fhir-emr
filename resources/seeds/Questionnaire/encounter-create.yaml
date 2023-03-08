@@ -41,18 +41,19 @@ item:
     - text: Service
       type: choice
       linkId: service
+      required: true
       repeats: false
       answerOption:
           - value:
                 Coding:
-                    code: HH
-                    system: http://terminology.hl7.org/CodeSystem/v3-ActCode
-                    display: home health
+                    system: http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type
+                    code: consultation
+                    display: The first appointment
           - value:
                 Coding:
-                    code: AMB
-                    system: http://terminology.hl7.org/CodeSystem/v3-ActCode
-                    display: ambulatory
+                    system: http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type
+                    code: follow-up
+                    display: A follow up visit
     - text: Date
       type: date
       linkId: date

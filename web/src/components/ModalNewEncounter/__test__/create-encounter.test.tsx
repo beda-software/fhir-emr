@@ -120,9 +120,9 @@ describe('createEncounter', () => {
                     {
                         value: {
                             Coding: {
-                                code: 'HH',
-                                system: 'http://terminology.hl7.org/CodeSystem/v3-ActCode',
-                                display: 'home health',
+                                code: 'consultation',
+                                system: 'http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type',
+                                display: 'The first appointment',
                             },
                         },
                     },
