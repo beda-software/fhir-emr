@@ -1,10 +1,10 @@
 resourceType: HealthcareService
 active: true
 type:
-  - text: The follow up appointment
+  - display: A follow up visit
     coding:
       - code: follow-up
         system: http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type
-        display: The follow up appointment
+        display: A follow up visit
 appointmentRequired: true
 duration: 30
