@@ -2,6 +2,10 @@
     border-radius: 10px;
     box-shadow: 0px 6px 16px #e6ebf5;
     background-color: #fff;
+
+    &:global(._empty) {
+        color: #8f9bb3;
+    }
 }
 
 .header {
@@ -33,6 +37,10 @@
     border-radius: 50%;
     color: #fff;
     font-size: 24px;
+
+    .card:global(._empty) & {
+        background-color: #adc6ff;
+    }
 }
 
 .content {

@@ -218,7 +218,7 @@ function usePatientOverview(props: Props) {
                         prepareImmunizations(immunizations),
                     ];
 
-                    return { cards: cards.filter((i) => i.data.length) };
+                    return { cards: _.sortBy(cards, ({ data }) => -1 * data.length) };
                 },
             ),
         [],
@@ -232,7 +232,12 @@ export function PatientOverview(props: Props) {
 
     const renderCards = (cards: OverviewCard[]) => {
         return cards.map((card) => (
-            <DashboardCard title={card.title} icon={card.icon} key={`cards-${card.title}`}>
+            <DashboardCard
+                title={card.title}
+                icon={card.icon}
+                key={`cards-${card.title}`}
+                empty={!card.data.length}
+            >
                 <DashboardCardTable
                     title={card.title}
                     data={card.data}
