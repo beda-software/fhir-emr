@@ -1,4 +1,3 @@
-import { parseFHIRDateTime } from 'aidbox-react/lib/utils/date';
 import {
     differenceInDays,
     differenceInMonths,
@@ -7,10 +6,10 @@ import {
     parseISO,
 } from 'date-fns';
 import _ from 'lodash';
-import moment from 'moment';
+
+import { parseFHIRDateTime } from 'aidbox-react/lib/utils/date';
 
 import { Period } from 'shared/src/contrib/aidbox';
-import { FHIRDateTime } from 'shared/src/utils/date';
 
 const DATE_TIME_FORMAT = 'dd/MM/yyyy HH:mm';
 const DATE_FORMAT = 'dd/MM/yyyy';

@@ -1,9 +1,9 @@
 import { AlertOutlined, ExperimentOutlined, HeartOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 import _ from 'lodash';
-import moment from 'moment';
 
 import { extractBundleResources, WithId } from 'aidbox-react/lib/services/fhir';
+import { parseFHIRDateTime } from 'aidbox-react/lib/utils/date';
 
 import {
     AllergyIntolerance,
@@ -14,12 +14,10 @@ import {
     MedicationStatement,
     Observation,
 } from 'shared/src/contrib/aidbox';
-import { FHIRDateTime } from 'shared/src/utils/date';
 
 import { formatHumanDate } from 'src/utils/date';
 
 import medicationIcon from './images/medication.svg';
-import { parseFHIRDateTime } from 'aidbox-react/lib/utils/date';
 
 interface OverviewCard<T = any> {
     title: string;
