@@ -3,7 +3,7 @@ h3.title {
     font-weight: 700;
 }
 
-.calendar {
+.calendar :global .fc {
     --fc-button-bg-color: #3366ff;
     --fc-button-border-color: #3366ff;
     --fc-button-text-color: #fff;
@@ -39,11 +39,11 @@ h3.title {
         font-size: 14px;
         line-height: 32px;
         font-weight: 400;
-        margin: 0 !important;
+        margin: 0;
 
         &:not(:disabled):focus,
         &:not(:disabled):active:focus {
-            box-shadow: 0 0 0 0.2rem rgba(51, 102, 255, 0.5) !important;
+            box-shadow: 0 0 0 0.2rem rgba(51, 102, 255, 0.5);
         }
     }
 
