@@ -1,3 +1,4 @@
+import { parseFHIRDateTime } from 'aidbox-react/lib/utils/date';
 import {
     differenceInDays,
     differenceInMonths,
@@ -9,7 +10,7 @@ import _ from 'lodash';
 import moment from 'moment';
 
 import { Period } from 'shared/src/contrib/aidbox';
-import { FHIRTime } from 'shared/src/utils/date';
+import { FHIRDateTime } from 'shared/src/utils/date';
 
 const DATE_TIME_FORMAT = 'dd/MM/yyyy HH:mm';
 const DATE_FORMAT = 'dd/MM/yyyy';
@@ -62,8 +63,8 @@ export function getPersonAge(date: string) {
 
 export function formatPeriodDateTime(period?: Period) {
     const timeRange = _.compact([
-        period?.start ? moment(period.start, FHIRTime).format('HH:mm') : undefined,
-        period?.end ? moment(period.end, FHIRTime).format('HH:mm') : undefined,
+        period?.start ? parseFHIRDateTime(period.start).format('HH:mm') : undefined,
+        period?.end ? parseFHIRDateTime(period.end).format('HH:mm') : undefined,
     ]).join('–');
 
     return period?.start ? `${formatHumanDate(period.start)} ${timeRange}` : null;

@@ -14,11 +14,12 @@ import {
     MedicationStatement,
     Observation,
 } from 'shared/src/contrib/aidbox';
-import { FHIRTime } from 'shared/src/utils/date';
+import { FHIRDateTime } from 'shared/src/utils/date';
 
 import { formatHumanDate } from 'src/utils/date';
 
 import medicationIcon from './images/medication.svg';
+import { parseFHIRDateTime } from 'aidbox-react/lib/utils/date';
 
 interface OverviewCard<T = any> {
     title: string;
@@ -159,8 +160,10 @@ export function prepareAppointmentDetails(appointment: Appointment) {
         {
             title: t`Time`,
             value: _.compact([
-                appointment.start ? moment(appointment.start, FHIRTime).format('HH:mm') : undefined,
-                appointment.end ? moment(appointment.end, FHIRTime).format('HH:mm') : undefined,
+                appointment.start
+                    ? parseFHIRDateTime(appointment.start).format('HH:mm')
+                    : undefined,
+                appointment.end ? parseFHIRDateTime(appointment.end).format('HH:mm') : undefined,
             ]).join('–'),
         },
     ];

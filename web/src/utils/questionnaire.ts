@@ -22,7 +22,7 @@ export function getDisplay(value?: QuestionnaireItemAnswerOptionValue): string |
     }
 
     if (value.time) {
-        return moment(value.time, FHIRTime).format('HH:mm');
+        return moment.utc(value.time, FHIRTime).local().format('HH:mm');
     }
 
     if (value.integer) {
