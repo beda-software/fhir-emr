@@ -10,6 +10,7 @@ import { EncounterData } from 'src/components/EncountersTable/types';
 import { EncounterStatusBadge } from 'src/components/EncounterStatusBadge';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
+import { formatPeriodDateTime } from 'src/utils/date';
 
 import { useEncounterList } from './hooks';
 import { EncounterListFilters, EncounterListFilterValues } from './types';
@@ -63,9 +64,17 @@ export function EncounterList() {
             ),
         },
         {
+            title: <Trans>Date</Trans>,
+            dataIndex: 'date',
+            key: 'date',
+            width: 220,
+            render: (_text: any, resource: EncounterData) => formatPeriodDateTime(resource.period),
+        },
+        {
             title: <Trans>Actions</Trans>,
             dataIndex: 'actions',
             key: 'action',
+            width: 180,
             render: (_text: any, resource: EncounterData) => (
                 <div>
                     <Link

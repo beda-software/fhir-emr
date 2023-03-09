@@ -1,10 +1,10 @@
-import { Patient, Practitioner } from 'shared/src/contrib/aidbox';
+import { Patient, Period, Practitioner } from 'shared/src/contrib/aidbox';
 
 export interface EncounterData {
     id: string;
     patient: Patient | undefined;
     practitioner: Practitioner | undefined;
     status: string;
-    date: string | undefined;
+    period?: Period,
     humanReadableDate: string | undefined;
 }

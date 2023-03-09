@@ -1,8 +1,6 @@
 import { Form } from 'antd';
 import { GroupItemProps } from 'sdc-qrf';
 
-import { FHIRTimeFormat } from 'aidbox-react/lib/utils/date';
-
 import { RangeTimePicker } from 'src/components/TimePicker';
 
 import { useTimeRangePickerControl } from './hooks';
@@ -25,7 +23,7 @@ function TimeRangePickerWidget(props: GroupItemProps) {
     return (
         <Form.Item label={questionItem.text} hidden={questionItem.hidden}>
             <RangeTimePicker
-                format={FHIRTimeFormat}
+                format="HH:mm"
                 disabled={questionItem.readOnly}
                 onChange={onTimeRangeChange}
             />
