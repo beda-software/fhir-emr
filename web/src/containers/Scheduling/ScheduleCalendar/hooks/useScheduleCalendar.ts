@@ -41,12 +41,15 @@ export function useScheduleCalendar(practitionerRole: PractitionerRole) {
             _include: 'Appointment:patient',
             date: [`ge${periodStart}`, `lt${periodEnd}`],
         });
+
         return mapSuccess(response, (bundle) => {
             const resMap = extractBundleResources(bundle);
             const appointments = resMap.Appointment;
+
             return appointments.map((appointment) => {
                 const patientRef = extractAppointmentPatient(appointment)!;
                 const patient = getIncludedResource<Patient>(resMap, patientRef)!;
+
                 return {
                     id: appointment.id,
                     title: patient?.name?.[0] ? renderHumanName(patient.name[0]) : appointment.id,

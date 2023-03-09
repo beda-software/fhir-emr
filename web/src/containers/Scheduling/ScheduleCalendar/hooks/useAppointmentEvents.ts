@@ -10,7 +10,9 @@ export interface NewAppointmentData {
 
 export function useAppointmentEvents(practitionerRole: PractitionerRole) {
     const [newAppointmentData, setNewAppointmentData] = useState<NewAppointmentData | undefined>();
-    const [appointmentDetailsId, setAppointmentDetailsId] = useState<string | undefined>();
+    const [appointmentDetails, setAppointmentDetails] = useState<
+        EventClickArg['event'] | undefined
+    >();
     const [editingAppointmentId, setEditingAppointmentId] = useState<string | undefined>();
 
     // function handleEventChange({ event }: EventChangeArg) {
@@ -29,10 +31,10 @@ export function useAppointmentEvents(practitionerRole: PractitionerRole) {
     }, []);
 
     const openAppointmentDetails = useCallback((e: EventClickArg) => {
-        setAppointmentDetailsId(e.event.id);
+        setAppointmentDetails(e.event);
     }, []);
     const closeAppointmentDetails = useCallback(() => {
-        setAppointmentDetailsId(undefined);
+        setAppointmentDetails(undefined);
     }, []);
 
     const openEditAppointment = useCallback((id: string) => {
@@ -48,7 +50,7 @@ export function useAppointmentEvents(practitionerRole: PractitionerRole) {
         closeNewAppointmentModal,
 
         openAppointmentDetails,
-        appointmentDetailsId,
+        appointmentDetails,
         closeAppointmentDetails,
 
         openEditAppointment,

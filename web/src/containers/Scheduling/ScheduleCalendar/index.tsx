@@ -33,7 +33,7 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
         newAppointmentData,
         closeNewAppointmentModal,
         openAppointmentDetails,
-        appointmentDetailsId,
+        appointmentDetails,
         closeAppointmentDetails,
         openEditAppointment,
         editingAppointmentId,
@@ -85,11 +85,12 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
                                 }}
                                 {...calendarOptions}
                             />
-                            {appointmentDetailsId && (
+                            {appointmentDetails && (
                                 <AppointmentDetailsModal
-                                    key={`appointment-details__${appointmentDetailsId}`}
+                                    key={`appointment-details__${appointmentDetails.id}`}
                                     practitionerRole={practitionerRole}
-                                    appointmentId={appointmentDetailsId}
+                                    appointmentId={appointmentDetails.id}
+                                    status={appointmentDetails.extendedProps.status}
                                     showModal={true}
                                     onEdit={(id) => openEditAppointment(id)}
                                     onClose={closeAppointmentDetails}

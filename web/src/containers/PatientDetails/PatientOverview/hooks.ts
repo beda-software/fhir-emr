@@ -77,6 +77,7 @@ export function usePatientOverview(props: Props) {
                             actor: patient.id,
                             date: [`ge${formatFHIRDateTime(moment().startOf('day'))}`],
                             _revinclude: ['Encounter:appointment'],
+                            'status:not': ['entered-in-error,cancelled'],
                         },
                     ),
                     allergiesBundle: getFHIRResources<AllergyIntolerance>('AllergyIntolerance', {

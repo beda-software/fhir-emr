@@ -7,7 +7,7 @@ import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { extractBundleResources, getFHIRResources, WithId } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess } from 'aidbox-react/lib/services/service';
 
-import { Bundle, Encounter, PractitionerRole } from 'shared/src/contrib/aidbox';
+import { Appointment, Bundle, Encounter, PractitionerRole } from 'shared/src/contrib/aidbox';
 import { inMemorySaveService } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { ReadonlyQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm/ReadonlyQuestionnaireResponseForm';
@@ -19,6 +19,7 @@ import { useNavigateToEncounter } from 'src/containers/EncounterDetails/hooks';
 interface Props {
     practitionerRole: PractitionerRole;
     appointmentId: string;
+    status: Appointment['status'];
     onEdit: (id: string) => void;
     onClose: () => void;
     showModal: boolean;
@@ -55,12 +56,20 @@ function useAppointmentDetailsModal(props: Props) {
 }
 
 export function AppointmentDetailsModal(props: Props) {
-    const { showModal, onClose, onEdit, appointmentId } = props;
+    const { showModal, onClose, onEdit, appointmentId, status } = props;
     const { encounterResponse, questionnaireResponse, onSubmit, navigateToEncounter } =
         useAppointmentDetailsModal(props);
 
     const renderFooter = () => {
-        if (isSuccess(encounterResponse) && encounterResponse.data.encounter) {
+        if (!isSuccess(encounterResponse) || !isSuccess(questionnaireResponse)) {
+            return null;
+        }
+
+        if (['entered-in-error', 'cancelled'].includes(status)) {
+            return null;
+        }
+
+        if (encounterResponse.data.encounter) {
             const { encounter } = encounterResponse.data;
 
             return [
@@ -102,11 +111,7 @@ export function AppointmentDetailsModal(props: Props) {
         <Modal
             open={showModal}
             title={t`Appointment`}
-            footer={
-                isSuccess(encounterResponse) && isSuccess(questionnaireResponse)
-                    ? renderFooter()
-                    : null
-            }
+            footer={renderFooter()}
             onCancel={onClose}
         >
             <RenderRemoteData remoteData={questionnaireResponse} renderLoading={Spinner}>

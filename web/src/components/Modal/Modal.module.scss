@@ -21,7 +21,7 @@
     }
 
     :global .ant-modal-body {
-        padding: 24px 24px 0 24px;
+        padding: 24px 24px 30px 24px;
     }
 
     :global .form__question {
@@ -35,16 +35,20 @@
         &:first-of-type {
             border: 0;
         }
+
+        &:last-of-type {
+            margin-bottom: 0;
+        }
     }
 
     :global .form__footer,
     :global .ant-modal-footer {
         padding: 10px 16px;
-        margin-top: 30px;
+        margin-top: 0;
         box-shadow: inset 0px 1px 0px #f0f0f0;
     }
 
     :global .form__footer {
-        margin: 30px -24px 0;
+        margin: 30px -24px -30px;
     }
 }
