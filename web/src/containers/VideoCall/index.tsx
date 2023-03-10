@@ -9,6 +9,7 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { EncounterData } from 'src/components/EncountersTable/types';
+import { sharedJitsiAuthToken } from 'src/sharedState';
 
 export function VideoCall() {
     const navigate = useNavigate();
@@ -20,7 +21,11 @@ export function VideoCall() {
         encounter.practitioner?.telecom?.find((t: ContactPoint) => t.system === 'email')?.value
     }`;
     const patientName = renderHumanName(encounter.patient?.name?.[0]);
-    const roomName = [practitionerName, 'and', patientName].join('-');
+    const roomName = [...practitionerName.split(' '), ...patientName.split(' ')]
+        .join('-')
+        .toLowerCase();
+    const jwtAuthToken = sharedJitsiAuthToken.getSharedState();
+
     return (
         <>
             <BasePageHeader style={{ paddingBottom: 0 }}>
@@ -34,59 +39,21 @@ export function VideoCall() {
                 <JitsiMeeting
                     domain={config.jitsiMeetServer}
                     roomName={roomName}
+                    jwt={jwtAuthToken}
                     configOverwrite={{
                         startWithAudioMuted: true,
-                        disableModeratorIndicator: true,
-                        startScreenSharing: true,
-                        enableEmailInStats: false,
-                        toolbarButtons: [
-                            'camera',
-                            'chat',
-                            'closedcaptions',
-                            'desktop',
-                            'download',
-                            // 'embedmeeting',
-                            'etherpad',
-                            'feedback',
-                            'filmstrip',
-                            'fullscreen',
-                            'hangup',
-                            'help',
-                            'highlight',
-                            'invite',
-                            'linktosalesforce',
-                            'livestreaming',
-                            'microphone',
-                            'noisesuppression',
-                            'participants-pane',
-                            'profile',
-                            // 'raisehand',
-                            'recording',
-                            // 'security',
-                            'select-background',
-                            'settings',
-                            'shareaudio',
-                            'sharedvideo',
-                            'shortcuts',
-                            // 'stats',
-                            'tileview',
-                            'toggle-camera',
-                            'videoquality',
-                            'whiteboard',
-                        ],
+                        startWithVideoMuted: true,
                         analytics: {
                             disabled: true,
                         },
                         readOnlyName: true,
                     }}
-                    interfaceConfigOverwrite={{}}
                     userInfo={{
                         displayName: practitionerName.split('-').join(' '),
                         email: practitionerEmail,
                     }}
-                    // onApiReady={(externalApi) => {}}
                     getIFrameRef={(iframeRef) => {
-                        iframeRef.style.height = '700px';
+                        iframeRef.style.height = '500px';
                     }}
                     onReadyToClose={() => {
                         navigate(`/encounters/`);

@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+
 import { useService } from 'aidbox-react/lib/hooks/service';
 import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess } from 'aidbox-react/lib/services/service';
@@ -26,4 +28,14 @@ export function useEncounterDetails(encounterId: string) {
         });
     });
     return encounterInfoRD;
+}
+
+export function useNavigateToEncounter() {
+    const navigate = useNavigate();
+
+    const navigateToEncounter = (patientId: string, encounterId: string) => {
+        navigate(`/patients/${patientId}/encounters/${encounterId}`);
+    }
+
+    return { navigateToEncounter }
 }

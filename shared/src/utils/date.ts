@@ -17,7 +17,7 @@ export const formatFHIRDateTime = (date: Date | moment.Moment) =>
     moment(date).utc().format(FHIRDateTime);
 
 // parseFHIR* functions return moment instance in local timezone
-export const parseFHIRTime = (date: string) => moment(date, FHIRTime);
+export const parseFHIRTime = (time: string) => moment.utc(time, FHIRTime).local();
 export const parseFHIRDate = (date: string) => moment(date, FHIRDate);
 export const parseFHIRDateTime = (date: string) => moment.utc(date, FHIRDateTime).local();
 

@@ -1,6 +1,7 @@
-import moment from 'moment';
 import { act, renderHook } from '@testing-library/react';
+import moment from 'moment';
 import { GroupItemProps } from 'sdc-qrf';
+
 import { FHIRTimeFormat } from 'aidbox-react/lib/utils/date';
 
 import { useTimeRangePickerControl } from '../hooks';
@@ -55,10 +56,10 @@ describe('TimeRangePickerControl', () => {
 
         expect(mockControllerFieldOnChange).toHaveBeenCalledTimes(2);
         expect(mockControllerFieldOnChange).toHaveBeenCalledWith({
-            value: { string: start.format(FHIRTimeFormat) },
+            value: { time: start.format(FHIRTimeFormat) },
         });
         expect(mockControllerFieldOnChange).toHaveBeenCalledWith({
-            value: { string: end.format(FHIRTimeFormat) },
+            value: { time: end.format(FHIRTimeFormat) },
         });
     });
 });

@@ -3,7 +3,7 @@ h3.title {
     font-weight: 700;
 }
 
-.calendar {
+.calendar :global .fc {
     --fc-button-bg-color: #3366ff;
     --fc-button-border-color: #3366ff;
     --fc-button-text-color: #fff;
@@ -39,11 +39,11 @@ h3.title {
         font-size: 14px;
         line-height: 32px;
         font-weight: 400;
-        margin: 0 !important;
+        margin: 0;
 
         &:not(:disabled):focus,
         &:not(:disabled):active:focus {
-            box-shadow: 0 0 0 0.2rem rgba(51, 102, 255, 0.5) !important;
+            box-shadow: 0 0 0 0.2rem rgba(51, 102, 255, 0.5);
         }
     }
 
@@ -98,32 +98,24 @@ h3.title {
 
     :global .fc-timegrid-event-harness-inset .fc-timegrid-event {
         margin: 0 -3px 0 -2px;
-        padding: 0 16px;
         font-size: 14px;
         line-height: 22px;
-
-        .fc-event-main {
-            > * {
-                display: block;
-            }
-
-            br {
-                display: none;
-            }
-
-            > b:first-child {
-                white-space: nowrap;
-                text-overflow: ellipsis;
-                overflow: hidden;
-            }
-        }
-
-        i {
-            font-style: normal;
-        }
+        border: 0;
     }
 
     :global .fc-timegrid-slot-label-cushion {
         text-transform: lowercase;
     }
+}
+
+.event {
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.eventName {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }

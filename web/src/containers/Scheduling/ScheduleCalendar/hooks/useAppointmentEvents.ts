@@ -1,79 +1,60 @@
 import { DateSelectArg, EventClickArg } from '@fullcalendar/core';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { PractitionerRole } from 'shared/src/contrib/aidbox/index';
 
-interface EditModalData {
-    clickedAppointmentId: string;
-    showEditAppointmentModal: boolean;
-}
-
-export interface NewModalData {
-    appointmentDate: {
-        start: Date | null;
-        end: Date | null;
-    };
-    showNewAppointmentModal: boolean;
+export interface NewAppointmentData {
+    start: Date;
+    end: Date;
 }
 
 export function useAppointmentEvents(practitionerRole: PractitionerRole) {
-    const [editModalData, setEditModalData] = useState<EditModalData>({
-        clickedAppointmentId: 'undefined',
-        showEditAppointmentModal: false,
-    });
-
-    const [newModalData, setNewModalData] = useState<NewModalData>({
-        appointmentDate: {
-            start: null,
-            end: null,
-        },
-        showNewAppointmentModal: false,
-    });
+    const [newAppointmentData, setNewAppointmentData] = useState<NewAppointmentData | undefined>();
+    const [appointmentDetails, setAppointmentDetails] = useState<
+        EventClickArg['event'] | undefined
+    >();
+    const [editingAppointmentId, setEditingAppointmentId] = useState<string | undefined>();
 
     // function handleEventChange({ event }: EventChangeArg) {
     //     // TODO: show confirm modal and discard event change if rejected
     //     const { id, start, end } = event;
     // }
 
-    function handleEventClick(e: EventClickArg) {
-        console.log('handleEventClick');
-
-        setEditModalData({ clickedAppointmentId: e.event.id, showEditAppointmentModal: true });
-    }
-
-    function handleGridSelect({ start, end }: DateSelectArg) {
-        console.log('handleGridSelect');
-
-        setNewModalData({
-            appointmentDate: {
-                start,
-                end,
-            },
-            showNewAppointmentModal: true,
+    const openNewAppointmentModal = useCallback(({ start, end }: DateSelectArg) => {
+        setNewAppointmentData({
+            start,
+            end,
         });
-    }
+    }, []);
+    const closeNewAppointmentModal = useCallback(() => {
+        setNewAppointmentData(undefined);
+    }, []);
 
-    function handleOkNewAppointment() {
-        setNewModalData((state) => ({
-            ...state,
-            showNewAppointmentModal: false,
-        }));
-    }
+    const openAppointmentDetails = useCallback((e: EventClickArg) => {
+        setAppointmentDetails(e.event);
+    }, []);
+    const closeAppointmentDetails = useCallback(() => {
+        setAppointmentDetails(undefined);
+    }, []);
 
-    async function handleCancelNewAppointment() {
-        setNewModalData((data) => ({
-            ...data,
-            showNewAppointmentModal: false,
-        }));
-    }
+    const openEditAppointment = useCallback((id: string) => {
+        setEditingAppointmentId(id);
+    }, []);
+    const closeEditAppointment = useCallback(() => {
+        setEditingAppointmentId(undefined);
+    }, []);
 
     return {
-        handleEventClick,
-        handleGridSelect,
-        editModalData,
-        setEditModalData,
-        newModalData,
-        handleOkNewAppointment,
-        handleCancelNewAppointment,
+        openNewAppointmentModal,
+        newAppointmentData,
+        closeNewAppointmentModal,
+
+        openAppointmentDetails,
+        appointmentDetails,
+        closeAppointmentDetails,
+
+        openEditAppointment,
+        editingAppointmentId,
+        closeEditAppointment,
     };
 }

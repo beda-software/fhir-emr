@@ -1,4 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
+
 import { getFHIRResource, getFHIRResources } from 'aidbox-react/lib/services/fhir';
 import { parseFHIRDateTime } from 'aidbox-react/lib/utils/date';
 import { ensure } from 'aidbox-react/lib/utils/tests';
@@ -92,20 +93,20 @@ describe('createEncounter', () => {
                         'start-time': [
                             {
                                 value: {
-                                    string: encounterPeriodStartTime,
+                                    time: encounterPeriodStartTime,
                                 },
                             },
                         ],
                         'end-time': [
                             {
                                 value: {
-                                    string: encounterPeriodEndTime,
+                                    time: encounterPeriodEndTime,
                                 },
                             },
                         ],
                     },
                 },
-                'practitioner-list': [
+                'practitioner-role': [
                     {
                         value: {
                             Reference: {
@@ -120,9 +121,9 @@ describe('createEncounter', () => {
                     {
                         value: {
                             Coding: {
-                                code: 'HH',
-                                system: 'http://terminology.hl7.org/CodeSystem/v3-ActCode',
-                                display: 'home health',
+                                code: 'consultation',
+                                system: 'http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type',
+                                display: 'The first appointment',
                             },
                         },
                     },

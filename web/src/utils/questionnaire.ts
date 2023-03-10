@@ -5,6 +5,7 @@ import {
     QuestionnaireItemAnswerOption,
     QuestionnaireItemAnswerOptionValue,
 } from 'shared/src/contrib/aidbox';
+import { parseFHIRTime } from 'shared/src/utils/date';
 
 export function getDisplay(value?: QuestionnaireItemAnswerOptionValue): string | number | null {
     if (!value) {
@@ -19,8 +20,16 @@ export function getDisplay(value?: QuestionnaireItemAnswerOptionValue): string |
         return value.string;
     }
 
+    if (value.time) {
+        return parseFHIRTime(value.time).format('HH:mm');
+    }
+
     if (value.integer) {
         return value.integer;
+    }
+
+    if (value.Reference && value.Reference.display) {
+        return value.Reference.display;
     }
 
     console.warn(`There is not implementation for getDisplay of ${JSON.stringify(value)}`);

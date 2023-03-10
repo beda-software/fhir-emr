@@ -5,6 +5,11 @@ import {
     format,
     parseISO,
 } from 'date-fns';
+import _ from 'lodash';
+
+import { parseFHIRDateTime } from 'aidbox-react/lib/utils/date';
+
+import { Period } from 'shared/src/contrib/aidbox';
 
 const DATE_TIME_FORMAT = 'dd/MM/yyyy HH:mm';
 const DATE_FORMAT = 'dd/MM/yyyy';
@@ -53,4 +58,13 @@ export function getPersonAge(date: string) {
     }
 
     return `${getDays(date)} d.o.`;
+}
+
+export function formatPeriodDateTime(period?: Period) {
+    const timeRange = _.compact([
+        period?.start ? parseFHIRDateTime(period.start).format('HH:mm') : undefined,
+        period?.end ? parseFHIRDateTime(period.end).format('HH:mm') : undefined,
+    ]).join('–');
+
+    return period?.start ? `${formatHumanDate(period.start)} ${timeRange}` : null;
 }

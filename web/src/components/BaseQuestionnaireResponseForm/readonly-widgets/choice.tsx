@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import _ from 'lodash';
 import { QuestionItemProps } from 'sdc-qrf';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
@@ -18,14 +17,14 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
 
     if (repeats) {
         return (
-            <p className={classNames(s.question, s.row)}>
+            <p className={classNames(s.question, s.row, 'form__question')}>
                 <span className={s.questionText}>{text}</span>
                 <span className={s.answer}>{getArrayDisplay(value) || '-'}</span>
             </p>
         );
     } else {
         return (
-            <p className={classNames(s.question, s.row)}>
+            <p className={classNames(s.question, s.row, 'form__question')}>
                 <span className={s.questionText}>{text}</span>
                 <span className={s.answer}>{getDisplay(value?.value) || '-'}</span>
             </p>

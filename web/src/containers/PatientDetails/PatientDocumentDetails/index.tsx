@@ -2,15 +2,8 @@ import { Trans } from '@lingui/macro';
 import { Button } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import { ReactElement, useContext, useEffect } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
 import { Outlet, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
-import {
-    calcInitialContext,
-    FormItems,
-    QuestionItems,
-    QuestionnaireResponseFormData,
-    QuestionnaireResponseFormProvider,
-} from 'sdc-qrf';
+import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
@@ -25,19 +18,14 @@ import { mapSuccess } from 'aidbox-react/lib/services/service';
 
 import { Encounter, Patient, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
-import { BloodPressureReadOnly, Col, Row } from 'src/components/BaseQuestionnaireResponseForm/widgets';
+import { ReadonlyQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm/ReadonlyQuestionnaireResponseForm';
+import { BloodPressureReadOnly } from 'src/components/BaseQuestionnaireResponseForm/widgets';
 import { Spinner } from 'src/components/Spinner';
 
 import { PatientDocument } from '../PatientDocument';
 import { usePatientDocument } from '../PatientDocument/usePatientDocument';
 import { PatientHeaderContext } from '../PatientHeader/context';
 import s from './PatientDocumentDetails.module.scss';
-import { QuestionChoice } from './widgets/choice';
-import { QuestionDateTime } from './widgets/date';
-import { Group } from './widgets/group';
-import { QuestionInteger } from './widgets/integer';
-import { AnxietyScore, DepressionScore } from './widgets/score';
-import { QuestionText } from './widgets/string';
 
 interface Props {
     patient: WithId<Patient>;
@@ -74,12 +62,6 @@ function PatientDocumentDetailsReadonly(props: {
     const location = useLocation();
     const navigate = useNavigate();
     const { formData, encounter } = props;
-    const methods = useForm<FormItems>({
-        defaultValues: formData.formValues,
-    });
-    const { watch } = methods;
-
-    const formValues = watch();
 
     const { setBreadcrumbs } = useContext(PatientHeaderContext);
 
@@ -107,41 +89,10 @@ function PatientDocumentDetailsReadonly(props: {
                         </Button>
                     ) : null}
                 </div>
-                <FormProvider {...methods}>
-                    <form>
-                        <QuestionnaireResponseFormProvider
-                            formValues={formValues}
-                            setFormValues={() => {}}
-                            groupItemComponent={Group}
-                            itemControlGroupItemComponents={{
-                                col: Col,
-                                row: Row,
-                                'blood-pressure': BloodPressureReadOnly,
-                            }}
-                            questionItemComponents={{
-                                text: QuestionText,
-                                string: QuestionText,
-                                integer: QuestionInteger,
-                                choice: QuestionChoice,
-                                date: QuestionDateTime,
-                                dateTime: QuestionDateTime,
-                            }}
-                            itemControlQuestionItemComponents={{
-                                'inline-choice': QuestionChoice,
-                                'anxiety-score': AnxietyScore,
-                                'depression-score': DepressionScore,
-                            }}
-                        >
-                            <>
-                                <QuestionItems
-                                    questionItems={formData.context.questionnaire.item!}
-                                    parentPath={[]}
-                                    context={calcInitialContext(formData.context, formValues)}
-                                />
-                            </>
-                        </QuestionnaireResponseFormProvider>
-                    </form>
-                </FormProvider>
+                <ReadonlyQuestionnaireResponseForm
+                    formData={formData}
+                    itemControlGroupItemComponents={{ 'blood-pressure': BloodPressureReadOnly }}
+                />
             </div>
         </div>
     );

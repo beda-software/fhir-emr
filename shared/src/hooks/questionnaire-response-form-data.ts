@@ -239,6 +239,7 @@ export function useQuestionnaireResponseFormData(
         return success({
             questionnaireResponse: saveQRRemoteData.data,
             extracted: isSuccess(extractRemoteData),
+            extractedBundle: isSuccess(extractRemoteData) ? extractRemoteData.data : undefined,
         });
     };
 

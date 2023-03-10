@@ -1,11 +1,12 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
-import { Button, Modal, notification } from 'antd';
+import { Button, notification } from 'antd';
 import { useState } from 'react';
 
 import { Patient } from 'shared/src/contrib/aidbox';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
+import { Modal } from '../Modal';
 import { QuestionnaireResponseForm } from '../QuestionnaireResponseForm';
 
 interface Props {

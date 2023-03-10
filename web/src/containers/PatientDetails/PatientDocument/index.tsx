@@ -1,5 +1,4 @@
 import Title from 'antd/lib/typography/Title';
-import _ from 'lodash';
 import { useContext, useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
@@ -7,9 +6,9 @@ import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
+import { AnxietyScore, DepressionScore } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/score';
 import { Spinner } from 'src/components/Spinner';
 
-import { AnxietyScore, DepressionScore } from '../PatientDocumentDetails/widgets/score';
 import { PatientHeaderContext } from '../PatientHeader/context';
 import s from './PatientDocument.module.scss';
 import { PhysicalExam } from './PhysicalExam';

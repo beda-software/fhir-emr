@@ -7,6 +7,7 @@ import { QuestionItemProps } from 'sdc-qrf';
 
 import { getDisplay } from 'src/utils/questionnaire';
 
+import s from '../BaseQuestionnaireResponseForm.module.scss';
 import { useFieldController } from '../hooks';
 
 const inputStyle = { backgroundColor: '#F7F9FC' };
@@ -98,7 +99,12 @@ function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
 
     return (
         <>
-            <Select options={selectOptions} onChange={newOnChange} value={selectValue} />
+            <Select
+                options={selectOptions}
+                onChange={newOnChange}
+                value={selectValue}
+                className={s.select}
+            />
         </>
     );
 }

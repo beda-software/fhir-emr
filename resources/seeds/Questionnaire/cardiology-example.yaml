@@ -3,9 +3,6 @@ resourceType: Questionnaire
 name: cardiology-example
 title: Cardiologist consultation
 status: active
-mapping:
-  - id: encounter-create
-    resourceType: Mapping
 item:
   - linkId: complaints
     type: text

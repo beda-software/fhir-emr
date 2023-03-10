@@ -74,3 +74,10 @@ export function getUserInfo() {
         url: '/auth/userinfo',
     });
 }
+
+export async function getJitsiAuthToken() {
+    return service<{ jwt: string }>({
+        method: 'POST',
+        url: '/auth/$jitsi-token',
+    });
+}

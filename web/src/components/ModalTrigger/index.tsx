@@ -1,8 +1,10 @@
-import { Layout, Modal } from 'antd';
+import { Layout } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
 import { ModalProps } from 'antd/lib/modal';
 import { useCallback } from 'react';
 import * as React from 'react';
+
+import { Modal } from '../Modal';
 
 interface Props {
     trigger: React.ReactElement<any>;

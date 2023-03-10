@@ -1,9 +1,10 @@
-import { FHIRTimeFormat } from 'aidbox-react/lib/utils/date';
 import { useCallback } from 'react';
 import { GroupItemProps } from 'sdc-qrf';
 
-import { RangeValue } from 'src/components/TimePicker/types';
+import { FHIRTimeFormat } from 'aidbox-react/lib/utils/date';
+
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
+import { RangeValue } from 'src/components/TimePicker/types';
 
 export function useTimeRangePickerControl(props: GroupItemProps) {
     const { questionItem } = props;
@@ -25,8 +26,8 @@ export function useTimeRangePickerControl(props: GroupItemProps) {
     const onTimeRangeChange = useCallback(
         (rangeValue: RangeValue) => {
             if (rangeValue) {
-                startTimeOnChange({ value: { string: rangeValue[0]!.format(FHIRTimeFormat) } });
-                endTimeOnChange({ value: { string: rangeValue[1]!.format(FHIRTimeFormat) } });
+                startTimeOnChange({ value: { time: rangeValue[0]!.format(FHIRTimeFormat) } });
+                endTimeOnChange({ value: { time: rangeValue[1]!.format(FHIRTimeFormat) } });
             }
         },
         [startTimeOnChange, endTimeOnChange],

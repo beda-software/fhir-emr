@@ -20,14 +20,14 @@ import { getAnswerCode, getAnswerDisplay } from 'shared/src/utils/questionnaire'
 
 import { useFieldController } from '../hooks';
 
-type AnswerReferenceProps<R extends Resource, IR extends Resource> = QuestionItemProps & {
+export type AnswerReferenceProps<R extends Resource, IR extends Resource> = QuestionItemProps & {
     overrideGetDisplay?: (resource: R, includedResources: ResourcesMap<R | IR>) => string;
     overrideGetLabel?: (
         o: QuestionnaireItemAnswerOption['value'] | QuestionnaireResponseItemAnswer['value'],
     ) => React.ReactElement | string;
 };
 
-function useAnswerReference<R extends Resource = any, IR extends Resource = any>({
+export function useAnswerReference<R extends Resource = any, IR extends Resource = any>({
     questionItem,
     parentPath,
     context,

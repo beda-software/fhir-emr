@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro';
-import { Button, Modal, ModalProps, notification, Radio, Space } from 'antd';
+import { Button, ModalProps, notification, Radio, Space } from 'antd';
 import _ from 'lodash';
 import { useCallback, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -11,6 +11,7 @@ import { mapSuccess } from 'aidbox-react/lib/services/service';
 
 import { Encounter, Patient, Questionnaire } from 'shared/src/contrib/aidbox';
 
+import { Modal } from 'src/components/Modal';
 import { Spinner } from 'src/components/Spinner';
 
 interface Props extends ModalProps {

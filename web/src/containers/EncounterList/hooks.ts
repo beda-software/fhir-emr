@@ -92,7 +92,7 @@ export function useEncounterList(
                     patient,
                     practitioner,
                     status: encounter.status,
-                    date: encounter?.period?.start,
+                    period: encounter?.period,
                     humanReadableDate:
                         encounter?.period?.start && formatHumanDateTime(encounter?.period?.start),
                 };

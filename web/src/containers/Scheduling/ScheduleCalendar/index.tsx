@@ -11,6 +11,7 @@ import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
 import { PractitionerRole } from 'shared/src/contrib/aidbox';
 
+import { AppointmentDetailsModal } from './components/AppointmentDetailsModal';
 import { EditAppointmentModal } from './components/EditAppointmentModal';
 import { NewAppointmentModal } from './components/NewAppointmentModal';
 import { useAppointmentEvents } from './hooks/useAppointmentEvents';
@@ -28,13 +29,15 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
     const { remoteResponses, slotsManager } = useScheduleCalendar(practitionerRole);
 
     const {
-        handleEventClick,
-        handleGridSelect,
-        editModalData,
-        setEditModalData,
-        newModalData,
-        handleOkNewAppointment,
-        handleCancelNewAppointment,
+        openNewAppointmentModal,
+        newAppointmentData,
+        closeNewAppointmentModal,
+        openAppointmentDetails,
+        appointmentDetails,
+        closeAppointmentDetails,
+        openEditAppointment,
+        editingAppointmentId,
+        closeEditAppointment,
     } = useAppointmentEvents(practitionerRole);
 
     return (
@@ -61,9 +64,9 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
                                 selectMirror={true}
                                 dayMaxEvents={true}
                                 initialEvents={calendarSlots}
-                                eventContent={renderEventContent}
-                                eventClick={handleEventClick}
-                                select={handleGridSelect}
+                                eventContent={AppointmentBubble}
+                                eventClick={openAppointmentDetails}
+                                select={openNewAppointmentModal}
                                 buttonText={{
                                     today: t`Today`,
                                     week: t`Week`,
@@ -80,48 +83,51 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
                                 slotLabelFormat={{
                                     timeStyle: 'short',
                                 }}
-                                // titleFormat={{
-                                //     hour12: true,
-                                // }}
                                 {...calendarOptions}
                             />
-                            {editModalData.showEditAppointmentModal && (
-                                <EditAppointmentModal
-                                    key={`edit-modal-${editModalData.clickedAppointmentId}`}
+                            {appointmentDetails && (
+                                <AppointmentDetailsModal
+                                    key={`appointment-details__${appointmentDetails.id}`}
                                     practitionerRole={practitionerRole}
-                                    appointmentId={editModalData.clickedAppointmentId}
-                                    showModal={editModalData.showEditAppointmentModal}
+                                    appointmentId={appointmentDetails.id}
+                                    status={appointmentDetails.extendedProps.status}
+                                    showModal={true}
+                                    onEdit={(id) => openEditAppointment(id)}
+                                    onClose={closeAppointmentDetails}
+                                />
+                            )}
+                            {editingAppointmentId && (
+                                <EditAppointmentModal
+                                    key={`editing-appointment__${editingAppointmentId}`}
+                                    practitionerRole={practitionerRole}
+                                    appointmentId={editingAppointmentId}
+                                    showModal={true}
                                     onSubmit={() => {
-                                        setEditModalData({
-                                            clickedAppointmentId: 'undefined',
-                                            showEditAppointmentModal: false,
-                                        });
+                                        closeEditAppointment();
                                         // slotsManager.softReloadAsync is not used here, because otherwise the display of appointments in the table will not be updated
                                         slotsManager.reload();
                                         notification.success({
                                             message: t`Appointment successfully rescheduled`,
                                         });
                                     }}
-                                    onClose={() =>
-                                        setEditModalData((data) => ({
-                                            ...data,
-                                            showEditAppointmentModal: false,
-                                        }))
-                                    }
+                                    onClose={closeEditAppointment}
                                 />
                             )}
-                            {newModalData.showNewAppointmentModal && (
+                            {newAppointmentData && (
                                 <NewAppointmentModal
+                                    key={`new-appointment`}
                                     practitionerRole={practitionerRole}
-                                    newModalData={newModalData}
+                                    start={newAppointmentData.start}
+                                    end={newAppointmentData.end}
+                                    showModal={true}
                                     onOk={() => {
-                                        handleOkNewAppointment();
+                                        closeNewAppointmentModal();
                                         slotsManager.reload();
                                         notification.success({
                                             message: t`Appointment successfully added`,
                                         });
                                     }}
-                                    onCancel={handleCancelNewAppointment}
+                                    onCancel={closeNewAppointmentModal}
                                 />
                             )}
                         </>
@@ -132,16 +138,14 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
     );
 }
 
-function renderEventContent(eventContent: EventContentArg) {
-    const titleMaxLength = eventContent.view.type === 'timeGridWeek' ? 20 : 100;
+function AppointmentBubble(eventContent: EventContentArg) {
     const status = eventContent.event.extendedProps.status;
+
     return (
-        <>
-            <b>{eventContent.event.title.substr(0, titleMaxLength)}</b>
-            <br />
-            <i>{eventContent.timeText}</i>
-            <br />
-            {status === 'cancelled' && <i>{status}</i>}
-        </>
+        <div className={s.event}>
+            <div className={s.eventName}>{eventContent.event.title}</div>
+            <div>{eventContent.timeText}</div>
+            {status === 'cancelled' && <div>{status}</div>}
+        </div>
     );
 }

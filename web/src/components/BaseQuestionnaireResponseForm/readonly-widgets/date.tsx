@@ -16,7 +16,7 @@ export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps
     }
 
     return (
-        <p className={classNames(s.question, s.row)}>
+        <p className={classNames(s.question, s.row, 'form__question')}>
             <span className={s.questionText}>{text}</span>
             <span className={s.answer}>
                 {value

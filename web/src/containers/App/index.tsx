@@ -7,10 +7,10 @@ import { useLocation } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
-import { isSuccess, RemoteDataResult, success } from 'aidbox-react/lib/libs/remoteData';
+import { isFailure, isSuccess, RemoteDataResult, success } from 'aidbox-react/lib/libs/remoteData';
 import { getFHIRResource } from 'aidbox-react/lib/services/fhir';
 import { resetInstanceToken, setInstanceToken } from 'aidbox-react/lib/services/instance';
-import { extractErrorCode } from 'aidbox-react/lib/utils/error';
+import { extractErrorCode, formatError } from 'aidbox-react/lib/utils/error';
 
 import { Practitioner } from 'shared/src/contrib/aidbox';
 
@@ -24,10 +24,10 @@ import { PractitionerList } from 'src/containers/PractitionerList';
 import { QuestionnaireBuilder } from 'src/containers/QuestionnaireBuilder';
 import { QuestionnaireList } from 'src/containers/QuestionnaireList';
 import { VideoCall } from 'src/containers/VideoCall';
-import { getToken, getUserInfo } from 'src/services/auth';
+import { getJitsiAuthToken, getToken, getUserInfo } from 'src/services/auth';
 import { parseOAuthState, setToken } from 'src/services/auth';
 import { history } from 'src/services/history';
-import { sharedAuthorisedPractitioner } from 'src/sharedState';
+import { sharedAuthorisedPractitioner, sharedJitsiAuthToken } from 'src/sharedState';
 
 import { PublicAppointment } from '../Appointment/PublicAppointment';
 import { PatientQuestionnaire } from '../PatientQuestionnaire';
@@ -55,6 +55,16 @@ export function App() {
                 sharedAuthorisedPractitioner.setSharedState(practitionerResponse.data);
             } else {
                 console.error(practitionerResponse.error);
+            }
+            const jitsiAuthTokenResponse = await getJitsiAuthToken();
+            if (isSuccess(jitsiAuthTokenResponse)) {
+                sharedJitsiAuthToken.setSharedState(jitsiAuthTokenResponse.data.jwt);
+            }
+            if (isFailure(jitsiAuthTokenResponse)) {
+                console.warn(
+                    'Error, while fetching Jitsi auth token: ',
+                    formatError(jitsiAuthTokenResponse.error),
+                );
             }
         } else {
             if (extractErrorCode(response.error) !== 'network_error') {

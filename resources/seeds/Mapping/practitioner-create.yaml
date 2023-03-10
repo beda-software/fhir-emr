@@ -37,8 +37,10 @@ body:
             healthcareService:
               - id: consultation
                 resourceType: HealthcareService
+                display: The first appointment
               - id: follow-up
                 resourceType: HealthcareService
+                display: A follow up visit
     $call: concat
 id: practitioner-create
 resourceType: Mapping

@@ -1,14 +1,14 @@
 import { Trans } from '@lingui/macro';
 import { ColumnsType } from 'antd/lib/table';
-import moment from 'moment';
 import { useContext, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import { Patient } from 'shared/src/contrib/aidbox';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { useEncounterList } from 'src/containers/EncounterList/hooks';
 import { PatientHeaderContext } from 'src/containers/PatientDetails/PatientHeader/context';
+import { formatPeriodDateTime } from 'src/utils/date';
 
 import { EncountersTable } from '../EncountersTable';
 import { EncounterData } from '../EncountersTable/types';
@@ -26,7 +26,6 @@ const columns: ColumnsType<EncounterData> = [
         key: 'practitioner',
         render: (_text: any, resource: EncounterData) =>
             renderHumanName(resource.practitioner?.name?.[0]),
-        width: '70%',
     },
     {
         title: <Trans>Status</Trans>,
@@ -37,10 +36,30 @@ const columns: ColumnsType<EncounterData> = [
         },
     },
     {
-        title: <Trans>Appointment date</Trans>,
+        title: <Trans>Date</Trans>,
         dataIndex: 'date',
         key: 'date',
-        render: (_text: any, resource: EncounterData) => moment(resource.date).format('YYYY/MM/DD'),
+        width: 250,
+        render: (_text: any, resource: EncounterData) => formatPeriodDateTime(resource.period),
+    },
+    {
+        title: <Trans>Actions</Trans>,
+        dataIndex: 'actions',
+        key: 'action',
+        width: 200,
+        render: (_text: any, resource: EncounterData) => (
+            <div>
+                <Link
+                    to={`/patients/${resource.patient?.id}/encounters/${resource.id}`}
+                    style={{ marginRight: 10 }}
+                >
+                    Open
+                </Link>
+                <Link to={`/encounters/${resource.id}/video`} state={{ encounterData: resource }}>
+                    Video call
+                </Link>
+            </div>
+        ),
     },
 ];
 
@@ -68,7 +87,6 @@ export const PatientEncounter = ({ patient }: Props) => {
                 remoteData={encounterDataListRD}
                 handleTableChange={handleTableChange}
                 pagination={pagination}
-                onRowEnabled={true}
             />
         </>
     );

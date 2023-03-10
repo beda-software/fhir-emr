@@ -6,6 +6,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
     title: string;
     icon: React.ReactNode;
     extra?: React.ReactNode;
+    empty?: boolean;
 }
 
 interface TableProps {
@@ -21,10 +22,14 @@ interface TableProps {
 }
 
 export function DashboardCard(props: Props) {
-    const { title, icon, extra, children, className } = props;
+    const { title, icon, extra, children, className, empty = false } = props;
 
     return (
-        <div className={classNames(s.card, className)}>
+        <div
+            className={classNames(s.card, className, {
+                _empty: empty,
+            })}
+        >
             <div className={s.header}>
                 <div>
                     <div className={s.icon}>{icon}</div>

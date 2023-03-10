@@ -72,7 +72,31 @@ item:
             path: >-
               practitioner.resource.name.given.first() + ' ' + 
               practitioner.resource.name.family + ' - ' + specialty.first().coding.display
-      - text: Type
+      - text: Predefined Patient Id
+        type: string
+        linkId: predefined-patient-id
+        hidden: true
+        initialExpression:
+          language: text/fhirpath
+          expression: "%patient.where($this != 'undefined').id"
+      - text: Patient
+        type: reference
+        required: true
+        linkId: patient
+        referenceResource:
+          - Patient
+        enableWhen:
+          - question: predefined-patient-id
+            operator: "exists"
+            answer:
+              boolean: false
+        answerExpression:
+          language: application/x-fhir-query
+          expression: "Patient"
+        choiceColumn:
+          - forDisplay: true
+            path: "name.given.first() + ' ' + name.family"
+      - text: Service
         type: choice
         required: true
         linkId: service-type
@@ -98,30 +122,6 @@ item:
                 system: http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type
                 code: follow-up
                 display: A follow up visit
-      - text: Predefined Patient Id
-        type: string
-        linkId: predefined-patient-id
-        hidden: true
-        initialExpression:
-          language: text/fhirpath
-          expression: "%patient.where($this != 'undefined').id"
-      - text: Patient
-        type: reference
-        required: true
-        linkId: patient
-        referenceResource:
-          - Patient
-        enableWhen:
-          - question: predefined-patient-id
-            operator: "exists"
-            answer:
-              boolean: false
-        answerExpression:
-          language: application/x-fhir-query
-          expression: "Patient"
-        choiceColumn:
-          - forDisplay: true
-            path: "name.given.first() + ' ' + name.family"
       - text: Start time
         required: true
         type: dateTime

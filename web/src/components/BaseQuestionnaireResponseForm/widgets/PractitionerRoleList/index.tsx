@@ -12,6 +12,7 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { Spinner } from 'src/components/Spinner';
 
+import s from '../../BaseQuestionnaireResponseForm.module.scss';
 import { useFieldController } from '../../hooks';
 
 export function PractitionerRoleList({ parentPath, questionItem }: QuestionItemProps) {
@@ -56,6 +57,8 @@ export function PractitionerRoleList({ parentPath, questionItem }: QuestionItemP
                         options={practitionerRoleSelectOptions}
                         value={value}
                         onChange={onChange}
+                        className={s.select}
+                        classNamePrefix="choice"
                     />
                 </Form.Item>
             )}
