@@ -1,35 +1,35 @@
-id: vitals-create
+id: vitals
 resourceType: Mapping
 body:
     $let:
         patientId: >-
-            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.value.decimal").0
+            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.value.integer").0
         patientName: >-
-            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.value.decimal").0
+            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.value.integer").0
         encounterId: >-
-            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='encounterId').answer.value.decimal").0
+            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='encounterId').answer.value.integer").0
         temperature: >-
-            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='temperature').answer.value.decimal").0
+            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='temperature').answer.value.integer").0
         bloodPressureSystolic: >-
-            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='blood-pressure-systolic').answer.value.decimal").0
+            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='blood-pressure-systolic').answer.value.integer").0
         bloodPressureDiastolic: >-
-            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='blood-pressure-diastolic').answer.value.decimal").0
+            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='blood-pressure-diastolic').answer.value.integer").0
         bloodPressureArm: >-
             $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='blood-pressure-arm').answer.value.Coding").0
         bloodPressurePosition: >-
             $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='blood-pressure-positions').answer.value.Coding").0
         pulseRate: >-
-            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='pulse-rate').answer.value.decimal").0
+            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='pulse-rate').answer.value.integer").0
         respiratoryRate: >-
-            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='respiratory-rate').answer.value.decimal").0
+            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='respiratory-rate').answer.value.integer").0
         oxygenSaturation: >-
-            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='oxygen-saturation').answer.value.decimal").0
+            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='oxygen-saturation').answer.value.integer").0
         height: >-
-            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='height').answer.value.decimal").0
+            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='height').answer.value.integer").0
         weight: >-
-            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='weight').answer.value.decimal").0
-        # bmi: >-
-        #     $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='bmi').answer.value.decimal").0
+            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='weight').answer.value.integer").0
+        bmi: >-
+            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='bmi').answer.value.integer").0
     $body:
         type: transaction
         entry:
@@ -165,7 +165,7 @@ body:
                   value:
                       Quantity:
                           value: $ oxygenSaturation
-                          unit: '%'
+                          unit: "%"
 
             - request:
                   url: /Observation
@@ -213,25 +213,25 @@ body:
                           value: $ weight
                           unit: kg
 
-            # - request:
-            #       url: /Observation
-            #       method: POST
-            #   resource:
-            #       resourceType: Observation
-            #       status: final
-            #       subject:
-            #           id: $ patientId
-            #           display: $ patientName
-            #           resourceType: Patient
-            #       encounter:
-            #           id: $ encounterId
-            #           resourceType: Encounter
-            #       code:
-            #           coding:
-            #               - code: 39156-5
-            #                 system: http://loinc.org
-            #                 display: BMI
-            #       value:
-            #           Quantity:
-            #               string: $ bmi
-            #               unit: kg/m2
+            - request:
+                  url: /Observation
+                  method: POST
+              resource:
+                  resourceType: Observation
+                  status: final
+                  subject:
+                      id: $ patientId
+                      display: $ patientName
+                      resourceType: Patient
+                  encounter:
+                      id: $ encounterId
+                      resourceType: Encounter
+                  code:
+                      coding:
+                          - code: 39156-5
+                            system: http://loinc.org
+                            display: BMI
+                  value:
+                      Quantity:
+                          value: $ bmi
+                          unit: kg/m2

@@ -2,15 +2,15 @@ url: https://beda.software/fhir-emr-blood-pressure
 item:
     - item:
           - text: Systolic
-            type: decimal
+            type: integer
             linkId: systolic
           - text: Diastolic
-            type: decimal
+            type: integer
             linkId: diastolic
       text: Blood pressure
       type: group
       unit: mmHg
-      linkId: Blood pressure
+      linkId: blood-pressure-systolic-diastolic
       itemControl:
           coding:
               - code: blood-pressure

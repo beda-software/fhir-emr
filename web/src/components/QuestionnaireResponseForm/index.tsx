@@ -33,8 +33,6 @@ export function useQuestionnaireResponseForm(props: Props) {
     const { onSuccess, onFailure, readOnly, initialQuestionnaireResponse, onCancel } = props;
 
     const onSubmit = async (formData: QuestionnaireResponseFormData) => {
-        console.log('formData!!!!!!!!!!!!!!!', formData);
-
         const saveResponse = await handleSave(
             _.merge({}, formData, {
                 context: {

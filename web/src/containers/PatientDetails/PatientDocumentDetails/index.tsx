@@ -25,6 +25,7 @@ import { mapSuccess } from 'aidbox-react/lib/services/service';
 
 import { Encounter, Patient, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
+import { BloodPressureReadOnly, Col, Row } from 'src/components/BaseQuestionnaireResponseForm/widgets';
 import { Spinner } from 'src/components/Spinner';
 
 import { PatientDocument } from '../PatientDocument';
@@ -112,6 +113,11 @@ function PatientDocumentDetailsReadonly(props: {
                             formValues={formValues}
                             setFormValues={() => {}}
                             groupItemComponent={Group}
+                            itemControlGroupItemComponents={{
+                                col: Col,
+                                row: Row,
+                                'blood-pressure': BloodPressureReadOnly,
+                            }}
                             questionItemComponents={{
                                 text: QuestionText,
                                 string: QuestionText,
