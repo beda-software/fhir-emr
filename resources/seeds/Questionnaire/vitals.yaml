@@ -12,6 +12,20 @@ launchContext:
   - name: Patient
     type: Patient
 item:
+  - text: PatientId
+    type: string
+    linkId: patientId
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.id"
+  - text: PatientName
+    type: string
+    linkId: patientName
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.name.given[0] + ' ' + %Patient.name.family"
   - type: integer
     linkId: height
     text: Height

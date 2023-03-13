@@ -3,9 +3,9 @@ resourceType: Mapping
 body:
     $let:
         patientId: >-
-            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.value.integer").0
+            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.value.string").0
         patientName: >-
-            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.value.integer").0
+            $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.value.string").0
         encounterId: >-
             $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='encounterId').answer.value.integer").0
         temperature: >-
