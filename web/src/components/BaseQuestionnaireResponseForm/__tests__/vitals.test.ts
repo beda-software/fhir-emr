@@ -212,7 +212,7 @@ describe('Vitals', () => {
         });
 
         observationsBundle = ensure(await getFHIRResources<Observation>('Observation', {}));
-        expect(observationsBundle.total).toBe(7);
+        expect(observationsBundle.total).toBe(8);
 
         const temperatureObservation = observationsBundle.entry!.find((observation) => {
             return observation.resource!.code.coding![0]!.code === '8310-5';
