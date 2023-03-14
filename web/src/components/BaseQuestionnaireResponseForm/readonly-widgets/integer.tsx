@@ -4,8 +4,7 @@ import { QuestionItemProps } from 'sdc-qrf';
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { formatUnit } from 'src/utils/unit';
 
-import s from '../ReadonlyWidgets.module.scss';
-import { BMI } from './BMI';
+import s from './ReadonlyWidgets.module.scss';
 
 export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, text, hidden } = questionItem;
@@ -17,10 +16,6 @@ export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps)
     }
 
     const { unit } = questionItem as { unit?: string };
-
-    if (linkId === 'bmi') {
-        return <BMI text={text} value={value} unit={unit} />;
-    }
 
     return (
         <p className={classNames(s.question, s.row, 'form__question')}>

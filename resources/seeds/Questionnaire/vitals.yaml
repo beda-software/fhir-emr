@@ -111,6 +111,5 @@ item:
     readOnly: true
     unit: kg/m2
     calculatedExpression:
-        language: text/fhirpath
-        expression:
-            "%QuestionnaireResponse.item.where(linkId='weight').answer.value.integer / ((%QuestionnaireResponse.item.where(linkId='height').answer.value.integer / 100) * (%QuestionnaireResponse.item.where(linkId='height').answer.value.integer / 100))"
+      language: text/fhirpath
+      expression: "(%QuestionnaireResponse.item.where(linkId='weight').answer.value.integer / ((%QuestionnaireResponse.item.where(linkId='height').answer.value.integer / 100) * (%QuestionnaireResponse.item.where(linkId='height').answer.value.integer / 100))).round(2)"

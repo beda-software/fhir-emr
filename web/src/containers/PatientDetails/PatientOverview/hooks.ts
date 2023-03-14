@@ -22,7 +22,6 @@ import {
 } from 'shared/src/contrib/aidbox';
 
 import { formatHumanDate, getPersonAge } from 'src/utils/date';
-import { roundBmi } from 'src/utils/roundBmi';
 
 import {
     prepareAllergies,
@@ -70,7 +69,7 @@ export function usePatientOverview(props: Props) {
         },
         {
             title: 'BMI',
-            value: bmi ? roundBmi(bmi) : undefined,
+            value: bmi,
         },
         {
             title: 'Phone number',
