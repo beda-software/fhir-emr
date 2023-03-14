@@ -17,9 +17,7 @@ export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps)
     const { value, onChange, disabled, hidden } = useFieldController(fieldName, questionItem);
 
     if (linkId === 'bmi') {
-        return (
-            <BMI onChange={onChange} linkId={linkId} text={text} value={value} unit={unit} />
-        );
+        return <BMI text={text} value={value} unit={unit} />;
     }
 
     return (
