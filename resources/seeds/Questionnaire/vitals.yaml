@@ -1,0 +1,115 @@
+id: vitals
+name: Vitals
+resourceType: Questionnaire
+status: active
+subjectType:
+  - Encounter
+  - Patient
+mapping:
+  - id: vitals
+    resourceType: Mapping
+launchContext:
+  - name: Patient
+    type: Patient
+item:
+  - text: PatientId
+    type: string
+    linkId: patientId
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.id"
+  - text: PatientName
+    type: string
+    linkId: patientName
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.name.given[0] + ' ' + %Patient.name.family"
+  - type: integer
+    linkId: height
+    text: Height
+    unit: cm
+  - type: integer
+    linkId: weight
+    text: Weight
+    unit: kg
+  - type: integer
+    linkId: temperature
+    text: Temperature
+    unit: Celsius
+  - type: integer
+    linkId: oxygen-saturation
+    text: Oxygen saturation
+    unit: "%"
+  - type: integer
+    linkId: pulse-rate
+    text: Pulse rate
+    unit: bpm
+  - type: integer
+    linkId: respiratory-rate
+    text: Respiratory Rate
+    unit: bpm
+  - text: Blood Pressure
+    type: group
+    linkId: blood-pressure
+    item:
+      - type: group
+        linkId: blood-pressure-systolic-diastolic
+        itemControl:
+          coding:
+            - code: blood-pressure
+        item:
+          - type: integer
+            text: BP systolic
+            linkId: blood-pressure-systolic
+            unit: mmHg
+          - type: integer
+            text: BP diastolic
+            linkId: blood-pressure-diastolic
+            unit: mmHg
+
+      - linkId: blood-pressure-positions
+        text: Positions
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - value:
+              Coding:
+                code: sitting
+                display: Sitting
+          - value:
+              Coding:
+                code: lying
+                display: Lying
+          - value:
+              Coding:
+                code: standing
+                display: Standing
+
+      - linkId: blood-pressure-arm
+        text: Arm
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - value:
+              Coding:
+                code: biceps-left
+                display: Biceps left
+          - value:
+              Coding:
+                code: biceps-right
+                display: Biceps right
+  - linkId: bmi
+    text: BMI
+    required: true
+    type: integer
+    readOnly: true
+    unit: kg/m2
+    calculatedExpression:
+      language: text/fhirpath
+      expression: "(%QuestionnaireResponse.item.where(linkId='weight').answer.value.integer / ((%QuestionnaireResponse.item.where(linkId='height').answer.value.integer / 100) * (%QuestionnaireResponse.item.where(linkId='height').answer.value.integer / 100))).round(2)"

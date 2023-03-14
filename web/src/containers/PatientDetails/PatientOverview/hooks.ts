@@ -2,6 +2,7 @@ import _ from 'lodash';
 import moment from 'moment';
 
 import { useService } from 'aidbox-react/lib/hooks/service';
+import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import {
     extractBundleResources,
     getAllFHIRResources,
@@ -37,9 +38,23 @@ interface Props {
 
 const depressionSeverityCode = '44261-6';
 const anxietySeverityCode = '70274-6';
+const bmiCode = '39156-5';
 
 export function usePatientOverview(props: Props) {
     const { patient } = props;
+
+    const [bmiRD] = useService(async () => {
+        const response = await getFHIRResources<Observation>('Observation', {
+            _subject: patient.id,
+            _sort: '-_lastUpdated',
+            code: bmiCode,
+        });
+        return mapSuccess(response, (bundle) => {
+            return extractBundleResources(bundle).Observation;
+        });
+    }, []);
+
+    const bmi = isSuccess(bmiRD) ? bmiRD.data[0]?.value?.Quantity?.value : undefined;
 
     let patientDetails = [
         {
@@ -52,11 +67,10 @@ export function usePatientOverview(props: Props) {
             title: 'Sex',
             value: _.upperFirst(patient.gender),
         },
-        // TODO: calculate after Vitals added
-        // {
-        //     title: 'BMI',
-        //     value: '26',
-        // },
+        {
+            title: 'BMI',
+            value: bmi,
+        },
         {
             title: 'Phone number',
             value: patient.telecom?.filter(({ system }) => system === 'mobile')[0]!.value,

@@ -1,6 +1,9 @@
 import { notification } from 'antd';
 import _ from 'lodash';
-import { ItemControlGroupItemComponentMapping, ItemControlQuestionItemComponentMapping } from 'sdc-qrf';
+import {
+    ItemControlGroupItemComponentMapping,
+    ItemControlQuestionItemComponentMapping,
+} from 'sdc-qrf';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
@@ -27,13 +30,7 @@ interface Props extends QuestionnaireResponseFormProps {
 
 export function useQuestionnaireResponseForm(props: Props) {
     const { response, handleSave } = useQuestionnaireResponseFormData(props);
-    const {
-        onSuccess,
-        onFailure,
-        readOnly,
-        initialQuestionnaireResponse,
-        onCancel,
-    } = props;
+    const { onSuccess, onFailure, readOnly, initialQuestionnaireResponse, onCancel } = props;
 
     const onSubmit = async (formData: QuestionnaireResponseFormData) => {
         const saveResponse = await handleSave(
@@ -75,8 +72,7 @@ export function useQuestionnaireResponseForm(props: Props) {
 }
 
 export function QuestionnaireResponseForm(props: Props) {
-    const { response, onSubmit, readOnly, onCancel } =
-        useQuestionnaireResponseForm(props);
+    const { response, onSubmit, readOnly, onCancel } = useQuestionnaireResponseForm(props);
 
     return (
         <RenderRemoteData remoteData={response} renderLoading={Spinner}>
