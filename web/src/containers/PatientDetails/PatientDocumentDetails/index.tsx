@@ -72,6 +72,10 @@ function PatientDocumentDetailsReadonly(props: {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const encounterStatus = !encounter || encounter?.status !== 'completed';
+
+    const qrStatus = formData.context.questionnaireResponse.status !== 'completed';
+
     return (
         <div className={s.container}>
             <div className={s.content}>
@@ -79,7 +83,7 @@ function PatientDocumentDetailsReadonly(props: {
                     <Title level={4} className={s.title}>
                         {formData.context.questionnaire.name}
                     </Title>
-                    {!encounter || encounter.status !== 'completed' ? (
+                    {encounterStatus && qrStatus ? (
                         <Button
                             type="link"
                             onClick={() => navigate(`${location.pathname}/edit`)}
