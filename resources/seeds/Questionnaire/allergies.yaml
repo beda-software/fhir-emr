@@ -11,8 +11,6 @@ mapping:
 launchContext:
     - name: Patient
       type: Patient
-    - name: AllergyIntolerance
-      type: AllergyIntolerance
 item:
     - text: AllergyIntoleranceId
       type: string
