@@ -1,5 +1,9 @@
 body:
     $let:
+        qrId: $ fhirpath("QuestionnaireResponse.id")
+        allergyIntoleranceId: >-
+            $
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='allergyIntoleranceId').answer.value.string").0
         status: >-
             $
             fhirpath("QuestionnaireResponse.repeat(item).where(linkId='status').answer.value.Coding").0
@@ -31,9 +35,16 @@ body:
         type: transaction
         entry:
             - request:
-                  url: /AllergyIntolerance
-                  method: POST
+                  $if: $ allergyIntoleranceId
+                  $then:
+                      url: $ "/AllergyIntolerance/" + allergyIntoleranceId
+                      method: PUT
+                  $else:
+                      url: /AllergyIntolerance
+                      method: POST
+              fullUrl: urn:uuid:allergy-id
               resource:
+                  resourceType: AllergyIntolerance
                   clinicalStatus:
                       coding:
                           - $ status
@@ -52,22 +63,49 @@ body:
                         414285001: food
                         426232007: environmental
                   code:
-                    coding:
-                      - $ substanceDrug || substanceFood || substanceEnvironmental
-                  reaction:
-                    - $if: $ reaction
-                      manifestation:
-                        $map: $ reaction
-                        $as: item
-                        $body:
-                          coding:
-                            - $ item
-                      substance:
-                        coding:
+                      coding:
                           - $ substanceDrug || substanceFood || substanceEnvironmental
+                  reaction:
+                      - $if: $ reaction
+                        manifestation:
+                            $map: $ reaction
+                            $as: item
+                            $body:
+                                coding:
+                                    - $ item
+                        substance:
+                            coding:
+                                - $ substanceDrug || substanceFood || substanceEnvironmental
                   note:
                       - text: $ notes
-                  resourceType: AllergyIntolerance
+            - request:
+                  url: /Provenance
+                  method: POST
+              resource:
+                  resourceType: Provenance
+                  target:
+                      - uri: urn:uuid:allergy-id
+                  recorded: '2023-03-16T10:00:00Z'
+                  activity:
+                      $if: $ allergyIntoleranceId
+                      $then:
+                          coding:
+                              - code: 'UPDATE'
+                                display: 'revise'
+                                system: 'http://terminology.hl7.org/CodeSystem/v3-DataOperation'
+                      $else:
+                          coding:
+                              - code: 'CREATE'
+                                display: 'create'
+                                system: 'http://terminology.hl7.org/CodeSystem/v3-DataOperation'
+                  agent:
+                      - who:
+                            display: automated
+                  entity:
+                      - role: source
+                        what:
+                            resourceType: QuestionnaireResponse
+                            id: $ qrId
         resourceType: Bundle
-id: allergy-create
+id: allergy-extract
 resourceType: Mapping

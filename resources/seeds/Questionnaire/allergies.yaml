@@ -3,36 +3,45 @@ resourceType: Questionnaire
 name: Allergies
 status: active
 subjectType:
-  - Encounter
-  - Patient
+    - Encounter
+    - Patient
 mapping:
-  - id: allergy-create
-    resourceType: Mapping
+    - id: allergy-extract
+      resourceType: Mapping
 launchContext:
-  - name: Patient
-    type: Patient
+    - name: Patient
+      type: Patient
+    - name: AllergyIntolerance
+      type: AllergyIntolerance
 item:
+    - text: AllergyIntoleranceId
+      type: string
+      linkId: allergyIntoleranceId
+      hidden: true
+      initialExpression:
+          language: text/fhirpath
+          expression: '%AllergyIntolerance.id'
     - text: PatientId
       type: string
       linkId: patientId
       hidden: true
       initialExpression:
-        language: text/fhirpath
-        expression: '%Patient.id'
+          language: text/fhirpath
+          expression: '%Patient.id'
     - text: PatientName
       type: string
       linkId: patientName
       hidden: true
       initialExpression:
-        language: text/fhirpath
-        expression: "%Patient.name.given[0] + ' ' + %Patient.name.family"
+          language: text/fhirpath
+          expression: "%Patient.name.given[0] + ' ' + %Patient.name.family"
     - linkId: type
       text: Type
       required: true
       type: choice
       itemControl:
-        coding:
-            - code: inline-choice
+          coding:
+              - code: inline-choice
       answerOption:
           - value:
                 Coding:
@@ -54,8 +63,8 @@ item:
       type: choice
       repeats: true
       itemControl:
-        coding:
-            - code: inline-choice
+          coding:
+              - code: inline-choice
       answerOption:
           - value:
                 Coding:
@@ -86,15 +95,15 @@ item:
       text: Substance
       type: choice
       itemControl:
-        coding:
-            - code: inline-choice
+          coding:
+              - code: inline-choice
       enableWhen:
-        - question: type
-          operator: "="
-          answer:
-            Coding:
-                system: 'http://snomed.ct'
-                code: '418634005'
+          - question: type
+            operator: '='
+            answer:
+                Coding:
+                    system: 'http://snomed.ct'
+                    code: '418634005'
       answerOption:
           - value:
                 Coding:
@@ -125,15 +134,15 @@ item:
       text: Substance
       type: choice
       itemControl:
-        coding:
-            - code: inline-choice
+          coding:
+              - code: inline-choice
       enableWhen:
-        - question: type
-          operator: "="
-          answer:
-            Coding:
-                system: 'http://snomed.ct'
-                code: '414285001'
+          - question: type
+            operator: '='
+            answer:
+                Coding:
+                    system: 'http://snomed.ct'
+                    code: '414285001'
       answerOption:
           - value:
                 Coding:
@@ -169,15 +178,15 @@ item:
       text: Substance
       type: choice
       itemControl:
-        coding:
-            - code: inline-choice
+          coding:
+              - code: inline-choice
       enableWhen:
-        - question: type
-          operator: "="
-          answer:
-            Coding:
-                system: 'http://snomed.ct'
-                code: '426232007'
+          - question: type
+            operator: '='
+            answer:
+                Coding:
+                    system: 'http://snomed.ct'
+                    code: '426232007'
       answerOption:
           - value:
                 Coding:
@@ -207,9 +216,8 @@ item:
       linkId: status
       hidden: true
       initial:
-        - value:
-            Coding:
-                system: 'http://terminology.hl7.org/ValueSet/allergyintolerance-clinical'
-                code: 'active'
-                display: 'Active'
-    
+          - value:
+                Coding:
+                    system: 'http://terminology.hl7.org/ValueSet/allergyintolerance-clinical'
+                    code: 'active'
+                    display: 'Active'
