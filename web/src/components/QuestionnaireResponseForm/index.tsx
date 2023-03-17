@@ -74,7 +74,7 @@ export function useQuestionnaireResponseForm(props: Props) {
     };
 
     const onSaveDraft = async (formData: QuestionnaireResponseFormData) => {
-        const saveData = _.merge({}, formData, {
+        const qrfdWithQuestionnaireName = _.merge({}, formData, {
             context: {
                 questionnaireResponse: {
                     questionnaire: initialQuestionnaireResponse?.questionnaire,
@@ -82,41 +82,26 @@ export function useQuestionnaireResponseForm(props: Props) {
             },
         });
 
-        if (formData.context.questionnaireResponse.id) {
-            const transformedFormValues = transformFormValuesIntoItem(formData.formValues);
+        const isCreating = formData.context.questionnaireResponse.id === undefined;
+        const transformedFormValues = transformFormValuesIntoItem(formData.formValues);
 
-            const updatedQuestionnaireResponse = {
-                id: formData.context.questionnaireResponse.id,
-                item: transformedFormValues,
-                questionnaire: formData.context.questionnaire.assembledFrom,
-                resourceType: formData.context.questionnaireResponse.resourceType,
-                source: formData.context.questionnaireResponse.source,
-                status: 'in-progress',
-                authored: new Date().toISOString(),
-            };
+        const questionnaireResponse = {
+            id: formData.context.questionnaireResponse.id,
+            item: transformedFormValues,
+            questionnaire: isCreating
+                ? qrfdWithQuestionnaireName.context.questionnaireResponse.questionnaire
+                : formData.context.questionnaire.assembledFrom,
+            resourceType: formData.context.questionnaireResponse.resourceType,
+            source: formData.context.questionnaireResponse.source,
+            status: 'in-progress',
+            authored: new Date().toISOString(),
+        };
 
-            const response = await updateFHIRResource(updatedQuestionnaireResponse);
+        const response = isCreating
+            ? await saveFHIRResource(questionnaireResponse)
+            : await updateFHIRResource(questionnaireResponse);
 
-            return response;
-        }
-
-        if (formData.context.questionnaireResponse.id === undefined) {
-            const transformedFormValues = transformFormValuesIntoItem(saveData.formValues);
-
-            const questionnaireResponse = {
-                id: saveData.context.questionnaireResponse.id,
-                item: transformedFormValues,
-                questionnaire: saveData.context.questionnaireResponse.questionnaire,
-                resourceType: saveData.context.questionnaireResponse.resourceType,
-                source: saveData.context.questionnaireResponse.source,
-                status: 'in-progress',
-                authored: new Date().toISOString(),
-            };
-
-            const response = await saveFHIRResource(questionnaireResponse);
-
-            return response;
-        }
+        return response;
     };
 
     return { response, onSubmit, readOnly, onCancel, onSaveDraft };
