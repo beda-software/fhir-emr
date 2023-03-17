@@ -54,6 +54,11 @@ function useColumns(
             //     key: 'created-by',
             // },
             {
+                title: <Trans>Status</Trans>,
+                dataIndex: 'status',
+                key: 'status',
+            },
+            {
                 title: <Trans>Date</Trans>,
                 dataIndex: 'creation-date',
                 key: 'creation-date',

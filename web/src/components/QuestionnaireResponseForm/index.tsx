@@ -1,14 +1,17 @@
 import { notification } from 'antd';
 import _ from 'lodash';
 import {
+    FormItems,
     ItemControlGroupItemComponentMapping,
     ItemControlQuestionItemComponentMapping,
 } from 'sdc-qrf';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
+import { saveFHIRResource, updateFHIRResource } from 'aidbox-react/lib/services/fhir';
 import { formatError } from 'aidbox-react/lib/utils/error';
 
+import { QuestionnaireResponseItem } from 'shared/src/contrib/aidbox';
 import {
     QuestionnaireResponseFormData,
     QuestionnaireResponseFormProps,
@@ -33,15 +36,17 @@ export function useQuestionnaireResponseForm(props: Props) {
     const { onSuccess, onFailure, readOnly, initialQuestionnaireResponse, onCancel } = props;
 
     const onSubmit = async (formData: QuestionnaireResponseFormData) => {
-        const saveResponse = await handleSave(
-            _.merge({}, formData, {
-                context: {
-                    questionnaireResponse: {
-                        questionnaire: initialQuestionnaireResponse?.questionnaire,
-                    },
+        const modifiedFormData = _.merge({}, formData, {
+            context: {
+                questionnaireResponse: {
+                    questionnaire: initialQuestionnaireResponse?.questionnaire,
                 },
-            }),
-        );
+            },
+        });
+
+        delete modifiedFormData.context.questionnaireResponse.meta;
+
+        const saveResponse = await handleSave(modifiedFormData);
 
         if (isSuccess(saveResponse)) {
             if (saveResponse.data.extracted) {
@@ -68,7 +73,108 @@ export function useQuestionnaireResponseForm(props: Props) {
         }
     };
 
-    return { response, onSubmit, readOnly, onCancel };
+    const onSaveDraft = async (formData: QuestionnaireResponseFormData) => {
+        const saveData = _.merge({}, formData, {
+            context: {
+                questionnaireResponse: {
+                    questionnaire: initialQuestionnaireResponse?.questionnaire,
+                },
+            },
+        });
+
+        if (formData.context.questionnaireResponse.id) {
+            const transformedFormValues = transformFormValuesIntoItem(formData.formValues);
+
+            const updatedQuestionnaireResponse = {
+                id: formData.context.questionnaireResponse.id,
+                item: transformedFormValues,
+                questionnaire: formData.context.questionnaire.assembledFrom,
+                resourceType: formData.context.questionnaireResponse.resourceType,
+                source: formData.context.questionnaireResponse.source,
+                status: 'in-progress',
+            };
+
+            const response = await updateFHIRResource(updatedQuestionnaireResponse);
+
+            return response;
+        }
+
+        if (formData.context.questionnaireResponse.id === undefined) {
+            const transformedFormValues = transformFormValuesIntoItem(saveData.formValues);
+
+            const questionnaireResponse = {
+                id: saveData.context.questionnaireResponse.id,
+                item: transformedFormValues,
+                questionnaire: saveData.context.questionnaireResponse.questionnaire,
+                resourceType: saveData.context.questionnaireResponse.resourceType,
+                source: saveData.context.questionnaireResponse.source,
+                status: 'in-progress',
+            };
+
+            const response = await saveFHIRResource(questionnaireResponse);
+
+            return response;
+        }
+    };
+
+    return { response, onSubmit, readOnly, onCancel, onSaveDraft };
+}
+
+function transformFormValuesIntoItem(inputData: FormItems): QuestionnaireResponseItem[] {
+    const outputData: QuestionnaireResponseItem[] = [];
+
+    for (const key in inputData) {
+        const item = inputData[key];
+
+        if (Array.isArray(item)) {
+            outputData.push({
+                linkId: key,
+                answer: item.map((obj) => (obj && 'value' in obj ? { value: obj.value } : {})),
+            });
+        } else if (typeof item === 'object' && item.items) {
+            const subItems: QuestionnaireResponseItem[] = [];
+
+            for (const subKey in item.items) {
+                const subItem = item.items[subKey];
+
+                if (Array.isArray(subItem)) {
+                    subItems.push({
+                        linkId: subKey,
+                        answer: subItem.map((obj) =>
+                            obj && 'value' in obj ? { value: obj.value } : {},
+                        ),
+                    });
+                } else if (typeof subItem === 'object' && subItem.items) {
+                    const deepItems: QuestionnaireResponseItem[] = [];
+
+                    for (const deepKey in subItem.items) {
+                        const deepItem = subItem.items[deepKey];
+
+                        if (Array.isArray(deepItem)) {
+                            deepItems.push({
+                                linkId: deepKey,
+                                answer: deepItem.map((obj) =>
+                                    obj && 'value' in obj ? { value: obj.value } : {},
+                                ),
+                            });
+                        }
+                    }
+
+                    subItems.push({
+                        linkId: subKey,
+                        item: deepItems,
+                    });
+                }
+            }
+
+            outputData.push({
+                linkId: key,
+                item: subItems,
+            });
+        }
+    }
+
+    return outputData;
 }
 
 export function QuestionnaireResponseForm(props: Props) {

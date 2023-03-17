@@ -1,8 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Trans } from '@lingui/macro';
+import { RemoteData } from 'aidbox-react';
 import { Button } from 'antd';
 import classNames from 'classnames';
-import { useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
     calcInitialContext,
@@ -18,6 +19,11 @@ import {
 import * as yup from 'yup';
 
 import 'react-phone-input-2/lib/style.css';
+
+import { isFailure, isSuccess } from 'aidbox-react/lib/libs/remoteData';
+
+import { QuestionnaireResponse } from 'shared/src/contrib/aidbox';
+
 import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
 import s from './BaseQuestionnaireResponseForm.module.scss';
@@ -52,10 +58,11 @@ export interface BaseQuestionnaireResponseFormProps {
     questionItemComponents?: QuestionItemComponentMapping;
     groupItemComponent?: GroupItemComponent;
     onCancel?: () => void;
+    onSaveDraft?: (formData: QuestionnaireResponseFormData) => Promise<any>;
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
-    const { onSubmit, formData, readOnly, onCancel } = props;
+    const { onSubmit, formData, readOnly, onCancel, onSaveDraft } = props;
 
     const schema: yup.AnyObjectSchema = useMemo(
         () => questionnaireToValidationSchema(formData.context.questionnaire),
@@ -70,6 +77,40 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
     const { setValue, handleSubmit, watch } = methods;
 
     const formValues = watch();
+
+    const isSaving = useRef(false);
+    const saveDraftTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    const saveDraft = useCallback(async () => {
+        if (!onSaveDraft || isSaving.current) return;
+
+        isSaving.current = true;
+
+        const draftFormData = { ...formData };
+
+        const response: RemoteData<QuestionnaireResponse, any> = await onSaveDraft({
+            ...draftFormData,
+            formValues,
+        });
+        if (isSuccess(response)) {
+            draftFormData.context = draftFormData.context || {};
+            draftFormData.context.questionnaireResponse.id = response.data.id;
+        }
+        if (isFailure(response)) {
+            console.error('Error saving a draft: ', response.error);
+        }
+
+        isSaving.current = false;
+    }, [formData, formValues, onSaveDraft]);
+
+    useEffect(() => {
+        if (saveDraftTimeout.current) clearTimeout(saveDraftTimeout.current);
+        saveDraftTimeout.current = setTimeout(saveDraft, 1000);
+
+        return () => {
+            if (saveDraftTimeout.current) clearTimeout(saveDraftTimeout.current);
+        };
+    }, [saveDraft]);
 
     return (
         <FormProvider {...methods}>
