@@ -20,6 +20,11 @@ import * as yup from 'yup';
 
 import 'react-phone-input-2/lib/style.css';
 
+import { RemoteDataResult } from 'aidbox-react/lib/libs/remoteData';
+import { WithId } from 'aidbox-react/lib/services/fhir';
+
+import { QuestionnaireResponse } from 'shared/src/contrib/aidbox';
+
 import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
 import s from './BaseQuestionnaireResponseForm.module.scss';
@@ -54,7 +59,10 @@ export interface BaseQuestionnaireResponseFormProps {
     questionItemComponents?: QuestionItemComponentMapping;
     groupItemComponent?: GroupItemComponent;
     onCancel?: () => void;
-    saveQuestionnaireResponseDraft?: any;
+    saveQuestionnaireResponseDraft?: (
+        formData: QuestionnaireResponseFormData,
+        currentFormValues: FormItems,
+    ) => Promise<RemoteDataResult<WithId<QuestionnaireResponse>>>;
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
