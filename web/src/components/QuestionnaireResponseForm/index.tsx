@@ -72,7 +72,7 @@ export function useQuestionnaireResponseForm(props: Props) {
         }
     };
 
-    const onSaveDraft = async (formData: QuestionnaireResponseFormData) => {
+    const saveInProgress = async (formData: QuestionnaireResponseFormData) => {
         const qrfdWithQuestionnaireName = _.merge({}, formData, {
             context: {
                 questionnaireResponse: {
@@ -106,7 +106,7 @@ export function useQuestionnaireResponseForm(props: Props) {
         return response;
     };
 
-    return { response, onSubmit, readOnly, onCancel, onSaveDraft };
+    return { response, onSubmit, readOnly, onCancel, saveInProgress };
 }
 
 export function QuestionnaireResponseForm(props: Props) {

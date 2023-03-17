@@ -58,11 +58,11 @@ export interface BaseQuestionnaireResponseFormProps {
     questionItemComponents?: QuestionItemComponentMapping;
     groupItemComponent?: GroupItemComponent;
     onCancel?: () => void;
-    onSaveDraft?: (formData: QuestionnaireResponseFormData) => Promise<any>;
+    saveInProgress?: (formData: QuestionnaireResponseFormData) => Promise<any>;
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
-    const { onSubmit, formData, readOnly, onCancel, onSaveDraft } = props;
+    const { onSubmit, formData, readOnly, onCancel, saveInProgress } = props;
 
     const schema: yup.AnyObjectSchema = useMemo(
         () => questionnaireToValidationSchema(formData.context.questionnaire),
@@ -82,13 +82,13 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
     const saveDraftTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const saveDraft = useCallback(async () => {
-        if (!onSaveDraft || isSaving.current) return;
+        if (!saveInProgress || isSaving.current) return;
 
         isSaving.current = true;
 
         const draftFormData = { ...formData };
 
-        const response: RemoteData<QuestionnaireResponse, any> = await onSaveDraft({
+        const response: RemoteData<QuestionnaireResponse, any> = await saveInProgress({
             ...draftFormData,
             formValues,
         });
@@ -101,7 +101,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         }
 
         isSaving.current = false;
-    }, [formData, formValues, onSaveDraft]);
+    }, [formData, formValues, saveInProgress]);
 
     useEffect(() => {
         if (saveDraftTimeout.current) clearTimeout(saveDraftTimeout.current);

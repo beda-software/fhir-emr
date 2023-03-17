@@ -18,7 +18,7 @@ export function PatientDocument(props: PatientDocumentProps) {
     const params = useParams<{ questionnaireId: string; encounterId?: string }>();
     const encounterId = props.encounterId || params.encounterId;
     const questionnaireId = props.questionnaireId || params.questionnaireId!;
-    const { response, onSubmit, readOnly, onSaveDraft } = usePatientDocument({
+    const { response, onSubmit, readOnly, saveInProgress } = usePatientDocument({
         ...props,
         questionnaireId,
         encounterId,
@@ -62,7 +62,7 @@ export function PatientDocument(props: PatientDocumentProps) {
                                     'depression-score': DepressionScore,
                                 }}
                                 onCancel={() => navigate(-1)}
-                                onSaveDraft={onSaveDraft}
+                                saveInProgress={saveInProgress}
                             />
                         </>
                     )}
