@@ -1,9 +1,9 @@
 import { notification } from 'antd';
 import _ from 'lodash';
 import {
-    FormItems,
     ItemControlGroupItemComponentMapping,
     ItemControlQuestionItemComponentMapping,
+    mapFormToResponse,
 } from 'sdc-qrf';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
@@ -11,7 +11,6 @@ import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { saveFHIRResource, updateFHIRResource } from 'aidbox-react/lib/services/fhir';
 import { formatError } from 'aidbox-react/lib/utils/error';
 
-import { QuestionnaireResponseItem } from 'shared/src/contrib/aidbox';
 import {
     QuestionnaireResponseFormData,
     QuestionnaireResponseFormProps,
@@ -83,11 +82,14 @@ export function useQuestionnaireResponseForm(props: Props) {
         });
 
         const isCreating = formData.context.questionnaireResponse.id === undefined;
-        const transformedFormValues = transformFormValuesIntoItem(formData.formValues);
+        const transformedFormValues = mapFormToResponse(
+            formData.formValues,
+            formData.context.questionnaire,
+        );
 
         const questionnaireResponse = {
             id: formData.context.questionnaireResponse.id,
-            item: transformedFormValues,
+            item: transformedFormValues.item,
             questionnaire: isCreating
                 ? qrfdWithQuestionnaireName.context.questionnaireResponse.questionnaire
                 : formData.context.questionnaire.assembledFrom,
@@ -105,63 +107,6 @@ export function useQuestionnaireResponseForm(props: Props) {
     };
 
     return { response, onSubmit, readOnly, onCancel, onSaveDraft };
-}
-
-function transformFormValuesIntoItem(inputData: FormItems): QuestionnaireResponseItem[] {
-    const outputData: QuestionnaireResponseItem[] = [];
-
-    for (const key in inputData) {
-        const item = inputData[key];
-
-        if (Array.isArray(item)) {
-            outputData.push({
-                linkId: key,
-                answer: item.map((obj) => (obj && 'value' in obj ? { value: obj.value } : {})),
-            });
-        } else if (typeof item === 'object' && item.items) {
-            const subItems: QuestionnaireResponseItem[] = [];
-
-            for (const subKey in item.items) {
-                const subItem = item.items[subKey];
-
-                if (Array.isArray(subItem)) {
-                    subItems.push({
-                        linkId: subKey,
-                        answer: subItem.map((obj) =>
-                            obj && 'value' in obj ? { value: obj.value } : {},
-                        ),
-                    });
-                } else if (typeof subItem === 'object' && subItem.items) {
-                    const deepItems: QuestionnaireResponseItem[] = [];
-
-                    for (const deepKey in subItem.items) {
-                        const deepItem = subItem.items[deepKey];
-
-                        if (Array.isArray(deepItem)) {
-                            deepItems.push({
-                                linkId: deepKey,
-                                answer: deepItem.map((obj) =>
-                                    obj && 'value' in obj ? { value: obj.value } : {},
-                                ),
-                            });
-                        }
-                    }
-
-                    subItems.push({
-                        linkId: subKey,
-                        item: deepItems,
-                    });
-                }
-            }
-
-            outputData.push({
-                linkId: key,
-                item: subItems,
-            });
-        }
-    }
-
-    return outputData;
 }
 
 export function QuestionnaireResponseForm(props: Props) {
