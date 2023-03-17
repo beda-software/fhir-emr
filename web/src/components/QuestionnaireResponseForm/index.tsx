@@ -1,13 +1,15 @@
 import { notification } from 'antd';
 import _ from 'lodash';
+import { useCallback } from 'react';
 import {
+    FormItems,
     ItemControlGroupItemComponentMapping,
     ItemControlQuestionItemComponentMapping,
     mapFormToResponse,
 } from 'sdc-qrf';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
+import { isFailure, isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { saveFHIRResource, updateFHIRResource } from 'aidbox-react/lib/services/fhir';
 import { formatError } from 'aidbox-react/lib/utils/error';
 
@@ -72,41 +74,43 @@ export function useQuestionnaireResponseForm(props: Props) {
         }
     };
 
-    const saveInProgress = async (formData: QuestionnaireResponseFormData) => {
-        const qrfdWithQuestionnaireName = _.merge({}, formData, {
-            context: {
-                questionnaireResponse: {
-                    questionnaire: initialQuestionnaireResponse?.questionnaire,
-                },
-            },
-        });
+    const saveQuestionnaireResponseDraft = useCallback(
+        async (formData: QuestionnaireResponseFormData, currentFormValues: FormItems) => {
+            const isCreating = formData.context.questionnaireResponse.id === undefined;
+            const transformedFormValues = mapFormToResponse(
+                currentFormValues,
+                formData.context.questionnaire,
+            );
 
-        const isCreating = formData.context.questionnaireResponse.id === undefined;
-        const transformedFormValues = mapFormToResponse(
-            formData.formValues,
-            formData.context.questionnaire,
-        );
+            const questionnaireResponse = {
+                id: formData.context.questionnaireResponse.id,
+                item: transformedFormValues.item,
+                questionnaire: isCreating
+                    ? initialQuestionnaireResponse?.questionnaire
+                    : formData.context.questionnaire.assembledFrom,
+                resourceType: formData.context.questionnaireResponse.resourceType,
+                source: formData.context.questionnaireResponse.source,
+                status: 'in-progress',
+                authored: new Date().toISOString(),
+            };
 
-        const questionnaireResponse = {
-            id: formData.context.questionnaireResponse.id,
-            item: transformedFormValues.item,
-            questionnaire: isCreating
-                ? qrfdWithQuestionnaireName.context.questionnaireResponse.questionnaire
-                : formData.context.questionnaire.assembledFrom,
-            resourceType: formData.context.questionnaireResponse.resourceType,
-            source: formData.context.questionnaireResponse.source,
-            status: 'in-progress',
-            authored: new Date().toISOString(),
-        };
+            const response = isCreating
+                ? await saveFHIRResource(questionnaireResponse)
+                : await updateFHIRResource(questionnaireResponse);
 
-        const response = isCreating
-            ? await saveFHIRResource(questionnaireResponse)
-            : await updateFHIRResource(questionnaireResponse);
+            if (isSuccess(response)) {
+                formData.context.questionnaireResponse.id = response.data.id;
+            }
+            if (isFailure(response)) {
+                console.error('Error saving a draft: ', response.error);
+            }
 
-        return response;
-    };
+            return response;
+        },
+        [initialQuestionnaireResponse],
+    );
 
-    return { response, onSubmit, readOnly, onCancel, saveInProgress };
+    return { response, onSubmit, readOnly, onCancel, saveQuestionnaireResponseDraft };
 }
 
 export function QuestionnaireResponseForm(props: Props) {

@@ -1,9 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Trans } from '@lingui/macro';
-import { RemoteData } from 'aidbox-react';
 import { Button } from 'antd';
 import classNames from 'classnames';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import _ from 'lodash';
+import { useCallback, useEffect, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
     calcInitialContext,
@@ -19,10 +19,6 @@ import {
 import * as yup from 'yup';
 
 import 'react-phone-input-2/lib/style.css';
-
-import { isFailure, isSuccess } from 'aidbox-react/lib/libs/remoteData';
-
-import { QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
 import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
@@ -58,11 +54,11 @@ export interface BaseQuestionnaireResponseFormProps {
     questionItemComponents?: QuestionItemComponentMapping;
     groupItemComponent?: GroupItemComponent;
     onCancel?: () => void;
-    saveInProgress?: (formData: QuestionnaireResponseFormData) => Promise<any>;
+    saveQuestionnaireResponseDraft?: any;
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
-    const { onSubmit, formData, readOnly, onCancel, saveInProgress } = props;
+    const { onSubmit, formData, readOnly, onCancel, saveQuestionnaireResponseDraft } = props;
 
     const schema: yup.AnyObjectSchema = useMemo(
         () => questionnaireToValidationSchema(formData.context.questionnaire),
@@ -78,39 +74,19 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
 
     const formValues = watch();
 
-    const isSaving = useRef(false);
-    const saveDraftTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const debouncedSaveDraft = useCallback(
+        _.debounce((currentFormValues: FormItems) => {
+            if (!saveQuestionnaireResponseDraft) return;
 
-    const saveDraft = useCallback(async () => {
-        if (!saveInProgress || isSaving.current) return;
-
-        isSaving.current = true;
-
-        const draftFormData = { ...formData };
-
-        const response: RemoteData<QuestionnaireResponse, any> = await saveInProgress({
-            ...draftFormData,
-            formValues,
-        });
-        if (isSuccess(response)) {
-            draftFormData.context = draftFormData.context || {};
-            draftFormData.context.questionnaireResponse.id = response.data.id;
-        }
-        if (isFailure(response)) {
-            console.error('Error saving a draft: ', response.error);
-        }
-
-        isSaving.current = false;
-    }, [formData, formValues, saveInProgress]);
+            saveQuestionnaireResponseDraft(formData, currentFormValues);
+        }, 1000),
+        [],
+    );
 
     useEffect(() => {
-        if (saveDraftTimeout.current) clearTimeout(saveDraftTimeout.current);
-        saveDraftTimeout.current = setTimeout(saveDraft, 1000);
-
-        return () => {
-            if (saveDraftTimeout.current) clearTimeout(saveDraftTimeout.current);
-        };
-    }, [saveDraft]);
+        debouncedSaveDraft(formValues);
+    }, [formValues, debouncedSaveDraft]);
 
     return (
         <FormProvider {...methods}>
