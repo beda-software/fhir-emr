@@ -92,6 +92,7 @@ export function useQuestionnaireResponseForm(props: Props) {
                 resourceType: formData.context.questionnaireResponse.resourceType,
                 source: formData.context.questionnaireResponse.source,
                 status: 'in-progress',
+                authored: new Date().toISOString(),
             };
 
             const response = await updateFHIRResource(updatedQuestionnaireResponse);
@@ -109,6 +110,7 @@ export function useQuestionnaireResponseForm(props: Props) {
                 resourceType: saveData.context.questionnaireResponse.resourceType,
                 source: saveData.context.questionnaireResponse.source,
                 status: 'in-progress',
+                authored: new Date().toISOString(),
             };
 
             const response = await saveFHIRResource(questionnaireResponse);
