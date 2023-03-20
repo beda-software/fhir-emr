@@ -1,8 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Trans } from '@lingui/macro';
+import { loading, RemoteData, RenderRemoteData, RemoteDataResult, WithId } from 'aidbox-react';
 import { Button } from 'antd';
 import classNames from 'classnames';
-import { useMemo } from 'react';
+import _ from 'lodash';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
     calcInitialContext,
@@ -18,6 +20,11 @@ import {
 import * as yup from 'yup';
 
 import 'react-phone-input-2/lib/style.css';
+
+import { notAsked } from 'aidbox-react/lib/libs/remoteData';
+
+import { QuestionnaireResponse } from 'shared/src/contrib/aidbox';
+
 import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
 import s from './BaseQuestionnaireResponseForm.module.scss';
@@ -52,11 +59,27 @@ export interface BaseQuestionnaireResponseFormProps {
     questionItemComponents?: QuestionItemComponentMapping;
     groupItemComponent?: GroupItemComponent;
     onCancel?: () => void;
+    // NOTE: saveQuestionnaireResponseDraft is used to display the save status of a form's draft.
+    // In some forms, such as the patient creation form,
+    // it makes no sense to do auto-save,
+    // so saveQuestionnaireResponseDraft can be undefined.
+    saveQuestionnaireResponseDraft?: (
+        formData: QuestionnaireResponseFormData,
+        currentFormValues: FormItems,
+        questionnaireId?: string,
+    ) => Promise<RemoteDataResult<WithId<QuestionnaireResponse>>>;
+    questionnaireId?: string;
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
-    const { onSubmit, formData, readOnly, onCancel } = props;
-
+    const {
+        onSubmit,
+        formData,
+        readOnly,
+        onCancel,
+        saveQuestionnaireResponseDraft,
+        questionnaireId,
+    } = props;
     const schema: yup.AnyObjectSchema = useMemo(
         () => questionnaireToValidationSchema(formData.context.questionnaire),
         [formData.context.questionnaire],
@@ -71,12 +94,51 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
 
     const formValues = watch();
 
+    const [draftSaveState, setDraftSaveState] = useState<RemoteData>(notAsked);
+
+    const previouseFormValuesRef = useRef<FormItems | null>(null);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const debouncedSaveDraft = useCallback(
+        _.debounce(async (currentFormValues: FormItems) => {
+            if (!saveQuestionnaireResponseDraft) return;
+
+            if (!_.isEqual(currentFormValues, previouseFormValuesRef.current)) {
+                setDraftSaveState(loading);
+                setDraftSaveState(
+                    await saveQuestionnaireResponseDraft(
+                        formData,
+                        currentFormValues,
+                        questionnaireId,
+                    ),
+                );
+                previouseFormValuesRef.current = _.cloneDeep(currentFormValues);
+            }
+        }, 1000),
+        [],
+    );
+
+    useEffect(() => {
+        debouncedSaveDraft(formValues);
+    }, [formValues, debouncedSaveDraft]);
+
     return (
         <FormProvider {...methods}>
             <form
                 onSubmit={handleSubmit(() => onSubmit({ ...formData, formValues }))}
                 className={classNames(s.form, 'app-form')}
             >
+                {saveQuestionnaireResponseDraft ? (
+                    <div style={{ height: 0, float: 'right' }}>
+                        <RenderRemoteData
+                            remoteData={draftSaveState}
+                            renderLoading={() => <div>Saving...</div>}
+                            renderFailure={() => <div>Saving error</div>}
+                        >
+                            {() => <div>Successful saving</div>}
+                        </RenderRemoteData>
+                    </div>
+                ) : null}
                 <QuestionnaireResponseFormProvider
                     formValues={formValues}
                     setFormValues={(values, fieldPath, value) =>

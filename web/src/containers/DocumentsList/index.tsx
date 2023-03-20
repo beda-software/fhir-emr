@@ -10,6 +10,7 @@ import { WithId } from 'aidbox-react/lib/services/fhir';
 import { Encounter, Patient, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
 import { Empty } from 'src/components/Empty';
+import { EncounterStatusBadge } from 'src/components/EncounterStatusBadge';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 import { formatHumanDate } from 'src/utils/date';
@@ -54,11 +55,17 @@ function useColumns(
             //     key: 'created-by',
             // },
             {
-                title: <Trans>Date</Trans>,
+                title: <Trans>Creation date</Trans>,
                 dataIndex: 'creation-date',
                 key: 'creation-date',
                 render: (_text, resource) =>
                     resource.authored ? formatHumanDate(resource.authored) : null,
+            },
+            {
+                title: <Trans>Status</Trans>,
+                dataIndex: 'status',
+                key: 'status',
+                render: (text, record) => <EncounterStatusBadge status={text} />,
             },
             {
                 title: <Trans>Actions</Trans>,

@@ -1,12 +1,15 @@
 import { notification } from 'antd';
 import _ from 'lodash';
 import {
+    FormItems,
     ItemControlGroupItemComponentMapping,
     ItemControlQuestionItemComponentMapping,
+    mapFormToResponse,
 } from 'sdc-qrf';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
+import { isFailure, isSuccess } from 'aidbox-react/lib/libs/remoteData';
+import { saveFHIRResource, updateFHIRResource } from 'aidbox-react/lib/services/fhir';
 import { formatError } from 'aidbox-react/lib/utils/error';
 
 import {
@@ -28,20 +31,57 @@ interface Props extends QuestionnaireResponseFormProps {
     onCancel?: () => void;
 }
 
+export const saveQuestionnaireResponseDraft = async (
+    questionnaireId: string,
+    formData: QuestionnaireResponseFormData,
+    currentFormValues: FormItems,
+) => {
+    const isCreating = formData.context.questionnaireResponse.id === undefined;
+    const transformedFormValues = mapFormToResponse(
+        currentFormValues,
+        formData.context.questionnaire,
+    );
+
+    const questionnaireResponse = {
+        id: formData.context.questionnaireResponse.id,
+        item: transformedFormValues.item,
+        questionnaire: isCreating ? questionnaireId : formData.context.questionnaire.assembledFrom,
+        resourceType: formData.context.questionnaireResponse.resourceType,
+        source: formData.context.questionnaireResponse.source,
+        status: 'in-progress',
+        authored: new Date().toISOString(),
+    };
+
+    const response = isCreating
+        ? await saveFHIRResource(questionnaireResponse)
+        : await updateFHIRResource(questionnaireResponse);
+
+    if (isSuccess(response)) {
+        formData.context.questionnaireResponse.id = response.data.id;
+    }
+    if (isFailure(response)) {
+        console.error('Error saving a draft: ', response.error);
+    }
+
+    return response;
+};
+
 export function useQuestionnaireResponseForm(props: Props) {
     const { response, handleSave } = useQuestionnaireResponseFormData(props);
     const { onSuccess, onFailure, readOnly, initialQuestionnaireResponse, onCancel } = props;
 
     const onSubmit = async (formData: QuestionnaireResponseFormData) => {
-        const saveResponse = await handleSave(
-            _.merge({}, formData, {
-                context: {
-                    questionnaireResponse: {
-                        questionnaire: initialQuestionnaireResponse?.questionnaire,
-                    },
+        const modifiedFormData = _.merge({}, formData, {
+            context: {
+                questionnaireResponse: {
+                    questionnaire: initialQuestionnaireResponse?.questionnaire,
                 },
-            }),
-        );
+            },
+        });
+
+        delete modifiedFormData.context.questionnaireResponse.meta;
+
+        const saveResponse = await handleSave(modifiedFormData);
 
         if (isSuccess(saveResponse)) {
             if (saveResponse.data.extracted) {
