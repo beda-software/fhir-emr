@@ -31,6 +31,41 @@ interface Props extends QuestionnaireResponseFormProps {
     onCancel?: () => void;
 }
 
+export const saveQuestionnaireResponseDraft = async (
+    questionnaireId: string,
+    formData: QuestionnaireResponseFormData,
+    currentFormValues: FormItems,
+) => {
+    const isCreating = formData.context.questionnaireResponse.id === undefined;
+    const transformedFormValues = mapFormToResponse(
+        currentFormValues,
+        formData.context.questionnaire,
+    );
+
+    const questionnaireResponse = {
+        id: formData.context.questionnaireResponse.id,
+        item: transformedFormValues.item,
+        questionnaire: isCreating ? questionnaireId : formData.context.questionnaire.assembledFrom,
+        resourceType: formData.context.questionnaireResponse.resourceType,
+        source: formData.context.questionnaireResponse.source,
+        status: 'in-progress',
+        authored: new Date().toISOString(),
+    };
+
+    const response = isCreating
+        ? await saveFHIRResource(questionnaireResponse)
+        : await updateFHIRResource(questionnaireResponse);
+
+    if (isSuccess(response)) {
+        formData.context.questionnaireResponse.id = response.data.id;
+    }
+    if (isFailure(response)) {
+        console.error('Error saving a draft: ', response.error);
+    }
+
+    return response;
+};
+
 export function useQuestionnaireResponseForm(props: Props) {
     const { response, handleSave } = useQuestionnaireResponseFormData(props);
     const { onSuccess, onFailure, readOnly, initialQuestionnaireResponse, onCancel } = props;
@@ -73,44 +108,7 @@ export function useQuestionnaireResponseForm(props: Props) {
         }
     };
 
-    const saveQuestionnaireResponseDraft = async (
-        formData: QuestionnaireResponseFormData,
-        currentFormValues: FormItems,
-        questionnaireId?: string,
-    ) => {
-        const isCreating = formData.context.questionnaireResponse.id === undefined;
-        const transformedFormValues = mapFormToResponse(
-            currentFormValues,
-            formData.context.questionnaire,
-        );
-
-        const questionnaireResponse = {
-            id: formData.context.questionnaireResponse.id,
-            item: transformedFormValues.item,
-            questionnaire: isCreating
-                ? questionnaireId
-                : formData.context.questionnaire.assembledFrom,
-            resourceType: formData.context.questionnaireResponse.resourceType,
-            source: formData.context.questionnaireResponse.source,
-            status: 'in-progress',
-            authored: new Date().toISOString(),
-        };
-
-        const response = isCreating
-            ? await saveFHIRResource(questionnaireResponse)
-            : await updateFHIRResource(questionnaireResponse);
-
-        if (isSuccess(response)) {
-            formData.context.questionnaireResponse.id = response.data.id;
-        }
-        if (isFailure(response)) {
-            console.error('Error saving a draft: ', response.error);
-        }
-
-        return response;
-    };
-
-    return { response, onSubmit, readOnly, onCancel, saveQuestionnaireResponseDraft };
+    return { response, onSubmit, readOnly, onCancel };
 }
 
 export function QuestionnaireResponseForm(props: Props) {

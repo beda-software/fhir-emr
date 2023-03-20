@@ -1,4 +1,5 @@
 import Title from 'antd/lib/typography/Title';
+import _ from 'lodash';
 import { useContext, useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
@@ -10,6 +11,7 @@ import {
     AnxietyScore,
     DepressionScore,
 } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/score';
+import { saveQuestionnaireResponseDraft } from 'src/components/QuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
 
 import { PatientHeaderContext } from '../PatientHeader/context';
@@ -21,7 +23,7 @@ export function PatientDocument(props: PatientDocumentProps) {
     const params = useParams<{ questionnaireId: string; encounterId?: string }>();
     const encounterId = props.encounterId || params.encounterId;
     const questionnaireId = props.questionnaireId || params.questionnaireId!;
-    const { response, onSubmit, readOnly, saveQuestionnaireResponseDraft } = usePatientDocument({
+    const { response, onSubmit, readOnly } = usePatientDocument({
         ...props,
         questionnaireId,
         encounterId,
@@ -65,8 +67,10 @@ export function PatientDocument(props: PatientDocumentProps) {
                                     'depression-score': DepressionScore,
                                 }}
                                 onCancel={() => navigate(-1)}
-                                saveQuestionnaireResponseDraft={saveQuestionnaireResponseDraft}
-                                questionnaireId={questionnaireId}
+                                saveQuestionnaireResponseDraft={_.partial(
+                                    saveQuestionnaireResponseDraft,
+                                    questionnaireId,
+                                )}
                             />
                         </>
                     )}

@@ -21,6 +21,8 @@ import * as yup from 'yup';
 
 import 'react-phone-input-2/lib/style.css';
 
+import { notAsked } from 'aidbox-react/lib/libs/remoteData';
+
 import { QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
 import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
@@ -57,6 +59,10 @@ export interface BaseQuestionnaireResponseFormProps {
     questionItemComponents?: QuestionItemComponentMapping;
     groupItemComponent?: GroupItemComponent;
     onCancel?: () => void;
+    // NOTE: saveQuestionnaireResponseDraft is used to display the save status of a form's draft.
+    // In some forms, such as the patient creation form,
+    // it makes no sense to do auto-save,
+    // so saveQuestionnaireResponseDraft can be undefined.
     saveQuestionnaireResponseDraft?: (
         formData: QuestionnaireResponseFormData,
         currentFormValues: FormItems,
@@ -88,7 +94,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
 
     const formValues = watch();
 
-    const [draftSaveState, setDraftSaveState] = useState<RemoteData>(loading);
+    const [draftSaveState, setDraftSaveState] = useState<RemoteData>(notAsked);
 
     const previouseFormValuesRef = useRef<FormItems | null>(null);
 
