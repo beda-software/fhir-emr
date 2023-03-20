@@ -1,9 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Trans } from '@lingui/macro';
+import { loading, RemoteData, RenderRemoteData, RemoteDataResult, WithId } from 'aidbox-react';
 import { Button } from 'antd';
 import classNames from 'classnames';
 import _ from 'lodash';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
     calcInitialContext,
@@ -19,9 +20,6 @@ import {
 import * as yup from 'yup';
 
 import 'react-phone-input-2/lib/style.css';
-
-import { RemoteDataResult } from 'aidbox-react/lib/libs/remoteData';
-import { WithId } from 'aidbox-react/lib/services/fhir';
 
 import { QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
@@ -76,7 +74,6 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         saveQuestionnaireResponseDraft,
         questionnaireId,
     } = props;
-
     const schema: yup.AnyObjectSchema = useMemo(
         () => questionnaireToValidationSchema(formData.context.questionnaire),
         [formData.context.questionnaire],
@@ -91,12 +88,26 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
 
     const formValues = watch();
 
+    const [draftSaveState, setDraftSaveState] = useState<RemoteData>(loading);
+
+    const previouseFormValuesRef = useRef<FormItems | null>(null);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const debouncedSaveDraft = useCallback(
-        _.debounce((currentFormValues: FormItems) => {
+        _.debounce(async (currentFormValues: FormItems) => {
             if (!saveQuestionnaireResponseDraft) return;
 
-            saveQuestionnaireResponseDraft(formData, currentFormValues, questionnaireId);
+            if (!_.isEqual(currentFormValues, previouseFormValuesRef.current)) {
+                setDraftSaveState(loading);
+                setDraftSaveState(
+                    await saveQuestionnaireResponseDraft(
+                        formData,
+                        currentFormValues,
+                        questionnaireId,
+                    ),
+                );
+                previouseFormValuesRef.current = _.cloneDeep(currentFormValues);
+            }
         }, 1000),
         [],
     );
@@ -111,6 +122,17 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                 onSubmit={handleSubmit(() => onSubmit({ ...formData, formValues }))}
                 className={classNames(s.form, 'app-form')}
             >
+                {saveQuestionnaireResponseDraft ? (
+                    <div style={{ height: 0, float: 'right' }}>
+                        <RenderRemoteData
+                            remoteData={draftSaveState}
+                            renderLoading={() => <div>Saving...</div>}
+                            renderFailure={() => <div>Saving error</div>}
+                        >
+                            {() => <div>Successful saving</div>}
+                        </RenderRemoteData>
+                    </div>
+                ) : null}
                 <QuestionnaireResponseFormProvider
                     formValues={formValues}
                     setFormValues={(values, fieldPath, value) =>
