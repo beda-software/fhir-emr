@@ -62,11 +62,20 @@ export interface BaseQuestionnaireResponseFormProps {
     saveQuestionnaireResponseDraft?: (
         formData: QuestionnaireResponseFormData,
         currentFormValues: FormItems,
+        questionnaireId?: string,
     ) => Promise<RemoteDataResult<WithId<QuestionnaireResponse>>>;
+    questionnaireId?: string;
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
-    const { onSubmit, formData, readOnly, onCancel, saveQuestionnaireResponseDraft } = props;
+    const {
+        onSubmit,
+        formData,
+        readOnly,
+        onCancel,
+        saveQuestionnaireResponseDraft,
+        questionnaireId,
+    } = props;
 
     const schema: yup.AnyObjectSchema = useMemo(
         () => questionnaireToValidationSchema(formData.context.questionnaire),
@@ -87,7 +96,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         _.debounce((currentFormValues: FormItems) => {
             if (!saveQuestionnaireResponseDraft) return;
 
-            saveQuestionnaireResponseDraft(formData, currentFormValues);
+            saveQuestionnaireResponseDraft(formData, currentFormValues, questionnaireId);
         }, 1000),
         [],
     );

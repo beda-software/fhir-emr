@@ -1,6 +1,5 @@
 import { notification } from 'antd';
 import _ from 'lodash';
-import { useCallback } from 'react';
 import {
     FormItems,
     ItemControlGroupItemComponentMapping,
@@ -74,41 +73,42 @@ export function useQuestionnaireResponseForm(props: Props) {
         }
     };
 
-    const saveQuestionnaireResponseDraft = useCallback(
-        async (formData: QuestionnaireResponseFormData, currentFormValues: FormItems) => {
-            const isCreating = formData.context.questionnaireResponse.id === undefined;
-            const transformedFormValues = mapFormToResponse(
-                currentFormValues,
-                formData.context.questionnaire,
-            );
+    const saveQuestionnaireResponseDraft = async (
+        formData: QuestionnaireResponseFormData,
+        currentFormValues: FormItems,
+        questionnaireId?: string,
+    ) => {
+        const isCreating = formData.context.questionnaireResponse.id === undefined;
+        const transformedFormValues = mapFormToResponse(
+            currentFormValues,
+            formData.context.questionnaire,
+        );
 
-            const questionnaireResponse = {
-                id: formData.context.questionnaireResponse.id,
-                item: transformedFormValues.item,
-                questionnaire: isCreating
-                    ? initialQuestionnaireResponse?.questionnaire
-                    : formData.context.questionnaire.assembledFrom,
-                resourceType: formData.context.questionnaireResponse.resourceType,
-                source: formData.context.questionnaireResponse.source,
-                status: 'in-progress',
-                authored: new Date().toISOString(),
-            };
+        const questionnaireResponse = {
+            id: formData.context.questionnaireResponse.id,
+            item: transformedFormValues.item,
+            questionnaire: isCreating
+                ? questionnaireId
+                : formData.context.questionnaire.assembledFrom,
+            resourceType: formData.context.questionnaireResponse.resourceType,
+            source: formData.context.questionnaireResponse.source,
+            status: 'in-progress',
+            authored: new Date().toISOString(),
+        };
 
-            const response = isCreating
-                ? await saveFHIRResource(questionnaireResponse)
-                : await updateFHIRResource(questionnaireResponse);
+        const response = isCreating
+            ? await saveFHIRResource(questionnaireResponse)
+            : await updateFHIRResource(questionnaireResponse);
 
-            if (isSuccess(response)) {
-                formData.context.questionnaireResponse.id = response.data.id;
-            }
-            if (isFailure(response)) {
-                console.error('Error saving a draft: ', response.error);
-            }
+        if (isSuccess(response)) {
+            formData.context.questionnaireResponse.id = response.data.id;
+        }
+        if (isFailure(response)) {
+            console.error('Error saving a draft: ', response.error);
+        }
 
-            return response;
-        },
-        [initialQuestionnaireResponse],
-    );
+        return response;
+    };
 
     return { response, onSubmit, readOnly, onCancel, saveQuestionnaireResponseDraft };
 }

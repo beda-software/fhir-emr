@@ -6,7 +6,10 @@ import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
-import { AnxietyScore, DepressionScore } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/score';
+import {
+    AnxietyScore,
+    DepressionScore,
+} from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/score';
 import { Spinner } from 'src/components/Spinner';
 
 import { PatientHeaderContext } from '../PatientHeader/context';
@@ -63,6 +66,7 @@ export function PatientDocument(props: PatientDocumentProps) {
                                 }}
                                 onCancel={() => navigate(-1)}
                                 saveQuestionnaireResponseDraft={saveQuestionnaireResponseDraft}
+                                questionnaireId={questionnaireId}
                             />
                         </>
                     )}
