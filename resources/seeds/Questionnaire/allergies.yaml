@@ -1,5 +1,14 @@
 id: allergies
 resourceType: Questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/allergies
+meta:
+  profile:
+    - https://beda.software/beda-emr-questionnaire
+    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire
+    - http://hl7.org/fhir/StructureDefinition/questionnaire-itemHidden
+    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extr-defn
+    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-render
+    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-pop-smap
 name: Allergies
 status: active
 subjectType:
@@ -9,35 +18,31 @@ mapping:
     - id: allergy-extract
       resourceType: Mapping
 launchContext:
-    - name: Patient
-      type: Patient
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/allergies
-meta:
-  profile:
-    - https://beda.software/beda-emr-questionnaire
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire
-    - http://hl7.org/fhir/StructureDefinition/questionnaire-hidden
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extr-defn
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-render
+  name:
+    code: patient
+    system: http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext
+    display: Patient
+  type:
+    - Patient
 item:
     - text: AllergyIntoleranceId
       type: string
       linkId: allergyIntoleranceId
-      hidden: true
+      itemHidden: true
       initialExpression:
           language: text/fhirpath
           expression: '%AllergyIntolerance.id'
     - text: PatientId
       type: string
       linkId: patientId
-      hidden: true
+      itemHidden: true
       initialExpression:
           language: text/fhirpath
           expression: '%Patient.id'
     - text: PatientName
       type: string
       linkId: patientName
-      hidden: true
+      itemHidden: true
       initialExpression:
           language: text/fhirpath
           expression: "%Patient.name.given[0] + ' ' + %Patient.name.family"
@@ -119,7 +124,7 @@ item:
           - value:
                 Coding:
                     system: 'http://loinc.org'
-                    code: '	LA30119-4'
+                    code: 'LA30119-4'
                     display: 'Iodine'
           - value:
                 Coding:
@@ -220,7 +225,7 @@ item:
     - text: Active
       type: string
       linkId: status
-      hidden: true
+      itemHidden: true
       initial:
           - value:
                 Coding:

@@ -5,9 +5,9 @@
           aidbox.repository.v1
           questionnaire-profile
           hl7-fhir-uv-sdc.sdc-questionnaire
-          hl7-fhir-r4-core.questionnaire-hidden
           hl7-fhir-uv-sdc.sdc-questionnaire-extr-defn
-          hl7-fhir-uv-sdc.sdc-questionnaire-render}
+          hl7-fhir-uv-sdc.sdc-questionnaire-render
+          hl7-fhir-uv-sdc.sdc-questionnaire-pop-smap}
 
  box
  {:zen/tags #{aidbox/system}
