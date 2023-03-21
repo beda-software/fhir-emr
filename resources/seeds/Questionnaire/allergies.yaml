@@ -18,12 +18,8 @@ mapping:
     - id: allergy-extract
       resourceType: Mapping
 launchContext:
-  name:
-    code: patient
-    system: http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext
-    display: Patient
-  type:
-    - Patient
+    - name: Patient
+      type: Patient
 item:
     - text: AllergyIntoleranceId
       type: string
