@@ -12,6 +12,7 @@ import { isFailure, isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { saveFHIRResource, updateFHIRResource } from 'aidbox-react/lib/services/fhir';
 import { formatError } from 'aidbox-react/lib/utils/error';
 
+import { QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 import {
     QuestionnaireResponseFormData,
     QuestionnaireResponseFormProps,
@@ -42,7 +43,7 @@ export const saveQuestionnaireResponseDraft = async (
         formData.context.questionnaire,
     );
 
-    const questionnaireResponse = {
+    const questionnaireResponse: QuestionnaireResponse = {
         id: formData.context.questionnaireResponse.id,
         item: transformedFormValues.item,
         questionnaire: isCreating ? questionnaireId : formData.context.questionnaire.assembledFrom,
