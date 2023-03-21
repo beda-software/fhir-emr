@@ -68,8 +68,8 @@ services:
             context: .
             dockerfile: Dockerfile.seeds
         volumes:
-            - ./zrc:/app/zrc
-            - ./resources/seeds:/app/resources/seeds
+          - ./zenproject:/app/zenproject
+          - ./resources/seeds:/app/resources/seeds
     scheduling:
         image: bedasoftware/aidbox-scheduling-node-app
         depends_on:
