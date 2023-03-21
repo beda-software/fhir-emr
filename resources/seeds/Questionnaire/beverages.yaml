@@ -33,8 +33,15 @@ item:
     adjustLastToRight: true
 meta:
   profile:
-    - https://beda.software/fhir-emr-questionnaire
+    - https://beda.software/beda-emr-questionnaire
+    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire
+    - http://hl7.org/fhir/StructureDefinition/questionnaire-itemHidden
+    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extr-defn
+    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-render
+    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-pop-smap
 name: Beverages
 status: draft
+subjectType:
+  - Patient
 id: beverages
 resourceType: Questionnaire

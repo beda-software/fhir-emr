@@ -1,48 +1,50 @@
-id: cardiology-example
-resourceType: Questionnaire
-name: cardiology-example
-title: Cardiologist consultation
-status: active
 item:
-  - linkId: complaints
+  - text: Primary compliant
     type: text
-    text: Primary compliant
-  - linkId: examination-objective
+    linkId: complaints
+  - text: Physical exam findings
     type: text
-    text: Physical exam findings
-  - linkId: observations-data
+    linkId: examination-objective
+  - text: Radiographic findings
     type: text
-    text: Radiographic findings
-  - linkId: lab-data
+    linkId: observations-data
+  - text: Laboratory data
     type: text
-    text: Laboratory data
-  - linkId: group-ds
-    type: group
-    text: Diagnosis
-    item:
-      - linkId: ds-main
-        type: group
-        text: Main
-        item:
-          - linkId: ds-icd-11
+    linkId: lab-data
+  - item:
+      - item:
+          - text: ICD-11
             type: choice
-            text: ICD-11
+            linkId: ds-icd-11
             answerOption:
               - value:
                   Coding:
+                    code: BA40
                     system: http://id.who.int/icd/release/11/mms
-                    code: "BA40"
-                    display: "BA40 Angina pectoris"
+                    display: BA40 Angina pectoris
               - value:
                   Coding:
+                    code: BA41
                     system: http://id.who.int/icd/release/11/mms
-                    code: "BA41"
-                    display: "BA41 Acute myocardial infarction"
+                    display: BA41 Acute myocardial infarction
               - value:
                   Coding:
+                    code: BA42
                     system: https://icd.who.int/browse11/l-m/en
-                    code: "BA42"
-                    display: "BA42 Subsequent myocardial infarction"
-          - linkId: ds-text
+                    display: BA42 Subsequent myocardial infarction
+          - text: Description
             type: text
-            text: Description
+            linkId: ds-text
+        text: Main
+        type: group
+        linkId: ds-main
+    text: Diagnosis
+    type: group
+    linkId: group-ds
+name: cardiology-example
+title: Cardiologist consultation
+status: active
+subjectType:
+  - Encounter
+id: cardiology-example
+resourceType: Questionnaire

@@ -7,7 +7,9 @@
           hl7-fhir-uv-sdc.sdc-questionnaire
           hl7-fhir-uv-sdc.sdc-questionnaire-extr-defn
           hl7-fhir-uv-sdc.sdc-questionnaire-render
-          hl7-fhir-uv-sdc.sdc-questionnaire-pop-smap}
+          hl7-fhir-uv-sdc.sdc-questionnaire-pop-smap
+          hl7-fhir-uv-sdc.sdc-questionnaire-behave}
+
 
  box
  {:zen/tags #{aidbox/system}
