@@ -14,12 +14,6 @@
                     :confirms #{hl7-fhir-r4-core.Questionnaire/item-schema}
                     :keys {:item {:type zen/vector
                                   :every {:confirms #{QuestionnaireItem}}}
-                           :hidden {:confirms #{hl7-fhir-r4-core.boolean/schema}
-                                    :fhir/extensionUri "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden"}
-                           :itemControl {:confirms #{hl7-fhir-r4-core.CodeableConcept/schema}
-                                         :fhir/extensionUri "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl"}
-                           :sliderStepValue {:confirms #{hl7-fhir-r4-core.integer/schema}
-                                             :fhir/extensionUri "http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue"}
                            :start {:confirms #{hl7-fhir-r4-core.integer/schema}
                                    :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/slider-start"}
                            :stop {:confirms #{hl7-fhir-r4-core.integer/schema}
@@ -40,9 +34,8 @@
 
  QuestionnaireProfile
  {:zen/tags #{zen.fhir/profile-schema zen/schema}
-  :confirms #{hl7-fhir-uv-sdc.sdc-questionnaire/schema}
   :zen.fhir/type "Questionnaire"
-  :zen.fhir/profileUri "https://beda.software/fhir-emr-questionnaire"
+  :zen.fhir/profileUri "https://beda.software/beda-emr-questionnaire"
   :type zen/map
   :zen.fhir/version "0.5.25-1"
   :keys {:mapping {:type zen/vector

@@ -1,4 +1,4 @@
-{ns box
+{ns system
  import #{aidbox.rest questionnaire-profile
           aidbox.search-parameter.v1
           aidbox
@@ -6,16 +6,10 @@
 
  box
  {:zen/tags #{aidbox/system}
-  :zen/desc "test server"
+  :zen/desc "Beda EMR"
   :services {:seed seed
              :seed-fixtures seed-fixtures
-             :sdc sdc-service
              :repositories repositories}}
-
- sdc-service
- {:zen/tags  #{aidbox/service}
-  :engine    aidbox.sdc/service
-  :versioning {:enabled false}}
 
  seed
  {:zen/tags  #{aidbox/service}

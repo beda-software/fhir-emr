@@ -4,5 +4,5 @@ services:
       context: .
       dockerfile: Dockerfile.seeds
     volumes:
-      - ./zrc:/app/zrc
+      - ./zenproject:/app/zenproject
       - ./resources/seeds:/app/resources/seeds

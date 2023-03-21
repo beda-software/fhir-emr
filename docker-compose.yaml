@@ -44,7 +44,7 @@ services:
             - .env
         volumes:
             - ./config:/var/config:cached
-            - ./zrc:/zrc
+            - ./zenproject:/zenproject
     devbox-db:
         image: 'healthsamurai/aidboxdb:13.2'
         environment:

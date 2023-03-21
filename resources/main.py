@@ -35,7 +35,7 @@ def load_resources(abs_path):
 def main():
     root_dir = os.path.dirname(os.path.abspath(__name__))
     resources = load_resources(os.path.join(root_dir, "seeds"))
-    with gzip.open("../zrc/seeds.ndjson.gz", "w") as f:
+    with gzip.open("../zenproject/seeds.ndjson.gz", "w") as f:
         f.write(ndjson.dumps(resources).encode())
 
 
