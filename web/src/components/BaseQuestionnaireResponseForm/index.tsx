@@ -82,14 +82,14 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
 
     const [draftSaveState, setDraftSaveState] = useState<RemoteData>(notAsked);
 
-    const previouseFormValuesRef = useRef<FormItems | null>(null);
+    const previousFormValuesRef = useRef<FormItems | null>(null);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const debouncedSaveDraft = useCallback(
         _.debounce(async (currentFormValues: FormItems) => {
             if (!autoSave || !questionnaireId) return;
 
-            if (!_.isEqual(currentFormValues, previouseFormValuesRef.current)) {
+            if (!_.isEqual(currentFormValues, previousFormValuesRef.current)) {
                 setDraftSaveState(loading);
                 setDraftSaveState(
                     await saveQuestionnaireResponseDraft(
@@ -98,7 +98,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                         currentFormValues,
                     ),
                 );
-                previouseFormValuesRef.current = _.cloneDeep(currentFormValues);
+                previousFormValuesRef.current = _.cloneDeep(currentFormValues);
             }
         }, 1000),
         [],
