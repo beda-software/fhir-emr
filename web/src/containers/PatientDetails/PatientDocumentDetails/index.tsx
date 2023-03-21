@@ -11,7 +11,6 @@ import { failure, isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import {
     extractBundleResources,
     getFHIRResources,
-    getReference,
     WithId,
 } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess } from 'aidbox-react/lib/services/service';
@@ -110,7 +109,7 @@ function PatientDocumentDetailsFormData(props: {
     const { questionnaireResponse, children, patient } = props;
     const { response } = usePatientDocument({
         ...props,
-        patient: getReference(patient),
+        patient: patient,
         questionnaireId: questionnaireResponse.questionnaire!,
     });
 
@@ -160,7 +159,7 @@ export function PatientDocumentDetails(props: Props) {
                                     path="/edit"
                                     element={
                                         <PatientDocument
-                                            patient={getReference(patient)}
+                                            patient={patient}
                                             questionnaireResponse={questionnaireResponse}
                                             questionnaireId={questionnaireResponse.questionnaire}
                                             onSuccess={() => navigate(-2)}

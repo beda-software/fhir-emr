@@ -2,7 +2,7 @@ import { useParams, Outlet, Route, Routes } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
-import { getFHIRResource, getReference } from 'aidbox-react/lib/services/fhir';
+import { getFHIRResource } from 'aidbox-react/lib/services/fhir';
 
 import { Patient } from 'shared/src/contrib/aidbox';
 
@@ -73,7 +73,7 @@ export const PatientDetails = () => {
                                     />
                                     <Route
                                         path="/documents/new/:questionnaireId"
-                                        element={<PatientDocument patient={getReference(patient)} />}
+                                        element={<PatientDocument patient={patient} />}
                                     />
                                     <Route
                                         path="/documents/:qrId/*"
