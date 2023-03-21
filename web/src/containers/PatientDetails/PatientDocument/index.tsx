@@ -14,7 +14,6 @@ import { Spinner } from 'src/components/Spinner';
 
 import { PatientHeaderContext } from '../PatientHeader/context';
 import s from './PatientDocument.module.scss';
-import { PhysicalExam } from './PhysicalExam';
 import { PatientDocumentProps, usePatientDocument } from './usePatientDocument';
 
 export function PatientDocument(props: PatientDocumentProps) {
@@ -27,13 +26,6 @@ export function PatientDocument(props: PatientDocumentProps) {
         encounterId,
     });
     const navigate = useNavigate();
-
-    const questionnaireResponseFormComponent = {
-        'physical-exam': PhysicalExam,
-    };
-
-    const Component =
-        questionnaireResponseFormComponent[questionnaireId] ?? BaseQuestionnaireResponseForm;
 
     const { setBreadcrumbs } = useContext(PatientHeaderContext);
     const location = useLocation();
@@ -56,7 +48,7 @@ export function PatientDocument(props: PatientDocumentProps) {
                             <div className={s.header}>
                                 <Title level={3}>{formData.context.questionnaire.name}</Title>
                             </div>
-                            <Component
+                            <BaseQuestionnaireResponseForm
                                 formData={formData}
                                 onSubmit={onSubmit}
                                 readOnly={readOnly}

@@ -14359,6 +14359,8 @@ export interface QuestionnaireItem {
     itemPopulationContext?: Expression;
     /** Unique id for item in questionnaire */
     linkId: string;
+    /** NOTE: from extension https://beda.software/fhir-emr-questionnaire/macro */
+    macro?: string;
     /** No more than this many characters */
     maxLength?: integer;
     /** Extensions that cannot be ignored even if unrecognized */

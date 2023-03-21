@@ -1,14 +1,14 @@
 import { useNavigate } from 'react-router-dom';
 
-import { WithId } from 'aidbox-react/lib/services/fhir';
+import { getReference, WithId } from 'aidbox-react/lib/services/fhir';
 
-import { AidboxReference, Patient, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
+import { Patient, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 
 export interface PatientDocumentProps {
-    patient: AidboxReference<Patient>;
+    patient: Patient;
     questionnaireResponse?: WithId<QuestionnaireResponse>;
     questionnaireId?: string;
     encounterId?: string;
@@ -28,7 +28,7 @@ export function usePatientDocument(props: PatientDocumentProps & { questionnaire
                 : []),
         ],
         initialQuestionnaireResponse: questionnaireResponse || {
-            source: patient,
+            source: getReference(patient),
             encounter: encounterId ? { resourceType: 'Encounter', id: encounterId } : undefined,
             questionnaire: questionnaireId,
         },

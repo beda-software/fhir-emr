@@ -48,6 +48,7 @@ import {
 } from './widgets';
 import { Display } from './widgets/display';
 import { QuestionReference } from './widgets/reference';
+import { TextWithMacroFill } from '../TextWithMacroFill';
 
 export interface BaseQuestionnaireResponseFormProps {
     formData: QuestionnaireResponseFormData;
@@ -163,6 +164,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                         'solid-radio-button': QuestionSolidRadio,
                         'inline-choice': InlineChoice,
                         'practitioner-role': PractitionerRoleList,
+                        'text-with-macro': TextWithMacroFill,
                         ...props.itemControlQuestionItemComponents,
                     }}
                     readOnly={readOnly}

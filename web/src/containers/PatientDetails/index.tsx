@@ -60,7 +60,7 @@ export const PatientDetails = () => {
                                     <Route
                                         path="/encounters/:encounterId/new/:questionnaireId"
                                         element={
-                                            <PatientDocument patient={getReference(patient)} />
+                                            <PatientDocument patient={patient} />
                                         }
                                     />
                                     <Route
