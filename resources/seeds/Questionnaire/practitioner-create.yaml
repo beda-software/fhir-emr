@@ -46,3 +46,10 @@ item:
             code: "419772000"
             system: http://snomed.info/sct
             display: Family practice
+meta:
+  profile:
+    - https://beda.software/beda-emr-questionnaire
+    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire
+    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extr-defn
+    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-render
+    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-pop-smap

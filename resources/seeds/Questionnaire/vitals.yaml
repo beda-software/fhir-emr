@@ -113,3 +113,10 @@ item:
     calculatedExpression:
       language: text/fhirpath
       expression: "(%QuestionnaireResponse.item.where(linkId='weight').answer.value.integer / ((%QuestionnaireResponse.item.where(linkId='height').answer.value.integer / 100) * (%QuestionnaireResponse.item.where(linkId='height').answer.value.integer / 100))).round(2)"
+meta:
+  profile:
+    - https://beda.software/beda-emr-questionnaire
+    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire
+    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extr-defn
+    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-render
+    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-pop-smap

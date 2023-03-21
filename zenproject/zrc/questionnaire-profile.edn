@@ -28,6 +28,9 @@
                                                :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/adjust-last-to-right"}
                            :unit {:confirms #{hl7-fhir-r4-core.string/schema}
                                   :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/unit"}
+                           ;; use hidden key over itemHidden from zen sdc zen profile
+                           :hidden {:confirms #{hl7-fhir-r4-core.questionnaire-hidden/schema},
+                                        :fhir/extensionUri "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden"},
                            :inlineChoiceDirection {:confirms #{hl7-fhir-r4-core.string/schema}
                                                    :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/inline-choice-direction"}}}
 

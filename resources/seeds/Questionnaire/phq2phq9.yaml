@@ -296,3 +296,10 @@ item:
                     "%QuestionnaireResponse.item.item.answer.children().children().where(code='LA6569-3').count()
                     + %QuestionnaireResponse.item.item.answer.children().children().where(code='LA6570-1').count() * 2
                     + %QuestionnaireResponse.item.item.answer.children().children().where(code='LA6571-9').count() * 3"
+meta:
+  profile:
+    - https://beda.software/beda-emr-questionnaire
+    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire
+    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extr-defn
+    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-render
+    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-pop-smap
