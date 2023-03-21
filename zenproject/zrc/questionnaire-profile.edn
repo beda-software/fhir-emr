@@ -1,6 +1,5 @@
 {ns questionnaire-profile
- import #{hl7-fhir-uv-sdc.sdc-questionnaire
-          hl7-fhir-r4-core.CodeableConcept
+ import #{hl7-fhir-r4-core.CodeableConcept
           hl7-fhir-r4-core.integer
           hl7-fhir-r4-core.boolean
           hl7-fhir-r4-core.Reference

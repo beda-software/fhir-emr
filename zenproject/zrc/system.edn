@@ -1,8 +1,13 @@
 {ns system
- import #{aidbox.rest questionnaire-profile
+ import #{aidbox
+          aidbox.rest
           aidbox.search-parameter.v1
-          aidbox
-          aidbox.repository.v1}
+          aidbox.repository.v1
+          questionnaire-profile
+          hl7-fhir-uv-sdc.sdc-questionnaire
+          hl7-fhir-r4-core.questionnaire-hidden
+          hl7-fhir-uv-sdc.sdc-questionnaire-extr-defn
+          hl7-fhir-uv-sdc.sdc-questionnaire-render}
 
  box
  {:zen/tags #{aidbox/system}

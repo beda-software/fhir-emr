@@ -11,6 +11,14 @@ mapping:
 launchContext:
     - name: Patient
       type: Patient
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/allergies
+meta:
+  profile:
+    - https://beda.software/beda-emr-questionnaire
+    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire
+    - http://hl7.org/fhir/StructureDefinition/questionnaire-hidden
+    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extr-defn
+    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-render
 item:
     - text: AllergyIntoleranceId
       type: string
