@@ -44,11 +44,12 @@ body:
                   gender: $ gender
                   telecom:
                       - value: $ mobile
-                        system: mobile
+                        system: phone
                   birthDate: $ birthDate
                   identifier:
                       - value: $ ssn
                         system: 1.2.643.100.3
+                  active: true
                   resourceType: Patient
         resourceType: Bundle
 id: patient-create

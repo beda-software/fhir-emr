@@ -44,7 +44,7 @@ services:
             - .env
         volumes:
             - ./config:/var/config:cached
-            - ./zrc:/zrc
+            - ./zenproject:/zenproject
     devbox-db_test:
         image: 'healthsamurai/aidboxdb:13.2'
         environment:
@@ -68,5 +68,5 @@ services:
             context: .
             dockerfile: Dockerfile.seeds
         volumes:
-            - ./zrc:/app/zrc
+            - ./zenproject:/app/zenproject
             - ./resources/seeds:/app/resources/seeds
