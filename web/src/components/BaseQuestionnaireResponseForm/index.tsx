@@ -62,7 +62,7 @@ export interface BaseQuestionnaireResponseFormProps {
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
-    const { onSubmit, formData, readOnly, onCancel } = props;
+    const { onSubmit, formData, readOnly, onCancel, autoSave } = props;
 
     const questionnaireId = formData.context.questionnaire.assembledFrom;
 
@@ -87,7 +87,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const debouncedSaveDraft = useCallback(
         _.debounce(async (currentFormValues: FormItems) => {
-            if (!questionnaireId) return;
+            if (!autoSave || !questionnaireId) return;
 
             if (!_.isEqual(currentFormValues, previouseFormValuesRef.current)) {
                 setDraftSaveState(loading);
