@@ -5,7 +5,6 @@ meta:
   profile:
     - https://beda.software/beda-emr-questionnaire
     - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire
-    - http://hl7.org/fhir/StructureDefinition/questionnaire-itemHidden
     - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extr-defn
     - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-render
     - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-pop-smap
@@ -24,21 +23,21 @@ item:
     - text: AllergyIntoleranceId
       type: string
       linkId: allergyIntoleranceId
-      itemHidden: true
+      hidden: true
       initialExpression:
           language: text/fhirpath
           expression: '%AllergyIntolerance.id'
     - text: PatientId
       type: string
       linkId: patientId
-      itemHidden: true
+      hidden: true
       initialExpression:
           language: text/fhirpath
           expression: '%Patient.id'
     - text: PatientName
       type: string
       linkId: patientName
-      itemHidden: true
+      hidden: true
       initialExpression:
           language: text/fhirpath
           expression: "%Patient.name.given[0] + ' ' + %Patient.name.family"
@@ -221,7 +220,7 @@ item:
     - text: Active
       type: string
       linkId: status
-      itemHidden: true
+      hidden: true
       initial:
           - value:
                 Coding:
