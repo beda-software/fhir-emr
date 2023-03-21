@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Trans } from '@lingui/macro';
-import { loading, RemoteData, RenderRemoteData, RemoteDataResult, WithId } from 'aidbox-react';
+import { loading, RemoteData, RenderRemoteData, isSuccess } from 'aidbox-react';
 import { Button } from 'antd';
 import classNames from 'classnames';
 import _ from 'lodash';
@@ -23,8 +23,7 @@ import 'react-phone-input-2/lib/style.css';
 
 import { notAsked } from 'aidbox-react/lib/libs/remoteData';
 
-import { QuestionnaireResponse } from 'shared/src/contrib/aidbox';
-
+import { saveQuestionnaireResponseDraft } from 'src/components/QuestionnaireResponseForm';
 import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
 import s from './BaseQuestionnaireResponseForm.module.scss';
@@ -59,27 +58,14 @@ export interface BaseQuestionnaireResponseFormProps {
     questionItemComponents?: QuestionItemComponentMapping;
     groupItemComponent?: GroupItemComponent;
     onCancel?: () => void;
-    // NOTE: saveQuestionnaireResponseDraft is used to display the save status of a form's draft.
-    // In some forms, such as the patient creation form,
-    // it makes no sense to do auto-save,
-    // so saveQuestionnaireResponseDraft can be undefined.
-    saveQuestionnaireResponseDraft?: (
-        formData: QuestionnaireResponseFormData,
-        currentFormValues: FormItems,
-        questionnaireId?: string,
-    ) => Promise<RemoteDataResult<WithId<QuestionnaireResponse>>>;
-    questionnaireId?: string;
+    autoSave?: boolean;
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
-    const {
-        onSubmit,
-        formData,
-        readOnly,
-        onCancel,
-        saveQuestionnaireResponseDraft,
-        questionnaireId,
-    } = props;
+    const { onSubmit, formData, readOnly, onCancel } = props;
+
+    const questionnaireId = formData.context.questionnaire.assembledFrom;
+
     const schema: yup.AnyObjectSchema = useMemo(
         () => questionnaireToValidationSchema(formData.context.questionnaire),
         [formData.context.questionnaire],
@@ -101,15 +87,15 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const debouncedSaveDraft = useCallback(
         _.debounce(async (currentFormValues: FormItems) => {
-            if (!saveQuestionnaireResponseDraft) return;
+            if (!questionnaireId) return;
 
             if (!_.isEqual(currentFormValues, previouseFormValuesRef.current)) {
                 setDraftSaveState(loading);
                 setDraftSaveState(
                     await saveQuestionnaireResponseDraft(
+                        questionnaireId,
                         formData,
                         currentFormValues,
-                        questionnaireId,
                     ),
                 );
                 previouseFormValuesRef.current = _.cloneDeep(currentFormValues);
@@ -125,10 +111,15 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
     return (
         <FormProvider {...methods}>
             <form
-                onSubmit={handleSubmit(() => onSubmit({ ...formData, formValues }))}
+                onSubmit={handleSubmit(() => {
+                    if (questionnaireId && isSuccess(draftSaveState)) {
+                        formData.context.questionnaireResponse.id = draftSaveState.data.id;
+                    }
+                    onSubmit({ ...formData, formValues });
+                })}
                 className={classNames(s.form, 'app-form')}
             >
-                {saveQuestionnaireResponseDraft ? (
+                {questionnaireId ? (
                     <div style={{ height: 0, float: 'right' }}>
                         <RenderRemoteData
                             remoteData={draftSaveState}
