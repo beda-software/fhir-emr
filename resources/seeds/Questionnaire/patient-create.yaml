@@ -1,5 +1,4 @@
 id: patient-create
-url: https://beda.software/fhir-emr/questionnaire-patient-create
 resourceType: Questionnaire
 name: patient-create
 title: Patient create
@@ -50,3 +49,4 @@ meta:
     - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extr-defn
     - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-render
     - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-pop-smap
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/patient-create

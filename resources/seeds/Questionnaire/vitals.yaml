@@ -120,3 +120,4 @@ meta:
     - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extr-defn
     - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-render
     - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-pop-smap
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/vitals

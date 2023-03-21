@@ -1,4 +1,4 @@
-url: https://beda.software/fhir-emr-questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/baverages
 item:
   - linkId: slider
     itemControl:
