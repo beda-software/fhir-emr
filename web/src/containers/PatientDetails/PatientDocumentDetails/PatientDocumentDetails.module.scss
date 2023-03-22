@@ -19,10 +19,16 @@
 }
 
 .title {
-    margin: 0!important;
+    margin: 0 !important;
 }
 
-.editButton {
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 80px;
+}
+
+.button {
     font-weight: 600;
     padding: 0;
 }
