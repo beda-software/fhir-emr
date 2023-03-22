@@ -109,49 +109,5 @@ export function prepareDataToDisplay(
         }),
     );
 
-    // const diff = _.toPairs(diffAfter).map(([linkId, item = []]) => {
-    //     const itemBefore = diffBefore[linkId];
-
-    //     return (
-    //         <div key={`diff-${provenance.id}-${linkId}`}>
-    //             <div>{item[0]?.question}</div>
-    //             <div className={s.diffRow}>
-    //                 <div className={classNames(s.diffItem, itemBefore ? s._deleted : undefined)}>
-    //                     {Array.isArray(itemBefore)
-    //                         ? itemBefore.map((v) => getDisplay(v.value)).join(', ')
-    //                         : null}
-    //                 </div>
-    //                 <div className={classNames(s.diffItem, s._added)}>
-    //                     {Array.isArray(item)
-    //                         ? item.map((v) => getDisplay(v.value)).join(', ')
-    //                         : null}
-    //                 </div>
-    //             </div>
-    //         </div>
-    //     );
-    // });
-
-    // const deletions = _.toPairs(diffBefore).map(([linkId, item = []]) => {
-    //     const itemAfter = diffAfter[linkId];
-
-    //     if (itemAfter) {
-    //         return null;
-    //     }
-
-    //     return (
-    //         <div key={`diff-${provenance.id}-${linkId}`}>
-    //             <div>{item[0]?.question}</div>
-    //             <div className={s.diffRow}>
-    //                 <div className={classNames(s.diffItem, s._deleted)}>
-    //                     {Array.isArray(item)
-    //                         ? item.map((v) => getDisplay(v.value)).join(', ')
-    //                         : null}
-    //                 </div>
-    //                 <div className={s.diffItem} />
-    //             </div>
-    //         </div>
-    //     );
-    // });
-
     return [...diff, ...deletions];
 }

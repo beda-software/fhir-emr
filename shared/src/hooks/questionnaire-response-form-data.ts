@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import moment from 'moment';
 
 import {
@@ -155,7 +154,10 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
 
     return mapSuccess(populateRemoteData, (populatedQR) => {
         const questionnaire = questionnaireRemoteData.data;
-        const questionnaireResponse = _.merge({}, initialQuestionnaireResponse, populatedQR);
+        const questionnaireResponse = {
+            ...initialQuestionnaireResponse,
+            ...populatedQR,
+        };
 
         return {
             context: {
