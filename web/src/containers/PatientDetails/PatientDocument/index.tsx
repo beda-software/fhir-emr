@@ -54,7 +54,7 @@ export function PatientDocument(props: Props) {
         <div className={s.container}>
             <div className={s.content}>
                 <RenderRemoteData remoteData={response} renderLoading={Spinner}>
-                    {({ formData, onSubmit }) => (
+                    {({ formData, onSubmit, provenance }) => (
                         <>
                             <div className={s.header}>
                                 <Title level={3}>{formData.context.questionnaire.name}</Title>
@@ -67,7 +67,7 @@ export function PatientDocument(props: Props) {
                                     'depression-score': DepressionScore,
                                 }}
                                 onCancel={() => navigate(-1)}
-                                autoSave
+                                autoSave={!provenance}
                             />
                         </>
                     )}
