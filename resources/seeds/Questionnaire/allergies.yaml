@@ -20,13 +20,6 @@ launchContext:
     - name: Patient
       type: Patient
 item:
-    - text: AllergyIntoleranceId
-      type: string
-      linkId: allergyIntoleranceId
-      hidden: true
-      initialExpression:
-          language: text/fhirpath
-          expression: '%AllergyIntolerance.id'
     - text: PatientId
       type: string
       linkId: patientId

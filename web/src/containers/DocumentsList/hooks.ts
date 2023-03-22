@@ -32,14 +32,14 @@ export function usePatientDocuments(patient: Patient, encounter?: AidboxReferenc
             });
 
             return mapSuccess(qResponse, (bundle) => {
-                let qById: { [key: string]: string | undefined } = {};
+                let questionnaireNames: { [key: string]: string | undefined } = {};
                 extractBundleResources(bundle).Questionnaire.forEach(
-                    (q) => (qById[q.id!] = q.name),
+                    (q) => (questionnaireNames[q.id!] = q.name),
                 );
 
                 return {
                     ...qrResponseExtracted.data,
-                    questionnaireName: qById,
+                    questionnaireNames,
                 };
             });
         }

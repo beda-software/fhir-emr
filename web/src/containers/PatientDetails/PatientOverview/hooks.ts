@@ -19,6 +19,7 @@ import {
     MedicationStatement,
     Observation,
     Patient,
+    Provenance,
 } from 'shared/src/contrib/aidbox';
 
 import { formatHumanDate, getPersonAge } from 'src/utils/date';
@@ -94,10 +95,14 @@ export function usePatientOverview(props: Props) {
                             'status:not': ['entered-in-error,cancelled'],
                         },
                     ),
-                    allergiesBundle: getFHIRResources<AllergyIntolerance>('AllergyIntolerance', {
-                        patient: patient.id,
-                        _sort: ['-lastUpdated'],
-                    }),
+                    allergiesBundle: getFHIRResources<AllergyIntolerance | Provenance>(
+                        'AllergyIntolerance',
+                        {
+                            patient: patient.id,
+                            _sort: ['-lastUpdated'],
+                            _revinclude: ['Provenance:target'],
+                        },
+                    ),
                     observationsBundle: getFHIRResources<Observation>('Observation', {
                         patient: patient.id,
                         _sort: ['-lastUpdated'],
@@ -123,6 +128,7 @@ export function usePatientOverview(props: Props) {
                     appointmentsBundle,
                 }) => {
                     const allergies = extractBundleResources(allergiesBundle).AllergyIntolerance;
+                    const allergyProvenance = extractBundleResources(allergiesBundle).Provenance;
                     const observations = extractBundleResources(observationsBundle).Observation;
                     const immunizations = extractBundleResources(immunizationsBundle).Immunization;
                     const medications =
@@ -130,7 +136,7 @@ export function usePatientOverview(props: Props) {
                     const cards = [
                         prepareObservations(observations),
                         prepareMedications(medications),
-                        prepareAllergies(allergies),
+                        prepareAllergies(allergies, allergyProvenance),
                         prepareImmunizations(immunizations),
                     ];
                     const appointments = prepareAppointments(appointmentsBundle);

@@ -20,6 +20,7 @@ import {
     extractBundleResources,
     forceDeleteFHIRResource,
     getFHIRResources,
+    patchFHIRResource,
     WithId,
 } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess } from 'aidbox-react/lib/services/service';
@@ -30,6 +31,7 @@ import { ReadonlyQuestionnaireResponseForm } from 'src/components/BaseQuestionna
 import { BloodPressureReadOnly } from 'src/components/BaseQuestionnaireResponseForm/widgets';
 import { Spinner } from 'src/components/Spinner';
 
+import { DocumentHistory } from '../DocumentHistory';
 import { PatientDocument } from '../PatientDocument';
 import { usePatientDocument } from '../PatientDocument/usePatientDocument';
 import { PatientHeaderContext } from '../PatientHeader/context';
@@ -62,6 +64,30 @@ const deleteDraft = async (navigate: NavigateFunction, patientId?: string, qrId?
     }
 };
 
+const amendDocument = async (reload: () => void, qrId?: string) => {
+    // eslint-disable-next-line no-restricted-globals
+    if (qrId && confirm(t`Are you sure you want to amend the document?`)) {
+        const response = await patchFHIRResource<QuestionnaireResponse>({
+            id: qrId,
+            resourceType: 'QuestionnaireResponse',
+            status: 'in-progress',
+        });
+
+        if (isSuccess(response)) {
+            reload();
+            notification.success({
+                message: t`The document successfully amended`,
+            });
+        }
+        if (isFailure(response)) {
+            console.error(response.error);
+            notification.error({
+                message: t`Error while amending the document`,
+            });
+        }
+    }
+};
+
 function usePatientDocumentDetails() {
     const params = useParams<{ qrId: string }>();
     const qrId = params.qrId!;
@@ -88,11 +114,12 @@ function usePatientDocumentDetails() {
 
 function PatientDocumentDetailsReadonly(props: {
     formData: QuestionnaireResponseFormData;
+    reload: () => void;
     encounter?: Encounter;
 }) {
     const location = useLocation();
     const navigate = useNavigate();
-    const { formData, encounter } = props;
+    const { formData, encounter, reload } = props;
 
     const { setBreadcrumbs } = useContext(PatientHeaderContext);
 
@@ -103,11 +130,13 @@ function PatientDocumentDetailsReadonly(props: {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const encounterStatus = !encounter || encounter?.status !== 'completed';
+    const encounterCompleted = encounter?.status === 'completed';
 
     const patientId = location.pathname.split('/')[2];
-    const qrStatus = formData.context.questionnaireResponse.status !== 'completed';
+    const qrCompleted = formData.context.questionnaireResponse.status === 'completed';
     const qrId = formData.context.questionnaireResponse.id;
+
+    const canBeEdited = (!encounter || !encounterCompleted) && !qrCompleted;
 
     return (
         <div className={s.container}>
@@ -116,24 +145,44 @@ function PatientDocumentDetailsReadonly(props: {
                     <Title level={4} className={s.title}>
                         {formData.context.questionnaire.name}
                     </Title>
-                    {encounterStatus && qrStatus ? (
-                        <div className={s.buttons}>
-                            <Button
-                                type="link"
-                                onClick={() => navigate(`${location.pathname}/edit`)}
-                                className={s.button}
-                            >
-                                <Trans>Edit</Trans>
-                            </Button>
-                            <Button
-                                type="link"
-                                onClick={() => deleteDraft(navigate, patientId, qrId)}
-                                className={s.button}
-                            >
-                                <Trans>Delete</Trans>
-                            </Button>
-                        </div>
-                    ) : null}
+                    <div className={s.buttons}>
+                        {qrCompleted ? (
+                            <>
+                                <Button
+                                    type="link"
+                                    onClick={() => navigate(`${location.pathname}/history`)}
+                                    className={s.button}
+                                >
+                                    <Trans>History</Trans>
+                                </Button>
+                                <Button
+                                    type="link"
+                                    onClick={() => amendDocument(reload, qrId)}
+                                    className={s.button}
+                                >
+                                    <Trans>Amend</Trans>
+                                </Button>
+                            </>
+                        ) : null}
+                        {canBeEdited ? (
+                            <>
+                                <Button
+                                    type="link"
+                                    onClick={() => navigate(`${location.pathname}/edit`)}
+                                    className={s.button}
+                                >
+                                    <Trans>Edit</Trans>
+                                </Button>
+                                <Button
+                                    type="link"
+                                    onClick={() => deleteDraft(navigate, patientId, qrId)}
+                                    className={s.button}
+                                >
+                                    <Trans>Delete</Trans>
+                                </Button>
+                            </>
+                        ) : null}
+                    </div>
                 </div>
                 <ReadonlyQuestionnaireResponseForm
                     formData={formData}
@@ -158,14 +207,14 @@ function PatientDocumentDetailsFormData(props: {
 
     return (
         <RenderRemoteData remoteData={response} renderLoading={Spinner}>
-            {(formData) => children({ formData })}
+            {({ formData }) => children({ formData })}
         </RenderRemoteData>
     );
 }
 
 export function PatientDocumentDetails(props: Props) {
     const { patient } = props;
-    const { response } = usePatientDocumentDetails();
+    const { response, manager } = usePatientDocumentDetails();
     const navigate = useNavigate();
 
     return (
@@ -195,6 +244,7 @@ export function PatientDocumentDetails(props: Props) {
                                         <PatientDocumentDetailsReadonly
                                             formData={formData}
                                             encounter={encounter}
+                                            reload={manager.reload}
                                         />
                                     }
                                 />
@@ -209,6 +259,7 @@ export function PatientDocumentDetails(props: Props) {
                                         />
                                     }
                                 />
+                                <Route path="/history" element={<DocumentHistory />} />
                             </Route>
                         </Routes>
                     )}
