@@ -23,7 +23,6 @@ import {
     Patient,
 } from '../contrib/aidbox';
 
-
 export type { QuestionnaireResponseFormData } from 'sdc-qrf';
 
 export type QuestionnaireResponseFormSaveResponse = {
@@ -109,14 +108,8 @@ export function questionnaireIdWOAssembleLoader(
        resources specified in the mappers
     8. Returns updated QuestionnaireResponse resource and extract result
 **/
-export async function loadQuestionnaireResponseFormData(
-    props: QuestionnaireResponseFormProps,
-) {
-    const {
-        launchContextParameters,
-        questionnaireLoader,
-        initialQuestionnaireResponse,
-    } = props;
+export async function loadQuestionnaireResponseFormData(props: QuestionnaireResponseFormProps) {
+    const { launchContextParameters, questionnaireLoader, initialQuestionnaireResponse } = props;
 
     const fetchQuestionnaire = () => {
         if (questionnaireLoader.type === 'raw-id') {
@@ -172,10 +165,14 @@ export async function loadQuestionnaireResponseFormData(
 
 export async function handleFormDataSave(
     props: QuestionnaireResponseFormProps & {
-        formData: QuestionnaireResponseFormData,
+        formData: QuestionnaireResponseFormData;
     },
 ): Promise<RemoteDataResult<QuestionnaireResponseFormSaveResponse>> {
-    const { formData, questionnaireResponseSaveService = persistSaveService, launchContextParameters } = props
+    const {
+        formData,
+        questionnaireResponseSaveService = persistSaveService,
+        launchContextParameters,
+    } = props;
     const { formValues, context } = formData;
     const { questionnaireResponse, questionnaire } = context;
     const itemContext = calcInitialContext(formData.context, formValues);
@@ -234,40 +231,24 @@ export async function handleFormDataSave(
         extracted: isSuccess(extractRemoteData),
         extractedBundle: isSuccess(extractRemoteData) ? extractRemoteData.data : undefined,
     });
-};
+}
 
 export function useQuestionnaireResponseFormData(
     props: QuestionnaireResponseFormProps,
     deps: any[] = [],
 ) {
-    const { questionnaireLoader } = props;
-
-    const fetchQuestionnaire = () => {
-        if (questionnaireLoader.type === 'raw-id') {
-            return service<Questionnaire>({
-                method: 'GET',
-                url: `/Questionnaire/${questionnaireLoader.questionnaireId}`,
-            });
-        }
-        if (questionnaireLoader.type === 'id') {
-            return service<Questionnaire>({
-                method: 'GET',
-                url: `/Questionnaire/${questionnaireLoader.questionnaireId}/$assemble`,
-            });
-        }
-
-        return questionnaireLoader.questionnaireService();
-    };
-
-    const [response] = useService<QuestionnaireResponseFormData>(async () =>
-        loadQuestionnaireResponseFormData(props), [props, ...deps]);
+    const [response] = useService<QuestionnaireResponseFormData>(
+        async () => loadQuestionnaireResponseFormData(props),
+        [props, ...deps],
+    );
 
     const handleSave = async (
         qrFormData: QuestionnaireResponseFormData,
-    ): Promise<RemoteDataResult<QuestionnaireResponseFormSaveResponse>> => handleFormDataSave({
-        ...props,
-        formData: qrFormData
-    });
+    ): Promise<RemoteDataResult<QuestionnaireResponseFormSaveResponse>> =>
+        handleFormDataSave({
+            ...props,
+            formData: qrFormData,
+        });
 
     return { response, handleSave };
 }
