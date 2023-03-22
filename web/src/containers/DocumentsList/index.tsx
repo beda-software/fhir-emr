@@ -25,7 +25,7 @@ interface Props {
 function useColumns(
     response: RemoteData<
         {
-            questionnaireName: { [key: string]: string | undefined };
+            questionnaireNames: { [key: string]: string | undefined };
             QuestionnaireResponse: WithId<QuestionnaireResponse>[];
         },
         any
@@ -39,7 +39,7 @@ function useColumns(
             return [];
         }
 
-        const { questionnaireName } = response.data;
+        const { questionnaireNames } = response.data;
 
         return [
             {
@@ -47,7 +47,7 @@ function useColumns(
                 dataIndex: 'questionnaires',
                 key: 'questionnaires',
                 render: (_text, resource) =>
-                    resource.questionnaire ? questionnaireName[resource.questionnaire] : '',
+                    resource.questionnaire ? questionnaireNames[resource.questionnaire] : '',
             },
             // {
             //     title: <Trans>Created by</Trans>,

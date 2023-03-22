@@ -1,4 +1,6 @@
+import _ from 'lodash';
 import moment from 'moment';
+
 import {
     mapFormToResponse,
     mapResponseToForm,
@@ -20,6 +22,7 @@ import {
     ParametersParameter,
     Patient,
 } from '../contrib/aidbox';
+
 
 export type { QuestionnaireResponseFormData } from 'sdc-qrf';
 
@@ -106,15 +109,13 @@ export function questionnaireIdWOAssembleLoader(
        resources specified in the mappers
     8. Returns updated QuestionnaireResponse resource and extract result
 **/
-export function useQuestionnaireResponseFormData(
+export async function loadQuestionnaireResponseFormData(
     props: QuestionnaireResponseFormProps,
-    deps: any[] = [],
 ) {
     const {
         launchContextParameters,
         questionnaireLoader,
         initialQuestionnaireResponse,
-        questionnaireResponseSaveService = persistSaveService,
     } = props;
 
     const fetchQuestionnaire = () => {
@@ -134,114 +135,139 @@ export function useQuestionnaireResponseFormData(
         return questionnaireLoader.questionnaireService();
     };
 
-    const [response] = useService<QuestionnaireResponseFormData>(async () => {
-        const questionnaireRemoteData = await fetchQuestionnaire();
+    const questionnaireRemoteData = await fetchQuestionnaire();
 
-        if (isFailure(questionnaireRemoteData)) {
-            return questionnaireRemoteData;
-        }
+    if (isFailure(questionnaireRemoteData)) {
+        return questionnaireRemoteData;
+    }
 
-        const params: Parameters = {
+    const params: Parameters = {
+        resourceType: 'Parameters',
+        parameter: [
+            { name: 'questionnaire', resource: questionnaireRemoteData.data },
+            ...(launchContextParameters || []),
+        ],
+    };
+
+    const populateRemoteData = await service<QuestionnaireResponse>({
+        method: 'POST',
+        url: '/Questionnaire/$populate',
+        data: params,
+    });
+
+    return mapSuccess(populateRemoteData, (populatedQR) => {
+        const questionnaire = questionnaireRemoteData.data;
+        const questionnaireResponse = _.merge({}, initialQuestionnaireResponse, populatedQR);
+
+        return {
+            context: {
+                questionnaire,
+                questionnaireResponse,
+                launchContextParameters: launchContextParameters || [],
+            },
+            formValues: mapResponseToForm(questionnaireResponse, questionnaire),
+        };
+    });
+}
+
+export async function handleFormDataSave(
+    props: QuestionnaireResponseFormProps & {
+        formData: QuestionnaireResponseFormData,
+    },
+): Promise<RemoteDataResult<QuestionnaireResponseFormSaveResponse>> {
+    const { formData, questionnaireResponseSaveService = persistSaveService, launchContextParameters } = props
+    const { formValues, context } = formData;
+    const { questionnaireResponse, questionnaire } = context;
+    const itemContext = calcInitialContext(formData.context, formValues);
+    const enabledQuestionsFormValues = removeDisabledAnswers(
+        questionnaire,
+        formValues,
+        itemContext,
+    );
+
+    const qrWithoutAttachments = {
+        ...questionnaireResponse,
+        ...mapFormToResponse(enabledQuestionsFormValues, questionnaire),
+        status: 'completed',
+        authored: formatFHIRDateTime(moment()),
+    };
+
+    const constraintRemoteData = await service({
+        url: '/QuestionnaireResponse/$constraint-check',
+        method: 'POST',
+        data: {
             resourceType: 'Parameters',
             parameter: [
-                { name: 'questionnaire', resource: questionnaireRemoteData.data },
+                { name: 'Questionnaire', resource: questionnaire },
+                { name: 'QuestionnaireResponse', resource: qrWithoutAttachments },
                 ...(launchContextParameters || []),
             ],
-        };
+        },
+    });
+    if (isFailure(constraintRemoteData)) {
+        return constraintRemoteData;
+    }
 
-        // TODO: check launch context in runtime
+    const saveQRRemoteData = await questionnaireResponseSaveService(qrWithoutAttachments);
+    if (isFailure(saveQRRemoteData)) {
+        return saveQRRemoteData;
+    }
 
-        let populateRemoteData: RemoteDataResult<QuestionnaireResponse>;
-        if (initialQuestionnaireResponse?.id) {
-            populateRemoteData = success(initialQuestionnaireResponse as QuestionnaireResponse);
-        } else {
-            populateRemoteData = await service<QuestionnaireResponse>({
-                method: 'POST',
-                url: '/Questionnaire/$populate',
-                data: params,
+    const extractRemoteData = await service<any>({
+        method: 'POST',
+        url: '/Questionnaire/$extract',
+        data: {
+            resourceType: 'Parameters',
+            parameter: [
+                { name: 'questionnaire', resource: questionnaire },
+                { name: 'questionnaire_response', resource: saveQRRemoteData.data },
+                ...(launchContextParameters || []),
+            ],
+        },
+    });
+
+    // TODO: save extract result info QuestionnaireResponse.extractedResources and store
+    // TODO: extracted flag
+
+    return success({
+        questionnaireResponse: saveQRRemoteData.data,
+        extracted: isSuccess(extractRemoteData),
+        extractedBundle: isSuccess(extractRemoteData) ? extractRemoteData.data : undefined,
+    });
+};
+
+export function useQuestionnaireResponseFormData(
+    props: QuestionnaireResponseFormProps,
+    deps: any[] = [],
+) {
+    const { questionnaireLoader } = props;
+
+    const fetchQuestionnaire = () => {
+        if (questionnaireLoader.type === 'raw-id') {
+            return service<Questionnaire>({
+                method: 'GET',
+                url: `/Questionnaire/${questionnaireLoader.questionnaireId}`,
+            });
+        }
+        if (questionnaireLoader.type === 'id') {
+            return service<Questionnaire>({
+                method: 'GET',
+                url: `/Questionnaire/${questionnaireLoader.questionnaireId}/$assemble`,
             });
         }
 
-        return mapSuccess(populateRemoteData, (populatedQR) => {
-            const questionnaire = questionnaireRemoteData.data;
-            const questionnaireResponse = {
-                ...initialQuestionnaireResponse,
-                ...populatedQR,
-            };
+        return questionnaireLoader.questionnaireService();
+    };
 
-            return {
-                context: {
-                    questionnaire,
-                    questionnaireResponse,
-                    launchContextParameters: launchContextParameters || [],
-                },
-                formValues: mapResponseToForm(questionnaireResponse, questionnaire),
-            };
-        });
-    }, deps);
+    const [response] = useService<QuestionnaireResponseFormData>(async () =>
+        loadQuestionnaireResponseFormData(props), [props, ...deps]);
 
     const handleSave = async (
         qrFormData: QuestionnaireResponseFormData,
-    ): Promise<RemoteDataResult<QuestionnaireResponseFormSaveResponse>> => {
-        const { formValues, context } = qrFormData;
-        const { questionnaireResponse, questionnaire } = context;
-        const itemContext = calcInitialContext(qrFormData.context, formValues);
-        const enabledQuestionsFormValues = removeDisabledAnswers(
-            questionnaire,
-            formValues,
-            itemContext,
-        );
-
-        const qrWithoutAttachments = {
-            ...questionnaireResponse,
-            ...mapFormToResponse(enabledQuestionsFormValues, questionnaire),
-            status: 'completed',
-            authored: formatFHIRDateTime(moment()),
-        };
-
-        const constraintRemoteData = await service({
-            url: '/QuestionnaireResponse/$constraint-check',
-            method: 'POST',
-            data: {
-                resourceType: 'Parameters',
-                parameter: [
-                    { name: 'Questionnaire', resource: questionnaire },
-                    { name: 'QuestionnaireResponse', resource: qrWithoutAttachments },
-                    ...(launchContextParameters || []),
-                ],
-            },
-        });
-        if (isFailure(constraintRemoteData)) {
-            return constraintRemoteData;
-        }
-
-        const saveQRRemoteData = await questionnaireResponseSaveService(qrWithoutAttachments);
-        if (isFailure(saveQRRemoteData)) {
-            return saveQRRemoteData;
-        }
-
-        const extractRemoteData = await service<any>({
-            method: 'POST',
-            url: '/Questionnaire/$extract',
-            data: {
-                resourceType: 'Parameters',
-                parameter: [
-                    { name: 'questionnaire', resource: questionnaire },
-                    { name: 'questionnaire_response', resource: saveQRRemoteData.data },
-                    ...(launchContextParameters || []),
-                ],
-            },
-        });
-
-        // TODO: save extract result info QuestionnaireResponse.extractedResources and store
-        // TODO: extracted flag
-
-        return success({
-            questionnaireResponse: saveQRRemoteData.data,
-            extracted: isSuccess(extractRemoteData),
-            extractedBundle: isSuccess(extractRemoteData) ? extractRemoteData.data : undefined,
-        });
-    };
+    ): Promise<RemoteDataResult<QuestionnaireResponseFormSaveResponse>> => handleFormDataSave({
+        ...props,
+        formData: qrFormData
+    });
 
     return { response, handleSave };
 }

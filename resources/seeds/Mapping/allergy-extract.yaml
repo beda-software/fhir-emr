@@ -1,6 +1,8 @@
 body:
     $let:
         qrId: $ fhirpath("QuestionnaireResponse.id")
+        qrVersion: $ fhirpath("QuestionnaireResponse.meta.versionId")
+        qrLastUpdated: $ fhirpath("QuestionnaireResponse.meta.lastUpdated")
         allergyIntoleranceId: >-
             $
             fhirpath("QuestionnaireResponse.repeat(item).where(linkId='allergyIntoleranceId').answer.value.string").0
@@ -85,7 +87,7 @@ body:
                   resourceType: Provenance
                   target:
                       - uri: urn:uuid:allergy-id
-                  recorded: '2023-03-16T10:00:00Z'
+                  recorded: $ qrLastUpdated
                   activity:
                       $if: $ allergyIntoleranceId
                       $then:
@@ -104,8 +106,7 @@ body:
                   entity:
                       - role: source
                         what:
-                            resourceType: QuestionnaireResponse
-                            id: $ qrId
+                            uri: $ "QuestionnaireResponse/" + qrId + "/_history/" + qrVersion
         resourceType: Bundle
 id: allergy-extract
 resourceType: Mapping

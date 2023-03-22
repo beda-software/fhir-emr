@@ -30,6 +30,7 @@ import { ReadonlyQuestionnaireResponseForm } from 'src/components/BaseQuestionna
 import { BloodPressureReadOnly } from 'src/components/BaseQuestionnaireResponseForm/widgets';
 import { Spinner } from 'src/components/Spinner';
 
+import { DocumentHistory } from '../DocumentHistory';
 import { PatientDocument } from '../PatientDocument';
 import { usePatientDocument } from '../PatientDocument/usePatientDocument';
 import { PatientHeaderContext } from '../PatientHeader/context';
@@ -158,7 +159,7 @@ function PatientDocumentDetailsFormData(props: {
 
     return (
         <RenderRemoteData remoteData={response} renderLoading={Spinner}>
-            {(formData) => children({ formData })}
+            {({ formData }) => children({ formData })}
         </RenderRemoteData>
     );
 }
@@ -209,6 +210,7 @@ export function PatientDocumentDetails(props: Props) {
                                         />
                                     }
                                 />
+                                <Route path="/history" element={<DocumentHistory />} />
                             </Route>
                         </Routes>
                     )}

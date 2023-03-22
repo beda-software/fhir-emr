@@ -1,11 +1,13 @@
 import { AlertOutlined, ExperimentOutlined, HeartOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 import _ from 'lodash';
+import { Link, useLocation } from 'react-router-dom';
 
 import { extractBundleResources, WithId } from 'aidbox-react/lib/services/fhir';
 import { parseFHIRDateTime } from 'aidbox-react/lib/utils/date';
 
 import {
+    AidboxResource,
     AllergyIntolerance,
     Appointment,
     Bundle,
@@ -13,6 +15,7 @@ import {
     Immunization,
     MedicationStatement,
     Observation,
+    Provenance,
 } from 'shared/src/contrib/aidbox';
 
 import { formatHumanDate } from 'src/utils/date';
@@ -32,8 +35,30 @@ interface OverviewCard<T = any> {
     getKey: (r: T) => string;
 }
 
+function LinkToEdit(props: {
+    name?: string;
+    resource: AidboxResource;
+    provenanceList: Provenance[];
+}) {
+    const { name, resource, provenanceList } = props;
+    const location = useLocation();
+    const provenance = provenanceList.find(
+        (p) =>
+            p.target[0]?.id === resource.id && p.target[0]?.resourceType === resource.resourceType,
+    );
+    const entity = provenance?.entity?.[0]?.what;
+    const qrId = entity?.uri?.split('/')[1];
+
+    if (qrId) {
+        return <Link to={`${location.pathname}/documents/${qrId}`}>{name}</Link>;
+    }
+
+    return <>{name}</>;
+}
+
 export function prepareAllergies(
     allergies: AllergyIntolerance[],
+    provenanceList: Provenance[],
 ): OverviewCard<AllergyIntolerance> {
     return {
         title: t`Allergies`,
@@ -44,7 +69,13 @@ export function prepareAllergies(
             {
                 title: t`Name`,
                 key: 'name',
-                render: (r: AllergyIntolerance) => r.code?.coding?.[0]?.display,
+                render: (resource: AllergyIntolerance) => (
+                    <LinkToEdit
+                        name={resource.code?.coding?.[0]?.display}
+                        resource={resource}
+                        provenanceList={provenanceList}
+                    />
+                ),
             },
             {
                 title: t`Date`,

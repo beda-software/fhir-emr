@@ -1,30 +1,89 @@
+import { RemoteDataResult } from 'aidbox-react';
+import _ from 'lodash';
 import { useNavigate } from 'react-router-dom';
 
+import { useService } from 'aidbox-react/lib/hooks/service';
+import { failure, isSuccess, success } from 'aidbox-react/lib/libs/remoteData';
 import { getReference, WithId } from 'aidbox-react/lib/services/fhir';
+import { mapSuccess, resolveMap } from 'aidbox-react/lib/services/service';
 
-import { Patient, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
-import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
+import {
+    Patient,
+    Provenance,
+    QuestionnaireResponse,
+} from 'shared/src/contrib/aidbox';
+import {
+    handleFormDataSave,
+    loadQuestionnaireResponseFormData,
+    questionnaireIdLoader,
+    QuestionnaireResponseFormData,
+    QuestionnaireResponseFormProps,
+} from 'shared/src/hooks/questionnaire-response-form-data';
 
-import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { onFormResponse } from 'src/components/QuestionnaireResponseForm';
+import { getProvenanceByEntity } from 'src/services/provenance';
 
-export interface PatientDocumentProps {
+export interface Props {
     patient: Patient;
     questionnaireResponse?: WithId<QuestionnaireResponse>;
-    questionnaireId?: string;
+    questionnaireId: string;
     encounterId?: string;
     onSuccess?: () => void;
 }
 
-export function usePatientDocument(props: PatientDocumentProps & { questionnaireId: string }) {
-    const { patient, questionnaireResponse, questionnaireId, encounterId, onSuccess } = props;
-    const navigate = useNavigate();
+async function onFormSubmit(
+    props: QuestionnaireResponseFormProps & {
+        formData: QuestionnaireResponseFormData;
+        onSuccess?: (resource: any) => void;
+    },
+) {
+    const { formData, initialQuestionnaireResponse, onSuccess } = props;
+    const modifiedFormData = _.merge({}, formData, {
+        context: {
+            questionnaireResponse: {
+                questionnaire: initialQuestionnaireResponse?.questionnaire,
+            },
+        },
+    });
 
-    const data = useQuestionnaireResponseForm({
+    delete modifiedFormData.context.questionnaireResponse.meta;
+
+    const saveResponse = await handleFormDataSave({
+        ...props,
+        formData: modifiedFormData,
+    });
+
+    onFormResponse({
+        response: saveResponse,
+        onSuccess,
+    });
+}
+
+function prepareFormInitialParams(
+    props: Props & { provenance?: WithId<Provenance> },
+): QuestionnaireResponseFormProps {
+    const { patient, questionnaireResponse, questionnaireId, encounterId, provenance } = props;
+    const target = provenance?.target[0];
+
+    const params = {
         questionnaireLoader: questionnaireIdLoader(questionnaireId),
         launchContextParameters: [
             { name: 'Patient', resource: patient },
             ...(encounterId
-                ? [{ name: 'Encounter', resource: { resourceType: 'Encounter', id: encounterId } }]
+                ? [
+                      {
+                          name: 'Encounter',
+                          resource: { resourceType: 'Encounter', id: encounterId },
+                      },
+                  ]
+                : []),
+            ...(target
+                ? [
+                      {
+                          name: target.resourceType,
+                          resource: target,
+                      },
+                  ]
                 : []),
         ],
         initialQuestionnaireResponse: questionnaireResponse || {
@@ -32,8 +91,54 @@ export function usePatientDocument(props: PatientDocumentProps & { questionnaire
             encounter: encounterId ? { resourceType: 'Encounter', id: encounterId } : undefined,
             questionnaire: questionnaireId,
         },
-        onSuccess: onSuccess ? onSuccess : () => navigate(-1),
-    });
+    };
 
-    return { ...data, questionnaireId };
+    return params;
+}
+
+export function usePatientDocument(props: Props) {
+    const { questionnaireResponse, questionnaireId, onSuccess } = props;
+    const navigate = useNavigate();
+
+    const [response] = useService(async () => {
+        let provenanceResponse: RemoteDataResult<WithId<Provenance>[]> = success([]);
+
+        if (questionnaireResponse && questionnaireResponse.id) {
+            const uri = `${questionnaireResponse.resourceType}/${questionnaireResponse.id}`;
+
+            provenanceResponse = await getProvenanceByEntity(uri);
+        }
+
+        if (isSuccess(provenanceResponse)) {
+            const provenance = provenanceResponse.data[0];
+            const formInitialParams = prepareFormInitialParams({
+                ...props,
+                provenance,
+            });
+
+            const onSubmit = async (formData: QuestionnaireResponseFormData) =>
+                onFormSubmit({
+                    ...formInitialParams,
+                    formData,
+                    onSuccess: onSuccess ? onSuccess : () => navigate(-1),
+                });
+
+            return mapSuccess(
+                await resolveMap({
+                    formData: loadQuestionnaireResponseFormData(formInitialParams),
+                }),
+                ({ formData }) => {
+                    return {
+                        formData,
+                        onSubmit,
+                        provenance,
+                    };
+                },
+            );
+        }
+
+        return failure({});
+    }, [questionnaireResponse]);
+
+    return { response, questionnaireId };
 }
