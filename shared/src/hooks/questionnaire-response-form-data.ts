@@ -142,11 +142,16 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
         ],
     };
 
-    const populateRemoteData = await service<QuestionnaireResponse>({
-        method: 'POST',
-        url: '/Questionnaire/$populate',
-        data: params,
-    });
+    let populateRemoteData: RemoteDataResult<QuestionnaireResponse>;
+    if (initialQuestionnaireResponse?.id) {
+        populateRemoteData = success(initialQuestionnaireResponse as QuestionnaireResponse);
+    } else {
+        populateRemoteData = await service<QuestionnaireResponse>({
+            method: 'POST',
+            url: '/Questionnaire/$populate',
+            data: params,
+        });
+    }
 
     return mapSuccess(populateRemoteData, (populatedQR) => {
         const questionnaire = questionnaireRemoteData.data;

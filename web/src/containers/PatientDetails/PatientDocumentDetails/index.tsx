@@ -104,10 +104,10 @@ function PatientDocumentDetailsReadonly(props: {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const encounterStatus = !encounter || encounter?.status !== 'completed';
+    const encounterCompleted = encounter && encounter.status === 'completed';
 
     const patientId = location.pathname.split('/')[2];
-    const qrStatus = formData.context.questionnaireResponse.status !== 'completed';
+    const qrCompleted = formData.context.questionnaireResponse.status === 'completed';
     const qrId = formData.context.questionnaireResponse.id;
 
     return (
@@ -117,24 +117,35 @@ function PatientDocumentDetailsReadonly(props: {
                     <Title level={4} className={s.title}>
                         {formData.context.questionnaire.name}
                     </Title>
-                    {encounterStatus && qrStatus ? (
-                        <div className={s.buttons}>
+                    <div className={s.buttons}>
+                        {qrCompleted ? (
                             <Button
                                 type="link"
-                                onClick={() => navigate(`${location.pathname}/edit`)}
+                                onClick={() => navigate(`${location.pathname}/history`)}
                                 className={s.button}
                             >
-                                <Trans>Edit</Trans>
+                                <Trans>History</Trans>
                             </Button>
-                            <Button
-                                type="link"
-                                onClick={() => deleteDraft(navigate, patientId, qrId)}
-                                className={s.button}
-                            >
-                                <Trans>Delete</Trans>
-                            </Button>
-                        </div>
-                    ) : null}
+                        ) : null}
+                        {!encounterCompleted && !qrCompleted ? (
+                            <>
+                                <Button
+                                    type="link"
+                                    onClick={() => navigate(`${location.pathname}/edit`)}
+                                    className={s.button}
+                                >
+                                    <Trans>Edit</Trans>
+                                </Button>
+                                <Button
+                                    type="link"
+                                    onClick={() => deleteDraft(navigate, patientId, qrId)}
+                                    className={s.button}
+                                >
+                                    <Trans>Delete</Trans>
+                                </Button>
+                            </>
+                        ) : null}
+                    </div>
                 </div>
                 <ReadonlyQuestionnaireResponseForm
                     formData={formData}

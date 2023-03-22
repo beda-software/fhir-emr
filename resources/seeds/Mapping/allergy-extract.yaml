@@ -3,9 +3,7 @@ body:
         qrId: $ fhirpath("QuestionnaireResponse.id")
         qrVersion: $ fhirpath("QuestionnaireResponse.meta.versionId")
         qrLastUpdated: $ fhirpath("QuestionnaireResponse.meta.lastUpdated")
-        allergyIntoleranceId: >-
-            $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='allergyIntoleranceId').answer.value.string").0
+        allergyIntoleranceId: $ AllergyIntolerance.id
         status: >-
             $
             fhirpath("QuestionnaireResponse.repeat(item).where(linkId='status').answer.value.Coding").0
