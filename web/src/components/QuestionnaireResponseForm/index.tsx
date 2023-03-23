@@ -46,6 +46,7 @@ export const saveQuestionnaireResponseDraft = async (
 
     const questionnaireResponse: QuestionnaireResponse = {
         id: formData.context.questionnaireResponse.id,
+        encounter: formData.context.questionnaireResponse.encounter,
         item: transformedFormValues.item,
         questionnaire: isCreating ? questionnaireId : formData.context.questionnaire.assembledFrom,
         resourceType: formData.context.questionnaireResponse.resourceType,
