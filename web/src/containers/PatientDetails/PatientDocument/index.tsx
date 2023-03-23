@@ -57,6 +57,7 @@ export function PatientDocument(props: PatientDocumentProps) {
                                     'depression-score': DepressionScore,
                                 }}
                                 onCancel={() => navigate(-1)}
+                                saveButtonTitle={'Complete'}
                                 autoSave
                             />
                         </>

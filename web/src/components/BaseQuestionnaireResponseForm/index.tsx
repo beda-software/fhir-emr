@@ -26,7 +26,6 @@ import { notAsked } from 'aidbox-react/lib/libs/remoteData';
 import { saveQuestionnaireResponseDraft } from 'src/components/QuestionnaireResponseForm';
 import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
-import { Spinner } from '../Spinner';
 import { TextWithMacroFill } from '../TextWithMacroFill';
 import s from './BaseQuestionnaireResponseForm.module.scss';
 import {
@@ -60,11 +59,12 @@ export interface BaseQuestionnaireResponseFormProps {
     questionItemComponents?: QuestionItemComponentMapping;
     groupItemComponent?: GroupItemComponent;
     onCancel?: () => void;
+    saveButtonTitle?: string;
     autoSave?: boolean;
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
-    const { onSubmit, formData, readOnly, onCancel, autoSave } = props;
+    const { onSubmit, formData, readOnly, onCancel, saveButtonTitle, autoSave } = props;
 
     const questionnaireId = formData.context.questionnaire.assembledFrom;
 
@@ -111,19 +111,16 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         debouncedSaveDraft(formValues);
     }, [formValues, debouncedSaveDraft]);
 
-    if (isLoading) {
-        return <Spinner />;
-    }
-
     return (
         <FormProvider {...methods}>
             <form
-                onSubmit={handleSubmit(() => {
+                onSubmit={handleSubmit(async () => {
                     setIsLoading(true);
                     if (questionnaireId && isSuccess(draftSaveState)) {
                         formData.context.questionnaireResponse.id = draftSaveState.data.id;
                     }
-                    onSubmit({ ...formData, formValues });
+                    await onSubmit({ ...formData, formValues });
+                    setIsLoading(false);
                 })}
                 className={classNames(s.form, 'app-form')}
             >
@@ -134,7 +131,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                             renderLoading={() => <div>Saving...</div>}
                             renderFailure={() => <div>Saving error</div>}
                         >
-                            {() => <div>Successful saving</div>}
+                            {() => <div>Saved</div>}
                         </RenderRemoteData>
                     </div>
                 ) : null}
@@ -192,9 +189,15 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                                     </Button>
                                 )}
 
-                                <Button type="primary" htmlType="submit" disabled={isLoading}>
-                                    <Trans>Save</Trans>
-                                </Button>
+                                {isLoading ? (
+                                    <Button type="primary" loading>
+                                        Saving...
+                                    </Button>
+                                ) : (
+                                    <Button type="primary" htmlType="submit">
+                                        <Trans>{saveButtonTitle ?? 'Save'}</Trans>
+                                    </Button>
+                                )}
                             </div>
                         )}
                     </>
