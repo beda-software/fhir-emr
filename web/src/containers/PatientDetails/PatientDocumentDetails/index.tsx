@@ -36,6 +36,7 @@ import { PatientDocument } from '../PatientDocument';
 import { usePatientDocument } from '../PatientDocument/usePatientDocument';
 import { PatientHeaderContext } from '../PatientHeader/context';
 import s from './PatientDocumentDetails.module.scss';
+import { useDocumentHistory } from '../DocumentHistory/hooks';
 
 interface Props {
     patient: WithId<Patient>;
@@ -123,6 +124,8 @@ function PatientDocumentDetailsReadonly(props: {
 
     const { setBreadcrumbs } = useContext(PatientHeaderContext);
 
+    const { response } = useDocumentHistory();
+
     useEffect(() => {
         setBreadcrumbs({
             [location?.pathname]: formData.context.questionnaire?.name || '',
@@ -148,15 +151,19 @@ function PatientDocumentDetailsReadonly(props: {
                     <div className={s.buttons}>
                         {qrCompleted ? (
                             <>
+                                <RenderRemoteData remoteData={response} renderLoading={Spinner}>
+                                    {({ provenanceList }) => (
+                                        <Button
+                                            type="primary"
+                                            onClick={() => navigate(`${location.pathname}/history`)}
+                                            className={s.button}
+                                            disabled={provenanceList.length === 0}
+                                        >
+                                            <Trans>History</Trans>
+                                        </Button>
+                                    )}
+                                </RenderRemoteData>
                                 <Button
-                                    type="link"
-                                    onClick={() => navigate(`${location.pathname}/history`)}
-                                    className={s.button}
-                                >
-                                    <Trans>History</Trans>
-                                </Button>
-                                <Button
-                                    type="link"
                                     onClick={() => amendDocument(reload, qrId)}
                                     className={s.button}
                                 >
@@ -167,14 +174,15 @@ function PatientDocumentDetailsReadonly(props: {
                         {canBeEdited ? (
                             <>
                                 <Button
-                                    type="link"
+                                    type="primary"
                                     onClick={() => navigate(`${location.pathname}/edit`)}
                                     className={s.button}
                                 >
                                     <Trans>Edit</Trans>
                                 </Button>
                                 <Button
-                                    type="link"
+                                    type="text"
+                                    danger
                                     onClick={() => deleteDraft(navigate, patientId, qrId)}
                                     className={s.button}
                                 >
