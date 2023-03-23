@@ -29,6 +29,7 @@ import { Encounter, Patient, QuestionnaireResponse } from 'shared/src/contrib/ai
 
 import { ReadonlyQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm/ReadonlyQuestionnaireResponseForm';
 import { BloodPressureReadOnly } from 'src/components/BaseQuestionnaireResponseForm/widgets';
+import { ConfirmActionButton } from 'src/components/ConfirmActionButton';
 import { Spinner } from 'src/components/Spinner';
 
 import { DocumentHistory } from '../DocumentHistory';
@@ -44,7 +45,7 @@ interface Props {
 
 const deleteDraft = async (navigate: NavigateFunction, patientId?: string, qrId?: string) => {
     if (!qrId) {
-        console.log('QuestionnaireResponse ID does not exist');
+        console.error('QuestionnaireResponse ID does not exist');
         return;
     }
     const response = await forceDeleteFHIRResource({
@@ -66,26 +67,26 @@ const deleteDraft = async (navigate: NavigateFunction, patientId?: string, qrId?
 };
 
 const amendDocument = async (reload: () => void, qrId?: string) => {
-    // eslint-disable-next-line no-restricted-globals
-    if (qrId && confirm(t`Are you sure you want to amend the document?`)) {
-        const response = await patchFHIRResource<QuestionnaireResponse>({
-            id: qrId,
-            resourceType: 'QuestionnaireResponse',
-            status: 'in-progress',
+    if (!qrId) {
+        console.error('QuestionnaireResponse ID does not exist');
+        return;
+    }
+    const response = await patchFHIRResource<QuestionnaireResponse>({
+        id: qrId,
+        resourceType: 'QuestionnaireResponse',
+        status: 'in-progress',
+    });
+    if (isSuccess(response)) {
+        reload();
+        notification.success({
+            message: 'The document successfully amended',
         });
-
-        if (isSuccess(response)) {
-            reload();
-            notification.success({
-                message: t`The document successfully amended`,
-            });
-        }
-        if (isFailure(response)) {
-            console.error(response.error);
-            notification.error({
-                message: t`Error while amending the document`,
-            });
-        }
+    }
+    if (isFailure(response)) {
+        console.error(response.error);
+        notification.error({
+            message: 'Error while amending the document',
+        });
     }
 };
 
@@ -151,12 +152,18 @@ function PatientDocumentDetailsReadonly(props: {
                     <div className={s.buttons}>
                         {qrCompleted ? (
                             <>
-                                <Button
-                                    onClick={() => amendDocument(reload, qrId)}
-                                    className={s.button}
+                                <ConfirmActionButton
+                                    action={() => amendDocument(reload, qrId)}
+                                    reload={reload}
+                                    qrId={qrId}
+                                    title={t`Are you sure you want to amend the document?`}
+                                    okText="Yes"
+                                    cancelText="No"
                                 >
-                                    <Trans>Amend</Trans>
-                                </Button>
+                                    <Button className={s.button}>
+                                        <Trans>Amend</Trans>
+                                    </Button>
+                                </ConfirmActionButton>
                                 <RenderRemoteData
                                     remoteData={response}
                                     renderLoading={() => (
@@ -180,14 +187,18 @@ function PatientDocumentDetailsReadonly(props: {
                         ) : null}
                         {canBeEdited ? (
                             <>
-                                <Button
-                                    type="text"
-                                    danger
-                                    onClick={() => deleteDraft(navigate, patientId, qrId)}
-                                    className={s.button}
+                                <ConfirmActionButton
+                                    action={() => deleteDraft(navigate, patientId, qrId)}
+                                    reload={reload}
+                                    qrId={qrId}
+                                    title={t`Are you sure you want to delete the document?`}
+                                    okText="Yes"
+                                    cancelText="No"
                                 >
-                                    <Trans>Delete</Trans>
-                                </Button>
+                                    <Button className={s.button} type={'text'} danger>
+                                        <Trans>Delete</Trans>
+                                    </Button>
+                                </ConfirmActionButton>
                                 <Button
                                     type="primary"
                                     onClick={() => navigate(`${location.pathname}/edit`)}
