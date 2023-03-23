@@ -2,7 +2,8 @@ body:
     $let:
         qrId: $ fhirpath("QuestionnaireResponse.id")
         qrVersion: $ fhirpath("QuestionnaireResponse.meta.versionId")
-        qrLastUpdated: $ fhirpath("QuestionnaireResponse.meta.lastUpdated")
+        qrLastUpdated: >-
+            $ fhirpath("QuestionnaireResponse.meta.lastUpdated") || fhirpath("QuestionnaireResponse.repeat(item).where(linkId='dateTime').answer.value.dateTime").0
         allergyIntoleranceId: $ AllergyIntolerance.id
         status: >-
             $
