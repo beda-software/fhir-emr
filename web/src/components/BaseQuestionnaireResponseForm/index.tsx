@@ -26,6 +26,8 @@ import { notAsked } from 'aidbox-react/lib/libs/remoteData';
 import { saveQuestionnaireResponseDraft } from 'src/components/QuestionnaireResponseForm';
 import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
+import { Spinner } from '../Spinner';
+import { TextWithMacroFill } from '../TextWithMacroFill';
 import s from './BaseQuestionnaireResponseForm.module.scss';
 import {
     Col,
@@ -48,7 +50,6 @@ import {
 } from './widgets';
 import { Display } from './widgets/display';
 import { QuestionReference } from './widgets/reference';
-import { TextWithMacroFill } from '../TextWithMacroFill';
 
 export interface BaseQuestionnaireResponseFormProps {
     formData: QuestionnaireResponseFormData;
@@ -82,6 +83,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
     const formValues = watch();
 
     const [draftSaveState, setDraftSaveState] = useState<RemoteData>(notAsked);
+    const [isLoading, setIsLoading] = useState(false);
 
     const previousFormValuesRef = useRef<FormItems | null>(null);
 
@@ -109,10 +111,15 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         debouncedSaveDraft(formValues);
     }, [formValues, debouncedSaveDraft]);
 
+    if (isLoading) {
+        return <Spinner />;
+    }
+
     return (
         <FormProvider {...methods}>
             <form
                 onSubmit={handleSubmit(() => {
+                    setIsLoading(true);
                     if (questionnaireId && isSuccess(draftSaveState)) {
                         formData.context.questionnaireResponse.id = draftSaveState.data.id;
                     }
@@ -184,7 +191,8 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                                         <Trans>Cancel</Trans>
                                     </Button>
                                 )}
-                                <Button type="primary" htmlType="submit">
+
+                                <Button type="primary" htmlType="submit" disabled={isLoading}>
                                     <Trans>Save</Trans>
                                 </Button>
                             </div>
