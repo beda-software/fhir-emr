@@ -4,6 +4,9 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
+import { WithId } from 'aidbox-react/lib/services/fhir';
+
+import { Patient, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import {
@@ -14,13 +17,21 @@ import { Spinner } from 'src/components/Spinner';
 
 import { PatientHeaderContext } from '../PatientHeader/context';
 import s from './PatientDocument.module.scss';
-import { PatientDocumentProps, usePatientDocument } from './usePatientDocument';
+import { usePatientDocument } from './usePatientDocument';
 
-export function PatientDocument(props: PatientDocumentProps) {
+interface Props {
+    patient: Patient;
+    questionnaireResponse?: WithId<QuestionnaireResponse>;
+    questionnaireId?: string;
+    encounterId?: string;
+    onSuccess?: () => void;
+}
+
+export function PatientDocument(props: Props) {
     const params = useParams<{ questionnaireId: string; encounterId?: string }>();
     const encounterId = props.encounterId || params.encounterId;
     const questionnaireId = props.questionnaireId || params.questionnaireId!;
-    const { response, onSubmit, readOnly } = usePatientDocument({
+    const { response } = usePatientDocument({
         ...props,
         questionnaireId,
         encounterId,
@@ -33,7 +44,7 @@ export function PatientDocument(props: PatientDocumentProps) {
     useEffect(() => {
         if (isSuccess(response)) {
             setBreadcrumbs({
-                [location?.pathname]: response.data.context.questionnaire?.name || '',
+                [location?.pathname]: response.data.formData.context.questionnaire?.name || '',
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -43,7 +54,7 @@ export function PatientDocument(props: PatientDocumentProps) {
         <div className={s.container}>
             <div className={s.content}>
                 <RenderRemoteData remoteData={response} renderLoading={Spinner}>
-                    {(formData) => (
+                    {({ formData, onSubmit, provenance }) => (
                         <>
                             <div className={s.header}>
                                 <Title level={3}>{formData.context.questionnaire.name}</Title>
@@ -51,14 +62,13 @@ export function PatientDocument(props: PatientDocumentProps) {
                             <BaseQuestionnaireResponseForm
                                 formData={formData}
                                 onSubmit={onSubmit}
-                                readOnly={readOnly}
                                 itemControlQuestionItemComponents={{
                                     'anxiety-score': AnxietyScore,
                                     'depression-score': DepressionScore,
                                 }}
                                 onCancel={() => navigate(-1)}
                                 saveButtonTitle={'Complete'}
-                                autoSave
+                                autoSave={!provenance}
                             />
                         </>
                     )}

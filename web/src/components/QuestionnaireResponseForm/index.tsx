@@ -8,7 +8,7 @@ import {
 } from 'sdc-qrf';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { isFailure, isSuccess } from 'aidbox-react/lib/libs/remoteData';
+import { isFailure, isSuccess, RemoteDataResult } from 'aidbox-react/lib/libs/remoteData';
 import { saveFHIRResource, updateFHIRResource } from 'aidbox-react/lib/services/fhir';
 import { formatError } from 'aidbox-react/lib/utils/error';
 
@@ -16,6 +16,7 @@ import { QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 import {
     QuestionnaireResponseFormData,
     QuestionnaireResponseFormProps,
+    QuestionnaireResponseFormSaveResponse,
     useQuestionnaireResponseFormData,
 } from 'shared/src/hooks/questionnaire-response-form-data';
 
@@ -45,6 +46,7 @@ export const saveQuestionnaireResponseDraft = async (
 
     const questionnaireResponse: QuestionnaireResponse = {
         id: formData.context.questionnaireResponse.id,
+        encounter: formData.context.questionnaireResponse.encounter,
         item: transformedFormValues.item,
         questionnaire: isCreating ? questionnaireId : formData.context.questionnaire.assembledFrom,
         resourceType: formData.context.questionnaireResponse.resourceType,
@@ -67,6 +69,38 @@ export const saveQuestionnaireResponseDraft = async (
     return response;
 };
 
+export function onFormResponse(props: {
+    response: RemoteDataResult<QuestionnaireResponseFormSaveResponse>;
+    onSuccess?: (resource: any) => void;
+    onFailure?: (error: any) => void;
+}) {
+    const { response, onSuccess, onFailure } = props;
+
+    if (isSuccess(response)) {
+        if (response.data.extracted) {
+            if (onSuccess) {
+                onSuccess(response.data);
+            } else {
+                notification.success({
+                    message: 'Form successfully saved',
+                });
+            }
+        } else {
+            if (onFailure) {
+                onFailure('Error while extracting');
+            } else {
+                notification.error({ message: 'Error while extracting' });
+            }
+        }
+    } else {
+        if (onFailure) {
+            onFailure(response.error);
+        } else {
+            notification.error({ message: formatError(response.error) });
+        }
+    }
+}
+
 export function useQuestionnaireResponseForm(props: Props) {
     const { response, handleSave } = useQuestionnaireResponseFormData(props);
     const { onSuccess, onFailure, readOnly, initialQuestionnaireResponse, onCancel } = props;
@@ -83,30 +117,7 @@ export function useQuestionnaireResponseForm(props: Props) {
         delete modifiedFormData.context.questionnaireResponse.meta;
 
         const saveResponse = await handleSave(modifiedFormData);
-
-        if (isSuccess(saveResponse)) {
-            if (saveResponse.data.extracted) {
-                if (onSuccess) {
-                    onSuccess(saveResponse.data);
-                } else {
-                    notification.success({
-                        message: 'Form successfully saved',
-                    });
-                }
-            } else {
-                if (onFailure) {
-                    onFailure('Error while extracting');
-                } else {
-                    notification.error({ message: 'Error while extracting' });
-                }
-            }
-        } else {
-            if (onFailure) {
-                onFailure(saveResponse.error);
-            } else {
-                notification.error({ message: formatError(saveResponse.error) });
-            }
-        }
+        onFormResponse({ response: saveResponse, onSuccess, onFailure });
     };
 
     return { response, onSubmit, readOnly, onCancel };

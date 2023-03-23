@@ -8,6 +8,7 @@
     background-color: #fff;
     box-shadow: 0px 6px 16px #e6ebf5;
     padding: 24px 32px;
+    border-radius: 10px;
 }
 
 .header {
@@ -24,8 +25,7 @@
 
 .buttons {
     display: flex;
-    justify-content: space-between;
-    width: 80px;
+    gap: 16px;
 }
 
 .button {
