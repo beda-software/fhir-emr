@@ -75,7 +75,6 @@ function prepareFormInitialParams(
         provenance,
         practitioner,
     } = props;
-    const target = provenance?.target[0];
 
     const params = {
         questionnaireLoader: questionnaireIdLoader(questionnaireId),
@@ -97,11 +96,11 @@ function prepareFormInitialParams(
                       },
                   ]
                 : []),
-            ...(target
+            ...(provenance
                 ? [
                       {
-                          name: target.resourceType,
-                          resource: target,
+                          name: 'Provenance',
+                          resource: provenance,
                       },
                   ]
                 : []),
