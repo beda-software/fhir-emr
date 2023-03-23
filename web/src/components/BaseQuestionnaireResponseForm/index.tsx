@@ -28,6 +28,7 @@ import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
 import { TextWithMacroFill } from '../TextWithMacroFill';
 import s from './BaseQuestionnaireResponseForm.module.scss';
+import { useSavedMessage } from './hooks';
 import {
     Col,
     Group,
@@ -87,6 +88,8 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
 
     const previousFormValuesRef = useRef<FormItems | null>(null);
 
+    const { savedMessage } = useSavedMessage(draftSaveState);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const debouncedSaveDraft = useCallback(
         _.debounce(async (currentFormValues: FormItems) => {
@@ -131,7 +134,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                             renderLoading={() => <div>Saving...</div>}
                             renderFailure={() => <div>Saving error</div>}
                         >
-                            {() => <div>Saved</div>}
+                            {() => <div>{savedMessage}</div>}
                         </RenderRemoteData>
                     </div>
                 ) : null}

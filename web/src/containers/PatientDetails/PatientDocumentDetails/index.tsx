@@ -152,14 +152,18 @@ function PatientDocumentDetailsReadonly(props: {
                     <div className={s.buttons}>
                         {qrCompleted ? (
                             <>
+                                <Button
+                                    onClick={() => amendDocument(reload, qrId)}
+                                    className={s.button}
+                                >
+                                    <Trans>Amend</Trans>
+                                </Button>
                                 <RenderRemoteData
                                     remoteData={response}
                                     renderLoading={() => (
-                                        <Button
-                                            type="primary"
-                                            icon={<PoweroffOutlined />}
-                                            loading
-                                        />
+                                        <Button type="primary" className={s.button} disabled>
+                                            <Trans>History</Trans>
+                                        </Button>
                                     )}
                                 >
                                     {({ provenanceList }) => (
@@ -173,23 +177,10 @@ function PatientDocumentDetailsReadonly(props: {
                                         </Button>
                                     )}
                                 </RenderRemoteData>
-                                <Button
-                                    onClick={() => amendDocument(reload, qrId)}
-                                    className={s.button}
-                                >
-                                    <Trans>Amend</Trans>
-                                </Button>
                             </>
                         ) : null}
                         {canBeEdited ? (
                             <>
-                                <Button
-                                    type="primary"
-                                    onClick={() => navigate(`${location.pathname}/edit`)}
-                                    className={s.button}
-                                >
-                                    <Trans>Edit</Trans>
-                                </Button>
                                 <Button
                                     type="text"
                                     danger
@@ -197,6 +188,13 @@ function PatientDocumentDetailsReadonly(props: {
                                     className={s.button}
                                 >
                                     <Trans>Delete</Trans>
+                                </Button>
+                                <Button
+                                    type="primary"
+                                    onClick={() => navigate(`${location.pathname}/edit`)}
+                                    className={s.button}
+                                >
+                                    <Trans>Edit</Trans>
                                 </Button>
                             </>
                         ) : null}
