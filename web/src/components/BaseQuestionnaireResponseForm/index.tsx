@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Trans } from '@lingui/macro';
-import { loading, RemoteData, RenderRemoteData, isSuccess } from 'aidbox-react';
+import { loading, RemoteData, isSuccess } from 'aidbox-react';
 import { Button } from 'antd';
 import classNames from 'classnames';
 import _ from 'lodash';
@@ -21,14 +21,11 @@ import * as yup from 'yup';
 
 import 'react-phone-input-2/lib/style.css';
 
-import { notAsked } from 'aidbox-react/lib/libs/remoteData';
-
 import { saveQuestionnaireResponseDraft } from 'src/components/QuestionnaireResponseForm';
 import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
 import { TextWithMacroFill } from '../TextWithMacroFill';
 import s from './BaseQuestionnaireResponseForm.module.scss';
-import { useSavedMessage } from './hooks';
 import {
     Col,
     Group,
@@ -62,10 +59,21 @@ export interface BaseQuestionnaireResponseFormProps {
     onCancel?: () => void;
     saveButtonTitle?: string;
     autoSave?: boolean;
+    draftSaveState?: RemoteData;
+    setDraftSaveState?: React.Dispatch<React.SetStateAction<RemoteData<any, any>>>;
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
-    const { onSubmit, formData, readOnly, onCancel, saveButtonTitle, autoSave } = props;
+    const {
+        onSubmit,
+        formData,
+        readOnly,
+        onCancel,
+        saveButtonTitle,
+        autoSave,
+        draftSaveState,
+        setDraftSaveState,
+    } = props;
 
     const questionnaireId = formData.context.questionnaire.assembledFrom;
 
@@ -83,19 +91,16 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
 
     const formValues = watch();
 
-    const [draftSaveState, setDraftSaveState] = useState<RemoteData>(notAsked);
     const [isLoading, setIsLoading] = useState(false);
 
     const previousFormValuesRef = useRef<FormItems | null>(null);
-
-    const { savedMessage } = useSavedMessage(draftSaveState);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const debouncedSaveDraft = useCallback(
         _.debounce(async (currentFormValues: FormItems) => {
             if (!autoSave || !questionnaireId) return;
 
-            if (!_.isEqual(currentFormValues, previousFormValuesRef.current)) {
+            if (!_.isEqual(currentFormValues, previousFormValuesRef.current) && setDraftSaveState) {
                 setDraftSaveState(loading);
                 setDraftSaveState(
                     await saveQuestionnaireResponseDraft(
@@ -119,7 +124,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
             <form
                 onSubmit={handleSubmit(async () => {
                     setIsLoading(true);
-                    if (questionnaireId && isSuccess(draftSaveState)) {
+                    if (questionnaireId && draftSaveState && isSuccess(draftSaveState)) {
                         formData.context.questionnaireResponse.id = draftSaveState.data.id;
                     }
                     await onSubmit({ ...formData, formValues });
@@ -127,17 +132,6 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                 })}
                 className={classNames(s.form, 'app-form')}
             >
-                {questionnaireId ? (
-                    <div style={{ height: 0, float: 'right' }}>
-                        <RenderRemoteData
-                            remoteData={draftSaveState}
-                            renderLoading={() => <div>Saving...</div>}
-                            renderFailure={() => <div>Saving error</div>}
-                        >
-                            {() => <div>{savedMessage}</div>}
-                        </RenderRemoteData>
-                    </div>
-                ) : null}
                 <QuestionnaireResponseFormProvider
                     formValues={formValues}
                     setFormValues={(values, fieldPath, value) =>

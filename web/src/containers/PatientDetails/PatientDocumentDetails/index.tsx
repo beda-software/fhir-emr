@@ -1,4 +1,3 @@
-import { PoweroffOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
 import Title from 'antd/lib/typography/Title';

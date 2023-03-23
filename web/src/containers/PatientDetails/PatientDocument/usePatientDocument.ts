@@ -7,11 +7,7 @@ import { failure, isSuccess, success } from 'aidbox-react/lib/libs/remoteData';
 import { getReference, WithId } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess, resolveMap } from 'aidbox-react/lib/services/service';
 
-import {
-    Patient,
-    Provenance,
-    QuestionnaireResponse,
-} from 'shared/src/contrib/aidbox';
+import { Patient, Provenance, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 import {
     handleFormDataSave,
     loadQuestionnaireResponseFormData,
