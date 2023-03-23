@@ -9,6 +9,7 @@ import { mapSuccess, resolveMap } from 'aidbox-react/lib/services/service';
 
 import {
     Patient,
+    Practitioner,
     Provenance,
     QuestionnaireResponse,
 } from 'shared/src/contrib/aidbox';
@@ -22,6 +23,7 @@ import {
 
 import { onFormResponse } from 'src/components/QuestionnaireResponseForm';
 import { getProvenanceByEntity } from 'src/services/provenance';
+import { sharedAuthorizedPractitioner } from 'src/sharedState';
 
 export interface Props {
     patient: Patient;
@@ -60,15 +62,33 @@ async function onFormSubmit(
 }
 
 function prepareFormInitialParams(
-    props: Props & { provenance?: WithId<Provenance> },
+    props: Props & {
+        provenance?: WithId<Provenance>;
+        practitioner?: WithId<Practitioner>;
+    },
 ): QuestionnaireResponseFormProps {
-    const { patient, questionnaireResponse, questionnaireId, encounterId, provenance } = props;
+    const {
+        patient,
+        questionnaireResponse,
+        questionnaireId,
+        encounterId,
+        provenance,
+        practitioner,
+    } = props;
     const target = provenance?.target[0];
 
     const params = {
         questionnaireLoader: questionnaireIdLoader(questionnaireId),
         launchContextParameters: [
             { name: 'Patient', resource: patient },
+            ...(practitioner
+                ? [
+                      {
+                          name: 'Practitioner',
+                          resource: practitioner,
+                      },
+                  ]
+                : []),
             ...(encounterId
                 ? [
                       {
@@ -99,6 +119,7 @@ function prepareFormInitialParams(
 export function usePatientDocument(props: Props) {
     const { questionnaireResponse, questionnaireId, onSuccess } = props;
     const navigate = useNavigate();
+    const practitioner = sharedAuthorizedPractitioner.getSharedState();
 
     const [response] = useService(async () => {
         let provenanceResponse: RemoteDataResult<WithId<Provenance>[]> = success([]);
@@ -114,6 +135,7 @@ export function usePatientDocument(props: Props) {
             const formInitialParams = prepareFormInitialParams({
                 ...props,
                 provenance,
+                practitioner,
             });
 
             const onSubmit = async (formData: QuestionnaireResponseFormData) =>

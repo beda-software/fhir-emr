@@ -27,7 +27,7 @@ import { VideoCall } from 'src/containers/VideoCall';
 import { getJitsiAuthToken, getToken, getUserInfo } from 'src/services/auth';
 import { parseOAuthState, setToken } from 'src/services/auth';
 import { history } from 'src/services/history';
-import { sharedAuthorisedPractitioner, sharedJitsiAuthToken } from 'src/sharedState';
+import { sharedAuthorizedPractitioner, sharedJitsiAuthToken } from 'src/sharedState';
 
 import { PublicAppointment } from '../Appointment/PublicAppointment';
 import { PatientQuestionnaire } from '../PatientQuestionnaire';
@@ -52,7 +52,7 @@ export function App() {
                 id: practitionerId,
             });
             if (isSuccess(practitionerResponse)) {
-                sharedAuthorisedPractitioner.setSharedState(practitionerResponse.data);
+                sharedAuthorizedPractitioner.setSharedState(practitionerResponse.data);
             } else {
                 console.error(practitionerResponse.error);
             }
