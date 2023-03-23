@@ -1,3 +1,4 @@
+import { PoweroffOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
 import Title from 'antd/lib/typography/Title';
@@ -32,11 +33,11 @@ import { BloodPressureReadOnly } from 'src/components/BaseQuestionnaireResponseF
 import { Spinner } from 'src/components/Spinner';
 
 import { DocumentHistory } from '../DocumentHistory';
+import { useDocumentHistory } from '../DocumentHistory/hooks';
 import { PatientDocument } from '../PatientDocument';
 import { usePatientDocument } from '../PatientDocument/usePatientDocument';
 import { PatientHeaderContext } from '../PatientHeader/context';
 import s from './PatientDocumentDetails.module.scss';
-import { useDocumentHistory } from '../DocumentHistory/hooks';
 
 interface Props {
     patient: WithId<Patient>;
@@ -151,7 +152,16 @@ function PatientDocumentDetailsReadonly(props: {
                     <div className={s.buttons}>
                         {qrCompleted ? (
                             <>
-                                <RenderRemoteData remoteData={response} renderLoading={Spinner}>
+                                <RenderRemoteData
+                                    remoteData={response}
+                                    renderLoading={() => (
+                                        <Button
+                                            type="primary"
+                                            icon={<PoweroffOutlined />}
+                                            loading
+                                        />
+                                    )}
+                                >
                                     {({ provenanceList }) => (
                                         <Button
                                             type="primary"
