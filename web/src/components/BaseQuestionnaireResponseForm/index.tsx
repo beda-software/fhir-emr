@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Trans } from '@lingui/macro';
-import { loading, RemoteData, RenderRemoteData, isSuccess } from 'aidbox-react';
+import { loading, RemoteData, isSuccess } from 'aidbox-react';
 import { Button } from 'antd';
 import classNames from 'classnames';
 import _ from 'lodash';
@@ -21,11 +21,12 @@ import * as yup from 'yup';
 
 import 'react-phone-input-2/lib/style.css';
 
-import { notAsked } from 'aidbox-react/lib/libs/remoteData';
+import { QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
 import { saveQuestionnaireResponseDraft } from 'src/components/QuestionnaireResponseForm';
 import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
+import { TextWithMacroFill } from '../TextWithMacroFill';
 import s from './BaseQuestionnaireResponseForm.module.scss';
 import {
     Col,
@@ -48,7 +49,6 @@ import {
 } from './widgets';
 import { Display } from './widgets/display';
 import { QuestionReference } from './widgets/reference';
-import { TextWithMacroFill } from '../TextWithMacroFill';
 
 export interface BaseQuestionnaireResponseFormProps {
     formData: QuestionnaireResponseFormData;
@@ -59,11 +59,23 @@ export interface BaseQuestionnaireResponseFormProps {
     questionItemComponents?: QuestionItemComponentMapping;
     groupItemComponent?: GroupItemComponent;
     onCancel?: () => void;
+    saveButtonTitle?: string;
     autoSave?: boolean;
+    draftSaveResponse?: RemoteData<QuestionnaireResponse>;
+    setDraftSaveResponse?: (data: RemoteData<QuestionnaireResponse>) => void;
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
-    const { onSubmit, formData, readOnly, onCancel, autoSave } = props;
+    const {
+        onSubmit,
+        formData,
+        readOnly,
+        onCancel,
+        saveButtonTitle,
+        autoSave,
+        draftSaveResponse,
+        setDraftSaveResponse,
+    } = props;
 
     const questionnaireId = formData.context.questionnaire.assembledFrom;
 
@@ -81,7 +93,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
 
     const formValues = watch();
 
-    const [draftSaveState, setDraftSaveState] = useState<RemoteData>(notAsked);
+    const [isLoading, setIsLoading] = useState(false);
 
     const previousFormValuesRef = useRef<FormItems | null>(null);
 
@@ -90,9 +102,12 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         _.debounce(async (currentFormValues: FormItems) => {
             if (!autoSave || !questionnaireId) return;
 
-            if (!_.isEqual(currentFormValues, previousFormValuesRef.current)) {
-                setDraftSaveState(loading);
-                setDraftSaveState(
+            if (
+                !_.isEqual(currentFormValues, previousFormValuesRef.current) &&
+                setDraftSaveResponse
+            ) {
+                setDraftSaveResponse(loading);
+                setDraftSaveResponse(
                     await saveQuestionnaireResponseDraft(
                         questionnaireId,
                         formData,
@@ -112,25 +127,16 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
     return (
         <FormProvider {...methods}>
             <form
-                onSubmit={handleSubmit(() => {
-                    if (questionnaireId && isSuccess(draftSaveState)) {
-                        formData.context.questionnaireResponse.id = draftSaveState.data.id;
+                onSubmit={handleSubmit(async () => {
+                    setIsLoading(true);
+                    if (questionnaireId && draftSaveResponse && isSuccess(draftSaveResponse)) {
+                        formData.context.questionnaireResponse.id = draftSaveResponse.data.id;
                     }
-                    onSubmit({ ...formData, formValues });
+                    await onSubmit({ ...formData, formValues });
+                    setIsLoading(false);
                 })}
                 className={classNames(s.form, 'app-form')}
             >
-                {questionnaireId ? (
-                    <div style={{ height: 0, float: 'right' }}>
-                        <RenderRemoteData
-                            remoteData={draftSaveState}
-                            renderLoading={() => <div>Saving...</div>}
-                            renderFailure={() => <div>Saving error</div>}
-                        >
-                            {() => <div>Successful saving</div>}
-                        </RenderRemoteData>
-                    </div>
-                ) : null}
                 <QuestionnaireResponseFormProvider
                     formValues={formValues}
                     setFormValues={(values, fieldPath, value) =>
@@ -184,9 +190,16 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                                         <Trans>Cancel</Trans>
                                     </Button>
                                 )}
-                                <Button type="primary" htmlType="submit">
-                                    <Trans>Save</Trans>
-                                </Button>
+
+                                {isLoading ? (
+                                    <Button type="primary" loading>
+                                        Saving...
+                                    </Button>
+                                ) : (
+                                    <Button type="primary" htmlType="submit">
+                                        <Trans>{saveButtonTitle ?? 'Save'}</Trans>
+                                    </Button>
+                                )}
                             </div>
                         )}
                     </>

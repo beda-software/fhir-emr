@@ -74,7 +74,7 @@ export function usePatientOverview(props: Props) {
         },
         {
             title: 'Phone number',
-            value: patient.telecom?.filter(({ system }) => system === 'mobile')[0]!.value,
+            value: patient.telecom?.filter(({ system }) => system === 'phone')[0]?.value,
         },
         {
             title: 'SSN',

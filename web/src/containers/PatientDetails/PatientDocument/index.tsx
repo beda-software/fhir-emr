@@ -1,14 +1,14 @@
-import Title from 'antd/lib/typography/Title';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
+import { isSuccess, notAsked, RemoteData } from 'aidbox-react/lib/libs/remoteData';
 import { WithId } from 'aidbox-react/lib/services/fhir';
 
 import { Patient, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
+import { useSavedMessage } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import {
     AnxietyScore,
     DepressionScore,
@@ -17,6 +17,7 @@ import { Spinner } from 'src/components/Spinner';
 
 import { PatientHeaderContext } from '../PatientHeader/context';
 import s from './PatientDocument.module.scss';
+import { PatientDocumentHeader } from './PatientDocumentHeader';
 import { usePatientDocument } from './usePatientDocument';
 
 interface Props {
@@ -41,6 +42,11 @@ export function PatientDocument(props: Props) {
     const { setBreadcrumbs } = useContext(PatientHeaderContext);
     const location = useLocation();
 
+    const [draftSaveResponse, setDraftSaveResponse] =
+        useState<RemoteData<QuestionnaireResponse>>(notAsked);
+
+    const { savedMessage } = useSavedMessage(draftSaveResponse);
+
     useEffect(() => {
         if (isSuccess(response)) {
             setBreadcrumbs({
@@ -56,9 +62,13 @@ export function PatientDocument(props: Props) {
                 <RenderRemoteData remoteData={response} renderLoading={Spinner}>
                     {({ formData, onSubmit, provenance }) => (
                         <>
-                            <div className={s.header}>
-                                <Title level={3}>{formData.context.questionnaire.name}</Title>
-                            </div>
+                            <PatientDocumentHeader
+                                formData={formData}
+                                questionnaireId={questionnaireId}
+                                draftSaveResponse={draftSaveResponse}
+                                savedMessage={savedMessage}
+                            />
+
                             <BaseQuestionnaireResponseForm
                                 formData={formData}
                                 onSubmit={onSubmit}
@@ -67,7 +77,10 @@ export function PatientDocument(props: Props) {
                                     'depression-score': DepressionScore,
                                 }}
                                 onCancel={() => navigate(-1)}
+                                saveButtonTitle={'Complete'}
                                 autoSave={!provenance}
+                                draftSaveResponse={draftSaveResponse}
+                                setDraftSaveResponse={setDraftSaveResponse}
                             />
                         </>
                     )}

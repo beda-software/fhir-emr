@@ -1,9 +1,15 @@
 import _ from 'lodash';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
-import { QuestionnaireItem, QuestionnaireItemAnswerOption } from 'shared/src/contrib/aidbox';
+import { isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
+
+import {
+    QuestionnaireItem,
+    QuestionnaireItemAnswerOption,
+    QuestionnaireResponse,
+} from 'shared/src/contrib/aidbox';
 
 export function useFieldController(fieldName: any, questionItem: QuestionnaireItem) {
     const qrfContext = useQuestionnaireResponseFormContext();
@@ -38,4 +44,20 @@ export function useFieldController(fieldName: any, questionItem: QuestionnaireIt
     );
 
     return { ...field, fieldState, onChange, hidden, disabled: readOnly || qrfContext.readOnly };
+}
+
+export function useSavedMessage(draftSaveResponse: RemoteData<QuestionnaireResponse>) {
+    const [savedMessage, setSavedMessage] = useState('');
+
+    useEffect(() => {
+        if (isSuccess(draftSaveResponse)) {
+            setSavedMessage('Saved');
+
+            const timeoutId = setTimeout(() => {
+                setSavedMessage('');
+            }, 2500);
+            return () => clearTimeout(timeoutId);
+        }
+    }, [draftSaveResponse]);
+    return { savedMessage };
 }

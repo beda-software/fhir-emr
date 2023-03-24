@@ -25,15 +25,16 @@ import {
 } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess } from 'aidbox-react/lib/services/service';
 
-import { Encounter, Patient, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
+import { Encounter, Patient, Provenance, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
 import { ReadonlyQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm/ReadonlyQuestionnaireResponseForm';
 import { BloodPressureReadOnly } from 'src/components/BaseQuestionnaireResponseForm/widgets';
+import { ConfirmActionButton } from 'src/components/ConfirmActionButton';
 import { Spinner } from 'src/components/Spinner';
 
 import { DocumentHistory } from '../DocumentHistory';
 import { PatientDocument } from '../PatientDocument';
-import { usePatientDocument } from '../PatientDocument/usePatientDocument';
+import { PatientDocumentData, usePatientDocument } from '../PatientDocument/usePatientDocument';
 import { PatientHeaderContext } from '../PatientHeader/context';
 import s from './PatientDocumentDetails.module.scss';
 
@@ -43,7 +44,7 @@ interface Props {
 
 const deleteDraft = async (navigate: NavigateFunction, patientId?: string, qrId?: string) => {
     if (!qrId) {
-        console.log('QuestionnaireResponse ID does not exist');
+        console.error('QuestionnaireResponse ID does not exist');
         return;
     }
     const response = await forceDeleteFHIRResource({
@@ -65,26 +66,26 @@ const deleteDraft = async (navigate: NavigateFunction, patientId?: string, qrId?
 };
 
 const amendDocument = async (reload: () => void, qrId?: string) => {
-    // eslint-disable-next-line no-restricted-globals
-    if (qrId && confirm(t`Are you sure you want to amend the document?`)) {
-        const response = await patchFHIRResource<QuestionnaireResponse>({
-            id: qrId,
-            resourceType: 'QuestionnaireResponse',
-            status: 'in-progress',
+    if (!qrId) {
+        console.error('QuestionnaireResponse ID does not exist');
+        return;
+    }
+    const response = await patchFHIRResource<QuestionnaireResponse>({
+        id: qrId,
+        resourceType: 'QuestionnaireResponse',
+        status: 'in-progress',
+    });
+    if (isSuccess(response)) {
+        reload();
+        notification.success({
+            message: 'The document successfully amended',
         });
-
-        if (isSuccess(response)) {
-            reload();
-            notification.success({
-                message: t`The document successfully amended`,
-            });
-        }
-        if (isFailure(response)) {
-            console.error(response.error);
-            notification.error({
-                message: t`Error while amending the document`,
-            });
-        }
+    }
+    if (isFailure(response)) {
+        console.error(response.error);
+        notification.error({
+            message: 'Error while amending the document',
+        });
     }
 };
 
@@ -116,10 +117,11 @@ function PatientDocumentDetailsReadonly(props: {
     formData: QuestionnaireResponseFormData;
     reload: () => void;
     encounter?: Encounter;
+    provenance?: WithId<Provenance>;
 }) {
     const location = useLocation();
     const navigate = useNavigate();
-    const { formData, encounter, reload } = props;
+    const { formData, encounter, reload, provenance } = props;
 
     const { setBreadcrumbs } = useContext(PatientHeaderContext);
 
@@ -148,37 +150,47 @@ function PatientDocumentDetailsReadonly(props: {
                     <div className={s.buttons}>
                         {qrCompleted ? (
                             <>
+                                <ConfirmActionButton
+                                    action={() => amendDocument(reload, qrId)}
+                                    reload={reload}
+                                    qrId={qrId}
+                                    title={t`Are you sure you want to amend the document?`}
+                                    okText="Yes"
+                                    cancelText="No"
+                                >
+                                    <Button className={s.button}>
+                                        <Trans>Amend</Trans>
+                                    </Button>
+                                </ConfirmActionButton>
                                 <Button
-                                    type="link"
+                                    type="primary"
                                     onClick={() => navigate(`${location.pathname}/history`)}
                                     className={s.button}
+                                    disabled={!provenance}
                                 >
                                     <Trans>History</Trans>
-                                </Button>
-                                <Button
-                                    type="link"
-                                    onClick={() => amendDocument(reload, qrId)}
-                                    className={s.button}
-                                >
-                                    <Trans>Amend</Trans>
                                 </Button>
                             </>
                         ) : null}
                         {canBeEdited ? (
                             <>
+                                <ConfirmActionButton
+                                    action={() => deleteDraft(navigate, patientId, qrId)}
+                                    qrId={qrId}
+                                    title={t`Are you sure you want to delete the document?`}
+                                    okText="Yes"
+                                    cancelText="No"
+                                >
+                                    <Button className={s.button} type={'text'} danger>
+                                        <Trans>Delete</Trans>
+                                    </Button>
+                                </ConfirmActionButton>
                                 <Button
-                                    type="link"
+                                    type="primary"
                                     onClick={() => navigate(`${location.pathname}/edit`)}
                                     className={s.button}
                                 >
                                     <Trans>Edit</Trans>
-                                </Button>
-                                <Button
-                                    type="link"
-                                    onClick={() => deleteDraft(navigate, patientId, qrId)}
-                                    className={s.button}
-                                >
-                                    <Trans>Delete</Trans>
                                 </Button>
                             </>
                         ) : null}
@@ -196,7 +208,7 @@ function PatientDocumentDetailsReadonly(props: {
 function PatientDocumentDetailsFormData(props: {
     questionnaireResponse: WithId<QuestionnaireResponse>;
     patient: WithId<Patient>;
-    children: (props: { formData: QuestionnaireResponseFormData }) => ReactElement;
+    children: (props: PatientDocumentData) => ReactElement;
 }) {
     const { questionnaireResponse, children, patient } = props;
     const { response } = usePatientDocument({
@@ -207,7 +219,7 @@ function PatientDocumentDetailsFormData(props: {
 
     return (
         <RenderRemoteData remoteData={response} renderLoading={Spinner}>
-            {({ formData }) => children({ formData })}
+            {(response) => children(response)}
         </RenderRemoteData>
     );
 }
@@ -228,7 +240,7 @@ export function PatientDocumentDetails(props: Props) {
                     questionnaireResponse={questionnaireResponse}
                     {...props}
                 >
-                    {({ formData }) => (
+                    {({ formData, provenance }) => (
                         <Routes>
                             <Route
                                 path="/"
@@ -245,6 +257,7 @@ export function PatientDocumentDetails(props: Props) {
                                             formData={formData}
                                             encounter={encounter}
                                             reload={manager.reload}
+                                            provenance={provenance}
                                         />
                                     }
                                 />
