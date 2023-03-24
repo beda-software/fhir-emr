@@ -45,5 +45,7 @@
   :keys {:mapping {:type zen/vector
                    :every {:confirms #{hl7-fhir-r4-core.Reference/schema}}
                    :fhir/extensionUri "http://beda.software/fhir-extensions/questionnaire-mapper"}
+         :launchContext {:type zen/any}
+         :sourceQueries {:type zen/any}
          :item {:type zen/vector
                 :every {:confirms #{QuestionnaireItem}}}}}}
