@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { isSuccess, notAsked, RemoteData } from 'aidbox-react/lib/libs/remoteData';
@@ -43,16 +42,15 @@ export function PatientDocument(props: Props) {
     const { setBreadcrumbs } = useContext(PatientHeaderContext);
     const location = useLocation();
 
-    const [draftSaveState, setDraftSaveState] = useState<RemoteData>(notAsked);
+    const [draftSaveResponse, setDraftSaveResponse] =
+        useState<RemoteData<QuestionnaireResponse>>(notAsked);
 
-    const { savedMessage } = useSavedMessage(draftSaveState);
+    const { savedMessage } = useSavedMessage(draftSaveResponse);
 
     useEffect(() => {
         if (isSuccess(response)) {
             setBreadcrumbs({
-                [location?.pathname]:
-                    (response.data.formData as QuestionnaireResponseFormData).context.questionnaire
-                        ?.name || '',
+                [location?.pathname]: response.data.formData.context.questionnaire?.name || '',
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -65,14 +63,14 @@ export function PatientDocument(props: Props) {
                     {({ formData, onSubmit, provenance }) => (
                         <>
                             <PatientDocumentHeader
-                                formData={formData as QuestionnaireResponseFormData}
+                                formData={formData}
                                 questionnaireId={questionnaireId}
-                                draftSaveState={draftSaveState}
+                                draftSaveResponse={draftSaveResponse}
                                 savedMessage={savedMessage}
                             />
 
                             <BaseQuestionnaireResponseForm
-                                formData={formData as QuestionnaireResponseFormData}
+                                formData={formData}
                                 onSubmit={onSubmit}
                                 itemControlQuestionItemComponents={{
                                     'anxiety-score': AnxietyScore,
@@ -81,8 +79,8 @@ export function PatientDocument(props: Props) {
                                 onCancel={() => navigate(-1)}
                                 saveButtonTitle={'Complete'}
                                 autoSave={!provenance}
-                                draftSaveState={draftSaveState}
-                                setDraftSaveState={setDraftSaveState}
+                                draftSaveResponse={draftSaveResponse}
+                                setDraftSaveResponse={setDraftSaveResponse}
                             />
                         </>
                     )}

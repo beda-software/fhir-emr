@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { useNavigate } from 'react-router-dom';
 
 import { useService } from 'aidbox-react/lib/hooks/service';
-import { failure, isSuccess, success } from 'aidbox-react/lib/libs/remoteData';
+import { failure, isSuccess, RemoteData, success } from 'aidbox-react/lib/libs/remoteData';
 import { getReference, WithId } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess, resolveMap } from 'aidbox-react/lib/services/service';
 
@@ -92,7 +92,16 @@ function prepareFormInitialParams(
     return params;
 }
 
-export function usePatientDocument(props: Props) {
+export interface PatientDocumentData {
+    formData: QuestionnaireResponseFormData;
+    onSubmit: (formData: QuestionnaireResponseFormData) => Promise<void>;
+    provenance?: WithId<Provenance>;
+}
+
+export function usePatientDocument(props: Props): {
+    response: RemoteData<PatientDocumentData>;
+    questionnaireId: string;
+} {
     const { questionnaireResponse, questionnaireId, onSuccess } = props;
     const navigate = useNavigate();
 

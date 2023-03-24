@@ -21,6 +21,8 @@ import * as yup from 'yup';
 
 import 'react-phone-input-2/lib/style.css';
 
+import { QuestionnaireResponse } from 'shared/src/contrib/aidbox';
+
 import { saveQuestionnaireResponseDraft } from 'src/components/QuestionnaireResponseForm';
 import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
@@ -59,8 +61,8 @@ export interface BaseQuestionnaireResponseFormProps {
     onCancel?: () => void;
     saveButtonTitle?: string;
     autoSave?: boolean;
-    draftSaveState?: RemoteData;
-    setDraftSaveState?: React.Dispatch<React.SetStateAction<RemoteData<any, any>>>;
+    draftSaveResponse?: RemoteData<QuestionnaireResponse>;
+    setDraftSaveResponse?: (data: RemoteData<QuestionnaireResponse>) => void;
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
@@ -71,8 +73,8 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         onCancel,
         saveButtonTitle,
         autoSave,
-        draftSaveState,
-        setDraftSaveState,
+        draftSaveResponse,
+        setDraftSaveResponse,
     } = props;
 
     const questionnaireId = formData.context.questionnaire.assembledFrom;
@@ -100,9 +102,12 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         _.debounce(async (currentFormValues: FormItems) => {
             if (!autoSave || !questionnaireId) return;
 
-            if (!_.isEqual(currentFormValues, previousFormValuesRef.current) && setDraftSaveState) {
-                setDraftSaveState(loading);
-                setDraftSaveState(
+            if (
+                !_.isEqual(currentFormValues, previousFormValuesRef.current) &&
+                setDraftSaveResponse
+            ) {
+                setDraftSaveResponse(loading);
+                setDraftSaveResponse(
                     await saveQuestionnaireResponseDraft(
                         questionnaireId,
                         formData,
@@ -124,8 +129,8 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
             <form
                 onSubmit={handleSubmit(async () => {
                     setIsLoading(true);
-                    if (questionnaireId && draftSaveState && isSuccess(draftSaveState)) {
-                        formData.context.questionnaireResponse.id = draftSaveState.data.id;
+                    if (questionnaireId && draftSaveResponse && isSuccess(draftSaveResponse)) {
+                        formData.context.questionnaireResponse.id = draftSaveResponse.data.id;
                     }
                     await onSubmit({ ...formData, formValues });
                     setIsLoading(false);

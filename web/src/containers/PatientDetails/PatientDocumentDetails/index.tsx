@@ -25,7 +25,7 @@ import {
 } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess } from 'aidbox-react/lib/services/service';
 
-import { Encounter, Patient, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
+import { Encounter, Patient, Provenance, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
 import { ReadonlyQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm/ReadonlyQuestionnaireResponseForm';
 import { BloodPressureReadOnly } from 'src/components/BaseQuestionnaireResponseForm/widgets';
@@ -33,9 +33,8 @@ import { ConfirmActionButton } from 'src/components/ConfirmActionButton';
 import { Spinner } from 'src/components/Spinner';
 
 import { DocumentHistory } from '../DocumentHistory';
-import { useDocumentHistory } from '../DocumentHistory/hooks';
 import { PatientDocument } from '../PatientDocument';
-import { usePatientDocument } from '../PatientDocument/usePatientDocument';
+import { PatientDocumentData, usePatientDocument } from '../PatientDocument/usePatientDocument';
 import { PatientHeaderContext } from '../PatientHeader/context';
 import s from './PatientDocumentDetails.module.scss';
 
@@ -118,14 +117,13 @@ function PatientDocumentDetailsReadonly(props: {
     formData: QuestionnaireResponseFormData;
     reload: () => void;
     encounter?: Encounter;
+    provenance?: WithId<Provenance>;
 }) {
     const location = useLocation();
     const navigate = useNavigate();
-    const { formData, encounter, reload } = props;
+    const { formData, encounter, reload, provenance } = props;
 
     const { setBreadcrumbs } = useContext(PatientHeaderContext);
-
-    const { response } = useDocumentHistory();
 
     useEffect(() => {
         setBreadcrumbs({
@@ -164,32 +162,20 @@ function PatientDocumentDetailsReadonly(props: {
                                         <Trans>Amend</Trans>
                                     </Button>
                                 </ConfirmActionButton>
-                                <RenderRemoteData
-                                    remoteData={response}
-                                    renderLoading={() => (
-                                        <Button type="primary" className={s.button} disabled>
-                                            <Trans>History</Trans>
-                                        </Button>
-                                    )}
+                                <Button
+                                    type="primary"
+                                    onClick={() => navigate(`${location.pathname}/history`)}
+                                    className={s.button}
+                                    disabled={!provenance}
                                 >
-                                    {({ provenanceList }) => (
-                                        <Button
-                                            type="primary"
-                                            onClick={() => navigate(`${location.pathname}/history`)}
-                                            className={s.button}
-                                            disabled={provenanceList.length === 0}
-                                        >
-                                            <Trans>History</Trans>
-                                        </Button>
-                                    )}
-                                </RenderRemoteData>
+                                    <Trans>History</Trans>
+                                </Button>
                             </>
                         ) : null}
                         {canBeEdited ? (
                             <>
                                 <ConfirmActionButton
                                     action={() => deleteDraft(navigate, patientId, qrId)}
-                                    reload={reload}
                                     qrId={qrId}
                                     title={t`Are you sure you want to delete the document?`}
                                     okText="Yes"
@@ -222,7 +208,7 @@ function PatientDocumentDetailsReadonly(props: {
 function PatientDocumentDetailsFormData(props: {
     questionnaireResponse: WithId<QuestionnaireResponse>;
     patient: WithId<Patient>;
-    children: (props: { formData: QuestionnaireResponseFormData }) => ReactElement;
+    children: (props: PatientDocumentData) => ReactElement;
 }) {
     const { questionnaireResponse, children, patient } = props;
     const { response } = usePatientDocument({
@@ -233,7 +219,7 @@ function PatientDocumentDetailsFormData(props: {
 
     return (
         <RenderRemoteData remoteData={response} renderLoading={Spinner}>
-            {({ formData }) => children({ formData })}
+            {(response) => children(response)}
         </RenderRemoteData>
     );
 }
@@ -254,7 +240,7 @@ export function PatientDocumentDetails(props: Props) {
                     questionnaireResponse={questionnaireResponse}
                     {...props}
                 >
-                    {({ formData }) => (
+                    {({ formData, provenance }) => (
                         <Routes>
                             <Route
                                 path="/"
@@ -271,6 +257,7 @@ export function PatientDocumentDetails(props: Props) {
                                             formData={formData}
                                             encounter={encounter}
                                             reload={manager.reload}
+                                            provenance={provenance}
                                         />
                                     }
                                 />

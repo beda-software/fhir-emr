@@ -6,19 +6,21 @@ import { QuestionnaireResponseFormData } from 'sdc-qrf';
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
 
+import { QuestionnaireResponse } from 'shared/src/contrib/aidbox';
+
 import s from '../PatientDocument.module.scss';
 
 interface Props {
     formData: QuestionnaireResponseFormData;
     questionnaireId: string;
-    draftSaveState: RemoteData<any, any>;
+    draftSaveResponse: RemoteData<QuestionnaireResponse>;
     savedMessage: string;
 }
 
 export const PatientDocumentHeader = ({
     formData,
     questionnaireId,
-    draftSaveState,
+    draftSaveResponse,
     savedMessage,
 }: Props) => (
     <div className={s.header}>
@@ -27,7 +29,7 @@ export const PatientDocumentHeader = ({
         </Title>
         {questionnaireId ? (
             <RenderRemoteData
-                remoteData={draftSaveState}
+                remoteData={draftSaveResponse}
                 renderLoading={() => <Tag icon={<SyncOutlined spin />}>Saving...</Tag>}
                 renderFailure={() => <Tag>Saving error</Tag>}
             >

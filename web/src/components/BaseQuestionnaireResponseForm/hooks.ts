@@ -5,7 +5,11 @@ import { useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
 import { isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
 
-import { QuestionnaireItem, QuestionnaireItemAnswerOption } from 'shared/src/contrib/aidbox';
+import {
+    QuestionnaireItem,
+    QuestionnaireItemAnswerOption,
+    QuestionnaireResponse,
+} from 'shared/src/contrib/aidbox';
 
 export function useFieldController(fieldName: any, questionItem: QuestionnaireItem) {
     const qrfContext = useQuestionnaireResponseFormContext();
@@ -42,11 +46,11 @@ export function useFieldController(fieldName: any, questionItem: QuestionnaireIt
     return { ...field, fieldState, onChange, hidden, disabled: readOnly || qrfContext.readOnly };
 }
 
-export function useSavedMessage(draftSaveState: RemoteData<any, any>) {
+export function useSavedMessage(draftSaveResponse: RemoteData<QuestionnaireResponse>) {
     const [savedMessage, setSavedMessage] = useState('');
 
     useEffect(() => {
-        if (isSuccess(draftSaveState)) {
+        if (isSuccess(draftSaveResponse)) {
             setSavedMessage('Saved');
 
             const timeoutId = setTimeout(() => {
@@ -54,6 +58,6 @@ export function useSavedMessage(draftSaveState: RemoteData<any, any>) {
             }, 2500);
             return () => clearTimeout(timeoutId);
         }
-    }, [draftSaveState]);
+    }, [draftSaveResponse]);
     return { savedMessage };
 }

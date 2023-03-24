@@ -2,7 +2,7 @@ import { Popconfirm } from 'antd';
 
 interface Props {
     action: (T: any) => void;
-    reload: () => void;
+    reload?: () => void;
     qrId?: string;
     title: string;
     children: any;
@@ -22,7 +22,9 @@ export const ConfirmActionButton = ({
     const handleConfirm = async () => {
         if (qrId) {
             await action(qrId);
-            reload();
+            if (reload) {
+                reload();
+            }
         }
     };
 
