@@ -8,6 +8,8 @@ subjectType:
 launchContext:
     - name: Patient
       type: Patient
+    - name: Practitioner
+      type: Practitioner
 mapping:
     - id: medication-statement-extract
       resourceType: Mapping

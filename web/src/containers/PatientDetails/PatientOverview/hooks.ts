@@ -108,9 +108,10 @@ export function usePatientOverview(props: Props) {
                         _sort: ['-lastUpdated'],
                         code: [`${depressionSeverityCode},${anxietySeverityCode}`],
                     }),
-                    immunizationsBundle: getFHIRResources<Immunization>('Immunization', {
+                    immunizationsBundle: getFHIRResources<Immunization | Provenance>('Immunization', {
                         patient: patient.id,
                         _sort: ['-lastUpdated'],
+                        _revinclude: ['Provenance:target'],
                     }),
                     medicationsBundle: getFHIRResources<MedicationStatement | Provenance>(
                         'MedicationStatement',
@@ -132,6 +133,7 @@ export function usePatientOverview(props: Props) {
                     const allergiesProvenance = extractBundleResources(allergiesBundle).Provenance;
                     const observations = extractBundleResources(observationsBundle).Observation;
                     const immunizations = extractBundleResources(immunizationsBundle).Immunization;
+                    const immunizationsProvenance = extractBundleResources(immunizationsBundle).Provenance;
                     const medications =
                         extractBundleResources(medicationsBundle).MedicationStatement;
                     const medicationsProvenance =
@@ -140,7 +142,7 @@ export function usePatientOverview(props: Props) {
                         prepareObservations(observations),
                         prepareMedications(medications, medicationsProvenance),
                         prepareAllergies(allergies, allergiesProvenance),
-                        prepareImmunizations(immunizations),
+                        prepareImmunizations(immunizations, immunizationsProvenance),
                     ];
                     const appointments = prepareAppointments(appointmentsBundle);
 

@@ -109,7 +109,10 @@ export function prepareObservations(observations: Observation[]): OverviewCard<O
     };
 }
 
-export function prepareImmunizations(observations: Immunization[]): OverviewCard<Immunization> {
+export function prepareImmunizations(
+    observations: Immunization[],
+    provenanceList: Provenance[],
+): OverviewCard<Immunization> {
     return {
         title: t`Immunization`,
         icon: <HeartOutlined />,
@@ -119,7 +122,13 @@ export function prepareImmunizations(observations: Immunization[]): OverviewCard
             {
                 title: t`Name`,
                 key: 'name',
-                render: (r: Immunization) => r.vaccineCode.coding?.[0]?.display,
+                render: (resource: Immunization) => (
+                    <LinkToEdit
+                        name={resource.vaccineCode.coding?.[0]?.display}
+                        resource={resource}
+                        provenanceList={provenanceList}
+                    />
+                ),
             },
             {
                 title: t`Date`,
