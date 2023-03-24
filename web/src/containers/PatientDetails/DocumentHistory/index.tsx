@@ -66,6 +66,9 @@ function DocumentHistoryEntry(props: DocumentHistoryDetailsProps) {
     const { provenance, prevProvenance, questionnaire, qrHistory } = props;
     const activity = codesMapping[provenance.activity?.coding?.[0]?.code || ''];
     const date = formatHumanDateTime(provenance.recorded);
+    const by = provenance.agent
+        .map((agent) => agent.who.display || 'No person name provided')
+        .join(', ');
 
     const currentQR = useMemo(
         () =>
@@ -110,7 +113,7 @@ function DocumentHistoryEntry(props: DocumentHistoryDetailsProps) {
         <div className={s.prov}>
             <div className={s.provHeader}>
                 <b>
-                    {activity} {date}
+                    {activity} {date} by {by}
                 </b>
             </div>
             {renderDiff()}
