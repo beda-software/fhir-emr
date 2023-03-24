@@ -2,12 +2,14 @@ import * as yup from 'yup';
 
 import {
     Questionnaire,
-    QuestionnaireItemAnswerOption,
-    QuestionnaireItemAnswerOptionValue,
+    QuestionnaireResponseItemAnswer,
+    QuestionnaireResponseItemAnswerValue,
 } from 'shared/src/contrib/aidbox';
 import { parseFHIRTime } from 'shared/src/utils/date';
 
-export function getDisplay(value?: QuestionnaireItemAnswerOptionValue): string | number | null {
+import { formatHumanDate, formatHumanDateTime } from './date';
+
+export function getDisplay(value?: QuestionnaireResponseItemAnswerValue): string | number | null {
     if (!value) {
         return null;
     }
@@ -18,6 +20,14 @@ export function getDisplay(value?: QuestionnaireItemAnswerOptionValue): string |
 
     if (value.string) {
         return value.string;
+    }
+
+    if (value.date) {
+        return formatHumanDate(value.date)
+    }
+
+    if (value.dateTime) {
+        return formatHumanDateTime(value.dateTime);
     }
 
     if (value.time) {
@@ -37,12 +47,12 @@ export function getDisplay(value?: QuestionnaireItemAnswerOptionValue): string |
     return '';
 }
 
-export function getArrayDisplay(options?: QuestionnaireItemAnswerOption[]): string | null {
+export function getArrayDisplay(options?: QuestionnaireResponseItemAnswer[]): string | null {
     if (!options) {
         return null;
     }
 
-    return options.map((v: QuestionnaireItemAnswerOption) => getDisplay(v.value)).join(', ');
+    return options.map((v: QuestionnaireResponseItemAnswer) => getDisplay(v.value)).join(', ');
 }
 
 export function questionnaireToValidationSchema(questionnaire: Questionnaire) {

@@ -112,11 +112,12 @@ export function usePatientOverview(props: Props) {
                         patient: patient.id,
                         _sort: ['-lastUpdated'],
                     }),
-                    medicationsBundle: getFHIRResources<MedicationStatement>(
+                    medicationsBundle: getFHIRResources<MedicationStatement | Provenance>(
                         'MedicationStatement',
                         {
                             patient: patient.id,
                             _sort: ['-lastUpdated'],
+                            _revinclude: ['Provenance:target'],
                         },
                     ),
                 }),
@@ -128,15 +129,17 @@ export function usePatientOverview(props: Props) {
                     appointmentsBundle,
                 }) => {
                     const allergies = extractBundleResources(allergiesBundle).AllergyIntolerance;
-                    const allergyProvenance = extractBundleResources(allergiesBundle).Provenance;
+                    const allergiesProvenance = extractBundleResources(allergiesBundle).Provenance;
                     const observations = extractBundleResources(observationsBundle).Observation;
                     const immunizations = extractBundleResources(immunizationsBundle).Immunization;
                     const medications =
                         extractBundleResources(medicationsBundle).MedicationStatement;
+                    const medicationsProvenance =
+                        extractBundleResources(medicationsBundle).Provenance;
                     const cards = [
                         prepareObservations(observations),
-                        prepareMedications(medications),
-                        prepareAllergies(allergies, allergyProvenance),
+                        prepareMedications(medications, medicationsProvenance),
+                        prepareAllergies(allergies, allergiesProvenance),
                         prepareImmunizations(immunizations),
                     ];
                     const appointments = prepareAppointments(appointmentsBundle);

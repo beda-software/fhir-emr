@@ -1,5 +1,11 @@
 body:
     $let:
+        qrId: $ fhirpath("QuestionnaireResponse.id")
+        qrVersion: $ fhirpath("QuestionnaireResponse.meta.versionId")
+        qrLastUpdated: >-
+            $ fhirpath("QuestionnaireResponse.meta.lastUpdated") || fhirpath("QuestionnaireResponse.repeat(item).where(linkId='dateTime').answer.value.dateTime").0
+        medicationStatementId: $ fhirpath("Provenance.target.where(resourceType='MedicationStatement').id").0
+        practitioner: $ Practitioner
         encounterId: >-
             $
             fhirpath("QuestionnaireResponse.repeat(item).where(linkId='encounterId').answer.value.string").0
@@ -28,8 +34,14 @@ body:
         type: transaction
         entry:
             - request:
-                  url: /MedicationStatement
-                  method: POST
+                  $if: $ medicationStatementId
+                  $then:
+                      url: $ "/MedicationStatement/" + medicationStatementId
+                      method: PUT
+                  $else:
+                      url: /MedicationStatement
+                      method: POST
+              fullUrl: urn:uuid:medication-id
               resource:
                   status: active
                   subject:
@@ -53,6 +65,35 @@ body:
                           start: $ startDate
                           end: $ endDate
                   resourceType: MedicationStatement
+            - request:
+                  url: /Provenance
+                  method: POST
+              resource:
+                  resourceType: Provenance
+                  target:
+                      - uri: urn:uuid:medication-id
+                  recorded: $ qrLastUpdated
+                  activity:
+                      $if: $ medicationStatementId
+                      $then:
+                          coding:
+                              - code: 'UPDATE'
+                                display: 'revise'
+                                system: 'http://terminology.hl7.org/CodeSystem/v3-DataOperation'
+                      $else:
+                          coding:
+                              - code: 'CREATE'
+                                display: 'create'
+                                system: 'http://terminology.hl7.org/CodeSystem/v3-DataOperation'
+                  agent:
+                      - who:
+                            id: $ practitioner.id
+                            resourceType: $ practitioner.resourceType
+                            display: $ practitioner.name.0.given.0 + ' ' + practitioner.name.0.family
+                  entity:
+                      - role: source
+                        what:
+                            uri: $ "QuestionnaireResponse/" + qrId + "/_history/" + qrVersion
         resourceType: Bundle
 id: medication-statement-extract
 resourceType: Mapping

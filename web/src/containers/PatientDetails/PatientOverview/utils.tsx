@@ -134,6 +134,7 @@ export function prepareImmunizations(observations: Immunization[]): OverviewCard
 
 export function prepareMedications(
     observations: MedicationStatement[],
+    provenanceList: Provenance[],
 ): OverviewCard<MedicationStatement> {
     return {
         title: t`Active Medications`,
@@ -145,8 +146,13 @@ export function prepareMedications(
             {
                 title: t`Name`,
                 key: 'name',
-                render: (r: MedicationStatement) =>
-                    r.medication?.CodeableConcept?.coding?.[0]?.display,
+                render: (resource: MedicationStatement) => (
+                    <LinkToEdit
+                        name={resource.medication?.CodeableConcept?.coding?.[0]?.display}
+                        resource={resource}
+                        provenanceList={provenanceList}
+                    />
+                ),
             },
             {
                 title: t`Dosage`,

@@ -12,6 +12,13 @@ mapping:
     - id: medication-statement-extract
       resourceType: Mapping
 item:
+    - text: DateTime
+      type: dateTime
+      linkId: dateTime
+      hidden: true
+      initialExpression:
+          language: text/fhirpath
+          expression: 'now()'
     - text: EncounterId
       type: string
       linkId: encounterId
