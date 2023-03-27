@@ -4727,6 +4727,11 @@
     "@types/qs" "*"
     "@types/serve-static" "*"
 
+"@types/fhir@0.0.36":
+  version "0.0.36"
+  resolved "https://registry.yarnpkg.com/@types/fhir/-/fhir-0.0.36.tgz#a4e4af716169b0e129e876c5ae8cbb5efeac6162"
+  integrity sha512-Krjb/2zKlJFjVkEPvs5QFjoYynDF2NaflR8fl4KREgJsvvHG7jrSrLdlS4zTB8E+1MgI1g0fWsz0FzniYmJlMg==
+
 "@types/glob@*", "@types/glob@^7.1.1":
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/@types/glob/-/glob-7.2.0.tgz#bc1b5bf3aa92f25bd5dd39f35c57361bdce5b2eb"
