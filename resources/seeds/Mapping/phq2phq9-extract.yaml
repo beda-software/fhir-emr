@@ -4,7 +4,7 @@ body:
         qrVersion: $ fhirpath("QuestionnaireResponse.meta.versionId")
         qrLastUpdated: >-
             $ fhirpath("QuestionnaireResponse.meta.lastUpdated") || fhirpath("QuestionnaireResponse.repeat(item).where(linkId='dateTime').answer.value.dateTime").0
-        observationId: $ fhirpath("Provenance.target.where(resourceType='Observation').id").0
+        conditionId: $ fhirpath("Provenance.target.where(resourceType='Condition').id").0
         practitioner: $ Practitioner
         patientId: >-
             $
@@ -19,15 +19,11 @@ body:
         type: transaction
         entry:
             - request:
-                  $if: $ observationId
-                  $then:
-                      url: $ "/Observation/" + observationId
-                      method: PUT
-                  $else:
-                      url: /Observation
-                      method: POST
+                  url: /Observation
+                  method: POST
               fullUrl: urn:uuid:observation-id
               resource:
+                  resourceType: Observation
                   status: final
                   subject:
                       id: $ patientId
@@ -54,17 +50,52 @@ body:
                                         $if: $ score <= 19
                                         $then: 'Moderately severe depression'
                                         $else: 'Severed depression'
-                  resourceType: Observation
+            - request:
+                  $if: $ conditionId
+                  $then:
+                      url: $ "/Condition/" + conditionId
+                      method: PUT
+                  $else:
+                      url: /Condition
+                      method: POST
+              fullUrl: urn:uuid:condition-id
+              resource:
+                  resourceType: Condition
+                  clinicalStatus:
+                      coding:
+                          - code: 'active'
+                            system: 'http://terminology.hl7.org/CodeSystem/condition-clinical'
+                  subject:
+                      id: $ patientId
+                      display: $ patientName
+                      resourceType: Patient
+                  evidence:
+                      - detail:
+                            - uri: urn:uuid:observation-id
+                  code:
+                      text:
+                          $if: $ score <= 4
+                          $then: 'Minimal depression'
+                          $else:
+                              $if: $ score <= 9
+                              $then: 'Mild depression'
+                              $else:
+                                  $if: $ score <= 14
+                                  $then: 'Moderate depression'
+                                  $else:
+                                      $if: $ score <= 19
+                                      $then: 'Moderately severe depression'
+                                      $else: 'Severed depression'
             - request:
                   url: /Provenance
                   method: POST
               resource:
                   resourceType: Provenance
                   target:
-                      - uri: urn:uuid:observation-id
+                      - uri: urn:uuid:condition-id
                   recorded: $ qrLastUpdated
                   activity:
-                      $if: $ observationId
+                      $if: $ conditionId
                       $then:
                           coding:
                               - code: 'UPDATE'

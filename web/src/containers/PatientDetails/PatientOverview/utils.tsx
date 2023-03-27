@@ -11,10 +11,10 @@ import {
     AllergyIntolerance,
     Appointment,
     Bundle,
+    Condition,
     Encounter,
     Immunization,
     MedicationStatement,
-    Observation,
     Provenance,
 } from 'shared/src/contrib/aidbox';
 
@@ -87,22 +87,22 @@ export function prepareAllergies(
     };
 }
 
-export function prepareObservations(
-    observations: Observation[],
+export function prepareConditions(
+    conditions: Condition[],
     provenanceList: Provenance[],
-): OverviewCard<Observation> {
+): OverviewCard<Condition> {
     return {
         title: t`Conditions`,
         icon: <AlertOutlined />,
-        data: observations,
-        getKey: (r: Observation) => r.id!,
+        data: conditions,
+        getKey: (r: Condition) => r.id!,
         columns: [
             {
                 title: t`Name`,
                 key: 'name',
-                render: (resource: Observation) => (
+                render: (resource: Condition) => (
                     <LinkToEdit
-                        name={resource.interpretation?.[0]?.text}
+                        name={resource.code?.text || resource.code?.coding?.[0]?.display}
                         resource={resource}
                         provenanceList={provenanceList}
                     />
@@ -111,7 +111,7 @@ export function prepareObservations(
             {
                 title: t`Date`,
                 key: 'date',
-                render: (r: Observation) => formatHumanDate(r.meta?.createdAt!),
+                render: (r: Condition) => formatHumanDate(r.meta?.createdAt!),
                 width: 200,
             },
         ],
