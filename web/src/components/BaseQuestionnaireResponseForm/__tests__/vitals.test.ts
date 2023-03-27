@@ -191,6 +191,11 @@ describe('Vitals', () => {
                         },
                     },
                 ],
+                bmi: [
+                    {
+                        value: { integer: 20 },
+                    },
+                ],
             },
         };
 
@@ -233,14 +238,12 @@ describe('Vitals', () => {
                 .Coding.code,
         );
         expect(bloodPressureObservation.component![0]?.value?.Quantity?.value).toBe(
-            formData.formValues['blood-pressure']!['items']['blood-pressure-systolic-diastolic'].items[
-                'blood-pressure-systolic'
-            ][0].value.integer,
+            formData.formValues['blood-pressure']!['items']['blood-pressure-systolic-diastolic']
+                .items['blood-pressure-systolic'][0].value.integer,
         );
         expect(bloodPressureObservation.component![1]?.value?.Quantity?.value).toBe(
-            formData.formValues['blood-pressure']!['items']['blood-pressure-systolic-diastolic'].items[
-                'blood-pressure-diastolic'
-            ][0].value.integer,
+            formData.formValues['blood-pressure']!['items']['blood-pressure-systolic-diastolic']
+                .items['blood-pressure-diastolic'][0].value.integer,
         );
 
         const pulseRateObservation = observationsBundle.entry!.find((observation) => {

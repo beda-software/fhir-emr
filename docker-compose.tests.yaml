@@ -1,4 +1,4 @@
-version: '3.9'
+name: fhir-emr-tests
 services:
     sdc-ide:
         image: bedasoftware/sdc-ide:master
