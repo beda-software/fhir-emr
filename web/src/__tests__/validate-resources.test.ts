@@ -1,4 +1,3 @@
-import { isSuccess } from 'aidbox-react';
 import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
 import { service } from 'aidbox-react/lib/services/service';
 import { ensure } from 'aidbox-react/lib/utils/tests';
