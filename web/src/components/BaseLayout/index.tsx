@@ -1,4 +1,5 @@
 import { Layout } from 'antd';
+import classNames from 'classnames';
 import { ReactNode } from 'react';
 
 import s from './BaseLayout.module.scss';
@@ -21,17 +22,21 @@ export function BaseLayout({ children, style }: Props) {
 }
 
 export function BasePageHeader(props: React.HTMLAttributes<HTMLDivElement>) {
+    const { className, ...rest } = props;
+
     return (
         <div className={s.pageHeaderWrapper}>
-            <div className={s.pageHeader} {...props} />
+            <div className={classNames(s.pageHeader, className)} {...rest} />
         </div>
     );
 }
 
 export function BasePageContent(props: React.HTMLAttributes<HTMLDivElement>) {
+    const { className, ...rest } = props;
+
     return (
         <div className={s.pageContentWrapper}>
-            <div className={s.pageContent} {...props} />
+            <div className={classNames(s.pageContent, className)} {...rest} />
         </div>
     );
 }
