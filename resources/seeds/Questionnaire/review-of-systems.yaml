@@ -198,7 +198,7 @@ item:
       - linkId: skin-comment
         type: text
         code:
-          system: http://loinc.org
+        - system: http://loinc.org
           code: 71415-4-comment
           display: CMS - integumentary panel - comment
         enableWhen:

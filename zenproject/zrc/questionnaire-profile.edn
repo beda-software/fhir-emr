@@ -4,7 +4,18 @@
           hl7-fhir-r4-core.boolean
           hl7-fhir-r4-core.Reference
           hl7-fhir-r4-core.Questionnaire
-          hl7-fhir-r4-core.string}
+          hl7-fhir-r4-core.string
+          hl7-fhir-uv-sdc.sdc-questionnaire-answerExpression
+          hl7-fhir-uv-sdc.sdc-questionnaire-choiceColumn
+          hl7-fhir-uv-sdc.sdc-questionnaire-initialExpression
+          hl7-fhir-r4-core.questionnaire-referenceResource
+          hl7-fhir-r4-core.questionnaire-itemControl
+          hl7-fhir-r4-core.questionnaire-sliderStepValue
+          hl7-fhir-uv-sdc.sdc-questionnaire-calculatedExpression
+          hl7-fhir-uv-sdc.sdc-questionnaire-itemPopulationContext
+          hl7-fhir-uv-sdc.sdc-questionnaire-enableWhenExpression
+          hl7-fhir-r4-core.questionnaire-hidden
+          hl7-fhir-uv-sdc.sdc-questionnaire-launchContext}
 
  QuestionnaireItem {:zen/tags #{zen/schema
                                 zen.fhir/structure-schema}
@@ -32,7 +43,9 @@
                                              :fhir/extensionUri "http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue"}
                            :calculatedExpression {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-calculatedExpression/schema},
                                                   :fhir/extensionUri "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression"}
-                           :itemContext {:confirms #{zen/any}},
+                           :itemPopulationContext {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-itemPopulationContext/schema}
+                                         :fhir/extensionUri "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemPopulationContext"
+                                         :fhir/flags #{:MS}}
                            :enableWhenExpression {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-enableWhenExpression/schema},
                                                   :fhir/extensionUri "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-enableWhenExpression",
                                                   :fhir/flags #{:MS}},
@@ -68,7 +81,6 @@
   :keys {:mapping {:type zen/vector
                    :every {:confirms #{hl7-fhir-r4-core.Reference/schema}}
                    :fhir/extensionUri "http://beda.software/fhir-extensions/questionnaire-mapper"}
-         :launchContext {:type zen/any}
-         :sourceQueries {:type zen/any}
+         :launchContext {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-launchContext/schema}}
          :item {:type zen/vector
                 :every {:confirms #{QuestionnaireItem}}}}}}
