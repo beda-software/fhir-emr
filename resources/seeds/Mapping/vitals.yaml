@@ -6,222 +6,241 @@ body:
       $fn: ["linkId", "type"]
       $name: answer
       $body: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='"+ linkId + "').answer.value."+type).0
-    patientId: $ answer('patientId', 'string')
-    patientName: $ answer('patientName', 'string')
-    encounterId: $ answer('encounterId', 'string')
-    temperature: $ answer('temperature', 'integer')
-    bloodPressureSystolic: $ answer('blood-pressure-systolic', 'integer')
-    bloodPressureDiastolic: $ answer('blood-pressure-diastolic', 'integer')
-    bloodPressureArm: $ answer('blood-pressure-arm', 'Coding')
-    bloodPressurePosition: $ answer('blood-pressure-positions', 'Coding')
-    pulseRate: $ answer('pulse-rate', 'integer')
-    respiratoryRate: $ answer('respiratory-rate', 'integer')
-    oxygenSaturation: $ answer('oxygen-saturation', 'integer')
-    height: $ answer('height', 'integer')
-    weight: $ answer('weight', 'integer')
-    bmi: $ answer('bmi', 'integer')
   $body:
-    type: transaction
-    entry:
-      - request:
-          url: /Observation
-          method: POST
-        resource:
-          resourceType: Observation
-          status: final
-          code:
-            coding:
-              - code: 8310-5
-                system: http://loinc.org
-                display: Body temperature
-          subject:
-            id: $ patientId
-            display: $ patientName
-            resourceType: Patient
-          encounter:
-            id: $ encounterId
-            resourceType: Encounter
-          value:
-            Quantity:
-              value: $ temperature
-              unit: degC
-
-      - request:
-          url: /Observation
-          method: POST
-        resource:
-          resourceType: Observation
-          status: final
-          code:
-            coding:
-              - code: 85354-9
-                system: http://loinc.org
-                display: Blood pressure
-          subject:
-            id: $ patientId
-            display: $ patientName
-            resourceType: Patient
-          encounter:
-            id: $ encounterId
-            resourceType: Encounter
-          bodySite:
-            coding:
-              - $ bloodPressureArm
-              - $ bloodPressurePosition
-          component:
-            - code:
+    $let:
+      patientId: $ answer('patientId', 'string')
+      patientName: $ answer('patientName', 'string')
+      encounterId: $ fhirpath("Encounter.id")
+      temperature: $ answer('temperature', 'integer')
+      bloodPressureSystolic: $ answer('blood-pressure-systolic', 'integer')
+      bloodPressureDiastolic: $ answer('blood-pressure-diastolic', 'integer')
+      bloodPressureArm: $ answer('blood-pressure-arm', 'Coding')
+      bloodPressurePosition: $ answer('blood-pressure-positions', 'Coding')
+      pulseRate: $ answer('pulse-rate', 'integer')
+      respiratoryRate: $ answer('respiratory-rate', 'integer')
+      oxygenSaturation: $ answer('oxygen-saturation', 'integer')
+      height: $ answer('height', 'integer')
+      weight: $ answer('weight', 'integer')
+      bmi: $ answer('bmi', 'integer')
+    $body:
+      type: transaction
+      entry:
+        - $if: $ temperature
+          $then:
+            request:
+              url: /Observation
+              method: POST
+            resource:
+              resourceType: Observation
+              status: final
+              code:
                 coding:
-                  - code: 8480-6
+                  - code: 8310-5
                     system: http://loinc.org
-                    display: Systolic blood pressure
+                    display: Body temperature
+              subject:
+                id: $ patientId
+                display: $ patientName
+                resourceType: Patient
+              encounter:
+                id: $ encounterId
+                resourceType: Encounter
               value:
                 Quantity:
-                  value: $ bloodPressureSystolic
-                  unit: mmHg
-            - code:
+                  value: $ temperature
+                  unit: degC
+
+        - $if: $ bloodPressureSystolic && bloodPressureDiastolic
+          $then:
+            request:
+              url: /Observation
+              method: POST
+            resource:
+              resourceType: Observation
+              status: final
+              code:
                 coding:
-                  - code: 8462-4
+                  - code: 85354-9
                     system: http://loinc.org
-                    display: Diastolic blood pressure
+                    display: Blood pressure
+              subject:
+                id: $ patientId
+                display: $ patientName
+                resourceType: Patient
+              encounter:
+                id: $ encounterId
+                resourceType: Encounter
+              bodySite:
+                $if: $ bloodPressureArm || bloodPressurePosition
+                coding:
+                  - $ bloodPressureArm
+                  - $ bloodPressurePosition
+              component:
+                - code:
+                    coding:
+                      - code: 8480-6
+                        system: http://loinc.org
+                        display: Systolic blood pressure
+                  value:
+                    Quantity:
+                      value: $ bloodPressureSystolic
+                      unit: mmHg
+                - code:
+                    coding:
+                      - code: 8462-4
+                        system: http://loinc.org
+                        display: Diastolic blood pressure
+                  value:
+                    Quantity:
+                      value: $ bloodPressureDiastolic
+                      unit: mmHg
+
+        - $if: $ pulseRate
+          $then:
+            request:
+              url: /Observation
+              method: POST
+            resource:
+              resourceType: Observation
+              status: final
+              code:
+                coding:
+                  - code: 8867-4
+                    system: http://loinc.org
+                    display: Heart rate
+              subject:
+                id: $ patientId
+                display: $ patientName
+                resourceType: Patient
+              encounter:
+                id: $ encounterId
+                resourceType: Encounter
               value:
                 Quantity:
-                  value: $ bloodPressureDiastolic
-                  unit: mmHg
+                  value: $ pulseRate
+                  unit: /min
 
-      - request:
-          url: /Observation
-          method: POST
-        resource:
-          resourceType: Observation
-          status: final
-          code:
-            coding:
-              - code: 8867-4
-                system: http://loinc.org
-                display: Heart rate
-          subject:
-            id: $ patientId
-            display: $ patientName
-            resourceType: Patient
-          encounter:
-            id: $ encounterId
-            resourceType: Encounter
-          value:
-            Quantity:
-              value: $ pulseRate
-              unit: /min
+        - $if: $ respiratoryRate
+          $then:
+            request:
+              url: /Observation
+              method: POST
+            resource:
+              resourceType: Observation
+              status: final
+              code:
+                coding:
+                  - code: 9279-1
+                    system: http://loinc.org
+                    display: Respiratory rate
+              subject:
+                id: $ patientId
+                display: $ patientName
+                resourceType: Patient
+              encounter:
+                id: $ encounterId
+                resourceType: Encounter
+              value:
+                Quantity:
+                  value: $ respiratoryRate
+                  unit: /min
 
-      - request:
-          url: /Observation
-          method: POST
-        resource:
-          resourceType: Observation
-          status: final
-          code:
-            coding:
-              - code: 9279-1
-                system: http://loinc.org
-                display: Respiratory rate
-          subject:
-            id: $ patientId
-            display: $ patientName
-            resourceType: Patient
-          encounter:
-            id: $ encounterId
-            resourceType: Encounter
-          value:
-            Quantity:
-              value: $ respiratoryRate
-              unit: /min
+        - $if: $ oxygenSaturation
+          $then:
+            request:
+              url: /Observation
+              method: POST
+            resource:
+              resourceType: Observation
+              status: final
+              code:
+                coding:
+                  - code: 59408-5
+                    system: http://loinc.org
+                    display: Oxygen saturation
+              subject:
+                id: $ patientId
+                display: $ patientName
+                resourceType: Patient
+              encounter:
+                id: $ encounterId
+                resourceType: Encounter
+              value:
+                Quantity:
+                  value: $ oxygenSaturation
+                  unit: "%"
 
-      - request:
-          url: /Observation
-          method: POST
-        resource:
-          resourceType: Observation
-          status: final
-          code:
-            coding:
-              - code: 59408-5
-                system: http://loinc.org
-                display: Oxygen saturation
-          subject:
-            id: $ patientId
-            display: $ patientName
-            resourceType: Patient
-          encounter:
-            id: $ encounterId
-            resourceType: Encounter
-          value:
-            Quantity:
-              value: $ oxygenSaturation
-              unit: "%"
+        - $if: $ height
+          $then:
+            request:
+              url: /Observation
+              method: POST
+            resource:
+              resourceType: Observation
+              status: final
+              code:
+                coding:
+                  - code: 8302-2
+                    system: http://loinc.org
+                    display: Body height
+              subject:
+                id: $ patientId
+                display: $ patientName
+                resourceType: Patient
+              encounter:
+                id: $ encounterId
+                resourceType: Encounter
+              value:
+                Quantity:
+                  value: $ height
+                  unit: cm
 
-      - request:
-          url: /Observation
-          method: POST
-        resource:
-          resourceType: Observation
-          status: final
-          code:
-            coding:
-              - code: 8302-2
-                system: http://loinc.org
-                display: Body height
-          subject:
-            id: $ patientId
-            display: $ patientName
-            resourceType: Patient
-          encounter:
-            id: $ encounterId
-            resourceType: Encounter
-          value:
-            Quantity:
-              value: $ height
-              unit: cm
+        - $if: $ weight
+          $then:
+            request:
+              url: /Observation
+              method: POST
+            resource:
+              resourceType: Observation
+              status: final
+              code:
+                coding:
+                  - code: 29463-7
+                    system: http://loinc.org
+                    display: Body weight
+              subject:
+                id: $ patientId
+                display: $ patientName
+                resourceType: Patient
+              encounter:
+                id: $ encounterId
+                resourceType: Encounter
+              value:
+                Quantity:
+                  value: $ weight
+                  unit: kg
 
-      - request:
-          url: /Observation
-          method: POST
-        resource:
-          resourceType: Observation
-          status: final
-          code:
-            coding:
-              - code: 29463-7
-                system: http://loinc.org
-                display: Body weight
-          subject:
-            id: $ patientId
-            display: $ patientName
-            resourceType: Patient
-          encounter:
-            id: $ encounterId
-            resourceType: Encounter
-          value:
-            Quantity:
-              value: $ weight
-              unit: kg
-
-      - request:
-          url: /Observation
-          method: POST
-        resource:
-          resourceType: Observation
-          status: final
-          subject:
-            id: $ patientId
-            display: $ patientName
-            resourceType: Patient
-          encounter:
-            id: $ encounterId
-            resourceType: Encounter
-          code:
-            coding:
-              - code: 39156-5
-                system: http://loinc.org
-                display: BMI
-          value:
-            Quantity:
-              value: $ bmi
-              unit: kg/m2
+        - $if: $ bmi
+          $then:
+            request:
+              url: /Observation
+              method: POST
+            resource:
+              resourceType: Observation
+              status: final
+              subject:
+                id: $ patientId
+                display: $ patientName
+                resourceType: Patient
+              encounter:
+                id: $ encounterId
+                resourceType: Encounter
+              code:
+                coding:
+                  - code: 39156-5
+                    system: http://loinc.org
+                    display: BMI
+              value:
+                Quantity:
+                  value: $ bmi
+                  unit: kg/m2
