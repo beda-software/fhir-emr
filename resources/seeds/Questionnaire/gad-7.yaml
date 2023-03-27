@@ -11,7 +11,16 @@ mapping:
 launchContext:
     - name: Patient
       type: Patient
+    - name: Practitioner
+      type: Practitioner
 item:
+    - text: DateTime
+      type: dateTime
+      linkId: dateTime
+      hidden: true
+      initialExpression:
+          language: text/fhirpath
+          expression: 'now()'
     - text: PatientId
       type: string
       linkId: patientId
