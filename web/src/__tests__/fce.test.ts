@@ -21,8 +21,7 @@ describe('Questionanire transformation', () => {
                     url: `/fhir/Questionnaire/${q.id}`,
                 }),
             );
-            // Temporary disable
-            // expect(toFirstClassExtension(fhirQuestionanire)).toStrictEqual(q);
+            expect(toFirstClassExtension(fhirQuestionanire)).toStrictEqual(q);
         }
     });
 });
