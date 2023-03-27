@@ -15,7 +15,8 @@
           hl7-fhir-uv-sdc.sdc-questionnaire-itemPopulationContext
           hl7-fhir-uv-sdc.sdc-questionnaire-enableWhenExpression
           hl7-fhir-r4-core.questionnaire-hidden
-          hl7-fhir-uv-sdc.sdc-questionnaire-launchContext}
+          hl7-fhir-uv-sdc.sdc-questionnaire-launchContext
+          hl7-fhir-uv-sdc.sdc-questionnaire-sourceQueries}
 
  QuestionnaireItem {:zen/tags #{zen/schema
                                 zen.fhir/structure-schema}
@@ -81,6 +82,8 @@
   :keys {:mapping {:type zen/vector
                    :every {:confirms #{hl7-fhir-r4-core.Reference/schema}}
                    :fhir/extensionUri "http://beda.software/fhir-extensions/questionnaire-mapper"}
+         :sourceQueries {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-sourceQueries/schema},
+                         :fhir/extensionUri "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-sourceQueries"},
          :launchContext {:type zen/vector
                          :every {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-launchContext/schema}}
                          :fhir/extensionUri "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext"}
