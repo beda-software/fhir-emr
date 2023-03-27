@@ -103,10 +103,11 @@ export function usePatientOverview(props: Props) {
                             _revinclude: ['Provenance:target'],
                         },
                     ),
-                    observationsBundle: getFHIRResources<Observation>('Observation', {
+                    observationsBundle: getFHIRResources<Observation | Provenance>('Observation', {
                         patient: patient.id,
                         _sort: ['-lastUpdated'],
                         code: [`${depressionSeverityCode},${anxietySeverityCode}`],
+                        _revinclude: ['Provenance:target'],
                     }),
                     immunizationsBundle: getFHIRResources<Immunization | Provenance>('Immunization', {
                         patient: patient.id,
@@ -132,6 +133,7 @@ export function usePatientOverview(props: Props) {
                     const allergies = extractBundleResources(allergiesBundle).AllergyIntolerance;
                     const allergiesProvenance = extractBundleResources(allergiesBundle).Provenance;
                     const observations = extractBundleResources(observationsBundle).Observation;
+                    const observationsProvenance = extractBundleResources(observationsBundle).Provenance;
                     const immunizations = extractBundleResources(immunizationsBundle).Immunization;
                     const immunizationsProvenance = extractBundleResources(immunizationsBundle).Provenance;
                     const medications =
@@ -139,7 +141,7 @@ export function usePatientOverview(props: Props) {
                     const medicationsProvenance =
                         extractBundleResources(medicationsBundle).Provenance;
                     const cards = [
-                        prepareObservations(observations),
+                        prepareObservations(observations, observationsProvenance),
                         prepareMedications(medications, medicationsProvenance),
                         prepareAllergies(allergies, allergiesProvenance),
                         prepareImmunizations(immunizations, immunizationsProvenance),

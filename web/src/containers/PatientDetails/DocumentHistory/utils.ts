@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { FormItems } from 'sdc-qrf/lib/types';
+import { FormGroupItems, FormItems } from 'sdc-qrf/lib/types';
 import { findAnswersForQuestionsRecursive, mapResponseToForm } from 'sdc-qrf/lib/utils';
 
 import { WithId } from 'aidbox-react/lib/services/fhir';
@@ -31,31 +31,68 @@ export function findResourceInHistory<R extends Resource>(
 }
 
 function isValueEmpty(linkId: string, data: FormItems) {
-    const prevAnswers = findAnswersForQuestionsRecursive(linkId, data);
+    const answers = findAnswersForQuestionsRecursive(linkId, data) || [];
 
-    return _.every(prevAnswers, (a) => !a.value || _.isEmpty(a.value));
+    return _.every(answers, (a) => !a.value || _.isEmpty(a.value));
 }
 
-export function getFormDataDiff(currentData: FormItems, prevData: FormItems) {
-    let diffBefore: FormItems = {};
-    let diffAfter: FormItems = {};
+function isGroup(data: FormGroupItems | FormItems) {
+    if (!Array.isArray(data) && data.items) {
+        return true;
+    }
 
-    _.toPairs(currentData).forEach(([linkId, data]) => {
-        if (isValueEmpty(linkId, currentData)) {
-            return;
-        } else if (isValueEmpty(linkId, prevData) && !isValueEmpty(linkId, currentData)) {
-            diffAfter[linkId] = data;
-        } else if (!_.isEqual(data, prevData[linkId])) {
-            diffAfter[linkId] = data;
-            diffBefore[linkId] = prevData[linkId];
-        }
-    });
+    return false;
+}
 
-    _.toPairs(prevData).forEach(([linkId, data]) => {
-        if (isValueEmpty(linkId, currentData) && !isValueEmpty(linkId, prevData)) {
-            diffBefore[linkId] = data;
-        }
-    });
+export function getFormDataDiff(initialCurrentData: FormItems, initialPrevData: FormItems) {
+    const generateDiff = (
+        currentData: FormItems | FormGroupItems,
+        prevData: FormItems | FormGroupItems,
+    ) => {
+        let diffBefore: FormItems = {};
+        let diffAfter: FormItems = {};
+
+        _.toPairs(currentData).forEach(([linkId, data]) => {
+            if (isGroup(data)) {
+                const groupDiff = generateDiff(data.items, prevData[linkId]?.items);
+                diffAfter = { ...diffAfter, ...groupDiff.diffAfter };
+                diffBefore = { ...diffBefore, ...groupDiff.diffBefore };
+
+                return;
+            } else {
+                if (isValueEmpty(linkId, currentData as FormItems)) {
+                    return;
+                } else if (
+                    isValueEmpty(linkId, prevData as FormItems) &&
+                    !isValueEmpty(linkId, currentData as FormItems)
+                ) {
+                    diffAfter[linkId] = data;
+
+                    return;
+                } else if (!_.isEqual(data, prevData[linkId])) {
+                    diffAfter[linkId] = data;
+                    diffBefore[linkId] = prevData[linkId];
+                }
+            }
+        });
+
+        _.toPairs(prevData).forEach(([linkId, data]) => {
+            if (isGroup(data)) {
+                return;
+            }
+
+            if (
+                isValueEmpty(linkId, currentData as FormItems) &&
+                !isValueEmpty(linkId, prevData as FormItems)
+            ) {
+                diffBefore[linkId] = data;
+            }
+        });
+
+        return { diffBefore, diffAfter };
+    };
+
+    const { diffBefore, diffAfter } = generateDiff(initialCurrentData, initialPrevData);
 
     return { diffBefore, diffAfter };
 }

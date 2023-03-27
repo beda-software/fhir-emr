@@ -87,7 +87,10 @@ export function prepareAllergies(
     };
 }
 
-export function prepareObservations(observations: Observation[]): OverviewCard<Observation> {
+export function prepareObservations(
+    observations: Observation[],
+    provenanceList: Provenance[],
+): OverviewCard<Observation> {
     return {
         title: t`Conditions`,
         icon: <AlertOutlined />,
@@ -97,7 +100,13 @@ export function prepareObservations(observations: Observation[]): OverviewCard<O
             {
                 title: t`Name`,
                 key: 'name',
-                render: (r: Observation) => r.interpretation?.[0]?.text,
+                render: (resource: Observation) => (
+                    <LinkToEdit
+                        name={resource.interpretation?.[0]?.text}
+                        resource={resource}
+                        provenanceList={provenanceList}
+                    />
+                ),
             },
             {
                 title: t`Date`,
