@@ -1,4 +1,5 @@
 import { Questionnaire as FHIRQuestionnaire } from 'fhir/r4b';
+
 import { Questionnaire as AidboxQuestionnaire } from 'shared/src/contrib/aidbox';
 
 export function toFirstClassExtension(q: FHIRQuestionnaire): AidboxQuestionnaire {
