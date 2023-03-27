@@ -25,7 +25,6 @@ describe('getFormDataDiff utils test', () => {
     test('getFormDataDiff works correctly with questionnaire group item data', async () => {
         const currentData = currentData4;
         const prevData = prevData4;
-        const r = getFormDataDiff(currentData, prevData);
 
         expect(getFormDataDiff(currentData, prevData)).toEqual(result4);
     });
