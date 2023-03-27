@@ -5,8 +5,10 @@ mapping:
     - id: edit-appointment-extract
       resourceType: Mapping
 launchContext:
-    - name: CurrentAppointmentId
-      type: string
+    - name:
+          code: CurrentAppointmentId
+      type:
+          - Basic
       description: The edited appointment ID
 contained:
     - resourceType: Bundle
@@ -17,7 +19,7 @@ contained:
                 method: GET
                 url: /Appointment?_id={{%CurrentAppointmentId}}
 sourceQueries:
-    - localRef: 'Bundle#CurrentAppointmentBundle'
+    localRef: "Bundle#CurrentAppointmentBundle"
 item:
     - type: group
       linkId: root-group
@@ -28,7 +30,7 @@ item:
             hidden: true
             initialExpression:
                 language: text/fhirpath
-                expression: '%CurrentAppointmentId'
+                expression: "%CurrentAppointmentId"
           - text: Practitioner
             type: reference
             referenceResource:
@@ -38,7 +40,7 @@ item:
             linkId: practitioner-role
             answerExpression:
                 language: application/x-fhir-query
-                expression: 'PractitionerRole?_assoc=practitioner'
+                expression: "PractitionerRole?_assoc=practitioner"
             choiceColumn:
                 - forDisplay: true
                   path: >-
@@ -56,7 +58,7 @@ item:
                 expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(resourceType='Patient')"
             answerExpression:
                 language: application/x-fhir-query
-                expression: 'Patient'
+                expression: "Patient"
             choiceColumn:
                 - forDisplay: true
                   path: "name.given.first() + ' ' + name.family"
@@ -86,11 +88,11 @@ item:
                           display: A follow up visit
             initialExpression:
                 language: text/fhirpath
-                expression: '%CurrentAppointmentBundle.entry[0].resource.entry.resource.serviceType.coding'
+                expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.serviceType.coding"
             enableBehavior: any
             enableWhen:
                 - question: practitioner-role
-                  operator: 'exists'
+                  operator: "exists"
                   answer:
                       boolean: true
           - text: Start datetime
@@ -99,12 +101,8 @@ item:
             linkId: start-datetime
             initialExpression:
                 language: text/fhirpath
-                expression: '%CurrentAppointmentBundle.entry[0].resource.entry.resource.start'
+                expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.start"
 url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/edit-appointment
 meta:
-  profile:
-    - https://beda.software/beda-emr-questionnaire
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extr-defn
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-render
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-pop-smap
+    profile:
+        - https://beda.software/beda-emr-questionnaire

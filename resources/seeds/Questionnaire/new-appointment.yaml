@@ -5,18 +5,21 @@ mapping:
   - id: new-appointment-extract
     resourceType: Mapping
 launchContext:
-  - name: patient
-    type: Patient
+  - name:
+      code: patient
+    type:
+      - Patient
     description: Patient resource
-  - name: practitionerRole
-    type: PractitionerRole
+  - name:
+      code: practitionerRole
+    type:
+      - PractitionerRole
     description: PractitionerRole resource
-  - name: appointmentStartDate
-    type: string
+  - name:
+      code: appointmentDraft
+    type:
+      - Basic
     description: Appointment date passing from calendar
-  - name: appointmentStartDateTime
-    type: string
-    description: Appointment datetime passing from calendar
 contained:
   - resourceType: Bundle
     id: PractitionerRoleWithPractitioner
@@ -26,7 +29,7 @@ contained:
           method: GET
           url: /PractitionerRole?_id={{%practitionerRole.id}}&_include=practitioner
 sourceQueries:
-  - localRef: "Bundle#PractitionerRoleWithPractitioner"
+  localRef: "Bundle#PractitionerRoleWithPractitioner"
 item:
   - type: group
     linkId: root-group
@@ -44,7 +47,7 @@ item:
         type: string
         linkId: predefined-practitioner-role-display
         hidden: true
-        itemContext:
+        itemPopulationContext:
           language: text/fhirpath
           expression: >-
             %PractitionerRoleWithPractitioner.entry.resource
@@ -128,12 +131,8 @@ item:
         linkId: start-datetime
         initialExpression:
           language: text/fhirpath
-          expression: "%appointmentStartDateTime"
+          expression: "%appointmentDraft"
 meta:
   profile:
     - https://beda.software/beda-emr-questionnaire
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extr-defn
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-render
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-pop-smap
 url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/new-appointment

@@ -3,14 +3,16 @@ resourceType: Questionnaire
 name: PHQ-2/PHQ-9 Depression Screening
 status: active
 subjectType:
-  - Encounter
-  - Patient
+    - Encounter
+    - Patient
 mapping:
     - id: phq2phq9-extract
       resourceType: Mapping
 launchContext:
-    - name: Patient
-      type: Patient
+    - name:
+          code: Patient
+      type:
+          - Patient
 item:
     - text: PatientId
       type: string
@@ -18,7 +20,7 @@ item:
       hidden: true
       initialExpression:
           language: text/fhirpath
-          expression: '%Patient.id'
+          expression: "%Patient.id"
     - text: PatientName
       type: string
       linkId: patientName
@@ -26,7 +28,7 @@ item:
       initialExpression:
           language: text/fhirpath
           expression: "%Patient.name.given[0] + ' ' + %Patient.name.family"
-    - text: 'Over the past 2 weeks, how often have you been bothered by:'
+    - text: "Over the past 2 weeks, how often have you been bothered by:"
       type: group
       linkId: phq2phq9
       item:
@@ -40,24 +42,24 @@ item:
             answerOption:
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6568-5'
-                          display: 'Not at all'
+                          system: "http://loinc.org"
+                          code: "LA6568-5"
+                          display: "Not at all"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6569-3'
-                          display: 'Several days'
+                          system: "http://loinc.org"
+                          code: "LA6569-3"
+                          display: "Several days"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6570-1'
-                          display: 'More than half the days'
+                          system: "http://loinc.org"
+                          code: "LA6570-1"
+                          display: "More than half the days"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6571-9'
-                          display: 'Nearly every day'
+                          system: "http://loinc.org"
+                          code: "LA6571-9"
+                          display: "Nearly every day"
           - linkId: 44255-8
             text: Feeling down, depressed, or hopeless
             required: true
@@ -68,24 +70,24 @@ item:
             answerOption:
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6568-5'
-                          display: 'Not at all'
+                          system: "http://loinc.org"
+                          code: "LA6568-5"
+                          display: "Not at all"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6569-3'
-                          display: 'Several days'
+                          system: "http://loinc.org"
+                          code: "LA6569-3"
+                          display: "Several days"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6570-1'
-                          display: 'More than half the days'
+                          system: "http://loinc.org"
+                          code: "LA6570-1"
+                          display: "More than half the days"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6571-9'
-                          display: 'Nearly every day'
+                          system: "http://loinc.org"
+                          code: "LA6571-9"
+                          display: "Nearly every day"
           - linkId: 44259-0
             text: Trouble falling or staying asleep, or sleeping too much
             required: true
@@ -96,24 +98,24 @@ item:
             answerOption:
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6568-5'
-                          display: 'Not at all'
+                          system: "http://loinc.org"
+                          code: "LA6568-5"
+                          display: "Not at all"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6569-3'
-                          display: 'Several days'
+                          system: "http://loinc.org"
+                          code: "LA6569-3"
+                          display: "Several days"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6570-1'
-                          display: 'More than half the days'
+                          system: "http://loinc.org"
+                          code: "LA6570-1"
+                          display: "More than half the days"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6571-9'
-                          display: 'Nearly every day'
+                          system: "http://loinc.org"
+                          code: "LA6571-9"
+                          display: "Nearly every day"
           - linkId: 44254-1
             text: Feeling tired or having little energy
             required: true
@@ -124,24 +126,24 @@ item:
             answerOption:
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6568-5'
-                          display: 'Not at all'
+                          system: "http://loinc.org"
+                          code: "LA6568-5"
+                          display: "Not at all"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6569-3'
-                          display: 'Several days'
+                          system: "http://loinc.org"
+                          code: "LA6569-3"
+                          display: "Several days"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6570-1'
-                          display: 'More than half the days'
+                          system: "http://loinc.org"
+                          code: "LA6570-1"
+                          display: "More than half the days"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6571-9'
-                          display: 'Nearly every day'
+                          system: "http://loinc.org"
+                          code: "LA6571-9"
+                          display: "Nearly every day"
           - linkId: 44251-7
             text: Poor appetite or overeating
             required: true
@@ -152,24 +154,24 @@ item:
             answerOption:
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6568-5'
-                          display: 'Not at all'
+                          system: "http://loinc.org"
+                          code: "LA6568-5"
+                          display: "Not at all"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6569-3'
-                          display: 'Several days'
+                          system: "http://loinc.org"
+                          code: "LA6569-3"
+                          display: "Several days"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6570-1'
-                          display: 'More than half the days'
+                          system: "http://loinc.org"
+                          code: "LA6570-1"
+                          display: "More than half the days"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6571-9'
-                          display: 'Nearly every day'
+                          system: "http://loinc.org"
+                          code: "LA6571-9"
+                          display: "Nearly every day"
           - linkId: 44258-2
             text: Feeling bad about yourself-or that you are a failure or have let yourself or your family down
             required: true
@@ -180,24 +182,24 @@ item:
             answerOption:
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6568-5'
-                          display: 'Not at all'
+                          system: "http://loinc.org"
+                          code: "LA6568-5"
+                          display: "Not at all"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6569-3'
-                          display: 'Several days'
+                          system: "http://loinc.org"
+                          code: "LA6569-3"
+                          display: "Several days"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6570-1'
-                          display: 'More than half the days'
+                          system: "http://loinc.org"
+                          code: "LA6570-1"
+                          display: "More than half the days"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6571-9'
-                          display: 'Nearly every day'
+                          system: "http://loinc.org"
+                          code: "LA6571-9"
+                          display: "Nearly every day"
           - linkId: 44252-5
             text: Trouble concentrating on things, such as reading the newspaper or watching television
             required: true
@@ -208,24 +210,24 @@ item:
             answerOption:
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6568-5'
-                          display: 'Not at all'
+                          system: "http://loinc.org"
+                          code: "LA6568-5"
+                          display: "Not at all"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6569-3'
-                          display: 'Several days'
+                          system: "http://loinc.org"
+                          code: "LA6569-3"
+                          display: "Several days"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6570-1'
-                          display: 'More than half the days'
+                          system: "http://loinc.org"
+                          code: "LA6570-1"
+                          display: "More than half the days"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6571-9'
-                          display: 'Nearly every day'
+                          system: "http://loinc.org"
+                          code: "LA6571-9"
+                          display: "Nearly every day"
           - linkId: 44253-3
             text: Moving or speaking so slowly that other people could have noticed. Or the opposite-being so fidgety or restless that you have been moving around a lot more than usual
             required: true
@@ -236,24 +238,24 @@ item:
             answerOption:
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6568-5'
-                          display: 'Not at all'
+                          system: "http://loinc.org"
+                          code: "LA6568-5"
+                          display: "Not at all"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6569-3'
-                          display: 'Several days'
+                          system: "http://loinc.org"
+                          code: "LA6569-3"
+                          display: "Several days"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6570-1'
-                          display: 'More than half the days'
+                          system: "http://loinc.org"
+                          code: "LA6570-1"
+                          display: "More than half the days"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6571-9'
-                          display: 'Nearly every day'
+                          system: "http://loinc.org"
+                          code: "LA6571-9"
+                          display: "Nearly every day"
           - linkId: 44260-8
             text: Thoughts that you would be better off dead, or of hurting yourself in some way
             required: true
@@ -264,24 +266,24 @@ item:
             answerOption:
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6568-5'
-                          display: 'Not at all'
+                          system: "http://loinc.org"
+                          code: "LA6568-5"
+                          display: "Not at all"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6569-3'
-                          display: 'Several days'
+                          system: "http://loinc.org"
+                          code: "LA6569-3"
+                          display: "Several days"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6570-1'
-                          display: 'More than half the days'
+                          system: "http://loinc.org"
+                          code: "LA6570-1"
+                          display: "More than half the days"
                 - value:
                       Coding:
-                          system: 'http://loinc.org'
-                          code: 'LA6571-9'
-                          display: 'Nearly every day'
+                          system: "http://loinc.org"
+                          code: "LA6571-9"
+                          display: "Nearly every day"
           - linkId: phq9-total-score
             text: PHQ2/PHQ-9 Depression Severity Score
             required: true
@@ -297,10 +299,6 @@ item:
                     + %QuestionnaireResponse.item.item.answer.children().children().where(code='LA6570-1').count() * 2
                     + %QuestionnaireResponse.item.item.answer.children().children().where(code='LA6571-9').count() * 3"
 meta:
-  profile:
-    - https://beda.software/beda-emr-questionnaire
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extr-defn
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-render
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-pop-smap
+    profile:
+        - https://beda.software/beda-emr-questionnaire
 url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/phq2phq9

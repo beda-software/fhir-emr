@@ -4,49 +4,45 @@ name: patient-create
 title: Patient create
 status: active
 mapping:
-    - id: patient-create
-      resourceType: Mapping
+  - id: patient-create
+    resourceType: Mapping
 item:
-    - linkId: patient-id
-      type: string
-      text: patientId
-      hidden: true
-    - linkId: last-name
-      type: string
-      text: Last name
-      required: true
-    - linkId: first-name
-      type: string
-      text: First name
-      required: true
-    - linkId: middle-name
-      type: string
-      text: Middle name
-    - linkId: birth-date
-      type: date
-      text: Birth date
-    - linkId: gender
-      type: choice
-      text: Gender
-      answerOption:
-          - value:
-                string: male
-          - value:
-                string: female
-    - linkId: ssn
-      type: string
-      text: SSN
-    - linkId: mobile
-      type: string
-      text: Phone number
-      itemControl:
-          coding:
-              - code: phoneWidget
+  - linkId: patient-id
+    type: string
+    text: patientId
+    hidden: true
+  - linkId: last-name
+    type: string
+    text: Last name
+    required: true
+  - linkId: first-name
+    type: string
+    text: First name
+    required: true
+  - linkId: middle-name
+    type: string
+    text: Middle name
+  - linkId: birth-date
+    type: date
+    text: Birth date
+  - linkId: gender
+    type: choice
+    text: Gender
+    answerOption:
+      - value:
+          string: male
+      - value:
+          string: female
+  - linkId: ssn
+    type: string
+    text: SSN
+  - linkId: mobile
+    type: string
+    text: Phone number
+    itemControl:
+      coding:
+        - code: phoneWidget
 meta:
   profile:
     - https://beda.software/beda-emr-questionnaire
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extr-defn
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-render
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-pop-smap
 url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/patient-create
