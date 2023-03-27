@@ -11,4 +11,6 @@ export default {
     mobileSentryDSN: null,
 
     jitsiMeetServer: 'http://localhost:8443',
+
+    wearablesDataStreamService: 'http://localhost:8082',
 };

@@ -90,3 +90,40 @@ services:
             - AUTH_JWT_SECRET
             - AUTH_JWT_ACCEPTED_ISSUERS
             - AUTH_JWT_ACCEPTED_AUDIENCES
+    datastream-timescaledb:
+        image: timescale/timescaledb:latest-pg15
+        healthcheck:
+            test: ['CMD', 'pg_isready', '-U', 'postgres']
+            interval: 5s
+            timeout: 5s
+            retries: 5
+        environment:
+            POSTGRES_PASSWORD: postgres
+    datastream-timescaledb-migrations:
+        image: bedasoftware/fhir-datasequence:latest
+        entrypoint:
+            - poetry
+            - run
+            - alembic
+            - upgrade
+            - head
+        depends_on:
+            datastream-timescaledb:
+                condition: service_healthy
+        environment:
+            TIMESCALEDB_SERVICE_NAME: datastream-timescaledb
+            PGUSER: postgres
+            PGPASSWORD: postgres
+    datastream:
+        image: bedasoftware/fhir-datasequence:latest
+        depends_on:
+            datastream-timescaledb:
+                condition: service_healthy
+            datastream-timescaledb-migrations:
+                condition: service_completed_successfully
+        ports:
+            - '8082:8081'
+        environment:
+            TIMESCALEDB_SERVICE_NAME: datastream-timescaledb
+            PGUSER: postgres
+            PGPASSWORD: postgres

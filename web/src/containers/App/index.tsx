@@ -30,6 +30,7 @@ import { history } from 'src/services/history';
 import { sharedAuthorizedPractitioner, sharedJitsiAuthToken } from 'src/sharedState';
 
 import { PublicAppointment } from '../Appointment/PublicAppointment';
+import { PatientPortal } from '../PatientPortal';
 import { PatientQuestionnaire } from '../PatientQuestionnaire';
 import { PractitionerDetails } from '../PractitionerDetails';
 import { SignIn } from '../SignIn';
@@ -99,6 +100,7 @@ export function App() {
             />
             <Route path="/appointment/book" element={<PublicAppointment />} />
             <Route path="/questionnaire" element={<PatientQuestionnaire />} />
+            <Route path="/patient-portal/*" element={<PatientPortal />} />
             <Route
                 path="*"
                 element={
