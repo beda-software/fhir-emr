@@ -6,6 +6,7 @@ import { AppFooter } from 'src/components/BaseLayout/Footer';
 import logo from 'src/images/logo-white.svg';
 import { getAuthorizeUrl, OAuthState } from 'src/services/auth';
 
+import { useAppleAuthentication } from './hooks';
 import s from './SignIn.module.scss';
 
 function authorize(state?: OAuthState) {
@@ -27,7 +28,22 @@ export function SignIn() {
                     {t`Password`}: password
                 </div>
             </div>
+            <AppleButton />
             <AppFooter type="light" />
         </div>
+    );
+}
+
+function AppleButton(_props: {}) {
+    useAppleAuthentication({ navigateOnSuccess: '/patient-portal/wearables' });
+
+    return (
+        <div
+            className={s.appleSignInBtn}
+            id="appleid-signin"
+            data-color="black"
+            data-border="true"
+            data-type="sign-in"
+        />
     );
 }
