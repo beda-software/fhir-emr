@@ -1,8 +1,81 @@
-import { Questionnaire as FHIRQuestionnaire } from 'fhir/r4b';
+import { Element, Extension,
+         Questionnaire as FHIRQuestionnaire,
+         QuestionnaireItem as FHIRQuestionnaireItem,
+         QuestionnaireItemAnswerOption as FHIRQuestionnaireItemAnswerOption,
+         Resource,
+       } from 'fhir/r4b';
 
-import { Questionnaire as AidboxQuestionnaire } from 'shared/src/contrib/aidbox';
+import { Questionnaire as FCEQuestionnaire,
+         QuestionnaireItem as FCEQuestionnaireItem,
+         QuestionnaireItemAnswerOption as FCEQuestionnaireItemAnswerOption,
+         CodeableConcept, Expression } from 'shared/src/contrib/aidbox';
 
-export function toFirstClassExtension(fhirQuestionnaire: FHIRQuestionnaire): AidboxQuestionnaire {
+interface ExtensionValue {
+    'ex:createdAt': string,
+    'http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl': CodeableConcept,
+    "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression": Expression,
+}
+
+const extensionsMap:Record<keyof ExtensionValue, keyof Extension> = {
+    'ex:createdAt': 'valueInstant',
+    'http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl': 'valueCodeableConcept',
+    "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression": 'valueExpression',
+};
+
+
+function extractExtension<U extends keyof ExtensionValue>(extension: Extension[] | undefined, url:U){
+    const e = extension?.find(e => e.url == url);
+    if(e){
+        const getter = extensionsMap[url];
+        return e[getter] as ExtensionValue[U];
+    }
+}
+
+function removeExtensions<E extends Element>(e:E): Omit<E, 'extension'>{
+    delete e.extension;
+    return e;
+}
+
+function trimUndefined<E extends Element>(e: E): E{
+    //recursevly delete all properties that has undefined value
+    return e;
+}
+
+function convertAnswerOption(answerOption?: FHIRQuestionnaireItemAnswerOption[]): FCEQuestionnaireItemAnswerOption[] | undefined{
+    if(answerOption){
+        return answerOption.map(ao => {
+            const rao: Required<FCEQuestionnaireItemAnswerOption> = {
+                id: ao.id!,
+                initialSelected: ao.initialSelected!,
+                extension: [],
+                modifierExtension: [],
+                value: {
+                    Coding: removeExtensions(ao.valueCoding!),
+                }
+
+            };
+            return rao;
+        })
+    } else {
+        return undefined;
+    }
+}
+
+function convertItem(fhirQuestinnaireItem: FHIRQuestionnaireItem): FCEQuestionnaireItem{
+    const resultItem: Required<FCEQuestionnaireItem> = {
+        linkId: fhirQuestinnaireItem.linkId,
+        type: fhirQuestinnaireItem.type,
+        answerExpression: extractExtension(fhirQuestinnaireItem.extension,
+                                           "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression"
+                                          )!,
+        answerOption: convertAnswerOption(fhirQuestinnaireItem.answerOption)!,
+        answerValueSet: fhirQuestinnaireItem.answerValueSet!,
+        item: fhirQuestinnaireItem.item?.map(i => convertItem(i))!,
+    };
+    return resultItem;
+}
+
+export function toFirstClassExtension(fhirQuestionnaire: FHIRQuestionnaire): FCEQuestionnaire {
     if (
         !(
             (fhirQuestionnaire.meta?.profile?.length ?? 0) == 1 &&
@@ -13,7 +86,8 @@ export function toFirstClassExtension(fhirQuestionnaire: FHIRQuestionnaire): Aid
     }
 
     const metaExtension = fhirQuestionnaire.meta.extension?.find(
-        (ext: any) => ext.url === 'ex:createdAt',
+        (ext) => ext.url === 'ex:createdAt',
+
     );
     const createdAt = metaExtension ? { createdAt: metaExtension.valueInstant } : {};
 
@@ -229,5 +303,5 @@ export function toFirstClassExtension(fhirQuestionnaire: FHIRQuestionnaire): Aid
 
     delete nq.extension;
 
-    return nq as unknown as AidboxQuestionnaire;
+    return nq as unknown as FCEQuestionnaire;
 }
