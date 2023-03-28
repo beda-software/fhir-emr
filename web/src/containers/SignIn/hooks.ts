@@ -13,7 +13,7 @@ export function useAppleAuthentication(config: { navigateOnSuccess: string }) {
 
     useEffect(() => {
         const onSignInSuccess = (event: any) => {
-            sharedAppleIdentityToken.setSharedState(event.detail.data.authorization.id_token);
+            sharedAppleIdentityToken.setSharedState(event.detail.authorization.id_token);
             navigate(navigateOnSuccess, { state: { replace: true } });
         };
         const onSignInFailure = (event: any) => {
