@@ -53,6 +53,7 @@ export function DocumentHistory() {
 const codesMapping = {
     CREATE: t`Created`,
     UPDATE: t`Updated`,
+    DELETE: t`Deleted`,
 };
 
 interface DocumentHistoryDetailsProps {

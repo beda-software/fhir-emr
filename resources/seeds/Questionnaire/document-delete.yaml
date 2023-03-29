@@ -1,0 +1,26 @@
+id: document-delete
+resourceType: Questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/document-delete
+meta:
+    profile:
+        - https://beda.software/beda-emr-questionnaire
+        - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire
+        - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extr-defn
+        - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-render
+        - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-pop-smap
+name: Delete Document
+status: active
+launchContext:
+    - name: Patient
+      type: Patient
+item:
+    - text: PatientId
+      type: string
+      linkId: patientId
+      hidden: true
+      initialExpression:
+          language: text/fhirpath
+          expression: '%Patient.id'
+mapping:
+    - id: document-delete-extract
+      resourceType: Mapping

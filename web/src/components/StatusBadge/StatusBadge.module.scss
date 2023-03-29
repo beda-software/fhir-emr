@@ -1,0 +1,29 @@
+.badge {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1px 8px;
+    border-radius: 4px;
+
+    &:global(._in-progress) {
+        background-color: #FA8C16;
+    }
+    
+    &:global(._completed) {
+        background-color: #6F7AE3;
+    }
+
+    &:global(._entered-in-error) {
+        background-color: #ff4d4f;
+    }
+}
+
+
+
+.title {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 20px;
+    color: #FFFFFF;
+}

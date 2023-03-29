@@ -10,8 +10,8 @@ import { WithId } from 'aidbox-react/lib/services/fhir';
 import { Encounter, Patient, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
 import { Empty } from 'src/components/Empty';
-import { EncounterStatusBadge } from 'src/components/EncounterStatusBadge';
 import { SpinIndicator } from 'src/components/Spinner';
+import { StatusBadge } from 'src/components/StatusBadge';
 import { Table } from 'src/components/Table';
 import { formatHumanDate } from 'src/utils/date';
 
@@ -65,7 +65,7 @@ function useColumns(
                 title: <Trans>Status</Trans>,
                 dataIndex: 'status',
                 key: 'status',
-                render: (text, record) => <EncounterStatusBadge status={text} />,
+                render: (text, record) => <StatusBadge status={text} />,
             },
             {
                 title: <Trans>Actions</Trans>,

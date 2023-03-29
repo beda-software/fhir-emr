@@ -12,8 +12,8 @@ import { formatPeriodDateTime } from 'src/utils/date';
 
 import { EncountersTable } from '../EncountersTable';
 import { EncounterData } from '../EncountersTable/types';
-import { EncounterStatusBadge } from '../EncounterStatusBadge';
 import { ModalNewEncounter } from '../ModalNewEncounter';
+import { StatusBadge } from '../StatusBadge';
 
 interface Props {
     patient: Patient;
@@ -31,9 +31,7 @@ const columns: ColumnsType<EncounterData> = [
         title: <Trans>Status</Trans>,
         dataIndex: 'status',
         key: 'status',
-        render: (_text: any, resource: EncounterData) => {
-            return <EncounterStatusBadge status={resource.status} />;
-        },
+        render: (_text: any, resource: EncounterData) => <StatusBadge status={resource.status} />,
     },
     {
         title: <Trans>Date</Trans>,
