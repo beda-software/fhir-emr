@@ -25,6 +25,16 @@ import {
 
 import { login as loginService } from 'src/services/auth';
 
+declare global {
+    var AppleID: any;
+}
+
+global.AppleID = {
+    auth: {
+        init: jest.fn(),
+    },
+};
+
 export async function createPatient(patient: Partial<Patient> = {}) {
     return ensure(
         await createFHIRResource<Patient>({

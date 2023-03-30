@@ -8,3 +8,5 @@ export const sharedAuthorizedPractitioner = createSharedState<WithId<Practitione
 );
 
 export const sharedJitsiAuthToken = createSharedState<string>('');
+
+export const sharedAppleIdentityToken = createSharedState<string>('');

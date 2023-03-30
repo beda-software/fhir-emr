@@ -13,14 +13,25 @@ launchContext:
           code: Patient
       type:
           - Patient
+    - name:
+          code: Practitioner
+      type:
+          - Practitioner
 item:
+    - text: DateTime
+      type: dateTime
+      linkId: dateTime
+      hidden: true
+      initialExpression:
+          language: text/fhirpath
+          expression: 'now()'
     - text: PatientId
       type: string
       linkId: patientId
       hidden: true
       initialExpression:
           language: text/fhirpath
-          expression: "%Patient.id"
+          expression: '%Patient.id'
     - text: PatientName
       type: string
       linkId: patientName
@@ -42,24 +53,24 @@ item:
             answerOption:
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6568-5"
-                          display: "Not at all"
+                          system: 'http://loinc.org'
+                          code: 'LA6568-5'
+                          display: 'Not at all'
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6569-3"
-                          display: "Several days"
+                          system: 'http://loinc.org'
+                          code: 'LA6569-3'
+                          display: 'Several days'
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6570-1"
-                          display: "More than half the days"
+                          system: 'http://loinc.org'
+                          code: 'LA6570-1'
+                          display: 'More than half the days'
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6571-9"
-                          display: "Nearly every day"
+                          system: 'http://loinc.org'
+                          code: 'LA6571-9'
+                          display: 'Nearly every day'
           - linkId: 68509-9
             text: Not being able to stop or control worrying
             required: true
@@ -70,24 +81,24 @@ item:
             answerOption:
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6568-5"
-                          display: "Not at all"
+                          system: 'http://loinc.org'
+                          code: 'LA6568-5'
+                          display: 'Not at all'
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6569-3"
-                          display: "Several days"
+                          system: 'http://loinc.org'
+                          code: 'LA6569-3'
+                          display: 'Several days'
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6570-1"
-                          display: "More than half the days"
+                          system: 'http://loinc.org'
+                          code: 'LA6570-1'
+                          display: 'More than half the days'
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6571-9"
-                          display: "Nearly every day"
+                          system: 'http://loinc.org'
+                          code: 'LA6571-9'
+                          display: 'Nearly every day'
           - linkId: 69733-4
             text: Worrying too much about different things
             required: true
@@ -98,24 +109,24 @@ item:
             answerOption:
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6568-5"
-                          display: "Not at all"
+                          system: 'http://loinc.org'
+                          code: 'LA6568-5'
+                          display: 'Not at all'
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6569-3"
-                          display: "Several days"
+                          system: 'http://loinc.org'
+                          code: 'LA6569-3'
+                          display: 'Several days'
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6570-1"
-                          display: "More than half the days"
+                          system: 'http://loinc.org'
+                          code: 'LA6570-1'
+                          display: 'More than half the days'
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6571-9"
-                          display: "Nearly every day"
+                          system: 'http://loinc.org'
+                          code: 'LA6571-9'
+                          display: 'Nearly every day'
           - linkId: 69734-2
             text: Trouble relaxing
             required: true
@@ -126,24 +137,24 @@ item:
             answerOption:
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6568-5"
-                          display: "Not at all"
+                          system: 'http://loinc.org'
+                          code: 'LA6568-5'
+                          display: 'Not at all'
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6569-3"
-                          display: "Several days"
+                          system: 'http://loinc.org'
+                          code: 'LA6569-3'
+                          display: 'Several days'
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6570-1"
-                          display: "More than half the days"
+                          system: 'http://loinc.org'
+                          code: 'LA6570-1'
+                          display: 'More than half the days'
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6571-9"
-                          display: "Nearly every day"
+                          system: 'http://loinc.org'
+                          code: 'LA6571-9'
+                          display: 'Nearly every day'
           - linkId: 69735-9
             text: Being so restless that it is hard to sit still
             required: true
@@ -154,24 +165,24 @@ item:
             answerOption:
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6568-5"
-                          display: "Not at all"
+                          system: 'http://loinc.org'
+                          code: 'LA6568-5'
+                          display: 'Not at all'
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6569-3"
-                          display: "Several days"
+                          system: 'http://loinc.org'
+                          code: 'LA6569-3'
+                          display: 'Several days'
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6570-1"
-                          display: "More than half the days"
+                          system: 'http://loinc.org'
+                          code: 'LA6570-1'
+                          display: 'More than half the days'
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6571-9"
-                          display: "Nearly every day"
+                          system: 'http://loinc.org'
+                          code: 'LA6571-9'
+                          display: 'Nearly every day'
           - linkId: 69689-8
             text: Becoming easily annoyed or irritable
             required: true
@@ -182,24 +193,24 @@ item:
             answerOption:
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6568-5"
-                          display: "Not at all"
+                          system: 'http://loinc.org'
+                          code: 'LA6568-5'
+                          display: 'Not at all'
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6569-3"
-                          display: "Several days"
+                          system: 'http://loinc.org'
+                          code: 'LA6569-3'
+                          display: 'Several days'
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6570-1"
-                          display: "More than half the days"
+                          system: 'http://loinc.org'
+                          code: 'LA6570-1'
+                          display: 'More than half the days'
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6571-9"
-                          display: "Nearly every day"
+                          system: 'http://loinc.org'
+                          code: 'LA6571-9'
+                          display: 'Nearly every day'
           - linkId: 69736-7
             text: Feeling afraid, as if something awful might happen
             required: true
@@ -210,24 +221,24 @@ item:
             answerOption:
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6568-5"
-                          display: "Not at all"
+                          system: 'http://loinc.org'
+                          code: 'LA6568-5'
+                          display: 'Not at all'
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6569-3"
-                          display: "Several days"
+                          system: 'http://loinc.org'
+                          code: 'LA6569-3'
+                          display: 'Several days'
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6570-1"
-                          display: "More than half the days"
+                          system: 'http://loinc.org'
+                          code: 'LA6570-1'
+                          display: 'More than half the days'
                 - value:
                       Coding:
-                          system: "http://loinc.org"
-                          code: "LA6571-9"
-                          display: "Nearly every day"
+                          system: 'http://loinc.org'
+                          code: 'LA6571-9'
+                          display: 'Nearly every day'
           - linkId: anxiety-score
             text: GAD-7 Anxiety Severity Score
             required: true

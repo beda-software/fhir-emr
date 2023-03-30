@@ -14,6 +14,7 @@ import { formatFHIRDateTime } from 'aidbox-react/lib/utils/date';
 import {
     AllergyIntolerance,
     Appointment,
+    Condition,
     Encounter,
     Immunization,
     MedicationStatement,
@@ -29,7 +30,7 @@ import {
     prepareAppointments,
     prepareImmunizations,
     prepareMedications,
-    prepareObservations,
+    prepareConditions,
 } from './utils';
 
 interface Props {
@@ -37,8 +38,6 @@ interface Props {
     reload: () => void;
 }
 
-const depressionSeverityCode = '44261-6';
-const anxietySeverityCode = '70274-6';
 const bmiCode = '39156-5';
 
 export function usePatientOverview(props: Props) {
@@ -103,10 +102,10 @@ export function usePatientOverview(props: Props) {
                             _revinclude: ['Provenance:target'],
                         },
                     ),
-                    observationsBundle: getFHIRResources<Observation>('Observation', {
+                    conditionsBundle: getFHIRResources<Condition | Provenance>('Condition', {
                         patient: patient.id,
                         _sort: ['-lastUpdated'],
-                        code: [`${depressionSeverityCode},${anxietySeverityCode}`],
+                        _revinclude: ['Provenance:target'],
                     }),
                     immunizationsBundle: getFHIRResources<Immunization | Provenance>('Immunization', {
                         patient: patient.id,
@@ -124,14 +123,15 @@ export function usePatientOverview(props: Props) {
                 }),
                 ({
                     allergiesBundle,
-                    observationsBundle,
+                    conditionsBundle,
                     immunizationsBundle,
                     medicationsBundle,
                     appointmentsBundle,
                 }) => {
                     const allergies = extractBundleResources(allergiesBundle).AllergyIntolerance;
                     const allergiesProvenance = extractBundleResources(allergiesBundle).Provenance;
-                    const observations = extractBundleResources(observationsBundle).Observation;
+                    const conditions = extractBundleResources(conditionsBundle).Condition;
+                    const conditionsProvenance = extractBundleResources(conditionsBundle).Provenance;
                     const immunizations = extractBundleResources(immunizationsBundle).Immunization;
                     const immunizationsProvenance = extractBundleResources(immunizationsBundle).Provenance;
                     const medications =
@@ -139,7 +139,7 @@ export function usePatientOverview(props: Props) {
                     const medicationsProvenance =
                         extractBundleResources(medicationsBundle).Provenance;
                     const cards = [
-                        prepareObservations(observations),
+                        prepareConditions(conditions, conditionsProvenance),
                         prepareMedications(medications, medicationsProvenance),
                         prepareAllergies(allergies, allergiesProvenance),
                         prepareImmunizations(immunizations, immunizationsProvenance),

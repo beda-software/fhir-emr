@@ -13,7 +13,18 @@ launchContext:
           code: Patient
       type:
           - Patient
+    - name:
+          code: Practitioner
+      type:
+          - Practitioner
 item:
+    - text: DateTime
+      type: dateTime
+      linkId: dateTime
+      hidden: true
+      initialExpression:
+          language: text/fhirpath
+          expression: 'now()'
     - text: PatientId
       type: string
       linkId: patientId

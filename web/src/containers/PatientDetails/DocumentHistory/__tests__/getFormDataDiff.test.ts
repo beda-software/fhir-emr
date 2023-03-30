@@ -21,6 +21,13 @@ describe('getFormDataDiff utils test', () => {
 
         expect(getFormDataDiff(currentData, prevData)).toEqual(result3);
     });
+
+    test('getFormDataDiff works correctly with questionnaire group item data', async () => {
+        const currentData = currentData4;
+        const prevData = prevData4;
+
+        expect(getFormDataDiff(currentData, prevData)).toEqual(result4);
+    });
 });
 
 const currentData1 = {
@@ -364,6 +371,222 @@ const result3 = {
                         system: 'http://snomed.ct',
                         display: 'Citrus fruit',
                     },
+                },
+                items: {},
+            },
+        ],
+    },
+};
+
+const currentData4 = {
+    'gad-7': {
+        question:
+            'Over the last two weeks, how often have you been bothered by the following problems?',
+        items: {
+            '69725-0': [
+                {
+                    question: 'Feeling nervous, anxious, or on edge',
+                    value: {
+                        Coding: {
+                            code: 'LA6570-1',
+                            system: 'http://loinc.org',
+                            display: 'More than half the days',
+                        },
+                    },
+                    items: {},
+                },
+            ],
+            '68509-9': [
+                {
+                    question: 'Not being able to stop or control worrying',
+                    value: {
+                        Coding: {
+                            code: 'LA6569-3',
+                            system: 'http://loinc.org',
+                            display: 'Several days',
+                        },
+                    },
+                    items: {},
+                },
+            ],
+            '69733-4': [
+                {
+                    question: 'Worrying too much about different things',
+                    value: {
+                        Coding: {
+                            code: 'LA6569-3',
+                            system: 'http://loinc.org',
+                            display: 'Several days',
+                        },
+                    },
+                    items: {},
+                },
+            ],
+            '69734-2': [
+                {
+                    question: 'Trouble relaxing',
+                    value: {
+                        Coding: {
+                            code: 'LA6571-9',
+                            system: 'http://loinc.org',
+                            display: 'Nearly every day',
+                        },
+                    },
+                    items: {},
+                },
+            ],
+            '69735-9': [
+                {
+                    question: 'Being so restless that it is hard to sit still',
+                    value: {
+                        Coding: {
+                            code: 'LA6571-9',
+                            system: 'http://loinc.org',
+                            display: 'Nearly every day',
+                        },
+                    },
+                    items: {},
+                },
+            ],
+            '69736-7': [
+                {
+                    question: 'Feeling afraid, as if something awful might happen',
+                    value: {
+                        Coding: {
+                            code: 'LA6569-3',
+                            system: 'http://loinc.org',
+                            display: 'Several days',
+                        },
+                    },
+                    items: {},
+                },
+            ],
+            'anxiety-score': [
+                {
+                    question: 'GAD-7 Anxiety Severity Score',
+                    value: {
+                        integer: 11,
+                    },
+                    items: {},
+                },
+            ],
+        },
+    },
+};
+
+const prevData4 = {
+    'gad-7': {
+        question:
+            'Over the last two weeks, how often have you been bothered by the following problems?',
+        items: {
+            '69725-0': [
+                {
+                    question: 'Feeling nervous, anxious, or on edge',
+                    value: {
+                        Coding: {
+                            code: 'LA6570-1',
+                            system: 'http://loinc.org',
+                            display: 'More than half the days',
+                        },
+                    },
+                    items: {},
+                },
+            ],
+            '68509-9': [
+                {
+                    question: 'Not being able to stop or control worrying',
+                    value: {
+                        Coding: {
+                            code: 'LA6569-3',
+                            system: 'http://loinc.org',
+                            display: 'Several days',
+                        },
+                    },
+                    items: {},
+                },
+            ],
+            'anxiety-score': [
+                {
+                    question: 'GAD-7 Anxiety Severity Score',
+                    value: {
+                        integer: 3,
+                    },
+                    items: {},
+                },
+            ],
+        },
+    },
+};
+const result4 = {
+    diffBefore: {
+        'anxiety-score': [
+            {
+                question: 'GAD-7 Anxiety Severity Score',
+                value: {
+                    integer: 3,
+                },
+                items: {},
+            },
+        ],
+    },
+    diffAfter: {
+        '69733-4': [
+            {
+                question: 'Worrying too much about different things',
+                value: {
+                    Coding: {
+                        code: 'LA6569-3',
+                        system: 'http://loinc.org',
+                        display: 'Several days',
+                    },
+                },
+                items: {},
+            },
+        ],
+        '69734-2': [
+            {
+                question: 'Trouble relaxing',
+                value: {
+                    Coding: {
+                        code: 'LA6571-9',
+                        system: 'http://loinc.org',
+                        display: 'Nearly every day',
+                    },
+                },
+                items: {},
+            },
+        ],
+        '69735-9': [
+            {
+                question: 'Being so restless that it is hard to sit still',
+                value: {
+                    Coding: {
+                        code: 'LA6571-9',
+                        system: 'http://loinc.org',
+                        display: 'Nearly every day',
+                    },
+                },
+                items: {},
+            },
+        ],
+        '69736-7': [
+            {
+                question: 'Feeling afraid, as if something awful might happen',
+                value: {
+                    Coding: {
+                        code: 'LA6569-3',
+                        system: 'http://loinc.org',
+                        display: 'Several days',
+                    },
+                },
+                items: {},
+            },
+        ],
+        'anxiety-score': [
+            {
+                question: 'GAD-7 Anxiety Severity Score',
+                value: {
+                    integer: 11,
                 },
                 items: {},
             },
