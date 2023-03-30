@@ -6,26 +6,43 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-top: 25vh;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     justify-content: center;
+    gap: 5px;
 }
 
-.logo {
-    margin-bottom: 12px;
-}
-
-h1.title {
+.title {
     margin: 0;
-    color: #fff;
+    color: black;
     font-weight: 700;
+    font-size: 19px;
+    line-height: 26px;
 }
 
-.loginBtn {
-    margin: 32px 0 34px;
+.form {
+    display: flex;
+    flex-direction: column;
+    width: 382px;
+    padding: 18px;
+    background-color: white;
+    gap: 32px;
+    border-radius: 16px;
+}
+
+.signInServiceSelectLabel {
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 600;
 }
 
 .message {
-    width: 360px;
-    background-color: #e6f7ff;
+    background-color: #fafafa;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
@@ -37,6 +54,5 @@ h1.title {
 
 .appleSignInBtn {
     height: 40px;
-    width: 250px;
-    margin: 34px 0 0px;
+    width: 100%;
 }
