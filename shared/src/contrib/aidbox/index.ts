@@ -1448,7 +1448,8 @@ export interface Bundle<T extends Resource = any> {
     /** If search, the total number of matches */
     total?: unsignedInt;
     /** document | message | transaction | transaction-response | batch | batch-response | history | searchset | collection */
-    type: code;
+    // type: code;
+    type: 'document' | 'message' | 'transaction' | 'transaction-response' | 'batch' | 'batch-response' | 'history' | 'searchset' | 'collection';
 }
 
 export interface BundleEntry<T extends Resource = any> {
@@ -1463,13 +1464,16 @@ export interface BundleEntry<T extends Resource = any> {
     /** Extensions that cannot be ignored even if unrecognized */
     modifierExtension?: Extension[];
     /** Additional execution information (transaction/batch/history) */
-    request?: BundleEntryRequest;
+    // request?: BundleEntryRequest;
+    request?: any;
     /** A resource in the bundle */
     resource?: T;
     /** Results of execution (transaction/batch/history) */
-    response?: BundleEntryResponse;
+    // response?: BundleEntryResponse;
+    response?: any;
     /** Search related information */
-    search?: BundleEntrySearch;
+    // search?: BundleEntrySearch;
+    search?: any;
 }
 
 export interface BundleEntryRequest {
@@ -7718,8 +7722,10 @@ export interface Extension {
     id?: string;
     /** identifies the meaning of the extension */
     url: string;
-    valueAddress?: Address;
-    valueAge?: Age;
+    // valueAddress?: Address;
+    valueAddress?: any;
+    // valueAge?: Age;
+    valueAge?: any;
     valueAnnotation?: Annotation;
     valueAttachment?: Attachment;
     valueBase64Binary?: base64Binary;
@@ -7728,40 +7734,60 @@ export interface Extension {
     valueCode?: code;
     valueCodeableConcept?: CodeableConcept;
     valueCoding?: Coding;
-    valueContactDetail?: ContactDetail;
-    valueContactPoint?: ContactPoint;
-    valueContributor?: Contributor;
-    valueCount?: Count;
-    valueDataRequirement?: DataRequirement;
+    // valueContactDetail?: ContactDetail;
+    valueContactDetail?: any;
+    // valueContactPoint?: ContactPoint;
+    valueContactPoint?: any;
+    // valueContributor?: Contributor;
+    valueContributor?: any;
+    // valueCount?: Count;
+    valueCount?: any;
+    // valueDataRequirement?: DataRequirement;
+    valueDataRequirement?: any;
     valueDate?: date;
     valueDateTime?: dateTime;
     valueDecimal?: decimal;
-    valueDistance?: Distance;
-    valueDosage?: Dosage;
-    valueDuration?: Duration;
+    // valueDistance?: Distance;
+    valueDistance?: any;
+    // valueDosage?: Dosage;
+    valueDosage?: any;
+    // valueDuration?: Duration;
+    valueDuration?: any;
     valueExpression?: Expression;
-    valueHumanName?: HumanName;
+    // valueHumanName?: HumanName;
+    valueHumanName?: any;
     valueId?: id;
-    valueIdentifier?: Identifier;
+    // valueIdentifier?: Identifier;
+    valueIdentifier?: any;
     valueInstant?: instant;
     valueInteger?: integer;
     valueMarkdown?: markdown;
     valueMoney?: Money;
     valueOid?: oid;
-    valueParameterDefinition?: ParameterDefinition;
+    // valueParameterDefinition?: ParameterDefinition;
+    valueParameterDefinition?: any;
     valuePeriod?: Period;
     valuePositiveInt?: positiveInt;
-    valueQuantity?: Quantity;
-    valueRange?: Range;
-    valueRatio?: Ratio;
-    valueReference?: InternalReference<any>;
-    valueRelatedArtifact?: RelatedArtifact;
-    valueSampledData?: SampledData;
-    valueSignature?: Signature;
+    // valueQuantity?: Quantity;
+    valueQuantity?: any;
+    // valueRange?: Range;
+    valueRange?: any;
+    // valueRatio?: Ratio;
+    valueRatio?: any;
+    // valueReference?: InternalReference<any>;
+    valueReference?: any;
+    // valueRelatedArtifact?: RelatedArtifact;
+    valueRelatedArtifact?: any;
+    // valueSampledData?: SampledData;
+    valueSampledData?: any;
+    // valueSignature?: Signature;
+    valueSignature?: any;
     valueString?: string;
     valueTime?: time;
-    valueTiming?: Timing;
-    valueTriggerDefinition?: TriggerDefinition;
+    // valueTiming?: Timing;
+    valueTiming?: any;
+    // valueTriggerDefinition?: TriggerDefinition;
+    valueTriggerDefinition?: any;
     valueUnsignedInt?: unsignedInt;
     valueUri?: uri;
     valueUrl?: url;
@@ -8469,7 +8495,8 @@ export interface HumanName {
 /** An identifier intended for computation */
 export interface Identifier {
     /** Organization that issued id (may be just text) */
-    assigner?: InternalReference<Organization>;
+    // assigner?: InternalReference<Organization>;
+    assigner?: any;
     /** Additional content defined by implementations */
     extension?: Extension[];
     /** Unique id for inter-element referencing */
@@ -8481,7 +8508,8 @@ export interface Identifier {
     /** Description of identifier */
     type?: CodeableConcept;
     /** usual | official | temp | secondary | old (If known) */
-    use?: code;
+    // use?: code;
+    use?: any;
     /** The value that is unique */
     value?: string;
 }
@@ -15848,9 +15876,10 @@ export interface Signature {
     /** Unique id for inter-element referencing */
     id?: string;
     /** The party represented */
-    onBehalfOf?: InternalReference<
-        Practitioner | PractitionerRole | RelatedPerson | Patient | Device | Organization
-    >;
+    // onBehalfOf?: InternalReference<
+    //     Practitioner | PractitionerRole | RelatedPerson | Patient | Device | Organization
+    // >;
+    onBehalfOf?: any;
     /** The technical format of the signature */
     sigFormat?: code;
     /** The technical format of the signed resources */
@@ -15860,9 +15889,10 @@ export interface Signature {
     /** When the signature was created */
     when: instant;
     /** Who signed */
-    who: InternalReference<
-        Practitioner | PractitionerRole | RelatedPerson | Patient | Device | Organization
-    >;
+    // who: InternalReference<
+    //     Practitioner | PractitionerRole | RelatedPerson | Patient | Device | Organization
+    // >;
+    who: any;
 }
 
 /** A fixed quantity (no comparator) */

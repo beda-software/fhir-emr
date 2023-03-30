@@ -13,4 +13,4 @@ if (config.webSentryDSN) {
     });
 }
 
-setInstanceBaseURL(config.baseURL);
+setInstanceBaseURL(config.baseURL + '/fhir');

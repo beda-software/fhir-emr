@@ -1,48 +1,49 @@
 import {
-    // Coding,
+    Coding,
     // Element,
-    // Extension,
+    Extension,
     Questionnaire as FHIRQuestionnaire,
     // QuestionnaireItem as FHIRQuestionnaireItem,
     // QuestionnaireItemAnswerOption as FHIRQuestionnaireItemAnswerOption,
     // Resource,
+    Reference,
 } from 'fhir/r4b';
 
 import {
     Questionnaire as FCEQuestionnaire,
     // QuestionnaireItem as FCEQuestionnaireItem,
     // QuestionnaireItemAnswerOption as FCEQuestionnaireItemAnswerOption,
-    // CodeableConcept,
-    // Expression,
+    CodeableConcept,
+    Expression,
 } from 'shared/src/contrib/aidbox';
 
-// interface ExtensionValue {
-//     'ex:createdAt': string;
-//     'http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl': CodeableConcept;
-//     'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression': Expression;
-//     'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn': Extension[];
-//     'http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource': Coding;
-// }
+interface ExtensionValue {
+    'ex:createdAt': string;
+    'http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl': CodeableConcept;
+    'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression': Expression;
+    'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn': Extension[];
+    'http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource': Coding;
+}
 
-// const extensionsMap: Record<keyof ExtensionValue, keyof Extension> = {
-//     'ex:createdAt': 'valueInstant',
-//     'http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl': 'valueCodeableConcept',
-//     'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression':
-//         'valueExpression',
-//     'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn': 'extension',
-//     'http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource': 'valueCode',
-// };
+const extensionsMap: Record<keyof ExtensionValue, keyof Extension> = {
+    'ex:createdAt': 'valueInstant',
+    'http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl': 'valueCodeableConcept',
+    'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression':
+        'valueExpression',
+    'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn': 'extension',
+    'http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource': 'valueCode',
+};
 
-// function extractExtension<U extends keyof ExtensionValue>(
-//     extension: Extension[] | undefined,
-//     url: U,
-// ) {
-//     const e = extension?.find((e) => e.url == url);
-//     if (e) {
-//         const getter = extensionsMap[url];
-//         return e[getter] as ExtensionValue[U];
-//     }
-// }
+export function extractExtension<U extends keyof ExtensionValue>(
+    extension: Extension[] | undefined,
+    url: U,
+) {
+    const e = extension?.find((e) => e.url === url);
+    if (e) {
+        const getter = extensionsMap[url];
+        return e[getter] as ExtensionValue[U];
+    }
+}
 
 // function extractChoiceColumn(extensions: any[]): any | undefined {
 //     const choiceColumnExtension = extensions.find(
@@ -515,4 +516,17 @@ export function toFirstClassExtension(fhirQuestionnaire: FHIRQuestionnaire): FCE
     const resultNQ = trimUndefined(nq);
 
     return resultNQ as unknown as FCEQuestionnaire;
+}
+
+export function fromFHIRReference(r?: Reference) {
+    if (!r || !r.reference) {
+        return undefined;
+    }
+
+    const [resourceType, id] = r.reference?.split('/');
+
+    return {
+        id,
+        resourceType,
+    };
 }

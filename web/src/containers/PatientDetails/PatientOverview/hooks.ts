@@ -1,3 +1,14 @@
+import {
+    AllergyIntolerance,
+    Appointment,
+    Encounter,
+    Immunization,
+    MedicationStatement,
+    Observation,
+    Patient,
+    Provenance,
+    Condition,
+} from 'fhir/r4b';
 import _ from 'lodash';
 import moment from 'moment';
 
@@ -10,18 +21,6 @@ import {
 } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess, resolveMap } from 'aidbox-react/lib/services/service';
 import { formatFHIRDateTime } from 'aidbox-react/lib/utils/date';
-
-import {
-    AllergyIntolerance,
-    Appointment,
-    Condition,
-    Encounter,
-    Immunization,
-    MedicationStatement,
-    Observation,
-    Patient,
-    Provenance,
-} from 'shared/src/contrib/aidbox';
 
 import { formatHumanDate, getPersonAge } from 'src/utils/date';
 
@@ -54,7 +53,7 @@ export function usePatientOverview(props: Props) {
         });
     }, []);
 
-    const bmi = isSuccess(bmiRD) ? bmiRD.data[0]?.value?.Quantity?.value : undefined;
+    const bmi = isSuccess(bmiRD) ? bmiRD.data[0]?.valueQuantity?.value : undefined;
 
     let patientDetails = [
         {
@@ -107,11 +106,14 @@ export function usePatientOverview(props: Props) {
                         _sort: ['-lastUpdated'],
                         _revinclude: ['Provenance:target'],
                     }),
-                    immunizationsBundle: getFHIRResources<Immunization | Provenance>('Immunization', {
-                        patient: patient.id,
-                        _sort: ['-lastUpdated'],
-                        _revinclude: ['Provenance:target'],
-                    }),
+                    immunizationsBundle: getFHIRResources<Immunization | Provenance>(
+                        'Immunization',
+                        {
+                            patient: patient.id,
+                            _sort: ['-lastUpdated'],
+                            _revinclude: ['Provenance:target'],
+                        },
+                    ),
                     medicationsBundle: getFHIRResources<MedicationStatement | Provenance>(
                         'MedicationStatement',
                         {
@@ -133,7 +135,8 @@ export function usePatientOverview(props: Props) {
                     const conditions = extractBundleResources(conditionsBundle).Condition;
                     const conditionsProvenance = extractBundleResources(conditionsBundle).Provenance;
                     const immunizations = extractBundleResources(immunizationsBundle).Immunization;
-                    const immunizationsProvenance = extractBundleResources(immunizationsBundle).Provenance;
+                    const immunizationsProvenance =
+                        extractBundleResources(immunizationsBundle).Provenance;
                     const medications =
                         extractBundleResources(medicationsBundle).MedicationStatement;
                     const medicationsProvenance =

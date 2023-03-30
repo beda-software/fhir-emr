@@ -1,13 +1,7 @@
 import { AlertOutlined, ExperimentOutlined, HeartOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
-import _ from 'lodash';
-import { Link, useLocation } from 'react-router-dom';
-
-import { extractBundleResources, WithId } from 'aidbox-react/lib/services/fhir';
-import { parseFHIRDateTime } from 'aidbox-react/lib/utils/date';
-
 import {
-    AidboxResource,
+    Resource,
     AllergyIntolerance,
     Appointment,
     Bundle,
@@ -16,9 +10,15 @@ import {
     Immunization,
     MedicationStatement,
     Provenance,
-} from 'shared/src/contrib/aidbox';
+} from 'fhir/r4b';
+import _ from 'lodash';
+import { Link, useLocation } from 'react-router-dom';
+
+import { extractBundleResources, WithId } from 'aidbox-react/lib/services/fhir';
+import { parseFHIRDateTime } from 'aidbox-react/lib/utils/date';
 
 import { formatHumanDate } from 'src/utils/date';
+import { extractExtension, fromFHIRReference } from 'src/utils/fce';
 
 import medicationIcon from './images/medication.svg';
 
@@ -35,19 +35,16 @@ interface OverviewCard<T = any> {
     getKey: (r: T) => string;
 }
 
-function LinkToEdit(props: {
-    name?: string;
-    resource: AidboxResource;
-    provenanceList: Provenance[];
-}) {
+function LinkToEdit(props: { name?: string; resource: Resource; provenanceList: Provenance[] }) {
     const { name, resource, provenanceList } = props;
     const location = useLocation();
     const provenance = provenanceList.find(
         (p) =>
-            p.target[0]?.id === resource.id && p.target[0]?.resourceType === resource.resourceType,
+            fromFHIRReference(p.target[0])?.id === resource.id &&
+            fromFHIRReference(p.target[0])?.resourceType === resource.resourceType,
     );
     const entity = provenance?.entity?.[0]?.what;
-    const qrId = entity?.uri?.split('/')[1];
+    const qrId = fromFHIRReference(entity)?.id;
 
     if (qrId) {
         return <Link to={`${location.pathname}/documents/${qrId}`}>{name}</Link>;
@@ -80,7 +77,11 @@ export function prepareAllergies(
             {
                 title: t`Date`,
                 key: 'date',
-                render: (r: AllergyIntolerance) => formatHumanDate(r.meta?.createdAt!),
+                render: (r: AllergyIntolerance) => {
+                    const createdAt = extractExtension(r.extension, 'ex:createdAt');
+
+                    return createdAt ? formatHumanDate(createdAt) : null;
+                },
                 width: 200,
             },
         ],
@@ -111,7 +112,11 @@ export function prepareConditions(
             {
                 title: t`Date`,
                 key: 'date',
-                render: (r: Condition) => formatHumanDate(r.meta?.createdAt!),
+                render: (r: Condition) => {
+                    const createdAt = extractExtension(r.extension, 'ex:createdAt');
+
+                    return createdAt ? formatHumanDate(createdAt) : null;
+                },
                 width: 200,
             },
         ],
@@ -143,7 +148,7 @@ export function prepareImmunizations(
                 title: t`Date`,
                 key: 'date',
                 render: (r: Immunization) =>
-                    r.occurrence?.dateTime ? formatHumanDate(r.occurrence?.dateTime) : '',
+                    r.occurrenceDateTime ? formatHumanDate(r.occurrenceDateTime) : '',
                 width: 200,
             },
         ],
@@ -166,7 +171,7 @@ export function prepareMedications(
                 key: 'name',
                 render: (resource: MedicationStatement) => (
                     <LinkToEdit
-                        name={resource.medication?.CodeableConcept?.coding?.[0]?.display}
+                        name={resource.medicationCodeableConcept?.coding?.[0]?.display}
                         resource={resource}
                         provenanceList={provenanceList}
                     />
@@ -195,7 +200,7 @@ export function prepareAppointments(bundle: Bundle<WithId<Appointment | Encounte
 export function prepareAppointmentDetails(appointment: Appointment) {
     const [name, specialty] =
         appointment.participant
-            .find((p) => p.actor?.resourceType === 'PractitionerRole')
+            .find((p) => fromFHIRReference(p.actor)?.resourceType === 'PractitionerRole')
             ?.actor?.display?.split(' - ') || [];
     const appointmentDetails = [
         {

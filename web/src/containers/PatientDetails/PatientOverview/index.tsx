@@ -1,13 +1,13 @@
 import { CalendarOutlined, ContactsOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
+import { Appointment, Bundle, Encounter, Patient } from 'fhir/r4b';
 import _ from 'lodash';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { extractBundleResources, WithId } from 'aidbox-react/lib/services/fhir';
 
-import { Appointment, Bundle, Encounter, Patient } from 'shared/src/contrib/aidbox';
 import {
     inMemorySaveService,
     questionnaireIdLoader,

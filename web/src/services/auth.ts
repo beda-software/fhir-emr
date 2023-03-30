@@ -49,6 +49,7 @@ type TokenResponse = {
 
 export async function login(data: LoginBody) {
     return await service<TokenResponse>({
+        baseURL: config.baseURL,
         url: '/auth/token',
         method: 'POST',
         data: {
@@ -63,6 +64,7 @@ export async function login(data: LoginBody) {
 
 export function logout() {
     return service({
+        baseURL: config.baseURL,
         method: 'DELETE',
         url: '/Session',
     });
@@ -70,6 +72,7 @@ export function logout() {
 
 export function getUserInfo() {
     return service<User>({
+        baseURL: config.baseURL,
         method: 'GET',
         url: '/auth/userinfo',
     });
@@ -77,6 +80,7 @@ export function getUserInfo() {
 
 export async function getJitsiAuthToken() {
     return service<{ jwt: string }>({
+        baseURL: config.baseURL,
         method: 'POST',
         url: '/auth/$jitsi-token',
     });
