@@ -54,7 +54,11 @@
                   :params {:source {:type "string" :format "%%%s%%" :isRequired true}}}
                  :provenance-by-target
                  {:query "select resource || jsonb_build_object('resourceType', 'Provenance', 'id', id) as resource from provenance where array_to_string(knife_extract_text(resource,'[[\"target\",\"uri\"]]'),'') like {{params.target}}"
-                  :params {:source {:type "string" :format "%%%s%%" :isRequired true}}}}}}
+                  :params {:source {:type "string" :format "%%%s%%" :isRequired true}}}}
+   :TokenIntrospector {:appleid
+                       {:type "jwt"
+                        :jwks_uri "https://appleid.apple.com/auth/keys"
+                        :jwt {:iss "https://appleid.apple.com"}}}}}
 
  encounter-participant-display
  {:zen/tags #{aidbox.search-parameter.v1/search-parameter}
