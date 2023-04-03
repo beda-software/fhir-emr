@@ -39,12 +39,22 @@
    :AccessPolicy {:test-wildcard-policy {:engine "allow" :link [{:resourceType "User"}]}
                   :admin-policy {:engine "allow"
                                  :roleName "admin"}
+                  :patient-role-policy {:engine "allow"
+                                        :roleName "patient"}
                   :public-appointment-policy
                   {:engine "allow"
                    :link [{:resourceType "Client" :id "anonymous"}]}
                   :patient-questionnaire-policy
                   {:engine "allow"
-                   :link [{:resourceType "Client" :id "patient-questionnaire"}]}}
+                   :link [{:resourceType "Client" :id "patient-questionnaire"}]}
+                  :federated-identity-signin {:engine "json-schema"
+                                              :schema {:required ["jwt"]
+                                                       :properties {:request-method {:const "post"}
+                                                                    :jwt {:required ["iss", "aud", "sub"]
+                                                                          :properties {:iss {:const "https://appleid.apple.com"}
+                                                                                       :aud {:const "software.beda.emr"}
+                                                                                       :sub {:type "string"
+                                                                                             :minLength 1}}}}}}}
    :Practitioner {:admin {:name [{:given ["Alex"], :family "Admin"}]}}
    :Role {:admin {:name "admin"
                   :user {:id "admin" :resourceType "User"}

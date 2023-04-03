@@ -63,7 +63,7 @@ export function SignIn() {
 }
 
 function AppleButton(_props: {}) {
-    useAppleAuthentication({ navigateOnSuccess: '/patient-portal/wearables' });
+    useAppleAuthentication();
 
     return (
         <div

@@ -3,7 +3,7 @@ import { failure, success } from 'aidbox-react/lib/libs/remoteData';
 
 import config from 'shared/src/config';
 
-import { sharedAppleIdentityToken } from 'src/sharedState';
+import { getToken } from 'src/services/auth';
 
 export interface WearablesDataRecord {
     sid: string;
@@ -16,15 +16,13 @@ export interface WearablesDataRecord {
 }
 
 export function usePatientWearablesData() {
-    const [identityToken] = sharedAppleIdentityToken.useSharedState();
-
     return useService(async () => {
         try {
             return success(
                 await fetch(`${config.wearablesDataStreamService}/api/v1/records`, {
                     method: 'GET',
                     headers: {
-                        Authorization: `Bearer ${identityToken}`,
+                        Authorization: `Bearer ${getToken()}`,
                     },
                 }).then(
                     (response): Promise<WearablesDataRecord[]> =>
@@ -34,5 +32,5 @@ export function usePatientWearablesData() {
         } catch (err) {
             return failure('Failed to retrieve wearables data');
         }
-    }, [identityToken]);
+    }, []);
 }
