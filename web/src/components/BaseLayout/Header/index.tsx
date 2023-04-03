@@ -6,6 +6,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 import { resetInstanceToken } from 'aidbox-react/lib/services/instance';
 
+import { Patient, Practitioner } from 'shared/src/contrib/aidbox';
 import {
     dynamicActivate,
     setCurrentLocale,
@@ -17,7 +18,8 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 import { AvatarImage } from 'src/images/AvatarImage';
 import logo from 'src/images/logo.svg';
 import { logout } from 'src/services/auth';
-import { sharedAuthorizedPractitioner } from 'src/sharedState';
+import { sharedAuthorizedPatient, sharedAuthorizedPractitioner } from 'src/sharedState';
+import { selectCurrentUserRole, Role } from 'src/utils/role';
 
 import s from './Header.module.scss';
 
@@ -67,12 +69,15 @@ export function AppHeader() {
 
     const location = useLocation();
 
-    const menuItems: RouteItem[] = [
-        { title: t`Encounters`, path: '/encounters' },
-        { title: t`Patients`, path: '/patients' },
-        { title: t`Practitioners`, path: '/practitioners' },
-        { title: t`Questionnaires`, path: '/questionnaires' },
-    ];
+    const menuItems: RouteItem[] = selectCurrentUserRole({
+        [Role.Admin]: [
+            { title: t`Encounters`, path: '/encounters' },
+            { title: t`Patients`, path: '/patients' },
+            { title: t`Practitioners`, path: '/practitioners' },
+            { title: t`Questionnaires`, path: '/questionnaires' },
+        ],
+        [Role.Patient]: [],
+    });
 
     const activeMenu = `/${location.pathname.split('/')[1]}`;
 
@@ -90,8 +95,10 @@ export function AppHeader() {
             }
         };
 
-        const practitionerData = sharedAuthorizedPractitioner.getSharedState();
-        const practitionerName = practitionerData?.name?.[0];
+        const userDetails = selectCurrentUserRole<() => Patient | Practitioner | undefined>({
+            [Role.Admin]: () => sharedAuthorizedPractitioner.getSharedState(),
+            [Role.Patient]: () => sharedAuthorizedPatient.getSharedState(),
+        })();
 
         return (
             <Dropdown
@@ -102,7 +109,7 @@ export function AppHeader() {
             >
                 <a onClick={(e) => e.preventDefault()} className={s.user}>
                     <AvatarImage className={s.avatar} />
-                    <span>{renderHumanName(practitionerName)}</span>
+                    <span>{renderHumanName(userDetails?.name?.[0])}</span>
                     <DownOutlined className={s.localeArrow} />
                 </a>
             </Dropdown>

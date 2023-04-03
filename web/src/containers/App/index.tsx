@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro';
-import { User } from '@sentry/types';
 import queryString from 'query-string';
 import { useEffect } from 'react';
 import { Route, unstable_HistoryRouter as HistoryRouter, Routes, Navigate } from 'react-router-dom';
@@ -7,78 +6,82 @@ import { useLocation } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
-import { isFailure, isSuccess, RemoteDataResult, success } from 'aidbox-react/lib/libs/remoteData';
-import { getFHIRResource } from 'aidbox-react/lib/services/fhir';
-import { resetInstanceToken, setInstanceToken } from 'aidbox-react/lib/services/instance';
-import { extractErrorCode, formatError } from 'aidbox-react/lib/utils/error';
+import { success } from 'aidbox-react/lib/libs/remoteData';
 
-import { Practitioner } from 'shared/src/contrib/aidbox';
+import { User } from 'shared/src/contrib/aidbox';
 
 import { BaseLayout } from 'src/components/BaseLayout';
+import { RoleSwitch } from 'src/components/RoleSwitch';
 import { Spinner } from 'src/components/Spinner';
+import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { EncounterList } from 'src/containers/EncounterList';
 import { EncounterQR } from 'src/containers/EncounterQR';
 import { PatientDetails } from 'src/containers/PatientDetails';
 import { PatientList } from 'src/containers/PatientList';
+import { PatientPortal } from 'src/containers/PatientPortal';
+import { PatientQuestionnaire } from 'src/containers/PatientQuestionnaire';
+import { PractitionerDetails } from 'src/containers/PractitionerDetails';
 import { PractitionerList } from 'src/containers/PractitionerList';
 import { QuestionnaireBuilder } from 'src/containers/QuestionnaireBuilder';
 import { QuestionnaireList } from 'src/containers/QuestionnaireList';
+import { SignIn } from 'src/containers/SignIn';
 import { VideoCall } from 'src/containers/VideoCall';
-import { getJitsiAuthToken, getToken, getUserInfo } from 'src/services/auth';
+import { getToken } from 'src/services/auth';
 import { parseOAuthState, setToken } from 'src/services/auth';
 import { history } from 'src/services/history';
-import { sharedAuthorizedPractitioner, sharedJitsiAuthToken } from 'src/sharedState';
+import { Role } from 'src/utils/role';
 
-import { PublicAppointment } from '../Appointment/PublicAppointment';
-import { PatientPortal } from '../PatientPortal';
-import { PatientQuestionnaire } from '../PatientQuestionnaire';
-import { PractitionerDetails } from '../PractitionerDetails';
-import { SignIn } from '../SignIn';
+import { restoreUserSession } from './utils';
 
 export function App() {
     const [userResponse] = useService(async () => {
         const appToken = getToken();
-        if (!appToken) {
-            return success(null);
-        }
-
-        setInstanceToken({ access_token: appToken, token_type: 'Bearer' });
-
-        const response: RemoteDataResult = await getUserInfo();
-
-        if (isSuccess(response)) {
-            const practitionerId = response.data.role[0].links.practitioner.id;
-            const practitionerResponse = await getFHIRResource<Practitioner>({
-                resourceType: 'Practitioner',
-                id: practitionerId,
-            });
-            if (isSuccess(practitionerResponse)) {
-                sharedAuthorizedPractitioner.setSharedState(practitionerResponse.data);
-            } else {
-                console.error(practitionerResponse.error);
-            }
-            const jitsiAuthTokenResponse = await getJitsiAuthToken();
-            if (isSuccess(jitsiAuthTokenResponse)) {
-                sharedJitsiAuthToken.setSharedState(jitsiAuthTokenResponse.data.jwt);
-            }
-            if (isFailure(jitsiAuthTokenResponse)) {
-                console.warn(
-                    'Error, while fetching Jitsi auth token: ',
-                    formatError(jitsiAuthTokenResponse.error),
-                );
-            }
-        } else {
-            if (extractErrorCode(response.error) !== 'network_error') {
-                resetInstanceToken();
-
-                return success(null);
-            }
-        }
-
-        return response;
+        return appToken ? restoreUserSession(appToken) : success(null);
     });
 
-    const renderAnonymousRoutes = () => (
+    const renderRoutes = (user: User | null) => {
+        if (user) {
+            return (
+                <RoleSwitch user={user}>
+                    {{
+                        [Role.Admin]: <AuthenticatedAdminUserApp />,
+                        [Role.Patient]: <AuthenticatedPatientUserApp />,
+                    }}
+                </RoleSwitch>
+            );
+        }
+
+        return <AnonymousUserApp />;
+    };
+
+    return (
+        <div data-testid="app-container">
+            <RenderRemoteData remoteData={userResponse} renderLoading={Spinner}>
+                {(user) => <HistoryRouter history={history}>{renderRoutes(user)}</HistoryRouter>}
+            </RenderRemoteData>
+        </div>
+    );
+}
+
+export function Auth() {
+    const location = useLocation();
+
+    useEffect(() => {
+        const queryParams = queryString.parse(location.hash);
+
+        if (queryParams.access_token) {
+            setToken(queryParams.access_token as string);
+            const state = parseOAuthState(queryParams.state as string | undefined);
+
+            window.location.href = state.nextUrl ?? '/';
+        }
+    }, [location.hash]);
+
+    return null;
+}
+
+function AnonymousUserApp(_props: {}) {
+    return (
         <Routes>
             <Route path="/auth" element={<Auth />} />
             <Route path="/signin" element={<SignIn />} />
@@ -100,7 +103,6 @@ export function App() {
             />
             <Route path="/appointment/book" element={<PublicAppointment />} />
             <Route path="/questionnaire" element={<PatientQuestionnaire />} />
-            <Route path="/patient-portal/*" element={<PatientPortal />} />
             <Route
                 path="*"
                 element={
@@ -111,64 +113,42 @@ export function App() {
             />
         </Routes>
     );
+}
 
-    const renderAuthenticatedRoutes = () => {
-        return (
-            <BaseLayout>
-                <Routes>
-                    <Route path="/patients" element={<PatientList />} />
-                    <Route path="/encounters" element={<EncounterList />} />
-                    <Route path="/appointment/book" element={<PublicAppointment />} />
-                    <Route path="/questionnaire" element={<PatientQuestionnaire />} />
-                    <Route path="/patients/:id/*" element={<PatientDetails />} />
-                    <Route path="/documents/:id/edit" element={<div>documents/:id/edit</div>} />
-                    <Route
-                        path="/encounters/:encounterId/qr/:questionnaireId"
-                        element={<EncounterQR />}
-                    />
-                    <Route path="/encounters/:encounterId/video" element={<VideoCall />} />
-                    <Route path="/practitioners" element={<PractitionerList />} />
-                    <Route path="/practitioners/:id/*" element={<PractitionerDetails />} />
-                    <Route path="/questionnaires" element={<QuestionnaireList />} />
-                    <Route path="/questionnaires/builder" element={<QuestionnaireBuilder />} />
-                    <Route path="/questionnaires/:id/edit" element={<QuestionnaireBuilder />} />
-                    <Route path="/questionnaires/:id" element={<div>questionnaires/:id</div>} />
-                    <Route path="*" element={<Navigate to="/encounters" />} />
-                </Routes>
-            </BaseLayout>
-        );
-    };
-
-    const renderRoutes = (user: User | null) => {
-        if (user) {
-            return renderAuthenticatedRoutes();
-        }
-
-        return renderAnonymousRoutes();
-    };
-
+function AuthenticatedAdminUserApp(_props: {}) {
     return (
-        <div data-testid="app-container">
-            <RenderRemoteData remoteData={userResponse} renderLoading={Spinner}>
-                {(data) => <HistoryRouter history={history}>{renderRoutes(data)}</HistoryRouter>}
-            </RenderRemoteData>
-        </div>
+        <BaseLayout>
+            <Routes>
+                <Route path="/patients" element={<PatientList />} />
+                <Route path="/encounters" element={<EncounterList />} />
+                <Route path="/appointment/book" element={<PublicAppointment />} />
+                <Route path="/questionnaire" element={<PatientQuestionnaire />} />
+                <Route path="/patients/:id/*" element={<PatientDetails />} />
+                <Route path="/documents/:id/edit" element={<div>documents/:id/edit</div>} />
+                <Route
+                    path="/encounters/:encounterId/qr/:questionnaireId"
+                    element={<EncounterQR />}
+                />
+                <Route path="/encounters/:encounterId/video" element={<VideoCall />} />
+                <Route path="/practitioners" element={<PractitionerList />} />
+                <Route path="/practitioners/:id/*" element={<PractitionerDetails />} />
+                <Route path="/questionnaires" element={<QuestionnaireList />} />
+                <Route path="/questionnaires/builder" element={<QuestionnaireBuilder />} />
+                <Route path="/questionnaires/:id/edit" element={<QuestionnaireBuilder />} />
+                <Route path="/questionnaires/:id" element={<div>questionnaires/:id</div>} />
+                <Route path="*" element={<Navigate to="/encounters" />} />
+            </Routes>
+        </BaseLayout>
     );
 }
 
-export function Auth() {
-    const location = useLocation();
-
-    useEffect(() => {
-        const queryParams = queryString.parse(location.hash);
-
-        if (queryParams.access_token) {
-            setToken(queryParams.access_token as string);
-            const state = parseOAuthState(queryParams.state as string | undefined);
-
-            window.location.href = state.nextUrl ?? '/';
-        }
-    }, [location.hash]);
-
-    return null;
+function AuthenticatedPatientUserApp(_props: {}) {
+    return (
+        <BaseLayout>
+            <Routes>
+                <Route path="/patient-portal/*" element={<PatientPortal />} />
+                <Route path="*" element={<Navigate to="/patient-portal/" />} />
+            </Routes>
+        </BaseLayout>
+    );
 }
