@@ -8,19 +8,7 @@ services:
         ports:
             - '3001:5000'
     sdc:
-        image: bedasoftware/aidbox-sdc:latest
-        command:
-            [
-                'pipenv',
-                'run',
-                'gunicorn',
-                'main:create_app',
-                '--worker-class',
-                'aiohttp.worker.GunicornWebWorker',
-                '-b',
-                '0.0.0.0:8081',
-                '--reload',
-            ]
+        image: bedasoftware/fhir-sdc:latest
         depends_on:
             devbox-healthcheck:
                 condition: service_healthy
