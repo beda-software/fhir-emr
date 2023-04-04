@@ -103,6 +103,8 @@ export function onFormResponse(props: {
 }
 
 export function useQuestionnaireResponseForm(props: Props) {
+    // TODO find what cause rerender and fix it
+    // remove this temporary hack
     const memoizedProps = useMemo(() => props, [JSON.stringify(props)]);
 
     const { response, handleSave } = useQuestionnaireResponseFormData(memoizedProps);
