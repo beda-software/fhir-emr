@@ -11,8 +11,8 @@ mapping:
 launchContext:
     - name: Patient
       type: Patient
-    - name: Practitioner
-      type: Practitioner
+    - name: Author
+      type: Resource
 item:
     - text: DateTime
       type: dateTime
