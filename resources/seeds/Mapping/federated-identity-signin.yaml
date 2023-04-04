@@ -11,6 +11,10 @@ body:
                   url: '/User'
               resource:
                   resourceType: User
+                  # Use fixed User.id here as required by Aidbox
+                  # https://docs.aidbox.app/security-and-access-control-1/auth/access-token-introspection#examples
+                  # Once the JWT is validated its 'sub' or 'box_user' will be used as an 'id'
+                  # to search for the associated User resource.
                   id: $ federatedUID
             - request:
                   method: Post
