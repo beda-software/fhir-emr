@@ -1,7 +1,7 @@
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
 import Title from 'antd/lib/typography/Title';
-import { ReactElement, useContext, useEffect } from 'react';
+import { ReactElement } from 'react';
 import {
     NavigateFunction,
     Outlet,
@@ -31,11 +31,14 @@ import { ReadonlyQuestionnaireResponseForm } from 'src/components/BaseQuestionna
 import { BloodPressureReadOnly } from 'src/components/BaseQuestionnaireResponseForm/widgets';
 import { ConfirmActionButton } from 'src/components/ConfirmActionButton';
 import { Spinner } from 'src/components/Spinner';
+import { DocumentHistory } from 'src/containers/PatientDetails/DocumentHistory';
+import { PatientDocument } from 'src/containers/PatientDetails/PatientDocument';
+import {
+    PatientDocumentData,
+    usePatientDocument,
+} from 'src/containers/PatientDetails/PatientDocument/usePatientDocument';
+import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
 
-import { DocumentHistory } from '../DocumentHistory';
-import { PatientDocument } from '../PatientDocument';
-import { PatientDocumentData, usePatientDocument } from '../PatientDocument/usePatientDocument';
-import { PatientHeaderContext } from '../PatientHeader/context';
 import s from './PatientDocumentDetails.module.scss';
 
 interface Props {
@@ -123,14 +126,7 @@ function PatientDocumentDetailsReadonly(props: {
     const navigate = useNavigate();
     const { formData, encounter, reload, provenance } = props;
 
-    const { setBreadcrumbs } = useContext(PatientHeaderContext);
-
-    useEffect(() => {
-        setBreadcrumbs({
-            [location?.pathname]: formData.context.questionnaire?.name || '',
-        });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    usePatientHeaderLocationTitle({ title: formData.context.questionnaire?.name ?? '' });
 
     const encounterCompleted = encounter?.status === 'completed';
 

@@ -1,9 +1,9 @@
 import { CheckOutlined, PlusOutlined } from '@ant-design/icons';
-import { Trans } from '@lingui/macro';
+import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
 import Title from 'antd/es/typography/Title';
-import { useCallback, useContext, useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useCallback, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
@@ -15,9 +15,9 @@ import { Encounter, Patient } from 'shared/src/contrib/aidbox';
 
 import { Spinner } from 'src/components/Spinner';
 import { DocumentsList } from 'src/containers/DocumentsList';
+import { ChooseDocumentToCreateModal } from 'src/containers/DocumentsList/ChooseDocumentToCreateModal';
+import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
 
-import { ChooseDocumentToCreateModal } from '../DocumentsList/ChooseDocumentToCreateModal';
-import { PatientHeaderContext } from '../PatientDetails/PatientHeader/context';
 import s from './EncounterDetails.module.scss';
 
 interface Props {
@@ -55,14 +55,9 @@ function useEncounterDetails() {
 
 export const EncounterDetails = ({ patient }: Props) => {
     const [modalOpened, setModalOpened] = useState(false);
-    const { setBreadcrumbs } = useContext(PatientHeaderContext);
-    const location = useLocation();
     const { response, completeEncounter } = useEncounterDetails();
 
-    useEffect(() => {
-        setBreadcrumbs({ [location?.pathname]: 'Consultation' });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    usePatientHeaderLocationTitle({ title: t`Consultation` });
 
     return (
         <>

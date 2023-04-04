@@ -11,6 +11,7 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 import { BasePageHeader } from 'src/components/BaseLayout';
 import { RouteItem } from 'src/components/BaseLayout/Header';
 import Breadcrumbs from 'src/components/Breadcrumbs';
+import { Role, selectCurrentUserRole } from 'src/utils/role';
 
 import { BreadCrumb, PatientHeaderContext } from './context';
 import s from './PatientHeader.module.scss';
@@ -72,14 +73,20 @@ export function PatientHeader() {
     const params = useParams<{ id: string }>();
     const { title, breadcrumbs } = useContext(PatientHeaderContext);
 
-    const menuItems: RouteItem[] = useMemo(
-        () => [
+    const menuItems: RouteItem[] = useMemo(() => {
+        const commonRoutes: RouteItem[] = [
             { title: t`Overview`, path: `/patients/${params.id}` },
             { title: t`Encounters`, path: `/patients/${params.id}/encounters` },
             { title: t`Documents`, path: `/patients/${params.id}/documents` },
-        ],
-        [params.id],
-    );
+        ];
+        return selectCurrentUserRole({
+            [Role.Admin]: commonRoutes,
+            [Role.Patient]: [
+                ...commonRoutes,
+                { title: t`Wearables`, path: `/patients/${params.id}/wearables` },
+            ],
+        });
+    }, [params.id]);
 
     const [currentPath, setCurrentPath] = useState(location?.pathname);
 
@@ -104,7 +111,12 @@ export function PatientHeader() {
 
     return (
         <BasePageHeader style={{ paddingBottom: 0 }}>
-            <Breadcrumbs crumbs={breadcrumbs} />
+            <Breadcrumbs
+                crumbs={selectCurrentUserRole({
+                    [Role.Admin]: breadcrumbs,
+                    [Role.Patient]: breadcrumbs.slice(1),
+                })}
+            />
             <Title style={{ marginBottom: 21 }}>{title}</Title>
             {renderMenu()}
         </BasePageHeader>

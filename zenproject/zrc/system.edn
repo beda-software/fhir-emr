@@ -39,12 +39,22 @@
    :AccessPolicy {:test-wildcard-policy {:engine "allow" :link [{:resourceType "User"}]}
                   :admin-policy {:engine "allow"
                                  :roleName "admin"}
+                  :patient-role-policy {:engine "allow"
+                                        :roleName "patient"}
                   :public-appointment-policy
                   {:engine "allow"
                    :link [{:resourceType "Client" :id "anonymous"}]}
                   :patient-questionnaire-policy
                   {:engine "allow"
-                   :link [{:resourceType "Client" :id "patient-questionnaire"}]}}
+                   :link [{:resourceType "Client" :id "patient-questionnaire"}]}
+                  :federated-identity-signin {:engine "json-schema"
+                                              :schema {:required ["jwt"]
+                                                       :properties {:request-method {:const "post"}
+                                                                    :jwt {:required ["iss", "aud", "sub"]
+                                                                          :properties {:iss {:const "https://appleid.apple.com"}
+                                                                                       :aud {:const "software.beda.emr"}
+                                                                                       :sub {:type "string"
+                                                                                             :minLength 1}}}}}}}
    :Practitioner {:admin {:name [{:given ["Alex"], :family "Admin"}]}}
    :Role {:admin {:name "admin"
                   :user {:id "admin" :resourceType "User"}
@@ -54,7 +64,11 @@
                   :params {:source {:type "string" :format "%%%s%%" :isRequired true}}}
                  :provenance-by-target
                  {:query "select resource || jsonb_build_object('resourceType', 'Provenance', 'id', id) as resource from provenance where array_to_string(knife_extract_text(resource,'[[\"target\",\"uri\"]]'),'') like {{params.target}}"
-                  :params {:source {:type "string" :format "%%%s%%" :isRequired true}}}}}}
+                  :params {:source {:type "string" :format "%%%s%%" :isRequired true}}}}
+   :TokenIntrospector {:appleid
+                       {:type "jwt"
+                        :jwks_uri "https://appleid.apple.com/auth/keys"
+                        :jwt {:iss "https://appleid.apple.com"}}}}}
 
  encounter-participant-display
  {:zen/tags #{aidbox.search-parameter.v1/search-parameter}

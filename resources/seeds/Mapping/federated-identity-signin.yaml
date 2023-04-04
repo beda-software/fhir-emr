@@ -1,0 +1,40 @@
+body:
+    $let:
+        firstname: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='firstname').answer.value.string").0
+        lastname: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='lastname').answer.value.string").0
+        federatedUID: $ fhirpath("FederatedIdentity")
+    $body:
+        type: transaction
+        entry:
+            - request:
+                  method: Post
+                  url: '/User'
+              resource:
+                  resourceType: User
+                  id: $ federatedUID
+            - request:
+                  method: Post
+                  url: '/Patient'
+              resource:
+                  resourceType: Patient
+                  id: $ federatedUID
+                  name:
+                      - given:
+                            - $ firstname
+                        family: $ lastname
+            - request:
+                  method: Post
+                  url: '/Role'
+              resource:
+                  resourceType: Role
+                  name: 'patient'
+                  user:
+                      resourceType: User
+                      id: $ federatedUID
+                  links:
+                      patient:
+                          resourceType: Patient
+                          id: $ federatedUID
+        resourceType: Bundle
+id: federated-identity-signin
+resourceType: Mapping
