@@ -1,4 +1,4 @@
-import { Patient, Period, Practitioner } from 'shared/src/contrib/aidbox';
+import { Patient, Period, Practitioner } from 'fhir/r4b';
 
 export interface EncounterData {
     id: string;

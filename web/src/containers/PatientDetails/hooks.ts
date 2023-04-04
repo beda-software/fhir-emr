@@ -1,24 +1,26 @@
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import { getFHIRResource } from 'aidbox-react/lib/services/fhir';
-
-import { Patient } from 'shared/src/contrib/aidbox';
+import { useService } from 'fhir-react/lib/hooks/service';
+import { extractBundleResources, getFHIRResources } from 'fhir-react/lib/services/fhir';
+import { mapSuccess } from 'fhir-react/lib/services/service';
+import { Patient } from 'fhir/r4b';
 
 import { sharedAuthorizedPatient } from 'src/sharedState';
 import { Role, selectCurrentUserRole } from 'src/utils/role';
 
 export function usePatientResource(config: { id: string }) {
     return useService(async () => {
-        const patientResponse = await getFHIRResource<Patient>({
+        const patientResponse = await getFHIRResources<Patient>('Patient', {
             resourceType: 'Patient',
             id: config.id,
         });
-        if (isSuccess(patientResponse)) {
+        return mapSuccess(patientResponse, (bundle) => {
+            const patient = extractBundleResources(bundle).Patient[0]!;
+
             selectCurrentUserRole({
-                [Role.Patient]: sharedAuthorizedPatient.setSharedState(patientResponse.data),
+                [Role.Patient]: sharedAuthorizedPatient.setSharedState(patient),
                 [Role.Admin]: undefined,
             });
-        }
-        return patientResponse;
+
+            return patient;
+        });
     });
 }

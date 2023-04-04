@@ -1,13 +1,11 @@
 import { TablePaginationConfig } from 'antd';
+import { RemoteData } from 'fhir-react/lib/libs/remoteData';
+import { extractBundleResources } from 'fhir-react/lib/services/fhir';
+import { SearchParams } from 'fhir-react/lib/services/search';
+import { mapSuccess } from 'fhir-react/lib/services/service';
+import { formatFHIRDateTime } from 'fhir-react/lib/utils/date';
+import { Encounter, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
 import { useMemo } from 'react';
-
-import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
-import { extractBundleResources } from 'aidbox-react/lib/services/fhir';
-import { SearchParams } from 'aidbox-react/lib/services/search';
-import { mapSuccess } from 'aidbox-react/lib/services/service';
-import { formatFHIRDateTime } from 'aidbox-react/lib/utils/date';
-
-import { Encounter, Patient, Practitioner, PractitionerRole } from 'shared/src/contrib/aidbox';
 
 import { EncounterData } from 'src/components/EncountersTable/types';
 import { usePagerExtended } from 'src/hooks/pager';

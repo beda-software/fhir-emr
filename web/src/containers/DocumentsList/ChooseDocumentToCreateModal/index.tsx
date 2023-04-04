@@ -1,15 +1,13 @@
 import { t, Trans } from '@lingui/macro';
 import { Button, ModalProps, notification, Radio, Space } from 'antd';
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { useService } from 'fhir-react/lib/hooks/service';
+import { extractBundleResources, getFHIRResources, WithId } from 'fhir-react/lib/services/fhir';
+import { mapSuccess } from 'fhir-react/lib/services/service';
+import { Encounter, Patient, Questionnaire } from 'fhir/r4b';
 import _ from 'lodash';
 import { useCallback, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { extractBundleResources, getFHIRResources, WithId } from 'aidbox-react/lib/services/fhir';
-import { mapSuccess } from 'aidbox-react/lib/services/service';
-
-import { Encounter, Patient, Questionnaire } from 'shared/src/contrib/aidbox';
 
 import { Modal } from 'src/components/Modal';
 import { Spinner } from 'src/components/Spinner';

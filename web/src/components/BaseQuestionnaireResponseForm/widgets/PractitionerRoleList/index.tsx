@@ -1,13 +1,12 @@
 import { Form  } from 'antd';
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { useService } from 'fhir-react/lib/hooks/service';
+import { extractBundleResources, getFHIRResources } from 'fhir-react/lib/services/fhir';
+import { mapSuccess } from 'fhir-react/lib/services/service';
+import { Practitioner, PractitionerRole } from 'fhir/r4b';
 import Select from 'react-select';
 import { QuestionItemProps } from 'sdc-qrf';
 
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
-import { mapSuccess } from 'aidbox-react/lib/services/service';
-
-import { Practitioner, PractitionerRole } from 'shared/src/contrib/aidbox';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { Spinner } from 'src/components/Spinner';

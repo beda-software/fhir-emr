@@ -1,4 +1,4 @@
-import { HumanName } from '../contrib/aidbox';
+import { HumanName } from 'fhir/r4b';
 
 export function renderHumanName(name?: HumanName) {
     if (!name) {

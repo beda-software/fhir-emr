@@ -1,21 +1,15 @@
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
-import { mapSuccess } from 'aidbox-react/lib/services/service';
+import { parseFHIRReference } from 'fhir-react';
+import { useService } from 'fhir-react/lib/hooks/service';
+import { isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { extractBundleResources, getFHIRResources } from 'fhir-react/lib/services/fhir';
+import { mapSuccess } from 'fhir-react/lib/services/service';
+import { Reference, Patient, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 
-import {
-    AidboxReference,
-    Encounter,
-    Patient,
-    Questionnaire,
-    QuestionnaireResponse,
-} from 'shared/src/contrib/aidbox';
-
-export function usePatientDocuments(patient: Patient, encounter?: AidboxReference<Encounter>) {
+export function usePatientDocuments(patient: Patient, encounter?: Reference) {
     const [response] = useService(async () => {
         const qrResponse = await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
             source: patient.id,
-            encounter: encounter?.id,
+            encounter: encounter ? parseFHIRReference(encounter).id : undefined,
         });
 
         const qrResponseExtracted = mapSuccess(qrResponse, (bundle) => ({

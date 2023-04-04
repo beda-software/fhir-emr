@@ -1,9 +1,11 @@
+import { Patient, Practitioner } from 'fhir/r4b';
+
 import { isFailure, isSuccess, success } from 'aidbox-react/lib/libs/remoteData';
 import { getFHIRResource } from 'aidbox-react/lib/services/fhir';
 import { resetInstanceToken, setInstanceToken } from 'aidbox-react/lib/services/instance';
 import { extractErrorCode, formatError } from 'aidbox-react/lib/utils/error';
 
-import { Patient, Practitioner, User } from 'shared/src/contrib/aidbox';
+import { User } from 'shared/src/contrib/aidbox';
 
 import { getJitsiAuthToken, getUserInfo } from 'src/services/auth';
 import {

@@ -1,8 +1,8 @@
 import { t, Trans } from '@lingui/macro';
 import { ColumnsType } from 'antd/lib/table';
+import { Patient } from 'fhir/r4b';
 import { Link } from 'react-router-dom';
 
-import { Patient } from 'shared/src/contrib/aidbox';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { EncountersTable } from 'src/components/EncountersTable';

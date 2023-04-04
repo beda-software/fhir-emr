@@ -1,7 +1,8 @@
-import { createSharedState } from 'aidbox-react/lib/hooks/shared-state';
-import { WithId } from 'aidbox-react/lib/services/fhir';
+import { createSharedState } from 'fhir-react/lib/hooks/shared-state';
+import { WithId } from 'fhir-react/lib/services/fhir';
+import { Patient, Practitioner } from 'fhir/r4b';
 
-import { Patient, Practitioner, User } from 'shared/src/contrib/aidbox';
+import { User } from 'shared/src/contrib/aidbox';
 
 export const sharedAuthorizedUser = createSharedState<User | undefined>(undefined);
 

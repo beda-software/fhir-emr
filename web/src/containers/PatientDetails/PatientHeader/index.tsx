@@ -1,11 +1,11 @@
 import { t } from '@lingui/macro';
 import { Menu } from 'antd';
 import Title from 'antd/es/typography/Title';
+import { Patient } from 'fhir/r4b';
 import _ from 'lodash';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
 
-import { Patient } from 'shared/src/contrib/aidbox';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { BasePageHeader } from 'src/components/BaseLayout';

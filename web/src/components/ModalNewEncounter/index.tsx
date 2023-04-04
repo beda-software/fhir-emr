@@ -1,9 +1,9 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 import { Button, notification } from 'antd';
+import { Patient } from 'fhir/r4b';
 import { useMemo, useState } from 'react';
 
-import { Patient } from 'shared/src/contrib/aidbox';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { Modal } from 'src/components/Modal';
