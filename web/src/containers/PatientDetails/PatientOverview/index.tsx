@@ -1,12 +1,11 @@
 import { CalendarOutlined, ContactsOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { extractBundleResources, WithId } from 'fhir-react/lib/services/fhir';
 import { Appointment, Bundle, Encounter, Patient } from 'fhir/r4b';
 import _ from 'lodash';
-
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import { extractBundleResources, WithId } from 'aidbox-react/lib/services/fhir';
 
 import {
     inMemorySaveService,
@@ -175,7 +174,7 @@ function useStartEncounter(props: StartEncounterProps) {
     const { response, onSubmit } = useQuestionnaireResponseForm({
         questionnaireLoader: { type: 'id', questionnaireId: 'encounter-create-from-appointment' },
         questionnaireResponseSaveService: inMemorySaveService,
-        launchContextParameters: [{ name: 'AppointmentId', value: { string: appointmentId } }],
+        launchContextParameters: [{ name: 'AppointmentId', valueString: appointmentId }],
         onSuccess: ({ extractedBundle }: { extractedBundle: Bundle<WithId<Encounter>>[] }) => {
             const encounter = extractBundleResources(extractedBundle[0]!).Encounter[0]!;
             navigateToEncounter(encounter.subject?.id!, encounter.id);

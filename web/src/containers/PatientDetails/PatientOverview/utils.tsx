@@ -1,5 +1,7 @@
 import { AlertOutlined, ExperimentOutlined, HeartOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
+import { extractBundleResources, WithId } from 'fhir-react/lib/services/fhir';
+import { parseFHIRDateTime } from 'fhir-react/lib/utils/date';
 import {
     Resource,
     AllergyIntolerance,
@@ -13,9 +15,6 @@ import {
 } from 'fhir/r4b';
 import _ from 'lodash';
 import { Link, useLocation } from 'react-router-dom';
-
-import { extractBundleResources, WithId } from 'aidbox-react/lib/services/fhir';
-import { parseFHIRDateTime } from 'aidbox-react/lib/utils/date';
 
 import { formatHumanDate } from 'src/utils/date';
 import { extractExtension, fromFHIRReference } from 'src/utils/fce';

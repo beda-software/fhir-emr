@@ -1,3 +1,13 @@
+
+import { useService } from 'fhir-react/lib/hooks/service';
+import { isSuccess } from 'fhir-react/lib/libs/remoteData';
+import {
+    extractBundleResources,
+    getAllFHIRResources,
+    getFHIRResources,
+} from 'fhir-react/lib/services/fhir';
+import { mapSuccess, resolveMap } from 'fhir-react/lib/services/service';
+import { formatFHIRDateTime } from 'fhir-react/lib/utils/date';
 import {
     AllergyIntolerance,
     Appointment,
@@ -11,16 +21,6 @@ import {
 } from 'fhir/r4b';
 import _ from 'lodash';
 import moment from 'moment';
-
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import {
-    extractBundleResources,
-    getAllFHIRResources,
-    getFHIRResources,
-} from 'aidbox-react/lib/services/fhir';
-import { mapSuccess, resolveMap } from 'aidbox-react/lib/services/service';
-import { formatFHIRDateTime } from 'aidbox-react/lib/utils/date';
 
 import { formatHumanDate, getPersonAge } from 'src/utils/date';
 
