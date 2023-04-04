@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { isSuccess, notAsked, RemoteData } from 'aidbox-react/lib/libs/remoteData';
@@ -14,8 +14,8 @@ import {
     DepressionScore,
 } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/score';
 import { Spinner } from 'src/components/Spinner';
+import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
 
-import { PatientHeaderContext } from '../PatientHeader/context';
 import s from './PatientDocument.module.scss';
 import { PatientDocumentHeader } from './PatientDocumentHeader';
 import { usePatientDocument } from './usePatientDocument';
@@ -39,22 +39,14 @@ export function PatientDocument(props: Props) {
     });
     const navigate = useNavigate();
 
-    const { setBreadcrumbs } = useContext(PatientHeaderContext);
-    const location = useLocation();
-
     const [draftSaveResponse, setDraftSaveResponse] =
         useState<RemoteData<QuestionnaireResponse>>(notAsked);
 
     const { savedMessage } = useSavedMessage(draftSaveResponse);
 
-    useEffect(() => {
-        if (isSuccess(response)) {
-            setBreadcrumbs({
-                [location?.pathname]: response.data.formData.context.questionnaire?.name || '',
-            });
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [response]);
+    usePatientHeaderLocationTitle({
+        title: isSuccess(response) ? response.data.formData.context.questionnaire?.name ?? '' : '',
+    });
 
     return (
         <div className={s.container}>

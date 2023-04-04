@@ -1,19 +1,17 @@
-import { Trans } from '@lingui/macro';
+import { t, Trans } from '@lingui/macro';
 import { ColumnsType } from 'antd/lib/table';
-import { useContext, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { Patient } from 'shared/src/contrib/aidbox';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
+import { EncountersTable } from 'src/components/EncountersTable';
+import { EncounterData } from 'src/components/EncountersTable/types';
+import { EncounterStatusBadge } from 'src/components/EncounterStatusBadge';
+import { ModalNewEncounter } from 'src/components/ModalNewEncounter';
 import { useEncounterList } from 'src/containers/EncounterList/hooks';
-import { PatientHeaderContext } from 'src/containers/PatientDetails/PatientHeader/context';
+import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
 import { formatPeriodDateTime } from 'src/utils/date';
-
-import { EncountersTable } from '../EncountersTable';
-import { EncounterData } from '../EncountersTable/types';
-import { EncounterStatusBadge } from '../EncounterStatusBadge';
-import { ModalNewEncounter } from '../ModalNewEncounter';
 
 interface Props {
     patient: Patient;
@@ -69,13 +67,7 @@ export const PatientEncounter = ({ patient }: Props) => {
             subject: patient.id,
         });
 
-    const { setBreadcrumbs } = useContext(PatientHeaderContext);
-    const location = useLocation();
-
-    useEffect(() => {
-        setBreadcrumbs({ [location?.pathname]: 'Encounters' });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    usePatientHeaderLocationTitle({ title: t`Encounters` });
 
     return (
         <>
