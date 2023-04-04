@@ -18,7 +18,6 @@ import { EncounterList } from 'src/containers/EncounterList';
 import { EncounterQR } from 'src/containers/EncounterQR';
 import { PatientDetails } from 'src/containers/PatientDetails';
 import { PatientList } from 'src/containers/PatientList';
-import { PatientPortal } from 'src/containers/PatientPortal';
 import { PatientQuestionnaire } from 'src/containers/PatientQuestionnaire';
 import { PractitionerDetails } from 'src/containers/PractitionerDetails';
 import { PractitionerList } from 'src/containers/PractitionerList';
@@ -29,6 +28,7 @@ import { VideoCall } from 'src/containers/VideoCall';
 import { getToken } from 'src/services/auth';
 import { parseOAuthState, setToken } from 'src/services/auth';
 import { history } from 'src/services/history';
+import { sharedAuthorizedPatient } from 'src/sharedState';
 import { Role } from 'src/utils/role';
 
 import { restoreUserSession } from './utils';
@@ -143,11 +143,13 @@ function AuthenticatedAdminUserApp(_props: {}) {
 }
 
 function AuthenticatedPatientUserApp(_props: {}) {
+    const [patient] = sharedAuthorizedPatient.useSharedState();
+
     return (
         <BaseLayout>
             <Routes>
-                <Route path="/patient-portal/*" element={<PatientPortal />} />
-                <Route path="*" element={<Navigate to="/patient-portal/" />} />
+                <Route path={`/patients/:id/*`} element={<PatientDetails />} />
+                <Route path="*" element={<Navigate to={`/patients/${patient!.id}`} />} />
             </Routes>
         </BaseLayout>
     );

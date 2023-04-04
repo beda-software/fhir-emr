@@ -9,6 +9,7 @@ import { Patient } from 'shared/src/contrib/aidbox';
 import { BasePageContent } from 'src/components/BaseLayout';
 import { PatientEncounter } from 'src/components/PatientEncounter';
 import { Spinner } from 'src/components/Spinner';
+import { Role, selectCurrentUserRole } from 'src/utils/role';
 
 import { EncounterDetails } from '../EncounterDetails';
 import { PatientDocument } from './PatientDocument';
@@ -16,6 +17,7 @@ import { PatientDocumentDetails } from './PatientDocumentDetails';
 import { PatientDocuments } from './PatientDocuments';
 import { PatientHeader, PatientHeaderContextProvider } from './PatientHeader';
 import { PatientOverview } from './PatientOverview';
+import { PatientWearables } from './PatientWearables';
 
 export const PatientDetails = () => {
     const params = useParams<{ id: string }>();
@@ -59,9 +61,7 @@ export const PatientDetails = () => {
                                     />
                                     <Route
                                         path="/encounters/:encounterId/new/:questionnaireId"
-                                        element={
-                                            <PatientDocument patient={patient} />
-                                        }
+                                        element={<PatientDocument patient={patient} />}
                                     />
                                     <Route
                                         path="/encounters/:encounterId/:qrId/*"
@@ -79,6 +79,15 @@ export const PatientDetails = () => {
                                         path="/documents/:qrId/*"
                                         element={<PatientDocumentDetails patient={patient} />}
                                     />
+                                    {selectCurrentUserRole({
+                                        [Role.Admin]: null,
+                                        [Role.Patient]: (
+                                            <Route
+                                                path="/wearables"
+                                                element={<PatientWearables />}
+                                            />
+                                        ),
+                                    })}
                                 </Route>
                             </Routes>
                         </BasePageContent>
