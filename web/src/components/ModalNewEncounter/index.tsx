@@ -1,21 +1,30 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { t, Trans } from '@lingui/macro';
+import { t } from '@lingui/macro';
 import { Button, notification } from 'antd';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { Patient } from 'shared/src/contrib/aidbox';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
-import { Modal } from '../Modal';
-import { QuestionnaireResponseForm } from '../QuestionnaireResponseForm';
+import { Modal } from 'src/components/Modal';
+import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { Role, selectCurrentUserRole } from 'src/utils/role';
 
-interface Props {
+export interface ModalNewEncounterProps {
     patient: Patient;
     reloadEncounter: () => void;
 }
 
-export const ModalNewEncounter = ({ patient, reloadEncounter }: Props) => {
+export const ModalNewEncounter = ({ patient, reloadEncounter }: ModalNewEncounterProps) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const title = useMemo(
+        () =>
+            selectCurrentUserRole({
+                [Role.Admin]: t`Create Encounter`,
+                [Role.Patient]: t`Request Appointment`,
+            }),
+        [],
+    );
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -32,12 +41,10 @@ export const ModalNewEncounter = ({ patient, reloadEncounter }: Props) => {
     return (
         <>
             <Button icon={<PlusOutlined />} type="primary" onClick={showModal}>
-                <span>
-                    <Trans>Create Encounter</Trans>
-                </span>
+                <span>{title}</span>
             </Button>
             <Modal
-                title={t`Create Encounter`}
+                title={title}
                 open={isModalVisible}
                 onCancel={() => setIsModalVisible(false)}
                 footer={null}
