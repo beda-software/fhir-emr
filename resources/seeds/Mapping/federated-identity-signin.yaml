@@ -21,11 +21,11 @@ body:
                   url: '/Patient'
               resource:
                   resourceType: Patient
-                  id: $ federatedUID
                   name:
                       - given:
                             - $ firstname
                         family: $ lastname
+              fullUrl: urn:uuid:cf3923f0-2eaa-4feb-94eb-3a3db62f0705
             - request:
                   method: Post
                   url: '/Role'
@@ -37,8 +37,7 @@ body:
                       id: $ federatedUID
                   links:
                       patient:
-                          resourceType: Patient
-                          id: $ federatedUID
+                          uri: urn:uuid:cf3923f0-2eaa-4feb-94eb-3a3db62f0705
         resourceType: Bundle
 id: federated-identity-signin
 resourceType: Mapping
