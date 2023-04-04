@@ -2,11 +2,11 @@ import { DownOutlined, GlobalOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 import { Dropdown, Menu } from 'antd';
 import { Header } from 'antd/lib/layout/layout';
+import { useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 import { resetInstanceToken } from 'aidbox-react/lib/services/instance';
 
-import { Patient, Practitioner } from 'shared/src/contrib/aidbox';
 import {
     dynamicActivate,
     setCurrentLocale,
@@ -60,13 +60,6 @@ function LocaleSwitcher() {
 }
 
 export function AppHeader() {
-    const doLogout = async () => {
-        await logout();
-        resetInstanceToken();
-        localStorage.clear();
-        window.location.href = '/';
-    };
-
     const location = useLocation();
 
     const menuItems: RouteItem[] = selectCurrentUserRole({
@@ -80,41 +73,6 @@ export function AppHeader() {
     });
 
     const activeMenu = `/${location.pathname.split('/')[1]}`;
-
-    const renderUserMenu = () => {
-        const userMenu = [
-            {
-                label: t`Log out`,
-                key: 'logout',
-            },
-        ];
-
-        const onUserMenuClick = ({ key }: { key: string }) => {
-            if (key === 'logout') {
-                doLogout();
-            }
-        };
-
-        const userDetails = selectCurrentUserRole<() => Patient | Practitioner | undefined>({
-            [Role.Admin]: () => sharedAuthorizedPractitioner.getSharedState(),
-            [Role.Patient]: () => sharedAuthorizedPatient.getSharedState(),
-        })();
-
-        return (
-            <Dropdown
-                menu={{ items: userMenu, onClick: onUserMenuClick }}
-                trigger={['click']}
-                placement="bottomLeft"
-                arrow
-            >
-                <a onClick={(e) => e.preventDefault()} className={s.user}>
-                    <AvatarImage className={s.avatar} />
-                    <span>{renderHumanName(userDetails?.name?.[0])}</span>
-                    <DownOutlined className={s.localeArrow} />
-                </a>
-            </Dropdown>
-        );
-    };
 
     return (
         <Header className={s.header}>
@@ -130,7 +88,7 @@ export function AppHeader() {
                         items={renderMenu(menuItems)}
                         className={s.menu}
                     />
-                    {renderUserMenu()}
+                    <UserMenu />
                     <LocaleSwitcher />
                 </div>
             </div>
@@ -152,4 +110,59 @@ export function renderMenu(menuRoutes: RouteItem[]) {
         key: route.path,
         label: <Link to={route.path}>{renderMenuTitle(route)}</Link>,
     }));
+}
+
+function UserMenu() {
+    const doLogout = useCallback(async () => {
+        await logout();
+        resetInstanceToken();
+        localStorage.clear();
+        window.location.href = '/';
+    }, []);
+
+    const userMenu = [
+        {
+            label: t`Log out`,
+            key: 'logout',
+        },
+    ];
+
+    const onUserMenuClick = useCallback(
+        ({ key }: { key: string }) => {
+            if (key === 'logout') {
+                doLogout();
+            }
+        },
+        [doLogout],
+    );
+
+    return (
+        <Dropdown
+            menu={{ items: userMenu, onClick: onUserMenuClick }}
+            trigger={['click']}
+            placement="bottomLeft"
+            arrow
+        >
+            <a onClick={(e) => e.preventDefault()} className={s.user}>
+                <AvatarImage className={s.avatar} />
+                {selectCurrentUserRole({
+                    [Role.Admin]: <AdminName />,
+                    [Role.Patient]: <PatientName />,
+                })}
+                <DownOutlined className={s.localeArrow} />
+            </a>
+        </Dropdown>
+    );
+}
+
+function PatientName() {
+    const [patient] = sharedAuthorizedPatient.useSharedState();
+
+    return <span>{renderHumanName(patient?.name?.[0])}</span>;
+}
+
+function AdminName() {
+    const [practitioner] = sharedAuthorizedPractitioner.useSharedState();
+
+    return <span>{renderHumanName(practitioner?.name?.[0])}</span>;
 }
