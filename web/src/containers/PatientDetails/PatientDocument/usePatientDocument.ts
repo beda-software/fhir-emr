@@ -23,7 +23,8 @@ import {
 
 import { onFormResponse } from 'src/components/QuestionnaireResponseForm';
 import { getProvenanceByEntity } from 'src/services/provenance';
-import { sharedAuthorizedPractitioner } from 'src/sharedState';
+import { sharedAuthorizedPatient, sharedAuthorizedPractitioner } from 'src/sharedState';
+import { Role, selectCurrentUserRole } from 'src/utils/role';
 
 export interface Props {
     patient: Patient;
@@ -64,27 +65,21 @@ async function onFormSubmit(
 function prepareFormInitialParams(
     props: Props & {
         provenance?: WithId<Provenance>;
-        practitioner?: WithId<Practitioner>;
+        author?: WithId<Practitioner | Patient>;
     },
 ): QuestionnaireResponseFormProps {
-    const {
-        patient,
-        questionnaireResponse,
-        questionnaireId,
-        encounterId,
-        provenance,
-        practitioner,
-    } = props;
+    const { patient, questionnaireResponse, questionnaireId, encounterId, provenance, author } =
+        props;
 
     const params = {
         questionnaireLoader: questionnaireIdLoader(questionnaireId),
         launchContextParameters: [
             { name: 'Patient', resource: patient },
-            ...(practitioner
+            ...(author
                 ? [
                       {
-                          name: 'Practitioner',
-                          resource: practitioner,
+                          name: 'Author',
+                          resource: author,
                       },
                   ]
                 : []),
@@ -127,7 +122,6 @@ export function usePatientDocument(props: Props): {
 } {
     const { questionnaireResponse, questionnaireId, onSuccess } = props;
     const navigate = useNavigate();
-    const practitioner = sharedAuthorizedPractitioner.getSharedState();
 
     const [response] = useService(async () => {
         let provenanceResponse: RemoteDataResult<WithId<Provenance>[]> = success([]);
@@ -143,7 +137,10 @@ export function usePatientDocument(props: Props): {
             const formInitialParams = prepareFormInitialParams({
                 ...props,
                 provenance,
-                practitioner,
+                author: selectCurrentUserRole<() => Practitioner | Patient | undefined>({
+                    [Role.Admin]: () => sharedAuthorizedPractitioner.getSharedState(),
+                    [Role.Patient]: () => sharedAuthorizedPatient.getSharedState(),
+                })(),
             });
 
             const onSubmit = async (formData: QuestionnaireResponseFormData) =>

@@ -1,20 +1,16 @@
 import { notification } from 'antd';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
-import { sharedAppleIdentityToken } from 'src/sharedState';
+import { signinWithIdentityToken } from 'src/services/auth';
 
 declare const AppleID: any;
 
-export function useAppleAuthentication(config: { navigateOnSuccess: string }) {
-    const { navigateOnSuccess } = config;
-
-    const navigate = useNavigate();
-
+export function useAppleAuthentication() {
     useEffect(() => {
         const onSignInSuccess = (event: any) => {
-            sharedAppleIdentityToken.setSharedState(event.detail.authorization.id_token);
-            navigate(navigateOnSuccess, { state: { replace: true } });
+            signinWithIdentityToken(event.detail.user, event.detail.authorization.id_token).then(
+                () => window.location.reload(),
+            );
         };
         const onSignInFailure = (event: any) => {
             const error = event.detail?.error;
@@ -39,5 +35,5 @@ export function useAppleAuthentication(config: { navigateOnSuccess: string }) {
             document.removeEventListener('AppleIDSignInOnSuccess', onSignInSuccess);
             document.removeEventListener('AppleIDSignInOnFailure', onSignInFailure);
         };
-    }, [navigate, navigateOnSuccess]);
+    }, []);
 }

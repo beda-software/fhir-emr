@@ -35,6 +35,12 @@ global.AppleID = {
     },
 };
 
+// 'jose' library import fails in non-node jest test environments
+// complaining about TextEncoder not being found:
+// `ReferenceError: TextEncoder is not defined`.
+// Mocking it here as there are no JWT-bound tests at the moment.
+jest.mock('jose', () => ({}));
+
 export async function createPatient(patient: Partial<Patient> = {}) {
     return ensure(
         await createFHIRResource<Patient>({

@@ -1,8 +1,11 @@
+import { decodeJwt } from 'jose';
+
+import { setInstanceToken } from 'aidbox-react/lib/services/instance';
 import { service } from 'aidbox-react/lib/services/service';
 import { Token } from 'aidbox-react/lib/services/token';
 
 import config from 'shared/src/config';
-import { User } from 'shared/src/contrib/aidbox';
+import { QuestionnaireResponse, User } from 'shared/src/contrib/aidbox';
 
 export interface OAuthState {
     nextUrl?: string;
@@ -83,5 +86,46 @@ export async function getJitsiAuthToken() {
         baseURL: config.baseURL,
         method: 'POST',
         url: '/auth/$jitsi-token',
+    });
+}
+
+export async function signinWithIdentityToken(
+    user: { firstName: string; lastName: string },
+    identityToken: string,
+) {
+    setToken(identityToken);
+    setInstanceToken({ access_token: identityToken, token_type: 'Bearer' });
+
+    return await service({
+        method: 'POST',
+        url: '/Questionnaire/federated-identity-signin/$extract',
+        data: {
+            resourceType: 'Parameters',
+            parameter: [
+                {
+                    name: 'FederatedIdentity',
+                    value: {
+                        string: decodeJwt(identityToken).sub,
+                    },
+                },
+                {
+                    name: 'questionnaire_response',
+                    resource: {
+                        resourceType: 'QuestionnaireResponse',
+                        questionnaire: 'federated-identity-signin',
+                        item: [
+                            {
+                                linkId: 'firstname',
+                                answer: [{ value: { string: user.firstName } }],
+                            },
+                            {
+                                linkId: 'lastname',
+                                answer: [{ value: { string: user.lastName } }],
+                            },
+                        ],
+                    } as QuestionnaireResponse,
+                },
+            ],
+        },
     });
 }

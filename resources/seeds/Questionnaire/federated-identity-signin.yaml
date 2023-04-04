@@ -1,0 +1,22 @@
+id: federated-identity-signin
+resourceType: Questionnaire
+name: federated-identity-signin
+title: Use Federated Identity Provider to create User/Patient/Role
+status: active
+mapping:
+    - id: federated-identity-signin
+      resourceType: Mapping
+item:
+    - linkId: firstname
+      type: string
+      required: true
+    - linkId: lastname
+      type: string
+      required: true
+meta:
+    profile:
+        - https://beda.software/beda-emr-questionnaire
+        - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire
+        - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extr-defn
+        - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-pop-smap
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/federated-identity-signin

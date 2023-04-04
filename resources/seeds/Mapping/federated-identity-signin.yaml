@@ -1,0 +1,43 @@
+body:
+    $let:
+        firstname: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='firstname').answer.value.string").0
+        lastname: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='lastname').answer.value.string").0
+        federatedUID: $ fhirpath("FederatedIdentity")
+    $body:
+        type: transaction
+        entry:
+            - request:
+                  method: Post
+                  url: '/User'
+              resource:
+                  resourceType: User
+                  # Use fixed User.id here as required by Aidbox
+                  # https://docs.aidbox.app/security-and-access-control-1/auth/access-token-introspection#examples
+                  # Once the JWT is validated its 'sub' or 'box_user' will be used as an 'id'
+                  # to search for the associated User resource.
+                  id: $ federatedUID
+            - request:
+                  method: Post
+                  url: '/Patient'
+              resource:
+                  resourceType: Patient
+                  name:
+                      - given:
+                            - $ firstname
+                        family: $ lastname
+              fullUrl: urn:uuid:cf3923f0-2eaa-4feb-94eb-3a3db62f0705
+            - request:
+                  method: Post
+                  url: '/Role'
+              resource:
+                  resourceType: Role
+                  name: 'patient'
+                  user:
+                      resourceType: User
+                      id: $ federatedUID
+                  links:
+                      patient:
+                          uri: urn:uuid:cf3923f0-2eaa-4feb-94eb-3a3db62f0705
+        resourceType: Bundle
+id: federated-identity-signin
+resourceType: Mapping

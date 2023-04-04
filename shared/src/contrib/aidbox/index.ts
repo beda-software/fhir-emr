@@ -18033,6 +18033,7 @@ export interface User {
     profileUrl?: uri;
     /** A list of roles for the User that collectively represent who the User is, e.g., 'Student', 'Faculty'. */
     roles?: UserRoles[];
+    role?: Role[];
     /** The User's time zone in the 'Olson' time zone database format, e.g., 'America/Los_Angeles'. */
     timezone?: string;
     /** The user's title, such as "Vice President." */

@@ -5,7 +5,7 @@ body:
         qrLastUpdated: >-
             $ fhirpath("QuestionnaireResponse.meta.lastUpdated") || fhirpath("QuestionnaireResponse.repeat(item).where(linkId='dateTime').answer.value.dateTime").0
         conditionId: $ fhirpath("Provenance.target.where(resourceType='Condition').id").0
-        practitioner: $ Practitioner
+        author: $ Author
         patientId: >-
             $
             fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.value.string").0
@@ -102,9 +102,9 @@ body:
                                 system: 'http://terminology.hl7.org/CodeSystem/v3-DataOperation'
                   agent:
                       - who:
-                            id: $ practitioner.id
-                            resourceType: $ practitioner.resourceType
-                            display: $ practitioner.name.0.given.0 + ' ' + practitioner.name.0.family
+                            id: $ author.id
+                            resourceType: $ author.resourceType
+                            display: $ author.name.0.given.0 + ' ' + author.name.0.family
                   entity:
                       - role: source
                         what:

@@ -1,5 +1,6 @@
 import { notification } from 'antd';
 import _ from 'lodash';
+import { useMemo } from 'react';
 import {
     FormItems,
     ItemControlGroupItemComponentMapping,
@@ -102,8 +103,13 @@ export function onFormResponse(props: {
 }
 
 export function useQuestionnaireResponseForm(props: Props) {
-    const { response, handleSave } = useQuestionnaireResponseFormData(props);
-    const { onSuccess, onFailure, readOnly, initialQuestionnaireResponse, onCancel } = props;
+    // TODO find what cause rerender and fix it
+    // remove this temporary hack
+    const memoizedProps = useMemo(() => props, [JSON.stringify(props)]);
+
+    const { response, handleSave } = useQuestionnaireResponseFormData(memoizedProps);
+    const { onSuccess, onFailure, readOnly, initialQuestionnaireResponse, onCancel } = memoizedProps;
+
 
     const onSubmit = async (formData: QuestionnaireResponseFormData) => {
         const modifiedFormData = _.merge({}, formData, {

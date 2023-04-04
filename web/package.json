@@ -29,6 +29,7 @@
         "date-fns": "^2.27.0",
         "fhir-react": "https://github.com/beda-software/fhir-react.git",
         "fullcalendar": "^6.0.3",
+        "jose": "^4.13.1",
         "lodash": "4.17.21",
         "query-string": "^7.0.1",
         "react": "^18.2.0",

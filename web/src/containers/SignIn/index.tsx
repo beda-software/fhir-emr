@@ -1,41 +1,69 @@
 import { t } from '@lingui/macro';
-import { Button } from 'antd';
-import Title from 'antd/lib/typography/Title';
+import { Button, Segmented } from 'antd';
+import Text from 'antd/lib/typography/Text';
+import noop from 'lodash/noop';
+import { useState } from 'react';
 
 import { AppFooter } from 'src/components/BaseLayout/Footer';
-import logo from 'src/images/logo-white.svg';
+import logo from 'src/images/logo.svg';
 import { getAuthorizeUrl, OAuthState } from 'src/services/auth';
 
 import { useAppleAuthentication } from './hooks';
 import s from './SignIn.module.scss';
+
+enum SignInService {
+    EMR = 'EMR',
+    PatientPortal = 'Patient Portal',
+}
 
 function authorize(state?: OAuthState) {
     window.location.href = getAuthorizeUrl(state);
 }
 
 export function SignIn() {
+    const [signInService, setSignInService] = useState<string>(SignInService.EMR);
+
     return (
         <div className={s.container}>
-            <img src={logo} alt="" className={s.logo} />
-            <Title className={s.title}>{t`Welcome`}</Title>
-            <Button type="primary" className={s.loginBtn} onClick={() => authorize()} size="large">
-                {t`Log in`}
-            </Button>
-            <div className={s.message}>
-                <b>{t`On the next page, please, use the following credentials`}</b>
-                <div>
-                    {t`Username`}: admin <br />
-                    {t`Password`}: password
+            <div className={s.form}>
+                <div className={s.header}>
+                    <Text className={s.title}>{t`Welcome to`}</Text>
+                    <img src={logo} alt="" />
                 </div>
+                <Segmented
+                    value={signInService}
+                    options={[SignInService.EMR, SignInService.PatientPortal]}
+                    block
+                    onChange={(value) => setSignInService(value as SignInService)}
+                    className={s.signInServiceSelectLabel}
+                    // For some reason these two props are declared as required in antd
+                    onResize={noop}
+                    onResizeCapture={noop}
+                />
+                {signInService === SignInService.EMR ? (
+                    <>
+                        <div className={s.message}>
+                            <b>{t`On the next page, please, use the following credentials`}</b>
+                            <div>
+                                {t`Username`}: admin <br />
+                                {t`Password`}: password
+                            </div>
+                        </div>
+                        <Button type="primary" onClick={() => authorize()} size="large">
+                            {t`Log in as Practitioner`}
+                        </Button>
+                    </>
+                ) : (
+                    <AppleButton />
+                )}
             </div>
-            <AppleButton />
             <AppFooter type="light" />
         </div>
     );
 }
 
 function AppleButton(_props: {}) {
-    useAppleAuthentication({ navigateOnSuccess: '/patient-portal/wearables' });
+    useAppleAuthentication();
 
     return (
         <div

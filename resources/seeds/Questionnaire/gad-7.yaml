@@ -14,9 +14,9 @@ launchContext:
       type:
           - Patient
     - name:
-          code: Practitioner
+          code: Author
       type:
-          - Practitioner
+          - Resource
 item:
     - text: DateTime
       type: dateTime

@@ -25,7 +25,7 @@ import { usePatientOverview } from './hooks';
 import s from './PatientOverview.module.scss';
 import { prepareAppointmentDetails } from './utils';
 
-interface Props {
+export interface PatientOverviewProps {
     patient: Patient;
     reload: () => void;
 }
@@ -43,7 +43,7 @@ interface OverviewCard<T = any> {
     getKey: (r: T) => string;
 }
 
-export function PatientOverview(props: Props) {
+export function PatientOverview(props: PatientOverviewProps) {
     const { response, patientDetails } = usePatientOverview(props);
 
     const renderAppointmentCards = (appointments: Appointment[]) => {
@@ -133,7 +133,7 @@ export function PatientOverview(props: Props) {
     );
 }
 
-function EditPatient(props: Props) {
+function EditPatient(props: PatientOverviewProps) {
     const { patient, reload } = props;
 
     return (

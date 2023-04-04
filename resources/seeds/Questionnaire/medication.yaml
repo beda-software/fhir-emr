@@ -3,115 +3,115 @@ resourceType: Questionnaire
 name: Medication
 status: active
 subjectType:
-  - Encounter
-  - Patient
+    - Encounter
+    - Patient
 launchContext:
-  - name:
-      code: Patient
-    type:
-      - Patient
-  - name:
-      code: Practitioner
-    type:
-      - Practitioner
+    - name:
+          code: Patient
+      type:
+          - Patient
+    - name:
+          code: Author
+      type:
+          - Resource
 mapping:
-  - id: medication-statement-extract
-    resourceType: Mapping
+    - id: medication-statement-extract
+      resourceType: Mapping
 item:
-  - text: DateTime
-    type: dateTime
-    linkId: dateTime
-    hidden: true
-    initialExpression:
-      language: text/fhirpath
-      expression: "now()"
-  - text: EncounterId
-    type: string
-    linkId: encounterId
-    hidden: true
-    initialExpression:
-      language: text/fhirpath
-      expression: "%Encounter.id"
-  - text: PatientId
-    type: string
-    linkId: patientId
-    hidden: true
-    required: true
-    initialExpression:
-      language: text/fhirpath
-      expression: "%Patient.id"
-  - text: PatientName
-    type: string
-    linkId: patientName
-    hidden: true
-    initialExpression:
-      language: text/fhirpath
-      expression: "%Patient.name.given[0] + ' ' + %Patient.name.family"
-  - linkId: medication
-    text: Medication name
-    required: true
-    type: choice
-    answerOption:
-      - value:
-          Coding:
-            system: "http://snomed.info/sct"
-            code: "261000"
-            display: "Codeine phosphate"
-      - value:
-          Coding:
-            system: "http://snomed.info/sct"
-            code: "2336001"
-            display: "Fibrinogen Tokyo II"
-      - value:
-          Coding:
-            system: "http://snomed.info/sct"
-            code: "363000"
-            display: "Fibrinogen San Juan"
-      - value:
-          Coding:
-            system: "http://snomed.info/sct"
-            code: "519005"
-            display: "Free protein S"
-      - value:
-          Coding:
-            system: "http://snomed.info/sct"
-            code: "585007"
-            display: "SP - Substance P"
-      - value:
-          Coding:
-            system: "http://snomed.info/sct"
-            code: "693002"
-            display: "Trichothecene"
-      - value:
-          Coding:
-            system: "http://snomed.info/sct"
-            code: "698006"
-            display: "Erythromycin lactobionate"
-      - value:
-          Coding:
-            system: "http://snomed.info/sct"
-            code: "699003"
-            display: "Coal tar extract"
-      - value:
-          Coding:
-            system: "http://snomed.info/sct"
-            code: "747006"
-            display: "Oxamniquine"
-  - linkId: dosage
-    text: Dosage
-    type: string
-    required: true
-  - linkId: start-date
-    type: date
-    text: Start Date
-  - linkId: stop-date
-    type: date
-    text: Stop Date
-  - linkId: notes
-    text: Notes
-    type: string
+    - text: DateTime
+      type: dateTime
+      linkId: dateTime
+      hidden: true
+      initialExpression:
+          language: text/fhirpath
+          expression: 'now()'
+    - text: EncounterId
+      type: string
+      linkId: encounterId
+      hidden: true
+      initialExpression:
+          language: text/fhirpath
+          expression: '%Encounter.id'
+    - text: PatientId
+      type: string
+      linkId: patientId
+      hidden: true
+      required: true
+      initialExpression:
+          language: text/fhirpath
+          expression: '%Patient.id'
+    - text: PatientName
+      type: string
+      linkId: patientName
+      hidden: true
+      initialExpression:
+          language: text/fhirpath
+          expression: "%Patient.name.given[0] + ' ' + %Patient.name.family"
+    - linkId: medication
+      text: Medication name
+      required: true
+      type: choice
+      answerOption:
+          - value:
+                Coding:
+                    system: 'http://snomed.info/sct'
+                    code: '261000'
+                    display: 'Codeine phosphate'
+          - value:
+                Coding:
+                    system: 'http://snomed.info/sct'
+                    code: '2336001'
+                    display: 'Fibrinogen Tokyo II'
+          - value:
+                Coding:
+                    system: 'http://snomed.info/sct'
+                    code: '363000'
+                    display: 'Fibrinogen San Juan'
+          - value:
+                Coding:
+                    system: 'http://snomed.info/sct'
+                    code: '519005'
+                    display: 'Free protein S'
+          - value:
+                Coding:
+                    system: 'http://snomed.info/sct'
+                    code: '585007'
+                    display: 'SP - Substance P'
+          - value:
+                Coding:
+                    system: 'http://snomed.info/sct'
+                    code: '693002'
+                    display: 'Trichothecene'
+          - value:
+                Coding:
+                    system: 'http://snomed.info/sct'
+                    code: '698006'
+                    display: 'Erythromycin lactobionate'
+          - value:
+                Coding:
+                    system: 'http://snomed.info/sct'
+                    code: '699003'
+                    display: 'Coal tar extract'
+          - value:
+                Coding:
+                    system: 'http://snomed.info/sct'
+                    code: '747006'
+                    display: 'Oxamniquine'
+    - linkId: dosage
+      text: Dosage
+      type: string
+      required: true
+    - linkId: start-date
+      type: date
+      text: Start Date
+    - linkId: stop-date
+      type: date
+      text: Stop Date
+    - linkId: notes
+      text: Notes
+      type: string
 
 meta:
-  profile:
-    - https://beda.software/beda-emr-questionnaire
+    profile:
+        - https://beda.software/beda-emr-questionnaire
 url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/medication
