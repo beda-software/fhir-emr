@@ -1,10 +1,9 @@
 import { ContactsOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
+import { WithId } from 'fhir-react/lib/services/fhir';
+import { Practitioner, PractitionerRole } from 'fhir/r4b';
 
-import { WithId } from 'aidbox-react/lib/services/fhir';
-
-import { Practitioner, PractitionerRole } from 'shared/src/contrib/aidbox';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { DashboardCard } from 'src/components/DashboardCard';

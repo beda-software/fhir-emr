@@ -1,8 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Trans } from '@lingui/macro';
-import { loading, RemoteData, isSuccess } from 'aidbox-react';
 import { Button } from 'antd';
 import classNames from 'classnames';
+import { isSuccess, loading, RemoteData } from 'fhir-react/lib/libs/remoteData';
+import { QuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -20,8 +21,6 @@ import {
 import * as yup from 'yup';
 
 import 'react-phone-input-2/lib/style.css';
-
-import { QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
 import { saveQuestionnaireResponseDraft } from 'src/components/QuestionnaireResponseForm';
 import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
@@ -49,6 +48,7 @@ import {
 } from './widgets';
 import { Display } from './widgets/display';
 import { QuestionReference } from './widgets/reference';
+
 
 export interface BaseQuestionnaireResponseFormProps {
     formData: QuestionnaireResponseFormData;

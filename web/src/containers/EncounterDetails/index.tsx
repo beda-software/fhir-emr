@@ -5,12 +5,7 @@ import Title from 'antd/es/typography/Title';
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { useService } from 'fhir-react/lib/hooks/service';
 import { isSuccess } from 'fhir-react/lib/libs/remoteData';
-import {
-    extractBundleResources,
-    getFHIRResources,
-    saveFHIRResource,
-} from 'fhir-react/lib/services/fhir';
-import { mapSuccess } from 'fhir-react/lib/services/service';
+import { getFHIRResource, saveFHIRResource } from 'fhir-react/lib/services/fhir';
 import { formatError } from 'fhir-react/lib/utils/error';
 import { Encounter, Patient } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
@@ -30,17 +25,11 @@ interface Props {
 function useEncounterDetails() {
     const params = useParams<{ encounterId: string }>();
 
-    const [response, manager] = useService(async () => {
-        const encounterResponse = await getFHIRResources<Encounter>('Encounter', {
-            resourceType: 'Encounter',
-            id: params.encounterId!,
-        });
-
-        return mapSuccess(
-            encounterResponse,
-            (bundle) => extractBundleResources(bundle).Encounter[0]!,
-        );
-    });
+    const [response, manager] = useService(async () =>
+        getFHIRResource<Encounter>({
+            reference: `Encounter/${params.encounterId}`,
+        }),
+    );
 
     const completeEncounter = useCallback(async () => {
         if (isSuccess(response)) {

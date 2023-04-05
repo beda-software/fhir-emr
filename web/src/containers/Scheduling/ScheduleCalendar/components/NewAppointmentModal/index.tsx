@@ -1,6 +1,6 @@
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { PractitionerRole } from 'fhir/r4b';
 
-import { PractitionerRole } from 'shared/src/contrib/aidbox';
 import { inMemorySaveService } from 'shared/src/hooks/questionnaire-response-form-data';
 import { formatFHIRDate, formatFHIRDateTime } from 'shared/src/utils/date';
 
@@ -39,15 +39,11 @@ export function NewAppointmentModal(props: NewAppointmentModalProps) {
             },
             {
                 name: 'appointmentStartDate',
-                value: {
-                    string: appointmentStartDate,
-                },
+                valueString: appointmentStartDate,
             },
             {
                 name: 'appointmentStartDateTime',
-                value: {
-                    string: appointmentStartDateTime,
-                },
+                valueString: appointmentStartDateTime,
             },
         ],
     });

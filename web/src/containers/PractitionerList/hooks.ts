@@ -1,9 +1,9 @@
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { isSuccess, success } from 'aidbox-react/lib/libs/remoteData';
-import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
-import { mapSuccess } from 'aidbox-react/lib/services/service';
+import { useService } from 'fhir-react/lib/hooks/service';
+import { isSuccess, success } from 'fhir-react/lib/libs/remoteData';
+import { extractBundleResources, getFHIRResources } from 'fhir-react/lib/services/fhir';
+import { mapSuccess } from 'fhir-react/lib/services/service';
+import { Practitioner, PractitionerRole } from 'fhir/r4b';
 
-import { Practitioner, PractitionerRole } from 'shared/src/contrib/aidbox';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';

@@ -1,11 +1,10 @@
+
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { isSuccess, notAsked, RemoteData } from 'fhir-react/lib/libs/remoteData';
+import { WithId } from 'fhir-react/lib/services/fhir';
+import { Patient, QuestionnaireResponse } from 'fhir/r4b';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { isSuccess, notAsked, RemoteData } from 'aidbox-react/lib/libs/remoteData';
-import { WithId } from 'aidbox-react/lib/services/fhir';
-
-import { Patient, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { useSavedMessage } from 'src/components/BaseQuestionnaireResponseForm/hooks';

@@ -1,17 +1,17 @@
-import moment from 'moment';
-import React from 'react';
 
-import { useService } from 'aidbox-react/lib/hooks/service';
+import { useService } from 'fhir-react/lib/hooks/service';
 import {
     extractBundleResources,
     getAllFHIRResources,
     getFHIRResource,
     getIncludedResource,
     getReference,
-} from 'aidbox-react/lib/services/fhir';
-import { mapSuccess, sequenceMap } from 'aidbox-react/lib/services/service';
+} from 'fhir-react/lib/services/fhir';
+import { mapSuccess, sequenceMap } from 'fhir-react/lib/services/service';
+import { Appointment, Patient, PractitionerRole } from 'fhir/r4b';
+import moment from 'moment';
+import React from 'react';
 
-import { Appointment, Patient, PractitionerRole } from 'shared/src/contrib/aidbox/index';
 import { extractAppointmentPatient } from 'shared/src/utils/appointment';
 import { formatFHIRDateTime } from 'shared/src/utils/date';
 import { renderHumanName } from 'shared/src/utils/fhir';

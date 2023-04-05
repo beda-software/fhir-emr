@@ -1,15 +1,13 @@
-import _ from 'lodash';
-import { useCallback, useEffect, useState } from 'react';
-import { useController, useFormContext } from 'react-hook-form';
-import { useQuestionnaireResponseFormContext } from 'sdc-qrf';
-
-import { isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
-
+import { isSuccess, RemoteData } from 'fhir-react/lib/libs/remoteData';
 import {
     QuestionnaireItem,
     QuestionnaireItemAnswerOption,
     QuestionnaireResponse,
-} from 'shared/src/contrib/aidbox';
+} from 'fhir/r4b';
+import _ from 'lodash';
+import { useCallback, useEffect, useState } from 'react';
+import { useController, useFormContext } from 'react-hook-form';
+import { useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
 export function useFieldController(fieldName: any, questionItem: QuestionnaireItem) {
     const qrfContext = useQuestionnaireResponseFormContext();

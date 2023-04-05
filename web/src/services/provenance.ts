@@ -1,8 +1,8 @@
+import { Provenance } from 'fhir/r4b';
+
 import { RemoteDataResult } from 'aidbox-react/lib/libs/remoteData';
 import { WithId } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess, service } from 'aidbox-react/lib/services/service';
-
-import { Provenance } from 'shared/src/contrib/aidbox';
 
 type ProvenanceResponse = {
     data: Array<{ resource: WithId<Provenance> }>;

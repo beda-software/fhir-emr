@@ -1,13 +1,12 @@
 import { t, Trans } from '@lingui/macro';
 import { Button } from 'antd';
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { useService } from 'fhir-react/lib/hooks/service';
+import { isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { extractBundleResources, getFHIRResources, WithId } from 'fhir-react/lib/services/fhir';
+import { mapSuccess } from 'fhir-react/lib/services/service';
+import { Appointment, Bundle, Encounter, PractitionerRole } from 'fhir/r4b';
 
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import { extractBundleResources, getFHIRResources, WithId } from 'aidbox-react/lib/services/fhir';
-import { mapSuccess } from 'aidbox-react/lib/services/service';
-
-import { Appointment, Bundle, Encounter, PractitionerRole } from 'shared/src/contrib/aidbox';
 import { inMemorySaveService } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { ReadonlyQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm/ReadonlyQuestionnaireResponseForm';
@@ -44,7 +43,7 @@ function useAppointmentDetailsModal(props: Props) {
     const { response: questionnaireResponse, onSubmit } = useQuestionnaireResponseForm({
         questionnaireLoader: { type: 'id', questionnaireId: 'encounter-create-from-appointment' },
         questionnaireResponseSaveService: inMemorySaveService,
-        launchContextParameters: [{ name: 'AppointmentId', value: { string: appointmentId } }],
+        launchContextParameters: [{ name: 'AppointmentId', valueString: appointmentId }],
         onSuccess: ({ extractedBundle }: { extractedBundle: Bundle<WithId<Encounter>>[] }) => {
             const encounter = extractBundleResources(extractedBundle[0]!).Encounter[0]!;
             navigateToEncounter(encounter.subject?.id!, encounter.id);
@@ -108,12 +107,7 @@ export function AppointmentDetailsModal(props: Props) {
     };
 
     return (
-        <Modal
-            open={showModal}
-            title={t`Appointment`}
-            footer={renderFooter()}
-            onCancel={onClose}
-        >
+        <Modal open={showModal} title={t`Appointment`} footer={renderFooter()} onCancel={onClose}>
             <RenderRemoteData remoteData={questionnaireResponse} renderLoading={Spinner}>
                 {(formData) => <ReadonlyQuestionnaireResponseForm formData={formData} />}
             </RenderRemoteData>

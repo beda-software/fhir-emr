@@ -1,18 +1,12 @@
-import { RemoteDataResult } from 'aidbox-react';
+import { RemoteDataResult } from 'fhir-react';
+import { useService } from 'fhir-react/lib/hooks/service';
+import { failure, isSuccess, RemoteData, success } from 'fhir-react/lib/libs/remoteData';
+import { getReference, WithId } from 'fhir-react/lib/services/fhir';
+import { mapSuccess, resolveMap } from 'fhir-react/lib/services/service';
+import { Patient, Practitioner, Provenance, QuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
 import { useNavigate } from 'react-router-dom';
 
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { failure, isSuccess, RemoteData, success } from 'aidbox-react/lib/libs/remoteData';
-import { getReference, WithId } from 'aidbox-react/lib/services/fhir';
-import { mapSuccess, resolveMap } from 'aidbox-react/lib/services/service';
-
-import {
-    Patient,
-    Practitioner,
-    Provenance,
-    QuestionnaireResponse,
-} from 'shared/src/contrib/aidbox';
 import {
     handleFormDataSave,
     loadQuestionnaireResponseFormData,

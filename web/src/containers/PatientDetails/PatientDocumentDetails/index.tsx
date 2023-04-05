@@ -1,6 +1,18 @@
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
 import Title from 'antd/lib/typography/Title';
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { useService } from 'fhir-react/lib/hooks/service';
+import { failure, isFailure, isSuccess } from 'fhir-react/lib/libs/remoteData';
+import {
+    extractBundleResources,
+    forceDeleteFHIRResource,
+    getFHIRResources,
+    patchFHIRResource,
+    WithId,
+} from 'fhir-react/lib/services/fhir';
+import { mapSuccess } from 'fhir-react/lib/services/service';
+import { Encounter, Patient, Provenance, QuestionnaireResponse } from 'fhir/r4b';
 import { ReactElement } from 'react';
 import {
     NavigateFunction,
@@ -12,20 +24,6 @@ import {
     useParams,
 } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
-
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { failure, isFailure, isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import {
-    extractBundleResources,
-    forceDeleteFHIRResource,
-    getFHIRResources,
-    patchFHIRResource,
-    WithId,
-} from 'aidbox-react/lib/services/fhir';
-import { mapSuccess } from 'aidbox-react/lib/services/service';
-
-import { Encounter, Patient, Provenance, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
 import { ReadonlyQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm/ReadonlyQuestionnaireResponseForm';
 import { BloodPressureReadOnly } from 'src/components/BaseQuestionnaireResponseForm/widgets';
@@ -51,8 +49,7 @@ const deleteDraft = async (navigate: NavigateFunction, patientId?: string, qrId?
         return;
     }
     const response = await forceDeleteFHIRResource({
-        resourceType: 'QuestionnaireResponse',
-        id: qrId,
+        reference: `QuestionnaireResponse/${qrId}`,
     });
     if (isSuccess(response)) {
         navigate(`/patients/${patientId}/documents`);
@@ -128,7 +125,7 @@ function PatientDocumentDetailsReadonly(props: {
 
     usePatientHeaderLocationTitle({ title: formData.context.questionnaire?.name ?? '' });
 
-    const encounterCompleted = encounter?.status === 'completed';
+    const encounterCompleted = encounter?.status === 'finished';
 
     const patientId = location.pathname.split('/')[2];
     const qrCompleted = formData.context.questionnaireResponse.status === 'completed';

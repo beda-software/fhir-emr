@@ -1,7 +1,8 @@
-import { Period, PractitionerRoleAvailableTime } from 'shared/src/contrib/aidbox';
+import { Period, PractitionerRoleAvailableTime } from 'fhir/r4b';
 
 export type ScheduleBreak = Period & { removed?: boolean };
 export type DaySchedule = Period & { breaks: ScheduleBreak[] };
+export type DaysOfWeek = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun';
 export type DaySchedules = {
     [day: string]: DaySchedule;
 };
@@ -96,7 +97,7 @@ export function toAvailableTime(schedulesByDay: DaySchedules): PractitionerRoleA
             end = currentBreak.start;
 
             acc.push({
-                daysOfWeek: [day],
+                daysOfWeek: [day as DaysOfWeek],
                 availableStartTime: start,
                 availableEndTime: end,
             });
@@ -107,7 +108,7 @@ export function toAvailableTime(schedulesByDay: DaySchedules): PractitionerRoleA
         end = schedule.end;
 
         acc.push({
-            daysOfWeek: [day],
+            daysOfWeek: [day as DaysOfWeek],
             availableStartTime: start,
             availableEndTime: end,
         });

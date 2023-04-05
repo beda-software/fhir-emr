@@ -3,8 +3,8 @@ import { Alert, notification } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { useService } from 'fhir-react/lib/hooks/service';
-import { extractBundleResources, getFHIRResources } from 'fhir-react/lib/services/fhir';
-import { mapSuccess, sequenceMap } from 'fhir-react/lib/services/service';
+import { getFHIRResource } from 'fhir-react/lib/services/fhir';
+import { sequenceMap } from 'fhir-react/lib/services/service';
 import { Questionnaire } from 'fhir/r4b';
 import { useParams } from 'react-router-dom';
 
@@ -28,11 +28,9 @@ export function EncounterQR() {
     const encounterInfoRD = useEncounterDetails(encounterId!);
 
     const [questionnaireRD] = useService(async () => {
-        const response = await getFHIRResources<Questionnaire>('Questionnaire', {
-            resourceType: 'Questionnaire',
-            id: questionnaireId!,
+        return await getFHIRResource<Questionnaire>({
+            reference: `Questionnaire/${questionnaireId}`,
         });
-        return mapSuccess(response, (bundle) => extractBundleResources(bundle).Questionnaire[0]!);
     });
 
     const remoteData = sequenceMap({

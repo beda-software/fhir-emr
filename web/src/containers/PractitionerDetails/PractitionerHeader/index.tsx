@@ -1,13 +1,12 @@
 import { t } from '@lingui/macro';
 import { Menu } from 'antd';
 import Title from 'antd/es/typography/Title';
+import { WithId } from 'fhir-react/lib/services/fhir';
+import { Practitioner } from 'fhir/r4b';
 import _ from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
 
-import { WithId } from 'aidbox-react/lib/services/fhir';
-
-import { Practitioner } from 'shared/src/contrib/aidbox';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { BasePageHeader } from 'src/components/BaseLayout';

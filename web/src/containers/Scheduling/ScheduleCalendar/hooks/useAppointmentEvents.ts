@@ -1,7 +1,6 @@
 import { DateSelectArg, EventClickArg } from '@fullcalendar/core';
+import { PractitionerRole } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
-
-import { PractitionerRole } from 'shared/src/contrib/aidbox/index';
 
 export interface NewAppointmentData {
     start: Date;

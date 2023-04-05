@@ -1,6 +1,6 @@
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { PractitionerRole } from 'fhir/r4b';
 
-import { PractitionerRole } from 'shared/src/contrib/aidbox';
 import { inMemorySaveService } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
@@ -22,9 +22,7 @@ export function EditAppointmentModal(props: Props) {
     const { response, onSubmit } = useQuestionnaireResponseForm({
         questionnaireLoader: { type: 'id', questionnaireId: 'edit-appointment' },
         questionnaireResponseSaveService: inMemorySaveService,
-        launchContextParameters: [
-            { name: 'CurrentAppointmentId', value: { string: appointmentId } },
-        ],
+        launchContextParameters: [{ name: 'CurrentAppointmentId', valueString: appointmentId }],
         onSuccess: props.onSubmit,
         onCancel: onClose,
     });
