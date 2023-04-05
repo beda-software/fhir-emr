@@ -1,12 +1,11 @@
 import { t, Trans } from '@lingui/macro';
 import Title from 'antd/lib/typography/Title';
 import classNames from 'classnames';
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { WithId } from 'fhir-react/lib/services/fhir';
+import { Provenance, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import { useCallback, useMemo } from 'react';
 
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { WithId } from 'aidbox-react/lib/services/fhir';
-
-import { Provenance, Questionnaire, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 import { formatHumanDateTime } from 'shared/src/utils/date';
 
 import { Spinner } from 'src/components/Spinner';

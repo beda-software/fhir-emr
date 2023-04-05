@@ -1,7 +1,6 @@
 import { t } from '@lingui/macro';
 import classNames from 'classnames';
-
-import { Encounter } from 'shared/src/contrib/aidbox';
+import { Encounter } from 'fhir/r4b';
 
 import s from './EncounterStatusBadge.module.scss';
 
@@ -21,7 +20,7 @@ export function EncounterStatusBadge(props: EncounterStatusBadgeProps) {
         <div
             className={classNames(s.container, {
                 [s.inProgress!]: status === 'in-progress',
-                [s.completed!]: status === 'completed',
+                [s.completed!]: status === 'finished',
             })}
         >
             <span className={s.title}>{statusHumanTitle[status] ?? status}</span>

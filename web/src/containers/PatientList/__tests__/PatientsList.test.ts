@@ -1,6 +1,5 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
-
-import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
+import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
 
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';

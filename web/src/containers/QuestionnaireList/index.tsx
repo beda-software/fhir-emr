@@ -3,12 +3,11 @@ import { t, Trans } from '@lingui/macro';
 import { Button, Col, Empty, Row } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { ColumnsType } from 'antd/lib/table';
+import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { Questionnaire } from 'fhir/r4b';
 import { Link } from 'react-router-dom';
 
-import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
-
 import config from 'shared/src/config';
-import { Questionnaire } from 'shared/src/contrib/aidbox';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';

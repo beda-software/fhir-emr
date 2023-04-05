@@ -1,8 +1,7 @@
 import { t } from '@lingui/macro';
 import { Empty } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
-
-import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
+import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
 
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';

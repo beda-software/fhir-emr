@@ -1,11 +1,10 @@
 import { t, Trans } from '@lingui/macro';
 import { Button, Empty, Row, Col, notification } from 'antd';
 import Title from 'antd/es/typography/Title';
+import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { Patient } from 'fhir/r4b';
 import { useNavigate } from 'react-router-dom';
 
-import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
-
-import { Patient } from 'shared/src/contrib/aidbox';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 import { renderHumanName } from 'shared/src/utils/fhir';
 

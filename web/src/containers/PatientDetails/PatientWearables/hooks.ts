@@ -1,5 +1,5 @@
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { failure, success } from 'aidbox-react/lib/libs/remoteData';
+import { useService } from 'fhir-react/lib/hooks/service';
+import { failure, success } from 'fhir-react/lib/libs/remoteData';
 
 import config from 'shared/src/config';
 

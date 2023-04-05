@@ -4,24 +4,22 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom/extend-expect';
 
+import {
+    resetInstanceToken as resetFHIRInstanceToken,
+    setInstanceBaseURL as setFHIRInstanceBaseURL,
+} from 'fhir-react/lib/services/instance';
+import { Encounter, Patient, Practitioner, PractitionerRole, Reference, Resource } from 'fhir/r4b';
+
 import { createFHIRResource, getReference, saveFHIRResource } from 'aidbox-react/lib/services/fhir';
 import {
     axiosInstance,
-    resetInstanceToken,
-    setInstanceBaseURL,
+    resetInstanceToken as resetAidboxInstanceToken,
+    setInstanceBaseURL as setAidboxInstanceBaseURL,
 } from 'aidbox-react/lib/services/instance';
 import { formatFHIRDateTime } from 'aidbox-react/lib/utils/date';
 import { ensure, withRootAccess, login, LoginService } from 'aidbox-react/lib/utils/tests';
 
-import {
-    AidboxReference,
-    AidboxResource,
-    Encounter,
-    Patient,
-    Practitioner,
-    PractitionerRole,
-    User,
-} from 'shared/src/contrib/aidbox';
+import { User } from 'shared/src/contrib/aidbox';
 
 import { login as loginService } from 'src/services/auth';
 
@@ -77,8 +75,8 @@ export async function createPractitioner(practitioner: Partial<Practitioner> = {
 }
 
 export async function createEncounter(
-    subject: AidboxReference<Patient>,
-    participant: AidboxReference<PractitionerRole>,
+    subject: Reference,
+    participant: Reference,
     date?: moment.Moment,
 ) {
     return ensure(
@@ -96,7 +94,7 @@ export async function createEncounter(
     );
 }
 
-export async function ensureSave<R extends AidboxResource>(resource: R): Promise<R> {
+export async function ensureSave<R extends Resource>(resource: R): Promise<R> {
     const result = await saveFHIRResource(resource);
 
     return ensure(result);
@@ -133,7 +131,8 @@ export const loginUser = async (user: User) => {
 
 beforeAll(async () => {
     jest.useFakeTimers();
-    setInstanceBaseURL('http://localhost:8080');
+    setAidboxInstanceBaseURL('http://localhost:8080');
+    setFHIRInstanceBaseURL('http://localhost:8080/fhir');
 });
 
 let txId: string;
@@ -152,7 +151,8 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-    resetInstanceToken();
+    resetAidboxInstanceToken();
+    resetFHIRInstanceToken();
     await withRootAccess(async () => {
         await axiosInstance({
             method: 'POST',

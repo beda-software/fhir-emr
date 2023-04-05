@@ -2,10 +2,11 @@ import { DownOutlined, GlobalOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 import { Dropdown, Menu } from 'antd';
 import { Header } from 'antd/lib/layout/layout';
+import { resetInstanceToken as resetFHIRInstanceToken } from 'fhir-react/lib/services/instance';
 import { useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
-import { resetInstanceToken } from 'aidbox-react/lib/services/instance';
+import { resetInstanceToken as resetAidboxInstanceToken } from 'aidbox-react/lib/services/instance';
 
 import {
     dynamicActivate,
@@ -115,7 +116,8 @@ export function renderMenu(menuRoutes: RouteItem[]) {
 function UserMenu() {
     const doLogout = useCallback(async () => {
         await logout();
-        resetInstanceToken();
+        resetAidboxInstanceToken();
+        resetFHIRInstanceToken();
         localStorage.clear();
         window.location.href = '/';
     }, []);

@@ -1,9 +1,8 @@
 import { Trans } from '@lingui/macro';
 import Title from 'antd/lib/typography/Title';
+import { axiosInstance } from 'fhir-react/lib/services/instance';
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-
-import { axiosInstance } from 'aidbox-react/lib/services/instance';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { Spinner } from 'src/components/Spinner';

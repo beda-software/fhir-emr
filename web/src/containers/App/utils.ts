@@ -1,9 +1,16 @@
+import { isFailure, isSuccess, success } from 'fhir-react/lib/libs/remoteData';
+import { getFHIRResource } from 'fhir-react/lib/services/fhir';
+import {
+    resetInstanceToken as resetFHIRInstanceToken,
+    setInstanceToken as setFHIRInstanceToken,
+} from 'fhir-react/lib/services/instance';
+import { extractErrorCode, formatError } from 'fhir-react/lib/utils/error';
 import { Patient, Practitioner } from 'fhir/r4b';
 
-import { isFailure, isSuccess, success } from 'aidbox-react/lib/libs/remoteData';
-import { getFHIRResource } from 'aidbox-react/lib/services/fhir';
-import { resetInstanceToken, setInstanceToken } from 'aidbox-react/lib/services/instance';
-import { extractErrorCode, formatError } from 'aidbox-react/lib/utils/error';
+import {
+    resetInstanceToken as resetAidboxInstanceToken,
+    setInstanceToken as setAidboxInstanceToken,
+} from 'aidbox-react/lib/services/instance';
 
 import { User } from 'shared/src/contrib/aidbox';
 
@@ -23,8 +30,7 @@ async function populateUserInfoSharedState(user: User) {
         [Role.Admin]: async () => {
             const practitionerId = user.role![0]!.links!.practitioner!.id;
             const practitionerResponse = await getFHIRResource<Practitioner>({
-                resourceType: 'Practitioner',
-                id: practitionerId,
+                reference: `Practitioner/${practitionerId}`,
             });
             if (isSuccess(practitionerResponse)) {
                 sharedAuthorizedPractitioner.setSharedState(practitionerResponse.data);
@@ -35,8 +41,7 @@ async function populateUserInfoSharedState(user: User) {
         [Role.Patient]: async () => {
             const patientId = user.role![0]!.links!.patient!.id;
             const patientResponse = await getFHIRResource<Patient>({
-                resourceType: 'Patient',
-                id: patientId,
+                reference: `Patient/${patientId}`,
             });
             if (isSuccess(patientResponse)) {
                 sharedAuthorizedPatient.setSharedState(patientResponse.data);
@@ -49,7 +54,8 @@ async function populateUserInfoSharedState(user: User) {
 }
 
 export async function restoreUserSession(token: string) {
-    setInstanceToken({ access_token: token, token_type: 'Bearer' });
+    setAidboxInstanceToken({ access_token: token, token_type: 'Bearer' });
+    setFHIRInstanceToken({ access_token: token, token_type: 'Bearer' });
 
     const userResponse = await getUserInfo();
 
@@ -68,7 +74,8 @@ export async function restoreUserSession(token: string) {
         }
     } else {
         if (extractErrorCode(userResponse.error) !== 'network_error') {
-            resetInstanceToken();
+            resetAidboxInstanceToken();
+            resetFHIRInstanceToken();
 
             return success(null);
         }

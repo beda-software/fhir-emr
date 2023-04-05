@@ -1,7 +1,12 @@
 import {
+    resetInstanceToken as resetFHIRInstanceToken,
+    setInstanceBaseURL as setFHIRInstanceBaseURL,
+} from 'fhir-react/lib/services/instance';
+
+import {
     axiosInstance,
-    resetInstanceToken,
-    setInstanceBaseURL,
+    resetInstanceToken as resetAidboxInstanceToken,
+    setInstanceBaseURL as setAidboxInstanceBaseURL,
 } from 'aidbox-react/src/services/instance';
 import { withRootAccess } from 'aidbox-react/src/utils/tests';
 
@@ -9,9 +14,11 @@ declare const process: any;
 
 beforeAll(async () => {
     if (process.env.CI) {
-        setInstanceBaseURL('http://devbox:8080');
+        setAidboxInstanceBaseURL('http://devbox:8080');
+        setFHIRInstanceBaseURL('http://devbox:8080/fhir');
     } else {
-        setInstanceBaseURL('http://localhost:8181');
+        setAidboxInstanceBaseURL('http://localhost:8181');
+        setFHIRInstanceBaseURL('http://localhost:8181/fhir');
     }
 });
 
@@ -31,7 +38,8 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-    resetInstanceToken();
+    resetAidboxInstanceToken();
+    resetFHIRInstanceToken();
     await withRootAccess(async () => {
         await axiosInstance({
             method: 'POST',

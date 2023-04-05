@@ -1,11 +1,9 @@
+import { useService } from 'fhir-react/lib/hooks/service';
+import { isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { extractBundleResources, getFHIRResource } from 'fhir-react/lib/services/fhir';
+import { mapSuccess, resolveMap } from 'fhir-react/lib/services/service';
+import { Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import { useParams } from 'react-router-dom';
-
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import { extractBundleResources, getFHIRResource } from 'aidbox-react/lib/services/fhir';
-import { mapSuccess, resolveMap } from 'aidbox-react/lib/services/service';
-
-import { Questionnaire, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
 import { loadResourceHistory } from 'src/services/history';
 import { getProvenanceByEntity } from 'src/services/provenance';
@@ -44,8 +42,7 @@ export function useDocumentHistory() {
             return mapSuccess(
                 await resolveMap({
                     questionnaire: getFHIRResource<Questionnaire>({
-                        resourceType: 'Questionnaire',
-                        id: questionnaireId,
+                        reference: `Questionnaire/${questionnaireId}`,
                     }),
                 }),
                 ({ questionnaire }) => {

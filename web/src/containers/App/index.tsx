@@ -1,12 +1,11 @@
 import { Trans } from '@lingui/macro';
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { useService } from 'fhir-react/lib/hooks/service';
+import { success } from 'fhir-react/lib/libs/remoteData';
 import queryString from 'query-string';
 import { useEffect } from 'react';
 import { Route, unstable_HistoryRouter as HistoryRouter, Routes, Navigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { success } from 'aidbox-react/lib/libs/remoteData';
 
 import { User } from 'shared/src/contrib/aidbox';
 

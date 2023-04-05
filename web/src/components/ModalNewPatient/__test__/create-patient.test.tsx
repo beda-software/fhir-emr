@@ -1,8 +1,8 @@
 import { act, renderHook } from '@testing-library/react';
-import { getFHIRResource, getFHIRResources } from 'aidbox-react/lib/services/fhir';
-import { ensure } from 'aidbox-react/lib/utils/tests';
+import { getFHIRResource, getFHIRResources } from 'fhir-react/lib/services/fhir';
+import { ensure } from 'fhir-react/lib/utils/tests';
+import { Patient, Questionnaire } from 'fhir/r4b';
 
-import { Patient, Questionnaire } from 'shared/src/contrib/aidbox';
 import {
     questionnaireIdLoader,
     QuestionnaireResponseFormData,
@@ -19,8 +19,7 @@ describe('createPatient', () => {
     test('should create patient', async () => {
         const createPatientQR = ensure(
             await getFHIRResource<Questionnaire>({
-                resourceType: 'Questionnaire',
-                id: 'patient-create',
+                reference: `Questionnaire/patient-create`,
             }),
         );
 

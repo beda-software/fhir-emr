@@ -1,11 +1,9 @@
 import { TablePaginationConfig } from 'antd';
+import { usePager } from 'fhir-react/lib/hooks/pager';
+import { isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { SearchParams } from 'fhir-react/lib/services/search';
+import { Resource } from 'fhir/r4b';
 import { useEffect, useState } from 'react';
-
-import { usePager } from 'aidbox-react/lib/hooks/pager';
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import { SearchParams } from 'aidbox-react/lib/services/search';
-
-import { Resource } from 'shared/src/contrib/aidbox';
 
 export function usePagerExtended<T extends Resource, F = unknown>(
     resourceType: string,

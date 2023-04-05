@@ -1,23 +1,20 @@
+import {
+    Reference,
+    Questionnaire,
+    QuestionnaireResponse,
+    Resource,
+} from 'fhir/r4b';
 import _ from 'lodash';
 import { FormGroupItems, FormItems } from 'sdc-qrf/lib/types';
 import { findAnswersForQuestionsRecursive, mapResponseToForm } from 'sdc-qrf/lib/utils';
 
-import { WithId } from 'aidbox-react/lib/services/fhir';
-
-import {
-    AidboxReference,
-    Questionnaire,
-    QuestionnaireResponse,
-    Resource,
-} from 'shared/src/contrib/aidbox';
-
 import { getDisplay } from 'src/utils/questionnaire';
 
 export function findResourceInHistory<R extends Resource>(
-    ref: WithId<AidboxReference>,
+    ref: Reference,
     history: R[],
 ) {
-    const [resourceType, id, , versionId] = (ref.uri || '').split('/');
+    const [resourceType, id, , versionId] = (ref.reference || '').split('/');
 
     const resourceIndex = history.findIndex(
         (r) => r.resourceType === resourceType && r.id === id && r.meta?.versionId === versionId,

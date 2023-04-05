@@ -1,10 +1,9 @@
 import { Trans } from '@lingui/macro';
 import { notification } from 'antd';
 import Title from 'antd/lib/typography/Title';
+import { axiosInstance as axiosFHIRInstance } from 'fhir-react/lib/services/instance';
+import { uuid4 } from 'fhir-react/lib/utils/uuid';
 import { useEffect, useState } from 'react';
-
-import { axiosInstance } from 'aidbox-react/lib/services/instance';
-import { uuid4 } from 'aidbox-react/lib/utils/uuid';
 
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
@@ -24,7 +23,7 @@ export function PublicAppointment() {
 
     useEffect(() => {
         if (!appToken) {
-            axiosInstance.defaults.headers.Authorization = `Basic ${window.btoa(
+            axiosFHIRInstance.defaults.headers.Authorization = `Basic ${window.btoa(
                 'anonymous:secret',
             )}`;
             setIsloading(false);
@@ -34,7 +33,7 @@ export function PublicAppointment() {
 
         return () => {
             if (!appToken) {
-                axiosInstance.defaults.headers.Authorization = undefined;
+                axiosFHIRInstance.defaults.headers.Authorization = undefined;
             }
         };
     }, [appToken]);
