@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 
 import config from 'shared/src/config';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
+import { processLaunchContext } from 'shared/src/utils/fce';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { ModalTrigger } from 'src/components/ModalTrigger';
@@ -48,10 +49,12 @@ const columns: ColumnsType<Questionnaire> = [
                         {({ closeModal }) => (
                             <QuestionnaireResponseForm
                                 questionnaireLoader={questionnaireIdLoader(resource.id!)}
-                                launchContextParameters={resource.launchContext?.map((lc) => ({
-                                    name: lc.name!,
-                                    value: { string: 'undefined' },
-                                }))}
+                                launchContextParameters={processLaunchContext(resource)?.map(
+                                    (lc) => ({
+                                        name: lc.name!,
+                                        value: { string: 'undefined' },
+                                    }),
+                                )}
                                 onCancel={closeModal}
                             />
                         )}
@@ -91,8 +94,9 @@ export function QuestionnaireList() {
         ],
     });
 
-    const { pagination, questionnaireListRD, handleTableChange } =
-        useQuestionnaireList(columnsFilterValues as StringTypeColumnFilterValue[]);
+    const { pagination, questionnaireListRD, handleTableChange } = useQuestionnaireList(
+        columnsFilterValues as StringTypeColumnFilterValue[],
+    );
 
     return (
         <>

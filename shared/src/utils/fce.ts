@@ -418,7 +418,7 @@ function processItem(item: any): any {
     return newItem;
 }
 
-function processLaunchContext(fhirQuestionnaire: FHIRQuestionnaire): any[] | undefined {
+export function processLaunchContext(fhirQuestionnaire: FHIRQuestionnaire): any[] | undefined {
     const launchContextExtensions = fhirQuestionnaire.extension?.filter(
         (ext: any) =>
             ext.url ===
