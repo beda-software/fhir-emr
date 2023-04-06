@@ -3,6 +3,7 @@ import {
     // Element,
     Extension,
     Questionnaire as FHIRQuestionnaire,
+    QuestionnaireResponse as FHIRQuestionnaireResponse,
     // QuestionnaireItem as FHIRQuestionnaireItem,
     // QuestionnaireItemAnswerOption as FHIRQuestionnaireItemAnswerOption,
     // Resource,
@@ -11,6 +12,7 @@ import {
 
 import {
     Questionnaire as FCEQuestionnaire,
+    QuestionnaireResponse as FCEQuestionnaireResponse,
     // QuestionnaireItem as FCEQuestionnaireItem,
     // QuestionnaireItemAnswerOption as FCEQuestionnaireItemAnswerOption,
     CodeableConcept,
@@ -497,25 +499,123 @@ function processExtensions(fhirQuestionnaire: FHIRQuestionnaire): {
     };
 }
 
-export function toFirstClassExtension(fhirQuestionnaire: FHIRQuestionnaire): FCEQuestionnaire {
-    checkFhirQuestionnaireProfile(fhirQuestionnaire);
+// QuestionnaireResponse
 
-    const meta = processMeta(fhirQuestionnaire);
-    const item = processItems(fhirQuestionnaire);
-    const { launchContext, mapping } = processExtensions(fhirQuestionnaire);
+function processAnswerQR(itemList: any[] | undefined) {
+    if (!itemList) {
+        return;
+    }
+    itemList.forEach((item) => {
+        if (item.answer && item.answer[0]?.valueString) {
+            item.answer[0].value = {
+                string: item.answer[0]?.valueString,
+            };
+            delete item.answer[0]?.valueString;
+        } else if (item.answer && item.answer[0]?.valueInteger) {
+            item.answer[0].value = {
+                integer: item.answer[0]?.valueInteger,
+            };
+            delete item.answer[0]?.valueInteger;
+        } else if (item.answer && item.answer[0]?.valueBoolean) {
+            item.answer[0].value = {
+                boolean: item.answer[0]?.valueBoolean,
+            };
+            delete item.answer[0]?.valueBoolean;
+        } else if (item.answer && item.answer[0]?.valueCoding) {
+            item.answer[0].value = {
+                Coding: item.answer[0]?.valueCoding,
+            };
+            delete item.answer[0]?.valueCoding;
+        } else if (item.answer && item.answer[0]?.valueDate) {
+            item.answer[0].value = {
+                date: item.answer[0]?.valueDate,
+            };
+            delete item.answer[0]?.valueDate;
+        } else if (item.answer && item.answer[0]?.valueDateTime) {
+            item.answer[0].value = {
+                dateTime: item.answer[0]?.valueDateTime,
+            };
+            delete item.answer[0]?.valueDateTime;
+        } else if (item.answer && item.answer[0]?.valueReference) {
+            const { display, resource } = item.answer[0]?.valueReference;
+            const { resourceType } = resource;
+            item.answer[0].value = {
+                Reference: {
+                    display,
+                    id: resource.id,
+                    resource,
+                    resourceType,
+                },
+            };
+            delete item.answer[0]?.valueReference;
+        } else if (item.answer && item.answer[0]?.valueTime) {
+            item.answer[0].value = {
+                time: item.answer[0]?.valueTime,
+            };
+            delete item.answer[0]?.valueTime;
+        } else if (item.item) {
+            processAnswerQR(item.item);
+        }
+    });
+}
 
-    const nq: any = {
-        ...fhirQuestionnaire,
-        meta,
-        item,
-        launchContext,
-        mapping,
-        extension: undefined,
-    };
+function processMetaQR(metaObj: any) {
+    if (metaObj && metaObj.extension) {
+        metaObj.extension.forEach((ext: any) => {
+            if (ext.url === 'ex:createdAt') {
+                metaObj.createdAt = ext.valueInstant;
+                delete ext.url;
+                delete ext.valueInstant;
+            }
+        });
+    }
+    delete metaObj.extension;
+}
 
-    const resultNQ = trimUndefined(nq);
+function processReferenceQR(fhirQuestionnaireResponse: any) {
+    if (fhirQuestionnaireResponse.encounter && fhirQuestionnaireResponse.encounter.reference) {
+        const [resourceType, id] = fhirQuestionnaireResponse.encounter.reference.split('/');
+        fhirQuestionnaireResponse.encounter = {
+            resourceType,
+            id,
+        };
+    }
+    if (fhirQuestionnaireResponse.source && fhirQuestionnaireResponse.source.reference) {
+        const [resourceType, id] = fhirQuestionnaireResponse.source.reference.split('/');
+        fhirQuestionnaireResponse.source = {
+            resourceType,
+            id,
+        };
+    }
+}
 
-    return resultNQ as unknown as FCEQuestionnaire;
+export function toFirstClassExtension(
+    fhirResource: FHIRQuestionnaire | FHIRQuestionnaireResponse,
+): FCEQuestionnaire | FCEQuestionnaireResponse | undefined {
+    if (fhirResource.resourceType === 'Questionnaire') {
+        const fhirQuestionnaire = fhirResource;
+        checkFhirQuestionnaireProfile(fhirQuestionnaire);
+        const meta = processMeta(fhirQuestionnaire);
+        const item = processItems(fhirQuestionnaire);
+        const { launchContext, mapping } = processExtensions(fhirQuestionnaire);
+        const nq: any = {
+            ...fhirQuestionnaire,
+            meta,
+            item,
+            launchContext,
+            mapping,
+            extension: undefined,
+        };
+        const resultNQ = trimUndefined(nq);
+        return resultNQ as unknown as FCEQuestionnaire;
+    }
+    if (fhirResource.resourceType === 'QuestionnaireResponse') {
+        const fhirQuestionnaireResponse = { ...fhirResource };
+        processAnswerQR(fhirQuestionnaireResponse.item as any[]);
+        processMetaQR(fhirQuestionnaireResponse.meta);
+        processReferenceQR(fhirQuestionnaireResponse);
+        return fhirQuestionnaireResponse as unknown as FCEQuestionnaireResponse;
+    }
 }
 
 export function fromFHIRReference(r?: Reference) {
