@@ -11,7 +11,7 @@ import {
 } from 'shared/src/contrib/aidbox';
 
 import { loginAdminUser } from 'src/setupTests';
-import { toFirstClassExtension } from 'src/utils/fce';
+import { toFHIRformat, toFirstClassExtension } from 'src/utils/fce';
 
 const notWorkingQuestionnaires = [
     'edit-appointment',
@@ -40,7 +40,7 @@ describe('Questionanire and QuestionnaireResponses transformation', () => {
             }
         }
     });
-    test('Each QuestionnaireResponse should convert to fce', async () => {
+    test('Each FHIR QuestionnaireResponse should convert to FCE', async () => {
         expect(toFirstClassExtension(practitioner_fhir_QuestionnaireResponse)).toStrictEqual(
             practitioner_aidbox_QuestionnaireResponse,
         );
@@ -79,6 +79,47 @@ describe('Questionanire and QuestionnaireResponses transformation', () => {
         ).toStrictEqual(allergies_inprogress_aidbox_QuestionnaireResponse);
         expect(toFirstClassExtension(newappointment_fhir_QuestionnaireResponse)).toStrictEqual(
             newappointment_aidbox_QuestionnaireResponse,
+        );
+    });
+    test('Each FCE QuestionnaireResponse should convert to FHIR', async () => {
+        expect(toFHIRformat(practitioner_aidbox_QuestionnaireResponse)).toStrictEqual(
+            practitioner_fhir_QuestionnaireResponse,
+        );
+        expect(toFHIRformat(patient_aidbox_QuestionnaireResponse)).toStrictEqual(
+            patient_fhir_QuestionnaireResponse,
+        );
+        expect(toFHIRformat(allergies_aidbox_QuestionnaireResponse)).toStrictEqual(
+            allergies_fhir_QuestionnaireResponse,
+        );
+        expect(toFHIRformat(gad7_aidbox_QuestionnaireResponse)).toStrictEqual(
+            gad7_fhir_QuestionnaireResponse,
+        );
+        expect(toFHIRformat(medication_aidbox_QuestionnaireResponse)).toStrictEqual(
+            medication_fhir_QuestionnaireResponse,
+        );
+        expect(toFHIRformat(physicalexam_aidbox_QuestionnaireResponse)).toStrictEqual(
+            physicalexam_fhir_QuestionnaireResponse,
+        );
+        expect(toFHIRformat(reviewofsystems_aidbox_QuestionnaireResponse)).toStrictEqual(
+            reviewofsystems_fhir_QuestionnaireResponse,
+        );
+        expect(toFHIRformat(vitals_aidbox_QuestionnaireResponse)).toStrictEqual(
+            vitals_fhir_QuestionnaireResponse,
+        );
+        expect(toFHIRformat(phq2phq9_aidbox_QuestionnaireResponse)).toStrictEqual(
+            phq2phq9_fhir_QuestionnaireResponse,
+        );
+        expect(toFHIRformat(immunization_aidbox_QuestionnaireResponse)).toStrictEqual(
+            immunization_fhir_QuestionnaireResponse,
+        );
+        expect(toFHIRformat(cardiology_aidbox_QuestionnaireResponse)).toStrictEqual(
+            cardiology_fhir_QuestionnaireResponse,
+        );
+        expect(toFHIRformat(allergies_inprogress_aidbox_QuestionnaireResponse)).toStrictEqual(
+            allergies_inprogress_fhir_QuestionnaireResponse,
+        );
+        expect(toFHIRformat(newappointment_aidbox_QuestionnaireResponse)).toStrictEqual(
+            newappointment_fhir_QuestionnaireResponse,
         );
     });
 });
@@ -3242,7 +3283,7 @@ const newappointment_fhir_QuestionnaireResponse: FHIRQuestionnaireResponse = JSO
     }),
 );
 
-const newappointment_aidbox_QuestionnaireResponse: FHIRQuestionnaireResponse = JSON.parse(
+const newappointment_aidbox_QuestionnaireResponse: AidboxQuestionnaireResponse = JSON.parse(
     JSON.stringify({
         authored: '2023-04-05T06:27:57Z',
         id: 'cf6d9d4b-bfcd-463f-9d26-b6769c2a3fc3',
