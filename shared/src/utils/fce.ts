@@ -499,33 +499,206 @@ function processExtensions(fhirQuestionnaire: FHIRQuestionnaire): {
     };
 }
 
-export function toFirstClassExtension(fhirQuestionnaire: FHIRQuestionnaireResponse): FCEQuestionnaireResponse;
-export function toFirstClassExtension(fhirQuestionnaire: FHIRQuestionnaire): FCEQuestionnaire;
-export function toFirstClassExtension(fhirQuestionnaire: any): any {
-    checkFhirQuestionnaireProfile(fhirQuestionnaire);
+// QuestionnaireResponse
 
-    const meta = processMeta(fhirQuestionnaire);
-    const item = processItems(fhirQuestionnaire);
-    const { launchContext, mapping } = processExtensions(fhirQuestionnaire);
-
-    const nq: any = {
-        ...fhirQuestionnaire,
-        meta,
-        item,
-        launchContext,
-        mapping,
-        extension: undefined,
-    };
-
-    const resultNQ = trimUndefined(nq);
-
-    return resultNQ as unknown as FCEQuestionnaire;
+function processAnswerToFCE(itemList: any[] | undefined) {
+    if (!itemList) {
+        return;
+    }
+    itemList.forEach((item) => {
+        if (item.answer && item.answer[0]?.valueString) {
+            item.answer[0].value = {
+                string: item.answer[0]?.valueString,
+            };
+            delete item.answer[0]?.valueString;
+        } else if (item.answer && item.answer[0]?.valueInteger) {
+            item.answer[0].value = {
+                integer: item.answer[0]?.valueInteger,
+            };
+            delete item.answer[0]?.valueInteger;
+        } else if (item.answer && item.answer[0]?.valueBoolean) {
+            item.answer[0].value = {
+                boolean: item.answer[0]?.valueBoolean,
+            };
+            delete item.answer[0]?.valueBoolean;
+        } else if (item.answer && item.answer[0]?.valueCoding) {
+            item.answer[0].value = {
+                Coding: item.answer[0]?.valueCoding,
+            };
+            delete item.answer[0]?.valueCoding;
+        } else if (item.answer && item.answer[0]?.valueDate) {
+            item.answer[0].value = {
+                date: item.answer[0]?.valueDate,
+            };
+            delete item.answer[0]?.valueDate;
+        } else if (item.answer && item.answer[0]?.valueDateTime) {
+            item.answer[0].value = {
+                dateTime: item.answer[0]?.valueDateTime,
+            };
+            delete item.answer[0]?.valueDateTime;
+        } else if (item.answer && item.answer[0]?.valueReference) {
+            const { display, resource } = item.answer[0]?.valueReference;
+            const { resourceType } = resource;
+            item.answer[0].value = {
+                Reference: {
+                    display,
+                    id: resource.id,
+                    resource,
+                    resourceType,
+                },
+            };
+            delete item.answer[0]?.valueReference;
+        } else if (item.answer && item.answer[0]?.valueTime) {
+            item.answer[0].value = {
+                time: item.answer[0]?.valueTime,
+            };
+            delete item.answer[0]?.valueTime;
+        } else if (item.item) {
+            processAnswerToFCE(item.item);
+        }
+    });
 }
 
-export function fromFirstClassExtension(fhirQuestionnaire: FCEQuestionnaireResponse): FHIRQuestionnaireResponse;
+function processAnswerToFHIR(itemList: any[] | undefined) {
+    if (!itemList) {
+        return;
+    }
+    itemList.forEach((item) => {
+        if (item.answer && item.answer[0]?.value?.string) {
+            item.answer[0].valueString = item.answer[0]?.value.string;
+            delete item.answer[0]?.value;
+        } else if (item.answer && item.answer[0]?.value?.integer) {
+            item.answer[0].valueInteger = item.answer[0]?.value.integer;
+            delete item.answer[0]?.value;
+        } else if (item.answer && item.answer[0]?.value?.boolean) {
+            item.answer[0].valueBoolean = item.answer[0]?.value.boolean;
+            delete item.answer[0]?.value;
+        } else if (item.answer && item.answer[0]?.value?.Coding) {
+            item.answer[0].valueCoding = item.answer[0]?.value.Coding;
+            delete item.answer[0]?.value;
+        } else if (item.answer && item.answer[0]?.value?.date) {
+            item.answer[0].valueDate = item.answer[0]?.value.date;
+            delete item.answer[0]?.value;
+        } else if (item.answer && item.answer[0]?.value?.dateTime) {
+            item.answer[0].valueDateTime = item.answer[0]?.value.dateTime;
+            delete item.answer[0]?.value;
+        } else if (item.answer && item.answer[0]?.value?.Reference) {
+            const { display, resource, resourceType, id } = item.answer[0]?.value.Reference;
+            item.answer[0].valueReference = {
+                display,
+                resource,
+                reference: `${resourceType}/${id}`,
+            };
+            delete item.answer[0]?.value;
+        } else if (item.answer && item.answer[0]?.value?.time) {
+            item.answer[0].valueTime = item.answer[0]?.value.time;
+            delete item.answer[0]?.value;
+        } else if (item.item) {
+            processAnswerToFHIR(item.item);
+        }
+    });
+}
+
+function processMetaToFCE(meta: any) {
+    if (meta && meta.extension) {
+        meta.extension.forEach((ext: any) => {
+            if (ext.url === 'ex:createdAt') {
+                meta.createdAt = ext.valueInstant;
+                delete ext.url;
+                delete ext.valueInstant;
+            }
+        });
+    }
+    delete meta.extension;
+}
+
+function processMetaToFHIR(meta: any) {
+    if (meta && meta.createdAt) {
+        meta.extension = [
+            {
+                url: 'ex:createdAt',
+                valueInstant: meta.createdAt,
+            },
+        ];
+        delete meta.createdAt;
+    }
+}
+
+function processReferenceToFCE(fhirQuestionnaireResponse: any) {
+    if (fhirQuestionnaireResponse.encounter && fhirQuestionnaireResponse.encounter.reference) {
+        const [resourceType, id] = fhirQuestionnaireResponse.encounter.reference.split('/');
+        fhirQuestionnaireResponse.encounter = {
+            resourceType,
+            id,
+        };
+    }
+    if (fhirQuestionnaireResponse.source && fhirQuestionnaireResponse.source.reference) {
+        const [resourceType, id] = fhirQuestionnaireResponse.source.reference.split('/');
+        fhirQuestionnaireResponse.source = {
+            resourceType,
+            id,
+        };
+    }
+}
+
+function processReferenceToFHIR(fceQR: any) {
+    if (fceQR.encounter && fceQR.encounter.resourceType && fceQR.encounter.id) {
+        fceQR.encounter.reference = `${fceQR.encounter.resourceType}/${fceQR.encounter.id}`;
+        delete fceQR.encounter.resourceType;
+        delete fceQR.encounter.id;
+    }
+    if (fceQR.source && fceQR.source.resourceType && fceQR.source.id) {
+        fceQR.source.reference = `${fceQR.source.resourceType}/${fceQR.source.id}`;
+        delete fceQR.source.resourceType;
+        delete fceQR.source.id;
+    }
+}
+
+export function toFirstClassExtension(
+    fhirQuestionnaire: FHIRQuestionnaireResponse,
+): FCEQuestionnaireResponse;
+export function toFirstClassExtension(fhirQuestionnaire: FHIRQuestionnaire): FCEQuestionnaire;
+export function toFirstClassExtension(fhirResource: any): any {
+    if (fhirResource.resourceType === 'Questionnaire') {
+        const fhirQuestionnaire = fhirResource;
+        checkFhirQuestionnaireProfile(fhirQuestionnaire);
+        const meta = processMeta(fhirQuestionnaire);
+        const item = processItems(fhirQuestionnaire);
+        const { launchContext, mapping } = processExtensions(fhirQuestionnaire);
+        const nq: any = {
+            ...fhirQuestionnaire,
+            meta,
+            item,
+            launchContext,
+            mapping,
+            extension: undefined,
+        };
+        const resultNQ = trimUndefined(nq);
+        return resultNQ as unknown as FCEQuestionnaire;
+    }
+    if (fhirResource.resourceType === 'QuestionnaireResponse') {
+        const fhirQuestionnaireResponse = JSON.parse(JSON.stringify(fhirResource));
+        processAnswerToFCE(fhirQuestionnaireResponse.item as any[]);
+        processMetaToFCE(fhirQuestionnaireResponse.meta);
+        processReferenceToFCE(fhirQuestionnaireResponse);
+        return fhirQuestionnaireResponse as unknown as FCEQuestionnaireResponse;
+    }
+}
+
+export function fromFirstClassExtension(
+    fhirQuestionnaire: FCEQuestionnaireResponse,
+): FHIRQuestionnaireResponse;
 export function fromFirstClassExtension(fhirQuestionnaire: FCEQuestionnaire): FHIRQuestionnaire;
-export function fromFirstClassExtension(fhirQuestionnaire: any): any {
-    return fhirQuestionnaire;
+export function fromFirstClassExtension(fceResource: any): any {
+    if (fceResource.resourceType === 'Questionnaire') {
+    }
+    if (fceResource.resourceType === 'QuestionnaireResponse') {
+        const fceQuestionnaireResponse = JSON.parse(JSON.stringify(fceResource));
+        processAnswerToFHIR(fceQuestionnaireResponse.item as any[]);
+        processMetaToFHIR(fceQuestionnaireResponse.meta);
+        processReferenceToFHIR(fceQuestionnaireResponse);
+        return fceQuestionnaireResponse as unknown as FHIRQuestionnaireResponse;
+    }
 }
 
 export function fromFHIRReference(r?: Reference) {
