@@ -13,7 +13,7 @@ export function EncounterStatusBadge(props: EncounterStatusBadgeProps) {
 
     const statusHumanTitle = {
         'in-progress': t`in progress`,
-        completed: t`completed`,
+        finished: t`completed`,
     };
 
     return (

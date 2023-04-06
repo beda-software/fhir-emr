@@ -2,6 +2,7 @@ import { useService } from 'fhir-react/lib/hooks/service';
 import { isSuccess, success } from 'fhir-react/lib/libs/remoteData';
 import { extractBundleResources, getFHIRResources } from 'fhir-react/lib/services/fhir';
 import { mapSuccess } from 'fhir-react/lib/services/service';
+import { parseFHIRReference } from 'fhir-react/lib/utils/fhir';
 import { Practitioner, PractitionerRole } from 'fhir/r4b';
 
 import { renderHumanName } from 'shared/src/utils/fhir';
@@ -61,7 +62,9 @@ export function usePractitionersList(filterValues: StringTypeColumnFilterValue[]
             return practitioners
                 .map((practitioner) => {
                     const practitionerRolesList = practitionerRoles.filter(
-                        (pR) => pR.practitioner?.id === practitioner.id,
+                        (pR) =>
+                            pR.practitioner &&
+                            parseFHIRReference(pR.practitioner).id === practitioner.id,
                     );
                     const rowData: PractitionerListRowData = {
                         key: practitioner.id,

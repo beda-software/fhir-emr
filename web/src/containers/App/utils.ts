@@ -1,4 +1,4 @@
-import { isFailure, isSuccess, success } from 'fhir-react/lib/libs/remoteData';
+import { isSuccess, success } from 'fhir-react/lib/libs/remoteData';
 import { getFHIRResource } from 'fhir-react/lib/services/fhir';
 import {
     resetInstanceToken as resetFHIRInstanceToken,
@@ -7,6 +7,7 @@ import {
 import { extractErrorCode, formatError } from 'fhir-react/lib/utils/error';
 import { Patient, Practitioner } from 'fhir/r4b';
 
+import * as aidboxReactRemoteData from 'aidbox-react/lib/libs/remoteData';
 import {
     resetInstanceToken as resetAidboxInstanceToken,
     setInstanceToken as setAidboxInstanceToken,
@@ -59,14 +60,14 @@ export async function restoreUserSession(token: string) {
 
     const userResponse = await getUserInfo();
 
-    if (isSuccess(userResponse)) {
+    if (aidboxReactRemoteData.isSuccess(userResponse)) {
         await populateUserInfoSharedState(userResponse.data);
 
         const jitsiAuthTokenResponse = await getJitsiAuthToken();
-        if (isSuccess(jitsiAuthTokenResponse)) {
+        if (aidboxReactRemoteData.isSuccess(jitsiAuthTokenResponse)) {
             sharedJitsiAuthToken.setSharedState(jitsiAuthTokenResponse.data.jwt);
         }
-        if (isFailure(jitsiAuthTokenResponse)) {
+        if (aidboxReactRemoteData.isFailure(jitsiAuthTokenResponse)) {
             console.warn(
                 'Error, while fetching Jitsi auth token: ',
                 formatError(jitsiAuthTokenResponse.error),

@@ -77,7 +77,7 @@ export function prepareAllergies(
                 title: t`Date`,
                 key: 'date',
                 render: (r: AllergyIntolerance) => {
-                    const createdAt = extractExtension(r.extension, 'ex:createdAt');
+                    const createdAt = extractExtension(r.meta?.extension, 'ex:createdAt');
 
                     return createdAt ? formatHumanDate(createdAt) : null;
                 },
@@ -112,7 +112,7 @@ export function prepareConditions(
                 title: t`Date`,
                 key: 'date',
                 render: (r: Condition) => {
-                    const createdAt = extractExtension(r.extension, 'ex:createdAt');
+                    const createdAt = extractExtension(r.meta?.extension, 'ex:createdAt');
 
                     return createdAt ? formatHumanDate(createdAt) : null;
                 },

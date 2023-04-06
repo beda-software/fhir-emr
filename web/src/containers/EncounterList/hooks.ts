@@ -4,6 +4,7 @@ import { extractBundleResources } from 'fhir-react/lib/services/fhir';
 import { SearchParams } from 'fhir-react/lib/services/search';
 import { mapSuccess } from 'fhir-react/lib/services/service';
 import { formatFHIRDateTime } from 'fhir-react/lib/utils/date';
+import { parseFHIRReference } from 'fhir-react/lib/utils/fhir';
 import { Encounter, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
 import { useMemo } from 'react';
 
@@ -74,15 +75,21 @@ export function useEncounterList(
             } = sourceMap;
 
             return encounters.map((encounter) => {
-                const patient = patients.find((patient) => patient.id === encounter.subject?.id);
+                const patient = patients.find(
+                    (patient) =>
+                        encounter.subject &&
+                        patient.id === parseFHIRReference(encounter.subject).id,
+                );
 
                 const practitionerRole = practitionerRoles.find(
                     (practitionerRole) =>
-                        practitionerRole.id === encounter.participant?.[0]!.individual?.id,
+                        encounter.participant?.[0]!.individual &&
+                        practitionerRole.id ===
+                            parseFHIRReference(encounter.participant?.[0]!.individual).id,
                 );
 
                 const practitioner = practitioners.find(
-                    (practitioner) => practitioner.id === practitionerRole?.practitioner?.id,
+                    (practitioner) => practitionerRole?.practitioner && practitioner.id === parseFHIRReference(practitionerRole?.practitioner).id,
                 );
 
                 return {
