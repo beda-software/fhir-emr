@@ -1,19 +1,13 @@
-import {
-    Reference,
-    Questionnaire,
-    QuestionnaireResponse,
-    Resource,
-} from 'fhir/r4b';
+import { Reference, Resource } from 'fhir/r4b';
 import _ from 'lodash';
 import { FormGroupItems, FormItems } from 'sdc-qrf/lib/types';
 import { findAnswersForQuestionsRecursive, mapResponseToForm } from 'sdc-qrf/lib/utils';
 
+import { Questionnaire, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
+
 import { getDisplay } from 'src/utils/questionnaire';
 
-export function findResourceInHistory<R extends Resource>(
-    ref: Reference,
-    history: R[],
-) {
+export function findResourceInHistory<R extends Resource>(ref: Reference, history: R[]) {
     const [resourceType, id, , versionId] = (ref.reference || '').split('/');
 
     const resourceIndex = history.findIndex(

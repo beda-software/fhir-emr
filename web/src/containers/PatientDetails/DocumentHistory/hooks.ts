@@ -5,6 +5,8 @@ import { mapSuccess, resolveMap } from 'fhir-react/lib/services/service';
 import { Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import { useParams } from 'react-router-dom';
 
+import { toFirstClassExtension } from 'shared/src/utils/fce';
+
 import { loadResourceHistory } from 'src/services/history';
 import { getProvenanceByEntity } from 'src/services/provenance';
 
@@ -17,15 +19,13 @@ export function useDocumentHistory() {
             await resolveMap({
                 provenanceList: getProvenanceByEntity(`QuestionnaireResponse/${qrId}`),
                 qrHistoryBundle: loadResourceHistory<QuestionnaireResponse>({
-                    id: qrId,
-                    resourceType: 'QuestionnaireResponse',
+                    reference: `QuestionnaireResponse/${qrId}`,
                 }),
             }),
             ({ provenanceList, qrHistoryBundle }) => {
-                const qrHistory =
-                    extractBundleResources<QuestionnaireResponse>(
-                        qrHistoryBundle,
-                    ).QuestionnaireResponse;
+                const qrHistory = extractBundleResources<QuestionnaireResponse>(
+                    qrHistoryBundle,
+                ).QuestionnaireResponse.map((qr) => toFirstClassExtension(qr));
 
                 return {
                     provenanceList: provenanceList.sort((a, b) =>
@@ -45,9 +45,11 @@ export function useDocumentHistory() {
                         reference: `Questionnaire/${questionnaireId}`,
                     }),
                 }),
-                ({ questionnaire }) => {
+                (bundle) => {
+                    const questionnaire = toFirstClassExtension(bundle.questionnaire);
                     return {
                         ...provenanceResponse.data,
+
                         questionnaire: {
                             ...questionnaire,
                             item: questionnaire.item?.filter((i) => !i.hidden),

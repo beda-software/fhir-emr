@@ -3,7 +3,7 @@ import { useService } from 'fhir-react/lib/hooks/service';
 import { failure, isSuccess, RemoteData, success } from 'fhir-react/lib/libs/remoteData';
 import { getReference, WithId } from 'fhir-react/lib/services/fhir';
 import { mapSuccess, resolveMap } from 'fhir-react/lib/services/service';
-import { Patient, Practitioner, Provenance, QuestionnaireResponse } from 'fhir/r4b';
+import { Encounter, Patient, Practitioner, Provenance, QuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
 import { useNavigate } from 'react-router-dom';
 
@@ -81,7 +81,7 @@ function prepareFormInitialParams(
                 ? [
                       {
                           name: 'Encounter',
-                          resource: { resourceType: 'Encounter', id: encounterId },
+                          resource: { resourceType: 'Encounter', id: encounterId } as Encounter,
                       },
                   ]
                 : []),
