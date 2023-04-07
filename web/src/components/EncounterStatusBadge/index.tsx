@@ -1,19 +1,21 @@
 import { t } from '@lingui/macro';
 import classNames from 'classnames';
-import { Encounter } from 'fhir/r4b';
+import { Encounter, QuestionnaireResponse } from 'fhir/r4b';
+import { ReactNode } from 'react';
 
 import s from './EncounterStatusBadge.module.scss';
 
-interface EncounterStatusBadgeProps {
-    status: Encounter['status'];
+interface Props {
+    status: Encounter['status'] | QuestionnaireResponse['status'];
 }
 
-export function EncounterStatusBadge(props: EncounterStatusBadgeProps) {
+export function StatusBadge(props: Props): ReactNode {
     const { status } = props;
 
     const statusHumanTitle = {
         'in-progress': t`in progress`,
         finished: t`completed`,
+        completed: t`completed`,
     };
 
     return (
@@ -21,6 +23,7 @@ export function EncounterStatusBadge(props: EncounterStatusBadgeProps) {
             className={classNames(s.container, {
                 [s.inProgress!]: status === 'in-progress',
                 [s.completed!]: status === 'finished',
+                [s.completed!]: status === 'completed',
             })}
         >
             <span className={s.title}>{statusHumanTitle[status] ?? status}</span>

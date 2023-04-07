@@ -8,7 +8,7 @@ import { useMemo } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { Empty } from 'src/components/Empty';
-import { EncounterStatusBadge } from 'src/components/EncounterStatusBadge';
+import { StatusBadge } from 'src/components/EncounterStatusBadge';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 import { formatHumanDate } from 'src/utils/date';
@@ -63,7 +63,7 @@ function useColumns(
                 title: <Trans>Status</Trans>,
                 dataIndex: 'status',
                 key: 'status',
-                render: (text, record) => <EncounterStatusBadge status={text} />,
+                render: (text, record) => <StatusBadge status={record.status} />,
             },
             {
                 title: <Trans>Actions</Trans>,

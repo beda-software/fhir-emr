@@ -7,7 +7,7 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { EncountersTable } from 'src/components/EncountersTable';
 import { EncounterData } from 'src/components/EncountersTable/types';
-import { EncounterStatusBadge } from 'src/components/EncounterStatusBadge';
+import { StatusBadge } from 'src/components/EncounterStatusBadge';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { formatPeriodDateTime } from 'src/utils/date';
@@ -60,7 +60,7 @@ export function EncounterList() {
             dataIndex: 'status',
             key: 'status',
             render: (_text: any, resource: EncounterData) => (
-                <EncounterStatusBadge status={resource.status} />
+                <StatusBadge status={resource.status} />
             ),
         },
         {
