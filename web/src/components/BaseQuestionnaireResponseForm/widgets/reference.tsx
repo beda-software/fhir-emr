@@ -9,7 +9,6 @@ import AsyncSelect from 'react-select/async';
 import { parseFhirQueryExpression, QuestionItemProps } from 'sdc-qrf';
 
 import {
-    // QuestionnaireItem,
     QuestionnaireItemAnswerOption,
     QuestionnaireResponseItemAnswer,
     Resource,

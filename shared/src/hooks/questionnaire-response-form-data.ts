@@ -166,8 +166,9 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
 
         return {
             context: {
-                questionnaire,
-                questionnaireResponse,
+                // TODO: we can't change type inside qrf utils
+                questionnaire: toFirstClassExtension(questionnaire),
+                questionnaireResponse: toFirstClassExtension(questionnaireResponse),
                 launchContextParameters: launchContextParameters || [],
             },
             formValues: mapResponseToForm(
@@ -263,11 +264,10 @@ export function useQuestionnaireResponseFormData(
             const result: QuestionnaireResponseFormData = {
                 formValues,
                 context: {
-                    // TODO: we can't change type inside qrf utils 
                     launchContextParameters:
                         context.launchContextParameters as unknown as FCEParametersParameter[],
-                    questionnaire: toFirstClassExtension(context.questionnaire),
-                    questionnaireResponse: toFirstClassExtension(context.questionnaireResponse),
+                    questionnaire: context.questionnaire,
+                    questionnaireResponse: context.questionnaireResponse,
                 },
             };
             return result;
