@@ -8,6 +8,7 @@ import {
 } from 'fhir-react/lib/services/fhir';
 import { mapSuccess, resolveMap } from 'fhir-react/lib/services/service';
 import { formatFHIRDate, formatFHIRDateTime, parseFHIRDateTime } from 'fhir-react/lib/utils/date';
+import { parseFHIRReference } from 'fhir-react/lib/utils/fhir';
 import { Reference, Appointment, PractitionerRole } from 'fhir/r4b';
 import _ from 'lodash';
 import moment from 'moment';
@@ -57,10 +58,10 @@ function useDateTimeSlots(practitionerRole: Reference) {
 }
 
 function usePractitionerRoleId(practitionerRolePath: Array<string | number>) {
-    const [prId, setPRId] = useState(undefined);
+    const [prId, setPRId] = useState<string | undefined>(undefined);
 
     const { watch } = useFormContext();
-    const newPRId = _.get(watch(), [...practitionerRolePath, 'id']);
+    const newPRId = parseFHIRReference(_.get(watch(), [...practitionerRolePath])).id;
 
     useEffect(() => {
         if (prId !== newPRId) {

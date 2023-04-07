@@ -1,8 +1,9 @@
-import { Form  } from 'antd';
+import { Form } from 'antd';
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { useService } from 'fhir-react/lib/hooks/service';
 import { extractBundleResources, getFHIRResources } from 'fhir-react/lib/services/fhir';
 import { mapSuccess } from 'fhir-react/lib/services/service';
+import { parseFHIRReference } from 'fhir-react/lib/utils/fhir';
 import { Practitioner, PractitionerRole } from 'fhir/r4b';
 import Select from 'react-select';
 import { QuestionItemProps } from 'sdc-qrf';
@@ -26,13 +27,14 @@ export function PractitionerRoleList({ parentPath, questionItem }: QuestionItemP
             const practitionerList = resourceMap.Practitioner;
 
             return practitionerRoleList.map((pR) => {
-                const practitioner = practitionerList.find((p) => p.id === pR.practitioner?.id);
+                const practitioner = practitionerList.find(
+                    (p) => pR.practitioner && p.id === parseFHIRReference(pR.practitioner).id,
+                );
 
                 return {
                     value: {
                         Reference: {
-                            id: pR.id,
-                            resourceType: 'PractitionerRole',
+                            reference: `PractitionerRole/${pR.id}`,
                             display: renderHumanName(practitioner?.name?.[0]),
                         },
                     },
