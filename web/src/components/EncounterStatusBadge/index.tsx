@@ -1,7 +1,6 @@
 import { t } from '@lingui/macro';
 import classNames from 'classnames';
 import { Encounter, QuestionnaireResponse } from 'fhir/r4b';
-import { ReactNode } from 'react';
 
 import s from './EncounterStatusBadge.module.scss';
 
@@ -9,7 +8,7 @@ interface Props {
     status: Encounter['status'] | QuestionnaireResponse['status'];
 }
 
-export function StatusBadge(props: Props): ReactNode {
+export function StatusBadge(props: Props) {
     const { status } = props;
 
     const statusHumanTitle = {
