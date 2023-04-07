@@ -1,4 +1,4 @@
-import { Appointment, PractitionerRole } from 'shared/src/contrib/aidbox';
+import { Appointment, PractitionerRole } from 'fhir/r4b';
 
 import { getTimeSlots } from './utils';
 
@@ -102,24 +102,21 @@ const appointments: Appointment[] = [
         participant: [
             {
                 actor: {
-                    id: 'eb857fa8-3eac-4e6f-9591-5d6100a34855',
+                    reference: 'Patient/eb857fa8-3eac-4e6f-9591-5d6100a34855',
                     display: 'John Smith',
-                    resourceType: 'Patient',
                 },
                 status: 'accepted',
             },
             {
                 actor: {
-                    id: 'ae1fdea9-1b7d-45c8-a766-17150a4f8456',
                     display: 'Tompson Peter - Endocrinology',
-                    resourceType: 'PractitionerRole',
+                    reference: `PractitionerRole/ae1fdea9-1b7d-45c8-a766-17150a4f8456`,
                 },
                 status: 'accepted',
             },
             {
                 actor: {
-                    id: 'consultation',
-                    resourceType: 'HealthcareService',
+                    reference: 'HealthcareService/consultation',
                 },
                 status: 'accepted',
             },
@@ -140,7 +137,7 @@ const appointments: Appointment[] = [
         resourceType: 'Appointment',
         meta: {
             lastUpdated: '2023-02-13T08:53:43.011772Z',
-            createdAt: '2023-02-13T08:53:43.011772Z',
+            // createdAt: '2023-02-13T08:53:43.011772Z',
             versionId: '12785',
         },
     },
@@ -151,24 +148,21 @@ const appointments: Appointment[] = [
         participant: [
             {
                 actor: {
-                    id: '8236f4c0-7569-4936-badf-c8dc23362e1a',
+                    reference: 'Patient/8236f4c0-7569-4936-badf-c8dc23362e1a',
                     display: 'Peter Li',
-                    resourceType: 'Patient',
                 },
                 status: 'accepted',
             },
             {
                 actor: {
-                    id: 'ae1fdea9-1b7d-45c8-a766-17150a4f8456',
+                    reference: 'PractitionerRole/ae1fdea9-1b7d-45c8-a766-17150a4f8456',
                     display: 'Tompson Peter - Endocrinology',
-                    resourceType: 'PractitionerRole',
                 },
                 status: 'accepted',
             },
             {
                 actor: {
-                    id: 'consultation',
-                    resourceType: 'HealthcareService',
+                    reference: 'HealthcareService/consultation',
                 },
                 status: 'accepted',
             },
@@ -189,7 +183,7 @@ const appointments: Appointment[] = [
         resourceType: 'Appointment',
         meta: {
             lastUpdated: '2023-02-15T15:56:25.582468Z',
-            createdAt: '2023-02-15T15:56:25.582468Z',
+            // createdAt: '2023-02-15T15:56:25.582468Z',
             versionId: '13658',
         },
     },

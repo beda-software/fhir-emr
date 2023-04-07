@@ -1,13 +1,11 @@
-import _ from 'lodash';
-import moment from 'moment';
-
-import { FHIRDateFormat, formatFHIRDateTime, parseFHIRDateTime } from 'aidbox-react/lib/utils/date';
-
+import { FHIRDateFormat, formatFHIRDateTime, parseFHIRDateTime } from 'fhir-react/lib/utils/date';
 import {
     Appointment,
     PractitionerRole,
     PractitionerRoleAvailableTime,
-} from 'shared/src/contrib/aidbox';
+} from 'fhir/r4b';
+import _ from 'lodash';
+import moment from 'moment';
 
 import { days } from 'src/containers/Scheduling/available-time';
 
