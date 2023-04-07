@@ -679,7 +679,9 @@ export function toFirstClassExtension(fhirResource: any): any {
     if (fhirResource.resourceType === 'QuestionnaireResponse') {
         const fhirQuestionnaireResponse = JSON.parse(JSON.stringify(fhirResource));
         processAnswerToFCE(fhirQuestionnaireResponse.item as any[]);
-        processMetaToFCE(fhirQuestionnaireResponse.meta);
+        if (fhirQuestionnaireResponse.meta) {
+            processMetaToFCE(fhirQuestionnaireResponse.meta);
+        }
         processReferenceToFCE(fhirQuestionnaireResponse);
         return fhirQuestionnaireResponse as unknown as FCEQuestionnaireResponse;
     }
