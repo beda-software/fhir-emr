@@ -1,20 +1,14 @@
 import {
     Coding,
-    // Element,
     Extension,
     Questionnaire as FHIRQuestionnaire,
     QuestionnaireResponse as FHIRQuestionnaireResponse,
-    // QuestionnaireItem as FHIRQuestionnaireItem,
-    // QuestionnaireItemAnswerOption as FHIRQuestionnaireItemAnswerOption,
-    // Resource,
     Reference,
 } from 'fhir/r4b';
 
 import {
     Questionnaire as FCEQuestionnaire,
     QuestionnaireResponse as FCEQuestionnaireResponse,
-    // QuestionnaireItem as FCEQuestionnaireItem,
-    // QuestionnaireItemAnswerOption as FCEQuestionnaireItemAnswerOption,
     CodeableConcept,
     Expression,
 } from 'shared/src/contrib/aidbox';
@@ -47,62 +41,6 @@ export function extractExtension<U extends keyof ExtensionValue>(
     }
 }
 
-// function extractChoiceColumn(extensions: any[]): any | undefined {
-//     const choiceColumnExtension = extensions.find(
-//         (ext: any) =>
-//             ext.url ===
-//             'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn',
-//     );
-
-//     if (choiceColumnExtension) {
-//         return choiceColumnExtension.extension;
-//     }
-
-//     return undefined;
-// }
-
-// function removeExtensions<E extends Element>(e: E): Omit<E, 'extension'> {
-//     delete e.extension;
-//     return e;
-// }
-
-// function convertAnswerOption(
-//     answerOption?: FHIRQuestionnaireItemAnswerOption[],
-// ): FCEQuestionnaireItemAnswerOption[] | undefined {
-//     if (answerOption) {
-//         return answerOption.map((ao) => {
-//             const rao: Required<FCEQuestionnaireItemAnswerOption> = {
-//                 id: ao.id!,
-//                 initialSelected: ao.initialSelected!,
-//                 extension: [],
-//                 modifierExtension: [],
-//                 value: {
-//                     Coding: removeExtensions(ao.valueCoding!),
-//                 },
-//             };
-//             return rao;
-//         });
-//     } else {
-//         return undefined;
-//     }
-// }
-
-// function convertItem(fhirQuestinnaireItem: FHIRQuestionnaireItem): FCEQuestionnaireItem {
-//     const resultItem: Required<FCEQuestionnaireItem> = {
-//         linkId: fhirQuestinnaireItem.linkId,
-//         type: fhirQuestinnaireItem.type,
-//         answerExpression: extractExtension(
-//             fhirQuestinnaireItem.extension,
-//             'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression',
-//         )!,
-//         answerOption: convertAnswerOption(fhirQuestinnaireItem.answerOption)!,
-//         answerValueSet: fhirQuestinnaireItem.answerValueSet!,
-//         item: fhirQuestinnaireItem.item?.map((i) => convertItem(i))!,
-//     };
-//     return resultItem;
-// }
-
-// function trimUndefined<E extends Element>(e: E): E {
 function trimUndefined(e: any) {
     for (const prop in e) {
         if (e.hasOwnProperty(prop)) {
@@ -499,8 +437,6 @@ function processExtensions(fhirQuestionnaire: FHIRQuestionnaire): {
     };
 }
 
-// QuestionnaireResponse
-
 function processAnswerToFCE(itemList: any[] | undefined) {
     if (!itemList) {
         return;
@@ -660,30 +596,29 @@ export function toFirstClassExtension(
 export function toFirstClassExtension(fhirQuestionnaire: FHIRQuestionnaire): FCEQuestionnaire;
 export function toFirstClassExtension(fhirResource: any): any {
     if (fhirResource.resourceType === 'Questionnaire') {
-        const fhirQuestionnaire = fhirResource;
+        const fhirQuestionnaire = JSON.parse(JSON.stringify(fhirResource));
         checkFhirQuestionnaireProfile(fhirQuestionnaire);
         const meta = processMeta(fhirQuestionnaire);
         const item = processItems(fhirQuestionnaire);
         const { launchContext, mapping } = processExtensions(fhirQuestionnaire);
-        const nq: any = {
+        const questionnaire = trimUndefined({
             ...fhirQuestionnaire,
             meta,
             item,
             launchContext,
             mapping,
             extension: undefined,
-        };
-        const resultNQ = trimUndefined(nq);
-        return resultNQ as unknown as FCEQuestionnaire;
+        });
+        return questionnaire as unknown as FCEQuestionnaire;
     }
     if (fhirResource.resourceType === 'QuestionnaireResponse') {
-        const fhirQuestionnaireResponse = JSON.parse(JSON.stringify(fhirResource));
-        processAnswerToFCE(fhirQuestionnaireResponse.item as any[]);
-        if (fhirQuestionnaireResponse.meta) {
-            processMetaToFCE(fhirQuestionnaireResponse.meta);
+        const questionnaireResponse = JSON.parse(JSON.stringify(fhirResource));
+        processAnswerToFCE(questionnaireResponse.item as any[]);
+        if (questionnaireResponse.meta) {
+            processMetaToFCE(questionnaireResponse.meta);
         }
-        processReferenceToFCE(fhirQuestionnaireResponse);
-        return fhirQuestionnaireResponse as unknown as FCEQuestionnaireResponse;
+        processReferenceToFCE(questionnaireResponse);
+        return questionnaireResponse as unknown as FCEQuestionnaireResponse;
     }
 }
 
@@ -693,21 +628,18 @@ export function fromFirstClassExtension(
 export function fromFirstClassExtension(fhirQuestionnaire: FCEQuestionnaire): FHIRQuestionnaire;
 export function fromFirstClassExtension(fceResource: any): any {
     if (fceResource.resourceType === 'Questionnaire') {
-        /* WORK IN PROGRESS */
-        /* You can try it with most questionnaires, but the questions may change places */
-        const questionnaire = fceResource;
+        const questionnaire = JSON.parse(JSON.stringify(fceResource));
         processMetaToFHIR(questionnaire.meta);
         processItemsToFHIR(questionnaire.item);
         processExtensionsToFHIR(questionnaire);
-        const result = questionnaire;
-        return result as unknown as FHIRQuestionnaire;
+        return questionnaire as unknown as FHIRQuestionnaire;
     }
     if (fceResource.resourceType === 'QuestionnaireResponse') {
-        const fceQuestionnaireResponse = JSON.parse(JSON.stringify(fceResource));
-        processAnswerToFHIR(fceQuestionnaireResponse.item as any[]);
-        processMetaToFHIR(fceQuestionnaireResponse.meta);
-        processReferenceToFHIR(fceQuestionnaireResponse);
-        return fceQuestionnaireResponse as unknown as FHIRQuestionnaireResponse;
+        const questionnaireResponse = JSON.parse(JSON.stringify(fceResource));
+        processAnswerToFHIR(questionnaireResponse.item as any[]);
+        processMetaToFHIR(questionnaireResponse.meta);
+        processReferenceToFHIR(questionnaireResponse);
+        return questionnaireResponse as unknown as FHIRQuestionnaireResponse;
     }
 }
 
@@ -733,6 +665,17 @@ function processItemsToFHIR(items: any[] | undefined) {
             processItemsToFHIR(item.item);
         }
 
+        if (item.macro) {
+            const macroExtension = {
+                url: 'https://beda.software/fhir-emr-questionnaire/macro',
+                valueString: item.macro,
+            };
+
+            item.extension = item.extension || [];
+            item.extension.push(macroExtension);
+            delete item.macro;
+        }
+
         if (item.itemControl) {
             const itemControlExtension = {
                 url: 'http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl',
@@ -743,16 +686,6 @@ function processItemsToFHIR(items: any[] | undefined) {
             item.extension = item.extension || [];
             item.extension.push(itemControlExtension);
             delete item.itemControl;
-        }
-
-        if (item.sliderStepValue !== undefined) {
-            const sliderStepValueExtension = {
-                url: 'http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue',
-                valueInteger: item.sliderStepValue,
-            };
-            item.extension = item.extension || [];
-            item.extension.push(sliderStepValueExtension);
-            delete item.sliderStepValue;
         }
 
         if (item.start !== undefined) {
@@ -775,6 +708,16 @@ function processItemsToFHIR(items: any[] | undefined) {
             delete item.stop;
         }
 
+        if (item.helpText !== undefined) {
+            const helpTextExtension = {
+                url: 'https://beda.software/fhir-emr-questionnaire/help-text',
+                valueString: item.helpText,
+            };
+            item.extension = item.extension || [];
+            item.extension.push(helpTextExtension);
+            delete item.helpText;
+        }
+
         if (item.stopLabel !== undefined) {
             const stopLabelExtension = {
                 url: 'https://beda.software/fhir-emr-questionnaire/slider-stop-label',
@@ -785,14 +728,14 @@ function processItemsToFHIR(items: any[] | undefined) {
             delete item.stopLabel;
         }
 
-        if (item.helpText !== undefined) {
-            const helpTextExtension = {
-                url: 'https://beda.software/fhir-emr-questionnaire/help-text',
-                valueString: item.helpText,
+        if (item.sliderStepValue !== undefined) {
+            const sliderStepValueExtension = {
+                url: 'http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue',
+                valueInteger: item.sliderStepValue,
             };
             item.extension = item.extension || [];
-            item.extension.push(helpTextExtension);
-            delete item.helpText;
+            item.extension.push(sliderStepValueExtension);
+            delete item.sliderStepValue;
         }
 
         if (item.adjustLastToRight !== undefined) {
@@ -833,11 +776,16 @@ function processItemsToFHIR(items: any[] | undefined) {
                 (condition: { question: any; operator: any; answer: any }) => {
                     const { question, operator, answer } = condition;
                     const answerCoding = answer?.Coding;
-                    return {
+                    const answerBoolean = answer?.boolean;
+                    const result = {
                         question,
                         operator,
                         ...(answerCoding && { answerCoding }),
                     };
+                    if (answerBoolean) {
+                        result.answerBoolean = answerBoolean;
+                    }
+                    return result;
                 },
             );
             item.enableWhen = enableWhen;
@@ -854,22 +802,16 @@ function processItemsToFHIR(items: any[] | undefined) {
         }
 
         if (item.initial) {
-            item.initial = item.initial.map((entry: { value: { Coding: any } }) => {
-                return {
-                    valueCoding: entry.value.Coding,
-                };
+            item.initial = item.initial.map((entry: any) => {
+                const result: any = {};
+                if (entry.value.boolean !== undefined) {
+                    result.valueBoolean = entry.value.boolean;
+                }
+                if (entry.value.Coding !== undefined) {
+                    result.valueCoding = entry.value.Coding;
+                }
+                return result;
             });
-            item.extension = item.extension || [];
-        }
-
-        if (item.answerExpression) {
-            const extension = {
-                url: 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression',
-                valueExpression: item.answerExpression,
-            };
-            item.extension = item.extension || [];
-            item.extension.push(extension);
-            delete item.answerExpression;
         }
 
         if (Array.isArray(item.choiceColumn)) {
@@ -901,6 +843,16 @@ function processItemsToFHIR(items: any[] | undefined) {
             delete item.choiceColumn;
         }
 
+        if (item.answerExpression) {
+            const extension = {
+                url: 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression',
+                valueExpression: item.answerExpression,
+            };
+            item.extension = item.extension || [];
+            item.extension.push(extension);
+            delete item.answerExpression;
+        }
+
         if (item.referenceResource) {
             const referenceResourceExtension = {
                 url: 'http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource',
@@ -909,6 +861,16 @@ function processItemsToFHIR(items: any[] | undefined) {
             item.extension = item.extension || [];
             item.extension.push(referenceResourceExtension);
             delete item.referenceResource;
+        }
+
+        if (item.unit) {
+            const unitExtension = {
+                url: 'http://hl7.org/fhir/StructureDefinition/questionnaire-unit',
+                valueCoding: item.unit,
+            };
+            item.extension = item.extension || [];
+            item.extension.push(unitExtension);
+            delete item.unit;
         }
 
         if (item.calculatedExpression) {
@@ -925,17 +887,6 @@ function processItemsToFHIR(items: any[] | undefined) {
             delete item.calculatedExpression;
         }
 
-        if (item.macro) {
-            const macroExtension = {
-                url: 'https://beda.software/fhir-emr-questionnaire/macro',
-                valueString: item.macro,
-            };
-
-            item.extension = item.extension || [];
-            item.extension.push(macroExtension);
-            delete item.macro;
-        }
-
         if (item.enableWhenExpression) {
             const enableWhenExpression = {
                 url: 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-enableWhenExpression',
@@ -947,16 +898,6 @@ function processItemsToFHIR(items: any[] | undefined) {
             item.extension = item.extension || [];
             item.extension.push(enableWhenExpression);
             delete item.enableWhenExpression;
-        }
-
-        if (item.unit) {
-            const unitExtension = {
-                url: 'http://hl7.org/fhir/StructureDefinition/questionnaire-unit',
-                valueCoding: item.unit,
-            };
-            item.extension = item.extension || [];
-            item.extension.push(unitExtension);
-            delete item.unit;
         }
     });
 }

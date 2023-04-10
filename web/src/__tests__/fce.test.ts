@@ -36,7 +36,10 @@ describe('Questionanire and QuestionnaireResponses transformation', () => {
                         url: `/fhir/Questionnaire/${q.id}`,
                     }),
                 );
-                expect(toFirstClassExtension(fhirQuestionnaire)).toStrictEqual(q);
+                const fceQuestionnaire = toFirstClassExtension(fhirQuestionnaire);
+                expect(fceQuestionnaire).toStrictEqual(q);
+                const fhirQuestionnaireConverted = toFHIRformat(fceQuestionnaire!);
+                expect(fhirQuestionnaireConverted).toStrictEqual(fhirQuestionnaire);
             }
         }
     });
