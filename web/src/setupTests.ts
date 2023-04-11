@@ -4,20 +4,24 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom/extend-expect';
 
+import { createFHIRResource, getReference, saveFHIRResource } from 'fhir-react/lib/services/fhir';
 import {
     resetInstanceToken as resetFHIRInstanceToken,
     setInstanceBaseURL as setFHIRInstanceBaseURL,
+    setInstanceToken as setFHIRInstanceToken,
 } from 'fhir-react/lib/services/instance';
+import { ensure } from 'fhir-react/lib/utils/tests';
 import { Encounter, Patient, Practitioner, PractitionerRole, Reference, Resource } from 'fhir/r4b';
 
-import { createFHIRResource, getReference, saveFHIRResource } from 'aidbox-react/lib/services/fhir';
+import { saveFHIRResource as aidboxSaveFHIRResource } from 'aidbox-react/lib/services/fhir';
 import {
     axiosInstance,
     resetInstanceToken as resetAidboxInstanceToken,
     setInstanceBaseURL as setAidboxInstanceBaseURL,
+    setInstanceToken as setAidboxInstanceToken,
 } from 'aidbox-react/lib/services/instance';
 import { formatFHIRDateTime } from 'aidbox-react/lib/utils/date';
-import { ensure, withRootAccess, login, LoginService } from 'aidbox-react/lib/utils/tests';
+import { withRootAccess, LoginService, getToken } from 'aidbox-react/lib/utils/tests';
 
 import { User } from 'shared/src/contrib/aidbox';
 
@@ -102,8 +106,8 @@ export async function ensureSave<R extends Resource>(resource: R): Promise<R> {
 
 const USER_PASSWORD = 'Password1!';
 
-export const createUser = async ({ patient, user }: { patient: Patient; user?: Partial<User> }) =>
-    await ensureSave<User>({
+export const createUser = async ({ patient, user }: { patient: Patient; user?: Partial<User> }) => {
+    const result = await aidboxSaveFHIRResource<User>({
         resourceType: 'User',
         email: `test${Math.random().toString(36)}@beda.software`,
         password: USER_PASSWORD,
@@ -118,15 +122,27 @@ export const createUser = async ({ patient, user }: { patient: Patient; user?: P
         ...(user ?? {}),
     });
 
+    return ensure(result);
+};
+
+async function login(user: User) {
+    resetAidboxInstanceToken();
+    resetFHIRInstanceToken();
+
+    const token = await getToken(user, loginService as LoginService);
+
+    setFHIRInstanceToken(token);
+    setAidboxInstanceToken(token);
+
+    return token;
+}
+
 export const loginAdminUser = async () => {
-    await login(
-        { email: 'admin', id: 'admin', password: 'password' } as User,
-        loginService as LoginService,
-    );
+    await login({ email: 'admin', id: 'admin', password: 'password' } as User);
 };
 
 export const loginUser = async (user: User) => {
-    await login({ ...user, password: USER_PASSWORD }, loginService as LoginService);
+    await login({ ...user, password: USER_PASSWORD });
 };
 
 beforeAll(async () => {
