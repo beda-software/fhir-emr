@@ -2,11 +2,11 @@ resourceType: Mapping
 id: edit-appointment-extract
 body:
     $let:
-        currentAppointmentId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='current-appointment-id').answer.children().string").0
-        selectedPatientReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patient').answer.children().Reference").0
-        selectedPractitionerRoleReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-role').answer.children().Reference").0
-        startDateTime: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='start-datetime').answer.children().dateTime").0
-        serviceTypeCoding: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='service-type').answer.children().Coding").0
+        currentAppointmentId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='current-appointment-id').answer.valueString").0
+        selectedPatientReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patient').answer.valueReference").0
+        selectedPractitionerRoleReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-role').answer.valueReference").0
+        startDateTime: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='start-datetime').answer.valueDateTime").0
+        serviceTypeCoding: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='service-type').answer.valueCoding").0
     $body:
         resourceType: Bundle
         type: batch

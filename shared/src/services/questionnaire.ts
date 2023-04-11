@@ -22,7 +22,6 @@ export async function loadResourceOptions<R extends Resource, IR extends Resourc
             value: {
                 Reference: {
                     ...getReference(resource, getDisplayFn(resource as R, resourcesMap)),
-                    resource,
                 },
             },
         }));

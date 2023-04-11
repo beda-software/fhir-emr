@@ -1,14 +1,15 @@
-import { Reference, Resource } from 'fhir/r4b';
+import { Resource, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
 import { FormGroupItems, FormItems } from 'sdc-qrf/lib/types';
 import { findAnswersForQuestionsRecursive, mapResponseToForm } from 'sdc-qrf/lib/utils';
 
-import { Questionnaire, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
+import { AidboxReference } from 'shared/src/contrib/aidbox';
+import { toFirstClassExtension } from 'shared/src/utils/fce';
 
 import { getDisplay } from 'src/utils/questionnaire';
 
-export function findResourceInHistory<R extends Resource>(ref: Reference, history: R[]) {
-    const [resourceType, id, , versionId] = (ref.reference || '').split('/');
+export function findResourceInHistory<R extends Resource>(provenanceRef: AidboxReference, history: R[]) {
+    const [resourceType, id, , versionId] = (provenanceRef.uri || '').split('/');
 
     const resourceIndex = history.findIndex(
         (r) => r.resourceType === resourceType && r.id === id && r.meta?.versionId === versionId,
@@ -93,8 +94,12 @@ export function prepareDataToDisplay(
     currentQR?: QuestionnaireResponse,
     prevQR?: QuestionnaireResponse,
 ) {
-    const currentFormValues = currentQR ? mapResponseToForm(currentQR, questionnaire) : undefined;
-    const prevFormValues = prevQR ? mapResponseToForm(prevQR, questionnaire) : {};
+    const currentFormValues = currentQR
+        ? mapResponseToForm(toFirstClassExtension(currentQR), toFirstClassExtension(questionnaire))
+        : undefined;
+    const prevFormValues = prevQR
+        ? mapResponseToForm(toFirstClassExtension(prevQR), toFirstClassExtension(questionnaire))
+        : {};
 
     if (!currentQR || !currentFormValues || !prevFormValues) {
         return [];

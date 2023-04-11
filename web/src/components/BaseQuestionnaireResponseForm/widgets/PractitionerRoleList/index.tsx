@@ -32,11 +32,9 @@ export function PractitionerRoleList({ parentPath, questionItem }: QuestionItemP
                 );
 
                 return {
-                    value: {
-                        Reference: {
-                            reference: `PractitionerRole/${pR.id}`,
-                            display: renderHumanName(practitioner?.name?.[0]),
-                        },
+                    valueReference: {
+                        reference: `PractitionerRole/${pR.id}`,
+                        display: renderHumanName(practitioner?.name?.[0]),
                     },
                     label: `${renderHumanName(practitioner?.name?.[0])}, ${
                         pR.specialty?.[0]!.coding?.[0]!.display

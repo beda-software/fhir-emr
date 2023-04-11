@@ -2,28 +2,28 @@ body:
     $let:
         appointmentId: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='appointmentId').answer.value.string").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='appointmentId').answer.valueString").0
         service: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='service').answer.value.Coding").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='service').answer.valueCoding").0
         patientId: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.value.string").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.valueString").0
         startDate: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='date').answer.value.date").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='date').answer.valueDate").0
         startTime: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='start-time').answer.value.time").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='start-time').answer.valueTime").0
         endTime: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='end-time').answer.value.time").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='end-time').answer.valueTime").0
         patientName: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.value.string").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.valueString").0
         practitionerRole: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-role').answer.value.Reference").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-role').answer.valueReference").0
     $body:
         type: transaction
         entry:

@@ -1,3 +1,4 @@
+import { WithId } from 'fhir-react';
 import { useService } from 'fhir-react/lib/hooks/service';
 import { isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { extractBundleResources, getFHIRResource } from 'fhir-react/lib/services/fhir';
@@ -5,7 +6,8 @@ import { mapSuccess, resolveMap } from 'fhir-react/lib/services/service';
 import { Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import { useParams } from 'react-router-dom';
 
-import { toFirstClassExtension } from 'shared/src/utils/fce';
+import { Provenance } from 'shared/src/contrib/aidbox';
+import { fromFirstClassExtension, toFirstClassExtension } from 'shared/src/utils/fce';
 
 import { loadResourceHistory } from 'src/services/history';
 import { getProvenanceByEntity } from 'src/services/provenance';
@@ -17,15 +19,18 @@ export function useDocumentHistory() {
     const [response] = useService(async () => {
         const provenanceResponse = mapSuccess(
             await resolveMap({
-                provenanceList: getProvenanceByEntity(`QuestionnaireResponse/${qrId}`),
+                provenanceList: getProvenanceByEntity<WithId<Provenance>>(
+                    `QuestionnaireResponse/${qrId}`,
+                ),
                 qrHistoryBundle: loadResourceHistory<QuestionnaireResponse>({
                     reference: `QuestionnaireResponse/${qrId}`,
                 }),
             }),
             ({ provenanceList, qrHistoryBundle }) => {
-                const qrHistory = extractBundleResources<QuestionnaireResponse>(
-                    qrHistoryBundle,
-                ).QuestionnaireResponse.map((qr) => toFirstClassExtension(qr));
+                const qrHistory =
+                    extractBundleResources<QuestionnaireResponse>(
+                        qrHistoryBundle,
+                    ).QuestionnaireResponse;
 
                 return {
                     provenanceList: provenanceList.sort((a, b) =>
@@ -50,10 +55,10 @@ export function useDocumentHistory() {
                     return {
                         ...provenanceResponse.data,
 
-                        questionnaire: {
+                        questionnaire: fromFirstClassExtension({
                             ...questionnaire,
                             item: questionnaire.item?.filter((i) => !i.hidden),
-                        },
+                        }),
                     };
                 },
             );

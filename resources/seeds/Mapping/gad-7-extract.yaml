@@ -3,18 +3,18 @@ body:
         qrId: $ fhirpath("QuestionnaireResponse.id")
         qrVersion: $ fhirpath("QuestionnaireResponse.meta.versionId")
         qrLastUpdated: >-
-            $ fhirpath("QuestionnaireResponse.meta.lastUpdated") || fhirpath("QuestionnaireResponse.repeat(item).where(linkId='dateTime').answer.value.dateTime").0
+            $ fhirpath("QuestionnaireResponse.meta.lastUpdated") || fhirpath("QuestionnaireResponse.repeat(item).where(linkId='dateTime').answer.valueDateTime").0
         conditionId: $ fhirpath("Provenance.target.where(resourceType='Condition').id").0
         author: $ Author
         patientId: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.value.string").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.valueString").0
         patientName: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.value.string").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.valueString").0
         score: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='anxiety-score').answer.value.integer").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='anxiety-score').answer.valueInteger").0
     $body:
         type: transaction
         entry:

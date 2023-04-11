@@ -20,7 +20,7 @@ body:
             fhirpath("QuestionnaireResponse.repeat(item).where(linkId='type').answer.valueCoding.code").0
         reaction: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='reaction').answer.valueCoding")
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='reaction').answer")
         notes: >-
             $
             fhirpath("QuestionnaireResponse.repeat(item).where(linkId='notes').answer.valueString").0
@@ -74,7 +74,7 @@ body:
                             $as: item
                             $body:
                                 coding:
-                                    - $ item
+                                    - $ item.valueCoding
                         substance:
                             coding:
                                 - $ substanceDrug || substanceFood || substanceEnvironmental

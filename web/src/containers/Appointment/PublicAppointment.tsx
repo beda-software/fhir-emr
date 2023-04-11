@@ -5,6 +5,8 @@ import { axiosInstance as axiosFHIRInstance } from 'fhir-react/lib/services/inst
 import { uuid4 } from 'fhir-react/lib/utils/uuid';
 import { useEffect, useState } from 'react';
 
+import { axiosInstance as axiosAidboxInstance } from 'aidbox-react/lib/services/instance';
+
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
@@ -17,13 +19,16 @@ import { history } from 'src/services/history';
 import s from './PublicAppointment.module.scss';
 
 export function PublicAppointment() {
-    const practitionerRolePath = ['practitioner-role', 0, 'value', 'Reference'];
+    const practitionerRolePath = ['practitioner-role', 0, 'valueReference'];
     const appToken = getToken();
     const [isLoading, setIsloading] = useState(!appToken);
 
     useEffect(() => {
         if (!appToken) {
             axiosFHIRInstance.defaults.headers.Authorization = `Basic ${window.btoa(
+                'anonymous:secret',
+            )}`;
+            axiosAidboxInstance.defaults.headers.Authorization = `Basic ${window.btoa(
                 'anonymous:secret',
             )}`;
             setIsloading(false);
@@ -34,6 +39,7 @@ export function PublicAppointment() {
         return () => {
             if (!appToken) {
                 axiosFHIRInstance.defaults.headers.Authorization = undefined;
+                axiosAidboxInstance.defaults.headers.Authorization = undefined;
             }
         };
     }, [appToken]);

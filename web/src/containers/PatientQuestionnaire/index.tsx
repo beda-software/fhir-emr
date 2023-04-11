@@ -1,8 +1,10 @@
 import { Trans } from '@lingui/macro';
 import Title from 'antd/lib/typography/Title';
-import { axiosInstance } from 'fhir-react/lib/services/instance';
+import { axiosInstance as axiosFHIRInstance } from 'fhir-react/lib/services/instance';
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+
+import { axiosInstance as axiosAidboxInstance } from 'aidbox-react/lib/services/instance';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { Spinner } from 'src/components/Spinner';
@@ -26,7 +28,10 @@ export function PatientQuestionnaire() {
 
     useEffect(() => {
         if (!appToken) {
-            axiosInstance.defaults.headers.Authorization = `Basic ${window.btoa(
+            axiosFHIRInstance.defaults.headers.Authorization = `Basic ${window.btoa(
+                'patient-questionnaire:secret',
+            )}`;
+            axiosAidboxInstance.defaults.headers.Authorization = `Basic ${window.btoa(
                 'patient-questionnaire:secret',
             )}`;
             setIsloading(false);
@@ -36,7 +41,8 @@ export function PatientQuestionnaire() {
 
         return () => {
             if (!appToken) {
-                axiosInstance.defaults.headers.Authorization = undefined;
+                axiosFHIRInstance.defaults.headers.Authorization = undefined;
+                axiosAidboxInstance.defaults.headers.Authorization = undefined;
             }
         };
     }, [appToken]);
