@@ -12,7 +12,7 @@ import {
     WithId,
 } from 'fhir-react/lib/services/fhir';
 import { mapSuccess } from 'fhir-react/lib/services/service';
-import { Encounter, Patient, Provenance, QuestionnaireResponse } from 'fhir/r4b';
+import { Encounter, Patient, Practitioner, Provenance, QuestionnaireResponse } from 'fhir/r4b';
 import { ReactElement } from 'react';
 import {
     NavigateFunction,
@@ -36,6 +36,8 @@ import {
     usePatientDocument,
 } from 'src/containers/PatientDetails/PatientDocument/usePatientDocument';
 import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
+import { sharedAuthorizedPatient, sharedAuthorizedPractitioner } from 'src/sharedState';
+import { Role, selectCurrentUserRole } from 'src/utils/role';
 
 import s from './PatientDocumentDetails.module.scss';
 
@@ -201,6 +203,7 @@ function PatientDocumentDetailsReadonly(props: {
 function PatientDocumentDetailsFormData(props: {
     questionnaireResponse: WithId<QuestionnaireResponse>;
     patient: WithId<Patient>;
+    author: WithId<Practitioner | Patient>;
     children: (props: PatientDocumentData) => ReactElement;
 }) {
     const { questionnaireResponse, children, patient } = props;
@@ -221,6 +224,10 @@ export function PatientDocumentDetails(props: Props) {
     const { patient } = props;
     const { response, manager } = usePatientDocumentDetails();
     const navigate = useNavigate();
+    const author = selectCurrentUserRole<() => Practitioner | Patient | undefined>({
+        [Role.Admin]: () => sharedAuthorizedPractitioner.getSharedState(),
+        [Role.Patient]: () => sharedAuthorizedPatient.getSharedState(),
+    })();
 
     return (
         <RenderRemoteData
@@ -231,6 +238,7 @@ export function PatientDocumentDetails(props: Props) {
             {({ questionnaireResponse, encounter }) => (
                 <PatientDocumentDetailsFormData
                     questionnaireResponse={questionnaireResponse}
+                    author={author}
                     {...props}
                 >
                     {({ formData, provenance }) => (
@@ -262,6 +270,7 @@ export function PatientDocumentDetails(props: Props) {
                                             questionnaireResponse={questionnaireResponse}
                                             questionnaireId={questionnaireResponse.questionnaire}
                                             onSuccess={() => navigate(-2)}
+                                            author={author}
                                         />
                                     }
                                 />

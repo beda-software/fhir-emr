@@ -2,7 +2,7 @@
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { isSuccess, notAsked, RemoteData } from 'fhir-react/lib/libs/remoteData';
 import { WithId } from 'fhir-react/lib/services/fhir';
-import { Patient, QuestionnaireResponse } from 'fhir/r4b';
+import { Patient, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -21,6 +21,7 @@ import { usePatientDocument } from './usePatientDocument';
 
 interface Props {
     patient: Patient;
+    author: WithId<Practitioner | Patient>;
     questionnaireResponse?: WithId<QuestionnaireResponse>;
     questionnaireId?: string;
     encounterId?: string;

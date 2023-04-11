@@ -17,11 +17,10 @@ import {
 
 import { onFormResponse } from 'src/components/QuestionnaireResponseForm';
 import { getProvenanceByEntity } from 'src/services/provenance';
-import { sharedAuthorizedPatient, sharedAuthorizedPractitioner } from 'src/sharedState';
-import { Role, selectCurrentUserRole } from 'src/utils/role';
 
 export interface Props {
     patient: Patient;
+    author: WithId<Practitioner | Patient>;
     questionnaireResponse?: WithId<QuestionnaireResponse>;
     questionnaireId: string;
     encounterId?: string;
@@ -69,14 +68,10 @@ function prepareFormInitialParams(
         questionnaireLoader: questionnaireIdLoader(questionnaireId),
         launchContextParameters: [
             { name: 'Patient', resource: patient },
-            ...(author
-                ? [
-                      {
-                          name: 'Author',
-                          resource: author,
-                      },
-                  ]
-                : []),
+            {
+                name: 'Author',
+                resource: author,
+            },
             ...(encounterId
                 ? [
                       {
@@ -131,10 +126,6 @@ export function usePatientDocument(props: Props): {
             const formInitialParams = prepareFormInitialParams({
                 ...props,
                 provenance,
-                author: selectCurrentUserRole<() => Practitioner | Patient | undefined>({
-                    [Role.Admin]: () => sharedAuthorizedPractitioner.getSharedState(),
-                    [Role.Patient]: () => sharedAuthorizedPatient.getSharedState(),
-                })(),
             });
 
             const onSubmit = async (formData: QuestionnaireResponseFormData) =>

@@ -1,9 +1,11 @@
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { Patient, Practitioner } from 'fhir/r4b';
 import { useParams, Outlet, Route, Routes } from 'react-router-dom';
 
 import { BasePageContent } from 'src/components/BaseLayout';
 import { PatientEncounter } from 'src/components/PatientEncounter';
 import { Spinner } from 'src/components/Spinner';
+import { sharedAuthorizedPatient, sharedAuthorizedPractitioner } from 'src/sharedState';
 import { Role, selectCurrentUserRole } from 'src/utils/role';
 
 import { EncounterDetails } from '../EncounterDetails';
@@ -19,6 +21,10 @@ export const PatientDetails = () => {
     const params = useParams<{ id: string }>();
 
     const [patientResponse, manager] = usePatientResource({ id: params.id! });
+    const author = selectCurrentUserRole<() => Practitioner | Patient | undefined>({
+        [Role.Admin]: () => sharedAuthorizedPractitioner.getSharedState(),
+        [Role.Patient]: () => sharedAuthorizedPatient.getSharedState(),
+    })();
 
     return (
         <RenderRemoteData remoteData={patientResponse} renderLoading={Spinner}>
@@ -55,7 +61,9 @@ export const PatientDetails = () => {
                                     />
                                     <Route
                                         path="/encounters/:encounterId/new/:questionnaireId"
-                                        element={<PatientDocument patient={patient} />}
+                                        element={
+                                            <PatientDocument patient={patient} author={author} />
+                                        }
                                     />
                                     <Route
                                         path="/encounters/:encounterId/:qrId/*"
@@ -67,7 +75,9 @@ export const PatientDetails = () => {
                                     />
                                     <Route
                                         path="/documents/new/:questionnaireId"
-                                        element={<PatientDocument patient={patient} />}
+                                        element={
+                                            <PatientDocument patient={patient} author={author} />
+                                        }
                                     />
                                     <Route
                                         path="/documents/:qrId/*"
