@@ -86,7 +86,7 @@ export async function getJitsiAuthToken() {
 }
 
 export async function signinWithIdentityToken(
-    user: { firstName: string; lastName: string },
+    user: { firstName: string; lastName: string } | undefined,
     identityToken: string,
 ) {
     setToken(identityToken);
@@ -112,11 +112,11 @@ export async function signinWithIdentityToken(
                         item: [
                             {
                                 linkId: 'firstname',
-                                answer: [{ value: { string: user.firstName } }],
+                                answer: [{ value: { string: user?.firstName } }],
                             },
                             {
                                 linkId: 'lastname',
-                                answer: [{ value: { string: user.lastName } }],
+                                answer: [{ value: { string: user?.lastName } }],
                             },
                         ],
                     } as QuestionnaireResponse,
