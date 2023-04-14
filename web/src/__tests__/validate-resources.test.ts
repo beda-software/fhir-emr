@@ -1,8 +1,7 @@
-import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
-import { service } from 'aidbox-react/lib/services/service';
-import { ensure } from 'aidbox-react/lib/utils/tests';
-
-import { OperationOutcome, Questionnaire } from 'shared/src/contrib/aidbox';
+import { extractBundleResources, getFHIRResources } from 'fhir-react/lib/services/fhir';
+import { service } from 'fhir-react/lib/services/service';
+import { ensure } from 'fhir-react/lib/utils/tests';
+import { OperationOutcome, Questionnaire } from 'fhir/r4b';
 
 import { loginAdminUser } from 'src/setupTests';
 
