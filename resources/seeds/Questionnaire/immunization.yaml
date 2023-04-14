@@ -8,12 +8,10 @@ subjectType:
 launchContext:
     - name:
           code: Patient
-      type:
-          - Patient
+      type: patient
     - name:
           code: Author
-      type:
-          - Resource
+      type: resource
 mapping:
     - id: immunization-extract
       resourceType: Mapping

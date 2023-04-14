@@ -7,18 +7,15 @@ mapping:
 launchContext:
   - name:
       code: patient
-    type:
-      - Patient
+    type: patient
     description: Patient resource
   - name:
       code: practitionerRole
-    type:
-      - PractitionerRole
+    type: practitionerRole
     description: PractitionerRole resource
   - name:
       code: appointmentDraft
-    type:
-      - Basic
+    type: basic
     description: Appointment date passing from calendar
 contained:
   - resourceType: Bundle

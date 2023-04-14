@@ -7,8 +7,7 @@ mapping:
 launchContext:
     - name:
           code: CurrentAppointmentId
-      type:
-          - Basic
+      type: basic
       description: The edited appointment ID
 contained:
     - resourceType: Bundle

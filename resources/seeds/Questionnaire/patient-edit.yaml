@@ -6,8 +6,7 @@ status: active
 launchContext:
   - name:
       code: Patient
-    type:
-      - Patient
+    type: patient
 mapping:
   - id: patient-create
     resourceType: Mapping

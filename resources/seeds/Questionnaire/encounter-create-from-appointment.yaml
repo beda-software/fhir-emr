@@ -9,8 +9,7 @@ mapping:
 launchContext:
   - name:
       code: AppointmentId
-    type:
-      - Basic
+    type: basic
 contained:
   - resourceType: Bundle
     id: AppointmentBundle

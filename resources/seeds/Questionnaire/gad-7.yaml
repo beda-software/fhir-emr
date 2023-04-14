@@ -11,12 +11,10 @@ mapping:
 launchContext:
     - name:
           code: Patient
-      type:
-          - Patient
+      type: patient
     - name:
           code: Author
-      type:
-          - Resource
+      type: resource
 item:
     - text: DateTime
       type: dateTime

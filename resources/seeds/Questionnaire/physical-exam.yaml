@@ -7,8 +7,7 @@ subjectType:
 launchContext:
   - name:
       code: Patient
-    type:
-      - Patient
+    type: patient
     description: Patient is answering the questionnaire
 item:
   - type: group

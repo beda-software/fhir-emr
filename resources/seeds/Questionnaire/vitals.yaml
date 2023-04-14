@@ -11,8 +11,7 @@ mapping:
 launchContext:
   - name:
       code: Patient
-    type:
-      - Patient
+    type: patient
 item:
   - text: PatientId
     type: string
