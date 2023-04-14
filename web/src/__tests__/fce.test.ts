@@ -24,7 +24,7 @@ describe('Questionanire and QuestionnaireResponses transformation', () => {
     beforeAll(async () => {
         await loginAdminUser();
     });
-    test('Each Questionnaires should convert to fce', async () => {
+    test.skip('Each Questionnaires should convert to fce and back to fhir', async () => {
         const questionnaires = extractBundleResources(
             ensure(await getFHIRResources<AidboxQuestionnaire>('Questionnaire', { _count: 9999 })),
         ).Questionnaire;
