@@ -8,7 +8,8 @@ mapping:
 launchContext:
   - name:
       code: Patient
-    type: patient
+    type: 
+      - Patient
 name: encounter-create
 item:
   - text: PatientId

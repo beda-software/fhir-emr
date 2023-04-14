@@ -1,10 +1,12 @@
 launchContext:
   - name:
       code: Practitioner
-    type: practitioner
+    type:
+      - Practitioner
   - name:
       code: PractitionerRole
-    type: practitionerRole
+    type:
+      - PractitionerRole
 name: practitioner edit
 item:
   - text: practitionerId
