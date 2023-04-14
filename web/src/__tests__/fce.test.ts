@@ -9,9 +9,9 @@ import {
     Questionnaire as AidboxQuestionnaire,
     QuestionnaireResponse as AidboxQuestionnaireResponse,
 } from 'shared/src/contrib/aidbox';
+import { toFirstClassExtension, fromFirstClassExtension } from 'shared/src/utils/fce';
 
 import { loginAdminUser } from 'src/setupTests';
-import { toFHIRformat, toFirstClassExtension } from 'src/utils/fce';
 
 const notWorkingQuestionnaires = [
     'edit-appointment',
@@ -38,7 +38,7 @@ describe('Questionanire and QuestionnaireResponses transformation', () => {
                 );
                 const fceQuestionnaire = toFirstClassExtension(fhirQuestionnaire);
                 expect(fceQuestionnaire).toStrictEqual(q);
-                const fhirQuestionnaireConverted = toFHIRformat(fceQuestionnaire!);
+                const fhirQuestionnaireConverted = fromFirstClassExtension(fceQuestionnaire!);
                 expect(fhirQuestionnaireConverted).toStrictEqual(fhirQuestionnaire);
             }
         }
@@ -85,43 +85,43 @@ describe('Questionanire and QuestionnaireResponses transformation', () => {
         );
     });
     test('Each FCE QuestionnaireResponse should convert to FHIR', async () => {
-        expect(toFHIRformat(practitioner_aidbox_QuestionnaireResponse)).toStrictEqual(
+        expect(fromFirstClassExtension(practitioner_aidbox_QuestionnaireResponse)).toStrictEqual(
             practitioner_fhir_QuestionnaireResponse,
         );
-        expect(toFHIRformat(patient_aidbox_QuestionnaireResponse)).toStrictEqual(
+        expect(fromFirstClassExtension(patient_aidbox_QuestionnaireResponse)).toStrictEqual(
             patient_fhir_QuestionnaireResponse,
         );
-        expect(toFHIRformat(allergies_aidbox_QuestionnaireResponse)).toStrictEqual(
+        expect(fromFirstClassExtension(allergies_aidbox_QuestionnaireResponse)).toStrictEqual(
             allergies_fhir_QuestionnaireResponse,
         );
-        expect(toFHIRformat(gad7_aidbox_QuestionnaireResponse)).toStrictEqual(
+        expect(fromFirstClassExtension(gad7_aidbox_QuestionnaireResponse)).toStrictEqual(
             gad7_fhir_QuestionnaireResponse,
         );
-        expect(toFHIRformat(medication_aidbox_QuestionnaireResponse)).toStrictEqual(
+        expect(fromFirstClassExtension(medication_aidbox_QuestionnaireResponse)).toStrictEqual(
             medication_fhir_QuestionnaireResponse,
         );
-        expect(toFHIRformat(physicalexam_aidbox_QuestionnaireResponse)).toStrictEqual(
+        expect(fromFirstClassExtension(physicalexam_aidbox_QuestionnaireResponse)).toStrictEqual(
             physicalexam_fhir_QuestionnaireResponse,
         );
-        expect(toFHIRformat(reviewofsystems_aidbox_QuestionnaireResponse)).toStrictEqual(
+        expect(fromFirstClassExtension(reviewofsystems_aidbox_QuestionnaireResponse)).toStrictEqual(
             reviewofsystems_fhir_QuestionnaireResponse,
         );
-        expect(toFHIRformat(vitals_aidbox_QuestionnaireResponse)).toStrictEqual(
+        expect(fromFirstClassExtension(vitals_aidbox_QuestionnaireResponse)).toStrictEqual(
             vitals_fhir_QuestionnaireResponse,
         );
-        expect(toFHIRformat(phq2phq9_aidbox_QuestionnaireResponse)).toStrictEqual(
+        expect(fromFirstClassExtension(phq2phq9_aidbox_QuestionnaireResponse)).toStrictEqual(
             phq2phq9_fhir_QuestionnaireResponse,
         );
-        expect(toFHIRformat(immunization_aidbox_QuestionnaireResponse)).toStrictEqual(
+        expect(fromFirstClassExtension(immunization_aidbox_QuestionnaireResponse)).toStrictEqual(
             immunization_fhir_QuestionnaireResponse,
         );
-        expect(toFHIRformat(cardiology_aidbox_QuestionnaireResponse)).toStrictEqual(
+        expect(fromFirstClassExtension(cardiology_aidbox_QuestionnaireResponse)).toStrictEqual(
             cardiology_fhir_QuestionnaireResponse,
         );
-        expect(toFHIRformat(allergies_inprogress_aidbox_QuestionnaireResponse)).toStrictEqual(
+        expect(fromFirstClassExtension(allergies_inprogress_aidbox_QuestionnaireResponse)).toStrictEqual(
             allergies_inprogress_fhir_QuestionnaireResponse,
         );
-        expect(toFHIRformat(newappointment_aidbox_QuestionnaireResponse)).toStrictEqual(
+        expect(fromFirstClassExtension(newappointment_aidbox_QuestionnaireResponse)).toStrictEqual(
             newappointment_fhir_QuestionnaireResponse,
         );
     });

@@ -377,7 +377,7 @@ export function processLaunchContext(fhirQuestionnaire: FHIRQuestionnaire): any[
         const descriptionExtension = launchContextExtension.extension?.find(
             (ext: any) => ext.url === 'description',
         );
-        const nameCode = nameExtension?.valueId?.code;
+        const nameCode = nameExtension?.valueCoding?.code;
         const typeCode = typeExtension?.valueCode;
         const description = descriptionExtension?.valueString;
 
@@ -385,7 +385,7 @@ export function processLaunchContext(fhirQuestionnaire: FHIRQuestionnaire): any[
             name: {
                 code: nameCode,
             },
-            type: typeCode,
+            type: [typeCode],
         };
 
         if (description) {
@@ -906,20 +906,21 @@ function processExtensionsToFHIR(questionnaire: FCEQuestionnaire) {
     if (questionnaire.launchContext) {
         const extension: any = questionnaire.launchContext.map((launchContext: any) => {
             const name = launchContext.name.code;
-            const type = launchContext.type;
+            const typeArray = launchContext.type;
             const description = launchContext.description;
 
             const extension: any = [
                 {
                     url: 'name',
-                    valueId: {
+                    valueCoding: {
+                        system: 'http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext',
                         code: name,
                     },
                 },
-                {
+                ...typeArray.map((type: string) => ({
                     url: 'type',
                     valueCode: type,
-                },
+                })),
             ];
 
             if (description !== undefined) {
