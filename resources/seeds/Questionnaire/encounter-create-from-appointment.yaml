@@ -19,7 +19,7 @@ contained:
           method: GET
           url: /Appointment?_id={{%AppointmentId}}
 sourceQueries:
-  localRef: "Bundle#AppointmentBundle"
+  - localRef: "Bundle#AppointmentBundle"
 item:
   - text: AppointmentId
     type: string

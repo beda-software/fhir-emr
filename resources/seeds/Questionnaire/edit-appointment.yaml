@@ -18,7 +18,7 @@ contained:
                 method: GET
                 url: /Appointment?_id={{%CurrentAppointmentId}}
 sourceQueries:
-    localRef: "Bundle#CurrentAppointmentBundle"
+    - localRef: "Bundle#CurrentAppointmentBundle"
 item:
     - type: group
       linkId: root-group
