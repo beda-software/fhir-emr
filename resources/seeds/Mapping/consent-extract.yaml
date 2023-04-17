@@ -1,0 +1,90 @@
+body:
+  $let:
+    qrId: $ fhirpath("QuestionnaireResponse.id")
+    qrVersion: $ fhirpath("QuestionnaireResponse.meta.versionId")
+    qrLastUpdated: $ fhirpath("QuestionnaireResponse.meta.lastUpdated")
+    consentID: $ fhirpath("Provenance.target.where(resourceType='Consent').id").0
+    service: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='service').answer.valueReference").0
+    practitioner: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner').answer.valueReference").0
+    patient:
+      reference: $ "Patient/" + Patient.id
+      display: $ Patient.name.0.given.0 + ' ' + Patient.name.0.family
+    provision: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='provision').answer.valueCoding").0
+  $body:
+    type: transaction
+    entry:
+      - request:
+          $if: $ consentID
+          $then:
+            url: $ "/fhir/Consent/" + consentID
+            method: PUT
+          $else:
+            url: /fhir/Consent
+            method: POST
+        fullUrl: urn:uuid:cf3923f0-2eaa-4feb-94eb-3a3db62f0705
+        resource:
+          resourceType: Consent
+          status:
+            $switch: $ provision.code
+            permit: active
+            $default: inactive
+          patient: $ patient
+          scope:
+            coding:
+              - code: patient-privacy
+                system: http://terminology.hl7.org/CodeSystem/consentscope
+          performer:
+            - $ patient
+          sourceReference:
+            reference: $ "QuestionnaireResponse/" + qrId
+          category:
+            - coding:
+              - code: INFAO
+                system: http://terminology.hl7.org/CodeSystem/v3-ActCode
+          provision:
+            data:
+              - meaning: instance
+                reference: $ service
+            type: $ provision.code
+            actor:
+              - role:
+                  coding:
+                    - code: PROV
+                      system: http://terminology.hl7.org/CodeSystem/v3-RoleClass
+                reference: $ practitioner
+            action:
+              - coding:
+                - code: access
+                  system: http://terminology.hl7.org/CodeSystem/consentaction
+            purpose:
+              - code: CAREMGT
+                system: http://terminology.hl7.org/CodeSystem/v3-ActReason
+      - request:
+          url: /fhir/Provenance
+          method: POST
+        resource:
+          resourceType: Provenance
+          target:
+            - uri: urn:uuid:cf3923f0-2eaa-4feb-94eb-3a3db62f0705
+          recorded: $ qrLastUpdated
+          activity:
+            $if: $ consentID
+            $then:
+              coding:
+                - code: 'UPDATE'
+                  display: 'revise'
+                  system: 'http://terminology.hl7.org/CodeSystem/v3-DataOperation'
+            $else:
+              coding:
+                - code: 'CREATE'
+                  display: 'create'
+                  system: 'http://terminology.hl7.org/CodeSystem/v3-DataOperation'
+          agent:
+            - who: $ patient
+          entity:
+            - role: source
+              what:
+                  uri: $ "QuestionnaireResponse/" + qrId + "/_history/" + qrVersion
+    resourceType: Bundle
+id: encounter-create-extract
+resourceType: Mapping
