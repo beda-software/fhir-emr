@@ -16,8 +16,9 @@ import {
 import _ from 'lodash';
 import { Link, useLocation } from 'react-router-dom';
 
+import { extractExtension, fromFHIRReference } from 'shared/src/utils/fce';
+
 import { formatHumanDate } from 'src/utils/date';
-import { extractExtension, fromFHIRReference } from 'src/utils/fce';
 
 import medicationIcon from './images/medication.svg';
 
