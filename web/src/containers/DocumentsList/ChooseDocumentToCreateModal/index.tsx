@@ -88,7 +88,7 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
                                 value={questionnaireId}
                             >
                                 <Space direction="vertical">
-                                    {questionnaires.map((q) => (
+                                    {questionnaires.sort().map((q) => (
                                         <Radio value={q.id} key={`create-document-${q.id}`}>
                                             {q.name}
                                         </Radio>
