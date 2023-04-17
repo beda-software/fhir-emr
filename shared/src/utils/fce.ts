@@ -473,14 +473,13 @@ function processAnswerToFCE(itemList: any[] | undefined) {
             };
             delete item.answer[0]?.valueDateTime;
         } else if (item.answer && item.answer[0]?.valueReference) {
-            const { display, resource } = item.answer[0]?.valueReference;
-            const { resourceType } = resource;
+            const { display, reference } = item.answer[0]?.valueReference;
+            const [ resourceType, id ] = reference.split('/');
             item.answer[0].value = {
                 Reference: {
                     display,
-                    id: resource.id,
-                    resource,
                     resourceType,
+                    id,
                 },
             };
             delete item.answer[0]?.valueReference;
@@ -519,10 +518,9 @@ function processAnswerToFHIR(itemList: any[] | undefined) {
             item.answer[0].valueDateTime = item.answer[0]?.value.dateTime;
             delete item.answer[0]?.value;
         } else if (item.answer && item.answer[0]?.value?.Reference) {
-            const { display, resource, resourceType, id } = item.answer[0]?.value.Reference;
+            const { display, resourceType, id } = item.answer[0]?.value.Reference;
             item.answer[0].valueReference = {
                 display,
-                resource,
                 reference: `${resourceType}/${id}`,
             };
             delete item.answer[0]?.value;
