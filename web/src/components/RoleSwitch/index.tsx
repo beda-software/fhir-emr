@@ -18,7 +18,11 @@ export type RoleSwitchProps =
       };
 
 export function RoleSwitch(props: RoleSwitchProps) {
-    return 'user' in props
-        ? selectUserRole(props.user, props.children)
-        : selectCurrentUserRole(props.children);
+    return (
+        <>
+            {'user' in props
+                ? selectUserRole(props.user, props.children)
+                : selectCurrentUserRole(props.children)}
+        </>
+    );
 }
