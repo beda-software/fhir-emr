@@ -1,4 +1,4 @@
-import { AlertOutlined, ExperimentOutlined, HeartOutlined } from '@ant-design/icons';
+import { AlertOutlined, ExperimentOutlined, HeartOutlined, TeamOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 import { extractBundleResources, WithId } from 'fhir-react/lib/services/fhir';
 import { parseFHIRDateTime } from 'fhir-react/lib/utils/date';
@@ -12,6 +12,7 @@ import {
     Immunization,
     MedicationStatement,
     Provenance,
+    Consent,
 } from 'fhir/r4b';
 import _ from 'lodash';
 import { Link, useLocation } from 'react-router-dom';
@@ -117,6 +118,48 @@ export function prepareConditions(
 
                     return createdAt ? formatHumanDate(createdAt) : null;
                 },
+                width: 200,
+            },
+        ],
+    };
+}
+
+export function prepareConsents(
+    consents: Consent[],
+    provenanceList: Provenance[],
+): OverviewCard<Consent> {
+    return {
+        title: t`Consents`,
+        icon: <TeamOutlined />,
+        data: consents,
+        getKey: (r: Consent) => r.id!,
+        columns: [
+            {
+                title: t`Name`,
+                key: 'name',
+                render: (resource: Consent) => (
+                    <LinkToEdit
+                        name={resource.provision?.data?.[0]?.reference.display}
+                        resource={resource}
+                        provenanceList={provenanceList}
+                    />
+                ),
+                width: 200,
+            },
+            {
+                title: t`Date`,
+                key: 'date',
+                render: (r: Consent) => {
+                    const createdAt = extractExtension(r.meta?.extension, 'ex:createdAt');
+
+                    return createdAt ? formatHumanDate(createdAt) : null;
+                },
+                width: 100,
+            },
+            {
+                title: t`Practitioner`,
+                key: 'actor',
+                render: (r: Consent) => r.provision?.actor?.[0]?.reference.display,
                 width: 200,
             },
         ],

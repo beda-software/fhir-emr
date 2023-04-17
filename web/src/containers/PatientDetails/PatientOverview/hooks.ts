@@ -1,4 +1,3 @@
-
 import { useService } from 'fhir-react/lib/hooks/service';
 import { isSuccess } from 'fhir-react/lib/libs/remoteData';
 import {
@@ -18,6 +17,7 @@ import {
     Patient,
     Provenance,
     Condition,
+    Consent,
 } from 'fhir/r4b';
 import _ from 'lodash';
 import moment from 'moment';
@@ -30,6 +30,7 @@ import {
     prepareImmunizations,
     prepareMedications,
     prepareConditions,
+    prepareConsents,
 } from './utils';
 
 interface Props {
@@ -122,6 +123,12 @@ export function usePatientOverview(props: Props) {
                             _revinclude: ['Provenance:target'],
                         },
                     ),
+                    consentsBundle: getFHIRResources<Consent | Provenance>('Consent', {
+                        patient: patient.id,
+                        status: 'active',
+                        _sort: ['-lastUpdated'],
+                        _revinclude: ['Provenance:target'],
+                    }),
                 }),
                 ({
                     allergiesBundle,
@@ -129,11 +136,15 @@ export function usePatientOverview(props: Props) {
                     immunizationsBundle,
                     medicationsBundle,
                     appointmentsBundle,
+                    consentsBundle,
                 }) => {
                     const allergies = extractBundleResources(allergiesBundle).AllergyIntolerance;
                     const allergiesProvenance = extractBundleResources(allergiesBundle).Provenance;
                     const conditions = extractBundleResources(conditionsBundle).Condition;
-                    const conditionsProvenance = extractBundleResources(conditionsBundle).Provenance;
+                    const conditionsProvenance =
+                        extractBundleResources(conditionsBundle).Provenance;
+                    const consents = extractBundleResources(consentsBundle).Consent;
+                    const consentsProvenance = extractBundleResources(consentsBundle).Provenance;
                     const immunizations = extractBundleResources(immunizationsBundle).Immunization;
                     const immunizationsProvenance =
                         extractBundleResources(immunizationsBundle).Provenance;
@@ -146,6 +157,7 @@ export function usePatientOverview(props: Props) {
                         prepareMedications(medications, medicationsProvenance),
                         prepareAllergies(allergies, allergiesProvenance),
                         prepareImmunizations(immunizations, immunizationsProvenance),
+                        prepareConsents(consents, consentsProvenance),
                     ];
                     const appointments = prepareAppointments(appointmentsBundle);
 
