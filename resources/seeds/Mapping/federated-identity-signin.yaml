@@ -2,7 +2,7 @@ body:
     $let:
         firstname: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='firstname').answer.value.string").0
         lastname: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='lastname').answer.value.string").0
-        federatedUID: $ fhirpath("FederatedIdentity")
+        federatedIdentity: $ fhirpath("FederatedIdentity")
     $body:
         type: transaction
         entry:
@@ -15,12 +15,14 @@ body:
                   # https://docs.aidbox.app/security-and-access-control-1/auth/access-token-introspection#examples
                   # Once the JWT is validated its 'sub' or 'box_user' will be used as an 'id'
                   # to search for the associated User resource.
-                  id: $ federatedUID
+                  id: $ federatedIdentity.value
             - request:
                   method: Post
                   url: '/Patient'
               resource:
                   resourceType: Patient
+                  identifier:
+                    - $ federatedIdentity
                   name:
                       - given:
                             - $ firstname
@@ -34,7 +36,7 @@ body:
                   name: 'patient'
                   user:
                       resourceType: User
-                      id: $ federatedUID
+                      id: $ federatedIdentity.value
                   links:
                       patient:
                           uri: urn:uuid:cf3923f0-2eaa-4feb-94eb-3a3db62f0705

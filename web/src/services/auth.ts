@@ -107,7 +107,10 @@ export async function signinWithIdentityToken(
                 {
                     name: 'FederatedIdentity',
                     value: {
-                        string: decodeJwt(identityToken).sub,
+                        Identifier: {
+                            system: decodeJwt(identityToken).iss,
+                            value: decodeJwt(identityToken).sub,
+                        },
                     },
                 },
                 {
