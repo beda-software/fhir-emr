@@ -78,15 +78,10 @@ export const PatientDetails = () => {
                                         path="/documents/:qrId/*"
                                         element={<PatientDocumentDetails patient={patient} />}
                                     />
-                                    {selectCurrentUserRole({
-                                        [Role.Admin]: null,
-                                        [Role.Patient]: (
-                                            <Route
-                                                path="/wearables"
-                                                element={<PatientWearables />}
-                                            />
-                                        ),
-                                    })}
+                                    <Route
+                                        path="/wearables"
+                                        element={<PatientWearables patient={patient} />}
+                                    />
                                 </Route>
                             </Routes>
                         </BasePageContent>

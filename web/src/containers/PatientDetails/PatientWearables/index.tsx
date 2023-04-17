@@ -1,13 +1,19 @@
 import { t } from '@lingui/macro';
 import { Empty } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
+import { WithId } from 'fhir-react';
 import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { Patient } from 'fhir/r4b';
 
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
 
 import { usePatientWearablesData, WearablesDataRecord } from './hooks';
+
+export interface PatientWearablesProps {
+    patient: WithId<Patient>;
+}
 
 const columns: ColumnsType<WearablesDataRecord> = [
     {
@@ -44,8 +50,8 @@ const columns: ColumnsType<WearablesDataRecord> = [
     },
 ];
 
-export function PatientWearables() {
-    const [wearablesData] = usePatientWearablesData();
+export function PatientWearables(props: PatientWearablesProps) {
+    const [wearablesData] = usePatientWearablesData(props.patient);
 
     usePatientHeaderLocationTitle({ title: t`Wearables` });
 
