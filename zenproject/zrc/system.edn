@@ -49,8 +49,7 @@
                    :link [{:resourceType "Client" :id "patient-questionnaire"}]}
                   :federated-identity-signin {:engine "json-schema"
                                               :schema {:required ["jwt"]
-                                                       :properties {:request-method {:const "post"}
-                                                                    :jwt {:required ["iss", "aud", "sub"]
+                                                       :properties {:jwt {:required ["iss", "aud", "sub"]
                                                                           :properties {:iss {:const "https://appleid.apple.com"}
                                                                                        :aud {:const "software.beda.emr"}
                                                                                        :sub {:type "string"
