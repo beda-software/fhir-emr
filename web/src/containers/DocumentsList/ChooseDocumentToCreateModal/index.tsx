@@ -36,8 +36,8 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
 
     const onCloseModal = useCallback(() => {
         onCancel();
-        setQuestionnaireId(undefined)
-    }, [onCancel])
+        setQuestionnaireId(undefined);
+    }, [onCancel]);
 
     return (
         <>

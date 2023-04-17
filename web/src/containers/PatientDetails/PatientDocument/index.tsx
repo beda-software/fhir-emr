@@ -1,4 +1,3 @@
-
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { isSuccess, notAsked, RemoteData } from 'fhir-react/lib/libs/remoteData';
 import { WithId } from 'fhir-react/lib/services/fhir';
