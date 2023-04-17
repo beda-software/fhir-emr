@@ -1,10 +1,11 @@
 import { Trans } from '@lingui/macro';
 import Title from 'antd/lib/typography/Title';
+import { WithId } from 'fhir-react';
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { useService } from 'fhir-react/lib/hooks/service';
 import { getFHIRResource } from 'fhir-react/lib/services/fhir';
 import { axiosInstance as axiosFHIRInstance } from 'fhir-react/lib/services/instance';
-import { Patient, Practitioner } from 'fhir/r4b';
+import { Patient } from 'fhir/r4b';
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -13,11 +14,9 @@ import { axiosInstance as axiosAidboxInstance } from 'aidbox-react/lib/services/
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { Spinner } from 'src/components/Spinner';
 import { getToken } from 'src/services/auth';
-import { sharedAuthorizedPatient, sharedAuthorizedPractitioner } from 'src/sharedState';
-import { Role, selectCurrentUserRole } from 'src/utils/role';
+import { selectCurrentUserRoleResource } from 'src/utils/role';
 
 import { PatientDocument } from '../PatientDetails/PatientDocument';
-
 
 function usePatientQuestionnaire() {
     const location = useLocation();
@@ -31,9 +30,9 @@ function usePatientQuestionnaire() {
         };
     }, [location.search]);
 
-    const [response] = useService<Patient>(
+    const [response] = useService<WithId<Patient>>(
         async () =>
-            getFHIRResource<Patient>({
+            getFHIRResource<WithId<Patient>>({
                 reference: `Patient/${patientId}`,
             }),
         [patientId],
@@ -90,18 +89,7 @@ export function PatientQuestionnaire() {
                         {(patient) => (
                             <PatientDocument
                                 patient={patient}
-                                author={
-                                    isAnonymousUser
-                                        ? patient
-                                        : selectCurrentUserRole<
-                                              () => Practitioner | Patient | undefined
-                                          >({
-                                              [Role.Admin]: () =>
-                                                  sharedAuthorizedPractitioner.getSharedState(),
-                                              [Role.Patient]: () =>
-                                                  sharedAuthorizedPatient.getSharedState(),
-                                          })()
-                                }
+                                author={isAnonymousUser ? patient : selectCurrentUserRoleResource()}
                                 questionnaireId={questionnaireId!}
                                 encounterId={encounterId}
                             />

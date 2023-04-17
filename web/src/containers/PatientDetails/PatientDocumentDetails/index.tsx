@@ -36,8 +36,7 @@ import {
     usePatientDocument,
 } from 'src/containers/PatientDetails/PatientDocument/usePatientDocument';
 import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
-import { sharedAuthorizedPatient, sharedAuthorizedPractitioner } from 'src/sharedState';
-import { Role, selectCurrentUserRole } from 'src/utils/role';
+import { selectCurrentUserRoleResource } from 'src/utils/role';
 
 import s from './PatientDocumentDetails.module.scss';
 
@@ -224,10 +223,7 @@ export function PatientDocumentDetails(props: Props) {
     const { patient } = props;
     const { response, manager } = usePatientDocumentDetails();
     const navigate = useNavigate();
-    const author = selectCurrentUserRole<() => Practitioner | Patient | undefined>({
-        [Role.Admin]: () => sharedAuthorizedPractitioner.getSharedState(),
-        [Role.Patient]: () => sharedAuthorizedPatient.getSharedState(),
-    })();
+    const author = selectCurrentUserRoleResource();
 
     return (
         <RenderRemoteData

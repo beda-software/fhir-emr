@@ -1,6 +1,13 @@
+import { WithId } from 'fhir-react';
+import { Patient, Practitioner } from 'fhir/r4b';
+
 import { User } from 'shared/src/contrib/aidbox';
 
-import { sharedAuthorizedUser } from 'src/sharedState';
+import {
+    sharedAuthorizedPatient,
+    sharedAuthorizedPractitioner,
+    sharedAuthorizedUser,
+} from 'src/sharedState';
 
 export enum Role {
     Patient = 'patient',
@@ -15,4 +22,11 @@ export function selectUserRole<T>(user: User, options: { [role in Role]: T }): T
 
 export function selectCurrentUserRole<T>(options: { [role in Role]: T }) {
     return selectUserRole(sharedAuthorizedUser.getSharedState()!, options);
+}
+
+export function selectCurrentUserRoleResource(): WithId<Patient | Practitioner> {
+    return selectCurrentUserRole<() => WithId<Patient | Practitioner>>({
+        [Role.Admin]: () => sharedAuthorizedPractitioner.getSharedState()!,
+        [Role.Patient]: () => sharedAuthorizedPatient.getSharedState()!,
+    })();
 }
