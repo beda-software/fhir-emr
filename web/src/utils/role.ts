@@ -7,10 +7,10 @@ export enum Role {
     Admin = 'admin',
 }
 
-export function selectUserRole<T>(user: User, options: { [role in Role]: T }) {
-    const userRole = user.role?.[0]?.name;
+export function selectUserRole<T>(user: User, options: { [role in Role]: T }): T {
+    const userRole = user.role![0]!.name;
 
-    return userRole ? options[userRole] : undefined;
+    return options[userRole];
 }
 
 export function selectCurrentUserRole<T>(options: { [role in Role]: T }) {
