@@ -109,7 +109,6 @@ item:
         itemControl:
           coding:
               - code: text-with-macro
- 
         code:
           - system: "http://loinc.org"
             code: "71404-8"
@@ -121,7 +120,6 @@ item:
         itemControl:
           coding:
               - code: text-with-macro
- 
         code:
           - system: "http://loinc.org"
             code: "71405-5"
@@ -133,7 +131,6 @@ item:
         itemControl:
           coding:
               - code: text-with-macro
- 
         code:
           - system: "http://loinc.org"
             code: "71403-0"
@@ -176,7 +173,7 @@ item:
             display: "CMS - genitourinary exam - female panel"
         enableWhenExpression:
           language: text/fhirpath
-          expression: "%Patient.gender = 'female'"
+          expression: "%Patient.gender.exists() and %Patient.gender = 'female'"
       - text: Genitourinary
         linkId: genitourinary-male
         type: text
@@ -190,7 +187,7 @@ item:
             display: "CMS - genitourinary exam - male panel"
         enableWhenExpression:
           language: text/fhirpath
-          expression: "%Patient.gender = 'male'"
+          expression: "%Patient.gender.exists() and %Patient.gender = 'male'"
       - text: Rectal
         linkId: rectal
         type: text
