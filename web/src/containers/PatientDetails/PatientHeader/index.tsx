@@ -73,20 +73,15 @@ export function PatientHeader() {
     const params = useParams<{ id: string }>();
     const { title, breadcrumbs } = useContext(PatientHeaderContext);
 
-    const menuItems: RouteItem[] = useMemo(() => {
-        const commonRoutes: RouteItem[] = [
+    const menuItems: RouteItem[] = useMemo(
+        () => [
             { title: t`Overview`, path: `/patients/${params.id}` },
             { title: t`Encounters`, path: `/patients/${params.id}/encounters` },
             { title: t`Documents`, path: `/patients/${params.id}/documents` },
-        ];
-        return selectCurrentUserRole({
-            [Role.Admin]: commonRoutes,
-            [Role.Patient]: [
-                ...commonRoutes,
-                { title: t`Wearables`, path: `/patients/${params.id}/wearables` },
-            ],
-        });
-    }, [params.id]);
+            { title: t`Wearables`, path: `/patients/${params.id}/wearables` },
+        ],
+        [params.id],
+    );
 
     const [currentPath, setCurrentPath] = useState(location?.pathname);
 
