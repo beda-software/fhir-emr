@@ -12,24 +12,25 @@
         "typecheck": "lerna run --parallel typecheck",
         "lint": "lerna run --parallel lint",
         "extract": "lingui extract",
-        "compile": "lingui compile --typescript"
+        "compile": "lingui compile --typescript",
+        "prepare": "husky install"
     },
     "devDependencies": {
         "@lingui/cli": "^3.14.0",
         "@lingui/macro": "^3.14.0",
+        "@types/fhir": "0.0.36",
         "@types/node": "^16.11.7",
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-import": "^2.25.2",
         "eslint-plugin-prettier": "^4.0.0",
         "eslint-plugin-react-hooks": "^4.2.0",
         "eslint-plugin-unused-imports": "^1.1.5",
-        "husky": "^7.0.4",
+        "husky": "^8.0.3",
         "lerna": "^4.0.0",
         "lint-staged": "^11.2.6",
         "prettier": "^2.4.1",
         "rimraf": "^3.0.2",
-        "typescript": "^4.5.4",
-        "@types/fhir": "0.0.36"
+        "typescript": "^4.5.4"
     },
     "dependencies": {
         "@lingui/react": "^3.14.0"
@@ -39,14 +40,5 @@
             "web",
             "shared"
         ]
-    },
-    "lint-staged": {
-        "*.{js,jsx,ts,tsx}": "eslint --fix",
-        "*.{js,jsx,ts,tsx,css,md}": "prettier --write"
-    },
-    "husky": {
-        "hooks": {
-            "pre-commit": "lint-staged"
-        }
     }
 }
