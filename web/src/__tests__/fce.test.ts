@@ -118,9 +118,9 @@ describe('Questionanire and QuestionnaireResponses transformation', () => {
         expect(fromFirstClassExtension(cardiology_aidbox_QuestionnaireResponse)).toStrictEqual(
             cardiology_fhir_QuestionnaireResponse,
         );
-        expect(fromFirstClassExtension(allergies_inprogress_aidbox_QuestionnaireResponse)).toStrictEqual(
-            allergies_inprogress_fhir_QuestionnaireResponse,
-        );
+        expect(
+            fromFirstClassExtension(allergies_inprogress_aidbox_QuestionnaireResponse),
+        ).toStrictEqual(allergies_inprogress_fhir_QuestionnaireResponse);
         expect(fromFirstClassExtension(newappointment_aidbox_QuestionnaireResponse)).toStrictEqual(
             newappointment_fhir_QuestionnaireResponse,
         );
@@ -450,57 +450,6 @@ const allergies_fhir_QuestionnaireResponse: FHIRQuestionnaireResponse = JSON.par
                         valueReference: {
                             display: 'Sanjay Patel - Cardiology',
                             reference: 'PractitionerRole/429e6a55-8a64-4ede-ad12-1206522253eb',
-                            resource: {
-                                healthcareService: [
-                                    {
-                                        display: 'The first appointment',
-                                        id: 'consultation',
-                                        resourceType: 'HealthcareService',
-                                    },
-                                    {
-                                        display: 'A follow up visit',
-                                        id: 'follow-up',
-                                        resourceType: 'HealthcareService',
-                                    },
-                                ],
-                                id: '429e6a55-8a64-4ede-ad12-1206522253eb',
-                                meta: {
-                                    createdAt: '2023-04-05T06:09:11.092359Z',
-                                    lastUpdated: '2023-04-05T06:09:11.092359Z',
-                                    versionId: '20418',
-                                },
-                                practitioner: {
-                                    id: '42e9bdc0-4fe6-4b8d-a6a5-fcb68f1fe836',
-                                    resource: {
-                                        id: '42e9bdc0-4fe6-4b8d-a6a5-fcb68f1fe836',
-                                        meta: {
-                                            createdAt: '2023-04-05T06:09:11.092359Z',
-                                            lastUpdated: '2023-04-05T06:09:11.092359Z',
-                                            versionId: '20416',
-                                        },
-                                        name: [
-                                            {
-                                                family: 'Patel',
-                                                given: ['Sanjay', 'Kumar'],
-                                            },
-                                        ],
-                                        resourceType: 'Practitioner',
-                                    },
-                                    resourceType: 'Practitioner',
-                                },
-                                resourceType: 'PractitionerRole',
-                                specialty: [
-                                    {
-                                        coding: [
-                                            {
-                                                code: '394579002',
-                                                display: 'Cardiology',
-                                                system: 'http://snomed.info/sct',
-                                            },
-                                        ],
-                                    },
-                                ],
-                            },
                         },
                     },
                 ],
@@ -595,57 +544,6 @@ const allergies_aidbox_QuestionnaireResponse: AidboxQuestionnaireResponse = JSON
                             Reference: {
                                 display: 'Sanjay Patel - Cardiology',
                                 id: '429e6a55-8a64-4ede-ad12-1206522253eb',
-                                resource: {
-                                    healthcareService: [
-                                        {
-                                            display: 'The first appointment',
-                                            id: 'consultation',
-                                            resourceType: 'HealthcareService',
-                                        },
-                                        {
-                                            display: 'A follow up visit',
-                                            id: 'follow-up',
-                                            resourceType: 'HealthcareService',
-                                        },
-                                    ],
-                                    id: '429e6a55-8a64-4ede-ad12-1206522253eb',
-                                    meta: {
-                                        createdAt: '2023-04-05T06:09:11.092359Z',
-                                        lastUpdated: '2023-04-05T06:09:11.092359Z',
-                                        versionId: '20418',
-                                    },
-                                    practitioner: {
-                                        id: '42e9bdc0-4fe6-4b8d-a6a5-fcb68f1fe836',
-                                        resource: {
-                                            id: '42e9bdc0-4fe6-4b8d-a6a5-fcb68f1fe836',
-                                            meta: {
-                                                createdAt: '2023-04-05T06:09:11.092359Z',
-                                                lastUpdated: '2023-04-05T06:09:11.092359Z',
-                                                versionId: '20416',
-                                            },
-                                            name: [
-                                                {
-                                                    family: 'Patel',
-                                                    given: ['Sanjay', 'Kumar'],
-                                                },
-                                            ],
-                                            resourceType: 'Practitioner',
-                                        },
-                                        resourceType: 'Practitioner',
-                                    },
-                                    resourceType: 'PractitionerRole',
-                                    specialty: [
-                                        {
-                                            coding: [
-                                                {
-                                                    code: '394579002',
-                                                    display: 'Cardiology',
-                                                    system: 'http://snomed.info/sct',
-                                                },
-                                            ],
-                                        },
-                                    ],
-                                },
                                 resourceType: 'PractitionerRole',
                             },
                         },
@@ -3173,57 +3071,6 @@ const newappointment_fhir_QuestionnaireResponse: FHIRQuestionnaireResponse = JSO
                         valueReference: {
                             display: 'Sanjay Patel - Cardiology',
                             reference: 'PractitionerRole/429e6a55-8a64-4ede-ad12-1206522253eb',
-                            resource: {
-                                healthcareService: [
-                                    {
-                                        display: 'The first appointment',
-                                        id: 'consultation',
-                                        resourceType: 'HealthcareService',
-                                    },
-                                    {
-                                        display: 'A follow up visit',
-                                        id: 'follow-up',
-                                        resourceType: 'HealthcareService',
-                                    },
-                                ],
-                                id: '429e6a55-8a64-4ede-ad12-1206522253eb',
-                                meta: {
-                                    createdAt: '2023-04-05T06:09:11.092359Z',
-                                    lastUpdated: '2023-04-05T06:09:11.092359Z',
-                                    versionId: '20418',
-                                },
-                                practitioner: {
-                                    id: '42e9bdc0-4fe6-4b8d-a6a5-fcb68f1fe836',
-                                    resource: {
-                                        id: '42e9bdc0-4fe6-4b8d-a6a5-fcb68f1fe836',
-                                        meta: {
-                                            createdAt: '2023-04-05T06:09:11.092359Z',
-                                            lastUpdated: '2023-04-05T06:09:11.092359Z',
-                                            versionId: '20416',
-                                        },
-                                        name: [
-                                            {
-                                                family: 'Patel',
-                                                given: ['Sanjay', 'Kumar'],
-                                            },
-                                        ],
-                                        resourceType: 'Practitioner',
-                                    },
-                                    resourceType: 'Practitioner',
-                                },
-                                resourceType: 'PractitionerRole',
-                                specialty: [
-                                    {
-                                        coding: [
-                                            {
-                                                code: '394579002',
-                                                display: 'Cardiology',
-                                                system: 'http://snomed.info/sct',
-                                            },
-                                        ],
-                                    },
-                                ],
-                            },
                         },
                     },
                 ],
@@ -3318,57 +3165,6 @@ const newappointment_aidbox_QuestionnaireResponse: AidboxQuestionnaireResponse =
                             Reference: {
                                 display: 'Sanjay Patel - Cardiology',
                                 id: '429e6a55-8a64-4ede-ad12-1206522253eb',
-                                resource: {
-                                    healthcareService: [
-                                        {
-                                            display: 'The first appointment',
-                                            id: 'consultation',
-                                            resourceType: 'HealthcareService',
-                                        },
-                                        {
-                                            display: 'A follow up visit',
-                                            id: 'follow-up',
-                                            resourceType: 'HealthcareService',
-                                        },
-                                    ],
-                                    id: '429e6a55-8a64-4ede-ad12-1206522253eb',
-                                    meta: {
-                                        createdAt: '2023-04-05T06:09:11.092359Z',
-                                        lastUpdated: '2023-04-05T06:09:11.092359Z',
-                                        versionId: '20418',
-                                    },
-                                    practitioner: {
-                                        id: '42e9bdc0-4fe6-4b8d-a6a5-fcb68f1fe836',
-                                        resource: {
-                                            id: '42e9bdc0-4fe6-4b8d-a6a5-fcb68f1fe836',
-                                            meta: {
-                                                createdAt: '2023-04-05T06:09:11.092359Z',
-                                                lastUpdated: '2023-04-05T06:09:11.092359Z',
-                                                versionId: '20416',
-                                            },
-                                            name: [
-                                                {
-                                                    family: 'Patel',
-                                                    given: ['Sanjay', 'Kumar'],
-                                                },
-                                            ],
-                                            resourceType: 'Practitioner',
-                                        },
-                                        resourceType: 'Practitioner',
-                                    },
-                                    resourceType: 'PractitionerRole',
-                                    specialty: [
-                                        {
-                                            coding: [
-                                                {
-                                                    code: '394579002',
-                                                    display: 'Cardiology',
-                                                    system: 'http://snomed.info/sct',
-                                                },
-                                            ],
-                                        },
-                                    ],
-                                },
                                 resourceType: 'PractitionerRole',
                             },
                         },
