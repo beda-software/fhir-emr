@@ -10,6 +10,7 @@ export function usePatientDocuments(patient: Patient, encounter?: Reference) {
         const qrResponse = await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
             source: patient.id,
             encounter: encounter ? parseFHIRReference(encounter).id : undefined,
+            _sort: '-authored',
         });
 
         const qrResponseExtracted = mapSuccess(qrResponse, (bundle) => ({
@@ -17,9 +18,9 @@ export function usePatientDocuments(patient: Patient, encounter?: Reference) {
         }));
 
         if (isSuccess(qrResponseExtracted)) {
-            const ids = qrResponseExtracted.data.QuestionnaireResponse.map(
-                (qr) => qr.questionnaire,
-            ).filter((q) => q !== undefined);
+            const ids = qrResponseExtracted.data.QuestionnaireResponse.map((qr) => qr.questionnaire).filter(
+                (q) => q !== undefined,
+            );
 
             const qResponse = await getFHIRResources<Questionnaire>('Questionnaire', {
                 id: ids.join(','),
@@ -27,9 +28,7 @@ export function usePatientDocuments(patient: Patient, encounter?: Reference) {
 
             return mapSuccess(qResponse, (bundle) => {
                 let questionnaireNames: { [key: string]: string | undefined } = {};
-                extractBundleResources(bundle).Questionnaire.forEach(
-                    (q) => (questionnaireNames[q.id!] = q.name),
-                );
+                extractBundleResources(bundle).Questionnaire.forEach((q) => (questionnaireNames[q.id!] = q.name));
 
                 return {
                     ...qrResponseExtracted.data,
