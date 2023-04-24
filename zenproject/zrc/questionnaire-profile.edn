@@ -82,7 +82,8 @@
   :keys {:mapping {:type zen/vector
                    :every {:confirms #{hl7-fhir-r4-core.Reference/schema}}
                    :fhir/extensionUri "http://beda.software/fhir-extensions/questionnaire-mapper"}
-         :sourceQueries {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-sourceQueries/schema},
+         :sourceQueries {:type zen/vector
+                         :every {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-sourceQueries/schema}},
                          :fhir/extensionUri "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-sourceQueries"},
          :launchContext {:type zen/vector
                          :every {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-launchContext/schema}}
