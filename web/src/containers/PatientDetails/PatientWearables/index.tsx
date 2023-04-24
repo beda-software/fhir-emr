@@ -2,6 +2,7 @@ import { t } from '@lingui/macro';
 import { Empty } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { WithId } from 'fhir-react';
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { Patient } from 'fhir/r4b';
 
@@ -26,8 +27,7 @@ const columns: ColumnsType<WearablesDataRecord> = [
         title: t`Duration (min)`,
         dataIndex: 'duration',
         key: 'duration',
-        render: (_text, resource) =>
-            resource.duration !== undefined ? Math.round(resource.duration / 60) : undefined,
+        render: (_text, resource) => (resource.duration !== undefined ? Math.round(resource.duration / 60) : undefined),
     },
     {
         title: t`Start`,
@@ -45,8 +45,7 @@ const columns: ColumnsType<WearablesDataRecord> = [
         title: t`Calories`,
         dataIndex: 'calories',
         key: 'calories',
-        render: (_text, resource) =>
-            resource.energy !== undefined ? Math.round(resource.energy) : undefined,
+        render: (_text, resource) => (resource.energy !== undefined ? Math.round(resource.energy) : undefined),
     },
 ];
 
@@ -59,13 +58,24 @@ export function PatientWearables(props: PatientWearablesProps) {
         <Table<WearablesDataRecord>
             locale={{
                 emptyText: (
-                    <>
-                        <Empty description={t`No data`} image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                    </>
+                    <RenderRemoteData remoteData={wearablesData}>
+                        {({ hasConsent }) => (
+                            <>
+                                {hasConsent ? (
+                                    <Empty description={t`No data`} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                                ) : (
+                                    <Empty
+                                        description={t`Contact patient to sign-off consent on activity data access.`}
+                                        image={Empty.PRESENTED_IMAGE_DEFAULT}
+                                    />
+                                )}
+                            </>
+                        )}
+                    </RenderRemoteData>
                 ),
             }}
             rowKey={(p) => p.sid}
-            dataSource={isSuccess(wearablesData) ? wearablesData.data : []}
+            dataSource={isSuccess(wearablesData) ? wearablesData.data.records : []}
             columns={columns}
             loading={isLoading(wearablesData) ? { indicator: SpinIndicator } : undefined}
         />
