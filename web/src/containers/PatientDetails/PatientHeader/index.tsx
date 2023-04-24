@@ -11,14 +11,12 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 import { BasePageHeader } from 'src/components/BaseLayout';
 import { RouteItem } from 'src/components/BaseLayout/Header';
 import Breadcrumbs from 'src/components/Breadcrumbs';
-import { Role, selectCurrentUserRole } from 'src/utils/role';
+import { matchCurrentUserRole, Role } from 'src/utils/role';
 
 import { BreadCrumb, PatientHeaderContext } from './context';
 import s from './PatientHeader.module.scss';
 
-export function PatientHeaderContextProvider(
-    props: React.HTMLAttributes<HTMLDivElement> & { patient: Patient },
-) {
+export function PatientHeaderContextProvider(props: React.HTMLAttributes<HTMLDivElement> & { patient: Patient }) {
     const { children, patient } = props;
     const [pageTitle] = useState(renderHumanName(patient.name?.[0]));
     const params = useParams<{ id: string }>();
@@ -107,9 +105,9 @@ export function PatientHeader() {
     return (
         <BasePageHeader style={{ paddingBottom: 0 }}>
             <Breadcrumbs
-                crumbs={selectCurrentUserRole({
-                    [Role.Admin]: breadcrumbs,
-                    [Role.Patient]: breadcrumbs.slice(1),
+                crumbs={matchCurrentUserRole({
+                    [Role.Admin]: () => breadcrumbs,
+                    [Role.Patient]: () => breadcrumbs.slice(1),
                 })}
             />
             <Title style={{ marginBottom: 21 }}>{title}</Title>

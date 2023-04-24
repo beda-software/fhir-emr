@@ -11,7 +11,6 @@ import { success } from 'aidbox-react/lib/libs/remoteData';
 import { User } from 'shared/src/contrib/aidbox';
 
 import { BaseLayout } from 'src/components/BaseLayout';
-import { RoleSwitch } from 'src/components/RoleSwitch';
 import { Spinner } from 'src/components/Spinner';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { EncounterList } from 'src/containers/EncounterList';
@@ -29,7 +28,7 @@ import { getToken } from 'src/services/auth';
 import { parseOAuthState, setToken } from 'src/services/auth';
 import { history } from 'src/services/history';
 import { sharedAuthorizedPatient } from 'src/sharedState';
-import { Role } from 'src/utils/role';
+import { Role, matchCurrentUserRole } from 'src/utils/role';
 
 import { restoreUserSession } from './utils';
 
@@ -41,14 +40,10 @@ export function App() {
 
     const renderRoutes = (user: User | null) => {
         if (user) {
-            return (
-                <RoleSwitch user={user}>
-                    {{
-                        [Role.Admin]: <AuthenticatedAdminUserApp />,
-                        [Role.Patient]: <AuthenticatedPatientUserApp />,
-                    }}
-                </RoleSwitch>
-            );
+            return matchCurrentUserRole({
+                [Role.Admin]: () => <AuthenticatedAdminUserApp />,
+                [Role.Patient]: () => <AuthenticatedPatientUserApp />,
+            });
         }
 
         return <AnonymousUserApp />;
@@ -125,10 +120,7 @@ function AuthenticatedAdminUserApp(_props: {}) {
                 <Route path="/questionnaire" element={<PatientQuestionnaire />} />
                 <Route path="/patients/:id/*" element={<PatientDetails />} />
                 <Route path="/documents/:id/edit" element={<div>documents/:id/edit</div>} />
-                <Route
-                    path="/encounters/:encounterId/qr/:questionnaireId"
-                    element={<EncounterQR />}
-                />
+                <Route path="/encounters/:encounterId/qr/:questionnaireId" element={<EncounterQR />} />
                 <Route path="/encounters/:encounterId/video" element={<VideoCall />} />
                 <Route path="/practitioners" element={<PractitionerList />} />
                 <Route path="/practitioners/:id/*" element={<PractitionerDetails />} />
