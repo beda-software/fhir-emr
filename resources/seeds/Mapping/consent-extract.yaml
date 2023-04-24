@@ -9,6 +9,9 @@ body:
     patient:
       reference: $ "Patient/" + Patient.id
       display: $ Patient.name.0.given.0 + ' ' + Patient.name.0.family
+    author:
+      reference: $ Author.resourceType + "/" + Author.id
+      display: $ Author.name.0.given.0 + ' ' + Author.name.0.family
     provision: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='provision').answer.valueCoding").0
   $body:
     type: transaction
@@ -34,7 +37,7 @@ body:
               - code: patient-privacy
                 system: http://terminology.hl7.org/CodeSystem/consentscope
           performer:
-            - $ patient
+            - $ author
           sourceReference:
             reference: $ "QuestionnaireResponse/" + qrId
           category:
@@ -80,7 +83,7 @@ body:
                   display: 'create'
                   system: 'http://terminology.hl7.org/CodeSystem/v3-DataOperation'
           agent:
-            - who: $ patient
+            - who: $ author
           entity:
             - role: source
               what:
