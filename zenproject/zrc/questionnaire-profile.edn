@@ -45,8 +45,8 @@
                            :calculatedExpression {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-calculatedExpression/schema},
                                                   :fhir/extensionUri "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression"}
                            :itemPopulationContext {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-itemPopulationContext/schema}
-                                         :fhir/extensionUri "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemPopulationContext"
-                                         :fhir/flags #{:MS}}
+                                                   :fhir/extensionUri "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemPopulationContext"
+                                                   :fhir/flags #{:MS}}
                            :enableWhenExpression {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-enableWhenExpression/schema},
                                                   :fhir/extensionUri "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-enableWhenExpression",
                                                   :fhir/flags #{:MS}},
@@ -80,13 +80,13 @@
   :type zen/map
   :zen.fhir/version "0.5.25-1"
   :keys {:mapping {:type zen/vector
-                   :every {:confirms #{hl7-fhir-r4-core.Reference/schema}}
-                   :fhir/extensionUri "http://beda.software/fhir-extensions/questionnaire-mapper"}
+                   :every {:confirms #{hl7-fhir-r4-core.Reference/schema}
+                           :fhir/extensionUri "http://beda.software/fhir-extensions/questionnaire-mapper"}}
          :sourceQueries {:type zen/vector
-                         :every {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-sourceQueries/schema}},
-                         :fhir/extensionUri "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-sourceQueries"},
+                         :every {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-sourceQueries/schema}
+                                 :fhir/extensionUri "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-sourceQueries"}}
          :launchContext {:type zen/vector
-                         :every {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-launchContext/schema}}
-                         :fhir/extensionUri "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext"}
+                         :every {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-launchContext/schema}
+                                 :fhir/extensionUri "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext"}}
          :item {:type zen/vector
                 :every {:confirms #{QuestionnaireItem}}}}}}
