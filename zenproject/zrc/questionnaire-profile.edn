@@ -88,5 +88,8 @@
          :launchContext {:type zen/vector
                          :every {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-launchContext/schema}
                                  :fhir/extensionUri "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext"}}
+         :targetStructureMap {:type zen/vector
+                         :every {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-targetStructureMap/schema}
+                                 :fhir/extensionUri "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-targetStructureMap"}}
          :item {:type zen/vector
                 :every {:confirms #{QuestionnaireItem}}}}}}
