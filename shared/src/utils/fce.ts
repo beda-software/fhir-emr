@@ -24,16 +24,12 @@ interface ExtensionValue {
 const extensionsMap: Record<keyof ExtensionValue, keyof Extension> = {
     'ex:createdAt': 'valueInstant',
     'http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl': 'valueCodeableConcept',
-    'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression':
-        'valueExpression',
+    'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression': 'valueExpression',
     'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn': 'extension',
     'http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource': 'valueCode',
 };
 
-export function extractExtension<U extends keyof ExtensionValue>(
-    extension: Extension[] | undefined,
-    url: U,
-) {
+export function extractExtension<U extends keyof ExtensionValue>(extension: Extension[] | undefined, url: U) {
     const e = extension?.find((e) => e.url === url);
     if (e) {
         const getter = extensionsMap[url];
@@ -75,10 +71,7 @@ function findInitialValue(item: any, property: string) {
 function getUpdatedPropertiesFromItem(item: any) {
     const updatedProperties: any = {};
 
-    const hidden = findExtension(
-        item,
-        'http://hl7.org/fhir/StructureDefinition/questionnaire-hidden',
-    )?.valueBoolean;
+    const hidden = findExtension(item, 'http://hl7.org/fhir/StructureDefinition/questionnaire-hidden')?.valueBoolean;
     const initialExpression = findExtension(
         item,
         'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression',
@@ -130,21 +123,18 @@ function getUpdatedPropertiesFromItem(item: any) {
             .filter(Boolean);
 
         updatedProperties.adjustLastToRight = item.extension?.find(
-            (ext: { url: string }) =>
-                ext.url === 'https://beda.software/fhir-emr-questionnaire/adjust-last-to-right',
+            (ext: { url: string }) => ext.url === 'https://beda.software/fhir-emr-questionnaire/adjust-last-to-right',
         )?.valueBoolean;
 
-        const enableWhen = item.enableWhen?.map(
-            (condition: { question: any; operator: any; answerCoding: any }) => {
-                return {
-                    question: condition.question,
-                    operator: condition.operator,
-                    answer: {
-                        Coding: condition.answerCoding,
-                    },
-                };
-            },
-        );
+        const enableWhen = item.enableWhen?.map((condition: { question: any; operator: any; answerCoding: any }) => {
+            return {
+                question: condition.question,
+                operator: condition.operator,
+                answer: {
+                    Coding: condition.answerCoding,
+                },
+            };
+        });
         if (enableWhen?.length > 0) {
             updatedProperties.enableWhen = enableWhen;
         }
@@ -169,38 +159,32 @@ function getUpdatedPropertiesFromItem(item: any) {
             (ext: any) => ext.url === 'https://beda.software/fhir-emr-questionnaire/help-text',
         )?.valueString;
         updatedProperties.stopLabel = item.extension?.find(
-            (ext: any) =>
-                ext.url === 'https://beda.software/fhir-emr-questionnaire/slider-stop-label',
+            (ext: any) => ext.url === 'https://beda.software/fhir-emr-questionnaire/slider-stop-label',
         )?.valueString;
         updatedProperties.sliderStepValue = item.extension?.find(
-            (ext: any) =>
-                ext.url === 'http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue',
+            (ext: any) => ext.url === 'http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue',
         )?.valueInteger;
     }
 
     if (item.type === 'integer') {
         updatedProperties.calculatedExpression = item.extension?.find(
             (ext: { url: string }) =>
-                ext.url ===
-                'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression',
+                ext.url === 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression',
         )?.valueExpression;
 
         updatedProperties.unit = item.extension?.find(
-            (ext: { url: string }) =>
-                ext.url === 'http://hl7.org/fhir/StructureDefinition/questionnaire-unit',
+            (ext: { url: string }) => ext.url === 'http://hl7.org/fhir/StructureDefinition/questionnaire-unit',
         )?.valueCoding;
     }
 
     if (item.type === 'text') {
         updatedProperties.macro = item.extension?.find(
-            (ext: { url: string }) =>
-                ext.url === 'https://beda.software/fhir-emr-questionnaire/macro',
+            (ext: { url: string }) => ext.url === 'https://beda.software/fhir-emr-questionnaire/macro',
         )?.valueString;
 
         updatedProperties.enableWhenExpression = item.extension?.find(
             (ext: { url: string }) =>
-                ext.url ===
-                'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-enableWhenExpression',
+                ext.url === 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-enableWhenExpression',
         )?.valueExpression;
 
         const enableWhen = item.enableWhen?.map(
@@ -222,8 +206,7 @@ function getUpdatedPropertiesFromItem(item: any) {
     if (item.type === 'group') {
         item.item?.forEach((nestedItem: any) => {
             const unit = nestedItem.extension?.find(
-                (ext: any) =>
-                    ext.url === 'http://hl7.org/fhir/StructureDefinition/questionnaire-unit',
+                (ext: any) => ext.url === 'http://hl7.org/fhir/StructureDefinition/questionnaire-unit',
             )?.valueCoding;
             if (unit !== undefined) {
                 nestedItem.unit = unit;
@@ -255,18 +238,12 @@ function getUpdatedPropertiesFromItem(item: any) {
 
     if (item.type === 'reference') {
         const choiceColumnExtension = item.extension?.find(
-            (ext: any) =>
-                ext.url ===
-                'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn',
+            (ext: any) => ext.url === 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn',
         ).extension;
 
-        const forDisplay = choiceColumnExtension.find(
-            (obj: { url: string }) => obj.url === 'forDisplay',
-        ).valueBoolean;
+        const forDisplay = choiceColumnExtension.find((obj: { url: string }) => obj.url === 'forDisplay').valueBoolean;
 
-        const path = choiceColumnExtension.find(
-            (obj: { url: string }) => obj.url === 'path',
-        ).valueString;
+        const path = choiceColumnExtension.find((obj: { url: string }) => obj.url === 'path').valueString;
 
         const choiceColumnArray = [];
         choiceColumnArray.push({
@@ -277,15 +254,12 @@ function getUpdatedPropertiesFromItem(item: any) {
 
         updatedProperties.answerExpression = item.extension?.find(
             (ext: any) =>
-                ext.url ===
-                'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression',
+                ext.url === 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression',
         ).valueExpression;
 
         const referenceResourceArray = [];
         const referenceResource = item.extension?.find(
-            (ext: any) =>
-                ext.url ===
-                'http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource',
+            (ext: any) => ext.url === 'http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource',
         ).valueCode;
         referenceResourceArray.push(referenceResource);
         updatedProperties.referenceResource = referenceResourceArray;
@@ -325,9 +299,7 @@ function checkFhirQuestionnaireProfile(fhirQuestionnaire: FHIRQuestionnaire): vo
 }
 
 function getCreatedAt(fhirQuestionnaire: FHIRQuestionnaire): { createdAt?: string } {
-    const metaExtension = fhirQuestionnaire.meta?.extension?.find(
-        (ext) => ext.url === 'ex:createdAt',
-    );
+    const metaExtension = fhirQuestionnaire.meta?.extension?.find((ext) => ext.url === 'ex:createdAt');
     return metaExtension ? { createdAt: metaExtension.valueInstant } : {};
 }
 
@@ -358,9 +330,7 @@ function processItem(item: any): any {
 
 export function processLaunchContext(fhirQuestionnaire: FHIRQuestionnaire): any[] | undefined {
     const launchContextExtensions = fhirQuestionnaire.extension?.filter(
-        (ext: any) =>
-            ext.url ===
-            'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext',
+        (ext: any) => ext.url === 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext',
     );
 
     if (!launchContextExtensions) {
@@ -368,15 +338,9 @@ export function processLaunchContext(fhirQuestionnaire: FHIRQuestionnaire): any[
     }
 
     return launchContextExtensions.map((launchContextExtension: any) => {
-        const nameExtension = launchContextExtension.extension?.find(
-            (ext: any) => ext.url === 'name',
-        );
-        const typeExtension = launchContextExtension.extension?.find(
-            (ext: any) => ext.url === 'type',
-        );
-        const descriptionExtension = launchContextExtension.extension?.find(
-            (ext: any) => ext.url === 'description',
-        );
+        const nameExtension = launchContextExtension.extension?.find((ext: any) => ext.url === 'name');
+        const typeExtension = launchContextExtension.extension?.find((ext: any) => ext.url === 'type');
+        const descriptionExtension = launchContextExtension.extension?.find((ext: any) => ext.url === 'description');
         const nameCode = nameExtension?.valueCoding?.code;
         const typeCode = typeExtension?.valueCode;
         const description = descriptionExtension?.valueString;
@@ -474,7 +438,7 @@ function processAnswerToFCE(itemList: any[] | undefined) {
             delete item.answer[0]?.valueDateTime;
         } else if (item.answer && item.answer[0]?.valueReference) {
             const { display, reference } = item.answer[0]?.valueReference;
-            const [ resourceType, id ] = reference.split('/');
+            const [resourceType, id] = reference.split('/');
             item.answer[0].value = {
                 Reference: {
                     display,
@@ -588,9 +552,7 @@ function processReferenceToFHIR(fceQR: any) {
     }
 }
 
-export function toFirstClassExtension(
-    fhirQuestionnaire: FHIRQuestionnaireResponse,
-): FCEQuestionnaireResponse;
+export function toFirstClassExtension(fhirQuestionnaire: FHIRQuestionnaireResponse): FCEQuestionnaireResponse;
 export function toFirstClassExtension(fhirQuestionnaire: FHIRQuestionnaire): FCEQuestionnaire;
 export function toFirstClassExtension(fhirResource: any): any {
     if (fhirResource.resourceType === 'Questionnaire') {
@@ -620,9 +582,7 @@ export function toFirstClassExtension(fhirResource: any): any {
     }
 }
 
-export function fromFirstClassExtension(
-    fhirQuestionnaire: FCEQuestionnaireResponse,
-): FHIRQuestionnaireResponse;
+export function fromFirstClassExtension(fhirQuestionnaire: FCEQuestionnaireResponse): FHIRQuestionnaireResponse;
 export function fromFirstClassExtension(fhirQuestionnaire: FCEQuestionnaire): FHIRQuestionnaire;
 export function fromFirstClassExtension(fceResource: any): any {
     if (fceResource.resourceType === 'Questionnaire') {
@@ -770,22 +730,20 @@ function processItemsToFHIR(items: any[] | undefined) {
         }
 
         if (item.enableWhen !== undefined) {
-            const enableWhen = item.enableWhen.map(
-                (condition: { question: any; operator: any; answer: any }) => {
-                    const { question, operator, answer } = condition;
-                    const answerCoding = answer?.Coding;
-                    const answerBoolean = answer?.boolean;
-                    const result = {
-                        question,
-                        operator,
-                        ...(answerCoding && { answerCoding }),
-                    };
-                    if (answerBoolean) {
-                        result.answerBoolean = answerBoolean;
-                    }
-                    return result;
-                },
-            );
+            const enableWhen = item.enableWhen.map((condition: { question: any; operator: any; answer: any }) => {
+                const { question, operator, answer } = condition;
+                const answerCoding = answer?.Coding;
+                const answerBoolean = answer?.boolean;
+                const result = {
+                    question,
+                    operator,
+                    ...(answerCoding && { answerCoding }),
+                };
+                if (answerBoolean) {
+                    result.answerBoolean = answerBoolean;
+                }
+                return result;
+            });
             item.enableWhen = enableWhen;
         }
 

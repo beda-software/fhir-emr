@@ -27,6 +27,7 @@ import fce_patient_edit from './resources/questionnaire_fce/patient_edit.json';
 import fce_phq_2_phq_9 from './resources/questionnaire_fce/phq_2_phq_9.json';
 import fce_physicalexam from './resources/questionnaire_fce/physicalexam.json';
 import fce_practitioner_create from './resources/questionnaire_fce/practitioner_create.json';
+import fce_practitioner_create_structure_map from './resources/questionnaire_fce/practitioner_create_structure_map.json';
 import fce_practitioner_edit from './resources/questionnaire_fce/practitioner_edit.json';
 import fce_practitioner_role_create from './resources/questionnaire_fce/practitioner_role_create.json';
 import fce_public_appointment from './resources/questionnaire_fce/public_appointment.json';
@@ -47,6 +48,7 @@ import fhir_patient_edit from './resources/questionnaire_fhir/patient_edit.json'
 import fhir_phq_2_phq_9 from './resources/questionnaire_fhir/phq_2_phq_9.json';
 import fhir_physicalexam from './resources/questionnaire_fhir/physicalexam.json';
 import fhir_practitioner_create from './resources/questionnaire_fhir/practitioner_create.json';
+import fhir_practitioner_create_structure_map from './resources/questionnaire_fhir/practitioner_create_structure_map.json';
 import fhir_practitioner_edit from './resources/questionnaire_fhir/practitioner_edit.json';
 import fhir_practitioner_role_create from './resources/questionnaire_fhir/practitioner_role_create.json';
 import fhir_public_appointment from './resources/questionnaire_fhir/public_appointment.json';
