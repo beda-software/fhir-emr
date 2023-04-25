@@ -1,0 +1,183 @@
+{
+    "meta": {
+        "profile": [
+            "https://beda.software/beda-emr-questionnaire"
+        ],
+        "lastUpdated": "2023-04-10T03:43:34.792167Z",
+        "versionId": "694",
+        "extension": [
+            {
+                "url": "ex:createdAt",
+                "valueInstant": "2023-04-05T05:22:35.752466Z"
+            }
+        ]
+    },
+    "name": "edit-patient",
+    "item": [
+        {
+            "text": "patientId",
+            "type": "string",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                    "valueBoolean": true
+                },
+                {
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+                    "valueExpression": {
+                        "language": "text/fhirpath",
+                        "expression": "%Patient.id"
+                    }
+                }
+            ],
+            "linkId": "patient-id",
+            "readOnly": true
+        },
+        {
+            "text": "Last name",
+            "type": "string",
+            "linkId": "last-name",
+            "required": true,
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+                    "valueExpression": {
+                        "language": "text/fhirpath",
+                        "expression": "%Patient.name.family"
+                    }
+                }
+            ]
+        },
+        {
+            "text": "First name",
+            "type": "string",
+            "linkId": "first-name",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+                    "valueExpression": {
+                        "language": "text/fhirpath",
+                        "expression": "%Patient.name.given[0]"
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Middle name",
+            "type": "string",
+            "linkId": "middle-name",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+                    "valueExpression": {
+                        "language": "text/fhirpath",
+                        "expression": "%Patient.name.given[1]"
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Birth date",
+            "type": "date",
+            "linkId": "birth-date",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+                    "valueExpression": {
+                        "language": "text/fhirpath",
+                        "expression": "%Patient.birthDate"
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Gender",
+            "type": "choice",
+            "linkId": "gender",
+            "answerOption": [
+                {
+                    "valueString": "male"
+                },
+                {
+                    "valueString": "female"
+                }
+            ],
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+                    "valueExpression": {
+                        "language": "text/fhirpath",
+                        "expression": "%Patient.gender"
+                    }
+                }
+            ]
+        },
+        {
+            "text": "SSN",
+            "type": "string",
+            "linkId": "ssn",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+                    "valueExpression": {
+                        "language": "text/fhirpath",
+                        "expression": "%Patient.identifier.where(system='1.2.643.100.3').value"
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Phone number",
+            "type": "string",
+            "linkId": "mobile",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                    "valueCodeableConcept": {
+                        "coding": [
+                            {
+                                "code": "phoneWidget"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+                    "valueExpression": {
+                        "language": "text/fhirpath",
+                        "expression": "%Patient.telecom.where(system='phone').value"
+                    }
+                }
+            ]
+        }
+    ],
+    "resourceType": "Questionnaire",
+    "title": "Edit patient",
+    "extension": [
+        {
+            "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext",
+            "extension": [
+                {
+                    "url": "name",
+                    "valueCoding": {
+                        "system": "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext",
+                        "code": "Patient"
+                    }
+                },
+                {
+                    "url": "type",
+                    "valueCode": "Patient"
+                }
+            ]
+        },
+        {
+            "url": "http://beda.software/fhir-extensions/questionnaire-mapper",
+            "valueReference": {
+                "reference": "Mapping/patient-create"
+            }
+        }
+    ],
+    "status": "active",
+    "id": "patient-edit",
+    "url": "https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/patient-edit"
+}

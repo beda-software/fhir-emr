@@ -1,0 +1,226 @@
+{
+  "subjectType": ["Encounter", "Patient"],
+  "meta": {
+    "profile": ["https://beda.software/beda-emr-questionnaire"],
+    "lastUpdated": "2023-04-10T03:43:34.792167Z",
+    "versionId": "694",
+    "extension": [
+      {
+        "url": "ex:createdAt",
+        "valueInstant": "2023-04-05T05:22:35.752466Z"
+      }
+    ]
+  },
+  "name": "Medication",
+  "item": [
+    {
+      "text": "DateTime",
+      "type": "dateTime",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+          "valueBoolean": true
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/fhirpath",
+            "expression": "now()"
+          }
+        }
+      ],
+      "linkId": "dateTime"
+    },
+    {
+      "text": "EncounterId",
+      "type": "string",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+          "valueBoolean": true
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/fhirpath",
+            "expression": "%Encounter.id"
+          }
+        }
+      ],
+      "linkId": "encounterId"
+    },
+    {
+      "text": "PatientId",
+      "type": "string",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+          "valueBoolean": true
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/fhirpath",
+            "expression": "%Patient.id"
+          }
+        }
+      ],
+      "linkId": "patientId",
+      "required": true
+    },
+    {
+      "text": "PatientName",
+      "type": "string",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+          "valueBoolean": true
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/fhirpath",
+            "expression": "%Patient.name.given[0] + ' ' + %Patient.name.family"
+          }
+        }
+      ],
+      "linkId": "patientName"
+    },
+    {
+      "text": "Medication name",
+      "type": "choice",
+      "linkId": "medication",
+      "required": true,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "261000",
+            "system": "http://snomed.info/sct",
+            "display": "Codeine phosphate"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "2336001",
+            "system": "http://snomed.info/sct",
+            "display": "Fibrinogen Tokyo II"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "363000",
+            "system": "http://snomed.info/sct",
+            "display": "Fibrinogen San Juan"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "519005",
+            "system": "http://snomed.info/sct",
+            "display": "Free protein S"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "585007",
+            "system": "http://snomed.info/sct",
+            "display": "SP - Substance P"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "693002",
+            "system": "http://snomed.info/sct",
+            "display": "Trichothecene"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "698006",
+            "system": "http://snomed.info/sct",
+            "display": "Erythromycin lactobionate"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "699003",
+            "system": "http://snomed.info/sct",
+            "display": "Coal tar extract"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "747006",
+            "system": "http://snomed.info/sct",
+            "display": "Oxamniquine"
+          }
+        }
+      ]
+    },
+    {
+      "text": "Dosage",
+      "type": "string",
+      "linkId": "dosage",
+      "required": true
+    },
+    {
+      "text": "Start Date",
+      "type": "date",
+      "linkId": "start-date"
+    },
+    {
+      "text": "Stop Date",
+      "type": "date",
+      "linkId": "stop-date"
+    },
+    {
+      "text": "Notes",
+      "type": "string",
+      "linkId": "notes"
+    }
+  ],
+  "resourceType": "Questionnaire",
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext",
+      "extension": [
+        {
+          "url": "name",
+          "valueCoding": {
+            "system": "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext",
+            "code": "Patient"
+          }
+        },
+        {
+          "url": "type",
+          "valueCode": "Patient"
+        }
+      ]
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext",
+      "extension": [
+        {
+          "url": "name",
+          "valueCoding": {
+            "system": "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext",
+            "code": "Author"
+          }
+        },
+        {
+          "url": "type",
+          "valueCode": "Resource"
+        }
+      ]
+    },
+    {
+      "url": "http://beda.software/fhir-extensions/questionnaire-mapper",
+      "valueReference": {
+        "reference": "Mapping/medication-statement-extract"
+      }
+    }
+  ],
+  "status": "active",
+  "id": "medication",
+  "url": "https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/medication"
+}

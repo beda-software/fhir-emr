@@ -1,0 +1,116 @@
+{
+    "meta": {
+        "profile": [
+            "https://beda.software/beda-emr-questionnaire"
+        ],
+        "lastUpdated": "2023-04-10T03:43:34.792167Z",
+        "versionId": "694",
+        "extension": [
+            {
+                "url": "ex:createdAt",
+                "valueInstant": "2023-04-05T05:22:35.752466Z"
+            }
+        ]
+    },
+    "name": "Appointment",
+    "item": [
+        {
+            "text": "First name",
+            "type": "string",
+            "linkId": "first-name",
+            "required": true
+        },
+        {
+            "text": "Last name",
+            "type": "string",
+            "linkId": "last-name",
+            "required": true
+        },
+        {
+            "text": "Phone number",
+            "type": "string",
+            "linkId": "mobile",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                    "valueCodeableConcept": {
+                        "coding": [
+                            {
+                                "code": "phoneWidget"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Practitioner",
+            "type": "choice",
+            "linkId": "practitioner-role",
+            "required": true,
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                    "valueCodeableConcept": {
+                        "coding": [
+                            {
+                                "code": "practitioner-role"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Type",
+            "type": "choice",
+            "required": true,
+            "linkId": "service-type",
+            "initial": [
+                {
+                    "valueCoding": {
+                        "code": "consultation",
+                        "system": "http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type",
+                        "display": "The first appointment"
+                    }
+                }
+            ],
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                    "valueBoolean": true
+                }
+            ]
+        },
+        {
+            "text": "Date and Time",
+            "type": "dateTime",
+            "linkId": "date-time-slot",
+            "required": true,
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                    "valueCodeableConcept": {
+                        "coding": [
+                            {
+                                "code": "date-time-slot"
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ],
+    "resourceType": "Questionnaire",
+    "extension": [
+        {
+            "url": "http://beda.software/fhir-extensions/questionnaire-mapper",
+            "valueReference": {
+                "reference": "Mapping/public-appointment-extract"
+            }
+        }
+    ],
+    "status": "active",
+    "id": "public-appointment",
+    "url": "https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/"
+}

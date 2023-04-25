@@ -1,0 +1,72 @@
+{
+  "url": "https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/baverages",
+  "item": [
+    {
+      "linkId": "slider",
+      "itemControl": {
+        "coding": [
+          {
+            "code": "slider"
+          }
+        ]
+      },
+      "start": 1,
+      "type": "decimal",
+      "stop": 20,
+      "helpText": "How many beverages you are consuming per day?",
+      "stopLabel": "20+",
+      "sliderStepValue": 2,
+      "text": "Frequency per week"
+    },
+    {
+      "text": "Beverage",
+      "type": "choice",
+      "linkId": "beverage-type",
+      "itemControl": {
+        "coding": [
+          {
+            "code": "solid-radio-button"
+          }
+        ]
+      },
+      "answerOption": [
+        {
+          "value": {
+            "Coding": {
+              "code": "beer",
+              "display": "Beer"
+            }
+          }
+        },
+        {
+          "value": {
+            "Coding": {
+              "code": "wine",
+              "display": "Wine"
+            }
+          }
+        },
+        {
+          "value": {
+            "Coding": {
+              "code": "none",
+              "display": "None"
+            }
+          }
+        }
+      ],
+      "adjustLastToRight": true
+    }
+  ],
+  "meta": {
+    "profile": ["https://beda.software/beda-emr-questionnaire"],
+    "lastUpdated": "2023-04-10T03:43:34.792167Z",
+    "createdAt": "2023-04-05T05:22:35.752466Z",
+    "versionId": "694"
+  },
+  "name": "Beverages",
+  "status": "draft",
+  "subjectType": ["Patient"],
+  "id": "beverages",
+  "resourceType": "Questionnaire"
+}
