@@ -1,10 +1,6 @@
 import { useService } from 'fhir-react/lib/hooks/service';
 import { isSuccess } from 'fhir-react/lib/libs/remoteData';
-import {
-    extractBundleResources,
-    getAllFHIRResources,
-    getFHIRResources,
-} from 'fhir-react/lib/services/fhir';
+import { extractBundleResources, getAllFHIRResources, getFHIRResources } from 'fhir-react/lib/services/fhir';
 import { mapSuccess, resolveMap } from 'fhir-react/lib/services/service';
 import { formatFHIRDateTime } from 'fhir-react/lib/utils/date';
 import {
@@ -77,7 +73,7 @@ export function usePatientOverview(props: Props) {
         },
         {
             title: 'SSN',
-            value: undefined,
+            value: patient.identifier?.find(({ system }) => system === '1.2.643.100.3')?.value,
         },
     ];
 
@@ -85,44 +81,32 @@ export function usePatientOverview(props: Props) {
         async () =>
             mapSuccess(
                 await resolveMap({
-                    appointmentsBundle: getAllFHIRResources<Appointment | Encounter>(
-                        'Appointment',
-                        {
-                            actor: patient.id,
-                            date: [`ge${formatFHIRDateTime(moment().startOf('day'))}`],
-                            _revinclude: ['Encounter:appointment'],
-                            'status:not': ['entered-in-error,cancelled'],
-                        },
-                    ),
-                    allergiesBundle: getFHIRResources<AllergyIntolerance | Provenance>(
-                        'AllergyIntolerance',
-                        {
-                            patient: patient.id,
-                            _sort: ['-lastUpdated'],
-                            _revinclude: ['Provenance:target'],
-                        },
-                    ),
+                    appointmentsBundle: getAllFHIRResources<Appointment | Encounter>('Appointment', {
+                        actor: patient.id,
+                        date: [`ge${formatFHIRDateTime(moment().startOf('day'))}`],
+                        _revinclude: ['Encounter:appointment'],
+                        'status:not': ['entered-in-error,cancelled'],
+                    }),
+                    allergiesBundle: getFHIRResources<AllergyIntolerance | Provenance>('AllergyIntolerance', {
+                        patient: patient.id,
+                        _sort: ['-lastUpdated'],
+                        _revinclude: ['Provenance:target'],
+                    }),
                     conditionsBundle: getFHIRResources<Condition | Provenance>('Condition', {
                         patient: patient.id,
                         _sort: ['-lastUpdated'],
                         _revinclude: ['Provenance:target'],
                     }),
-                    immunizationsBundle: getFHIRResources<Immunization | Provenance>(
-                        'Immunization',
-                        {
-                            patient: patient.id,
-                            _sort: ['-lastUpdated'],
-                            _revinclude: ['Provenance:target'],
-                        },
-                    ),
-                    medicationsBundle: getFHIRResources<MedicationStatement | Provenance>(
-                        'MedicationStatement',
-                        {
-                            patient: patient.id,
-                            _sort: ['-lastUpdated'],
-                            _revinclude: ['Provenance:target'],
-                        },
-                    ),
+                    immunizationsBundle: getFHIRResources<Immunization | Provenance>('Immunization', {
+                        patient: patient.id,
+                        _sort: ['-lastUpdated'],
+                        _revinclude: ['Provenance:target'],
+                    }),
+                    medicationsBundle: getFHIRResources<MedicationStatement | Provenance>('MedicationStatement', {
+                        patient: patient.id,
+                        _sort: ['-lastUpdated'],
+                        _revinclude: ['Provenance:target'],
+                    }),
                     consentsBundle: getFHIRResources<Consent | Provenance>('Consent', {
                         patient: patient.id,
                         status: 'active',
@@ -141,17 +125,13 @@ export function usePatientOverview(props: Props) {
                     const allergies = extractBundleResources(allergiesBundle).AllergyIntolerance;
                     const allergiesProvenance = extractBundleResources(allergiesBundle).Provenance;
                     const conditions = extractBundleResources(conditionsBundle).Condition;
-                    const conditionsProvenance =
-                        extractBundleResources(conditionsBundle).Provenance;
+                    const conditionsProvenance = extractBundleResources(conditionsBundle).Provenance;
                     const consents = extractBundleResources(consentsBundle).Consent;
                     const consentsProvenance = extractBundleResources(consentsBundle).Provenance;
                     const immunizations = extractBundleResources(immunizationsBundle).Immunization;
-                    const immunizationsProvenance =
-                        extractBundleResources(immunizationsBundle).Provenance;
-                    const medications =
-                        extractBundleResources(medicationsBundle).MedicationStatement;
-                    const medicationsProvenance =
-                        extractBundleResources(medicationsBundle).Provenance;
+                    const immunizationsProvenance = extractBundleResources(immunizationsBundle).Provenance;
+                    const medications = extractBundleResources(medicationsBundle).MedicationStatement;
+                    const medicationsProvenance = extractBundleResources(medicationsBundle).Provenance;
                     const cards = [
                         prepareConditions(conditions, conditionsProvenance),
                         prepareMedications(medications, medicationsProvenance),
