@@ -78,11 +78,7 @@ export async function createPractitioner(practitioner: Partial<Practitioner> = {
     );
 }
 
-export async function createEncounter(
-    subject: Reference,
-    participant: Reference,
-    date?: moment.Moment,
-) {
+export async function createEncounter(subject: Reference, participant: Reference, date?: moment.Moment) {
     return ensure(
         await createFHIRResource<Encounter>({
             resourceType: 'Encounter',
@@ -167,8 +163,6 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-    resetAidboxInstanceToken();
-    resetFHIRInstanceToken();
     await withRootAccess(async () => {
         await axiosInstance({
             method: 'POST',
@@ -179,5 +173,7 @@ afterEach(async () => {
 });
 
 afterAll(() => {
+    resetAidboxInstanceToken();
+    resetFHIRInstanceToken();
     jest.clearAllTimers();
 });
