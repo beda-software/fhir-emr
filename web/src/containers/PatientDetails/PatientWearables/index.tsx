@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro';
-import { Empty } from 'antd';
+import { Empty, Result } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { WithId } from 'fhir-react';
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
@@ -64,9 +64,10 @@ export function PatientWearables(props: PatientWearablesProps) {
                                 {hasConsent ? (
                                     <Empty description={t`No data`} image={Empty.PRESENTED_IMAGE_SIMPLE} />
                                 ) : (
-                                    <Empty
-                                        description={t`Contact patient to sign-off consent on activity data access.`}
-                                        image={Empty.PRESENTED_IMAGE_DEFAULT}
+                                    <Result
+                                        status="info"
+                                        subTitle="Contact patient to sign-off consent on activity data access"
+                                        title="Patient consent is required"
                                     />
                                 )}
                             </>
