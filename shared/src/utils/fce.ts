@@ -98,7 +98,7 @@ function getUpdatedPropertiesFromItem(item: any) {
     if (item.type === 'choice') {
         updatedProperties.answerOption = item.answerOption
             ?.map((option: any) => {
-                if (option.valueCoding === undefined) {
+                if (typeof option.valueCoding === 'undefined') {
                     if (option.valueString) {
                         return {
                             value: {
@@ -106,6 +106,7 @@ function getUpdatedPropertiesFromItem(item: any) {
                             },
                         };
                     }
+                    // TODO: Add support for valueReference
                 }
                 const value = {
                     Coding: {
@@ -375,6 +376,18 @@ function processMapping(fhirQuestionnaire: FHIRQuestionnaire): any[] | undefined
     }));
 }
 
+function processTargetStructureMap(fhirQuestionnaire: FHIRQuestionnaire): string[] | undefined {
+    const extensions = fhirQuestionnaire.extension?.filter(
+        (ext) => ext.url === 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-targetStructureMap',
+    );
+
+    if (!extensions) {
+        return undefined;
+    }
+
+    return extensions.map((extension) => extension.valueCanonical!);
+}
+
 function processMeta(fhirQuestionnaire: FHIRQuestionnaire): any {
     const createdAt = getCreatedAt(fhirQuestionnaire);
     return {
@@ -391,13 +404,16 @@ function processItems(fhirQuestionnaire: FHIRQuestionnaire): any[] | undefined {
 function processExtensions(fhirQuestionnaire: FHIRQuestionnaire): {
     launchContext?: any[];
     mapping?: any[];
+    targetStructureMap?: any[];
 } {
     const launchContext = processLaunchContext(fhirQuestionnaire);
     const mapping = processMapping(fhirQuestionnaire);
+    const targetStructureMap = processTargetStructureMap(fhirQuestionnaire);
 
     return {
         launchContext: launchContext?.length ? launchContext : undefined,
         mapping: mapping?.length ? mapping : undefined,
+        targetStructureMap: targetStructureMap?.length ? targetStructureMap : undefined,
     };
 }
 
@@ -560,13 +576,14 @@ export function toFirstClassExtension(fhirResource: any): any {
         checkFhirQuestionnaireProfile(fhirQuestionnaire);
         const meta = processMeta(fhirQuestionnaire);
         const item = processItems(fhirQuestionnaire);
-        const { launchContext, mapping } = processExtensions(fhirQuestionnaire);
+        const { launchContext, mapping, targetStructureMap } = processExtensions(fhirQuestionnaire);
         const questionnaire = trimUndefined({
             ...fhirQuestionnaire,
             meta,
             item,
             launchContext,
             mapping,
+            targetStructureMap,
             extension: undefined,
         });
         return questionnaire as unknown as FCEQuestionnaire;

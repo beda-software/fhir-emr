@@ -1,0 +1,91 @@
+{
+    "meta": {
+        "profile": ["https://beda.software/beda-emr-questionnaire"],
+        "lastUpdated": "2023-04-25T06:51:01.969393Z",
+        "versionId": "268",
+        "extension": [
+            {
+                "url": "ex:createdAt",
+                "valueInstant": "2023-04-25T06:38:33.794441Z"
+            }
+        ]
+    },
+    "name": "practitioner-create",
+    "item": [
+        {
+            "text": "Last name",
+            "type": "string",
+            "linkId": "last-name",
+            "required": true
+        },
+        {
+            "text": "First name",
+            "type": "string",
+            "linkId": "first-name"
+        },
+        {
+            "text": "Middle name",
+            "type": "string",
+            "linkId": "middle-name"
+        },
+        {
+            "text": "Specialty",
+            "type": "choice",
+            "linkId": "specialty",
+            "answerOption": [
+                {
+                    "valueCoding": {
+                        "code": "394577000",
+                        "system": "http://snomed.info/sct",
+                        "display": "Anesthetics"
+                    }
+                },
+                {
+                    "valueCoding": {
+                        "code": "394579002",
+                        "system": "http://snomed.info/sct",
+                        "display": "Cardiology"
+                    }
+                },
+                {
+                    "valueCoding": {
+                        "code": "394582007",
+                        "system": "http://snomed.info/sct",
+                        "display": "Dermatology"
+                    }
+                },
+                {
+                    "valueCoding": {
+                        "code": "394583002",
+                        "system": "http://snomed.info/sct",
+                        "display": "Endocrinology"
+                    }
+                },
+                {
+                    "valueCoding": {
+                        "code": "419772000",
+                        "system": "http://snomed.info/sct",
+                        "display": "Family practice"
+                    }
+                }
+            ]
+        }
+    ],
+    "resourceType": "Questionnaire",
+    "title": "Practitioner create",
+    "extension": [
+        {
+            "url": "http://beda.software/fhir-extensions/questionnaire-mapper",
+            "valueReference": {
+                "reference": "Mapping/practitioner-create"
+            }
+        },
+        {
+            "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-targetStructureMap",
+            "valueCanonical": "StructureMap/practitioner-create"
+        }
+    ],
+    "status": "active",
+    "id": "practitioner-create-fhir-testing",
+    "url": "https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/practitioner-create"
+}
