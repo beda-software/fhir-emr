@@ -1,6 +1,5 @@
 /** Reference to internal resource that is accessible via id */
-export type InternalReference<T extends Resource = any> = Omit<Reference<T>, 'id'> &
-    Required<Pick<Reference<T>, 'id'>>;
+export type InternalReference<T extends Resource = any> = Omit<Reference<T>, 'id'> & Required<Pick<Reference<T>, 'id'>>;
 /** Reference to external resource that is accessible via uri */
 export type ExternalReference<T extends Resource = any> = Omit<Reference<T>, 'uri'> &
     Required<Pick<Reference<T>, 'uri'>>;
@@ -97,13 +96,7 @@ export interface Account {
     /** The entity that caused the expenses */
     subject?: Array<
         InternalReference<
-            | Patient
-            | Device
-            | Practitioner
-            | PractitionerRole
-            | Location
-            | HealthcareService
-            | Organization
+            Patient | Device | Practitioner | PractitionerRole | Location | HealthcareService | Organization
         >
     >;
     /** Text summary of the resource, for human interpretation */
@@ -403,13 +396,7 @@ export interface AdverseEventSuspectEntity {
     id?: string;
     /** Refers to the specific entity that caused the adverse event */
     instance: InternalReference<
-        | Immunization
-        | Procedure
-        | Substance
-        | Medication
-        | MedicationAdministration
-        | MedicationStatement
-        | Device
+        Immunization | Procedure | Substance | Medication | MedicationAdministration | MedicationStatement | Device
     >;
     /** Extensions that cannot be ignored even if unrecognized */
     modifierExtension?: Extension[];
@@ -772,9 +759,7 @@ export interface Appointment {
     /** Coded reason this appointment is scheduled */
     reasonCode?: CodeableConcept[];
     /** Reason the appointment is to take place (resource) */
-    reasonReference?: Array<
-        InternalReference<Condition | Procedure | Observation | ImmunizationRecommendation>
-    >;
+    reasonReference?: Array<InternalReference<Condition | Procedure | Observation | ImmunizationRecommendation>>;
     /** Potential date/time interval(s) requested to allocate the appointment within */
     requestedPeriod?: Period[];
     /** A broad categorization of the service that is to be performed during this appointment */
@@ -798,13 +783,7 @@ export interface Appointment {
 export interface AppointmentParticipant {
     /** Person, Location/HealthcareService or Device */
     actor?: InternalReference<
-        | Patient
-        | Practitioner
-        | PractitionerRole
-        | RelatedPerson
-        | Device
-        | HealthcareService
-        | Location
+        Patient | Practitioner | PractitionerRole | RelatedPerson | Device | HealthcareService | Location
     >;
     /** Additional content defined by implementations */
     extension?: Extension[];
@@ -829,13 +808,7 @@ export interface AppointmentResponse {
     meta?: Meta;
     /** Person, Location, HealthcareService, or Device */
     actor?: InternalReference<
-        | Patient
-        | Practitioner
-        | PractitionerRole
-        | RelatedPerson
-        | Device
-        | HealthcareService
-        | Location
+        Patient | Practitioner | PractitionerRole | RelatedPerson | Device | HealthcareService | Location
     >;
     /** Appointment this response relates to */
     appointment: InternalReference<Appointment>;
@@ -1021,9 +994,7 @@ export interface AuditEventAgent {
     /** How agent participated */
     type?: CodeableConcept;
     /** Identifier of who */
-    who?: InternalReference<
-        PractitionerRole | Practitioner | Organization | Device | Patient | RelatedPerson
-    >;
+    who?: InternalReference<PractitionerRole | Practitioner | Organization | Device | Patient | RelatedPerson>;
 }
 
 export interface AuditEventAgentNetwork {
@@ -1092,9 +1063,7 @@ export interface AuditEventSource {
     /** Extensions that cannot be ignored even if unrecognized */
     modifierExtension?: Extension[];
     /** The identity of source detecting the event */
-    observer: InternalReference<
-        PractitionerRole | Practitioner | Organization | Device | Patient | RelatedPerson
-    >;
+    observer: InternalReference<PractitionerRole | Practitioner | Organization | Device | Patient | RelatedPerson>;
     /** Logical source location within the enterprise */
     site?: string;
     /** The type of source where event originated */
@@ -1179,9 +1148,7 @@ export interface Basic {
     id?: id;
     meta?: Meta;
     /** Who created */
-    author?: InternalReference<
-        Practitioner | PractitionerRole | Patient | RelatedPerson | Organization
-    >;
+    author?: InternalReference<Practitioner | PractitionerRole | Patient | RelatedPerson | Organization>;
     /** Kind of Resource */
     code: CodeableConcept;
     /** Contained, inline Resources */
@@ -1449,7 +1416,16 @@ export interface Bundle<T extends Resource = any> {
     total?: unsignedInt;
     /** document | message | transaction | transaction-response | batch | batch-response | history | searchset | collection */
     // type: code;
-    type: 'document' | 'message' | 'transaction' | 'transaction-response' | 'batch' | 'batch-response' | 'history' | 'searchset' | 'collection';
+    type:
+        | 'document'
+        | 'message'
+        | 'transaction'
+        | 'transaction-response'
+        | 'batch'
+        | 'batch-response'
+        | 'history'
+        | 'searchset'
+        | 'collection';
 }
 
 export interface BundleEntry<T extends Resource = any> {
@@ -1565,15 +1541,7 @@ export interface CarePlan {
     contained?: Resource[];
     /** Who provided the content of the care plan */
     contributor?: Array<
-        InternalReference<
-            | Patient
-            | Practitioner
-            | PractitionerRole
-            | Device
-            | RelatedPerson
-            | Organization
-            | CareTeam
-        >
+        InternalReference<Patient | Practitioner | PractitionerRole | Device | RelatedPerson | Organization | CareTeam>
     >;
     /** Date record was first recorded */
     created?: dateTime;
@@ -1693,9 +1661,7 @@ export interface CarePlanActivityDetail {
     /** Why activity should be done or why activity was prohibited */
     reasonCode?: CodeableConcept[];
     /** Why activity is needed */
-    reasonReference?: Array<
-        InternalReference<Condition | Observation | DiagnosticReport | DocumentReference>
-    >;
+    reasonReference?: Array<InternalReference<Condition | Observation | DiagnosticReport | DocumentReference>>;
     /** When activity is to occur */
     scheduled?: CarePlanActivityDetailScheduled;
     /** not-started | scheduled | in-progress | on-hold | completed | cancelled | stopped | unknown | entered-in-error */
@@ -1766,9 +1732,7 @@ export interface CareTeamParticipant {
     /** Unique id for inter-element referencing */
     id?: string;
     /** Who is involved */
-    member?: InternalReference<
-        Practitioner | PractitionerRole | RelatedPerson | Patient | Organization | CareTeam
-    >;
+    member?: InternalReference<Practitioner | PractitionerRole | RelatedPerson | Patient | Organization | CareTeam>;
     /** Extensions that cannot be ignored even if unrecognized */
     modifierExtension?: Extension[];
     /** Organization of the practitioner */
@@ -1873,9 +1837,7 @@ export interface ChargeItem {
     /** Date the charge item was entered */
     enteredDate?: dateTime;
     /** Individual who was entering */
-    enterer?: InternalReference<
-        Practitioner | PractitionerRole | Organization | Patient | Device | RelatedPerson
-    >;
+    enterer?: InternalReference<Practitioner | PractitionerRole | Organization | Patient | Device | RelatedPerson>;
     /** Additional content defined by implementations */
     extension?: Extension[];
     /** Factor overriding the associated rules */
@@ -2109,9 +2071,7 @@ export interface Claim {
     /** Extensions that cannot be ignored */
     modifierExtension?: Extension[];
     /** Original prescription if superseded by fulfiller */
-    originalPrescription?: InternalReference<
-        DeviceRequest | MedicationRequest | VisionPrescription
-    >;
+    originalPrescription?: InternalReference<DeviceRequest | MedicationRequest | VisionPrescription>;
     /** The recipient of the products and services */
     patient: InternalReference<Patient>;
     /** Recipient of benefits payable */
@@ -2364,9 +2324,7 @@ export interface ClaimPayee {
     /** Extensions that cannot be ignored even if unrecognized */
     modifierExtension?: Extension[];
     /** Recipient reference */
-    party?: InternalReference<
-        Practitioner | PractitionerRole | Organization | Patient | RelatedPerson
-    >;
+    party?: InternalReference<Practitioner | PractitionerRole | Organization | Patient | RelatedPerson>;
     /** Category of recipient */
     type: CodeableConcept;
 }
@@ -2789,13 +2747,7 @@ export interface Client {
     description?: string;
     first_party?: boolean;
     grant_types?: Array<
-        | 'basic'
-        | 'authorization_code'
-        | 'code'
-        | 'password'
-        | 'client_credentials'
-        | 'implicit'
-        | 'refresh_token'
+        'basic' | 'authorization_code' | 'code' | 'password' | 'client_credentials' | 'implicit' | 'refresh_token'
     >;
     scope?: string[];
     scopes?: ClientScopes[];
@@ -3197,9 +3149,7 @@ export interface Communication {
     /** Indication for message */
     reasonCode?: CodeableConcept[];
     /** Why was communication done? */
-    reasonReference?: Array<
-        InternalReference<Condition | Observation | DiagnosticReport | DocumentReference>
-    >;
+    reasonReference?: Array<InternalReference<Condition | Observation | DiagnosticReport | DocumentReference>>;
     /** When received */
     received?: dateTime;
     /** Message recipient */
@@ -3218,13 +3168,7 @@ export interface Communication {
     >;
     /** Message sender */
     sender?: InternalReference<
-        | Device
-        | Organization
-        | Patient
-        | Practitioner
-        | PractitionerRole
-        | RelatedPerson
-        | HealthcareService
+        Device | Organization | Patient | Practitioner | PractitionerRole | RelatedPerson | HealthcareService
     >;
     /** When sent */
     sent?: dateTime;
@@ -3301,9 +3245,7 @@ export interface CommunicationRequest {
     /** Why is communication needed? */
     reasonCode?: CodeableConcept[];
     /** Why is communication needed? */
-    reasonReference?: Array<
-        InternalReference<Condition | Observation | DiagnosticReport | DocumentReference>
-    >;
+    reasonReference?: Array<InternalReference<Condition | Observation | DiagnosticReport | DocumentReference>>;
     /** Message recipient */
     recipient?: Array<
         InternalReference<
@@ -3321,18 +3263,10 @@ export interface CommunicationRequest {
     /** Request(s) replaced by this request */
     replaces?: Array<InternalReference<CommunicationRequest>>;
     /** Who/what is requesting service */
-    requester?: InternalReference<
-        Practitioner | PractitionerRole | Organization | Patient | RelatedPerson | Device
-    >;
+    requester?: InternalReference<Practitioner | PractitionerRole | Organization | Patient | RelatedPerson | Device>;
     /** Message sender */
     sender?: InternalReference<
-        | Device
-        | Organization
-        | Patient
-        | Practitioner
-        | PractitionerRole
-        | RelatedPerson
-        | HealthcareService
+        Device | Organization | Patient | Practitioner | PractitionerRole | RelatedPerson | HealthcareService
     >;
     /** draft | active | suspended | cancelled | completed | entered-in-error | unknown */
     status: code;
@@ -3436,11 +3370,7 @@ export interface Composition {
     /** Attests to accuracy of composition */
     attester?: CompositionAttester[];
     /** Who and/or what authored the composition */
-    author: Array<
-        InternalReference<
-            Practitioner | PractitionerRole | Device | Patient | RelatedPerson | Organization
-        >
-    >;
+    author: Array<InternalReference<Practitioner | PractitionerRole | Device | Patient | RelatedPerson | Organization>>;
     /** Categorization of Composition */
     category?: CodeableConcept[];
     /** As defined by affinity domain */
@@ -3491,9 +3421,7 @@ export interface CompositionAttester {
     /** Extensions that cannot be ignored even if unrecognized */
     modifierExtension?: Extension[];
     /** Who attested the composition */
-    party?: InternalReference<
-        Patient | RelatedPerson | Practitioner | PractitionerRole | Organization
-    >;
+    party?: InternalReference<Patient | RelatedPerson | Practitioner | PractitionerRole | Organization>;
     /** When the composition was attested */
     time?: dateTime;
 }
@@ -3534,9 +3462,7 @@ export interface CompositionRelatesToTarget {
 export interface CompositionSection {
     /** Who and/or what authored the section */
     author?: Array<
-        InternalReference<
-            Practitioner | PractitionerRole | Device | Patient | RelatedPerson | Organization
-        >
+        InternalReference<Practitioner | PractitionerRole | Device | Patient | RelatedPerson | Organization>
     >;
     /** Classification of section (recommended) */
     code?: CodeableConcept;
@@ -3871,9 +3797,7 @@ export interface Consent {
     /** Who the consent applies to */
     patient?: InternalReference<Patient>;
     /** Who is agreeing to the policy and rules */
-    performer?: Array<
-        InternalReference<Organization | Patient | Practitioner | RelatedPerson | PractitionerRole>
-    >;
+    performer?: Array<InternalReference<Organization | Patient | Practitioner | RelatedPerson | PractitionerRole>>;
     /** Policies covered by this consent */
     policy?: ConsentPolicy[];
     /** Regulation that this consents to */
@@ -3945,14 +3869,7 @@ export interface ConsentProvisionActor {
     modifierExtension?: Extension[];
     /** Resource for the actor (or group, by role) */
     reference: InternalReference<
-        | Device
-        | Group
-        | CareTeam
-        | Organization
-        | Patient
-        | Practitioner
-        | RelatedPerson
-        | PractitionerRole
+        Device | Group | CareTeam | Organization | Patient | Practitioner | RelatedPerson | PractitionerRole
     >;
     /** How the actor is involved */
     role: CodeableConcept;
@@ -4188,9 +4105,7 @@ export interface ContractSigner {
     /** Extensions that cannot be ignored even if unrecognized */
     modifierExtension?: Extension[];
     /** Contract Signatory Party */
-    party: InternalReference<
-        Organization | Patient | Practitioner | PractitionerRole | RelatedPerson
-    >;
+    party: InternalReference<Organization | Patient | Practitioner | PractitionerRole | RelatedPerson>;
     /** Contract Documentation Signature */
     signature: Signature[];
     /** Contract Signatory Role */
@@ -4278,25 +4193,12 @@ export interface ContractTermAction {
     /** Why is action (not) needed? */
     reasonReference?: Array<
         InternalReference<
-            | Condition
-            | Observation
-            | DiagnosticReport
-            | DocumentReference
-            | Questionnaire
-            | QuestionnaireResponse
+            Condition | Observation | DiagnosticReport | DocumentReference | Questionnaire | QuestionnaireResponse
         >
     >;
     /** Who asked for action */
     requester?: Array<
-        InternalReference<
-            | Patient
-            | RelatedPerson
-            | Practitioner
-            | PractitionerRole
-            | Device
-            | Group
-            | Organization
-        >
+        InternalReference<Patient | RelatedPerson | Practitioner | PractitionerRole | Device | Group | Organization>
     >;
     /** Pointer to specific item */
     requesterLinkId?: string[];
@@ -4325,15 +4227,7 @@ export interface ContractTermActionSubject {
     modifierExtension?: Extension[];
     /** Entity of the action */
     reference: Array<
-        InternalReference<
-            | Patient
-            | RelatedPerson
-            | Practitioner
-            | PractitionerRole
-            | Device
-            | Group
-            | Organization
-        >
+        InternalReference<Patient | RelatedPerson | Practitioner | PractitionerRole | Device | Group | Organization>
     >;
     /** Role type of the agent */
     role?: CodeableConcept;
@@ -4421,13 +4315,9 @@ export interface ContractTermAssetValuedItem {
     /** Count of Contract Valued Items */
     quantity?: Quantity;
     /** Who will receive payment */
-    recipient?: InternalReference<
-        Organization | Patient | Practitioner | PractitionerRole | RelatedPerson
-    >;
+    recipient?: InternalReference<Organization | Patient | Practitioner | PractitionerRole | RelatedPerson>;
     /** Who will make payment */
-    responsible?: InternalReference<
-        Organization | Patient | Practitioner | PractitionerRole | RelatedPerson
-    >;
+    responsible?: InternalReference<Organization | Patient | Practitioner | PractitionerRole | RelatedPerson>;
     /** Security Labels that define affected terms */
     securityLabelNumber?: unsignedInt[];
     /** Contract Valued Item fee, charge, or cost */
@@ -4503,15 +4393,7 @@ export interface ContractTermOfferParty {
     modifierExtension?: Extension[];
     /** Referenced entity */
     reference: Array<
-        InternalReference<
-            | Patient
-            | RelatedPerson
-            | Practitioner
-            | PractitionerRole
-            | Device
-            | Group
-            | Organization
-        >
+        InternalReference<Patient | RelatedPerson | Practitioner | PractitionerRole | Device | Group | Organization>
     >;
     /** Participant engagement type */
     role: CodeableConcept;
@@ -5506,14 +5388,7 @@ export interface DeviceRequest {
     parameter?: DeviceRequestParameter[];
     /** Requested Filler */
     performer?: InternalReference<
-        | Practitioner
-        | PractitionerRole
-        | Organization
-        | CareTeam
-        | HealthcareService
-        | Patient
-        | Device
-        | RelatedPerson
+        Practitioner | PractitionerRole | Organization | CareTeam | HealthcareService | Patient | Device | RelatedPerson
     >;
     /** Filler role */
     performerType?: CodeableConcept;
@@ -5524,9 +5399,7 @@ export interface DeviceRequest {
     /** Coded Reason for request */
     reasonCode?: CodeableConcept[];
     /** Linked Reason for request */
-    reasonReference?: Array<
-        InternalReference<Condition | Observation | DiagnosticReport | DocumentReference>
-    >;
+    reasonReference?: Array<InternalReference<Condition | Observation | DiagnosticReport | DocumentReference>>;
     /** Request provenance */
     relevantHistory?: Array<InternalReference<Provenance>>;
     /** Who/what is requesting diagnostics */
@@ -5619,14 +5492,7 @@ export interface DeviceUseStatement {
     contained?: Resource[];
     /** Supporting information */
     derivedFrom?: Array<
-        InternalReference<
-            | ServiceRequest
-            | Procedure
-            | Claim
-            | Observation
-            | QuestionnaireResponse
-            | DocumentReference
-        >
+        InternalReference<ServiceRequest | Procedure | Claim | Observation | QuestionnaireResponse | DocumentReference>
     >;
     /** Reference to device used */
     device: InternalReference<Device>;
@@ -5645,9 +5511,7 @@ export interface DeviceUseStatement {
     /** Why device was used */
     reasonCode?: CodeableConcept[];
     /** Why was DeviceUseStatement performed? */
-    reasonReference?: Array<
-        InternalReference<Condition | Observation | DiagnosticReport | DocumentReference | Media>
-    >;
+    reasonReference?: Array<InternalReference<Condition | Observation | DiagnosticReport | DocumentReference | Media>>;
     /** When statement was recorded */
     recordedOn?: dateTime;
     /** Who made the statement */
@@ -5690,13 +5554,7 @@ export interface DiagnosticReport {
     meta?: Meta;
     /** What was requested */
     basedOn?: Array<
-        InternalReference<
-            | CarePlan
-            | ImmunizationRecommendation
-            | MedicationRequest
-            | NutritionOrder
-            | ServiceRequest
-        >
+        InternalReference<CarePlan | ImmunizationRecommendation | MedicationRequest | NutritionOrder | ServiceRequest>
     >;
     /** Service category */
     category?: CodeableConcept[];
@@ -5735,9 +5593,7 @@ export interface DiagnosticReport {
     /** Observations */
     result?: Array<InternalReference<Observation>>;
     /** Primary result interpreter */
-    resultsInterpreter?: Array<
-        InternalReference<Practitioner | PractitionerRole | Organization | CareTeam>
-    >;
+    resultsInterpreter?: Array<InternalReference<Practitioner | PractitionerRole | Organization | CareTeam>>;
     /** Specimens this report is based on */
     specimen?: Array<InternalReference<Specimen>>;
     /** registered | partial | preliminary | final + */
@@ -5791,9 +5647,7 @@ export interface DocumentManifest {
     meta?: Meta;
     /** Who and/or what authored the DocumentManifest */
     author?: Array<
-        InternalReference<
-            Practitioner | PractitionerRole | Organization | Device | Patient | RelatedPerson
-        >
+        InternalReference<Practitioner | PractitionerRole | Organization | Device | Patient | RelatedPerson>
     >;
     /** Contained, inline Resources */
     contained?: Resource[];
@@ -5816,9 +5670,7 @@ export interface DocumentManifest {
     /** Extensions that cannot be ignored */
     modifierExtension?: Extension[];
     /** Intended to get notified about this set of documents */
-    recipient?: Array<
-        InternalReference<Patient | Practitioner | PractitionerRole | RelatedPerson | Organization>
-    >;
+    recipient?: Array<InternalReference<Patient | Practitioner | PractitionerRole | RelatedPerson | Organization>>;
     /** Related things */
     related?: DocumentManifestRelated[];
     /** The source system/application/software */
@@ -5855,9 +5707,7 @@ export interface DocumentReference {
     authenticator?: InternalReference<Practitioner | PractitionerRole | Organization>;
     /** Who and/or what authored the document */
     author?: Array<
-        InternalReference<
-            Practitioner | PractitionerRole | Organization | Device | Patient | RelatedPerson
-        >
+        InternalReference<Practitioner | PractitionerRole | Organization | Device | Patient | RelatedPerson>
     >;
     /** Categorization of document */
     category?: CodeableConcept[];
@@ -6274,9 +6124,7 @@ export interface Encounter {
     /** Coded reason the encounter takes place */
     reasonCode?: CodeableConcept[];
     /** Reason the encounter takes place (reference) */
-    reasonReference?: Array<
-        InternalReference<Condition | Procedure | Observation | ImmunizationRecommendation>
-    >;
+    reasonReference?: Array<InternalReference<Condition | Procedure | Observation | ImmunizationRecommendation>>;
     /** The organization (facility) responsible for this encounter */
     serviceProvider?: InternalReference<Organization>;
     /** Specific type of service */
@@ -7565,9 +7413,7 @@ export interface ExplanationOfBenefitPayee {
     /** Extensions that cannot be ignored even if unrecognized */
     modifierExtension?: Extension[];
     /** Recipient reference */
-    party?: InternalReference<
-        Practitioner | PractitionerRole | Organization | Patient | RelatedPerson
-    >;
+    party?: InternalReference<Practitioner | PractitionerRole | Organization | Patient | RelatedPerson>;
     /** Category of recipient */
     type?: CodeableConcept;
 }
@@ -7841,12 +7687,7 @@ export interface FamilyMemberHistory {
     /** Why was family member history performed? */
     reasonReference?: Array<
         InternalReference<
-            | Condition
-            | Observation
-            | AllergyIntolerance
-            | QuestionnaireResponse
-            | DiagnosticReport
-            | DocumentReference
+            Condition | Observation | AllergyIntolerance | QuestionnaireResponse | DiagnosticReport | DocumentReference
         >
     >;
     /** Relationship to the subject */
@@ -7936,14 +7777,7 @@ export interface Flag {
     status: code;
     /** Who/What is flag about? */
     subject: InternalReference<
-        | Patient
-        | Location
-        | Group
-        | Organization
-        | Practitioner
-        | PlanDefinition
-        | Medication
-        | Procedure
+        Patient | Location | Group | Organization | Practitioner | PlanDefinition | Medication | Procedure
     >;
     /** Text summary of the resource, for human interpretation */
     text?: Narrative;
@@ -7970,12 +7804,7 @@ export interface Goal {
     /** Issues addressed by this goal */
     addresses?: Array<
         InternalReference<
-            | Condition
-            | Observation
-            | MedicationStatement
-            | NutritionOrder
-            | ServiceRequest
-            | RiskAssessment
+            Condition | Observation | MedicationStatement | NutritionOrder | ServiceRequest | RiskAssessment
         >
     >;
     /** E.g. Treatment, dietary, behavioral, etc. */
@@ -8200,9 +8029,7 @@ export interface Group {
     /** Language of the resource content */
     language?: code;
     /** Entity that is the custodian of the Group's definition */
-    managingEntity?: InternalReference<
-        Organization | RelatedPerson | Practitioner | PractitionerRole
-    >;
+    managingEntity?: InternalReference<Organization | RelatedPerson | Practitioner | PractitionerRole>;
     /** Who or what is in group */
     member?: GroupMember[];
     /** Extensions that cannot be ignored */
@@ -8244,9 +8071,7 @@ export interface GroupCharacteristicValue {
 
 export interface GroupMember {
     /** Reference to the group member */
-    entity: InternalReference<
-        Patient | Practitioner | PractitionerRole | Device | Medication | Substance | Group
-    >;
+    entity: InternalReference<Patient | Practitioner | PractitionerRole | Device | Medication | Substance | Group>;
     /** Additional content defined by implementations */
     extension?: Extension[];
     /** Unique id for inter-element referencing */
@@ -8295,9 +8120,7 @@ export interface GuidanceResponse {
     /** Why guidance is needed */
     reasonCode?: CodeableConcept[];
     /** Why guidance is needed */
-    reasonReference?: Array<
-        InternalReference<Condition | Observation | DiagnosticReport | DocumentReference>
-    >;
+    reasonReference?: Array<InternalReference<Condition | Observation | DiagnosticReport | DocumentReference>>;
     /** The identifier of the request associated with this response, if any */
     requestIdentifier?: Identifier;
     /** Proposed actions, if any */
@@ -8550,9 +8373,7 @@ export interface ImagingStudy {
     id?: id;
     meta?: Meta;
     /** Request fulfilled */
-    basedOn?: Array<
-        InternalReference<CarePlan | ServiceRequest | Appointment | AppointmentResponse | Task>
-    >;
+    basedOn?: Array<InternalReference<CarePlan | ServiceRequest | Appointment | AppointmentResponse | Task>>;
     /** Contained, inline Resources */
     contained?: Resource[];
     /** Institution-generated description */
@@ -8590,9 +8411,7 @@ export interface ImagingStudy {
     /** Why the study was requested */
     reasonCode?: CodeableConcept[];
     /** Why was study performed */
-    reasonReference?: Array<
-        InternalReference<Condition | Observation | Media | DiagnosticReport | DocumentReference>
-    >;
+    reasonReference?: Array<InternalReference<Condition | Observation | Media | DiagnosticReport | DocumentReference>>;
     /** Referring physician */
     referrer?: InternalReference<Practitioner | PractitionerRole>;
     /** Each study has one or more series of instances */
@@ -9493,9 +9312,7 @@ export interface InvoiceLineItemPriceComponent {
 
 export interface InvoiceParticipant {
     /** Individual who was involved */
-    actor: InternalReference<
-        Practitioner | Organization | Patient | PractitionerRole | Device | RelatedPerson
-    >;
+    actor: InternalReference<Practitioner | Organization | Patient | PractitionerRole | Device | RelatedPerson>;
     /** Additional content defined by implementations */
     extension?: Extension[];
     /** Unique id for inter-element referencing */
@@ -10032,9 +9849,7 @@ export interface MeasureReport {
     /** complete | pending | error */
     status: code;
     /** What individual(s) the report is for */
-    subject?: InternalReference<
-        Patient | Practitioner | PractitionerRole | Location | Device | RelatedPerson | Group
-    >;
+    subject?: InternalReference<Patient | Practitioner | PractitionerRole | Location | Device | RelatedPerson | Group>;
     /** Text summary of the resource, for human interpretation */
     text?: Narrative;
     /** individual | subject-list | summary | data-collection */
@@ -10207,9 +10022,7 @@ export interface Media {
     /** preparation | in-progress | not-done | suspended | aborted | completed | entered-in-error | unknown */
     status: code;
     /** Who/What this Media is a record of */
-    subject?: InternalReference<
-        Patient | Practitioner | PractitionerRole | Group | Device | Specimen | Location
-    >;
+    subject?: InternalReference<Patient | Practitioner | PractitionerRole | Group | Device | Specimen | Location>;
     /** Text summary of the resource, for human interpretation */
     text?: Narrative;
     /** Classification of media as image, video, or audio */
@@ -10453,9 +10266,7 @@ export interface MedicationDispenseMedication {
 
 export interface MedicationDispensePerformer {
     /** Individual who was performing */
-    actor: InternalReference<
-        Practitioner | PractitionerRole | Organization | Patient | Device | RelatedPerson
-    >;
+    actor: InternalReference<Practitioner | PractitionerRole | Organization | Patient | Device | RelatedPerson>;
     /** Additional content defined by implementations */
     extension?: Extension[];
     /** Who performed the dispense and what they did */
@@ -10819,11 +10630,7 @@ export interface MedicationRequest {
     /** When request was initially authored */
     authoredOn?: dateTime;
     /** What request fulfills */
-    basedOn?: Array<
-        InternalReference<
-            CarePlan | MedicationRequest | ServiceRequest | ImmunizationRecommendation
-        >
-    >;
+    basedOn?: Array<InternalReference<CarePlan | MedicationRequest | ServiceRequest | ImmunizationRecommendation>>;
     /** Type of medication usage */
     category?: CodeableConcept[];
     /** Contained, inline Resources */
@@ -10885,9 +10692,7 @@ export interface MedicationRequest {
     /** Reported rather than primary record */
     reported?: MedicationRequestReported;
     /** Who/What requested the Request */
-    requester?: InternalReference<
-        Practitioner | PractitionerRole | Organization | Patient | RelatedPerson | Device
-    >;
+    requester?: InternalReference<Practitioner | PractitionerRole | Organization | Patient | RelatedPerson | Device>;
     /** active | on-hold | cancelled | completed | entered-in-error | stopped | draft | unknown */
     status: code;
     /** Reason for current status */
@@ -10994,9 +10799,7 @@ export interface MedicationStatement {
     /** A set of rules under which this content was created */
     implicitRules?: uri;
     /** Person or organization that provided the information about the taking of this medication */
-    informationSource?: InternalReference<
-        Patient | Practitioner | PractitionerRole | RelatedPerson | Organization
-    >;
+    informationSource?: InternalReference<Patient | Practitioner | PractitionerRole | RelatedPerson | Organization>;
     /** Language of the resource content */
     language?: code;
     /** What medication was taken */
@@ -11007,13 +10810,7 @@ export interface MedicationStatement {
     note?: Annotation[];
     /** Part of referenced event */
     partOf?: Array<
-        InternalReference<
-            | MedicationAdministration
-            | MedicationDispense
-            | MedicationStatement
-            | Procedure
-            | Observation
-        >
+        InternalReference<MedicationAdministration | MedicationDispense | MedicationStatement | Procedure | Observation>
     >;
     /** Reason for why the medication is being/was taken */
     reasonCode?: CodeableConcept[];
@@ -12552,12 +12349,7 @@ export interface Observation {
     /** Fulfills plan, proposal or order */
     basedOn?: Array<
         InternalReference<
-            | CarePlan
-            | DeviceRequest
-            | ImmunizationRecommendation
-            | MedicationRequest
-            | NutritionOrder
-            | ServiceRequest
+            CarePlan | DeviceRequest | ImmunizationRecommendation | MedicationRequest | NutritionOrder | ServiceRequest
         >
     >;
     /** Observed body part */
@@ -12575,12 +12367,7 @@ export interface Observation {
     /** Related measurements the observation is made from */
     derivedFrom?: Array<
         InternalReference<
-            | DocumentReference
-            | ImagingStudy
-            | Media
-            | QuestionnaireResponse
-            | Observation
-            | MolecularSequence
+            DocumentReference | ImagingStudy | Media | QuestionnaireResponse | Observation | MolecularSequence
         >
     >;
     /** (Measurement) Device */
@@ -12624,9 +12411,7 @@ export interface Observation {
     >;
     /** Who is responsible for the observation */
     performer?: Array<
-        InternalReference<
-            Practitioner | PractitionerRole | Organization | CareTeam | Patient | RelatedPerson
-        >
+        InternalReference<Practitioner | PractitionerRole | Organization | CareTeam | Patient | RelatedPerson>
     >;
     /** Provides guide for interpretation */
     referenceRange?: ObservationReferenceRange[];
@@ -14032,9 +13817,7 @@ export interface Procedure {
     reasonCode?: CodeableConcept[];
     /** The justification that the procedure was performed */
     reasonReference?: Array<
-        InternalReference<
-            Condition | Observation | Procedure | DiagnosticReport | DocumentReference
-        >
+        InternalReference<Condition | Observation | Procedure | DiagnosticReport | DocumentReference>
     >;
     /** Who recorded the procedure */
     recorder?: InternalReference<Patient | RelatedPerson | Practitioner | PractitionerRole>;
@@ -14077,9 +13860,7 @@ export interface ProcedurePerformed {
 
 export interface ProcedurePerformer {
     /** The reference to the practitioner */
-    actor: InternalReference<
-        Practitioner | PractitionerRole | Organization | Patient | RelatedPerson | Device
-    >;
+    actor: InternalReference<Practitioner | PractitionerRole | Organization | Patient | RelatedPerson | Device>;
     /** Additional content defined by implementations */
     extension?: Extension[];
     /** Type of performance */
@@ -14189,17 +13970,13 @@ export interface ProvenanceAgent {
     /** Extensions that cannot be ignored even if unrecognized */
     modifierExtension?: Extension[];
     /** Who the agent is representing */
-    onBehalfOf?: InternalReference<
-        Practitioner | PractitionerRole | RelatedPerson | Patient | Device | Organization
-    >;
+    onBehalfOf?: InternalReference<Practitioner | PractitionerRole | RelatedPerson | Patient | Device | Organization>;
     /** What the agents role was */
     role?: CodeableConcept[];
     /** How the agent participated */
     type?: CodeableConcept;
     /** Who participated */
-    who: InternalReference<
-        Practitioner | PractitionerRole | RelatedPerson | Patient | Device | Organization
-    >;
+    who: InternalReference<Practitioner | PractitionerRole | RelatedPerson | Patient | Device | Organization>;
 }
 
 export interface ProvenanceEntity {
@@ -14324,6 +14101,7 @@ export interface Questionnaire {
     variable?: Expression[];
     /** Business version of the questionnaire */
     version?: string;
+    targetStructureMap?: canonical[];
 }
 
 export interface QuestionnaireAssembleContext {
@@ -14536,9 +14314,7 @@ export interface QuestionnaireResponse {
     id?: id;
     meta?: Meta;
     /** Person who received and recorded the answers */
-    author?: InternalReference<
-        Device | Practitioner | PractitionerRole | Patient | RelatedPerson | Organization
-    >;
+    author?: InternalReference<Device | Practitioner | PractitionerRole | Patient | RelatedPerson | Organization>;
     /** Date the answers were gathered */
     authored?: dateTime;
     /** Request fulfilled by this QuestionnaireResponse */
@@ -14798,9 +14574,7 @@ export interface RequestGroup {
     /** Why the request group is needed */
     reasonCode?: CodeableConcept[];
     /** Why the request group is needed */
-    reasonReference?: Array<
-        InternalReference<Condition | Observation | DiagnosticReport | DocumentReference>
-    >;
+    reasonReference?: Array<InternalReference<Condition | Observation | DiagnosticReport | DocumentReference>>;
     /** Request(s) replaced by this request */
     replaces?: Array<InternalReference<Resource>>;
     /** draft | active | suspended | cancelled | completed | entered-in-error | unknown */
@@ -14833,9 +14607,7 @@ export interface RequestGroupAction {
     /** Extensions that cannot be ignored even if unrecognized */
     modifierExtension?: Extension[];
     /** Who should perform the action */
-    participant?: Array<
-        InternalReference<Patient | Practitioner | PractitionerRole | RelatedPerson | Device>
-    >;
+    participant?: Array<InternalReference<Patient | Practitioner | PractitionerRole | RelatedPerson | Device>>;
     /** yes | no */
     precheckBehavior?: code;
     /** User-visible prefix for the action (e.g. 1. or A.) */
@@ -15318,9 +15090,7 @@ export interface RiskAssessment {
     /** Why the assessment was necessary? */
     reasonCode?: CodeableConcept[];
     /** Why the assessment was necessary? */
-    reasonReference?: Array<
-        InternalReference<Condition | Observation | DiagnosticReport | DocumentReference>
-    >;
+    reasonReference?: Array<InternalReference<Condition | Observation | DiagnosticReport | DocumentReference>>;
     /** registered | preliminary | final | amended + */
     status: code;
     /** Who/what does assessment apply to? */
@@ -15584,13 +15354,7 @@ export interface Schedule {
     /** Resource(s) that availability information is being provided for */
     actor: Array<
         InternalReference<
-            | Patient
-            | Practitioner
-            | PractitionerRole
-            | RelatedPerson
-            | Device
-            | HealthcareService
-            | Location
+            Patient | Practitioner | PractitionerRole | RelatedPerson | Device | HealthcareService | Location
         >
     >;
     /** Comments on availability */
@@ -15804,17 +15568,13 @@ export interface ServiceRequest {
     /** Explanation/Justification for procedure or service */
     reasonCode?: CodeableConcept[];
     /** Explanation/Justification for service or service */
-    reasonReference?: Array<
-        InternalReference<Condition | Observation | DiagnosticReport | DocumentReference>
-    >;
+    reasonReference?: Array<InternalReference<Condition | Observation | DiagnosticReport | DocumentReference>>;
     /** Request provenance */
     relevantHistory?: Array<InternalReference<Provenance>>;
     /** What request replaces */
     replaces?: Array<InternalReference<ServiceRequest>>;
     /** Who/what is requesting service */
-    requester?: InternalReference<
-        Practitioner | PractitionerRole | Organization | Patient | RelatedPerson | Device
-    >;
+    requester?: InternalReference<Practitioner | PractitionerRole | Organization | Patient | RelatedPerson | Device>;
     /** Composite Request ID */
     requisition?: Identifier;
     /** Procedure Samples */
@@ -17542,13 +17302,9 @@ export interface SupplyRequest {
     /** The reason why the supply item was requested */
     reasonCode?: CodeableConcept[];
     /** The reason why the supply item was requested */
-    reasonReference?: Array<
-        InternalReference<Condition | Observation | DiagnosticReport | DocumentReference>
-    >;
+    reasonReference?: Array<InternalReference<Condition | Observation | DiagnosticReport | DocumentReference>>;
     /** Individual making the request */
-    requester?: InternalReference<
-        Practitioner | PractitionerRole | Organization | Patient | RelatedPerson | Device
-    >;
+    requester?: InternalReference<Practitioner | PractitionerRole | Organization | Patient | RelatedPerson | Device>;
     /** draft | active | suspended + */
     status?: code;
     /** Who is intended to fulfill the request */
@@ -17645,14 +17401,7 @@ export interface Task {
     output?: TaskOutput[];
     /** Responsible individual */
     owner?: InternalReference<
-        | Practitioner
-        | PractitionerRole
-        | Organization
-        | CareTeam
-        | HealthcareService
-        | Patient
-        | Device
-        | RelatedPerson
+        Practitioner | PractitionerRole | Organization | CareTeam | HealthcareService | Patient | Device | RelatedPerson
     >;
     /** Composite task */
     partOf?: Array<InternalReference<Task>>;
@@ -17667,9 +17416,7 @@ export interface Task {
     /** Key events in history of the Task */
     relevantHistory?: Array<InternalReference<Provenance>>;
     /** Who is asking for task to be done */
-    requester?: InternalReference<
-        Device | Organization | Patient | Practitioner | PractitionerRole | RelatedPerson
-    >;
+    requester?: InternalReference<Device | Organization | Patient | Practitioner | PractitionerRole | RelatedPerson>;
     /** Constraints on fulfillment tasks */
     restriction?: TaskRestriction;
     /** draft | requested | received | accepted | + */
@@ -17821,9 +17568,7 @@ export interface TaskRestriction {
     period?: Period;
     /** For whom is fulfillment sought? */
     recipient?: Array<
-        InternalReference<
-            Patient | Practitioner | PractitionerRole | RelatedPerson | Group | Organization
-        >
+        InternalReference<Patient | Practitioner | PractitionerRole | RelatedPerson | Group | Organization>
     >;
     /** How many times to repeat */
     repetitions?: positiveInt;

@@ -915,14 +915,25 @@ function processExtensionsToFHIR(questionnaire: FCEQuestionnaire) {
     }
 
     if (questionnaire.mapping) {
-        const mappingExtension = {
+        const mappingExtension = questionnaire.mapping.map((mapping) => ({
             url: 'http://beda.software/fhir-extensions/questionnaire-mapper',
             valueReference: {
-                reference: `Mapping/${questionnaire.mapping[0]?.id}`,
+                reference: `Mapping/${mapping.id}`,
             },
-        };
+        }));
         questionnaire.extension = questionnaire.extension || [];
-        questionnaire.extension.push(mappingExtension);
+        questionnaire.extension.push(...mappingExtension);
         delete questionnaire.mapping;
+    }
+
+    if (questionnaire.targetStructureMap) {
+        const extensions = questionnaire.targetStructureMap.map((targetStructureMapRef) => ({
+            url: 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-targetStructureMap',
+            valueCanonical: targetStructureMapRef,
+        }));
+
+        questionnaire.extension = questionnaire.extension || [];
+        questionnaire.extension.push(...extensions);
+        delete questionnaire.targetStructureMap;
     }
 }
