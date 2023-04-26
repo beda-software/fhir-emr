@@ -106,7 +106,46 @@ function getUpdatedPropertiesFromItem(item: any) {
                             },
                         };
                     }
-                    // TODO: Add support for valueReference
+                    if (option.valueCoding) {
+                        return {
+                            value: {
+                                Coding: {
+                                    code: option.valueCoding?.code,
+                                    display: option.valueCoding?.display,
+                                    system: option.valueCoding?.system,
+                                },
+                            },
+                        };
+                    }
+                    if (option.valueReference) {
+                        return {
+                            value: {
+                                Referece: {
+                                    resourceType: option.valueReference?.resourceType,
+                                    display: option.valueReference?.display,
+                                    extension: option.valueReference?.extension,
+                                    localRef: option.valueReference?.localRef,
+                                    resource: option.valueReference?.resource,
+                                    type: option.valueReference?.type,
+                                    uri: option.valueReference?.reference,
+                                },
+                            },
+                        };
+                    }
+                    if (option.valueDate) {
+                        return {
+                            value: {
+                                date: option.valueDate,
+                            },
+                        };
+                    }
+                    if (option.valueInteger) {
+                        return {
+                            value: {
+                                integer: option.valueInteger,
+                            },
+                        };
+                    }
                 }
                 const value = {
                     Coding: {
@@ -731,6 +770,30 @@ function processItemsToFHIR(items: any[] | undefined) {
                 }
                 if (option.value && option.value.string) {
                     option.valueString = option.value.string;
+                    delete option.value;
+                }
+                if (option.value && option.value.Reference) {
+                    let reference = option.value.Reference;
+                    option.valueReference = {};
+                    if (reference.resourceType) option.valueReference.resourceType = reference.resourceType;
+                    if (reference.display) option.valueReference.display = reference.display;
+                    if (reference.extension) option.valueReference.extension = reference.extension;
+                    if (reference.localRef) option.valueReference.localRef = reference.localRef;
+                    if (reference.resource) option.valueReference.resource = reference.resource;
+                    if (reference.type) option.valueReference.type = reference.type;
+                    if (reference.uri) option.valueReference.reference = reference.uri;
+                    delete option.value;
+                }
+                if (option.value && option.value.date) {
+                    option.valueDate = option.value.date;
+                    delete option.value;
+                }
+                if (option.value && option.value.integer) {
+                    option.valueInteger = option.value.integer;
+                    delete option.value;
+                }
+                if (option.value && option.value.time) {
+                    option.valueTime = option.value.time;
                     delete option.value;
                 }
             });
