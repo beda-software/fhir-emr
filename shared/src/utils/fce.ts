@@ -147,18 +147,7 @@ function getUpdatedPropertiesFromItem(item: any) {
                         };
                     }
                 }
-                const value = {
-                    Coding: {
-                        code: option.valueCoding?.code,
-                        display: option.valueCoding?.display,
-                    },
-                };
-
-                (value.Coding as any).system = option.valueCoding.system;
-
-                return {
-                    value,
-                };
+                return option;
             })
             .filter(Boolean);
 
