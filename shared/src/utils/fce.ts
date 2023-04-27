@@ -355,36 +355,59 @@ function processItem(item: any): any {
     return newItem;
 }
 
-export function processLaunchContext(fhirQuestionnaire: FHIRQuestionnaire): any[] | undefined {
-    const launchContextExtensions = fhirQuestionnaire.extension?.filter(
-        (ext: any) => ext.url === 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext',
+interface LaunchContext {
+    name: {
+        code?: string;
+    };
+    type: string[];
+    description?: string;
+}
+
+function processLaunchContext(fhirQuestionnaire: FHIRQuestionnaire): LaunchContext[] | undefined {
+    let launchContextExtensions = fhirQuestionnaire.extension ?? [];
+
+    launchContextExtensions = launchContextExtensions.filter(
+        (ext) => ext.url === 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext',
     );
 
-    if (!launchContextExtensions) {
+    if (launchContextExtensions.length === 0) {
         return undefined;
     }
 
-    return launchContextExtensions.map((launchContextExtension: any) => {
-        const nameExtension = launchContextExtension.extension?.find((ext: any) => ext.url === 'name');
-        const typeExtension = launchContextExtension.extension?.find((ext: any) => ext.url === 'type');
-        const descriptionExtension = launchContextExtension.extension?.find((ext: any) => ext.url === 'description');
+    const launchContextArray = [];
+    for (const launchContextExtension of launchContextExtensions) {
+        const nameExtension = launchContextExtension.extension?.find((ext) => ext.url === 'name');
+        const typeExtensions = launchContextExtension.extension?.filter((ext) => ext.url === 'type');
+        const descriptionExtension = launchContextExtension.extension?.find((ext) => ext.url === 'description');
+
         const nameCode = nameExtension?.valueCoding?.code;
-        const typeCode = typeExtension?.valueCode;
+        const typeCodes = typeExtensions?.map((typeExtension) => typeExtension.valueCode!);
         const description = descriptionExtension?.valueString;
 
-        const context = {
-            name: {
-                code: nameCode,
-            },
-            type: [typeCode],
-        };
-
-        if (description) {
-            (context as any).description = description;
+        let contextFound = false;
+        for (const context of launchContextArray) {
+            if (context.name.code === nameCode) {
+                context.type.push(...(typeCodes ?? []));
+                contextFound = true;
+                break;
+            }
         }
 
-        return context;
-    });
+        if (!contextFound) {
+            const context: LaunchContext = {
+                name: {
+                    code: nameCode,
+                },
+                type: typeCodes ?? [],
+            };
+            if (description) {
+                context.description = description;
+            }
+            launchContextArray.push(context);
+        }
+    }
+
+    return launchContextArray;
 }
 
 function processMapping(fhirQuestionnaire: FHIRQuestionnaire): any[] | undefined {
@@ -591,56 +614,6 @@ function processReferenceToFHIR(fceQR: any) {
         fceQR.source.reference = `${fceQR.source.resourceType}/${fceQR.source.id}`;
         delete fceQR.source.resourceType;
         delete fceQR.source.id;
-    }
-}
-
-export function toFirstClassExtension(fhirQuestionnaire: FHIRQuestionnaireResponse): FCEQuestionnaireResponse;
-export function toFirstClassExtension(fhirQuestionnaire: FHIRQuestionnaire): FCEQuestionnaire;
-export function toFirstClassExtension(fhirResource: any): any {
-    if (fhirResource.resourceType === 'Questionnaire') {
-        const fhirQuestionnaire = JSON.parse(JSON.stringify(fhirResource));
-        checkFhirQuestionnaireProfile(fhirQuestionnaire);
-        const meta = processMeta(fhirQuestionnaire);
-        const item = processItems(fhirQuestionnaire);
-        const { launchContext, mapping, targetStructureMap } = processExtensions(fhirQuestionnaire);
-        const questionnaire = trimUndefined({
-            ...fhirQuestionnaire,
-            meta,
-            item,
-            launchContext,
-            mapping,
-            targetStructureMap,
-            extension: undefined,
-        });
-        return questionnaire as unknown as FCEQuestionnaire;
-    }
-    if (fhirResource.resourceType === 'QuestionnaireResponse') {
-        const questionnaireResponse = JSON.parse(JSON.stringify(fhirResource));
-        processAnswerToFCE(questionnaireResponse.item as any[]);
-        if (questionnaireResponse.meta) {
-            processMetaToFCE(questionnaireResponse.meta);
-        }
-        processReferenceToFCE(questionnaireResponse);
-        return questionnaireResponse as unknown as FCEQuestionnaireResponse;
-    }
-}
-
-export function fromFirstClassExtension(fhirQuestionnaire: FCEQuestionnaireResponse): FHIRQuestionnaireResponse;
-export function fromFirstClassExtension(fhirQuestionnaire: FCEQuestionnaire): FHIRQuestionnaire;
-export function fromFirstClassExtension(fceResource: any): any {
-    if (fceResource.resourceType === 'Questionnaire') {
-        const questionnaire = JSON.parse(JSON.stringify(fceResource));
-        processMetaToFHIR(questionnaire.meta);
-        processItemsToFHIR(questionnaire.item);
-        processExtensionsToFHIR(questionnaire);
-        return questionnaire as unknown as FHIRQuestionnaire;
-    }
-    if (fceResource.resourceType === 'QuestionnaireResponse') {
-        const questionnaireResponse = JSON.parse(JSON.stringify(fceResource));
-        processAnswerToFHIR(questionnaireResponse.item as any[]);
-        processMetaToFHIR(questionnaireResponse.meta);
-        processReferenceToFHIR(questionnaireResponse);
-        return questionnaireResponse as unknown as FHIRQuestionnaireResponse;
     }
 }
 
@@ -927,37 +900,39 @@ function processItemsToFHIR(items: any[] | undefined) {
 
 function processExtensionsToFHIR(questionnaire: FCEQuestionnaire) {
     if (questionnaire.launchContext) {
-        const extension: any = questionnaire.launchContext.map((launchContext: any) => {
-            const name = launchContext.name.code;
-            const typeArray = launchContext.type;
-            const description = launchContext.description;
+        const extension: any[] = [];
+        for (const launchContext of questionnaire.launchContext as any) {
+            const name = launchContext.name?.code;
+            const typeList = launchContext['type'];
+            const description = launchContext['description'];
 
-            const extension: any = [
-                {
-                    url: 'name',
-                    valueCoding: {
-                        system: 'http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext',
-                        code: name,
-                    },
-                },
-                ...typeArray.map((type: string) => ({
-                    url: 'type',
-                    valueCode: type,
-                })),
-            ];
+            if (typeList) {
+                for (const typeCode of typeList) {
+                    const launchContextExtension: any = [
+                        {
+                            url: 'name',
+                            valueCoding: {
+                                system: 'http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext',
+                                code: name,
+                            },
+                        },
+                        { url: 'type', valueCode: typeCode },
+                    ];
 
-            if (description !== undefined) {
-                extension.push({
-                    url: 'description',
-                    valueString: description,
-                });
+                    if (description !== undefined) {
+                        launchContextExtension.push({
+                            url: 'description',
+                            valueString: description,
+                        });
+                    }
+
+                    extension.push({
+                        url: 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext',
+                        extension: launchContextExtension,
+                    });
+                }
             }
-
-            return {
-                url: 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext',
-                extension,
-            };
-        });
+        }
 
         questionnaire.extension = questionnaire.extension || [];
         questionnaire.extension.push(...extension);
@@ -985,5 +960,55 @@ function processExtensionsToFHIR(questionnaire: FCEQuestionnaire) {
         questionnaire.extension = questionnaire.extension || [];
         questionnaire.extension.push(...extensions);
         delete questionnaire.targetStructureMap;
+    }
+}
+
+export function toFirstClassExtension(fhirQuestionnaire: FHIRQuestionnaireResponse): FCEQuestionnaireResponse;
+export function toFirstClassExtension(fhirQuestionnaire: FHIRQuestionnaire): FCEQuestionnaire;
+export function toFirstClassExtension(fhirResource: any): any {
+    if (fhirResource.resourceType === 'Questionnaire') {
+        const fhirQuestionnaire = JSON.parse(JSON.stringify(fhirResource));
+        checkFhirQuestionnaireProfile(fhirQuestionnaire);
+        const meta = processMeta(fhirQuestionnaire);
+        const item = processItems(fhirQuestionnaire);
+        const { launchContext, mapping, targetStructureMap } = processExtensions(fhirQuestionnaire);
+        const questionnaire = trimUndefined({
+            ...fhirQuestionnaire,
+            meta,
+            item,
+            launchContext,
+            mapping,
+            targetStructureMap,
+            extension: undefined,
+        });
+        return questionnaire as unknown as FCEQuestionnaire;
+    }
+    if (fhirResource.resourceType === 'QuestionnaireResponse') {
+        const questionnaireResponse = JSON.parse(JSON.stringify(fhirResource));
+        processAnswerToFCE(questionnaireResponse.item as any[]);
+        if (questionnaireResponse.meta) {
+            processMetaToFCE(questionnaireResponse.meta);
+        }
+        processReferenceToFCE(questionnaireResponse);
+        return questionnaireResponse as unknown as FCEQuestionnaireResponse;
+    }
+}
+
+export function fromFirstClassExtension(fceQuestionnaire: FCEQuestionnaireResponse): FHIRQuestionnaireResponse;
+export function fromFirstClassExtension(fceQuestionnaire: FCEQuestionnaire): FHIRQuestionnaire;
+export function fromFirstClassExtension(fceResource: any): any {
+    if (fceResource.resourceType === 'Questionnaire') {
+        const questionnaire = JSON.parse(JSON.stringify(fceResource));
+        processMetaToFHIR(questionnaire.meta);
+        processItemsToFHIR(questionnaire.item);
+        processExtensionsToFHIR(questionnaire);
+        return questionnaire as unknown as FHIRQuestionnaire;
+    }
+    if (fceResource.resourceType === 'QuestionnaireResponse') {
+        const questionnaireResponse = JSON.parse(JSON.stringify(fceResource));
+        processAnswerToFHIR(questionnaireResponse.item as any[]);
+        processMetaToFHIR(questionnaireResponse.meta);
+        processReferenceToFHIR(questionnaireResponse);
+        return questionnaireResponse as unknown as FHIRQuestionnaireResponse;
     }
 }
