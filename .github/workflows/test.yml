@@ -27,5 +27,5 @@ jobs:
               if: ${{ failure() }}
               run: docker-compose logs
             - name: Run tests
-              run: yarn test
+              run: yarn test --silent
             - run: yarn build:web

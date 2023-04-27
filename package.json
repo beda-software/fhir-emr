@@ -3,7 +3,7 @@
     "scripts": {
         "clean": "lerna clean",
         "bootstrap": "lerna bootstrap",
-        "test": "lerna run test --stream --concurrency=1 -- --silent",
+        "test": "lerna run test --stream --concurrency=1 --",
         "test:web": "lerna run test --stream --concurrency=1 --scope web --",
         "start": "lerna run --parallel start",
         "start:web": "lerna run start --parallel --scope web",
