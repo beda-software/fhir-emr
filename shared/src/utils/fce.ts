@@ -363,7 +363,7 @@ interface LaunchContext {
     description?: string;
 }
 
-function processLaunchContext(fhirQuestionnaire: FHIRQuestionnaire): LaunchContext[] | undefined {
+export function processLaunchContext(fhirQuestionnaire: FHIRQuestionnaire): LaunchContext[] | undefined {
     let launchContextExtensions = fhirQuestionnaire.extension ?? [];
 
     launchContextExtensions = launchContextExtensions.filter(
