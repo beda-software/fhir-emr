@@ -425,6 +425,17 @@ function processMapping(fhirQuestionnaire: FHIRQuestionnaire): any[] | undefined
     }));
 }
 
+function processSourceQueries(fhirQuestionnaire: FHIRQuestionnaire): any[] {
+    const extensions =
+        fhirQuestionnaire.extension?.filter(
+            (ext) => ext.url === 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-sourceQueries',
+        ) ?? [];
+
+    return extensions.map((ext) => ({
+        localRef: ext.valueReference?.reference?.substring(1) ?? '',
+    }));
+}
+
 function processTargetStructureMap(fhirQuestionnaire: FHIRQuestionnaire): string[] | undefined {
     const extensions = fhirQuestionnaire.extension?.filter(
         (ext) => ext.url === 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-targetStructureMap',
@@ -453,15 +464,18 @@ function processItems(fhirQuestionnaire: FHIRQuestionnaire): any[] | undefined {
 function processExtensions(fhirQuestionnaire: FHIRQuestionnaire): {
     launchContext?: any[];
     mapping?: any[];
+    sourceQueries?: any[];
     targetStructureMap?: any[];
 } {
     const launchContext = processLaunchContext(fhirQuestionnaire);
     const mapping = processMapping(fhirQuestionnaire);
+    const sourceQueries = processSourceQueries(fhirQuestionnaire);
     const targetStructureMap = processTargetStructureMap(fhirQuestionnaire);
 
     return {
         launchContext: launchContext?.length ? launchContext : undefined,
         mapping: mapping?.length ? mapping : undefined,
+        sourceQueries: sourceQueries?.length ? sourceQueries : undefined,
         targetStructureMap: targetStructureMap?.length ? targetStructureMap : undefined,
     };
 }
@@ -903,8 +917,8 @@ function processExtensionsToFHIR(questionnaire: FCEQuestionnaire) {
         const extension: any[] = [];
         for (const launchContext of questionnaire.launchContext as any) {
             const name = launchContext.name?.code;
-            const typeList = launchContext['type'];
-            const description = launchContext['description'];
+            const typeList = launchContext.type;
+            const description = launchContext.description;
 
             if (typeList) {
                 for (const typeCode of typeList) {
@@ -951,6 +965,19 @@ function processExtensionsToFHIR(questionnaire: FCEQuestionnaire) {
         delete questionnaire.mapping;
     }
 
+    if (questionnaire.sourceQueries) {
+        const sourceQueries = questionnaire.sourceQueries;
+        for (const item of sourceQueries) {
+            const extension = {
+                url: 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-sourceQueries',
+                valueReference: { reference: `#${item.localRef}` },
+            };
+            questionnaire.extension = questionnaire.extension ?? [];
+            questionnaire.extension.push(extension);
+        }
+        delete questionnaire.sourceQueries;
+    }
+
     if (questionnaire.targetStructureMap) {
         const extensions = questionnaire.targetStructureMap.map((targetStructureMapRef) => ({
             url: 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-targetStructureMap',
@@ -971,14 +998,12 @@ export function toFirstClassExtension(fhirResource: any): any {
         checkFhirQuestionnaireProfile(fhirQuestionnaire);
         const meta = processMeta(fhirQuestionnaire);
         const item = processItems(fhirQuestionnaire);
-        const { launchContext, mapping, targetStructureMap } = processExtensions(fhirQuestionnaire);
+        const extensions = processExtensions(fhirQuestionnaire);
         const questionnaire = trimUndefined({
             ...fhirQuestionnaire,
             meta,
             item,
-            launchContext,
-            mapping,
-            targetStructureMap,
+            ...extensions,
             extension: undefined,
         });
         return questionnaire as unknown as FCEQuestionnaire;
