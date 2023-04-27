@@ -355,15 +355,7 @@ function processItem(item: any): any {
     return newItem;
 }
 
-interface LaunchContext {
-    name: {
-        code?: string;
-    };
-    type: string[];
-    description?: string;
-}
-
-export function processLaunchContext(fhirQuestionnaire: FHIRQuestionnaire): LaunchContext[] | undefined {
+export function processLaunchContext(fhirQuestionnaire: FHIRQuestionnaire): any[] | undefined {
     let launchContextExtensions = fhirQuestionnaire.extension ?? [];
 
     launchContextExtensions = launchContextExtensions.filter(
@@ -394,7 +386,7 @@ export function processLaunchContext(fhirQuestionnaire: FHIRQuestionnaire): Laun
         }
 
         if (!contextFound) {
-            const context: LaunchContext = {
+            const context: any = {
                 name: {
                     code: nameCode,
                 },
