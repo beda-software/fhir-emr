@@ -98,54 +98,52 @@ function getUpdatedPropertiesFromItem(item: any) {
     if (item.type === 'choice') {
         updatedProperties.answerOption = item.answerOption
             ?.map((option: any) => {
-                if (typeof option.valueCoding === 'undefined') {
-                    if (option.valueString) {
-                        return {
-                            value: {
-                                string: option.valueString,
+                if (option.valueString) {
+                    return {
+                        value: {
+                            string: option.valueString,
+                        },
+                    };
+                }
+                if (option.valueCoding) {
+                    return {
+                        value: {
+                            Coding: {
+                                code: option.valueCoding?.code,
+                                display: option.valueCoding?.display,
+                                system: option.valueCoding?.system,
                             },
-                        };
-                    }
-                    if (option.valueCoding) {
-                        return {
-                            value: {
-                                Coding: {
-                                    code: option.valueCoding?.code,
-                                    display: option.valueCoding?.display,
-                                    system: option.valueCoding?.system,
-                                },
+                        },
+                    };
+                }
+                if (option.valueReference) {
+                    return {
+                        value: {
+                            Reference: {
+                                resourceType: option.valueReference?.resourceType,
+                                display: option.valueReference?.display,
+                                extension: option.valueReference?.extension,
+                                localRef: option.valueReference?.localRef,
+                                resource: option.valueReference?.resource,
+                                type: option.valueReference?.type,
+                                uri: option.valueReference?.reference,
                             },
-                        };
-                    }
-                    if (option.valueReference) {
-                        return {
-                            value: {
-                                Referece: {
-                                    resourceType: option.valueReference?.resourceType,
-                                    display: option.valueReference?.display,
-                                    extension: option.valueReference?.extension,
-                                    localRef: option.valueReference?.localRef,
-                                    resource: option.valueReference?.resource,
-                                    type: option.valueReference?.type,
-                                    uri: option.valueReference?.reference,
-                                },
-                            },
-                        };
-                    }
-                    if (option.valueDate) {
-                        return {
-                            value: {
-                                date: option.valueDate,
-                            },
-                        };
-                    }
-                    if (option.valueInteger) {
-                        return {
-                            value: {
-                                integer: option.valueInteger,
-                            },
-                        };
-                    }
+                        },
+                    };
+                }
+                if (option.valueDate) {
+                    return {
+                        value: {
+                            date: option.valueDate,
+                        },
+                    };
+                }
+                if (option.valueInteger) {
+                    return {
+                        value: {
+                            integer: option.valueInteger,
+                        },
+                    };
                 }
                 return option;
             })
