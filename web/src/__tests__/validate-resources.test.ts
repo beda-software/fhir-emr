@@ -19,8 +19,11 @@ describe('Validate all questionanires', () => {
         const questionnaire = ensure(
             await getFHIRResource<Questionnaire>({ reference: `Questionnaire/${questionnaireId}` }),
         );
-        expect(questionnaire.meta?.profile?.length).toBe(1);
-        expect(questionnaire.meta?.profile?.[0]).toBe('https://beda.software/beda-emr-questionnaire');
+        expect(questionnaire.meta?.profile?.length).toBeGreaterThanOrEqual(1);
+        const bedaQuestionnaireProfile = questionnaire.meta?.profile?.find(
+            (profileUrl) => profileUrl === 'https://beda.software/beda-emr-questionnaire',
+        );
+        expect(bedaQuestionnaireProfile).not.toBeUndefined();
         const outcome = ensure(
             await service<OperationOutcome>({
                 url: '/Questionnaire/$validate',
