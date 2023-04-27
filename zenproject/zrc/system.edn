@@ -3,13 +3,7 @@
           aidbox.rest
           aidbox.search-parameter.v1
           aidbox.repository.v1
-          questionnaire-profile
-          hl7-fhir-uv-sdc.sdc-questionnaire
-          hl7-fhir-uv-sdc.sdc-questionnaire-extr-defn
-          hl7-fhir-uv-sdc.sdc-questionnaire-render
-          hl7-fhir-uv-sdc.sdc-questionnaire-pop-smap
-          hl7-fhir-uv-sdc.sdc-questionnaire-behave
-          hl7-fhir-uv-sdc.sdc-questionnaire-extr-smap}
+          questionnaire-profile}
 
 
  box
