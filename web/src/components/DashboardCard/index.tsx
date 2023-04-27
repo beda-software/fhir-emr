@@ -52,7 +52,7 @@ export function DashboardCardTable(props: TableProps) {
                     <div
                         key={`header-${title}-${col.title}`}
                         className={s.tableCell}
-                        style={{ width: col.width }}
+                        style={{ width: col.width, minWidth: col.width }}
                     >
                         {col.title}
                     </div>
@@ -67,7 +67,7 @@ export function DashboardCardTable(props: TableProps) {
                             <div
                                 key={`row-${key}-${col.title}`}
                                 className={s.tableCell}
-                                style={{ width: col.width }}
+                                style={{ width: col.width, minWidth: col.width }}
                             >
                                 {col.render(item)}
                             </div>

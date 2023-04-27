@@ -81,7 +81,7 @@ export function prepareAllergies(
                 render: (r: AllergyIntolerance) => {
                     const createdAt = extractExtension(r.meta?.extension, 'ex:createdAt');
 
-                    return createdAt ? formatHumanDate(createdAt) : null;
+                    return createdAt ? formatHumanDate(r.recordedDate || createdAt) : null;
                 },
                 width: 200,
             },
@@ -89,10 +89,7 @@ export function prepareAllergies(
     };
 }
 
-export function prepareConditions(
-    conditions: Condition[],
-    provenanceList: Provenance[],
-): OverviewCard<Condition> {
+export function prepareConditions(conditions: Condition[], provenanceList: Provenance[]): OverviewCard<Condition> {
     return {
         title: t`Conditions`,
         icon: <AlertOutlined />,
@@ -116,7 +113,7 @@ export function prepareConditions(
                 render: (r: Condition) => {
                     const createdAt = extractExtension(r.meta?.extension, 'ex:createdAt');
 
-                    return createdAt ? formatHumanDate(createdAt) : null;
+                    return createdAt ? formatHumanDate(r.recordedDate || createdAt) : null;
                 },
                 width: 200,
             },
@@ -124,10 +121,7 @@ export function prepareConditions(
     };
 }
 
-export function prepareConsents(
-    consents: Consent[],
-    provenanceList: Provenance[],
-): OverviewCard<Consent> {
+export function prepareConsents(consents: Consent[], provenanceList: Provenance[]): OverviewCard<Consent> {
     return {
         title: t`Consents`,
         icon: <TeamOutlined />,
@@ -152,7 +146,7 @@ export function prepareConsents(
                 render: (r: Consent) => {
                     const createdAt = extractExtension(r.meta?.extension, 'ex:createdAt');
 
-                    return createdAt ? formatHumanDate(createdAt) : null;
+                    return createdAt ? formatHumanDate(r.dateTime || createdAt) : null;
                 },
                 width: 100,
             },
@@ -190,8 +184,7 @@ export function prepareImmunizations(
             {
                 title: t`Date`,
                 key: 'date',
-                render: (r: Immunization) =>
-                    r.occurrenceDateTime ? formatHumanDate(r.occurrenceDateTime) : '',
+                render: (r: Immunization) => (r.occurrenceDateTime ? formatHumanDate(r.occurrenceDateTime) : ''),
                 width: 200,
             },
         ],
@@ -223,8 +216,7 @@ export function prepareMedications(
             {
                 title: t`Dosage`,
                 key: 'date',
-                render: (r: MedicationStatement) =>
-                    r.dosage?.[0]?.text ? r.dosage?.[0]?.text : '',
+                render: (r: MedicationStatement) => (r.dosage?.[0]?.text ? r.dosage?.[0]?.text : ''),
                 width: 200,
             },
         ],
@@ -233,9 +225,7 @@ export function prepareMedications(
 
 export function prepareAppointments(bundle: Bundle<WithId<Appointment | Encounter>>) {
     const appointments = extractBundleResources(bundle).Appointment;
-    const appointmentsWithEncounter = extractBundleResources(bundle).Encounter.map(
-        (e) => e.appointment?.[0]?.id,
-    );
+    const appointmentsWithEncounter = extractBundleResources(bundle).Encounter.map((e) => e.appointment?.[0]?.id);
 
     return appointments.filter((a) => !appointmentsWithEncounter.includes(a.id));
 }
@@ -261,9 +251,7 @@ export function prepareAppointmentDetails(appointment: Appointment) {
         {
             title: t`Time`,
             value: _.compact([
-                appointment.start
-                    ? parseFHIRDateTime(appointment.start).format('HH:mm')
-                    : undefined,
+                appointment.start ? parseFHIRDateTime(appointment.start).format('HH:mm') : undefined,
                 appointment.end ? parseFHIRDateTime(appointment.end).format('HH:mm') : undefined,
             ]).join('–'),
         },
