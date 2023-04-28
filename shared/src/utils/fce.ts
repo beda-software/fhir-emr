@@ -472,100 +472,109 @@ function processExtensions(fhirQuestionnaire: FHIRQuestionnaire): {
     };
 }
 
-function processAnswerToFCE(itemList: any[] | undefined) {
-    if (!itemList) {
-        return;
-    }
-    itemList.forEach((item) => {
-        if (item.answer && item.answer[0]?.valueString) {
-            item.answer[0].value = {
-                string: item.answer[0]?.valueString,
-            };
-            delete item.answer[0]?.valueString;
-        } else if (item.answer && item.answer[0]?.valueInteger) {
-            item.answer[0].value = {
-                integer: item.answer[0]?.valueInteger,
-            };
-            delete item.answer[0]?.valueInteger;
-        } else if (item.answer && item.answer[0]?.valueBoolean) {
-            item.answer[0].value = {
-                boolean: item.answer[0]?.valueBoolean,
-            };
-            delete item.answer[0]?.valueBoolean;
-        } else if (item.answer && item.answer[0]?.valueCoding) {
-            item.answer[0].value = {
-                Coding: item.answer[0]?.valueCoding,
-            };
-            delete item.answer[0]?.valueCoding;
-        } else if (item.answer && item.answer[0]?.valueDate) {
-            item.answer[0].value = {
-                date: item.answer[0]?.valueDate,
-            };
-            delete item.answer[0]?.valueDate;
-        } else if (item.answer && item.answer[0]?.valueDateTime) {
-            item.answer[0].value = {
-                dateTime: item.answer[0]?.valueDateTime,
-            };
-            delete item.answer[0]?.valueDateTime;
-        } else if (item.answer && item.answer[0]?.valueReference) {
-            const { display, reference } = item.answer[0]?.valueReference;
-            const [resourceType, id] = reference.split('/');
-            item.answer[0].value = {
-                Reference: {
-                    display,
-                    resourceType,
-                    id,
-                },
-            };
-            delete item.answer[0]?.valueReference;
-        } else if (item.answer && item.answer[0]?.valueTime) {
-            item.answer[0].value = {
-                time: item.answer[0]?.valueTime,
-            };
-            delete item.answer[0]?.valueTime;
-        } else if (item.item) {
-            processAnswerToFCE(item.item);
-        }
-    });
+interface Answer {
+    [key: string]: any;
 }
 
-function processAnswerToFHIR(itemList: any[] | undefined) {
-    if (!itemList) {
+interface Item {
+    answer?: Answer[];
+    item?: Item[];
+}
+
+function processAnswerToFCE(items: Item[]) {
+    if (!items) {
         return;
     }
-    itemList.forEach((item) => {
-        if (item.answer && item.answer[0]?.value?.string) {
-            item.answer[0].valueString = item.answer[0]?.value.string;
-            delete item.answer[0]?.value;
-        } else if (item.answer && item.answer[0]?.value?.integer) {
-            item.answer[0].valueInteger = item.answer[0]?.value.integer;
-            delete item.answer[0]?.value;
-        } else if (item.answer && item.answer[0]?.value?.boolean) {
-            item.answer[0].valueBoolean = item.answer[0]?.value.boolean;
-            delete item.answer[0]?.value;
-        } else if (item.answer && item.answer[0]?.value?.Coding) {
-            item.answer[0].valueCoding = item.answer[0]?.value.Coding;
-            delete item.answer[0]?.value;
-        } else if (item.answer && item.answer[0]?.value?.date) {
-            item.answer[0].valueDate = item.answer[0]?.value.date;
-            delete item.answer[0]?.value;
-        } else if (item.answer && item.answer[0]?.value?.dateTime) {
-            item.answer[0].valueDateTime = item.answer[0]?.value.dateTime;
-            delete item.answer[0]?.value;
-        } else if (item.answer && item.answer[0]?.value?.Reference) {
-            const { display, resourceType, id } = item.answer[0]?.value.Reference;
-            item.answer[0].valueReference = {
-                display,
-                reference: `${resourceType}/${id}`,
-            };
-            delete item.answer[0]?.value;
-        } else if (item.answer && item.answer[0]?.value?.time) {
-            item.answer[0].valueTime = item.answer[0]?.value.time;
-            delete item.answer[0]?.value;
-        } else if (item.item) {
-            processAnswerToFHIR(item.item);
+
+    function processAnswer(answer: Answer) {
+        const valueHandlers = {
+            valueString: (value: any) => ({ string: value }),
+            valueInteger: (value: any) => ({ integer: value }),
+            valueBoolean: (value: any) => ({ boolean: value }),
+            valueCoding: (value: any) => ({ Coding: value }),
+            valueDate: (value: any) => ({ date: value }),
+            valueDateTime: (value: any) => ({ dateTime: value }),
+            valueReference: (value: { display: any; resource: { id: any; resourceType: any } }) => ({
+                Reference: {
+                    display: value.display,
+                    id: value.resource.id,
+                    resource: value.resource,
+                    resourceType: value.resource.resourceType,
+                },
+            }),
+            valueTime: (value: any) => ({ time: value }),
+        };
+
+        for (const key in valueHandlers) {
+            if (key in answer) {
+                const value = answer[key];
+                delete answer[key];
+                answer.value = valueHandlers[key]?.(value);
+            }
         }
-    });
+    }
+
+    for (const item of items) {
+        if (item.answer) {
+            for (const answer of item.answer) {
+                processAnswer(answer);
+            }
+        }
+        if (item.item) {
+            processAnswerToFCE(item.item);
+        }
+    }
+}
+
+function processAnswerToFHIR(items: any): void {
+    if (!items) {
+        return;
+    }
+
+    function processAnswer(answerItem: any): void {
+        if (!answerItem.value) {
+            return;
+        }
+        const value = answerItem.value;
+        const valueMappings = {
+            string: 'valueString',
+            integer: 'valueInteger',
+            boolean: 'valueBoolean',
+            Coding: 'valueCoding',
+            date: 'valueDate',
+            dateTime: 'valueDateTime',
+            time: 'valueTime',
+        };
+        for (const key in valueMappings) {
+            if (key in value) {
+                const newKey = valueMappings[key];
+                if (newKey) {
+                    answerItem[newKey] = value[key];
+                }
+                delete answerItem.value;
+                break;
+            }
+        }
+        if ('Reference' in value) {
+            answerItem.valueReference = {
+                display: value.Reference.display,
+                resource: value.Reference.resource,
+                reference: `${value.Reference.resourceType}/${value.Reference.id}`,
+            };
+            delete answerItem['value'];
+        }
+    }
+
+    for (const item of items) {
+        if ('answer' in item) {
+            for (const answer of item.answer!) {
+                processAnswer(answer);
+            }
+        }
+        if ('item' in item) {
+            processAnswerToFHIR(item.item!);
+        }
+    }
 }
 
 function processMetaToFCE(meta: any) {
