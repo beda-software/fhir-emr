@@ -1,0 +1,158 @@
+{
+  "questionnaire": "physical-exam",
+  "meta": {
+    "lastUpdated": "2023-04-06T02:05:52.434771Z",
+    "versionId": "20470",
+    "extension": [
+      {
+        "url": "ex:createdAt",
+        "valueInstant": "2023-04-06T02:05:32.668369Z"
+      }
+    ]
+  },
+  "encounter": {
+    "reference": "Encounter/e133b999-9e91-4ebd-967e-450bad770682"
+  },
+  "item": [
+    {
+      "item": [
+        {
+          "answer": [
+            {
+              "valueString": "Well nourished, well developed, awake and alert, resting comfortably in no acute distress, cooperative on exam"
+            }
+          ],
+          "linkId": "general"
+        },
+        {
+          "answer": [
+            {
+              "valueString": "NCAT, PERRL, normal conjunctivae, nonicteric sclerae, bilateral EAC/TM clear, no nasal discharge, OP clear, moist mucous membranes"
+            }
+          ],
+          "linkId": "heent"
+        },
+        {
+          "answer": [
+            {
+              "valueString": "Supple, normal ROM, no lymphadenopathy/masses, nontender"
+            }
+          ],
+          "linkId": "neck"
+        },
+        {
+          "answer": [
+            {
+              "valueString": "RRR, normal S1/S2, no murmurs/gallops/rub"
+            }
+          ],
+          "linkId": "cardiovascular"
+        },
+        {
+          "answer": [
+            {
+              "valueString": "No respiratory distress, lungs CTAB: no rales, rhonchi, or wheeze"
+            }
+          ],
+          "linkId": "pulmonary"
+        },
+        {
+          "answer": [
+            {
+              "valueString": "Soft and non-tender with no guarding or rebound; +BS normoactive, no tympany on auscultation"
+            }
+          ],
+          "linkId": "abdominal"
+        },
+        {
+          "answer": [
+            {
+              "valueString": "Normal ROM of UE and LE, normal bulk and tone,"
+            }
+          ],
+          "linkId": "musculoskeletal"
+        },
+        {
+          "answer": [
+            {
+              "valueString": "Pulses intact with normal cap refill, no LE pitting edema or calf tenderness"
+            }
+          ],
+          "linkId": "extremities"
+        },
+        {
+          "answer": [
+            {
+              "valueString": "AAOx3, converses normally. CN II - XII grossly intact. Gait and coordination intact. 5+ BL UE/LE strength, no gross motor or sensory defects"
+            }
+          ],
+          "linkId": "neurologic"
+        },
+        {
+          "answer": [
+            {
+              "valueString": "Normal mood and affect. Judgement/competence is appropriate"
+            }
+          ],
+          "linkId": "psychiatric"
+        },
+        {
+          "answer": [
+            {
+              "valueString": "Warm, dry, and intact. No rashes, dermatoses, petechiae, or lesions"
+            }
+          ],
+          "linkId": "skin"
+        },
+        {
+          "answer": [
+            {
+              "valueString": "Normal sensation bilaterally on soles of feet with 10g monofilament"
+            }
+          ],
+          "linkId": "monofilament"
+        },
+        {
+          "answer": [
+            {
+              "valueString": "The chest wall is symmetric, without deformity, and is atraumatic in appearance"
+            }
+          ],
+          "linkId": "chest"
+        },
+        {
+          "answer": [
+            {
+              "valueString": "External genitalia without erythema, exudate or discharge"
+            }
+          ],
+          "linkId": "genitourinary-female"
+        },
+        {
+          "answer": [
+            {
+              "valueString": "Normal external anus and normal tone. No palpable masses, normal mucosa, brown stool. Hemoccult negative"
+            }
+          ],
+          "linkId": "rectal"
+        },
+        {
+          "answer": [
+            {
+              "valueString": "No enlarged lymph nodes of occipital, pre- and postauricular, submandibular, anterior or posterior cervical, or supraclavicular identified"
+            }
+          ],
+          "linkId": "lymphatic"
+        }
+      ],
+      "linkId": "physical-exam-group"
+    }
+  ],
+  "resourceType": "QuestionnaireResponse",
+  "source": {
+    "reference": "Patient/683e382b-fed4-433e-9b6d-a847a7953bc0"
+  },
+  "status": "completed",
+  "id": "288fd914-b836-47dd-863a-e7d86a923f28",
+  "authored": "2023-04-06T02:05:51Z"
+}

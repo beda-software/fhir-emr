@@ -1,0 +1,147 @@
+{
+  "authored": "2023-04-05T06:27:57Z",
+  "id": "cf6d9d4b-bfcd-463f-9d26-b6769c2a3fc3",
+  "item": [
+    {
+      "answer": [
+        {
+          "value": {
+            "string": "683e382b-fed4-433e-9b6d-a847a7953bc0"
+          }
+        }
+      ],
+      "linkId": "patientId"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "string": "Emily Nguyen"
+          }
+        }
+      ],
+      "linkId": "patientName"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "Reference": {
+              "display": "Sanjay Patel - Cardiology",
+              "id": "429e6a55-8a64-4ede-ad12-1206522253eb",
+              "resource": {
+                "healthcareService": [
+                  {
+                    "display": "The first appointment",
+                    "id": "consultation",
+                    "resourceType": "HealthcareService"
+                  },
+                  {
+                    "display": "A follow up visit",
+                    "id": "follow-up",
+                    "resourceType": "HealthcareService"
+                  }
+                ],
+                "id": "429e6a55-8a64-4ede-ad12-1206522253eb",
+                "meta": {
+                  "createdAt": "2023-04-05T06:09:11.092359Z",
+                  "lastUpdated": "2023-04-05T06:09:11.092359Z",
+                  "versionId": "20418"
+                },
+                "practitioner": {
+                  "id": "42e9bdc0-4fe6-4b8d-a6a5-fcb68f1fe836",
+                  "resource": {
+                    "id": "42e9bdc0-4fe6-4b8d-a6a5-fcb68f1fe836",
+                    "meta": {
+                      "createdAt": "2023-04-05T06:09:11.092359Z",
+                      "lastUpdated": "2023-04-05T06:09:11.092359Z",
+                      "versionId": "20416"
+                    },
+                    "name": [
+                      {
+                        "family": "Patel",
+                        "given": ["Sanjay", "Kumar"]
+                      }
+                    ],
+                    "resourceType": "Practitioner"
+                  },
+                  "resourceType": "Practitioner"
+                },
+                "resourceType": "PractitionerRole",
+                "specialty": [
+                  {
+                    "coding": [
+                      {
+                        "code": "394579002",
+                        "display": "Cardiology",
+                        "system": "http://snomed.info/sct"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "resourceType": "PractitionerRole"
+            }
+          }
+        }
+      ],
+      "linkId": "practitioner-role"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "Coding": {
+              "code": "consultation",
+              "display": "The first appointment",
+              "system": "http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type"
+            }
+          }
+        }
+      ],
+      "linkId": "service"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "date": "2023-04-26"
+          }
+        }
+      ],
+      "linkId": "date"
+    },
+    {
+      "item": [
+        {
+          "answer": [
+            {
+              "value": {
+                "time": "15:00:00"
+              }
+            }
+          ],
+          "linkId": "start-time"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "time": "16:00:00"
+              }
+            }
+          ],
+          "linkId": "end-time"
+        }
+      ],
+      "linkId": "Time period"
+    }
+  ],
+  "meta": {
+    "createdAt": "2023-04-05T06:27:58.499391Z",
+    "lastUpdated": "2023-04-05T06:27:58.499391Z",
+    "versionId": "20420"
+  },
+  "resourceType": "QuestionnaireResponse",
+  "status": "completed"
+}

@@ -1,0 +1,146 @@
+{
+  "questionnaire": "gad-7",
+  "meta": {
+    "lastUpdated": "2023-04-06T01:29:05.681893Z",
+    "versionId": "20442",
+    "extension": [
+      {
+        "url": "ex:createdAt",
+        "valueInstant": "2023-04-06T01:28:53.793848Z"
+      }
+    ]
+  },
+  "encounter": {
+    "reference": "Encounter/e133b999-9e91-4ebd-967e-450bad770682"
+  },
+  "item": [
+    {
+      "answer": [
+        {
+          "valueDateTime": "2023-04-06T01:28:52+00:00"
+        }
+      ],
+      "linkId": "dateTime"
+    },
+    {
+      "answer": [
+        {
+          "valueString": "683e382b-fed4-433e-9b6d-a847a7953bc0"
+        }
+      ],
+      "linkId": "patientId"
+    },
+    {
+      "answer": [
+        {
+          "valueString": "Emily Nguyen"
+        }
+      ],
+      "linkId": "patientName"
+    },
+    {
+      "item": [
+        {
+          "answer": [
+            {
+              "valueCoding": {
+                "code": "LA6569-3",
+                "system": "http://loinc.org",
+                "display": "Several days"
+              }
+            }
+          ],
+          "linkId": "69725-0"
+        },
+        {
+          "answer": [
+            {
+              "valueCoding": {
+                "code": "LA6570-1",
+                "system": "http://loinc.org",
+                "display": "More than half the days"
+              }
+            }
+          ],
+          "linkId": "68509-9"
+        },
+        {
+          "answer": [
+            {
+              "valueCoding": {
+                "code": "LA6568-5",
+                "system": "http://loinc.org",
+                "display": "Not at all"
+              }
+            }
+          ],
+          "linkId": "69733-4"
+        },
+        {
+          "answer": [
+            {
+              "valueCoding": {
+                "code": "LA6571-9",
+                "system": "http://loinc.org",
+                "display": "Nearly every day"
+              }
+            }
+          ],
+          "linkId": "69734-2"
+        },
+        {
+          "answer": [
+            {
+              "valueCoding": {
+                "code": "LA6570-1",
+                "system": "http://loinc.org",
+                "display": "More than half the days"
+              }
+            }
+          ],
+          "linkId": "69735-9"
+        },
+        {
+          "answer": [
+            {
+              "valueCoding": {
+                "code": "LA6569-3",
+                "system": "http://loinc.org",
+                "display": "Several days"
+              }
+            }
+          ],
+          "linkId": "69689-8"
+        },
+        {
+          "answer": [
+            {
+              "valueCoding": {
+                "code": "LA6568-5",
+                "system": "http://loinc.org",
+                "display": "Not at all"
+              }
+            }
+          ],
+          "linkId": "69736-7"
+        },
+        {
+          "answer": [
+            {
+              "valueInteger": 9
+            }
+          ],
+          "linkId": "anxiety-score"
+        }
+      ],
+      "linkId": "gad-7"
+    }
+  ],
+  "resourceType": "QuestionnaireResponse",
+  "source": {
+    "reference": "Patient/683e382b-fed4-433e-9b6d-a847a7953bc0"
+  },
+  "status": "completed",
+  "id": "a00b8309-f74f-462c-a7e4-64852d5bf707",
+  "authored": "2023-04-06T01:29:05Z"
+}

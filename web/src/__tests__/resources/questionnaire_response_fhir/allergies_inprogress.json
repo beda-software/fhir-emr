@@ -1,0 +1,77 @@
+{
+  "questionnaire": "allergies",
+  "meta": {
+    "lastUpdated": "2023-04-06T02:48:18.132716Z",
+    "versionId": "20530",
+    "extension": [
+      {
+        "url": "ex:createdAt",
+        "valueInstant": "2023-04-06T02:48:18.132716Z"
+      }
+    ]
+  },
+  "encounter": {
+    "reference": "Encounter/e133b999-9e91-4ebd-967e-450bad770682"
+  },
+  "item": [
+    {
+      "answer": [
+        {
+          "valueDateTime": "2023-04-06T02:48:16+00:00"
+        }
+      ],
+      "linkId": "dateTime"
+    },
+    {
+      "answer": [
+        {
+          "valueString": "683e382b-fed4-433e-9b6d-a847a7953bc0"
+        }
+      ],
+      "linkId": "patientId"
+    },
+    {
+      "answer": [
+        {
+          "valueString": "Emily Nguyen"
+        }
+      ],
+      "linkId": "patientName"
+    },
+    {
+      "answer": [
+        {
+          "valueCoding": {
+            "code": "active",
+            "system": "http://terminology.hl7.org/ValueSet/allergyintolerance-clinical",
+            "display": "Active"
+          }
+        }
+      ],
+      "linkId": "status"
+    },
+    {
+      "answer": [],
+      "linkId": "type"
+    },
+    {
+      "answer": [],
+      "linkId": "reaction"
+    },
+    {
+      "answer": [
+        {
+          "value": {}
+        }
+      ],
+      "linkId": "notes"
+    }
+  ],
+  "resourceType": "QuestionnaireResponse",
+  "source": {
+    "reference": "Patient/683e382b-fed4-433e-9b6d-a847a7953bc0"
+  },
+  "status": "in-progress",
+  "id": "f0a0b4cf-ff0e-47e2-814d-3327a138653e",
+  "authored": "2023-04-06T02:48:17.734Z"
+}

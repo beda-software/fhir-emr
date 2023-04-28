@@ -21,7 +21,7 @@
  QuestionnaireItem {:zen/tags #{zen/schema
                                 zen.fhir/structure-schema}
                     :type zen/map
-                    :zen.fhir/version "0.5.25-1"
+                    :zen.fhir/version "0.6.23-1"
                     :confirms #{hl7-fhir-r4-core.Questionnaire/item-schema}
                     :keys {:item {:type zen/vector
                                   :every {:confirms #{QuestionnaireItem}}}
@@ -78,7 +78,7 @@
   :zen.fhir/type "Questionnaire"
   :zen.fhir/profileUri "https://beda.software/beda-emr-questionnaire"
   :type zen/map
-  :zen.fhir/version "0.5.25-1"
+  :zen.fhir/version "0.6.23-1"
   :keys {:mapping {:type zen/vector
                    :every {:confirms #{hl7-fhir-r4-core.Reference/schema}
                            :fhir/extensionUri "http://beda.software/fhir-extensions/questionnaire-mapper"}}

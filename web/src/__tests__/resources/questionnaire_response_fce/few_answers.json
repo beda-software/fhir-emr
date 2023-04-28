@@ -1,0 +1,48 @@
+{
+  "item": [
+    {
+      "answer": [
+        {
+          "value": {
+            "Coding": {
+              "code": "39579001",
+              "system": "http://snomed.ct",
+              "display": "Anaphylaxis"
+            }
+          }
+        },
+        {
+          "value": {
+            "Coding": {
+              "code": "247472004",
+              "system": "http://snomed.ct",
+              "display": "Hives (Wheal)"
+            }
+          }
+        },
+        {
+          "value": {
+            "Coding": {
+              "code": "422587007",
+              "system": "http://snomed.ct",
+              "display": "Nausea"
+            }
+          }
+        }
+      ],
+      "linkId": "reaction"
+    }
+  ],
+  "source": {
+    "id": "test-patient",
+    "resourceType": "Patient"
+  },
+  "status": "completed",
+  "authored": "2023-04-14T09:36:35Z",
+  "questionnaire": "allergies",
+  "id": "test",
+  "resourceType": "QuestionnaireResponse",
+  "meta": {
+    "createdAt": "2023-04-14T09:36:35.349085Z"
+  }
+}

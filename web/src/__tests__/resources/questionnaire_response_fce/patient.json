@@ -1,0 +1,91 @@
+{
+  "authored": "2023-04-05T06:03:19Z",
+  "id": "24306b57-b463-4e39-807f-e715a80bbe5f",
+  "item": [
+    {
+      "answer": [
+        {
+          "value": {}
+        }
+      ],
+      "linkId": "patient-id"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "string": "Nguyen"
+          }
+        }
+      ],
+      "linkId": "last-name"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "string": "Emily"
+          }
+        }
+      ],
+      "linkId": "first-name"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "string": "Marie"
+          }
+        }
+      ],
+      "linkId": "middle-name"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "date": "1991-12-29"
+          }
+        }
+      ],
+      "linkId": "birth-date"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "string": "female"
+          }
+        }
+      ],
+      "linkId": "gender"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "string": "123-45-6789"
+          }
+        }
+      ],
+      "linkId": "ssn"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "string": "15551234567"
+          }
+        }
+      ],
+      "linkId": "mobile"
+    }
+  ],
+  "meta": {
+    "createdAt": "2023-04-05T06:03:21.353895Z",
+    "lastUpdated": "2023-04-05T06:03:21.353895Z",
+    "versionId": "20412"
+  },
+  "resourceType": "QuestionnaireResponse",
+  "status": "completed"
+}

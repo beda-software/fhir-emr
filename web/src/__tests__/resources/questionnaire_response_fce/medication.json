@@ -1,0 +1,116 @@
+{
+  "questionnaire": "medication",
+  "meta": {
+    "lastUpdated": "2023-04-06T01:59:42.145206Z",
+    "createdAt": "2023-04-06T01:59:02.311377Z",
+    "versionId": "20458"
+  },
+  "encounter": {
+    "id": "e133b999-9e91-4ebd-967e-450bad770682",
+    "resourceType": "Encounter"
+  },
+  "item": [
+    {
+      "answer": [
+        {
+          "value": {
+            "dateTime": "2023-04-06T01:59:00+00:00"
+          }
+        }
+      ],
+      "linkId": "dateTime"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "string": "e133b999-9e91-4ebd-967e-450bad770682"
+          }
+        }
+      ],
+      "linkId": "encounterId"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "string": "683e382b-fed4-433e-9b6d-a847a7953bc0"
+          }
+        }
+      ],
+      "linkId": "patientId"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "string": "Emily Nguyen"
+          }
+        }
+      ],
+      "linkId": "patientName"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "Coding": {
+              "code": "261000",
+              "system": "http://snomed.info/sct",
+              "display": "Codeine phosphate"
+            }
+          }
+        }
+      ],
+      "linkId": "medication"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "string": "25 or 20"
+          }
+        }
+      ],
+      "linkId": "dosage"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "date": "2023-04-10"
+          }
+        }
+      ],
+      "linkId": "start-date"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "date": "2023-04-17"
+          }
+        }
+      ],
+      "linkId": "stop-date"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "string": "nothing"
+          }
+        }
+      ],
+      "linkId": "notes"
+    }
+  ],
+  "resourceType": "QuestionnaireResponse",
+  "source": {
+    "id": "683e382b-fed4-433e-9b6d-a847a7953bc0",
+    "resourceType": "Patient"
+  },
+  "status": "completed",
+  "id": "3d077aed-ccd4-43d4-843e-0e2224e7571e",
+  "authored": "2023-04-06T01:59:41Z"
+}
