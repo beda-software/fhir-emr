@@ -24,6 +24,7 @@ export interface RouteItem {
     exact?: boolean;
     title: string;
     icon?: React.ReactElement;
+    disabled?: boolean;
 }
 
 function LocaleSwitcher() {

@@ -1,3 +1,4 @@
+import { WithId } from 'fhir-react';
 import { useService } from 'fhir-react/lib/hooks/service';
 import { isSuccess, success } from 'fhir-react/lib/libs/remoteData';
 import { extractBundleResources, getFHIRResources } from 'fhir-react/lib/services/fhir';
@@ -31,7 +32,7 @@ export function usePractitionersList(filterValues: StringTypeColumnFilterValue[]
     };
 
     const { resourceResponse, pagerManager, handleTableChange, pagination } = usePagerExtended<
-        Practitioner,
+        WithId<Practitioner>,
         StringTypeColumnFilterValue[]
     >('Practitioner', queryParameters, debouncedFilterValues);
 
@@ -46,25 +47,19 @@ export function usePractitionersList(filterValues: StringTypeColumnFilterValue[]
 
         const response = filteredResourcesAreFound
             ? await getFHIRResources<PractitionerRole | Practitioner>('PractitionerRole', {
-                  _include: ['PractitionerRole:practitioner:Practitioner'],
                   practitioner: practitioners.map((practitioner) => practitioner.id).join(','),
               })
             : success(undefined);
 
         return mapSuccess(response, (bundle) => {
-            const sourceMap = bundle
-                ? extractBundleResources(bundle)
-                : { Practitioner: [], PractitionerRole: [] };
+            const sourceMap = bundle ? extractBundleResources(bundle) : { Practitioner: [], PractitionerRole: [] };
 
-            const practitioners = sourceMap.Practitioner;
             const practitionerRoles = sourceMap.PractitionerRole;
 
             return practitioners
                 .map((practitioner) => {
                     const practitionerRolesList = practitionerRoles.filter(
-                        (pR) =>
-                            pR.practitioner &&
-                            parseFHIRReference(pR.practitioner).id === practitioner.id,
+                        (pR) => pR.practitioner && parseFHIRReference(pR.practitioner).id === practitioner.id,
                     );
                     const rowData: PractitionerListRowData = {
                         key: practitioner.id,

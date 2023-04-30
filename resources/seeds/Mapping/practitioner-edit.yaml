@@ -36,10 +36,25 @@ body:
             fhirpath("QuestionnaireResponse.repeat(item).where(linkId='specialty').answer")
           $body:
             request:
-              url: $ "/PractitionerRole/" + practitionerRoleId
-              method: PATCH
+              $if: $ practitionerRoleId
+              $then:
+                  url: $ "/PractitionerRole/" + practitionerRoleId
+                  method: PUT
+              $else:
+                  url: /PractitionerRole
+                  method: POST
             resource:
               specialty:
                 - coding:
                     - $ specialtyItem.valueCoding
+              practitioner:
+                uri: urn:uuid:practitioner-id
+              resourceType: practitionerRole
+              healthcareService:
+                - id: consultation
+                  resourceType: HealthcareService
+                  display: The first appointment
+                - id: follow-up
+                  resourceType: HealthcareService
+                  display: A follow up visit
       $call: concat

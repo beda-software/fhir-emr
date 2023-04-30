@@ -2,7 +2,7 @@ import { t } from '@lingui/macro';
 import { Menu } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { WithId } from 'fhir-react/lib/services/fhir';
-import { Practitioner } from 'fhir/r4b';
+import { Practitioner, PractitionerRole } from 'fhir/r4b';
 import _ from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
@@ -22,6 +22,7 @@ interface BreadCrumb {
 
 interface Props {
     practitioner: WithId<Practitioner>;
+    practitionerRole?: WithId<PractitionerRole>;
 }
 
 function usePractitionerHeader(props: Props) {
@@ -59,6 +60,7 @@ function usePractitionerHeader(props: Props) {
 }
 
 export function PractitionerHeader(props: Props) {
+    const { practitionerRole } = props;
     const location = useLocation();
     const params = useParams<{ id: string }>();
     const { pageTitle, breadcrumbs } = usePractitionerHeader(props);
@@ -66,10 +68,10 @@ export function PractitionerHeader(props: Props) {
     const menuItems: RouteItem[] = useMemo(
         () => [
             { title: t`Overview`, path: `/practitioners/${params.id}` },
-            { title: t`Scheduling`, path: `/practitioners/${params.id}/scheduling` },
-            { title: t`Availability`, path: `/practitioners/${params.id}/availability` },
+            { title: t`Scheduling`, path: `/practitioners/${params.id}/scheduling`, disabled: !practitionerRole },
+            { title: t`Availability`, path: `/practitioners/${params.id}/availability`, disabled: !practitionerRole },
         ],
-        [params.id],
+        [params.id, practitionerRole],
     );
 
     const [currentPath, setCurrentPath] = useState(location?.pathname);
@@ -87,7 +89,8 @@ export function PractitionerHeader(props: Props) {
                 className={s.menu}
                 items={menuItems.map((route) => ({
                     key: route.path,
-                    label: <Link to={route.path}>{route.title}</Link>,
+                    label: route.disabled ? route.title : <Link to={route.path}>{route.title}</Link>,
+                    disabled: route.disabled,
                 }))}
             />
         );

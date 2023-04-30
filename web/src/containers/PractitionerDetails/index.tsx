@@ -1,4 +1,3 @@
-
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { useService } from 'fhir-react/lib/hooks/service';
 import { extractBundleResources, getFHIRResources, WithId } from 'fhir-react/lib/services/fhir';
@@ -29,7 +28,7 @@ export const PractitionerDetails = () => {
 
                 return {
                     practitioner: resources.Practitioner[0]!,
-                    practitionerRole: resources.PractitionerRole[0]!,
+                    practitionerRole: resources.PractitionerRole[0],
                 };
             },
         );
@@ -40,7 +39,7 @@ export const PractitionerDetails = () => {
             {({ practitioner, practitionerRole }) => {
                 return (
                     <>
-                        <PractitionerHeader practitioner={practitioner} />
+                        <PractitionerHeader practitioner={practitioner} practitionerRole={practitionerRole} />
                         <BasePageContent>
                             <Routes>
                                 <Route
@@ -61,29 +60,29 @@ export const PractitionerDetails = () => {
                                             />
                                         }
                                     />
-                                    <Route
-                                        path="/scheduling"
-                                        element={
-                                            <ScheduleCalendar practitionerRole={practitionerRole} />
-                                        }
-                                    />
-                                    <Route
-                                        path="/availability"
-                                        element={
-                                            <Availability
-                                                practitionerRole={practitionerRole}
-                                                onSave={(updatedPR: WithId<PractitionerRole>) => {
-                                                    navigate(
-                                                        `/practitioners/${practitioner.id}/scheduling`,
-                                                    );
-                                                    manager.set({
-                                                        practitioner,
-                                                        practitionerRole: updatedPR,
-                                                    });
-                                                }}
+                                    {practitionerRole ? (
+                                        <>
+                                            <Route
+                                                path="/scheduling"
+                                                element={<ScheduleCalendar practitionerRole={practitionerRole} />}
                                             />
-                                        }
-                                    />
+                                            <Route
+                                                path="/availability"
+                                                element={
+                                                    <Availability
+                                                        practitionerRole={practitionerRole}
+                                                        onSave={(updatedPR: WithId<PractitionerRole>) => {
+                                                            navigate(`/practitioners/${practitioner.id}/scheduling`);
+                                                            manager.set({
+                                                                practitioner,
+                                                                practitionerRole: updatedPR,
+                                                            });
+                                                        }}
+                                                    />
+                                                }
+                                            />
+                                        </>
+                                    ) : null}
                                 </Route>
                             </Routes>
                         </BasePageContent>

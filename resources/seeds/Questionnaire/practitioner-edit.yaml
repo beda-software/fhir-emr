@@ -3,10 +3,6 @@ launchContext:
       code: Practitioner
     type:
       - Practitioner
-  - name:
-      code: PractitionerRole
-    type:
-      - PractitionerRole
 name: practitioner edit
 item:
   - text: practitionerId
@@ -24,7 +20,7 @@ item:
     hidden: true
     initialExpression:
       language: text/fhirpath
-      expression: "%PractitionerRole.id"
+      expression: "%PractitionerRole.where(id.exists()).id"
   - text: First name
     type: string
     linkId: first-name
@@ -75,7 +71,7 @@ item:
             display: Family practice
     initialExpression:
       language: text/fhirpath
-      expression: "%PractitionerRole.specialty[0].coding"
+      expression: "%PractitionerRole.where(id.exists()).specialty[0].coding"
 mapping:
   - id: practitioner-edit
     resourceType: Mapping
