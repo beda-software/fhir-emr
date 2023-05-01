@@ -88,14 +88,16 @@ const notWorkingQuestionnaires = [
     'edit-appointment',
     'encounter-create-from-appointment',
     'new-appointment',
-    'federated-identity-signin',
+    'consent', // choiceColumn
+    'encounter-create', // choiceColumn
+    'vitals', // unit
 ];
 
 describe('Questionanire and QuestionnaireResponses transformation', () => {
     beforeAll(async () => {
         await loginAdminUser();
     });
-    test.skip('Each Questionnaires should convert to fce and back to fhir (obsolete)', async () => {
+    test('Each Questionnaires should convert to fce and back to fhir', async () => {
         const questionnaires = extractBundleResources(
             ensure(await getFHIRResources<AidboxQuestionnaire>('Questionnaire', { _count: 9999 })),
         ).Questionnaire;

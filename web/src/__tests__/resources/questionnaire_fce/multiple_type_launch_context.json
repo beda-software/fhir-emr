@@ -14,7 +14,8 @@
     "launchContext": [
         {
             "name": {
-                "code": "LaunchPatient"
+                "code": "LaunchPatient",
+                "system": "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext"
             },
             "type": [
                 "Patient",

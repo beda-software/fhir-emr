@@ -199,9 +199,15 @@ function getUpdatedPropertiesFromItem(item: any) {
                 ext.url === 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression',
         )?.valueExpression;
 
-        updatedProperties.unit = item.extension?.find(
+        let unit = item.extension?.find(
             (ext: { url: string }) => ext.url === 'http://hl7.org/fhir/StructureDefinition/questionnaire-unit',
         )?.valueCoding;
+        // if (!unit) {
+        //     unit = item.extension?.find(
+        //         (ext: { url: string }) => ext.url === 'https://beda.software/fhir-emr-questionnaire/unit',
+        //     )?.valueString;
+        // }
+        updatedProperties.unit = unit;
     }
 
     if (item.type === 'text') {
@@ -235,6 +241,7 @@ function getUpdatedPropertiesFromItem(item: any) {
             const unit = nestedItem.extension?.find(
                 (ext: any) => ext.url === 'http://hl7.org/fhir/StructureDefinition/questionnaire-unit',
             )?.valueCoding;
+
             if (unit !== undefined) {
                 nestedItem.unit = unit;
             }
@@ -266,18 +273,22 @@ function getUpdatedPropertiesFromItem(item: any) {
     if (item.type === 'reference') {
         const choiceColumnExtension = item.extension?.find(
             (ext: any) => ext.url === 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn',
-        ).extension;
+        )?.extension;
 
-        const forDisplay = choiceColumnExtension.find((obj: { url: string }) => obj.url === 'forDisplay').valueBoolean;
+        if (choiceColumnExtension) {
+            const forDisplay = choiceColumnExtension.find(
+                (obj: { url: string }) => obj.url === 'forDisplay',
+            ).valueBoolean;
 
-        const path = choiceColumnExtension.find((obj: { url: string }) => obj.url === 'path').valueString;
+            const path = choiceColumnExtension.find((obj: { url: string }) => obj.url === 'path').valueString;
 
-        const choiceColumnArray = [];
-        choiceColumnArray.push({
-            forDisplay: forDisplay ?? false,
-            path,
-        });
-        updatedProperties.choiceColumn = choiceColumnArray;
+            const choiceColumnArray = [];
+            choiceColumnArray.push({
+                forDisplay: forDisplay ?? false,
+                path,
+            });
+            updatedProperties.choiceColumn = choiceColumnArray;
+        }
 
         updatedProperties.answerExpression = item.extension?.find(
             (ext: any) =>
@@ -387,9 +398,7 @@ export function processLaunchContext(fhirQuestionnaire: FHIRQuestionnaire): any[
 
         if (!contextFound) {
             const context: any = {
-                name: {
-                    code: nameCode,
-                },
+                name: nameExtension?.valueCoding,
                 type: typeCodes ?? [],
             };
             if (description) {
@@ -472,29 +481,20 @@ function processExtensions(fhirQuestionnaire: FHIRQuestionnaire): {
     };
 }
 
-interface Answer {
-    [key: string]: any;
-}
-
-interface Item {
-    answer?: Answer[];
-    item?: Item[];
-}
-
-function processAnswerToFCE(items: Item[]) {
+function processAnswerToFCE(items: any) {
     if (!items) {
         return;
     }
 
-    function processAnswer(answer: Answer) {
-        const valueHandlers = {
+    function processAnswer(answer: any) {
+        const valueHandlers: any = {
             valueString: (value: any) => ({ string: value }),
             valueInteger: (value: any) => ({ integer: value }),
             valueBoolean: (value: any) => ({ boolean: value }),
             valueCoding: (value: any) => ({ Coding: value }),
             valueDate: (value: any) => ({ date: value }),
             valueDateTime: (value: any) => ({ dateTime: value }),
-            valueReference: (value: { display: any; resource: { id: any; resourceType: any } }) => ({
+            valueReference: (value: any) => ({
                 Reference: {
                     display: value.display,
                     id: value.resource.id,
@@ -526,12 +526,12 @@ function processAnswerToFCE(items: Item[]) {
     }
 }
 
-function processAnswerToFHIR(items: any): void {
+function processAnswerToFHIR(items: any) {
     if (!items) {
         return;
     }
 
-    function processAnswer(answerItem: any): void {
+    function processAnswer(answerItem: any) {
         if (!answerItem.value) {
             return;
         }
@@ -555,24 +555,24 @@ function processAnswerToFHIR(items: any): void {
                 break;
             }
         }
-        if ('Reference' in value) {
+        if (value.Reference) {
             answerItem.valueReference = {
                 display: value.Reference.display,
                 resource: value.Reference.resource,
                 reference: `${value.Reference.resourceType}/${value.Reference.id}`,
             };
-            delete answerItem['value'];
+            delete answerItem.value;
         }
     }
 
     for (const item of items) {
-        if ('answer' in item) {
-            for (const answer of item.answer!) {
+        if (item.answer) {
+            for (const answer of item.answer) {
                 processAnswer(answer);
             }
         }
-        if ('item' in item) {
-            processAnswerToFHIR(item.item!);
+        if (item.item) {
+            processAnswerToFHIR(item.item);
         }
     }
 }
@@ -876,7 +876,7 @@ function processItemsToFHIR(items: any[] | undefined) {
 
         if (item.unit) {
             const unitExtension = {
-                url: 'http://hl7.org/fhir/StructureDefinition/questionnaire-unit',
+                url: 'http://hl7.org/fhir/StructureDefinition/questionnaire-unit', // unit url ?
                 valueCoding: item.unit,
             };
             item.extension = item.extension || [];
@@ -917,7 +917,7 @@ function processExtensionsToFHIR(questionnaire: FCEQuestionnaire) {
     if (questionnaire.launchContext) {
         const extension: any[] = [];
         for (const launchContext of questionnaire.launchContext as any) {
-            const name = launchContext.name?.code;
+            const name = launchContext.name;
             const typeList = launchContext.type;
             const description = launchContext.description;
 
@@ -926,10 +926,7 @@ function processExtensionsToFHIR(questionnaire: FCEQuestionnaire) {
                     const launchContextExtension: any = [
                         {
                             url: 'name',
-                            valueCoding: {
-                                system: 'http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext',
-                                code: name,
-                            },
+                            valueCoding: name,
                         },
                         { url: 'type', valueCode: typeCode },
                     ];
@@ -991,7 +988,7 @@ function processExtensionsToFHIR(questionnaire: FCEQuestionnaire) {
     }
 }
 
-export function toFirstClassExtension(fhirQuestionnaire: FHIRQuestionnaireResponse): FCEQuestionnaireResponse;
+export function toFirstClassExtension(fhirQuestionnaireResponse: FHIRQuestionnaireResponse): FCEQuestionnaireResponse;
 export function toFirstClassExtension(fhirQuestionnaire: FHIRQuestionnaire): FCEQuestionnaire;
 export function toFirstClassExtension(fhirResource: any): any {
     if (fhirResource.resourceType === 'Questionnaire') {
@@ -1011,7 +1008,7 @@ export function toFirstClassExtension(fhirResource: any): any {
     }
     if (fhirResource.resourceType === 'QuestionnaireResponse') {
         const questionnaireResponse = JSON.parse(JSON.stringify(fhirResource));
-        processAnswerToFCE(questionnaireResponse.item as any[]);
+        processAnswerToFCE(questionnaireResponse.item);
         if (questionnaireResponse.meta) {
             processMetaToFCE(questionnaireResponse.meta);
         }
@@ -1020,7 +1017,7 @@ export function toFirstClassExtension(fhirResource: any): any {
     }
 }
 
-export function fromFirstClassExtension(fceQuestionnaire: FCEQuestionnaireResponse): FHIRQuestionnaireResponse;
+export function fromFirstClassExtension(fceQuestionnaireResponse: FCEQuestionnaireResponse): FHIRQuestionnaireResponse;
 export function fromFirstClassExtension(fceQuestionnaire: FCEQuestionnaire): FHIRQuestionnaire;
 export function fromFirstClassExtension(fceResource: any): any {
     if (fceResource.resourceType === 'Questionnaire') {
@@ -1032,7 +1029,7 @@ export function fromFirstClassExtension(fceResource: any): any {
     }
     if (fceResource.resourceType === 'QuestionnaireResponse') {
         const questionnaireResponse = JSON.parse(JSON.stringify(fceResource));
-        processAnswerToFHIR(questionnaireResponse.item as any[]);
+        processAnswerToFHIR(questionnaireResponse.item);
         processMetaToFHIR(questionnaireResponse.meta);
         processReferenceToFHIR(questionnaireResponse);
         return questionnaireResponse as unknown as FHIRQuestionnaireResponse;

@@ -1,8 +1,6 @@
 {
     "meta": {
-        "profile": [
-            "https://beda.software/beda-emr-questionnaire"
-        ],
+        "profile": ["https://beda.software/beda-emr-questionnaire"],
         "lastUpdated": "2023-04-10T03:43:34.792167Z",
         "createdAt": "2023-04-05T05:22:35.752466Z",
         "versionId": "694"
@@ -10,11 +8,10 @@
     "launchContext": [
         {
             "name": {
-                "code": "Patient"
+                "code": "Patient",
+                "system": "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext"
             },
-            "type": [
-                "Patient"
-            ]
+            "type": ["Patient"]
         }
     ],
     "name": "encounter-create",
@@ -54,9 +51,7 @@
                 "language": "application/x-fhir-query",
                 "expression": "PractitionerRole?_assoc=practitioner"
             },
-            "referenceResource": [
-                "PractitionerRole"
-            ]
+            "referenceResource": ["PractitionerRole"]
         },
         {
             "text": "Service",

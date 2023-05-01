@@ -8,13 +8,15 @@
   "launchContext": [
     {
       "name": {
-        "code": "Practitioner"
+        "code": "Practitioner",
+        "system": "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext"
       },
       "type": ["Practitioner"]
     },
     {
       "name": {
-        "code": "PractitionerRole"
+        "code": "PractitionerRole",
+        "system": "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext"
       },
       "type": ["PractitionerRole"]
     }

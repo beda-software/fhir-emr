@@ -144,8 +144,8 @@
                 {
                     "url": "name",
                     "valueCoding": {
-                        "system": "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext",
-                        "code": "Patient"
+                        "code": "Patient",
+                        "system": "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext"
                     }
                 },
                 {

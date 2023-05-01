@@ -9,7 +9,8 @@
   "launchContext": [
     {
       "name": {
-        "code": "Patient"
+        "code": "Patient",
+        "system": "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext"
       },
       "type": ["Patient"],
       "description": "Patient is answering the questionnaire"
