@@ -77,6 +77,7 @@ export function PatientHeader() {
             { title: t`Encounters`, path: `/patients/${params.id}/encounters` },
             { title: t`Documents`, path: `/patients/${params.id}/documents` },
             { title: t`Wearables`, path: `/patients/${params.id}/wearables` },
+            { title: t`Resources`, path: `/patients/${params.id}/resources` },
         ],
         [params.id],
     );

@@ -23,10 +23,12 @@ import { formatHumanDate } from 'src/utils/date';
 
 import medicationIcon from './images/medication.svg';
 
-interface OverviewCard<T = any> {
+export interface OverviewCard<T = any> {
     title: string;
+    key: string;
     icon: React.ReactNode;
     data: T[];
+    total?: number;
     columns: {
         key: string;
         title: string;
@@ -57,11 +59,14 @@ function LinkToEdit(props: { name?: string; resource: Resource; provenanceList: 
 export function prepareAllergies(
     allergies: AllergyIntolerance[],
     provenanceList: Provenance[],
+    total?: number,
 ): OverviewCard<AllergyIntolerance> {
     return {
         title: t`Allergies`,
+        key: 'allergies',
         icon: <ExperimentOutlined />,
         data: allergies,
+        total,
         getKey: (r: AllergyIntolerance) => r.id!,
         columns: [
             {
@@ -83,17 +88,23 @@ export function prepareAllergies(
 
                     return createdAt ? formatHumanDate(r.recordedDate || createdAt) : null;
                 },
-                width: 200,
+                width: 120,
             },
         ],
     };
 }
 
-export function prepareConditions(conditions: Condition[], provenanceList: Provenance[]): OverviewCard<Condition> {
+export function prepareConditions(
+    conditions: Condition[],
+    provenanceList: Provenance[],
+    total?: number,
+): OverviewCard<Condition> {
     return {
         title: t`Conditions`,
+        key: 'conditions',
         icon: <AlertOutlined />,
         data: conditions,
+        total,
         getKey: (r: Condition) => r.id!,
         columns: [
             {
@@ -115,17 +126,23 @@ export function prepareConditions(conditions: Condition[], provenanceList: Prove
 
                     return createdAt ? formatHumanDate(r.recordedDate || createdAt) : null;
                 },
-                width: 200,
+                width: 120,
             },
         ],
     };
 }
 
-export function prepareConsents(consents: Consent[], provenanceList: Provenance[]): OverviewCard<Consent> {
+export function prepareConsents(
+    consents: Consent[],
+    provenanceList: Provenance[],
+    total?: number,
+): OverviewCard<Consent> {
     return {
         title: t`Consents`,
+        key: 'consents',
         icon: <TeamOutlined />,
         data: consents,
+        total,
         getKey: (r: Consent) => r.id!,
         columns: [
             {
@@ -163,11 +180,14 @@ export function prepareConsents(consents: Consent[], provenanceList: Provenance[
 export function prepareImmunizations(
     observations: Immunization[],
     provenanceList: Provenance[],
+    total?: number,
 ): OverviewCard<Immunization> {
     return {
         title: t`Immunization`,
+        key: 'immunization',
         icon: <HeartOutlined />,
         data: observations,
+        total,
         getKey: (r: Immunization) => r.id!,
         columns: [
             {
@@ -185,7 +205,7 @@ export function prepareImmunizations(
                 title: t`Date`,
                 key: 'date',
                 render: (r: Immunization) => (r.occurrenceDateTime ? formatHumanDate(r.occurrenceDateTime) : ''),
-                width: 200,
+                width: 120,
             },
         ],
     };
@@ -194,12 +214,15 @@ export function prepareImmunizations(
 export function prepareMedications(
     observations: MedicationStatement[],
     provenanceList: Provenance[],
+    total?: number,
 ): OverviewCard<MedicationStatement> {
     return {
         title: t`Active Medications`,
+        key: 'active-medications',
         // eslint-disable-next-line jsx-a11y/alt-text
         icon: <img src={medicationIcon} />,
         data: observations,
+        total,
         getKey: (r: MedicationStatement) => r.id!,
         columns: [
             {

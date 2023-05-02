@@ -91,28 +91,32 @@ export function usePatientOverview(props: Props) {
                         patient: patient.id,
                         _sort: ['-_lastUpdated'],
                         _revinclude: ['Provenance:target'],
+                        _count: 7,
                     }),
                     conditionsBundle: getFHIRResources<Condition | Provenance>('Condition', {
                         patient: patient.id,
                         _sort: ['-_lastUpdated'],
                         _revinclude: ['Provenance:target'],
+                        _count: 7,
                     }),
                     immunizationsBundle: getFHIRResources<Immunization | Provenance>('Immunization', {
                         patient: patient.id,
                         _sort: ['-_lastUpdated'],
                         _revinclude: ['Provenance:target'],
+                        _count: 7,
                     }),
                     medicationsBundle: getFHIRResources<MedicationStatement | Provenance>('MedicationStatement', {
                         patient: patient.id,
                         _sort: ['-_lastUpdated'],
                         _revinclude: ['Provenance:target'],
-                        _count: 3,
+                        _count: 7,
                     }),
                     consentsBundle: getFHIRResources<Consent | Provenance>('Consent', {
                         patient: patient.id,
                         status: 'active',
                         _sort: ['-_lastUpdated'],
                         _revinclude: ['Provenance:target'],
+                        _count: 7,
                     }),
                 }),
                 ({
@@ -134,11 +138,11 @@ export function usePatientOverview(props: Props) {
                     const medications = extractBundleResources(medicationsBundle).MedicationStatement;
                     const medicationsProvenance = extractBundleResources(medicationsBundle).Provenance;
                     const cards = [
-                        prepareConditions(conditions, conditionsProvenance),
-                        prepareMedications(medications, medicationsProvenance),
-                        prepareAllergies(allergies, allergiesProvenance),
-                        prepareImmunizations(immunizations, immunizationsProvenance),
-                        prepareConsents(consents, consentsProvenance),
+                        prepareConditions(conditions, conditionsProvenance, conditionsBundle.total),
+                        prepareMedications(medications, medicationsProvenance, medicationsBundle.total),
+                        prepareAllergies(allergies, allergiesProvenance, allergiesBundle.total),
+                        prepareImmunizations(immunizations, immunizationsProvenance, immunizationsBundle.total),
+                        prepareConsents(consents, consentsProvenance, consentsBundle.total),
                     ];
                     const appointments = prepareAppointments(appointmentsBundle);
 

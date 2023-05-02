@@ -12,6 +12,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 interface TableProps {
     title: string;
     data: any[];
+    total?: number;
     columns: {
         title: string;
         key: string;
