@@ -1,0 +1,34 @@
+id: activity-summary
+resourceType: Questionnaire
+name: activity-summary
+title: Daily activity summary (calories burned, exercises, stand hours)
+status: active
+mapping:
+    - id: activity-summary-extract
+      resourceType: Mapping
+item:
+    - linkId: effective
+      type: date
+      required: true
+    - linkId: active-energy-burned-goal
+      type: quantity
+      required: true
+    - linkId: active-energy-burned
+      type: quantity
+      required: true
+    - linkId: stand-hours-goal
+      type: quantity
+      required: true
+    - linkId: stand-hours
+      type: quantity
+      required: true
+    - linkId: exercise-time-goal
+      type: quantity
+      required: true
+    - linkId: exercise-time
+      type: quantity
+      required: true
+meta:
+    profile:
+        - https://beda.software/beda-emr-questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/activity-summary
