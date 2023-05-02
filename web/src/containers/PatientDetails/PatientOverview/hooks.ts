@@ -41,9 +41,10 @@ export function usePatientOverview(props: Props) {
 
     const [bmiRD] = useService(async () => {
         const response = await getFHIRResources<Observation>('Observation', {
-            _subject: patient.id,
-            _sort: '-_lastUpdated',
+            subject: patient.id,
             code: bmiCode,
+            _sort: ['-_lastUpdated'],
+            _count: 1,
         });
         return mapSuccess(response, (bundle) => {
             return extractBundleResources(bundle).Observation;
