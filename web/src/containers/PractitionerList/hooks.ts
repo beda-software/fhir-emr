@@ -56,22 +56,20 @@ export function usePractitionersList(filterValues: StringTypeColumnFilterValue[]
 
             const practitionerRoles = sourceMap.PractitionerRole;
 
-            return practitioners
-                .map((practitioner) => {
-                    const practitionerRolesList = practitionerRoles.filter(
-                        (pR) => pR.practitioner && parseFHIRReference(pR.practitioner).id === practitioner.id,
-                    );
-                    const rowData: PractitionerListRowData = {
-                        key: practitioner.id,
-                        id: practitioner.id,
-                        practitionerResource: practitioner,
-                        practitionerRolesResource: practitionerRolesList,
-                        practitionerName: renderHumanName(practitioner.name?.[0]),
-                        practitionerRoleList: practitionerRoleToStringArray(practitionerRolesList),
-                    };
-                    return rowData;
-                })
-                .reverse();
+            return practitioners.map((practitioner) => {
+                const practitionerRolesList = practitionerRoles.filter(
+                    (pR) => pR.practitioner && parseFHIRReference(pR.practitioner).id === practitioner.id,
+                );
+                const rowData: PractitionerListRowData = {
+                    key: practitioner.id,
+                    id: practitioner.id,
+                    practitionerResource: practitioner,
+                    practitionerRolesResource: practitionerRolesList,
+                    practitionerName: renderHumanName(practitioner.name?.[0]),
+                    practitionerRoleList: practitionerRoleToStringArray(practitionerRolesList),
+                };
+                return rowData;
+            });
         });
     }, [debouncedFilterValues, resourceResponse]);
 
