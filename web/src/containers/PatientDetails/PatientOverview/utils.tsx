@@ -1,5 +1,6 @@
-import { AlertOutlined, ExperimentOutlined, HeartOutlined, TeamOutlined } from '@ant-design/icons';
+import { AlertOutlined, ExperimentOutlined, HeartOutlined, TeamOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
+import { formatFHIRDate } from 'fhir-react';
 import { extractBundleResources, WithId } from 'fhir-react/lib/services/fhir';
 import { parseFHIRDateTime } from 'fhir-react/lib/utils/date';
 import {
@@ -13,12 +14,15 @@ import {
     MedicationStatement,
     Provenance,
     Consent,
+    Observation,
 } from 'fhir/r4b';
 import _ from 'lodash';
+import moment from 'moment';
 import { Link, useLocation } from 'react-router-dom';
 
 import { extractExtension, fromFHIRReference } from 'shared/src/utils/fce';
 
+import { PatientActivitySummary } from 'src/containers/PatientDetails/PatientActivitySummary';
 import { formatHumanDate } from 'src/utils/date';
 
 import medicationIcon from './images/medication.svg';
@@ -174,6 +178,34 @@ export function prepareConsents(
                 width: 200,
             },
         ],
+    };
+}
+
+export function prepareActivitySummary(activitySummary: Observation[]): OverviewCard<Observation[]> {
+    return {
+        title: t`Activities`,
+        key: 'activities',
+        icon: <ThunderboltOutlined />,
+        data: [activitySummary],
+        getKey: () => 'activity-summary-timeline',
+        columns: Object.keys(Array(7).fill(undefined))
+            .reverse()
+            .map((daysBefore) => moment().subtract(daysBefore, 'days'))
+            .map((calendarDate) => ({
+                title: calendarDate.format('ddd'),
+                key: 'date',
+                render: (r: Observation[]) => {
+                    return (
+                        <PatientActivitySummary
+                            activitySummary={r.find(
+                                (observation) => observation.effectiveDateTime === formatFHIRDate(calendarDate),
+                            )}
+                        />
+                    );
+                },
+                width: 75,
+                height: 75,
+            })),
     };
 }
 

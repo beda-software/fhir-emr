@@ -1,3 +1,4 @@
+import { formatFHIRDate } from 'fhir-react';
 import { useService } from 'fhir-react/lib/hooks/service';
 import { isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { extractBundleResources, getAllFHIRResources, getFHIRResources } from 'fhir-react/lib/services/fhir';
@@ -27,6 +28,7 @@ import {
     prepareMedications,
     prepareConditions,
     prepareConsents,
+    prepareActivitySummary,
 } from './utils';
 
 interface Props {
@@ -119,6 +121,12 @@ export function usePatientOverview(props: Props) {
                         _revinclude: ['Provenance:target'],
                         _count: 7,
                     }),
+                    activitySummaryBundle: getFHIRResources<Observation>('Observation', {
+                        patient: patient.id,
+                        status: 'final',
+                        code: 'activity-summary',
+                        date: `ge${formatFHIRDate(moment().subtract(6, 'days'))}`,
+                    }),
                 }),
                 ({
                     allergiesBundle,
@@ -127,6 +135,7 @@ export function usePatientOverview(props: Props) {
                     medicationsBundle,
                     appointmentsBundle,
                     consentsBundle,
+                    activitySummaryBundle,
                 }) => {
                     const allergies = extractBundleResources(allergiesBundle).AllergyIntolerance;
                     const allergiesProvenance = extractBundleResources(allergiesBundle).Provenance;
@@ -138,12 +147,14 @@ export function usePatientOverview(props: Props) {
                     const immunizationsProvenance = extractBundleResources(immunizationsBundle).Provenance;
                     const medications = extractBundleResources(medicationsBundle).MedicationStatement;
                     const medicationsProvenance = extractBundleResources(medicationsBundle).Provenance;
+                    const activitySummary = extractBundleResources(activitySummaryBundle).Observation;
                     const cards = [
                         prepareConditions(conditions, conditionsProvenance, conditionsBundle.total),
                         prepareMedications(medications, medicationsProvenance, medicationsBundle.total),
                         prepareAllergies(allergies, allergiesProvenance, allergiesBundle.total),
                         prepareImmunizations(immunizations, immunizationsProvenance, immunizationsBundle.total),
                         prepareConsents(consents, consentsProvenance, consentsBundle.total),
+                        prepareActivitySummary(activitySummary),
                     ];
                     const appointments = prepareAppointments(appointmentsBundle);
 
