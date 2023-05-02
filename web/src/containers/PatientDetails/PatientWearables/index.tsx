@@ -66,7 +66,7 @@ export function PatientWearables(props: PatientWearablesProps) {
                                 ) : (
                                     <Result
                                         status="info"
-                                        subTitle="Contact patient to sign-off consent on activity data access"
+                                        subTitle="Contact the patient to obtain their consent for accessing activity data"
                                         title="Patient consent is required"
                                     />
                                 )}
