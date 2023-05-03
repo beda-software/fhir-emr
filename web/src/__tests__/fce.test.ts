@@ -84,14 +84,7 @@ import fhir_practitioner_qr from './resources/questionnaire_response_fhir/practi
 import fhir_review_of_systems_qr from './resources/questionnaire_response_fhir/review_of_systems.json';
 import fhir_vitals_qr from './resources/questionnaire_response_fhir/vitals.json';
 
-const notWorkingQuestionnaires = [
-    'edit-appointment',
-    'encounter-create-from-appointment',
-    'new-appointment',
-    'consent', // choiceColumn
-    'encounter-create', // choiceColumn
-    'vitals', // unit
-];
+const notWorkingQuestionnaires = ['edit-appointment', 'encounter-create-from-appointment', 'new-appointment'];
 
 describe('Questionanire and QuestionnaireResponses transformation', () => {
     beforeAll(async () => {
