@@ -5,12 +5,14 @@
           hl7-fhir-r4-core.Reference
           hl7-fhir-r4-core.Questionnaire
           hl7-fhir-r4-core.string
+          hl7-fhir-r4-core.Quantity
           hl7-fhir-uv-sdc.sdc-questionnaire-answerExpression
           hl7-fhir-uv-sdc.sdc-questionnaire-choiceColumn
           hl7-fhir-uv-sdc.sdc-questionnaire-initialExpression
           hl7-fhir-r4-core.questionnaire-referenceResource
           hl7-fhir-r4-core.questionnaire-itemControl
           hl7-fhir-r4-core.questionnaire-sliderStepValue
+          hl7-fhir-r4-core.questionnaire-unit
           hl7-fhir-uv-sdc.sdc-questionnaire-calculatedExpression
           hl7-fhir-uv-sdc.sdc-questionnaire-itemPopulationContext
           hl7-fhir-uv-sdc.sdc-questionnaire-enableWhenExpression
@@ -63,8 +65,8 @@
 
                            :adjustLastToRight {:confirms #{hl7-fhir-r4-core.boolean/schema}
                                                :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/adjust-last-to-right"}
-                           :unit {:confirms #{hl7-fhir-r4-core.string/schema}
-                                  :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/unit"}
+                           :unit {:confirms #{hl7-fhir-r4-core.questionnaire-unit/schema},
+                                  :fhir/extensionUri "http://hl7.org/fhir/StructureDefinition/questionnaire-unit"}
                            :macro {:confirms #{hl7-fhir-r4-core.string/schema}
                                    :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/macro"}
                            ;; use hidden key over itemHidden from zen sdc zen profile
