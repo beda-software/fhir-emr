@@ -33,6 +33,7 @@ describe('Validate all questionanires', () => {
         );
         expect(outcome.resourceType).toBe('OperationOutcome');
         if (outcome.id !== 'allok') {
+            console.log('qid', questionnaireId);
             console.log(JSON.stringify(outcome, undefined, 4));
         }
         expect(outcome.id).toBe('allok');
