@@ -31,27 +31,45 @@ item:
   - type: integer
     linkId: height
     text: Height
-    unit: cm
+    unit:
+      code: cm
+      system: http://unitsofmeasure.org
+      display: cm
   - type: integer
     linkId: weight
     text: Weight
-    unit: kg
+    unit:
+      code: kg
+      system: http://unitsofmeasure.org
+      display: kg
   - type: integer
     linkId: temperature
     text: Temperature
-    unit: Celsius
+    unit:
+      code: Celsius
+      system: http://unitsofmeasure.org
+      display: Celsius
   - type: integer
     linkId: oxygen-saturation
     text: Oxygen saturation
-    unit: "%"
+    unit:
+      code: "%"
+      system: http://unitsofmeasure.org
+      display: "%"
   - type: integer
     linkId: pulse-rate
     text: Pulse rate
-    unit: bpm
+    unit:
+      code: bpm
+      system: http://unitsofmeasure.org
+      display: bpm
   - type: integer
     linkId: respiratory-rate
     text: Respiratory Rate
-    unit: bpm
+    unit:
+      code: bpm
+      system: http://unitsofmeasure.org
+      display: bpm
   - text: Blood Pressure
     type: group
     linkId: blood-pressure
@@ -65,11 +83,17 @@ item:
           - type: integer
             text: BP systolic
             linkId: blood-pressure-systolic
-            unit: mmHg
+            unit:
+              code: mmHg
+              system: http://unitsofmeasure.org
+              display: mmHg
           - type: integer
             text: BP diastolic
             linkId: blood-pressure-diastolic
-            unit: mmHg
+            unit:
+              code: mmHg
+              system: http://unitsofmeasure.org
+              display: mmHg
 
       - linkId: blood-pressure-positions
         text: Positions
@@ -111,7 +135,10 @@ item:
     required: true
     type: integer
     readOnly: true
-    unit: kg/m2
+    unit:
+      code: kg/m2
+      system: http://unitsofmeasure.org
+      display: kg/m2
     calculatedExpression:
       language: text/fhirpath
       expression: "(%QuestionnaireResponse.item.where(linkId='weight').answer.value.integer / ((%QuestionnaireResponse.item.where(linkId='height').answer.value.integer / 100) * (%QuestionnaireResponse.item.where(linkId='height').answer.value.integer / 100))).round(2)"
