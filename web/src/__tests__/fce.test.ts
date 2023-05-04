@@ -69,6 +69,7 @@ import fce_patient_qr from './resources/questionnaire_response_fce/patient.json'
 import fce_phq_2_phq_9_qr from './resources/questionnaire_response_fce/phq_2_phq_9.json';
 import fce_physicalexam_qr from './resources/questionnaire_response_fce/physicalexam.json';
 import fce_practitioner_qr from './resources/questionnaire_response_fce/practitioner.json';
+import fce_reference_answer_with_assoc from './resources/questionnaire_response_fce/reference_answer_with_assoc.json';
 import fce_review_of_systems_qr from './resources/questionnaire_response_fce/review_of_systems.json';
 import fce_vitals_qr from './resources/questionnaire_response_fce/vitals.json';
 // fhir questionnaire response
@@ -83,6 +84,7 @@ import fhir_patient_qr from './resources/questionnaire_response_fhir/patient.jso
 import fhir_phq_2_phq_9_qr from './resources/questionnaire_response_fhir/phq_2_phq_9.json';
 import fhir_physicalexam_qr from './resources/questionnaire_response_fhir/physicalexam.json';
 import fhir_practitioner_qr from './resources/questionnaire_response_fhir/practitioner.json';
+import fhir_reference_answer_with_assoc from './resources/questionnaire_response_fhir/reference_answer_with_assoc.json';
 import fhir_review_of_systems_qr from './resources/questionnaire_response_fhir/review_of_systems.json';
 import fhir_vitals_qr from './resources/questionnaire_response_fhir/vitals.json';
 
@@ -243,5 +245,8 @@ describe('Questionanire and QuestionnaireResponses transformation', () => {
             fhir_review_of_systems_qr,
         );
         expect(fromFirstClassExtension(fce_vitals_qr as FCEQuestionnaireResponse)).toStrictEqual(fhir_vitals_qr);
+        expect(fromFirstClassExtension(fce_reference_answer_with_assoc as FCEQuestionnaireResponse)).toStrictEqual(
+            fhir_reference_answer_with_assoc,
+        );
     });
 });

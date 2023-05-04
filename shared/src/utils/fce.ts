@@ -491,9 +491,8 @@ function processAnswerToFCE(items: any) {
             valueReference: (value: any) => ({
                 Reference: {
                     display: value.display,
-                    id: value.resource.id,
-                    resource: value.resource,
-                    resourceType: value.resource.resourceType,
+                    id: value.reference.split('/').slice(-1)[0],
+                    resourceType: value.reference.split('/')[0],
                 },
             }),
             valueTime: (value: any) => ({ time: value }),
@@ -552,7 +551,6 @@ function processAnswerToFHIR(items: any) {
         if (value.Reference) {
             answerItem.valueReference = {
                 display: value.Reference.display,
-                resource: value.Reference.resource,
                 reference: `${value.Reference.resourceType}/${value.Reference.id}`,
             };
             delete answerItem.value;
