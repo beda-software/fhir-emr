@@ -214,7 +214,6 @@ describe('Questionanire and QuestionnaireResponses transformation', () => {
             fce_review_of_systems_qr,
         );
         expect(toFirstClassExtension(fhir_vitals_qr as FHIRQuestionnaireResponse)).toStrictEqual(fce_vitals_qr);
-        expect(toFirstClassExtension(fhir_vitals_qr as FHIRQuestionnaireResponse)).toStrictEqual(fce_vitals_qr);
     });
     test('Each FCE QuestionnaireResponse should convert to FHIR', async () => {
         expect(fromFirstClassExtension(fce_allergies_inprogress_qr as FCEQuestionnaireResponse)).toStrictEqual(
