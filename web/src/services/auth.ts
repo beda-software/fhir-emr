@@ -1,4 +1,5 @@
 import { setInstanceToken as setFHIRInstanceToken } from 'fhir-react/lib/services/instance';
+import { QuestionnaireResponse } from 'fhir/r4b';
 import { decodeJwt } from 'jose';
 
 import { setInstanceToken as setAidboxInstanceToken } from 'aidbox-react/lib/services/instance';
@@ -6,7 +7,7 @@ import { service } from 'aidbox-react/lib/services/service';
 import { Token } from 'aidbox-react/lib/services/token';
 
 import config from 'shared/src/config';
-import { QuestionnaireResponse, User } from 'shared/src/contrib/aidbox';
+import { User } from 'shared/src/contrib/aidbox';
 
 export interface OAuthState {
     nextUrl?: string;
@@ -90,10 +91,7 @@ export async function getJitsiAuthToken() {
     });
 }
 
-export async function signinWithIdentityToken(
-    user: { firstName: string; lastName: string },
-    identityToken: string,
-) {
+export async function signinWithIdentityToken(user: { firstName: string; lastName: string }, identityToken: string) {
     setToken(identityToken);
     setAidboxInstanceToken({ access_token: identityToken, token_type: 'Bearer' });
     setFHIRInstanceToken({ access_token: identityToken, token_type: 'Bearer' });
@@ -121,11 +119,11 @@ export async function signinWithIdentityToken(
                         item: [
                             {
                                 linkId: 'firstname',
-                                answer: [{ value: { string: user.firstName } }],
+                                answer: [{ valueString: user.firstName }],
                             },
                             {
                                 linkId: 'lastname',
-                                answer: [{ value: { string: user.lastName } }],
+                                answer: [{ valueString: user.lastName }],
                             },
                         ],
                     } as QuestionnaireResponse,
