@@ -8,7 +8,7 @@ import { OperationOutcome, Questionnaire } from 'fhir/r4b';
 
 import { loginAdminUser } from 'src/setupTests';
 
-describe('Validate all questionanires', () => {
+describe('Validate all questionnaires', () => {
     beforeEach(async () => {
         await loginAdminUser();
     });

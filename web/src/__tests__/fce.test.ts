@@ -1,13 +1,15 @@
-import { Questionnaire as FHIRQuestionnaire } from 'fhir/r4b';
-import { QuestionnaireResponse as FHIRQuestionnaireResponse } from 'fhir/r4b';
+import { readdirSync } from 'fs';
+import { parse as parsePath } from 'path';
 
-import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
-import { service } from 'aidbox-react/lib/services/service';
+import { getFHIRResource } from 'fhir-react/lib/services/fhir';
+import { QuestionnaireResponse as FHIRQuestionnaireResponse, Questionnaire as FHIRQuestionnaire } from 'fhir/r4b';
+
+import { getFHIRResource as getFCEResource } from 'aidbox-react/lib/services/fhir';
 import { ensure } from 'aidbox-react/lib/utils/tests';
 
 import {
-    Questionnaire as AidboxQuestionnaire,
-    QuestionnaireResponse as AidboxQuestionnaireResponse,
+    Questionnaire as FCEQuestionnaire,
+    QuestionnaireResponse as FCEQuestionnaireResponse,
 } from 'shared/src/contrib/aidbox';
 import { toFirstClassExtension, fromFirstClassExtension } from 'shared/src/utils/fce';
 
@@ -87,28 +89,33 @@ import fhir_vitals_qr from './resources/questionnaire_response_fhir/vitals.json'
 const notWorkingQuestionnaires = ['edit-appointment', 'encounter-create-from-appointment', 'new-appointment'];
 
 describe('Questionanire and QuestionnaireResponses transformation', () => {
-    beforeAll(async () => {
+    beforeEach(async () => {
         await loginAdminUser();
     });
-    test('Each Questionnaires should convert to fce and back to fhir', async () => {
-        const questionnaires = extractBundleResources(
-            ensure(await getFHIRResources<AidboxQuestionnaire>('Questionnaire', { _count: 9999 })),
-        ).Questionnaire;
-        for (let q of questionnaires) {
-            console.log('Conversion', q.id);
-            if (!notWorkingQuestionnaires.includes(q.id)) {
-                const fhirQuestionnaire = ensure(
-                    await service<FHIRQuestionnaire>({
-                        url: `/fhir/Questionnaire/${q.id}`,
-                    }),
-                );
-                const fceQuestionnaire = toFirstClassExtension(fhirQuestionnaire);
-                expect(fceQuestionnaire).toStrictEqual(q);
-                const fhirQuestionnaireConverted = fromFirstClassExtension(fceQuestionnaire!);
-                expect(fhirQuestionnaireConverted).toStrictEqual(fhirQuestionnaire);
-            }
+
+    const filenames = readdirSync('../resources/seeds/Questionnaire').map((filename) => parsePath(filename).name);
+
+    test.each(filenames)('Questionnaires %s should be converted to FHIR and back to FCE', async (questionnaireId) => {
+        const questionnaire = ensure(
+            await getFCEResource<FCEQuestionnaire>({
+                id: questionnaireId,
+                resourceType: 'Questionnaire',
+            }),
+        );
+        console.log('Conversion', questionnaire.id);
+        // TODO: There should be no not working questionnaires
+        if (notWorkingQuestionnaires.includes(questionnaire.id)) {
+            return;
         }
+        const fhirQuestionnaire = ensure(
+            await getFHIRResource<FHIRQuestionnaire>({ reference: `Questionnaire/${questionnaire.id}` }),
+        );
+        const fceQuestionnaire = toFirstClassExtension(fhirQuestionnaire);
+        expect(fceQuestionnaire).toStrictEqual(questionnaire);
+        const fhirQuestionnaireConverted = fromFirstClassExtension(fceQuestionnaire!);
+        expect(fhirQuestionnaireConverted).toStrictEqual(fhirQuestionnaire);
     });
+
     test('Each FHIR Questionnaire should convert to FCE', async () => {
         expect(toFirstClassExtension(fhir_allergies as FHIRQuestionnaire)).toStrictEqual(fce_allergies);
         expect(toFirstClassExtension(fhir_beverages as FHIRQuestionnaire)).toStrictEqual(fce_beverages);
@@ -203,38 +210,38 @@ describe('Questionanire and QuestionnaireResponses transformation', () => {
         expect(toFirstClassExtension(fhir_vitals_qr as FHIRQuestionnaireResponse)).toStrictEqual(fce_vitals_qr);
     });
     test('Each FCE QuestionnaireResponse should convert to FHIR', async () => {
-        expect(fromFirstClassExtension(fce_allergies_inprogress_qr as AidboxQuestionnaireResponse)).toStrictEqual(
+        expect(fromFirstClassExtension(fce_allergies_inprogress_qr as FCEQuestionnaireResponse)).toStrictEqual(
             fhir_allergies_inprogress_qr,
         );
-        expect(fromFirstClassExtension(fce_cardiology_qr as AidboxQuestionnaireResponse)).toStrictEqual(
+        expect(fromFirstClassExtension(fce_cardiology_qr as FCEQuestionnaireResponse)).toStrictEqual(
             fhir_cardiology_qr,
         );
-        expect(fromFirstClassExtension(fce_few_answers_qr as AidboxQuestionnaireResponse)).toStrictEqual(
+        expect(fromFirstClassExtension(fce_few_answers_qr as FCEQuestionnaireResponse)).toStrictEqual(
             fhir_few_answers_qr,
         );
-        expect(fromFirstClassExtension(fce_gad_7_qr as AidboxQuestionnaireResponse)).toStrictEqual(fhir_gad_7_qr);
-        expect(fromFirstClassExtension(fce_immunization_qr as AidboxQuestionnaireResponse)).toStrictEqual(
+        expect(fromFirstClassExtension(fce_gad_7_qr as FCEQuestionnaireResponse)).toStrictEqual(fhir_gad_7_qr);
+        expect(fromFirstClassExtension(fce_immunization_qr as FCEQuestionnaireResponse)).toStrictEqual(
             fhir_immunization_qr,
         );
-        expect(fromFirstClassExtension(fce_medication_qr as AidboxQuestionnaireResponse)).toStrictEqual(
+        expect(fromFirstClassExtension(fce_medication_qr as FCEQuestionnaireResponse)).toStrictEqual(
             fhir_medication_qr,
         );
-        expect(fromFirstClassExtension(fce_new_appointment_qr as AidboxQuestionnaireResponse)).toStrictEqual(
+        expect(fromFirstClassExtension(fce_new_appointment_qr as FCEQuestionnaireResponse)).toStrictEqual(
             fhir_new_appointment_qr,
         );
-        expect(fromFirstClassExtension(fce_patient_qr as AidboxQuestionnaireResponse)).toStrictEqual(fhir_patient_qr);
-        expect(fromFirstClassExtension(fce_phq_2_phq_9_qr as AidboxQuestionnaireResponse)).toStrictEqual(
+        expect(fromFirstClassExtension(fce_patient_qr as FCEQuestionnaireResponse)).toStrictEqual(fhir_patient_qr);
+        expect(fromFirstClassExtension(fce_phq_2_phq_9_qr as FCEQuestionnaireResponse)).toStrictEqual(
             fhir_phq_2_phq_9_qr,
         );
-        expect(fromFirstClassExtension(fce_physicalexam_qr as AidboxQuestionnaireResponse)).toStrictEqual(
+        expect(fromFirstClassExtension(fce_physicalexam_qr as FCEQuestionnaireResponse)).toStrictEqual(
             fhir_physicalexam_qr,
         );
-        expect(fromFirstClassExtension(fce_practitioner_qr as AidboxQuestionnaireResponse)).toStrictEqual(
+        expect(fromFirstClassExtension(fce_practitioner_qr as FCEQuestionnaireResponse)).toStrictEqual(
             fhir_practitioner_qr,
         );
-        expect(fromFirstClassExtension(fce_review_of_systems_qr as AidboxQuestionnaireResponse)).toStrictEqual(
+        expect(fromFirstClassExtension(fce_review_of_systems_qr as FCEQuestionnaireResponse)).toStrictEqual(
             fhir_review_of_systems_qr,
         );
-        expect(fromFirstClassExtension(fce_vitals_qr as AidboxQuestionnaireResponse)).toStrictEqual(fhir_vitals_qr);
+        expect(fromFirstClassExtension(fce_vitals_qr as FCEQuestionnaireResponse)).toStrictEqual(fhir_vitals_qr);
     });
 });
