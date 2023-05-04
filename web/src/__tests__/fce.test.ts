@@ -19,6 +19,7 @@ import { loginAdminUser } from 'src/setupTests';
 import fce_allergies from './resources/questionnaire_fce/allergies.json';
 import fce_beverages from './resources/questionnaire_fce/beverages.json';
 import fce_choice_answer_option from './resources/questionnaire_fce/choice_answer_option.json';
+import fce_consent from './resources/questionnaire_fce/consent.json';
 import fce_encounter_create from './resources/questionnaire_fce/encounter_create.json';
 import fce_gad_7 from './resources/questionnaire_fce/gad_7.json';
 import fce_immunization from './resources/questionnaire_fce/immunization.json';
@@ -40,6 +41,7 @@ import fce_vitals from './resources/questionnaire_fce/vitals.json';
 import fhir_allergies from './resources/questionnaire_fhir/allergies.json';
 import fhir_beverages from './resources/questionnaire_fhir/beverages.json';
 import fhir_choice_answer_option from './resources/questionnaire_fhir/choice_answer_option.json';
+import fhir_consent from './resources/questionnaire_fhir/consent.json';
 import fhir_encounter_create from './resources/questionnaire_fhir/encounter_create.json';
 import fhir_gad_7 from './resources/questionnaire_fhir/gad_7.json';
 import fhir_immunization from './resources/questionnaire_fhir/immunization.json';
@@ -151,6 +153,7 @@ describe('Questionanire and QuestionnaireResponses transformation', () => {
         expect(toFirstClassExtension(fhir_practitioner_create_structure_map as FHIRQuestionnaire)).toStrictEqual(
             fce_practitioner_create_structure_map,
         );
+        expect(toFirstClassExtension(fhir_consent as FHIRQuestionnaire)).toStrictEqual(fce_consent);
     });
     test('Each FCE Questionnaire should convert to FHIR', async () => {
         expect(fromFirstClassExtension(fce_allergies as any)).toStrictEqual(fhir_allergies);
@@ -179,6 +182,7 @@ describe('Questionanire and QuestionnaireResponses transformation', () => {
         expect(fromFirstClassExtension(fce_practitioner_create_structure_map as any)).toStrictEqual(
             fhir_practitioner_create_structure_map,
         );
+        expect(fromFirstClassExtension(fce_consent as any)).toStrictEqual(fhir_consent);
     });
     test('Each FHIR QuestionnaireResponse should convert to FCE', async () => {
         expect(toFirstClassExtension(fhir_allergies_inprogress_qr as FHIRQuestionnaireResponse)).toStrictEqual(
@@ -209,6 +213,7 @@ describe('Questionanire and QuestionnaireResponses transformation', () => {
         expect(toFirstClassExtension(fhir_review_of_systems_qr as FHIRQuestionnaireResponse)).toStrictEqual(
             fce_review_of_systems_qr,
         );
+        expect(toFirstClassExtension(fhir_vitals_qr as FHIRQuestionnaireResponse)).toStrictEqual(fce_vitals_qr);
         expect(toFirstClassExtension(fhir_vitals_qr as FHIRQuestionnaireResponse)).toStrictEqual(fce_vitals_qr);
     });
     test('Each FCE QuestionnaireResponse should convert to FHIR', async () => {
