@@ -19,7 +19,7 @@ services:
         # Colored logs
         tty: true
     devbox:
-        image: 'healthsamurai/aidboxone:latest'
+        image: healthsamurai/aidboxone:edge
         depends_on:
             - devbox-db_test
             - build-seeds
