@@ -199,15 +199,9 @@ function getUpdatedPropertiesFromItem(item: any) {
                 ext.url === 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression',
         )?.valueExpression;
 
-        let unit = item.extension?.find(
+        updatedProperties.unit = item.extension?.find(
             (ext: { url: string }) => ext.url === 'http://hl7.org/fhir/StructureDefinition/questionnaire-unit',
         )?.valueCoding;
-        // if (!unit) {
-        //     unit = item.extension?.find(
-        //         (ext: { url: string }) => ext.url === 'https://beda.software/fhir-emr-questionnaire/unit',
-        //     )?.valueString;
-        // }
-        updatedProperties.unit = unit;
     }
 
     if (item.type === 'text') {
