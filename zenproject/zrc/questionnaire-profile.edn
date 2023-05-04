@@ -18,7 +18,8 @@
           hl7-fhir-uv-sdc.sdc-questionnaire-enableWhenExpression
           hl7-fhir-r4-core.questionnaire-hidden
           hl7-fhir-uv-sdc.sdc-questionnaire-launchContext
-          hl7-fhir-uv-sdc.sdc-questionnaire-sourceQueries}
+          hl7-fhir-uv-sdc.sdc-questionnaire-sourceQueries
+          hl7-fhir-uv-sdc.sdc-questionnaire-targetStructureMap}
 
  QuestionnaireItem {:zen/tags #{zen/schema
                                 zen.fhir/structure-schema}
