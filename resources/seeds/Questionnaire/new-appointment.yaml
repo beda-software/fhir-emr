@@ -60,6 +60,8 @@ item:
             .entry.resource.where(resourceType='PractitionerRole').specialty.first().coding.display
       - text: Practitioner
         type: reference
+        referenceResource:
+          - PractitionerRole
         required: true
         linkId: practitioner-role
         enableWhen:

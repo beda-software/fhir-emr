@@ -51,6 +51,8 @@ item:
                 expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(resourceType='PractitionerRole')"
           - text: Patient
             type: reference
+            referenceResource:
+                - Patient
             required: true
             linkId: patient
             initialExpression:
