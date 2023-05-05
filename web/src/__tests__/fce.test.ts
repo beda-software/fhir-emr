@@ -11,7 +11,7 @@ import {
     Questionnaire as FCEQuestionnaire,
     QuestionnaireResponse as FCEQuestionnaireResponse,
 } from 'shared/src/contrib/aidbox';
-import { toFirstClassExtension, fromFirstClassExtension } from 'shared/src/utils/fce';
+import { toFirstClassExtension, fromFirstClassExtension } from 'shared/src/utils/converter';
 
 import { loginAdminUser } from 'src/setupTests';
 

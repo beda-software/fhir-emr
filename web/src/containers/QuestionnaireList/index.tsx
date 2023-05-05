@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 
 import config from 'shared/src/config';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
-import { processLaunchContext } from 'shared/src/utils/fce';
+import { processLaunchContextToFce } from 'shared/src/utils/converter';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { ModalTrigger } from 'src/components/ModalTrigger';
@@ -49,12 +49,10 @@ const columns: ColumnsType<Questionnaire> = [
                         {({ closeModal }) => (
                             <QuestionnaireResponseForm
                                 questionnaireLoader={questionnaireIdLoader(resource.id!)}
-                                launchContextParameters={processLaunchContext(resource)?.map(
-                                    (lc) => ({
-                                        name: lc.name!,
-                                        value: { string: 'undefined' },
-                                    }),
-                                )}
+                                launchContextParameters={processLaunchContextToFce(resource)?.map((lc) => ({
+                                    name: lc.name!,
+                                    value: { string: 'undefined' },
+                                }))}
                                 onCancel={closeModal}
                             />
                         )}
@@ -67,11 +65,7 @@ const columns: ColumnsType<Questionnaire> = [
                     <Button
                         type="link"
                         onClick={() =>
-                            window.open(
-                                `${config.sdcIdeUrl}/#/${resource.id}`,
-                                '_blank',
-                                'noopener,noreferrer',
-                            )
+                            window.open(`${config.sdcIdeUrl}/#/${resource.id}`, '_blank', 'noopener,noreferrer')
                         }
                     >
                         <Trans>Edit in SDC IDE</Trans>
@@ -131,10 +125,7 @@ export function QuestionnaireList() {
                     locale={{
                         emptyText: (
                             <>
-                                <Empty
-                                    description={<Trans>No data</Trans>}
-                                    image={Empty.PRESENTED_IMAGE_SIMPLE}
-                                />
+                                <Empty description={<Trans>No data</Trans>} image={Empty.PRESENTED_IMAGE_SIMPLE} />
                             </>
                         ),
                     }}

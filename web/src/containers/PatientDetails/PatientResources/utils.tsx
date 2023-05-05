@@ -12,7 +12,7 @@ import {
 } from 'fhir/r4b';
 import { Link, useLocation } from 'react-router-dom';
 
-import { extractExtension, fromFHIRReference } from 'shared/src/utils/fce';
+import { extractExtension, fromFHIRReference } from 'shared/src/utils/converter';
 
 import { formatHumanDate } from 'src/utils/date';
 
