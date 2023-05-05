@@ -20,7 +20,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import { Link, useLocation } from 'react-router-dom';
 
-import { extractExtension, fromFHIRReference } from 'shared/src/utils/fce';
+import { extractExtension, fromFHIRReference } from 'shared/src/utils/converter';
 
 import { PatientActivitySummary } from 'src/containers/PatientDetails/PatientActivitySummary';
 import { formatHumanDate } from 'src/utils/date';

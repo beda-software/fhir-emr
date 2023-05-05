@@ -7,7 +7,7 @@ import { Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import { useParams } from 'react-router-dom';
 
 import { Provenance } from 'shared/src/contrib/aidbox';
-import { fromFirstClassExtension, toFirstClassExtension } from 'shared/src/utils/fce';
+import { fromFirstClassExtension, toFirstClassExtension } from 'shared/src/utils/converter';
 
 import { loadResourceHistory } from 'src/services/history';
 import { getProvenanceByEntity } from 'src/services/provenance';
@@ -19,23 +19,16 @@ export function useDocumentHistory() {
     const [response] = useService(async () => {
         const provenanceResponse = mapSuccess(
             await resolveMap({
-                provenanceList: getProvenanceByEntity<WithId<Provenance>>(
-                    `QuestionnaireResponse/${qrId}`,
-                ),
+                provenanceList: getProvenanceByEntity<WithId<Provenance>>(`QuestionnaireResponse/${qrId}`),
                 qrHistoryBundle: loadResourceHistory<QuestionnaireResponse>({
                     reference: `QuestionnaireResponse/${qrId}`,
                 }),
             }),
             ({ provenanceList, qrHistoryBundle }) => {
-                const qrHistory =
-                    extractBundleResources<QuestionnaireResponse>(
-                        qrHistoryBundle,
-                    ).QuestionnaireResponse;
+                const qrHistory = extractBundleResources<QuestionnaireResponse>(qrHistoryBundle).QuestionnaireResponse;
 
                 return {
-                    provenanceList: provenanceList.sort((a, b) =>
-                        a.recorded.localeCompare(b.recorded),
-                    ),
+                    provenanceList: provenanceList.sort((a, b) => a.recorded.localeCompare(b.recorded)),
                     qrHistory,
                 };
             },

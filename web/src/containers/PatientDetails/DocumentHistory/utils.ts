@@ -4,7 +4,7 @@ import { FormGroupItems, FormItems } from 'sdc-qrf/lib/types';
 import { findAnswersForQuestionsRecursive, mapResponseToForm } from 'sdc-qrf/lib/utils';
 
 import { AidboxReference } from 'shared/src/contrib/aidbox';
-import { toFirstClassExtension } from 'shared/src/utils/fce';
+import { toFirstClassExtension } from 'shared/src/utils/converter';
 
 import { getDisplay } from 'src/utils/questionnaire';
 
@@ -37,10 +37,7 @@ function isGroup(data: FormGroupItems | FormItems) {
 }
 
 export function getFormDataDiff(initialCurrentData: FormItems, initialPrevData: FormItems) {
-    const generateDiff = (
-        currentData: FormItems | FormGroupItems,
-        prevData: FormItems | FormGroupItems,
-    ) => {
+    const generateDiff = (currentData: FormItems | FormGroupItems, prevData: FormItems | FormGroupItems) => {
         let diffBefore: FormItems = {};
         let diffAfter: FormItems = {};
 
@@ -73,10 +70,7 @@ export function getFormDataDiff(initialCurrentData: FormItems, initialPrevData: 
                 return;
             }
 
-            if (
-                isValueEmpty(linkId, currentData as FormItems) &&
-                !isValueEmpty(linkId, prevData as FormItems)
-            ) {
+            if (isValueEmpty(linkId, currentData as FormItems) && !isValueEmpty(linkId, prevData as FormItems)) {
                 diffBefore[linkId] = data;
             }
         });
@@ -114,12 +108,8 @@ export function prepareDataToDisplay(
             linkId,
             question: item[0]?.question,
             valueBefore:
-                itemBefore && Array.isArray(itemBefore)
-                    ? itemBefore.map((v) => getDisplay(v.value)).join(', ')
-                    : null,
-            valueAfter: Array.isArray(item)
-                ? item.map((v) => getDisplay(v.value)).join(', ')
-                : null,
+                itemBefore && Array.isArray(itemBefore) ? itemBefore.map((v) => getDisplay(v.value)).join(', ') : null,
+            valueAfter: Array.isArray(item) ? item.map((v) => getDisplay(v.value)).join(', ') : null,
         };
     });
 
@@ -134,9 +124,7 @@ export function prepareDataToDisplay(
             return {
                 linkId,
                 question: item[0]?.question,
-                valueBefore: Array.isArray(item)
-                    ? item.map((v) => getDisplay(v.value)).join(', ')
-                    : null,
+                valueBefore: Array.isArray(item) ? item.map((v) => getDisplay(v.value)).join(', ') : null,
                 valueAfter: null,
             };
         }),

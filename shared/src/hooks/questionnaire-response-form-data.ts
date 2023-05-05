@@ -23,7 +23,7 @@ import {
     QuestionnaireResponse as FCEQuestionnaireResponse,
     ParametersParameter as FCEParametersParameter,
 } from '../contrib/aidbox';
-import { toFirstClassExtension, fromFirstClassExtension } from '../utils/fce';
+import { toFirstClassExtension, fromFirstClassExtension } from '../utils/converter';
 
 export type { QuestionnaireResponseFormData } from 'sdc-qrf';
 
@@ -54,21 +54,16 @@ interface QuestionnaireIdWOAssembleLoader {
     questionnaireId: string;
 }
 
-type QuestionnaireLoader =
-    | QuestionnaireServiceLoader
-    | QuestionnaireIdLoader
-    | QuestionnaireIdWOAssembleLoader;
+type QuestionnaireLoader = QuestionnaireServiceLoader | QuestionnaireIdLoader | QuestionnaireIdWOAssembleLoader;
 
 type QuestionnaireResponseSaveService = (
     qr: FHIRQuestionnaireResponse,
 ) => Promise<RemoteDataResult<FHIRQuestionnaireResponse>>;
 
-export const inMemorySaveService: QuestionnaireResponseSaveService = (
-    qr: FHIRQuestionnaireResponse,
-) => Promise.resolve(success(qr));
-export const persistSaveService: QuestionnaireResponseSaveService = (
-    qr: FHIRQuestionnaireResponse,
-) => saveFHIRResource(qr);
+export const inMemorySaveService: QuestionnaireResponseSaveService = (qr: FHIRQuestionnaireResponse) =>
+    Promise.resolve(success(qr));
+export const persistSaveService: QuestionnaireResponseSaveService = (qr: FHIRQuestionnaireResponse) =>
+    saveFHIRResource(qr);
 
 export function questionnaireServiceLoader(
     questionnaireService: QuestionnaireServiceLoader['questionnaireService'],
@@ -86,9 +81,7 @@ export function questionnaireIdLoader(questionnaireId: string): QuestionnaireIdL
     };
 }
 
-export function questionnaireIdWOAssembleLoader(
-    questionnaireId: string,
-): QuestionnaireIdWOAssembleLoader {
+export function questionnaireIdWOAssembleLoader(questionnaireId: string): QuestionnaireIdWOAssembleLoader {
     return {
         type: 'raw-id',
         questionnaireId,
@@ -184,19 +177,11 @@ export async function handleFormDataSave(
         formData: QuestionnaireResponseFormData;
     },
 ): Promise<RemoteDataResult<QuestionnaireResponseFormSaveResponse>> {
-    const {
-        formData,
-        questionnaireResponseSaveService = persistSaveService,
-        launchContextParameters,
-    } = props;
+    const { formData, questionnaireResponseSaveService = persistSaveService, launchContextParameters } = props;
     const { formValues, context } = formData;
     const { questionnaireResponse, questionnaire } = context;
     const itemContext = calcInitialContext(formData.context, formValues);
-    const enabledQuestionsFormValues = removeDisabledAnswers(
-        questionnaire,
-        formValues,
-        itemContext,
-    );
+    const enabledQuestionsFormValues = removeDisabledAnswers(questionnaire, formValues, itemContext);
 
     const finalFCEQuestionnaireResponse: FCEQuestionnaireResponse = {
         ...questionnaireResponse,
@@ -204,9 +189,8 @@ export async function handleFormDataSave(
         status: 'completed',
         authored: formatFHIRDateTime(moment()),
     };
-    const finalFHIRQuestionnaireResponse: FHIRQuestionnaireResponse = fromFirstClassExtension(
-        finalFCEQuestionnaireResponse,
-    );
+    const finalFHIRQuestionnaireResponse: FHIRQuestionnaireResponse =
+        fromFirstClassExtension(finalFCEQuestionnaireResponse);
     const fhirQuestionnaire: FHIRQuestionnaire = fromFirstClassExtension(questionnaire);
 
     const constraintRemoteData = await service({
@@ -253,10 +237,7 @@ export async function handleFormDataSave(
     });
 }
 
-export function useQuestionnaireResponseFormData(
-    props: QuestionnaireResponseFormProps,
-    deps: any[] = [],
-) {
+export function useQuestionnaireResponseFormData(props: QuestionnaireResponseFormProps, deps: any[] = []) {
     const [response] = useService<QuestionnaireResponseFormData>(async () => {
         const r = await loadQuestionnaireResponseFormData(props);
 
@@ -264,8 +245,7 @@ export function useQuestionnaireResponseFormData(
             const result: QuestionnaireResponseFormData = {
                 formValues,
                 context: {
-                    launchContextParameters:
-                        context.launchContextParameters as unknown as FCEParametersParameter[],
+                    launchContextParameters: context.launchContextParameters as unknown as FCEParametersParameter[],
                     questionnaire: context.questionnaire,
                     questionnaireResponse: context.questionnaireResponse,
                 },
@@ -293,8 +273,7 @@ export function usePatientQuestionnaireResponseFormData(
     props: PatientQuestionnaireResponseFormProps,
     deps: any[] = [],
 ) {
-    const { initialQuestionnaireResponse, patient, questionnaireLoader, launchContextParameters } =
-        props;
+    const { initialQuestionnaireResponse, patient, questionnaireLoader, launchContextParameters } = props;
 
     return useQuestionnaireResponseFormData(
         {
