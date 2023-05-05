@@ -46,7 +46,7 @@
                                               :schema {:required ["jwt"]
                                                        :properties {:jwt {:required ["iss", "aud", "sub"]
                                                                           :properties {:iss {:const "https://appleid.apple.com"}
-                                                                                       :aud {:const "software.beda.emr"}
+                                                                                       :aud {:enum ["software.beda.emr", "software.beda.fhirmhealth.fhirmhealth"]}
                                                                                        :sub {:type "string"
                                                                                              :minLength 1}}}}}}}
    :Practitioner {:admin {:name [{:given ["Alex"], :family "Admin"}]}}
