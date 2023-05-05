@@ -3,7 +3,8 @@ import { Coding, Extension, Reference } from 'fhir/r4b';
 import { CodeableConcept, Expression } from 'shared/src/contrib/aidbox';
 
 import { fromFirstClassExtension } from './fceToFhir';
-import { toFirstClassExtension, processLaunchContext as processLaunchContextToFce } from './fhirToFce';
+import { toFirstClassExtension } from './fhirToFce';
+import { processLaunchContext as processLaunchContextToFce } from './fhirToFce/questionnaire/processExtensions';
 
 interface ExtensionValue {
     'ex:createdAt': string;
