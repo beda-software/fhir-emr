@@ -9372,7 +9372,7 @@ fetch-retry@^5.0.2:
 
 "fhir-react@https://github.com/beda-software/fhir-react.git":
   version "1.7.0"
-  resolved "https://github.com/beda-software/fhir-react.git#dd69f05cdf0311ba539454641db4eb8b6988d912"
+  resolved "https://github.com/beda-software/fhir-react.git#2c7fe29428cad5651e1ea4c4d05b20d30a7d980f"
   dependencies:
     axios "^0.21.2"
     moment "^2.29.1"

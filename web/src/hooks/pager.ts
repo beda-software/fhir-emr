@@ -18,10 +18,12 @@ export function usePagerExtended<T extends Resource, F = unknown>(
         if (typeof pagination.current !== 'number') return;
 
         if (pagination.pageSize && pagination.pageSize !== pageSize) {
-            pagerManager.loadPage(pagination.current);
+            pagerManager.reload();
             setPageSize(pagination.pageSize);
         } else {
-            pagerManager.loadPage(pagination.current);
+            pagerManager.loadPage(pagination.current, {
+                _page: pagination.current,
+            });
         }
     };
 
