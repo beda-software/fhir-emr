@@ -6,7 +6,7 @@ import {
 } from 'shared/src/contrib/aidbox';
 
 import { convertQuestionnaire } from './questionnaire';
-import { convertQuestionnaireResponse } from './QuestionnaireResponse';
+import { convertQuestionnaireResponse } from './questionnaireResponse';
 
 export function toFirstClassExtension(fhirQuestionnaireResponse: FHIRQuestionnaireResponse): FCEQuestionnaireResponse;
 export function toFirstClassExtension(fhirQuestionnaire: FHIRQuestionnaire): FCEQuestionnaire;
