@@ -1,6 +1,6 @@
 import { QuestionnaireResponse as FHIRQuestionnaireResponse } from 'fhir/r4b';
 
-import { processAnswers } from './processAnswer';
+import { processAnswers } from './processAnswers';
 import { processMeta } from './processMeta';
 import { processReference } from './processReference';
 
