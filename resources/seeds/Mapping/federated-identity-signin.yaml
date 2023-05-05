@@ -1,7 +1,7 @@
 body:
     $let:
-        firstname: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='firstname').answer.valueString").0
-        lastname: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='lastname').answer.valueString").0
+        firstname: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='firstname').answer.value.string").0
+        lastname: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='lastname').answer.value.string").0
         federatedIdentity: $ fhirpath("FederatedIdentity")
     $body:
         type: transaction
