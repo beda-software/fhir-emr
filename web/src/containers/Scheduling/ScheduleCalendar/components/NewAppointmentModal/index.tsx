@@ -20,7 +20,6 @@ interface NewAppointmentModalProps {
 
 export function NewAppointmentModal(props: NewAppointmentModalProps) {
     const { showModal, start, onOk, onCancel } = props;
-    const appointmentStartDate = start ? formatFHIRDate(start) : formatFHIRDate(new Date());
     const appointmentStartDateTime = start ? formatFHIRDateTime(start) : formatFHIRDateTime(new Date());
     const { response, onSubmit, readOnly } = useQuestionnaireResponseForm({
         onSuccess: onOk,
