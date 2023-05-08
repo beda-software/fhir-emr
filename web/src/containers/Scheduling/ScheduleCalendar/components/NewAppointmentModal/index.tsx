@@ -21,9 +21,7 @@ interface NewAppointmentModalProps {
 export function NewAppointmentModal(props: NewAppointmentModalProps) {
     const { showModal, start, onOk, onCancel } = props;
     const appointmentStartDate = start ? formatFHIRDate(start) : formatFHIRDate(new Date());
-    const appointmentStartDateTime = start
-        ? formatFHIRDateTime(start)
-        : formatFHIRDateTime(new Date());
+    const appointmentStartDateTime = start ? formatFHIRDateTime(start) : formatFHIRDateTime(new Date());
     const { response, onSubmit, readOnly } = useQuestionnaireResponseForm({
         onSuccess: onOk,
         questionnaireResponseSaveService: inMemorySaveService,
@@ -38,12 +36,13 @@ export function NewAppointmentModal(props: NewAppointmentModalProps) {
                 resource: props.practitionerRole,
             },
             {
-                name: 'appointmentStartDate',
-                valueString: appointmentStartDate,
-            },
-            {
-                name: 'appointmentStartDateTime',
-                valueString: appointmentStartDateTime,
+                name: 'appointment',
+                resource: {
+                    resourceType: 'Appointment',
+                    start: appointmentStartDateTime,
+                    status: 'pending',
+                    participant: [{ status: 'accepted' }],
+                },
             },
         ],
     });
@@ -52,11 +51,7 @@ export function NewAppointmentModal(props: NewAppointmentModalProps) {
             <RenderRemoteData remoteData={response} renderLoading={Spinner}>
                 {(formData) => {
                     return (
-                        <BaseQuestionnaireResponseForm
-                            formData={formData}
-                            onSubmit={onSubmit}
-                            readOnly={readOnly}
-                        />
+                        <BaseQuestionnaireResponseForm formData={formData} onSubmit={onSubmit} readOnly={readOnly} />
                     );
                 }}
             </RenderRemoteData>

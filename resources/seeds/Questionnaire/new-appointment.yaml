@@ -16,9 +16,9 @@ launchContext:
       - PractitionerRole
     description: PractitionerRole resource
   - name:
-      code: appointmentDraft
+      code: appointment
     type:
-      - Basic
+      - Appointment
     description: Appointment date passing from calendar
 contained:
   - resourceType: Bundle
@@ -133,7 +133,7 @@ item:
         linkId: start-datetime
         initialExpression:
           language: text/fhirpath
-          expression: "%appointmentDraft"
+          expression: "%appointment.start"
 meta:
   profile:
     - https://beda.software/beda-emr-questionnaire
