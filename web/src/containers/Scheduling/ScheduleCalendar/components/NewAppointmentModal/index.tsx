@@ -2,7 +2,7 @@ import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { PractitionerRole } from 'fhir/r4b';
 
 import { inMemorySaveService } from 'shared/src/hooks/questionnaire-response-form-data';
-import { formatFHIRDate, formatFHIRDateTime } from 'shared/src/utils/date';
+import { formatFHIRDateTime } from 'shared/src/utils/date';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { Modal } from 'src/components/Modal';
