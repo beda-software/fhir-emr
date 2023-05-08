@@ -1,0 +1,103 @@
+{
+    "item": [
+        {
+            "text": "Do you smoke?",
+            "type": "choice",
+            "linkId": "1",
+            "enableWhen": [
+                {
+                    "answer": {
+                        "boolean": true
+                    },
+                    "operator": "exists",
+                    "question": "2"
+                },
+                {
+                    "answer": {
+                        "decimal": 10
+                    },
+                    "operator": "=",
+                    "question": "3"
+                },
+                {
+                    "answer": {
+                        "integer": 5
+                    },
+                    "operator": "=",
+                    "question": "4"
+                },
+                {
+                    "answer": {
+                        "date": "2023-05-07"
+                    },
+                    "operator": "=",
+                    "question": "5"
+                },
+                {
+                    "answer": {
+                        "dateTime": "2023-04-06T02:48:16+00:00"
+                    },
+                    "operator": "=",
+                    "question": "6"
+                },
+                {
+                    "answer": {
+                        "time": "10:30:00"
+                    },
+                    "operator": "=",
+                    "question": "7"
+                },
+                {
+                    "answer": {
+                        "string": "example"
+                    },
+                    "operator": "=",
+                    "question": "8"
+                },
+                {
+                    "answer": {
+                        "Coding": {
+                            "code": "123456",
+                            "system": "http://snomed.info/sct"
+                        }
+                    },
+                    "operator": "=",
+                    "question": "9"
+                },
+                {
+                    "answer": {
+                        "Quantity": {
+                            "code": "mg",
+                            "unit": "mg",
+                            "value": 5,
+                            "system": "http://unitsofmeasure.org"
+                        }
+                    },
+                    "operator": "=",
+                    "question": "10"
+                },
+                {
+                    "answer": {
+                        "Reference": {
+                            "id": "example",
+                            "display": "example patient",
+                            "resourceType": "Patient"
+                        }
+                    },
+                    "operator": "=",
+                    "question": "11"
+                }
+            ]
+        }
+    ],
+    "status": "active",
+    "subjectType": ["Patient"],
+    "id": "example",
+    "resourceType": "Questionnaire",
+    "meta": {
+        "profile": ["https://beda.software/beda-emr-questionnaire"],
+        "lastUpdated": "2023-05-07T09:04:40.566686Z",
+        "createdAt": "2023-05-07T09:04:40.566686Z",
+        "versionId": "459"
+    }
+}
