@@ -7,8 +7,8 @@ import {
     axiosInstance,
     resetInstanceToken as resetAidboxInstanceToken,
     setInstanceBaseURL as setAidboxInstanceBaseURL,
-} from 'aidbox-react/src/services/instance';
-import { withRootAccess } from 'aidbox-react/src/utils/tests';
+} from 'aidbox-react/lib/services/instance';
+import { withRootAccess } from 'aidbox-react/lib/utils/tests';
 
 declare const process: any;
 
@@ -17,8 +17,8 @@ beforeAll(async () => {
         setAidboxInstanceBaseURL('http://devbox:8080');
         setFHIRInstanceBaseURL('http://devbox:8080/fhir');
     } else {
-        setAidboxInstanceBaseURL('http://localhost:8181');
-        setFHIRInstanceBaseURL('http://localhost:8181/fhir');
+        setAidboxInstanceBaseURL('http://localhost:8081');
+        setFHIRInstanceBaseURL('http://localhost:8081/fhir');
     }
 });
 

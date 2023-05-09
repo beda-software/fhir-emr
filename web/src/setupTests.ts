@@ -78,11 +78,7 @@ export async function createPractitioner(practitioner: Partial<Practitioner> = {
     );
 }
 
-export async function createEncounter(
-    subject: Reference,
-    participant: Reference,
-    date?: moment.Moment,
-) {
+export async function createEncounter(subject: Reference, participant: Reference, date?: moment.Moment) {
     return ensure(
         await createFHIRResource<Encounter>({
             resourceType: 'Encounter',
