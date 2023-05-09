@@ -8,9 +8,9 @@ mapping:
     resourceType: Mapping
 launchContext:
   - name:
-      code: AppointmentId
+      code: Appointment
     type: 
-      - Basic
+      - Appointment
 contained:
   - resourceType: Bundle
     id: AppointmentBundle
@@ -18,7 +18,7 @@ contained:
     entry:
       - request:
           method: GET
-          url: /Appointment?_id={{%AppointmentId}}
+          url: /Appointment?_id={{%Appointment.id}}
 sourceQueries:
   - localRef: "Bundle#AppointmentBundle"
 item:
@@ -29,7 +29,7 @@ item:
     hidden: true
     initialExpression:
       language: text/fhirpath
-      expression: "%AppointmentId"
+      expression: "%AppointmentBundle.entry[0].resource.entry.resource.id"
   - text: PatientId
     type: string
     linkId: patientId

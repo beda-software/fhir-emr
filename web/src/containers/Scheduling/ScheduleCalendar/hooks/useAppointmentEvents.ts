@@ -1,6 +1,10 @@
 import { DateSelectArg, EventClickArg } from '@fullcalendar/core';
-import { PractitionerRole } from 'fhir/r4b';
+import { getFHIRResource } from 'fhir-react/lib/services/fhir';
+import { Appointment, PractitionerRole } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
+
+import { useService } from 'aidbox-react/lib/hooks/service';
+import { success } from 'aidbox-react/lib/libs/remoteData';
 
 export interface NewAppointmentData {
     start: Date;
@@ -9,9 +13,7 @@ export interface NewAppointmentData {
 
 export function useAppointmentEvents(practitionerRole: PractitionerRole) {
     const [newAppointmentData, setNewAppointmentData] = useState<NewAppointmentData | undefined>();
-    const [appointmentDetails, setAppointmentDetails] = useState<
-        EventClickArg['event'] | undefined
-    >();
+    const [appointmentDetails, setAppointmentDetails] = useState<EventClickArg['event'] | undefined>();
     const [editingAppointmentId, setEditingAppointmentId] = useState<string | undefined>();
 
     // function handleEventChange({ event }: EventChangeArg) {

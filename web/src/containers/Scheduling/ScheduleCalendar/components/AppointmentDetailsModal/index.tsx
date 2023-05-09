@@ -43,7 +43,17 @@ function useAppointmentDetailsModal(props: Props) {
     const { response: questionnaireResponse, onSubmit } = useQuestionnaireResponseForm({
         questionnaireLoader: { type: 'id', questionnaireId: 'encounter-create-from-appointment' },
         questionnaireResponseSaveService: inMemorySaveService,
-        launchContextParameters: [{ name: 'AppointmentId', valueString: appointmentId }],
+        launchContextParameters: [
+            {
+                name: 'Appointment',
+                resource: {
+                    resourceType: 'Appointment',
+                    id: appointmentId,
+                    status: 'booked',
+                    participant: [{ status: 'accepted' }],
+                },
+            },
+        ],
         onSuccess: ({ extractedBundle }: { extractedBundle: Bundle<WithId<Encounter>>[] }) => {
             const encounter = extractBundleResources(extractedBundle[0]!).Encounter[0]!;
             navigateToEncounter(encounter.subject?.id!, encounter.id);

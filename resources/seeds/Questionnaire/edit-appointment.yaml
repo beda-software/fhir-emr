@@ -6,10 +6,10 @@ mapping:
       resourceType: Mapping
 launchContext:
     - name:
-          code: CurrentAppointmentId
+          code: CurrentAppointment
       type: 
-        - Basic
-      description: The edited appointment ID
+        - Appointment
+      description: The edited appointment
 contained:
     - resourceType: Bundle
       id: CurrentAppointmentBundle
@@ -17,7 +17,7 @@ contained:
       entry:
           - request:
                 method: GET
-                url: /Appointment?_id={{%CurrentAppointmentId}}
+                url: /Appointment?_id={{%CurrentAppointment.id}}
 sourceQueries:
     - localRef: "Bundle#CurrentAppointmentBundle"
 item:
@@ -30,7 +30,7 @@ item:
             hidden: true
             initialExpression:
                 language: text/fhirpath
-                expression: "%CurrentAppointmentId"
+                expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.id"
           - text: Practitioner
             type: reference
             referenceResource:

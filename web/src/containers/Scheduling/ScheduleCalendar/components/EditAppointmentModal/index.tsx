@@ -18,11 +18,22 @@ interface Props {
 
 export function EditAppointmentModal(props: Props) {
     const { showModal, onClose, appointmentId } = props;
+    console.log('props.appointmentId', props.appointmentId);
 
     const { response, onSubmit } = useQuestionnaireResponseForm({
         questionnaireLoader: { type: 'id', questionnaireId: 'edit-appointment' },
         questionnaireResponseSaveService: inMemorySaveService,
-        launchContextParameters: [{ name: 'CurrentAppointmentId', valueString: appointmentId }],
+        launchContextParameters: [
+            {
+                name: 'CurrentAppointment',
+                resource: {
+                    resourceType: 'Appointment',
+                    id: appointmentId,
+                    status: 'booked',
+                    participant: [{ status: 'accepted' }],
+                },
+            },
+        ],
         onSuccess: props.onSubmit,
         onCancel: onClose,
     });
@@ -30,9 +41,7 @@ export function EditAppointmentModal(props: Props) {
     return (
         <Modal open={showModal} title="Edit Appointment" footer={null} onCancel={onClose}>
             <RenderRemoteData remoteData={response} renderLoading={Spinner}>
-                {(formData) => (
-                    <BaseQuestionnaireResponseForm formData={formData} onSubmit={onSubmit} />
-                )}
+                {(formData) => <BaseQuestionnaireResponseForm formData={formData} onSubmit={onSubmit} />}
             </RenderRemoteData>
         </Modal>
     );
