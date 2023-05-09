@@ -30,7 +30,7 @@ body:
         $call: splitStr
         $args:
           - $ practitionerRole.reference
-          - '/'
+          - "/"
     $body:
       type: transaction
       entry:
