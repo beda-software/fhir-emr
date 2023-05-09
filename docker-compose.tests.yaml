@@ -1,5 +1,12 @@
 name: fhir-emr-tests
 services:
+    sdc-ide:
+        image: bedasoftware/sdc-ide:master
+        depends_on:
+            devbox-healthcheck:
+                condition: service_healthy
+        ports:
+            - '3001:5000'
     sdc:
         image: bedasoftware/fhir-sdc:develop
         depends_on:
@@ -19,7 +26,7 @@ services:
         links:
             - 'devbox-db_test:database'
         ports:
-            - '8081:8080'
+            - '8080:8080'
         env_file:
             - .env.aidbox
             - .env

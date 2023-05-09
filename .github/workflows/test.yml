@@ -22,10 +22,10 @@ jobs:
             - name: Create deps dir
               run: mkdir -p zenproject/zen-packages && chmod 0777 zenproject/zen-packages
             - name: Run aidbox
-              run: make up-test
+              run: make up
             - name: Show logs
               if: ${{ failure() }}
-              run: docker compose -f docker-compose.tests.yaml logs
+              run: docker-compose logs
             - name: Run tests
               run: yarn test --silent
             - run: yarn build:web
