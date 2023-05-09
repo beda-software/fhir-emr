@@ -11,45 +11,57 @@ body:
     serviceTypeCoding: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='service-type').answer.valueCoding").0
   $body:
     $let:
-      practitionerRoleId: $ predefinedPractitionerRoleId || selectedPractitionerRoleReference.id
-      patientId: $ predefinedPatientId || selectedPatientReference.id
+      selectedPatientReferenceSplit:
+        $call: splitStr
+        $args:
+          - $ selectedPatientReference.reference
+          - "/"
+      selectedPractitionerRoleReferenceSplit:
+        $call: splitStr
+        $args:
+          - $ selectedPractitionerRoleReference.reference
+          - "/"
     $body:
-      resourceType: Bundle
-      type: transaction
-      entry:
-        - request:
-            url: /Appointment/$book
-            method: POST
-          resource:
-            resourceType: Bundle
-            entry:
-              - resource:
-                  resourceType: Appointment
-                  participant:
-                    - actor:
-                        $if: $ selectedPatientReference
-                        $then:
-                          resourceType: Patient
-                          id: $ selectedPatientReference.id
-                          display: $ selectedPatientReference.display
-                        $else:
-                          id: $ patientId
-                          resourceType: Patient
-                      status: accepted
-                    - actor:
-                        $if: $ selectedPractitionerRoleReference
-                        $then:
-                          resourceType: PractitionerRole
-                          id: $ selectedPractitionerRoleReference.id
-                          display: $ selectedPractitionerRoleReference.display
-                        $else:
-                          resourceType: PractitionerRole
-                          id: $ practitionerRoleId
-                          display: $ predefinedPractitionerRoleDisplay
-                      status: accepted
-                  serviceType:
-                    - text: $ serviceTypeCoding.display
-                      coding:
-                        - $ serviceTypeCoding
-                  status: pending
-                  start: $ startDateTime
+      $let:
+        patientId: $ predefinedPatientId || selectedPatientReferenceSplit.1
+        practitionerRoleId: $ predefinedPractitionerRoleId || selectedPractitionerRoleReferenceSplit.1
+      $body:
+        resourceType: Bundle
+        type: transaction
+        entry:
+          - request:
+              url: /Appointment/$book
+              method: POST
+            resource:
+              resourceType: Bundle
+              entry:
+                - resource:
+                    resourceType: Appointment
+                    participant:
+                      - actor:
+                          $if: $ selectedPatientReference
+                          $then:
+                            resourceType: $ selectedPatientReferenceSplit.0
+                            id: $ selectedPatientReferenceSplit.1
+                            display: $ selectedPatientReference.display
+                          $else:
+                            id: $ patientId
+                            resourceType: Patient
+                        status: accepted
+                      - actor:
+                          $if: $ selectedPractitionerRoleReference
+                          $then:
+                            resourceType: $ selectedPractitionerRoleReferenceSplit.0
+                            id: $ selectedPractitionerRoleReferenceSplit.1
+                            display: $ selectedPractitionerRoleReference.display
+                          $else:
+                            resourceType: PractitionerRole
+                            id: $ practitionerRoleId
+                            display: $ predefinedPractitionerRoleDisplay
+                        status: accepted
+                    serviceType:
+                      - text: $ serviceTypeCoding.display
+                        coding:
+                          - $ serviceTypeCoding
+                    status: pending
+                    start: $ startDateTime
