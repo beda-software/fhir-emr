@@ -25,35 +25,42 @@ body:
       $
       fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-role').answer.valueReference").0
   $body:
-    type: transaction
-    entry:
-      - request:
-          url: /Encounter
-          method: POST
-        resource:
-          class:
-            code: $ service.code
-            system: $ service.system
-            display: $ service.display
-          period:
-            start: $ startDate + 'T' + startTime
-            end: $ startDate + 'T' + endTime
-          status: in-progress
-          subject:
-            id: $ patientId
-            display: $ patientName
-            resourceType: Patient
-          participant:
-            - individual:
-                id: $ practitionerRole.id
-                display: $ practitionerRole.display
-                resourceType: $ practitionerRole.resourceType
-          appointment:
-            $if: $ appointmentId
-            $then:
-              - resourceType: Appointment
-                id: $ appointmentId
-          resourceType: Encounter
-    resourceType: Bundle
+    $let:
+      selectedPractitionerRoleReferenceSplit:
+        $call: splitStr
+        $args:
+          - $ practitionerRole.reference
+          - '/'
+    $body:
+      type: transaction
+      entry:
+        - request:
+            url: /Encounter
+            method: POST
+          resource:
+            class:
+              code: $ service.code
+              system: $ service.system
+              display: $ service.display
+            period:
+              start: $ startDate + 'T' + startTime
+              end: $ startDate + 'T' + endTime
+            status: in-progress
+            subject:
+              id: $ patientId
+              display: $ patientName
+              resourceType: Patient
+            participant:
+              - individual:
+                  id: $ selectedPractitionerRoleReferenceSplit.1
+                  resourceType: $ selectedPractitionerRoleReferenceSplit.0
+                  display: $ selectedPractitionerRoleReference.display
+            appointment:
+              $if: $ appointmentId
+              $then:
+                - resourceType: Appointment
+                  id: $ appointmentId
+            resourceType: Encounter
+      resourceType: Bundle
 id: encounter-create-extract
 resourceType: Mapping
