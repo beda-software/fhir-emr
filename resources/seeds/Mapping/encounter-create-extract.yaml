@@ -54,7 +54,7 @@ body:
               - individual:
                   id: $ selectedPractitionerRoleReferenceSplit.1
                   resourceType: $ selectedPractitionerRoleReferenceSplit.0
-                  display: $ selectedPractitionerRoleReference.display
+                  display: $ practitionerRole.display
             appointment:
               $if: $ appointmentId
               $then:
