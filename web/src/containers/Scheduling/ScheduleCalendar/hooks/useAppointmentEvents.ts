@@ -1,10 +1,6 @@
 import { DateSelectArg, EventClickArg } from '@fullcalendar/core';
-import { getFHIRResource } from 'fhir-react/lib/services/fhir';
-import { Appointment, PractitionerRole } from 'fhir/r4b';
+import { PractitionerRole } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
-
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { success } from 'aidbox-react/lib/libs/remoteData';
 
 export interface NewAppointmentData {
     start: Date;
