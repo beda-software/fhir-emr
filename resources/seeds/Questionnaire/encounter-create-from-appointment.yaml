@@ -30,20 +30,20 @@ item:
     initialExpression:
       language: text/fhirpath
       expression: "%AppointmentBundle.entry[0].resource.entry.resource.id"
-  - text: PatientId
-    type: string
-    linkId: patientId
+  - text: PatientReference
+    type: Reference
+    linkId: patient-reference
     hidden: true
     initialExpression:
       language: text/fhirpath
-      expression: "%AppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(resourceType='Patient').id"
+      expression: "%AppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(reference.startsWith('Patient'))"
   - text: PatientName
     type: string
     linkId: patientName
     hidden: true
     initialExpression:
       language: text/fhirpath
-      expression: "%AppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(resourceType='Patient').display"
+      expression: "%AppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(reference.startsWith('Patient')).display"
   - text: Practitioner
     type: reference
     referenceResource:
@@ -61,14 +61,14 @@ item:
           practitioner.resource.name.family + ' - ' + specialty.first().coding.display
     initialExpression:
       language: text/fhirpath
-      expression: "%AppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(resourceType='PractitionerRole')"
+      expression: "%AppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(reference.startsWith('PractitionerRole'))"
   - text: Patient
     type: choice
     required: true
     linkId: patient
     initialExpression:
       language: text/fhirpath
-      expression: "%AppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(resourceType='Patient')"
+      expression: "%AppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(reference.startsWith('Patient'))"
   - text: Service
     type: choice
     linkId: service
