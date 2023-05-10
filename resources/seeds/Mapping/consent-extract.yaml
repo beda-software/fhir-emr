@@ -89,5 +89,5 @@ body:
               what:
                   uri: $ "QuestionnaireResponse/" + qrId + "/_history/" + qrVersion
     resourceType: Bundle
-id: encounter-create-extract
+id: consent-create-extract
 resourceType: Mapping

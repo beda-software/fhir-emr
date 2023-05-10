@@ -9,6 +9,9 @@ body:
     patientId: >-
       $
       fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.valueString").0
+    patientReference: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patient-reference').answer.valueReference").0
     startDate: >-
       $
       fhirpath("QuestionnaireResponse.repeat(item).where(linkId='date').answer.valueDate").0
@@ -31,6 +34,11 @@ body:
         $args:
           - $ practitionerRole.reference
           - "/"
+      patientReferenceSplit:
+        $call: splitStr
+        $args:
+          - $ patientReference.reference
+          - "/"
     $body:
       type: transaction
       entry:
@@ -47,7 +55,7 @@ body:
               end: $ startDate + 'T' + endTime
             status: in-progress
             subject:
-              id: $ patientId
+              id: $ patientId || patientReferenceSplit.1
               display: $ patientName
               resourceType: Patient
             participant:

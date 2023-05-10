@@ -21,7 +21,7 @@ export function StatusBadge(props: Props) {
         <div
             className={classNames(s.container, {
                 [s.inProgress!]: status === 'in-progress',
-                [s.completed!]: status === 'finished',
+                [s.finished!]: status === 'finished',
                 [s.completed!]: status === 'completed',
             })}
         >

@@ -48,7 +48,7 @@ item:
                       practitioner.resource.name.family + ' - ' + specialty.first().coding.display
             initialExpression:
                 language: text/fhirpath
-                expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(resourceType='PractitionerRole')"
+                expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(reference.startsWith('PractitionerRole'))"
           - text: Patient
             type: reference
             referenceResource:
@@ -57,7 +57,7 @@ item:
             linkId: patient
             initialExpression:
                 language: text/fhirpath
-                expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(resourceType='Patient')"
+                expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(reference.startsWith('Patient'))"
             answerExpression:
                 language: application/x-fhir-query
                 expression: "Patient"
