@@ -31,7 +31,7 @@ item:
       language: text/fhirpath
       expression: "%AppointmentBundle.entry[0].resource.entry.resource.id"
   - text: PatientReference
-    type: Reference
+    type: reference
     linkId: patient-reference
     hidden: true
     initialExpression:
