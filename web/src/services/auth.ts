@@ -90,7 +90,10 @@ export async function getJitsiAuthToken() {
     });
 }
 
-export async function signinWithIdentityToken(user: { firstName: string; lastName: string }, identityToken: string) {
+export async function signinWithIdentityToken(
+    user: { firstName: string; lastName: string } | undefined,
+    identityToken: string,
+) {
     setToken(identityToken);
     setAidboxInstanceToken({ access_token: identityToken, token_type: 'Bearer' });
     setFHIRInstanceToken({ access_token: identityToken, token_type: 'Bearer' });
@@ -118,11 +121,11 @@ export async function signinWithIdentityToken(user: { firstName: string; lastNam
                         item: [
                             {
                                 linkId: 'firstname',
-                                answer: [{ valueString: user.firstName }],
+                                answer: [{ valueString: user?.firstName }],
                             },
                             {
                                 linkId: 'lastname',
-                                answer: [{ valueString: user.lastName }],
+                                answer: [{ valueString: user?.lastName }],
                             },
                         ],
                     },
