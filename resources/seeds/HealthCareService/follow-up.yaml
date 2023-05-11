@@ -1,7 +1,7 @@
 resourceType: HealthcareService
 active: true
 type:
-  - display: A follow up visit
+  - text: A follow up visit
     coding:
       - code: follow-up
         system: http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type
