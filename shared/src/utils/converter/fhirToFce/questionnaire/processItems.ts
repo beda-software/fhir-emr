@@ -190,12 +190,12 @@ function processReferenceType(item: any, updatedProperties: any) {
 
     updatedProperties.answerExpression = item.extension?.find(
         (ext: any) => ext.url === 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression',
-    ).valueExpression;
+    )?.valueExpression;
 
     const referenceResourceArray = [];
     const referenceResource = item.extension?.find(
         (ext: any) => ext.url === 'http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource',
-    ).valueCode;
+    )?.valueCode;
     referenceResourceArray.push(referenceResource);
 
     const enableWhen = item.enableWhen?.map((item: FHIRQuestionnaireItemEnableWhen) => {

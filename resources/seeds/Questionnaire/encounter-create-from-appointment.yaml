@@ -9,7 +9,7 @@ mapping:
 launchContext:
   - name:
       code: Appointment
-    type: 
+    type:
       - Appointment
 contained:
   - resourceType: Bundle
@@ -32,8 +32,17 @@ item:
       expression: "%AppointmentBundle.entry[0].resource.entry.resource.id"
   - text: PatientReference
     type: reference
-    linkId: patient-reference
+    referenceResource:
+      - Patient
     hidden: true
+    linkId: patient-reference
+    answerExpression:
+      language: application/x-fhir-query
+      expression: "Patient"
+    choiceColumn:
+      - forDisplay: true
+        path: >-
+          name.given.first() + ' ' + name.family
     initialExpression:
       language: text/fhirpath
       expression: "%AppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(reference.startsWith('Patient'))"
