@@ -74,6 +74,7 @@ import fce_phq_2_phq_9_qr from './resources/questionnaire_response_fce/phq_2_phq
 import fce_physicalexam_qr from './resources/questionnaire_response_fce/physicalexam.json';
 import fce_practitioner_qr from './resources/questionnaire_response_fce/practitioner.json';
 import fce_reference_answer_with_assoc from './resources/questionnaire_response_fce/reference_answer_with_assoc.json';
+import fce_reference_answer_with_fhir_reference from './resources/questionnaire_response_fce/reference_answer_with_fhir_reference.json';
 import fce_review_of_systems_qr from './resources/questionnaire_response_fce/review_of_systems.json';
 import fce_vitals_qr from './resources/questionnaire_response_fce/vitals.json';
 // fhir questionnaire response
@@ -89,6 +90,7 @@ import fhir_phq_2_phq_9_qr from './resources/questionnaire_response_fhir/phq_2_p
 import fhir_physicalexam_qr from './resources/questionnaire_response_fhir/physicalexam.json';
 import fhir_practitioner_qr from './resources/questionnaire_response_fhir/practitioner.json';
 import fhir_reference_answer_with_assoc from './resources/questionnaire_response_fhir/reference_answer_with_assoc.json';
+import fhir_reference_answer_with_fhir_reference from './resources/questionnaire_response_fhir/reference_answer_with_fhir_reference.json';
 import fhir_review_of_systems_qr from './resources/questionnaire_response_fhir/review_of_systems.json';
 import fhir_vitals_qr from './resources/questionnaire_response_fhir/vitals.json';
 
@@ -255,6 +257,9 @@ describe('Questionanire and QuestionnaireResponses transformation', () => {
         expect(fromFirstClassExtension(fce_vitals_qr as FCEQuestionnaireResponse)).toStrictEqual(fhir_vitals_qr);
         expect(fromFirstClassExtension(fce_reference_answer_with_assoc as FCEQuestionnaireResponse)).toStrictEqual(
             fhir_reference_answer_with_assoc,
+        );
+        expect(fromFirstClassExtension(fce_reference_answer_with_fhir_reference as any)).toStrictEqual(
+            fhir_reference_answer_with_fhir_reference,
         );
     });
 });

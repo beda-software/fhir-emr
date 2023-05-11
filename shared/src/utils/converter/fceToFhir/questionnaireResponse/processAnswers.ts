@@ -28,10 +28,14 @@ export function processAnswers(items: any) {
             }
         }
         if (value.Reference) {
-            answerItem.valueReference = {
-                display: value.Reference.display,
-                reference: `${value.Reference.resourceType}/${value.Reference.id}`,
-            };
+            if (value.Reference.resourceType && value.Reference.id) {
+                answerItem.valueReference = {
+                    display: value.Reference?.display,
+                    reference: `${value.Reference.resourceType}/${value.Reference.id}`,
+                };
+            } else {
+                answerItem.valueReference = value.Reference;
+            }
             delete answerItem.value;
         }
     }
