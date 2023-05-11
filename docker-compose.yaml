@@ -1,4 +1,3 @@
-version: '3.9'
 services:
     sdc-ide:
         image: bedasoftware/sdc-ide:master
@@ -8,7 +7,7 @@ services:
         ports:
             - '3001:5000'
     sdc:
-        image: bedasoftware/fhir-sdc:latest
+        image: bedasoftware/fhir-sdc:develop
         depends_on:
             devbox-healthcheck:
                 condition: service_healthy
@@ -16,10 +15,9 @@ services:
             - devbox
         env_file:
             - .env.sdc
-        # Colored logs
         tty: true
     devbox:
-        image: 'healthsamurai/aidboxone:latest'
+        image: 'healthsamurai/aidboxone:edge'
         depends_on:
             - devbox-db
             - build-seeds
@@ -47,9 +45,9 @@ services:
         depends_on:
             - devbox
         healthcheck:
-            test: curl --fail http://devbox:8080/__healthcheck || exit 1
-            interval: 1s
-            timeout: 20s
+            test: curl --fail http://devbox:8080/health || exit 1
+            interval: 5s
+            timeout: 30s
             retries: 100
     build-seeds:
         build:

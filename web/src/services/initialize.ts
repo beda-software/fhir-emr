@@ -1,6 +1,7 @@
 import * as Sentry from '@sentry/browser';
+import { setInstanceBaseURL as setFHIRInstanceBaseURL } from 'fhir-react/lib/services/instance';
 
-import { setInstanceBaseURL } from 'aidbox-react/lib/services/instance';
+import { setInstanceBaseURL as setAidboxInstanceBaseURL } from 'aidbox-react/lib/services/instance';
 
 import config from 'shared/src/config';
 
@@ -13,4 +14,5 @@ if (config.webSentryDSN) {
     });
 }
 
-setInstanceBaseURL(config.baseURL);
+setFHIRInstanceBaseURL(config.baseURL + '/fhir');
+setAidboxInstanceBaseURL(config.baseURL);

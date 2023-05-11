@@ -2,28 +2,28 @@ body:
     $let:
         ssn: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='ssn').answer.value.string").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='ssn').answer.valueString").0
         gender: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='gender').answer.value.string").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='gender').answer.valueString").0
         mobile: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='mobile').answer.value.string").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='mobile').answer.valueString").0
         lastName: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='last-name').answer.value.string").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='last-name').answer.valueString").0
         birthDate: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='birth-date').answer.value.date").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='birth-date').answer.valueDate").0
         firstName: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='first-name').answer.value.string").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='first-name').answer.valueString").0
         patientId: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patient-id').answer.value.string").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patient-id').answer.valueString").0
         middleName: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='middle-name').answer.value.string").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='middle-name').answer.valueString").0
     $body:
         type: transaction
         entry:

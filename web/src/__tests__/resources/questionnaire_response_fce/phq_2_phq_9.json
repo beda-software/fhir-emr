@@ -1,0 +1,193 @@
+{
+  "authored": "2023-04-06T02:33:05Z",
+  "encounter": {
+    "id": "e133b999-9e91-4ebd-967e-450bad770682",
+    "resourceType": "Encounter"
+  },
+  "id": "846558b9-4c03-4af6-a258-62b0390633e2",
+  "item": [
+    {
+      "answer": [
+        {
+          "value": {
+            "dateTime": "2023-04-06T02:32:40+00:00"
+          }
+        }
+      ],
+      "linkId": "dateTime"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "string": "683e382b-fed4-433e-9b6d-a847a7953bc0"
+          }
+        }
+      ],
+      "linkId": "patientId"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "string": "Emily Nguyen"
+          }
+        }
+      ],
+      "linkId": "patientName"
+    },
+    {
+      "item": [
+        {
+          "answer": [
+            {
+              "value": {
+                "Coding": {
+                  "code": "LA6568-5",
+                  "display": "Not at all",
+                  "system": "http://loinc.org"
+                }
+              }
+            }
+          ],
+          "linkId": "44250-9"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "Coding": {
+                  "code": "LA6569-3",
+                  "display": "Several days",
+                  "system": "http://loinc.org"
+                }
+              }
+            }
+          ],
+          "linkId": "44255-8"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "Coding": {
+                  "code": "LA6570-1",
+                  "display": "More than half the days",
+                  "system": "http://loinc.org"
+                }
+              }
+            }
+          ],
+          "linkId": "44259-0"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "Coding": {
+                  "code": "LA6571-9",
+                  "display": "Nearly every day",
+                  "system": "http://loinc.org"
+                }
+              }
+            }
+          ],
+          "linkId": "44254-1"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "Coding": {
+                  "code": "LA6570-1",
+                  "display": "More than half the days",
+                  "system": "http://loinc.org"
+                }
+              }
+            }
+          ],
+          "linkId": "44251-7"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "Coding": {
+                  "code": "LA6569-3",
+                  "display": "Several days",
+                  "system": "http://loinc.org"
+                }
+              }
+            }
+          ],
+          "linkId": "44258-2"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "Coding": {
+                  "code": "LA6568-5",
+                  "display": "Not at all",
+                  "system": "http://loinc.org"
+                }
+              }
+            }
+          ],
+          "linkId": "44252-5"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "Coding": {
+                  "code": "LA6569-3",
+                  "display": "Several days",
+                  "system": "http://loinc.org"
+                }
+              }
+            }
+          ],
+          "linkId": "44253-3"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "Coding": {
+                  "code": "LA6570-1",
+                  "display": "More than half the days",
+                  "system": "http://loinc.org"
+                }
+              }
+            }
+          ],
+          "linkId": "44260-8"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "integer": 12
+              }
+            }
+          ],
+          "linkId": "phq9-total-score"
+        }
+      ],
+      "linkId": "phq2phq9"
+    }
+  ],
+  "meta": {
+    "createdAt": "2023-04-06T02:32:41.569773Z",
+    "lastUpdated": "2023-04-06T02:33:06.758734Z",
+    "versionId": "20508"
+  },
+  "questionnaire": "phq2phq9",
+  "resourceType": "QuestionnaireResponse",
+  "source": {
+    "id": "683e382b-fed4-433e-9b6d-a847a7953bc0",
+    "resourceType": "Patient"
+  },
+  "status": "completed"
+}

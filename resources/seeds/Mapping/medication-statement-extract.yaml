@@ -3,33 +3,33 @@ body:
         qrId: $ fhirpath("QuestionnaireResponse.id")
         qrVersion: $ fhirpath("QuestionnaireResponse.meta.versionId")
         qrLastUpdated: >-
-            $ fhirpath("QuestionnaireResponse.meta.lastUpdated") || fhirpath("QuestionnaireResponse.repeat(item).where(linkId='dateTime').answer.value.dateTime").0
+            $ fhirpath("QuestionnaireResponse.meta.lastUpdated") || fhirpath("QuestionnaireResponse.repeat(item).where(linkId='dateTime').answer.valueDateTime").0
         medicationStatementId: $ fhirpath("Provenance.target.where(resourceType='MedicationStatement').id").0
         author: $ Author
         encounterId: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='encounterId').answer.value.string").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='encounterId').answer.valueString").0
         patientId: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.value.string").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.valueString").0
         patientName: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.value.string").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.valueString").0
         medication: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='medication').answer.value.Coding").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='medication').answer.valueCoding").0
         startDate: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='start-date').answer.value.date").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='start-date').answer.valueDate").0
         endDate: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='end-date').answer.value.date").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='end-date').answer.valueDate").0
         dosage: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='dosage').answer.value.string").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='dosage').answer.valueString").0
         notes: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='notes').answer.value.string").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='notes').answer.valueString").0
     $body:
         type: transaction
         entry:

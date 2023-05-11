@@ -1,51 +1,33 @@
 import { CalendarOutlined, ContactsOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { extractBundleResources, WithId } from 'fhir-react/lib/services/fhir';
+import { Appointment, Bundle, Encounter, Patient } from 'fhir/r4b';
 import _ from 'lodash';
+import { Link, useLocation } from 'react-router-dom';
 
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import { extractBundleResources, WithId } from 'aidbox-react/lib/services/fhir';
-
-import { Appointment, Bundle, Encounter, Patient } from 'shared/src/contrib/aidbox';
-import {
-    inMemorySaveService,
-    questionnaireIdLoader,
-} from 'shared/src/hooks/questionnaire-response-form-data';
+import { inMemorySaveService, questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { DashboardCard, DashboardCardTable } from 'src/components/DashboardCard';
 import { ModalTrigger } from 'src/components/ModalTrigger';
-import {
-    QuestionnaireResponseForm,
-    useQuestionnaireResponseForm,
-} from 'src/components/QuestionnaireResponseForm';
+import { QuestionnaireResponseForm, useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
 import { useNavigateToEncounter } from 'src/containers/EncounterDetails/hooks';
 
 import { usePatientOverview } from './hooks';
 import s from './PatientOverview.module.scss';
-import { prepareAppointmentDetails } from './utils';
+import { OverviewCard, prepareAppointmentDetails } from './utils';
 
 export interface PatientOverviewProps {
     patient: Patient;
     reload: () => void;
 }
 
-interface OverviewCard<T = any> {
-    title: string;
-    icon: React.ReactNode;
-    data: T[];
-    columns: {
-        key: string;
-        title: string;
-        render: (r: T) => React.ReactNode;
-        width?: string | number;
-    }[];
-    getKey: (r: T) => string;
-}
-
 export function PatientOverview(props: PatientOverviewProps) {
     const { response, patientDetails } = usePatientOverview(props);
+    const location = useLocation();
 
     const renderAppointmentCards = (appointments: Appointment[]) => {
         return appointments.map((appointment) => {
@@ -76,15 +58,20 @@ export function PatientOverview(props: PatientOverviewProps) {
             <DashboardCard
                 title={card.title}
                 icon={card.icon}
-                key={`cards-${card.title}`}
+                key={`cards-${card.key}`}
                 empty={!card.data.length}
+                extra={
+                    card.total && card.total > 7 ? (
+                        <Link to={`${location.pathname}/resources/${card.key}`}>
+                            <b>
+                                <Trans>See all</Trans>
+                                {` (${card.total})`}
+                            </b>
+                        </Link>
+                    ) : null
+                }
             >
-                <DashboardCardTable
-                    title={card.title}
-                    data={card.data}
-                    columns={card.columns}
-                    getKey={card.getKey}
-                />
+                <DashboardCardTable title={card.title} data={card.data} columns={card.columns} getKey={card.getKey} />
             </DashboardCard>
         ));
     };
@@ -112,10 +99,7 @@ export function PatientOverview(props: PatientOverviewProps) {
                             >
                                 <div className={s.detailsRow}>
                                     {patientDetails.map(({ title, value }, index) => (
-                                        <div
-                                            key={`patient-details__${index}`}
-                                            className={s.detailItem}
-                                        >
+                                        <div key={`patient-details__${index}`} className={s.detailItem}>
                                             <div className={s.detailsTitle}>{title}</div>
                                             <div className={s.detailsValue}>{value || '-'}</div>
                                         </div>
@@ -175,7 +159,7 @@ function useStartEncounter(props: StartEncounterProps) {
     const { response, onSubmit } = useQuestionnaireResponseForm({
         questionnaireLoader: { type: 'id', questionnaireId: 'encounter-create-from-appointment' },
         questionnaireResponseSaveService: inMemorySaveService,
-        launchContextParameters: [{ name: 'AppointmentId', value: { string: appointmentId } }],
+        launchContextParameters: [{ name: 'AppointmentId', valueString: appointmentId }],
         onSuccess: ({ extractedBundle }: { extractedBundle: Bundle<WithId<Encounter>>[] }) => {
             const encounter = extractBundleResources(extractedBundle[0]!).Encounter[0]!;
             navigateToEncounter(encounter.subject?.id!, encounter.id);

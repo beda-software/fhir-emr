@@ -1,0 +1,90 @@
+{
+  "meta": {
+    "profile": ["https://beda.software/beda-emr-questionnaire"],
+    "lastUpdated": "2023-04-10T03:43:34.792167Z",
+    "createdAt": "2023-04-05T05:22:35.752466Z",
+    "versionId": "694"
+  },
+  "name": "practitioner-create",
+  "item": [
+    {
+      "text": "Last name",
+      "type": "string",
+      "linkId": "last-name",
+      "required": true
+    },
+    {
+      "text": "First name",
+      "type": "string",
+      "linkId": "first-name"
+    },
+    {
+      "text": "Middle name",
+      "type": "string",
+      "linkId": "middle-name"
+    },
+    {
+      "text": "Specialty",
+      "type": "choice",
+      "linkId": "specialty",
+      "answerOption": [
+        {
+          "value": {
+            "Coding": {
+              "code": "394577000",
+              "system": "http://snomed.info/sct",
+              "display": "Anesthetics"
+            }
+          }
+        },
+        {
+          "value": {
+            "Coding": {
+              "code": "394579002",
+              "system": "http://snomed.info/sct",
+              "display": "Cardiology"
+            }
+          }
+        },
+        {
+          "value": {
+            "Coding": {
+              "code": "394582007",
+              "system": "http://snomed.info/sct",
+              "display": "Dermatology"
+            }
+          }
+        },
+        {
+          "value": {
+            "Coding": {
+              "code": "394583002",
+              "system": "http://snomed.info/sct",
+              "display": "Endocrinology"
+            }
+          }
+        },
+        {
+          "value": {
+            "Coding": {
+              "code": "419772000",
+              "system": "http://snomed.info/sct",
+              "display": "Family practice"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "mapping": [
+    {
+      "id": "practitioner-create",
+      "resourceType": "Mapping"
+    }
+  ],
+  "resourceType": "Questionnaire",
+  "title": "Practitioner create",
+  "status": "active",
+  "id": "practitioner-create",
+  "url": "https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/practitioner-create"
+}

@@ -1,0 +1,96 @@
+{
+  "questionnaire": "cardiology-example",
+  "meta": {
+    "lastUpdated": "2023-04-06T02:43:40.015349Z",
+    "createdAt": "2023-04-06T02:43:16.150751Z",
+    "versionId": "20529"
+  },
+  "encounter": {
+    "id": "e133b999-9e91-4ebd-967e-450bad770682",
+    "resourceType": "Encounter"
+  },
+  "item": [
+    {
+      "answer": [
+        {
+          "value": {
+            "string": "123"
+          }
+        }
+      ],
+      "linkId": "complaints"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "string": "123"
+          }
+        }
+      ],
+      "linkId": "examination-objective"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "string": "321"
+          }
+        }
+      ],
+      "linkId": "observations-data"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "string": "321"
+          }
+        }
+      ],
+      "linkId": "lab-data"
+    },
+    {
+      "item": [
+        {
+          "item": [
+            {
+              "answer": [
+                {
+                  "value": {
+                    "Coding": {
+                      "code": "BA40",
+                      "system": "http://id.who.int/icd/release/11/mms",
+                      "display": "BA40 Angina pectoris"
+                    }
+                  }
+                }
+              ],
+              "linkId": "ds-icd-11"
+            },
+            {
+              "answer": [
+                {
+                  "value": {
+                    "string": "desc 123"
+                  }
+                }
+              ],
+              "linkId": "ds-text"
+            }
+          ],
+          "linkId": "ds-main"
+        }
+      ],
+      "linkId": "group-ds"
+    }
+  ],
+  "resourceType": "QuestionnaireResponse",
+  "source": {
+    "id": "683e382b-fed4-433e-9b6d-a847a7953bc0",
+    "resourceType": "Patient"
+  },
+  "status": "completed",
+  "id": "16917bdf-309f-4cd7-9a8a-56a928dbedea",
+  "authored": "2023-04-06T02:43:39Z"
+}

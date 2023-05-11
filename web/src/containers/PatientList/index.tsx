@@ -1,11 +1,10 @@
 import { t, Trans } from '@lingui/macro';
 import { Button, Empty, Row, Col, notification } from 'antd';
 import Title from 'antd/es/typography/Title';
+import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { Patient } from 'fhir/r4b';
 import { useNavigate } from 'react-router-dom';
 
-import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
-
-import { Patient } from 'shared/src/contrib/aidbox';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
@@ -66,10 +65,7 @@ export function PatientList() {
                     locale={{
                         emptyText: (
                             <>
-                                <Empty
-                                    description={<Trans>No data</Trans>}
-                                    image={Empty.PRESENTED_IMAGE_SIMPLE}
-                                />
+                                <Empty description={<Trans>No data</Trans>} image={Empty.PRESENTED_IMAGE_SIMPLE} />
                             </>
                         ),
                     }}
@@ -94,7 +90,8 @@ export function PatientList() {
                             title: <Trans>SSN</Trans>,
                             dataIndex: 'identifier',
                             key: 'identifier',
-                            render: (_text, resource) => resource.identifier?.[0]!.value,
+                            render: (_text, resource) =>
+                                resource.identifier?.find(({ system }) => system === '1.2.643.100.3')?.value,
                             width: '25%',
                         },
                         {
@@ -125,12 +122,8 @@ export function PatientList() {
                                         >
                                             {({ closeModal }) => (
                                                 <QuestionnaireResponseForm
-                                                    questionnaireLoader={questionnaireIdLoader(
-                                                        'patient-edit',
-                                                    )}
-                                                    launchContextParameters={[
-                                                        { name: 'Patient', resource },
-                                                    ]}
+                                                    questionnaireLoader={questionnaireIdLoader('patient-edit')}
+                                                    launchContextParameters={[{ name: 'Patient', resource }]}
                                                     onSuccess={() => {
                                                         notification.success({
                                                             message: t`Patient saved`,

@@ -1,23 +1,15 @@
+import { Resource, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
 import { FormGroupItems, FormItems } from 'sdc-qrf/lib/types';
 import { findAnswersForQuestionsRecursive, mapResponseToForm } from 'sdc-qrf/lib/utils';
 
-import { WithId } from 'aidbox-react/lib/services/fhir';
-
-import {
-    AidboxReference,
-    Questionnaire,
-    QuestionnaireResponse,
-    Resource,
-} from 'shared/src/contrib/aidbox';
+import { AidboxReference } from 'shared/src/contrib/aidbox';
+import { toFirstClassExtension } from 'shared/src/utils/converter';
 
 import { getDisplay } from 'src/utils/questionnaire';
 
-export function findResourceInHistory<R extends Resource>(
-    ref: WithId<AidboxReference>,
-    history: R[],
-) {
-    const [resourceType, id, , versionId] = (ref.uri || '').split('/');
+export function findResourceInHistory<R extends Resource>(provenanceRef: AidboxReference, history: R[]) {
+    const [resourceType, id, , versionId] = (provenanceRef.uri || '').split('/');
 
     const resourceIndex = history.findIndex(
         (r) => r.resourceType === resourceType && r.id === id && r.meta?.versionId === versionId,
@@ -45,10 +37,7 @@ function isGroup(data: FormGroupItems | FormItems) {
 }
 
 export function getFormDataDiff(initialCurrentData: FormItems, initialPrevData: FormItems) {
-    const generateDiff = (
-        currentData: FormItems | FormGroupItems,
-        prevData: FormItems | FormGroupItems,
-    ) => {
+    const generateDiff = (currentData: FormItems | FormGroupItems, prevData: FormItems | FormGroupItems) => {
         let diffBefore: FormItems = {};
         let diffAfter: FormItems = {};
 
@@ -81,10 +70,7 @@ export function getFormDataDiff(initialCurrentData: FormItems, initialPrevData: 
                 return;
             }
 
-            if (
-                isValueEmpty(linkId, currentData as FormItems) &&
-                !isValueEmpty(linkId, prevData as FormItems)
-            ) {
+            if (isValueEmpty(linkId, currentData as FormItems) && !isValueEmpty(linkId, prevData as FormItems)) {
                 diffBefore[linkId] = data;
             }
         });
@@ -102,8 +88,12 @@ export function prepareDataToDisplay(
     currentQR?: QuestionnaireResponse,
     prevQR?: QuestionnaireResponse,
 ) {
-    const currentFormValues = currentQR ? mapResponseToForm(currentQR, questionnaire) : undefined;
-    const prevFormValues = prevQR ? mapResponseToForm(prevQR, questionnaire) : {};
+    const currentFormValues = currentQR
+        ? mapResponseToForm(toFirstClassExtension(currentQR), toFirstClassExtension(questionnaire))
+        : undefined;
+    const prevFormValues = prevQR
+        ? mapResponseToForm(toFirstClassExtension(prevQR), toFirstClassExtension(questionnaire))
+        : {};
 
     if (!currentQR || !currentFormValues || !prevFormValues) {
         return [];
@@ -118,12 +108,8 @@ export function prepareDataToDisplay(
             linkId,
             question: item[0]?.question,
             valueBefore:
-                itemBefore && Array.isArray(itemBefore)
-                    ? itemBefore.map((v) => getDisplay(v.value)).join(', ')
-                    : null,
-            valueAfter: Array.isArray(item)
-                ? item.map((v) => getDisplay(v.value)).join(', ')
-                : null,
+                itemBefore && Array.isArray(itemBefore) ? itemBefore.map((v) => getDisplay(v.value)).join(', ') : null,
+            valueAfter: Array.isArray(item) ? item.map((v) => getDisplay(v.value)).join(', ') : null,
         };
     });
 
@@ -138,9 +124,7 @@ export function prepareDataToDisplay(
             return {
                 linkId,
                 question: item[0]?.question,
-                valueBefore: Array.isArray(item)
-                    ? item.map((v) => getDisplay(v.value)).join(', ')
-                    : null,
+                valueBefore: Array.isArray(item) ? item.map((v) => getDisplay(v.value)).join(', ') : null,
                 valueAfter: null,
             };
         }),

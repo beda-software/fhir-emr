@@ -5,11 +5,9 @@ import {
     format,
     parseISO,
 } from 'date-fns';
+import { parseFHIRDateTime } from 'fhir-react/lib/utils/date';
+import { Period } from 'fhir/r4b';
 import _ from 'lodash';
-
-import { parseFHIRDateTime } from 'aidbox-react/lib/utils/date';
-
-import { Period } from 'shared/src/contrib/aidbox';
 
 const DATE_TIME_FORMAT = 'dd/MM/yyyy HH:mm';
 const DATE_FORMAT = 'dd/MM/yyyy';

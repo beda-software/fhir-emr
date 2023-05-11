@@ -1,12 +1,10 @@
 import { SyncOutlined } from '@ant-design/icons';
 import { Tag } from 'antd';
 import Title from 'antd/lib/typography/Title';
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { RemoteData } from 'fhir-react/lib/libs/remoteData';
+import { QuestionnaireResponse } from 'fhir/r4b';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
-
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
-
-import { QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
 import s from '../PatientDocument.module.scss';
 

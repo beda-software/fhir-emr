@@ -1,12 +1,14 @@
 import { Form, InputNumber } from 'antd';
 import { QuestionItemProps } from 'sdc-qrf';
 
+import { Coding } from 'shared/src/contrib/aidbox';
+
 import { useFieldController } from '../hooks';
 
 const inputStyle = { backgroundColor: '#FFFFFF', width: '100%' };
 
 interface NumericItem {
-    unit?: string;
+    unit?: Coding;
 }
 
 export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps) {
@@ -18,7 +20,7 @@ export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps)
     return (
         <Form.Item label={text} hidden={hidden}>
             <InputNumber
-                addonAfter={unit}
+                addonAfter={unit?.display}
                 style={inputStyle}
                 disabled={disabled}
                 onChange={onChange}
@@ -38,7 +40,7 @@ export function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps)
     return (
         <Form.Item label={text} hidden={hidden}>
             <InputNumber
-                addonAfter={unit}
+                addonAfter={unit?.display}
                 style={inputStyle}
                 disabled={disabled}
                 onChange={onChange}

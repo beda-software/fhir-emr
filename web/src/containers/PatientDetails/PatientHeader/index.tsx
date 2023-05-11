@@ -1,24 +1,22 @@
 import { t } from '@lingui/macro';
 import { Menu } from 'antd';
 import Title from 'antd/es/typography/Title';
+import { Patient } from 'fhir/r4b';
 import _ from 'lodash';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
 
-import { Patient } from 'shared/src/contrib/aidbox';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { BasePageHeader } from 'src/components/BaseLayout';
 import { RouteItem } from 'src/components/BaseLayout/Header';
 import Breadcrumbs from 'src/components/Breadcrumbs';
-import { Role, selectCurrentUserRole } from 'src/utils/role';
+import { matchCurrentUserRole, Role } from 'src/utils/role';
 
 import { BreadCrumb, PatientHeaderContext } from './context';
 import s from './PatientHeader.module.scss';
 
-export function PatientHeaderContextProvider(
-    props: React.HTMLAttributes<HTMLDivElement> & { patient: Patient },
-) {
+export function PatientHeaderContextProvider(props: React.HTMLAttributes<HTMLDivElement> & { patient: Patient }) {
     const { children, patient } = props;
     const [pageTitle] = useState(renderHumanName(patient.name?.[0]));
     const params = useParams<{ id: string }>();
@@ -73,20 +71,16 @@ export function PatientHeader() {
     const params = useParams<{ id: string }>();
     const { title, breadcrumbs } = useContext(PatientHeaderContext);
 
-    const menuItems: RouteItem[] = useMemo(() => {
-        const commonRoutes: RouteItem[] = [
+    const menuItems: RouteItem[] = useMemo(
+        () => [
             { title: t`Overview`, path: `/patients/${params.id}` },
             { title: t`Encounters`, path: `/patients/${params.id}/encounters` },
             { title: t`Documents`, path: `/patients/${params.id}/documents` },
-        ];
-        return selectCurrentUserRole({
-            [Role.Admin]: commonRoutes,
-            [Role.Patient]: [
-                ...commonRoutes,
-                { title: t`Wearables`, path: `/patients/${params.id}/wearables` },
-            ],
-        });
-    }, [params.id]);
+            { title: t`Wearables`, path: `/patients/${params.id}/wearables` },
+            { title: t`Resources`, path: `/patients/${params.id}/resources` },
+        ],
+        [params.id],
+    );
 
     const [currentPath, setCurrentPath] = useState(location?.pathname);
 
@@ -112,9 +106,9 @@ export function PatientHeader() {
     return (
         <BasePageHeader style={{ paddingBottom: 0 }}>
             <Breadcrumbs
-                crumbs={selectCurrentUserRole({
-                    [Role.Admin]: breadcrumbs,
-                    [Role.Patient]: breadcrumbs.slice(1),
+                crumbs={matchCurrentUserRole({
+                    [Role.Admin]: () => breadcrumbs,
+                    [Role.Patient]: () => breadcrumbs.slice(1),
                 })}
             />
             <Title style={{ marginBottom: 21 }}>{title}</Title>

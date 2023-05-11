@@ -2,14 +2,13 @@ import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { Trans } from '@lingui/macro';
 import { Button, Checkbox, Col, notification, Row } from 'antd';
 import Title from 'antd/es/typography/Title';
+import { isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { saveFHIRResource, WithId } from 'fhir-react/lib/services/fhir';
+import { formatError } from 'fhir-react/lib/utils/error';
+import { PractitionerRole } from 'fhir/r4b';
 import moment from 'moment';
 import React from 'react';
 
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import { saveFHIRResource, WithId } from 'aidbox-react/lib/services/fhir';
-import { formatError } from 'aidbox-react/lib/utils/error';
-
-import { PractitionerRole } from 'shared/src/contrib/aidbox';
 import { formatFHIRTime } from 'shared/src/utils/date';
 
 import { RangeTimePicker } from 'src/components/TimePicker';

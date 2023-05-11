@@ -3,76 +3,74 @@ resourceType: Questionnaire
 title: Encounter create
 status: active
 mapping:
-    - id: encounter-create-extract
-      resourceType: Mapping
+  - id: encounter-create-extract
+    resourceType: Mapping
 launchContext:
-    - name: Patient
-      type: Patient
+  - name:
+      code: Patient
+    type: 
+      - Patient
 name: encounter-create
 item:
-    - text: PatientId
-      type: string
-      linkId: patientId
-      hidden: true
-      initialExpression:
-          language: text/fhirpath
-          expression: '%Patient.id'
-    - text: PatientName
-      type: string
-      linkId: patientName
-      readOnly: true
-      initialExpression:
-          language: text/fhirpath
-          expression: "%Patient.name.given[0] + ' ' + %Patient.name.family"
-    - text: Practitioner
-      type: reference
-      referenceResource:
-          - PractitionerRole
-      required: true
-      linkId: practitioner-role
-      answerExpression:
-          language: application/x-fhir-query
-          expression: 'PractitionerRole?_assoc=practitioner'
-      choiceColumn:
-          - forDisplay: true
-            path: >-
-                practitioner.resource.name.given.first() + ' ' +
-                practitioner.resource.name.family + ' - ' + specialty.first().coding.display
-    - text: Service
-      type: choice
-      linkId: service
-      required: true
-      repeats: false
-      answerOption:
-          - value:
-                Coding:
-                    system: http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type
-                    code: consultation
-                    display: The first appointment
-          - value:
-                Coding:
-                    system: http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type
-                    code: follow-up
-                    display: A follow up visit
-    - text: Date
-      type: date
-      linkId: date
-    - text: Time
-      type: group
-      linkId: Time period
-      itemControl:
-          coding:
-              - code: time-range-picker
-      item:
-          - type: time
-            linkId: start-time
-          - type: time
-            linkId: end-time
+  - text: PatientId
+    type: string
+    linkId: patientId
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.id"
+  - text: PatientName
+    type: string
+    linkId: patientName
+    readOnly: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.name.given[0] + ' ' + %Patient.name.family"
+  - text: Practitioner
+    type: reference
+    referenceResource:
+      - PractitionerRole
+    required: true
+    linkId: practitioner-role
+    answerExpression:
+      language: application/x-fhir-query
+      expression: "PractitionerRole?_assoc=practitioner"
+    choiceColumn:
+      - forDisplay: true
+        path: >-
+          practitioner.resource.name.given.first() + ' ' +
+          practitioner.resource.name.family + ' - ' + specialty.first().coding.display
+  - text: Service
+    type: choice
+    linkId: service
+    required: true
+    repeats: false
+    answerOption:
+      - value:
+          Coding:
+            system: http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type
+            code: consultation
+            display: The first appointment
+      - value:
+          Coding:
+            system: http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type
+            code: follow-up
+            display: A follow up visit
+  - text: Date
+    type: date
+    linkId: date
+  - text: Time
+    type: group
+    linkId: Time period
+    itemControl:
+      coding:
+        - code: time-range-picker
+    item:
+      - type: time
+        linkId: start-time
+      - type: time
+        linkId: end-time
 meta:
   profile:
     - https://beda.software/beda-emr-questionnaire
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extr-defn
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-render
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-pop-smap
 url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/encounter-create

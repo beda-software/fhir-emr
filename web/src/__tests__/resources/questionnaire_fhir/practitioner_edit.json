@@ -1,0 +1,193 @@
+{
+  "meta": {
+    "profile": ["https://beda.software/beda-emr-questionnaire"],
+    "lastUpdated": "2023-04-10T03:43:34.792167Z",
+    "versionId": "694",
+    "extension": [
+      {
+        "url": "ex:createdAt",
+        "valueInstant": "2023-04-05T05:22:35.752466Z"
+      }
+    ]
+  },
+  "name": "practitioner edit",
+  "item": [
+    {
+      "text": "practitionerId",
+      "type": "string",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+          "valueBoolean": true
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/fhirpath",
+            "expression": "%Practitioner.id"
+          }
+        }
+      ],
+      "linkId": "practitioner-id",
+      "readOnly": true
+    },
+    {
+      "text": "practitionerRoleId",
+      "type": "string",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+          "valueBoolean": true
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/fhirpath",
+            "expression": "%PractitionerRole.id"
+          }
+        }
+      ],
+      "linkId": "practitioner-role-id",
+      "readOnly": true
+    },
+    {
+      "text": "First name",
+      "type": "string",
+      "linkId": "first-name",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/fhirpath",
+            "expression": "%Practitioner.name.given[0]"
+          }
+        }
+      ]
+    },
+    {
+      "text": "Middle name",
+      "type": "string",
+      "linkId": "middle-name",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/fhirpath",
+            "expression": "%Practitioner.name.given[1]"
+          }
+        }
+      ]
+    },
+    {
+      "text": "Last name",
+      "type": "string",
+      "linkId": "last-name",
+      "required": true,
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/fhirpath",
+            "expression": "%Practitioner.name.family"
+          }
+        }
+      ]
+    },
+    {
+      "text": "Specialty",
+      "type": "choice",
+      "linkId": "specialty",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "394577000",
+            "system": "http://snomed.info/sct",
+            "display": "Anesthetics"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "394579002",
+            "system": "http://snomed.info/sct",
+            "display": "Cardiology"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "394582007",
+            "system": "http://snomed.info/sct",
+            "display": "Dermatology"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "394583002",
+            "system": "http://snomed.info/sct",
+            "display": "Endocrinology"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "419772000",
+            "system": "http://snomed.info/sct",
+            "display": "Family practice"
+          }
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/fhirpath",
+            "expression": "%PractitionerRole.specialty[0].coding"
+          }
+        }
+      ]
+    }
+  ],
+  "resourceType": "Questionnaire",
+  "title": "Practitioner edit",
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext",
+      "extension": [
+        {
+          "url": "name",
+          "valueCoding": {
+            "system": "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext",
+            "code": "Practitioner"
+          }
+        },
+        {
+          "url": "type",
+          "valueCode": "Practitioner"
+        }
+      ]
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext",
+      "extension": [
+        {
+          "url": "name",
+          "valueCoding": {
+            "system": "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext",
+            "code": "PractitionerRole"
+          }
+        },
+        {
+          "url": "type",
+          "valueCode": "PractitionerRole"
+        }
+      ]
+    },
+    {
+      "url": "http://beda.software/fhir-extensions/questionnaire-mapper",
+      "valueReference": {
+        "reference": "Mapping/practitioner-edit"
+      }
+    }
+  ],
+  "status": "active",
+  "id": "practitioner-edit",
+  "url": "https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/practitioner-edit"
+}

@@ -5,6 +5,15 @@ module.exports = {
     trailingComma: 'all',
     tabWidth: 4,
     arrowParens: 'always',
-    printWidth: 100,
+    printWidth: 120,
     jsxSingleQuote: false,
+    overrides: [
+        {
+            files: ['*.yaml', '*.yml'],
+            options: {
+                tabWidth: 2,
+                singleQuote: false,
+            },
+        },
+    ],
 };

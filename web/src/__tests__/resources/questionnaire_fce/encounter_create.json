@@ -1,0 +1,126 @@
+{
+    "meta": {
+        "profile": ["https://beda.software/beda-emr-questionnaire"],
+        "lastUpdated": "2023-04-10T03:43:34.792167Z",
+        "createdAt": "2023-04-05T05:22:35.752466Z",
+        "versionId": "694"
+    },
+    "launchContext": [
+        {
+            "name": {
+                "code": "Patient",
+                "system": "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext"
+            },
+            "type": ["Patient"]
+        }
+    ],
+    "name": "encounter-create",
+    "item": [
+        {
+            "text": "PatientId",
+            "type": "string",
+            "hidden": true,
+            "linkId": "patientId",
+            "initialExpression": {
+                "language": "text/fhirpath",
+                "expression": "%Patient.id"
+            }
+        },
+        {
+            "text": "PatientName",
+            "type": "string",
+            "linkId": "patientName",
+            "readOnly": true,
+            "initialExpression": {
+                "language": "text/fhirpath",
+                "expression": "%Patient.name.given[0] + ' ' + %Patient.name.family"
+            }
+        },
+        {
+            "text": "Practitioner",
+            "type": "reference",
+            "linkId": "practitioner-role",
+            "required": true,
+            "choiceColumn": [
+                {
+                    "path": "practitioner.resource.name.given.first() + ' ' + practitioner.resource.name.family + ' - ' + specialty.first().coding.display",
+                    "forDisplay": true
+                }
+            ],
+            "answerExpression": {
+                "language": "application/x-fhir-query",
+                "expression": "PractitionerRole?_assoc=practitioner"
+            },
+            "referenceResource": ["PractitionerRole"]
+        },
+        {
+            "text": "Service",
+            "type": "choice",
+            "linkId": "service",
+            "repeats": false,
+            "required": true,
+            "answerOption": [
+                {
+                    "value": {
+                        "Coding": {
+                            "code": "consultation",
+                            "system": "http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type",
+                            "display": "The first appointment"
+                        }
+                    }
+                },
+                {
+                    "value": {
+                        "Coding": {
+                            "code": "follow-up",
+                            "system": "http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type",
+                            "display": "A follow up visit"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Date",
+            "type": "date",
+            "linkId": "date"
+        },
+        {
+            "item": [
+                {
+                    "type": "time",
+                    "linkId": "start-time"
+                },
+                {
+                    "type": "time",
+                    "linkId": "end-time"
+                }
+            ],
+            "text": "Time",
+            "type": "group",
+            "linkId": "Time period",
+            "itemControl": {
+                "coding": [
+                    {
+                        "code": "time-range-picker"
+                    }
+                ]
+            }
+        }
+    ],
+    "mapping": [
+        {
+            "id": "encounter-create-extract",
+            "resourceType": "Mapping"
+        },
+        {
+            "id": "test-mapper",
+            "resourceType": "Mapping"
+        }
+    ],
+    "resourceType": "Questionnaire",
+    "title": "Encounter create",
+    "status": "active",
+    "id": "encounter-create",
+    "url": "https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/encounter-create"
+}

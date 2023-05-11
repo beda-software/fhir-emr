@@ -1,19 +1,19 @@
 import { t } from '@lingui/macro';
 import classNames from 'classnames';
-
-import { Encounter } from 'shared/src/contrib/aidbox';
+import { Encounter, QuestionnaireResponse } from 'fhir/r4b';
 
 import s from './EncounterStatusBadge.module.scss';
 
-interface EncounterStatusBadgeProps {
-    status: Encounter['status'];
+interface Props {
+    status: Encounter['status'] | QuestionnaireResponse['status'];
 }
 
-export function EncounterStatusBadge(props: EncounterStatusBadgeProps) {
+export function StatusBadge(props: Props) {
     const { status } = props;
 
     const statusHumanTitle = {
         'in-progress': t`in progress`,
+        finished: t`completed`,
         completed: t`completed`,
     };
 
@@ -21,6 +21,7 @@ export function EncounterStatusBadge(props: EncounterStatusBadgeProps) {
         <div
             className={classNames(s.container, {
                 [s.inProgress!]: status === 'in-progress',
+                [s.finished!]: status === 'finished',
                 [s.completed!]: status === 'completed',
             })}
         >

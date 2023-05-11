@@ -1,7 +1,6 @@
 import { DateSelectArg, EventClickArg } from '@fullcalendar/core';
+import { PractitionerRole } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
-
-import { PractitionerRole } from 'shared/src/contrib/aidbox/index';
 
 export interface NewAppointmentData {
     start: Date;
@@ -10,9 +9,7 @@ export interface NewAppointmentData {
 
 export function useAppointmentEvents(practitionerRole: PractitionerRole) {
     const [newAppointmentData, setNewAppointmentData] = useState<NewAppointmentData | undefined>();
-    const [appointmentDetails, setAppointmentDetails] = useState<
-        EventClickArg['event'] | undefined
-    >();
+    const [appointmentDetails, setAppointmentDetails] = useState<EventClickArg['event'] | undefined>();
     const [editingAppointmentId, setEditingAppointmentId] = useState<string | undefined>();
 
     // function handleEventChange({ event }: EventChangeArg) {

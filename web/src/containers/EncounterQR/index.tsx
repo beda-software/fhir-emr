@@ -1,14 +1,13 @@
 import { t } from '@lingui/macro';
 import { Alert, notification } from 'antd';
 import Title from 'antd/es/typography/Title';
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { useService } from 'fhir-react/lib/hooks/service';
+import { getFHIRResource } from 'fhir-react/lib/services/fhir';
+import { sequenceMap } from 'fhir-react/lib/services/service';
+import { Questionnaire } from 'fhir/r4b';
 import { useParams } from 'react-router-dom';
 
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { getFHIRResource } from 'aidbox-react/lib/services/fhir';
-import { sequenceMap } from 'aidbox-react/lib/services/service';
-
-import { Questionnaire } from 'shared/src/contrib/aidbox';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
@@ -30,8 +29,7 @@ export function EncounterQR() {
 
     const [questionnaireRD] = useService(async () => {
         return await getFHIRResource<Questionnaire>({
-            resourceType: 'Questionnaire',
-            id: questionnaireId!,
+            reference: `Questionnaire/${questionnaireId}`,
         });
     });
 

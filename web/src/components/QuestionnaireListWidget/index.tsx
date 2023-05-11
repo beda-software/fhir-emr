@@ -1,6 +1,5 @@
+import { Questionnaire } from 'fhir/r4b';
 import { Link, useParams } from 'react-router-dom';
-
-import { Questionnaire } from 'shared/src/contrib/aidbox';
 
 interface Props {
     questionnaireList: Questionnaire[];

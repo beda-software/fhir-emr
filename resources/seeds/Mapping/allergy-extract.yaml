@@ -3,36 +3,36 @@ body:
         qrId: $ fhirpath("QuestionnaireResponse.id")
         qrVersion: $ fhirpath("QuestionnaireResponse.meta.versionId")
         qrLastUpdated: >-
-            $ fhirpath("QuestionnaireResponse.meta.lastUpdated") || fhirpath("QuestionnaireResponse.repeat(item).where(linkId='dateTime').answer.value.dateTime").0
+            $ fhirpath("QuestionnaireResponse.meta.lastUpdated") || fhirpath("QuestionnaireResponse.repeat(item).where(linkId='dateTime').answer.valueDateTime").0
         allergyIntoleranceId: $ fhirpath("Provenance.target.where(resourceType='AllergyIntolerance').id").0
         author: $ Author
         status: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='status').answer.value.Coding").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='status').answer.valueCoding").0
         patientId: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.value.string").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.valueString").0
         patientName: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.value.string").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.valueString").0
         category: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='type').answer.value.Coding.code").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='type').answer.valueCoding.code").0
         reaction: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='reaction').answer.value.Coding")
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='reaction').answer")
         notes: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='notes').answer.value.string").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='notes').answer.valueString").0
         substanceDrug: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='substance-drug').answer.value.Coding").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='substance-drug').answer.valueCoding").0
         substanceFood: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='substance-food').answer.value.Coding").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='substance-food').answer.valueCoding").0
         substanceEnvironmental: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='substance-environmental').answer.value.Coding").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='substance-environmental').answer.valueCoding").0
     $body:
         type: transaction
         entry:
@@ -74,7 +74,7 @@ body:
                             $as: item
                             $body:
                                 coding:
-                                    - $ item
+                                    - $ item.valueCoding
                         substance:
                             coding:
                                 - $ substanceDrug || substanceFood || substanceEnvironmental

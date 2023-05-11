@@ -1,0 +1,389 @@
+{
+  "url": "https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/review-of-systems",
+  "item": [
+    {
+      "code": [
+        {
+          "code": "71406-3",
+          "system": "http://loinc.org",
+          "display": "CMS - review of systems panel"
+        }
+      ],
+      "text": "Provider reviewed all systems and state that all are WNL except as noted below\n",
+      "type": "boolean",
+      "linkId": "provider-viewed-confirmation",
+      "initial": [
+        {
+          "value": {
+            "boolean": false
+          }
+        }
+      ]
+    },
+    {
+      "item": [
+        {
+          "code": [
+            {
+              "code": "71407-1",
+              "system": "http://loinc.org",
+              "display": "CMS - constitutional symptoms panel"
+            }
+          ],
+          "text": "General",
+          "type": "boolean",
+          "linkId": "general"
+        },
+        {
+          "code": [
+            {
+              "code": "71407-1-comment",
+              "system": "http://loinc.org",
+              "display": "CMS - constitutional symptoms panel - comment"
+            }
+          ],
+          "type": "text",
+          "linkId": "general-comment",
+          "enableWhen": [
+            {
+              "answer": {
+                "boolean": true
+              },
+              "operator": "=",
+              "question": "general"
+            }
+          ]
+        },
+        {
+          "code": [
+            {
+              "code": "71409-7",
+              "system": "http://loinc.org",
+              "display": "CMS - ear-nose-mouth-throat panel"
+            }
+          ],
+          "text": "HEENT",
+          "type": "boolean",
+          "linkId": "heent"
+        },
+        {
+          "code": [
+            {
+              "code": "71409-7-comment",
+              "system": "http://loinc.org",
+              "display": "CMS - ear-nose-mouth-throat panel - comment"
+            }
+          ],
+          "type": "text",
+          "linkId": "heent-comment",
+          "enableWhen": [
+            {
+              "answer": {
+                "boolean": true
+              },
+              "operator": "=",
+              "question": "heent"
+            }
+          ]
+        },
+        {
+          "code": [
+            {
+              "code": "71410-5",
+              "system": "http://loinc.org",
+              "display": "CMS - cardiovascular panel"
+            }
+          ],
+          "text": "Cardiovascular",
+          "type": "boolean",
+          "linkId": "cardiovascular"
+        },
+        {
+          "code": [
+            {
+              "code": "71410-5-comment",
+              "system": "http://loinc.org",
+              "display": "CMS - cardiovascular panel - comment"
+            }
+          ],
+          "type": "text",
+          "linkId": "cardiovascular-comment",
+          "enableWhen": [
+            {
+              "answer": {
+                "boolean": true
+              },
+              "operator": "=",
+              "question": "cardiovascular"
+            }
+          ]
+        },
+        {
+          "code": [
+            {
+              "code": "71411-3",
+              "system": "http://loinc.org",
+              "display": "CMS - respiratory panel"
+            }
+          ],
+          "text": "Respiratory",
+          "type": "boolean",
+          "linkId": "respiratory"
+        },
+        {
+          "code": [
+            {
+              "code": "71411-3-comment",
+              "system": "http://loinc.org",
+              "display": "CMS - respiratory panel - comment"
+            }
+          ],
+          "type": "text",
+          "linkId": "respiratory-comment",
+          "enableWhen": [
+            {
+              "answer": {
+                "boolean": true
+              },
+              "operator": "=",
+              "question": "respiratory"
+            }
+          ]
+        },
+        {
+          "code": [
+            {
+              "code": "71412-1",
+              "system": "http://loinc.org",
+              "display": "CMS - gastrointestinal panel"
+            }
+          ],
+          "text": "Gastrointestinal",
+          "type": "boolean",
+          "linkId": "gastrointestinal"
+        },
+        {
+          "code": [
+            {
+              "code": "71412-1-comment",
+              "system": "http://loinc.org",
+              "display": "CMS - gastrointestinal panel - comment"
+            }
+          ],
+          "type": "text",
+          "linkId": "gastrointestinal-comment",
+          "enableWhen": [
+            {
+              "answer": {
+                "boolean": true
+              },
+              "operator": "=",
+              "question": "gastrointestinal"
+            }
+          ]
+        },
+        {
+          "code": [
+            {
+              "code": "71413-9",
+              "system": "http://loinc.org",
+              "display": "CMS - genitourinary panel"
+            }
+          ],
+          "text": "Genitourinary",
+          "type": "boolean",
+          "linkId": "genitourinary"
+        },
+        {
+          "code": [
+            {
+              "code": "71413-9-comment",
+              "system": "http://loinc.org",
+              "display": "CMS - genitourinary panel - comment"
+            }
+          ],
+          "type": "text",
+          "linkId": "genitourinary-comment",
+          "enableWhen": [
+            {
+              "answer": {
+                "boolean": true
+              },
+              "operator": "=",
+              "question": "genitourinary"
+            }
+          ]
+        },
+        {
+          "code": [
+            {
+              "code": "71414-7",
+              "system": "http://loinc.org",
+              "display": "CMS - musculoskeletal panel"
+            }
+          ],
+          "text": "Musculoskeletal",
+          "type": "boolean",
+          "linkId": "musculoskeletal"
+        },
+        {
+          "code": [
+            {
+              "code": "71414-7-comment",
+              "system": "http://loinc.org",
+              "display": "CMS - musculoskeletal panel - comment"
+            }
+          ],
+          "type": "text",
+          "linkId": "musculoskeletal-comment",
+          "enableWhen": [
+            {
+              "answer": {
+                "boolean": true
+              },
+              "operator": "=",
+              "question": "musculoskeletal"
+            }
+          ]
+        },
+        {
+          "code": [
+            {
+              "code": "71416-2",
+              "system": "http://loinc.org",
+              "display": "CMS - neurological panel"
+            }
+          ],
+          "text": "Neurologic",
+          "type": "boolean",
+          "linkId": "neurologic"
+        },
+        {
+          "code": [
+            {
+              "code": "71416-2-comment",
+              "system": "http://loinc.org",
+              "display": "CMS - neurological panel - comment"
+            }
+          ],
+          "type": "text",
+          "linkId": "neurologic-comment",
+          "enableWhen": [
+            {
+              "answer": {
+                "boolean": true
+              },
+              "operator": "=",
+              "question": "neurologic"
+            }
+          ]
+        },
+        {
+          "code": [
+            {
+              "code": "71417-0",
+              "system": "http://loinc.org",
+              "display": "CMS - psychiatric panel"
+            }
+          ],
+          "text": "Psychiatric",
+          "type": "boolean",
+          "linkId": "psychiatric"
+        },
+        {
+          "code": [
+            {
+              "code": "71417-0-comment",
+              "system": "http://loinc.org",
+              "display": "CMS - psychiatric panel - comment"
+            }
+          ],
+          "type": "text",
+          "linkId": "psychiatric-comment",
+          "enableWhen": [
+            {
+              "answer": {
+                "boolean": true
+              },
+              "operator": "=",
+              "question": "psychiatric"
+            }
+          ]
+        },
+        {
+          "code": [
+            {
+              "code": "71415-4",
+              "system": "http://loinc.org",
+              "display": "CMS - integumentary panel"
+            }
+          ],
+          "text": "Skin",
+          "type": "boolean",
+          "linkId": "skin"
+        },
+        {
+          "code": [
+            {
+              "code": "71415-4-comment",
+              "system": "http://loinc.org",
+              "display": "CMS - integumentary panel - comment"
+            }
+          ],
+          "type": "text",
+          "linkId": "skin-comment",
+          "enableWhen": [
+            {
+              "answer": {
+                "boolean": true
+              },
+              "operator": "=",
+              "question": "skin"
+            }
+          ]
+        },
+        {
+          "text": "Other",
+          "type": "boolean",
+          "linkId": "other"
+        },
+        {
+          "type": "text",
+          "linkId": "other-comment",
+          "enableWhen": [
+            {
+              "answer": {
+                "boolean": true
+              },
+              "operator": "=",
+              "question": "other"
+            }
+          ]
+        }
+      ],
+      "text": "Select abnormal systems",
+      "type": "group",
+      "linkId": "abnormal-systems-group",
+      "enableWhen": [
+        {
+          "answer": {
+            "boolean": true
+          },
+          "operator": "=",
+          "question": "provider-viewed-confirmation"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "profile": ["https://beda.software/beda-emr-questionnaire"],
+    "lastUpdated": "2023-04-10T03:43:34.792167Z",
+    "createdAt": "2023-04-05T05:22:35.752466Z",
+    "versionId": "694"
+  },
+  "name": "Review of Systems",
+  "status": "active",
+  "subjectType": ["Encounter"],
+  "id": "review-of-systems",
+  "resourceType": "Questionnaire"
+}

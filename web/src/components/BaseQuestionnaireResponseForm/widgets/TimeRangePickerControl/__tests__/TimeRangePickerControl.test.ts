@@ -1,8 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
+import { FHIRTimeFormat } from 'fhir-react/lib/utils/date';
 import moment from 'moment';
 import { GroupItemProps } from 'sdc-qrf';
-
-import { FHIRTimeFormat } from 'aidbox-react/lib/utils/date';
 
 import { useTimeRangePickerControl } from '../hooks';
 

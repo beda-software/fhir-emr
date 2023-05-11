@@ -1,18 +1,12 @@
-import { RemoteDataResult } from 'aidbox-react';
+import { RemoteDataResult } from 'fhir-react';
+import { useService } from 'fhir-react/lib/hooks/service';
+import { failure, isSuccess, RemoteData, success } from 'fhir-react/lib/libs/remoteData';
+import { getReference, WithId } from 'fhir-react/lib/services/fhir';
+import { mapSuccess, resolveMap } from 'fhir-react/lib/services/service';
+import { Encounter, Patient, Practitioner, Provenance, QuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
 import { useNavigate } from 'react-router-dom';
 
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { failure, isSuccess, RemoteData, success } from 'aidbox-react/lib/libs/remoteData';
-import { getReference, WithId } from 'aidbox-react/lib/services/fhir';
-import { mapSuccess, resolveMap } from 'aidbox-react/lib/services/service';
-
-import {
-    Patient,
-    Practitioner,
-    Provenance,
-    QuestionnaireResponse,
-} from 'shared/src/contrib/aidbox';
 import {
     handleFormDataSave,
     loadQuestionnaireResponseFormData,
@@ -23,11 +17,10 @@ import {
 
 import { onFormResponse } from 'src/components/QuestionnaireResponseForm';
 import { getProvenanceByEntity } from 'src/services/provenance';
-import { sharedAuthorizedPatient, sharedAuthorizedPractitioner } from 'src/sharedState';
-import { Role, selectCurrentUserRole } from 'src/utils/role';
 
 export interface Props {
     patient: Patient;
+    author: WithId<Practitioner | Patient>;
     questionnaireResponse?: WithId<QuestionnaireResponse>;
     questionnaireId: string;
     encounterId?: string;
@@ -75,19 +68,15 @@ function prepareFormInitialParams(
         questionnaireLoader: questionnaireIdLoader(questionnaireId),
         launchContextParameters: [
             { name: 'Patient', resource: patient },
-            ...(author
-                ? [
-                      {
-                          name: 'Author',
-                          resource: author,
-                      },
-                  ]
-                : []),
+            {
+                name: 'Author',
+                resource: author,
+            },
             ...(encounterId
                 ? [
                       {
                           name: 'Encounter',
-                          resource: { resourceType: 'Encounter', id: encounterId },
+                          resource: { resourceType: 'Encounter', id: encounterId } as Encounter,
                       },
                   ]
                 : []),
@@ -137,10 +126,6 @@ export function usePatientDocument(props: Props): {
             const formInitialParams = prepareFormInitialParams({
                 ...props,
                 provenance,
-                author: selectCurrentUserRole<() => Practitioner | Patient | undefined>({
-                    [Role.Admin]: () => sharedAuthorizedPractitioner.getSharedState(),
-                    [Role.Patient]: () => sharedAuthorizedPatient.getSharedState(),
-                })(),
             });
 
             const onSubmit = async (formData: QuestionnaireResponseFormData) =>

@@ -2,11 +2,10 @@ import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, Col, Empty, notification, Row } from 'antd';
 import Title from 'antd/es/typography/Title';
+import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { Practitioner } from 'fhir/r4b';
 import { useNavigate } from 'react-router-dom';
 
-import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
-
-import { Practitioner } from 'shared/src/contrib/aidbox';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';

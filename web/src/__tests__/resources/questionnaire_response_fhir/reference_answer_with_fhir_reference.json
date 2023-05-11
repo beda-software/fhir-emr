@@ -1,0 +1,19 @@
+{
+    "authored": "2023-04-05T06:27:57Z",
+    "id": "cf6d9d4b-bfcd-463f-9d26-b6769c2a3fc3",
+    "item": [
+        {
+            "answer": [
+                {
+                    "valueReference": {
+                        "display": "Sanjay Patel - Cardiology",
+                        "reference": "PractitionerRole/429e6a55-8a64-4ede-ad12-1206522253eb"
+                    }
+                }
+            ],
+            "linkId": "practitioner-role"
+        }
+    ],
+    "resourceType": "QuestionnaireResponse",
+    "status": "completed"
+}

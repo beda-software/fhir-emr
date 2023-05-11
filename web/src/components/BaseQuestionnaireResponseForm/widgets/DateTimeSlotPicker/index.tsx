@@ -1,21 +1,21 @@
 import { Form } from 'antd';
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { useService } from 'fhir-react/lib/hooks/service';
+import {
+    extractBundleResources,
+    getAllFHIRResources,
+    getFHIRResource,
+} from 'fhir-react/lib/services/fhir';
+import { mapSuccess, resolveMap } from 'fhir-react/lib/services/service';
+import { formatFHIRDate, formatFHIRDateTime, parseFHIRDateTime } from 'fhir-react/lib/utils/date';
+import { parseFHIRReference } from 'fhir-react/lib/utils/fhir';
+import { Reference, Appointment, PractitionerRole } from 'fhir/r4b';
 import _ from 'lodash';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { QuestionItemProps } from 'sdc-qrf';
 
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { useService } from 'aidbox-react/lib/hooks/service';
-import {
-    extractBundleResources,
-    getAllFHIRResources,
-    getFHIRResource,
-} from 'aidbox-react/lib/services/fhir';
-import { mapSuccess, resolveMap } from 'aidbox-react/lib/services/service';
-import { formatFHIRDate, formatFHIRDateTime, parseFHIRDateTime } from 'aidbox-react/lib/utils/date';
-
-import { AidboxReference, Appointment, PractitionerRole } from 'shared/src/contrib/aidbox';
 import { humanDateTime } from 'shared/src/utils/date';
 
 import { DatePicker } from 'src/components/DatePicker';
@@ -29,7 +29,7 @@ interface AvailableDatePickerProps extends QuestionItemProps {
     practitionerRolePath: Array<string | number>;
 }
 
-function useDateTimeSlots(practitionerRole: AidboxReference<PractitionerRole>) {
+function useDateTimeSlots(practitionerRole: Reference) {
     const { calendarOptions } = useCalendarOptions();
     const { slotDuration } = calendarOptions;
 
@@ -58,10 +58,10 @@ function useDateTimeSlots(practitionerRole: AidboxReference<PractitionerRole>) {
 }
 
 function usePractitionerRoleId(practitionerRolePath: Array<string | number>) {
-    const [prId, setPRId] = useState(undefined);
+    const [prId, setPRId] = useState<string | undefined>(undefined);
 
     const { watch } = useFormContext();
-    const newPRId = _.get(watch(), [...practitionerRolePath, 'id']);
+    const newPRId = parseFHIRReference(_.get(watch(), [...practitionerRolePath])).id;
 
     useEffect(() => {
         if (prId !== newPRId) {
@@ -83,8 +83,7 @@ export function DateTimeSlotPicker(props: AvailableDatePickerProps) {
                 <AvailableDateControl
                     {...props}
                     practitionerRole={{
-                        resourceType: 'PractitionerRole',
-                        id: prId,
+                        reference: `PractitionerRole/${prId}`,
                     }}
                 />
             ) : null}
@@ -127,9 +126,7 @@ function getDisabledTime(date: moment.Moment | null, timeSlots: TimeSlots) {
     };
 }
 
-function AvailableDateControl(
-    props: AvailableDatePickerProps & { practitionerRole: AidboxReference<PractitionerRole> },
-) {
+function AvailableDateControl(props: AvailableDatePickerProps & { practitionerRole: Reference }) {
     const { questionItem, parentPath, practitionerRole } = props;
     const { linkId } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'dateTime'];

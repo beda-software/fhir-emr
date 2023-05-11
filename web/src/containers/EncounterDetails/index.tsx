@@ -2,16 +2,14 @@ import { CheckOutlined, PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
 import Title from 'antd/es/typography/Title';
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { useService } from 'fhir-react/lib/hooks/service';
+import { isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { getFHIRResource, saveFHIRResource } from 'fhir-react/lib/services/fhir';
+import { formatError } from 'fhir-react/lib/utils/error';
+import { Encounter, Patient } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
-
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import { getFHIRResource, saveFHIRResource } from 'aidbox-react/lib/services/fhir';
-import { formatError } from 'aidbox-react/lib/utils/error';
-
-import { Encounter, Patient } from 'shared/src/contrib/aidbox';
 
 import { Spinner } from 'src/components/Spinner';
 import { DocumentsList } from 'src/containers/DocumentsList';
@@ -29,17 +27,16 @@ function useEncounterDetails() {
 
     const [response, manager] = useService(async () =>
         getFHIRResource<Encounter>({
-            resourceType: 'Encounter',
-            id: params.encounterId!,
+            reference: `Encounter/${params.encounterId}`,
         }),
     );
 
     const completeEncounter = useCallback(async () => {
         if (isSuccess(response)) {
             const encounter = response.data;
-            const saveResponse = await saveFHIRResource({
+            const saveResponse = await saveFHIRResource<Encounter>({
                 ...encounter,
-                status: 'completed',
+                status: 'finished',
             });
 
             if (isSuccess(saveResponse)) {
@@ -66,7 +63,7 @@ export const EncounterDetails = ({ patient }: Props) => {
             </Title>
             <RenderRemoteData remoteData={response} renderLoading={Spinner}>
                 {(encounter) => {
-                    const isEncounterCompleted = encounter.status === 'completed';
+                    const isEncounterCompleted = encounter.status === 'finished';
 
                     return (
                         <>

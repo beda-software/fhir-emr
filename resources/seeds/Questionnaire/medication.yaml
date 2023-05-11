@@ -3,13 +3,17 @@ resourceType: Questionnaire
 name: Medication
 status: active
 subjectType:
-  - Encounter
-  - Patient
+    - Encounter
+    - Patient
 launchContext:
-    - name: Patient
-      type: Patient
-    - name: Author
-      type: Resource
+    - name:
+          code: Patient
+      type:
+        - Patient
+    - name:
+          code: Author
+      type:
+        - Resource
 mapping:
     - id: medication-statement-extract
       resourceType: Mapping
@@ -108,10 +112,6 @@ item:
       type: string
 
 meta:
-  profile:
-    - https://beda.software/beda-emr-questionnaire
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extr-defn
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-render
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-pop-smap
+    profile:
+        - https://beda.software/beda-emr-questionnaire
 url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/medication

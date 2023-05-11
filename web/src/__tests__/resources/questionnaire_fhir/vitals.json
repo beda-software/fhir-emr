@@ -1,0 +1,317 @@
+{
+    "subjectType": ["Encounter", "Patient"],
+    "meta": {
+        "profile": ["https://beda.software/beda-emr-questionnaire"],
+        "lastUpdated": "2023-05-04T01:00:51.328418Z",
+        "versionId": "2",
+        "extension": [
+            {
+                "url": "ex:createdAt",
+                "valueInstant": "2023-05-04T01:00:51.328418Z"
+            }
+        ]
+    },
+    "name": "Vitals",
+    "item": [
+        {
+            "text": "PatientId",
+            "type": "string",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                    "valueBoolean": true
+                },
+                {
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+                    "valueExpression": {
+                        "language": "text/fhirpath",
+                        "expression": "%Patient.id"
+                    }
+                }
+            ],
+            "linkId": "patientId"
+        },
+        {
+            "text": "PatientName",
+            "type": "string",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                    "valueBoolean": true
+                },
+                {
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+                    "valueExpression": {
+                        "language": "text/fhirpath",
+                        "expression": "%Patient.name.given[0] + ' ' + %Patient.name.family"
+                    }
+                }
+            ],
+            "linkId": "patientName"
+        },
+        {
+            "text": "Height",
+            "type": "integer",
+            "linkId": "height",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                    "valueCoding": {
+                        "code": "cm",
+                        "system": "http://unitsofmeasure.org",
+                        "display": "cm"
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Weight",
+            "type": "integer",
+            "linkId": "weight",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                    "valueCoding": {
+                        "code": "kg",
+                        "system": "http://unitsofmeasure.org",
+                        "display": "kg"
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Temperature",
+            "type": "integer",
+            "linkId": "temperature",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                    "valueCoding": {
+                        "code": "Celsius",
+                        "system": "http://unitsofmeasure.org",
+                        "display": "Celsius"
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Oxygen saturation",
+            "type": "integer",
+            "linkId": "oxygen-saturation",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                    "valueCoding": {
+                        "code": "%",
+                        "system": "http://unitsofmeasure.org",
+                        "display": "%"
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Pulse rate",
+            "type": "integer",
+            "linkId": "pulse-rate",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                    "valueCoding": {
+                        "code": "bpm",
+                        "system": "http://unitsofmeasure.org",
+                        "display": "bpm"
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Respiratory Rate",
+            "type": "integer",
+            "linkId": "respiratory-rate",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                    "valueCoding": {
+                        "code": "bpm",
+                        "system": "http://unitsofmeasure.org",
+                        "display": "bpm"
+                    }
+                }
+            ]
+        },
+        {
+            "item": [
+                {
+                    "item": [
+                        {
+                            "text": "BP systolic",
+                            "type": "integer",
+                            "linkId": "blood-pressure-systolic",
+                            "extension": [
+                                {
+                                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                                    "valueCoding": {
+                                        "code": "mmHg",
+                                        "system": "http://unitsofmeasure.org",
+                                        "display": "mmHg"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "text": "BP diastolic",
+                            "type": "integer",
+                            "linkId": "blood-pressure-diastolic",
+                            "extension": [
+                                {
+                                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                                    "valueCoding": {
+                                        "code": "mmHg",
+                                        "system": "http://unitsofmeasure.org",
+                                        "display": "mmHg"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "type": "group",
+                    "linkId": "blood-pressure-systolic-diastolic",
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                            "valueCodeableConcept": {
+                                "coding": [
+                                    {
+                                        "code": "blood-pressure"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "text": "Positions",
+                    "type": "choice",
+                    "linkId": "blood-pressure-positions",
+                    "answerOption": [
+                        {
+                            "valueCoding": {
+                                "code": "sitting",
+                                "display": "Sitting"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "lying",
+                                "display": "Lying"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "standing",
+                                "display": "Standing"
+                            }
+                        }
+                    ],
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                            "valueCodeableConcept": {
+                                "coding": [
+                                    {
+                                        "code": "inline-choice"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "text": "Arm",
+                    "type": "choice",
+                    "linkId": "blood-pressure-arm",
+                    "answerOption": [
+                        {
+                            "valueCoding": {
+                                "code": "biceps-left",
+                                "display": "Biceps left"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "biceps-right",
+                                "display": "Biceps right"
+                            }
+                        }
+                    ],
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                            "valueCodeableConcept": {
+                                "coding": [
+                                    {
+                                        "code": "inline-choice"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ],
+            "text": "Blood Pressure",
+            "type": "group",
+            "linkId": "blood-pressure"
+        },
+        {
+            "text": "BMI",
+            "type": "integer",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                    "valueCoding": {
+                        "code": "kg/m2",
+                        "system": "http://unitsofmeasure.org",
+                        "display": "kg/m2"
+                    }
+                },
+                {
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
+                    "valueExpression": {
+                        "language": "text/fhirpath",
+                        "expression": "(%QuestionnaireResponse.item.where(linkId='weight').answer.value.integer / ((%QuestionnaireResponse.item.where(linkId='height').answer.value.integer / 100) * (%QuestionnaireResponse.item.where(linkId='height').answer.value.integer / 100))).round(2)"
+                    }
+                }
+            ],
+            "linkId": "bmi",
+            "readOnly": true,
+            "required": true
+        }
+    ],
+    "resourceType": "Questionnaire",
+    "extension": [
+        {
+            "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext",
+            "extension": [
+                {
+                    "url": "name",
+                    "valueCoding": {
+                        "code": "Patient"
+                    }
+                },
+                {
+                    "url": "type",
+                    "valueCode": "Patient"
+                }
+            ]
+        },
+        {
+            "url": "http://beda.software/fhir-extensions/questionnaire-mapper",
+            "valueReference": {
+                "reference": "Mapping/vitals"
+            }
+        }
+    ],
+    "status": "active",
+    "id": "vitals",
+    "url": "https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/vitals"
+}

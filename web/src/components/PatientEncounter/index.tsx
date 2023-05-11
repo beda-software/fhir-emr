@@ -1,13 +1,13 @@
 import { t, Trans } from '@lingui/macro';
 import { ColumnsType } from 'antd/lib/table';
+import { Patient } from 'fhir/r4b';
 import { Link } from 'react-router-dom';
 
-import { Patient } from 'shared/src/contrib/aidbox';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { EncountersTable } from 'src/components/EncountersTable';
 import { EncounterData } from 'src/components/EncountersTable/types';
-import { EncounterStatusBadge } from 'src/components/EncounterStatusBadge';
+import { StatusBadge } from 'src/components/EncounterStatusBadge';
 import { ModalNewEncounter } from 'src/components/ModalNewEncounter';
 import { useEncounterList } from 'src/containers/EncounterList/hooks';
 import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
@@ -30,7 +30,7 @@ const columns: ColumnsType<EncounterData> = [
         dataIndex: 'status',
         key: 'status',
         render: (_text: any, resource: EncounterData) => {
-            return <EncounterStatusBadge status={resource.status} />;
+            return <StatusBadge status={resource.status} />;
         },
     },
     {

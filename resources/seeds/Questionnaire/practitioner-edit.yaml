@@ -1,80 +1,80 @@
 launchContext:
-    - name: Practitioner
-      type: Practitioner
-    - name: PractitionerRole
-      type: PractitionerRole
+  - name:
+      code: Practitioner
+    type:
+      - Practitioner
 name: practitioner edit
 item:
-    - text: practitionerId
-      type: string
-      linkId: practitioner-id
-      readOnly: true
-      hidden: true
-      initialExpression:
-          language: text/fhirpath
-          expression: '%Practitioner.id'
-    - text: practitionerRoleId
-      type: string
-      linkId: practitioner-role-id
-      readOnly: true
-      hidden: true
-      initialExpression:
-          language: text/fhirpath
-          expression: '%PractitionerRole.id'
-    - text: First name
-      type: string
-      linkId: first-name
-      initialExpression:
-          language: text/fhirpath
-          expression: '%Practitioner.name.given[0]'
-    - text: Middle name
-      type: string
-      linkId: middle-name
-      initialExpression:
-          language: text/fhirpath
-          expression: '%Practitioner.name.given[1]'
-    - text: Last name
-      type: string
-      linkId: last-name
-      required: true
-      initialExpression:
-          language: text/fhirpath
-          expression: '%Practitioner.name.family'
-    - text: Specialty
-      type: choice
-      linkId: specialty
-      answerOption:
-          - value:
-                Coding:
-                    code: '394577000'
-                    system: http://snomed.info/sct
-                    display: Anesthetics
-          - value:
-                Coding:
-                    code: '394579002'
-                    system: http://snomed.info/sct
-                    display: Cardiology
-          - value:
-                Coding:
-                    code: '394582007'
-                    system: http://snomed.info/sct
-                    display: Dermatology
-          - value:
-                Coding:
-                    code: '394583002'
-                    system: http://snomed.info/sct
-                    display: Endocrinology
-          - value:
-                Coding:
-                    code: '419772000'
-                    system: http://snomed.info/sct
-                    display: Family practice
-      initialExpression:
-          language: text/fhirpath
-          expression: '%PractitionerRole.specialty[0].coding'
+  - text: practitionerId
+    type: string
+    linkId: practitioner-id
+    readOnly: true
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Practitioner.id"
+  - text: practitionerRoleId
+    type: string
+    linkId: practitioner-role-id
+    readOnly: true
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%PractitionerRole.where(id.exists()).id"
+  - text: First name
+    type: string
+    linkId: first-name
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Practitioner.name.given[0]"
+  - text: Middle name
+    type: string
+    linkId: middle-name
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Practitioner.name.given[1]"
+  - text: Last name
+    type: string
+    linkId: last-name
+    required: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Practitioner.name.family"
+  - text: Specialty
+    type: choice
+    linkId: specialty
+    answerOption:
+      - value:
+          Coding:
+            code: "394577000"
+            system: http://snomed.info/sct
+            display: Anesthetics
+      - value:
+          Coding:
+            code: "394579002"
+            system: http://snomed.info/sct
+            display: Cardiology
+      - value:
+          Coding:
+            code: "394582007"
+            system: http://snomed.info/sct
+            display: Dermatology
+      - value:
+          Coding:
+            code: "394583002"
+            system: http://snomed.info/sct
+            display: Endocrinology
+      - value:
+          Coding:
+            code: "419772000"
+            system: http://snomed.info/sct
+            display: Family practice
+    initialExpression:
+      language: text/fhirpath
+      expression: "%PractitionerRole.where(id.exists()).specialty[0].coding"
 mapping:
-    - id: practitioner-edit
-      resourceType: Mapping
+  - id: practitioner-edit
+    resourceType: Mapping
 resourceType: Questionnaire
 title: Practitioner edit
 status: active
@@ -82,8 +82,4 @@ id: practitioner-edit
 meta:
   profile:
     - https://beda.software/beda-emr-questionnaire
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extr-defn
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-render
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-pop-smap
 url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/practitioner-edit

@@ -1,10 +1,9 @@
 import { ContactsOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
+import { WithId } from 'fhir-react/lib/services/fhir';
+import { Practitioner, PractitionerRole } from 'fhir/r4b';
 
-import { WithId } from 'aidbox-react/lib/services/fhir';
-
-import { Practitioner, PractitionerRole } from 'shared/src/contrib/aidbox';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { DashboardCard } from 'src/components/DashboardCard';
@@ -15,7 +14,7 @@ import s from './PractitionerOverview.module.scss';
 
 interface Props {
     practitioner: WithId<Practitioner>;
-    practitionerRole: WithId<PractitionerRole>;
+    practitionerRole?: WithId<PractitionerRole>;
     reload: () => void;
 }
 
@@ -37,7 +36,7 @@ function usePractitionerOverview(props: Props) {
         },
         {
             title: 'Specialty',
-            value: practitionerRole.specialty?.[0]?.coding?.[0]?.display,
+            value: practitionerRole?.specialty?.[0]?.coding?.[0]?.display,
         },
     ];
 
@@ -69,10 +68,14 @@ export function PractitionerOverview(props: Props) {
                                         name: 'Practitioner',
                                         resource: practitioner,
                                     },
-                                    {
-                                        name: 'PractitionerRole',
-                                        resource: practitionerRole,
-                                    },
+                                    ...(practitionerRole
+                                        ? [
+                                              {
+                                                  name: 'PractitionerRole',
+                                                  resource: practitionerRole,
+                                              },
+                                          ]
+                                        : []),
                                 ]}
                                 onSuccess={() => {
                                     reload();

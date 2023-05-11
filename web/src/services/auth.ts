@@ -1,11 +1,12 @@
+import { setInstanceToken as setFHIRInstanceToken } from 'fhir-react/lib/services/instance';
 import { decodeJwt } from 'jose';
 
-import { setInstanceToken } from 'aidbox-react/lib/services/instance';
+import { setInstanceToken as setAidboxInstanceToken } from 'aidbox-react/lib/services/instance';
 import { service } from 'aidbox-react/lib/services/service';
 import { Token } from 'aidbox-react/lib/services/token';
 
 import config from 'shared/src/config';
-import { QuestionnaireResponse, User } from 'shared/src/contrib/aidbox';
+import { User } from 'shared/src/contrib/aidbox';
 
 export interface OAuthState {
     nextUrl?: string;
@@ -52,6 +53,7 @@ type TokenResponse = {
 
 export async function login(data: LoginBody) {
     return await service<TokenResponse>({
+        baseURL: config.baseURL,
         url: '/auth/token',
         method: 'POST',
         data: {
@@ -66,6 +68,7 @@ export async function login(data: LoginBody) {
 
 export function logout() {
     return service({
+        baseURL: config.baseURL,
         method: 'DELETE',
         url: '/Session',
     });
@@ -73,6 +76,7 @@ export function logout() {
 
 export function getUserInfo() {
     return service<User>({
+        baseURL: config.baseURL,
         method: 'GET',
         url: '/auth/userinfo',
     });
@@ -80,6 +84,7 @@ export function getUserInfo() {
 
 export async function getJitsiAuthToken() {
     return service<{ jwt: string }>({
+        baseURL: config.baseURL,
         method: 'POST',
         url: '/auth/$jitsi-token',
     });
@@ -90,7 +95,8 @@ export async function signinWithIdentityToken(
     identityToken: string,
 ) {
     setToken(identityToken);
-    setInstanceToken({ access_token: identityToken, token_type: 'Bearer' });
+    setAidboxInstanceToken({ access_token: identityToken, token_type: 'Bearer' });
+    setFHIRInstanceToken({ access_token: identityToken, token_type: 'Bearer' });
 
     return await service({
         method: 'POST',
@@ -101,7 +107,10 @@ export async function signinWithIdentityToken(
                 {
                     name: 'FederatedIdentity',
                     value: {
-                        string: decodeJwt(identityToken).sub,
+                        Identifier: {
+                            system: decodeJwt(identityToken).iss,
+                            value: decodeJwt(identityToken).sub,
+                        },
                     },
                 },
                 {
@@ -112,14 +121,14 @@ export async function signinWithIdentityToken(
                         item: [
                             {
                                 linkId: 'firstname',
-                                answer: [{ value: { string: user?.firstName } }],
+                                answer: [{ valueString: user?.firstName }],
                             },
                             {
                                 linkId: 'lastname',
-                                answer: [{ value: { string: user?.lastName } }],
+                                answer: [{ valueString: user?.lastName }],
                             },
                         ],
-                    } as QuestionnaireResponse,
+                    },
                 },
             ],
         },

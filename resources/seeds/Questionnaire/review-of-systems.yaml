@@ -1,226 +1,223 @@
-resourceType: Questionnaire
-id: review-of-systems
-status: active
 name: Review of Systems
+status: active
 subjectType:
   - Encounter
+id: review-of-systems
+resourceType: Questionnaire
+url: >-
+  https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/review-of-systems
 item:
-  - linkId: provider-viewed-confirmation
-    type: boolean
-    text: >
-      Provider reviewed all systems and state
-      that all are WNL except as noted below
-    code:
-      - system: http://loinc.org
-        code: 71406-3
+  - code:
+      - code: 71406-3
+        system: http://loinc.org
         display: CMS - review of systems panel
+    text: >
+      Provider reviewed all systems and state that all are WNL except as noted
+      below
+    type: boolean
+    linkId: provider-viewed-confirmation
     initial:
       - value:
           boolean: false
-  - linkId: abnormal-systems-group
-    type: group
-    text: Select abnormal systems
-    enableWhen:
-      - question: provider-viewed-confirmation
-        operator: "="
-        answer:
-          boolean: true
-    item:
-      - linkId: general
+  - item:
+      - code:
+          - code: 71407-1
+            system: http://loinc.org
+            display: CMS - constitutional symptoms panel
         text: General
         type: boolean
-        code:
-          system: http://loinc.org
-          code: 71407-1
-          display: CMS - constitutional symptoms panel
-      - linkId: general-comment
+        linkId: general
+      - code:
+          - code: 71407-1-comment
+            system: http://loinc.org
+            display: CMS - constitutional symptoms panel - comment
         type: text
-        code:
-          system: http://loinc.org
-          code: 71407-1-comment
-          display: CMS - constitutional symptoms panel - comment
+        linkId: general-comment
         enableWhen:
-          - question: general
-            operator: "="
-            answer:
+          - answer:
               boolean: true
-      - linkId: heent
+            operator: "="
+            question: general
+      - code:
+          - code: 71409-7
+            system: http://loinc.org
+            display: CMS - ear-nose-mouth-throat panel
         text: HEENT
         type: boolean
-        code:
-          system: http://loinc.org
-          code: 71409-7
-          display: CMS - ear-nose-mouth-throat panel
-      - linkId: heent-comment
+        linkId: heent
+      - code:
+          - code: 71409-7-comment
+            system: http://loinc.org
+            display: CMS - ear-nose-mouth-throat panel - comment
         type: text
-        code:
-          system: http://loinc.org
-          code: 71409-7-comment
-          display: CMS - ear-nose-mouth-throat panel - comment
+        linkId: heent-comment
         enableWhen:
-          - question: heent
-            operator: "="
-            answer:
+          - answer:
               boolean: true
-      - linkId: cardiovascular
+            operator: "="
+            question: heent
+      - code:
+          - code: 71410-5
+            system: http://loinc.org
+            display: CMS - cardiovascular panel
         text: Cardiovascular
         type: boolean
-        code:
-          system: http://loinc.org
-          code: 71410-5
-          display: CMS - cardiovascular panel
-      - linkId: cardiovascular-comment
+        linkId: cardiovascular
+      - code:
+          - code: 71410-5-comment
+            system: http://loinc.org
+            display: CMS - cardiovascular panel - comment
         type: text
-        code:
-          system: http://loinc.org
-          code: 71410-5-comment
-          display: CMS - cardiovascular panel - comment
+        linkId: cardiovascular-comment
         enableWhen:
-          - question: cardiovascular
-            operator: "="
-            answer:
+          - answer:
               boolean: true
-      - linkId: respiratory
+            operator: "="
+            question: cardiovascular
+      - code:
+          - code: 71411-3
+            system: http://loinc.org
+            display: CMS - respiratory panel
         text: Respiratory
         type: boolean
-        code:
-          system: http://loinc.org
-          code: 71411-3
-          display: CMS - respiratory panel
-      - linkId: respiratory-comment
+        linkId: respiratory
+      - code:
+          - code: 71411-3-comment
+            system: http://loinc.org
+            display: CMS - respiratory panel - comment
         type: text
-        code:
-          system: http://loinc.org
-          code: 71411-3-comment
-          display: CMS - respiratory panel - comment
+        linkId: respiratory-comment
         enableWhen:
-          - question: respiratory
-            operator: "="
-            answer:
+          - answer:
               boolean: true
-      - linkId: gastrointestinal
+            operator: "="
+            question: respiratory
+      - code:
+          - code: 71412-1
+            system: http://loinc.org
+            display: CMS - gastrointestinal panel
         text: Gastrointestinal
         type: boolean
-        code:
-          system: http://loinc.org
-          code: 71412-1
-          display: CMS - gastrointestinal panel
-      - linkId: gastrointestinal-comment
+        linkId: gastrointestinal
+      - code:
+          - code: 71412-1-comment
+            system: http://loinc.org
+            display: CMS - gastrointestinal panel - comment
         type: text
-        code:
-          system: http://loinc.org
-          code: 71412-1-comment
-          display: CMS - gastrointestinal panel - comment
+        linkId: gastrointestinal-comment
         enableWhen:
-          - question: gastrointestinal
-            operator: "="
-            answer:
+          - answer:
               boolean: true
-      - linkId: genitourinary
+            operator: "="
+            question: gastrointestinal
+      - code:
+          - code: 71413-9
+            system: http://loinc.org
+            display: CMS - genitourinary panel
         text: Genitourinary
         type: boolean
-        code:
-          system: http://loinc.org
-          code: 71413-9
-          display: CMS - genitourinary panel
-      - linkId: genitourinary-comment
+        linkId: genitourinary
+      - code:
+          - code: 71413-9-comment
+            system: http://loinc.org
+            display: CMS - genitourinary panel - comment
         type: text
-        code:
-          system: http://loinc.org
-          code: 71413-9-comment
-          display: CMS - genitourinary panel - comment
+        linkId: genitourinary-comment
         enableWhen:
-          - question: genitourinary
-            operator: "="
-            answer:
+          - answer:
               boolean: true
-      - linkId: musculoskeletal
+            operator: "="
+            question: genitourinary
+      - code:
+          - code: 71414-7
+            system: http://loinc.org
+            display: CMS - musculoskeletal panel
         text: Musculoskeletal
         type: boolean
-        code:
-          system: http://loinc.org
-          code: 71414-7
-          display: CMS - musculoskeletal panel
-      - linkId: musculoskeletal-comment
+        linkId: musculoskeletal
+      - code:
+          - code: 71414-7-comment
+            system: http://loinc.org
+            display: CMS - musculoskeletal panel - comment
         type: text
-        code:
-          system: http://loinc.org
-          code: 71414-7-comment
-          display: CMS - musculoskeletal panel - comment
+        linkId: musculoskeletal-comment
         enableWhen:
-          - question: musculoskeletal
-            operator: "="
-            answer:
+          - answer:
               boolean: true
-      - linkId: neurologic
+            operator: "="
+            question: musculoskeletal
+      - code:
+          - code: 71416-2
+            system: http://loinc.org
+            display: CMS - neurological panel
         text: Neurologic
         type: boolean
-        code:
-          system: http://loinc.org
-          code: 71416-2
-          display: CMS - neurological panel
-      - linkId: neurologic-comment
+        linkId: neurologic
+      - code:
+          - code: 71416-2-comment
+            system: http://loinc.org
+            display: CMS - neurological panel - comment
         type: text
-        code:
-          system: http://loinc.org
-          code: 71416-2-comment
-          display: CMS - neurological panel - comment
+        linkId: neurologic-comment
         enableWhen:
-          - question: neurologic
-            operator: "="
-            answer:
+          - answer:
               boolean: true
-      - linkId: psychiatric
+            operator: "="
+            question: neurologic
+      - code:
+          - code: 71417-0
+            system: http://loinc.org
+            display: CMS - psychiatric panel
         text: Psychiatric
         type: boolean
-        code:
-          system: http://loinc.org
-          code: 71417-0
-          display: CMS - psychiatric panel
-      - linkId: psychiatric-comment
+        linkId: psychiatric
+      - code:
+          - code: 71417-0-comment
+            system: http://loinc.org
+            display: CMS - psychiatric panel - comment
         type: text
-        code:
-          system: http://loinc.org
-          code: 71417-0-comment
-          display: CMS - psychiatric panel - comment
+        linkId: psychiatric-comment
         enableWhen:
-          - question: psychiatric
-            operator: "="
-            answer:
+          - answer:
               boolean: true
-      - linkId: skin
+            operator: "="
+            question: psychiatric
+      - code:
+          - code: 71415-4
+            system: http://loinc.org
+            display: CMS - integumentary panel
         text: Skin
         type: boolean
-        code:
-          system: http://loinc.org
-          code: 71415-4
-          display: CMS - integumentary panel
-      - linkId: skin-comment
+        linkId: skin
+      - code:
+          - code: 71415-4-comment
+            system: http://loinc.org
+            display: CMS - integumentary panel - comment
         type: text
-        code:
-          system: http://loinc.org
-          code: 71415-4-comment
-          display: CMS - integumentary panel - comment
+        linkId: skin-comment
         enableWhen:
-          - question: skin
-            operator: "="
-            answer:
+          - answer:
               boolean: true
-      - linkId: other
-        text: Other
+            operator: "="
+            question: skin
+      - text: Other
         type: boolean
-      - linkId: other-comment
-        type: text
+        linkId: other
+      - type: text
+        linkId: other-comment
         enableWhen:
-          - question: other
-            operator: "="
-            answer:
+          - answer:
               boolean: true
+            operator: "="
+            question: other
+    text: Select abnormal systems
+    type: group
+    linkId: abnormal-systems-group
+    enableWhen:
+      - answer:
+          boolean: true
+        operator: "="
+        question: provider-viewed-confirmation
 meta:
   profile:
     - https://beda.software/beda-emr-questionnaire
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extr-defn
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-render
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-pop-smap
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/review-of-systems

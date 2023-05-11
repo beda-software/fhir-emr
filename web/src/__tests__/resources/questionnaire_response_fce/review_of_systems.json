@@ -1,0 +1,161 @@
+{
+  "authored": "2023-04-06T02:11:08Z",
+  "encounter": {
+    "id": "e133b999-9e91-4ebd-967e-450bad770682",
+    "resourceType": "Encounter"
+  },
+  "id": "d575fe05-9db2-4df8-b131-48bb5d27509d",
+  "item": [
+    {
+      "answer": [
+        {
+          "value": {
+            "boolean": true
+          }
+        }
+      ],
+      "linkId": "provider-viewed-confirmation"
+    },
+    {
+      "item": [
+        {
+          "answer": [
+            {
+              "value": {}
+            }
+          ],
+          "linkId": "general"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "boolean": true
+              }
+            }
+          ],
+          "linkId": "heent"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "string": "heent"
+              }
+            }
+          ],
+          "linkId": "heent-comment"
+        },
+        {
+          "answer": [
+            {
+              "value": {}
+            }
+          ],
+          "linkId": "cardiovascular"
+        },
+        {
+          "answer": [
+            {
+              "value": {}
+            }
+          ],
+          "linkId": "respiratory"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "boolean": true
+              }
+            }
+          ],
+          "linkId": "gastrointestinal"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "string": "gastrointestinal"
+              }
+            }
+          ],
+          "linkId": "gastrointestinal-comment"
+        },
+        {
+          "answer": [
+            {
+              "value": {}
+            }
+          ],
+          "linkId": "genitourinary"
+        },
+        {
+          "answer": [
+            {
+              "value": {}
+            }
+          ],
+          "linkId": "musculoskeletal"
+        },
+        {
+          "answer": [
+            {
+              "value": {}
+            }
+          ],
+          "linkId": "neurologic"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "boolean": true
+              }
+            }
+          ],
+          "linkId": "psychiatric"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "string": "psychiatric"
+              }
+            }
+          ],
+          "linkId": "psychiatric-comment"
+        },
+        {
+          "answer": [
+            {
+              "value": {}
+            }
+          ],
+          "linkId": "skin"
+        },
+        {
+          "answer": [
+            {
+              "value": {}
+            }
+          ],
+          "linkId": "other"
+        }
+      ],
+      "linkId": "abnormal-systems-group"
+    }
+  ],
+  "meta": {
+    "createdAt": "2023-04-06T02:10:37.718483Z",
+    "lastUpdated": "2023-04-06T02:11:09.776717Z",
+    "versionId": "20480"
+  },
+  "questionnaire": "review-of-systems",
+  "resourceType": "QuestionnaireResponse",
+  "source": {
+    "id": "683e382b-fed4-433e-9b6d-a847a7953bc0",
+    "resourceType": "Patient"
+  },
+  "status": "completed"
+}

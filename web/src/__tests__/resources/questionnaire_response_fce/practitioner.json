@@ -1,0 +1,57 @@
+{
+  "authored": "2023-04-05T06:09:09Z",
+  "id": "cedd0c3e-be1a-4c1b-92af-351ed76fe41e",
+  "item": [
+    {
+      "answer": [
+        {
+          "value": {
+            "string": "Patel"
+          }
+        }
+      ],
+      "linkId": "last-name"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "string": "Sanjay"
+          }
+        }
+      ],
+      "linkId": "first-name"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "string": "Kumar"
+          }
+        }
+      ],
+      "linkId": "middle-name"
+    },
+    {
+      "answer": [
+        {
+          "value": {
+            "Coding": {
+              "code": "394579002",
+              "display": "Cardiology",
+              "system": "http://snomed.info/sct"
+            }
+          }
+        }
+      ],
+      "linkId": "specialty"
+    }
+  ],
+  "meta": {
+    "createdAt": "2023-04-05T06:09:10.640955Z",
+    "lastUpdated": "2023-04-05T06:09:10.640955Z",
+    "versionId": "20415"
+  },
+  "resourceType": "QuestionnaireResponse",
+  "status": "completed"
+}

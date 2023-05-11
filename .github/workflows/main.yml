@@ -22,7 +22,7 @@ jobs:
             - name: Prepare index.html
               run: cp web/public/index.production.html web/public/index.html
             - name: Install deps
-              run: yarn
+              run: yarn install --network-concurrency 1
             - run: yarn compile
             - run: cd web && yarn build
             - name: Set up Docker Buildx

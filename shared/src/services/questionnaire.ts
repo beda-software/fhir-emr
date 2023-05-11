@@ -1,13 +1,15 @@
-import { ResourcesMap } from 'aidbox-react/lib/services/fhir';
+import { ResourcesMap } from 'fhir-react/lib/services/fhir';
 import {
     getFHIRResources,
-    getReference,
     extractBundleResources,
+} from 'fhir-react/lib/services/fhir';
+import { SearchParams } from 'fhir-react/lib/services/search';
+import { mapSuccess } from 'fhir-react/lib/services/service';
+import {
+    getReference,
 } from 'aidbox-react/lib/services/fhir';
-import { SearchParams } from 'aidbox-react/lib/services/search';
-import { mapSuccess } from 'aidbox-react/lib/services/service';
 
-import { Resource } from '../contrib/aidbox';
+import { Resource } from 'fhir/r4b';
 
 export async function loadResourceOptions<R extends Resource, IR extends Resource = any>(
     resourceType: R['resourceType'],
@@ -20,7 +22,6 @@ export async function loadResourceOptions<R extends Resource, IR extends Resourc
             value: {
                 Reference: {
                     ...getReference(resource, getDisplayFn(resource as R, resourcesMap)),
-                    resource,
                 },
             },
         }));

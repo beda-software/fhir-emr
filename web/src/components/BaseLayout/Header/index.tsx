@@ -2,24 +2,20 @@ import { DownOutlined, GlobalOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 import { Dropdown, Menu } from 'antd';
 import { Header } from 'antd/lib/layout/layout';
+import { resetInstanceToken as resetFHIRInstanceToken } from 'fhir-react/lib/services/instance';
 import { useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
-import { resetInstanceToken } from 'aidbox-react/lib/services/instance';
+import { resetInstanceToken as resetAidboxInstanceToken } from 'aidbox-react/lib/services/instance';
 
-import {
-    dynamicActivate,
-    setCurrentLocale,
-    getCurrentLocale,
-    locales,
-} from 'shared/src/services/i18n';
+import { dynamicActivate, setCurrentLocale, getCurrentLocale, locales } from 'shared/src/services/i18n';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { AvatarImage } from 'src/images/AvatarImage';
 import logo from 'src/images/logo.svg';
 import { logout } from 'src/services/auth';
 import { sharedAuthorizedPatient, sharedAuthorizedPractitioner } from 'src/sharedState';
-import { selectCurrentUserRole, Role } from 'src/utils/role';
+import { Role, matchCurrentUserRole } from 'src/utils/role';
 
 import s from './Header.module.scss';
 
@@ -28,6 +24,7 @@ export interface RouteItem {
     exact?: boolean;
     title: string;
     icon?: React.ReactElement;
+    disabled?: boolean;
 }
 
 function LocaleSwitcher() {
@@ -62,14 +59,14 @@ function LocaleSwitcher() {
 export function AppHeader() {
     const location = useLocation();
 
-    const menuItems: RouteItem[] = selectCurrentUserRole({
-        [Role.Admin]: [
+    const menuItems: RouteItem[] = matchCurrentUserRole({
+        [Role.Admin]: () => [
             { title: t`Encounters`, path: '/encounters' },
             { title: t`Patients`, path: '/patients' },
             { title: t`Practitioners`, path: '/practitioners' },
             { title: t`Questionnaires`, path: '/questionnaires' },
         ],
-        [Role.Patient]: [],
+        [Role.Patient]: () => [],
     });
 
     const activeMenu = `/${location.pathname.split('/')[1]}`;
@@ -115,7 +112,8 @@ export function renderMenu(menuRoutes: RouteItem[]) {
 function UserMenu() {
     const doLogout = useCallback(async () => {
         await logout();
-        resetInstanceToken();
+        resetAidboxInstanceToken();
+        resetFHIRInstanceToken();
         localStorage.clear();
         window.location.href = '/';
     }, []);
@@ -137,17 +135,12 @@ function UserMenu() {
     );
 
     return (
-        <Dropdown
-            menu={{ items: userMenu, onClick: onUserMenuClick }}
-            trigger={['click']}
-            placement="bottomLeft"
-            arrow
-        >
+        <Dropdown menu={{ items: userMenu, onClick: onUserMenuClick }} trigger={['click']} placement="bottomLeft" arrow>
             <a onClick={(e) => e.preventDefault()} className={s.user}>
                 <AvatarImage className={s.avatar} />
-                {selectCurrentUserRole({
-                    [Role.Admin]: <AdminName />,
-                    [Role.Patient]: <PatientName />,
+                {matchCurrentUserRole({
+                    [Role.Admin]: () => <AdminName />,
+                    [Role.Patient]: () => <PatientName />,
                 })}
                 <DownOutlined className={s.localeArrow} />
             </a>

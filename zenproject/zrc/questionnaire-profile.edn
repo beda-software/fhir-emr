@@ -4,15 +4,55 @@
           hl7-fhir-r4-core.boolean
           hl7-fhir-r4-core.Reference
           hl7-fhir-r4-core.Questionnaire
-          hl7-fhir-r4-core.string}
+          hl7-fhir-r4-core.string
+          hl7-fhir-r4-core.Quantity
+          hl7-fhir-uv-sdc.sdc-questionnaire-answerExpression
+          hl7-fhir-uv-sdc.sdc-questionnaire-choiceColumn
+          hl7-fhir-uv-sdc.sdc-questionnaire-initialExpression
+          hl7-fhir-r4-core.questionnaire-referenceResource
+          hl7-fhir-r4-core.questionnaire-itemControl
+          hl7-fhir-r4-core.questionnaire-sliderStepValue
+          hl7-fhir-r4-core.questionnaire-unit
+          hl7-fhir-uv-sdc.sdc-questionnaire-calculatedExpression
+          hl7-fhir-uv-sdc.sdc-questionnaire-itemPopulationContext
+          hl7-fhir-uv-sdc.sdc-questionnaire-enableWhenExpression
+          hl7-fhir-r4-core.questionnaire-hidden
+          hl7-fhir-uv-sdc.sdc-questionnaire-launchContext
+          hl7-fhir-uv-sdc.sdc-questionnaire-sourceQueries
+          hl7-fhir-uv-sdc.sdc-questionnaire-targetStructureMap}
 
  QuestionnaireItem {:zen/tags #{zen/schema
                                 zen.fhir/structure-schema}
                     :type zen/map
-                    :zen.fhir/version "0.5.25-1"
+                    :zen.fhir/version "0.6.23-1"
                     :confirms #{hl7-fhir-r4-core.Questionnaire/item-schema}
                     :keys {:item {:type zen/vector
                                   :every {:confirms #{QuestionnaireItem}}}
+                           :answerExpression {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-answerExpression/schema},
+                                              :fhir/extensionUri "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression",
+                                              :fhir/flags #{:MS}},
+                           :choiceColumn {:type zen/vector,
+                                          :every {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-choiceColumn/schema},
+                                                  :fhir/extensionUri "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn"}},
+                           :initialExpression {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-initialExpression/schema},
+                                               :fhir/extensionUri "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression"},
+                           :referenceResource {:type zen/vector,
+                                               :every {:confirms #{hl7-fhir-r4-core.questionnaire-referenceResource/schema},
+                                                       :fhir/extensionUri "http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource",
+                                                       :fhir/flags #{:MS}}},
+                           :itemControl {:confirms #{hl7-fhir-r4-core.questionnaire-itemControl/schema},
+                                         :fhir/extensionUri "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                                         :fhir/flags #{:MS}},
+                           :sliderStepValue {:confirms #{hl7-fhir-r4-core.questionnaire-sliderStepValue/schema},
+                                             :fhir/extensionUri "http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue"}
+                           :calculatedExpression {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-calculatedExpression/schema},
+                                                  :fhir/extensionUri "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression"}
+                           :itemPopulationContext {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-itemPopulationContext/schema}
+                                                   :fhir/extensionUri "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemPopulationContext"
+                                                   :fhir/flags #{:MS}}
+                           :enableWhenExpression {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-enableWhenExpression/schema},
+                                                  :fhir/extensionUri "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-enableWhenExpression",
+                                                  :fhir/flags #{:MS}},
                            :start {:confirms #{hl7-fhir-r4-core.integer/schema}
                                    :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/slider-start"}
                            :stop {:confirms #{hl7-fhir-r4-core.integer/schema}
@@ -26,13 +66,13 @@
 
                            :adjustLastToRight {:confirms #{hl7-fhir-r4-core.boolean/schema}
                                                :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/adjust-last-to-right"}
-                           :unit {:confirms #{hl7-fhir-r4-core.string/schema}
-                                  :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/unit"}
+                           :unit {:confirms #{hl7-fhir-r4-core.questionnaire-unit/schema},
+                                  :fhir/extensionUri "http://hl7.org/fhir/StructureDefinition/questionnaire-unit"}
                            :macro {:confirms #{hl7-fhir-r4-core.string/schema}
                                    :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/macro"}
                            ;; use hidden key over itemHidden from zen sdc zen profile
                            :hidden {:confirms #{hl7-fhir-r4-core.questionnaire-hidden/schema},
-                                        :fhir/extensionUri "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden"},
+                                    :fhir/extensionUri "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden"},
                            :inlineChoiceDirection {:confirms #{hl7-fhir-r4-core.string/schema}
                                                    :fhir/extensionUri "https://beda.software/fhir-emr-questionnaire/inline-choice-direction"}}}
 
@@ -41,11 +81,18 @@
   :zen.fhir/type "Questionnaire"
   :zen.fhir/profileUri "https://beda.software/beda-emr-questionnaire"
   :type zen/map
-  :zen.fhir/version "0.5.25-1"
+  :zen.fhir/version "0.6.23-1"
   :keys {:mapping {:type zen/vector
-                   :every {:confirms #{hl7-fhir-r4-core.Reference/schema}}
-                   :fhir/extensionUri "http://beda.software/fhir-extensions/questionnaire-mapper"}
-         :launchContext {:type zen/any}
-         :sourceQueries {:type zen/any}
+                   :every {:confirms #{hl7-fhir-r4-core.Reference/schema}
+                           :fhir/extensionUri "http://beda.software/fhir-extensions/questionnaire-mapper"}}
+         :sourceQueries {:type zen/vector
+                         :every {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-sourceQueries/schema}
+                                 :fhir/extensionUri "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-sourceQueries"}}
+         :launchContext {:type zen/vector
+                         :every {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-launchContext/schema}
+                                 :fhir/extensionUri "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext"}}
+         :targetStructureMap {:type zen/vector
+                              :every {:confirms #{hl7-fhir-uv-sdc.sdc-questionnaire-targetStructureMap/schema}
+                                      :fhir/extensionUri "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-targetStructureMap"}}
          :item {:type zen/vector
                 :every {:confirms #{QuestionnaireItem}}}}}}

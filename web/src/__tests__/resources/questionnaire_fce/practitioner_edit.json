@@ -1,0 +1,144 @@
+{
+  "meta": {
+    "profile": ["https://beda.software/beda-emr-questionnaire"],
+    "lastUpdated": "2023-04-10T03:43:34.792167Z",
+    "createdAt": "2023-04-05T05:22:35.752466Z",
+    "versionId": "694"
+  },
+  "launchContext": [
+    {
+      "name": {
+        "code": "Practitioner",
+        "system": "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext"
+      },
+      "type": ["Practitioner"]
+    },
+    {
+      "name": {
+        "code": "PractitionerRole",
+        "system": "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext"
+      },
+      "type": ["PractitionerRole"]
+    }
+  ],
+  "name": "practitioner edit",
+  "item": [
+    {
+      "text": "practitionerId",
+      "type": "string",
+      "hidden": true,
+      "linkId": "practitioner-id",
+      "readOnly": true,
+      "initialExpression": {
+        "language": "text/fhirpath",
+        "expression": "%Practitioner.id"
+      }
+    },
+    {
+      "text": "practitionerRoleId",
+      "type": "string",
+      "hidden": true,
+      "linkId": "practitioner-role-id",
+      "readOnly": true,
+      "initialExpression": {
+        "language": "text/fhirpath",
+        "expression": "%PractitionerRole.id"
+      }
+    },
+    {
+      "text": "First name",
+      "type": "string",
+      "linkId": "first-name",
+      "initialExpression": {
+        "language": "text/fhirpath",
+        "expression": "%Practitioner.name.given[0]"
+      }
+    },
+    {
+      "text": "Middle name",
+      "type": "string",
+      "linkId": "middle-name",
+      "initialExpression": {
+        "language": "text/fhirpath",
+        "expression": "%Practitioner.name.given[1]"
+      }
+    },
+    {
+      "text": "Last name",
+      "type": "string",
+      "linkId": "last-name",
+      "required": true,
+      "initialExpression": {
+        "language": "text/fhirpath",
+        "expression": "%Practitioner.name.family"
+      }
+    },
+    {
+      "text": "Specialty",
+      "type": "choice",
+      "linkId": "specialty",
+      "answerOption": [
+        {
+          "value": {
+            "Coding": {
+              "code": "394577000",
+              "system": "http://snomed.info/sct",
+              "display": "Anesthetics"
+            }
+          }
+        },
+        {
+          "value": {
+            "Coding": {
+              "code": "394579002",
+              "system": "http://snomed.info/sct",
+              "display": "Cardiology"
+            }
+          }
+        },
+        {
+          "value": {
+            "Coding": {
+              "code": "394582007",
+              "system": "http://snomed.info/sct",
+              "display": "Dermatology"
+            }
+          }
+        },
+        {
+          "value": {
+            "Coding": {
+              "code": "394583002",
+              "system": "http://snomed.info/sct",
+              "display": "Endocrinology"
+            }
+          }
+        },
+        {
+          "value": {
+            "Coding": {
+              "code": "419772000",
+              "system": "http://snomed.info/sct",
+              "display": "Family practice"
+            }
+          }
+        }
+      ],
+      "initialExpression": {
+        "language": "text/fhirpath",
+        "expression": "%PractitionerRole.specialty[0].coding"
+      }
+    }
+  ],
+  "mapping": [
+    {
+      "id": "practitioner-edit",
+      "resourceType": "Mapping"
+    }
+  ],
+  "resourceType": "Questionnaire",
+  "title": "Practitioner edit",
+  "status": "active",
+  "id": "practitioner-edit",
+  "url": "https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/practitioner-edit"
+}

@@ -1,59 +1,74 @@
 body:
+  $let:
+    appointmentId: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='appointmentId').answer.valueString").0
+    service: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='service').answer.valueCoding").0
+    patientId: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.valueString").0
+    patientReference: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patient-reference').answer.valueReference").0
+    startDate: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='date').answer.valueDate").0
+    startTime: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='start-time').answer.valueTime").0
+    endTime: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='end-time').answer.valueTime").0
+    patientName: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.valueString").0
+    practitionerRole: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-role').answer.valueReference").0
+  $body:
     $let:
-        appointmentId: >-
-            $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='appointmentId').answer.value.string").0
-        service: >-
-            $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='service').answer.value.Coding").0
-        patientId: >-
-            $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.value.string").0
-        startDate: >-
-            $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='date').answer.value.date").0
-        startTime: >-
-            $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='start-time').answer.value.time").0
-        endTime: >-
-            $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='end-time').answer.value.time").0
-        patientName: >-
-            $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.value.string").0
-        practitionerRole: >-
-            $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-role').answer.value.Reference").0
+      selectedPractitionerRoleReferenceSplit:
+        $call: splitStr
+        $args:
+          - $ practitionerRole.reference
+          - "/"
+      patientReferenceSplit:
+        $call: splitStr
+        $args:
+          - $ patientReference.reference
+          - "/"
     $body:
-        type: transaction
-        entry:
-            - request:
-                  url: /Encounter
-                  method: POST
-              resource:
-                  class:
-                      code: $ service.code
-                      system: $ service.system
-                      display: $ service.display
-                  period:
-                      start: $ startDate + 'T' + startTime
-                      end: $ startDate + 'T' + endTime
-                  status: in-progress
-                  subject:
-                      id: $ patientId
-                      display: $ patientName
-                      resourceType: Patient
-                  participant:
-                      - individual:
-                            id: $ practitionerRole.id
-                            display: $ practitionerRole.display
-                            resourceType: $ practitionerRole.resourceType
-                  appointment:
-                      $if: $ appointmentId
-                      $then:
-                          - resourceType: Appointment
-                            id: $ appointmentId
-                  resourceType: Encounter
-        resourceType: Bundle
+      type: transaction
+      entry:
+        - request:
+            url: /Encounter
+            method: POST
+          resource:
+            class:
+              code: $ service.code
+              system: $ service.system
+              display: $ service.display
+            period:
+              start: $ startDate + 'T' + startTime
+              end: $ startDate + 'T' + endTime
+            status: in-progress
+            subject:
+              id: $ patientId || patientReferenceSplit.1
+              display: $ patientName
+              resourceType: Patient
+            participant:
+              - individual:
+                  id: $ selectedPractitionerRoleReferenceSplit.1
+                  resourceType: $ selectedPractitionerRoleReferenceSplit.0
+                  display: $ practitionerRole.display
+            appointment:
+              $if: $ appointmentId
+              $then:
+                - resourceType: Appointment
+                  id: $ appointmentId
+            resourceType: Encounter
+      resourceType: Bundle
 id: encounter-create-extract
 resourceType: Mapping

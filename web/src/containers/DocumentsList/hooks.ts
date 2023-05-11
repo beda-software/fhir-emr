@@ -1,21 +1,16 @@
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
-import { mapSuccess } from 'aidbox-react/lib/services/service';
+import { useService } from 'fhir-react/lib/hooks/service';
+import { isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { extractBundleResources, getFHIRResources } from 'fhir-react/lib/services/fhir';
+import { mapSuccess } from 'fhir-react/lib/services/service';
+import { parseFHIRReference } from 'fhir-react/lib/utils/fhir';
+import { Reference, Patient, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 
-import {
-    AidboxReference,
-    Encounter,
-    Patient,
-    Questionnaire,
-    QuestionnaireResponse,
-} from 'shared/src/contrib/aidbox';
-
-export function usePatientDocuments(patient: Patient, encounter?: AidboxReference<Encounter>) {
+export function usePatientDocuments(patient: Patient, encounter?: Reference) {
     const [response] = useService(async () => {
         const qrResponse = await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
             source: patient.id,
-            encounter: encounter?.id,
+            encounter: encounter ? parseFHIRReference(encounter).id : undefined,
+            _sort: '-authored',
         });
 
         const qrResponseExtracted = mapSuccess(qrResponse, (bundle) => ({
@@ -23,9 +18,9 @@ export function usePatientDocuments(patient: Patient, encounter?: AidboxReferenc
         }));
 
         if (isSuccess(qrResponseExtracted)) {
-            const ids = qrResponseExtracted.data.QuestionnaireResponse.map(
-                (qr) => qr.questionnaire,
-            ).filter((q) => q !== undefined);
+            const ids = qrResponseExtracted.data.QuestionnaireResponse.map((qr) => qr.questionnaire).filter(
+                (q) => q !== undefined,
+            );
 
             const qResponse = await getFHIRResources<Questionnaire>('Questionnaire', {
                 id: ids.join(','),
@@ -33,9 +28,7 @@ export function usePatientDocuments(patient: Patient, encounter?: AidboxReferenc
 
             return mapSuccess(qResponse, (bundle) => {
                 let questionnaireNames: { [key: string]: string | undefined } = {};
-                extractBundleResources(bundle).Questionnaire.forEach(
-                    (q) => (questionnaireNames[q.id!] = q.name),
-                );
+                extractBundleResources(bundle).Questionnaire.forEach((q) => (questionnaireNames[q.id!] = q.name));
 
                 return {
                     ...qrResponseExtracted.data,

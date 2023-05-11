@@ -1,9 +1,11 @@
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { isSuccess, success } from 'aidbox-react/lib/libs/remoteData';
-import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
-import { mapSuccess } from 'aidbox-react/lib/services/service';
+import { WithId } from 'fhir-react';
+import { useService } from 'fhir-react/lib/hooks/service';
+import { isSuccess, success } from 'fhir-react/lib/libs/remoteData';
+import { extractBundleResources, getFHIRResources } from 'fhir-react/lib/services/fhir';
+import { mapSuccess } from 'fhir-react/lib/services/service';
+import { parseFHIRReference } from 'fhir-react/lib/utils/fhir';
+import { Practitioner, PractitionerRole } from 'fhir/r4b';
 
-import { Practitioner, PractitionerRole } from 'shared/src/contrib/aidbox';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
@@ -30,7 +32,7 @@ export function usePractitionersList(filterValues: StringTypeColumnFilterValue[]
     };
 
     const { resourceResponse, pagerManager, handleTableChange, pagination } = usePagerExtended<
-        Practitioner,
+        WithId<Practitioner>,
         StringTypeColumnFilterValue[]
     >('Practitioner', queryParameters, debouncedFilterValues);
 
@@ -45,35 +47,29 @@ export function usePractitionersList(filterValues: StringTypeColumnFilterValue[]
 
         const response = filteredResourcesAreFound
             ? await getFHIRResources<PractitionerRole | Practitioner>('PractitionerRole', {
-                  _include: ['PractitionerRole:practitioner:Practitioner'],
                   practitioner: practitioners.map((practitioner) => practitioner.id).join(','),
               })
             : success(undefined);
 
         return mapSuccess(response, (bundle) => {
-            const sourceMap = bundle
-                ? extractBundleResources(bundle)
-                : { Practitioner: [], PractitionerRole: [] };
+            const sourceMap = bundle ? extractBundleResources(bundle) : { Practitioner: [], PractitionerRole: [] };
 
-            const practitioners = sourceMap.Practitioner;
             const practitionerRoles = sourceMap.PractitionerRole;
 
-            return practitioners
-                .map((practitioner) => {
-                    const practitionerRolesList = practitionerRoles.filter(
-                        (pR) => pR.practitioner?.id === practitioner.id,
-                    );
-                    const rowData: PractitionerListRowData = {
-                        key: practitioner.id,
-                        id: practitioner.id,
-                        practitionerResource: practitioner,
-                        practitionerRolesResource: practitionerRolesList,
-                        practitionerName: renderHumanName(practitioner.name?.[0]),
-                        practitionerRoleList: practitionerRoleToStringArray(practitionerRolesList),
-                    };
-                    return rowData;
-                })
-                .reverse();
+            return practitioners.map((practitioner) => {
+                const practitionerRolesList = practitionerRoles.filter(
+                    (pR) => pR.practitioner && parseFHIRReference(pR.practitioner).id === practitioner.id,
+                );
+                const rowData: PractitionerListRowData = {
+                    key: practitioner.id,
+                    id: practitioner.id,
+                    practitionerResource: practitioner,
+                    practitionerRolesResource: practitionerRolesList,
+                    practitionerName: renderHumanName(practitioner.name?.[0]),
+                    practitionerRoleList: practitionerRoleToStringArray(practitionerRolesList),
+                };
+                return rowData;
+            });
         });
     }, [debouncedFilterValues, resourceResponse]);
 

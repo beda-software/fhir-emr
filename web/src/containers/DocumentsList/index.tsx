@@ -1,16 +1,14 @@
 import { Trans } from '@lingui/macro';
 import { Button } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
+import { isLoading, isSuccess, RemoteData } from 'fhir-react/lib/libs/remoteData';
+import { WithId } from 'fhir-react/lib/services/fhir';
+import { Encounter, Patient, QuestionnaireResponse } from 'fhir/r4b';
 import { useMemo } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-import { isLoading, isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
-import { WithId } from 'aidbox-react/lib/services/fhir';
-
-import { Encounter, Patient, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
-
 import { Empty } from 'src/components/Empty';
-import { EncounterStatusBadge } from 'src/components/EncounterStatusBadge';
+import { StatusBadge } from 'src/components/EncounterStatusBadge';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 import { formatHumanDate } from 'src/utils/date';
@@ -65,7 +63,7 @@ function useColumns(
                 title: <Trans>Status</Trans>,
                 dataIndex: 'status',
                 key: 'status',
-                render: (text, record) => <EncounterStatusBadge status={text} />,
+                render: (text, record) => <StatusBadge status={record.status} />,
             },
             {
                 title: <Trans>Actions</Trans>,
@@ -95,8 +93,7 @@ export const DocumentsList = ({ patient }: Props) => {
         patient,
         params.encounterId
             ? {
-                  resourceType: 'Encounter',
-                  id: params.encounterId,
+                  reference: `Encounter/${params.encounterId}`,
               }
             : undefined,
     );

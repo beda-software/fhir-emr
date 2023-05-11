@@ -1,7 +1,6 @@
+import { PractitionerRole } from 'fhir/r4b';
 import _ from 'lodash';
 import React, { useCallback, useMemo } from 'react';
-
-import { PractitionerRole } from 'shared/src/contrib/aidbox';
 
 import {
     days,

@@ -3,12 +3,7 @@
           aidbox.rest
           aidbox.search-parameter.v1
           aidbox.repository.v1
-          questionnaire-profile
-          hl7-fhir-uv-sdc.sdc-questionnaire
-          hl7-fhir-uv-sdc.sdc-questionnaire-extr-defn
-          hl7-fhir-uv-sdc.sdc-questionnaire-render
-          hl7-fhir-uv-sdc.sdc-questionnaire-pop-smap
-          hl7-fhir-uv-sdc.sdc-questionnaire-behave}
+          questionnaire-profile}
 
 
  box
@@ -49,8 +44,7 @@
                    :link [{:resourceType "Client" :id "patient-questionnaire"}]}
                   :federated-identity-signin {:engine "json-schema"
                                               :schema {:required ["jwt"]
-                                                       :properties {:request-method {:const "post"}
-                                                                    :jwt {:required ["iss", "aud", "sub"]
+                                                       :properties {:jwt {:required ["iss", "aud", "sub"]
                                                                           :properties {:iss {:const "https://appleid.apple.com"}
                                                                                        :aud {:enum ["software.beda.emr", "software.beda.fhirmhealth.fhirmhealth"]}
                                                                                        :sub {:type "string"
@@ -68,7 +62,17 @@
    :TokenIntrospector {:appleid
                        {:type "jwt"
                         :jwks_uri "https://appleid.apple.com/auth/keys"
-                        :jwt {:iss "https://appleid.apple.com"}}}}}
+                        :jwt {:iss "https://appleid.apple.com"}}}
+   :Endpoint {:emr-datasequence-records
+              {:identifier [{:system "https://fhir.emr.beda.software/CodeSystem/consent-subject"
+                             :value "emr-datasequence-records"}]
+               :status "active"
+               :name "Activity Data"
+               :address "https://ingest.emr.beda.software"
+               :connectionType {:system "https://spec.openapis.org/oas/v3.1.0"
+                                :code "openapi"}
+               :payloadType [{:coding [{:system "http://terminology.hl7.org/CodeSystem/endpoint-payload-type"
+                                        :code "urn:ihe:pcc:xphr:2007"}]}]}}}}
 
  encounter-participant-display
  {:zen/tags #{aidbox.search-parameter.v1/search-parameter}

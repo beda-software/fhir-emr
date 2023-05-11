@@ -3,13 +3,13 @@ import { t, Trans } from '@lingui/macro';
 import { Button, Col, Empty, Row } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { ColumnsType } from 'antd/lib/table';
+import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { Questionnaire } from 'fhir/r4b';
 import { Link } from 'react-router-dom';
 
-import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
-
 import config from 'shared/src/config';
-import { Questionnaire } from 'shared/src/contrib/aidbox';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
+import { processLaunchContextToFce } from 'shared/src/utils/converter';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { ModalTrigger } from 'src/components/ModalTrigger';
@@ -49,7 +49,7 @@ const columns: ColumnsType<Questionnaire> = [
                         {({ closeModal }) => (
                             <QuestionnaireResponseForm
                                 questionnaireLoader={questionnaireIdLoader(resource.id!)}
-                                launchContextParameters={resource.launchContext?.map((lc) => ({
+                                launchContextParameters={processLaunchContextToFce(resource)?.map((lc) => ({
                                     name: lc.name!,
                                     value: { string: 'undefined' },
                                 }))}
@@ -65,11 +65,7 @@ const columns: ColumnsType<Questionnaire> = [
                     <Button
                         type="link"
                         onClick={() =>
-                            window.open(
-                                `${config.sdcIdeUrl}/#/${resource.id}`,
-                                '_blank',
-                                'noopener,noreferrer',
-                            )
+                            window.open(`${config.sdcIdeUrl}/#/${resource.id}`, '_blank', 'noopener,noreferrer')
                         }
                     >
                         <Trans>Edit in SDC IDE</Trans>
@@ -92,8 +88,9 @@ export function QuestionnaireList() {
         ],
     });
 
-    const { pagination, questionnaireListRD, handleTableChange } =
-        useQuestionnaireList(columnsFilterValues as StringTypeColumnFilterValue[]);
+    const { pagination, questionnaireListRD, handleTableChange } = useQuestionnaireList(
+        columnsFilterValues as StringTypeColumnFilterValue[],
+    );
 
     return (
         <>
@@ -128,10 +125,7 @@ export function QuestionnaireList() {
                     locale={{
                         emptyText: (
                             <>
-                                <Empty
-                                    description={<Trans>No data</Trans>}
-                                    image={Empty.PRESENTED_IMAGE_SIMPLE}
-                                />
+                                <Empty description={<Trans>No data</Trans>} image={Empty.PRESENTED_IMAGE_SIMPLE} />
                             </>
                         ),
                     }}

@@ -1,0 +1,145 @@
+{
+  "questionnaire": "vitals",
+  "meta": {
+    "lastUpdated": "2023-04-06T02:20:25.903562Z",
+    "versionId": "20492",
+    "extension": [
+      {
+        "url": "ex:createdAt",
+        "valueInstant": "2023-04-06T02:19:51.712237Z"
+      }
+    ]
+  },
+  "encounter": {
+    "reference": "Encounter/e133b999-9e91-4ebd-967e-450bad770682"
+  },
+  "item": [
+    {
+      "answer": [
+        {
+          "valueString": "683e382b-fed4-433e-9b6d-a847a7953bc0"
+        }
+      ],
+      "linkId": "patientId"
+    },
+    {
+      "answer": [
+        {
+          "valueString": "Emily Nguyen"
+        }
+      ],
+      "linkId": "patientName"
+    },
+    {
+      "answer": [
+        {
+          "valueInteger": 180
+        }
+      ],
+      "linkId": "height"
+    },
+    {
+      "answer": [
+        {
+          "valueInteger": 80
+        }
+      ],
+      "linkId": "weight"
+    },
+    {
+      "answer": [
+        {
+          "valueInteger": 36
+        }
+      ],
+      "linkId": "temperature"
+    },
+    {
+      "answer": [
+        {
+          "valueInteger": 56
+        }
+      ],
+      "linkId": "oxygen-saturation"
+    },
+    {
+      "answer": [
+        {
+          "valueInteger": 100
+        }
+      ],
+      "linkId": "pulse-rate"
+    },
+    {
+      "answer": [
+        {
+          "valueInteger": 50
+        }
+      ],
+      "linkId": "respiratory-rate"
+    },
+    {
+      "item": [
+        {
+          "item": [
+            {
+              "answer": [
+                {
+                  "valueInteger": 45
+                }
+              ],
+              "linkId": "blood-pressure-systolic"
+            },
+            {
+              "answer": [
+                {
+                  "valueInteger": 67
+                }
+              ],
+              "linkId": "blood-pressure-diastolic"
+            }
+          ],
+          "linkId": "blood-pressure-systolic-diastolic"
+        },
+        {
+          "answer": [
+            {
+              "valueCoding": {
+                "code": "sitting",
+                "display": "Sitting"
+              }
+            }
+          ],
+          "linkId": "blood-pressure-positions"
+        },
+        {
+          "answer": [
+            {
+              "valueCoding": {
+                "code": "biceps-left",
+                "display": "Biceps left"
+              }
+            }
+          ],
+          "linkId": "blood-pressure-arm"
+        }
+      ],
+      "linkId": "blood-pressure"
+    },
+    {
+      "answer": [
+        {
+          "valueInteger": 24.69
+        }
+      ],
+      "linkId": "bmi"
+    }
+  ],
+  "resourceType": "QuestionnaireResponse",
+  "source": {
+    "reference": "Patient/683e382b-fed4-433e-9b6d-a847a7953bc0"
+  },
+  "status": "completed",
+  "id": "a583cc11-99c6-4719-acab-cb3fb72f5078",
+  "authored": "2023-04-06T02:20:25Z"
+}

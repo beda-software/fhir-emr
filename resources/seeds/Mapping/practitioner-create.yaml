@@ -11,13 +11,13 @@ body:
               - given:
                   - >-
                     $
-                    fhirpath("QuestionnaireResponse.repeat(item).where(linkId='first-name').answer.value.string").0
+                    fhirpath("QuestionnaireResponse.repeat(item).where(linkId='first-name').answer.valueString").0
                   - >-
                     $
-                    fhirpath("QuestionnaireResponse.repeat(item).where(linkId='middle-name').answer.value.string").0
+                    fhirpath("QuestionnaireResponse.repeat(item).where(linkId='middle-name').answer.valueString").0
                 family: >-
                   $
-                  fhirpath("QuestionnaireResponse.repeat(item).where(linkId='last-name').answer.value.string").0
+                  fhirpath("QuestionnaireResponse.repeat(item).where(linkId='last-name').answer.valueString").0
             resourceType: Practitioner
       - $as: specialtyItem
         $map: >-
@@ -30,7 +30,7 @@ body:
           resource:
             specialty:
               - coding:
-                  - $ specialtyItem.value.Coding
+                  - $ specialtyItem.valueCoding
             practitioner:
               uri: urn:uuid:practitioner-id
             resourceType: practitionerRole

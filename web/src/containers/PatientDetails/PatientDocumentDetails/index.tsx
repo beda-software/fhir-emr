@@ -1,6 +1,18 @@
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
 import Title from 'antd/lib/typography/Title';
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { useService } from 'fhir-react/lib/hooks/service';
+import { failure, isFailure, isSuccess } from 'fhir-react/lib/libs/remoteData';
+import {
+    extractBundleResources,
+    forceDeleteFHIRResource,
+    getFHIRResources,
+    patchFHIRResource,
+    WithId,
+} from 'fhir-react/lib/services/fhir';
+import { mapSuccess } from 'fhir-react/lib/services/service';
+import { Encounter, Patient, Practitioner, Provenance, QuestionnaireResponse } from 'fhir/r4b';
 import { ReactElement } from 'react';
 import {
     NavigateFunction,
@@ -13,20 +25,6 @@ import {
 } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { failure, isFailure, isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import {
-    extractBundleResources,
-    forceDeleteFHIRResource,
-    getFHIRResources,
-    patchFHIRResource,
-    WithId,
-} from 'aidbox-react/lib/services/fhir';
-import { mapSuccess } from 'aidbox-react/lib/services/service';
-
-import { Encounter, Patient, Provenance, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
-
 import { ReadonlyQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm/ReadonlyQuestionnaireResponseForm';
 import { BloodPressureReadOnly } from 'src/components/BaseQuestionnaireResponseForm/widgets';
 import { ConfirmActionButton } from 'src/components/ConfirmActionButton';
@@ -38,6 +36,7 @@ import {
     usePatientDocument,
 } from 'src/containers/PatientDetails/PatientDocument/usePatientDocument';
 import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
+import { selectCurrentUserRoleResource } from 'src/utils/role';
 
 import s from './PatientDocumentDetails.module.scss';
 
@@ -51,8 +50,7 @@ const deleteDraft = async (navigate: NavigateFunction, patientId?: string, qrId?
         return;
     }
     const response = await forceDeleteFHIRResource({
-        resourceType: 'QuestionnaireResponse',
-        id: qrId,
+        reference: `QuestionnaireResponse/${qrId}`,
     });
     if (isSuccess(response)) {
         navigate(`/patients/${patientId}/documents`);
@@ -128,7 +126,7 @@ function PatientDocumentDetailsReadonly(props: {
 
     usePatientHeaderLocationTitle({ title: formData.context.questionnaire?.name ?? '' });
 
-    const encounterCompleted = encounter?.status === 'completed';
+    const encounterCompleted = encounter?.status === 'finished';
 
     const patientId = location.pathname.split('/')[2];
     const qrCompleted = formData.context.questionnaireResponse.status === 'completed';
@@ -204,6 +202,7 @@ function PatientDocumentDetailsReadonly(props: {
 function PatientDocumentDetailsFormData(props: {
     questionnaireResponse: WithId<QuestionnaireResponse>;
     patient: WithId<Patient>;
+    author: WithId<Practitioner | Patient>;
     children: (props: PatientDocumentData) => ReactElement;
 }) {
     const { questionnaireResponse, children, patient } = props;
@@ -224,6 +223,7 @@ export function PatientDocumentDetails(props: Props) {
     const { patient } = props;
     const { response, manager } = usePatientDocumentDetails();
     const navigate = useNavigate();
+    const author = selectCurrentUserRoleResource();
 
     return (
         <RenderRemoteData
@@ -234,6 +234,7 @@ export function PatientDocumentDetails(props: Props) {
             {({ questionnaireResponse, encounter }) => (
                 <PatientDocumentDetailsFormData
                     questionnaireResponse={questionnaireResponse}
+                    author={author}
                     {...props}
                 >
                     {({ formData, provenance }) => (
@@ -265,6 +266,7 @@ export function PatientDocumentDetails(props: Props) {
                                             questionnaireResponse={questionnaireResponse}
                                             questionnaireId={questionnaireResponse.questionnaire}
                                             onSuccess={() => navigate(-2)}
+                                            author={author}
                                         />
                                     }
                                 />

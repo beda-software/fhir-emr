@@ -5,23 +5,23 @@ body:
     answer:
       $fn: ["linkId", "type"]
       $name: answer
-      $body: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='"+ linkId + "').answer.value."+type).0
+      $body: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='"+ linkId + "').answer."+type).0
   $body:
     $let:
-      patientId: $ answer('patientId', 'string')
-      patientName: $ answer('patientName', 'string')
+      patientId: $ answer('patientId', 'valueString')
+      patientName: $ answer('patientName', 'valueString')
       encounterId: $ fhirpath("Encounter.id")
-      temperature: $ answer('temperature', 'integer')
-      bloodPressureSystolic: $ answer('blood-pressure-systolic', 'integer')
-      bloodPressureDiastolic: $ answer('blood-pressure-diastolic', 'integer')
-      bloodPressureArm: $ answer('blood-pressure-arm', 'Coding')
-      bloodPressurePosition: $ answer('blood-pressure-positions', 'Coding')
-      pulseRate: $ answer('pulse-rate', 'integer')
-      respiratoryRate: $ answer('respiratory-rate', 'integer')
-      oxygenSaturation: $ answer('oxygen-saturation', 'integer')
-      height: $ answer('height', 'integer')
-      weight: $ answer('weight', 'integer')
-      bmi: $ answer('bmi', 'integer')
+      temperature: $ answer('temperature', 'valueInteger')
+      bloodPressureSystolic: $ answer('blood-pressure-systolic', 'valueInteger')
+      bloodPressureDiastolic: $ answer('blood-pressure-diastolic', 'valueInteger')
+      bloodPressureArm: $ answer('blood-pressure-arm', 'valueCoding')
+      bloodPressurePosition: $ answer('blood-pressure-positions', 'valueCoding')
+      pulseRate: $ answer('pulse-rate', 'valueInteger')
+      respiratoryRate: $ answer('respiratory-rate', 'valueInteger')
+      oxygenSaturation: $ answer('oxygen-saturation', 'valueInteger')
+      height: $ answer('height', 'valueInteger')
+      weight: $ answer('weight', 'valueInteger')
+      bmi: $ answer('bmi', 'valueInteger')
     $body:
       type: transaction
       entry:

@@ -1,9 +1,8 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button } from 'antd';
+import { Patient } from 'fhir/r4b';
 import { useState } from 'react';
-
-import { Patient } from 'shared/src/contrib/aidbox';
 
 import { DocumentsList } from 'src/containers/DocumentsList';
 import { ChooseDocumentToCreateModal } from 'src/containers/DocumentsList/ChooseDocumentToCreateModal';

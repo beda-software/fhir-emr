@@ -1,0 +1,489 @@
+{
+    "subjectType": [
+        "Encounter",
+        "Patient"
+    ],
+    "meta": {
+        "profile": [
+            "https://beda.software/beda-emr-questionnaire"
+        ],
+        "lastUpdated": "2023-04-10T03:43:34.792167Z",
+        "versionId": "694",
+        "extension": [
+            {
+                "url": "ex:createdAt",
+                "valueInstant": "2023-04-05T05:22:35.752466Z"
+            }
+        ]
+    },
+    "name": "GAD-7",
+    "item": [
+        {
+            "text": "DateTime",
+            "type": "dateTime",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                    "valueBoolean": true
+                },
+                {
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+                    "valueExpression": {
+                        "language": "text/fhirpath",
+                        "expression": "now()"
+                    }
+                }
+            ],
+            "linkId": "dateTime"
+        },
+        {
+            "text": "PatientId",
+            "type": "string",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                    "valueBoolean": true
+                },
+                {
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+                    "valueExpression": {
+                        "language": "text/fhirpath",
+                        "expression": "%Patient.id"
+                    }
+                }
+            ],
+            "linkId": "patientId"
+        },
+        {
+            "text": "PatientName",
+            "type": "string",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                    "valueBoolean": true
+                },
+                {
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+                    "valueExpression": {
+                        "language": "text/fhirpath",
+                        "expression": "%Patient.name.given[0] + ' ' + %Patient.name.family"
+                    }
+                }
+            ],
+            "linkId": "patientName"
+        },
+        {
+            "item": [
+                {
+                    "text": "Feeling nervous, anxious, or on edge",
+                    "type": "choice",
+                    "linkId": "69725-0",
+                    "required": true,
+                    "answerOption": [
+                        {
+                            "valueCoding": {
+                                "code": "LA6568-5",
+                                "system": "http://loinc.org",
+                                "display": "Not at all"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "LA6569-3",
+                                "system": "http://loinc.org",
+                                "display": "Several days"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "LA6570-1",
+                                "system": "http://loinc.org",
+                                "display": "More than half the days"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "LA6571-9",
+                                "system": "http://loinc.org",
+                                "display": "Nearly every day"
+                            }
+                        }
+                    ],
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                            "valueCodeableConcept": {
+                                "coding": [
+                                    {
+                                        "code": "inline-choice"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "text": "Not being able to stop or control worrying",
+                    "type": "choice",
+                    "linkId": "68509-9",
+                    "required": true,
+                    "answerOption": [
+                        {
+                            "valueCoding": {
+                                "code": "LA6568-5",
+                                "system": "http://loinc.org",
+                                "display": "Not at all"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "LA6569-3",
+                                "system": "http://loinc.org",
+                                "display": "Several days"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "LA6570-1",
+                                "system": "http://loinc.org",
+                                "display": "More than half the days"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "LA6571-9",
+                                "system": "http://loinc.org",
+                                "display": "Nearly every day"
+                            }
+                        }
+                    ],
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                            "valueCodeableConcept": {
+                                "coding": [
+                                    {
+                                        "code": "inline-choice"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "text": "Worrying too much about different things",
+                    "type": "choice",
+                    "linkId": "69733-4",
+                    "required": true,
+                    "answerOption": [
+                        {
+                            "valueCoding": {
+                                "code": "LA6568-5",
+                                "system": "http://loinc.org",
+                                "display": "Not at all"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "LA6569-3",
+                                "system": "http://loinc.org",
+                                "display": "Several days"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "LA6570-1",
+                                "system": "http://loinc.org",
+                                "display": "More than half the days"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "LA6571-9",
+                                "system": "http://loinc.org",
+                                "display": "Nearly every day"
+                            }
+                        }
+                    ],
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                            "valueCodeableConcept": {
+                                "coding": [
+                                    {
+                                        "code": "inline-choice"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "text": "Trouble relaxing",
+                    "type": "choice",
+                    "linkId": "69734-2",
+                    "required": true,
+                    "answerOption": [
+                        {
+                            "valueCoding": {
+                                "code": "LA6568-5",
+                                "system": "http://loinc.org",
+                                "display": "Not at all"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "LA6569-3",
+                                "system": "http://loinc.org",
+                                "display": "Several days"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "LA6570-1",
+                                "system": "http://loinc.org",
+                                "display": "More than half the days"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "LA6571-9",
+                                "system": "http://loinc.org",
+                                "display": "Nearly every day"
+                            }
+                        }
+                    ],
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                            "valueCodeableConcept": {
+                                "coding": [
+                                    {
+                                        "code": "inline-choice"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "text": "Being so restless that it is hard to sit still",
+                    "type": "choice",
+                    "linkId": "69735-9",
+                    "required": true,
+                    "answerOption": [
+                        {
+                            "valueCoding": {
+                                "code": "LA6568-5",
+                                "system": "http://loinc.org",
+                                "display": "Not at all"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "LA6569-3",
+                                "system": "http://loinc.org",
+                                "display": "Several days"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "LA6570-1",
+                                "system": "http://loinc.org",
+                                "display": "More than half the days"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "LA6571-9",
+                                "system": "http://loinc.org",
+                                "display": "Nearly every day"
+                            }
+                        }
+                    ],
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                            "valueCodeableConcept": {
+                                "coding": [
+                                    {
+                                        "code": "inline-choice"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "text": "Becoming easily annoyed or irritable",
+                    "type": "choice",
+                    "linkId": "69689-8",
+                    "required": true,
+                    "answerOption": [
+                        {
+                            "valueCoding": {
+                                "code": "LA6568-5",
+                                "system": "http://loinc.org",
+                                "display": "Not at all"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "LA6569-3",
+                                "system": "http://loinc.org",
+                                "display": "Several days"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "LA6570-1",
+                                "system": "http://loinc.org",
+                                "display": "More than half the days"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "LA6571-9",
+                                "system": "http://loinc.org",
+                                "display": "Nearly every day"
+                            }
+                        }
+                    ],
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                            "valueCodeableConcept": {
+                                "coding": [
+                                    {
+                                        "code": "inline-choice"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "text": "Feeling afraid, as if something awful might happen",
+                    "type": "choice",
+                    "linkId": "69736-7",
+                    "required": true,
+                    "answerOption": [
+                        {
+                            "valueCoding": {
+                                "code": "LA6568-5",
+                                "system": "http://loinc.org",
+                                "display": "Not at all"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "LA6569-3",
+                                "system": "http://loinc.org",
+                                "display": "Several days"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "LA6570-1",
+                                "system": "http://loinc.org",
+                                "display": "More than half the days"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "LA6571-9",
+                                "system": "http://loinc.org",
+                                "display": "Nearly every day"
+                            }
+                        }
+                    ],
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                            "valueCodeableConcept": {
+                                "coding": [
+                                    {
+                                        "code": "inline-choice"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "text": "GAD-7 Anxiety Severity Score",
+                    "type": "integer",
+                    "linkId": "anxiety-score",
+                    "readOnly": true,
+                    "required": true,
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                            "valueCodeableConcept": {
+                                "coding": [
+                                    {
+                                        "code": "anxiety-score"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
+                            "valueExpression": {
+                                "language": "text/fhirpath",
+                                "expression": "%QuestionnaireResponse.item.item.answer.children().children().where(code='LA6569-3').count() + %QuestionnaireResponse.item.item.answer.children().children().where(code='LA6570-1').count() * 2 + %QuestionnaireResponse.item.item.answer.children().children().where(code='LA6571-9').count() * 3"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "text": "Over the last two weeks, how often have you been bothered by the following problems?",
+            "type": "group",
+            "linkId": "gad-7"
+        }
+    ],
+    "resourceType": "Questionnaire",
+    "extension": [
+        {
+            "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext",
+            "extension": [
+                {
+                    "url": "name",
+                    "valueCoding": {
+                        "system": "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext",
+                        "code": "Patient"
+                    }
+                },
+                {
+                    "url": "type",
+                    "valueCode": "Patient"
+                }
+            ]
+        },
+        {
+            "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext",
+            "extension": [
+                {
+                    "url": "name",
+                    "valueCoding": {
+                        "system": "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext",
+                        "code": "Author"
+                    }
+                },
+                {
+                    "url": "type",
+                    "valueCode": "Resource"
+                }
+            ]
+        },
+        {
+            "url": "http://beda.software/fhir-extensions/questionnaire-mapper",
+            "valueReference": {
+                "reference": "Mapping/gad-7-extract"
+            }
+        }
+    ],
+    "status": "active",
+    "id": "gad-7",
+    "url": "https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/gad7"
+}

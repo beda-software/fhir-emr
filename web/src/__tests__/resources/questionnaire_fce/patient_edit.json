@@ -1,0 +1,125 @@
+{
+    "meta": {
+        "profile": ["https://beda.software/beda-emr-questionnaire"],
+        "lastUpdated": "2023-04-10T03:43:34.792167Z",
+        "createdAt": "2023-04-05T05:22:35.752466Z",
+        "versionId": "694"
+    },
+    "launchContext": [
+        {
+            "name": {
+                "code": "Patient",
+                "system": "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext"
+            },
+            "type": ["Patient"]
+        }
+    ],
+    "name": "edit-patient",
+    "item": [
+        {
+            "text": "patientId",
+            "type": "string",
+            "hidden": true,
+            "linkId": "patient-id",
+            "readOnly": true,
+            "initialExpression": {
+                "language": "text/fhirpath",
+                "expression": "%Patient.id"
+            }
+        },
+        {
+            "text": "Last name",
+            "type": "string",
+            "linkId": "last-name",
+            "required": true,
+            "initialExpression": {
+                "language": "text/fhirpath",
+                "expression": "%Patient.name.family"
+            }
+        },
+        {
+            "text": "First name",
+            "type": "string",
+            "linkId": "first-name",
+            "initialExpression": {
+                "language": "text/fhirpath",
+                "expression": "%Patient.name.given[0]"
+            }
+        },
+        {
+            "text": "Middle name",
+            "type": "string",
+            "linkId": "middle-name",
+            "initialExpression": {
+                "language": "text/fhirpath",
+                "expression": "%Patient.name.given[1]"
+            }
+        },
+        {
+            "text": "Birth date",
+            "type": "date",
+            "linkId": "birth-date",
+            "initialExpression": {
+                "language": "text/fhirpath",
+                "expression": "%Patient.birthDate"
+            }
+        },
+        {
+            "text": "Gender",
+            "type": "choice",
+            "linkId": "gender",
+            "answerOption": [
+                {
+                    "value": {
+                        "string": "male"
+                    }
+                },
+                {
+                    "value": {
+                        "string": "female"
+                    }
+                }
+            ],
+            "initialExpression": {
+                "language": "text/fhirpath",
+                "expression": "%Patient.gender"
+            }
+        },
+        {
+            "text": "SSN",
+            "type": "string",
+            "linkId": "ssn",
+            "initialExpression": {
+                "language": "text/fhirpath",
+                "expression": "%Patient.identifier.where(system='1.2.643.100.3').value"
+            }
+        },
+        {
+            "text": "Phone number",
+            "type": "string",
+            "linkId": "mobile",
+            "itemControl": {
+                "coding": [
+                    {
+                        "code": "phoneWidget"
+                    }
+                ]
+            },
+            "initialExpression": {
+                "language": "text/fhirpath",
+                "expression": "%Patient.telecom.where(system='phone').value"
+            }
+        }
+    ],
+    "mapping": [
+        {
+            "id": "patient-create",
+            "resourceType": "Mapping"
+        }
+    ],
+    "resourceType": "Questionnaire",
+    "title": "Edit patient",
+    "status": "active",
+    "id": "patient-edit",
+    "url": "https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/patient-edit"
+}

@@ -1,14 +1,20 @@
 import { t } from '@lingui/macro';
-import { Empty } from 'antd';
+import { Empty, Result } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
-
-import { isLoading, isSuccess } from 'aidbox-react/lib/libs/remoteData';
+import { WithId } from 'fhir-react';
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { Patient } from 'fhir/r4b';
 
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
 
 import { usePatientWearablesData, WearablesDataRecord } from './hooks';
+
+export interface PatientWearablesProps {
+    patient: WithId<Patient>;
+}
 
 const columns: ColumnsType<WearablesDataRecord> = [
     {
@@ -21,8 +27,7 @@ const columns: ColumnsType<WearablesDataRecord> = [
         title: t`Duration (min)`,
         dataIndex: 'duration',
         key: 'duration',
-        render: (_text, resource) =>
-            resource.duration !== undefined ? Math.round(resource.duration / 60) : undefined,
+        render: (_text, resource) => (resource.duration !== undefined ? Math.round(resource.duration / 60) : undefined),
     },
     {
         title: t`Start`,
@@ -40,13 +45,12 @@ const columns: ColumnsType<WearablesDataRecord> = [
         title: t`Calories`,
         dataIndex: 'calories',
         key: 'calories',
-        render: (_text, resource) =>
-            resource.energy !== undefined ? Math.round(resource.energy) : undefined,
+        render: (_text, resource) => (resource.energy !== undefined ? Math.round(resource.energy) : undefined),
     },
 ];
 
-export function PatientWearables() {
-    const [wearablesData] = usePatientWearablesData();
+export function PatientWearables(props: PatientWearablesProps) {
+    const [wearablesData] = usePatientWearablesData(props.patient);
 
     usePatientHeaderLocationTitle({ title: t`Wearables` });
 
@@ -54,13 +58,25 @@ export function PatientWearables() {
         <Table<WearablesDataRecord>
             locale={{
                 emptyText: (
-                    <>
-                        <Empty description={t`No data`} image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                    </>
+                    <RenderRemoteData remoteData={wearablesData}>
+                        {({ hasConsent }) => (
+                            <>
+                                {hasConsent ? (
+                                    <Empty description={t`No data`} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                                ) : (
+                                    <Result
+                                        status="info"
+                                        subTitle="Contact the patient to obtain their consent for accessing activity data"
+                                        title="Patient consent is required"
+                                    />
+                                )}
+                            </>
+                        )}
+                    </RenderRemoteData>
                 ),
             }}
             rowKey={(p) => p.sid}
-            dataSource={isSuccess(wearablesData) ? wearablesData.data : []}
+            dataSource={isSuccess(wearablesData) ? wearablesData.data.records : []}
             columns={columns}
             loading={isLoading(wearablesData) ? { indicator: SpinIndicator } : undefined}
         />

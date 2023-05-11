@@ -1,11 +1,9 @@
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { useService } from 'fhir-react/lib/hooks/service';
+import { extractBundleResources, getFHIRResources, WithId } from 'fhir-react/lib/services/fhir';
+import { mapSuccess } from 'fhir-react/lib/services/service';
+import { Practitioner, PractitionerRole } from 'fhir/r4b';
 import { Outlet, Route, Routes, useNavigate, useParams } from 'react-router-dom';
-
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { extractBundleResources, getFHIRResources, WithId } from 'aidbox-react/lib/services/fhir';
-import { mapSuccess } from 'aidbox-react/lib/services/service';
-
-import { Practitioner, PractitionerRole } from 'shared/src/contrib/aidbox';
 
 import { BasePageContent } from 'src/components/BaseLayout';
 import { Spinner } from 'src/components/Spinner';
@@ -30,7 +28,7 @@ export const PractitionerDetails = () => {
 
                 return {
                     practitioner: resources.Practitioner[0]!,
-                    practitionerRole: resources.PractitionerRole[0]!,
+                    practitionerRole: resources.PractitionerRole[0],
                 };
             },
         );
@@ -41,7 +39,7 @@ export const PractitionerDetails = () => {
             {({ practitioner, practitionerRole }) => {
                 return (
                     <>
-                        <PractitionerHeader practitioner={practitioner} />
+                        <PractitionerHeader practitioner={practitioner} practitionerRole={practitionerRole} />
                         <BasePageContent>
                             <Routes>
                                 <Route
@@ -62,29 +60,29 @@ export const PractitionerDetails = () => {
                                             />
                                         }
                                     />
-                                    <Route
-                                        path="/scheduling"
-                                        element={
-                                            <ScheduleCalendar practitionerRole={practitionerRole} />
-                                        }
-                                    />
-                                    <Route
-                                        path="/availability"
-                                        element={
-                                            <Availability
-                                                practitionerRole={practitionerRole}
-                                                onSave={(updatedPR: WithId<PractitionerRole>) => {
-                                                    navigate(
-                                                        `/practitioners/${practitioner.id}/scheduling`,
-                                                    );
-                                                    manager.set({
-                                                        practitioner,
-                                                        practitionerRole: updatedPR,
-                                                    });
-                                                }}
+                                    {practitionerRole ? (
+                                        <>
+                                            <Route
+                                                path="/scheduling"
+                                                element={<ScheduleCalendar practitionerRole={practitionerRole} />}
                                             />
-                                        }
-                                    />
+                                            <Route
+                                                path="/availability"
+                                                element={
+                                                    <Availability
+                                                        practitionerRole={practitionerRole}
+                                                        onSave={(updatedPR: WithId<PractitionerRole>) => {
+                                                            navigate(`/practitioners/${practitioner.id}/scheduling`);
+                                                            manager.set({
+                                                                practitioner,
+                                                                practitionerRole: updatedPR,
+                                                            });
+                                                        }}
+                                                    />
+                                                }
+                                            />
+                                        </>
+                                    ) : null}
                                 </Route>
                             </Routes>
                         </BasePageContent>

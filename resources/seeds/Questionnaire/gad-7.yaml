@@ -3,16 +3,20 @@ resourceType: Questionnaire
 name: GAD-7
 status: active
 subjectType:
-  - Encounter
-  - Patient
+    - Encounter
+    - Patient
 mapping:
     - id: gad-7-extract
       resourceType: Mapping
 launchContext:
-    - name: Patient
-      type: Patient
-    - name: Author
-      type: Resource
+    - name:
+          code: Patient
+      type: 
+        - Patient
+    - name:
+          code: Author
+      type: 
+        - Resource
 item:
     - text: DateTime
       type: dateTime
@@ -248,10 +252,6 @@ item:
                 expression: "%QuestionnaireResponse.item.item.answer.children().children().where(code='LA6569-3').count() + %QuestionnaireResponse.item.item.answer.children().children().where(code='LA6570-1').count() * 2 + %QuestionnaireResponse.item.item.answer.children().children().where(code='LA6571-9').count() * 3"
 
 meta:
-  profile:
-    - https://beda.software/beda-emr-questionnaire
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extr-defn
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-render
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-pop-smap
+    profile:
+        - https://beda.software/beda-emr-questionnaire
 url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/gad7

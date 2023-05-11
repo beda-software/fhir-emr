@@ -4727,6 +4727,11 @@
     "@types/qs" "*"
     "@types/serve-static" "*"
 
+"@types/fhir@0.0.36":
+  version "0.0.36"
+  resolved "https://registry.yarnpkg.com/@types/fhir/-/fhir-0.0.36.tgz#a4e4af716169b0e129e876c5ae8cbb5efeac6162"
+  integrity sha512-Krjb/2zKlJFjVkEPvs5QFjoYynDF2NaflR8fl4KREgJsvvHG7jrSrLdlS4zTB8E+1MgI1g0fWsz0FzniYmJlMg==
+
 "@types/glob@*", "@types/glob@^7.1.1":
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/@types/glob/-/glob-7.2.0.tgz#bc1b5bf3aa92f25bd5dd39f35c57361bdce5b2eb"
@@ -9365,6 +9370,13 @@ fetch-retry@^5.0.2:
   resolved "https://registry.yarnpkg.com/fetch-retry/-/fetch-retry-5.0.3.tgz#edfa3641892995f9afee94f25b168827aa97fe3d"
   integrity sha512-uJQyMrX5IJZkhoEUBQ3EjxkeiZkppBd5jS/fMTJmfZxLSiaQjv2zD0kTvuvkSH89uFvgSlB6ueGpjD3HWN7Bxw==
 
+"fhir-react@https://github.com/beda-software/fhir-react.git":
+  version "1.7.0"
+  resolved "https://github.com/beda-software/fhir-react.git#881d1190f67081a33dff04023ab0a1c81e6bc431"
+  dependencies:
+    axios "^0.21.2"
+    moment "^2.29.1"
+
 fhirpath@^3.3.1:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/fhirpath/-/fhirpath-3.3.1.tgz#cda17acd62243e3dac24e4b54f65dd5a37fee937"
@@ -10520,10 +10532,10 @@ humanize-ms@^1.2.1:
   dependencies:
     ms "^2.0.0"
 
-husky@^7.0.4:
-  version "7.0.4"
-  resolved "https://registry.yarnpkg.com/husky/-/husky-7.0.4.tgz#242048245dc49c8fb1bf0cc7cfb98dd722531535"
-  integrity sha512-vbaCKN2QLtP/vD4yvs6iz6hBEo6wkSzs8HpRah1Z6aGmF2KW5PdYuAd7uX5a+OyBZHBhd+TFLqgjUgytQr4RvQ==
+husky@^8.0.3:
+  version "8.0.3"
+  resolved "https://registry.yarnpkg.com/husky/-/husky-8.0.3.tgz#4936d7212e46d1dea28fef29bb3a108872cd9184"
+  integrity sha512-+dQSyqPh4x1hlO1swXBiNb2HzTDN1I2IGLQx1GrBuiqFJfoMrnZWwVmatvSiO+Iz8fBUnf+lekwNo4c2LlXItg==
 
 iconv-lite@0.4.24, iconv-lite@^0.4.24:
   version "0.4.24"

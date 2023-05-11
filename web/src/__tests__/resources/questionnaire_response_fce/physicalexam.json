@@ -1,0 +1,187 @@
+{
+  "questionnaire": "physical-exam",
+  "meta": {
+    "lastUpdated": "2023-04-06T02:05:52.434771Z",
+    "createdAt": "2023-04-06T02:05:32.668369Z",
+    "versionId": "20470"
+  },
+  "encounter": {
+    "id": "e133b999-9e91-4ebd-967e-450bad770682",
+    "resourceType": "Encounter"
+  },
+  "item": [
+    {
+      "item": [
+        {
+          "answer": [
+            {
+              "value": {
+                "string": "Well nourished, well developed, awake and alert, resting comfortably in no acute distress, cooperative on exam"
+              }
+            }
+          ],
+          "linkId": "general"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "string": "NCAT, PERRL, normal conjunctivae, nonicteric sclerae, bilateral EAC/TM clear, no nasal discharge, OP clear, moist mucous membranes"
+              }
+            }
+          ],
+          "linkId": "heent"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "string": "Supple, normal ROM, no lymphadenopathy/masses, nontender"
+              }
+            }
+          ],
+          "linkId": "neck"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "string": "RRR, normal S1/S2, no murmurs/gallops/rub"
+              }
+            }
+          ],
+          "linkId": "cardiovascular"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "string": "No respiratory distress, lungs CTAB: no rales, rhonchi, or wheeze"
+              }
+            }
+          ],
+          "linkId": "pulmonary"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "string": "Soft and non-tender with no guarding or rebound; +BS normoactive, no tympany on auscultation"
+              }
+            }
+          ],
+          "linkId": "abdominal"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "string": "Normal ROM of UE and LE, normal bulk and tone,"
+              }
+            }
+          ],
+          "linkId": "musculoskeletal"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "string": "Pulses intact with normal cap refill, no LE pitting edema or calf tenderness"
+              }
+            }
+          ],
+          "linkId": "extremities"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "string": "AAOx3, converses normally. CN II - XII grossly intact. Gait and coordination intact. 5+ BL UE/LE strength, no gross motor or sensory defects"
+              }
+            }
+          ],
+          "linkId": "neurologic"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "string": "Normal mood and affect. Judgement/competence is appropriate"
+              }
+            }
+          ],
+          "linkId": "psychiatric"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "string": "Warm, dry, and intact. No rashes, dermatoses, petechiae, or lesions"
+              }
+            }
+          ],
+          "linkId": "skin"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "string": "Normal sensation bilaterally on soles of feet with 10g monofilament"
+              }
+            }
+          ],
+          "linkId": "monofilament"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "string": "The chest wall is symmetric, without deformity, and is atraumatic in appearance"
+              }
+            }
+          ],
+          "linkId": "chest"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "string": "External genitalia without erythema, exudate or discharge"
+              }
+            }
+          ],
+          "linkId": "genitourinary-female"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "string": "Normal external anus and normal tone. No palpable masses, normal mucosa, brown stool. Hemoccult negative"
+              }
+            }
+          ],
+          "linkId": "rectal"
+        },
+        {
+          "answer": [
+            {
+              "value": {
+                "string": "No enlarged lymph nodes of occipital, pre- and postauricular, submandibular, anterior or posterior cervical, or supraclavicular identified"
+              }
+            }
+          ],
+          "linkId": "lymphatic"
+        }
+      ],
+      "linkId": "physical-exam-group"
+    }
+  ],
+  "resourceType": "QuestionnaireResponse",
+  "source": {
+    "id": "683e382b-fed4-433e-9b6d-a847a7953bc0",
+    "resourceType": "Patient"
+  },
+  "status": "completed",
+  "id": "288fd914-b836-47dd-863a-e7d86a923f28",
+  "authored": "2023-04-06T02:05:51Z"
+}

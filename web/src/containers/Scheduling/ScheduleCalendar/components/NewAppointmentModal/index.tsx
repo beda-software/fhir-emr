@@ -1,8 +1,8 @@
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { PractitionerRole } from 'fhir/r4b';
 
-import { PractitionerRole } from 'shared/src/contrib/aidbox';
 import { inMemorySaveService } from 'shared/src/hooks/questionnaire-response-form-data';
-import { formatFHIRDate, formatFHIRDateTime } from 'shared/src/utils/date';
+import { formatFHIRDateTime } from 'shared/src/utils/date';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { Modal } from 'src/components/Modal';
@@ -20,10 +20,7 @@ interface NewAppointmentModalProps {
 
 export function NewAppointmentModal(props: NewAppointmentModalProps) {
     const { showModal, start, onOk, onCancel } = props;
-    const appointmentStartDate = start ? formatFHIRDate(start) : formatFHIRDate(new Date());
-    const appointmentStartDateTime = start
-        ? formatFHIRDateTime(start)
-        : formatFHIRDateTime(new Date());
+    const appointmentStartDateTime = start ? formatFHIRDateTime(start) : formatFHIRDateTime(new Date());
     const { response, onSubmit, readOnly } = useQuestionnaireResponseForm({
         onSuccess: onOk,
         questionnaireResponseSaveService: inMemorySaveService,
@@ -38,15 +35,12 @@ export function NewAppointmentModal(props: NewAppointmentModalProps) {
                 resource: props.practitionerRole,
             },
             {
-                name: 'appointmentStartDate',
-                value: {
-                    string: appointmentStartDate,
-                },
-            },
-            {
-                name: 'appointmentStartDateTime',
-                value: {
-                    string: appointmentStartDateTime,
+                name: 'appointment',
+                resource: {
+                    resourceType: 'Appointment',
+                    start: appointmentStartDateTime,
+                    status: 'pending',
+                    participant: [{ status: 'accepted' }],
                 },
             },
         ],
@@ -56,11 +50,7 @@ export function NewAppointmentModal(props: NewAppointmentModalProps) {
             <RenderRemoteData remoteData={response} renderLoading={Spinner}>
                 {(formData) => {
                     return (
-                        <BaseQuestionnaireResponseForm
-                            formData={formData}
-                            onSubmit={onSubmit}
-                            readOnly={readOnly}
-                        />
+                        <BaseQuestionnaireResponseForm formData={formData} onSubmit={onSubmit} readOnly={readOnly} />
                     );
                 }}
             </RenderRemoteData>

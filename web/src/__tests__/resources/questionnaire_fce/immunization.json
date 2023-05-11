@@ -1,0 +1,182 @@
+{
+    "subjectType": [
+        "Encounter",
+        "Patient"
+    ],
+    "meta": {
+        "profile": [
+            "https://beda.software/beda-emr-questionnaire"
+        ],
+        "lastUpdated": "2023-04-10T03:43:34.792167Z",
+        "createdAt": "2023-04-05T05:22:35.752466Z",
+        "versionId": "694"
+    },
+    "launchContext": [
+        {
+            "name": {
+                "code": "Patient",
+                "system": "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext"
+            },
+            "type": [
+                "Patient"
+            ]
+        },
+        {
+            "name": {
+                "code": "Author",
+                "system": "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext"
+            },
+            "type": [
+                "Resource"
+            ]
+        }
+    ],
+    "name": "Immunization",
+    "item": [
+        {
+            "text": "DateTime",
+            "type": "dateTime",
+            "hidden": true,
+            "linkId": "dateTime",
+            "initialExpression": {
+                "language": "text/fhirpath",
+                "expression": "now()"
+            }
+        },
+        {
+            "text": "EncounterId",
+            "type": "string",
+            "hidden": true,
+            "linkId": "encounterId",
+            "initialExpression": {
+                "language": "text/fhirpath",
+                "expression": "%Encounter.id"
+            }
+        },
+        {
+            "text": "PatientId",
+            "type": "string",
+            "hidden": true,
+            "linkId": "patientId",
+            "required": true,
+            "initialExpression": {
+                "language": "text/fhirpath",
+                "expression": "%Patient.id"
+            }
+        },
+        {
+            "text": "PatientName",
+            "type": "string",
+            "hidden": true,
+            "linkId": "patientName",
+            "initialExpression": {
+                "language": "text/fhirpath",
+                "expression": "%Patient.name.given[0] + ' ' + %Patient.name.family"
+            }
+        },
+        {
+            "text": "Vaccine",
+            "type": "choice",
+            "linkId": "vaccine-code",
+            "required": true,
+            "answerOption": [
+                {
+                    "value": {
+                        "Coding": {
+                            "code": "143",
+                            "system": "http://hl7.org/fhir/sid/cvx",
+                            "display": "Adenovirus types 4 and 7"
+                        }
+                    }
+                },
+                {
+                    "value": {
+                        "Coding": {
+                            "code": "24",
+                            "system": "http://hl7.org/fhir/sid/cvx",
+                            "display": "anthrax"
+                        }
+                    }
+                },
+                {
+                    "value": {
+                        "Coding": {
+                            "code": "173",
+                            "system": "http://hl7.org/fhir/sid/cvx",
+                            "display": "cholera, BivWC"
+                        }
+                    }
+                },
+                {
+                    "value": {
+                        "Coding": {
+                            "code": "56",
+                            "system": "http://hl7.org/fhir/sid/cvx",
+                            "display": "dengue fever"
+                        }
+                    }
+                },
+                {
+                    "value": {
+                        "Coding": {
+                            "code": "12",
+                            "system": "http://hl7.org/fhir/sid/cvx",
+                            "display": "diphtheria antitoxin"
+                        }
+                    }
+                },
+                {
+                    "value": {
+                        "Coding": {
+                            "code": "52",
+                            "system": "http://hl7.org/fhir/sid/cvx",
+                            "display": "Hep A, adult"
+                        }
+                    }
+                },
+                {
+                    "value": {
+                        "Coding": {
+                            "code": "58",
+                            "system": "http://hl7.org/fhir/sid/cvx",
+                            "display": "Hep C"
+                        }
+                    }
+                },
+                {
+                    "value": {
+                        "Coding": {
+                            "code": "60",
+                            "system": "http://hl7.org/fhir/sid/cvx",
+                            "display": "herpes simplex 2"
+                        }
+                    }
+                },
+                {
+                    "value": {
+                        "Coding": {
+                            "code": "61",
+                            "system": "http://hl7.org/fhir/sid/cvx",
+                            "display": "HIV"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Date of injection",
+            "type": "date",
+            "linkId": "date-of-injection"
+        }
+    ],
+    "mapping": [
+        {
+            "id": "immunization-extract",
+            "resourceType": "Mapping"
+        }
+    ],
+    "resourceType": "Questionnaire",
+    "status": "active",
+    "id": "immunization",
+    "url": "https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/immunization"
+}

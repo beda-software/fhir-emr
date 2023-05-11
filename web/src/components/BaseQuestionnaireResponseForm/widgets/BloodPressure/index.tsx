@@ -2,6 +2,7 @@ import { Form, InputNumber, InputNumberProps } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import { GroupItemProps } from 'sdc-qrf';
 
+import { Coding } from 'shared/src/contrib/aidbox';
 import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
@@ -47,16 +48,12 @@ export function BloodPressure({ parentPath, questionItem }: GroupItemProps) {
 
     const [firstItem, secondItem] = questionItem.item;
 
-    const { unit } = questionItem as { unit?: string };
+    const { unit } = questionItem as { unit?: Coding };
 
     return (
         <div className={s.row}>
             <div className={s.inputWrapper}>
-                <BloodPressureItem
-                    parentPath={groupFieldName}
-                    questionItem={firstItem!}
-                    unit={unit}
-                />
+                <BloodPressureItem parentPath={groupFieldName} questionItem={firstItem!} unit={unit?.display} />
             </div>
 
             <div className={s.splitterWrapper}>
@@ -64,11 +61,7 @@ export function BloodPressure({ parentPath, questionItem }: GroupItemProps) {
             </div>
 
             <div className={s.inputWrapper}>
-                <BloodPressureItem
-                    parentPath={groupFieldName}
-                    questionItem={secondItem!}
-                    unit={unit}
-                />
+                <BloodPressureItem parentPath={groupFieldName} questionItem={secondItem!} unit={unit?.display} />
             </div>
         </div>
     );

@@ -1,0 +1,77 @@
+{
+  "questionnaire": "immunization",
+  "meta": {
+    "lastUpdated": "2023-04-06T02:39:03.018390Z",
+    "versionId": "20519",
+    "extension": [
+      {
+        "url": "ex:createdAt",
+        "valueInstant": "2023-04-06T02:38:51.964987Z"
+      }
+    ]
+  },
+  "encounter": {
+    "reference": "Encounter/e133b999-9e91-4ebd-967e-450bad770682"
+  },
+  "item": [
+    {
+      "answer": [
+        {
+          "valueDateTime": "2023-04-06T02:38:50+00:00"
+        }
+      ],
+      "linkId": "dateTime"
+    },
+    {
+      "answer": [
+        {
+          "valueString": "e133b999-9e91-4ebd-967e-450bad770682"
+        }
+      ],
+      "linkId": "encounterId"
+    },
+    {
+      "answer": [
+        {
+          "valueString": "683e382b-fed4-433e-9b6d-a847a7953bc0"
+        }
+      ],
+      "linkId": "patientId"
+    },
+    {
+      "answer": [
+        {
+          "valueString": "Emily Nguyen"
+        }
+      ],
+      "linkId": "patientName"
+    },
+    {
+      "answer": [
+        {
+          "valueCoding": {
+            "code": "173",
+            "system": "http://hl7.org/fhir/sid/cvx",
+            "display": "cholera, BivWC"
+          }
+        }
+      ],
+      "linkId": "vaccine-code"
+    },
+    {
+      "answer": [
+        {
+          "valueDate": "2023-04-13"
+        }
+      ],
+      "linkId": "date-of-injection"
+    }
+  ],
+  "resourceType": "QuestionnaireResponse",
+  "source": {
+    "reference": "Patient/683e382b-fed4-433e-9b6d-a847a7953bc0"
+  },
+  "status": "completed",
+  "id": "5d59e534-a7ce-4254-8a41-31b3895ea525",
+  "authored": "2023-04-06T02:39:02Z"
+}

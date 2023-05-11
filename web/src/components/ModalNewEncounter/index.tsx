@@ -1,14 +1,14 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 import { Button, notification } from 'antd';
+import { Patient } from 'fhir/r4b';
 import { useMemo, useState } from 'react';
 
-import { Patient } from 'shared/src/contrib/aidbox';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { Modal } from 'src/components/Modal';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
-import { Role, selectCurrentUserRole } from 'src/utils/role';
+import { Role, matchCurrentUserRole } from 'src/utils/role';
 
 export interface ModalNewEncounterProps {
     patient: Patient;
@@ -19,9 +19,9 @@ export const ModalNewEncounter = ({ patient, reloadEncounter }: ModalNewEncounte
     const [isModalVisible, setIsModalVisible] = useState(false);
     const title = useMemo(
         () =>
-            selectCurrentUserRole({
-                [Role.Admin]: t`Create Encounter`,
-                [Role.Patient]: t`Request Appointment`,
+            matchCurrentUserRole({
+                [Role.Admin]: () => t`Create Encounter`,
+                [Role.Patient]: () => t`Request Appointment`,
             }),
         [],
     );

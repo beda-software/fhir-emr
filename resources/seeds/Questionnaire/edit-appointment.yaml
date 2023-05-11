@@ -5,9 +5,11 @@ mapping:
     - id: edit-appointment-extract
       resourceType: Mapping
 launchContext:
-    - name: CurrentAppointmentId
-      type: string
-      description: The edited appointment ID
+    - name:
+          code: CurrentAppointment
+      type: 
+        - Appointment
+      description: The edited appointment
 contained:
     - resourceType: Bundle
       id: CurrentAppointmentBundle
@@ -15,9 +17,9 @@ contained:
       entry:
           - request:
                 method: GET
-                url: /Appointment?_id={{%CurrentAppointmentId}}
+                url: /Appointment?_id={{%CurrentAppointment.id}}
 sourceQueries:
-    - localRef: 'Bundle#CurrentAppointmentBundle'
+    - localRef: "Bundle#CurrentAppointmentBundle"
 item:
     - type: group
       linkId: root-group
@@ -28,7 +30,7 @@ item:
             hidden: true
             initialExpression:
                 language: text/fhirpath
-                expression: '%CurrentAppointmentId'
+                expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.id"
           - text: Practitioner
             type: reference
             referenceResource:
@@ -38,7 +40,7 @@ item:
             linkId: practitioner-role
             answerExpression:
                 language: application/x-fhir-query
-                expression: 'PractitionerRole?_assoc=practitioner'
+                expression: "PractitionerRole?_assoc=practitioner"
             choiceColumn:
                 - forDisplay: true
                   path: >-
@@ -46,17 +48,19 @@ item:
                       practitioner.resource.name.family + ' - ' + specialty.first().coding.display
             initialExpression:
                 language: text/fhirpath
-                expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(resourceType='PractitionerRole')"
+                expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(reference.startsWith('PractitionerRole'))"
           - text: Patient
             type: reference
+            referenceResource:
+                - Patient
             required: true
             linkId: patient
             initialExpression:
                 language: text/fhirpath
-                expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(resourceType='Patient')"
+                expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.participant.actor.where(reference.startsWith('Patient'))"
             answerExpression:
                 language: application/x-fhir-query
-                expression: 'Patient'
+                expression: "Patient"
             choiceColumn:
                 - forDisplay: true
                   path: "name.given.first() + ' ' + name.family"
@@ -86,11 +90,11 @@ item:
                           display: A follow up visit
             initialExpression:
                 language: text/fhirpath
-                expression: '%CurrentAppointmentBundle.entry[0].resource.entry.resource.serviceType.coding'
+                expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.serviceType.coding"
             enableBehavior: any
             enableWhen:
                 - question: practitioner-role
-                  operator: 'exists'
+                  operator: "exists"
                   answer:
                       boolean: true
           - text: Start datetime
@@ -99,12 +103,8 @@ item:
             linkId: start-datetime
             initialExpression:
                 language: text/fhirpath
-                expression: '%CurrentAppointmentBundle.entry[0].resource.entry.resource.start'
+                expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.start"
 url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/edit-appointment
 meta:
-  profile:
-    - https://beda.software/beda-emr-questionnaire
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extr-defn
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-render
-    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-pop-smap
+    profile:
+        - https://beda.software/beda-emr-questionnaire
