@@ -5,12 +5,31 @@ import { signinWithIdentityToken } from 'src/services/auth';
 
 declare const AppleID: any;
 
+interface AppleAuthenticationResponse {
+    // 'user' information is only available the first time the user authorizes the app.
+    // Consecutive authorization requests will have this field missing.
+    // For more information:
+    // https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/configuring_your_webpage_for_sign_in_with_apple#3331292
+    user?: {
+        email: string;
+        name: {
+            firstName: string;
+            lastName: string;
+        };
+    };
+    authorization: {
+        id_token: string;
+    };
+}
+
 export function useAppleAuthentication() {
     useEffect(() => {
         const onSignInSuccess = (event: any) => {
-            signinWithIdentityToken(event.detail.user, event.detail.authorization.id_token).then(
-                () => window.location.reload(),
-            );
+            const authentication: AppleAuthenticationResponse = event.detail;
+            signinWithIdentityToken(
+                authentication.user?.name,
+                authentication.authorization.id_token,
+            ).then(() => window.location.reload());
         };
         const onSignInFailure = (event: any) => {
             const error = event.detail?.error;
