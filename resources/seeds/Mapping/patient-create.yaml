@@ -34,7 +34,7 @@ body:
                       method: POST
                   $then:
                       url: $ "/Patient/" + patientId
-                      method: PUT
+                      method: PATCH
               resource:
                   name:
                       - given:
