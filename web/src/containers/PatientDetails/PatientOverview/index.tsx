@@ -159,7 +159,12 @@ function useStartEncounter(props: StartEncounterProps) {
     const { response, onSubmit } = useQuestionnaireResponseForm({
         questionnaireLoader: { type: 'id', questionnaireId: 'encounter-create-from-appointment' },
         questionnaireResponseSaveService: inMemorySaveService,
-        launchContextParameters: [{ name: 'AppointmentId', valueString: appointmentId }],
+        launchContextParameters: [
+            {
+                name: 'Appointment',
+                resource: { id: appointmentId, resourceType: 'Appointment' } as Appointment,
+            },
+        ],
         onSuccess: ({ extractedBundle }: { extractedBundle: Bundle<WithId<Encounter>>[] }) => {
             const encounter = extractBundleResources(extractedBundle[0]!).Encounter[0]!;
             navigateToEncounter(encounter.subject?.id!, encounter.id);
