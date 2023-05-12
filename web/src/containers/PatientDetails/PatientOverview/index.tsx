@@ -4,6 +4,7 @@ import { Button, notification } from 'antd';
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { extractBundleResources, WithId } from 'fhir-react/lib/services/fhir';
+import { parseFHIRReference } from 'fhir-react/lib/utils/fhir';
 import { Appointment, Bundle, Encounter, Patient } from 'fhir/r4b';
 import _ from 'lodash';
 import { Link, useLocation } from 'react-router-dom';
@@ -167,7 +168,8 @@ function useStartEncounter(props: StartEncounterProps) {
         ],
         onSuccess: ({ extractedBundle }: { extractedBundle: Bundle<WithId<Encounter>>[] }) => {
             const encounter = extractBundleResources(extractedBundle[0]!).Encounter[0]!;
-            navigateToEncounter(encounter.subject?.id!, encounter.id);
+            const patientId = parseFHIRReference(encounter.subject!).id!;
+            navigateToEncounter(patientId, encounter.id);
         },
     });
 

@@ -5,6 +5,7 @@ import { useService } from 'fhir-react/lib/hooks/service';
 import { isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { extractBundleResources, getFHIRResources, WithId } from 'fhir-react/lib/services/fhir';
 import { mapSuccess } from 'fhir-react/lib/services/service';
+import { parseFHIRReference } from 'fhir-react/lib/utils/fhir';
 import { Appointment, Bundle, Encounter, PractitionerRole } from 'fhir/r4b';
 
 import { inMemorySaveService } from 'shared/src/hooks/questionnaire-response-form-data';
@@ -56,7 +57,8 @@ function useAppointmentDetailsModal(props: Props) {
         ],
         onSuccess: ({ extractedBundle }: { extractedBundle: Bundle<WithId<Encounter>>[] }) => {
             const encounter = extractBundleResources(extractedBundle[0]!).Encounter[0]!;
-            navigateToEncounter(encounter.subject?.id!, encounter.id);
+            const patientId = parseFHIRReference(encounter.subject!).id!;
+            navigateToEncounter(patientId, encounter.id);
             onClose();
         },
     });
@@ -80,11 +82,11 @@ export function AppointmentDetailsModal(props: Props) {
 
         if (encounterResponse.data.encounter) {
             const { encounter } = encounterResponse.data;
-
+            const patientId = parseFHIRReference(encounter.subject!).id!;
             return [
                 <Button
                     key="go-to-the-encounter"
-                    onClick={() => navigateToEncounter(encounter.subject?.id!, encounter.id)}
+                    onClick={() => navigateToEncounter(patientId, encounter.id)}
                     type="primary"
                 >
                     <Trans>Go to the encounter</Trans>
