@@ -91,6 +91,11 @@ function getUpdatedPropertiesFromItem(item: any) {
     if (item.itemPopulationContext) {
         processItemPopulationContex(item, updatedProperties);
     }
+
+    updatedProperties.enableWhen = item.enableWhen?.map((item: FHIRQuestionnaireItemEnableWhen) => {
+        return processEnableWhenItem(item);
+    });
+
     return updatedProperties;
 }
 

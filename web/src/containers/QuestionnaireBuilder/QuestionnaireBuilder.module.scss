@@ -1,0 +1,37 @@
+.prompts {
+    margin: -4px 0 16px;
+}
+
+.prompt {
+    padding: 4px 0;
+    font-size: 14px;
+    line-height: 16px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+}
+
+.content {
+    background-color: #fff;
+    box-shadow: 0px 6px 16px #e6ebf5;
+    padding: 32px;
+    border-radius: 10px;
+    display: flex;
+}
+
+.title {
+    margin-bottom: 30px !important;
+}
+
+.promptForm {
+    flex: 2;
+    border-right: 1px solid rgba(5, 5, 5, 0.06);
+    margin-right: 30px;
+    padding-right: 30px;
+}
+
+.questionnaireForm {
+    flex: 3;
+}

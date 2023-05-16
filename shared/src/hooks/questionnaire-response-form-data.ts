@@ -88,6 +88,25 @@ export function questionnaireIdWOAssembleLoader(questionnaireId: string): Questi
     };
 }
 
+export function toQuestionnaireResponseFormData(
+    questionnaire: FHIRQuestionnaire,
+    questionnaireResponse: FHIRQuestionnaireResponse,
+    launchContextParameters: ParametersParameter[] = [],
+): QuestionnaireResponseFormData {
+    return {
+        context: {
+            // TODO: we can't change type inside qrf utils
+            questionnaire: toFirstClassExtension(questionnaire),
+            questionnaireResponse: toFirstClassExtension(questionnaireResponse),
+            launchContextParameters: launchContextParameters || [],
+        },
+        formValues: mapResponseToForm(
+            toFirstClassExtension(questionnaireResponse),
+            toFirstClassExtension(questionnaire),
+        ),
+    };
+}
+
 /*
     Hook uses for:
     On mount:
@@ -157,18 +176,7 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
             ...populatedQR,
         };
 
-        return {
-            context: {
-                // TODO: we can't change type inside qrf utils
-                questionnaire: toFirstClassExtension(questionnaire),
-                questionnaireResponse: toFirstClassExtension(questionnaireResponse),
-                launchContextParameters: launchContextParameters || [],
-            },
-            formValues: mapResponseToForm(
-                toFirstClassExtension(questionnaireResponse),
-                toFirstClassExtension(questionnaire),
-            ),
-        };
+        return toQuestionnaireResponseFormData(questionnaire, questionnaireResponse, launchContextParameters);
     });
 }
 

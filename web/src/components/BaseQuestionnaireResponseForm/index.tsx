@@ -49,10 +49,9 @@ import {
 import { Display } from './widgets/display';
 import { QuestionReference } from './widgets/reference';
 
-
 export interface BaseQuestionnaireResponseFormProps {
     formData: QuestionnaireResponseFormData;
-    onSubmit: (formData: QuestionnaireResponseFormData) => Promise<any>;
+    onSubmit?: (formData: QuestionnaireResponseFormData) => Promise<any>;
     readOnly?: boolean;
     itemControlQuestionItemComponents?: ItemControlQuestionItemComponentMapping;
     itemControlGroupItemComponents?: ItemControlGroupItemComponentMapping;
@@ -102,17 +101,10 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         _.debounce(async (currentFormValues: FormItems) => {
             if (!autoSave || !questionnaireId) return;
 
-            if (
-                !_.isEqual(currentFormValues, previousFormValuesRef.current) &&
-                setDraftSaveResponse
-            ) {
+            if (!_.isEqual(currentFormValues, previousFormValuesRef.current) && setDraftSaveResponse) {
                 setDraftSaveResponse(loading);
                 setDraftSaveResponse(
-                    await saveQuestionnaireResponseDraft(
-                        questionnaireId,
-                        formData,
-                        currentFormValues,
-                    ),
+                    await saveQuestionnaireResponseDraft(questionnaireId, formData, currentFormValues),
                 );
                 previousFormValuesRef.current = _.cloneDeep(currentFormValues);
             }
@@ -132,16 +124,14 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                     if (questionnaireId && draftSaveResponse && isSuccess(draftSaveResponse)) {
                         formData.context.questionnaireResponse.id = draftSaveResponse.data.id;
                     }
-                    await onSubmit({ ...formData, formValues });
+                    await onSubmit?.({ ...formData, formValues });
                     setIsLoading(false);
                 })}
                 className={classNames(s.form, 'app-form')}
             >
                 <QuestionnaireResponseFormProvider
                     formValues={formValues}
-                    setFormValues={(values, fieldPath, value) =>
-                        setValue(fieldPath.join('.'), value)
-                    }
+                    setFormValues={(values, fieldPath, value) => setValue(fieldPath.join('.'), value)}
                     groupItemComponent={Group}
                     itemControlGroupItemComponents={{
                         col: Col,
@@ -183,7 +173,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                                 context={calcInitialContext(formData.context, formValues)}
                             />
                         </div>
-                        {!readOnly && (
+                        {!readOnly && onSubmit && (
                             <div className={classNames(s.footer, 'form__footer')}>
                                 {onCancel && (
                                     <Button key="back" onClick={onCancel}>
