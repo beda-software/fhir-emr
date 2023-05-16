@@ -6,6 +6,7 @@ import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { useService } from 'fhir-react/lib/hooks/service';
 import { isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { getFHIRResource, saveFHIRResource } from 'fhir-react/lib/services/fhir';
+import { formatFHIRDateTime } from 'fhir-react/lib/utils/date';
 import { formatError } from 'fhir-react/lib/utils/error';
 import { Encounter, Patient } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
@@ -37,6 +38,10 @@ function useEncounterDetails() {
             const saveResponse = await saveFHIRResource<Encounter>({
                 ...encounter,
                 status: 'finished',
+                period: {
+                    start: encounter.period?.start,
+                    end: formatFHIRDateTime(new Date()),
+                },
             });
 
             if (isSuccess(saveResponse)) {
@@ -69,21 +74,13 @@ export const EncounterDetails = ({ patient }: Props) => {
                         <>
                             <div style={{ display: 'flex', gap: 32 }}>
                                 {!isEncounterCompleted ? (
-                                    <Button
-                                        icon={<PlusOutlined />}
-                                        type="primary"
-                                        onClick={() => setModalOpened(true)}
-                                    >
+                                    <Button icon={<PlusOutlined />} type="primary" onClick={() => setModalOpened(true)}>
                                         <span>
                                             <Trans>Create document</Trans>
                                         </span>
                                     </Button>
                                 ) : null}
-                                <Button
-                                    icon={<CheckOutlined />}
-                                    type="primary"
-                                    onClick={() => completeEncounter()}
-                                >
+                                <Button icon={<CheckOutlined />} type="primary" onClick={() => completeEncounter()}>
                                     <span>
                                         {isEncounterCompleted ? (
                                             <Trans>Encounter completed</Trans>

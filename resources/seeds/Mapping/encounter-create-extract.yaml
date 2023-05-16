@@ -18,9 +18,6 @@ body:
     startTime: >-
       $
       fhirpath("QuestionnaireResponse.repeat(item).where(linkId='start-time').answer.valueTime").0
-    endTime: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='end-time').answer.valueTime").0
     patientName: >-
       $
       fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.valueString").0
@@ -51,8 +48,7 @@ body:
               system: $ service.system
               display: $ service.display
             period:
-              start: $ startDate + 'T' + startTime
-              end: $ startDate + 'T' + endTime
+              start: $ startDate + "T" + startTime
             status: in-progress
             subject:
               id: $ patientId || patientReferenceSplit.1
