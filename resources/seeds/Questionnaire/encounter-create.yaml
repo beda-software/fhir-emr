@@ -57,22 +57,12 @@ item:
             code: follow-up
             display: A follow up visit
   - text: Date
-    type: date
+    type: dateTime
     linkId: date
     initialExpression:
       language: text/fhirpath
-      expression: "today()"
-  - text: Time
-    type: group
-    linkId: Time period
-    itemControl:
-      coding:
-        - code: time-range-picker
-    item:
-      - type: time
-        linkId: start-time
-      - type: time
-        linkId: end-time
+      expression: "now()"
+
 meta:
   profile:
     - https://beda.software/beda-emr-questionnaire

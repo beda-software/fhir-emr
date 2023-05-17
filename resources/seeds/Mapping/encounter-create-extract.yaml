@@ -12,12 +12,9 @@ body:
     patientReference: >-
       $
       fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patient-reference').answer.valueReference").0
-    startDate: >-
+    startDateTime: >-
       $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='date').answer.valueDate").0
-    startTime: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='start-time').answer.valueTime").0
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='date').answer.valueDateTime").0
     patientName: >-
       $
       fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.valueString").0
@@ -48,7 +45,7 @@ body:
               system: $ service.system
               display: $ service.display
             period:
-              start: $ startDate + "T" + startTime
+              start: $ startDateTime
             status: in-progress
             subject:
               id: $ patientId || patientReferenceSplit.1
