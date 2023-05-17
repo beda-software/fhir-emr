@@ -9,8 +9,7 @@ export function useSearchBar(props: SearchBarProps): SearchBarData {
         return columns.map((column) => ({ column }));
     }, [columns]);
 
-    const [columnsFilterValues, setColumnsFilterValues] =
-        useState<ColumnFilterValue[]>(defaultFiltersValues);
+    const [columnsFilterValues, setColumnsFilterValues] = useState<ColumnFilterValue[]>(defaultFiltersValues);
 
     const onChangeColumnFilter = useCallback(
         (value: DateColumnFilterValue | string, id: string) => {
@@ -19,7 +18,9 @@ export function useSearchBar(props: SearchBarProps): SearchBarData {
 
                 const editedFilterValueIndex = newFilterValue.findIndex((v) => v.column.id === id);
 
-                if (editedFilterValueIndex >= 0) {
+                if (value === '') {
+                    newFilterValue[editedFilterValueIndex]!.value = undefined;
+                } else {
                     newFilterValue[editedFilterValueIndex]!.value = value;
                 }
 
