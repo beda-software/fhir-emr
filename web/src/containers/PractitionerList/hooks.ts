@@ -71,7 +71,7 @@ export function usePractitionersList(filterValues: StringTypeColumnFilterValue[]
                 return rowData;
             });
         });
-    }, [debouncedFilterValues, resourceResponse]);
+    }, [resourceResponse]);
 
     return {
         practitionerDataListRD,
