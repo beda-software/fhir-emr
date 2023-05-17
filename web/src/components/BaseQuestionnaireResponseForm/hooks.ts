@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
-import { QuestionnaireItem, QuestionnaireItemAnswerOption } from 'shared/src/contrib/aidbox';
+import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
 
 export function useFieldController(fieldName: any, questionItem: QuestionnaireItem) {
     const qrfContext = useQuestionnaireResponseFormContext();
@@ -20,16 +20,14 @@ export function useFieldController(fieldName: any, questionItem: QuestionnaireIt
     const onChange = useCallback(
         (option: any) => {
             if (repeats) {
-                const arrayValue = (field.value || []) as QuestionnaireItemAnswerOption[];
-                const valueIndex = arrayValue.findIndex((v) => _.isEqual(v?.value, option.value));
+                let arrayValue = (field.value ?? []) as any[];
+                const valueIndex = arrayValue.findIndex((v) => _.isEqual(v, option));
 
                 if (valueIndex === -1) {
                     field.onChange([...arrayValue, option]);
                 } else {
-                    const filteredValues = arrayValue.filter(
-                        (v) => !_.isEqual(v?.value, option.value),
-                    );
-                    field.onChange(filteredValues);
+                    arrayValue.splice(valueIndex, 1);
+                    field.onChange(arrayValue);
                 }
             } else {
                 field.onChange(option);
@@ -38,7 +36,13 @@ export function useFieldController(fieldName: any, questionItem: QuestionnaireIt
         [repeats, field],
     );
 
-    return { ...field, fieldState, onChange, hidden, disabled: readOnly || qrfContext.readOnly };
+    return {
+        ...field,
+        fieldState,
+        onChange,
+        hidden,
+        disabled: readOnly || qrfContext.readOnly,
+    };
 }
 
 export function useSavedMessage(draftSaveResponse: RemoteData) {
