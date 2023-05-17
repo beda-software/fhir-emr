@@ -5,19 +5,16 @@ import Select from 'react-select';
 import { StateManagerProps } from 'react-select/dist/declarations/src/stateManager';
 import { QuestionItemProps } from 'sdc-qrf';
 
-import { getDisplay } from 'src/utils/questionnaire';
+import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer } from 'shared/src/contrib/aidbox';
+
+import { getArrayDisplay, getDisplay } from 'src/utils/questionnaire';
 
 import s from '../BaseQuestionnaireResponseForm.module.scss';
 import { useFieldController } from '../hooks';
 
 const inputStyle = { backgroundColor: '#F7F9FC' };
 
-export function QuestionSelectWrapper({
-    value,
-    onChange,
-    options,
-    isMulti,
-}: StateManagerProps<any>) {
+export function QuestionSelectWrapper({ value, onChange, options, isMulti }: StateManagerProps<any>) {
     const newValue = useMemo(() => {
         if (value) {
             if (isArray(value)) {
@@ -70,12 +67,10 @@ export function QuestionSelectWrapper({
     );
 }
 
-class Option {}
-
 interface ChoiceQuestionSelectProps {
-    value?: any;
-    onChange?: (option: Option | null) => void;
-    options: any;
+    value?: QuestionnaireResponseItemAnswer[];
+    onChange?: (option: QuestionnaireResponseItemAnswer) => void;
+    options: QuestionnaireItemAnswerOption[];
 }
 
 function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
@@ -83,28 +78,23 @@ function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
 
     const selectOptions = options?.map((c: any) => {
         return {
-            label: c.value?.Coding.display,
+            label: c.value?.Coding?.display,
             value: c.value,
         };
     });
 
     const newOnChange = (selectValue: any) => {
-        onChange && onChange(selectValue.value);
+        onChange?.({ value: selectValue.value });
     };
 
     const selectValue = {
-        label: value?.Coding.display,
+        label: getArrayDisplay(value),
         value,
     };
 
     return (
         <>
-            <Select
-                options={selectOptions}
-                onChange={newOnChange}
-                value={selectValue}
-                className={s.select}
-            />
+            <Select options={selectOptions} onChange={newOnChange} value={selectValue} className={s.select} />
         </>
     );
 }
@@ -117,7 +107,7 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
         if (repeats) {
             fieldName = [...parentPath, linkId];
         } else {
-            fieldName = [...parentPath, linkId, 0, 'value'];
+            fieldName = [...parentPath, linkId, 0];
         }
     }
 
@@ -126,7 +116,7 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
     if (answerOption?.[0]?.value?.Coding) {
         return (
             <Form.Item label={text} hidden={hidden}>
-                <ChoiceQuestionSelect options={answerOption} value={value} onChange={onChange} />
+                <ChoiceQuestionSelect options={answerOption} value={repeats ? value : [value]} onChange={onChange} />
                 {/*<QuestionSelectWrapper isMulti={repeats} options={children} />*/}
             </Form.Item>
         );
@@ -134,17 +124,9 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
 
     return (
         <Form.Item label={text} hidden={hidden}>
-            <ANTDSelect
-                style={inputStyle}
-                disabled={disabled}
-                value={value}
-                onChange={(v) => onChange(v)}
-            >
+            <ANTDSelect style={inputStyle} disabled={disabled} value={value} onChange={onChange}>
                 {answerOption?.map((answerOption) => (
-                    <ANTDSelect.Option
-                        key={JSON.stringify(answerOption)}
-                        value={answerOption.value?.string}
-                    >
+                    <ANTDSelect.Option key={JSON.stringify(answerOption)} value={answerOption.value?.string}>
                         {getDisplay(answerOption.value!)}
                     </ANTDSelect.Option>
                 ))}
