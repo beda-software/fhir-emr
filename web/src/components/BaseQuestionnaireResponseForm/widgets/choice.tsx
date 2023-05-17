@@ -116,7 +116,11 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
     if (answerOption?.[0]?.value?.Coding) {
         return (
             <Form.Item label={text} hidden={hidden}>
-                <ChoiceQuestionSelect options={answerOption} value={repeats ? value : [value]} onChange={onChange} />
+                <ChoiceQuestionSelect
+                    options={answerOption}
+                    value={!repeats && value ? [value] : value}
+                    onChange={onChange}
+                />
                 {/*<QuestionSelectWrapper isMulti={repeats} options={children} />*/}
             </Form.Item>
         );
