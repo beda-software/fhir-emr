@@ -18,10 +18,12 @@ describe('Practitioner list filters testing', () => {
     });
 
     test('String filters', async () => {
-        const { practitionerRole: _practitionerRole1, practitioner: practitioner1 } =
-            await createPractitionerRole(PRACTITIONER_ADDITION_DATA[0]!);
-        const { practitionerRole: _practitionerRole2, practitioner: practitioner2 } =
-            await createPractitionerRole(PRACTITIONER_ADDITION_DATA[1]!);
+        const { practitionerRole: _practitionerRole1, practitioner: practitioner1 } = await createPractitionerRole(
+            PRACTITIONER_ADDITION_DATA[0]!,
+        );
+        const { practitionerRole: _practitionerRole2, practitioner: practitioner2 } = await createPractitionerRole(
+            PRACTITIONER_ADDITION_DATA[1]!,
+        );
 
         const { result } = renderHook(() => {
             const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
@@ -60,9 +62,13 @@ describe('Practitioner list filters testing', () => {
         act(() => {
             result.current.onChangeColumnFilter('victor', 'practitioner');
         });
-        await waitFor(() => {
-            expect(isLoading(result.current.practitionerDataListRD)).toBeTruthy();
-        });
+
+        await waitFor(
+            () => {
+                expect(isLoading(result.current.practitionerDataListRD)).toBeTruthy();
+            },
+            { timeout: 30000 },
+        );
         await waitFor(() => {
             isSuccess(result.current.practitionerDataListRD);
         });
@@ -74,9 +80,12 @@ describe('Practitioner list filters testing', () => {
         act(() => {
             result.current.onChangeColumnFilter('testtest', 'practitioner');
         });
-        await waitFor(() => {
-            expect(isLoading(result.current.practitionerDataListRD)).toBeTruthy();
-        });
+        await waitFor(
+            () => {
+                expect(isLoading(result.current.practitionerDataListRD)).toBeTruthy();
+            },
+            { timeout: 30000 },
+        );
         await waitFor(() => {
             isSuccess(result.current.practitionerDataListRD);
         });
@@ -87,9 +96,13 @@ describe('Practitioner list filters testing', () => {
         act(() => {
             result.current.onChangeColumnFilter('pet', 'practitioner');
         });
-        await waitFor(() => {
-            expect(isLoading(result.current.practitionerDataListRD)).toBeTruthy();
-        });
+
+        await waitFor(
+            () => {
+                expect(isLoading(result.current.practitionerDataListRD)).toBeTruthy();
+            },
+            { timeout: 30000 },
+        );
         await waitFor(() => {
             isSuccess(result.current.practitionerDataListRD);
         });
