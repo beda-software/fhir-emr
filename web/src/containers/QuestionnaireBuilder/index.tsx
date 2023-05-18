@@ -40,9 +40,7 @@ function useQuestionnaireBuilder() {
     const navigate = useNavigate();
     const params = useParams();
     const [response, setResponse] = useState<RemoteData>(notAsked);
-    const [error, setError] = useState<string | undefined>(
-        'Something went wrong please try again or rewrite the message',
-    );
+    const [error, setError] = useState<string | undefined>();
 
     useEffect(() => {
         (async () => {
