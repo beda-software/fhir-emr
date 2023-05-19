@@ -76,23 +76,14 @@ export function useQuestionnaireBuilder() {
                 console.log('saveResponse', saveResponse);
 
                 if (isSuccess(saveResponse)) {
-                    try {
-                        const newQuestionnaire = JSON.parse(saveResponse.data);
-                        setResponse(success(newQuestionnaire));
-                    } catch (error: any) {
-                        notification.error({ message: 'Something went wrong please try again or rewrite the message' });
-                        setResponse(success(response.data));
-                        setError('Something went wrong please try again or rewrite the message');
-                    }
+                    const newQuestionnaire = saveResponse.data;
+                    setResponse(success(newQuestionnaire));
                 }
 
                 if (isFailure(saveResponse)) {
-                    notification.error({
-                        message:
-                            saveResponse.error?.message ||
-                            'Something went wrong please try again or rewrite the message',
-                    });
-                    setError(saveResponse.error?.message);
+                    setError(
+                        saveResponse.error?.message || 'Something went wrong please try again or rewrite the message',
+                    );
                     setResponse(success(response.data));
                 }
             }

@@ -71,9 +71,14 @@ export function Builder(props: { response: RemoteData; error?: string }) {
                 }
 
                 return (
-                    <Title level={4} className={s.title} style={{ color: 'rgba(5, 5, 5, 0.3)' }}>
-                        {t`Here will be your questionnaire`}
-                    </Title>
+                    <>
+                        {error ? (
+                            <Alert message={error} type="error" showIcon closable style={{ marginBottom: 30 }} />
+                        ) : null}
+                        <Title level={4} className={s.title} style={{ color: 'rgba(5, 5, 5, 0.3)' }}>
+                            {t`Here will be your questionnaire`}
+                        </Title>
+                    </>
                 );
             }}
         </RenderRemoteData>
