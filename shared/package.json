@@ -4,6 +4,7 @@
     "description": "",
     "scripts": {
         "typecheck": "tsc",
+        "test": "react-scripts test --watchAll=false",
         "lint": "eslint src/ --quiet"
     },
     "keywords": [],
