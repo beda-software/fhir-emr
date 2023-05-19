@@ -7,7 +7,7 @@ import { processExtensions } from './processExtensions';
 import { processItems } from './processItems';
 import { processMeta } from './processMeta';
 
-export function convertQuestionnaire(questionnaire: FCEQuestionnaire) {
+export function convertQuestionnaire(questionnaire: FCEQuestionnaire): FHIRQuestionnaire {
     questionnaire = cloneDeep(questionnaire);
     processMeta(questionnaire.meta);
     processItems(questionnaire.item);

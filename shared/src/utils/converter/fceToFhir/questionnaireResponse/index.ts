@@ -7,7 +7,9 @@ import { processAnswers } from './processAnswers';
 import { processMeta } from './processMeta';
 import { processReference } from './processReference';
 
-export function convertQuestionnaireResponse(questionnaireResponse: FCEQuestionnaireResponse) {
+export function convertQuestionnaireResponse(
+    questionnaireResponse: FCEQuestionnaireResponse,
+): FHIRQuestionnaireResponse {
     questionnaireResponse = cloneDeep(questionnaireResponse);
     processAnswers(questionnaireResponse.item);
     processMeta(questionnaireResponse.meta);

@@ -8,7 +8,7 @@ import { processItems } from './processItems';
 import { processMeta } from './processMeta';
 import { checkFhirQuestionnaireProfile, trimUndefined } from './utils';
 
-export function convertQuestionnaire(fhirQuestionnaire: FHIRQuestionnaire) {
+export function convertQuestionnaire(fhirQuestionnaire: FHIRQuestionnaire): FCEQuestionnaire {
     checkFhirQuestionnaireProfile(fhirQuestionnaire);
     fhirQuestionnaire = cloneDeep(fhirQuestionnaire);
     const meta = processMeta(fhirQuestionnaire);

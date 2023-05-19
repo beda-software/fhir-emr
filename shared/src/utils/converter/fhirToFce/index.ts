@@ -10,11 +10,13 @@ import { convertQuestionnaireResponse } from './questionnaireResponse';
 
 export function toFirstClassExtension(fhirQuestionnaireResponse: FHIRQuestionnaireResponse): FCEQuestionnaireResponse;
 export function toFirstClassExtension(fhirQuestionnaire: FHIRQuestionnaire): FCEQuestionnaire;
-export function toFirstClassExtension(fhirResource: FHIRQuestionnaire | FHIRQuestionnaireResponse): any {
-    if (fhirResource.resourceType === 'Questionnaire') {
-        return convertQuestionnaire(fhirResource);
-    }
-    if (fhirResource.resourceType === 'QuestionnaireResponse') {
-        return convertQuestionnaireResponse(fhirResource);
+export function toFirstClassExtension(
+    fhirResource: FHIRQuestionnaire | FHIRQuestionnaireResponse,
+): FCEQuestionnaireResponse | FCEQuestionnaire {
+    switch (fhirResource.resourceType) {
+        case 'Questionnaire':
+            return convertQuestionnaire(fhirResource);
+        case 'QuestionnaireResponse':
+            return convertQuestionnaireResponse(fhirResource);
     }
 }
