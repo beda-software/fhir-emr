@@ -1,6 +1,9 @@
 import { QuestionnaireResponse as FHIRQuestionnaireResponse, Questionnaire as FHIRQuestionnaire } from 'fhir/r4b';
 
-import { QuestionnaireResponse as FCEQuestionnaireResponse } from 'shared/src/contrib/aidbox';
+import {
+    QuestionnaireResponse as FCEQuestionnaireResponse,
+    Questionnaire as FCEQuestionnaire,
+} from 'shared/src/contrib/aidbox';
 import { toFirstClassExtension, fromFirstClassExtension } from 'shared/src/utils/converter';
 
 // fce questionnaire
@@ -110,108 +113,72 @@ describe('Questionanire and QuestionnaireResponses transformation', () => {
         expect(toFirstClassExtension(fhir_questionnaire as FHIRQuestionnaire)).toStrictEqual(fce_questionnaire);
     });
 
-    test('Each FCE Questionnaire should convert to FHIR', async () => {
-        expect(fromFirstClassExtension(fce_allergies as any)).toStrictEqual(fhir_allergies);
-        expect(fromFirstClassExtension(fce_beverages as any)).toStrictEqual(fhir_beverages);
-        expect(fromFirstClassExtension(fce_choice_answer_option as any)).toStrictEqual(fhir_choice_answer_option);
-        expect(fromFirstClassExtension(fce_encounter_create as any)).toStrictEqual(fhir_encounter_create);
-        expect(fromFirstClassExtension(fce_gad_7 as any)).toStrictEqual(fhir_gad_7);
-        expect(fromFirstClassExtension(fce_immunization as any)).toStrictEqual(fhir_immunization);
-        expect(fromFirstClassExtension(fce_medication as any)).toStrictEqual(fhir_medication);
-        expect(fromFirstClassExtension(fce_multiple_type_launch_context as any)).toStrictEqual(
-            fhir_multiple_type_launch_context,
-        );
-        expect(fromFirstClassExtension(fce_patient_create as any)).toStrictEqual(fhir_patient_create);
-        expect(fromFirstClassExtension(fce_patient_edit as any)).toStrictEqual(fhir_patient_edit);
-        expect(fromFirstClassExtension(fce_phq_2_phq_9 as any)).toStrictEqual(fhir_phq_2_phq_9);
-        expect(fromFirstClassExtension(fce_physicalexam as any)).toStrictEqual(fhir_physicalexam);
-        expect(fromFirstClassExtension(fce_practitioner_create as any)).toStrictEqual(fhir_practitioner_create);
-        expect(fromFirstClassExtension(fce_practitioner_edit as any)).toStrictEqual(fhir_practitioner_edit);
-        expect(fromFirstClassExtension(fce_practitioner_role_create as any)).toStrictEqual(
-            fhir_practitioner_role_create,
-        );
-        expect(fromFirstClassExtension(fce_public_appointment as any)).toStrictEqual(fhir_public_appointment);
-        expect(fromFirstClassExtension(fce_review_of_systems as any)).toStrictEqual(fhir_review_of_systems);
-        expect(fromFirstClassExtension(fce_source_queries as any)).toStrictEqual(fhir_source_queries);
-        expect(fromFirstClassExtension(fce_vitals as any)).toStrictEqual(fhir_vitals);
-        expect(fromFirstClassExtension(fce_practitioner_create_structure_map as any)).toStrictEqual(
-            fhir_practitioner_create_structure_map,
-        );
-        expect(fromFirstClassExtension(fce_consent as any)).toStrictEqual(fhir_consent);
-        expect(fromFirstClassExtension(fce_enable_when as any)).toStrictEqual(fhir_enable_when);
+    test.each([
+        [fce_allergies, fhir_allergies],
+        [fce_beverages, fhir_beverages],
+        [fce_choice_answer_option, fhir_choice_answer_option],
+        [fce_encounter_create, fhir_encounter_create],
+        [fce_gad_7, fhir_gad_7],
+        [fce_immunization, fhir_immunization],
+        [fce_medication, fhir_medication],
+        [fce_multiple_type_launch_context, fhir_multiple_type_launch_context],
+        [fce_patient_create, fhir_patient_create],
+        [fce_patient_edit, fhir_patient_edit],
+        [fce_phq_2_phq_9, fhir_phq_2_phq_9],
+        [fce_physicalexam, fhir_physicalexam],
+        [fce_practitioner_create, fhir_practitioner_create],
+        [fce_practitioner_edit, fhir_practitioner_edit],
+        [fce_practitioner_role_create, fhir_practitioner_role_create],
+        [fce_public_appointment, fhir_public_appointment],
+        [fce_review_of_systems, fhir_review_of_systems],
+        [fce_source_queries, fhir_source_queries],
+        [fce_vitals, fhir_vitals],
+        [fce_practitioner_create_structure_map, fhir_practitioner_create_structure_map],
+        [fce_consent, fhir_consent],
+        [fce_enable_when, fhir_enable_when],
+    ])('Each FCE Questionnaire should convert to FHIR', async (fce_questionnaire, fhir_questionnaire) => {
+        expect(fromFirstClassExtension(fce_questionnaire as FCEQuestionnaire)).toStrictEqual(fhir_questionnaire);
     });
 
-    test('Each FHIR QuestionnaireResponse should convert to FCE', async () => {
-        expect(toFirstClassExtension(fhir_allergies_inprogress_qr as FHIRQuestionnaireResponse)).toStrictEqual(
-            fce_allergies_inprogress_qr,
+    test.each([
+        [fhir_allergies_inprogress_qr, fce_allergies_inprogress_qr],
+        [fhir_cardiology_qr, fce_cardiology_qr],
+        [fhir_few_answers_qr, fce_few_answers_qr],
+        [fhir_gad_7_qr, fce_gad_7_qr],
+        [fhir_immunization_qr, fce_immunization_qr],
+        [fhir_medication_qr, fce_medication_qr],
+        [fhir_new_appointment_qr, fce_new_appointment_qr],
+        [fhir_patient_qr, fce_patient_qr],
+        [fhir_phq_2_phq_9_qr, fce_phq_2_phq_9_qr],
+        [fhir_physicalexam_qr, fce_physicalexam_qr],
+        [fhir_practitioner_qr, fce_practitioner_qr],
+        [fhir_review_of_systems_qr, fce_review_of_systems_qr],
+        [fhir_vitals_qr, fce_vitals_qr],
+    ])('Each FHIR QuestionnaireResponse should convert to FCE', async (fhirQuestionnaireResponse, expectedFCE) => {
+        expect(toFirstClassExtension(fhirQuestionnaireResponse as FHIRQuestionnaireResponse)).toStrictEqual(
+            expectedFCE,
         );
-        expect(toFirstClassExtension(fhir_cardiology_qr as FHIRQuestionnaireResponse)).toStrictEqual(fce_cardiology_qr);
-        expect(toFirstClassExtension(fhir_few_answers_qr as FHIRQuestionnaireResponse)).toStrictEqual(
-            fce_few_answers_qr,
-        );
-        expect(toFirstClassExtension(fhir_gad_7_qr as FHIRQuestionnaireResponse)).toStrictEqual(fce_gad_7_qr);
-        expect(toFirstClassExtension(fhir_immunization_qr as FHIRQuestionnaireResponse)).toStrictEqual(
-            fce_immunization_qr,
-        );
-        expect(toFirstClassExtension(fhir_medication_qr as FHIRQuestionnaireResponse)).toStrictEqual(fce_medication_qr);
-        expect(toFirstClassExtension(fhir_new_appointment_qr as FHIRQuestionnaireResponse)).toStrictEqual(
-            fce_new_appointment_qr,
-        );
-        expect(toFirstClassExtension(fhir_patient_qr as FHIRQuestionnaireResponse)).toStrictEqual(fce_patient_qr);
-        expect(toFirstClassExtension(fhir_phq_2_phq_9_qr as FHIRQuestionnaireResponse)).toStrictEqual(
-            fce_phq_2_phq_9_qr,
-        );
-        expect(toFirstClassExtension(fhir_physicalexam_qr as FHIRQuestionnaireResponse)).toStrictEqual(
-            fce_physicalexam_qr,
-        );
-        expect(toFirstClassExtension(fhir_practitioner_qr as FHIRQuestionnaireResponse)).toStrictEqual(
-            fce_practitioner_qr,
-        );
-        expect(toFirstClassExtension(fhir_review_of_systems_qr as FHIRQuestionnaireResponse)).toStrictEqual(
-            fce_review_of_systems_qr,
-        );
-        expect(toFirstClassExtension(fhir_vitals_qr as FHIRQuestionnaireResponse)).toStrictEqual(fce_vitals_qr);
     });
 
-    test('Each FCE QuestionnaireResponse should convert to FHIR', async () => {
-        expect(fromFirstClassExtension(fce_allergies_inprogress_qr as FCEQuestionnaireResponse)).toStrictEqual(
-            fhir_allergies_inprogress_qr,
-        );
-        expect(fromFirstClassExtension(fce_cardiology_qr as FCEQuestionnaireResponse)).toStrictEqual(
-            fhir_cardiology_qr,
-        );
-        expect(fromFirstClassExtension(fce_few_answers_qr as FCEQuestionnaireResponse)).toStrictEqual(
-            fhir_few_answers_qr,
-        );
-        expect(fromFirstClassExtension(fce_gad_7_qr as FCEQuestionnaireResponse)).toStrictEqual(fhir_gad_7_qr);
-        expect(fromFirstClassExtension(fce_immunization_qr as FCEQuestionnaireResponse)).toStrictEqual(
-            fhir_immunization_qr,
-        );
-        expect(fromFirstClassExtension(fce_medication_qr as FCEQuestionnaireResponse)).toStrictEqual(
-            fhir_medication_qr,
-        );
-        expect(fromFirstClassExtension(fce_new_appointment_qr as FCEQuestionnaireResponse)).toStrictEqual(
-            fhir_new_appointment_qr,
-        );
-        expect(fromFirstClassExtension(fce_patient_qr as FCEQuestionnaireResponse)).toStrictEqual(fhir_patient_qr);
-        expect(fromFirstClassExtension(fce_phq_2_phq_9_qr as FCEQuestionnaireResponse)).toStrictEqual(
-            fhir_phq_2_phq_9_qr,
-        );
-        expect(fromFirstClassExtension(fce_physicalexam_qr as FCEQuestionnaireResponse)).toStrictEqual(
-            fhir_physicalexam_qr,
-        );
-        expect(fromFirstClassExtension(fce_practitioner_qr as FCEQuestionnaireResponse)).toStrictEqual(
-            fhir_practitioner_qr,
-        );
-        expect(fromFirstClassExtension(fce_review_of_systems_qr as FCEQuestionnaireResponse)).toStrictEqual(
-            fhir_review_of_systems_qr,
-        );
-        expect(fromFirstClassExtension(fce_vitals_qr as FCEQuestionnaireResponse)).toStrictEqual(fhir_vitals_qr);
-        expect(fromFirstClassExtension(fce_reference_answer_with_assoc as FCEQuestionnaireResponse)).toStrictEqual(
-            fhir_reference_answer_with_assoc,
-        );
-        expect(fromFirstClassExtension(fce_reference_answer_with_fhir_reference as any)).toStrictEqual(
-            fhir_reference_answer_with_fhir_reference,
+    test.each([
+        [fce_allergies_inprogress_qr, fhir_allergies_inprogress_qr],
+        [fce_cardiology_qr, fhir_cardiology_qr],
+        [fce_few_answers_qr, fhir_few_answers_qr],
+        [fce_gad_7_qr, fhir_gad_7_qr],
+        [fce_immunization_qr, fhir_immunization_qr],
+        [fce_medication_qr, fhir_medication_qr],
+        [fce_new_appointment_qr, fhir_new_appointment_qr],
+        [fce_patient_qr, fhir_patient_qr],
+        [fce_phq_2_phq_9_qr, fhir_phq_2_phq_9_qr],
+        [fce_physicalexam_qr, fhir_physicalexam_qr],
+        [fce_practitioner_qr, fhir_practitioner_qr],
+        [fce_review_of_systems_qr, fhir_review_of_systems_qr],
+        [fce_vitals_qr, fhir_vitals_qr],
+        [fce_reference_answer_with_assoc, fhir_reference_answer_with_assoc],
+        [fce_reference_answer_with_fhir_reference, fhir_reference_answer_with_fhir_reference],
+    ])('Each FCE QuestionnaireResponse should convert to FHIR', async (fceQuestionnaireResponse, expectedFHIR) => {
+        expect(fromFirstClassExtension(fceQuestionnaireResponse as FCEQuestionnaireResponse)).toStrictEqual(
+            expectedFHIR,
         );
     });
 });
