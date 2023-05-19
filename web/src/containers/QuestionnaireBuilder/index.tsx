@@ -12,6 +12,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { mapFormToResponse } from 'sdc-qrf';
 
 import { toQuestionnaireResponseFormData } from 'shared/src/hooks/questionnaire-response-form-data';
+import { fromFirstClassExtension } from 'shared/src/utils/converter';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
@@ -186,10 +187,13 @@ function Builder(props: { response: RemoteData; error?: string }) {
                             <BaseQuestionnaireResponseForm
                                 formData={formData}
                                 onSubmit={async (values) =>
-                                    console.log('result', {
-                                        ...values.context.questionnaireResponse,
-                                        ...mapFormToResponse(values.formValues, values.context.questionnaire),
-                                    })
+                                    console.log(
+                                        'result',
+                                        fromFirstClassExtension({
+                                            ...values.context.questionnaireResponse,
+                                            ...mapFormToResponse(values.formValues, values.context.questionnaire),
+                                        }),
+                                    )
                                 }
                             />
                         </>
