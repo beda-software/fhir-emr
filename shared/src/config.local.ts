@@ -6,7 +6,7 @@ export default {
     tier: 'develop',
     baseURL: 'http://localhost:8080',
     sdcIdeUrl: 'http://localhost:3001',
-    aiQuestionnaireBuilderUrl: 'https://builder.emr.beda.software',
+    aiQuestionnaireBuilderUrl: 'http://localhost:3002',
 
     webSentryDSN: null,
     mobileSentryDSN: null,
