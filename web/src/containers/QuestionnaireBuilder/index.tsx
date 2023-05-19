@@ -9,6 +9,7 @@ import { formatError } from 'fhir-react/lib/utils/error';
 import { Questionnaire, QuestionnaireItem } from 'fhir/r4b';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { mapFormToResponse } from 'sdc-qrf';
 
 import { toQuestionnaireResponseFormData } from 'shared/src/hooks/questionnaire-response-form-data';
 
@@ -182,7 +183,15 @@ function Builder(props: { response: RemoteData; error?: string }) {
                             <Title level={3} className={s.title}>
                                 {title}
                             </Title>
-                            <BaseQuestionnaireResponseForm formData={formData} />
+                            <BaseQuestionnaireResponseForm
+                                formData={formData}
+                                onSubmit={async (values) =>
+                                    console.log('result', {
+                                        ...values.context.questionnaireResponse,
+                                        ...mapFormToResponse(values.formValues, values.context.questionnaire),
+                                    })
+                                }
+                            />
                         </>
                     );
                 }
