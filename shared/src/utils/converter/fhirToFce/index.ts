@@ -10,7 +10,7 @@ import { convertQuestionnaireResponse } from './questionnaireResponse';
 
 export function toFirstClassExtension(fhirQuestionnaireResponse: FHIRQuestionnaireResponse): FCEQuestionnaireResponse;
 export function toFirstClassExtension(fhirQuestionnaire: FHIRQuestionnaire): FCEQuestionnaire;
-export function toFirstClassExtension(fhirResource: any): any {
+export function toFirstClassExtension(fhirResource: FHIRQuestionnaire | FHIRQuestionnaireResponse): any {
     if (fhirResource.resourceType === 'Questionnaire') {
         return convertQuestionnaire(fhirResource);
     }

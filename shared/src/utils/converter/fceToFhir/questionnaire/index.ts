@@ -1,13 +1,16 @@
 import { Questionnaire as FHIRQuestionnaire } from 'fhir/r4b';
+import cloneDeep from 'lodash/cloneDeep';
+
+import { Questionnaire as FCEQuestionnaire } from 'shared/src/contrib/aidbox';
 
 import { processExtensions } from './processExtensions';
 import { processItems } from './processItems';
 import { processMeta } from './processMeta';
 
-export const convertQuestionnaire = (fceResource: any) => {
-    const questionnaire = JSON.parse(JSON.stringify(fceResource));
+export function convertQuestionnaire(questionnaire: FCEQuestionnaire) {
+    questionnaire = cloneDeep(questionnaire);
     processMeta(questionnaire.meta);
     processItems(questionnaire.item);
     processExtensions(questionnaire);
     return questionnaire as unknown as FHIRQuestionnaire;
-};
+}

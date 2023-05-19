@@ -10,7 +10,7 @@ import { convertQuestionnaireResponse } from './questionnaireResponse';
 
 export function fromFirstClassExtension(fceQuestionnaireResponse: FCEQuestionnaireResponse): FHIRQuestionnaireResponse;
 export function fromFirstClassExtension(fceQuestionnaire: FCEQuestionnaire): FHIRQuestionnaire;
-export function fromFirstClassExtension(fceResource: any): any {
+export function fromFirstClassExtension(fceResource: FCEQuestionnaire | FCEQuestionnaireResponse): any {
     if (fceResource.resourceType === 'Questionnaire') {
         return convertQuestionnaire(fceResource);
     }
