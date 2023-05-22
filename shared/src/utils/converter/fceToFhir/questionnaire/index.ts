@@ -10,7 +10,7 @@ import { processMeta } from './processMeta';
 export function convertQuestionnaire(questionnaire: FCEQuestionnaire): FHIRQuestionnaire {
     questionnaire = cloneDeep(questionnaire);
     processMeta(questionnaire.meta);
-    processItems(questionnaire.item);
+    questionnaire.item = processItems(questionnaire.item ?? []);
     processExtensions(questionnaire);
     return questionnaire as unknown as FHIRQuestionnaire;
 }

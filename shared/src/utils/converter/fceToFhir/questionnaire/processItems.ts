@@ -8,10 +8,7 @@ import {
 import { convertFromFHIRExtension, convertToFHIRExtension, toFHIRReference } from 'shared/src/utils/converter';
 
 export function processItems(items: FCEQuestionnaireItem[]) {
-    if (!items) {
-        return;
-    }
-    items.forEach((item) => {
+    return items.map((item) => {
         const extensions = convertToFHIRExtension(item);
         if (extensions.length > 0) {
             const fieldsToOmit = extensions
@@ -39,6 +36,8 @@ export function processItems(items: FCEQuestionnaireItem[]) {
         if (item.item) {
             processItems(item.item);
         }
+
+        return item;
     });
 }
 
