@@ -15,16 +15,40 @@ import { fromFirstClassExtension } from './fceToFhir';
 import { toFirstClassExtension } from './fhirToFce';
 import { processLaunchContext as processLaunchContextToFce } from './fhirToFce/questionnaire/processExtensions';
 
-export function convertFromFHIRExtension(
-    identifier: ExtensionIdentifier,
-    extension: FHIRExtension,
-): Partial<FCEQuestionnaireItem> {
+export function convertFromFHIRExtension(extension: FHIRExtension): Partial<FCEQuestionnaireItem> | undefined {
+    const identifier = extension.url;
     const transformer = extensionTransformers[identifier];
-    if ('transform' in transformer) {
-        return transformer.transform.fromFHIR(extension);
-    } else {
-        return { [transformer.path.FCE]: extension[transformer.path.FHIR] };
+    if (transformer !== undefined) {
+        if ('transform' in transformer) {
+            return transformer.transform.fromFHIR(extension);
+        } else {
+            return { [transformer.path.FCE]: extension[transformer.path.FHIR] };
+        }
     }
+}
+
+export function convertToFHIRExtension(item: FCEQuestionnaireItem): FHIRExtension[] {
+    let extensions: FHIRExtension[] = [];
+    for (const identifer in ExtensionIdentifier) {
+        const identifierURI = ExtensionIdentifier[identifer];
+        const transformer = extensionTransformers[identifierURI];
+        if ('transform' in transformer) {
+            const extension = transformer.transform.toFHIR(item);
+            if (extension !== undefined) {
+                extensions.push(extension);
+            }
+        } else {
+            const extensionValue = item[transformer.path.FCE];
+            if (extensionValue !== undefined) {
+                const extension: FHIRExtension = {
+                    [transformer.path.FHIR]: extensionValue,
+                    url: identifierURI,
+                };
+                extensions.push(extension);
+            }
+        }
+    }
+    return extensions;
 }
 
 export function extractExtension(extension: FCEExtension[] | undefined, url: 'ex:createdAt') {

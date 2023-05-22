@@ -42,7 +42,7 @@ function getUpdatedPropertiesFromItem(item: FHIRQuestionnaireItem) {
         if (extension !== undefined) {
             updatedProperties = {
                 ...updatedProperties,
-                ...convertFromFHIRExtension(identifierURI as ExtensionIdentifier, extension),
+                ...convertFromFHIRExtension(extension),
             };
         }
     }

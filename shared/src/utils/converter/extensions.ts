@@ -28,8 +28,8 @@ type ExtensionTransformer = {
     [key in ExtensionIdentifier]:
         | {
               transform: {
-                  fromFHIR: (extension: FHIRExtension) => Partial<FCEQuestionnaireItem>;
-                  toFHIR: (item: FCEQuestionnaireItem) => Omit<FHIRExtension, 'url'>;
+                  fromFHIR: (extension: FHIRExtension) => Partial<FCEQuestionnaireItem> | undefined;
+                  toFHIR: (item: FCEQuestionnaireItem) => Omit<FHIRExtension, 'url'> | undefined;
               };
           }
         | {
@@ -62,7 +62,14 @@ export const extensionTransformers: ExtensionTransformer = {
                     return {};
                 }
             },
-            toFHIR: (item) => ({}),
+            toFHIR: (item) => {
+                if (item.referenceResource?.length) {
+                    return {
+                        url: 'http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource',
+                        valueCode: item.referenceResource[0],
+                    };
+                }
+            },
         },
     },
 
@@ -99,7 +106,23 @@ export const extensionTransformers: ExtensionTransformer = {
                     return {};
                 }
             },
-            toFHIR: (item) => ({}),
+            toFHIR: (item) => {
+                if (item.choiceColumn) {
+                    return {
+                        url: 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn',
+                        extension: [
+                            {
+                                url: 'forDisplay',
+                                valueBoolean: item.choiceColumn[0]?.forDisplay,
+                            },
+                            {
+                                url: 'path',
+                                valueString: item.choiceColumn[0]?.path,
+                            },
+                        ],
+                    };
+                }
+            },
         },
     },
 
