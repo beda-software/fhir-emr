@@ -8,11 +8,7 @@ import { ActionMeta, MultiValue, SingleValue } from 'react-select';
 import AsyncSelect from 'react-select/async';
 import { parseFhirQueryExpression, QuestionItemProps } from 'sdc-qrf';
 
-import {
-    QuestionnaireItemAnswerOption,
-    QuestionnaireResponseItemAnswer,
-    Resource,
-} from 'shared/src/contrib/aidbox';
+import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer, Resource } from 'shared/src/contrib/aidbox';
 import { loadResourceOptions } from 'shared/src/services/questionnaire';
 import { getAnswerCode, getAnswerDisplay } from 'shared/src/utils/questionnaire';
 
@@ -40,14 +36,10 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
     const fieldController = useFieldController(fieldPath, questionItem);
 
     const getDisplay =
-        overrideGetDisplay ??
-        ((resource: R) => fhirpath.evaluate(resource, choiceColumn![0]!.path, context)[0]);
+        overrideGetDisplay ?? ((resource: R) => fhirpath.evaluate(resource, choiceColumn![0]!.path!, context)[0]);
 
     // TODO: add support for fhirpath and application/x-fhir-query
-    const [resourceType, searchParams] = parseFhirQueryExpression(
-        answerExpression!.expression!,
-        context,
-    );
+    const [resourceType, searchParams] = parseFhirQueryExpression(answerExpression!.expression!, context);
 
     const loadOptions = async (searchText: string) => {
         const response = await loadResourceOptions(
@@ -71,9 +63,7 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
     );
 
     const onChange = (
-        _value:
-            | SingleValue<QuestionnaireItemAnswerOption>
-            | MultiValue<QuestionnaireItemAnswerOption>,
+        _value: SingleValue<QuestionnaireItemAnswerOption> | MultiValue<QuestionnaireItemAnswerOption>,
         action: ActionMeta<QuestionnaireItemAnswerOption>,
     ) => {
         if (!repeats || action.action !== 'select-option') {
