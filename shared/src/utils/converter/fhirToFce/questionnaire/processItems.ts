@@ -1,240 +1,69 @@
-import { QuestionnaireItemEnableWhen as FHIRQuestionnaireItemEnableWhen } from 'fhir/r4b';
-import { Questionnaire as FHIRQuestionnaire } from 'fhir/r4b';
+import {
+    QuestionnaireItemEnableWhen as FHIRQuestionnaireItemEnableWhen,
+    Questionnaire as FHIRQuestionnaire,
+    QuestionnaireItem as FHIRQuestionnaireItem,
+    QuestionnaireItemAnswerOption as FHIRQuestionnaireItemAnswerOption,
+    QuestionnaireItemInitial as FHIRQuestionnaireItemInitial,
+} from 'fhir/r4b';
+
+import {
+    QuestionnaireItem as FCEQuestionnaireItem,
+    QuestionnaireItemEnableWhen as FCEQuestionnaireItemEnableWhen,
+    QuestionnaireItemEnableWhenAnswer as FCEQuestionnaireItemEnableWhenAnswer,
+    QuestionnaireItemAnswerOption as FCEQuestionnaireItemAnswerOption,
+    QuestionnaireItemInitial as FCEQuestionnaireItemInitial,
+} from 'shared/src/contrib/aidbox';
+import { convertFromFHIRExtension, findExtension, fromFHIRReference } from 'shared/src/utils/converter';
+import { ExtensionIdentifier } from 'shared/src/utils/converter/extensions';
 
 export function processItems(fhirQuestionnaire: FHIRQuestionnaire) {
-    return fhirQuestionnaire.item?.map(processItem);
+    return fhirQuestionnaire.item?.map(convertItemProperties);
 }
 
-function processItem(item: any) {
-    let properties: any = {};
-
+function convertItemProperties(item: FHIRQuestionnaireItem): FCEQuestionnaireItem {
     const updatedProperties = getUpdatedPropertiesFromItem(item);
-    properties = { ...properties, ...updatedProperties };
+    const newItem = { ...item, ...updatedProperties };
 
-    const convertedItem = convertItemProperties(item);
+    newItem.item = item.item?.map((nestedItem) => convertItemProperties(nestedItem));
 
-    const newItem = {
-        ...convertedItem,
-        ...properties,
-        extension: undefined,
-    };
-
-    if (newItem.extension === undefined) {
+    if (newItem.extension) {
         delete newItem.extension;
-    }
-
-    if (newItem.itemControl === undefined) {
-        delete newItem.itemControl;
     }
 
     return newItem;
 }
 
-function getUpdatedPropertiesFromItem(item: any) {
-    const updatedProperties: any = {};
+function getUpdatedPropertiesFromItem(item: FHIRQuestionnaireItem) {
+    let updatedProperties: FCEQuestionnaireItem = { linkId: item.linkId, type: item.type };
 
-    updatedProperties.hidden = findExtension(
-        item,
-        'http://hl7.org/fhir/StructureDefinition/questionnaire-hidden',
-    )?.valueBoolean;
-    updatedProperties.initialExpression = findExtension(
-        item,
-        'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression',
-    )?.valueExpression;
-    updatedProperties.itemControl = findExtension(
-        item,
-        'http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl',
-    )?.valueCodeableConcept;
-    updatedProperties.itemPopulationContext = findExtension(
-        item,
-        'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemPopulationContext',
-    )?.valueExpression;
-
-    updatedProperties.answerOption = item.answerOption
-        ?.map((option: any) => {
-            if (option.valueString) {
-                return {
-                    value: {
-                        string: option.valueString,
-                    },
-                };
-            }
-            if (option.valueCoding) {
-                return {
-                    value: {
-                        Coding: {
-                            code: option.valueCoding?.code,
-                            display: option.valueCoding?.display,
-                            system: option.valueCoding?.system,
-                        },
-                    },
-                };
-            }
-            if (option.valueReference) {
-                return {
-                    value: {
-                        Reference: {
-                            resourceType: option.valueReference?.resourceType,
-                            display: option.valueReference?.display,
-                            extension: option.valueReference?.extension,
-                            localRef: option.valueReference?.localRef,
-                            resource: option.valueReference?.resource,
-                            type: option.valueReference?.type,
-                            uri: option.valueReference?.reference,
-                        },
-                    },
-                };
-            }
-            if (option.valueDate) {
-                return {
-                    value: {
-                        date: option.valueDate,
-                    },
-                };
-            }
-            if (option.valueInteger) {
-                return {
-                    value: {
-                        integer: option.valueInteger,
-                    },
-                };
-            }
-            return option;
-        })
-        .filter(Boolean);
-
-    updatedProperties.adjustLastToRight = findExtension(
-        item,
-        'https://beda.software/fhir-emr-questionnaire/adjust-last-to-right',
-    )?.valueBoolean;
-    updatedProperties.initial = item.initial?.map((init: any) => {
-        if (init.valueCoding !== undefined) {
-            return { value: { Coding: init.valueCoding } };
-        } else {
-            return init;
+    for (const identifer in ExtensionIdentifier) {
+        const identifierURI = ExtensionIdentifier[identifer];
+        const extension = findExtension(item, identifierURI);
+        if (extension !== undefined) {
+            updatedProperties = {
+                ...updatedProperties,
+                ...convertFromFHIRExtension(identifierURI as ExtensionIdentifier, extension),
+            };
         }
-    });
-    updatedProperties.start = findExtension(
-        item,
-        'https://beda.software/fhir-emr-questionnaire/slider-start',
-    )?.valueInteger;
-    updatedProperties.stop = findExtension(
-        item,
-        'https://beda.software/fhir-emr-questionnaire/slider-stop',
-    )?.valueInteger;
-    updatedProperties.helpText = findExtension(
-        item,
-        'https://beda.software/fhir-emr-questionnaire/help-text',
-    )?.valueString;
-    updatedProperties.stopLabel = findExtension(
-        item,
-        'https://beda.software/fhir-emr-questionnaire/slider-stop-label',
-    )?.valueString;
-    updatedProperties.sliderStepValue = findExtension(
-        item,
-        'http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue',
-    )?.valueInteger;
-    updatedProperties.calculatedExpression = findExtension(
-        item,
-        'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression',
-    )?.valueExpression;
-    updatedProperties.unit = findExtension(
-        item,
-        'http://hl7.org/fhir/StructureDefinition/questionnaire-unit',
-    )?.valueCoding;
-    updatedProperties.macro = findExtension(item, 'https://beda.software/fhir-emr-questionnaire/macro')?.valueString;
-    updatedProperties.enableWhenExpression = findExtension(
-        item,
-        'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-enableWhenExpression',
-    )?.valueExpression;
-    updatedProperties.answerExpression = findExtension(
-        item,
-        'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression',
-    )?.valueExpression;
-
-    item.item?.forEach((nestedItem: any) => {
-        const unit = findExtension(
-            nestedItem,
-            'http://hl7.org/fhir/StructureDefinition/questionnaire-unit',
-        )?.valueCoding;
-
-        if (unit !== undefined) {
-            nestedItem.unit = unit;
-        }
-    });
-
-    const boolean = item.initial?.find((init: any) => init.valueBoolean !== undefined)?.valueBoolean;
-    if (boolean !== undefined) {
-        updatedProperties.initial = [{ value: { boolean } }];
     }
 
-    const choiceColumnExtension = findExtension(
-        item,
-        'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn',
-    )?.extension;
-    if (choiceColumnExtension) {
-        const forDisplay = choiceColumnExtension.find((obj: { url: string }) => obj.url === 'forDisplay').valueBoolean;
-        const path = choiceColumnExtension.find((obj: { url: string }) => obj.url === 'path').valueString;
-        const choiceColumnArray = [];
-        choiceColumnArray.push({
-            forDisplay: forDisplay ?? false,
-            path,
-        });
-        updatedProperties.choiceColumn = choiceColumnArray;
-    }
-
-    const referenceResourceArray = [];
-    const referenceResource = item.extension?.find(
-        (ext: any) => ext.url === 'http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource',
-    )?.valueCode;
-    if (referenceResource !== undefined) {
-        referenceResourceArray.push(referenceResource);
-    }
-    if (referenceResourceArray.length > 0) {
-        updatedProperties.referenceResource = referenceResourceArray;
-    }
-
-    if (item.initialExpression) {
-        updatedProperties.initialExpression = {
-            expression: item.initialExpression.expression,
-            language: item.initialExpression.language,
-        };
-    }
-
-    if (item.itemPopulationContext) {
-        updatedProperties.itemPopulationContext = {
-            expression: item.itemPopulationContext.expression,
-            language: item.itemPopulationContext.language,
-        };
-    }
-
-    updatedProperties.enableWhen = item.enableWhen?.map((item: FHIRQuestionnaireItemEnableWhen) => {
-        return processEnableWhenItem(item);
-    });
+    updatedProperties.answerOption = item.answerOption?.map(processItemOption);
+    updatedProperties.initial = item.initial?.map(processItemOption);
+    updatedProperties.enableWhen = item.enableWhen?.map(processEnableWhenItem);
 
     return updatedProperties;
 }
 
-function convertItemProperties(item: any): any {
-    const updatedProperties = getUpdatedPropertiesFromItem(item);
-    const newItem = { ...item, ...updatedProperties };
-
-    delete newItem.extension;
-
-    if (newItem.item) {
-        newItem.item = newItem.item.map((nestedItem: any) => convertItemProperties(nestedItem));
-    }
-
-    return newItem;
+function processEnableWhenItem(item: FHIRQuestionnaireItemEnableWhen): FCEQuestionnaireItemEnableWhen {
+    return {
+        question: item.question,
+        operator: item.operator,
+        answer: processEnableWhenAnswerOption(item),
+    };
 }
 
-function findExtension(item: any, url: string) {
-    return item.extension?.find((ext: any) => ext.url === url);
-}
-
-function processEnableWhenItem(item: FHIRQuestionnaireItemEnableWhen) {
-    const { question, operator } = item;
-    const answer = {};
+function processEnableWhenAnswerOption(item: FHIRQuestionnaireItemEnableWhen) {
+    let answer: FCEQuestionnaireItemEnableWhenAnswer = {};
 
     switch (true) {
         case 'answerBoolean' in item:
@@ -265,24 +94,63 @@ function processEnableWhenItem(item: FHIRQuestionnaireItemEnableWhen) {
             answer['Quantity'] = item.answerQuantity;
             break;
         case 'answerReference' in item:
-            if (item.answerReference && item.answerReference.reference) {
-                const { reference } = item.answerReference;
-                const splitReference = reference.split('/') || [];
-                const resourceType = splitReference[0];
-                const id = splitReference[1];
-                answer['Reference'] = { ...item.answerReference, id, resourceType };
-                delete answer['Reference'].reference;
+            if (item.answerReference) {
+                answer['Reference'] = fromFHIRReference(item.answerReference);
             } else {
-                answer['Reference'] = { ...item.answerReference };
+                throw Error("Can not process 'answerReference' with no reference inside");
             }
             break;
         default:
             break;
     }
 
-    return {
-        question,
-        operator,
-        answer,
-    };
+    return answer;
+}
+
+function processItemOption(
+    option: FHIRQuestionnaireItemAnswerOption | FHIRQuestionnaireItemInitial,
+): FCEQuestionnaireItemAnswerOption | FCEQuestionnaireItemInitial {
+    if (option.valueString) {
+        return {
+            value: {
+                string: option.valueString,
+            },
+        };
+    }
+    if (option.valueCoding) {
+        return {
+            value: {
+                Coding: option.valueCoding,
+            },
+        };
+    }
+    if (option.valueReference) {
+        return {
+            value: {
+                Reference: fromFHIRReference(option.valueReference),
+            },
+        };
+    }
+    if (option.valueDate) {
+        return {
+            value: {
+                date: option.valueDate,
+            },
+        };
+    }
+    if (option.valueInteger) {
+        return {
+            value: {
+                integer: option.valueInteger,
+            },
+        };
+    }
+    if ('valueBoolean' in option) {
+        return {
+            value: {
+                boolean: option.valueBoolean,
+            },
+        };
+    }
+    return option;
 }

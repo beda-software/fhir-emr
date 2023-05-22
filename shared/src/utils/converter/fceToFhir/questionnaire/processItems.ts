@@ -1,5 +1,6 @@
 import { Quantity as QuantityFHIR, QuestionnaireItemEnableWhen as FHIRQuestionnaireItemEnableWhen } from 'fhir/r4b';
 
+import { toFHIRReference } from '../..';
 import { QuestionnaireItemEnableWhen as FCEQuestionnaireItemEnableWhen } from '../../../../contrib/aidbox';
 import { QuestionnaireItemEnableWhenAnswer as FCEQuestionnaireItemEnableWhenAnswer } from '../../../../contrib/aidbox';
 
@@ -237,15 +238,7 @@ function processAnswerOption(item: any) {
             delete option.value;
         }
         if (option.value && option.value.Reference) {
-            let reference = option.value.Reference;
-            option.valueReference = {};
-            if (reference.resourceType) option.valueReference.resourceType = reference.resourceType;
-            if (reference.display) option.valueReference.display = reference.display;
-            if (reference.extension) option.valueReference.extension = reference.extension;
-            if (reference.localRef) option.valueReference.localRef = reference.localRef;
-            if (reference.resource) option.valueReference.resource = reference.resource;
-            if (reference.type) option.valueReference.type = reference.type;
-            if (reference.uri) option.valueReference.reference = reference.uri;
+            option.valueReference = toFHIRReference(option.value.Reference);
             delete option.value;
         }
         if (option.value && option.value.date) {
