@@ -62,6 +62,13 @@ body:
                 - resourceType: Appointment
                   id: $ appointmentId
             resourceType: Encounter
+        - $if: $ appointmentId
+          $then:
+            request:
+              url: $ "/Appointment/" + appointmentId
+              method: PATCH
+            resource:
+              status: checked-in
       resourceType: Bundle
 id: encounter-create-extract
 resourceType: Mapping
