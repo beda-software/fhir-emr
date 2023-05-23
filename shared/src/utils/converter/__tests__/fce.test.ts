@@ -1,4 +1,5 @@
 import { QuestionnaireResponse as FHIRQuestionnaireResponse, Questionnaire as FHIRQuestionnaire } from 'fhir/r4b';
+import cloneDeep from 'lodash/cloneDeep';
 
 import {
     QuestionnaireResponse as FCEQuestionnaireResponse,
@@ -85,6 +86,29 @@ import fhir_reference_answer_with_fhir_reference from './resources/questionnaire
 import fhir_review_of_systems_qr from './resources/questionnaire_response_fhir/review_of_systems.json';
 import fhir_vitals_qr from './resources/questionnaire_response_fhir/vitals.json';
 
+function sortExtensionsRecursive(object: any) {
+    if (typeof object !== 'object' || object === null) {
+        return object;
+    }
+    for (let [key, property] of Object.entries(object)) {
+        if (Array.isArray(property)) {
+            if (key === 'extension') {
+                property.sort((a, b) => (a.url === b.url ? 0 : a.url < b.url ? -1 : 1));
+            }
+            for (let nestedProperty of property) {
+                sortExtensionsRecursive(nestedProperty);
+            }
+        } else {
+            sortExtensionsRecursive(property);
+        }
+    }
+    return object;
+}
+
+function sortExtensionsList(object: any) {
+    return sortExtensionsRecursive(cloneDeep(object));
+}
+
 describe('Questionanire and QuestionnaireResponses transformation', () => {
     test.each([
         [fhir_allergies, fce_allergies],
@@ -137,7 +161,9 @@ describe('Questionanire and QuestionnaireResponses transformation', () => {
         [fce_consent, fhir_consent],
         [fce_enable_when, fhir_enable_when],
     ])('Each FCE Questionnaire should convert to FHIR', async (fce_questionnaire, fhir_questionnaire) => {
-        expect(fromFirstClassExtension(fce_questionnaire as FCEQuestionnaire)).toStrictEqual(fhir_questionnaire);
+        expect(sortExtensionsList(fromFirstClassExtension(fce_questionnaire as FCEQuestionnaire))).toStrictEqual(
+            sortExtensionsList(fhir_questionnaire),
+        );
     });
 
     test.each([
