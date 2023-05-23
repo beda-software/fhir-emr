@@ -1,13 +1,21 @@
-import { Quantity as QuantityFHIR, QuestionnaireItemEnableWhen as FHIRQuestionnaireItemEnableWhen } from 'fhir/r4b';
+import {
+    Quantity as QuantityFHIR,
+    QuestionnaireItemEnableWhen as FHIRQuestionnaireItemEnableWhen,
+    QuestionnaireItem as FHIRQuestionnaireItem,
+    QuestionnaireItemAnswerOption as FHIRQuestionnaireItemAnswerOption,
+    QuestionnaireItemInitial as FHIRQuestionnaireItemInitial,
+} from 'fhir/r4b';
 
 import {
     QuestionnaireItem as FCEQuestionnaireItem,
     QuestionnaireItemEnableWhen as FCEQuestionnaireItemEnableWhen,
     QuestionnaireItemEnableWhenAnswer as FCEQuestionnaireItemEnableWhenAnswer,
+    QuestionnaireItemAnswerOption as FCEQuestionnaireItemAnswerOption,
+    QuestionnaireItemInitial as FCEQuestionnaireItemInitial,
 } from 'shared/src/contrib/aidbox';
 import { convertFromFHIRExtension, convertToFHIRExtension, toFHIRReference } from 'shared/src/utils/converter';
 
-export function processItems(items: FCEQuestionnaireItem[]) {
+export function processItems(items: FCEQuestionnaireItem[]): FHIRQuestionnaireItem[] {
     return items.map((item) => {
         const extensions = convertToFHIRExtension(item);
         if (extensions.length > 0) {
@@ -21,23 +29,34 @@ export function processItems(items: FCEQuestionnaireItem[]) {
             item.extension = extensions.sort();
         }
 
-        if (item.answerOption !== undefined) {
-            processAnswerOption(item);
+        const { enableBehavior, enableWhen, answerOption, initial, item: nestedItems, type, ...commonOptions } = item;
+
+        let fhirItem: FHIRQuestionnaireItem = {
+            ...commonOptions,
+            type: type as FHIRQuestionnaireItem['type'],
+        };
+
+        if (answerOption !== undefined) {
+            fhirItem.answerOption = processAnswerOption(answerOption);
         }
 
-        if (item.enableWhen !== undefined) {
-            processEnableWhen(item);
+        if (enableBehavior !== undefined) {
+            fhirItem.enableBehavior = enableBehavior as FHIRQuestionnaireItem['enableBehavior'];
         }
 
-        if (item.initial) {
-            processInitial(item);
+        if (enableWhen !== undefined) {
+            fhirItem.enableWhen = processEnableWhen(enableWhen);
         }
 
-        if (item.item) {
-            processItems(item.item);
+        if (initial) {
+            fhirItem.initial = processInitial(initial);
         }
 
-        return item;
+        if (nestedItems) {
+            fhirItem.item = processItems(nestedItems);
+        }
+
+        return fhirItem;
     });
 }
 
@@ -76,13 +95,7 @@ const convertEnableWhen = (
                 result.answerQuantity = answer[answerType] as QuantityFHIR;
                 break;
             case 'Reference':
-                const answerReference = {
-                    ...answer[answerType],
-                    reference: `${answer[answerType]?.resourceType}/${answer[answerType]?.id}`,
-                };
-                delete answerReference.id;
-                delete answerReference.resourceType;
-                result.answerReference = answerReference;
+                result.answerReference = toFHIRReference(answer[answerType]);
                 break;
             default:
                 break;
@@ -90,37 +103,37 @@ const convertEnableWhen = (
     }
 };
 
-function processAnswerOption(item: any) {
-    item.answerOption.forEach((option: any) => {
-        if (option.value && option.value.Coding) {
-            option.valueCoding = option.value.Coding;
-            delete option.value;
+function processAnswerOption(options: FCEQuestionnaireItemAnswerOption[]): FHIRQuestionnaireItemAnswerOption[] {
+    return options.map((option) => {
+        const { value, ...commonOptions } = option;
+
+        let fhirOption: FHIRQuestionnaireItemAnswerOption = { ...commonOptions };
+
+        if (value?.Coding) {
+            fhirOption.valueCoding = value.Coding;
         }
-        if (option.value && option.value.string) {
-            option.valueString = option.value.string;
-            delete option.value;
+        if (value?.string) {
+            fhirOption.valueString = value.string;
         }
-        if (option.value && option.value.Reference) {
-            option.valueReference = toFHIRReference(option.value.Reference);
-            delete option.value;
+        if (value?.Reference) {
+            fhirOption.valueReference = toFHIRReference(value.Reference);
         }
-        if (option.value && option.value.date) {
-            option.valueDate = option.value.date;
-            delete option.value;
+        if (value?.date) {
+            fhirOption.valueDate = value.date;
         }
-        if (option.value && option.value.integer) {
-            option.valueInteger = option.value.integer;
-            delete option.value;
+        if (value?.integer) {
+            fhirOption.valueInteger = value.integer;
         }
-        if (option.value && option.value.time) {
-            option.valueTime = option.value.time;
-            delete option.value;
+        if (value?.time) {
+            fhirOption.valueTime = value.time;
         }
+
+        return fhirOption;
     });
 }
 
-function processEnableWhen(item: any) {
-    item.enableWhen = item.enableWhen?.map((item: FCEQuestionnaireItemEnableWhen) => {
+function processEnableWhen(options: FCEQuestionnaireItemEnableWhen[]) {
+    return options.map((item: FCEQuestionnaireItemEnableWhen) => {
         const { question, operator, answer } = item;
         const result: FHIRQuestionnaireItemEnableWhen = {
             question,
@@ -152,13 +165,13 @@ function processEnableWhen(item: any) {
     });
 }
 
-function processInitial(item: any) {
-    item.initial = item.initial.map((entry: any) => {
-        const result: any = {};
-        if (entry.value.boolean !== undefined) {
+function processInitial(options: FCEQuestionnaireItemInitial[]): FHIRQuestionnaireItemInitial[] {
+    return options.map((entry) => {
+        const result: FHIRQuestionnaireItemInitial = {};
+        if (entry.value?.boolean !== undefined) {
             result.valueBoolean = entry.value.boolean;
         }
-        if (entry.value.Coding !== undefined) {
+        if (entry.value?.Coding !== undefined) {
             result.valueCoding = entry.value.Coding;
         }
         return result;

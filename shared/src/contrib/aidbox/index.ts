@@ -14310,7 +14310,7 @@ export interface QuestionnaireLaunchContext {
     /** NOTE: from extension description */
     description?: string;
     /** NOTE: from extension name */
-    name?: id;
+    name?: Coding;
     /** NOTE: from extension type */
     type?: code;
 }
