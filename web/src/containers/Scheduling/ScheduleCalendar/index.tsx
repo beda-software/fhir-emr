@@ -138,12 +138,16 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
 
 function AppointmentBubble(eventContent: EventContentArg) {
     const status = eventContent.event.extendedProps.status;
-
+    const statusColorMap = {
+        cancelled: '#f6bf26',
+        'checked-in': '#c470d7',
+    };
+    eventContent.event.setProp('backgroundColor', statusColorMap[status] ?? '#3366ff');
     return (
         <div className={s.event}>
             <div className={s.eventName}>{eventContent.event.title}</div>
-            <div>{eventContent.timeText}</div>
-            {status === 'cancelled' && <div>{status}</div>}
+            {status === 'booked' && <div>{eventContent.timeText}</div>}
+            {status !== 'booked' && <div>{status}</div>}
         </div>
     );
 }
