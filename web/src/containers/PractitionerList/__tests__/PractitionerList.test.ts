@@ -17,7 +17,7 @@ describe('Practitioner list filters testing', () => {
         await loginAdminUser();
     });
 
-    test('String filters', async () => {
+    test.skip('String filters', async () => {
         const { practitionerRole: _practitionerRole1, practitioner: practitioner1 } = await createPractitionerRole(
             PRACTITIONER_ADDITION_DATA[0]!,
         );

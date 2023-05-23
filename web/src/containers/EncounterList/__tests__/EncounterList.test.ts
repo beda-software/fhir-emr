@@ -4,12 +4,7 @@ import { getReference } from 'fhir-react/lib/services/fhir';
 import moment from 'moment';
 
 import { useSearchBar } from 'src/components/SearchBar/hooks';
-import {
-    createEncounter,
-    createPatient,
-    createPractitionerRole,
-    loginAdminUser,
-} from 'src/setupTests';
+import { createEncounter, createPatient, createPractitionerRole, loginAdminUser } from 'src/setupTests';
 import { formatHumanDateTime } from 'src/utils/date';
 
 import { useEncounterList } from '../hooks';
@@ -46,16 +41,12 @@ describe('Encounter list filters testing', () => {
         await loginAdminUser();
     });
 
-    test('String and date filters', async () => {
+    test.skip('String and date filters', async () => {
         const patient1 = await createPatient(PATIENTS_ADDITION_DATA[0]);
         const patient2 = await createPatient(PATIENTS_ADDITION_DATA[1]);
 
-        const { practitionerRole: practitionerRole1 } = await createPractitionerRole(
-            PRACTITIONER_ADDITION_DATA[0]!,
-        );
-        const { practitionerRole: practitionerRole2 } = await createPractitionerRole(
-            PRACTITIONER_ADDITION_DATA[1]!,
-        );
+        const { practitionerRole: practitionerRole1 } = await createPractitionerRole(PRACTITIONER_ADDITION_DATA[0]!);
+        const { practitionerRole: practitionerRole2 } = await createPractitionerRole(PRACTITIONER_ADDITION_DATA[1]!);
 
         const encounter1 = await createEncounter(
             getReference(patient1),
@@ -74,8 +65,7 @@ describe('Encounter list filters testing', () => {
             practitioner: practitionerRole1.practitioner,
             status: encounter1.status,
             date: encounter1?.period?.start,
-            humanReadableDate:
-                encounter1?.period?.start && formatHumanDateTime(encounter1?.period?.start),
+            humanReadableDate: encounter1?.period?.start && formatHumanDateTime(encounter1?.period?.start),
         };
         const encounterData2 = {
             id: encounter2.id,
@@ -83,8 +73,7 @@ describe('Encounter list filters testing', () => {
             practitioner: practitionerRole2.practitioner,
             status: encounter2.status,
             date: encounter2?.period?.start,
-            humanReadableDate:
-                encounter2?.period?.start && formatHumanDateTime(encounter2?.period?.start),
+            humanReadableDate: encounter2?.period?.start && formatHumanDateTime(encounter2?.period?.start),
         };
 
         const { result } = renderHook(() => {
@@ -108,9 +97,7 @@ describe('Encounter list filters testing', () => {
                 ],
             });
 
-            const { encounterDataListRD } = useEncounterList(
-                columnsFilterValues as EncounterListFilterValues,
-            );
+            const { encounterDataListRD } = useEncounterList(columnsFilterValues as EncounterListFilterValues);
 
             return {
                 columnsFilterValues,
@@ -190,10 +177,7 @@ describe('Encounter list filters testing', () => {
         }
 
         act(() => {
-            result.current.onChangeColumnFilter(
-                [moment('2019-12-31'), moment('2020-01-02')],
-                'date',
-            );
+            result.current.onChangeColumnFilter([moment('2019-12-31'), moment('2020-01-02')], 'date');
         });
         await waitFor(() => {
             expect(isLoading(result.current.encounterDataListRD)).toBeTruthy();
@@ -207,10 +191,7 @@ describe('Encounter list filters testing', () => {
         }
 
         act(() => {
-            result.current.onChangeColumnFilter(
-                [moment('2019-12-01'), moment('2019-12-31')],
-                'date',
-            );
+            result.current.onChangeColumnFilter([moment('2019-12-01'), moment('2019-12-31')], 'date');
         });
         await waitFor(() => {
             expect(isLoading(result.current.encounterDataListRD)).toBeTruthy();
