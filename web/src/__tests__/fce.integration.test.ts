@@ -9,10 +9,9 @@ import { ensure } from 'aidbox-react/lib/utils/tests';
 
 import { Questionnaire as FCEQuestionnaire } from 'shared/src/contrib/aidbox';
 import { toFirstClassExtension, fromFirstClassExtension } from 'shared/src/utils/converter';
+import { sortExtensionsList } from 'shared/src/utils/converter/__tests__/fce.test';
 
 import { loginAdminUser } from 'src/setupTests';
-
-const notWorkingQuestionnaires = ['encounter-create-from-appointment', 'edit-appointment'];
 
 describe('Questionanire and QuestionnaireResponses transformation', () => {
     beforeEach(async () => {
@@ -29,16 +28,12 @@ describe('Questionanire and QuestionnaireResponses transformation', () => {
             }),
         );
         console.log('Conversion', questionnaire.id);
-        // TODO: There should be no not working questionnaires
-        if (notWorkingQuestionnaires.includes(questionnaire.id)) {
-            return;
-        }
         const fhirQuestionnaire = ensure(
             await getFHIRResource<FHIRQuestionnaire>({ reference: `Questionnaire/${questionnaire.id}` }),
         );
         const fceQuestionnaire = toFirstClassExtension(fhirQuestionnaire);
         expect(fceQuestionnaire).toStrictEqual(questionnaire);
         const fhirQuestionnaireConverted = fromFirstClassExtension(fceQuestionnaire!);
-        expect(fhirQuestionnaireConverted).toStrictEqual(fhirQuestionnaire);
+        expect(sortExtensionsList(fhirQuestionnaireConverted)).toStrictEqual(sortExtensionsList(fhirQuestionnaire));
     });
 });

@@ -105,7 +105,7 @@ function sortExtensionsRecursive(object: any) {
     return object;
 }
 
-function sortExtensionsList(object: any) {
+export function sortExtensionsList(object: any) {
     return sortExtensionsRecursive(cloneDeep(object));
 }
 
