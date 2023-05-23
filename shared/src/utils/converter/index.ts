@@ -17,12 +17,12 @@ import { processLaunchContext as processLaunchContextToFce } from './fhirToFce/q
 
 export function convertFromFHIRExtension(extension: FHIRExtension): Partial<FCEQuestionnaireItem> | undefined {
     const identifier = extension.url;
-    const transformer = extensionTransformers[identifier];
+    const transformer = extensionTransformers[identifier as ExtensionIdentifier];
     if (transformer !== undefined) {
         if ('transform' in transformer) {
-            return transformer.transform.fromFHIR(extension);
+            return transformer.transform.fromExtension(extension);
         } else {
-            return { [transformer.path.FCE]: extension[transformer.path.FHIR] };
+            return { [transformer.path.questionnaire]: extension[transformer.path.extension] };
         }
     }
 }
@@ -30,19 +30,18 @@ export function convertFromFHIRExtension(extension: FHIRExtension): Partial<FCEQ
 export function convertToFHIRExtension(item: FCEQuestionnaireItem): FHIRExtension[] {
     let extensions: FHIRExtension[] = [];
     for (const identifer in ExtensionIdentifier) {
-        const identifierURI = ExtensionIdentifier[identifer];
-        const transformer = extensionTransformers[identifierURI];
+        const transformer = extensionTransformers[ExtensionIdentifier[identifer] as ExtensionIdentifier];
         if ('transform' in transformer) {
-            const extension = transformer.transform.toFHIR(item);
+            const extension = transformer.transform.toExtension(item);
             if (extension !== undefined) {
                 extensions.push(extension);
             }
         } else {
-            const extensionValue = item[transformer.path.FCE];
+            const extensionValue = item[transformer.path.questionnaire];
             if (extensionValue !== undefined) {
                 const extension: FHIRExtension = {
-                    [transformer.path.FHIR]: extensionValue,
-                    url: identifierURI,
+                    [transformer.path.extension]: extensionValue,
+                    url: ExtensionIdentifier[identifer],
                 };
                 extensions.push(extension);
             }

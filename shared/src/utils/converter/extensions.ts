@@ -24,48 +24,48 @@ export enum ExtensionIdentifier {
     Macro = 'https://beda.software/fhir-emr-questionnaire/macro',
 }
 
-type ExtensionTransformer = {
+export type ExtensionTransformer = {
     [key in ExtensionIdentifier]:
         | {
               transform: {
-                  fromFHIR: (extension: FHIRExtension) => Partial<FCEQuestionnaireItem> | undefined;
-                  toFHIR: (item: FCEQuestionnaireItem) => Omit<FHIRExtension, 'url'> | undefined;
+                  fromExtension: (extension: FHIRExtension) => Partial<FCEQuestionnaireItem> | undefined;
+                  toExtension: (item: FCEQuestionnaireItem) => FHIRExtension | undefined;
               };
           }
         | {
               path: {
-                  FHIR: keyof FHIRExtension;
-                  FCE: keyof FCEQuestionnaireItem;
+                  extension: keyof FHIRExtension;
+                  questionnaire: keyof FCEQuestionnaireItem;
               };
           };
 };
 
 export const extensionTransformers: ExtensionTransformer = {
-    'http://hl7.org/fhir/StructureDefinition/questionnaire-hidden': {
-        path: { FHIR: 'valueBoolean', FCE: 'hidden' },
+    [ExtensionIdentifier.Hidden]: {
+        path: { extension: 'valueBoolean', questionnaire: 'hidden' },
     },
-    'http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl': {
-        path: { FHIR: 'valueCodeableConcept', FCE: 'itemControl' },
+    [ExtensionIdentifier.ItemControl]: {
+        path: { extension: 'valueCodeableConcept', questionnaire: 'itemControl' },
     },
-    'http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue': {
-        path: { FHIR: 'valueInteger', FCE: 'sliderStepValue' },
+    [ExtensionIdentifier.SliderStepValue]: {
+        path: { extension: 'valueInteger', questionnaire: 'sliderStepValue' },
     },
-    'http://hl7.org/fhir/StructureDefinition/questionnaire-unit': {
-        path: { FHIR: 'valueCoding', FCE: 'unit' },
+    [ExtensionIdentifier.Unit]: {
+        path: { extension: 'valueCoding', questionnaire: 'unit' },
     },
-    'http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource': {
+    [ExtensionIdentifier.ReferenceResource]: {
         transform: {
-            fromFHIR: (extension) => {
+            fromExtension: (extension) => {
                 if (extension.valueCode) {
                     return { referenceResource: [extension.valueCode] };
                 } else {
                     return {};
                 }
             },
-            toFHIR: (item) => {
+            toExtension: (item) => {
                 if (item.referenceResource?.length) {
                     return {
-                        url: 'http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource',
+                        url: ExtensionIdentifier.ReferenceResource,
                         valueCode: item.referenceResource[0],
                     };
                 }
@@ -73,43 +73,42 @@ export const extensionTransformers: ExtensionTransformer = {
         },
     },
 
-    'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemPopulationContext': {
-        path: { FHIR: 'valueExpression', FCE: 'itemPopulationContext' },
+    [ExtensionIdentifier.ItemPopulationContext]: {
+        path: { extension: 'valueExpression', questionnaire: 'itemPopulationContext' },
     },
-    'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression': {
-        path: { FHIR: 'valueExpression', FCE: 'initialExpression' },
+    [ExtensionIdentifier.InitialExpression]: {
+        path: { extension: 'valueExpression', questionnaire: 'initialExpression' },
     },
-    'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression': {
-        path: { FHIR: 'valueExpression', FCE: 'calculatedExpression' },
+    [ExtensionIdentifier.CalculatedExpression]: {
+        path: { extension: 'valueExpression', questionnaire: 'calculatedExpression' },
     },
-    'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-enableWhenExpression': {
-        path: { FHIR: 'valueExpression', FCE: 'enableWhenExpression' },
+    [ExtensionIdentifier.EnableWhenExpression]: {
+        path: { extension: 'valueExpression', questionnaire: 'enableWhenExpression' },
     },
-    'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression': {
-        path: { FHIR: 'valueExpression', FCE: 'answerExpression' },
+    [ExtensionIdentifier.AnswerExpression]: {
+        path: { extension: 'valueExpression', questionnaire: 'answerExpression' },
     },
-    'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn': {
+    [ExtensionIdentifier.ChoiceColumn]: {
         transform: {
-            fromFHIR: (extension) => {
+            fromExtension: (extension) => {
                 const choiceColumnExtension = extension.extension;
-
                 if (choiceColumnExtension) {
-                    const forDisplay = choiceColumnExtension.find((obj) => obj.url === 'forDisplay')?.valueBoolean;
-                    const path = choiceColumnExtension.find((obj) => obj.url === 'path')?.valueString;
-                    const choiceColumnArray = [];
-                    choiceColumnArray.push({
-                        forDisplay: forDisplay ?? false,
-                        path,
-                    });
-                    return { choiceColumn: choiceColumnArray };
-                } else {
-                    return {};
+                    return {
+                        choiceColumn: [
+                            {
+                                forDisplay:
+                                    choiceColumnExtension.find((obj) => obj.url === 'forDisplay')?.valueBoolean ??
+                                    false,
+                                path: choiceColumnExtension.find((obj) => obj.url === 'path')?.valueString,
+                            },
+                        ],
+                    };
                 }
             },
-            toFHIR: (item) => {
+            toExtension: (item) => {
                 if (item.choiceColumn) {
                     return {
-                        url: 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn',
+                        url: ExtensionIdentifier.ChoiceColumn,
                         extension: [
                             {
                                 url: 'forDisplay',
@@ -126,22 +125,22 @@ export const extensionTransformers: ExtensionTransformer = {
         },
     },
 
-    'https://beda.software/fhir-emr-questionnaire/adjust-last-to-right': {
-        path: { FHIR: 'valueBoolean', FCE: 'adjustLastToRight' },
+    [ExtensionIdentifier.AdjustLastToRight]: {
+        path: { extension: 'valueBoolean', questionnaire: 'adjustLastToRight' },
     },
-    'https://beda.software/fhir-emr-questionnaire/slider-start': {
-        path: { FHIR: 'valueInteger', FCE: 'start' },
+    [ExtensionIdentifier.SliderStart]: {
+        path: { extension: 'valueInteger', questionnaire: 'start' },
     },
-    'https://beda.software/fhir-emr-questionnaire/slider-stop': {
-        path: { FHIR: 'valueInteger', FCE: 'stop' },
+    [ExtensionIdentifier.SliderStop]: {
+        path: { extension: 'valueInteger', questionnaire: 'stop' },
     },
-    'https://beda.software/fhir-emr-questionnaire/help-text': {
-        path: { FHIR: 'valueString', FCE: 'helpText' },
+    [ExtensionIdentifier.HelpText]: {
+        path: { extension: 'valueString', questionnaire: 'helpText' },
     },
-    'https://beda.software/fhir-emr-questionnaire/slider-stop-label': {
-        path: { FHIR: 'valueString', FCE: 'stopLabel' },
+    [ExtensionIdentifier.StopLabel]: {
+        path: { extension: 'valueString', questionnaire: 'stopLabel' },
     },
-    'https://beda.software/fhir-emr-questionnaire/macro': {
-        path: { FHIR: 'valueString', FCE: 'macro' },
+    [ExtensionIdentifier.Macro]: {
+        path: { extension: 'valueString', questionnaire: 'macro' },
     },
 };
