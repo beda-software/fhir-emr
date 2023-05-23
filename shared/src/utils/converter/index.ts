@@ -81,6 +81,8 @@ export function toFHIRReference(r?: InternalReference): FHIRReference | undefine
 
     const { id, resourceType, ...commonReferenceProperties } = r;
 
+    delete commonReferenceProperties.resource;
+
     return {
         ...commonReferenceProperties,
         reference: `${resourceType}/${id}`,

@@ -1,82 +1,78 @@
 {
-  "authored": "2023-04-05T06:03:19Z",
-  "id": "24306b57-b463-4e39-807f-e715a80bbe5f",
-  "item": [
-    {
-      "answer": [
+    "authored": "2023-04-05T06:03:19Z",
+    "id": "24306b57-b463-4e39-807f-e715a80bbe5f",
+    "item": [
         {
-          "value": {}
-        }
-      ],
-      "linkId": "patient-id"
-    },
-    {
-      "answer": [
+            "answer": [],
+            "linkId": "patient-id"
+        },
         {
-          "valueString": "Nguyen"
-        }
-      ],
-      "linkId": "last-name"
-    },
-    {
-      "answer": [
+            "answer": [
+                {
+                    "valueString": "Nguyen"
+                }
+            ],
+            "linkId": "last-name"
+        },
         {
-          "valueString": "Emily"
-        }
-      ],
-      "linkId": "first-name"
-    },
-    {
-      "answer": [
+            "answer": [
+                {
+                    "valueString": "Emily"
+                }
+            ],
+            "linkId": "first-name"
+        },
         {
-          "valueString": "Marie"
-        }
-      ],
-      "linkId": "middle-name"
-    },
-    {
-      "answer": [
+            "answer": [
+                {
+                    "valueString": "Marie"
+                }
+            ],
+            "linkId": "middle-name"
+        },
         {
-          "valueDate": "1991-12-29"
-        }
-      ],
-      "linkId": "birth-date"
-    },
-    {
-      "answer": [
+            "answer": [
+                {
+                    "valueDate": "1991-12-29"
+                }
+            ],
+            "linkId": "birth-date"
+        },
         {
-          "valueString": "female"
-        }
-      ],
-      "linkId": "gender"
-    },
-    {
-      "answer": [
+            "answer": [
+                {
+                    "valueString": "female"
+                }
+            ],
+            "linkId": "gender"
+        },
         {
-          "valueString": "123-45-6789"
-        }
-      ],
-      "linkId": "ssn"
-    },
-    {
-      "answer": [
+            "answer": [
+                {
+                    "valueString": "123-45-6789"
+                }
+            ],
+            "linkId": "ssn"
+        },
         {
-          "valueString": "15551234567"
+            "answer": [
+                {
+                    "valueString": "15551234567"
+                }
+            ],
+            "linkId": "mobile"
         }
-      ],
-      "linkId": "mobile"
-    }
-  ],
-  "meta": {
-    "extension": [
-      {
-        "url": "ex:createdAt",
-        "valueInstant": "2023-04-05T06:03:21.353895Z"
-      }
     ],
-    "lastUpdated": "2023-04-05T06:03:21.353895Z",
-    "versionId": "20412"
-  },
-  "resourceType": "QuestionnaireResponse",
-  "status": "completed"
+    "meta": {
+        "extension": [
+            {
+                "url": "ex:createdAt",
+                "valueInstant": "2023-04-05T06:03:21.353895Z"
+            }
+        ],
+        "lastUpdated": "2023-04-05T06:03:21.353895Z",
+        "versionId": "20412"
+    },
+    "resourceType": "QuestionnaireResponse",
+    "status": "completed"
 }

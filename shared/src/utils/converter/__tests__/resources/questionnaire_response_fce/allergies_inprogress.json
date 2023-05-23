@@ -63,11 +63,7 @@
       "linkId": "reaction"
     },
     {
-      "answer": [
-        {
-          "value": {}
-        }
-      ],
+      "answer": [],
       "linkId": "notes"
     }
   ],

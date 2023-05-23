@@ -1,53 +1,49 @@
-export function processAnswers(items: any) {
-    if (!items) {
-        return;
-    }
+import { QuestionnaireResponseItemAnswer as FHIRQuestionnaireResponseItemAnswer } from 'fhir/r4b';
+import isEmpty from 'lodash/isEmpty';
 
-    function processAnswer(answerItem: any) {
-        if (!answerItem.value) {
-            return;
-        }
-        const value = answerItem.value;
-        const valueMappings = {
-            string: 'valueString',
-            integer: 'valueInteger',
-            boolean: 'valueBoolean',
-            Coding: 'valueCoding',
-            date: 'valueDate',
-            dateTime: 'valueDateTime',
-            time: 'valueTime',
-        };
-        for (const key in valueMappings) {
-            if (key in value) {
-                const newKey = valueMappings[key];
-                if (newKey) {
-                    answerItem[newKey] = value[key];
-                }
-                delete answerItem.value;
-                break;
-            }
-        }
-        if (value.Reference) {
-            if (value.Reference.resourceType && value.Reference.id) {
-                answerItem.valueReference = {
-                    display: value.Reference?.display,
-                    reference: `${value.Reference.resourceType}/${value.Reference.id}`,
-                };
-            } else {
-                answerItem.valueReference = value.Reference;
-            }
-            delete answerItem.value;
-        }
-    }
+import {
+    QuestionnaireResponseItem as FCEQuestionnaireResponseItem,
+    QuestionnaireResponseItemAnswer as FCEQuestionnaireResponseItemAnswer,
+} from 'shared/src/contrib/aidbox';
+import { toFHIRReference } from 'shared/src/utils/converter';
 
+export function processAnswers(items: FCEQuestionnaireResponseItem[]) {
     for (const item of items) {
         if (item.answer) {
-            for (const answer of item.answer) {
-                processAnswer(answer);
-            }
+            item.answer = item.answer.map(processAnswer).filter((answer) => !isEmpty(answer));
         }
         if (item.item) {
             processAnswers(item.item);
         }
     }
+}
+
+function processAnswer(answerItem: FCEQuestionnaireResponseItemAnswer): FHIRQuestionnaireResponseItemAnswer {
+    if (!answerItem.value) {
+        return answerItem;
+    }
+    const { value, ...item } = answerItem;
+    const fhirAnswerItem: FHIRQuestionnaireResponseItemAnswer = item;
+    const valueMappings = {
+        string: 'valueString',
+        integer: 'valueInteger',
+        boolean: 'valueBoolean',
+        Coding: 'valueCoding',
+        date: 'valueDate',
+        dateTime: 'valueDateTime',
+        time: 'valueTime',
+    };
+    for (const key in valueMappings) {
+        if (key in value) {
+            const newKey = valueMappings[key];
+            if (newKey) {
+                fhirAnswerItem[newKey] = value[key];
+            }
+            break;
+        }
+    }
+    if (value.Reference) {
+        fhirAnswerItem.valueReference = toFHIRReference(value.Reference);
+    }
+    return fhirAnswerItem;
 }

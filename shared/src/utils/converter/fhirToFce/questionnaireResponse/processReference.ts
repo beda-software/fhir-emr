@@ -1,16 +1,16 @@
-export function processReference(fhirQuestionnaireResponse: any) {
-    if (fhirQuestionnaireResponse.encounter && fhirQuestionnaireResponse.encounter.reference) {
-        const [resourceType, id] = fhirQuestionnaireResponse.encounter.reference.split('/');
-        fhirQuestionnaireResponse.encounter = {
-            resourceType,
-            id,
-        };
+import { QuestionnaireResponse as FHIRQuestionnaireResponse } from 'fhir/r4b';
+
+import { QuestionnaireResponse as FCEQuestionnaireResponse } from 'shared/src/contrib/aidbox';
+import { fromFHIRReference } from 'shared/src/utils/converter';
+
+export function processReference(fhirQuestionnaireResponse: FHIRQuestionnaireResponse): FCEQuestionnaireResponse {
+    const { encounter, source, ...commonProperties } = fhirQuestionnaireResponse;
+    const fceQuestionnaireResponse: FCEQuestionnaireResponse = commonProperties as FCEQuestionnaireResponse;
+    if (encounter?.reference) {
+        fceQuestionnaireResponse.encounter = fromFHIRReference(encounter);
     }
-    if (fhirQuestionnaireResponse.source && fhirQuestionnaireResponse.source.reference) {
-        const [resourceType, id] = fhirQuestionnaireResponse.source.reference.split('/');
-        fhirQuestionnaireResponse.source = {
-            resourceType,
-            id,
-        };
+    if (source?.reference) {
+        fceQuestionnaireResponse.source = fromFHIRReference(source);
     }
+    return fceQuestionnaireResponse;
 }

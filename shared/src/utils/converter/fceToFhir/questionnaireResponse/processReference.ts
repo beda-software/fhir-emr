@@ -1,12 +1,17 @@
-export function processReference(fceQR: any) {
-    if (fceQR.encounter && fceQR.encounter.resourceType && fceQR.encounter.id) {
-        fceQR.encounter.reference = `${fceQR.encounter.resourceType}/${fceQR.encounter.id}`;
-        delete fceQR.encounter.resourceType;
-        delete fceQR.encounter.id;
+import { QuestionnaireResponse as FHIRQuestionnaireResponse } from 'fhir/r4b';
+
+import { QuestionnaireResponse as FCEQuestionnaireResponse } from 'shared/src/contrib/aidbox';
+
+export function processReference(fceQR: FCEQuestionnaireResponse): FHIRQuestionnaireResponse {
+    const { encounter, source, ...commonProprties } = fceQR;
+    const fhirQuestionnaireResponse: FHIRQuestionnaireResponse = commonProprties as FHIRQuestionnaireResponse;
+    if (encounter && encounter.resourceType && encounter.id) {
+        const { id, resourceType, ...encounterProperties } = encounter;
+        fhirQuestionnaireResponse.encounter = { reference: `${resourceType}/${id}`, ...encounterProperties };
     }
-    if (fceQR.source && fceQR.source.resourceType && fceQR.source.id) {
-        fceQR.source.reference = `${fceQR.source.resourceType}/${fceQR.source.id}`;
-        delete fceQR.source.resourceType;
-        delete fceQR.source.id;
+    if (source && source.resourceType && source.id) {
+        const { id, resourceType, ...sourceProperties } = source;
+        fhirQuestionnaireResponse.source = { reference: `${resourceType}/${id}`, ...sourceProperties };
     }
+    return fhirQuestionnaireResponse;
 }

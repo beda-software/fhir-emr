@@ -19,11 +19,7 @@
     {
       "item": [
         {
-          "answer": [
-            {
-              "value": {}
-            }
-          ],
+          "answer": [],
           "linkId": "general"
         },
         {
@@ -47,19 +43,11 @@
           "linkId": "heent-comment"
         },
         {
-          "answer": [
-            {
-              "value": {}
-            }
-          ],
+          "answer": [],
           "linkId": "cardiovascular"
         },
         {
-          "answer": [
-            {
-              "value": {}
-            }
-          ],
+          "answer": [],
           "linkId": "respiratory"
         },
         {
@@ -83,27 +71,15 @@
           "linkId": "gastrointestinal-comment"
         },
         {
-          "answer": [
-            {
-              "value": {}
-            }
-          ],
+          "answer": [],
           "linkId": "genitourinary"
         },
         {
-          "answer": [
-            {
-              "value": {}
-            }
-          ],
+          "answer": [],
           "linkId": "musculoskeletal"
         },
         {
-          "answer": [
-            {
-              "value": {}
-            }
-          ],
+          "answer": [],
           "linkId": "neurologic"
         },
         {
@@ -127,19 +103,11 @@
           "linkId": "psychiatric-comment"
         },
         {
-          "answer": [
-            {
-              "value": {}
-            }
-          ],
+          "answer": [],
           "linkId": "skin"
         },
         {
-          "answer": [
-            {
-              "value": {}
-            }
-          ],
+          "answer": [],
           "linkId": "other"
         }
       ],
