@@ -98,30 +98,11 @@ item:
       language: text/fhirpath
       expression: "%AppointmentBundle.entry[0].resource.entry.resource.serviceType.coding"
   - text: Date
-    type: date
+    type: dateTime
     linkId: date
-    required: true
     initialExpression:
       language: text/fhirpath
-      expression: "%AppointmentBundle.entry[0].resource.entry.resource.start.substring(0,10)"
-  - text: Time
-    type: group
-    linkId: time-period
-    itemControl:
-      coding:
-        - code: time-range-picker
-    item:
-      - type: time
-        linkId: start-time
-        required: true
-        initialExpression:
-          language: text/fhirpath
-          expression: "%AppointmentBundle.entry[0].resource.entry.resource.start.substring(11)"
-      - type: time
-        linkId: end-time
-        initialExpression:
-          language: text/fhirpath
-          expression: "%AppointmentBundle.entry[0].resource.entry.resource.end.substring(11)"
+      expression: "%AppointmentBundle.entry[0].resource.entry.resource.start"
 meta:
   profile:
     - https://beda.software/beda-emr-questionnaire

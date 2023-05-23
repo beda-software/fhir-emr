@@ -6,8 +6,9 @@ import { isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { extractBundleResources, getFHIRResources, WithId } from 'fhir-react/lib/services/fhir';
 import { mapSuccess } from 'fhir-react/lib/services/service';
 import { parseFHIRReference } from 'fhir-react/lib/utils/fhir';
-import { Appointment, Bundle, Encounter, PractitionerRole } from 'fhir/r4b';
+import { Appointment, Bundle, Encounter as FHIREncounter, PractitionerRole } from 'fhir/r4b';
 
+import { Encounter as FCEEncounter } from 'shared/src/contrib/aidbox';
 import { inMemorySaveService } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { ReadonlyQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm/ReadonlyQuestionnaireResponseForm';
@@ -30,7 +31,7 @@ function useAppointmentDetailsModal(props: Props) {
     const { navigateToEncounter } = useNavigateToEncounter();
 
     const [encounterResponse] = useService(async () => {
-        const response = await getFHIRResources<Encounter>('Encounter', {
+        const response = await getFHIRResources<FHIREncounter>('Encounter', {
             appointment: appointmentId,
         });
 
@@ -41,7 +42,7 @@ function useAppointmentDetailsModal(props: Props) {
         });
     });
 
-    const { response: questionnaireResponse, onSubmit } = useQuestionnaireResponseForm({
+    const { response: questionnaireResponseRD, onSubmit } = useQuestionnaireResponseForm({
         questionnaireLoader: { type: 'id', questionnaireId: 'encounter-create-from-appointment' },
         questionnaireResponseSaveService: inMemorySaveService,
         launchContextParameters: [
@@ -55,24 +56,26 @@ function useAppointmentDetailsModal(props: Props) {
                 },
             },
         ],
-        onSuccess: ({ extractedBundle }: { extractedBundle: Bundle<WithId<Encounter>>[] }) => {
+        onSuccess: ({ extractedBundle }: { extractedBundle: Bundle<WithId<FCEEncounter>>[] }) => {
+            // NOTE: mapper extract resources in FCE format
             const encounter = extractBundleResources(extractedBundle[0]!).Encounter[0]!;
-            const patientId = parseFHIRReference(encounter.subject!).id!;
+
+            const patientId = encounter.subject?.id!;
             navigateToEncounter(patientId, encounter.id);
             onClose();
         },
     });
 
-    return { encounterResponse, questionnaireResponse, onSubmit, navigateToEncounter };
+    return { encounterResponse, questionnaireResponseRD, onSubmit, navigateToEncounter };
 }
 
 export function AppointmentDetailsModal(props: Props) {
     const { showModal, onClose, onEdit, appointmentId, status } = props;
-    const { encounterResponse, questionnaireResponse, onSubmit, navigateToEncounter } =
+    const { encounterResponse, questionnaireResponseRD, onSubmit, navigateToEncounter } =
         useAppointmentDetailsModal(props);
 
     const renderFooter = () => {
-        if (!isSuccess(encounterResponse) || !isSuccess(questionnaireResponse)) {
+        if (!isSuccess(encounterResponse) || !isSuccess(questionnaireResponseRD)) {
             return null;
         }
 
@@ -83,6 +86,7 @@ export function AppointmentDetailsModal(props: Props) {
         if (encounterResponse.data.encounter) {
             const { encounter } = encounterResponse.data;
             const patientId = parseFHIRReference(encounter.subject!).id!;
+
             return [
                 <Button
                     key="go-to-the-encounter"
@@ -107,8 +111,8 @@ export function AppointmentDetailsModal(props: Props) {
             <Button
                 key="start-the-encounter"
                 onClick={() => {
-                    if (isSuccess(questionnaireResponse)) {
-                        onSubmit(questionnaireResponse.data);
+                    if (isSuccess(questionnaireResponseRD)) {
+                        onSubmit(questionnaireResponseRD.data);
                     }
                 }}
                 type="primary"
@@ -120,7 +124,7 @@ export function AppointmentDetailsModal(props: Props) {
 
     return (
         <Modal open={showModal} title={t`Appointment`} footer={renderFooter()} onCancel={onClose}>
-            <RenderRemoteData remoteData={questionnaireResponse} renderLoading={Spinner}>
+            <RenderRemoteData remoteData={questionnaireResponseRD} renderLoading={Spinner}>
                 {(formData) => <ReadonlyQuestionnaireResponseForm formData={formData} />}
             </RenderRemoteData>
         </Modal>
