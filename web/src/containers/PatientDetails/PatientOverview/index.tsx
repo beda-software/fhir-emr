@@ -4,11 +4,11 @@ import { Button, notification } from 'antd';
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { extractBundleResources, WithId } from 'fhir-react/lib/services/fhir';
-import { parseFHIRReference } from 'fhir-react/lib/utils/fhir';
-import { Appointment, Bundle, Encounter, Patient } from 'fhir/r4b';
+import { Appointment, Bundle, Patient } from 'fhir/r4b';
 import _ from 'lodash';
 import { Link, useLocation } from 'react-router-dom';
 
+import { Encounter } from 'shared/src/contrib/aidbox';
 import { inMemorySaveService, questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { DashboardCard, DashboardCardTable } from 'src/components/DashboardCard';
@@ -151,9 +151,10 @@ function EditPatient(props: PatientOverviewProps) {
 
 interface StartEncounterProps {
     appointmentId: string;
+    onClose?: () => void;
 }
 
-function useStartEncounter(props: StartEncounterProps) {
+export function useStartEncounter(props: StartEncounterProps) {
     const { appointmentId } = props;
     const { navigateToEncounter } = useNavigateToEncounter();
 
@@ -163,13 +164,22 @@ function useStartEncounter(props: StartEncounterProps) {
         launchContextParameters: [
             {
                 name: 'Appointment',
-                resource: { id: appointmentId, resourceType: 'Appointment' } as Appointment,
+                resource: {
+                    resourceType: 'Appointment',
+                    id: appointmentId,
+                    status: 'booked',
+                    participant: [{ status: 'accepted' }],
+                },
             },
         ],
         onSuccess: ({ extractedBundle }: { extractedBundle: Bundle<WithId<Encounter>>[] }) => {
+            // NOTE: mapper extract resources in FCE format
             const encounter = extractBundleResources(extractedBundle[0]!).Encounter[0]!;
-            const patientId = parseFHIRReference(encounter.subject!).id!;
+            const patientId = encounter.subject?.id!;
             navigateToEncounter(patientId, encounter.id);
+            if (props.onClose) {
+                props.onClose();
+            }
         },
     });
 

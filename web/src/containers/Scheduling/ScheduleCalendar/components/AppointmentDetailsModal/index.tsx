@@ -3,19 +3,16 @@ import { Button } from 'antd';
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { useService } from 'fhir-react/lib/hooks/service';
 import { isSuccess } from 'fhir-react/lib/libs/remoteData';
-import { extractBundleResources, getFHIRResources, WithId } from 'fhir-react/lib/services/fhir';
+import { extractBundleResources, getFHIRResources } from 'fhir-react/lib/services/fhir';
 import { mapSuccess } from 'fhir-react/lib/services/service';
 import { parseFHIRReference } from 'fhir-react/lib/utils/fhir';
-import { Appointment, Bundle, Encounter as FHIREncounter, PractitionerRole } from 'fhir/r4b';
-
-import { Encounter as FCEEncounter } from 'shared/src/contrib/aidbox';
-import { inMemorySaveService } from 'shared/src/hooks/questionnaire-response-form-data';
+import { Appointment, Encounter, PractitionerRole } from 'fhir/r4b';
 
 import { ReadonlyQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm/ReadonlyQuestionnaireResponseForm';
 import { Modal } from 'src/components/Modal';
-import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
 import { useNavigateToEncounter } from 'src/containers/EncounterDetails/hooks';
+import { useStartEncounter } from 'src/containers/PatientDetails/PatientOverview';
 
 interface Props {
     practitionerRole: PractitionerRole;
@@ -27,11 +24,11 @@ interface Props {
 }
 
 function useAppointmentDetailsModal(props: Props) {
-    const { onClose, appointmentId } = props;
+    const { appointmentId } = props;
     const { navigateToEncounter } = useNavigateToEncounter();
-
+    const { response: questionnaireResponseRD, onSubmit } = useStartEncounter(props);
     const [encounterResponse] = useService(async () => {
-        const response = await getFHIRResources<FHIREncounter>('Encounter', {
+        const response = await getFHIRResources<Encounter>('Encounter', {
             appointment: appointmentId,
         });
 
@@ -40,30 +37,6 @@ function useAppointmentDetailsModal(props: Props) {
 
             return { encounter };
         });
-    });
-
-    const { response: questionnaireResponseRD, onSubmit } = useQuestionnaireResponseForm({
-        questionnaireLoader: { type: 'id', questionnaireId: 'encounter-create-from-appointment' },
-        questionnaireResponseSaveService: inMemorySaveService,
-        launchContextParameters: [
-            {
-                name: 'Appointment',
-                resource: {
-                    resourceType: 'Appointment',
-                    id: appointmentId,
-                    status: 'booked',
-                    participant: [{ status: 'accepted' }],
-                },
-            },
-        ],
-        onSuccess: ({ extractedBundle }: { extractedBundle: Bundle<WithId<FCEEncounter>>[] }) => {
-            // NOTE: mapper extract resources in FCE format
-            const encounter = extractBundleResources(extractedBundle[0]!).Encounter[0]!;
-
-            const patientId = encounter.subject?.id!;
-            navigateToEncounter(patientId, encounter.id);
-            onClose();
-        },
     });
 
     return { encounterResponse, questionnaireResponseRD, onSubmit, navigateToEncounter };
