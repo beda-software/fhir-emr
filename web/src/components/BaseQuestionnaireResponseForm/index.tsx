@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { isSuccess, loading, RemoteData } from 'fhir-react/lib/libs/remoteData';
 import { QuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { ComponentType, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
     calcInitialContext,
@@ -13,7 +13,9 @@ import {
     GroupItemComponent,
     ItemControlGroupItemComponentMapping,
     ItemControlQuestionItemComponentMapping,
+    QuestionItemComponent,
     QuestionItemComponentMapping,
+    QuestionItemProps,
     QuestionItems,
     QuestionnaireResponseFormData,
     QuestionnaireResponseFormProvider,
@@ -25,29 +27,8 @@ import 'react-phone-input-2/lib/style.css';
 import { saveQuestionnaireResponseDraft } from 'src/components/QuestionnaireResponseForm';
 import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
-import { TextWithMacroFill } from '../TextWithMacroFill';
 import s from './BaseQuestionnaireResponseForm.module.scss';
-import {
-    Col,
-    Group,
-    InlineChoice,
-    TimeRangePickerControl,
-    QuestionBoolean,
-    QuestionChoice,
-    QuestionDateTime,
-    QuestionDecimal,
-    QuestionInteger,
-    QuestionPhone,
-    QuestionSlider,
-    QuestionSolidRadio,
-    QuestionString,
-    QuestionText,
-    Row,
-    PractitionerRoleList,
-    BloodPressure,
-} from './widgets';
-import { Display } from './widgets/display';
-import { QuestionReference } from './widgets/reference';
+import { groupComponent, groupControlComponents, itemComponents, itemControlComponents } from './controls';
 
 export interface BaseQuestionnaireResponseFormProps {
     formData: QuestionnaireResponseFormData;
@@ -62,6 +43,11 @@ export interface BaseQuestionnaireResponseFormProps {
     autoSave?: boolean;
     draftSaveResponse?: RemoteData<QuestionnaireResponse>;
     setDraftSaveResponse?: (data: RemoteData<QuestionnaireResponse>) => void;
+    ItemWrapper?: ComponentType<{
+        item: QuestionItemProps;
+        control: QuestionItemComponent;
+        children: React.ReactElement;
+    }>;
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
@@ -74,6 +60,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         autoSave,
         draftSaveResponse,
         setDraftSaveResponse,
+        ItemWrapper = (props) => <React.Fragment {...props} />,
     } = props;
 
     const questionnaireId = formData.context.questionnaire.assembledFrom;
@@ -116,6 +103,33 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         debouncedSaveDraft(formValues);
     }, [formValues, debouncedSaveDraft]);
 
+    const questionItemComponents = {
+        ...itemComponents,
+        ...props.questionItemComponents,
+    };
+    const itemControlQuestionItemComponents = {
+        ...itemControlComponents,
+        ...props.itemControlQuestionItemComponents,
+    };
+
+    const wrapControls = useCallback(
+        (mapping: { [x: string]: QuestionItemComponent }): { [x: string]: QuestionItemComponent } => {
+            return _.chain(mapping)
+                .toPairs()
+                .map(([key, Control]) => [
+                    key,
+                    (props: QuestionItemProps) => (
+                        <ItemWrapper item={props} control={Control}>
+                            <Control {...props} />
+                        </ItemWrapper>
+                    ),
+                ])
+                .fromPairs()
+                .value();
+        },
+        [ItemWrapper],
+    );
+
     return (
         <FormProvider {...methods}>
             <form
@@ -132,37 +146,13 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                 <QuestionnaireResponseFormProvider
                     formValues={formValues}
                     setFormValues={(values, fieldPath, value) => setValue(fieldPath.join('.'), value)}
-                    groupItemComponent={Group}
+                    groupItemComponent={groupComponent}
                     itemControlGroupItemComponents={{
-                        col: Col,
-                        row: Row,
-                        'blood-pressure': BloodPressure,
-                        'time-range-picker': TimeRangePickerControl,
+                        ...groupControlComponents,
                         ...props.itemControlGroupItemComponents,
                     }}
-                    questionItemComponents={{
-                        text: QuestionText,
-                        string: QuestionString,
-                        decimal: QuestionDecimal,
-                        integer: QuestionInteger,
-                        date: QuestionDateTime,
-                        dateTime: QuestionDateTime,
-                        time: QuestionDateTime,
-                        choice: QuestionChoice,
-                        boolean: QuestionBoolean,
-                        display: Display,
-                        reference: QuestionReference,
-                        ...props.questionItemComponents,
-                    }}
-                    itemControlQuestionItemComponents={{
-                        phoneWidget: QuestionPhone,
-                        slider: QuestionSlider,
-                        'solid-radio-button': QuestionSolidRadio,
-                        'inline-choice': InlineChoice,
-                        'practitioner-role': PractitionerRoleList,
-                        'text-with-macro': TextWithMacroFill,
-                        ...props.itemControlQuestionItemComponents,
-                    }}
+                    questionItemComponents={wrapControls(questionItemComponents)}
+                    itemControlQuestionItemComponents={wrapControls(itemControlQuestionItemComponents)}
                     readOnly={readOnly}
                 >
                     <>
