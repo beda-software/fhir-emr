@@ -100,7 +100,7 @@ function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
 }
 
 export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) {
-    const { linkId, text, answerOption, repeats } = questionItem;
+    const { linkId, text, answerOption, repeats, required } = questionItem;
     let fieldName = [...parentPath, linkId, 0, 'value', 'string'];
 
     if (answerOption?.[0]?.value?.Coding) {
@@ -111,11 +111,17 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
         }
     }
 
-    const { value, onChange, disabled, hidden } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, hidden, fieldState } = useFieldController(fieldName, questionItem);
 
     if (answerOption?.[0]?.value?.Coding) {
         return (
-            <Form.Item label={text} hidden={hidden}>
+            <Form.Item
+                label={text}
+                hidden={hidden}
+                validateStatus={fieldState.invalid ? 'error' : 'success'}
+                help={fieldState.invalid && `${text} is required`}
+                required={required}
+            >
                 <ChoiceQuestionSelect
                     options={answerOption}
                     value={!repeats && value ? [value] : value}
@@ -127,7 +133,13 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
     }
 
     return (
-        <Form.Item label={text} hidden={hidden}>
+        <Form.Item
+            label={text}
+            hidden={hidden}
+            validateStatus={fieldState.invalid ? 'error' : 'success'}
+            help={fieldState.invalid && `${text} is required`}
+            required={required}
+        >
             <ANTDSelect style={inputStyle} disabled={disabled} value={value} onChange={onChange}>
                 {answerOption?.map((answerOption) => (
                     <ANTDSelect.Option key={JSON.stringify(answerOption)} value={answerOption.value?.string}>
