@@ -60,7 +60,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         autoSave,
         draftSaveResponse,
         setDraftSaveResponse,
-        ItemWrapper = (wrapperProps) => <React.Fragment {...wrapperProps} />,
+        ItemWrapper,
     } = props;
 
     const questionnaireId = formData.context.questionnaire.assembledFrom;
@@ -103,31 +103,45 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         debouncedSaveDraft(formValues);
     }, [formValues, debouncedSaveDraft]);
 
-    const questionItemComponents = {
-        ...itemComponents,
-        ...props.questionItemComponents,
-    };
-    const itemControlQuestionItemComponents = {
-        ...itemControlComponents,
-        ...props.itemControlQuestionItemComponents,
-    };
-
     const wrapControls = useCallback(
         (mapping: { [x: string]: QuestionItemComponent }): { [x: string]: QuestionItemComponent } => {
             return _.chain(mapping)
                 .toPairs()
                 .map(([key, Control]) => [
                     key,
-                    (itemProps: QuestionItemProps) => (
-                        <ItemWrapper item={itemProps} control={Control}>
-                            <Control {...itemProps} />
-                        </ItemWrapper>
-                    ),
+                    (itemProps: QuestionItemProps) => {
+                        if (ItemWrapper) {
+                            return (
+                                <ItemWrapper item={itemProps} control={Control}>
+                                    <Control {...itemProps} />
+                                </ItemWrapper>
+                            );
+                        }
+
+                        return <Control {...itemProps} />;
+                    },
                 ])
                 .fromPairs()
                 .value();
         },
         [ItemWrapper],
+    );
+
+    const questionItemComponents = useMemo(
+        () =>
+            wrapControls({
+                ...itemComponents,
+                ...props.questionItemComponents,
+            }),
+        [wrapControls, props.questionItemComponents],
+    );
+    const itemControlQuestionItemComponents = useMemo(
+        () =>
+            wrapControls({
+                ...itemControlComponents,
+                ...props.itemControlQuestionItemComponents,
+            }),
+        [wrapControls, props.itemControlQuestionItemComponents],
     );
 
     return (
@@ -151,8 +165,8 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                         ...groupControlComponents,
                         ...props.itemControlGroupItemComponents,
                     }}
-                    questionItemComponents={wrapControls(questionItemComponents)}
-                    itemControlQuestionItemComponents={wrapControls(itemControlQuestionItemComponents)}
+                    questionItemComponents={questionItemComponents}
+                    itemControlQuestionItemComponents={itemControlQuestionItemComponents}
                     readOnly={readOnly}
                 >
                     <>
