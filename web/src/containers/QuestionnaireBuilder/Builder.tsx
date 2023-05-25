@@ -2,7 +2,7 @@ import { t } from '@lingui/macro';
 import { Alert, Typography } from 'antd';
 import { RemoteData } from 'fhir-react';
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { mapFormToResponse } from 'sdc-qrf';
+import { QuestionItemProps, mapFormToResponse } from 'sdc-qrf';
 
 import { toQuestionnaireResponseFormData } from 'shared/src/hooks/questionnaire-response-form-data';
 import { fromFirstClassExtension } from 'shared/src/utils/converter';
@@ -10,12 +10,19 @@ import { fromFirstClassExtension } from 'shared/src/utils/converter';
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
 
+import { BuilderField } from './BuilderField';
 import s from './QuestionnaireBuilder.module.scss';
 
 const { Title } = Typography;
 
-export function Builder(props: { response: RemoteData; error?: string }) {
-    const { response, error } = props;
+interface Props {
+    response: RemoteData;
+    error?: string;
+    onQuestionnaireItemClick: (item: QuestionItemProps | undefined) => void;
+}
+
+export function Builder(props: Props) {
+    const { response, error, onQuestionnaireItemClick } = props;
 
     return (
         <RenderRemoteData
@@ -65,6 +72,9 @@ export function Builder(props: { response: RemoteData; error?: string }) {
                                         }),
                                     )
                                 }
+                                ItemWrapper={(props) => (
+                                    <BuilderField {...props} onQuestionnaireItemClick={onQuestionnaireItemClick} />
+                                )}
                             />
                         </>
                     );

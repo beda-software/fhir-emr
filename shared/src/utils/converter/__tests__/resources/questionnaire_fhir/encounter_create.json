@@ -1,8 +1,6 @@
 {
     "meta": {
-        "profile": [
-            "https://beda.software/beda-emr-questionnaire"
-        ],
+        "profile": ["https://beda.software/beda-emr-questionnaire"],
         "lastUpdated": "2023-04-10T03:43:34.792167Z",
         "versionId": "694",
         "extension": [
@@ -54,28 +52,28 @@
             "required": true,
             "extension": [
                 {
-                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn",
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource",
+                    "valueCode": "PractitionerRole"
+                },
+                {
                     "extension": [
-                        {
-                            "url": "path",
-                            "valueString": "practitioner.resource.name.given.first() + ' ' + practitioner.resource.name.family + ' - ' + specialty.first().coding.display"
-                        },
                         {
                             "url": "forDisplay",
                             "valueBoolean": true
+                        },
+                        {
+                            "url": "path",
+                            "valueString": "practitioner.resource.name.given.first() + ' ' + practitioner.resource.name.family + ' - ' + specialty.first().coding.display"
                         }
-                    ]
+                    ],
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn"
                 },
                 {
-                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression",
                     "valueExpression": {
                         "language": "application/x-fhir-query",
                         "expression": "PractitionerRole?_assoc=practitioner"
-                    }
-                },
-                {
-                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource",
-                    "valueCode": "PractitionerRole"
+                    },
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression"
                 }
             ]
         },

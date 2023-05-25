@@ -1,14 +1,9 @@
 import { Form } from 'antd';
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { useService } from 'fhir-react/lib/hooks/service';
-import {
-    extractBundleResources,
-    getAllFHIRResources,
-    getFHIRResource,
-} from 'fhir-react/lib/services/fhir';
+import { extractBundleResources, getAllFHIRResources, getFHIRResource } from 'fhir-react/lib/services/fhir';
 import { mapSuccess, resolveMap } from 'fhir-react/lib/services/service';
 import { formatFHIRDate, formatFHIRDateTime, parseFHIRDateTime } from 'fhir-react/lib/utils/date';
-import { parseFHIRReference } from 'fhir-react/lib/utils/fhir';
 import { Reference, Appointment, PractitionerRole } from 'fhir/r4b';
 import _ from 'lodash';
 import moment from 'moment';
@@ -59,9 +54,10 @@ function useDateTimeSlots(practitionerRole: Reference) {
 
 function usePractitionerRoleId(practitionerRolePath: Array<string | number>) {
     const [prId, setPRId] = useState<string | undefined>(undefined);
-
     const { watch } = useFormContext();
-    const newPRId = parseFHIRReference(_.get(watch(), [...practitionerRolePath])).id;
+
+    // const newPRId = parseFHIRReference(_.get(watch(), [...practitionerRolePath])).id;
+    const newPRId = _.get(watch(), [...practitionerRolePath])?.id;
 
     useEffect(() => {
         if (prId !== newPRId) {
@@ -108,16 +104,14 @@ function getDisabledTime(date: moment.Moment | null, timeSlots: TimeSlots) {
     }
 
     const currentHour = date.hour();
-    const enabledTimeSlots: string[] =
-        timeSlots.filter((v) => v.date === formatFHIRDate(date))[0]?.timeSlots ?? [];
+    const enabledTimeSlots: string[] = timeSlots.filter((v) => v.date === formatFHIRDate(date))[0]?.timeSlots ?? [];
 
     const enabledHours = _.uniq(enabledTimeSlots.map((d) => parseFHIRDateTime(d).hour()));
     const disabledHours = hoursRange.filter((v) => !enabledHours.includes(v));
 
-    const enabledMinutes = _.filter(
-        enabledTimeSlots,
-        (d) => parseFHIRDateTime(d).hour() === currentHour,
-    ).map((d) => parseFHIRDateTime(d).minute());
+    const enabledMinutes = _.filter(enabledTimeSlots, (d) => parseFHIRDateTime(d).hour() === currentHour).map((d) =>
+        parseFHIRDateTime(d).minute(),
+    );
     const disabledMinutes = minutesRange.filter((v) => !enabledMinutes.includes(v));
 
     return {
@@ -167,9 +161,7 @@ function AvailableDateControl(props: AvailableDatePickerProps & { practitionerRo
                         disabledDate={(date) => !enabledDates.includes(formatFHIRDate(date))}
                         disabledTime={(date) => getDisabledTime(date, timeSlots)}
                         onBlur={(e) => {
-                            const date = e.target.value
-                                ? moment(e.target.value, humanDateTime)
-                                : null;
+                            const date = e.target.value ? moment(e.target.value, humanDateTime) : null;
                             onDateChange(date, timeSlots);
                         }}
                     />

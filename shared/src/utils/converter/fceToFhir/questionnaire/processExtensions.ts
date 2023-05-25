@@ -1,16 +1,21 @@
+import { Extension as FHIRExtension, Questionnaire as FHIRQuestionnaire } from 'fhir/r4b';
+
 import { Questionnaire as FCEQuestionnaire } from 'shared/src/contrib/aidbox';
 
-export function processExtensions(questionnaire: FCEQuestionnaire) {
-    if (questionnaire.launchContext) {
-        const extension: any[] = [];
-        for (const launchContext of questionnaire.launchContext as any) {
-            const name = launchContext.name;
-            const typeList = launchContext.type;
-            const description = launchContext.description;
+export function processExtensions(questionnaire: FCEQuestionnaire): FHIRQuestionnaire {
+    const { launchContext, mapping, sourceQueries, targetStructureMap, ...fhirQuestionnaire } = questionnaire;
+
+    let extensions: FHIRExtension[] = [];
+
+    if (launchContext) {
+        for (const launchContextItem of launchContext) {
+            const name = launchContextItem.name;
+            const typeList = launchContextItem.type;
+            const description = launchContextItem.description;
 
             if (typeList) {
                 for (const typeCode of typeList) {
-                    const launchContextExtension: any = [
+                    let launchContextExtension: FHIRExtension[] = [
                         {
                             url: 'name',
                             valueCoding: name,
@@ -25,52 +30,47 @@ export function processExtensions(questionnaire: FCEQuestionnaire) {
                         });
                     }
 
-                    extension.push({
+                    extensions.push({
                         url: 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext',
                         extension: launchContextExtension,
                     });
                 }
             }
         }
-
-        questionnaire.extension = questionnaire.extension || [];
-        questionnaire.extension.push(...extension);
-        delete questionnaire.launchContext;
     }
 
-    if (questionnaire.mapping) {
-        const mappingExtension = questionnaire.mapping.map((mapping) => ({
-            url: 'http://beda.software/fhir-extensions/questionnaire-mapper',
-            valueReference: {
-                reference: `Mapping/${mapping.id}`,
-            },
-        }));
-        questionnaire.extension = questionnaire.extension || [];
-        questionnaire.extension.push(...mappingExtension);
-        delete questionnaire.mapping;
+    if (mapping) {
+        extensions = extensions.concat(
+            mapping.map((mapping) => ({
+                url: 'http://beda.software/fhir-extensions/questionnaire-mapper',
+                valueReference: {
+                    reference: `Mapping/${mapping.id}`,
+                },
+            })),
+        );
     }
 
-    if (questionnaire.sourceQueries) {
-        const sourceQueries = questionnaire.sourceQueries;
-        for (const item of sourceQueries) {
-            const extension = {
+    if (sourceQueries) {
+        extensions = extensions.concat(
+            sourceQueries.map((item) => ({
                 url: 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-sourceQueries',
                 valueReference: { reference: `#${item.localRef}` },
-            };
-            questionnaire.extension = questionnaire.extension ?? [];
-            questionnaire.extension.push(extension);
-        }
-        delete questionnaire.sourceQueries;
+            })),
+        );
     }
 
-    if (questionnaire.targetStructureMap) {
-        const extensions = questionnaire.targetStructureMap.map((targetStructureMapRef) => ({
-            url: 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-targetStructureMap',
-            valueCanonical: targetStructureMapRef,
-        }));
-
-        questionnaire.extension = questionnaire.extension || [];
-        questionnaire.extension.push(...extensions);
-        delete questionnaire.targetStructureMap;
+    if (targetStructureMap) {
+        extensions = extensions.concat(
+            targetStructureMap.map((targetStructureMapRef) => ({
+                url: 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-targetStructureMap',
+                valueCanonical: targetStructureMapRef,
+            })),
+        );
     }
+
+    if (extensions.length) {
+        fhirQuestionnaire.extension = (fhirQuestionnaire.extension ?? []).concat(extensions);
+    }
+
+    return fhirQuestionnaire as FHIRQuestionnaire;
 }

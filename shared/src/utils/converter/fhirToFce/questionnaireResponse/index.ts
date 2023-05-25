@@ -11,10 +11,11 @@ export function convertQuestionnaireResponse(
     questionnaireResponse: FHIRQuestionnaireResponse,
 ): FCEQuestionnaireResponse {
     questionnaireResponse = cloneDeep(questionnaireResponse);
-    processAnswers(questionnaireResponse.item);
-    if (questionnaireResponse.meta) {
-        processMeta(questionnaireResponse.meta);
+    if (questionnaireResponse.item) {
+        processAnswers(questionnaireResponse.item);
     }
-    processReference(questionnaireResponse);
-    return questionnaireResponse as unknown as FCEQuestionnaireResponse;
+    if (questionnaireResponse.meta) {
+        questionnaireResponse.meta = processMeta(questionnaireResponse.meta);
+    }
+    return processReference(questionnaireResponse);
 }

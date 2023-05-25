@@ -4,8 +4,12 @@ import { isFailure, isSuccess, loading, success } from 'fhir-react/lib/libs/remo
 import { getFHIRResource, saveFHIRResource } from 'fhir-react/lib/services/fhir';
 import { formatError } from 'fhir-react/lib/utils/error';
 import { Questionnaire, QuestionnaireItem } from 'fhir/r4b';
+import _ from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { QuestionItemProps } from 'sdc-qrf';
+
+import { fromFirstClassExtension } from 'shared/src/utils/converter';
 
 import { generateQuestionnaire } from 'src/services/questionnaire-builder';
 
@@ -91,5 +95,32 @@ export function useQuestionnaireBuilder() {
         [response],
     );
 
-    return { response, onSaveQuestionnaire, onSubmitPrompt, error };
+    const onItemChange = useCallback(
+        (item: QuestionItemProps) => {
+            if (isSuccess(response)) {
+                const path = ['item', ...item.parentPath];
+                const items = _.get(response.data, path.join('.'));
+                const itemIndex = Array.isArray(items)
+                    ? items.findIndex((i) => i.linkId === item.questionItem.linkId)
+                    : -1;
+
+                if (itemIndex > -1) {
+                    const name = [...path, itemIndex].join('.');
+                    const fhirQuestionItem = fromFirstClassExtension({
+                        resourceType: 'Questionnaire',
+                        status: 'draft',
+                        meta: {
+                            profile: ['https://beda.software/beda-emr-questionnaire'],
+                        },
+                        item: [item.questionItem],
+                    }).item![0]!;
+                    const resultQuestionnaire = _.set({ ...response.data }, name, fhirQuestionItem);
+                    setResponse(success(resultQuestionnaire));
+                }
+            }
+        },
+        [response],
+    );
+
+    return { response, onSaveQuestionnaire, onSubmitPrompt, onItemChange, error };
 }

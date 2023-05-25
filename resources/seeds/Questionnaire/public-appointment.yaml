@@ -21,12 +21,19 @@ item:
       coding:
         - code: phoneWidget
   - text: Practitioner
-    type: choice
-    linkId: practitioner-role
+    type: reference
+    referenceResource:
+      - PractitionerRole
     required: true
-    itemControl:
-      coding:
-        - code: practitioner-role
+    linkId: practitioner-role
+    answerExpression:
+      language: application/x-fhir-query
+      expression: "PractitionerRole?_assoc=practitioner"
+    choiceColumn:
+      - forDisplay: true
+        path: >-
+          practitioner.resource.name.given.first() + ' ' + 
+          practitioner.resource.name.family + ' - ' + specialty.first().coding.display
   - text: Type
     linkId: service-type
     type: choice

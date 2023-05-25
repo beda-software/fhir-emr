@@ -1,0 +1,61 @@
+import {
+    GroupItemComponent,
+    ItemControlGroupItemComponentMapping,
+    ItemControlQuestionItemComponentMapping,
+    QuestionItemComponentMapping,
+} from 'sdc-qrf/lib/types';
+
+import { TextWithMacroFill } from '../TextWithMacroFill';
+import {
+    Col,
+    Group,
+    InlineChoice,
+    TimeRangePickerControl,
+    QuestionBoolean,
+    QuestionChoice,
+    QuestionDateTime,
+    QuestionDecimal,
+    QuestionInteger,
+    QuestionPhone,
+    QuestionSlider,
+    QuestionSolidRadio,
+    QuestionString,
+    QuestionText,
+    Row,
+    PractitionerRoleList,
+    BloodPressure,
+} from './widgets';
+import { Display } from './widgets/display';
+import { QuestionReference } from './widgets/reference';
+
+export const itemComponents: QuestionItemComponentMapping = {
+    text: QuestionText,
+    string: QuestionString,
+    decimal: QuestionDecimal,
+    integer: QuestionInteger,
+    date: QuestionDateTime,
+    dateTime: QuestionDateTime,
+    time: QuestionDateTime,
+    choice: QuestionChoice,
+    boolean: QuestionBoolean,
+    display: Display,
+    reference: QuestionReference,
+};
+
+export const groupComponent: GroupItemComponent = Group;
+
+export const itemControlComponents: ItemControlQuestionItemComponentMapping = {
+    phoneWidget: QuestionPhone,
+    slider: QuestionSlider,
+    'solid-radio-button': QuestionSolidRadio,
+    'inline-choice': InlineChoice,
+    'practitioner-role': PractitionerRoleList,
+    'text-with-macro': TextWithMacroFill,
+};
+
+export const groupControlComponents: ItemControlGroupItemComponentMapping = {
+    col: Col,
+    row: Row,
+    'blood-pressure': BloodPressure,
+    'time-range-picker': TimeRangePickerControl,
+};

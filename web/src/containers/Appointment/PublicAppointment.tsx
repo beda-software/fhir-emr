@@ -19,18 +19,14 @@ import { history } from 'src/services/history';
 import s from './PublicAppointment.module.scss';
 
 export function PublicAppointment() {
-    const practitionerRolePath = ['practitioner-role', 0, 'valueReference'];
+    const practitionerRolePath = ['practitioner-role', 0, 'value', 'Reference'];
     const appToken = getToken();
     const [isLoading, setIsloading] = useState(!appToken);
 
     useEffect(() => {
         if (!appToken) {
-            axiosFHIRInstance.defaults.headers.Authorization = `Basic ${window.btoa(
-                'anonymous:secret',
-            )}`;
-            axiosAidboxInstance.defaults.headers.Authorization = `Basic ${window.btoa(
-                'anonymous:secret',
-            )}`;
+            axiosFHIRInstance.defaults.headers.Authorization = `Basic ${window.btoa('anonymous:secret')}`;
+            axiosAidboxInstance.defaults.headers.Authorization = `Basic ${window.btoa('anonymous:secret')}`;
             setIsloading(false);
 
             return;
@@ -66,10 +62,7 @@ export function PublicAppointment() {
                             }}
                             itemControlQuestionItemComponents={{
                                 'date-time-slot': (props) => (
-                                    <DateTimeSlotPicker
-                                        {...props}
-                                        practitionerRolePath={practitionerRolePath}
-                                    />
+                                    <DateTimeSlotPicker {...props} practitionerRolePath={practitionerRolePath} />
                                 ),
                             }}
                             initialQuestionnaireResponse={{
