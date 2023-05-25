@@ -11,7 +11,7 @@ import { QuestionItemProps } from 'sdc-qrf';
 
 import { fromFirstClassExtension } from 'shared/src/utils/converter';
 
-import { generateQuestionnaire } from 'src/services/questionnaire-builder';
+import { generateQuestionnaire, generateMapper } from 'src/services/questionnaire-builder';
 
 function cleanUpQuestionnaire(questionnaire: Questionnaire) {
     function cleanUpItems(item: Questionnaire['item']): Questionnaire['item'] {
@@ -123,4 +123,22 @@ export function useQuestionnaireBuilder() {
     );
 
     return { response, onSaveQuestionnaire, onSubmitPrompt, onItemChange, error };
+}
+
+export function useMapper() {
+    const [prompt, setPrompt] = useState('patient');
+    const [mapper, setMapper] = useState<RemoteData<object>>(notAsked);
+    const generate = useCallback(
+        async (q: Questionnaire) => {
+            setMapper(loading);
+            setMapper(await generateMapper(JSON.stringify(q), prompt));
+        },
+        [prompt],
+    );
+    return {
+        prompt,
+        mapper,
+        generate,
+        setPrompt,
+    };
 }
