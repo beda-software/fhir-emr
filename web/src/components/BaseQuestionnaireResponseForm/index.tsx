@@ -60,7 +60,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         autoSave,
         draftSaveResponse,
         setDraftSaveResponse,
-        ItemWrapper = (props) => <React.Fragment {...props} />,
+        ItemWrapper = (wrapperProps) => <React.Fragment {...wrapperProps} />,
     } = props;
 
     const questionnaireId = formData.context.questionnaire.assembledFrom;
