@@ -118,9 +118,9 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                 .toPairs()
                 .map(([key, Control]) => [
                     key,
-                    (props: QuestionItemProps) => (
-                        <ItemWrapper item={props} control={Control}>
-                            <Control {...props} />
+                    (itemProps: QuestionItemProps) => (
+                        <ItemWrapper item={itemProps} control={Control}>
+                            <Control {...itemProps} />
                         </ItemWrapper>
                     ),
                 ])
