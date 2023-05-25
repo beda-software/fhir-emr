@@ -28,6 +28,10 @@
           }
         },
         {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue",
+          "valueInteger": 2
+        },
+        {
           "url": "https://beda.software/fhir-emr-questionnaire/slider-start",
           "valueInteger": 1
         },
@@ -42,10 +46,6 @@
         {
           "url": "https://beda.software/fhir-emr-questionnaire/slider-stop-label",
           "valueString": "20+"
-        },
-        {
-          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue",
-          "valueInteger": 2
         }
       ],
       "text": "Frequency per week"

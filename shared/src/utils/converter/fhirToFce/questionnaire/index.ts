@@ -3,10 +3,10 @@ import cloneDeep from 'lodash/cloneDeep';
 
 import { Questionnaire as FCEQuestionnaire } from 'shared/src/contrib/aidbox';
 
+import { checkFhirQuestionnaireProfile, trimUndefined } from '../utils';
 import { processExtensions } from './processExtensions';
 import { processItems } from './processItems';
 import { processMeta } from './processMeta';
-import { checkFhirQuestionnaireProfile, trimUndefined } from './utils';
 
 export function convertQuestionnaire(fhirQuestionnaire: FHIRQuestionnaire): FCEQuestionnaire {
     checkFhirQuestionnaireProfile(fhirQuestionnaire);

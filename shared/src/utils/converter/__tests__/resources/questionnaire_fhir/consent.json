@@ -21,15 +21,19 @@
             "required": true,
             "extension": [
                 {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource",
+                    "valueCode": "Practitioner"
+                },
+                {
                     "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn",
                     "extension": [
                         {
-                            "url": "path",
-                            "valueString": "name.given.first() + ' ' + name.family"
-                        },
-                        {
                             "url": "forDisplay",
                             "valueBoolean": true
+                        },
+                        {
+                            "url": "path",
+                            "valueString": "name.given.first() + ' ' + name.family"
                         }
                     ]
                 },
@@ -39,10 +43,6 @@
                         "language": "application/x-fhir-query",
                         "expression": "Practitioner"
                     }
-                },
-                {
-                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource",
-                    "valueCode": "Practitioner"
                 }
             ]
         },
@@ -54,15 +54,19 @@
             "required": true,
             "extension": [
                 {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource",
+                    "valueCode": "Endpoint"
+                },
+                {
                     "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn",
                     "extension": [
                         {
-                            "url": "path",
-                            "valueString": "name"
-                        },
-                        {
                             "url": "forDisplay",
                             "valueBoolean": true
+                        },
+                        {
+                            "url": "path",
+                            "valueString": "name"
                         }
                     ]
                 },
@@ -72,10 +76,6 @@
                         "language": "application/x-fhir-query",
                         "expression": "Endpoint?identifier=https://fhir.emr.beda.software/CodeSystem/consent-subject|&status=active"
                     }
-                },
-                {
-                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource",
-                    "valueCode": "Endpoint"
                 }
             ]
         },

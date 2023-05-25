@@ -22,7 +22,7 @@
         {
           "valueReference": {
             "display": "Other",
-            "reference": "http://example.org/other-colors/123"
+            "reference": "Color/123"
           }
         },
         {

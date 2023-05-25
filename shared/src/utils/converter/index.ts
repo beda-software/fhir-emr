@@ -1,45 +1,91 @@
-import { Coding, Extension, Reference } from 'fhir/r4b';
+import {
+    Reference as FHIRReference,
+    Extension as FHIRExtension,
+    QuestionnaireItem as FHIRQuestionnaireItem,
+} from 'fhir/r4b';
 
-import { CodeableConcept, Expression } from 'shared/src/contrib/aidbox';
+import {
+    Extension as FCEExtension,
+    QuestionnaireItem as FCEQuestionnaireItem,
+    InternalReference,
+} from 'shared/src/contrib/aidbox';
 
+import { ExtensionIdentifier, extensionTransformers } from './extensions';
 import { fromFirstClassExtension } from './fceToFhir';
 import { toFirstClassExtension } from './fhirToFce';
 import { processLaunchContext as processLaunchContextToFce } from './fhirToFce/questionnaire/processExtensions';
 
-interface ExtensionValue {
-    'ex:createdAt': string;
-    'http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl': CodeableConcept;
-    'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression': Expression;
-    'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn': Extension[];
-    'http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource': Coding;
-}
-
-const extensionsMap: Record<keyof ExtensionValue, keyof Extension> = {
-    'ex:createdAt': 'valueInstant',
-    'http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl': 'valueCodeableConcept',
-    'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression': 'valueExpression',
-    'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn': 'extension',
-    'http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource': 'valueCode',
-};
-
-export function extractExtension<U extends keyof ExtensionValue>(extension: Extension[] | undefined, url: U) {
-    const e = extension?.find((e) => e.url === url);
-    if (e) {
-        const getter = extensionsMap[url];
-        return e[getter] as ExtensionValue[U];
+export function convertFromFHIRExtension(extension: FHIRExtension): Partial<FCEQuestionnaireItem> | undefined {
+    const identifier = extension.url;
+    const transformer = extensionTransformers[identifier as ExtensionIdentifier];
+    if (transformer !== undefined) {
+        if ('transform' in transformer) {
+            return transformer.transform.fromExtension(extension);
+        } else {
+            return { [transformer.path.questionnaire]: extension[transformer.path.extension] };
+        }
     }
 }
 
-export function fromFHIRReference(r?: Reference) {
+export function convertToFHIRExtension(item: FCEQuestionnaireItem): FHIRExtension[] {
+    let extensions: FHIRExtension[] = [];
+    for (const identifer in ExtensionIdentifier) {
+        const transformer = extensionTransformers[ExtensionIdentifier[identifer] as ExtensionIdentifier];
+        if ('transform' in transformer) {
+            const extension = transformer.transform.toExtension(item);
+            if (extension !== undefined) {
+                extensions.push(extension);
+            }
+        } else {
+            const extensionValue = item[transformer.path.questionnaire];
+            if (extensionValue !== undefined) {
+                const extension: FHIRExtension = {
+                    [transformer.path.extension]: extensionValue,
+                    url: ExtensionIdentifier[identifer],
+                };
+                extensions.push(extension);
+            }
+        }
+    }
+    return extensions;
+}
+
+export function extractExtension(extension: FCEExtension[] | undefined, url: 'ex:createdAt') {
+    return extension?.find((e) => e.url === url)?.valueInstant;
+}
+
+export function findExtension(item: FHIRQuestionnaireItem, url: string) {
+    return item.extension?.find((ext) => ext.url === url);
+}
+
+export function fromFHIRReference(r?: FHIRReference): InternalReference | undefined {
     if (!r || !r.reference) {
         return undefined;
     }
 
-    const [resourceType, id] = r.reference?.split('/');
+    const { reference: literalReference, ...commonReferenceProperties } = r;
+
+    const [id, resourceType] = r.reference.split('/').reverse();
 
     return {
-        id,
+        ...commonReferenceProperties,
+        id: id!,
         resourceType,
+    };
+}
+
+export function toFHIRReference(r?: InternalReference): FHIRReference | undefined {
+    if (!r) {
+        return undefined;
+    }
+
+    const { id, resourceType, ...commonReferenceProperties } = r;
+
+    delete commonReferenceProperties.resource;
+
+    return {
+        ...commonReferenceProperties,
+        reference: `${resourceType}/${id}`,
     };
 }
 

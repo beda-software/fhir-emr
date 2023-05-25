@@ -14191,6 +14191,13 @@ export interface QuestionnaireItem {
     /** NOTE: from extension http://hl7.org/fhir/StructureDefinition/variable */
     /** Variable specifying a logic to generate a variable for use in subsequent logic. The name of the variable will be added to FHIRPath's context when processing descendants of the element that contains this extension. */
     variable?: Expression[];
+    unit?: Coding;
+    sliderStepValue?: integer;
+    adjustLastToRight?: boolean;
+    start?: integer;
+    stop?: integer;
+    helpText?: string;
+    stopLabel?: string;
 }
 
 export interface QuestionnaireItemAnswerOption {
@@ -14224,7 +14231,7 @@ export interface QuestionnaireItemChoiceColumn {
     label?: string;
     /** NOTE: from extension path */
     /** Column path */
-    path: string;
+    path?: string;
     /** NOTE: from extension width */
     /** Width of column */
     width?: Quantity;
@@ -14303,7 +14310,7 @@ export interface QuestionnaireLaunchContext {
     /** NOTE: from extension description */
     description?: string;
     /** NOTE: from extension name */
-    name?: id;
+    name?: Coding;
     /** NOTE: from extension type */
     type?: code;
 }
