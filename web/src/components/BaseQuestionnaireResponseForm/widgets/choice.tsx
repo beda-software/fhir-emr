@@ -101,7 +101,7 @@ function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
 
 export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, text, answerOption, repeats, required } = questionItem;
-    let fieldName = [...parentPath, linkId, 0, 'value', 'string'];
+    let fieldName = [...parentPath, linkId, 0, 'value', 'Coding'];
 
     if (answerOption?.[0]?.value?.Coding) {
         if (repeats) {
