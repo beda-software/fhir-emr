@@ -17,3 +17,17 @@ export async function generateQuestionnaire(prompt: string, questionnaire?: stri
         },
     });
 }
+
+export async function generateMapper(questionnaire: string, resource: string) {
+    const appToken = getToken();
+
+    return await service<any>({
+        baseURL: config.aiQuestionnaireBuilderUrl,
+        url: `/mapper`,
+        method: 'POST',
+        data: { questionnaire, resource },
+        headers: {
+            Authorization: `Bearer ${appToken}`,
+        },
+    });
+}
