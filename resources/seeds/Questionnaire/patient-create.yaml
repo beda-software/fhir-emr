@@ -30,9 +30,15 @@ item:
     text: Gender
     answerOption:
       - value:
-          string: male
+          Coding:
+            code: male
+            system: http://hl7.org/fhir/administrative-gender
+            display: Male
       - value:
-          string: female
+          Coding:
+            code: female
+            system: http://hl7.org/fhir/administrative-gender
+            display: Female
   - linkId: ssn
     type: string
     text: SSN

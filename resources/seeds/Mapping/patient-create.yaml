@@ -5,7 +5,7 @@ body:
             fhirpath("QuestionnaireResponse.repeat(item).where(linkId='ssn').answer.valueString").0
         gender: >-
             $
-            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='gender').answer.valueString").0
+            fhirpath("QuestionnaireResponse.repeat(item).where(linkId='gender').answer.valueCoding.code").0
         mobile: >-
             $
             fhirpath("QuestionnaireResponse.repeat(item).where(linkId='mobile').answer.valueString").0
