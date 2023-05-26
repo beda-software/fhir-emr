@@ -61,7 +61,7 @@ item:
             display: Female
     initialExpression:
       language: text/fhirpath
-      expression: "%Patient.gender"
+      expression: "%Questionnaire.repeat(item).where(linkId='gender').answerOption.valueCoding.where(code=%Patient.gender)"
   - linkId: ssn
     type: string
     text: SSN
