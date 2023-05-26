@@ -105,7 +105,6 @@ item:
         type: choice
         required: true
         linkId: service-type
-        answerValueSet: "appointment-type"
         enableBehavior: any
         enableWhen:
           - question: predefined-practitioner-role-id
