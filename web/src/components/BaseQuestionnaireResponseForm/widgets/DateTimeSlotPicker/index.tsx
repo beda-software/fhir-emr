@@ -24,7 +24,7 @@ interface AvailableDatePickerProps extends QuestionItemProps {
     practitionerRolePath: Array<string | number>;
 }
 
-function useDateTimeSlots(practitionerRole: Reference) {
+function useDateTimeSlots(practitionerRoleRef: Reference) {
     const { calendarOptions } = useCalendarOptions();
     const { slotDuration } = calendarOptions;
 
@@ -32,9 +32,9 @@ function useDateTimeSlots(practitionerRole: Reference) {
         async () =>
             mapSuccess(
                 await resolveMap({
-                    practitionerRole: getFHIRResource<PractitionerRole>(practitionerRole),
+                    practitionerRole: getFHIRResource<PractitionerRole>(practitionerRoleRef),
                     appointmentsBundle: getAllFHIRResources<Appointment>('Appointment', {
-                        actor: practitionerRole.id,
+                        actor: practitionerRoleRef.id,
                         date: [`ge${formatFHIRDateTime(moment().startOf('day'))}`],
                     }),
                 }),
@@ -46,7 +46,7 @@ function useDateTimeSlots(practitionerRole: Reference) {
                     };
                 },
             ),
-        [practitionerRole.id],
+        [practitionerRoleRef.id],
     );
 
     return { response };

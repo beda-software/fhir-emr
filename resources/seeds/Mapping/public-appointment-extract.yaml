@@ -4,7 +4,7 @@ body:
     lastName: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='last-name').answer.valueString").0
     mobile: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='mobile').answer.valueString").0
     practitionerRole: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-role').answer.valueReference").0
-    startDateTime: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='date-time-slot').answer.valueSateTime").0
+    startDateTime: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='date-time-slot').answer.valueDateTime").0
     serviceTypeCoding: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='service-type').answer.valueCoding").0
   $body:
     $let:
