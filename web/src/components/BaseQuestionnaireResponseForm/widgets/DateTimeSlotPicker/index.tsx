@@ -34,7 +34,7 @@ function useDateTimeSlots(practitionerRoleRef: Reference) {
                 await resolveMap({
                     practitionerRole: getFHIRResource<PractitionerRole>(practitionerRoleRef),
                     appointmentsBundle: getAllFHIRResources<Appointment>('Appointment', {
-                        actor: practitionerRoleRef.id,
+                        actor: practitionerRoleRef.reference,
                         date: [`ge${formatFHIRDateTime(moment().startOf('day'))}`],
                     }),
                 }),
@@ -46,7 +46,7 @@ function useDateTimeSlots(practitionerRoleRef: Reference) {
                     };
                 },
             ),
-        [practitionerRoleRef.id],
+        [practitionerRoleRef.reference],
     );
 
     return { response };
