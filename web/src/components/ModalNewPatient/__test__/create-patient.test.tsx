@@ -66,7 +66,11 @@ describe('createPatient', () => {
                 gender: [
                     {
                         value: {
-                            string: 'male',
+                            Coding: {
+                                code: 'male',
+                                display: 'Male',
+                                system: 'http://hl7.org/fhir/administrative-gender',
+                            },
                         },
                     },
                 ],
