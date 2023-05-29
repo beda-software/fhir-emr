@@ -27,7 +27,7 @@ const columns: ColumnsType<Questionnaire> = [
         title: <Trans id="msg.QuestionnaireName">Name</Trans>,
         dataIndex: 'name',
         key: 'name',
-        render: (_text, resource) => resource.name || resource.id,
+        render: (_text, resource) => resource.title || resource.id,
     },
 
     {
