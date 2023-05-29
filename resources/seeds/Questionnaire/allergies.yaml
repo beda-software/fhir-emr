@@ -4,7 +4,8 @@ url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/allergi
 meta:
     profile:
         - https://beda.software/beda-emr-questionnaire
-name: Allergies
+name: allergies
+title: Allergies
 status: active
 subjectType:
     - Encounter

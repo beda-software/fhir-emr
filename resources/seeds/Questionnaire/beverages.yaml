@@ -34,7 +34,8 @@ item:
 meta:
   profile:
     - https://beda.software/beda-emr-questionnaire
-name: Beverages
+name: beverages
+title: Beverages
 status: draft
 subjectType:
   - Patient

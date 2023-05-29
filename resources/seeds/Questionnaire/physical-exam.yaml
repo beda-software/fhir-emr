@@ -1,7 +1,8 @@
 resourceType: Questionnaire
 id: physical-exam
 status: active
-name: Physical exam
+name: physical-exam
+title: Physical exam
 subjectType:
   - Encounter
 launchContext:

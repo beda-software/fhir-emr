@@ -1,5 +1,6 @@
 id: encounter-create
 resourceType: Questionnaire
+name: encounter-create
 title: Encounter create
 status: active
 mapping:

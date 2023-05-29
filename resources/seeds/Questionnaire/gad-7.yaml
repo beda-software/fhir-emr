@@ -1,6 +1,7 @@
 id: gad7
 resourceType: Questionnaire
-name: GAD-7
+name: gad-7
+title: GAD-7
 status: active
 subjectType:
     - Encounter

@@ -1,6 +1,7 @@
 id: medication
 resourceType: Questionnaire
 name: Medication
+title: Medication
 status: active
 subjectType:
     - Encounter

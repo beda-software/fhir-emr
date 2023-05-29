@@ -1,6 +1,7 @@
 id: immunization
 resourceType: Questionnaire
-name: Immunization
+name: immunization
+title: Immunization
 status: active
 subjectType:
     - Encounter

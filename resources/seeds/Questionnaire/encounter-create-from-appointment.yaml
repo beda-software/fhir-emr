@@ -1,7 +1,8 @@
 id: encounter-create-from-appointment
 name: encounter-create-from-appointment
 resourceType: Questionnaire
-title: Encounter create
+title: Encounter create from the selected appointment
+name: encounter-create-from-appointment
 status: active
 mapping:
   - id: encounter-create-extract

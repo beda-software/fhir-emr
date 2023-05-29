@@ -1,6 +1,7 @@
 resourceType: Questionnaire
 id: edit-appointment
 status: active
+title: Edit appointment
 mapping:
     - id: edit-appointment-extract
       resourceType: Mapping

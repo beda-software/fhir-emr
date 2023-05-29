@@ -1,6 +1,7 @@
 id: public-appointment
 resourceType: Questionnaire
-name: Appointment
+name: public-appointment
+title: Public appointment
 status: active
 mapping:
   - id: public-appointment-extract

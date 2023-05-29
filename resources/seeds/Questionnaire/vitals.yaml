@@ -1,5 +1,6 @@
 id: vitals
-name: Vitals
+name: vitals
+title: Vitals
 resourceType: Questionnaire
 status: active
 subjectType:

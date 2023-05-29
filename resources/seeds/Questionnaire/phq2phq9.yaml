@@ -1,6 +1,7 @@
 id: phq2phq9
 resourceType: Questionnaire
-name: PHQ-2/PHQ-9 Depression Screening
+name: phq2-phq9-depression-screening
+title: PHQ-2/PHQ-9 Depression Screening
 status: active
 subjectType:
     - Encounter

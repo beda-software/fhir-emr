@@ -1,5 +1,7 @@
 resourceType: Questionnaire
 id: new-appointment
+name: new-appointment
+title: New appointment
 status: active
 mapping:
   - id: new-appointment-extract
