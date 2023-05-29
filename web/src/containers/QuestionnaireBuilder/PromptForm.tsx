@@ -13,10 +13,11 @@ interface PromptFormInterface {
 interface Props extends FormProps {
     onSubmit: (prompt: string) => Promise<any>;
     isLoading?: boolean;
+    visible?: boolean;
 }
 
 export function PromptForm(props: Props) {
-    const { onSubmit, isLoading, ...rest } = props;
+    const { onSubmit, isLoading, visible, ...rest } = props;
     const [promptForm] = Form.useForm<PromptFormInterface>();
     const [prompts, setPrompts] = useState<string[]>([]);
     const disabled = isLoading;
@@ -32,6 +33,7 @@ export function PromptForm(props: Props) {
                     promptForm.resetFields();
                 }
             }}
+            style={{ display: visible ? 'block' : 'none' }}
             {...rest}
         >
             <Form.Item name="prompt" label={t`Describe requirements to a questionnaire`}>

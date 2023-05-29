@@ -79,13 +79,13 @@ export function QuestionnaireBuilder() {
                                     }}
                                 />
                             </div>
-                        ) : (
-                            <PromptForm
-                                className={s.promptForm}
-                                onSubmit={(prompt) => onSubmitPrompt(prompt)}
-                                isLoading={isLoading(response)}
-                            />
-                        )}
+                        ) : null}
+                        <PromptForm
+                            className={s.promptForm}
+                            visible={!questionnaireItem}
+                            onSubmit={(prompt) => onSubmitPrompt(prompt)}
+                            isLoading={isLoading(response)}
+                        />
                     </div>
                 </div>
             </BasePageContent>

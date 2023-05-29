@@ -1,10 +1,15 @@
 import { Trans, t } from '@lingui/macro';
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Checkbox, Form, Input, Select } from 'antd';
 import Title from 'antd/lib/typography/Title';
-import { FormProvider, UseControllerReturn, useController, useForm, useFormContext } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { QuestionItemProps } from 'sdc-qrf/lib/types';
 
 import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
+
+import { itemControlSpecificFields, itemControls, typeSpecificFields } from './controls';
+import { SettingsField } from './SettingsField';
+
+const { Option } = Select;
 
 interface Props {
     item: QuestionItemProps;
@@ -18,6 +23,9 @@ export function QuestionnaireItemSettings(props: Props) {
     });
     const { handleSubmit, watch } = methods;
     const formValues = watch();
+    const controls = itemControls[item.questionItem.type];
+    const type = formValues.type;
+    const itemControlCode = formValues.itemControl?.coding?.[0]?.code;
 
     return (
         <FormProvider {...methods}>
@@ -57,6 +65,25 @@ export function QuestionnaireItemSettings(props: Props) {
                         </Form.Item>
                     )}
                 </SettingsField>
+                {controls && controls.length > 0 ? (
+                    <>
+                        <SettingsField name="itemControl.coding.0.code">
+                            {({ field }) => (
+                                <Form.Item label={t`Item Control`}>
+                                    <Select allowClear onChange={field.onChange} value={field.value}>
+                                        {controls.map((c) => (
+                                            <Option value={c.code} key={`item-control-${c.code}`}>
+                                                {c.label}
+                                            </Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
+                            )}
+                        </SettingsField>
+                        {itemControlCode ? itemControlSpecificFields[itemControlCode] : null}
+                    </>
+                ) : null}
+                {type ? typeSpecificFields[type] : null}
                 <Form.Item>
                     <Button htmlType="submit">
                         <Trans>Save</Trans>
@@ -65,26 +92,4 @@ export function QuestionnaireItemSettings(props: Props) {
             </form>
         </FormProvider>
     );
-}
-
-interface SettingsFieldProps {
-    name: string;
-    children: (props: UseControllerReturn) => React.ReactNode;
-}
-
-function SettingsField({ name, children }: SettingsFieldProps) {
-    const props = useFieldController(name);
-
-    return <>{children?.(props)}</>;
-}
-
-export function useFieldController(name: string): UseControllerReturn {
-    const { control } = useFormContext();
-
-    const result = useController({
-        control: control,
-        name,
-    });
-
-    return result;
 }
