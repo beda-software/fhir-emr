@@ -3,7 +3,8 @@
           aidbox.rest
           aidbox.search-parameter.v1
           aidbox.repository.v1
-          questionnaire-profile}
+          questionnaire-profile
+          hl7-fhir-r4-core}
 
 
  box
