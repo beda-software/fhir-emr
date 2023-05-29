@@ -68,6 +68,8 @@ export function useQuestionnaireBuilder() {
             notification.error({ message: formatError(saveResponse.error) });
             setError(formatError(saveResponse.error));
         }
+
+        return saveResponse;
     };
 
     const onSubmitPrompt = useCallback(
