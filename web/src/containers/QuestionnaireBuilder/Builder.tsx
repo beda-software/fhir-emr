@@ -72,8 +72,11 @@ export function Builder(props: Props) {
                                         }),
                                     )
                                 }
-                                ItemWrapper={(props) => (
-                                    <BuilderField {...props} onQuestionnaireItemClick={onQuestionnaireItemClick} />
+                                ItemWrapper={(wrapperProps) => (
+                                    <BuilderField
+                                        {...wrapperProps}
+                                        onQuestionnaireItemClick={onQuestionnaireItemClick}
+                                    />
                                 )}
                             />
                         </>
