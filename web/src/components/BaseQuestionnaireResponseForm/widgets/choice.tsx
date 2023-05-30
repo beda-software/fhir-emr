@@ -1,11 +1,23 @@
 import { Form, Select as ANTDSelect } from 'antd';
-import { isArray } from 'lodash';
+import { mapSuccess } from 'fhir-react';
+import { isArray, debounce } from 'lodash';
 import { useCallback, useMemo } from 'react';
-import Select from 'react-select';
+import { ControllerFieldState } from 'react-hook-form';
+import Select, { SingleValue } from 'react-select';
+import AsyncSelect from 'react-select/async';
 import { StateManagerProps } from 'react-select/dist/declarations/src/stateManager';
 import { QuestionItemProps } from 'sdc-qrf';
 
-import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer } from 'shared/src/contrib/aidbox';
+import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
+import { service } from 'aidbox-react/lib/services/service';
+
+import {
+    Coding,
+    QuestionnaireItem,
+    QuestionnaireItemAnswerOption,
+    QuestionnaireResponseItemAnswer,
+    ValueSet,
+} from 'shared/src/contrib/aidbox';
 
 import { getArrayDisplay, getDisplay } from 'src/utils/questionnaire';
 
@@ -100,7 +112,7 @@ function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
 }
 
 export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) {
-    const { linkId, text, answerOption, repeats, required } = questionItem;
+    const { linkId, text, answerOption, repeats, required, answerValueSet } = questionItem;
     let fieldName = [...parentPath, linkId, 0, 'value', 'Coding'];
 
     if (answerOption?.[0]?.value?.Coding) {
@@ -132,6 +144,19 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
         );
     }
 
+    if (answerValueSet) {
+        return (
+            <SelectAnswerValueSet
+                questionItem={questionItem}
+                value={value}
+                onChange={onChange}
+                disabled={disabled}
+                hidden={hidden}
+                fieldState={fieldState}
+            />
+        );
+    }
+
     return (
         <Form.Item
             label={text}
@@ -141,12 +166,103 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
             required={required}
         >
             <ANTDSelect style={inputStyle} disabled={disabled} value={value} onChange={onChange}>
-                {answerOption?.map((answerOption) => (
-                    <ANTDSelect.Option key={JSON.stringify(answerOption)} value={answerOption.value?.string}>
-                        {getDisplay(answerOption.value!)}
+                {answerOption?.map((option) => (
+                    <ANTDSelect.Option key={JSON.stringify(option)} value={option.value?.string}>
+                        {getDisplay(option.value!)}
                     </ANTDSelect.Option>
                 ))}
             </ANTDSelect>
+        </Form.Item>
+    );
+}
+
+interface SelectAnswerValueSetProps {
+    questionItem: QuestionnaireItem;
+    value: any;
+    onChange: (option: any) => void;
+    disabled: boolean | undefined;
+    hidden: boolean | undefined;
+    fieldState: ControllerFieldState;
+}
+
+interface Option extends Coding {
+    value?: {
+        Coding: Coding;
+    };
+}
+
+function getOptionLabel(option: Option) {
+    if (option && option.value) {
+        return option?.value?.Coding.display!;
+    } else return option.display!;
+}
+
+function SelectAnswerValueSet(props: SelectAnswerValueSetProps) {
+    const { questionItem, value, onChange, hidden, fieldState } = props;
+    const { text, required, answerValueSet: valueSetId } = questionItem;
+    const loadOptions = useCallback(
+        async (searchText: string) => {
+            const response = mapSuccess(
+                await service<ValueSet>({
+                    url: `ValueSet/${valueSetId}/$expand`,
+                    params: {
+                        filter: searchText,
+                        count: 50,
+                    },
+                }),
+                (expandedValueSet) => {
+                    const expansionEntries = Array.isArray(expandedValueSet.expansion?.contains)
+                        ? expandedValueSet.expansion!.contains
+                        : [];
+
+                    return expansionEntries.map(
+                        (expansion): Option => ({
+                            value: {
+                                Coding: {
+                                    code: expansion.code,
+                                    system: expansion.system,
+                                    display: expansion.display,
+                                },
+                            },
+                        }),
+                    );
+                },
+            );
+
+            if (isSuccess(response)) {
+                return response.data;
+            }
+            return [];
+        },
+        [valueSetId],
+    );
+
+    const debouncedLoadOptions = debounce((searchText, callback) => {
+        (async () => callback(await loadOptions(searchText)))();
+    }, 500);
+
+    const onChangeCoding = useCallback(
+        (data: SingleValue<Option>) => {
+            onChange(data!.value?.Coding);
+        },
+        [onChange],
+    );
+
+    return (
+        <Form.Item
+            label={text}
+            hidden={hidden}
+            validateStatus={fieldState.invalid ? 'error' : 'success'}
+            help={fieldState.invalid && `${text} is required`}
+            required={required}
+        >
+            <AsyncSelect<Option>
+                loadOptions={debouncedLoadOptions}
+                defaultOptions
+                getOptionLabel={getOptionLabel}
+                onChange={onChangeCoding}
+                value={value}
+            />
         </Form.Item>
     );
 }
