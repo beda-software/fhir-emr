@@ -3,7 +3,7 @@ import { mapSuccess } from 'fhir-react';
 import { isArray, debounce } from 'lodash';
 import { useCallback, useMemo } from 'react';
 import { ControllerFieldState } from 'react-hook-form';
-import Select, { SingleValue } from 'react-select';
+import Select from 'react-select';
 import AsyncSelect from 'react-select/async';
 import { StateManagerProps } from 'react-select/dist/declarations/src/stateManager';
 import { QuestionItemProps } from 'sdc-qrf';
@@ -185,18 +185,6 @@ interface SelectAnswerValueSetProps {
     fieldState: ControllerFieldState;
 }
 
-interface Option extends Coding {
-    value?: {
-        Coding: Coding;
-    };
-}
-
-function getOptionLabel(option: Option) {
-    if (option && option.value) {
-        return option?.value?.Coding.display!;
-    } else return option.display!;
-}
-
 function SelectAnswerValueSet(props: SelectAnswerValueSetProps) {
     const { questionItem, value, onChange, hidden, fieldState } = props;
     const { text, required, answerValueSet: valueSetId } = questionItem;
@@ -215,17 +203,11 @@ function SelectAnswerValueSet(props: SelectAnswerValueSetProps) {
                         ? expandedValueSet.expansion!.contains
                         : [];
 
-                    return expansionEntries.map(
-                        (expansion): Option => ({
-                            value: {
-                                Coding: {
-                                    code: expansion.code,
-                                    system: expansion.system,
-                                    display: expansion.display,
-                                },
-                            },
-                        }),
-                    );
+                    return expansionEntries.map(({ code, system, display }) => ({
+                        code,
+                        system,
+                        display,
+                    }));
                 },
             );
 
@@ -241,13 +223,6 @@ function SelectAnswerValueSet(props: SelectAnswerValueSetProps) {
         (async () => callback(await loadOptions(searchText)))();
     }, 500);
 
-    const onChangeCoding = useCallback(
-        (data: SingleValue<Option>) => {
-            onChange(data!.value?.Coding);
-        },
-        [onChange],
-    );
-
     return (
         <Form.Item
             label={text}
@@ -256,11 +231,13 @@ function SelectAnswerValueSet(props: SelectAnswerValueSetProps) {
             help={fieldState.invalid && `${text} is required`}
             required={required}
         >
-            <AsyncSelect<Option>
+            <AsyncSelect<Coding>
                 loadOptions={debouncedLoadOptions}
                 defaultOptions
-                getOptionLabel={getOptionLabel}
-                onChange={onChangeCoding}
+                onChange={onChange}
+                getOptionLabel={(option) => {
+                    return option.display!;
+                }}
                 value={value}
             />
         </Form.Item>
