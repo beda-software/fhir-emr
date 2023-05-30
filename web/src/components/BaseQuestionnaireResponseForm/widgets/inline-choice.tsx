@@ -17,25 +17,19 @@ interface InlineChoiceProps extends QuestionItemProps {
 }
 
 export function InlineChoice({ parentPath, questionItem }: InlineChoiceProps) {
-    const { linkId, text, answerOption, hidden, repeats, inlineChoiceDirection, required } = questionItem;
+    const { linkId, answerOption: answerOptionList, repeats, inlineChoiceDirection } = questionItem;
 
     const fieldName = repeats ? [...parentPath, linkId] : [...parentPath, linkId, 0];
 
-    const { value, onChange, disabled, fieldState } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, formItem } = useFieldController(fieldName, questionItem);
 
     if (repeats) {
         const arrayValue = (value || []) as QuestionnaireItemAnswerOption[];
 
         return (
-            <Form.Item
-                label={text}
-                hidden={hidden}
-                validateStatus={fieldState.invalid ? 'error' : 'success'}
-                help={fieldState.invalid && `${text} is required`}
-                required={required}
-            >
+            <Form.Item {...formItem}>
                 <Space direction={inlineChoiceDirection ?? 'vertical'}>
-                    {answerOption?.map((answerOption) => (
+                    {answerOptionList?.map((answerOption) => (
                         <Checkbox
                             checked={arrayValue.findIndex((v) => _.isEqual(v?.value, answerOption.value)) !== -1}
                             key={JSON.stringify(answerOption)}
@@ -50,15 +44,9 @@ export function InlineChoice({ parentPath, questionItem }: InlineChoiceProps) {
         );
     } else {
         return (
-            <Form.Item
-                label={text}
-                hidden={hidden}
-                validateStatus={fieldState.invalid ? 'error' : 'success'}
-                help={fieldState.invalid && `${text} is required`}
-                required={required}
-            >
+            <Form.Item {...formItem}>
                 <Space direction={inlineChoiceDirection ?? 'vertical'}>
-                    {answerOption?.map((answerOption) => (
+                    {answerOptionList?.map((answerOption) => (
                         <Radio
                             key={JSON.stringify(answerOption)}
                             checked={_.isEqual(value?.value, answerOption.value)}

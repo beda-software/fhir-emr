@@ -24,10 +24,10 @@ function BloodPressureItem(props: BloodPressureItemProps) {
 
     const fieldName = getFieldName(parentPath, questionItem);
 
-    const { value, onChange, disabled, hidden } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, formItem } = useFieldController(fieldName, questionItem);
 
     return (
-        <Form.Item hidden={hidden} label={questionItem.text}>
+        <Form.Item {...formItem}>
             <InputNumber
                 style={{ width: '100%' }}
                 disabled={disabled}
@@ -70,9 +70,9 @@ export function BloodPressure({ parentPath, questionItem }: GroupItemProps) {
 function BloodPressureItemReadOnly(props: BloodPressureItemProps) {
     const { parentPath, questionItem } = props;
     const fieldName = getFieldName(parentPath, questionItem);
-    const { value, hidden } = useFieldController(fieldName, questionItem);
+    const { value, formItem } = useFieldController(fieldName, questionItem);
 
-    if (hidden) {
+    if (formItem.hidden) {
         return null;
     }
 

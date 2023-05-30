@@ -11,27 +11,21 @@ interface SolidRadioButton {
 }
 
 export function QuestionSolidRadio({ parentPath, questionItem }: QuestionItemProps) {
-    const { linkId, text, answerOption, required } = questionItem;
+    const { linkId, answerOption } = questionItem;
     const { adjustLastToRight } = questionItem as SolidRadioButton;
     const [options, rightOption] = useMemo(() => {
-        const options = (answerOption ?? []).map((o) => o.value!.Coding!);
+        const optionsList = (answerOption ?? []).map((o) => o.value!.Coding!);
         if (adjustLastToRight) {
-            return [options.slice(0, -1), options[options.length - 1]];
+            return [optionsList.slice(0, -1), optionsList[optionsList.length - 1]];
         }
-        return [options, null];
+        return [optionsList, null];
     }, [answerOption, adjustLastToRight]);
 
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
-    const { value, onChange, disabled, hidden, fieldState } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, formItem } = useFieldController(fieldName, questionItem);
 
     return (
-        <Form.Item
-            label={text}
-            hidden={hidden}
-            validateStatus={fieldState.invalid ? 'error' : 'success'}
-            help={fieldState.invalid && `${text} is required`}
-            required={required}
-        >
+        <Form.Item {...formItem}>
             <RadioItems
                 options={options}
                 rightOption={rightOption}

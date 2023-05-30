@@ -1,8 +1,7 @@
-import { Form, Select as ANTDSelect } from 'antd';
+import { Form, Select as ANTDSelect, FormItemProps } from 'antd';
 import { mapSuccess } from 'fhir-react';
 import { isArray, debounce } from 'lodash';
 import { useCallback, useMemo } from 'react';
-import { ControllerFieldState } from 'react-hook-form';
 import Select from 'react-select';
 import AsyncSelect from 'react-select/async';
 import { StateManagerProps } from 'react-select/dist/declarations/src/stateManager';
@@ -112,7 +111,7 @@ function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
 }
 
 export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) {
-    const { linkId, text, answerOption, repeats, required, answerValueSet } = questionItem;
+    const { linkId, answerOption, repeats, answerValueSet } = questionItem;
     let fieldName = [...parentPath, linkId, 0, 'value', 'Coding'];
 
     if (answerOption?.[0]?.value?.Coding) {
@@ -123,17 +122,11 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
         }
     }
 
-    const { value, onChange, disabled, hidden, fieldState } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, formItem } = useFieldController(fieldName, questionItem);
 
     if (answerOption?.[0]?.value?.Coding) {
         return (
-            <Form.Item
-                label={text}
-                hidden={hidden}
-                validateStatus={fieldState.invalid ? 'error' : 'success'}
-                help={fieldState.invalid && `${text} is required`}
-                required={required}
-            >
+            <Form.Item {...formItem}>
                 <ChoiceQuestionSelect
                     options={answerOption}
                     value={!repeats && value ? [value] : value}
@@ -151,20 +144,13 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
                 value={value}
                 onChange={onChange}
                 disabled={disabled}
-                hidden={hidden}
-                fieldState={fieldState}
+                formItem={formItem}
             />
         );
     }
 
     return (
-        <Form.Item
-            label={text}
-            hidden={hidden}
-            validateStatus={fieldState.invalid ? 'error' : 'success'}
-            help={fieldState.invalid && `${text} is required`}
-            required={required}
-        >
+        <Form.Item {...formItem}>
             <ANTDSelect style={inputStyle} disabled={disabled} value={value} onChange={onChange}>
                 {answerOption?.map((option) => (
                     <ANTDSelect.Option key={JSON.stringify(option)} value={option.value?.string}>
@@ -181,13 +167,12 @@ interface SelectAnswerValueSetProps {
     value: any;
     onChange: (option: any) => void;
     disabled: boolean | undefined;
-    hidden: boolean | undefined;
-    fieldState: ControllerFieldState;
+    formItem: FormItemProps;
 }
 
 function SelectAnswerValueSet(props: SelectAnswerValueSetProps) {
-    const { questionItem, value, onChange, hidden, fieldState } = props;
-    const { text, required, answerValueSet: valueSetId } = questionItem;
+    const { questionItem, value, onChange, formItem } = props;
+    const { answerValueSet: valueSetId } = questionItem;
     const loadOptions = useCallback(
         async (searchText: string) => {
             const response = mapSuccess(
@@ -224,13 +209,7 @@ function SelectAnswerValueSet(props: SelectAnswerValueSetProps) {
     }, 500);
 
     return (
-        <Form.Item
-            label={text}
-            hidden={hidden}
-            validateStatus={fieldState.invalid ? 'error' : 'success'}
-            help={fieldState.invalid && `${text} is required`}
-            required={required}
-        >
+        <Form.Item {...formItem}>
             <AsyncSelect<Coding>
                 loadOptions={debouncedLoadOptions}
                 defaultOptions

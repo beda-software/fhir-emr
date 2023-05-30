@@ -55,10 +55,10 @@ export function TextWithMacroFill({ parentPath, questionItem }: QuestionItemProp
     const qrfContext = useQuestionnaireResponseFormContext();
     const { linkId } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
-    const { value, onChange, disabled, hidden } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, formItem } = useFieldController(fieldName, questionItem);
 
     return (
-        <Form.Item hidden={hidden}>
+        <Form.Item {...formItem} label={undefined}>
             <QuestionField
                 value={value}
                 onChange={onChange}

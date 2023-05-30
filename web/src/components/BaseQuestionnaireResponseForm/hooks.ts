@@ -1,3 +1,4 @@
+import { FormItemProps } from 'antd';
 import { isSuccess, RemoteData } from 'fhir-react/lib/libs/remoteData';
 import _ from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
@@ -8,7 +9,7 @@ import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
 
 export function useFieldController(fieldName: any, questionItem: QuestionnaireItem) {
     const qrfContext = useQuestionnaireResponseFormContext();
-    const { readOnly, hidden, repeats } = questionItem;
+    const { readOnly, hidden, repeats, text, required, linkId } = questionItem;
     const { control } = useFormContext();
 
     const { field, fieldState } = useController({
@@ -16,6 +17,13 @@ export function useFieldController(fieldName: any, questionItem: QuestionnaireIt
         name: fieldName.join('.'),
         ...(repeats ? { defaultValue: [] } : {}),
     });
+    const formItem: FormItemProps = {
+        label: text,
+        hidden: hidden,
+        validateStatus: fieldState.invalid ? 'error' : 'success',
+        help: fieldState.invalid && `${text} is required`,
+        required,
+    };
 
     const onChange = useCallback(
         (option: any) => {
@@ -40,8 +48,8 @@ export function useFieldController(fieldName: any, questionItem: QuestionnaireIt
         ...field,
         fieldState,
         onChange,
-        hidden,
         disabled: readOnly || qrfContext.readOnly,
+        formItem,
     };
 }
 

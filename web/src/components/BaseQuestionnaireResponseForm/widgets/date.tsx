@@ -10,18 +10,13 @@ import { DatePicker } from 'src/components/DatePicker';
 import { useFieldController } from '../hooks';
 
 export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps) {
-    const { linkId, text, type } = questionItem;
+    const { linkId, type } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', type];
-    const { value, onChange, disabled, hidden } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, formItem } = useFieldController(fieldName, questionItem);
 
     return (
-        <Form.Item label={text} hidden={hidden}>
-            <DateTimePickerWrapper
-                type={type}
-                onChange={onChange}
-                value={value}
-                disabled={disabled}
-            />
+        <Form.Item {...formItem}>
+            <DateTimePickerWrapper type={type} onChange={onChange} value={value} disabled={disabled} />
         </Form.Item>
     );
 }
@@ -35,24 +30,18 @@ function DateTimePickerWrapper({ value, onChange, type, disabled }: DateTimePick
     const formatFunction = type === 'date' ? formatFHIRDate : formatFHIRDateTime;
 
     const newOnChange = useCallback(
-        (value: Moment | null, dateString: string) => {
-            if (value) {
-                value.toJSON = () => {
-                    return formatFunction(value);
+        (v: Moment | null, dateString: string) => {
+            if (v) {
+                v.toJSON = () => {
+                    return formatFunction(v);
                 };
             }
-            onChange && onChange(value, dateString);
+            onChange && onChange(v, dateString);
         },
         [onChange, formatFunction],
     );
 
     return (
-        <DatePicker
-            showTime={showTime}
-            onChange={newOnChange}
-            format={format}
-            value={newValue}
-            disabled={disabled}
-        />
+        <DatePicker showTime={showTime} onChange={newOnChange} format={format} value={newValue} disabled={disabled} />
     );
 }

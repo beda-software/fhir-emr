@@ -17,11 +17,11 @@ import { useFieldController } from '../../hooks';
 
 export function PractitionerRoleList({ parentPath, questionItem }: QuestionItemProps) {
     const [practitionerRoleSelectOptionsRD] = useService(async () => {
-        const bundle = await getFHIRResources<PractitionerRole | Practitioner>('PractitionerRole', {
+        const response = await getFHIRResources<PractitionerRole | Practitioner>('PractitionerRole', {
             _include: ['PractitionerRole:practitioner:Practitioner'],
         });
 
-        return mapSuccess(bundle, (bundle) => {
+        return mapSuccess(response, (bundle) => {
             const resourceMap = extractBundleResources(bundle);
             const practitionerRoleList = resourceMap.PractitionerRole;
             const practitionerList = resourceMap.Practitioner;
@@ -36,22 +36,20 @@ export function PractitionerRoleList({ parentPath, questionItem }: QuestionItemP
                         reference: `PractitionerRole/${pR.id}`,
                         display: renderHumanName(practitioner?.name?.[0]),
                     },
-                    label: `${renderHumanName(practitioner?.name?.[0])}, ${
-                        pR.specialty?.[0]!.coding?.[0]!.display
-                    }`,
+                    label: `${renderHumanName(practitioner?.name?.[0])}, ${pR.specialty?.[0]!.coding?.[0]!.display}`,
                 };
             });
         });
     });
 
-    const { text, linkId } = questionItem;
+    const { linkId } = questionItem;
     const fieldName = [...parentPath, linkId, 0];
-    const { value, onChange, hidden } = useFieldController(fieldName, questionItem);
+    const { value, onChange, formItem } = useFieldController(fieldName, questionItem);
 
     return (
         <RenderRemoteData remoteData={practitionerRoleSelectOptionsRD} renderLoading={Spinner}>
             {(practitionerRoleSelectOptions) => (
-                <Form.Item label={text} hidden={hidden}>
+                <Form.Item {...formItem}>
                     <Select
                         options={practitionerRoleSelectOptions}
                         value={value}

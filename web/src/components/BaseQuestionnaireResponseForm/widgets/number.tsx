@@ -12,13 +12,13 @@ interface NumericItem {
 }
 
 export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps) {
-    const { linkId, text, required } = questionItem;
+    const { linkId, required } = questionItem;
     const { unit } = questionItem as NumericItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'integer'];
-    const { value, onChange, disabled, hidden } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, formItem } = useFieldController(fieldName, questionItem);
 
     return (
-        <Form.Item label={text} hidden={hidden}>
+        <Form.Item {...formItem}>
             <InputNumber
                 addonAfter={unit?.display}
                 style={inputStyle}
@@ -32,13 +32,13 @@ export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps)
 }
 
 export function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps) {
-    const { linkId, text } = questionItem;
+    const { linkId } = questionItem;
     const { unit } = questionItem as NumericItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'decimal'];
-    const { value, onChange, disabled, hidden } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, formItem } = useFieldController(fieldName, questionItem);
 
     return (
-        <Form.Item label={text} hidden={hidden}>
+        <Form.Item {...formItem}>
             <InputNumber
                 addonAfter={unit?.display}
                 style={inputStyle}

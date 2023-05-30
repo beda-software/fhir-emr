@@ -77,7 +77,7 @@ function TextWithMacroFields() {
     return (
         <SettingsField name="macro">
             {({ field }) => (
-                <Form.Item label={t`Macro text`}>
+                <Form.Item label={t`Macro text`} required>
                     <Input value={field.value} onChange={field.onChange} onBlur={field.onBlur} />
                 </Form.Item>
             )}

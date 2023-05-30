@@ -117,10 +117,11 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
 function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource = any>(
     props: AnswerReferenceProps<R, IR>,
 ) {
-    const { debouncedLoadOptions, fieldController, text, repeats } = useAnswerReference(props);
+    const { debouncedLoadOptions, fieldController, repeats } = useAnswerReference(props);
+    const { formItem } = fieldController;
 
     return (
-        <Form.Item hidden={fieldController.hidden} label={text}>
+        <Form.Item {...formItem}>
             <AsyncSelect<QuestionnaireItemAnswerOption>
                 onChange={fieldController.onChange}
                 value={fieldController.value}

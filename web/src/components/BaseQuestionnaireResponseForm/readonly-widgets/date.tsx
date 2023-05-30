@@ -9,9 +9,9 @@ import s from './ReadonlyWidgets.module.scss';
 export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, text, type } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', type];
-    const { value, hidden } = useFieldController(fieldName, questionItem);
+    const { value, formItem } = useFieldController(fieldName, questionItem);
 
-    if (hidden) {
+    if (formItem.hidden) {
         return null;
     }
 
@@ -19,11 +19,7 @@ export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps
         <p className={classNames(s.question, s.row, 'form__question')}>
             <span className={s.questionText}>{text}</span>
             <span className={s.answer}>
-                {value
-                    ? type === 'dateTime'
-                        ? formatHumanDateTime(value)
-                        : formatHumanDate(value)
-                    : '-'}
+                {value ? (type === 'dateTime' ? formatHumanDateTime(value) : formatHumanDate(value)) : '-'}
             </span>
         </p>
     );
