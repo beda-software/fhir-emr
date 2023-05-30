@@ -57,9 +57,7 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
                                 encounter?.id ? `encounter=${encounter.id}` : null,
                             ]);
                             navigator.clipboard.writeText(
-                                `${window.location.origin}/questionnaire?${questionnaireParams.join(
-                                    '&',
-                                )}`,
+                                `${window.location.origin}/questionnaire?${questionnaireParams.join('&')}`,
                             );
                             notification.success({
                                 message: t`The link was copied to clipboard`,
@@ -83,14 +81,11 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
                 <RenderRemoteData renderLoading={Spinner} remoteData={questionnairesResponse}>
                     {(questionnaires) => (
                         <>
-                            <Radio.Group
-                                onChange={(e) => setQuestionnaireId(e.target.value)}
-                                value={questionnaireId}
-                            >
+                            <Radio.Group onChange={(e) => setQuestionnaireId(e.target.value)} value={questionnaireId}>
                                 <Space direction="vertical">
                                     {questionnaires.sort().map((q) => (
                                         <Radio value={q.id} key={`create-document-${q.id}`}>
-                                            {q.name}
+                                            {q.title}
                                         </Radio>
                                     ))}
                                 </Space>
