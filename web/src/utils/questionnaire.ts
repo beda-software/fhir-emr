@@ -23,7 +23,7 @@ export function getDisplay(value?: QuestionnaireResponseItemAnswerValue): string
     }
 
     if (value.date) {
-        return formatHumanDate(value.date)
+        return formatHumanDate(value.date);
     }
 
     if (value.dateTime) {
@@ -57,14 +57,12 @@ export function getArrayDisplay(options?: QuestionnaireResponseItemAnswer[]): st
 
 export function questionnaireToValidationSchema(questionnaire: Questionnaire) {
     const validationSchema: Record<string, yup.AnySchema> = {};
-    if (questionnaire.item === undefined)
-        return yup.object(validationSchema) as yup.AnyObjectSchema;
+    if (questionnaire.item === undefined) return yup.object(validationSchema) as yup.AnyObjectSchema;
     questionnaire.item.forEach((item) => {
         if (item.type === 'string') {
             let stringSchema = yup.string();
             if (item.required) stringSchema = stringSchema.required();
-            if (item.maxLength && item.maxLength > 0)
-                stringSchema = stringSchema.max(item.maxLength);
+            if (item.maxLength && item.maxLength > 0) stringSchema = stringSchema.max(item.maxLength);
             validationSchema[item.linkId] = createSchemaArray(
                 yup.object({ string: stringSchema }),
             ).required() as unknown as yup.AnySchema;
@@ -75,9 +73,7 @@ export function questionnaireToValidationSchema(questionnaire: Questionnaire) {
                 yup.object({ integer: numberSchema }),
             ).required() as unknown as yup.AnySchema;
         } else {
-            (validationSchema[item.linkId] as any) = item.required
-                ? yup.mixed().required()
-                : yup.mixed().nullable();
+            (validationSchema[item.linkId] as any) = item.required ? yup.mixed().required() : yup.mixed().nullable();
         }
     });
     return yup.object(validationSchema).required() as yup.AnyObjectSchema;

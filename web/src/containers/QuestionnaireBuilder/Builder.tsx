@@ -2,7 +2,7 @@ import { t } from '@lingui/macro';
 import { Alert, Typography } from 'antd';
 import { RemoteData } from 'fhir-react';
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { QuestionItemProps, mapFormToResponse } from 'sdc-qrf';
+import { GroupItemProps, QuestionItemProps, mapFormToResponse } from 'sdc-qrf';
 
 import { toQuestionnaireResponseFormData } from 'shared/src/hooks/questionnaire-response-form-data';
 import { fromFirstClassExtension } from 'shared/src/utils/converter';
@@ -11,6 +11,7 @@ import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireR
 import { Spinner } from 'src/components/Spinner';
 
 import { BuilderField } from './BuilderField';
+import { BuilderGroup } from './BuilderGroup';
 import s from './QuestionnaireBuilder.module.scss';
 
 const { Title } = Typography;
@@ -18,11 +19,12 @@ const { Title } = Typography;
 interface Props {
     response: RemoteData;
     error?: string;
-    onQuestionnaireItemClick: (item: QuestionItemProps | undefined) => void;
+    activeQuestionItem?: QuestionItemProps | GroupItemProps;
+    onQuestionnaireItemClick: (item: QuestionItemProps | GroupItemProps | undefined) => void;
 }
 
 export function Builder(props: Props) {
-    const { response, error, onQuestionnaireItemClick } = props;
+    const { response, error, activeQuestionItem, onQuestionnaireItemClick } = props;
 
     return (
         <RenderRemoteData
@@ -75,7 +77,15 @@ export function Builder(props: Props) {
                                 ItemWrapper={(wrapperProps) => (
                                     <BuilderField
                                         {...wrapperProps}
-                                        onQuestionnaireItemClick={onQuestionnaireItemClick}
+                                        activeQuestionItem={activeQuestionItem as QuestionItemProps}
+                                        onEditClick={onQuestionnaireItemClick}
+                                    />
+                                )}
+                                GroupWrapper={(wrapperProps) => (
+                                    <BuilderGroup
+                                        {...wrapperProps}
+                                        activeQuestionItem={activeQuestionItem as GroupItemProps}
+                                        onEditClick={onQuestionnaireItemClick}
                                     />
                                 )}
                             />

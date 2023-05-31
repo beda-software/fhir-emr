@@ -7,7 +7,7 @@ import { Questionnaire as FHIRQuestionnaire, QuestionnaireItem as FHIRQuestionna
 import _ from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { QuestionItemProps } from 'sdc-qrf';
+import { GroupItemProps, QuestionItemProps } from 'sdc-qrf';
 
 import {
     Questionnaire as FCEQuestionnaire,
@@ -102,7 +102,7 @@ export function useQuestionnaireBuilder() {
     );
 
     const onItemChange = useCallback(
-        (item: QuestionItemProps) => {
+        (item: QuestionItemProps | GroupItemProps) => {
             if (isSuccess(response)) {
                 const questionnaire = toFirstClassExtension(response.data);
                 const path = getQuestionPath(questionnaire, item.questionItem, item.parentPath);

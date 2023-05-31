@@ -6,13 +6,16 @@
     margin-right: 40px;
     transition: border-color 0.2s;
 
-    + .container {
+    + * {
         margin-top: 16px;
     }
 
-    &._active,
-    &:hover {
+    &:global(._active) {
         border-color: #fa8c16;
+    }
+
+    &:hover {
+        border-color: rgba(#fa8c16, 0.5);
     }
 }
 

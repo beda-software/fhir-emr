@@ -15,22 +15,22 @@ import { DatePicker } from 'src/components/DatePicker';
 import s from './QuestionnaireItemSettings.module.scss';
 import { SettingsField, SettingsFieldArray } from './SettingsField';
 
-export const itemControls: { [key: string]: Array<{ label: string; code: string | undefined }> } = {
+export const itemControls: { [key: string]: Array<{ label: string; code: string | null }> } = {
     choice: [
-        { label: t`Select (default)`, code: undefined },
+        { label: t`Select (default)`, code: null },
         { label: t`Inline choice`, code: 'inline-choice' },
         { label: t`Solid radio button`, code: 'solid-radio-button' },
     ],
     string: [
-        { label: t`Text (default)`, code: undefined },
+        { label: t`Text (default)`, code: null },
         { label: t`Phone widget`, code: 'phoneWidget' },
     ],
     text: [
-        { label: t`Text (default)`, code: undefined },
+        { label: t`Text (default)`, code: null },
         { label: t`Text with macro`, code: 'text-with-macro' },
     ],
     decimal: [
-        { label: t`Number (default)`, code: undefined },
+        { label: t`Number (default)`, code: null },
         { label: t`Slider`, code: 'slider' },
     ],
     integer: [
@@ -38,14 +38,15 @@ export const itemControls: { [key: string]: Array<{ label: string; code: string 
         // { label: 'Depression score', code: 'depression-score' },
     ],
     dateTime: [
-        { label: t`Default`, code: undefined },
+        { label: t`Default`, code: null },
         { label: t`Date & time slot`, code: 'date-time-slot' },
     ],
     group: [
-        { label: t`Blood pressure`, code: 'blood-pressure' },
+        { label: t`Col (default)`, code: null },
+        // { label: t`Blood pressure`, code: 'blood-pressure' },
         // { label: t`Time range picker`, code: 'time-range-picker' }, --- obsolete?
         { label: t`Row`, code: 'row' },
-        { label: t`Col`, code: 'col' },
+        // { label: t`Col`, code: 'col' },
     ],
 };
 

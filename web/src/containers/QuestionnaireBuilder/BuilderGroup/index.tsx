@@ -1,18 +1,18 @@
 import { SettingOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import classNames from 'classnames';
-import { QuestionItemProps } from 'sdc-qrf';
+import { GroupItemProps } from 'sdc-qrf';
 
-import s from './BuilderField.module.scss';
+import s from '../BuilderField/BuilderField.module.scss';
 
 interface Props {
     children: React.ReactNode;
-    item: QuestionItemProps;
-    activeQuestionItem?: QuestionItemProps;
-    onEditClick?: (item: QuestionItemProps | undefined) => void;
+    item: GroupItemProps;
+    activeQuestionItem?: GroupItemProps;
+    onEditClick?: (item: GroupItemProps | undefined) => void;
 }
 
-export function BuilderField(props: Props) {
+export function BuilderGroup(props: Props) {
     const { children, item, activeQuestionItem, onEditClick } = props;
     const { hidden } = item.questionItem;
 

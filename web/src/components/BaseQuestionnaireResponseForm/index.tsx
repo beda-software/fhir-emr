@@ -11,6 +11,7 @@ import {
     calcInitialContext,
     FormItems,
     GroupItemComponent,
+    GroupItemProps,
     ItemControlGroupItemComponentMapping,
     ItemControlQuestionItemComponentMapping,
     QuestionItemComponent,
@@ -48,6 +49,11 @@ export interface BaseQuestionnaireResponseFormProps {
         control: QuestionItemComponent;
         children: React.ReactElement;
     }>;
+    GroupWrapper?: ComponentType<{
+        item: GroupItemProps;
+        control: GroupItemComponent;
+        children: React.ReactElement;
+    }>;
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
@@ -61,6 +67,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         draftSaveResponse,
         setDraftSaveResponse,
         ItemWrapper,
+        GroupWrapper,
     } = props;
 
     const questionnaireId = formData.context.questionnaire.assembledFrom;
@@ -127,6 +134,30 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         [ItemWrapper],
     );
 
+    const wrapGroups = useCallback(
+        (mapping: { [x: string]: GroupItemComponent }): { [x: string]: GroupItemComponent } => {
+            return _.chain(mapping)
+                .toPairs()
+                .map(([key, Control]) => [
+                    key,
+                    (itemProps: GroupItemProps) => {
+                        if (GroupWrapper) {
+                            return (
+                                <GroupWrapper item={itemProps} control={Control}>
+                                    <Control {...itemProps} />
+                                </GroupWrapper>
+                            );
+                        }
+
+                        return <Control {...itemProps} />;
+                    },
+                ])
+                .fromPairs()
+                .value();
+        },
+        [GroupWrapper],
+    );
+
     const questionItemComponents = useMemo(
         () =>
             wrapControls({
@@ -142,6 +173,31 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                 ...props.itemControlQuestionItemComponents,
             }),
         [wrapControls, props.itemControlQuestionItemComponents],
+    );
+
+    const itemControlGroupItemComponents = useMemo(
+        () =>
+            wrapGroups({
+                ...groupControlComponents,
+                ...props.itemControlGroupItemComponents,
+            }),
+        [wrapGroups, props.itemControlGroupItemComponents],
+    );
+    const groupItemComponent = useMemo(
+        () => (itemProps: GroupItemProps) => {
+            const Control = groupComponent;
+
+            if (GroupWrapper) {
+                return (
+                    <GroupWrapper item={itemProps} control={Control}>
+                        <Control {...itemProps} />
+                    </GroupWrapper>
+                );
+            }
+
+            return <Control {...itemProps} />;
+        },
+        [GroupWrapper],
     );
 
     return (
@@ -160,11 +216,8 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                 <QuestionnaireResponseFormProvider
                     formValues={formValues}
                     setFormValues={(values, fieldPath, value) => setValue(fieldPath.join('.'), value)}
-                    groupItemComponent={groupComponent}
-                    itemControlGroupItemComponents={{
-                        ...groupControlComponents,
-                        ...props.itemControlGroupItemComponents,
-                    }}
+                    groupItemComponent={groupItemComponent}
+                    itemControlGroupItemComponents={itemControlGroupItemComponents}
                     questionItemComponents={questionItemComponents}
                     itemControlQuestionItemComponents={itemControlQuestionItemComponents}
                     readOnly={readOnly}

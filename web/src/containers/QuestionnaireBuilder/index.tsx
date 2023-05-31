@@ -5,7 +5,7 @@ import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { isLoading } from 'fhir-react/lib/libs/remoteData';
 import { Questionnaire } from 'fhir/r4b';
 import React, { useState } from 'react';
-import { QuestionItemProps } from 'sdc-qrf/lib/types';
+import { GroupItemProps, QuestionItemProps } from 'sdc-qrf/lib/types';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { ModalTrigger } from 'src/components/ModalTrigger';
@@ -22,6 +22,7 @@ const { Title } = Typography;
 export function QuestionnaireBuilder() {
     const { response, onSubmitPrompt, error, onItemChange, onSaveQuestionnaire } = useQuestionnaireBuilder();
     const [questionnaireItem, setQuestionnaireItem] = useState<QuestionItemProps | undefined>();
+    const [groupItem, setGroupItem] = useState<GroupItemProps | undefined>();
     console.log('questionnaireItem', questionnaireItem);
     console.log('response', response);
 
@@ -59,22 +60,42 @@ export function QuestionnaireBuilder() {
             <BasePageContent className={s.container}>
                 <div className={s.content}>
                     <div className={s.rightColumn}>
-                        <Builder response={response} error={error} onQuestionnaireItemClick={setQuestionnaireItem} />
+                        <Builder
+                            response={response}
+                            error={error}
+                            activeQuestionItem={questionnaireItem || groupItem}
+                            onQuestionnaireItemClick={(item) => {
+                                if (item?.questionItem.type === 'group') {
+                                    setGroupItem(item as GroupItemProps);
+                                    setQuestionnaireItem(undefined);
+                                } else {
+                                    setQuestionnaireItem(item as QuestionItemProps);
+                                    setGroupItem(undefined);
+                                }
+                            }}
+                        />
                     </div>
                     <div className={s.leftColumn}>
-                        {questionnaireItem ? (
-                            <div className={s.settings} key={questionnaireItem.questionItem.linkId}>
+                        {questionnaireItem || groupItem ? (
+                            <div
+                                className={s.settings}
+                                key={questionnaireItem?.questionItem.linkId || groupItem?.questionItem.linkId}
+                            >
                                 <Button
                                     type="text"
                                     className={s.closeButton}
-                                    onClick={() => setQuestionnaireItem(undefined)}
+                                    onClick={() => {
+                                        setQuestionnaireItem(undefined);
+                                        setGroupItem(undefined);
+                                    }}
                                 >
                                     <CloseOutlined />
                                 </Button>
                                 <QuestionnaireItemSettings
-                                    item={questionnaireItem}
+                                    item={(questionnaireItem || groupItem)!}
                                     onSave={(item) => {
                                         setQuestionnaireItem(undefined);
+                                        setGroupItem(undefined);
                                         onItemChange(item);
                                     }}
                                 />
@@ -82,7 +103,7 @@ export function QuestionnaireBuilder() {
                         ) : null}
                         <PromptForm
                             className={s.promptForm}
-                            visible={!questionnaireItem}
+                            visible={!questionnaireItem && !groupItem}
                             onSubmit={(prompt) => onSubmitPrompt(prompt)}
                             isLoading={isLoading(response)}
                         />
