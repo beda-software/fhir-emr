@@ -2,7 +2,7 @@ import { Form, Select as ANTDSelect, FormItemProps } from 'antd';
 import { mapSuccess } from 'fhir-react';
 import { isArray, debounce } from 'lodash';
 import { useCallback, useMemo } from 'react';
-import Select from 'react-select';
+import Select, { SingleValue } from 'react-select';
 import AsyncSelect from 'react-select/async';
 import { StateManagerProps } from 'react-select/dist/declarations/src/stateManager';
 import { QuestionItemProps } from 'sdc-qrf';
@@ -189,9 +189,7 @@ function SelectAnswerValueSet(props: SelectAnswerValueSetProps) {
                         : [];
 
                     return expansionEntries.map(({ code, system, display }) => ({
-                        code,
-                        system,
-                        display,
+                        value: { Coding: { code, system, display } },
                     }));
                 },
             );
@@ -208,17 +206,28 @@ function SelectAnswerValueSet(props: SelectAnswerValueSetProps) {
         (async () => callback(await loadOptions(searchText)))();
     }, 500);
 
+    const newOnChange = useCallback(
+        (data: SingleValue<any>) => {
+            onChange(data.value?.Coding);
+        },
+        [onChange],
+    );
+
     return (
         <Form.Item {...formItem}>
-            <AsyncSelect<Coding>
+            <AsyncSelect
                 loadOptions={debouncedLoadOptions}
                 defaultOptions
-                onChange={onChange}
-                getOptionLabel={(option) => {
-                    return option.display!;
-                }}
+                onChange={newOnChange}
+                getOptionLabel={getOptionLabel}
                 value={value}
             />
         </Form.Item>
     );
+}
+
+function getOptionLabel(option: { value: { Coding: { display: string } }; display: string }) {
+    if (option && option.value) {
+        return option.value.Coding.display;
+    } else return option.display;
 }
