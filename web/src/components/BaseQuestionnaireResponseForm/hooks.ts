@@ -20,8 +20,8 @@ export function useFieldController(fieldName: any, questionItem: QuestionnaireIt
     const formItem: FormItemProps = {
         label: text,
         hidden: hidden,
-        validateStatus: fieldState.invalid ? 'error' : 'success',
-        help: fieldState.invalid && `${text} is required`,
+        validateStatus: fieldState?.invalid ? 'error' : 'success',
+        help: fieldState?.invalid && `${text} is required`,
         required,
     };
 
