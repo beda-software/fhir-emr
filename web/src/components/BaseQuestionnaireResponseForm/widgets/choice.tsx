@@ -11,7 +11,6 @@ import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { service } from 'aidbox-react/lib/services/service';
 
 import {
-    Coding,
     QuestionnaireItem,
     QuestionnaireItemAnswerOption,
     QuestionnaireResponseItemAnswer,

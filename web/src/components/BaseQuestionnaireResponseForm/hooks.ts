@@ -9,7 +9,7 @@ import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
 
 export function useFieldController(fieldName: any, questionItem: QuestionnaireItem) {
     const qrfContext = useQuestionnaireResponseFormContext();
-    const { readOnly, hidden, repeats, text, required, linkId } = questionItem;
+    const { readOnly, hidden, repeats, text, required } = questionItem;
     const { control } = useFormContext();
 
     const { field, fieldState } = useController({
