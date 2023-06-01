@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro';
 import queryString from 'query-string';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Route, unstable_HistoryRouter as HistoryRouter, Routes, Navigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
@@ -76,10 +76,13 @@ export function Auth() {
 }
 
 function AnonymousUserApp(_props: {}) {
+    const location = useLocation();
+    const originPathRef = useRef(location.pathname);
+
     return (
         <Routes>
             <Route path="/auth" element={<Auth />} />
-            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signin" element={<SignIn originPathName={originPathRef.current} />} />
             <Route
                 path="/reset-password"
                 element={

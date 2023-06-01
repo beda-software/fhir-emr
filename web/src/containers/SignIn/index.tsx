@@ -20,7 +20,11 @@ function authorize(state?: OAuthState) {
     window.location.href = getAuthorizeUrl(state);
 }
 
-export function SignIn() {
+interface SignInProps {
+    originPathName?: string;
+}
+
+export function SignIn(props: SignInProps) {
     const [signInService, setSignInService] = useState<string>(SignInService.EMR);
 
     return (
@@ -49,7 +53,11 @@ export function SignIn() {
                                 {t`Password`}: password
                             </div>
                         </div>
-                        <Button type="primary" onClick={() => authorize()} size="large">
+                        <Button
+                            type="primary"
+                            onClick={() => authorize({ nextUrl: props.originPathName })}
+                            size="large"
+                        >
                             {t`Log in as Practitioner`}
                         </Button>
                     </>

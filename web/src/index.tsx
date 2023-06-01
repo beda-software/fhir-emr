@@ -1,5 +1,6 @@
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
+import { ConfigProvider } from 'antd';
 import React, { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 
@@ -14,7 +15,6 @@ import 'shared/src/services/i18n';
 import { App } from 'src/containers/App';
 
 import * as serviceWorker from './serviceWorker';
-import { ConfigProvider } from 'antd';
 
 const I18nApp = () => {
     useEffect(() => {
