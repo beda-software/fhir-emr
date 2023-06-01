@@ -43,6 +43,10 @@ module.exports = {
                 alphabetize: { order: 'asc', caseInsensitive: true },
             },
         ],
-        'no-shadow': ['error', { builtinGlobals: false, hoist: 'functions', allow: [], ignoreOnInitialization: false }],
+        'no-shadow': 'off',
+        '@typescript-eslint/no-shadow': [
+            'error',
+            { builtinGlobals: false, hoist: 'functions', allow: [], ignoreOnInitialization: false },
+        ],
     },
 };
