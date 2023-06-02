@@ -171,7 +171,9 @@ interface SelectAnswerValueSetProps {
 
 function SelectAnswerValueSet(props: SelectAnswerValueSetProps) {
     const { questionItem, value, onChange, formItem } = props;
-    const { answerValueSet: valueSetId } = questionItem;
+    const { answerValueSet } = questionItem;
+    const valueSetId = answerValueSet?.split('/').slice(-1);
+
     const loadOptions = useCallback(
         async (searchText: string) => {
             const response = mapSuccess(

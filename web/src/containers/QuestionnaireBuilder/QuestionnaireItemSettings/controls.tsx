@@ -1,36 +1,47 @@
 import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Trans, t } from '@lingui/macro';
-import { Button, Checkbox, Form, Input } from 'antd';
-import { formatFHIRDate, formatFHIRTime, parseFHIRDate } from 'fhir-react';
+import { Button, Checkbox, Empty, Form, Input } from 'antd';
 import { parseFHIRTime } from 'fhir-react';
+import { useService } from 'fhir-react/lib/hooks/service';
+import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { WithId, extractBundleResources, getFHIRResources } from 'fhir-react/lib/services/fhir';
+import { mapSuccess } from 'fhir-react/lib/services/service';
+import { formatFHIRDate, formatFHIRTime, parseFHIRDate } from 'fhir-react/lib/utils/date';
+import { Coding, ValueSet } from 'fhir/r4b';
 import _ from 'lodash';
 import { useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
+import AsyncSelect from 'react-select/async';
+
+import { service } from 'aidbox-react/lib/services/service';
 
 import { QuestionnaireItemAnswerOption } from 'shared/src/contrib/aidbox';
 import { humanDate, humanTime } from 'shared/src/utils/date';
 
 import { DatePicker } from 'src/components/DatePicker';
+import { ModalTrigger } from 'src/components/ModalTrigger';
+import { SpinIndicator } from 'src/components/Spinner';
+import { Table } from 'src/components/Table';
 
 import s from './QuestionnaireItemSettings.module.scss';
 import { SettingsField, SettingsFieldArray } from './SettingsField';
 
-export const itemControls: { [key: string]: Array<{ label: string; code: string | null }> } = {
+export const itemControls: { [key: string]: Array<{ label: string; code: string | undefined; default?: boolean }> } = {
     choice: [
-        { label: t`Select (default)`, code: null },
+        { label: t`Select (default)`, code: undefined, default: true },
         { label: t`Inline choice`, code: 'inline-choice' },
         { label: t`Solid radio button`, code: 'solid-radio-button' },
     ],
     string: [
-        { label: t`Text (default)`, code: null },
+        { label: t`Text (default)`, code: undefined, default: true },
         { label: t`Phone widget`, code: 'phoneWidget' },
     ],
     text: [
-        { label: t`Text (default)`, code: null },
+        { label: t`Text (default)`, code: undefined, default: true },
         { label: t`Text with macro`, code: 'text-with-macro' },
     ],
     decimal: [
-        { label: t`Number (default)`, code: null },
+        { label: t`Number (default)`, code: undefined, default: true },
         { label: t`Slider`, code: 'slider' },
     ],
     integer: [
@@ -38,11 +49,11 @@ export const itemControls: { [key: string]: Array<{ label: string; code: string 
         // { label: 'Depression score', code: 'depression-score' },
     ],
     dateTime: [
-        { label: t`Default`, code: null },
+        { label: t`Default`, code: undefined, default: true },
         { label: t`Date & time slot`, code: 'date-time-slot' },
     ],
     group: [
-        { label: t`Col (default)`, code: null },
+        { label: t`Col (default)`, code: undefined, default: true },
         // { label: t`Blood pressure`, code: 'blood-pressure' },
         // { label: t`Time range picker`, code: 'time-range-picker' }, --- obsolete?
         { label: t`Row`, code: 'row' },
@@ -293,13 +304,7 @@ function ChoiceFields() {
                     </SettingsFieldArray>
                 </>
             ) : (
-                <SettingsField name="answerValueSet">
-                    {({ field }) => (
-                        <Form.Item label={t`ValueSet url`}>
-                            <Input value={field.value} onChange={field.onChange} onBlur={field.onBlur} />
-                        </Form.Item>
-                    )}
-                </SettingsField>
+                <ValueSetField />
             )}
         </>
     );
@@ -330,4 +335,183 @@ function getNewOption(
     // }
 
     return undefined;
+}
+
+export function useValueSetField() {
+    const [optionsData, setOptionsData] = useState<{ [key: string]: WithId<ValueSet> }>({});
+
+    const loadOptions = async (searchText: string) => {
+        const response = mapSuccess(await getFHIRResources<ValueSet>('ValueSet', { _ilike: searchText }), (bundle) => {
+            const valueSets = extractBundleResources(bundle).ValueSet;
+
+            return valueSets;
+        });
+
+        if (isSuccess(response)) {
+            let valueSetMap = {};
+            response.data.forEach((v) => (valueSetMap[`ValueSet/${v.id}`] = v));
+            setOptionsData(valueSetMap);
+            return response.data || [];
+        }
+
+        return [];
+    };
+
+    const debouncedLoadOptions = _.debounce((searchText: string, callback: (options: any) => void) => {
+        (async () => callback(await loadOptions(searchText)))();
+    }, 500);
+
+    const validate = (inputValue: any) => {
+        if (!inputValue) {
+            return 'Required';
+        }
+    };
+
+    return {
+        optionsData,
+        debouncedLoadOptions,
+        validate,
+    };
+}
+
+interface ValueSetFieldProps {
+    onValueSetChange?: () => void;
+}
+
+function ValueSetField(props: ValueSetFieldProps) {
+    const { debouncedLoadOptions, optionsData } = useValueSetField();
+    const { watch, setValue } = useFormContext();
+    const formValues = watch();
+    const answerOptions: QuestionnaireItemAnswerOption[] = useMemo(
+        () => _.get(formValues, ['answerOption'], []),
+        [formValues],
+    );
+
+    return (
+        <SettingsField name="answerValueSet">
+            {({ field }) => {
+                const valueSet = field.value ? optionsData[field.value] : undefined;
+
+                return (
+                    <Form.Item label={t`ValueSet url`} required>
+                        <AsyncSelect
+                            onChange={(option) => {
+                                if (answerOptions.length) {
+                                    setValue('answerOption', undefined);
+                                }
+                                field.onChange(`ValueSet/${option?.id}`);
+                            }}
+                            value={valueSet}
+                            loadOptions={debouncedLoadOptions}
+                            defaultOptions
+                            formatOptionLabel={(option) => (
+                                <div>
+                                    {_.startCase(option.title || option.name || '')}
+                                    <br />
+                                    {option.description && (
+                                        <i style={{ fontSize: 12, lineHeight: '14px' }}>{option.description}</i>
+                                    )}
+                                </div>
+                            )}
+                            getOptionValue={(option) => `ValueSet/${option.id}`}
+                            isMulti={false}
+                        />
+                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            {valueSet && (
+                                <ModalTrigger
+                                    title={t`ValueSet details`}
+                                    trigger={
+                                        <Button type="link" style={{ padding: 0 }}>{t`See ValueSet details`}</Button>
+                                    }
+                                >
+                                    {() => <ValueSetDetails valueSet={valueSet} />}
+                                </ModalTrigger>
+                            )}
+                        </div>
+                    </Form.Item>
+                );
+            }}
+        </SettingsField>
+    );
+}
+
+interface ValueSetDetailsProps {
+    valueSet: ValueSet;
+}
+
+function useValueSetDetails(props: ValueSetDetailsProps) {
+    const { valueSet } = props;
+    console.log('valueSet', valueSet);
+
+    const [response] = useService(async () => {
+        const r = await service<ValueSet>({
+            url: `ValueSet/${valueSet.id}/$expand`,
+            params: {
+                count: 50,
+            },
+        });
+
+        return mapSuccess(r, (expandedValueSet) => {
+            const expansionEntries = Array.isArray(expandedValueSet.expansion?.contains)
+                ? expandedValueSet.expansion!.contains
+                : [];
+
+            return expansionEntries;
+        });
+    }, [valueSet]);
+
+    return { response };
+}
+
+function ValueSetDetails(props: ValueSetDetailsProps) {
+    const { valueSet } = props;
+    const { response } = useValueSetDetails(props);
+    console.log('response', response);
+
+    return (
+        <>
+            {valueSet?.description && (
+                <div>
+                    <i>{t`Description:`}</i> {valueSet.description}
+                </div>
+            )}
+            {valueSet?.url && (
+                <div>
+                    <i>{t`Url:`}</i>{' '}
+                    <a href={valueSet.url} target="_blank" rel="noreferrer">
+                        {valueSet.url}
+                    </a>
+                </div>
+            )}
+            <br />
+            <i>{t`Concepts:`}</i>
+            <Table<Coding>
+                pagination={false}
+                locale={{
+                    emptyText: (
+                        <>
+                            <Empty description={<Trans>No data</Trans>} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                        </>
+                    ),
+                }}
+                rowKey={(p) => p.id!}
+                dataSource={isSuccess(response) ? response.data : []}
+                columns={[
+                    {
+                        title: <Trans>Display</Trans>,
+                        dataIndex: 'display',
+                        key: 'display',
+                        render: (_text, resource) => resource.display,
+                    },
+                    {
+                        title: <Trans>Code</Trans>,
+                        dataIndex: 'code',
+                        key: 'code',
+                        render: (_text, resource) => resource.code,
+                    },
+                ]}
+                loading={isLoading(response) && { indicator: SpinIndicator }}
+            />
+        </>
+    );
 }

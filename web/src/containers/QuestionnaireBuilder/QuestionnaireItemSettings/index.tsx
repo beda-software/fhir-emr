@@ -106,8 +106,8 @@ export function QuestionnaireItemSettings(props: Props) {
                                                 field.onChange(v);
                                             }
                                         }}
-                                        value={field.value || null}
-                                        defaultValue={null}
+                                        value={field.value}
+                                        defaultValue={controls.filter((c) => c.default)}
                                     >
                                         {controls.map((c) => (
                                             <Option value={c.code} key={`item-control-${c.code}`}>

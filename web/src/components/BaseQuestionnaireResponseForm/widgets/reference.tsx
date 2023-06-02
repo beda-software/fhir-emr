@@ -21,6 +21,74 @@ export type AnswerReferenceProps<R extends Resource, IR extends Resource> = Ques
     ) => React.ReactElement | string;
 };
 
+interface UseFieldReferenceProps<R extends Resource, IR extends Resource> {
+    resourceType: string;
+    getDisplay: (resource: R, includedResources: ResourcesMap<R | IR>) => string;
+    searchParams?: any;
+    required?: boolean;
+    repeats?: boolean;
+}
+
+export function useFieldReference<R extends Resource = any, IR extends Resource = any>(
+    props: UseFieldReferenceProps<R, IR>,
+) {
+    const { resourceType, getDisplay, searchParams, required, repeats } = props;
+
+    const loadOptions = async (searchText: string) => {
+        const response = await loadResourceOptions(
+            resourceType,
+            { ...(typeof searchParams === 'string' ? {} : searchParams ?? {}), _ilike: searchText },
+            getDisplay,
+        );
+
+        if (isSuccess(response)) {
+            return response.data;
+        }
+
+        return [];
+    };
+
+    const debouncedLoadOptions = _.debounce(
+        (searchText: string, callback: (options: QuestionnaireItemAnswerOption[]) => void) => {
+            (async () => callback(await loadOptions(searchText)))();
+        },
+        500,
+    );
+
+    const onChange = (
+        _value: SingleValue<QuestionnaireItemAnswerOption> | MultiValue<QuestionnaireItemAnswerOption>,
+        action: ActionMeta<QuestionnaireItemAnswerOption>,
+    ) => {
+        if (!repeats || action.action !== 'select-option') {
+            return;
+        }
+    };
+
+    const validate = required
+        ? (inputValue: any) => {
+              if (repeats) {
+                  if (!inputValue || !inputValue.length) {
+                      return 'Choose at least one option';
+                  }
+              } else {
+                  if (!inputValue) {
+                      return 'Required';
+                  }
+              }
+
+              return undefined;
+          }
+        : undefined;
+
+    return {
+        debouncedLoadOptions,
+        onChange,
+        validate,
+        searchParams,
+        resourceType,
+    };
+}
+
 export function useAnswerReference<R extends Resource = any, IR extends Resource = any>({
     questionItem,
     parentPath,
