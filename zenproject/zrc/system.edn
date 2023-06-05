@@ -26,6 +26,9 @@
   {:Client {:web {:auth {:implicit {:redirect_uri #env FHIR_EMR_AUTH_URL}}
                   :first_party true
                   :grant_types [:implicit]}
+            :sdc-ide {:auth {:implicit {:redirect_uri #env SDC_IDE_AUTH_URL}}
+                      :first_party true
+                      :grant_types [:implicit]}
             :testAuth {:grant_types [:password]
                        :secret "123456"}
             :anonymous {:grant_types [:basic]

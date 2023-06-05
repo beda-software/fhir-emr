@@ -64,9 +64,13 @@ const columns: ColumnsType<Questionnaire> = [
                     </Link>
                     <Button
                         type="link"
-                        onClick={() =>
-                            window.open(`${config.sdcIdeUrl}/#/${resource.id}`, '_blank', 'noopener,noreferrer')
-                        }
+                        onClick={() => {
+                            window.open(
+                                `${config.sdcIdeUrl}/client=sdc-ide&resource=${resource.id}`,
+                                '_blank',
+                                'noopener,noreferrer',
+                            );
+                        }}
                     >
                         <Trans>Edit in SDC IDE</Trans>
                     </Button>
