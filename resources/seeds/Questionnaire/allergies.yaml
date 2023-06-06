@@ -55,18 +55,18 @@ item:
           - value:
                 Coding:
                     system: 'http://hl7.org/fhir/allergy-intolerance-category'
-                    code: '418634005'
-                    display: 'Drug'
+                    code: 'medication'
+                    display: 'Medication'
           - value:
                 Coding:
                     system: 'http://hl7.org/fhir/allergy-intolerance-category'
-                    code: '414285001'
+                    code: 'food'
                     display: 'Food'
           - value:
                 Coding:
                     system: 'http://hl7.org/fhir/allergy-intolerance-category'
-                    code: '426232007'
-                    display: 'Environmental'
+                    code: 'environment'
+                    display: 'Environment'
     - linkId: reaction
       text: Reaction
       type: choice
@@ -111,8 +111,8 @@ item:
             operator: '='
             answer:
                 Coding:
-                    system: 'http://snomed.ct'
-                    code: '418634005'
+                    system: 'http://hl7.org/fhir/allergy-intolerance-category'
+                    code: 'medication'
       answerOption:
           - value:
                 Coding:
@@ -150,8 +150,8 @@ item:
             operator: '='
             answer:
                 Coding:
-                    system: 'http://snomed.ct'
-                    code: '414285001'
+                    system: 'http://hl7.org/fhir/allergy-intolerance-category'
+                    code: 'food'
       answerOption:
           - value:
                 Coding:
@@ -194,8 +194,8 @@ item:
             operator: '='
             answer:
                 Coding:
-                    system: 'http://snomed.ct'
-                    code: '426232007'
+                    system: 'http://hl7.org/fhir/allergy-intolerance-category'
+                    code: 'environment'
       answerOption:
           - value:
                 Coding:
