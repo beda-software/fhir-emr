@@ -26,6 +26,7 @@ function processAnswer(answerItem: FCEQuestionnaireResponseItemAnswer): FHIRQues
     const fhirAnswerItem: FHIRQuestionnaireResponseItemAnswer = item;
     const valueMappings = {
         string: 'valueString',
+        decimal: 'valueDecimal',
         integer: 'valueInteger',
         boolean: 'valueBoolean',
         Coding: 'valueCoding',

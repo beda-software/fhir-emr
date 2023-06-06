@@ -29,42 +29,42 @@ item:
     initialExpression:
       language: text/fhirpath
       expression: "%Patient.name.given[0] + ' ' + %Patient.name.family"
-  - type: integer
+  - type: decimal
     linkId: height
     text: Height
     unit:
       code: cm
       system: http://unitsofmeasure.org
       display: cm
-  - type: integer
+  - type: decimal
     linkId: weight
     text: Weight
     unit:
       code: kg
       system: http://unitsofmeasure.org
       display: kg
-  - type: integer
+  - type: decimal
     linkId: temperature
     text: Temperature
     unit:
       code: Celsius
       system: http://unitsofmeasure.org
       display: Celsius
-  - type: integer
+  - type: decimal
     linkId: oxygen-saturation
     text: Oxygen saturation
     unit:
       code: "%"
       system: http://unitsofmeasure.org
       display: "%"
-  - type: integer
+  - type: decimal
     linkId: pulse-rate
     text: Pulse rate
     unit:
       code: bpm
       system: http://unitsofmeasure.org
       display: bpm
-  - type: integer
+  - type: decimal
     linkId: respiratory-rate
     text: Respiratory Rate
     unit:
@@ -81,14 +81,14 @@ item:
           coding:
             - code: blood-pressure
         item:
-          - type: integer
+          - type: decimal
             text: BP systolic
             linkId: blood-pressure-systolic
             unit:
               code: mmHg
               system: http://unitsofmeasure.org
               display: mmHg
-          - type: integer
+          - type: decimal
             text: BP diastolic
             linkId: blood-pressure-diastolic
             unit:
@@ -134,7 +134,7 @@ item:
   - linkId: bmi
     text: BMI
     required: true
-    type: integer
+    type: decimal
     readOnly: true
     unit:
       code: kg/m2
@@ -142,7 +142,7 @@ item:
       display: kg/m2
     calculatedExpression:
       language: text/fhirpath
-      expression: "(%QuestionnaireResponse.item.where(linkId='weight').answer.value.integer / ((%QuestionnaireResponse.item.where(linkId='height').answer.value.integer / 100) * (%QuestionnaireResponse.item.where(linkId='height').answer.value.integer / 100))).round(2)"
+      expression: "(%QuestionnaireResponse.item.where(linkId='weight').answer.value.decimal / ((%QuestionnaireResponse.item.where(linkId='height').answer.value.decimal / 100) * (%QuestionnaireResponse.item.where(linkId='height').answer.value.decimal / 100))).round(2)"
 meta:
   profile:
     - https://beda.software/beda-emr-questionnaire

@@ -28,6 +28,7 @@ function processAnswer(answer: FHIRQuestionnaireResponseItemAnswer): FCEQuestion
     const valueHandlers = {
         valueString: (value: string) => ({ string: value }),
         valueInteger: (value: number) => ({ integer: value }),
+        valueDecimal: (value: number) => ({ decimal: value }),
         valueBoolean: (value: boolean) => ({ boolean: value }),
         valueCoding: (value: FHIRCoding) => ({ Coding: value }),
         valueDate: (value: string) => ({ date: value }),
