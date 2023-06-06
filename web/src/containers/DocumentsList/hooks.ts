@@ -28,7 +28,9 @@ export function usePatientDocuments(patient: Patient, encounter?: Reference) {
 
             return mapSuccess(qResponse, (bundle) => {
                 let questionnaireNames: { [key: string]: string | undefined } = {};
-                extractBundleResources(bundle).Questionnaire.forEach((q) => (questionnaireNames[q.id!] = q.name));
+                extractBundleResources(bundle).Questionnaire.forEach(
+                    (q) => (questionnaireNames[q.id!] = q.title || q.name),
+                );
 
                 return {
                     ...qrResponseExtracted.data,

@@ -15,15 +15,10 @@ interface Props {
     savedMessage: string;
 }
 
-export const PatientDocumentHeader = ({
-    formData,
-    questionnaireId,
-    draftSaveResponse,
-    savedMessage,
-}: Props) => (
+export const PatientDocumentHeader = ({ formData, questionnaireId, draftSaveResponse, savedMessage }: Props) => (
     <div className={s.header}>
         <Title level={3} className={s.title}>
-            {formData.context.questionnaire.name}
+            {formData.context.questionnaire.title || formData.context.questionnaire.name}
         </Title>
         {questionnaireId ? (
             <RenderRemoteData

@@ -14,15 +14,7 @@ import {
 import { mapSuccess } from 'fhir-react/lib/services/service';
 import { Encounter, Patient, Practitioner, Provenance, QuestionnaireResponse } from 'fhir/r4b';
 import { ReactElement } from 'react';
-import {
-    NavigateFunction,
-    Outlet,
-    Route,
-    Routes,
-    useLocation,
-    useNavigate,
-    useParams,
-} from 'react-router-dom';
+import { NavigateFunction, Outlet, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
 import { ReadonlyQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm/ReadonlyQuestionnaireResponseForm';
@@ -139,7 +131,7 @@ function PatientDocumentDetailsReadonly(props: {
             <div className={s.content}>
                 <div className={s.header}>
                     <Title level={4} className={s.title}>
-                        {formData.context.questionnaire.name}
+                        {formData.context.questionnaire.title || formData.context.questionnaire.name}
                     </Title>
                     <div className={s.buttons}>
                         {qrCompleted ? (
@@ -214,7 +206,7 @@ function PatientDocumentDetailsFormData(props: {
 
     return (
         <RenderRemoteData remoteData={response} renderLoading={Spinner}>
-            {(response) => children(response)}
+            {(documentData) => children(documentData)}
         </RenderRemoteData>
     );
 }
@@ -226,11 +218,7 @@ export function PatientDocumentDetails(props: Props) {
     const author = selectCurrentUserRoleResource();
 
     return (
-        <RenderRemoteData
-            remoteData={response}
-            renderLoading={Spinner}
-            renderFailure={(error) => <div>{error}</div>}
-        >
+        <RenderRemoteData remoteData={response} renderLoading={Spinner} renderFailure={(error) => <div>{error}</div>}>
             {({ questionnaireResponse, encounter }) => (
                 <PatientDocumentDetailsFormData
                     questionnaireResponse={questionnaireResponse}
