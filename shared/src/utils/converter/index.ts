@@ -64,14 +64,25 @@ export function fromFHIRReference(r?: FHIRReference): InternalReference | undefi
     }
 
     const { reference: literalReference, ...commonReferenceProperties } = r;
+    const isHistoryVersionLink = r.reference.split('/').slice(-2, -1)[0] === '_history';
 
-    const [id, resourceType] = r.reference.split('/').reverse();
+    if (isHistoryVersionLink) {
+        const [, , id, resourceType] = r.reference.split('/').reverse();
 
-    return {
-        ...commonReferenceProperties,
-        id: id!,
-        resourceType,
-    };
+        return {
+            ...commonReferenceProperties,
+            id: id!,
+            resourceType,
+        };
+    } else {
+        const [id, resourceType] = r.reference.split('/').reverse();
+
+        return {
+            ...commonReferenceProperties,
+            id: id!,
+            resourceType,
+        };
+    }
 }
 
 export function toFHIRReference(r?: InternalReference): FHIRReference | undefined {
