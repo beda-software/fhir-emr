@@ -441,7 +441,6 @@ interface ValueSetDetailsProps {
 
 function useValueSetDetails(props: ValueSetDetailsProps) {
     const { valueSet } = props;
-    console.log('valueSet', valueSet);
 
     const [response] = useService(async () => {
         const r = await service<ValueSet>({
@@ -466,7 +465,6 @@ function useValueSetDetails(props: ValueSetDetailsProps) {
 function ValueSetDetails(props: ValueSetDetailsProps) {
     const { valueSet } = props;
     const { response } = useValueSetDetails(props);
-    console.log('response', response);
 
     return (
         <>

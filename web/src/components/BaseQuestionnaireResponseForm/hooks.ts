@@ -29,7 +29,7 @@ export function useFieldController(fieldName: any, questionItem: QuestionnaireIt
         (option: any) => {
             if (repeats) {
                 let arrayValue = (field.value ?? []) as any[];
-                const valueIndex = arrayValue.findIndex((v) => _.isEqual(v, option));
+                const valueIndex = arrayValue.findIndex((v) => _.isEqual(v?.value, option.value));
 
                 if (valueIndex === -1) {
                     field.onChange([...arrayValue, option]);
