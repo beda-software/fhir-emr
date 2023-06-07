@@ -9,7 +9,7 @@ launchContext:
     type:
       - Patient
 mapping:
-  - id: patient-create
+  - id: patient-edit
     resourceType: Mapping
 item:
   - linkId: patient-id
