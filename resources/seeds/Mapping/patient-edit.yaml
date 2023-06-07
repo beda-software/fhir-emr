@@ -24,6 +24,7 @@ body:
     middleName: >-
       $
       fhirpath("QuestionnaireResponse.repeat(item).where(linkId='middle-name').answer.valueString").0
+    patient: $ Patient
   $body:
     type: transaction
     entry:
@@ -52,5 +53,5 @@ body:
           active: true
           resourceType: Patient
     resourceType: Bundle
-id: patient-create
+id: patient-edit
 resourceType: Mapping

@@ -61,8 +61,7 @@ function prepareFormInitialParams(
         author?: WithId<Practitioner | Patient>;
     },
 ): QuestionnaireResponseFormProps {
-    const { patient, questionnaireResponse, questionnaireId, encounterId, provenance, author } =
-        props;
+    const { patient, questionnaireResponse, questionnaireId, encounterId, provenance, author } = props;
 
     const params = {
         questionnaireLoader: questionnaireIdLoader(questionnaireId),
@@ -91,7 +90,7 @@ function prepareFormInitialParams(
         ],
         initialQuestionnaireResponse: questionnaireResponse || {
             source: getReference(patient),
-            encounter: encounterId ? { resourceType: 'Encounter', id: encounterId } : undefined,
+            encounter: encounterId ? getReference({ resourceType: 'Encounter', id: encounterId }) : undefined,
             questionnaire: questionnaireId,
         },
     };

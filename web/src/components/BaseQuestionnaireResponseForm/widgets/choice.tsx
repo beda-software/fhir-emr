@@ -1,10 +1,10 @@
 import { Form, Select as ANTDSelect, FormItemProps } from 'antd';
 import { mapSuccess } from 'fhir-react';
-import { isArray, debounce } from 'lodash';
-import { useCallback, useMemo } from 'react';
+import { debounce } from 'lodash';
+import _ from 'lodash';
+import { useCallback } from 'react';
 import Select, { SingleValue } from 'react-select';
 import AsyncSelect from 'react-select/async';
-import { StateManagerProps } from 'react-select/dist/declarations/src/stateManager';
 import { QuestionItemProps } from 'sdc-qrf';
 
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
@@ -23,59 +23,6 @@ import s from '../BaseQuestionnaireResponseForm.module.scss';
 import { useFieldController } from '../hooks';
 
 const inputStyle = { backgroundColor: '#F7F9FC' };
-
-export function QuestionSelectWrapper({ value, onChange, options, isMulti }: StateManagerProps<any>) {
-    const newValue = useMemo(() => {
-        if (value) {
-            if (isArray(value)) {
-                return value.map((answerItem: any) => ({
-                    label: answerItem.value.Coding.display,
-                    value: answerItem.value,
-                }));
-            }
-            return {
-                label: value.value.Coding.display,
-                value: value.value,
-            };
-        } else {
-            return [];
-        }
-    }, [value]);
-    const newOnChange = useCallback(
-        (values: any, option: any) => {
-            onChange && onChange(values, option);
-        },
-        [onChange],
-    );
-    if (isMulti) {
-        return (
-            <Select
-                isMulti
-                options={options?.map((c: any) => {
-                    return {
-                        label: c.value?.Coding.display,
-                        value: c.value,
-                    };
-                })}
-                onChange={newOnChange}
-                value={newValue}
-            />
-        );
-    }
-
-    return (
-        <Select
-            options={options?.map((c: any) => {
-                return {
-                    label: c.value?.Coding.display,
-                    value: c.value,
-                };
-            })}
-            onChange={newOnChange}
-            value={newValue}
-        />
-    );
-}
 
 interface ChoiceQuestionSelectProps {
     value?: QuestionnaireResponseItemAnswer[];
@@ -104,7 +51,15 @@ function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
 
     return (
         <>
-            <Select options={selectOptions} onChange={newOnChange} value={selectValue} className={s.select} />
+            <Select
+                options={selectOptions}
+                onChange={newOnChange}
+                value={selectValue}
+                className={s.select}
+                isOptionSelected={(option) =>
+                    !!value && value?.findIndex((v) => _.isEqual(v?.value, option.value)) !== -1
+                }
+            />
         </>
     );
 }
@@ -131,7 +86,6 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
                     value={!repeats && value ? [value] : value}
                     onChange={onChange}
                 />
-                {/*<QuestionSelectWrapper isMulti={repeats} options={children} />*/}
             </Form.Item>
         );
     }
