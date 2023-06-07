@@ -56,7 +56,9 @@ function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
                 onChange={newOnChange}
                 value={selectValue}
                 className={s.select}
-                isOptionSelected={(option) => value?.findIndex((v) => _.isEqual(v?.value, option.value)) !== -1}
+                isOptionSelected={(option) =>
+                    !!value && value?.findIndex((v) => _.isEqual(v?.value, option.value)) !== -1
+                }
             />
         </>
     );
