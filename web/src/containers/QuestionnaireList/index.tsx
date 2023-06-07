@@ -8,12 +8,8 @@ import { Questionnaire } from 'fhir/r4b';
 import { Link } from 'react-router-dom';
 
 import config from 'shared/src/config';
-import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
-import { processLaunchContextToFce } from 'shared/src/utils/converter';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
-import { ModalTrigger } from 'src/components/ModalTrigger';
-import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
