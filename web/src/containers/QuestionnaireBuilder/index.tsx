@@ -20,7 +20,8 @@ import { QuestionnaireSaveForm } from './QuestionnaireSaveForm';
 const { Title } = Typography;
 
 export function QuestionnaireBuilder() {
-    const { response, onSubmitPrompt, error, onItemChange, onSaveQuestionnaire } = useQuestionnaireBuilder();
+    const { response, onSubmitPrompt, error, onItemChange, onItemDrag, onSaveQuestionnaire } =
+        useQuestionnaireBuilder();
     const [questionnaireItem, setQuestionnaireItem] = useState<QuestionItemProps | undefined>();
     const [groupItem, setGroupItem] = useState<GroupItemProps | undefined>();
     console.log('questionnaireItem', questionnaireItem);
@@ -73,6 +74,7 @@ export function QuestionnaireBuilder() {
                                     setGroupItem(undefined);
                                 }
                             }}
+                            onItemDrag={onItemDrag}
                         />
                     </div>
                     <div className={s.leftColumn}>

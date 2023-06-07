@@ -1,3 +1,27 @@
+.board {
+    cursor: grab;
+
+    + * {
+        margin-top: 16px;
+    }
+}
+
+.dropArea {
+    height: 0;
+    width: 100%;
+    z-index: 1;
+    opacity: 0.5;
+    background-color: yellow;
+    margin-top: 16px;
+    border-radius: 10px;
+    transition: height 0.1s;
+
+    &:global(._over) {
+        height: 50px;
+        transition: height 0s;
+    }
+}
+
 .container {
     position: relative;
     border: 1px solid rgba(5, 5, 5, 0.06);
@@ -5,10 +29,6 @@
     padding: 16px 16px 0 16px;
     margin-right: 40px;
     transition: border-color 0.2s;
-
-    + * {
-        margin-top: 16px;
-    }
 
     &:global(._active) {
         border-color: #fa8c16;

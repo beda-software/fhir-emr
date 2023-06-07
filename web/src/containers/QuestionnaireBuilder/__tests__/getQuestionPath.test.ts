@@ -1,6 +1,6 @@
 import { Questionnaire } from 'shared/src/contrib/aidbox';
 
-import { getQuestionPath } from '../hooks';
+import { getQuestionPath } from '../utils';
 
 describe('getQuestionPath test', () => {
     test('getting path for tope level QuestionItem', () => {
