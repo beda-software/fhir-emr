@@ -38,28 +38,9 @@ const columns: ColumnsType<Questionnaire> = [
         render: (_text, resource) => {
             return (
                 <>
-                    <ModalTrigger
-                        trigger={
-                            <Button type="link">
-                                <Trans>Open</Trans>
-                            </Button>
-                        }
-                        title={resource.name || resource.id!}
-                    >
-                        {({ closeModal }) => (
-                            <QuestionnaireResponseForm
-                                questionnaireLoader={questionnaireIdLoader(resource.id!)}
-                                launchContextParameters={processLaunchContextToFce(resource)?.map((lc) => ({
-                                    name: lc.name!,
-                                    value: { string: 'undefined' },
-                                }))}
-                                onCancel={closeModal}
-                            />
-                        )}
-                    </ModalTrigger>{' '}
                     <Link to={`/questionnaires/${resource.id}/edit`}>
                         <Button type="link">
-                            <Trans>Edit in builder</Trans>
+                            <Trans>Open</Trans>
                         </Button>
                     </Link>
                     <a
