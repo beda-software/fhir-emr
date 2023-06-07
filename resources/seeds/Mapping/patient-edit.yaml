@@ -1,57 +1,67 @@
-body:
-  $let:
-    ssn: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='ssn').answer.valueString").0
-    gender: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='gender').answer.valueCoding.code").0
-    mobile: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='mobile').answer.valueString").0
-    lastName: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='last-name').answer.valueString").0
-    birthDate: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='birth-date').answer.valueDate").0
-    firstName: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='first-name').answer.valueString").0
-    patientId: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patient-id').answer.valueString").0
-    middleName: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='middle-name').answer.valueString").0
-    patient: $ Patient
-  $body:
-    type: transaction
-    entry:
-      - request:
-          $if: $ patientId
-          $else:
-            url: /Patient
-            method: POST
-          $then:
-            url: $ "/Patient/" + patientId
-            method: PATCH
-        resource:
-          name:
-            - given:
-                - $ firstName
-                - $ middleName
-              family: $ lastName
-          gender: $ gender
-          telecom:
-            - value: $ mobile
-              system: phone
-          birthDate: $ birthDate
-          identifier:
-            - value: $ ssn
-              system: 1.2.643.100.3
-          active: true
-          resourceType: Patient
-    resourceType: Bundle
 id: patient-edit
 resourceType: Mapping
+body:
+  $let:
+    patient: $patient
+  $body:
+    $let:
+      ssn: >-
+        $
+        fhirpath("QuestionnaireResponse.repeat(item).where(linkId='ssn').answer.valueString").0
+      gender: >-
+        $
+        fhirpath("QuestionnaireResponse.repeat(item).where(linkId='gender').answer.valueCoding.code").0
+      mobile: >-
+        $
+        fhirpath("QuestionnaireResponse.repeat(item).where(linkId='mobile').answer.valueString").0
+      lastName: >-
+        $
+        fhirpath("QuestionnaireResponse.repeat(item).where(linkId='last-name').answer.valueString").0
+      birthDate: >-
+        $
+        fhirpath("QuestionnaireResponse.repeat(item).where(linkId='birth-date').answer.valueDate").0
+      firstName: >-
+        $
+        fhirpath("QuestionnaireResponse.repeat(item).where(linkId='first-name').answer.valueString").0
+      patientId: >-
+        $
+        fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patient-id').answer.valueString").0
+      middleName: >-
+        $
+        fhirpath("QuestionnaireResponse.repeat(item).where(linkId='middle-name').answer.valueString").0
+      currentSsn: $ fhirpath("Patient.identifier.where(system='http://hl7.org/fhir/sid/us-ssn').value").0
+      nonSsnIdentifiers: $ fhirpath("Patient.identifier.where(system!='http://hl7.org/fhir/sid/us-ssn')")
+    $body:
+      type: transaction
+      entry:
+        - request:
+            $if: $ patientId
+            $else:
+              url: /Patient
+              method: POST
+            $then:
+              url: $ "/Patient/" + patientId
+              method: PATCH
+          resource:
+            name:
+              - given:
+                  - $ firstName
+                  - $ middleName
+                family: $ lastName
+            gender: $ gender
+            telecom:
+              - value: $ mobile
+                system: phone
+            birthDate: $ birthDate
+            identifier:
+              $if: $ ssn
+              $then:
+                $call: concat
+                $args:
+                  - $ nonSsnIdentifiers
+                  - - value: $ ssn
+                      system: http://hl7.org/fhir/sid/us-ssn
+              $else: $ nonSsnIdentifiers
+            active: true
+            resourceType: Patient
+      resourceType: Bundle

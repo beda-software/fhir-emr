@@ -48,7 +48,7 @@ body:
           birthDate: $ birthDate
           identifier:
             - value: $ ssn
-              system: 1.2.643.100.3
+              system: http://hl7.org/fhir/sid/us-ssn
           active: true
           resourceType: Patient
     resourceType: Bundle
