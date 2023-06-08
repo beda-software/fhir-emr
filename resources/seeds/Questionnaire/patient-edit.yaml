@@ -67,7 +67,7 @@ item:
     text: SSN
     initialExpression:
       language: text/fhirpath
-      expression: "%Patient.identifier.where(system='1.2.643.100.3').value"
+      expression: "%Patient.identifier.where(system='http://hl7.org/fhir/sid/us-ssn').value"
   - linkId: mobile
     type: string
     text: Phone number
