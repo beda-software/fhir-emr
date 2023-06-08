@@ -91,7 +91,8 @@ export function PatientList() {
                             dataIndex: 'identifier',
                             key: 'identifier',
                             render: (_text, resource) =>
-                                resource.identifier?.find(({ system }) => system === '1.2.643.100.3')?.value,
+                                resource.identifier?.find(({ system }) => system === 'http://hl7.org/fhir/sid/us-ssn')
+                                    ?.value,
                             width: '25%',
                         },
                         {

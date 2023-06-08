@@ -47,8 +47,10 @@ body:
               system: phone
           birthDate: $ birthDate
           identifier:
-            - value: $ ssn
-              system: http://hl7.org/fhir/sid/us-ssn
+            $if: $ ssn
+            $then:
+              - value: $ ssn
+                system: http://hl7.org/fhir/sid/us-ssn
           active: true
           resourceType: Patient
     resourceType: Bundle

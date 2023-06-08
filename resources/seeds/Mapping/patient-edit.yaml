@@ -26,19 +26,13 @@ body:
     middleName: >-
       $
       fhirpath("QuestionnaireResponse.repeat(item).where(linkId='middle-name').answer.valueString").0
-    currentSsn: $ fhirpath("Patient.identifier.where(system='http://hl7.org/fhir/sid/us-ssn').value").0
-    nonSsnIdentifiers: $ fhirpath("Patient.identifier.where(system!='http://hl7.org/fhir/sid/us-ssn')")
+    appleIdentifier: $ fhirpath("Patient.identifier.where(system='https://appleid.apple.com')").0
   $body:
     type: transaction
     entry:
       - request:
-          $if: $ patientId
-          $else:
-            url: /Patient
-            method: POST
-          $then:
-            url: $ "/Patient/" + patientId
-            method: PATCH
+          url: $ "/Patient/" + patientId
+          method: PUT
         resource:
           name:
             - given:
@@ -51,14 +45,15 @@ body:
               system: phone
           birthDate: $ birthDate
           identifier:
-            $if: $ ssn
+            $if: $ ssn && ssn != ""
             $then:
               $call: concat
               $args:
-                - $ nonSsnIdentifiers
+                - - $ appleIdentifier
                 - - value: $ ssn
                     system: http://hl7.org/fhir/sid/us-ssn
-            $else: $ nonSsnIdentifiers
+            $else:
+              - $ appleIdentifier
           active: true
           resourceType: Patient
     resourceType: Bundle
