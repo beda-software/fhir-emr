@@ -45,6 +45,7 @@ export function moveQuestionnaireItem(
     questionnaire: FCEQuestionnaire,
     targetItem: MoveQuestionnaireItem,
     sourceItem: MoveQuestionnaireItem,
+    place: 'before' | 'after' = 'after',
 ): FCEQuestionnaire {
     const sourcePath = getQuestionPath(questionnaire, sourceItem.questionItem, sourceItem.parentPath);
     const sourceItemsPath = sourcePath.slice(0, -1).join('.');
@@ -57,11 +58,20 @@ export function moveQuestionnaireItem(
     const newTargetItems: FCEQuestionItem[] = _.get(newQuestionnaire, newTargetItemsPath);
 
     const targetIndex = newTargetItems.findIndex((i) => i.linkId === targetItem.questionItem.linkId);
-    const resultTargetItems = [
-        ...newTargetItems.slice(0, targetIndex + 1),
-        sourceItem.questionItem,
-        ...newTargetItems.slice(targetIndex + 1),
-    ];
+    let resultTargetItems = [];
+    if (place === 'after') {
+        resultTargetItems = [
+            ...newTargetItems.slice(0, targetIndex + 1),
+            sourceItem.questionItem,
+            ...newTargetItems.slice(targetIndex + 1),
+        ];
+    } else {
+        resultTargetItems = [
+            ...newTargetItems.slice(0, targetIndex),
+            sourceItem.questionItem,
+            ...newTargetItems.slice(targetIndex),
+        ];
+    }
 
     const resultQuestionnaire = _.set(newQuestionnaire, newTargetItemsPath, resultTargetItems);
 

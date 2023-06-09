@@ -1,56 +1,63 @@
 .board {
-    cursor: grab;
+    position: relative;
+    padding-top: 16px;
+}
 
-    + * {
-        margin-top: 16px;
+.dragArea {
+    &:global(._dragging) {
+        opacity: 0.3;
+        background-color: green;
     }
 }
 
 .dropArea {
-    height: 0;
-    width: 100%;
-    z-index: 1;
-    opacity: 0.5;
-    background-color: yellow;
-    margin-top: 16px;
-    border-radius: 10px;
+    position: absolute;
+    left: 0;
+    right: 40px;
+    height: 6px;
+    background-color: #fa8c16;
+    border-radius: 2px;
     transition: height 0.1s;
+    opacity: 0;
 
     &:global(._over) {
-        height: 50px;
-        transition: height 0s;
+        opacity: 1;
+    }
+
+    &:global(._up) {
+        top: 6px;
+    }
+
+    &:global(._down) {
+        bottom: -10px;
     }
 }
 
 .container {
+    cursor: grab;
     position: relative;
     border: 1px solid rgba(5, 5, 5, 0.06);
     border-radius: 10px;
-    padding: 16px 16px 0 16px;
+    padding: 16px;
     margin-right: 40px;
     transition: border-color 0.2s;
-
-    &:global(._active) {
-        border-color: #fa8c16;
-    }
 
     &:hover {
         border-color: rgba(#fa8c16, 0.5);
     }
 }
 
-.panel {
+.toolBox {
     position: absolute;
     right: -40px;
     top: 0;
     bottom: 0;
-    z-index: 1;
     display: flex;
     flex-direction: column;
     opacity: 0.3;
     transition: opacity 0.2s;
 
-    .container:hover & {
+    .container:hover > & {
         opacity: 1;
     }
 }

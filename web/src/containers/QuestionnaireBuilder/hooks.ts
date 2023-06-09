@@ -15,6 +15,12 @@ import { generateQuestionnaire } from 'src/services/questionnaire-builder';
 
 import { getQuestionPath, moveQuestionnaireItem } from './utils';
 
+export interface OnItemDrag {
+    dropTargetItem: QuestionItemProps | GroupItemProps;
+    dropSourceItem: QuestionItemProps | GroupItemProps;
+    place: 'before' | 'after';
+}
+
 function cleanUpQuestionnaire(questionnaire: FHIRQuestionnaire) {
     function cleanUpItems(item: FHIRQuestionnaire['item']): FHIRQuestionnaire['item'] {
         return item?.reduce((acc, qItem) => {
@@ -123,13 +129,16 @@ export function useQuestionnaireBuilder() {
     );
 
     const onItemDrag = useCallback(
-        (dropTargetItem: QuestionItemProps | GroupItemProps, dropSourceItem: QuestionItemProps | GroupItemProps) => {
+        (props: OnItemDrag) => {
+            const { dropTargetItem, dropSourceItem, place } = props;
+
             if (isSuccess(response)) {
                 const questionnaire = response.data;
                 const result = moveQuestionnaireItem(
                     toFirstClassExtension(questionnaire),
                     dropTargetItem,
                     dropSourceItem,
+                    place,
                 );
                 setResponse(success(fromFirstClassExtension(result)));
             }
