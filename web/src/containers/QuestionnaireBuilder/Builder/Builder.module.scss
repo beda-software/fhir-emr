@@ -6,7 +6,6 @@
 .dragArea {
     &:global(._dragging) {
         opacity: 0.3;
-        background-color: green;
     }
 }
 

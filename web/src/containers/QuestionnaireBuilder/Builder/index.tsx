@@ -12,11 +12,11 @@ import { toQuestionnaireResponseFormData } from 'shared/src/hooks/questionnaire-
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
 
+import { FieldSourceContext } from '../context';
+import { OnItemDrag } from '../hooks';
+import s from '../QuestionnaireBuilder.module.scss';
 import { BuilderField } from './BuilderField';
 import { BuilderGroup } from './BuilderGroup';
-import { FieldSourceContext } from './context';
-import { OnItemDrag } from './hooks';
-import s from './QuestionnaireBuilder.module.scss';
 
 const { Title } = Typography;
 
@@ -31,7 +31,6 @@ interface Props {
 export function Builder(props: Props) {
     const { response, error, activeQuestionItem, onQuestionnaireItemClick, onItemDrag } = props;
     const [moving, setMoving] = useState<'up' | 'down'>('down');
-    console.log('moving', moving);
 
     return (
         <RenderRemoteData
