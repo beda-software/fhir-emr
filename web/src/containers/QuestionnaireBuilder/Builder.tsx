@@ -2,16 +2,20 @@ import { t } from '@lingui/macro';
 import { Alert, Typography } from 'antd';
 import { RemoteData } from 'fhir-react';
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { GroupItemProps, QuestionItemProps, mapFormToResponse } from 'sdc-qrf';
+import { useState } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { GroupItemProps, QuestionItemProps } from 'sdc-qrf';
 
 import { toQuestionnaireResponseFormData } from 'shared/src/hooks/questionnaire-response-form-data';
-import { fromFirstClassExtension } from 'shared/src/utils/converter';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
 
 import { BuilderField } from './BuilderField';
 import { BuilderGroup } from './BuilderGroup';
+import { FieldSourceContext } from './context';
+import { OnItemDrag } from './hooks';
 import s from './QuestionnaireBuilder.module.scss';
 
 const { Title } = Typography;
@@ -21,10 +25,13 @@ interface Props {
     error?: string;
     activeQuestionItem?: QuestionItemProps | GroupItemProps;
     onQuestionnaireItemClick: (item: QuestionItemProps | GroupItemProps | undefined) => void;
+    onItemDrag: (props: OnItemDrag) => void;
 }
 
 export function Builder(props: Props) {
-    const { response, error, activeQuestionItem, onQuestionnaireItemClick } = props;
+    const { response, error, activeQuestionItem, onQuestionnaireItemClick, onItemDrag } = props;
+    const [moving, setMoving] = useState<'up' | 'down'>('down');
+    console.log('moving', moving);
 
     return (
         <RenderRemoteData
@@ -63,32 +70,46 @@ export function Builder(props: Props) {
                             <Title level={3} className={s.title}>
                                 {title}
                             </Title>
-                            <BaseQuestionnaireResponseForm
-                                formData={formData}
-                                onSubmit={async (values) =>
-                                    console.log(
-                                        'result',
-                                        fromFirstClassExtension({
-                                            ...values.context.questionnaireResponse,
-                                            ...mapFormToResponse(values.formValues, values.context.questionnaire),
-                                        }),
-                                    )
-                                }
-                                ItemWrapper={(wrapperProps) => (
-                                    <BuilderField
-                                        {...wrapperProps}
-                                        activeQuestionItem={activeQuestionItem as QuestionItemProps}
-                                        onEditClick={onQuestionnaireItemClick}
+                            <FieldSourceContext.Provider
+                                value={{
+                                    moving,
+                                    setMoving,
+                                }}
+                            >
+                                <DndProvider backend={HTML5Backend}>
+                                    <BaseQuestionnaireResponseForm
+                                        formData={formData}
+                                        // onSubmit={async (values) =>
+                                        //     console.log(
+                                        //         'result',
+                                        //         fromFirstClassExtension({
+                                        //             ...values.context.questionnaireResponse,
+                                        //             ...mapFormToResponse(
+                                        //                 values.formValues,
+                                        //                 values.context.questionnaire,
+                                        //             ),
+                                        //         }),
+                                        //     )
+                                        // }
+                                        ItemWrapper={(wrapperProps) => (
+                                            <BuilderField
+                                                {...wrapperProps}
+                                                activeQuestionItem={activeQuestionItem as QuestionItemProps}
+                                                onEditClick={onQuestionnaireItemClick}
+                                                onItemDrag={onItemDrag}
+                                            />
+                                        )}
+                                        GroupWrapper={(wrapperProps) => (
+                                            <BuilderGroup
+                                                {...wrapperProps}
+                                                activeQuestionItem={activeQuestionItem as GroupItemProps}
+                                                onEditClick={onQuestionnaireItemClick}
+                                                onItemDrag={onItemDrag}
+                                            />
+                                        )}
                                     />
-                                )}
-                                GroupWrapper={(wrapperProps) => (
-                                    <BuilderGroup
-                                        {...wrapperProps}
-                                        activeQuestionItem={activeQuestionItem as GroupItemProps}
-                                        onEditClick={onQuestionnaireItemClick}
-                                    />
-                                )}
-                            />
+                                </DndProvider>
+                            </FieldSourceContext.Provider>
                         </>
                     );
                 }

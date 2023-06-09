@@ -3,17 +3,20 @@ import { Button } from 'antd';
 import classNames from 'classnames';
 import { GroupItemProps } from 'sdc-qrf';
 
+import { FieldSource, FieldTarget } from '../BuilderField';
 import s from '../BuilderField/BuilderField.module.scss';
+import { OnItemDrag } from '../hooks';
 
 interface Props {
     children: React.ReactNode;
     item: GroupItemProps;
     activeQuestionItem?: GroupItemProps;
     onEditClick?: (item: GroupItemProps | undefined) => void;
+    onItemDrag: (props: OnItemDrag) => void;
 }
 
 export function BuilderGroup(props: Props) {
-    const { children, item, activeQuestionItem, onEditClick } = props;
+    const { children, item, activeQuestionItem, onEditClick, onItemDrag } = props;
     const { hidden } = item.questionItem;
 
     if (hidden) {
@@ -21,17 +24,21 @@ export function BuilderGroup(props: Props) {
     }
 
     return (
-        <div
-            className={classNames(s.container, {
-                _active: item.questionItem.linkId === activeQuestionItem?.questionItem.linkId,
-            })}
-        >
-            <div className={s.panel}>
-                <Button type="text" className={s.button} onClick={() => onEditClick?.(item)}>
-                    <SettingOutlined />
-                </Button>
-            </div>
-            {children}
-        </div>
+        <FieldTarget item={item} onItemDrag={onItemDrag}>
+            <FieldSource item={item}>
+                <div
+                    className={classNames(s.container, {
+                        _active: item.questionItem.linkId === activeQuestionItem?.questionItem.linkId,
+                    })}
+                >
+                    <div className={s.toolBox}>
+                        <Button type="text" className={s.button} onClick={() => onEditClick?.(item)}>
+                            <SettingOutlined />
+                        </Button>
+                    </div>
+                    {children}
+                </div>
+            </FieldSource>
+        </FieldTarget>
     );
 }

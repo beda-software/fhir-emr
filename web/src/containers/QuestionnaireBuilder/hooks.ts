@@ -9,13 +9,17 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { GroupItemProps, QuestionItemProps } from 'sdc-qrf';
 
-import {
-    Questionnaire as FCEQuestionnaire,
-    QuestionnaireItem as FCEQuestionnaireItem,
-} from 'shared/src/contrib/aidbox';
 import { fromFirstClassExtension, toFirstClassExtension } from 'shared/src/utils/converter';
 
 import { generateQuestionnaire } from 'src/services/questionnaire-builder';
+
+import { getQuestionPath, moveQuestionnaireItem } from './utils';
+
+export interface OnItemDrag {
+    dropTargetItem: QuestionItemProps | GroupItemProps;
+    dropSourceItem: QuestionItemProps | GroupItemProps;
+    place: 'before' | 'after';
+}
 
 function cleanUpQuestionnaire(questionnaire: FHIRQuestionnaire) {
     function cleanUpItems(item: FHIRQuestionnaire['item']): FHIRQuestionnaire['item'] {
@@ -104,8 +108,8 @@ export function useQuestionnaireBuilder() {
     const onItemChange = useCallback(
         (item: QuestionItemProps | GroupItemProps) => {
             if (isSuccess(response)) {
-                const questionnaire = toFirstClassExtension(response.data);
-                const path = getQuestionPath(questionnaire, item.questionItem, item.parentPath);
+                const fceQuestionnaire = toFirstClassExtension(response.data);
+                const path = getQuestionPath(fceQuestionnaire, item.questionItem, item.parentPath);
                 const name = path.join('.');
 
                 const fhirQuestionItem = fromFirstClassExtension({
@@ -124,35 +128,23 @@ export function useQuestionnaireBuilder() {
         [response],
     );
 
-    return { response, onSaveQuestionnaire, onSubmitPrompt, onItemChange, error };
-}
+    const onItemDrag = useCallback(
+        (props: OnItemDrag) => {
+            const { dropTargetItem, dropSourceItem, place } = props;
 
-export function getQuestionPath(
-    questionnaire: FCEQuestionnaire,
-    questionItem: FCEQuestionnaireItem,
-    parentPath: (string | number)[],
-) {
-    const { linkId } = questionItem;
+            if (isSuccess(response)) {
+                const questionnaire = response.data;
+                const result = moveQuestionnaireItem(
+                    toFirstClassExtension(questionnaire),
+                    dropTargetItem,
+                    dropSourceItem,
+                    place,
+                );
+                setResponse(success(fromFirstClassExtension(result)));
+            }
+        },
+        [response],
+    );
 
-    if (parentPath.length === 0) {
-        const index = questionnaire.item!.findIndex((i) => i.linkId === linkId);
-
-        return ['item', index];
-    } else {
-        return parentPath.reduce(
-            (acc: (string | number)[], pathItem: string | number) => {
-                if (pathItem === 'items') {
-                    const items: FCEQuestionnaireItem[] = _.get(questionnaire, [...acc, 'item'].join('.'));
-                    const index = items.findIndex((i) => i.linkId === linkId);
-                    return [...acc, 'item', index];
-                } else {
-                    const items: FCEQuestionnaireItem[] = _.get(questionnaire, acc.join('.'));
-                    const index = items.findIndex((i) => i.linkId === pathItem);
-
-                    return [...acc, index];
-                }
-            },
-            ['item'],
-        );
-    }
+    return { response, onSaveQuestionnaire, onSubmitPrompt, onItemChange, onItemDrag, error };
 }
