@@ -13,7 +13,7 @@ import { fromFirstClassExtension, toFirstClassExtension } from 'shared/src/utils
 
 import { generateQuestionnaire } from 'src/services/questionnaire-builder';
 
-import { getQuestionPath, moveQuestionnaireItem } from './utils';
+import { deleteQuestionnaireItem, getQuestionPath, moveQuestionnaireItem } from './utils';
 
 export interface OnItemDrag {
     dropTargetItem: QuestionItemProps | GroupItemProps;
@@ -146,5 +146,16 @@ export function useQuestionnaireBuilder() {
         [response],
     );
 
-    return { response, onSaveQuestionnaire, onSubmitPrompt, onItemChange, onItemDrag, error };
+    const onItemDelete = useCallback(
+        (item: QuestionItemProps | GroupItemProps) => {
+            if (isSuccess(response)) {
+                const questionnaire = response.data;
+                const result = deleteQuestionnaireItem(toFirstClassExtension(questionnaire), item);
+                setResponse(success(fromFirstClassExtension(result)));
+            }
+        },
+        [response],
+    );
+
+    return { response, onSaveQuestionnaire, onSubmitPrompt, onItemChange, onItemDrag, onItemDelete, error };
 }

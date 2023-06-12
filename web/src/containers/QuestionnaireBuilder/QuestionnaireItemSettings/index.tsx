@@ -1,5 +1,5 @@
 import { Trans, t } from '@lingui/macro';
-import { Button, Checkbox, Form, Input, Select } from 'antd';
+import { Button, Checkbox, Form, Input, Select, Popconfirm } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import { FormProvider, useForm } from 'react-hook-form';
 import { GroupItemProps, QuestionItemProps } from 'sdc-qrf/lib/types';
@@ -7,6 +7,7 @@ import { GroupItemProps, QuestionItemProps } from 'sdc-qrf/lib/types';
 import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
 
 import { itemControlSpecificFields, itemControls, typeSpecificFields } from './controls';
+import s from './QuestionnaireItemSettings.module.scss';
 import { SettingsField } from './SettingsField';
 
 const { Option } = Select;
@@ -14,10 +15,11 @@ const { Option } = Select;
 interface Props {
     item: QuestionItemProps | GroupItemProps;
     onSave: (item: QuestionItemProps | GroupItemProps) => void;
+    onDelete: (item: QuestionItemProps | GroupItemProps) => void;
 }
 
 export function QuestionnaireItemSettings(props: Props) {
-    const { item, onSave } = props;
+    const { item, onSave, onDelete } = props;
     const methods = useForm<QuestionnaireItem>({
         defaultValues: item.questionItem,
     });
@@ -122,11 +124,22 @@ export function QuestionnaireItemSettings(props: Props) {
                     </>
                 ) : null}
                 {type ? typeSpecificFields[type] : null}
-                <Form.Item>
-                    <Button htmlType="submit">
+                <div className={s.buttons}>
+                    <Button htmlType="submit" type="primary" ghost>
                         <Trans>Save</Trans>
                     </Button>
-                </Form.Item>
+                    <Popconfirm
+                        title="Delete Questionnaire Item"
+                        description="Are you sure you want to delete this item?"
+                        onConfirm={() => onDelete(item)}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <Button htmlType="button" danger>
+                            <Trans>Delete</Trans>
+                        </Button>
+                    </Popconfirm>
+                </div>
             </Form>
         </FormProvider>
     );

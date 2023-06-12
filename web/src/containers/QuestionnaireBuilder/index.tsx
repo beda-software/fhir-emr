@@ -20,7 +20,7 @@ import { QuestionnaireSaveForm } from './QuestionnaireSaveForm';
 const { Title } = Typography;
 
 export function QuestionnaireBuilder() {
-    const { response, onSubmitPrompt, error, onItemChange, onItemDrag, onSaveQuestionnaire } =
+    const { response, onSubmitPrompt, error, onItemChange, onItemDrag, onSaveQuestionnaire, onItemDelete } =
         useQuestionnaireBuilder();
     const [questionnaireItem, setQuestionnaireItem] = useState<QuestionItemProps | undefined>();
     const [groupItem, setGroupItem] = useState<GroupItemProps | undefined>();
@@ -99,6 +99,11 @@ export function QuestionnaireBuilder() {
                                         setQuestionnaireItem(undefined);
                                         setGroupItem(undefined);
                                         onItemChange(item);
+                                    }}
+                                    onDelete={(item) => {
+                                        setQuestionnaireItem(undefined);
+                                        setGroupItem(undefined);
+                                        onItemDelete(item);
                                     }}
                                 />
                             </div>

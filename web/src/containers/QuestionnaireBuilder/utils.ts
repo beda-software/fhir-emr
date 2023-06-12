@@ -77,3 +77,17 @@ export function moveQuestionnaireItem(
 
     return resultQuestionnaire;
 }
+
+export function deleteQuestionnaireItem(
+    questionnaire: FCEQuestionnaire,
+    item: MoveQuestionnaireItem,
+): FCEQuestionnaire {
+    const path = getQuestionPath(questionnaire, item.questionItem, item.parentPath);
+    const itemsPath = path.slice(0, -1).join('.');
+    const items: FCEQuestionItem[] = _.get(questionnaire, itemsPath);
+
+    const filteredItems = items.filter((i) => i.linkId !== item.questionItem.linkId);
+    const newQuestionnaire = _.set(questionnaire, itemsPath, filteredItems);
+
+    return newQuestionnaire;
+}
