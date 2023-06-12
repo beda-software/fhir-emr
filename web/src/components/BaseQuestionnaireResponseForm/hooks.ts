@@ -1,7 +1,6 @@
 import { FormItemProps } from 'antd';
-import { isSuccess, RemoteData } from 'fhir-react/lib/libs/remoteData';
 import _ from 'lodash';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
@@ -51,20 +50,4 @@ export function useFieldController(fieldName: any, questionItem: QuestionnaireIt
         disabled: readOnly || qrfContext.readOnly,
         formItem,
     };
-}
-
-export function useSavedMessage(draftSaveResponse: RemoteData) {
-    const [savedMessage, setSavedMessage] = useState('');
-
-    useEffect(() => {
-        if (isSuccess(draftSaveResponse)) {
-            setSavedMessage('Saved');
-
-            const timeoutId = setTimeout(() => {
-                setSavedMessage('');
-            }, 2500);
-            return () => clearTimeout(timeoutId);
-        }
-    }, [draftSaveResponse]);
-    return { savedMessage };
 }

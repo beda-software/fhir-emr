@@ -2,15 +2,11 @@ import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { isSuccess, notAsked, RemoteData } from 'fhir-react/lib/libs/remoteData';
 import { WithId } from 'fhir-react/lib/services/fhir';
 import { Patient, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
-import { useSavedMessage } from 'src/components/BaseQuestionnaireResponseForm/hooks';
-import {
-    AnxietyScore,
-    DepressionScore,
-} from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/score';
+import { AnxietyScore, DepressionScore } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/score';
 import { Spinner } from 'src/components/Spinner';
 import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
 
@@ -38,8 +34,7 @@ export function PatientDocument(props: Props) {
     });
     const navigate = useNavigate();
 
-    const [draftSaveResponse, setDraftSaveResponse] =
-        useState<RemoteData<QuestionnaireResponse>>(notAsked);
+    const [draftSaveResponse, setDraftSaveResponse] = useState<RemoteData<QuestionnaireResponse>>(notAsked);
 
     const { savedMessage } = useSavedMessage(draftSaveResponse);
 
@@ -79,4 +74,20 @@ export function PatientDocument(props: Props) {
             </div>
         </div>
     );
+}
+
+function useSavedMessage(draftSaveResponse: RemoteData) {
+    const [savedMessage, setSavedMessage] = useState('');
+
+    useEffect(() => {
+        if (isSuccess(draftSaveResponse)) {
+            setSavedMessage('Saved');
+
+            const timeoutId = setTimeout(() => {
+                setSavedMessage('');
+            }, 2500);
+            return () => clearTimeout(timeoutId);
+        }
+    }, [draftSaveResponse]);
+    return { savedMessage };
 }
