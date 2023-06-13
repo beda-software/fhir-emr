@@ -24,7 +24,7 @@ export function useFieldController(fieldName: any, questionItem: QuestionnaireIt
         required,
     };
 
-    const onChange = useCallback(
+    const onMultiChange = useCallback(
         (option: any) => {
             if (repeats) {
                 let arrayValue = (field.value ?? []) as any[];
@@ -45,8 +45,8 @@ export function useFieldController(fieldName: any, questionItem: QuestionnaireIt
 
     return {
         ...field,
+        onMultiChange,
         fieldState,
-        onChange,
         disabled: readOnly || qrfContext.readOnly,
         formItem,
     };

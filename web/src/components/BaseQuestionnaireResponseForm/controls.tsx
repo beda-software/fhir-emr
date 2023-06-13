@@ -22,7 +22,6 @@ import {
     QuestionString,
     QuestionText,
     Row,
-    PractitionerRoleList,
     BloodPressure,
 } from './widgets';
 import { Display } from './widgets/display';
@@ -49,7 +48,6 @@ export const itemControlComponents: ItemControlQuestionItemComponentMapping = {
     slider: QuestionSlider,
     'solid-radio-button': QuestionSolidRadio,
     'inline-choice': InlineChoice,
-    'practitioner-role': PractitionerRoleList,
     'text-with-macro': TextWithMacroFill,
 };
 

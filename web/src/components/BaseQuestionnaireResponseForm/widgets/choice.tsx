@@ -1,64 +1,44 @@
-import { Form, Select as ANTDSelect, FormItemProps } from 'antd';
+import { Form } from 'antd';
 import { mapSuccess } from 'fhir-react';
 import { debounce } from 'lodash';
 import _ from 'lodash';
 import { useCallback } from 'react';
-import Select, { SingleValue } from 'react-select';
+import Select from 'react-select';
 import AsyncSelect from 'react-select/async';
 import { QuestionItemProps } from 'sdc-qrf';
 
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { service } from 'aidbox-react/lib/services/service';
 
-import {
-    QuestionnaireItem,
-    QuestionnaireItemAnswerOption,
-    QuestionnaireResponseItemAnswer,
-    ValueSet,
-} from 'shared/src/contrib/aidbox';
+import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer, ValueSet } from 'shared/src/contrib/aidbox';
 
-import { getArrayDisplay, getDisplay } from 'src/utils/questionnaire';
+import { getDisplay } from 'src/utils/questionnaire';
 
 import s from '../BaseQuestionnaireResponseForm.module.scss';
 import { useFieldController } from '../hooks';
 
-const inputStyle = { backgroundColor: '#F7F9FC' };
-
 interface ChoiceQuestionSelectProps {
     value?: QuestionnaireResponseItemAnswer[];
-    onChange?: (option: QuestionnaireResponseItemAnswer) => void;
+    onChange: (...option: any[]) => void;
     options: QuestionnaireItemAnswerOption[];
+    repeats?: boolean;
 }
 
 function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
-    const { value, onChange, options } = props;
-
-    const selectOptions = options?.map((c: any) => {
-        return {
-            label: c.value?.Coding?.display,
-            value: c.value,
-        };
-    });
-
-    const newOnChange = (selectValue: any) => {
-        onChange?.({ value: selectValue.value });
-    };
-
-    const selectValue = {
-        label: getArrayDisplay(value),
-        value,
-    };
+    const { value, onChange, options, repeats = false } = props;
 
     return (
         <>
             <Select
-                options={selectOptions}
-                onChange={newOnChange}
-                value={selectValue}
+                value={value}
+                options={options}
                 className={s.select}
+                onChange={(v) => onChange(v)}
                 isOptionSelected={(option) =>
                     !!value && value?.findIndex((v) => _.isEqual(v?.value, option.value)) !== -1
                 }
+                isMulti={repeats}
+                getOptionLabel={(o) => (getDisplay(o.value) as string) || ''}
             />
         </>
     );
@@ -66,67 +46,49 @@ function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
 
 export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, answerOption, repeats, answerValueSet } = questionItem;
-    let fieldName = [...parentPath, linkId, 0, 'value', 'Coding'];
+    let fieldName = [...parentPath, linkId, 0];
 
-    if (answerOption?.[0]?.value?.Coding) {
-        if (repeats) {
-            fieldName = [...parentPath, linkId];
-        } else {
-            fieldName = [...parentPath, linkId, 0];
-        }
+    if (repeats) {
+        fieldName = [...parentPath, linkId];
     }
 
-    const { value, onChange, disabled, formItem } = useFieldController(fieldName, questionItem);
+    const { value, formItem, onChange } = useFieldController(fieldName, questionItem);
 
-    if (answerOption?.[0]?.value?.Coding) {
+    if (answerValueSet) {
         return (
             <Form.Item {...formItem}>
-                <ChoiceQuestionSelect
-                    options={answerOption}
+                <ChoiceQuestionValueSet
+                    answerValueSet={answerValueSet}
                     value={!repeats && value ? [value] : value}
                     onChange={onChange}
+                    repeats={repeats}
                 />
             </Form.Item>
         );
     }
 
-    if (answerValueSet) {
-        return (
-            <SelectAnswerValueSet
-                questionItem={questionItem}
-                value={value}
-                onChange={onChange}
-                disabled={disabled}
-                formItem={formItem}
-            />
-        );
-    }
-
     return (
         <Form.Item {...formItem}>
-            <ANTDSelect style={inputStyle} disabled={disabled} value={value} onChange={onChange}>
-                {answerOption?.map((option) => (
-                    <ANTDSelect.Option key={JSON.stringify(option)} value={option.value?.string}>
-                        {getDisplay(option.value!)}
-                    </ANTDSelect.Option>
-                ))}
-            </ANTDSelect>
+            <ChoiceQuestionSelect
+                options={answerOption!}
+                value={!repeats && value ? [value] : value}
+                onChange={onChange}
+                repeats={repeats}
+            />
         </Form.Item>
     );
 }
 
-interface SelectAnswerValueSetProps {
-    questionItem: QuestionnaireItem;
-    value: any;
+interface ChoiceQuestionValueSetProps {
+    answerValueSet: string;
+    value: QuestionnaireResponseItemAnswer[];
     onChange: (option: any) => void;
-    disabled: boolean | undefined;
-    formItem: FormItemProps;
+    repeats?: boolean;
 }
 
-function SelectAnswerValueSet(props: SelectAnswerValueSetProps) {
-    const { questionItem, value, onChange, formItem } = props;
-    const { answerValueSet } = questionItem;
-    const valueSetId = answerValueSet?.split('/').slice(-1);
+function ChoiceQuestionValueSet(props: ChoiceQuestionValueSetProps) {
+    const { answerValueSet, value, onChange, repeats = false } = props;
+    const valueSetId = answerValueSet.split('/').slice(-1);
 
     const loadOptions = useCallback(
         async (searchText: string) => {
@@ -161,28 +123,15 @@ function SelectAnswerValueSet(props: SelectAnswerValueSetProps) {
         (async () => callback(await loadOptions(searchText)))();
     }, 500);
 
-    const newOnChange = useCallback(
-        (data: SingleValue<any>) => {
-            onChange(data.value?.Coding);
-        },
-        [onChange],
-    );
-
     return (
-        <Form.Item {...formItem}>
-            <AsyncSelect
-                loadOptions={debouncedLoadOptions}
-                defaultOptions
-                onChange={newOnChange}
-                getOptionLabel={getOptionLabel}
-                value={value}
-            />
-        </Form.Item>
+        <AsyncSelect
+            loadOptions={debouncedLoadOptions}
+            defaultOptions
+            value={value}
+            onChange={(v) => onChange(v)}
+            isOptionSelected={(option) => !!value && value?.findIndex((v) => _.isEqual(v?.value, option.value)) !== -1}
+            isMulti={repeats}
+            getOptionLabel={(o) => (getDisplay(o.value) as string) || ''}
+        />
     );
-}
-
-function getOptionLabel(option: { value: { Coding: { display: string } }; display: string }) {
-    if (option && option.value) {
-        return option.value.Coding.display;
-    } else return option.display;
 }
