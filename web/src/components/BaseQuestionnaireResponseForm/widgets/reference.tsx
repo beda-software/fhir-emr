@@ -190,14 +190,14 @@ function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource =
 
     return (
         <Form.Item {...formItem}>
-            <AsyncSelect<QuestionnaireItemAnswerOption>
+            <AsyncSelect
                 onChange={fieldController.onChange}
-                value={fieldController.value}
+                value={repeats ? fieldController.value : [fieldController.value]}
                 loadOptions={debouncedLoadOptions}
                 defaultOptions
                 getOptionLabel={(option) => getAnswerDisplay(option.value)}
                 getOptionValue={(option) => getAnswerCode(option.value)}
-                isMulti={!repeats ? false : undefined}
+                isMulti={repeats}
             />
         </Form.Item>
     );

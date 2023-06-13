@@ -21,7 +21,7 @@ export function InlineChoice({ parentPath, questionItem }: InlineChoiceProps) {
 
     const fieldName = repeats ? [...parentPath, linkId] : [...parentPath, linkId, 0];
 
-    const { value, onChange, disabled, formItem } = useFieldController(fieldName, questionItem);
+    const { value, onChange, onMultiChange, disabled, formItem } = useFieldController(fieldName, questionItem);
 
     if (repeats) {
         const arrayValue = (value || []) as QuestionnaireItemAnswerOption[];
@@ -34,7 +34,7 @@ export function InlineChoice({ parentPath, questionItem }: InlineChoiceProps) {
                             checked={arrayValue.findIndex((v) => _.isEqual(v?.value, answerOption.value)) !== -1}
                             key={JSON.stringify(answerOption)}
                             disabled={disabled}
-                            onChange={() => onChange(answerOption)}
+                            onChange={() => onMultiChange(answerOption)}
                         >
                             {getDisplay(answerOption.value!)}
                         </Checkbox>
