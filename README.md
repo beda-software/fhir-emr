@@ -74,6 +74,8 @@ cp .env.tpl .env
 
 ### Local setup
 
+#### Prepare frontend configuration
+
 ```
 cp shared/src/config.local.ts shared/src/config.ts
 ```
@@ -84,7 +86,10 @@ This file (`shared/src/config.ts`) is ignored by git. So, feel free to change it
 yarn
 yarn compile
 ```
-Run Aidbox and other dependencies via docker
+
+#### Docker
+You need to setup docker to run FHIR server, SDC and other microservices. https://docker.com/  
+Once you get docker installed in you local machine, you can run Aidbox and other dependencies
 ```sh
 make up
 ```
