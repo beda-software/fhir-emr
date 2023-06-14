@@ -91,6 +91,7 @@ yarn compile
 You need to setup docker to run FHIR server, SDC and other microservices. https://docker.com/  
 Once you get docker installed in you local machine, you can run Aidbox and other dependencies
 ```sh
+make build-seeds
 make up
 ```
 The first start may take a few minutes since it synchronizes the terminology.
@@ -107,7 +108,7 @@ yarn start           # start watch all workspaces
 yarn test            # launch tests for all workspaces
 ```
 
-## Build seeds
+## Update seeds
 
 To see the changes that were added to `resources/seeds` follow next steps
 
