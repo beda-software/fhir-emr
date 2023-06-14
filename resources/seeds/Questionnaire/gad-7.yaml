@@ -12,12 +12,14 @@ mapping:
 launchContext:
     - name:
           code: Patient
-      type: 
+      type:
         - Patient
     - name:
           code: Author
-      type: 
-        - Resource
+      type:
+        - PractitionerRole
+        - Practitioner
+        - Patient
 item:
     - text: DateTime
       type: dateTime

@@ -14,7 +14,9 @@ launchContext:
     - name:
           code: Author
       type:
-        - Resource
+        - PractitionerRole
+        - Practitioner
+        - Patient
 mapping:
     - id: medication-statement-extract
       resourceType: Mapping
