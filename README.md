@@ -81,18 +81,14 @@ cp shared/src/config.local.ts shared/src/config.ts
 This file (`shared/src/config.ts`) is ignored by git. So, feel free to change it.
 
 ```sh
-git submodule update --init
-```
-
-```sh
 yarn
 yarn compile
 ```
-
+Run Aidbox and other dependencies via docker
 ```sh
-docker-compose pull
-docker-compose build
+make up
 ```
+The first start may take a few minutes since it synchronizes the terminology.
 
 ### Start
 
