@@ -1,0 +1,129 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    padding: 0 4px;
+    gap: 4px;
+}
+
+.logoWrapper {
+    height: 68px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 55px;
+    transition: padding 0.2s;
+
+    .container:global(._collapsed) & {
+        padding: 0 20px;
+    }
+}
+
+.logoCompanyName {
+    opacity: 1;
+    transition: all 0.6s;
+
+    .container:global(._collapsed) & {
+        opacity: 0;
+        transition: all 0s;
+    }
+}
+
+.divider {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.menu {
+    border: 0 !important;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    &::before,
+    &::after {
+        display: none;
+    }
+}
+
+.menuItem {
+    height: 48px !important;
+    line-height: 24px !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: #0a0e2c !important;
+    border-radius: 6px !important;
+    transition: height 0.2s;
+
+    .container:global(._collapsed) & {
+        height: 68px !important;
+    }
+
+    &:hover:not(:global(.ant-menu-item-selected)) {
+        background: 0 !important;
+        color: #3366ff !important;
+    }
+
+    &:global(.ant-menu-item-selected) {
+        background-color: #f5f5f5 !important;
+        color: #3366ff !important;
+        color: #0a0e2c !important;
+    }
+}
+
+.menuLink {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px 16px 6px;
+    transition: all 0.2s;
+
+    .container:global(._collapsed) & {
+        padding: 12px 24px;
+    }
+
+    &::before,
+    &::after {
+        display: none;
+    }
+}
+
+.menuLinkRow {
+    display: flex;
+    align-items: center;
+    gap: 0 10px;
+}
+
+.menuItemLabel {
+    opacity: 1;
+    transition: opacity 0.6s;
+
+    &._small {
+        opacity: 0;
+        height: 0;
+        font-size: 9px;
+        line-height: 14px;
+        font-weight: 500;
+        transition: opacity 0s;
+        display: flex;
+        justify-content: center;
+        visibility: hidden;
+    }
+
+    .container:global(._collapsed) & {
+        opacity: 0;
+        transition: opacity 0s;
+
+        &._small {
+            height: 14px;
+            opacity: 1;
+            transition: opacity 0.2s;
+            transition-delay: 0.18s;
+            visibility: visible;
+        }
+    }
+}
+
+:global .ant-menu-inline-collapsed-tooltip,
+:global .ant-menu-submenu-popup {
+    display: none !important;
+}

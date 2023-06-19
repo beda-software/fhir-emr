@@ -1,16 +1,17 @@
 import { i18n } from '@lingui/core';
 import { en, ru } from 'make-plural/plurals';
-import {messages as enMessages} from '../locale/en/messages';
-import {messages as ruMessages} from '../locale/ru/messages';
+
+import { messages as enMessages } from '../locale/en/messages';
+import { messages as ruMessages } from '../locale/ru/messages';
 
 const localMap = {
     en: enMessages,
     ru: ruMessages,
-}
+};
 
 export const locales = {
-    en: 'EN',
-    ru: 'RU',
+    en: 'English',
+    ru: 'Русский',
 };
 
 i18n.loadLocaleData({
@@ -28,7 +29,7 @@ export const setCurrentLocale = (locale: string) => {
 
 export function dynamicActivate(locale: string) {
     const messages = localMap[locale];
-    if(messages){
+    if (messages) {
         i18n.load(locale, messages);
     }
     i18n.activate(locale);

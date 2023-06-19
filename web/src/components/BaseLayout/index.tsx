@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 
 import s from './BaseLayout.module.scss';
 import { AppFooter } from './Footer';
-import { AppHeader } from './Header';
+import { AppSidebar } from './Sidebar';
 
 interface Props {
     children: ReactNode;
@@ -14,9 +14,11 @@ interface Props {
 export function BaseLayout({ children, style }: Props) {
     return (
         <Layout className={s.container} style={style}>
-            <AppHeader />
-            {children}
-            <AppFooter />
+            <AppSidebar />
+            <Layout className={s.content}>
+                {children}
+                <AppFooter />
+            </Layout>
         </Layout>
     );
 }
