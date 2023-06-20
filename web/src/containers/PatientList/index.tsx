@@ -41,7 +41,7 @@ export function PatientList() {
     return (
         <>
             <BasePageHeader style={{ paddingTop: 40, paddingBottom: 92 }}>
-                <Row justify="space-between" align="middle" style={{ marginBottom: 40 }}>
+                <Row justify="space-between" align="middle" style={{ marginBottom: 40 }} gutter={[16, 16]}>
                     <Col>
                         <Title style={{ marginBottom: 0 }}>
                             <Trans>Patients</Trans>
@@ -101,42 +101,46 @@ export function PatientList() {
                             key: 'actions',
                             render: (_text, resource) => {
                                 return (
-                                    <>
-                                        <Button
-                                            type="link"
-                                            style={{ padding: 0 }}
-                                            onClick={() =>
-                                                navigate(`/patients/${resource.id}`, {
-                                                    state: { resource },
-                                                })
-                                            }
-                                        >
-                                            <Trans>Open</Trans>
-                                        </Button>
-                                        <ModalTrigger
-                                            title={t`Edit patient`}
-                                            trigger={
-                                                <Button type="link">
-                                                    <Trans>Edit</Trans>
-                                                </Button>
-                                            }
-                                        >
-                                            {({ closeModal }) => (
-                                                <QuestionnaireResponseForm
-                                                    questionnaireLoader={questionnaireIdLoader('patient-edit')}
-                                                    launchContextParameters={[{ name: 'Patient', resource }]}
-                                                    onSuccess={() => {
-                                                        notification.success({
-                                                            message: t`Patient saved`,
-                                                        });
-                                                        pagerManager.reload();
-                                                        closeModal();
-                                                    }}
-                                                    onCancel={closeModal}
-                                                />
-                                            )}
-                                        </ModalTrigger>
-                                    </>
+                                    <Row wrap={false}>
+                                        <Col>
+                                            <Button
+                                                type="link"
+                                                style={{ padding: 0 }}
+                                                onClick={() =>
+                                                    navigate(`/patients/${resource.id}`, {
+                                                        state: { resource },
+                                                    })
+                                                }
+                                            >
+                                                <Trans>Open</Trans>
+                                            </Button>
+                                        </Col>
+                                        <Col>
+                                            <ModalTrigger
+                                                title={t`Edit patient`}
+                                                trigger={
+                                                    <Button type="link">
+                                                        <Trans>Edit</Trans>
+                                                    </Button>
+                                                }
+                                            >
+                                                {({ closeModal }) => (
+                                                    <QuestionnaireResponseForm
+                                                        questionnaireLoader={questionnaireIdLoader('patient-edit')}
+                                                        launchContextParameters={[{ name: 'Patient', resource }]}
+                                                        onSuccess={() => {
+                                                            notification.success({
+                                                                message: t`Patient saved`,
+                                                            });
+                                                            pagerManager.reload();
+                                                            closeModal();
+                                                        }}
+                                                        onCancel={closeModal}
+                                                    />
+                                                )}
+                                            </ModalTrigger>
+                                        </Col>
+                                    </Row>
                                 );
                             },
                             width: 200,

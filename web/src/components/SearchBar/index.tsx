@@ -10,7 +10,7 @@ export function SearchBar(props: SearchBarData) {
 
     return (
         <div className={s.container}>
-            <Row gutter={32}>
+            <Row gutter={[32, 16]}>
                 {columnsFilterValues.map((columnFilterValue, columnIndex) => (
                     <SearchBarColumn
                         key={`search-bar-column-${columnIndex}`}

@@ -31,13 +31,14 @@ export function PractitionerList() {
         ],
     });
 
-    const { practitionerDataListRD, practitionerListReload, pagination, handleTableChange } =
-        usePractitionersList(columnsFilterValues as StringTypeColumnFilterValue[]);
+    const { practitionerDataListRD, practitionerListReload, pagination, handleTableChange } = usePractitionersList(
+        columnsFilterValues as StringTypeColumnFilterValue[],
+    );
 
     return (
         <>
             <BasePageHeader style={{ paddingTop: 40, paddingBottom: 92 }}>
-                <Row justify="space-between" align="middle" style={{ marginBottom: 40 }}>
+                <Row justify="space-between" align="middle" style={{ marginBottom: 40 }} gutter={[16, 16]}>
                     <Col>
                         <Title style={{ marginBottom: 0 }}>
                             <Trans>Practitioners</Trans>
@@ -56,9 +57,7 @@ export function PractitionerList() {
                         >
                             {({ closeModal }) => (
                                 <QuestionnaireResponseForm
-                                    questionnaireLoader={questionnaireIdLoader(
-                                        'practitioner-create',
-                                    )}
+                                    questionnaireLoader={questionnaireIdLoader('practitioner-create')}
                                     onSuccess={() => {
                                         practitionerListReload();
                                         closeModal();
@@ -87,16 +86,11 @@ export function PractitionerList() {
                     locale={{
                         emptyText: (
                             <>
-                                <Empty
-                                    description={<Trans>No data</Trans>}
-                                    image={Empty.PRESENTED_IMAGE_SIMPLE}
-                                />
+                                <Empty description={<Trans>No data</Trans>} image={Empty.PRESENTED_IMAGE_SIMPLE} />
                             </>
                         ),
                     }}
-                    dataSource={
-                        isSuccess(practitionerDataListRD) ? practitionerDataListRD.data : []
-                    }
+                    dataSource={isSuccess(practitionerDataListRD) ? practitionerDataListRD.data : []}
                     columns={[
                         {
                             title: <Trans>Name</Trans>,

@@ -33,20 +33,25 @@ const columns: ColumnsType<Questionnaire> = [
         key: 'actions',
         render: (_text, resource) => {
             return (
-                <>
-                    <Link to={`/questionnaires/${resource.id}/edit`}>
-                        <Button type="link">
-                            <Trans>Open</Trans>
-                        </Button>
-                    </Link>
-                    <a
-                        href={`${config.sdcIdeUrl}/${resource.id}?client=sdc-ide`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        <Trans>Edit in SDC IDE</Trans>
-                    </a>
-                </>
+                <Row wrap={false} align="middle">
+                    <Col>
+                        <Link to={`/questionnaires/${resource.id}/edit`}>
+                            <Button type="link">
+                                <Trans>Open</Trans>
+                            </Button>
+                        </Link>
+                    </Col>
+                    <Col>
+                        <a
+                            href={`${config.sdcIdeUrl}/${resource.id}?client=sdc-ide`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ whiteSpace: 'nowrap' }}
+                        >
+                            <Trans>Edit in SDC IDE</Trans>
+                        </a>
+                    </Col>
+                </Row>
             );
         },
     },
@@ -70,7 +75,7 @@ export function QuestionnaireList() {
     return (
         <>
             <BasePageHeader style={{ paddingTop: 40, paddingBottom: 92 }}>
-                <Row justify="space-between" align="middle" style={{ marginBottom: 40 }}>
+                <Row justify="space-between" align="middle" style={{ marginBottom: 40 }} gutter={[16, 16]}>
                     <Col>
                         <Title style={{ marginBottom: 0 }}>
                             <Trans>Questionnaires</Trans>

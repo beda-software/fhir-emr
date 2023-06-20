@@ -1,7 +1,7 @@
 .container {
     min-height: 100vh;
     position: relative;
-    padding-bottom: 64px;
+    padding: 0 16px 64px;
     background-color: #3366ff;
     display: flex;
     flex-direction: column;
@@ -28,7 +28,8 @@
 .form {
     display: flex;
     flex-direction: column;
-    width: 382px;
+    max-width: 382px;
+    width: 100%;
     padding: 18px;
     background-color: white;
     gap: 32px;

@@ -83,11 +83,11 @@ export function PatientOverview(props: PatientOverviewProps) {
                 {({ cards, appointments }) => {
                     const leftColCards = _.filter(
                         cards,
-                        (c: OverviewCard, index: number) => index % 2 === 0,
+                        (c: OverviewCard, index: number) => index % 2 === 0 && c.key !== 'activities',
                     ) as OverviewCard[];
                     const rightColCards = _.filter(
                         cards,
-                        (c: OverviewCard, index: number) => index % 2 !== 0,
+                        (c: OverviewCard, index: number) => index % 2 !== 0 || c.key === 'activities',
                     ) as OverviewCard[];
 
                     return (

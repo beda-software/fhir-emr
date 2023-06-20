@@ -1,4 +1,5 @@
 import { t, Trans } from '@lingui/macro';
+import { Col, Row } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { Link } from 'react-router-dom';
 
@@ -45,23 +46,19 @@ export function EncounterList() {
             title: <Trans>Patient</Trans>,
             dataIndex: 'patient',
             key: 'patient',
-            render: (_text: any, resource: EncounterData) =>
-                renderHumanName(resource.patient?.name?.[0]),
+            render: (_text: any, resource: EncounterData) => renderHumanName(resource.patient?.name?.[0]),
         },
         {
             title: <Trans>Practitioner</Trans>,
             dataIndex: 'practitioner',
             key: 'practitioner',
-            render: (_text: any, resource: EncounterData) =>
-                renderHumanName(resource.practitioner?.name?.[0]),
+            render: (_text: any, resource: EncounterData) => renderHumanName(resource.practitioner?.name?.[0]),
         },
         {
             title: <Trans>Status</Trans>,
             dataIndex: 'status',
             key: 'status',
-            render: (_text: any, resource: EncounterData) => (
-                <StatusBadge status={resource.status} />
-            ),
+            render: (_text: any, resource: EncounterData) => <StatusBadge status={resource.status} />,
         },
         {
             title: <Trans>Date</Trans>,
@@ -76,20 +73,25 @@ export function EncounterList() {
             key: 'action',
             width: 180,
             render: (_text: any, resource: EncounterData) => (
-                <div>
-                    <Link
-                        to={`/patients/${resource.patient?.id}/encounters/${resource.id}`}
-                        style={{ marginRight: 10 }}
-                    >
-                        Open
-                    </Link>
-                    <Link
-                        to={`/encounters/${resource.id}/video`}
-                        state={{ encounterData: resource }}
-                    >
-                        Video call
-                    </Link>
-                </div>
+                <Row wrap={false}>
+                    <Col>
+                        <Link
+                            to={`/patients/${resource.patient?.id}/encounters/${resource.id}`}
+                            style={{ marginRight: 10 }}
+                        >
+                            <Trans>Open</Trans>
+                        </Link>
+                    </Col>
+                    <Col>
+                        <Link
+                            to={`/encounters/${resource.id}/video`}
+                            state={{ encounterData: resource }}
+                            style={{ whiteSpace: 'nowrap' }}
+                        >
+                            <Trans>Video call</Trans>
+                        </Link>
+                    </Col>
+                </Row>
             ),
         },
     ];

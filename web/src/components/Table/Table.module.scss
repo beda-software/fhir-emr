@@ -1,12 +1,26 @@
+.container {
+    overflow: auto;
+}
+
 :local .table {
+    :global .ant-spin-container {
+        min-width: fit-content;
+    }
+
     :global .ant-table {
         border-radius: 10px;
         box-shadow: 0px 6px 16px #e6ebf5;
+        min-width: fit-content;
     }
 
     :global .ant-table-container {
         border-radius: 10px;
         border-left: 0 !important;
+        min-width: fit-content;
+    }
+
+    :global .ant-table-content {
+        min-width: fit-content;
     }
 
     :global .ant-table table {
