@@ -9,7 +9,7 @@ import { useParams, useLocation, Link } from 'react-router-dom';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { BasePageHeader } from 'src/components/BaseLayout';
-import { RouteItem } from 'src/components/BaseLayout/Header';
+import { RouteItem } from 'src/components/BaseLayout/Sidebar/SidebarTop';
 import Breadcrumbs from 'src/components/Breadcrumbs';
 import { matchCurrentUserRole, Role } from 'src/utils/role';
 
@@ -73,11 +73,11 @@ export function PatientHeader() {
 
     const menuItems: RouteItem[] = useMemo(
         () => [
-            { title: t`Overview`, path: `/patients/${params.id}` },
-            { title: t`Encounters`, path: `/patients/${params.id}/encounters` },
-            { title: t`Documents`, path: `/patients/${params.id}/documents` },
-            { title: t`Wearables`, path: `/patients/${params.id}/wearables` },
-            { title: t`Resources`, path: `/patients/${params.id}/resources` },
+            { label: t`Overview`, path: `/patients/${params.id}` },
+            { label: t`Encounters`, path: `/patients/${params.id}/encounters` },
+            { label: t`Documents`, path: `/patients/${params.id}/documents` },
+            { label: t`Wearables`, path: `/patients/${params.id}/wearables` },
+            { label: t`Resources`, path: `/patients/${params.id}/resources` },
         ],
         [params.id],
     );
@@ -97,7 +97,7 @@ export function PatientHeader() {
                 className={s.menu}
                 items={menuItems.map((route) => ({
                     key: route.path,
-                    label: <Link to={route.path}>{route.title}</Link>,
+                    label: <Link to={route.path}>{route.label}</Link>,
                 }))}
             />
         );

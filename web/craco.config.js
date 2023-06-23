@@ -1,4 +1,6 @@
 const path = require('path');
+
+const styledComponentsPlugin = require('babel-plugin-styled-components');
 const rewireBabelLoader = require('craco-babel-loader');
 
 module.exports = {
@@ -13,5 +15,6 @@ module.exports = {
                 ],
             },
         },
+        { plugin: styledComponentsPlugin },
     ],
 };

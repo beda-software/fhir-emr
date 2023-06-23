@@ -10,7 +10,7 @@ import { useParams, useLocation, Link } from 'react-router-dom';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { BasePageHeader } from 'src/components/BaseLayout';
-import { RouteItem } from 'src/components/BaseLayout/Header';
+import { RouteItem } from 'src/components/BaseLayout/Sidebar/SidebarTop';
 import Breadcrumbs from 'src/components/Breadcrumbs';
 
 import s from './PractitionerHeader.module.scss';
@@ -67,9 +67,9 @@ export function PractitionerHeader(props: Props) {
 
     const menuItems: RouteItem[] = useMemo(
         () => [
-            { title: t`Overview`, path: `/practitioners/${params.id}` },
-            { title: t`Scheduling`, path: `/practitioners/${params.id}/scheduling`, disabled: !practitionerRole },
-            { title: t`Availability`, path: `/practitioners/${params.id}/availability`, disabled: !practitionerRole },
+            { label: t`Overview`, path: `/practitioners/${params.id}` },
+            { label: t`Scheduling`, path: `/practitioners/${params.id}/scheduling`, disabled: !practitionerRole },
+            { label: t`Availability`, path: `/practitioners/${params.id}/availability`, disabled: !practitionerRole },
         ],
         [params.id, practitionerRole],
     );
@@ -89,7 +89,7 @@ export function PractitionerHeader(props: Props) {
                 className={s.menu}
                 items={menuItems.map((route) => ({
                     key: route.path,
-                    label: route.disabled ? route.title : <Link to={route.path}>{route.title}</Link>,
+                    label: route.disabled ? route.label : <Link to={route.path}>{route.label}</Link>,
                     disabled: route.disabled,
                 }))}
             />

@@ -12,6 +12,7 @@ import questionnairesIcon from 'src/icons/menu/questionnaires.svg';
 import { Role, matchCurrentUserRole } from 'src/utils/role';
 
 import s from './SidebarTop.module.scss';
+import { S } from './SidebarTop.styles';
 
 export interface RouteItem {
     path: string;
@@ -43,7 +44,7 @@ export function SidebarTop(props: Props) {
     const activeMenu = `/${location.pathname.split('/')[1]}`;
 
     return (
-        <div
+        <S.Container
             className={classNames(s.container, {
                 _collapsed: collapsed,
             })}
@@ -61,7 +62,7 @@ export function SidebarTop(props: Props) {
                 className={s.menu}
                 inlineCollapsed={collapsed}
             />
-        </div>
+        </S.Container>
     );
 }
 

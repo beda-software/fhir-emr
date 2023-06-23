@@ -1,7 +1,5 @@
 import { t } from '@lingui/macro';
 import { Button, Segmented } from 'antd';
-import Text from 'antd/lib/typography/Text';
-import noop from 'lodash/noop';
 import { useState } from 'react';
 
 import { AppFooter } from 'src/components/BaseLayout/Footer';
@@ -10,6 +8,7 @@ import { getAuthorizeUrl, OAuthState } from 'src/services/auth';
 
 import { useAppleAuthentication } from './hooks';
 import s from './SignIn.module.scss';
+import { S } from './SignIn.styles';
 
 enum SignInService {
     EMR = 'EMR',
@@ -28,10 +27,10 @@ export function SignIn(props: SignInProps) {
     const [signInService, setSignInService] = useState<string>(SignInService.EMR);
 
     return (
-        <div className={s.container}>
-            <div className={s.form}>
+        <S.Container>
+            <S.Form>
                 <div className={s.header}>
-                    <Text className={s.title}>{t`Welcome to`}</Text>
+                    <S.Text>{t`Welcome to`}</S.Text>
                     <img src={logo} alt="" />
                 </div>
                 <Segmented
@@ -40,19 +39,16 @@ export function SignIn(props: SignInProps) {
                     block
                     onChange={(value) => setSignInService(value as SignInService)}
                     className={s.signInServiceSelectLabel}
-                    // For some reason these two props are declared as required in antd
-                    onResize={noop}
-                    onResizeCapture={noop}
                 />
                 {signInService === SignInService.EMR ? (
                     <>
-                        <div className={s.message}>
+                        <S.Message>
                             <b>{t`On the next page, please, use the following credentials`}</b>
                             <div>
                                 {t`Username`}: admin <br />
                                 {t`Password`}: password
                             </div>
-                        </div>
+                        </S.Message>
                         <Button
                             type="primary"
                             onClick={() => authorize({ nextUrl: props.originPathName })}
@@ -64,9 +60,9 @@ export function SignIn(props: SignInProps) {
                 ) : (
                     <AppleButton />
                 )}
-            </div>
+            </S.Form>
             <AppFooter type="light" />
-        </div>
+        </S.Container>
     );
 }
 

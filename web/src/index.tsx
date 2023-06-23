@@ -1,8 +1,9 @@
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
-import { ConfigProvider } from 'antd';
+import { ConfigProvider as ANTDConfigProvider } from 'antd';
 import React, { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
+import { ThemeProvider } from 'styled-components';
 
 import 'src/services/initialize';
 
@@ -15,25 +16,22 @@ import 'shared/src/services/i18n';
 import { App } from 'src/containers/App';
 
 import * as serviceWorker from './serviceWorker';
+import { getAppTheme, getANTDTheme } from './theme';
 
 const I18nApp = () => {
     useEffect(() => {
         dynamicActivate(getCurrentLocale());
     }, []);
 
+    const dark = false;
+
     return (
         <I18nProvider i18n={i18n}>
-            <ConfigProvider
-                theme={{
-                    components: {
-                        Layout: {
-                            colorBgHeader: '#fff',
-                        },
-                    },
-                }}
-            >
-                <App />
-            </ConfigProvider>
+            <ANTDConfigProvider theme={getANTDTheme({ dark: dark })}>
+                <ThemeProvider theme={getAppTheme({ dark: dark })}>
+                    <App />
+                </ThemeProvider>
+            </ANTDConfigProvider>
         </I18nProvider>
     );
 };

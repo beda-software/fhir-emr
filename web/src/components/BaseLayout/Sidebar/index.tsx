@@ -1,12 +1,9 @@
-import { Layout } from 'antd';
-import classNames from 'classnames';
 import { useState } from 'react';
 
 import s from './Sidebar.module.scss';
+import { S } from './Sidebar.styles';
 import { SidebarBottom } from './SidebarBottom';
 import { SidebarTop } from './SidebarTop';
-
-const { Sider } = Layout;
 
 export function AppSidebar() {
     const [collapsed, setCollapsed] = useState(true);
@@ -15,13 +12,8 @@ export function AppSidebar() {
     const width = 248;
 
     return (
-        <div
-            className={classNames(s.container, {
-                _collapsed: collapsed,
-            })}
-            style={{ width: collapsed ? collapsedWidth : width }}
-        >
-            <Sider
+        <S.Container style={{ width: collapsed ? collapsedWidth : width }}>
+            <S.Sidebar
                 collapsible
                 collapsed={collapsed}
                 className={s.sidebar}
@@ -29,11 +21,11 @@ export function AppSidebar() {
                 width={width}
                 trigger={null}
             >
-                <div className={s.sidebarContent}>
+                <S.SidebarContent>
                     <SidebarTop collapsed={collapsed} />
                     <SidebarBottom collapsed={collapsed} toggleCollapsed={() => setCollapsed((v) => !v)} />
-                </div>
-            </Sider>
-        </div>
+                </S.SidebarContent>
+            </S.Sidebar>
+        </S.Container>
     );
 }

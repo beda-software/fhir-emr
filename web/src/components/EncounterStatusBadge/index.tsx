@@ -1,8 +1,8 @@
 import { t } from '@lingui/macro';
-import classNames from 'classnames';
+import { Tag, theme } from 'antd';
 import { Encounter, QuestionnaireResponse } from 'fhir/r4b';
 
-import s from './EncounterStatusBadge.module.scss';
+const { useToken } = theme;
 
 interface Props {
     status: Encounter['status'] | QuestionnaireResponse['status'];
@@ -10,6 +10,7 @@ interface Props {
 
 export function StatusBadge(props: Props) {
     const { status } = props;
+    const { token } = useToken();
 
     const statusHumanTitle = {
         'in-progress': t`in progress`,
@@ -17,15 +18,11 @@ export function StatusBadge(props: Props) {
         completed: t`completed`,
     };
 
-    return (
-        <div
-            className={classNames(s.container, {
-                [s.inProgress!]: status === 'in-progress',
-                [s.finished!]: status === 'finished',
-                [s.completed!]: status === 'completed',
-            })}
-        >
-            <span className={s.title}>{statusHumanTitle[status] ?? status}</span>
-        </div>
-    );
+    const color = {
+        'in-progress': token['orange-6'],
+        finished: token['purple-6'],
+        completed: token['purple-6'],
+    };
+
+    return <Tag color={color[status]}>{statusHumanTitle[status] ?? status}</Tag>;
 }
