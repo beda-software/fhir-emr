@@ -2,6 +2,7 @@ import 'styled-components';
 
 declare module 'styled-components' {
   export interface DefaultTheme {
+    mode?: 'dark' | 'light';
     primary: string;
     secondary: string;
     link: string;

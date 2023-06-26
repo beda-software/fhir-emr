@@ -6,6 +6,7 @@ import s from './BaseLayout.module.scss';
 import { S } from './BaseLayout.styles';
 import { AppFooter } from './Footer';
 import { AppSidebar } from './Sidebar';
+import { AppTabBar } from './TabBar';
 
 interface Props {
     children: ReactNode;
@@ -16,6 +17,7 @@ export function BaseLayout({ children, style }: Props) {
     return (
         <S.Container style={style}>
             <AppSidebar />
+            <AppTabBar />
             <Layout className={s.content}>
                 {children}
                 <AppFooter />

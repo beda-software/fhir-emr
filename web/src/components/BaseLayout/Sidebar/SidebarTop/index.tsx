@@ -1,7 +1,7 @@
 import { t } from '@lingui/macro';
 import { Menu } from 'antd';
 import classNames from 'classnames';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import logoCompanyName from 'src/icons/brand/company-name.svg';
 import logoSmall from 'src/icons/brand/logo-small.svg';
@@ -23,13 +23,15 @@ export interface RouteItem {
     className?: string;
 }
 
-interface Props {
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
     collapsed: boolean;
+    onItemClick?: () => void;
 }
 
 export function SidebarTop(props: Props) {
     const location = useLocation();
-    const { collapsed } = props;
+    const { collapsed, onItemClick, ...other } = props;
+    const navigate = useNavigate();
 
     const menuItems: RouteItem[] = matchCurrentUserRole({
         [Role.Admin]: () => [
@@ -42,23 +44,29 @@ export function SidebarTop(props: Props) {
     });
 
     const activeMenu = `/${location.pathname.split('/')[1]}`;
+    const onMenuItemClick = (path: string) => {
+        onItemClick?.();
+        navigate(path);
+    };
 
     return (
         <S.Container
+            $collapsed={collapsed}
             className={classNames(s.container, {
                 _collapsed: collapsed,
             })}
+            {...other}
         >
             <Link to="/" className={s.logoWrapper}>
                 <img src={logoSmall} alt="" />
                 <img src={logoCompanyName} className={s.logoCompanyName} alt="" />
             </Link>
-            <div className={s.divider} />
+            <S.Divider />
             <Menu
                 mode="inline"
                 theme="light"
                 selectedKeys={[activeMenu!]}
-                items={renderTopMenu(menuItems)}
+                items={renderTopMenu(menuItems, onMenuItemClick)}
                 className={s.menu}
                 inlineCollapsed={collapsed}
             />
@@ -66,17 +74,16 @@ export function SidebarTop(props: Props) {
     );
 }
 
-function renderTopMenu(menuRoutes: RouteItem[]) {
+function renderTopMenu(menuRoutes: RouteItem[], onItemClick: (path: string) => void) {
     return menuRoutes.map((route) => ({
         key: route.path,
+        icon: route.icon,
+        onClick: () => onItemClick(route.path),
         label: (
-            <Link to={route.path} className={s.menuLink}>
-                <div className={s.menuLinkRow}>
-                    {route.icon ? route.icon : null}
-                    <span className={s.menuItemLabel}>{route.label}</span>
-                </div>
+            <div className={s.menuLink}>
+                <span className={s.menuItemLabel}>{route.label}</span>
                 <span className={classNames(s.menuItemLabel, s._small)}>{route.label}</span>
-            </Link>
+            </div>
         ),
         className: s.menuItem,
     }));

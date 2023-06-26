@@ -11,6 +11,7 @@ import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 
 import s from './PractitionerOverview.module.scss';
+import { S } from './PractitionerOverview.styles';
 
 interface Props {
     practitioner: WithId<Practitioner>;
@@ -94,10 +95,10 @@ export function PractitionerOverview(props: Props) {
             >
                 <div className={s.details}>
                     {details.map(({ title, value }, index) => (
-                        <div key={`practitioner-details__${index}`} className={s.detailItem}>
-                            <div className={s.detailsTitle}>{title}</div>
-                            <div className={s.detailsValue}>{value}</div>
-                        </div>
+                        <S.DetailsItem key={`practitioner-details__${index}`}>
+                            <S.DetailsTitle>{title}</S.DetailsTitle>
+                            <S.DetailsValue>{value}</S.DetailsValue>
+                        </S.DetailsItem>
                     ))}
                 </div>
             </DashboardCard>

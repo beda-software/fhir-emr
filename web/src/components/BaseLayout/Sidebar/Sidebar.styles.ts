@@ -6,6 +6,10 @@ const { Sider } = Layout;
 export const S = {
     Container: styled.div`
         transition: all 0.2s;
+
+        @media screen and (max-width: 767px) {
+            display: none;
+        }
     `,
     Sidebar: styled(Sider)`
         position: fixed !important;

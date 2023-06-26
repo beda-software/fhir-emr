@@ -24,11 +24,17 @@ const I18nApp = () => {
     }, []);
 
     const dark = false;
+    // const dark = true;
 
     return (
         <I18nProvider i18n={i18n}>
             <ANTDConfigProvider theme={getANTDTheme({ dark: dark })}>
-                <ThemeProvider theme={getAppTheme({ dark: dark })}>
+                <ThemeProvider
+                    theme={{
+                        mode: dark ? 'dark' : 'light',
+                        ...getAppTheme({ dark: dark }),
+                    }}
+                >
                     <App />
                 </ThemeProvider>
             </ANTDConfigProvider>
