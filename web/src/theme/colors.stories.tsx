@@ -1,8 +1,9 @@
 import { ComponentStory } from '@storybook/react';
-import Title from 'antd/lib/typography/Title';
 import _ from 'lodash';
 import React from 'react';
 import styled, { DefaultTheme } from 'styled-components/macro';
+
+import { Title } from 'src/components/Typography';
 
 import { getAppTheme } from '.';
 

@@ -1,7 +1,6 @@
 import { CheckOutlined, PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
-import Title from 'antd/es/typography/Title';
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { useService } from 'fhir-react/lib/hooks/service';
 import { isSuccess } from 'fhir-react/lib/libs/remoteData';
@@ -13,6 +12,7 @@ import { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Spinner } from 'src/components/Spinner';
+import { Title } from 'src/components/Typography';
 import { DocumentsList } from 'src/containers/DocumentsList';
 import { ChooseDocumentToCreateModal } from 'src/containers/DocumentsList/ChooseDocumentToCreateModal';
 import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';

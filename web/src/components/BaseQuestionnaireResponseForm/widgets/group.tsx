@@ -1,5 +1,7 @@
 import { GroupItemProps, QuestionItems } from 'sdc-qrf';
 
+import { Paragraph } from 'src/components/Typography';
+
 import s from './group.module.scss';
 
 const styles = {
@@ -25,7 +27,7 @@ function Flex({ parentPath, questionItem, context, kind }: GroupItemProps & { ki
     }
     return (
         <div className={s.groupContainer}>
-            {text && <p className={s.groupTitle}>{text}</p>}
+            {text && <Paragraph className={s.groupTitle}>{text}</Paragraph>}
             <div style={styles[kind] ?? {}}>
                 {item && (
                     <QuestionItems

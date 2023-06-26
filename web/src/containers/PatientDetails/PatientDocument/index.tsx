@@ -11,6 +11,7 @@ import { Spinner } from 'src/components/Spinner';
 import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
 
 import s from './PatientDocument.module.scss';
+import { S } from './PatientDocument.styles';
 import { PatientDocumentHeader } from './PatientDocumentHeader';
 import { usePatientDocument } from './usePatientDocument';
 
@@ -44,7 +45,7 @@ export function PatientDocument(props: Props) {
 
     return (
         <div className={s.container}>
-            <div className={s.content}>
+            <S.Content>
                 <RenderRemoteData remoteData={response} renderLoading={Spinner}>
                     {({ formData, onSubmit, provenance }) => (
                         <>
@@ -71,7 +72,7 @@ export function PatientDocument(props: Props) {
                         </>
                     )}
                 </RenderRemoteData>
-            </div>
+            </S.Content>
         </div>
     );
 }

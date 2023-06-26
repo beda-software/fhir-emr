@@ -4,6 +4,7 @@ import { QuestionItemProps } from 'sdc-qrf';
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 
 import s from './ReadonlyWidgets.module.scss';
+import { S } from './ReadonlyWidgets.styles';
 
 function getAnxietyScoreInterpretation(score: number) {
     if (score <= 4) {
@@ -27,14 +28,12 @@ export function AnxietyScore({ parentPath, questionItem }: QuestionItemProps) {
     }
 
     return (
-        <p className={classNames(s.question, s.row, 'form__question')}>
+        <S.Question className={classNames(s.question, s.row, 'form__question')}>
             <span className={s.questionText}>{text}</span>
             <span className={s.answer}>
-                {typeof value !== 'undefined'
-                    ? `${value} (${getAnxietyScoreInterpretation(value)})`
-                    : null}
+                {typeof value !== 'undefined' ? `${value} (${getAnxietyScoreInterpretation(value)})` : null}
             </span>
-        </p>
+        </S.Question>
     );
 }
 
@@ -62,13 +61,11 @@ export function DepressionScore({ parentPath, questionItem }: QuestionItemProps)
     }
 
     return (
-        <p className={classNames(s.question, s.row, 'form__question')}>
+        <S.Question className={classNames(s.question, s.row, 'form__question')}>
             <span className={s.questionText}>{text}</span>
             <span className={s.answer}>
-                {typeof value !== 'undefined'
-                    ? `${value} (${getDepressionScoreInterpretation(value)})`
-                    : null}
+                {typeof value !== 'undefined' ? `${value} (${getDepressionScoreInterpretation(value)})` : null}
             </span>
-        </p>
+        </S.Question>
     );
 }

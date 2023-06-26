@@ -6,6 +6,7 @@ import { GroupItemProps, QuestionItemProps } from 'sdc-qrf';
 import { FieldSourceContext } from '../context';
 import { OnItemDrag } from '../hooks';
 import s from './Builder.module.scss';
+import { S } from './Builder.styles';
 
 interface FieldSourceProps {
     children: React.ReactNode;
@@ -89,8 +90,8 @@ export function FieldTarget(props: FieldTargetProps) {
     return (
         <div ref={dropRef} className={s.board}>
             {moving === 'up' ? (
-                <div
-                    className={classNames(s.dropArea, {
+                <S.DropArea
+                    className={classNames({
                         _over: isOver,
                         _up: true,
                     })}
@@ -99,8 +100,8 @@ export function FieldTarget(props: FieldTargetProps) {
             ) : null}
             {children}
             {moving === 'down' ? (
-                <div
-                    className={classNames(s.dropArea, {
+                <S.DropArea
+                    className={classNames({
                         _over: isOver,
                         _down: true,
                     })}

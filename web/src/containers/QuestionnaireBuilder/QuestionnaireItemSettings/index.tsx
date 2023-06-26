@@ -1,10 +1,11 @@
 import { Trans, t } from '@lingui/macro';
 import { Button, Checkbox, Form, Input, Select, Popconfirm } from 'antd';
-import Title from 'antd/lib/typography/Title';
 import { FormProvider, useForm } from 'react-hook-form';
 import { GroupItemProps, QuestionItemProps } from 'sdc-qrf/lib/types';
 
 import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
+
+import { Title } from 'src/components/Typography';
 
 import { itemControlSpecificFields, itemControls, typeSpecificFields } from './controls';
 import s from './QuestionnaireItemSettings.module.scss';

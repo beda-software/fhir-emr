@@ -6,6 +6,7 @@ import { getArrayDisplay, getDisplay } from 'src/utils/questionnaire';
 
 import { AnswerReferenceProps, useAnswerReference } from '../widgets/reference';
 import s from './ReadonlyWidgets.module.scss';
+import { S } from './ReadonlyWidgets.styles';
 
 function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource = any>(
     props: AnswerReferenceProps<R, IR>,
@@ -14,19 +15,17 @@ function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource =
 
     if (repeats) {
         return (
-            <p className={classNames(s.question, s.row, 'form__question')}>
+            <S.Question className={classNames(s.question, s.row, 'form__question')}>
                 <span className={s.questionText}>{text}</span>
-                <span className={s.answer}>
-                    {getArrayDisplay(fieldController.value?.value) || '-'}
-                </span>
-            </p>
+                <span className={s.answer}>{getArrayDisplay(fieldController.value?.value) || '-'}</span>
+            </S.Question>
         );
     } else {
         return (
-            <p className={classNames(s.question, s.row, 'form__question')}>
+            <S.Question className={classNames(s.question, s.row, 'form__question')}>
                 <span className={s.questionText}>{text}</span>
                 <span className={s.answer}>{getDisplay(fieldController.value?.value) || '-'}</span>
-            </p>
+            </S.Question>
         );
     }
 }

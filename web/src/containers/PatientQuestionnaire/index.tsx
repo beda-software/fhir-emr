@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro';
-import Title from 'antd/lib/typography/Title';
 import { WithId } from 'fhir-react';
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { useService } from 'fhir-react/lib/hooks/service';
@@ -13,6 +12,7 @@ import { axiosInstance as axiosAidboxInstance } from 'aidbox-react/lib/services/
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { Spinner } from 'src/components/Spinner';
+import { Title } from 'src/components/Typography';
 import { getToken } from 'src/services/auth';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 
@@ -54,12 +54,8 @@ export function PatientQuestionnaire() {
 
     useEffect(() => {
         if (isAnonymousUser) {
-            axiosFHIRInstance.defaults.headers.Authorization = `Basic ${window.btoa(
-                'patient-questionnaire:secret',
-            )}`;
-            axiosAidboxInstance.defaults.headers.Authorization = `Basic ${window.btoa(
-                'patient-questionnaire:secret',
-            )}`;
+            axiosFHIRInstance.defaults.headers.Authorization = `Basic ${window.btoa('patient-questionnaire:secret')}`;
+            axiosAidboxInstance.defaults.headers.Authorization = `Basic ${window.btoa('patient-questionnaire:secret')}`;
             setIsLoading(false);
 
             return;

@@ -1,6 +1,5 @@
 import { t } from '@lingui/macro';
 import { Menu } from 'antd';
-import Title from 'antd/es/typography/Title';
 import { WithId } from 'fhir-react/lib/services/fhir';
 import { Practitioner, PractitionerRole } from 'fhir/r4b';
 import _ from 'lodash';
@@ -12,6 +11,7 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 import { BasePageHeader } from 'src/components/BaseLayout';
 import { RouteItem } from 'src/components/BaseLayout/Sidebar/SidebarTop';
 import Breadcrumbs from 'src/components/Breadcrumbs';
+import { Title } from 'src/components/Typography';
 
 import s from './PractitionerHeader.module.scss';
 

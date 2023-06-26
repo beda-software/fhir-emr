@@ -1,5 +1,4 @@
 import { t, Trans } from '@lingui/macro';
-import Title from 'antd/lib/typography/Title';
 import classNames from 'classnames';
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { WithId } from 'fhir-react/lib/services/fhir';
@@ -10,8 +9,10 @@ import { Provenance } from 'shared/src/contrib/aidbox';
 import { formatHumanDateTime } from 'shared/src/utils/date';
 
 import { Spinner } from 'src/components/Spinner';
+import { Text, Title } from 'src/components/Typography';
 
 import s from './DocumentHistory.module.scss';
+import { S } from './DocumentHistory.styles';
 import { useDocumentHistory } from './hooks';
 import { findResourceInHistory, prepareDataToDisplay } from './utils';
 
@@ -20,7 +21,7 @@ export function DocumentHistory() {
 
     return (
         <div className={s.container}>
-            <div className={s.content}>
+            <S.Content>
                 <RenderRemoteData remoteData={response} renderLoading={Spinner}>
                     {({ provenanceList, qrHistory, questionnaire }) => (
                         <>
@@ -34,9 +35,7 @@ export function DocumentHistory() {
                                     <DocumentHistoryEntry
                                         key={`provenance-${provenance.id}`}
                                         provenance={provenance}
-                                        prevProvenance={
-                                            index > 0 ? provenanceList[index - 1] : undefined
-                                        }
+                                        prevProvenance={index > 0 ? provenanceList[index - 1] : undefined}
                                         questionnaire={questionnaire}
                                         qrHistory={qrHistory}
                                     />
@@ -45,7 +44,7 @@ export function DocumentHistory() {
                         </>
                     )}
                 </RenderRemoteData>
-            </div>
+            </S.Content>
         </div>
     );
 }
@@ -66,22 +65,16 @@ function DocumentHistoryEntry(props: DocumentHistoryDetailsProps) {
     const { provenance, prevProvenance, questionnaire, qrHistory } = props;
     const activity = codesMapping[provenance.activity?.coding?.[0]?.code || ''];
     const date = formatHumanDateTime(provenance.recorded);
-    const by = provenance.agent
-        .map((agent) => agent.who.display || 'No person name provided')
-        .join(', ');
+    const by = provenance.agent.map((agent) => agent.who.display || 'No person name provided').join(', ');
 
     const currentQR = useMemo(
-        () =>
-            findResourceInHistory<QuestionnaireResponse>(provenance.entity?.[0]?.what!, qrHistory),
+        () => findResourceInHistory<QuestionnaireResponse>(provenance.entity?.[0]?.what!, qrHistory),
         [provenance, qrHistory],
     );
     const prevQR = useMemo(
         () =>
             prevProvenance
-                ? findResourceInHistory<QuestionnaireResponse>(
-                      prevProvenance.entity?.[0]?.what!,
-                      qrHistory,
-                  )
+                ? findResourceInHistory<QuestionnaireResponse>(prevProvenance.entity?.[0]?.what!, qrHistory)
                 : undefined,
         [prevProvenance, qrHistory],
     );
@@ -91,19 +84,14 @@ function DocumentHistoryEntry(props: DocumentHistoryDetailsProps) {
 
         return historyToDisplay.map((item) => (
             <div key={`diff-${provenance.id}-${item.linkId}`}>
-                <div>{item.question}</div>
+                <Text>{item.question}</Text>
                 <div className={s.diffRow}>
-                    <div
-                        className={classNames(
-                            s.diffItem,
-                            item.valueBefore ? s._deleted : undefined,
-                        )}
-                    >
+                    <S.DiffItem className={classNames(item.valueBefore ? '_deleted' : undefined)}>
                         {item.valueBefore}
-                    </div>
-                    <div className={classNames(s.diffItem, item.valueAfter ? s._added : undefined)}>
+                    </S.DiffItem>
+                    <S.DiffItem className={classNames(item.valueAfter ? '_added' : undefined)}>
                         {item.valueAfter}
-                    </div>
+                    </S.DiffItem>
                 </div>
             </div>
         ));
@@ -111,11 +99,11 @@ function DocumentHistoryEntry(props: DocumentHistoryDetailsProps) {
 
     return (
         <div className={s.prov}>
-            <div className={s.provHeader}>
+            <S.RecordHeader className={s.provHeader}>
                 <b>
                     {activity} {date} by {by}
                 </b>
-            </div>
+            </S.RecordHeader>
             {renderDiff()}
         </div>
     );

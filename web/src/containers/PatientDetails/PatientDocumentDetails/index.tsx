@@ -1,6 +1,5 @@
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
-import Title from 'antd/lib/typography/Title';
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { useService } from 'fhir-react/lib/hooks/service';
 import { failure, isFailure, isSuccess } from 'fhir-react/lib/libs/remoteData';
@@ -21,6 +20,7 @@ import { ReadonlyQuestionnaireResponseForm } from 'src/components/BaseQuestionna
 import { BloodPressureReadOnly } from 'src/components/BaseQuestionnaireResponseForm/widgets';
 import { ConfirmActionButton } from 'src/components/ConfirmActionButton';
 import { Spinner } from 'src/components/Spinner';
+import { Paragraph, Title } from 'src/components/Typography';
 import { DocumentHistory } from 'src/containers/PatientDetails/DocumentHistory';
 import { PatientDocument } from 'src/containers/PatientDetails/PatientDocument';
 import {
@@ -31,6 +31,7 @@ import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/Pat
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 
 import s from './PatientDocumentDetails.module.scss';
+import { S } from './PatientDocumentDetails.styles';
 
 interface Props {
     patient: WithId<Patient>;
@@ -128,7 +129,7 @@ function PatientDocumentDetailsReadonly(props: {
 
     return (
         <div className={s.container}>
-            <div className={s.content}>
+            <S.Content>
                 <div className={s.header}>
                     <Title level={4} className={s.title}>
                         {formData.context.questionnaire.title || formData.context.questionnaire.name}
@@ -186,7 +187,7 @@ function PatientDocumentDetailsReadonly(props: {
                     formData={formData}
                     itemControlGroupItemComponents={{ 'blood-pressure': BloodPressureReadOnly }}
                 />
-            </div>
+            </S.Content>
         </div>
     );
 }
@@ -218,7 +219,11 @@ export function PatientDocumentDetails(props: Props) {
     const author = selectCurrentUserRoleResource();
 
     return (
-        <RenderRemoteData remoteData={response} renderLoading={Spinner} renderFailure={(error) => <div>{error}</div>}>
+        <RenderRemoteData
+            remoteData={response}
+            renderLoading={Spinner}
+            renderFailure={(error) => <Paragraph>{error}</Paragraph>}
+        >
             {({ questionnaireResponse, encounter }) => (
                 <PatientDocumentDetailsFormData
                     questionnaireResponse={questionnaireResponse}

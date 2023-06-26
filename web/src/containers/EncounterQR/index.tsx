@@ -1,6 +1,5 @@
 import { t } from '@lingui/macro';
 import { Alert, notification } from 'antd';
-import Title from 'antd/es/typography/Title';
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { useService } from 'fhir-react/lib/hooks/service';
 import { getFHIRResource } from 'fhir-react/lib/services/fhir';
@@ -12,6 +11,7 @@ import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-f
 import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { Spinner } from 'src/components/Spinner';
+import { Title } from 'src/components/Typography';
 
 import { BasePageContent, BasePageHeader } from '../../components/BaseLayout';
 import { QuestionnaireResponseForm } from '../../components/QuestionnaireResponseForm';
@@ -20,10 +20,11 @@ import { useEncounterDetails } from '../EncounterDetails/hooks';
 import s from './EncounterQR.module.scss';
 
 export function EncounterQR() {
-    const { encounterId, questionnaireId } = useParams<{
-        encounterId: string;
-        questionnaireId: string;
-    }>();
+    const { encounterId, questionnaireId } =
+        useParams<{
+            encounterId: string;
+            questionnaireId: string;
+        }>();
 
     const encounterInfoRD = useEncounterDetails(encounterId!);
 
@@ -66,27 +67,20 @@ export function EncounterQR() {
                                 <div className={s.infoContainer}>
                                     <div className={s.infoItemContainer}>
                                         <span className={s.title}>service:</span>
-                                        <span className={s.text}>
-                                            {encounter.serviceType?.coding?.[0]?.display}
-                                        </span>
+                                        <span className={s.text}>{encounter.serviceType?.coding?.[0]?.display}</span>
                                     </div>
                                     <div className={s.infoItemContainer}>
                                         <span className={s.title}>practitioner:</span>
-                                        <span className={s.text}>
-                                            {renderHumanName(practitioner.name?.[0])}
-                                        </span>
+                                        <span className={s.text}>{renderHumanName(practitioner.name?.[0])}</span>
                                     </div>
                                     <div className={s.infoItemContainer}>
                                         <span className={s.title}>date:</span>
                                         <span className={s.text}>
-                                            {encounter.period?.start &&
-                                                formatHumanDate(encounter.period?.start)}
+                                            {encounter.period?.start && formatHumanDate(encounter.period?.start)}
                                         </span>
                                     </div>
                                 </div>
-                                <h2>
-                                    {questionnaire.title || questionnaire.name || questionnaire.id}
-                                </h2>
+                                <h2>{questionnaire.title || questionnaire.name || questionnaire.id}</h2>
                                 <QuestionnaireResponseForm
                                     questionnaireLoader={questionnaireIdLoader(questionnaireId!)}
                                     onSuccess={() => {

@@ -1,6 +1,5 @@
 import { t } from '@lingui/macro';
 import { Menu } from 'antd';
-import Title from 'antd/es/typography/Title';
 import { Patient } from 'fhir/r4b';
 import _ from 'lodash';
 import { useContext, useEffect, useMemo, useState } from 'react';
@@ -11,6 +10,7 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 import { BasePageHeader } from 'src/components/BaseLayout';
 import { RouteItem } from 'src/components/BaseLayout/Sidebar/SidebarTop';
 import Breadcrumbs from 'src/components/Breadcrumbs';
+import { Title } from 'src/components/Typography';
 import { matchCurrentUserRole, Role } from 'src/utils/role';
 
 import { BreadCrumb, PatientHeaderContext } from './context';

@@ -1,5 +1,6 @@
-import Text from 'antd/lib/typography/Text';
 import styled from 'styled-components/macro';
+
+import { Text } from 'src/components/Typography';
 
 export const S = {
     Container: styled.div`
@@ -24,7 +25,6 @@ export const S = {
     `,
     Text: styled(Text)`
         margin: 0;
-        color: ${({ theme }) => theme.neutralPalette.gray_13};
         font-weight: 700;
         font-size: 19px;
         line-height: 26px;

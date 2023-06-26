@@ -1,7 +1,6 @@
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { Trans } from '@lingui/macro';
 import { Button, Checkbox, Col, notification, Row } from 'antd';
-import Title from 'antd/es/typography/Title';
 import { isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { saveFHIRResource, WithId } from 'fhir-react/lib/services/fhir';
 import { formatError } from 'fhir-react/lib/utils/error';
@@ -12,6 +11,7 @@ import React from 'react';
 import { formatFHIRTime } from 'shared/src/utils/date';
 
 import { RangeTimePicker } from 'src/components/TimePicker';
+import { Title } from 'src/components/Typography';
 
 import { DaySchedule, daysMapping, toAvailableTime } from '../available-time';
 import s from './Availability.module.scss';
@@ -108,21 +108,13 @@ function WeekDaySchedule(props: WeekDayScheduleProps) {
         <div className={s.weekday}>
             <Row gutter={16} justify="space-between" align="middle">
                 <Col span={6}>
-                    <Checkbox
-                        checked={isActive}
-                        onChange={() => toggleSchedule(day)}
-                        className={s.weekdayCheckbox}
-                    >
+                    <Checkbox checked={isActive} onChange={() => toggleSchedule(day)} className={s.weekdayCheckbox}>
                         {daysMapping[day]}
                     </Checkbox>
                 </Col>
                 {isActive ? (
                     <Col>
-                        <Button
-                            type="primary"
-                            onClick={() => addBreak(day)}
-                            icon={<PlusOutlined />}
-                        >
+                        <Button type="primary" onClick={() => addBreak(day)} icon={<PlusOutlined />}>
                             <span>
                                 <Trans>Add break</Trans>
                             </span>
@@ -140,10 +132,7 @@ function WeekDaySchedule(props: WeekDayScheduleProps) {
                             format="HH:mm"
                             value={
                                 daySchedule?.start && daySchedule?.end
-                                    ? [
-                                          moment(daySchedule.start, 'HH:mm'),
-                                          moment(daySchedule.end, 'HH:mm'),
-                                      ]
+                                    ? [moment(daySchedule.start, 'HH:mm'), moment(daySchedule.end, 'HH:mm')]
                                     : undefined
                             }
                             onChange={(values) => {
@@ -157,12 +146,7 @@ function WeekDaySchedule(props: WeekDayScheduleProps) {
                         />
                     </Col>
                     <Col>
-                        <Button
-                            type="primary"
-                            ghost
-                            onClick={() => toggleSchedule(day)}
-                            icon={<DeleteOutlined />}
-                        />
+                        <Button type="primary" ghost onClick={() => toggleSchedule(day)} icon={<DeleteOutlined />} />
                     </Col>
                 </Row>
             ) : null}
@@ -188,10 +172,7 @@ function WeekDaySchedule(props: WeekDayScheduleProps) {
                                       format="HH:mm"
                                       value={
                                           currentBreak?.start && currentBreak?.end
-                                              ? [
-                                                    moment(currentBreak.start, 'HH:mm'),
-                                                    moment(currentBreak.end, 'HH:mm'),
-                                                ]
+                                              ? [moment(currentBreak.start, 'HH:mm'), moment(currentBreak.end, 'HH:mm')]
                                               : undefined
                                       }
                                       onChange={(values) => {
