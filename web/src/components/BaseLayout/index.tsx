@@ -3,8 +3,10 @@ import classNames from 'classnames';
 import { ReactNode } from 'react';
 
 import s from './BaseLayout.module.scss';
+import { S } from './BaseLayout.styles';
 import { AppFooter } from './Footer';
 import { AppSidebar } from './Sidebar';
+import { AppTabBar } from './TabBar';
 
 interface Props {
     children: ReactNode;
@@ -13,13 +15,14 @@ interface Props {
 
 export function BaseLayout({ children, style }: Props) {
     return (
-        <Layout className={s.container} style={style}>
+        <S.Container style={style}>
             <AppSidebar />
+            <AppTabBar />
             <Layout className={s.content}>
                 {children}
                 <AppFooter />
             </Layout>
-        </Layout>
+        </S.Container>
     );
 }
 
@@ -27,9 +30,9 @@ export function BasePageHeader(props: React.HTMLAttributes<HTMLDivElement>) {
     const { className, ...rest } = props;
 
     return (
-        <div className={s.pageHeaderWrapper}>
+        <S.PageWrapper>
             <div className={classNames(s.pageHeader, className)} {...rest} />
-        </div>
+        </S.PageWrapper>
     );
 }
 

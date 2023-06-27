@@ -1,10 +1,11 @@
 import { t } from '@lingui/macro';
-import { Button, Form } from 'antd';
+import { Button, Form, Input } from 'antd';
 import { FormProps } from 'antd/lib/form';
-import TextArea from 'antd/lib/input/TextArea';
 import { useState } from 'react';
 
 import s from './QuestionnaireBuilder.module.scss';
+
+const { TextArea } = Input;
 
 interface PromptFormInterface {
     prompt: string;

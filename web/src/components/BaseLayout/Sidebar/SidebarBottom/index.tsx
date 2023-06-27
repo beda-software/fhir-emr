@@ -11,13 +11,14 @@ import { resetInstanceToken as resetAidboxInstanceToken } from 'aidbox-react/lib
 import { dynamicActivate, setCurrentLocale, getCurrentLocale, locales } from 'shared/src/services/i18n';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
-import menuIcon from 'src/icons/general/menu.svg';
+import { MenuIcon } from 'src/icons/general/Menu';
 import { AvatarImage } from 'src/images/AvatarImage';
 import { logout } from 'src/services/auth';
 import { sharedAuthorizedPatient, sharedAuthorizedPractitioner } from 'src/sharedState';
 import { Role, matchCurrentUserRole } from 'src/utils/role';
 
 import s from './SidebarBottom.module.scss';
+import { S } from './SidebarBottom.styles';
 
 interface MenuItem {
     key: string;
@@ -26,45 +27,41 @@ interface MenuItem {
     children?: ItemType[];
 }
 
-interface Props {
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
     collapsed: boolean;
-    toggleCollapsed: () => void;
+    toggleCollapsed?: () => void;
+    onItemClick?: () => void;
 }
 
 export function SidebarBottom(props: Props) {
-    const { collapsed, toggleCollapsed } = props;
+    const { collapsed, toggleCollapsed, onItemClick, ...other } = props;
 
     return (
-        <div
+        <S.Container
             className={classNames(s.container, {
                 _collapsed: collapsed,
             })}
+            {...other}
         >
-            <div className={s.divider} />
-            <LocaleSwitcher />
-            <div className={s.divider} />
-            <UserMenu />
-            <div className={s.divider} />
-            <Button
-                icon={<img src={menuIcon} alt="" />}
-                className={s.collapseButton}
-                type="default"
-                onClick={toggleCollapsed}
-            />
-        </div>
+            <S.Divider $hidden={collapsed} />
+            <LocaleSwitcher onItemClick={onItemClick} />
+            <S.Divider $hidden={collapsed} />
+            <UserMenu onItemClick={onItemClick} />
+            {toggleCollapsed && (
+                <>
+                    <S.Divider $hidden={collapsed} />
+                    <Button icon={<MenuIcon />} className={s.collapseButton} type="default" onClick={toggleCollapsed} />
+                </>
+            )}
+        </S.Container>
     );
 }
 
 export function renderMenu(items: MenuItem[]): ItemType[] {
     return items.map((item) => ({
         key: item.key,
-        label: (
-            <div className={s.menuItemContent}>
-                {item.icon ? <div className={s.icon}>{item.icon}</div> : null}
-                <span className={s.menuItemLabel}>{item.label}</span>
-            </div>
-        ),
-        className: s.menuItem,
+        icon: <S.Icon>{item.icon}</S.Icon>,
+        label: <span className={s.menuItemLabel}>{item.label}</span>,
         children: item.children?.map((child) => ({
             ...child,
             className: s.submenuItem,
@@ -72,7 +69,8 @@ export function renderMenu(items: MenuItem[]): ItemType[] {
     }));
 }
 
-function UserMenu() {
+function UserMenu(props: { onItemClick?: () => void }) {
+    const { onItemClick } = props;
     const doLogout = useCallback(async () => {
         await logout();
         resetAidboxInstanceToken();
@@ -85,7 +83,10 @@ function UserMenu() {
         {
             label: t`Log out`,
             key: 'logout',
-            onClick: doLogout,
+            onClick: () => {
+                doLogout();
+                onItemClick?.();
+            },
             icon: <LogoutOutlined />,
         },
     ];
@@ -126,13 +127,17 @@ function AdminName() {
     return <span>{renderHumanName(practitioner?.name?.[0])}</span>;
 }
 
-function LocaleSwitcher() {
+function LocaleSwitcher(props: { onItemClick?: () => void }) {
+    const { onItemClick } = props;
     const currentLocale = getCurrentLocale();
     const localesList = Object.entries(locales);
     const items = localesList.map(([value, label]) => ({
         label: <div>{label}</div>,
         key: value,
-        onClick: () => onChangeLocale(value),
+        onClick: () => {
+            onChangeLocale(value);
+            onItemClick?.();
+        },
     }));
 
     const onChangeLocale = (key: string) => {

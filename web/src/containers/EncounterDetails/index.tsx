@@ -1,7 +1,6 @@
 import { CheckOutlined, PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
-import Title from 'antd/es/typography/Title';
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { useService } from 'fhir-react/lib/hooks/service';
 import { isSuccess } from 'fhir-react/lib/libs/remoteData';
@@ -17,7 +16,7 @@ import { DocumentsList } from 'src/containers/DocumentsList';
 import { ChooseDocumentToCreateModal } from 'src/containers/DocumentsList/ChooseDocumentToCreateModal';
 import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
 
-import s from './EncounterDetails.module.scss';
+import { S } from './EncounterDetails.styles';
 
 interface Props {
     patient: Patient;
@@ -63,9 +62,9 @@ export const EncounterDetails = ({ patient }: Props) => {
 
     return (
         <>
-            <Title level={3} className={s.title}>
+            <S.Title level={3}>
                 <Trans>Consultation</Trans>
-            </Title>
+            </S.Title>
             <RenderRemoteData remoteData={response} renderLoading={Spinner}>
                 {(encounter) => {
                     const isEncounterCompleted = encounter.status === 'finished';

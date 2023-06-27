@@ -5,7 +5,7 @@ import { Coding } from 'shared/src/contrib/aidbox';
 
 import { useFieldController } from '../hooks';
 
-const inputStyle = { backgroundColor: '#FFFFFF', width: '100%' };
+const inputStyle = { width: '100%' };
 
 interface NumericItem {
     unit?: Coding;

@@ -7,6 +7,7 @@ import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm
 import { formatUnit } from 'src/utils/unit';
 
 import s from './ReadonlyWidgets.module.scss';
+import { S } from './ReadonlyWidgets.styles';
 
 export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, text, hidden } = questionItem;
@@ -20,10 +21,10 @@ export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps)
     const { unit } = questionItem as { unit?: Coding };
 
     return (
-        <p className={classNames(s.question, s.row, 'form__question')}>
+        <S.Question className={classNames(s.question, s.row, 'form__question')}>
             <span className={s.questionText}>{text}</span>
             <span className={s.answer}>{value ? `${value} ${formatUnit(unit?.display)}` : '-'}</span>
-        </p>
+        </S.Question>
     );
 }
 
@@ -39,9 +40,9 @@ export function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps)
     const { unit } = questionItem as { unit?: Coding };
 
     return (
-        <p className={classNames(s.question, s.row, 'form__question')}>
+        <S.Question className={classNames(s.question, s.row, 'form__question')}>
             <span className={s.questionText}>{text}</span>
             <span className={s.answer}>{value ? `${value} ${formatUnit(unit?.display)}` : '-'}</span>
-        </p>
+        </S.Question>
     );
 }

@@ -3,17 +3,6 @@
     justify-content: center;
 }
 
-.content {
-    width: 440px;
-    background-color: #fff;
-    box-shadow: 0px 6px 16px #e6ebf5;
-    padding: 32px;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-}
-
 .header {
     h3 {
         margin-bottom: 0;
@@ -50,11 +39,6 @@
 
 .scheduleRowTitle {
     width: 53px;
-}
-
-.divider {
-    height: 1px;
-    background-color: rgba(0, 0, 0, 0.03);
 }
 
 .footer {

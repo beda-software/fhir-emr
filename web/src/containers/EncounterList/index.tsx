@@ -1,6 +1,5 @@
 import { t, Trans } from '@lingui/macro';
 import { Col, Row } from 'antd';
-import Title from 'antd/es/typography/Title';
 import { Link } from 'react-router-dom';
 
 import { renderHumanName } from 'shared/src/utils/fhir';
@@ -11,6 +10,7 @@ import { EncounterData } from 'src/components/EncountersTable/types';
 import { StatusBadge } from 'src/components/EncounterStatusBadge';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
+import { Title } from 'src/components/Typography';
 import { formatPeriodDateTime } from 'src/utils/date';
 
 import { useEncounterList } from './hooks';

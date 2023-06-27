@@ -19,6 +19,7 @@ import { useNavigateToEncounter } from 'src/containers/EncounterDetails/hooks';
 
 import { usePatientOverview } from './hooks';
 import s from './PatientOverview.module.scss';
+import { S } from './PatientOverview.styles';
 import { OverviewCard, prepareAppointmentDetails } from './utils';
 
 export interface PatientOverviewProps {
@@ -44,7 +45,7 @@ export function PatientOverview(props: PatientOverviewProps) {
                     <div className={s.detailsRow}>
                         {appointmentDetails.map(({ title, value }, index) => (
                             <div key={`patient-details__${index}`} className={s.detailItem}>
-                                <div className={s.detailsTitle}>{title}</div>
+                                <S.DetailsTitle>{title}</S.DetailsTitle>
                                 <div className={s.detailsValue}>{value || '-'}</div>
                             </div>
                         ))}
@@ -101,7 +102,7 @@ export function PatientOverview(props: PatientOverviewProps) {
                                 <div className={s.detailsRow}>
                                     {patientDetails.map(({ title, value }, index) => (
                                         <div key={`patient-details__${index}`} className={s.detailItem}>
-                                            <div className={s.detailsTitle}>{title}</div>
+                                            <S.DetailsTitle>{title}</S.DetailsTitle>
                                             <div className={s.detailsValue}>{value || '-'}</div>
                                         </div>
                                     ))}

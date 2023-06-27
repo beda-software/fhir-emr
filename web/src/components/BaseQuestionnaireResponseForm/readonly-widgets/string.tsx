@@ -4,6 +4,7 @@ import { QuestionItemProps } from 'sdc-qrf';
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 
 import s from './ReadonlyWidgets.module.scss';
+import { S } from './ReadonlyWidgets.styles';
 
 export function QuestionText({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, text, hidden } = questionItem;
@@ -15,9 +16,9 @@ export function QuestionText({ parentPath, questionItem }: QuestionItemProps) {
     }
 
     return (
-        <p className={classNames(s.question, s.column, 'form__question')}>
+        <S.Question className={classNames(s.question, s.column, 'form__question')}>
             <span className={s.questionText}>{text}</span>
             <span>{value || '-'}</span>
-        </p>
+        </S.Question>
     );
 }

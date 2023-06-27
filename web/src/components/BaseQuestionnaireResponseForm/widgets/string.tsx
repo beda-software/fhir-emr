@@ -1,5 +1,4 @@
 import { Form, Input } from 'antd';
-import TextArea from 'antd/lib/input/TextArea';
 import { QuestionItemProps } from 'sdc-qrf';
 
 import { useFieldController } from '../hooks';
@@ -23,7 +22,7 @@ export function QuestionText({ parentPath, questionItem }: QuestionItemProps) {
 
     return (
         <Form.Item {...formItem}>
-            <TextArea value={value} rows={1} disabled={disabled} onChange={onChange} />
+            <Input.TextArea value={value} rows={1} disabled={disabled} onChange={onChange} />
         </Form.Item>
     );
 }

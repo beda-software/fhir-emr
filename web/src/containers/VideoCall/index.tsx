@@ -1,6 +1,5 @@
 import { JitsiMeeting } from '@jitsi/react-sdk';
 import { Col, Row } from 'antd';
-import Title from 'antd/es/typography/Title';
 import { ContactPoint } from 'fhir/r4b';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -9,6 +8,7 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { EncounterData } from 'src/components/EncountersTable/types';
+import { Title } from 'src/components/Typography';
 import { sharedJitsiAuthToken } from 'src/sharedState';
 
 export function VideoCall() {
@@ -21,9 +21,7 @@ export function VideoCall() {
         encounter.practitioner?.telecom?.find((t: ContactPoint) => t.system === 'email')?.value
     }`;
     const patientName = renderHumanName(encounter.patient?.name?.[0]);
-    const roomName = [...practitionerName.split(' '), ...patientName.split(' ')]
-        .join('-')
-        .toLowerCase();
+    const roomName = [...practitionerName.split(' '), ...patientName.split(' ')].join('-').toLowerCase();
     const jwtAuthToken = sharedJitsiAuthToken.getSharedState();
 
     return (

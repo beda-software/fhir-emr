@@ -1,19 +1,7 @@
-.container {
-    min-height: 100vh;
-    background-color: #fafcff;
-    position: relative;
-}
-
 .content {
     background: 0;
     position: relative;
     padding-bottom: 64px;
-}
-
-.pageHeaderWrapper {
-    background-color: #e0eaff;
-    display: flex;
-    justify-content: center;
 }
 
 .pageHeader {
@@ -22,13 +10,13 @@
     flex-direction: column;
     padding: 24px 20px;
 
-    @media only screen and (min-width: 1281px) {
+    @media screen and (min-width: 1281px) {
         max-width: 1120px;
     }
 }
 
 .pageContentWrapper {
-    @media only screen and (min-width: 1281px) {
+    @media screen and (min-width: 1281px) {
         display: flex;
         justify-content: center;
     }
@@ -41,7 +29,7 @@
     padding: 40px 20px;
     gap: 40px;
 
-    @media only screen and (min-width: 1281px) {
+    @media screen and (min-width: 1281px) {
         max-width: 1120px;
     }
 }

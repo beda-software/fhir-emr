@@ -1,13 +1,14 @@
 import { Trans, t } from '@lingui/macro';
 import { Button, Checkbox, Form, Input, Select, Popconfirm } from 'antd';
-import Title from 'antd/lib/typography/Title';
 import { FormProvider, useForm } from 'react-hook-form';
 import { GroupItemProps, QuestionItemProps } from 'sdc-qrf/lib/types';
 
 import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
 
+import { Title } from 'src/components/Typography';
+
 import { itemControlSpecificFields, itemControls, typeSpecificFields } from './controls';
-import s from './QuestionnaireItemSettings.module.scss';
+import { S } from './QuestionnaireItemSettings.styles';
 import { SettingsField } from './SettingsField';
 
 const { Option } = Select;
@@ -124,7 +125,7 @@ export function QuestionnaireItemSettings(props: Props) {
                     </>
                 ) : null}
                 {type ? typeSpecificFields[type] : null}
-                <div className={s.buttons}>
+                <S.Buttons>
                     <Button htmlType="submit" type="primary" ghost>
                         <Trans>Save</Trans>
                     </Button>
@@ -139,7 +140,7 @@ export function QuestionnaireItemSettings(props: Props) {
                             <Trans>Delete</Trans>
                         </Button>
                     </Popconfirm>
-                </div>
+                </S.Buttons>
             </Form>
         </FormProvider>
     );

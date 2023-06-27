@@ -1,22 +1,20 @@
-import classNames from 'classnames';
-
-import s from './Footer.module.scss';
+import { S } from './Footer.styles';
 
 interface Props {
     type?: 'default' | 'light';
 }
 
 export function AppFooter(props: Props) {
-    const { type = "default" } = props;
+    const { type = 'default' } = props;
 
     return (
-        <div className={classNames(s.footer, s[`_${type}`])}>
-            <div className={s.content}>
+        <S.Footer className={`_${type}`}>
+            <S.Content>
                 Made with &#10084;&#65039; by{' '}
-                <a href="https://beda.software/emr" target="_blank" className={s.link} rel="noreferrer">
+                <S.Link href="https://beda.software/emr" target="_blank" rel="noreferrer">
                     Beda Software
-                </a>
-            </div>
-        </div>
+                </S.Link>
+            </S.Content>
+        </S.Footer>
     );
 }

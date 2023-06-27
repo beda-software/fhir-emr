@@ -1,5 +1,3 @@
-import { Layout } from 'antd';
-import { Content } from 'antd/lib/layout/layout';
 import { ModalProps } from 'antd/lib/modal';
 import { useCallback } from 'react';
 import * as React from 'react';
@@ -59,11 +57,7 @@ export function ModalTrigger(props: Props) {
                 footer={modalProps?.footer}
                 destroyOnClose
             >
-                <Layout>
-                    <Content style={{ backgroundColor: 'white' }}>
-                        {showModal && children({ closeModal })}
-                    </Content>
-                </Layout>
+                {showModal && children({ closeModal })}
             </Modal>
         </>
     );

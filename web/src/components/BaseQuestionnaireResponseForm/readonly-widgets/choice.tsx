@@ -5,6 +5,7 @@ import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm
 import { getArrayDisplay, getDisplay } from 'src/utils/questionnaire';
 
 import s from './ReadonlyWidgets.module.scss';
+import { S } from './ReadonlyWidgets.styles';
 
 export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, text, repeats, hidden } = questionItem;
@@ -17,17 +18,17 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
 
     if (repeats) {
         return (
-            <p className={classNames(s.question, s.row, 'form__question')}>
+            <S.Question className={classNames(s.question, s.row, 'form__question')}>
                 <span className={s.questionText}>{text}</span>
                 <span className={s.answer}>{getArrayDisplay(value) || '-'}</span>
-            </p>
+            </S.Question>
         );
     } else {
         return (
-            <p className={classNames(s.question, s.row, 'form__question')}>
+            <S.Question className={classNames(s.question, s.row, 'form__question')}>
                 <span className={s.questionText}>{text}</span>
                 <span className={s.answer}>{getDisplay(value?.value) || '-'}</span>
-            </p>
+            </S.Question>
         );
     }
 }

@@ -1,11 +1,11 @@
 import { Form, InputNumber, InputNumberProps } from 'antd';
-import Title from 'antd/lib/typography/Title';
 import { GroupItemProps } from 'sdc-qrf';
 
 import { Coding } from 'shared/src/contrib/aidbox';
 import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
+import { Paragraph } from 'src/components/Typography';
 
 import s from './styles.module.scss';
 
@@ -41,7 +41,7 @@ function BloodPressureItem(props: BloodPressureItemProps) {
 
 export function BloodPressure({ parentPath, questionItem }: GroupItemProps) {
     if (typeof questionItem.item === 'undefined' || questionItem.item.length !== 2) {
-        return <p>Blood pressure widget requires exactly two children</p>;
+        return <Paragraph>Blood pressure widget requires exactly two children</Paragraph>;
     }
 
     const groupFieldName = [...parentPath, questionItem.linkId, 'items'];
@@ -63,43 +63,6 @@ export function BloodPressure({ parentPath, questionItem }: GroupItemProps) {
             <div className={s.inputWrapper}>
                 <BloodPressureItem parentPath={groupFieldName} questionItem={secondItem!} unit={unit?.display} />
             </div>
-        </div>
-    );
-}
-
-function BloodPressureItemReadOnly(props: BloodPressureItemProps) {
-    const { parentPath, questionItem } = props;
-    const fieldName = getFieldName(parentPath, questionItem);
-    const { value, formItem } = useFieldController(fieldName, questionItem);
-
-    if (formItem.hidden) {
-        return null;
-    }
-
-    return (
-        <p className={s.rowReadOnly}>
-            <span className={s.questionText}>{questionItem.text}</span>
-            <span className={s.answer}>{typeof value !== 'undefined' ? `${value} mmHg` : '-'}</span>
-        </p>
-    );
-}
-
-export function BloodPressureReadOnly({ parentPath, questionItem }: GroupItemProps) {
-    if (typeof questionItem.item === 'undefined' || questionItem.item.length !== 2) {
-        return <p>Blood pressure widget requires exactly two children</p>;
-    }
-
-    const groupFieldName = [...parentPath, questionItem.linkId, 'items'];
-
-    const [firstItem, secondItem] = questionItem.item;
-
-    return (
-        <div>
-            <Title level={5} className={s.title}>
-                Blood Pressure
-            </Title>
-            <BloodPressureItemReadOnly parentPath={groupFieldName} questionItem={firstItem!} />
-            <BloodPressureItemReadOnly parentPath={groupFieldName} questionItem={secondItem!} />
         </div>
     );
 }

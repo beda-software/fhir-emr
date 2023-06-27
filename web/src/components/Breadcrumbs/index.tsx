@@ -1,3 +1,4 @@
+import { Breadcrumb } from 'antd';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -19,20 +20,12 @@ const Breadcrumbs = (props: Props) => {
 
     return (
         <div className={s.container} {...props}>
-            {crumbs.map(({ name, path }, key) =>
-                key + 1 === crumbs.length || !path ? (
-                    <span key={key} className={s.currentPage}>
-                        {name}
-                    </span>
-                ) : (
-                    <React.Fragment key={key}>
-                        <Link to={path} className={s.prevPage}>
-                            {name}
-                        </Link>
-                        <span className={s.arrow}>{'>'}</span>
-                    </React.Fragment>
-                ),
-            )}
+            <Breadcrumb
+                separator=">"
+                items={crumbs.map(({ name, path }, key) => ({
+                    title: key + 1 === crumbs.length || !path ? name : <Link to={path}>{name}</Link>,
+                }))}
+            />
         </div>
     );
 };

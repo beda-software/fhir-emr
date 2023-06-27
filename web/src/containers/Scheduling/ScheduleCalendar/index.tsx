@@ -5,9 +5,10 @@ import FullCalendar from '@fullcalendar/react'; // import it first
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { t, Trans } from '@lingui/macro';
 import { notification } from 'antd';
-import Title from 'antd/es/typography/Title';
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { PractitionerRole } from 'fhir/r4b';
+
+import { Title } from 'src/components/Typography';
 
 import { AppointmentDetailsModal } from './components/AppointmentDetailsModal';
 import { EditAppointmentModal } from './components/EditAppointmentModal';
@@ -16,6 +17,7 @@ import { useAppointmentEvents } from './hooks/useAppointmentEvents';
 import { useCalendarOptions } from './hooks/useCalendarOptions';
 import { useScheduleCalendar } from './hooks/useScheduleCalendar';
 import s from './ScheduleCalendar.module.scss';
+import { S } from './ScheduleCalendar.styles';
 
 interface Props {
     practitionerRole: PractitionerRole;
@@ -43,7 +45,7 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
             <Title level={3} className={s.title}>
                 <Trans>Schedule calendar</Trans>
             </Title>
-            <div className={s.calendar}>
+            <S.Calendar>
                 <RenderRemoteData remoteData={remoteResponses}>
                     {({ businessHours, calendarSlots }) => (
                         <>
@@ -131,7 +133,7 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
                         </>
                     )}
                 </RenderRemoteData>
-            </div>
+            </S.Calendar>
         </>
     );
 }

@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 
-import s from './DashboardCard.module.scss';
+import { S } from './DashboardCard.styles';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
     title: string;
@@ -26,20 +26,20 @@ export function DashboardCard(props: Props) {
     const { title, icon, extra, children, className, empty = false } = props;
 
     return (
-        <div
-            className={classNames(s.card, className, {
+        <S.Card
+            className={classNames(className, {
                 _empty: empty,
             })}
         >
-            <div className={s.header}>
+            <S.Header>
                 <div>
-                    <div className={s.icon}>{icon}</div>
-                    <div className={s.title}>{title}</div>
+                    <S.Icon className={classNames({ _empty: empty })}>{icon}</S.Icon>
+                    <S.Title>{title}</S.Title>
                 </div>
                 {extra && <div>{extra}</div>}
-            </div>
-            {children && <div className={s.content}>{children}</div>}
-        </div>
+            </S.Header>
+            {children && <S.Content>{children}</S.Content>}
+        </S.Card>
     );
 }
 
@@ -47,33 +47,28 @@ export function DashboardCardTable(props: TableProps) {
     const { title, data, columns, getKey } = props;
 
     return (
-        <div className={s.table}>
-            <div className={classNames(s.tableHeader, s.tableRow)}>
+        <div>
+            <S.TableHeader>
                 {columns.map((col) => (
-                    <div
-                        key={`header-${title}-${col.title}`}
-                        className={s.tableCell}
-                        style={{ width: col.width, minWidth: col.width }}
-                    >
+                    <S.TableCell key={`header-${title}-${col.title}`} style={{ width: col.width, minWidth: col.width }}>
                         {col.title}
-                    </div>
+                    </S.TableCell>
                 ))}
-            </div>
+            </S.TableHeader>
             {data.map((item) => {
                 const key = getKey(item);
 
                 return (
-                    <div key={`row-${key}`} className={s.tableRow}>
+                    <S.TableRow key={`row-${key}`}>
                         {columns.map((col) => (
-                            <div
+                            <S.TableCell
                                 key={`row-${key}-${col.title}`}
-                                className={s.tableCell}
                                 style={{ width: col.width, minWidth: col.width }}
                             >
                                 {col.render(item)}
-                            </div>
+                            </S.TableCell>
                         ))}
-                    </div>
+                    </S.TableRow>
                 );
             })}
         </div>

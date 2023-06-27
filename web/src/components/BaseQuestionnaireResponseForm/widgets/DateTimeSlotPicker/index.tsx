@@ -154,7 +154,6 @@ function AvailableDateControl(props: AvailableDatePickerProps & { practitionerRo
                         showNow={false}
                         showToday={false}
                         format={humanDateTime}
-                        minuteStep={5}
                         onChange={(date) => onDateChange(date, timeSlots)}
                         value={value ? parseFHIRDateTime(value) : undefined}
                         disabled={disabled}

@@ -5,12 +5,13 @@ import { buildQueryParams } from 'fhir-react/lib/services/instance';
 import fhirpath from 'fhirpath';
 import _ from 'lodash';
 import { ActionMeta, MultiValue, SingleValue } from 'react-select';
-import AsyncSelect from 'react-select/async';
 import { parseFhirQueryExpression, QuestionItemProps } from 'sdc-qrf';
 
 import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer, Resource } from 'shared/src/contrib/aidbox';
 import { loadResourceOptions } from 'shared/src/services/questionnaire';
 import { getAnswerCode, getAnswerDisplay } from 'shared/src/utils/questionnaire';
+
+import { AsyncSelect } from 'src/components/Select';
 
 import { useFieldController } from '../hooks';
 

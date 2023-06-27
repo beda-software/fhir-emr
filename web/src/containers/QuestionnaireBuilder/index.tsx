@@ -1,6 +1,6 @@
 import { CloseOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
-import { Button, Col, Row, Typography } from 'antd';
+import { Button, Col, Row } from 'antd';
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { isLoading } from 'fhir-react/lib/libs/remoteData';
 import { Questionnaire } from 'fhir/r4b';
@@ -9,15 +9,15 @@ import { GroupItemProps, QuestionItemProps } from 'sdc-qrf/lib/types';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { ModalTrigger } from 'src/components/ModalTrigger';
+import { Title } from 'src/components/Typography';
 
 import { Builder } from './Builder';
 import { useQuestionnaireBuilder } from './hooks';
 import { PromptForm } from './PromptForm';
 import s from './QuestionnaireBuilder.module.scss';
+import { S } from './QuestionnaireBuilder.styles';
 import { QuestionnaireItemSettings } from './QuestionnaireItemSettings';
 import { QuestionnaireSaveForm } from './QuestionnaireSaveForm';
-
-const { Title } = Typography;
 
 export function QuestionnaireBuilder() {
     const { response, onSubmitPrompt, error, onItemChange, onItemDrag, onSaveQuestionnaire, onItemDelete } =
@@ -65,7 +65,7 @@ export function QuestionnaireBuilder() {
                 </div>
             </BasePageHeader>
             <BasePageContent className={s.container}>
-                <div className={s.content}>
+                <S.Content>
                     <div className={s.rightColumn}>
                         <Builder
                             response={response}
@@ -83,22 +83,21 @@ export function QuestionnaireBuilder() {
                             onItemDrag={onItemDrag}
                         />
                     </div>
-                    <div className={s.leftColumn}>
+                    <S.LeftColumn>
                         {questionnaireItem || groupItem ? (
                             <div
                                 className={s.settings}
                                 key={questionnaireItem?.questionItem.linkId || groupItem?.questionItem.linkId}
                             >
-                                <Button
+                                <S.CloseButton
                                     type="text"
-                                    className={s.closeButton}
                                     onClick={() => {
                                         setQuestionnaireItem(undefined);
                                         setGroupItem(undefined);
                                     }}
                                 >
                                     <CloseOutlined />
-                                </Button>
+                                </S.CloseButton>
                                 <QuestionnaireItemSettings
                                     item={(questionnaireItem || groupItem)!}
                                     onSave={(item) => {
@@ -120,8 +119,8 @@ export function QuestionnaireBuilder() {
                             onSubmit={(prompt) => onSubmitPrompt(prompt)}
                             isLoading={isLoading(response)}
                         />
-                    </div>
-                </div>
+                    </S.LeftColumn>
+                </S.Content>
             </BasePageContent>
         </>
     );

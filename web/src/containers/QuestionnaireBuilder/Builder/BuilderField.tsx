@@ -1,10 +1,10 @@
 import { SettingOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
 import classNames from 'classnames';
 import { QuestionItemProps } from 'sdc-qrf';
 
 import { OnItemDrag } from '../hooks';
 import s from './Builder.module.scss';
+import { S } from './Builder.styles';
 import { FieldSource, FieldTarget } from './DragAndDrop';
 
 interface Props {
@@ -26,19 +26,19 @@ export function BuilderField(props: Props) {
     return (
         <FieldTarget item={item} onItemDrag={onItemDrag}>
             <FieldSource item={item}>
-                <div
-                    className={classNames(s.container, {
+                <S.Container
+                    className={classNames({
                         _active: item.questionItem.linkId === activeQuestionItem?.questionItem.linkId,
                     })}
                     style={{ paddingBottom: 0 }}
                 >
                     <div className={s.toolBox}>
-                        <Button type="text" className={s.button} onClick={() => onEditClick?.(item)}>
+                        <S.Button type="text" onClick={() => onEditClick?.(item)}>
                             <SettingOutlined />
-                        </Button>
+                        </S.Button>
                     </div>
                     {children}
-                </div>
+                </S.Container>
             </FieldSource>
         </FieldTarget>
     );

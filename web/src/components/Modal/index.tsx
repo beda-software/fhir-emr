@@ -1,10 +1,9 @@
-import { Modal as ANTDModal } from 'antd';
 import { ModalProps as ANTDModalProps } from 'antd/lib/modal';
 
-import s from './Modal.module.scss';
+import { S } from './Modal.styles';
 
 export interface ModalProps extends ANTDModalProps {}
 
 export function Modal(props: ModalProps) {
-    return <ANTDModal className={s.modal} {...props} />;
+    return <S.Modal {...props} />;
 }

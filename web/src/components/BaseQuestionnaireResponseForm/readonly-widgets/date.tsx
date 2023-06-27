@@ -5,6 +5,7 @@ import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm
 import { formatHumanDate, formatHumanDateTime } from 'src/utils/date';
 
 import s from './ReadonlyWidgets.module.scss';
+import { S } from './ReadonlyWidgets.styles';
 
 export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, text, type } = questionItem;
@@ -16,11 +17,11 @@ export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps
     }
 
     return (
-        <p className={classNames(s.question, s.row, 'form__question')}>
+        <S.Question className={classNames(s.question, s.row, 'form__question')}>
             <span className={s.questionText}>{text}</span>
             <span className={s.answer}>
                 {value ? (type === 'dateTime' ? formatHumanDateTime(value) : formatHumanDate(value)) : '-'}
             </span>
-        </p>
+        </S.Question>
     );
 }

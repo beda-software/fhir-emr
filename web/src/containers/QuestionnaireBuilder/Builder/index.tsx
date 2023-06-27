@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro';
-import { Alert, Typography } from 'antd';
+import { Alert } from 'antd';
 import { RemoteData } from 'fhir-react';
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { useState } from 'react';
@@ -11,14 +11,13 @@ import { toQuestionnaireResponseFormData } from 'shared/src/hooks/questionnaire-
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
+import { Title } from 'src/components/Typography';
 
 import { FieldSourceContext } from '../context';
 import { OnItemDrag } from '../hooks';
 import s from '../QuestionnaireBuilder.module.scss';
 import { BuilderField } from './BuilderField';
 import { BuilderGroup } from './BuilderGroup';
-
-const { Title } = Typography;
 
 interface Props {
     response: RemoteData;
@@ -118,7 +117,7 @@ export function Builder(props: Props) {
                         {error ? (
                             <Alert message={error} type="error" showIcon closable style={{ marginBottom: 30 }} />
                         ) : null}
-                        <Title level={4} className={s.title} style={{ color: 'rgba(5, 5, 5, 0.3)' }}>
+                        <Title level={4} className={s.title}>
                             {t`Here will be your questionnaire`}
                         </Title>
                     </>

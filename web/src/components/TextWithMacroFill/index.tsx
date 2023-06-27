@@ -1,12 +1,12 @@
 import { t, Trans } from '@lingui/macro';
-import { Button, Form, notification } from 'antd';
-import TextArea from 'antd/lib/input/TextArea';
+import { Button, Form, Input, notification } from 'antd';
 import { QRFContextData, QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
 import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 
+import { Text } from '../Typography';
 import s from './TextWithMacroFill.module.scss';
 
 interface QuestionFieldProps {
@@ -34,12 +34,12 @@ function QuestionField(props: QuestionFieldProps) {
         <>
             <div className={s.inputContainer}>
                 <div className={s.inputHeader}>
-                    <span className={s.label}>{text}</span>
+                    <Text className={s.label}>{text}</Text>
                     <Button type="primary" onClick={onFill} disabled={value === fillText}>
                         <Trans>Fill</Trans>
                     </Button>
                 </div>
-                <TextArea
+                <Input.TextArea
                     autoSize
                     allowClear
                     value={value}
