@@ -23,83 +23,10 @@
     }
 }
 
-.ant-input {
-    border-color: #d9d9d9;
-}
-
 .footer {
     margin-top: 24px;
     padding: 10px 0;
     display: flex;
     justify-content: flex-end;
     gap: 8px;
-}
-
-:global .react-tel-input {
-    :local .phoneInput {
-        width: 100%;
-        border-color: #d9d9d9;
-        padding: 4px 11px 4px 50px;
-        height: 32px;
-        transition: border-color 0.2s;
-    }
-
-    :local .phoneButton {
-        border-color: #d9d9d9;
-        transition: border-color 0.2s;
-    }
-
-    &:hover :local .phoneInput,
-    &:hover :local .phoneButton {
-        border-color: #4096ff;
-    }
-
-    &._focused :local .phoneInput,
-    &._focused :local .phoneButton {
-        border-color: #4096ff;
-        box-shadow: 0 0 0 2px rgb(5 145 255 / 10%);
-    }
-}
-
-.select {
-    :global .choice__control {
-        border-color: #d9d9d9;
-        min-height: 32px;
-        box-shadow: none;
-
-        &:hover {
-            border-color: #4096ff;
-        }
-    }
-
-    :global .choice__control--menu-is-open,
-    :global .choice__control--is-focused {
-        border-color: #4096ff;
-        box-shadow: 0 0 0 2px rgb(5 145 255 / 10%);
-    }
-
-    :global .choice__value-container {
-        height: 32px;
-        padding: 4px 11px;
-        line-height: 24px;
-    }
-
-    :global .choice__indicator {
-        padding: 6px;
-        cursor: pointer;
-    }
-
-    :global .choice__placeholder {
-        margin: 0;
-    }
-
-    :global .choice__input-container {
-        margin: 0;
-        padding: 0;
-    }
-
-    :global .choice__indicator-separator {
-        margin: 0;
-        background-color: #d9d9d9;
-    }
 }

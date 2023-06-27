@@ -117,7 +117,7 @@ export function Builder(props: Props) {
                         {error ? (
                             <Alert message={error} type="error" showIcon closable style={{ marginBottom: 30 }} />
                         ) : null}
-                        <Title level={4} className={s.title} style={{ color: 'rgba(5, 5, 5, 0.3)' }}>
+                        <Title level={4} className={s.title}>
                             {t`Here will be your questionnaire`}
                         </Title>
                     </>

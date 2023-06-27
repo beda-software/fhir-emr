@@ -12,12 +12,11 @@ import { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Spinner } from 'src/components/Spinner';
-import { Title } from 'src/components/Typography';
 import { DocumentsList } from 'src/containers/DocumentsList';
 import { ChooseDocumentToCreateModal } from 'src/containers/DocumentsList/ChooseDocumentToCreateModal';
 import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
 
-import s from './EncounterDetails.module.scss';
+import { S } from './EncounterDetails.styles';
 
 interface Props {
     patient: Patient;
@@ -63,9 +62,9 @@ export const EncounterDetails = ({ patient }: Props) => {
 
     return (
         <>
-            <Title level={3} className={s.title}>
+            <S.Title level={3}>
                 <Trans>Consultation</Trans>
-            </Title>
+            </S.Title>
             <RenderRemoteData remoteData={response} renderLoading={Spinner}>
                 {(encounter) => {
                     const isEncounterCompleted = encounter.status === 'finished';

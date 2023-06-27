@@ -11,7 +11,6 @@ import { Coding, ValueSet } from 'fhir/r4b';
 import _ from 'lodash';
 import { useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import AsyncSelect from 'react-select/async';
 
 import { service } from 'aidbox-react/lib/services/service';
 
@@ -20,10 +19,11 @@ import { humanDate, humanTime } from 'shared/src/utils/date';
 
 import { DatePicker } from 'src/components/DatePicker';
 import { ModalTrigger } from 'src/components/ModalTrigger';
+import { AsyncSelect } from 'src/components/Select';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 
-import s from './QuestionnaireItemSettings.module.scss';
+import { S } from './QuestionnaireItemSettings.styles';
 import { SettingsField, SettingsFieldArray } from './SettingsField';
 
 export const itemControls: { [key: string]: Array<{ label: string; code: string | undefined; default?: boolean }> } = {
@@ -277,7 +277,7 @@ function ChoiceFields() {
                             <>
                                 {fields.map((f, index) => {
                                     return (
-                                        <div key={`answerOption-${f.id}`} className={s.option}>
+                                        <S.Option key={`answerOption-${f.id}`}>
                                             <div style={{ flex: 1 }}>{renderOption(index)}</div>
                                             <div style={{ width: 40 }}>
                                                 {fields.length > 1 ? (
@@ -286,7 +286,7 @@ function ChoiceFields() {
                                                     </Button>
                                                 ) : null}
                                             </div>
-                                        </div>
+                                        </S.Option>
                                     );
                                 })}
                                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -395,7 +395,7 @@ function ValueSetField(props: ValueSetFieldProps) {
                 return (
                     <Form.Item label={t`ValueSet url`} required>
                         <AsyncSelect
-                            onChange={(option) => {
+                            onChange={(option: any) => {
                                 if (answerOptions.length) {
                                     setValue('answerOption', undefined);
                                 }

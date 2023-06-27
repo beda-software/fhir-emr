@@ -16,7 +16,7 @@ import { Title } from 'src/components/Typography';
 import { getToken } from 'src/services/auth';
 import { history } from 'src/services/history';
 
-import s from './PublicAppointment.module.scss';
+import { S } from './PublicAppointment.styles';
 
 export function PublicAppointment() {
     const practitionerRolePath = ['practitioner-role', 0, 'value', 'Reference'];
@@ -41,14 +41,15 @@ export function PublicAppointment() {
     }, [appToken]);
 
     return (
-        <>
+        <S.Container>
             <BasePageHeader>
                 <Title>
                     <Trans>Appointment booking</Trans>
                 </Title>
             </BasePageHeader>
+
             <BasePageContent style={{ alignItems: 'center' }}>
-                <div className={s.content}>
+                <S.Content>
                     {isLoading ? (
                         <Spinner />
                     ) : (
@@ -79,8 +80,8 @@ export function PublicAppointment() {
                             ]}
                         />
                     )}
-                </div>
+                </S.Content>
             </BasePageContent>
-        </>
+        </S.Container>
     );
 }

@@ -38,7 +38,7 @@ export function PromptForm(props: Props) {
             {...rest}
         >
             <Form.Item name="prompt" label={t`Describe requirements to a questionnaire`}>
-                <Input.TextArea rows={5} disabled={disabled} />
+                <TextArea rows={5} disabled={disabled} />
             </Form.Item>
             <Form.Item>
                 <Button htmlType="submit" disabled={disabled}>{t`Submit`}</Button>

@@ -1,4 +1,3 @@
-
 import { useService } from 'fhir-react/lib/hooks/service';
 import {
     extractBundleResources,
@@ -20,14 +19,12 @@ import { days } from '../../available-time';
 
 export function useScheduleCalendar(practitionerRole: PractitionerRole) {
     const [businessHoursRD] = useService(async () => {
-        return mapSuccess(
-            await getFHIRResource<PractitionerRole>(getReference(practitionerRole)),
-            (resource) =>
-                resource.availableTime?.map((item) => ({
-                    daysOfWeek: item.daysOfWeek!.map((dow) => days.indexOf(dow) + 1),
-                    startTime: item.availableStartTime,
-                    endTime: item.availableEndTime,
-                })),
+        return mapSuccess(await getFHIRResource<PractitionerRole>(getReference(practitionerRole)), (resource) =>
+            resource.availableTime?.map((item) => ({
+                daysOfWeek: item.daysOfWeek!.map((dow) => days.indexOf(dow) + 1),
+                startTime: item.availableStartTime,
+                endTime: item.availableEndTime,
+            })),
         );
     }, []);
 
@@ -56,7 +53,7 @@ export function useScheduleCalendar(practitionerRole: PractitionerRole) {
                     start: appointment.start!,
                     end: appointment.end!,
                     status: appointment.status,
-                    color: appointment.status === 'cancelled' ? '#F6BF26' : '#3366FF',
+                    classNames: [`_${appointment.status}`],
                 };
             });
         });

@@ -11,10 +11,11 @@ import React from 'react';
 import { formatFHIRTime } from 'shared/src/utils/date';
 
 import { RangeTimePicker } from 'src/components/TimePicker';
-import { Title } from 'src/components/Typography';
+import { Text, Title } from 'src/components/Typography';
 
 import { DaySchedule, daysMapping, toAvailableTime } from '../available-time';
 import s from './Availability.module.scss';
+import { S } from './Availability.styles';
 import { useAvailability } from './hooks';
 
 interface Props {
@@ -48,7 +49,7 @@ export function Availability(props: Props) {
 
     return (
         <div className={s.container}>
-            <div className={s.content}>
+            <S.Content>
                 <div className={s.header}>
                     <Title level={3}>
                         <Trans>Availability</Trans>
@@ -64,7 +65,7 @@ export function Availability(props: Props) {
                         />
                     ))}
                 </div>
-                <div className={s.divider} />
+                <S.Divider />
                 <div className={s.footer}>
                     <Button type="default" onClick={reset} disabled={!scheduleHasChanges}>
                         <Trans>Cancel</Trans>
@@ -73,7 +74,7 @@ export function Availability(props: Props) {
                         <Trans>Save</Trans>
                     </Button>
                 </div>
-            </div>
+            </S.Content>
         </div>
     );
 }
@@ -125,7 +126,9 @@ function WeekDaySchedule(props: WeekDayScheduleProps) {
             {isActive ? (
                 <Row gutter={16} justify="space-between" align="middle" wrap={false}>
                     <Col className={s.scheduleRowTitle}>
-                        <Trans>Time</Trans>
+                        <Text>
+                            <Trans>Time</Trans>
+                        </Text>
                     </Col>
                     <Col style={{ flex: 1 }}>
                         <RangeTimePicker
@@ -165,7 +168,9 @@ function WeekDaySchedule(props: WeekDayScheduleProps) {
                               wrap={false}
                           >
                               <Col className={s.scheduleRowTitle}>
-                                  <Trans>Break</Trans>
+                                  <Text>
+                                      <Trans>Break</Trans>
+                                  </Text>
                               </Col>
                               <Col style={{ flex: 1 }}>
                                   <RangeTimePicker

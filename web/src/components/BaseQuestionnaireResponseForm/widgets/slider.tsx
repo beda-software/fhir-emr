@@ -2,9 +2,9 @@ import { Form, Slider } from 'antd';
 import type { SliderMarks } from 'antd/es/slider';
 import { QuestionItemProps } from 'sdc-qrf';
 
-import { useFieldController } from '../hooks';
+import { Paragraph } from 'src/components/Typography';
 
-const inputStyle = { backgroundColor: '#F7F9FC' };
+import { useFieldController } from '../hooks';
 
 interface QuestionSliderExtensions {
     start?: number;
@@ -22,7 +22,7 @@ export function QuestionSlider({ parentPath, questionItem }: QuestionItemProps) 
     const { value, onChange, disabled, formItem } = useFieldController(fieldName, questionItem);
 
     if (typeof start === 'undefined' || typeof stop === 'undefined') {
-        return <p>Start and stop boundaries is required for slider</p>;
+        return <Paragraph>Start and stop boundaries is required for slider</Paragraph>;
     }
 
     const marks: SliderMarks = {
@@ -35,7 +35,6 @@ export function QuestionSlider({ parentPath, questionItem }: QuestionItemProps) 
             <Slider
                 value={value}
                 onChange={onChange}
-                style={inputStyle}
                 marks={marks}
                 min={start}
                 max={stop}

@@ -14,7 +14,6 @@ import { BaseLayout } from 'src/components/BaseLayout';
 import { Spinner } from 'src/components/Spinner';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { EncounterList } from 'src/containers/EncounterList';
-import { EncounterQR } from 'src/containers/EncounterQR';
 import { PatientDetails } from 'src/containers/PatientDetails';
 import { PatientList } from 'src/containers/PatientList';
 import { PatientQuestionnaire } from 'src/containers/PatientQuestionnaire';
@@ -123,7 +122,6 @@ function AuthenticatedAdminUserApp(_props: {}) {
                 <Route path="/questionnaire" element={<PatientQuestionnaire />} />
                 <Route path="/patients/:id/*" element={<PatientDetails />} />
                 <Route path="/documents/:id/edit" element={<div>documents/:id/edit</div>} />
-                <Route path="/encounters/:encounterId/qr/:questionnaireId" element={<EncounterQR />} />
                 <Route path="/encounters/:encounterId/video" element={<VideoCall />} />
                 <Route path="/practitioners" element={<PractitionerList />} />
                 <Route path="/practitioners/:id/*" element={<PractitionerDetails />} />

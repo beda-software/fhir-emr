@@ -17,7 +17,6 @@ import { NavigateFunction, Outlet, Route, Routes, useLocation, useNavigate, useP
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
 import { ReadonlyQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm/ReadonlyQuestionnaireResponseForm';
-import { BloodPressureReadOnly } from 'src/components/BaseQuestionnaireResponseForm/widgets';
 import { ConfirmActionButton } from 'src/components/ConfirmActionButton';
 import { Spinner } from 'src/components/Spinner';
 import { Paragraph, Title } from 'src/components/Typography';
@@ -183,10 +182,7 @@ function PatientDocumentDetailsReadonly(props: {
                         ) : null}
                     </div>
                 </div>
-                <ReadonlyQuestionnaireResponseForm
-                    formData={formData}
-                    itemControlGroupItemComponents={{ 'blood-pressure': BloodPressureReadOnly }}
-                />
+                <ReadonlyQuestionnaireResponseForm formData={formData} />
             </S.Content>
         </div>
     );

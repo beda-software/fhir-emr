@@ -17,6 +17,7 @@ import { useAppointmentEvents } from './hooks/useAppointmentEvents';
 import { useCalendarOptions } from './hooks/useCalendarOptions';
 import { useScheduleCalendar } from './hooks/useScheduleCalendar';
 import s from './ScheduleCalendar.module.scss';
+import { S } from './ScheduleCalendar.styles';
 
 interface Props {
     practitionerRole: PractitionerRole;
@@ -44,7 +45,7 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
             <Title level={3} className={s.title}>
                 <Trans>Schedule calendar</Trans>
             </Title>
-            <div className={s.calendar}>
+            <S.Calendar>
                 <RenderRemoteData remoteData={remoteResponses}>
                     {({ businessHours, calendarSlots }) => (
                         <>
@@ -132,7 +133,7 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
                         </>
                     )}
                 </RenderRemoteData>
-            </div>
+            </S.Calendar>
         </>
     );
 }

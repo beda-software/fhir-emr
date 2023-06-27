@@ -3,8 +3,6 @@ import { mapSuccess } from 'fhir-react';
 import { debounce } from 'lodash';
 import _ from 'lodash';
 import { useCallback } from 'react';
-import Select from 'react-select';
-import AsyncSelect from 'react-select/async';
 import { QuestionItemProps } from 'sdc-qrf';
 
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
@@ -12,6 +10,7 @@ import { service } from 'aidbox-react/lib/services/service';
 
 import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer, ValueSet } from 'shared/src/contrib/aidbox';
 
+import { AsyncSelect, Select } from 'src/components/Select';
 import { getDisplay } from 'src/utils/questionnaire';
 
 import s from '../BaseQuestionnaireResponseForm.module.scss';
@@ -29,7 +28,7 @@ function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
 
     return (
         <>
-            <Select
+            <Select<QuestionnaireItemAnswerOption>
                 value={value}
                 options={options}
                 className={s.select}
@@ -39,6 +38,7 @@ function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
                 }
                 isMulti={repeats}
                 getOptionLabel={(o) => (getDisplay(o.value) as string) || ''}
+                classNamePrefix="react-select"
             />
         </>
     );
