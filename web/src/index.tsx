@@ -17,18 +17,21 @@ import { App } from 'src/containers/App';
 
 import * as serviceWorker from './serviceWorker';
 import { getAppTheme, getANTDTheme } from './theme';
+import { useTheme } from './utils/theme';
 
-const I18nApp = () => {
+const AppWithContext = () => {
     useEffect(() => {
         dynamicActivate(getCurrentLocale());
     }, []);
 
-    const dark = false;
-    // const dark = true;
+    const { theme } = useTheme();
+    const dark = theme === 'dark';
+
+    const antdTheme = getANTDTheme({ dark: dark });
 
     return (
         <I18nProvider i18n={i18n}>
-            <ANTDConfigProvider theme={getANTDTheme({ dark: dark })}>
+            <ANTDConfigProvider theme={antdTheme}>
                 <ThemeProvider
                     theme={{
                         mode: dark ? 'dark' : 'light',
@@ -47,7 +50,7 @@ const root = createRoot(container);
 
 root.render(
     <React.StrictMode>
-        <I18nApp />
+        <AppWithContext />
     </React.StrictMode>,
 );
 
