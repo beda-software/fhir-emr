@@ -5,9 +5,11 @@ export const S = {
         .react-select__control {
             border-color: ${({ theme }) => theme.neutralPalette.gray_5};
             min-height: 32px;
+            height: 32px;
             box-shadow: none;
             border-radius: 6px;
-            background-color: ${({ theme }) => theme.neutralPalette.gray_2};
+            background-color: ${({ theme }) =>
+                theme.mode === 'dark' ? theme.neutralPalette.gray_2 : theme.neutralPalette.gray_1};
 
             &:hover {
                 border-color: ${({ theme }) => theme.primary};
@@ -21,13 +23,14 @@ export const S = {
         }
 
         .react-select__value-container {
-            height: 32px;
-            padding: 4px 11px;
+            height: 30px;
+            padding: 3px 11px;
             line-height: 24px;
         }
 
         .react-select__indicator {
-            padding: 6px;
+            height: 30px;
+            padding: 5px 6px;
             cursor: pointer;
             color: ${({ theme }) => theme.neutralPalette.gray_5};
         }
@@ -48,7 +51,8 @@ export const S = {
         }
 
         .react-select__menu {
-            background-color: ${({ theme }) => theme.neutralPalette.gray_2};
+            background-color: ${({ theme }) =>
+                theme.mode === 'dark' ? theme.neutralPalette.gray_2 : theme.neutralPalette.gray_1};
             border-radius: 8px;
             padding: 4px;
         }

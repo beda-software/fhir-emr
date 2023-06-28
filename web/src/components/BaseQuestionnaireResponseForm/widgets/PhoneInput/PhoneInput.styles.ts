@@ -10,7 +10,8 @@ export const S = {
             height: 32px;
             box-shadow: none;
             border-radius: 6px;
-            background-color: ${({ theme }) => theme.neutralPalette.gray_2};
+            background-color: ${({ theme }) =>
+                theme.mode === 'dark' ? theme.neutralPalette.gray_2 : theme.neutralPalette.gray_1};
         }
 
         .react-phone-input__button {
@@ -35,7 +36,8 @@ export const S = {
         }
 
         .country-list {
-            background-color: ${({ theme }) => theme.neutralPalette.gray_2};
+            background-color: ${({ theme }) =>
+                theme.mode === 'dark' ? theme.neutralPalette.gray_2 : theme.neutralPalette.gray_1};
             border-radius: 8px;
             padding: 4px;
         }
