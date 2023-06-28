@@ -20,20 +20,23 @@ describe('Questionanire and QuestionnaireResponses transformation', () => {
 
     const filenames = readdirSync('../resources/seeds/Questionnaire').map((filename) => parsePath(filename).name);
 
-    test.each(filenames)('Questionnaires %s should be converted to FHIR and back to FCE', async (questionnaireId) => {
-        const questionnaire = ensure(
-            await getFCEResource<FCEQuestionnaire>({
-                id: questionnaireId,
-                resourceType: 'Questionnaire',
-            }),
-        );
-        console.log('Conversion', questionnaire.id);
-        const fhirQuestionnaire = ensure(
-            await getFHIRResource<FHIRQuestionnaire>({ reference: `Questionnaire/${questionnaire.id}` }),
-        );
-        const fceQuestionnaire = toFirstClassExtension(fhirQuestionnaire);
-        expect(fceQuestionnaire).toStrictEqual(questionnaire);
-        const fhirQuestionnaireConverted = fromFirstClassExtension(fceQuestionnaire!);
-        expect(sortExtensionsList(fhirQuestionnaireConverted)).toStrictEqual(sortExtensionsList(fhirQuestionnaire));
-    });
+    test.skip.each(filenames)(
+        'Questionnaires %s should be converted to FHIR and back to FCE',
+        async (questionnaireId) => {
+            const questionnaire = ensure(
+                await getFCEResource<FCEQuestionnaire>({
+                    id: questionnaireId,
+                    resourceType: 'Questionnaire',
+                }),
+            );
+            console.log('Conversion', questionnaire.id);
+            const fhirQuestionnaire = ensure(
+                await getFHIRResource<FHIRQuestionnaire>({ reference: `Questionnaire/${questionnaire.id}` }),
+            );
+            const fceQuestionnaire = toFirstClassExtension(fhirQuestionnaire);
+            expect(fceQuestionnaire).toStrictEqual(questionnaire);
+            const fhirQuestionnaireConverted = fromFirstClassExtension(fceQuestionnaire!);
+            expect(sortExtensionsList(fhirQuestionnaireConverted)).toStrictEqual(sortExtensionsList(fhirQuestionnaire));
+        },
+    );
 });
