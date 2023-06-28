@@ -26,20 +26,22 @@ export function DashboardCard(props: Props) {
     const { title, icon, extra, children, className, empty = false } = props;
 
     return (
-        <S.Card
-            className={classNames(className, {
-                _empty: empty,
-            })}
-        >
-            <S.Header>
-                <div>
-                    <S.Icon className={classNames({ _empty: empty })}>{icon}</S.Icon>
-                    <S.Title>{title}</S.Title>
-                </div>
-                {extra && <div>{extra}</div>}
-            </S.Header>
-            {children && <S.Content>{children}</S.Content>}
-        </S.Card>
+        <S.Wrapper>
+            <S.Card
+                className={classNames(className, {
+                    _empty: empty,
+                })}
+            >
+                <S.Header>
+                    <div>
+                        <S.Icon className={classNames({ _empty: empty })}>{icon}</S.Icon>
+                        <S.Title>{title}</S.Title>
+                    </div>
+                    {extra && <div>{extra}</div>}
+                </S.Header>
+                {children && <S.Content>{children}</S.Content>}
+            </S.Card>
+        </S.Wrapper>
     );
 }
 

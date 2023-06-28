@@ -7,7 +7,7 @@ export const S = {
         position: relative;
 
         @media screen and (max-width: 767px) {
-            padding-bottom: 50px;
+            padding-top: 50px;
         }
     `,
     PageWrapper: styled.div`

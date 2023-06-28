@@ -1,7 +1,11 @@
 import styled from 'styled-components/macro';
 
 export const S = {
+    Wrapper: styled.div`
+        overflow-x: auto;
+    `,
     Calendar: styled.div`
+        min-width: 800px;
         --fc-button-bg-color: ${({ theme }) => theme.primary};
         --fc-button-border-color: ${({ theme }) => theme.primary};
         --fc-button-text-color: #fff;

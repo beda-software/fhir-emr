@@ -1,4 +1,5 @@
 import { Button, Drawer } from 'antd';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components/macro';
 
 export const S = {
@@ -7,16 +8,24 @@ export const S = {
         height: 50px;
         left: 0;
         right: 0;
-        bottom: 0;
+        top: 0;
         background-color: ${({ theme }) => theme.neutralPalette.gray_1};
         z-index: 11;
-        border-top: 1px solid ${({ theme }) => theme.neutralPalette.gray_4};
+        border-bottom: 1px solid ${({ theme }) => theme.neutralPalette.gray_4};
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
 
         @media screen and (min-width: 768px) {
             display: none;
         }
+    `,
+    LogoWrapper: styled(Link)`
+        height: 50px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 0 24px;
+        transition: padding 0.2s;
     `,
     CloseIcon: styled(Button)`
         position: absolute;

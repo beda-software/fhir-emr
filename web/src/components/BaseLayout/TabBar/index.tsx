@@ -1,6 +1,8 @@
 import { CloseOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 
+import logoCompanyName from 'src/icons/brand/company-name.svg';
+import logoSmall from 'src/icons/brand/logo-small.svg';
 import { MenuIcon } from 'src/icons/general/Menu';
 
 import { SidebarBottom } from '../Sidebar/SidebarBottom';
@@ -13,6 +15,10 @@ export function AppTabBar() {
     return (
         <>
             <S.TabBar>
+                <S.LogoWrapper to="/">
+                    <img src={logoSmall} alt="" />
+                    <img src={logoCompanyName} alt="" />
+                </S.LogoWrapper>
                 <S.Button icon={<MenuIcon />} type="text" onClick={() => toggleMenuOpened((v) => !v)} />
             </S.TabBar>
             <S.Drawer placement="right" onClose={() => toggleMenuOpened(false)} open={menuOpened} closable={false}>

@@ -1,11 +1,15 @@
 import styled from 'styled-components/macro';
 
 export const S = {
+    Wrapper: styled.div`
+        overflow-x: auto;
+    `,
     Card: styled.div`
         border-radius: 10px;
         box-shadow: 0px 6px 16px ${({ theme }) => theme.neutralPalette.gray_4};
         background-color: ${({ theme }) => theme.neutralPalette.gray_1};
         color: ${({ theme }) => theme.neutralPalette.gray_13};
+        min-width: fit-content;
 
         &._empty {
             color: ${({ theme }) => theme.neutralPalette.gray_6};
