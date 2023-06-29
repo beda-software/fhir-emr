@@ -12,39 +12,37 @@ export function processExtensions(questionnaire: FCEQuestionnaire): FHIRQuestion
             const name = launchContextItem.name;
             const typeList = launchContextItem.type;
             const description = launchContextItem.description;
+            let launchContextExtension: FHIRExtension[] = [
+                {
+                    url: 'name',
+                    valueCoding: name,
+                },
+            ];
 
-            if (typeList) {
-                for (const typeCode of typeList) {
-                    let launchContextExtension: FHIRExtension[] = [
-                        {
-                            url: 'name',
-                            valueCoding: name,
-                        },
-                        { url: 'type', valueCode: typeCode },
-                    ];
-
-                    if (description !== undefined) {
-                        launchContextExtension.push({
-                            url: 'description',
-                            valueString: description,
-                        });
-                    }
-
-                    extensions.push({
-                        url: 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext',
-                        extension: launchContextExtension,
-                    });
-                }
+            for (const typeCode of typeList ?? []) {
+                launchContextExtension.push({ url: 'type', valueCode: typeCode });
             }
+
+            if (description !== undefined) {
+                launchContextExtension.push({
+                    url: 'description',
+                    valueString: description,
+                });
+            }
+
+            extensions.push({
+                url: 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext',
+                extension: launchContextExtension,
+            });
         }
     }
 
     if (mapping) {
         extensions = extensions.concat(
-            mapping.map((mapping) => ({
+            mapping.map((m) => ({
                 url: 'http://beda.software/fhir-extensions/questionnaire-mapper',
                 valueReference: {
-                    reference: `Mapping/${mapping.id}`,
+                    reference: `Mapping/${m.id}`,
                 },
             })),
         );
