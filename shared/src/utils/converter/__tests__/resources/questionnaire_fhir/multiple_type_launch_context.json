@@ -396,18 +396,6 @@
         {
           "url": "type",
           "valueCode": "Patient"
-        }
-      ]
-    },
-    {
-      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext",
-      "extension": [
-        {
-          "url": "name",
-          "valueCoding": {
-            "system": "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext",
-            "code": "LaunchPatient"
-          }
         },
         {
           "url": "type",
