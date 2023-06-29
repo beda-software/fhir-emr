@@ -1,8 +1,10 @@
+import { ThemeConfig } from 'antd';
 import 'styled-components';
 
 declare module 'styled-components' {
   export interface DefaultTheme {
-    mode?: 'dark' | 'light';
+    mode: 'dark' | 'light';
+    antdTheme?: ThemeConfig['token'];
     primary: string;
     secondary: string;
     link: string;

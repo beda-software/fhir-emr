@@ -1,11 +1,14 @@
 import { theme as ANTDTheme, ThemeConfig } from 'antd';
+import _ from 'lodash';
 
 import { colors, getPalette } from './palette';
+
+const { getDesignToken } = ANTDTheme;
 
 export function getANTDTheme({ dark }: { dark?: boolean }): ThemeConfig {
     const palette = getPalette({ dark });
 
-    return {
+    const config: ThemeConfig = {
         token: {
             colorPrimary: colors.primary,
             colorLink: palette.link,
@@ -24,4 +27,8 @@ export function getANTDTheme({ dark }: { dark?: boolean }): ThemeConfig {
             },
         },
     };
+
+    const defaultTokens = getDesignToken(config);
+
+    return _.merge({}, { token: defaultTokens }, config);
 }

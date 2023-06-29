@@ -6,17 +6,16 @@ export const S = {
         width: fit-content;
 
         .react-phone-input {
-            border-color: ${({ theme }) => theme.neutralPalette.gray_5};
+            border-color: ${({ theme }) => theme.antdTheme?.colorBorder};
             height: 32px;
             box-shadow: none;
             border-radius: 6px;
-            background-color: ${({ theme }) =>
-                theme.mode === 'dark' ? theme.neutralPalette.gray_2 : theme.neutralPalette.gray_1};
+            background-color: ${({ theme }) => theme.antdTheme?.colorBgContainer};
         }
 
         .react-phone-input__button {
-            background-color: ${({ theme }) => theme.neutralPalette.gray_2};
-            border-color: ${({ theme }) => theme.neutralPalette.gray_5};
+            background-color: ${({ theme }) => theme.antdTheme?.colorBgContainer};
+            border-color: ${({ theme }) => theme.antdTheme?.colorBorder};
         }
 
         .flag-dropdown {
@@ -36,8 +35,7 @@ export const S = {
         }
 
         .country-list {
-            background-color: ${({ theme }) =>
-                theme.mode === 'dark' ? theme.neutralPalette.gray_2 : theme.neutralPalette.gray_1};
+            background-color: ${({ theme }) => theme.antdTheme?.colorBgContainer};
             border-radius: 8px;
             padding: 4px;
         }
@@ -48,9 +46,10 @@ export const S = {
             border-radius: 4px;
             transition: background 0.3s ease;
             cursor: pointer;
+            color: ${({ theme }) => theme.antdTheme?.colorText};
 
             &:hover {
-                background-color: ${({ theme }) => theme.neutral.background} !important;
+                background-color: ${({ theme }) => theme.antdTheme?.controlItemBgHover} !important;
             }
 
             &.country.active {

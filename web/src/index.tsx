@@ -28,16 +28,15 @@ const AppWithContext = () => {
     const dark = theme === 'dark';
 
     const antdTheme = getANTDTheme({ dark: dark });
+    const appTheme = {
+        ...getAppTheme({ dark: dark }),
+        antdTheme: antdTheme.token,
+    };
 
     return (
         <I18nProvider i18n={i18n}>
             <ANTDConfigProvider theme={antdTheme}>
-                <ThemeProvider
-                    theme={{
-                        mode: dark ? 'dark' : 'light',
-                        ...getAppTheme({ dark: dark }),
-                    }}
-                >
+                <ThemeProvider theme={appTheme}>
                     <App />
                 </ThemeProvider>
             </ANTDConfigProvider>
