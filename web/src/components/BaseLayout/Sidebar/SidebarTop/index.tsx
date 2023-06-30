@@ -3,12 +3,12 @@ import { Menu } from 'antd';
 import classNames from 'classnames';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-import logoCompanyName from 'src/icons/brand/company-name.svg';
-import logoSmall from 'src/icons/brand/logo-small.svg';
-import encountersIcon from 'src/icons/menu/encounters.svg';
-import patientsIcon from 'src/icons/menu/patients.svg';
-import practitionersIcon from 'src/icons/menu/practitioners.svg';
-import questionnairesIcon from 'src/icons/menu/questionnaires.svg';
+import { CompanyName } from 'src/icons/brand/CompanyName';
+import { LogoSmall } from 'src/icons/brand/LogoSmall';
+import { EncountersIcon } from 'src/icons/menu/EncountersIcon';
+import { PatientsIcon } from 'src/icons/menu/PatientsIcon';
+import { PractitionersIcon } from 'src/icons/menu/PractitionersIcon';
+import { QuestionnairesIcon } from 'src/icons/menu/QuestionnairesIcon';
 import { Role, matchCurrentUserRole } from 'src/utils/role';
 
 import s from './SidebarTop.module.scss';
@@ -35,10 +35,10 @@ export function SidebarTop(props: Props) {
 
     const menuItems: RouteItem[] = matchCurrentUserRole({
         [Role.Admin]: () => [
-            { label: t`Encounters`, path: '/encounters', icon: <img src={encountersIcon} alt="" /> },
-            { label: t`Patients`, path: '/patients', icon: <img src={patientsIcon} alt="" /> },
-            { label: t`Practitioners`, path: '/practitioners', icon: <img src={practitionersIcon} alt="" /> },
-            { label: t`Questionnaires`, path: '/questionnaires', icon: <img src={questionnairesIcon} alt="" /> },
+            { label: t`Encounters`, path: '/encounters', icon: <EncountersIcon /> },
+            { label: t`Patients`, path: '/patients', icon: <PatientsIcon /> },
+            { label: t`Practitioners`, path: '/practitioners', icon: <PractitionersIcon /> },
+            { label: t`Questionnaires`, path: '/questionnaires', icon: <QuestionnairesIcon /> },
         ],
         [Role.Patient]: () => [],
     });
@@ -58,8 +58,8 @@ export function SidebarTop(props: Props) {
             {...other}
         >
             <Link to="/" className={s.logoWrapper}>
-                <img src={logoSmall} alt="" />
-                <img src={logoCompanyName} className={s.logoCompanyName} alt="" />
+                <LogoSmall style={{ minWidth: 32 }} />
+                <CompanyName className={s.logoCompanyName} style={{ minWidth: 89 }} />
             </Link>
             <S.Divider />
             <Menu

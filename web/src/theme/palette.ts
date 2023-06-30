@@ -29,6 +29,8 @@ const neutralColors = {
         dividers: 'rgba(0,0,0,0.06)',
         background: 'rgba(0,0,0,0.04)',
         tableHeader: 'rgba(0,0,0,0.02)',
+
+        sidebarBackground: '#fff',
     },
     dark: {
         title: 'rgba(255,255,255,0.85)',
@@ -39,6 +41,8 @@ const neutralColors = {
         dividers: 'rgba(255,255,255,0.12)',
         background: 'rgba(255,255,255,0.08)',
         tableHeader: 'rgba(255,255,255,0.04)',
+
+        sidebarBackground: '#141414',
     },
 };
 

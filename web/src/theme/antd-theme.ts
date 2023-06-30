@@ -22,7 +22,7 @@ export function getANTDTheme({ dark }: { dark?: boolean }): ThemeConfig {
         algorithm: dark ? ANTDTheme.darkAlgorithm : ANTDTheme.defaultAlgorithm,
         components: {
             Layout: {
-                colorBgHeader: dark ? '#141414' : '#fff',
+                colorBgHeader: palette.neutral.sidebarBackground,
                 colorBgBody: palette.primaryPalette.bcp_1,
             },
         },

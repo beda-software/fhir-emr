@@ -20,6 +20,8 @@ declare module 'styled-components' {
         dividers: string;
         background: string;
         tableHeader: string;
+
+        sidebarBackground: string,
     };
     primaryPalette: {
         bcp_1: string;
