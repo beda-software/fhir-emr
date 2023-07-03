@@ -9,7 +9,8 @@ export const S = {
 
         .ant-modal-header {
             padding: 16px 24px;
-            box-shadow: inset 0px -1px 0px ${({ theme }) => theme.neutralPalette.gray_4};
+            box-shadow: none;
+            border-bottom: 1px solid ${({ theme }) => theme.antdTheme?.colorBorderSecondary};
             margin-bottom: 0;
         }
 
@@ -49,7 +50,7 @@ export const S = {
         .ant-modal-footer {
             padding: 10px 16px;
             margin-top: 0;
-            box-shadow: inset 0px 1px 0px ${({ theme }) => theme.neutralPalette.gray_4};
+            border-top: 1px solid ${({ theme }) => theme.antdTheme?.colorBorderSecondary};
         }
 
         .form__footer {

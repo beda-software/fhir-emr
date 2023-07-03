@@ -19,7 +19,7 @@ export const S = {
         max-width: 382px;
         width: 100%;
         padding: 18px;
-        background-color: ${({ theme }) => theme.neutralPalette.gray_1};
+        background-color: ${({ theme }) => theme.antdTheme?.colorBgContainer};
         gap: 32px;
         border-radius: 16px;
     `,

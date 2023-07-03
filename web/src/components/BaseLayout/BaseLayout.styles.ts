@@ -11,7 +11,7 @@ export const S = {
         }
     `,
     PageWrapper: styled.div`
-        background-color: ${({ theme }) => theme.primaryPalette.bcp_2};
+        background-color: ${({ theme }) => theme.primaryPalette.bcp_1};
         display: flex;
         justify-content: center;
     `,

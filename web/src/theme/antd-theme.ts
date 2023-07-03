@@ -23,7 +23,6 @@ export function getANTDTheme({ dark }: { dark?: boolean }): ThemeConfig {
         components: {
             Layout: {
                 colorBgHeader: palette.neutral.sidebarBackground,
-                colorBgBody: palette.primaryPalette.bcp_1,
             },
         },
     };

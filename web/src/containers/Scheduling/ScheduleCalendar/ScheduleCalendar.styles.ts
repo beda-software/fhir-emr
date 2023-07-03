@@ -83,8 +83,8 @@ export const S = {
 
         .fc-scrollgrid {
             border: 0;
-            background-color: ${({ theme }) => theme.neutralPalette.gray_1};
-            box-shadow: 0px 6px 16px ${({ theme }) => theme.neutralPalette.gray_4};
+            background-color: ${({ theme }) => theme.antdTheme?.colorBgContainer};
+            border: 1px solid ${({ theme }) => theme.antdTheme?.colorBorderSecondary};
             border-radius: 10px;
             overflow: hidden;
         }

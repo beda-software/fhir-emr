@@ -6,9 +6,9 @@ export const S = {
     `,
     Card: styled.div`
         border-radius: 10px;
-        box-shadow: 0px 6px 16px ${({ theme }) => theme.neutralPalette.gray_4};
-        background-color: ${({ theme }) => theme.neutralPalette.gray_1};
+        background-color: ${({ theme }) => theme.neutralPalette.gray_2};
         color: ${({ theme }) => theme.neutralPalette.gray_13};
+        border: 1px solid ${({ theme }) => theme.antdTheme?.colorBorderSecondary};
         min-width: fit-content;
 
         &._empty {
@@ -49,7 +49,7 @@ export const S = {
         }
     `,
     Content: styled.div`
-        box-shadow: inset 0px 1px 0px ${({ theme }) => theme.neutralPalette.gray_4};
+        border-top: 1px solid ${({ theme }) => theme.antdTheme?.colorBorderSecondary};
         font-size: 14px;
         line-height: 22px;
     `,
@@ -63,20 +63,20 @@ export const S = {
         display: flex;
         justify-content: space-between;
         align-items: stretch;
-        box-shadow: inset 0px 1px 0px ${({ theme }) => theme.neutralPalette.gray_4};
+        border-top: 1px solid ${({ theme }) => theme.antdTheme?.colorBorderSecondary};
 
         &:first-child {
-            box-shadow: none;
+            border-left: 0;
         }
     `,
     TableCell: styled.div`
         display: flex;
         align-items: center;
         padding: 13px 12px;
-        box-shadow: inset 1px 0px 0px ${({ theme }) => theme.neutralPalette.gray_4};
+        border-left: 1px solid ${({ theme }) => theme.antdTheme?.colorBorderSecondary};
 
         &:first-child {
-            box-shadow: none;
+            border-left: 0;
         }
     `,
 };

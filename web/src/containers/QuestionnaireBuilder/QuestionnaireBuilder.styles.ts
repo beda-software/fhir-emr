@@ -3,15 +3,15 @@ import styled from 'styled-components/macro';
 
 export const S = {
     Content: styled.div`
-        background-color: ${({ theme }) => theme.neutralPalette.gray_1};
-        box-shadow: 0px 6px 16px ${({ theme }) => theme.neutralPalette.gray_4};
+        background-color: ${({ theme }) => theme.antdTheme?.colorBgContainer};
+        border: 1px solid ${({ theme }) => theme.antdTheme?.colorBorderSecondary};
         padding: 32px;
         border-radius: 10px;
         display: flex;
     `,
     LeftColumn: styled.div`
         width: 420px;
-        border-left: 1px solid ${({ theme }) => theme.neutralPalette.gray_4};
+        border-left: 1px solid ${({ theme }) => theme.antdTheme?.colorBorderSecondary};
         margin-left: 30px;
         padding-left: 30px;
     `,

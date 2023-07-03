@@ -17,7 +17,7 @@ export const S = {
         top: 0;
         left: 0;
         bottom: 0;
-        box-shadow: inset -1px 0px 0px ${({ theme }) => theme.neutralPalette.gray_4};
+        border-right: 1px solid ${({ theme }) => theme.antdTheme?.colorBorderSecondary};
         z-index: 1;
     `,
     SidebarContent: styled.div`
