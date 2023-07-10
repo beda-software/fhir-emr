@@ -1,3 +1,43 @@
 {
-    "extends": "./tsconfig.base.json"
-}
+    "compilerOptions": {
+      "target": "ES2020",
+      "useDefineForClassFields": true,
+      "lib": ["ES2020", "DOM", "DOM.Iterable"],
+      "module": "ESNext",
+      "skipLibCheck": true,
+      "esModuleInterop": true,
+  
+      /* Bundler mode */
+      "moduleResolution": "bundler",
+      "allowImportingTsExtensions": true,
+      "resolveJsonModule": true,
+      "isolatedModules": true,
+      "noEmit": true,
+      "jsx": "react-jsx",
+      "baseUrl": ".",
+      "paths": {
+        "src/*": ["./src/*"],
+        "shared/*": ["./shared/*"]
+      },
+  
+      /* Linting */
+      "strict": true,
+      "noUnusedLocals": true,
+      // "noUnusedParameters": true,
+      "noFallthroughCasesInSwitch": true,
+      "noImplicitAny": true,
+      "strictNullChecks": true,
+      "noImplicitThis": true,
+      "allowSyntheticDefaultImports": true,
+      "forceConsistentCasingInFileNames": true,
+      "noUncheckedIndexedAccess": true,
+  
+      // Option 'suppressImplicitAnyIndexErrors' is deprecated and will stop functioning in TypeScript 5.5 
+      "suppressImplicitAnyIndexErrors": true,
+      "ignoreDeprecations": "5.0",
+    },
+    "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],
+    "exclude": ["node_modules"],
+    "references": [{ "path": "./tsconfig.node.json" }]
+  }
+  

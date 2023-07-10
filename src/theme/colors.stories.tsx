@@ -1,7 +1,8 @@
 import { ComponentStory } from '@storybook/react';
 import _ from 'lodash';
 import React from 'react';
-import styled, { DefaultTheme } from 'styled-components/macro';
+import { DefaultTheme } from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { Title } from 'src/components/Typography';
 

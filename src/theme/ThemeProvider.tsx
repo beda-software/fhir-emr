@@ -1,11 +1,11 @@
 import { ConfigProvider as ANTDConfigProvider } from 'antd';
 import { ReactNode, useEffect } from 'react';
-import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle } from 'styled-components/macro';
+import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle } from 'styled-components';
 
 import { dynamicActivate, getCurrentLocale } from 'shared/src/services/i18n';
 
-import { useTheme } from '../utils/theme';
 import { getAppTheme, getANTDTheme } from './';
+import { useTheme } from '../utils/theme';
 
 interface Props {
     children: ReactNode;

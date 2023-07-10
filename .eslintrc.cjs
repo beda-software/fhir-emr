@@ -1,7 +1,7 @@
 module.exports = {
     env: {
-        // 'jest/globals': true,
         browser: true,
+        es2020: true,
         serviceworker: true,
     },
     globals: {
@@ -9,14 +9,37 @@ module.exports = {
         JSX: true,
     },
     root: true,
-    extends: ['react-app', 'prettier'],
+    extends: [
+        'eslint:recommended',
+        'plugin:react/recommended',
+        'plugin:react-hooks/recommended',
+        'plugin:import/recommended',
+        'plugin:@typescript-eslint/recommended',
+        'plugin:storybook/recommended',
+        'eslint-config-prettier',
+    ],
     parser: '@typescript-eslint/parser',
-    plugins: ['@typescript-eslint', 'import'],
+    parserOptions: {
+        project: 'tsconfig.json',
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+    },
+    settings: {
+        'import/resolver': {
+            'eslint-import-resolver-custom-alias': {
+                alias: {
+                    src: './src',
+                    shared: './shared',
+                },
+                extensions: ['.js', '.jsx', '.ts', '.tsx'],
+            },
+        },
+    },
+    plugins: ['react', '@typescript-eslint', 'react-refresh', 'prettier', 'import'],
     rules: {
+        'react-refresh/only-export-components': 'warn',
         'react/jsx-uses-react': 'off',
         'react/react-in-jsx-scope': 'off',
-        'no-restricted-imports': ['error', { patterns: ['shared/lib', 'aidbox-react/src'] }],
-        'prettier/prettier': 0,
         'import/order': [
             'error',
             {
@@ -26,6 +49,11 @@ module.exports = {
                 pathGroups: [
                     {
                         pattern: 'aidbox-react/**',
+                        group: 'external',
+                        position: 'after',
+                    },
+                    {
+                        pattern: 'fhir-react/**',
                         group: 'external',
                         position: 'after',
                     },
@@ -42,11 +70,6 @@ module.exports = {
                 ],
                 alphabetize: { order: 'asc', caseInsensitive: true },
             },
-        ],
-        'no-shadow': 'off',
-        '@typescript-eslint/no-shadow': [
-            'error',
-            { builtinGlobals: false, hoist: 'functions', allow: [], ignoreOnInitialization: false },
         ],
     },
 };

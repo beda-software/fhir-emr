@@ -5,9 +5,9 @@ import { CompanyName } from 'src/icons/brand/CompanyName';
 import { LogoSmall } from 'src/icons/brand/LogoSmall';
 import { MenuIcon } from 'src/icons/general/Menu';
 
+import { S } from './TabBar.styles';
 import { SidebarBottom } from '../Sidebar/SidebarBottom';
 import { SidebarTop } from '../Sidebar/SidebarTop';
-import { S } from './TabBar.styles';
 
 export function AppTabBar() {
     const [menuOpened, toggleMenuOpened] = useState(false);

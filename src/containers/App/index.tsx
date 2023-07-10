@@ -1,8 +1,7 @@
 import { Trans } from '@lingui/macro';
 import queryString from 'query-string';
 import { useEffect, useRef } from 'react';
-import { Route, unstable_HistoryRouter as HistoryRouter, Routes, Navigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { Route, unstable_HistoryRouter as HistoryRouter, Routes, Navigate, useLocation } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
@@ -23,8 +22,7 @@ import { QuestionnaireBuilder } from 'src/containers/QuestionnaireBuilder';
 import { QuestionnaireList } from 'src/containers/QuestionnaireList';
 import { SignIn } from 'src/containers/SignIn';
 import { VideoCall } from 'src/containers/VideoCall';
-import { getToken } from 'src/services/auth';
-import { parseOAuthState, setToken } from 'src/services/auth';
+import { getToken , parseOAuthState, setToken } from 'src/services/auth';
 import { history } from 'src/services/history';
 import { sharedAuthorizedPatient } from 'src/sharedState';
 import { Role, matchCurrentUserRole } from 'src/utils/role';
@@ -74,7 +72,7 @@ export function Auth() {
     return null;
 }
 
-function AnonymousUserApp(_props: {}) {
+function AnonymousUserApp() {
     const location = useLocation();
     const originPathRef = useRef(location.pathname);
 
@@ -112,7 +110,7 @@ function AnonymousUserApp(_props: {}) {
     );
 }
 
-function AuthenticatedAdminUserApp(_props: {}) {
+function AuthenticatedAdminUserApp() {
     return (
         <BaseLayout>
             <Routes>
@@ -135,7 +133,7 @@ function AuthenticatedAdminUserApp(_props: {}) {
     );
 }
 
-function AuthenticatedPatientUserApp(_props: {}) {
+function AuthenticatedPatientUserApp() {
     const [patient] = sharedAuthorizedPatient.useSharedState();
 
     return (
