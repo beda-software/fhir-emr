@@ -44,6 +44,15 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
+            - name: Cleanup seeds
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.REMOTE_HOST }}
+                  username: ${{ secrets.REMOTE_USER }}
+                  key: ${{ secrets.SSH_PRIVATE_KEY }}
+                  port: 22
+                  script_stop: true
+                  script: rm -rf /root/fhir-emr-master/resources/seeds
             - name: Deploy to Server
               uses: easingthemes/ssh-deploy@v2.1.1
               env:
