@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro';
 import queryString from 'query-string';
 import { useEffect, useRef } from 'react';
-import { Route, unstable_HistoryRouter as HistoryRouter, Routes, Navigate, useLocation } from 'react-router-dom';
+import { Route, BrowserRouter, Routes, Navigate, useLocation } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
@@ -22,8 +22,7 @@ import { QuestionnaireBuilder } from 'src/containers/QuestionnaireBuilder';
 import { QuestionnaireList } from 'src/containers/QuestionnaireList';
 import { SignIn } from 'src/containers/SignIn';
 import { VideoCall } from 'src/containers/VideoCall';
-import { getToken , parseOAuthState, setToken } from 'src/services/auth';
-import { history } from 'src/services/history';
+import { getToken, parseOAuthState, setToken } from 'src/services/auth';
 import { sharedAuthorizedPatient } from 'src/sharedState';
 import { Role, matchCurrentUserRole } from 'src/utils/role';
 
@@ -49,7 +48,7 @@ export function App() {
     return (
         <div data-testid="app-container">
             <RenderRemoteData remoteData={userResponse} renderLoading={Spinner}>
-                {(user) => <HistoryRouter history={history}>{renderRoutes(user)}</HistoryRouter>}
+                {(user) => <BrowserRouter>{renderRoutes(user)}</BrowserRouter>}
             </RenderRemoteData>
         </div>
     );

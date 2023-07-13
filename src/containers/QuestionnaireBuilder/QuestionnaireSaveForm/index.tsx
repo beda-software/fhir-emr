@@ -1,12 +1,14 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Trans, t } from '@lingui/macro';
 import { Button, Form, Input, Select } from 'antd';
-import { RemoteDataResult, isSuccess } from 'fhir-react/lib/libs/remoteData';
-import { WithId } from 'fhir-react/lib/services/fhir';
 import { Questionnaire } from 'fhir/r4b';
+import _ from 'lodash';
 import { useMemo } from 'react';
 import { FormProvider, UseControllerReturn, useController, useForm, useFormContext } from 'react-hook-form';
 import * as yup from 'yup';
+
+import { RemoteDataResult, isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { WithId } from 'fhir-react/lib/services/fhir';
 
 import { Title } from 'src/components/Typography';
 
@@ -17,8 +19,8 @@ interface QuestionnaireSaveFormProps {
 }
 export function QuestionnaireSaveForm(props: QuestionnaireSaveFormProps) {
     const { questionnaire, onSave, onSuccess } = props;
-    const schema = useMemo(() => yup.object({ title: yup.string().required() }), []);
-    const methods = useForm<Questionnaire>({
+    const schema = useMemo(() => yup.object<Partial<Questionnaire>>({ title: yup.string().required() }), []);
+    const methods = useForm<Partial<Questionnaire>>({
         defaultValues: { ...questionnaire, status: questionnaire.status ? questionnaire.status : 'active' },
         resolver: yupResolver(schema),
         mode: 'onBlur',
@@ -34,8 +36,8 @@ export function QuestionnaireSaveForm(props: QuestionnaireSaveFormProps) {
         <FormProvider {...methods}>
             <Form
                 onFinish={handleSubmit(async () => {
-                    const questionnaireName = formValues.title?.toLowerCase().replaceAll(' ', '-');
-                    const saveResponse = await onSave({ ...formValues, name: questionnaireName });
+                    const questionnaireName = _.kebabCase(formValues.title?.toLowerCase());
+                    const saveResponse = await onSave({ ...formValues, name: questionnaireName } as Questionnaire);
                     if (isSuccess(saveResponse) && onSuccess) {
                         onSuccess();
                     }

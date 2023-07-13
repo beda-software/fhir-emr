@@ -1,11 +1,8 @@
-import { FHIRDateFormat, formatFHIRDateTime, parseFHIRDateTime } from 'fhir-react/lib/utils/date';
-import {
-    Appointment,
-    PractitionerRole,
-    PractitionerRoleAvailableTime,
-} from 'fhir/r4b';
+import { Appointment, PractitionerRole, PractitionerRoleAvailableTime } from 'fhir/r4b';
 import _ from 'lodash';
 import moment from 'moment';
+
+import { FHIRDateFormat, formatFHIRDateTime, parseFHIRDateTime } from 'fhir-react/lib/utils/date';
 
 import { days } from 'src/containers/Scheduling/available-time';
 
@@ -16,9 +13,9 @@ function praseSlotDuration(slotDuration: string) {
 }
 
 function getPeriodTimeSlots(start: moment.Moment, end: moment.Moment, slotDuration: string) {
-    let startTime = start;
-    let endTime = end;
-    let timeStops = [];
+    const startTime = start;
+    const endTime = end;
+    const timeStops = [];
     const { hours, minutes, seconds } = praseSlotDuration(slotDuration);
 
     while (startTime.isBefore(endTime)) {
@@ -29,13 +26,10 @@ function getPeriodTimeSlots(start: moment.Moment, end: moment.Moment, slotDurati
     return timeStops;
 }
 
-export function getAllTimeSlots(
-    availableTime: PractitionerRoleAvailableTime[],
-    slotDuration: string,
-) {
+export function getAllTimeSlots(availableTime: PractitionerRoleAvailableTime[], slotDuration: string) {
     // TODO: use number of weeks from settings or limited to maxDate
     const weeks = [0, 1, 2];
-    let timeSlots: string[][] = [];
+    const timeSlots: string[][] = [];
 
     availableTime.forEach((availableTime) => {
         const { daysOfWeek, availableStartTime, availableEndTime } = availableTime;
@@ -47,12 +41,8 @@ export function getAllTimeSlots(
         const dayOfWeekNumber = days.indexOf(daysOfWeek[0]) + 1;
 
         weeks.forEach((w) => {
-            const startTime = moment(availableStartTime, 'hh:mm:ss')
-                .day(dayOfWeekNumber)
-                .add(w, 'weeks');
-            const endTime = moment(availableEndTime, 'hh:mm:ss')
-                .day(dayOfWeekNumber)
-                .add(w, 'weeks');
+            const startTime = moment(availableStartTime, 'hh:mm:ss').day(dayOfWeekNumber).add(w, 'weeks');
+            const endTime = moment(availableEndTime, 'hh:mm:ss').day(dayOfWeekNumber).add(w, 'weeks');
 
             const dateTimeSlots = getPeriodTimeSlots(startTime, endTime, slotDuration);
 
@@ -73,7 +63,7 @@ function compareDates(date1: string, date2: string) {
     }
 }
 
-export function groupAndSortTimeSlots(timeSlots: string[]) {
+export function groupAndSortTimeSlots(timeSlots: string[]): TimeSlots {
     return _.chain(timeSlots)
         .groupBy((t) => parseFHIRDateTime(t).format(FHIRDateFormat))
         .toPairs()
@@ -83,14 +73,15 @@ export function groupAndSortTimeSlots(timeSlots: string[]) {
             timeSlots: timeSlots.sort((date1, date2) => compareDates(date1, date2)),
         }))
         .value()
-        .sort((g1, g2) => compareDates(g1.date, g2.date));
+        .sort((g1, g2) => compareDates(g1.date, g2.date)) as TimeSlots;
 }
 
-export function getTimeSlots(
-    practitionerRole: PractitionerRole,
-    appointments: Appointment[],
-    slotDuration: string,
-) {
+export type TimeSlots = {
+    date: string;
+    timeSlots: [string, ...string[]];
+}[];
+
+export function getTimeSlots(practitionerRole: PractitionerRole, appointments: Appointment[], slotDuration: string) {
     const { availableTime } = practitionerRole;
     const timeSlots = availableTime ? getAllTimeSlots(availableTime, slotDuration) : [];
     const filteredBusySlots = filterBusyTimeSlots(timeSlots, appointments, slotDuration);
@@ -118,10 +109,7 @@ function isPeriodsIntersect(props: IntersectProps) {
     }
 
     if (!appointmentEnd) {
-        if (
-            timeSlotStart.isSame(appointmentStart, 'minutes') ||
-            timeSlotEnd?.isSame(appointmentStart, 'minutes')
-        ) {
+        if (timeSlotStart.isSame(appointmentStart, 'minutes') || timeSlotEnd?.isSame(appointmentStart, 'minutes')) {
             return true;
         }
     }
@@ -136,11 +124,7 @@ function isPeriodsIntersect(props: IntersectProps) {
     return false;
 }
 
-export function filterBusyTimeSlots(
-    timeSlots: string[],
-    appointments: Appointment[],
-    slotDuration: string,
-) {
+export function filterBusyTimeSlots(timeSlots: string[], appointments: Appointment[], slotDuration: string) {
     const { hours, minutes, seconds } = praseSlotDuration(slotDuration);
 
     return timeSlots.filter((timeSlot) => {
@@ -151,9 +135,7 @@ export function filterBusyTimeSlots(
                     .add(hours, 'hours')
                     .add(minutes, 'minutes')
                     .add(seconds, 'seconds'),
-                appointmentStart: appointment.start
-                    ? parseFHIRDateTime(appointment.start)
-                    : undefined,
+                appointmentStart: appointment.start ? parseFHIRDateTime(appointment.start) : undefined,
                 appointmentEnd: appointment.end ? parseFHIRDateTime(appointment.end) : undefined,
             });
         });
@@ -162,12 +144,4 @@ export function filterBusyTimeSlots(
     });
 }
 
-export const dayNames = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday',
-];
+export const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];

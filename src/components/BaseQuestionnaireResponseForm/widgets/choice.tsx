@@ -1,7 +1,6 @@
 import { Form } from 'antd';
 import { mapSuccess } from 'fhir-react';
-import { debounce } from 'lodash';
-import _ from 'lodash';
+import _, { debounce } from 'lodash';
 import { useCallback } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 

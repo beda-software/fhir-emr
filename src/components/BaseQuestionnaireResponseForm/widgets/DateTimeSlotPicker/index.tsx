@@ -1,9 +1,4 @@
 import { Form } from 'antd';
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { useService } from 'fhir-react/lib/hooks/service';
-import { extractBundleResources, getAllFHIRResources, getFHIRResource } from 'fhir-react/lib/services/fhir';
-import { mapSuccess, resolveMap } from 'fhir-react/lib/services/service';
-import { formatFHIRDate, formatFHIRDateTime, parseFHIRDateTime } from 'fhir-react/lib/utils/date';
 import { Reference, Appointment, PractitionerRole } from 'fhir/r4b';
 import _ from 'lodash';
 import moment from 'moment';
@@ -11,14 +6,20 @@ import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { QuestionItemProps } from 'sdc-qrf';
 
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { useService } from 'fhir-react/lib/hooks/service';
+import { extractBundleResources, getAllFHIRResources, getFHIRResource } from 'fhir-react/lib/services/fhir';
+import { mapSuccess, resolveMap } from 'fhir-react/lib/services/service';
+import { formatFHIRDate, formatFHIRDateTime, parseFHIRDateTime } from 'fhir-react/lib/utils/date';
+
 import { humanDateTime } from 'shared/src/utils/date';
 
 import { DatePicker } from 'src/components/DatePicker';
 import { Spinner } from 'src/components/Spinner';
 import { useCalendarOptions } from 'src/containers/Scheduling/ScheduleCalendar/hooks/useCalendarOptions';
 
+import { TimeSlots, getTimeSlots } from './utils';
 import { useFieldController } from '../../hooks';
-import { getTimeSlots } from './utils';
 
 interface AvailableDatePickerProps extends QuestionItemProps {
     practitionerRolePath: Array<string | number>;
@@ -86,11 +87,6 @@ export function DateTimeSlotPicker(props: AvailableDatePickerProps) {
         </Form.Item>
     );
 }
-
-type TimeSlots = {
-    date: string;
-    timeSlots: [string, ...string[]];
-}[];
 
 function getDisabledTime(date: moment.Moment | null, timeSlots: TimeSlots) {
     const hoursRange = _.range(0, 24);
