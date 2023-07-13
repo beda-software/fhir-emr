@@ -11,7 +11,8 @@
     "extract": "lingui extract",
     "compile": "lingui compile --typescript",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "typecheck": "tsc"
   },
   "dependencies": {
     "@ant-design/colors": "^7.0.0",
