@@ -40,6 +40,9 @@ module.exports = {
         'react-refresh/only-export-components': 'warn',
         'react/jsx-uses-react': 'off',
         'react/react-in-jsx-scope': 'off',
+        'import/no-unresolved': [2, {
+            ignore: ['fhir/r4b'] // Fixes error: Unable to resolve path to module 'fhir/r4b'.
+        }],
         'import/order': [
             'error',
             {
