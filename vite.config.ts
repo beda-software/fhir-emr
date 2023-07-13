@@ -56,4 +56,9 @@ export default defineConfig(({ command }) => ({
             transformMixedEsModules: true,
         },
     },
+    test: {
+        globals: true, // To use the Vitest APIs globally like Jest
+        environment: 'jsdom', // https://vitest.dev/config/#environment
+        setupFiles: 'src/setupTests.ts', //  https://vitest.dev/config/#setupfiles
+    },
 }));

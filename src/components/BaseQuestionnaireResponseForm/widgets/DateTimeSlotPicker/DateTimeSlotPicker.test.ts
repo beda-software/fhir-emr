@@ -26,13 +26,11 @@ describe('DateTimeSLot utils test', () => {
                 },
             ],
         };
-        const currentDateSpy = jest
+        const currentDateSpy = vi
             .spyOn(Date, 'now')
             .mockImplementation(() => new Date('2023-02-15T13:00:00.000Z').getTime());
 
-        expect(getTimeSlots(practitionerRole, appointments, slotDuration)).toEqual(
-            groupedTimeSlots,
-        );
+        expect(getTimeSlots(practitionerRole, appointments, slotDuration)).toEqual(groupedTimeSlots);
         currentDateSpy.mockRestore();
     });
 });
@@ -50,12 +48,7 @@ const groupedTimeSlots = [
     },
     {
         date: '2023-02-22',
-        timeSlots: [
-            '2023-02-22T12:00:00Z',
-            '2023-02-22T12:15:00Z',
-            '2023-02-22T15:30:00Z',
-            '2023-02-22T15:45:00Z',
-        ],
+        timeSlots: ['2023-02-22T12:00:00Z', '2023-02-22T12:15:00Z', '2023-02-22T15:30:00Z', '2023-02-22T15:45:00Z'],
     },
     {
         date: '2023-02-24',
@@ -72,12 +65,7 @@ const groupedTimeSlots = [
     },
     {
         date: '2023-03-01',
-        timeSlots: [
-            '2023-03-01T12:00:00Z',
-            '2023-03-01T12:15:00Z',
-            '2023-03-01T15:30:00Z',
-            '2023-03-01T15:45:00Z',
-        ],
+        timeSlots: ['2023-03-01T12:00:00Z', '2023-03-01T12:15:00Z', '2023-03-01T15:30:00Z', '2023-03-01T15:45:00Z'],
     },
     {
         date: '2023-03-03',

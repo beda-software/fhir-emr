@@ -7,5 +7,5 @@ fi
 docker compose -f docker-compose.tests.yaml pull
 docker compose -f docker-compose.tests.yaml up -d
 
-yarn test $@ --runInBand
+yarn test
 exit $?

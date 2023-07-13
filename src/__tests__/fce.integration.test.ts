@@ -1,11 +1,12 @@
 import { readdirSync } from 'fs';
 import { parse as parsePath } from 'path';
 
-import { getFHIRResource } from 'fhir-react/lib/services/fhir';
 import { Questionnaire as FHIRQuestionnaire } from 'fhir/r4b';
 
 import { getFHIRResource as getFCEResource } from 'aidbox-react/lib/services/fhir';
 import { ensure } from 'aidbox-react/lib/utils/tests';
+
+import { getFHIRResource } from 'fhir-react/lib/services/fhir';
 
 import { Questionnaire as FCEQuestionnaire } from 'shared/src/contrib/aidbox';
 import { toFirstClassExtension, fromFirstClassExtension } from 'shared/src/utils/converter';
@@ -18,7 +19,7 @@ describe('Questionanire and QuestionnaireResponses transformation', () => {
         await loginAdminUser();
     });
 
-    const filenames = readdirSync('../resources/seeds/Questionnaire').map((filename) => parsePath(filename).name);
+    const filenames = readdirSync('resources/seeds/Questionnaire').map((filename) => parsePath(filename).name);
 
     test.each(filenames)('Questionnaires %s should be converted to FHIR and back to FCE', async (questionnaireId) => {
         const questionnaire = ensure(

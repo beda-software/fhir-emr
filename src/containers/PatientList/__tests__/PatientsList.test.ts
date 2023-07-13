@@ -1,4 +1,5 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
+
 import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
 
 import { useSearchBar } from 'src/components/SearchBar/hooks';
@@ -46,9 +47,7 @@ describe('Patient list filters testing', () => {
                 ],
             });
 
-            const { patientsResponse } = usePatientList(
-                columnsFilterValues as StringTypeColumnFilterValue[],
-            );
+            const { patientsResponse } = usePatientList(columnsFilterValues as StringTypeColumnFilterValue[]);
 
             return {
                 columnsFilterValues,

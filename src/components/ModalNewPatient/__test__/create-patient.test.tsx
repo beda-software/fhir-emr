@@ -1,7 +1,8 @@
 import { act, renderHook } from '@testing-library/react';
+import { Patient, Questionnaire } from 'fhir/r4b';
+
 import { getFHIRResource, getFHIRResources } from 'fhir-react/lib/services/fhir';
 import { ensure } from 'fhir-react/lib/utils/tests';
-import { Patient, Questionnaire } from 'fhir/r4b';
 
 import {
     questionnaireIdLoader,
