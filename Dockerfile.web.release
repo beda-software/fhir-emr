@@ -2,7 +2,7 @@ FROM node:lts
 
 RUN yarn global add serve
 RUN mkdir /app
-COPY web/build /app
+COPY /build /app
 WORKDIR /app
 
 EXPOSE 5000
