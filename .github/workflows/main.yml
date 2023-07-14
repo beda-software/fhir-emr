@@ -20,7 +20,7 @@ jobs:
             - name: Prepare config
               run: cp shared/src/config.production.ts shared/src/config.ts
             - name: Prepare index.html
-              run: cp public/index.production.html public/index.html
+              run: cp public/index.production.html index.html
             - name: Install deps
               run: yarn install --network-concurrency 1
             - run: yarn compile
