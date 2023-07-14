@@ -489,11 +489,6 @@ msgstr ""
 #~ msgid "msg.QuestionnaireNamePlaceholder"
 #~ msgstr "Name"
 
-#. js-lingui-explicit-id
-#: src/containers/QuestionnaireList/index.tsx:23
-msgid "msg.QuestionnaireName"
-msgstr ""
-
 #: src/containers/PatientDetails/PatientOverview/utils.tsx:77
 #: src/containers/PatientDetails/PatientOverview/utils.tsx:115
 #: src/containers/PatientDetails/PatientOverview/utils.tsx:153
@@ -507,6 +502,11 @@ msgstr ""
 #: src/containers/PatientList/index.tsx:76
 #: src/containers/PractitionerList/index.tsx:96
 msgid "Name"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/containers/QuestionnaireList/index.tsx:23
+msgid "msg.QuestionnaireName"
 msgstr ""
 
 #: web/src/containers/PatientDetails/PatientDocument/PhysicalExam/index.tsx:28
