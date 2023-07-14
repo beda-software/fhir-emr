@@ -11,7 +11,7 @@ const require = createRequire(import.meta.url);
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => ({
     server: {
-        port: command === 'build' ? undefined : 3000,
+        port: command === 'build' ? 5000 : 3000,
     },
     plugins: [
         viteCommonjs(),
@@ -41,6 +41,7 @@ export default defineConfig(({ command }) => ({
         ],
     },
     build: {
+        outDir: path.resolve(__dirname, 'build'),
         commonjsOptions: {
             defaultIsModuleExports(id) {
                 try {
