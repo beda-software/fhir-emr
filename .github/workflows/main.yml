@@ -71,5 +71,6 @@ jobs:
                   port: 22
                   script_stop: true
                   script: |
+                      cd ~/web
                       make restart
                       echo Current branch is ${{ github.ref }}
