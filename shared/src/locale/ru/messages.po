@@ -507,7 +507,7 @@ msgstr "Имя"
 #. js-lingui-explicit-id
 #: src/containers/QuestionnaireList/index.tsx:23
 msgid "msg.QuestionnaireName"
-msgstr ""
+msgstr "Название"
 
 #: web/src/containers/PatientDetails/PatientDocument/PhysicalExam/index.tsx:28
 #~ msgid "NCAT, PERRL, normal conjunctivae, nonicteric sclerae, bilateral EAC/TM clear, no nasal discharge, OP clear, moist mucous membranes"
