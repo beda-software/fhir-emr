@@ -1,4 +1,4 @@
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import _ from 'lodash';
 import React from 'react';
 import { DefaultTheme } from 'styled-components';
@@ -12,7 +12,7 @@ export default {
     title: 'Theme',
 };
 
-export const Template: ComponentStory<any> = () => {
+export const Template: StoryFn = () => {
     const lightTheme = getAppTheme({ dark: false });
     const darkTheme = getAppTheme({ dark: true });
 
