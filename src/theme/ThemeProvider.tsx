@@ -1,13 +1,12 @@
 import { ConfigProvider as ANTDConfigProvider } from 'antd';
-import { ReactNode, useEffect } from 'react';
+import { ReactNode } from 'react';
 import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle } from 'styled-components';
-
-import { dynamicActivate, getCurrentLocale } from 'shared/src/services/i18n';
 
 import { getAppTheme, getANTDTheme } from './';
 import { useTheme } from '../utils/theme';
 
 interface Props {
+    theme?: 'dark' | 'light';
     children: ReactNode;
 }
 
@@ -24,19 +23,15 @@ const GlobalStyle = createGlobalStyle<{ $whiteColor?: boolean }>`
 `;
 
 export function ThemeProvider(props: Props) {
-    const { children } = props;
-
-    useEffect(() => {
-        dynamicActivate(getCurrentLocale());
-    }, []);
+    const { theme: initialTheme, children } = props;
 
     const { theme } = useTheme();
-    const dark = theme === 'dark';
+    const dark = (initialTheme ?? theme) === 'dark';
 
     const antdTheme = getANTDTheme({ dark: dark });
     const appTheme = {
         ...getAppTheme({ dark: dark }),
-        mode: theme,
+        mode: initialTheme ?? theme,
         antdTheme: antdTheme.token,
     };
 

@@ -4,8 +4,8 @@ import { useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import { QuestionItemProps } from 'sdc-qrf';
 
-import { useFieldController } from '../../hooks';
 import { S } from './PhoneInput.styles';
+import { useFieldController } from '../../hooks';
 
 export function QuestionPhone({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId } = questionItem;

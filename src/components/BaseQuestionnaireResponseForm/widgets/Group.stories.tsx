@@ -1,26 +1,30 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
-import { ItemContext } from 'sdc-qrf';
+import type { Meta, StoryObj } from '@storybook/react';
+import { ItemContext } from 'sdc-qrf/lib/types';
+
+import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 
 import { Group } from './index';
 
-export default {
+const meta: Meta<typeof Group> = {
     title: 'group/Group',
     component: Group,
-    parameters: {
-        storyshots: { disable: true },
-    },
-} as ComponentMeta<typeof Group>;
+    decorators: [withColorSchemeDecorator, WithQuestionFormProviderDecorator],
+};
 
-const Template: ComponentStory<typeof Group> = (args) => <Group {...args} />;
+export default meta;
+type Story = StoryObj<typeof Group>;
 
-export const Example = Template.bind({});
-Example.args = {
-    context: [{questionnaire: {item: []}} as  unknown as ItemContext],
-    parentPath: [],
-    questionItem: {
-        text: 'Group Title',
-        type: 'group',
-        linkId: 'example',
-        required: true,
-    },
+export const Example: Story = {
+    render: () => (
+        <Group
+            parentPath={[]}
+            questionItem={{
+                text: 'Group Title',
+                type: 'group',
+                linkId: 'example',
+                required: true,
+            }}
+            context={[] as ItemContext[]}
+        />
+    ),
 };

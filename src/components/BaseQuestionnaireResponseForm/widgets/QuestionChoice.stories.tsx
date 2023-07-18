@@ -1,18 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { ItemContext } from 'sdc-qrf/lib/types';
+
+import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 
 import { QuestionChoice } from './index';
-import { StoryQuestionDecorator } from './utils-stories';
 
 const meta: Meta<typeof QuestionChoice> = {
     title: 'widget/QuestionChoice',
     component: QuestionChoice,
-    decorators: [
-        (Story) => (
-            <StoryQuestionDecorator>
-                <Story />
-            </StoryQuestionDecorator>
-        ),
-    ],
+    decorators: [withColorSchemeDecorator, WithQuestionFormProviderDecorator],
 };
 
 export default meta;
@@ -34,7 +30,7 @@ export const Example: Story = {
                     { value: { Coding: { code: '4', display: 'Item 4' } } },
                 ],
             }}
-            context={{} as any}
+            context={{} as ItemContext}
         />
     ),
 };

@@ -1,81 +1,90 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react';
+import { ItemContext } from 'sdc-qrf/lib/types';
+
+import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 
 import { QuestionSlider } from './index';
-import { StoryQuestionDecorator } from './utils-stories';
 
-export default {
+const meta: Meta<typeof QuestionSlider> = {
     title: 'widget/QuestionSlider',
     component: QuestionSlider,
-    parameters: {
-        storyshots: { disable: true },
-    },
-    decorators: [
-        (Story) => (
-            <StoryQuestionDecorator>
-                <Story />
-            </StoryQuestionDecorator>
-        ),
-    ],
-} as ComponentMeta<typeof QuestionSlider>;
-
-const Template: ComponentStory<typeof QuestionSlider> = (args) => <QuestionSlider {...args} />;
-
-export const Basic = Template.bind({});
-Basic.args = {
-    parentPath: [],
-    questionItem: {
-        text: 'Example',
-        type: 'string',
-        linkId: 'example',
-        required: true,
-        start: 1,
-        stop: 10,
-    } as any,
+    decorators: [withColorSchemeDecorator, WithQuestionFormProviderDecorator],
 };
 
+export default meta;
+type Story = StoryObj<typeof QuestionSlider>;
 
-export const Labels = Template.bind({});
-Labels.args = {
-    parentPath: [],
-    questionItem: {
-        text: 'Example',
-        type: 'string',
-        linkId: 'example',
-        required: true,
-        start: 1,
-        startLabel: 'Start value',
-        stop: 10,
-        stopLabel: 'Stop value'
-    } as any,
+export const Basic: Story = {
+    render: () => (
+        <QuestionSlider
+            parentPath={[]}
+            questionItem={{
+                text: 'Example',
+                type: 'string',
+                linkId: 'example',
+                required: true,
+                start: 1,
+                stop: 10,
+            }}
+            context={{} as ItemContext}
+        />
+    ),
 };
 
-
-export const Step = Template.bind({});
-Step.args = {
-    parentPath: [],
-    questionItem: {
-        text: 'Example',
-        type: 'string',
-        linkId: 'example',
-        required: true,
-        start: 1,
-        stop: 50,
-        sliderStepValue: 5,
-    } as any,
+export const Labels: Story = {
+    render: () => (
+        <QuestionSlider
+            parentPath={[]}
+            questionItem={{
+                text: 'Example',
+                type: 'string',
+                linkId: 'example',
+                required: true,
+                start: 1,
+                // TODO: Remove ignore and add startLabel to QuestionItem
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                startLabel: 'Start value',
+                stop: 10,
+                stopLabel: 'Stop value',
+            }}
+            context={{} as ItemContext}
+        />
+    ),
 };
 
-
-export const HelpText = Template.bind({});
-HelpText.args = {
-    parentPath: [],
-    questionItem: {
-        text: 'Example',
-        type: 'string',
-        linkId: 'example',
-        required: true,
-        start: 1,
-        stop: 10,
-        helpText: "Some additional information about the control"
-    } as any,
+export const Step: Story = {
+    render: () => (
+        <QuestionSlider
+            parentPath={[]}
+            questionItem={{
+                text: 'Example',
+                type: 'string',
+                linkId: 'example',
+                required: true,
+                start: 1,
+                stop: 50,
+                sliderStepValue: 5,
+            }}
+            context={{} as ItemContext}
+        />
+    ),
 };
 
+export const HelpText: Story = {
+    render: () => (
+        <QuestionSlider
+            parentPath={[]}
+            questionItem={{
+                text: 'Example',
+                type: 'string',
+                linkId: 'example',
+                required: true,
+                start: 1,
+                stop: 10,
+                helpText: 'Some additional information about the control',
+            }}
+            context={{} as ItemContext}
+        />
+    ),
+};

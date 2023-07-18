@@ -1,10 +1,10 @@
-import React from 'react';
 import 'antd/dist/reset.css';
 import { Preview } from '@storybook/react';
-import { ThemeProvider } from '../src/theme/ThemeProvider';
+import { withThemeDecorator } from './decorators';
 
 const preview: Preview = {
     parameters: {
+        layout: 'fullscreen',
         actions: { argTypesRegex: '^on[A-Z].*' },
         controls: {
             matchers: {
@@ -13,13 +13,20 @@ const preview: Preview = {
             },
         },
     },
-    decorators: [
-        (Story) => (
-            <ThemeProvider>
-                <Story />
-            </ThemeProvider>
-        ),
-    ],
+    decorators: [withThemeDecorator],
+};
+
+export const globalTypes = {
+    scheme: {
+        name: 'Scheme',
+        description: 'Select dark or light scheme',
+        defaultValue: 'both',
+        toolbar: {
+            icon: 'mirror',
+            items: ['light', 'dark', 'both'],
+            dynamicTitle: true,
+        },
+    },
 };
 
 export default preview;

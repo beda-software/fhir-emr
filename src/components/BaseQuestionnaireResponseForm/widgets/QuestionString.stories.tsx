@@ -1,52 +1,30 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react';
+import { ItemContext } from 'sdc-qrf/lib/types';
+
+import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 
 import { QuestionString } from './index';
-import { StoryQuestionDecorator } from './utils-stories';
 
-export default {
+const meta: Meta<typeof QuestionString> = {
     title: 'widget/QuestionString',
     component: QuestionString,
-    parameters: {
-        storyshots: { disable: true },
-    },
-    decorators: [
-        (Story) => (
-            <StoryQuestionDecorator>
-                <Story />
-            </StoryQuestionDecorator>
-        ),
-    ],
-} as ComponentMeta<typeof QuestionString>;
-
-const Template: ComponentStory<typeof QuestionString> = (args) => <QuestionString {...args} />;
-
-export const LastName = Template.bind({});
-LastName.args = {
-    parentPath: [],
-    questionItem: {
-        text: 'Last name',
-        type: 'string',
-        linkId: 'last-name',
-        required: true,
-    },
+    decorators: [withColorSchemeDecorator, WithQuestionFormProviderDecorator],
 };
 
-export const FirstName = Template.bind({});
-FirstName.args = {
-    parentPath: [],
-    questionItem: {
-        text: 'First name',
-        type: 'string',
-        linkId: 'first-name',
-    },
-};
+export default meta;
+type Story = StoryObj<typeof QuestionString>;
 
-export const MiddleName = Template.bind({});
-MiddleName.args = {
-    parentPath: [],
-    questionItem: {
-        text: 'Middle name',
-        type: 'string',
-        linkId: 'middle-name',
-    },
+export const Example: Story = {
+    render: () => (
+        <QuestionString
+            parentPath={[]}
+            questionItem={{
+                text: 'First name',
+                type: 'string',
+                linkId: 'first-name',
+                required: true,
+            }}
+            context={{} as ItemContext}
+        />
+    ),
 };

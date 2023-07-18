@@ -1,32 +1,30 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react';
+import { ItemContext } from 'sdc-qrf/lib/types';
+
+import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 
 import { QuestionPhone } from './index';
-import { StoryQuestionDecorator } from './utils-stories';
 
-export default {
+const meta: Meta<typeof QuestionPhone> = {
     title: 'widget/QuestionPhone',
     component: QuestionPhone,
-    parameters: {
-        storyshots: { disable: true },
-    },
-    decorators: [
-        (Story) => (
-            <StoryQuestionDecorator>
-                <Story />
-            </StoryQuestionDecorator>
-        ),
-    ],
-} as ComponentMeta<typeof QuestionPhone>;
+    decorators: [withColorSchemeDecorator, WithQuestionFormProviderDecorator],
+};
 
-const Template: ComponentStory<typeof QuestionPhone> = (args) => <QuestionPhone {...args} />;
+export default meta;
+type Story = StoryObj<typeof QuestionPhone>;
 
-export const Example = Template.bind({});
-Example.args = {
-    parentPath: [],
-    questionItem: {
-        text: 'Example',
-        type: 'string',
-        linkId: 'example',
-        required: true,
-    },
+export const Example: Story = {
+    render: () => (
+        <QuestionPhone
+            parentPath={[]}
+            questionItem={{
+                text: 'Example',
+                type: 'string',
+                linkId: 'example',
+                required: true,
+            }}
+            context={{} as ItemContext}
+        />
+    ),
 };

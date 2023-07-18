@@ -1,31 +1,29 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react';
+import { ItemContext } from 'sdc-qrf/lib/types';
+
+import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 
 import { QuestionDateTime } from './index';
-import { StoryQuestionDecorator } from './utils-stories';
 
-export default {
+const meta: Meta<typeof QuestionDateTime> = {
     title: 'widget/QuestionDateTime',
     component: QuestionDateTime,
-    parameters: {
-        storyshots: { disable: true },
-    },
-    decorators: [
-        (Story) => (
-            <StoryQuestionDecorator>
-                <Story />
-            </StoryQuestionDecorator>
-        ),
-    ],
-} as ComponentMeta<typeof QuestionDateTime>;
+    decorators: [withColorSchemeDecorator, WithQuestionFormProviderDecorator],
+};
 
-const Template: ComponentStory<typeof QuestionDateTime> = (args) => <QuestionDateTime {...args} />;
+export default meta;
+type Story = StoryObj<typeof QuestionDateTime>;
 
-export const DateOfBirth = Template.bind({});
-DateOfBirth.args = {
-    parentPath: [],
-    questionItem: {
-        text: 'Birth date',
-        type: 'date',
-        linkId: 'birth-date',
-    },
+export const Example: Story = {
+    render: () => (
+        <QuestionDateTime
+            parentPath={[]}
+            questionItem={{
+                text: 'Birth date',
+                type: 'date',
+                linkId: 'birth-date',
+            }}
+            context={{} as ItemContext}
+        />
+    ),
 };

@@ -10,6 +10,9 @@ import { getAppTheme } from '.';
 
 export default {
     title: 'Theme',
+    parameters: {
+        layout: 'padded',
+    },
 };
 
 export const Template: StoryFn = () => {
