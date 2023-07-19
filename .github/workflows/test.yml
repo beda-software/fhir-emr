@@ -19,6 +19,8 @@ jobs:
             - run: yarn compile
             - name: Check types
               run: yarn typecheck
+            - name: Test storybook
+              run: yarn test-storybook
             - name: Create deps dir
               run: mkdir -p zenproject/zen-packages && chmod 0777 zenproject/zen-packages
             - name: Run aidbox

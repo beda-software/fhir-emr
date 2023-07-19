@@ -1,4 +1,4 @@
-import { StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 import _ from 'lodash';
 import React from 'react';
 import { DefaultTheme } from 'styled-components';
@@ -8,12 +8,14 @@ import { Title } from 'src/components/Typography';
 
 import { getAppTheme } from '.';
 
-export default {
+const meta: Meta = {
     title: 'Theme',
     parameters: {
         layout: 'padded',
     },
 };
+
+export default meta;
 
 export const Template: StoryFn = () => {
     const lightTheme = getAppTheme({ dark: false });

@@ -40,6 +40,7 @@ module.exports = {
         'react-refresh/only-export-components': 'warn',
         'react/jsx-uses-react': 'off',
         'react/react-in-jsx-scope': 'off',
+        '@typescript-eslint/no-non-null-assertion': 'off',
         'import/no-unresolved': [
             2,
             {

@@ -19,7 +19,7 @@
         "src/*": ["./src/*"],
         "shared/*": ["./shared/*"]
       },
-      "types": ["vitest/globals"],
+      "types": ["node", "vitest/globals", "jest", "@testing-library/jest-dom"],
   
       /* Linting */
       "strict": true,

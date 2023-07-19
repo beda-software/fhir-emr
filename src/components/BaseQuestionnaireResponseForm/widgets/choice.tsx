@@ -55,7 +55,7 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
 
     if (answerValueSet) {
         return (
-            <Form.Item {...formItem}>
+            <Form.Item {...formItem} data-testid="question-choice">
                 <ChoiceQuestionValueSet
                     answerValueSet={answerValueSet}
                     value={!repeats && value ? [value] : value}
@@ -67,7 +67,7 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
     }
 
     return (
-        <Form.Item {...formItem}>
+        <Form.Item {...formItem} data-testid="question-choice">
             <ChoiceQuestionSelect
                 options={answerOption!}
                 value={!repeats && value ? [value] : value}

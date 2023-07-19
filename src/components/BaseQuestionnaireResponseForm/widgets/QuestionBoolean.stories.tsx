@@ -1,4 +1,6 @@
+import { expect } from '@storybook/jest';
 import { Meta, StoryObj } from '@storybook/react';
+import { within, userEvent, findByTestId } from '@storybook/testing-library';
 import { ItemContext } from 'sdc-qrf/lib/types';
 
 import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
@@ -27,4 +29,19 @@ export const Example: Story = {
             context={{} as ItemContext}
         />
     ),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        const getQuestion = () => canvas.findAllByTestId('question-boolean');
+
+        const questions: HTMLElement[] = await getQuestion();
+        await expect(questions.length > 0).toBe(true);
+        const checkbox = await findByTestId<HTMLInputElement>(questions[0]!, 'checkbox');
+        expect(checkbox.checked).toBe(false);
+
+        await userEvent.click(checkbox);
+        await expect(checkbox.checked).toBe(true);
+
+        await userEvent.click(checkbox);
+        await expect(checkbox.checked).toBe(false);
+    },
 };
