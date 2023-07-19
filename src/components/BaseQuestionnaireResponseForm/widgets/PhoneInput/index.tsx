@@ -1,11 +1,14 @@
 import { Form } from 'antd';
 import classNames from 'classnames';
 import { useState } from 'react';
-import PhoneInput from 'react-phone-input-2';
+import PI, { PhoneInputProps } from 'react-phone-input-2';
 import { QuestionItemProps } from 'sdc-qrf';
 
 import { S } from './PhoneInput.styles';
 import { useFieldController } from '../../hooks';
+
+// https://github.com/bl00mber/react-phone-input-2/issues/533#issuecomment-1508211907
+const PhoneInput: React.FC<PhoneInputProps> = (PI as any).default || PI;
 
 export function QuestionPhone({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId } = questionItem;
