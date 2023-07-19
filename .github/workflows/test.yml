@@ -19,8 +19,15 @@ jobs:
             - run: yarn compile
             - name: Check types
               run: yarn typecheck
+            - name: Install Playwright
+              run: npx playwright install --with-deps
+            - name: Build Storybook
+              run: yarn build-storybook --quiet
             - name: Test storybook
-              run: yarn test-storybook
+              run: |
+                npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
+                  "npx http-server storybook-static --port 6006 --silent" \
+                  "npx wait-on tcp:6006 && yarn test-storybook"
             - name: Create deps dir
               run: mkdir -p zenproject/zen-packages && chmod 0777 zenproject/zen-packages
             - name: Run aidbox
