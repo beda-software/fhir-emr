@@ -5,6 +5,7 @@ jobs:
         runs-on: ubuntu-latest
         env:
             AIDBOX_LICENSE: ${{ secrets.AIDBOX_LICENSE }}
+            CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
         steps:
             - uses: actions/checkout@v2
             - uses: actions/setup-node@v3
@@ -39,4 +40,6 @@ jobs:
               run: docker-compose logs
             - name: Run tests
               run: yarn test --silent
+            - name: Publish Storybook and run visual tests
+              run: yarn chromatic
             - run: yarn build
