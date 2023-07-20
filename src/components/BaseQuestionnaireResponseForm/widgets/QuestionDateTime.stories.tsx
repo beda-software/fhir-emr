@@ -6,7 +6,7 @@ import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src
 import { QuestionDateTime } from './index';
 
 const meta: Meta<typeof QuestionDateTime> = {
-    title: 'widget/QuestionDateTime',
+    title: 'Questionnaire / questions / dateTime',
     component: QuestionDateTime,
     decorators: [withColorSchemeDecorator, WithQuestionFormProviderDecorator],
 };

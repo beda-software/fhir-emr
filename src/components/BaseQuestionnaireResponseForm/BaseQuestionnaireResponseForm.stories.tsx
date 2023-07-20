@@ -12,10 +12,11 @@ i18n.loadLocaleData({
 i18n.activate('en');
 
 export default {
-    title: 'Form/QuestionnaireResponseForm',
+    title: 'Questionnaire / form examples',
     component: BaseQuestionnaireResponseForm,
     parameters: {
         storyshots: { disable: true },
+        layout: 'padded',
     },
 } as ComponentMeta<typeof BaseQuestionnaireResponseForm>;
 

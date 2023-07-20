@@ -6,7 +6,7 @@ import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src
 import { Group } from './index';
 
 const meta: Meta<typeof Group> = {
-    title: 'group/Group',
+    title: 'Questionnaire / questions / group',
     component: Group,
     decorators: [withColorSchemeDecorator, WithQuestionFormProviderDecorator],
 };

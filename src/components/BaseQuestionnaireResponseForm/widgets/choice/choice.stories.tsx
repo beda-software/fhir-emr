@@ -8,7 +8,7 @@ import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src
 import { QuestionChoice } from './index';
 
 const meta: Meta<typeof QuestionChoice> = {
-    title: 'widget/QuestionChoice',
+    title: 'Questionnaire / questions / choice',
     component: QuestionChoice,
     decorators: [withColorSchemeDecorator, WithQuestionFormProviderDecorator],
 };

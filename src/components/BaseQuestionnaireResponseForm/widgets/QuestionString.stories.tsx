@@ -6,7 +6,7 @@ import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src
 import { QuestionString } from './index';
 
 const meta: Meta<typeof QuestionString> = {
-    title: 'widget/QuestionString',
+    title: 'Questionnaire / questions / string',
     component: QuestionString,
     decorators: [withColorSchemeDecorator, WithQuestionFormProviderDecorator],
 };

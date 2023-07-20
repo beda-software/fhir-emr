@@ -6,7 +6,7 @@ import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src
 import { QuestionPhone } from './index';
 
 const meta: Meta<typeof QuestionPhone> = {
-    title: 'widget/QuestionPhone',
+    title: 'Questionnaire / questions / phoneWidget',
     component: QuestionPhone,
     decorators: [withColorSchemeDecorator, WithQuestionFormProviderDecorator],
 };

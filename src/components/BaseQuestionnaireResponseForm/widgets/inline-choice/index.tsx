@@ -6,9 +6,9 @@ import { QuestionnaireItem, QuestionnaireItemAnswerOption } from 'shared/src/con
 
 import { getDisplay } from 'src/utils/questionnaire';
 
-import { useFieldController } from '../hooks';
+import { useFieldController } from '../../hooks';
 
-type InlineChoiceQuestionItem = QuestionnaireItem & {
+export type InlineChoiceQuestionItem = QuestionnaireItem & {
     inlineChoiceDirection?: 'horizontal' | 'vertical';
 };
 
@@ -16,7 +16,9 @@ interface InlineChoiceProps extends QuestionItemProps {
     questionItem: InlineChoiceQuestionItem;
 }
 
-export function InlineChoice({ parentPath, questionItem }: InlineChoiceProps) {
+export function InlineChoice(props: InlineChoiceProps) {
+    console.log('props', props);
+    const { parentPath, questionItem } = props;
     const { linkId, answerOption: answerOptionList, repeats, inlineChoiceDirection } = questionItem;
 
     const fieldName = repeats ? [...parentPath, linkId] : [...parentPath, linkId, 0];
@@ -27,7 +29,7 @@ export function InlineChoice({ parentPath, questionItem }: InlineChoiceProps) {
         const arrayValue = (value || []) as QuestionnaireItemAnswerOption[];
 
         return (
-            <Form.Item {...formItem}>
+            <Form.Item {...formItem} data-testid="question-inline-choice">
                 <Space direction={inlineChoiceDirection ?? 'vertical'}>
                     {answerOptionList?.map((answerOption) => (
                         <Checkbox
@@ -35,6 +37,9 @@ export function InlineChoice({ parentPath, questionItem }: InlineChoiceProps) {
                             key={JSON.stringify(answerOption)}
                             disabled={disabled}
                             onChange={() => onMultiChange(answerOption)}
+                            data-testid={`inline-choice__${_.kebabCase(
+                                JSON.stringify(getDisplay(answerOption.value!)),
+                            )}`}
                         >
                             {getDisplay(answerOption.value!)}
                         </Checkbox>
@@ -44,7 +49,7 @@ export function InlineChoice({ parentPath, questionItem }: InlineChoiceProps) {
         );
     } else {
         return (
-            <Form.Item {...formItem}>
+            <Form.Item {...formItem} data-testid="question-inline-choice">
                 <Space direction={inlineChoiceDirection ?? 'vertical'}>
                     {answerOptionList?.map((answerOption) => (
                         <Radio
@@ -52,6 +57,9 @@ export function InlineChoice({ parentPath, questionItem }: InlineChoiceProps) {
                             checked={_.isEqual(value?.value, answerOption.value)}
                             disabled={disabled}
                             onChange={() => onChange(answerOption)}
+                            data-testid={`inline-choice__${_.kebabCase(
+                                JSON.stringify(getDisplay(answerOption.value!)),
+                            )}`}
                         >
                             {getDisplay(answerOption.value!)}
                         </Radio>

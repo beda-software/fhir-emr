@@ -8,7 +8,7 @@ import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src
 import { QuestionBoolean } from './index';
 
 const meta: Meta<typeof QuestionBoolean> = {
-    title: 'widget/QuestionBoolean',
+    title: 'Questionnaire / questions / boolean',
     component: QuestionBoolean,
     decorators: [withColorSchemeDecorator, WithQuestionFormProviderDecorator],
 };
@@ -16,7 +16,7 @@ const meta: Meta<typeof QuestionBoolean> = {
 export default meta;
 type Story = StoryObj<typeof QuestionBoolean>;
 
-export const Example: Story = {
+export const Default: Story = {
     render: () => (
         <QuestionBoolean
             parentPath={[]}

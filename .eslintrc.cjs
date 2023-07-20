@@ -41,6 +41,7 @@ module.exports = {
         'react/jsx-uses-react': 'off',
         'react/react-in-jsx-scope': 'off',
         '@typescript-eslint/no-non-null-assertion': 'off',
+        "@typescript-eslint/ban-ts-comment": 'off',
         'import/no-unresolved': [
             2,
             {

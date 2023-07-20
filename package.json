@@ -15,6 +15,7 @@
         "storybook": "storybook dev -p 6006",
         "build-storybook": "storybook build",
         "typecheck": "tsc",
+        "chromatic": "npx chromatic",
         "prepare": "husky install"
     },
     "dependencies": {
@@ -82,6 +83,7 @@
         "@vitejs/plugin-react": "^4.0.0",
         "babel-plugin-macros": "^3.1.0",
         "babel-plugin-styled-components": "^2.1.4",
+        "chromatic": "^6.19.9",
         "css-loader": "^6.8.1",
         "eslint": "^8.38.0",
         "eslint-config-prettier": "^8.8.0",

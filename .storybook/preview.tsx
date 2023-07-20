@@ -4,6 +4,11 @@ import { withThemeDecorator } from './decorators';
 
 const preview: Preview = {
     parameters: {
+        options: {
+            storySort: {
+                order: ['Theme', 'components', '*'],
+            },
+        },
         layout: 'fullscreen',
         actions: { argTypesRegex: '^on[A-Z].*' },
         controls: {

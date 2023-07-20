@@ -4,7 +4,7 @@ import React from 'react';
 import { DefaultTheme } from 'styled-components';
 import styled from 'styled-components/macro';
 
-import { Title } from 'src/components/Typography';
+import { Text, Title } from 'src/components/Typography';
 
 import { getAppTheme } from '.';
 
@@ -94,7 +94,7 @@ const S = {
     GroupTitle: styled(Title)`
         margin: 32px 0 16px;
     `,
-    Name: styled.div`
+    Name: styled(Text)`
         width: 150px;
         min-width: 150px;
         padding-right: 16px;

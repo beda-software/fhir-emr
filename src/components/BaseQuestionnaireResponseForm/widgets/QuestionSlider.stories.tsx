@@ -6,7 +6,7 @@ import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src
 import { QuestionSlider } from './index';
 
 const meta: Meta<typeof QuestionSlider> = {
-    title: 'widget/QuestionSlider',
+    title: 'Questionnaire / questions / slider',
     component: QuestionSlider,
     decorators: [withColorSchemeDecorator, WithQuestionFormProviderDecorator],
 };

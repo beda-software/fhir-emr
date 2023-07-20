@@ -12,8 +12,8 @@ import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer, ValueSe
 import { AsyncSelect, Select } from 'src/components/Select';
 import { getDisplay } from 'src/utils/questionnaire';
 
-import s from '../BaseQuestionnaireResponseForm.module.scss';
-import { useFieldController } from '../hooks';
+import s from '../../BaseQuestionnaireResponseForm.module.scss';
+import { useFieldController } from '../../hooks';
 
 interface ChoiceQuestionSelectProps {
     value?: QuestionnaireResponseItemAnswer[];

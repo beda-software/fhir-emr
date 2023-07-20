@@ -6,7 +6,7 @@ import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src
 import { QuestionSolidRadio } from './index';
 
 const meta: Meta<typeof QuestionSolidRadio> = {
-    title: 'widget/QuestionRadio',
+    title: 'Questionnaire / questions / solid-radio-button',
     component: QuestionSolidRadio,
     decorators: [withColorSchemeDecorator, WithQuestionFormProviderDecorator],
 };

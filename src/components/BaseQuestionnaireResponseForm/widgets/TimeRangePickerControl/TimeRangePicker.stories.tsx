@@ -6,7 +6,7 @@ import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src
 import { TimeRangePickerControl } from './index';
 
 const meta: Meta<typeof TimeRangePickerControl> = {
-    title: 'widget/TimeRangePicker',
+    title: 'Questionnaire / questions / time-range-picker',
     component: TimeRangePickerControl,
     decorators: [withColorSchemeDecorator, WithQuestionFormProviderDecorator],
 };

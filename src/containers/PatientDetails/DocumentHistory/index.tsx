@@ -1,15 +1,15 @@
-import { t, Trans } from '@lingui/macro';
-import classNames from 'classnames';
+import { Trans } from '@lingui/macro';
+import { QuestionnaireResponse, Questionnaire } from 'fhir/r4b';
+import { useMemo } from 'react';
+
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { WithId } from 'fhir-react/lib/services/fhir';
-import { QuestionnaireResponse, Questionnaire } from 'fhir/r4b';
-import { useCallback, useMemo } from 'react';
 
 import { Provenance } from 'shared/src/contrib/aidbox';
-import { formatHumanDateTime } from 'shared/src/utils/date';
 
+import { ChangesDiff } from 'src/components/ChangesDiff';
 import { Spinner } from 'src/components/Spinner';
-import { Text, Title } from 'src/components/Typography';
+import { Title } from 'src/components/Typography';
 
 import s from './DocumentHistory.module.scss';
 import { S } from './DocumentHistory.styles';
@@ -49,62 +49,43 @@ export function DocumentHistory() {
     );
 }
 
-const codesMapping = {
-    CREATE: t`Created`,
-    UPDATE: t`Updated`,
-};
-
-interface DocumentHistoryDetailsProps {
+export interface DocumentHistoryDetailsProps {
     provenance: WithId<Provenance>;
     prevProvenance?: WithId<Provenance>;
     questionnaire: Questionnaire;
     qrHistory: QuestionnaireResponse[];
 }
 
-function DocumentHistoryEntry(props: DocumentHistoryDetailsProps) {
+export function DocumentHistoryEntry(props: DocumentHistoryDetailsProps) {
     const { provenance, prevProvenance, questionnaire, qrHistory } = props;
-    const activity = codesMapping[provenance.activity?.coding?.[0]?.code || ''];
-    const date = formatHumanDateTime(provenance.recorded);
-    const by = provenance.agent.map((agent) => agent.who.display || 'No person name provided').join(', ');
+    const activityCode = provenance.activity?.coding?.[0]?.code;
+    const by = provenance.agent.map((agent) => agent.who.display || 'No person name provided');
 
     const currentQR = useMemo(
-        () => findResourceInHistory<QuestionnaireResponse>(provenance.entity?.[0]?.what!, qrHistory),
+        () => findResourceInHistory<QuestionnaireResponse>(provenance.entity![0]!.what, qrHistory),
         [provenance, qrHistory],
     );
     const prevQR = useMemo(
         () =>
             prevProvenance
-                ? findResourceInHistory<QuestionnaireResponse>(prevProvenance.entity?.[0]?.what!, qrHistory)
+                ? findResourceInHistory<QuestionnaireResponse>(prevProvenance.entity![0]!.what!, qrHistory)
                 : undefined,
         [prevProvenance, qrHistory],
     );
 
-    const renderDiff = useCallback(() => {
-        const historyToDisplay = prepareDataToDisplay(questionnaire, currentQR, prevQR);
-
-        return historyToDisplay.map((item) => (
-            <div key={`diff-${provenance.id}-${item.linkId}`}>
-                <Text>{item.question}</Text>
-                <div className={s.diffRow}>
-                    <S.DiffItem className={classNames(item.valueBefore ? '_deleted' : undefined)}>
-                        {item.valueBefore}
-                    </S.DiffItem>
-                    <S.DiffItem className={classNames(item.valueAfter ? '_added' : undefined)}>
-                        {item.valueAfter}
-                    </S.DiffItem>
-                </div>
-            </div>
-        ));
-    }, [currentQR, prevQR, provenance, questionnaire]);
+    const historyToDisplay = prepareDataToDisplay(questionnaire, currentQR, prevQR);
 
     return (
-        <div className={s.prov}>
-            <S.RecordHeader className={s.provHeader}>
-                <b>
-                    {activity} {date} by {by}
-                </b>
-            </S.RecordHeader>
-            {renderDiff()}
-        </div>
+        <ChangesDiff
+            id={provenance.id!}
+            activityCode={activityCode || ''}
+            recorded={provenance.recorded}
+            author={by}
+            changes={historyToDisplay.map((item) => ({
+                ...item,
+                title: item.question,
+                key: item.linkId,
+            }))}
+        />
     );
 }

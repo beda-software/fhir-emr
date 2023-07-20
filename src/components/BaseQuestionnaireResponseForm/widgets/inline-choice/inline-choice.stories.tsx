@@ -1,0 +1,186 @@
+import { expect } from '@storybook/jest';
+import { Meta, StoryObj } from '@storybook/react';
+import { within, userEvent, findByTestId } from '@storybook/testing-library';
+import { ItemContext } from 'sdc-qrf/lib/types';
+
+import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
+
+import { InlineChoice, InlineChoiceQuestionItem } from './index';
+
+const meta: Meta<typeof InlineChoice> = {
+    title: 'Questionnaire / questions / inline-choice',
+    component: InlineChoice,
+    decorators: [withColorSchemeDecorator, WithQuestionFormProviderDecorator],
+};
+
+export default meta;
+type Story = StoryObj<typeof InlineChoice>;
+
+export const Default: Story = {
+    render: () => <InlineChoice parentPath={[]} questionItem={questionItemDefault} context={{} as ItemContext} />,
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        const getQuestion = () => canvas.findAllByTestId('question-inline-choice');
+
+        const questions: HTMLElement[] = await getQuestion();
+        await expect(questions.length > 0).toBe(true);
+
+        // Choose an item in the list
+        const checkbox1 = await findByTestId<HTMLInputElement>(questions[0]!, 'inline-choice__medication');
+        expect(checkbox1.checked).toBe(false);
+
+        await userEvent.click(checkbox1);
+        await expect(checkbox1.checked).toBe(true);
+
+        // Choose another item in the list
+        const checkbox2 = await findByTestId<HTMLInputElement>(questions[0]!, 'inline-choice__food');
+        expect(checkbox2.checked).toBe(false);
+
+        await userEvent.click(checkbox2);
+        await expect(checkbox1.checked).toBe(false);
+        await expect(checkbox2.checked).toBe(true);
+    },
+};
+
+export const Multiple: Story = {
+    render: () => <InlineChoice parentPath={[]} questionItem={questionItemMultiple} context={{} as ItemContext} />,
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        const getQuestion = () => canvas.findAllByTestId('question-inline-choice');
+
+        const questions: HTMLElement[] = await getQuestion();
+        await expect(questions.length > 0).toBe(true);
+
+        // Choose an item in the list
+        const checkbox1 = await findByTestId<HTMLInputElement>(questions[0]!, 'inline-choice__headache');
+        expect(checkbox1.checked).toBe(false);
+
+        await userEvent.click(checkbox1);
+        await expect(checkbox1.checked).toBe(true);
+
+        // Choose another item in the list
+        const checkbox2 = await findByTestId<HTMLInputElement>(questions[0]!, 'inline-choice__nausea');
+        expect(checkbox2.checked).toBe(false);
+
+        await userEvent.click(checkbox2);
+        await expect(checkbox1.checked).toBe(true);
+        await expect(checkbox2.checked).toBe(true);
+    },
+};
+
+export const Horizontal: Story = {
+    render: () => (
+        <InlineChoice
+            parentPath={[]}
+            questionItem={{
+                ...questionItemMultiple,
+                inlineChoiceDirection: 'horizontal',
+            }}
+            context={{} as ItemContext}
+        />
+    ),
+};
+
+const questionItemDefault: InlineChoiceQuestionItem = {
+    text: 'Type',
+    type: 'choice',
+    linkId: 'type',
+    required: true,
+    answerOption: [
+        {
+            value: {
+                Coding: {
+                    code: 'medication',
+                    system: 'http://hl7.org/fhir/allergy-intolerance-category',
+                    display: 'Medication',
+                },
+            },
+        },
+        {
+            value: {
+                Coding: {
+                    code: 'food',
+                    system: 'http://hl7.org/fhir/allergy-intolerance-category',
+                    display: 'Food',
+                },
+            },
+        },
+        {
+            value: {
+                Coding: {
+                    code: 'environment',
+                    system: 'http://hl7.org/fhir/allergy-intolerance-category',
+                    display: 'Environment',
+                },
+            },
+        },
+    ],
+    itemControl: {
+        coding: [
+            {
+                code: 'inline-choice',
+            },
+        ],
+    },
+};
+
+const questionItemMultiple: InlineChoiceQuestionItem = {
+    text: 'Reaction',
+    type: 'choice',
+    linkId: 'reaction',
+    repeats: true,
+    answerOption: [
+        {
+            value: {
+                Coding: {
+                    code: '39579001',
+                    system: 'http://snomed.ct',
+                    display: 'Anaphylaxis',
+                },
+            },
+        },
+        {
+            value: {
+                Coding: {
+                    code: '25064002',
+                    system: 'http://snomed.ct',
+                    display: 'Headache',
+                },
+            },
+        },
+        {
+            value: {
+                Coding: {
+                    code: '247472004',
+                    system: 'http://snomed.ct',
+                    display: 'Hives (Wheal)',
+                },
+            },
+        },
+        {
+            value: {
+                Coding: {
+                    code: '422587007',
+                    system: 'http://snomed.ct',
+                    display: 'Nausea',
+                },
+            },
+        },
+        {
+            value: {
+                Coding: {
+                    code: '422400008',
+                    system: 'http://snomed.ct',
+                    display: 'Vomiting',
+                },
+            },
+        },
+    ],
+    itemControl: {
+        coding: [
+            {
+                code: 'inline-choice',
+            },
+        ],
+    },
+};
