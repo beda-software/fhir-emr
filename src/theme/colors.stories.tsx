@@ -12,6 +12,7 @@ const meta: Meta = {
     title: 'Theme',
     parameters: {
         layout: 'padded',
+        chromatic: { disableSnapshot: true },
     },
 };
 

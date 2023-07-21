@@ -1,4 +1,5 @@
 import 'antd/dist/reset.css';
+import 'src/styles/index.scss';
 import { Preview } from '@storybook/react';
 import { withThemeDecorator } from './decorators';
 
