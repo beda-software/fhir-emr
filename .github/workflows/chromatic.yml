@@ -1,3 +1,5 @@
+# https://www.chromatic.com/docs/github-actions
+
 name: chromatic
 
 on:
@@ -8,7 +10,6 @@ on:
 jobs:
   Chromatic:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    needs: Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
