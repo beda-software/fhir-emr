@@ -5,7 +5,6 @@ jobs:
         runs-on: ubuntu-latest
         env:
             AIDBOX_LICENSE: ${{ secrets.AIDBOX_LICENSE }}
-            CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
         steps:
             - uses: actions/checkout@v2
             - uses: actions/setup-node@v3
@@ -40,6 +39,19 @@ jobs:
               run: docker-compose logs
             - name: Run tests
               run: yarn test --silent
-            - name: Publish Storybook and run visual tests
-              run: yarn chromatic
             - run: yarn build
+    Chromatic:
+      if: ${{ github.event.workflow_run.conclusion == 'success' }}
+      needs: Test
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v1
+        - name: Prepare config
+          run: cp shared/src/config.local.ts shared/src/config.ts
+        - name: Install deps
+          run: yarn install --network-concurrency 1
+        - run: yarn compile
+        - name: Publish to Chromatic
+          uses: chromaui/action@v1
+          with:
+            projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}

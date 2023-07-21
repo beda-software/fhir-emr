@@ -15,7 +15,7 @@
         "storybook": "storybook dev -p 6006",
         "build-storybook": "storybook build",
         "typecheck": "tsc",
-        "chromatic": "chromatic --exit-zero-on-changes",
+        "chromatic": "chromatic",
         "prepare": "husky install"
     },
     "dependencies": {
