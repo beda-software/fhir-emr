@@ -1,7 +1,7 @@
 name: Release & Deploy
 on:
     workflow_run:
-        workflows: [chromatic]
+        workflows: [test]
         branches: [master]
         types: [completed]
 
