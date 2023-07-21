@@ -40,18 +40,3 @@ jobs:
             - name: Run tests
               run: yarn test --silent
             - run: yarn build
-    Chromatic:
-      if: ${{ github.event.workflow_run.conclusion == 'success' }}
-      needs: Test
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v1
-        - name: Prepare config
-          run: cp shared/src/config.local.ts shared/src/config.ts
-        - name: Install deps
-          run: yarn install --network-concurrency 1
-        - run: yarn compile
-        - name: Publish to Chromatic
-          uses: chromaui/action@v1
-          with:
-            projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
