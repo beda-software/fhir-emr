@@ -2,7 +2,7 @@ import * as ANTDColors from '@ant-design/colors';
 import _ from 'lodash';
 import { DefaultTheme } from 'styled-components';
 
-const brandColors: Pick<DefaultTheme, 'primary' | 'secondary'> = {
+export const brandColors: Pick<DefaultTheme, 'primary' | 'secondary'> = {
     primary: '#3366ff',
     secondary: '#05BDB1',
 };
