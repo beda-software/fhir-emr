@@ -31,7 +31,7 @@ jobs:
               run: |
                 npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
                   "npx http-server storybook-static --port 6006 --silent" \
-                  "npx wait-on tcp:6006 && yarn test-storybook --maxWorkers=2"
+                  "npx wait-on tcp:6006 && yarn test-storybook"
             - name: Create deps dir
               run: mkdir -p zenproject/zen-packages && chmod 0777 zenproject/zen-packages
             - name: Run aidbox
