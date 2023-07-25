@@ -21,7 +21,7 @@ async function rpcJSON<T extends Rpc>(method: T['method'], params: T['params']) 
 }
 
 describe('Zen manifest', () => {
-    test.skip('There is no zen errors', async () => {
+    test('There is no zen errors', async () => {
         await loginAdminUser();
         const errors = ensure(await rpcJSON<Rpc & { result: { errors: Array<unknown> } }>('aidbox.zen/errors', {}));
         expect(errors.errors).toStrictEqual([]);
