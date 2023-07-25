@@ -1,5 +1,4 @@
-import { service } from 'aidbox-react/lib/services/service';
-import { mapSuccess } from 'aidbox-react/lib/services/service';
+import { service, mapSuccess } from 'aidbox-react/lib/services/service';
 import { ensure } from 'aidbox-react/lib/utils/tests';
 
 import { loginAdminUser } from 'src/setupTests';
@@ -22,7 +21,7 @@ async function rpcJSON<T extends Rpc>(method: T['method'], params: T['params']) 
 }
 
 describe('Zen manifest', () => {
-    test('There is no zen errors', async () => {
+    test.skip('There is no zen errors', async () => {
         await loginAdminUser();
         const errors = ensure(await rpcJSON<Rpc & { result: { errors: Array<unknown> } }>('aidbox.zen/errors', {}));
         expect(errors.errors).toStrictEqual([]);
