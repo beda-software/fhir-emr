@@ -8,7 +8,7 @@ import { Reference, Patient, Questionnaire, QuestionnaireResponse } from 'fhir/r
 export function usePatientDocuments(patient: Patient, encounter?: Reference) {
     const [response] = useService(async () => {
         const qrResponse = await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
-            source: patient.id,
+            ".source.id": patient.id,
             encounter: encounter ? parseFHIRReference(encounter).id : undefined,
             _sort: '-authored',
         });
