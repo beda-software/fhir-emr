@@ -1,16 +1,18 @@
 import { t } from '@lingui/macro';
-import { WithId } from 'fhir-react/lib/services/fhir';
 import {
     AllergyIntolerance,
     Condition,
     Consent,
     Immunization,
     MedicationStatement,
+    Observation,
     Patient,
     Provenance,
     Resource,
 } from 'fhir/r4b';
 import { Link, useLocation } from 'react-router-dom';
+
+import { WithId } from 'fhir-react/lib/services/fhir';
 
 import { extractExtension, fromFHIRReference } from 'shared/src/utils/converter';
 
@@ -211,6 +213,58 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     title: t`Practitioner`,
                     key: 'actor',
                     render: (r: Consent) => r.provision?.actor?.[0]?.reference.display,
+                    width: 200,
+                },
+            ],
+        },
+        {
+            value: 'observations',
+            label: 'Observations',
+            renderTable: (option: Option) => (
+                <ResourceTable<Observation>
+                    key={`resource-table-${option.value}`}
+                    resourceType="Observation"
+                    params={{
+                        patient: patient.id,
+                        status: 'final',
+                        _sort: ['-_lastUpdated'],
+                        _revinclude: ['Provenance:target'],
+                    }}
+                    option={option}
+                />
+            ),
+            getTableColumns: (provenanceList: Provenance[] = []) => [
+                {
+                    title: t`Title`,
+                    key: 'title',
+                    render: (resource: Observation) => (
+                        <LinkToEdit
+                            name={resource.code?.coding?.[0]?.display}
+                            resource={resource}
+                            provenanceList={provenanceList}
+                        />
+                    ),
+                    width: 200,
+                },
+                {
+                    title: t`Date`,
+                    key: 'date',
+                    render: (r: Consent) => {
+                        const createdAt = extractExtension(r.meta?.extension, 'ex:createdAt');
+                        return createdAt ? formatHumanDate(r.dateTime || createdAt) : null;
+                    },
+                    width: 100,
+                },
+                {
+                    title: t`Value`,
+                    key: 'actor',
+                    render: (r: Observation) => {
+                        if (r.valueQuantity) {
+                            return JSON.stringify(r.valueQuantity);
+                        } else {
+                            return JSON.stringify(r.component);
+                        }
+                    },
                     width: 200,
                 },
             ],
