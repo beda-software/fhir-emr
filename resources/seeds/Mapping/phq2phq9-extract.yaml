@@ -110,7 +110,7 @@ body:
                       - who:
                             id: $ author.id
                             resourceType: $ author.resourceType
-                            display: $ author.name.0.given.0 + ' ' + author.name.0.family
+                            display: $ author.name.0.given.0 + " " + author.name.0.family
                   entity:
                       - role: source
                         what:
