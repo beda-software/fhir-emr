@@ -50,6 +50,12 @@ function getColumns(): ColumnsType<WearablesDataRecord> {
             key: 'calories',
             render: (_text, resource) => (resource.energy !== undefined ? Math.round(resource.energy) : undefined),
         },
+        {
+            title: t`Provider`,
+            dataIndex: 'provider',
+            key: 'provider',
+            render: (_text, resource) => resource.provider,
+        },
     ];
 }
 
@@ -80,7 +86,9 @@ export function PatientWearables(props: PatientWearablesProps) {
                 ),
             }}
             rowKey={(p) => p.sid}
-            dataSource={isSuccess(wearablesData) ? wearablesData.data.records : []}
+            dataSource={
+                isSuccess(wearablesData) ? [...wearablesData.data.records, ...wearablesData.data.metriportRecords] : []
+            }
             columns={getColumns()}
             loading={isLoading(wearablesData) ? { indicator: SpinIndicator } : undefined}
         />

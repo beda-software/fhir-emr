@@ -18,6 +18,7 @@ export interface WearablesDataRecord {
     code?: string;
     duration?: number;
     energy?: number;
+    provider?: string;
 }
 
 export function usePatientWearablesData(patient: WithId<Patient>) {
@@ -78,9 +79,6 @@ async function fetchPatientRecords(patient: WithId<Patient>) {
     ).then((response): Promise<WearablesDataRecord[]> => response.json().then(({ records }) => records));
 }
 
-export interface MetriportDataRecord extends WearablesDataRecord {
-    provider: string;
-}
 async function fetchPatientMetriportRecords(patient: WithId<Patient>) {
     const patientMetriportUserId = patient.identifier?.find(
         (identifier) => identifier.system === config.metriportIdentifierSystem,
@@ -101,5 +99,5 @@ async function fetchPatientMetriportRecords(patient: WithId<Patient>) {
                 Authorization: `Bearer ${getToken()}`,
             },
         },
-    ).then((response): Promise<MetriportDataRecord[]> => response.json().then(({ records }) => records));
+    ).then((response): Promise<WearablesDataRecord[]> => response.json().then(({ records }) => records));
 }
