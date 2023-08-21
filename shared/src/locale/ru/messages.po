@@ -17,10 +17,6 @@ msgstr ""
 msgid "{0}"
 msgstr ""
 
-#: web/src/containers/PatientDetails/PatientDocument/PhysicalExam/index.tsx:35
-#~ msgid "AAOx3, converses normally. CN II - XII grossly intact. Gait and coordination intact. 5+ BL UE/LE strength, no gross motor or sensory defects"
-#~ msgstr ""
-
 #: src/components/PatientEncounter/index.tsx:44
 #: src/containers/DocumentsList/index.tsx:68
 #: src/containers/EncounterList/index.tsx:71
@@ -50,19 +46,11 @@ msgstr ""
 msgid "Add break"
 msgstr ""
 
-#: web/src/containers/QuestionnaireBuilder/index.tsx:778
-#~ msgid "Add group"
-#~ msgstr "Добавить группу"
-
 #: src/containers/PractitionerList/index.tsx:53
 msgid "Add new practitioner"
 msgstr ""
 
-#: web/src/containers/PractitionerList/index.tsx:45
-#~ msgid "Add New Practitioner"
-#~ msgstr ""
-
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:299
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:304
 msgid "Add option"
 msgstr ""
 
@@ -71,20 +59,11 @@ msgstr ""
 msgid "Add patient"
 msgstr "Добавить пациенда"
 
-#: web/src/components/ModalNewPractitioner/index.tsx:28
-#: web/src/components/ModalNewPractitioner/index.tsx:31
-#~ msgid "Add practitioner"
-#~ msgstr "Добавить врача"
-
 #: src/containers/QuestionnaireList/index.tsx:88
 msgid "Add questionnaire"
 msgstr "Добавить опросник"
 
-#: web/src/containers/QuestionnaireBuilder/index.tsx:799
-#~ msgid "Add questionnaire item"
-#~ msgstr "Добавить поле опросника"
-
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:80
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:85
 msgid "Adjust Last Option Right"
 msgstr ""
 
@@ -103,11 +82,6 @@ msgstr ""
 #: src/containers/Appointment/PublicAppointment.tsx:47
 msgid "Appointment booking"
 msgstr ""
-
-#: web/src/components/PatientEncounter/index.tsx:34
-#: web/src/containers/EncounterList/index.tsx:39
-#~ msgid "Appointment date"
-#~ msgstr "Дата приема"
 
 #: src/containers/Scheduling/ScheduleCalendar/index.tsx:128
 msgid "Appointment successfully added"
@@ -135,10 +109,6 @@ msgstr ""
 msgid "Birth date"
 msgstr "Дата рождения"
 
-#: web/src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:45
-#~ msgid "Blood pressure"
-#~ msgstr ""
-
 #: src/containers/Scheduling/Availability/index.tsx:172
 msgid "Break"
 msgstr ""
@@ -165,16 +135,12 @@ msgstr ""
 msgid "Clinician successfully updated"
 msgstr ""
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:168
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:505
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:173
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:510
 msgid "Code"
 msgstr ""
 
-#: web/src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:48
-#~ msgid "Col"
-#~ msgstr ""
-
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:56
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:60
 msgid "Col (default)"
 msgstr ""
 
@@ -187,7 +153,7 @@ msgstr ""
 msgid "completed"
 msgstr ""
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:485
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:490
 msgid "Concepts:"
 msgstr ""
 
@@ -221,7 +187,7 @@ msgstr ""
 msgid "Create practitioner"
 msgstr ""
 
-#: src/components/ChangesDiff/index.tsx:11
+#: src/components/ChangesDiff/index.tsx:28
 msgid "Created"
 msgstr ""
 
@@ -244,7 +210,7 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:53
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:57
 msgid "Date & time slot"
 msgstr ""
 
@@ -256,7 +222,7 @@ msgstr ""
 msgid "days"
 msgstr ""
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:52
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:56
 msgid "Default"
 msgstr ""
 
@@ -265,29 +231,17 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: web/src/containers/PatientDetails/PatientHeader/index.tsx:49
-#~ msgid "Demographics"
-#~ msgstr ""
-
 #: src/containers/QuestionnaireBuilder/PromptForm.tsx:40
 msgid "Describe requirements to a questionnaire"
 msgstr ""
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:473
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:478
 msgid "Description:"
 msgstr ""
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:499
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:504
 msgid "Display"
 msgstr ""
-
-#: web/src/containers/EncounterQR/index.tsx:94
-#~ msgid "Document is saved"
-#~ msgstr ""
-
-#: web/src/containers/PatientDetails/index.tsx:158
-#~ msgid "documents"
-#~ msgstr "документы"
 
 #: src/containers/PatientDetails/PatientDocuments/index.tsx:18
 #: src/containers/PatientDetails/PatientHeader/index.tsx:78
@@ -307,10 +261,6 @@ msgstr "Черновик"
 msgid "Draft successfully deleted"
 msgstr ""
 
-#: web/src/containers/QuestionnaireBuilder/index.tsx:196
-#~ msgid "Drag items into the field"
-#~ msgstr "Переместите элементы в поле"
-
 #: src/containers/PatientDetails/PatientWearables/index.tsx:29
 msgid "Duration (min)"
 msgstr ""
@@ -322,10 +272,6 @@ msgstr ""
 #: src/containers/Scheduling/ScheduleCalendar/components/AppointmentDetailsModal/index.tsx:82
 msgid "Edit"
 msgstr "Редактировать"
-
-#: web/src/containers/QuestionnaireList/index.tsx:62
-#~ msgid "Edit in builder"
-#~ msgstr ""
 
 #: src/containers/QuestionnaireList/index.tsx:51
 msgid "Edit in SDC IDE"
@@ -367,18 +313,6 @@ msgstr "Конец периода"
 msgid "Error deleting a draft"
 msgstr ""
 
-#: web/src/containers/PatientDetails/PatientDocument/PhysicalExam/index.tsx:40
-#~ msgid "External genitalia without erythema, exudate or discharge"
-#~ msgstr ""
-
-#: web/src/containers/PatientDetails/index.tsx:47
-#~ msgid "Female"
-#~ msgstr "Женский"
-
-#: web/src/containers/QuestionnaireBuilder/index.tsx:280
-#~ msgid "Field type"
-#~ msgstr "Тип поля"
-
 #: src/components/TextWithMacroFill/index.tsx:39
 msgid "Fill"
 msgstr ""
@@ -391,14 +325,6 @@ msgstr "Найти пациента"
 msgid "Find questionnaire"
 msgstr "Найти опросник"
 
-#: web/src/containers/PractitionerList/index.tsx:26
-#~ msgid "Fullname"
-#~ msgstr "ФИО"
-
-#: web/src/containers/PatientDetails/PatientHeader/index.tsx:84
-#~ msgid "General information"
-#~ msgstr "Основная информация"
-
 #: src/containers/PatientDetails/PatientOverview/index.tsx:98
 #: src/containers/PractitionerDetails/PractitionerOverview/index.tsx:54
 msgid "General Information"
@@ -408,7 +334,7 @@ msgstr ""
 msgid "Go to the encounter"
 msgstr ""
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:133
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:138
 msgid "Help text"
 msgstr ""
 
@@ -436,11 +362,11 @@ msgstr ""
 msgid "Infant"
 msgstr ""
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:32
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:36
 msgid "Inline choice"
 msgstr ""
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:242
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:247
 msgid "Inline options?"
 msgstr ""
 
@@ -452,10 +378,6 @@ msgstr ""
 msgid "Label"
 msgstr ""
 
-#: web/src/containers/App/index.tsx:161
-#~ msgid "Log in"
-#~ msgstr "Войти"
-
 #: src/containers/SignIn/index.tsx:57
 msgid "Log in as Practitioner"
 msgstr ""
@@ -464,31 +386,13 @@ msgstr ""
 msgid "Log out"
 msgstr "Выйти"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:92
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:97
 msgid "Macro text"
 msgstr ""
-
-#: web/src/containers/PatientDetails/index.tsx:45
-#~ msgid "Male"
-#~ msgstr "Мужской"
-
-#: web/src/containers/PatientDetails/index.tsx:35
-#: web/src/containers/PatientDetails/index.tsx:37
-#: web/src/containers/PatientDetails/index.tsx:48
-#~ msgid "Missing"
-#~ msgstr "Отсутствует"
 
 #: shared/src/utils/date.ts:109
 msgid "mo"
 msgstr ""
-
-#: web/src/containers/QuestionnaireList/index.tsx:27
-#~ msgid "msg.QuestionnaireName"
-#~ msgstr "Название"
-
-#: web/src/containers/QuestionnaireBuilder/index.tsx:149
-#~ msgid "msg.QuestionnaireNamePlaceholder"
-#~ msgstr "Название"
 
 #: src/containers/PatientDetails/PatientOverview/utils.tsx:77
 #: src/containers/PatientDetails/PatientOverview/utils.tsx:115
@@ -510,53 +414,25 @@ msgstr "Имя"
 msgid "msg.QuestionnaireName"
 msgstr "Название"
 
-#: web/src/containers/PatientDetails/PatientDocument/PhysicalExam/index.tsx:28
-#~ msgid "NCAT, PERRL, normal conjunctivae, nonicteric sclerae, bilateral EAC/TM clear, no nasal discharge, OP clear, moist mucous membranes"
-#~ msgstr ""
-
 #: src/components/EncountersTable/index.tsx:30
 #: src/containers/PatientDetails/PatientResources/ResourceTable.tsx:59
 #: src/containers/PatientDetails/PatientWearables/index.tsx:75
 #: src/containers/PatientList/index.tsx:68
 #: src/containers/PractitionerList/index.tsx:89
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:491
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:496
 #: src/containers/QuestionnaireList/index.tsx:108
 msgid "No data"
 msgstr "Нет данных"
-
-#: web/src/containers/PatientDetails/PatientDocument/PhysicalExam/index.tsx:43
-#~ msgid "No enlarged lymph nodes of occipital, pre- and postauricular, submandibular, anterior or posterior cervical, or supraclavicular identified"
-#~ msgstr ""
 
 #: src/components/TextWithMacroFill/index.tsx:29
 msgid "No prepared text"
 msgstr ""
 
-#: web/src/containers/PatientDetails/PatientDocument/PhysicalExam/index.tsx:31
-#~ msgid "No respiratory distress, lungs CTAB: no rales, rhonchi, or wheeze"
-#~ msgstr ""
-
-#: web/src/containers/PatientDetails/PatientDocument/PhysicalExam/index.tsx:42
-#~ msgid "Normal external anus and normal tone. No palpable masses, normal mucosa, brown stool. Hemoccult negative"
-#~ msgstr ""
-
-#: web/src/containers/PatientDetails/PatientDocument/PhysicalExam/index.tsx:36
-#~ msgid "Normal mood and affect. Judgement/competence is appropriate"
-#~ msgstr ""
-
-#: web/src/containers/PatientDetails/PatientDocument/PhysicalExam/index.tsx:33
-#~ msgid "Normal ROM of UE and LE, normal bulk and tone"
-#~ msgstr ""
-
-#: web/src/containers/PatientDetails/PatientDocument/PhysicalExam/index.tsx:38
-#~ msgid "Normal sensation bilaterally on soles of feet with 10g monofilament"
-#~ msgstr ""
-
 #: shared/src/utils/date.ts:144
 msgid "NotChild"
 msgstr ""
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:44
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:48
 msgid "Number (default)"
 msgstr ""
 
@@ -572,14 +448,14 @@ msgstr ""
 msgid "Open"
 msgstr "Открыть"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:159
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:164
 msgid "Option {0}"
 msgstr ""
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:179
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:187
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:206
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:226
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:184
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:192
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:211
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:231
 msgid "Option {index}"
 msgstr ""
 
@@ -587,10 +463,6 @@ msgstr ""
 #: src/containers/PractitionerDetails/PractitionerHeader/index.tsx:70
 msgid "Overview"
 msgstr ""
-
-#: web/src/containers/PatientDetails/index.tsx:37
-#~ msgid "Passport data"
-#~ msgstr "Паспортные данные"
 
 #: src/containers/SignIn/index.tsx:49
 msgid "Password"
@@ -616,21 +488,9 @@ msgstr "Пациент успешно создан"
 msgid "Patients"
 msgstr "Пациенты"
 
-#: web/src/containers/PatientDetails/PatientDocument/PhysicalExam/index.tsx:41
-#~ msgid "Penis without lesions. No urethral discharge. Testes normal size without masses or tenderness. No scrotal masses. No hernia"
-#~ msgstr ""
-
-#: web/src/containers/PatientDetails/index.tsx:39
-#~ msgid "Phone number"
-#~ msgstr "Номер телефона"
-
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:37
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:41
 msgid "Phone widget"
 msgstr ""
-
-#: web/src/containers/PractitionerList/index.tsx:38
-#~ msgid "Position"
-#~ msgstr "Должность"
 
 #: src/components/PatientEncounter/index.tsx:23
 #: src/containers/EncounterList/index.tsx:52
@@ -657,10 +517,6 @@ msgstr ""
 #: src/containers/PatientDetails/PatientWearables/index.tsx:54
 msgid "Provider"
 msgstr ""
-
-#: web/src/containers/PatientDetails/PatientDocument/PhysicalExam/index.tsx:34
-#~ msgid "Pulses intact with normal cap refill, no LE pitting edema or calf tenderness"
-#~ msgstr ""
 
 #: src/containers/PatientQuestionnaire/index.tsx:77
 msgid "Questionnaire"
@@ -700,13 +556,9 @@ msgstr "Сбросить пароль"
 msgid "Resources"
 msgstr ""
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:59
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:63
 msgid "Row"
 msgstr ""
-
-#: web/src/containers/PatientDetails/PatientDocument/PhysicalExam/index.tsx:30
-#~ msgid "RRR, normal S1/S2, no murmurs/gallops/rub"
-#~ msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:130
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:89
@@ -744,17 +596,13 @@ msgstr "Поиск по врачу"
 msgid "See all"
 msgstr ""
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:424
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:429
 msgid "See ValueSet details"
 msgstr ""
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:31
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:35
 msgid "Select (default)"
 msgstr ""
-
-#: web/src/components/BaseQuestionnaireResponseForm/index.tsx:54
-#~ msgid "Send"
-#~ msgstr "Отправить"
 
 #: src/containers/PatientDetails/PatientOverview/utils.tsx:299
 msgid "Service"
@@ -764,15 +612,11 @@ msgstr ""
 msgid "Set password"
 msgstr "Задать пароль"
 
-#: web/src/containers/PatientDetails/index.tsx:42
-#~ msgid "Sex"
-#~ msgstr "Пол"
-
 #: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:68
 msgid "Share link"
 msgstr ""
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:45
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:49
 msgid "Slider"
 msgstr ""
 
@@ -780,17 +624,9 @@ msgstr ""
 msgid "Smart Apps"
 msgstr ""
 
-#: web/src/containers/PatientDetails/PatientDocument/PhysicalExam/index.tsx:32
-#~ msgid "Soft and non-tender with no guarding or rebound; +BS normoactive, no tympany on auscultation"
-#~ msgstr ""
-
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:33
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:37
 msgid "Solid radio button"
 msgstr ""
-
-#: web/src/containers/PractitionerList/index.tsx:83
-#~ msgid "Speciality"
-#~ msgstr "Специальность"
 
 #: src/containers/PractitionerList/index.tsx:102
 msgid "Specialty"
@@ -813,7 +649,7 @@ msgstr "Начало периода"
 msgid "Start the encounter"
 msgstr ""
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:105
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:110
 msgid "Start value"
 msgstr ""
 
@@ -824,15 +660,15 @@ msgstr ""
 msgid "Status"
 msgstr "Статус"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:119
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:124
 msgid "Step"
 msgstr ""
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:126
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:131
 msgid "Stop label"
 msgstr ""
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:112
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:117
 msgid "Stop value"
 msgstr ""
 
@@ -844,11 +680,7 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: web/src/containers/PatientDetails/PatientDocument/PhysicalExam/index.tsx:29
-#~ msgid "Supple, normal ROM, no lymphadenopathy/masses, nontender"
-#~ msgstr ""
-
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:250
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:255
 msgid "System"
 msgstr ""
 
@@ -856,18 +688,14 @@ msgstr ""
 msgid "Text"
 msgstr ""
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:36
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:40
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:44
 msgid "Text (default)"
 msgstr ""
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:41
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:45
 msgid "Text with macro"
 msgstr ""
-
-#: web/src/containers/PatientDetails/PatientDocument/PhysicalExam/index.tsx:39
-#~ msgid "The chest wall is symmetric, without deformity, and is atraumatic in appearance"
-#~ msgstr ""
 
 #: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:63
 msgid "The link was copied to clipboard"
@@ -899,11 +727,11 @@ msgstr ""
 msgid "Upcoming appointment"
 msgstr ""
 
-#: src/components/ChangesDiff/index.tsx:12
+#: src/components/ChangesDiff/index.tsx:29
 msgid "Updated"
 msgstr ""
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:478
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:483
 msgid "Url:"
 msgstr ""
 
@@ -915,21 +743,17 @@ msgstr ""
 msgid "Value"
 msgstr ""
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:422
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:427
 msgid "ValueSet details"
 msgstr ""
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:396
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:401
 msgid "ValueSet url"
 msgstr ""
 
 #: src/containers/EncounterList/index.tsx:91
 msgid "Video call"
 msgstr ""
-
-#: web/src/containers/PatientDetails/PatientDocument/PhysicalExam/index.tsx:37
-#~ msgid "Warm, dry, and intact. No rashes, dermatoses, petechiae, or lesions"
-#~ msgstr ""
 
 #: src/containers/PatientDetails/PatientHeader/index.tsx:79
 #: src/containers/PatientDetails/PatientWearables/index.tsx:65
@@ -940,17 +764,9 @@ msgstr ""
 msgid "Week"
 msgstr ""
 
-#: web/src/containers/App/index.tsx:159
-#~ msgid "Welcome"
-#~ msgstr "Добро пожаловать"
-
 #: src/containers/SignIn/index.tsx:33
 msgid "Welcome to"
 msgstr ""
-
-#: web/src/containers/PatientDetails/PatientDocument/PhysicalExam/index.tsx:27
-#~ msgid "Well nourished, well developed, awake and alert, resting comfortably in no acute distress, cooperative on exam"
-#~ msgstr ""
 
 #: shared/src/utils/date.ts:108
 msgid "yr"
