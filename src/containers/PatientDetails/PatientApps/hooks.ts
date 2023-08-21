@@ -36,7 +36,7 @@ export async function launch({ user, client, patient }: LaunchProps) {
         method: 'POST',
         data: {
             method: 'aidbox.smart/get-launch-uri',
-            params: { user, iss: config.baseURL, client, ctx: { patient } },
+            params: { user, iss: `${config.baseURL}/fhir`, client, ctx: { patient } },
         },
     });
     if (isSuccess(response)) {
