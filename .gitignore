@@ -4,6 +4,7 @@ coverage
 .DS_Store
 .idea
 htmlcov
+build
 
 # Project-specific files
 shared/src/config.ts

@@ -24,6 +24,7 @@ module.exports = {
         ecmaVersion: 'latest',
         sourceType: 'module',
     },
+    ignorePatterns: ['.eslintrc.cjs'],
     settings: {
         'import/resolver': {
             'eslint-import-resolver-custom-alias': {
@@ -38,6 +39,7 @@ module.exports = {
     plugins: ['react', '@typescript-eslint', 'react-refresh', 'prettier', 'import'],
     rules: {
         'react-refresh/only-export-components': 'warn',
+        '@typescript-eslint/no-explicit-any': 'warn',
         'react/jsx-uses-react': 'off',
         'react/react-in-jsx-scope': 'off',
         '@typescript-eslint/no-non-null-assertion': 'off',
