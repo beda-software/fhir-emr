@@ -113,10 +113,13 @@ services:
         ports:
             - '8082:8081'
         environment:
-            TIMESCALEDB_SERVICE_NAME: datastream-timescaledb
-            PGUSER: postgres
-            PGPASSWORD: postgres
-            EMR_WEB_URL: "http://localhost:3000"
+            - TIMESCALEDB_SERVICE_NAME=datastream-timescaledb
+            - PGUSER=postgres
+            - PGPASSWORD=postgres
+            - EMR_WEB_URL="http://localhost:3000"
+            - METRIPORT_USE_SANDBOX=true
+            - METRIPORT_WEBHOOK_AUTH_KEY
+            - METRIPORT_API_SECRET
     jute:
         image: bedasoftware/jute-microservice:latest
         ports:
