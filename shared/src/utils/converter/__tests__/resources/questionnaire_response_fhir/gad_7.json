@@ -140,6 +140,9 @@
   "source": {
     "reference": "Patient/683e382b-fed4-433e-9b6d-a847a7953bc0"
   },
+  "subject": {
+    "reference": "Patient/683e382b-fed4-433e-9b6d-a847a7953bc0"
+  },
   "status": "completed",
   "id": "a00b8309-f74f-462c-a7e4-64852d5bf707",
   "authored": "2023-04-06T01:29:05Z"

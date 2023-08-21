@@ -30,6 +30,9 @@
   "source": {
     "reference": "Patient/test-patient"
   },
+  "subject": {
+    "reference": "Patient/test-patient"
+  },
   "status": "completed",
   "authored": "2023-04-14T09:36:35Z",
   "questionnaire": "allergies",

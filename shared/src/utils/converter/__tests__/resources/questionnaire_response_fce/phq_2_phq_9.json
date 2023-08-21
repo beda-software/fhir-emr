@@ -189,5 +189,9 @@
     "id": "683e382b-fed4-433e-9b6d-a847a7953bc0",
     "resourceType": "Patient"
   },
+  "subject": {
+    "id": "683e382b-fed4-433e-9b6d-a847a7953bc0",
+    "resourceType": "Patient"
+  },
   "status": "completed"
 }

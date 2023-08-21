@@ -95,6 +95,9 @@
   "source": {
     "reference": "Patient/683e382b-fed4-433e-9b6d-a847a7953bc0"
   },
+  "subject": {
+    "reference": "Patient/683e382b-fed4-433e-9b6d-a847a7953bc0"
+  },
   "status": "completed",
   "id": "3d077aed-ccd4-43d4-843e-0e2224e7571e",
   "authored": "2023-04-06T01:59:41Z"

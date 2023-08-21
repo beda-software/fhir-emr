@@ -114,5 +114,8 @@
   "source": {
     "reference": "Patient/683e382b-fed4-433e-9b6d-a847a7953bc0"
   },
+  "subject": {
+    "reference": "Patient/683e382b-fed4-433e-9b6d-a847a7953bc0"
+  },
   "status": "completed"
 }

@@ -72,6 +72,10 @@
     "id": "683e382b-fed4-433e-9b6d-a847a7953bc0",
     "resourceType": "Patient"
   },
+  "subject": {
+    "id": "683e382b-fed4-433e-9b6d-a847a7953bc0",
+    "resourceType": "Patient"
+  },
   "status": "in-progress",
   "id": "f0a0b4cf-ff0e-47e2-814d-3327a138653e",
   "authored": "2023-04-06T02:48:17.734Z"

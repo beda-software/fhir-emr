@@ -71,6 +71,9 @@
   "source": {
     "reference": "Patient/683e382b-fed4-433e-9b6d-a847a7953bc0"
   },
+  "subject": {
+    "reference": "Patient/683e382b-fed4-433e-9b6d-a847a7953bc0"
+  },
   "status": "completed",
   "id": "5d59e534-a7ce-4254-8a41-31b3895ea525",
   "authored": "2023-04-06T02:39:02Z"
