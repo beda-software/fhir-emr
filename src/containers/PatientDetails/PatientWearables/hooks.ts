@@ -91,7 +91,7 @@ async function fetchPatientMetriportRecords(patient: WithId<Patient>) {
     return fetch(
         matchCurrentUserRole({
             [Role.Patient]: () => `${config.wearablesDataStreamService}/metriport/records?${searchParams}`,
-            [Role.Admin]: () => `${config.wearablesDataStreamService}/api/v1/${patient.id}/records`,
+            [Role.Admin]: () => `${config.wearablesDataStreamService}/metriport/${patient.id}/records`,
         }),
         {
             method: 'GET',
