@@ -22,7 +22,7 @@ msgstr ""
 #~ msgstr ""
 
 #: src/components/PatientEncounter/index.tsx:44
-#: src/containers/DocumentsList/index.tsx:69
+#: src/containers/DocumentsList/index.tsx:68
 #: src/containers/EncounterList/index.tsx:71
 #: src/containers/PatientList/index.tsx:99
 #: src/containers/PractitionerList/index.tsx:109
@@ -42,7 +42,7 @@ msgstr ""
 msgid "Activities"
 msgstr ""
 
-#: src/containers/PatientDetails/PatientWearables/index.tsx:21
+#: src/containers/PatientDetails/PatientWearables/index.tsx:23
 msgid "Activity"
 msgstr ""
 
@@ -147,7 +147,7 @@ msgstr ""
 msgid "Build your form"
 msgstr ""
 
-#: src/containers/PatientDetails/PatientWearables/index.tsx:45
+#: src/containers/PatientDetails/PatientWearables/index.tsx:48
 msgid "Calories"
 msgstr ""
 
@@ -221,7 +221,7 @@ msgstr ""
 msgid "Create practitioner"
 msgstr ""
 
-#: src/containers/PatientDetails/DocumentHistory/index.tsx:53
+#: src/components/ChangesDiff/index.tsx:11
 msgid "Created"
 msgstr ""
 
@@ -236,10 +236,11 @@ msgstr ""
 #: src/containers/PatientDetails/PatientOverview/utils.tsx:165
 #: src/containers/PatientDetails/PatientOverview/utils.tsx:237
 #: src/containers/PatientDetails/PatientOverview/utils.tsx:303
-#: src/containers/PatientDetails/PatientResources/utils.tsx:86
-#: src/containers/PatientDetails/PatientResources/utils.tsx:125
-#: src/containers/PatientDetails/PatientResources/utils.tsx:164
-#: src/containers/PatientDetails/PatientResources/utils.tsx:201
+#: src/containers/PatientDetails/PatientResources/utils.tsx:88
+#: src/containers/PatientDetails/PatientResources/utils.tsx:127
+#: src/containers/PatientDetails/PatientResources/utils.tsx:166
+#: src/containers/PatientDetails/PatientResources/utils.tsx:203
+#: src/containers/PatientDetails/PatientResources/utils.tsx:250
 msgid "Date"
 msgstr ""
 
@@ -294,7 +295,7 @@ msgid "Documents"
 msgstr ""
 
 #: src/containers/PatientDetails/PatientOverview/utils.tsx:272
-#: src/containers/PatientDetails/PatientResources/utils.tsx:51
+#: src/containers/PatientDetails/PatientResources/utils.tsx:53
 msgid "Dosage"
 msgstr ""
 
@@ -310,7 +311,7 @@ msgstr ""
 #~ msgid "Drag items into the field"
 #~ msgstr ""
 
-#: src/containers/PatientDetails/PatientWearables/index.tsx:27
+#: src/containers/PatientDetails/PatientWearables/index.tsx:29
 msgid "Duration (min)"
 msgstr ""
 
@@ -354,7 +355,7 @@ msgstr ""
 msgid "Encounters"
 msgstr ""
 
-#: src/containers/PatientDetails/PatientWearables/index.tsx:39
+#: src/containers/PatientDetails/PatientWearables/index.tsx:42
 msgid "End"
 msgstr ""
 
@@ -494,11 +495,11 @@ msgstr ""
 #: src/containers/PatientDetails/PatientOverview/utils.tsx:153
 #: src/containers/PatientDetails/PatientOverview/utils.tsx:226
 #: src/containers/PatientDetails/PatientOverview/utils.tsx:261
-#: src/containers/PatientDetails/PatientResources/utils.tsx:40
-#: src/containers/PatientDetails/PatientResources/utils.tsx:75
-#: src/containers/PatientDetails/PatientResources/utils.tsx:114
-#: src/containers/PatientDetails/PatientResources/utils.tsx:153
-#: src/containers/PatientDetails/PatientResources/utils.tsx:189
+#: src/containers/PatientDetails/PatientResources/utils.tsx:42
+#: src/containers/PatientDetails/PatientResources/utils.tsx:77
+#: src/containers/PatientDetails/PatientResources/utils.tsx:116
+#: src/containers/PatientDetails/PatientResources/utils.tsx:155
+#: src/containers/PatientDetails/PatientResources/utils.tsx:191
 #: src/containers/PatientList/index.tsx:76
 #: src/containers/PractitionerList/index.tsx:96
 msgid "Name"
@@ -515,7 +516,7 @@ msgstr "Name"
 
 #: src/components/EncountersTable/index.tsx:30
 #: src/containers/PatientDetails/PatientResources/ResourceTable.tsx:59
-#: src/containers/PatientDetails/PatientWearables/index.tsx:65
+#: src/containers/PatientDetails/PatientWearables/index.tsx:75
 #: src/containers/PatientList/index.tsx:68
 #: src/containers/PractitionerList/index.tsx:89
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:491
@@ -563,7 +564,7 @@ msgstr ""
 msgid "On the next page, please, use the following credentials"
 msgstr ""
 
-#: src/containers/DocumentsList/index.tsx:79
+#: src/containers/DocumentsList/index.tsx:78
 #: src/containers/EncounterList/index.tsx:82
 #: src/containers/PatientList/index.tsx:115
 #: src/containers/PractitionerList/index.tsx:124
@@ -635,7 +636,7 @@ msgstr ""
 #: src/containers/EncounterList/index.tsx:52
 #: src/containers/PatientDetails/PatientOverview/utils.tsx:175
 #: src/containers/PatientDetails/PatientOverview/utils.tsx:295
-#: src/containers/PatientDetails/PatientResources/utils.tsx:211
+#: src/containers/PatientDetails/PatientResources/utils.tsx:213
 msgid "Practitioner"
 msgstr ""
 
@@ -651,6 +652,10 @@ msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:95
 msgid "Properties"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientWearables/index.tsx:54
+msgid "Provider"
 msgstr ""
 
 #: web/src/containers/PatientDetails/PatientDocument/PhysicalExam/index.tsx:34
@@ -670,7 +675,7 @@ msgstr ""
 #~ msgstr ""
 
 #: src/components/BaseLayout/Sidebar/SidebarTop/index.tsx:41
-#: src/containers/DocumentsList/index.tsx:44
+#: src/containers/DocumentsList/index.tsx:45
 #: src/containers/QuestionnaireList/index.tsx:81
 msgid "Questionnaires"
 msgstr ""
@@ -775,6 +780,10 @@ msgstr ""
 msgid "Slider"
 msgstr ""
 
+#: src/containers/PatientDetails/PatientHeader/index.tsx:81
+msgid "Smart Apps"
+msgstr ""
+
 #: web/src/containers/PatientDetails/index.tsx:42
 #~ msgid "SNN"
 #~ msgstr ""
@@ -799,7 +808,7 @@ msgstr ""
 msgid "SSN"
 msgstr ""
 
-#: src/containers/PatientDetails/PatientWearables/index.tsx:33
+#: src/containers/PatientDetails/PatientWearables/index.tsx:36
 msgid "Start"
 msgstr ""
 
@@ -817,7 +826,7 @@ msgid "Start value"
 msgstr ""
 
 #: src/components/PatientEncounter/index.tsx:29
-#: src/containers/DocumentsList/index.tsx:63
+#: src/containers/DocumentsList/index.tsx:62
 #: src/containers/EncounterList/index.tsx:58
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:76
 msgid "Status"
@@ -876,7 +885,7 @@ msgstr ""
 msgid "The process of generating or updating a questionnaire may require some time to complete"
 msgstr ""
 
-#: src/containers/DocumentsList/index.tsx:107
+#: src/containers/DocumentsList/index.tsx:106
 msgid "There are no documents yet"
 msgstr ""
 
@@ -885,6 +894,7 @@ msgstr ""
 msgid "Time"
 msgstr ""
 
+#: src/containers/PatientDetails/PatientResources/utils.tsx:238
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:53
 msgid "Title"
 msgstr ""
@@ -897,7 +907,7 @@ msgstr ""
 msgid "Upcoming appointment"
 msgstr ""
 
-#: src/containers/PatientDetails/DocumentHistory/index.tsx:54
+#: src/components/ChangesDiff/index.tsx:12
 msgid "Updated"
 msgstr ""
 
@@ -907,6 +917,10 @@ msgstr ""
 
 #: src/containers/SignIn/index.tsx:48
 msgid "Username"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientResources/utils.tsx:261
+msgid "Value"
 msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:422
@@ -926,7 +940,7 @@ msgstr ""
 #~ msgstr ""
 
 #: src/containers/PatientDetails/PatientHeader/index.tsx:79
-#: src/containers/PatientDetails/PatientWearables/index.tsx:55
+#: src/containers/PatientDetails/PatientWearables/index.tsx:65
 msgid "Wearables"
 msgstr ""
 
