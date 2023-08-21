@@ -7,11 +7,6 @@ import { Text } from 'src/components/Typography';
 
 import { S } from './ChangesDiff.styles';
 
-const codesMapping = {
-    CREATE: t`Created`,
-    UPDATE: t`Updated`,
-};
-
 interface Change {
     key: string;
     title: string;
@@ -28,8 +23,11 @@ export interface Props {
 }
 
 export function ChangesDiff(props: Props) {
-    console.log('props', props);
     const { changes, id, activityCode, recorded, author = [] } = props;
+    const codesMapping = {
+        CREATE: t`Created`,
+        UPDATE: t`Updated`,
+    };
     const activity = codesMapping[activityCode];
     const date = formatHumanDateTime(recorded);
     const by = author.join(', ');

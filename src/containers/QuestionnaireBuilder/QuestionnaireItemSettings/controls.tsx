@@ -1,18 +1,19 @@
 import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Trans, t } from '@lingui/macro';
 import { Button, Checkbox, Empty, Form, Input } from 'antd';
-import { parseFHIRTime } from 'fhir-react';
-import { useService } from 'fhir-react/lib/hooks/service';
-import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
-import { WithId, extractBundleResources, getFHIRResources } from 'fhir-react/lib/services/fhir';
-import { mapSuccess } from 'fhir-react/lib/services/service';
-import { formatFHIRDate, formatFHIRTime, parseFHIRDate } from 'fhir-react/lib/utils/date';
 import { Coding, ValueSet } from 'fhir/r4b';
+import { parseFHIRTime } from 'fhir-react';
 import _ from 'lodash';
 import { useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { service } from 'aidbox-react/lib/services/service';
+
+import { useService } from 'fhir-react/lib/hooks/service';
+import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { WithId, extractBundleResources, getFHIRResources } from 'fhir-react/lib/services/fhir';
+import { mapSuccess } from 'fhir-react/lib/services/service';
+import { formatFHIRDate, formatFHIRTime, parseFHIRDate } from 'fhir-react/lib/utils/date';
 
 import { QuestionnaireItemAnswerOption } from 'shared/src/contrib/aidbox';
 import { humanDate, humanTime } from 'shared/src/utils/date';
@@ -26,40 +27,44 @@ import { Table } from 'src/components/Table';
 import { S } from './QuestionnaireItemSettings.styles';
 import { SettingsField, SettingsFieldArray } from './SettingsField';
 
-export const itemControls: { [key: string]: Array<{ label: string; code: string | undefined; default?: boolean }> } = {
-    choice: [
-        { label: t`Select (default)`, code: undefined, default: true },
-        { label: t`Inline choice`, code: 'inline-choice' },
-        { label: t`Solid radio button`, code: 'solid-radio-button' },
-    ],
-    string: [
-        { label: t`Text (default)`, code: undefined, default: true },
-        { label: t`Phone widget`, code: 'phoneWidget' },
-    ],
-    text: [
-        { label: t`Text (default)`, code: undefined, default: true },
-        { label: t`Text with macro`, code: 'text-with-macro' },
-    ],
-    decimal: [
-        { label: t`Number (default)`, code: undefined, default: true },
-        { label: t`Slider`, code: 'slider' },
-    ],
-    integer: [
-        // { label: 'Anxiety score', code: 'anxiety-score' },
-        // { label: 'Depression score', code: 'depression-score' },
-    ],
-    dateTime: [
-        { label: t`Default`, code: undefined, default: true },
-        { label: t`Date & time slot`, code: 'date-time-slot' },
-    ],
-    group: [
-        { label: t`Col (default)`, code: undefined, default: true },
-        // { label: t`Blood pressure`, code: 'blood-pressure' },
-        // { label: t`Time range picker`, code: 'time-range-picker' }, --- obsolete?
-        { label: t`Row`, code: 'row' },
-        // { label: t`Col`, code: 'col' },
-    ],
-};
+export function getItemControls(): {
+    [key: string]: Array<{ label: string; code: string | undefined; default?: boolean }>;
+} {
+    return {
+        choice: [
+            { label: t`Select (default)`, code: undefined, default: true },
+            { label: t`Inline choice`, code: 'inline-choice' },
+            { label: t`Solid radio button`, code: 'solid-radio-button' },
+        ],
+        string: [
+            { label: t`Text (default)`, code: undefined, default: true },
+            { label: t`Phone widget`, code: 'phoneWidget' },
+        ],
+        text: [
+            { label: t`Text (default)`, code: undefined, default: true },
+            { label: t`Text with macro`, code: 'text-with-macro' },
+        ],
+        decimal: [
+            { label: t`Number (default)`, code: undefined, default: true },
+            { label: t`Slider`, code: 'slider' },
+        ],
+        integer: [
+            // { label: 'Anxiety score', code: 'anxiety-score' },
+            // { label: 'Depression score', code: 'depression-score' },
+        ],
+        dateTime: [
+            { label: t`Default`, code: undefined, default: true },
+            { label: t`Date & time slot`, code: 'date-time-slot' },
+        ],
+        group: [
+            { label: t`Col (default)`, code: undefined, default: true },
+            // { label: t`Blood pressure`, code: 'blood-pressure' },
+            // { label: t`Time range picker`, code: 'time-range-picker' }, --- obsolete?
+            { label: t`Row`, code: 'row' },
+            // { label: t`Col`, code: 'col' },
+        ],
+    };
+}
 
 export const typeSpecificFields = {
     choice: <ChoiceFields />,
@@ -348,7 +353,7 @@ export function useValueSetField() {
         });
 
         if (isSuccess(response)) {
-            let valueSetMap = {};
+            const valueSetMap = {};
             response.data.forEach((v) => (valueSetMap[`ValueSet/${v.id}`] = v));
             setOptionsData(valueSetMap);
             return response.data || [];

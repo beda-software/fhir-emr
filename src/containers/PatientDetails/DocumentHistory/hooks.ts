@@ -1,10 +1,11 @@
+import { Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import { WithId } from 'fhir-react';
+import { useParams } from 'react-router-dom';
+
 import { useService } from 'fhir-react/lib/hooks/service';
 import { isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { extractBundleResources, getFHIRResource } from 'fhir-react/lib/services/fhir';
 import { mapSuccess, resolveMap } from 'fhir-react/lib/services/service';
-import { Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
-import { useParams } from 'react-router-dom';
 
 import { Provenance } from 'shared/src/contrib/aidbox';
 import { fromFirstClassExtension, toFirstClassExtension } from 'shared/src/utils/converter';
@@ -35,7 +36,7 @@ export function useDocumentHistory() {
         );
 
         if (isSuccess(provenanceResponse)) {
-            const questionnaireId = provenanceResponse.data.qrHistory[0]?.questionnaire!;
+            const questionnaireId = provenanceResponse.data.qrHistory[0]!.questionnaire!;
 
             return mapSuccess(
                 await resolveMap({

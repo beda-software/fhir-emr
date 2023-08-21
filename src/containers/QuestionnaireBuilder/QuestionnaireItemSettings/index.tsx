@@ -7,7 +7,7 @@ import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
 
 import { Title } from 'src/components/Typography';
 
-import { itemControlSpecificFields, itemControls, typeSpecificFields } from './controls';
+import { itemControlSpecificFields, getItemControls, typeSpecificFields } from './controls';
 import { S } from './QuestionnaireItemSettings.styles';
 import { SettingsField } from './SettingsField';
 
@@ -26,7 +26,7 @@ export function QuestionnaireItemSettings(props: Props) {
     });
     const { handleSubmit, watch } = methods;
     const formValues = watch();
-    const controls = itemControls[item.questionItem.type];
+    const controls = getItemControls()[item.questionItem.type];
     const type = formValues.type;
     const itemControlCode = formValues.itemControl?.coding?.[0]?.code;
 

@@ -93,6 +93,7 @@
         "eslint-plugin-react-hooks": "^4.6.0",
         "eslint-plugin-react-refresh": "^0.3.4",
         "eslint-plugin-storybook": "^0.6.12",
+        "eslint-plugin-string-to-lingui": "^0.21.1",
         "husky": "^8.0.3",
         "jsdom": "^22.1.0",
         "lint-staged": "^13.2.3",

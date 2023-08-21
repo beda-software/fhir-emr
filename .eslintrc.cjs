@@ -36,14 +36,15 @@ module.exports = {
             },
         },
     },
-    plugins: ['react', '@typescript-eslint', 'react-refresh', 'prettier', 'import'],
+    plugins: ['react', '@typescript-eslint', 'react-refresh', 'prettier', 'import', 'string-to-lingui'],
     rules: {
         'react-refresh/only-export-components': 'warn',
         '@typescript-eslint/no-explicit-any': 'warn',
         'react/jsx-uses-react': 'off',
         'react/react-in-jsx-scope': 'off',
         '@typescript-eslint/no-non-null-assertion': 'off',
-        "@typescript-eslint/ban-ts-comment": 'off',
+        '@typescript-eslint/ban-ts-comment': 'off',
+        "string-to-lingui/t-call-in-function": 2,
         'import/no-unresolved': [
             2,
             {
