@@ -1,13 +1,14 @@
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { useParams, Outlet, Route, Routes } from 'react-router-dom';
+
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 
 import { BasePageContent } from 'src/components/BaseLayout';
 import { PatientEncounter } from 'src/components/PatientEncounter';
 import { Spinner } from 'src/components/Spinner';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 
-import { EncounterDetails } from '../EncounterDetails';
 import { usePatientResource } from './hooks';
+import { PatientApps } from './PatientApps';
 import { PatientDocument } from './PatientDocument';
 import { PatientDocumentDetails } from './PatientDocumentDetails';
 import { PatientDocuments } from './PatientDocuments';
@@ -15,6 +16,7 @@ import { PatientHeader, PatientHeaderContextProvider } from './PatientHeader';
 import { PatientOverview } from './PatientOverview';
 import { PatientResources } from './PatientResources';
 import { PatientWearables } from './PatientWearables';
+import { EncounterDetails } from '../EncounterDetails';
 
 export const PatientDetails = () => {
     const params = useParams<{ id: string }>();
@@ -67,6 +69,7 @@ export const PatientDetails = () => {
                                     <Route path="/wearables" element={<PatientWearables patient={patient} />} />
                                     <Route path="/resources/:type" element={<PatientResources patient={patient} />} />
                                     <Route path="/resources" element={<PatientResources patient={patient} />} />
+                                    <Route path="/apps" element={<PatientApps patient={patient} />} />
                                 </Route>
                             </Routes>
                         </BasePageContent>
