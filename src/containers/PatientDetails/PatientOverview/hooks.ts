@@ -1,9 +1,3 @@
-import { formatFHIRDate } from 'fhir-react';
-import { useService } from 'fhir-react/lib/hooks/service';
-import { isSuccess } from 'fhir-react/lib/libs/remoteData';
-import { extractBundleResources, getAllFHIRResources, getFHIRResources } from 'fhir-react/lib/services/fhir';
-import { mapSuccess, resolveMap } from 'fhir-react/lib/services/service';
-import { formatFHIRDateTime } from 'fhir-react/lib/utils/date';
 import {
     AllergyIntolerance,
     Appointment,
@@ -16,8 +10,15 @@ import {
     Condition,
     Consent,
 } from 'fhir/r4b';
+import { formatFHIRDate } from 'fhir-react';
 import _ from 'lodash';
 import moment from 'moment';
+
+import { useService } from 'fhir-react/lib/hooks/service';
+import { isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { extractBundleResources, getAllFHIRResources, getFHIRResources } from 'fhir-react/lib/services/fhir';
+import { mapSuccess, resolveMap } from 'fhir-react/lib/services/service';
+import { formatFHIRDateTime } from 'fhir-react/lib/utils/date';
 
 import { formatHumanDate, getPersonAge } from 'src/utils/date';
 
@@ -55,7 +56,7 @@ export function usePatientOverview(props: Props) {
 
     const bmi = isSuccess(bmiRD) ? bmiRD.data[0]?.valueQuantity?.value : undefined;
 
-    let patientDetails = [
+    const patientDetails = [
         {
             title: 'Birth date',
             value: patient.birthDate

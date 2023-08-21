@@ -1,14 +1,15 @@
+import { Reference, Patient, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
+
 import { useService } from 'fhir-react/lib/hooks/service';
 import { isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { extractBundleResources, getFHIRResources } from 'fhir-react/lib/services/fhir';
 import { mapSuccess } from 'fhir-react/lib/services/service';
 import { parseFHIRReference } from 'fhir-react/lib/utils/fhir';
-import { Reference, Patient, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 
 export function usePatientDocuments(patient: Patient, encounter?: Reference) {
     const [response] = useService(async () => {
         const qrResponse = await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
-            ".source.id": patient.id,
+            subject: patient.id,
             encounter: encounter ? parseFHIRReference(encounter).id : undefined,
             _sort: '-authored',
         });
@@ -27,7 +28,7 @@ export function usePatientDocuments(patient: Patient, encounter?: Reference) {
             });
 
             return mapSuccess(qResponse, (bundle) => {
-                let questionnaireNames: { [key: string]: string | undefined } = {};
+                const questionnaireNames: { [key: string]: string | undefined } = {};
                 extractBundleResources(bundle).Questionnaire.forEach(
                     (q) => (questionnaireNames[q.id!] = q.title || q.name),
                 );

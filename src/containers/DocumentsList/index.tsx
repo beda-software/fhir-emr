@@ -1,11 +1,12 @@
 import { Trans } from '@lingui/macro';
 import { Button } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
-import { isLoading, isSuccess, RemoteData } from 'fhir-react/lib/libs/remoteData';
-import { WithId } from 'fhir-react/lib/services/fhir';
 import { Encounter, Patient, QuestionnaireResponse } from 'fhir/r4b';
 import { useMemo } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+
+import { isLoading, isSuccess, RemoteData } from 'fhir-react/lib/libs/remoteData';
+import { WithId } from 'fhir-react/lib/services/fhir';
 
 import { Empty } from 'src/components/Empty';
 import { StatusBadge } from 'src/components/EncounterStatusBadge';
@@ -44,8 +45,7 @@ function useColumns(
                 title: <Trans>Questionnaires</Trans>,
                 dataIndex: 'questionnaires',
                 key: 'questionnaires',
-                render: (_text, resource) =>
-                    resource.questionnaire ? questionnaireNames[resource.questionnaire] : '',
+                render: (_text, resource) => (resource.questionnaire ? questionnaireNames[resource.questionnaire] : ''),
             },
             // {
             //     title: <Trans>Created by</Trans>,
@@ -56,8 +56,7 @@ function useColumns(
                 title: <Trans>Creation date</Trans>,
                 dataIndex: 'creation-date',
                 key: 'creation-date',
-                render: (_text, resource) =>
-                    resource.authored ? formatHumanDate(resource.authored) : null,
+                render: (_text, resource) => (resource.authored ? formatHumanDate(resource.authored) : null),
             },
             {
                 title: <Trans>Status</Trans>,

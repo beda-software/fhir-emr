@@ -10,6 +10,7 @@ export const S = {
         margin: 0;
         font-size: 14px;
         line-height: 22px;
+        margin-bottom: 0 !important;
 
         &:first-of-type {
             border-top: 1px solid ${({ theme }) => theme.neutralPalette.gray_4};
