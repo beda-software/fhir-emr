@@ -48,7 +48,13 @@ export function PatientApps({ patient }: PatientAppsProps) {
                 if (apps.length == 0) {
                     return <Text>There are no registered smart apps</Text>;
                 } else {
-                    return apps.map((app) => <SmartApp key={app.id} app={app} patient={patient} />);
+                    return (
+                        <>
+                            {apps.map((app) => (
+                                <SmartApp key={app.id} app={app} patient={patient} />
+                            ))}
+                        </>
+                    );
                 }
             }}
         </RenderRemoteData>
