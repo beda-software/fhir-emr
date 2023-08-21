@@ -23,6 +23,7 @@ jobs:
               run: cp public/index.production.html index.html
             - name: Install deps
               run: yarn install --network-concurrency 1
+            - run: yarn extract
             - run: yarn compile
             - run: yarn build
             - name: Set up Docker Buildx
