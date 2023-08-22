@@ -12,8 +12,10 @@ interface Props {
 
 const GlobalStyle = createGlobalStyle<{ $whiteColor?: boolean }>`
   :root {
-    --theme-icon-primary: ${({ theme }) => theme.primaryPalette.bcp_6};
-    --theme-icon-secondary: ${({ theme }) => theme.secondaryPalette.bcs_6};
+    --theme-icon-primary: ${({ theme }) =>
+        theme.mode === 'dark' ? theme.neutralPalette.gray_12 : theme.primaryPalette.bcp_6};
+    --theme-icon-secondary: ${({ theme }) =>
+        theme.mode === 'dark' ? theme.neutralPalette.gray_6 : theme.secondaryPalette.bcs_2};
     --theme-sidebar-background: ${({ theme }) => theme.neutral.sidebarBackground};
   }
 
