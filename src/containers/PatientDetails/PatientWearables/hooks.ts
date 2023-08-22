@@ -1,10 +1,10 @@
 import { Consent, Patient, Practitioner } from 'fhir/r4b';
 
 import { useService } from 'fhir-react/lib/hooks/service';
-import { failure, isFailure, isSuccess, success } from 'fhir-react/lib/libs/remoteData';
+import { isFailure, isSuccess, success } from 'fhir-react/lib/libs/remoteData';
+import { service } from 'fhir-react/lib/services/fetch';
 import { WithId, getFHIRResources, extractBundleResources } from 'fhir-react/lib/services/fhir';
-import { service } from 'fhir-react/src/services/fetch';
-import { mapSuccess, sequenceMap } from 'fhir-react/src/services/service';
+import { mapSuccess } from 'fhir-react/lib/services/service';
 
 import config from 'shared/src/config';
 
