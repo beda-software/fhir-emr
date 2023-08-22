@@ -45,7 +45,7 @@ function useColumns(
                 title: <Trans>Questionnaires</Trans>,
                 dataIndex: 'questionnaires',
                 key: 'questionnaires',
-                render: (_text, resource) => (resource.questionnaire ? questionnaireNames[resource.questionnaire] : ''),
+                render: (_text, resource) => questionnaireNames[resource.id!],
             },
             // {
             //     title: <Trans>Created by</Trans>,

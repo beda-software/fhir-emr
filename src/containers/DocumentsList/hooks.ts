@@ -28,10 +28,25 @@ export function usePatientDocuments(patient: Patient, encounter?: Reference) {
             });
 
             return mapSuccess(qResponse, (bundle) => {
-                const questionnaireNames: { [key: string]: string | undefined } = {};
+                const questionnaireNames: { [key: string]: string } = {};
+                const questionnaireNameById: { [key: string]: string } = {};
                 extractBundleResources(bundle).Questionnaire.forEach(
-                    (q) => (questionnaireNames[q.id!] = q.title || q.name),
+                    (q) => (questionnaireNameById[q.id!] = q.title || q.name || 'Unknown'),
                 );
+
+                qrResponseExtracted.data.QuestionnaireResponse.forEach((qr) => {
+                    const remoteName = questionnaireNameById[qr.questionnaire!];
+                    if (remoteName) {
+                        questionnaireNames[qr.id!] = remoteName;
+                    } else {
+                        const e = qr._questionnaire?.extension?.find(
+                            ({ url }) => url === 'http://hl7.org/fhir/StructureDefinition/display',
+                        );
+                        if (e) {
+                            questionnaireNames[qr.id!] = e.valueString ?? 'Unknown';
+                        }
+                    }
+                });
 
                 return {
                     ...qrResponseExtracted.data,
