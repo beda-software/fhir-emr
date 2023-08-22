@@ -45,7 +45,7 @@ export function SignIn(props: SignInProps) {
                         <S.Message>
                             <b>{t`On the next page, please, use the following credentials`}</b>
                             <div>
-                                {t`Username`}: admin <br />
+                                {t`Username`}: practitioner <br />
                                 {t`Password`}: password
                             </div>
                         </S.Message>
@@ -66,7 +66,7 @@ export function SignIn(props: SignInProps) {
     );
 }
 
-function AppleButton(_props: {}) {
+function AppleButton() {
     useAppleAuthentication();
 
     return (
