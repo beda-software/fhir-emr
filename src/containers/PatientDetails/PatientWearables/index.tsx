@@ -67,27 +67,27 @@ export function PatientWearables(props: PatientWearablesProps) {
     return (
         <RenderRemoteData remoteData={wearablesData}>
             {(data) => (
-                <Table<WearablesDataRecord>
-                    locale={{
-                        emptyText: data.hasConsent ? (
-                            <Empty description={t`No data`} image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                        ) : (
-                            <Result
-                                status="info"
-                                subTitle="Contact the patient to obtain their consent for accessing activity data"
-                                title="Patient consent is required"
-                            />
-                        ),
-                    }}
-                    rowKey={(p) => p.sid}
-                    dataSource={
-                        isSuccess(wearablesData)
-                            ? [...data.patientRecords.records, ...data.metriportRecords.records]
-                            : []
-                    }
-                    columns={getColumns()}
-                    loading={isLoading(wearablesData) ? { indicator: SpinIndicator } : undefined}
-                />
+                <>
+                    {data.patientRecordsWarning ? <span>{data.patientRecordsWarning}</span> : null}
+                    {data.patientMetriportRecordsWarning ? <span>{data.patientMetriportRecordsWarning}</span> : null}
+                    <Table<WearablesDataRecord>
+                        locale={{
+                            emptyText: data.hasConsent ? (
+                                <Empty description={t`No data`} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                            ) : (
+                                <Result
+                                    status="info"
+                                    subTitle="Contact the patient to obtain their consent for accessing activity data"
+                                    title="Patient consent is required"
+                                />
+                            ),
+                        }}
+                        rowKey={(p) => p.sid}
+                        dataSource={data.aggregatedRecords}
+                        columns={getColumns()}
+                        loading={isLoading(wearablesData) ? { indicator: SpinIndicator } : undefined}
+                    />
+                </>
             )}
         </RenderRemoteData>
     );

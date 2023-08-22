@@ -1,7 +1,7 @@
 import { Consent, Patient, Practitioner } from 'fhir/r4b';
 
 import { useService } from 'fhir-react/lib/hooks/service';
-import { failure, isFailure, success } from 'fhir-react/lib/libs/remoteData';
+import { failure, isFailure, isSuccess, success } from 'fhir-react/lib/libs/remoteData';
 import { WithId, getFHIRResources, extractBundleResources } from 'fhir-react/lib/services/fhir';
 import { service } from 'fhir-react/src/services/fetch';
 import { mapSuccess, sequenceMap } from 'fhir-react/src/services/service';
@@ -36,10 +36,27 @@ export function usePatientWearablesData(patient: WithId<Patient>) {
             return consentResponse;
         }
 
-        return sequenceMap({
-            hasConsent: consentResponse,
-            patientRecords: await fetchPatientRecords(patient),
-            metriportRecords: await fetchPatientMetriportRecords(patient),
+        const patientRecordsResponse = await fetchPatientRecords(patient);
+        const patientMetriportRecordsResponse = await fetchPatientMetriportRecords(patient);
+
+        if (isFailure(patientRecordsResponse) && isFailure(patientMetriportRecordsResponse)) {
+            return patientRecordsResponse;
+        }
+        let aggregatedRecords: WearablesDataRecord[] = [];
+        if (isSuccess(patientRecordsResponse)) {
+            aggregatedRecords = aggregatedRecords.concat(patientRecordsResponse.data.records);
+        }
+        if (isSuccess(patientMetriportRecordsResponse)) {
+            aggregatedRecords = aggregatedRecords.concat(patientMetriportRecordsResponse.data.records);
+        }
+
+        return success({
+            hasConsent: consentResponse.data.hasConsent,
+            aggregatedRecords,
+            patientRecordsWarning: isFailure(patientRecordsResponse) ? patientRecordsResponse.error : undefined,
+            patientMetriportRecordsWarning: isFailure(patientMetriportRecordsResponse)
+                ? patientMetriportRecordsResponse.error
+                : undefined,
         });
     });
 }
