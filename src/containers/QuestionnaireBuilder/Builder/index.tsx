@@ -1,23 +1,24 @@
 import { t } from '@lingui/macro';
 import { Alert } from 'antd';
 import { RemoteData } from 'fhir-react';
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { GroupItemProps, QuestionItemProps } from 'sdc-qrf';
 
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+
 import { toQuestionnaireResponseFormData } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
-import { Title } from 'src/components/Typography';
+import { Title, Text } from 'src/components/Typography';
 
+import { BuilderField } from './BuilderField';
+import { BuilderGroup } from './BuilderGroup';
 import { FieldSourceContext } from '../context';
 import { OnItemDrag } from '../hooks';
 import s from '../QuestionnaireBuilder.module.scss';
-import { BuilderField } from './BuilderField';
-import { BuilderGroup } from './BuilderGroup';
 
 interface Props {
     response: RemoteData;
@@ -35,7 +36,7 @@ export function Builder(props: Props) {
         <RenderRemoteData
             remoteData={response}
             renderLoading={() => (
-                <div
+                <Text
                     style={{
                         height: 180,
                         display: 'flex',
@@ -47,7 +48,7 @@ export function Builder(props: Props) {
                 >
                     {t`The process of generating or updating a questionnaire may require some time to complete`}
                     <Spinner />
-                </div>
+                </Text>
             )}
         >
             {(questionnaire) => {

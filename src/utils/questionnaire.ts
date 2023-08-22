@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro';
 import * as yup from 'yup';
 
 import {
@@ -36,6 +37,14 @@ export function getDisplay(value?: QuestionnaireResponseItemAnswerValue): string
 
     if (value.integer) {
         return value.integer;
+    }
+
+    if (value.decimal) {
+        return value.decimal;
+    }
+
+    if (value.boolean) {
+        return value.boolean ? t`Yes` : t`No`;
     }
 
     if (value.Reference && value.Reference.display) {

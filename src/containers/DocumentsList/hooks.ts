@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro';
 import { Reference, Patient, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 
 import { useService } from 'fhir-react/lib/hooks/service';
@@ -5,6 +6,8 @@ import { isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { extractBundleResources, getFHIRResources } from 'fhir-react/lib/services/fhir';
 import { mapSuccess } from 'fhir-react/lib/services/service';
 import { parseFHIRReference } from 'fhir-react/lib/utils/fhir';
+
+import { getExternalQuestionnaireName } from 'src/utils/smart-apps';
 
 export function usePatientDocuments(patient: Patient, encounter?: Reference) {
     const [response] = useService(async () => {
@@ -31,7 +34,7 @@ export function usePatientDocuments(patient: Patient, encounter?: Reference) {
                 const questionnaireNames: { [key: string]: string } = {};
                 const questionnaireNameById: { [key: string]: string } = {};
                 extractBundleResources(bundle).Questionnaire.forEach(
-                    (q) => (questionnaireNameById[q.id!] = q.title || q.name || 'Unknown'),
+                    (q) => (questionnaireNameById[q.id!] = q.title || q.name || t`Unknown`),
                 );
 
                 qrResponseExtracted.data.QuestionnaireResponse.forEach((qr) => {
@@ -39,12 +42,7 @@ export function usePatientDocuments(patient: Patient, encounter?: Reference) {
                     if (remoteName) {
                         questionnaireNames[qr.id!] = remoteName;
                     } else {
-                        const e = qr._questionnaire?.extension?.find(
-                            ({ url }) => url === 'http://hl7.org/fhir/StructureDefinition/display',
-                        );
-                        if (e) {
-                            questionnaireNames[qr.id!] = e.valueString ?? 'Unknown';
-                        }
+                        questionnaireNames[qr.id!] = getExternalQuestionnaireName(qr) || t`Unknown`;
                     }
                 });
 

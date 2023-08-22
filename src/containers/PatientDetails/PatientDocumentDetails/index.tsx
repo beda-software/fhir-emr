@@ -1,5 +1,10 @@
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
+import { Encounter, Patient, Practitioner, Provenance, QuestionnaireResponse } from 'fhir/r4b';
+import { ReactElement } from 'react';
+import { NavigateFunction, Outlet, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { QuestionnaireResponseFormData } from 'sdc-qrf';
+
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { useService } from 'fhir-react/lib/hooks/service';
 import { failure, isFailure, isSuccess } from 'fhir-react/lib/libs/remoteData';
@@ -11,10 +16,6 @@ import {
     WithId,
 } from 'fhir-react/lib/services/fhir';
 import { mapSuccess } from 'fhir-react/lib/services/service';
-import { Encounter, Patient, Practitioner, Provenance, QuestionnaireResponse } from 'fhir/r4b';
-import { ReactElement } from 'react';
-import { NavigateFunction, Outlet, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
 import { ReadonlyQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm/ReadonlyQuestionnaireResponseForm';
 import { ConfirmActionButton } from 'src/components/ConfirmActionButton';
@@ -28,7 +29,9 @@ import {
 } from 'src/containers/PatientDetails/PatientDocument/usePatientDocument';
 import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
+import { isExternalQuestionnaire } from 'src/utils/smart-apps';
 
+import { ExternalDocumentView } from './ExternalDocumentView';
 import s from './PatientDocumentDetails.module.scss';
 import { S } from './PatientDocumentDetails.styles';
 
@@ -220,51 +223,57 @@ export function PatientDocumentDetails(props: Props) {
             renderLoading={Spinner}
             renderFailure={(error) => <Paragraph>{error}</Paragraph>}
         >
-            {({ questionnaireResponse, encounter }) => (
-                <PatientDocumentDetailsFormData
-                    questionnaireResponse={questionnaireResponse}
-                    author={author}
-                    {...props}
-                >
-                    {({ formData, provenance }) => (
-                        <Routes>
-                            <Route
-                                path="/"
-                                element={
-                                    <>
-                                        <Outlet />
-                                    </>
-                                }
-                            >
-                                <Route
-                                    path="/"
-                                    element={
-                                        <PatientDocumentDetailsReadonly
-                                            formData={formData}
-                                            encounter={encounter}
-                                            reload={manager.reload}
-                                            provenance={provenance}
+            {({ questionnaireResponse, encounter }) => {
+                if (isExternalQuestionnaire(questionnaireResponse)) {
+                    return <ExternalDocumentView questionnaireResponse={questionnaireResponse} />;
+                } else {
+                    return (
+                        <PatientDocumentDetailsFormData
+                            questionnaireResponse={questionnaireResponse}
+                            author={author}
+                            {...props}
+                        >
+                            {({ formData, provenance }) => (
+                                <Routes>
+                                    <Route
+                                        path="/"
+                                        element={
+                                            <>
+                                                <Outlet />
+                                            </>
+                                        }
+                                    >
+                                        <Route
+                                            path="/"
+                                            element={
+                                                <PatientDocumentDetailsReadonly
+                                                    formData={formData}
+                                                    encounter={encounter}
+                                                    reload={manager.reload}
+                                                    provenance={provenance}
+                                                />
+                                            }
                                         />
-                                    }
-                                />
-                                <Route
-                                    path="/edit"
-                                    element={
-                                        <PatientDocument
-                                            patient={patient}
-                                            questionnaireResponse={questionnaireResponse}
-                                            questionnaireId={questionnaireResponse.questionnaire}
-                                            onSuccess={() => navigate(-2)}
-                                            author={author}
+                                        <Route
+                                            path="/edit"
+                                            element={
+                                                <PatientDocument
+                                                    patient={patient}
+                                                    questionnaireResponse={questionnaireResponse}
+                                                    questionnaireId={questionnaireResponse.questionnaire}
+                                                    onSuccess={() => navigate(-2)}
+                                                    author={author}
+                                                />
+                                            }
                                         />
-                                    }
-                                />
-                                <Route path="/history" element={<DocumentHistory />} />
-                            </Route>
-                        </Routes>
-                    )}
-                </PatientDocumentDetailsFormData>
-            )}
+                                        <Route path="/history" element={<DocumentHistory />} />
+                                    </Route>
+                                </Routes>
+                            )}
+                        </PatientDocumentDetailsFormData>
+                    );
+                }
+            }}
         </RenderRemoteData>
     );
 }
