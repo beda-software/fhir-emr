@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro';
-import { Empty, Result } from 'antd';
+import { Alert, Empty, Result } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { Patient } from 'fhir/r4b';
 import { WithId } from 'fhir-react';
@@ -68,8 +68,10 @@ export function PatientWearables(props: PatientWearablesProps) {
         <RenderRemoteData remoteData={wearablesData}>
             {(data) => (
                 <>
-                    {data.patientRecordsWarning ? <span>{data.patientRecordsWarning}</span> : null}
-                    {data.patientMetriportRecordsWarning ? <span>{data.patientMetriportRecordsWarning}</span> : null}
+                    {data.patientRecordsWarning ? <Alert message={data.patientRecordsWarning} type="warning" /> : null}
+                    {data.patientMetriportRecordsWarning ? (
+                        <Alert message={data.patientMetriportRecordsWarning} type="warning" />
+                    ) : null}
                     <Table<WearablesDataRecord>
                         locale={{
                             emptyText: data.hasConsent ? (
