@@ -3,7 +3,8 @@ import { Consent, Patient, Practitioner } from 'fhir/r4b';
 import { useService } from 'fhir-react/lib/hooks/service';
 import { failure, isFailure, success } from 'fhir-react/lib/libs/remoteData';
 import { WithId, getFHIRResources, extractBundleResources } from 'fhir-react/lib/services/fhir';
-import { mapSuccess } from 'fhir-react/lib/services/service';
+import { service } from 'fhir-react/src/services/fetch';
+import { mapSuccess, sequenceMap } from 'fhir-react/src/services/service';
 
 import config from 'shared/src/config';
 
@@ -21,6 +22,8 @@ export interface WearablesDataRecord {
     provider?: string;
 }
 
+type WearablesData = { records: WearablesDataRecord[] };
+
 export function usePatientWearablesData(patient: WithId<Patient>) {
     return useService(async () => {
         const consentResponse = await matchCurrentUserRole({
@@ -33,16 +36,12 @@ export function usePatientWearablesData(patient: WithId<Patient>) {
             return consentResponse;
         }
 
-        try {
-            return success({
-                hasConsent: consentResponse.data.hasConsent,
-                records: consentResponse.data.hasConsent ? await fetchPatientRecords(patient) : [],
-                metriportRecords: consentResponse.data.hasConsent ? await fetchPatientMetriportRecords(patient) : [],
-            });
-        } catch (err) {
-            return failure('Failed to retrieve wearables data');
-        }
-    }, []);
+        return sequenceMap({
+            hasConsent: consentResponse,
+            patientRecords: await fetchPatientRecords(patient),
+            metriportRecords: await fetchPatientMetriportRecords(patient),
+        });
+    });
 }
 
 async function fetchConsentStatus(actor: WithId<Practitioner>, patient: WithId<Patient>, consentSubject: string) {
@@ -65,7 +64,7 @@ async function fetchConsentStatus(actor: WithId<Practitioner>, patient: WithId<P
 }
 
 async function fetchPatientRecords(patient: WithId<Patient>) {
-    return fetch(
+    return service<WearablesData>(
         matchCurrentUserRole({
             [Role.Patient]: () => `${config.wearablesDataStreamService}/api/v1/records`,
             [Role.Admin]: () => `${config.wearablesDataStreamService}/api/v1/${patient.id}/records`,
@@ -76,21 +75,13 @@ async function fetchPatientRecords(patient: WithId<Patient>) {
                 Authorization: `Bearer ${getToken()}`,
             },
         },
-    ).then((response): Promise<WearablesDataRecord[]> => response.json().then(({ records }) => records));
+    );
 }
 
 async function fetchPatientMetriportRecords(patient: WithId<Patient>) {
-    const patientMetriportUserId = patient.identifier?.find(
-        (identifier) => identifier.system === config.metriportIdentifierSystem,
-    )?.value;
-
-    if (!patientMetriportUserId) {
-        return Promise.resolve([]);
-    }
-    const searchParams = new URLSearchParams({ metriportUserId: patientMetriportUserId });
-    return fetch(
+    return await service<WearablesData>(
         matchCurrentUserRole({
-            [Role.Patient]: () => `${config.wearablesDataStreamService}/metriport/records?${searchParams}`,
+            [Role.Patient]: () => `${config.wearablesDataStreamService}/metriport/records`,
             [Role.Admin]: () => `${config.wearablesDataStreamService}/metriport/${patient.id}/records`,
         }),
         {
@@ -99,5 +90,5 @@ async function fetchPatientMetriportRecords(patient: WithId<Patient>) {
                 Authorization: `Bearer ${getToken()}`,
             },
         },
-    ).then((response): Promise<WearablesDataRecord[]> => response.json().then(({ records }) => records));
+    );
 }

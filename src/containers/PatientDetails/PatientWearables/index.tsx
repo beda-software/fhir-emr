@@ -4,8 +4,8 @@ import { ColumnsType } from 'antd/lib/table';
 import { Patient } from 'fhir/r4b';
 import { WithId } from 'fhir-react';
 
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { RenderRemoteData } from 'fhir-react/src/components/RenderRemoteData';
+import { isLoading, isSuccess } from 'fhir-react/src/libs/remoteData';
 
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
@@ -65,32 +65,30 @@ export function PatientWearables(props: PatientWearablesProps) {
     usePatientHeaderLocationTitle({ title: t`Wearables` });
 
     return (
-        <Table<WearablesDataRecord>
-            locale={{
-                emptyText: (
-                    <RenderRemoteData remoteData={wearablesData}>
-                        {({ hasConsent }) => (
-                            <>
-                                {hasConsent ? (
-                                    <Empty description={t`No data`} image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                                ) : (
-                                    <Result
-                                        status="info"
-                                        subTitle="Contact the patient to obtain their consent for accessing activity data"
-                                        title="Patient consent is required"
-                                    />
-                                )}
-                            </>
-                        )}
-                    </RenderRemoteData>
-                ),
-            }}
-            rowKey={(p) => p.sid}
-            dataSource={
-                isSuccess(wearablesData) ? [...wearablesData.data.records, ...wearablesData.data.metriportRecords] : []
-            }
-            columns={getColumns()}
-            loading={isLoading(wearablesData) ? { indicator: SpinIndicator } : undefined}
-        />
+        <RenderRemoteData remoteData={wearablesData}>
+            {(data) => (
+                <Table<WearablesDataRecord>
+                    locale={{
+                        emptyText: data.hasConsent ? (
+                            <Empty description={t`No data`} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                        ) : (
+                            <Result
+                                status="info"
+                                subTitle="Contact the patient to obtain their consent for accessing activity data"
+                                title="Patient consent is required"
+                            />
+                        ),
+                    }}
+                    rowKey={(p) => p.sid}
+                    dataSource={
+                        isSuccess(wearablesData)
+                            ? [...data.patientRecords.records, ...data.metriportRecords.records]
+                            : []
+                    }
+                    columns={getColumns()}
+                    loading={isLoading(wearablesData) ? { indicator: SpinIndicator } : undefined}
+                />
+            )}
+        </RenderRemoteData>
     );
 }
