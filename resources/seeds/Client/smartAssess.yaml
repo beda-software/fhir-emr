@@ -1,0 +1,14 @@
+auth:
+  authorization_code:
+    redirect_uri: https://app.smartfhirdemo.live/landingpage
+    refresh_token: true
+    secret_required: false
+    access_token_expiration: 36000
+type: smart-on-fhir
+smart:
+  name: Smart Assess
+  launch_uri: https://app.smartfhirdemo.live/launch
+grant_types:
+  - authorization_code
+id: smartAssess
+resourceType: Client
