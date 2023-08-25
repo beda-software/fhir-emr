@@ -3,10 +3,10 @@ import { useContext } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { GroupItemProps, QuestionItemProps } from 'sdc-qrf';
 
-import { FieldSourceContext } from '../context';
-import { OnItemDrag } from '../hooks';
 import s from './Builder.module.scss';
 import { S } from './Builder.styles';
+import { FieldSourceContext } from '../context';
+import { OnItemDrag } from '../hooks';
 
 interface FieldSourceProps {
     children: React.ReactNode;
@@ -65,11 +65,11 @@ export function useFieldTarget(props: FieldTargetProps) {
             hover: (_, monitor) => {
                 const coords = monitor.getDifferenceFromInitialOffset();
                 if (coords && coords.y < 0) {
-                    setMoving('up');
+                    setMoving?.('up');
                 }
 
                 if (coords && coords.y > 0) {
-                    setMoving('down');
+                    setMoving?.('down');
                 }
             },
             collect: (monitor) => ({

@@ -2,7 +2,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Trans } from '@lingui/macro';
 import { Button } from 'antd';
 import classNames from 'classnames';
-import { isSuccess, loading, RemoteData } from 'fhir-react/lib/libs/remoteData';
 import { QuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
 import React, { ComponentType, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -22,6 +21,8 @@ import {
     QuestionnaireResponseFormProvider,
 } from 'sdc-qrf';
 import * as yup from 'yup';
+
+import { isSuccess, loading, RemoteData } from 'fhir-react/lib/libs/remoteData';
 
 import 'react-phone-input-2/lib/style.css';
 
@@ -184,19 +185,20 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         [wrapGroups, props.itemControlGroupItemComponents],
     );
     const groupItemComponent = useMemo(
-        () => (itemProps: GroupItemProps) => {
-            const Control = groupComponent;
+        () =>
+            function GroupItemComponent(itemProps: GroupItemProps) {
+                const Control = groupComponent;
 
-            if (GroupWrapper) {
-                return (
-                    <GroupWrapper item={itemProps} control={Control}>
-                        <Control {...itemProps} />
-                    </GroupWrapper>
-                );
-            }
+                if (GroupWrapper) {
+                    return (
+                        <GroupWrapper item={itemProps} control={Control}>
+                            <Control {...itemProps} />
+                        </GroupWrapper>
+                    );
+                }
 
-            return <Control {...itemProps} />;
-        },
+                return <Control {...itemProps} />;
+            },
         [GroupWrapper],
     );
 

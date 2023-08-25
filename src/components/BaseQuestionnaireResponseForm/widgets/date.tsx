@@ -1,9 +1,10 @@
 import { Form } from 'antd';
 import { PickerProps } from 'antd/lib/date-picker/generatePicker';
-import { FHIRDateFormat, formatFHIRDate, formatFHIRDateTime } from 'fhir-react/lib/utils/date';
-import moment, { Moment } from 'moment';
+import moment, { type Moment } from 'moment';
 import { useCallback, useMemo } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
+
+import { FHIRDateFormat, formatFHIRDate, formatFHIRDateTime } from 'fhir-react/lib/utils/date';
 
 import { DatePicker } from 'src/components/DatePicker';
 

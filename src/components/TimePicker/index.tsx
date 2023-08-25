@@ -4,14 +4,16 @@ import { forwardRef } from 'react';
 
 import { DatePicker } from 'src/components/DatePicker';
 
-interface TimePickerProps extends Omit<PickerTimeProps<moment.Moment>, 'picker'> {}
+type TimePickerProps = Omit<PickerTimeProps<moment.Moment>, 'picker'>;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, react/display-name
 export const TimePicker = forwardRef<any, TimePickerProps>((props, ref) => (
     <DatePicker {...props} picker="time" mode={undefined} ref={ref} />
 ));
 
-interface RangeTimePickerProps extends Omit<RangePickerTimeProps<moment.Moment>, 'picker'> {}
+type RangeTimePickerProps = Omit<RangePickerTimeProps<moment.Moment>, 'picker'>;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, react/display-name
 export const RangeTimePicker = forwardRef<any, RangeTimePickerProps>((props, ref) => (
     <DatePicker.RangePicker {...props} picker="time" mode={undefined} ref={ref} />
 ));

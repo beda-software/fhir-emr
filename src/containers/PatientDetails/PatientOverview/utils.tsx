@@ -1,8 +1,5 @@
 import { AlertOutlined, ExperimentOutlined, HeartOutlined, TeamOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
-import { formatFHIRDate } from 'fhir-react';
-import { extractBundleResources, WithId } from 'fhir-react/lib/services/fhir';
-import { parseFHIRDateTime } from 'fhir-react/lib/utils/date';
 import {
     Resource,
     AllergyIntolerance,
@@ -16,9 +13,13 @@ import {
     Consent,
     Observation,
 } from 'fhir/r4b';
+import { formatFHIRDate } from 'fhir-react';
 import _ from 'lodash';
 import moment from 'moment';
 import { Link, useLocation } from 'react-router-dom';
+
+import { extractBundleResources, WithId } from 'fhir-react/lib/services/fhir';
+import { parseFHIRDateTime } from 'fhir-react/lib/utils/date';
 
 import { extractExtension, fromFHIRReference } from 'shared/src/utils/converter';
 
@@ -251,7 +252,6 @@ export function prepareMedications(
     return {
         title: t`Active Medications`,
         key: 'active-medications',
-        // eslint-disable-next-line jsx-a11y/alt-text
         icon: <img src={medicationIcon} />,
         data: observations,
         total,

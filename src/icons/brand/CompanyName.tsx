@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/named
 import { useTheme } from 'styled-components/macro';
 
 export function CompanyName(props: React.SVGProps<SVGSVGElement>) {

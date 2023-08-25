@@ -42,6 +42,7 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
                 <QuestionnaireResponseFormProvider
                     {...other}
                     formValues={formValues}
+                    // eslint-disable-next-line @typescript-eslint/no-empty-function
                     setFormValues={() => {}}
                     groupItemComponent={Group}
                     itemControlGroupItemComponents={{

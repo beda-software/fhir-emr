@@ -1,9 +1,10 @@
-import { setInstanceToken as setFHIRInstanceToken } from 'fhir-react/lib/services/instance';
 import { decodeJwt } from 'jose';
 
 import { setInstanceToken as setAidboxInstanceToken } from 'aidbox-react/lib/services/instance';
 import { service } from 'aidbox-react/lib/services/service';
 import { Token } from 'aidbox-react/lib/services/token';
+
+import { setInstanceToken as setFHIRInstanceToken } from 'fhir-react/lib/services/instance';
 
 import config from 'shared/src/config';
 import { User } from 'shared/src/contrib/aidbox';
@@ -15,9 +16,9 @@ export interface OAuthState {
 export function parseOAuthState(state?: string): OAuthState {
     try {
         return state ? JSON.parse(atob(state)) : {};
-    } catch {}
-
-    return {};
+    } catch {
+        return {};
+    }
 }
 
 export function formatOAuthState(state: OAuthState) {

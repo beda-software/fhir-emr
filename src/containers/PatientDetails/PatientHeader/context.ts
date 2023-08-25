@@ -8,11 +8,11 @@ export interface BreadCrumb {
 interface PatientHeaderContextProps {
     title: string;
     breadcrumbs: BreadCrumb[];
-    setBreadcrumbs: (v: { [x: string]: string }) => void;
+    setBreadcrumbs?: (v: { [x: string]: string }) => void;
 }
 
 export const PatientHeaderContext = React.createContext<PatientHeaderContextProps>({
     title: '',
     breadcrumbs: [],
-    setBreadcrumbs: () => {},
+    setBreadcrumbs: undefined,
 });

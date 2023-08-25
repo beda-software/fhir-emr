@@ -9,7 +9,7 @@ export function usePatientHeaderLocationTitle(config: { title: string }) {
     const location = useLocation();
 
     useEffect(() => {
-        setBreadcrumbs({ [location?.pathname]: title });
+        setBreadcrumbs?.({ [location?.pathname]: title });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [title]);
 }

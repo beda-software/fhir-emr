@@ -1,12 +1,13 @@
 import { GlobalOutlined, LogoutOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 import { Button, Menu } from 'antd';
-import { ItemType } from 'antd/es/menu/hooks/useItems';
+import { ItemType } from 'antd/lib/menu/hooks/useItems';
 import classNames from 'classnames';
-import { resetInstanceToken as resetFHIRInstanceToken } from 'fhir-react/lib/services/instance';
 import { useCallback } from 'react';
 
 import { resetInstanceToken as resetAidboxInstanceToken } from 'aidbox-react/lib/services/instance';
+
+import { resetInstanceToken as resetFHIRInstanceToken } from 'fhir-react/lib/services/instance';
 
 import { dynamicActivate, setCurrentLocale, getCurrentLocale, locales } from 'shared/src/services/i18n';
 import { renderHumanName } from 'shared/src/utils/fhir';
