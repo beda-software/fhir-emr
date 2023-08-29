@@ -64,4 +64,4 @@ item:
         question: none
     itemControl:
       coding:
-        - code: row
+        - code: gtable
