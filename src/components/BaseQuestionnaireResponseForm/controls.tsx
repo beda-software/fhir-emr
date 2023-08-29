@@ -22,6 +22,7 @@ import {
     QuestionText,
     Row,
     BloodPressure,
+    Gtable,
 } from './widgets';
 import { Display } from './widgets/display';
 import { QuestionReference } from './widgets/reference';
@@ -54,6 +55,7 @@ export const itemControlComponents: ItemControlQuestionItemComponentMapping = {
 export const groupControlComponents: ItemControlGroupItemComponentMapping = {
     col: Col,
     row: Row,
+    gtable: Gtable,
     'blood-pressure': BloodPressure,
     'time-range-picker': TimeRangePickerControl,
 };

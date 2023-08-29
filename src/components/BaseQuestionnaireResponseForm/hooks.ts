@@ -1,18 +1,20 @@
 import { FormItemProps } from 'antd';
 import classNames from 'classnames';
 import _ from 'lodash';
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
 import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
 
 import s from './BaseQuestionnaireResponseForm.module.scss';
+import { GroupContext } from './widgets/Group/context';
 
 export function useFieldController(fieldName: any, questionItem: QuestionnaireItem) {
     const qrfContext = useQuestionnaireResponseFormContext();
     const { readOnly, hidden, repeats, text, required } = questionItem;
     const { control } = useFormContext();
+    const { type: groupType } = useContext(GroupContext);
 
     const { field, fieldState } = useController({
         control: control,
@@ -20,7 +22,7 @@ export function useFieldController(fieldName: any, questionItem: QuestionnaireIt
         ...(repeats ? { defaultValue: [] } : {}),
     });
     const formItem: FormItemProps = {
-        label: text,
+        label: groupType !== 'gtable' ? text : undefined,
         hidden: hidden,
         validateStatus: fieldState?.invalid ? 'error' : 'success',
         help: fieldState?.invalid ? `${text} is required` : undefined,

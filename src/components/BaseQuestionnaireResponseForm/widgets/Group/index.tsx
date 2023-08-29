@@ -1,31 +1,39 @@
 import classNames from 'classnames';
 import { GroupItemProps, QuestionItems } from 'sdc-qrf';
 
-import { Paragraph } from 'src/components/Typography';
+import { Text } from 'src/components/Typography';
 
+import { GroupContext } from './context';
 import s from './group.module.scss';
+import { GTable } from './GTable';
 import { RepeatableGroupRow, RepeatableGroups } from './RepeatableGroups';
 
-function Flex(groupItem: GroupItemProps & { type?: 'row' | 'col' }) {
-    const { parentPath, questionItem, context, type } = groupItem;
+function Flex(props: GroupItemProps & { type?: 'row' | 'col' | 'gtable' }) {
+    const { parentPath, questionItem, context, type = 'col' } = props;
     const { linkId, item, repeats, text, helpText } = questionItem;
 
-    if (repeats) {
-        if (type === 'row') {
-            return (
-                <RepeatableGroups groupItem={groupItem} renderGroup={(props) => <RepeatableGroupRow {...props} />} />
-            );
+    const renderRepeatableGroup = () => {
+        if (type === 'gtable') {
+            return <GTable groupItem={props} />;
         }
 
-        return <RepeatableGroups groupItem={groupItem} />;
+        if (type === 'row') {
+            return <RepeatableGroups groupItem={props} renderGroup={(p) => <RepeatableGroupRow {...p} />} />;
+        }
+
+        return <RepeatableGroups groupItem={props} />;
+    };
+
+    if (repeats) {
+        return <GroupContext.Provider value={{ type }}>{renderRepeatableGroup()}</GroupContext.Provider>;
     }
 
     return (
         <div className={s.group}>
             {text || helpText ? (
                 <div>
-                    {text && <Paragraph className={s.groupTitle}>{text}</Paragraph>}
-                    {helpText && <Paragraph style={{ margin: 0 }}>{helpText}</Paragraph>}
+                    {text && <Text className={s.groupTitle}>{text}</Text>}
+                    {helpText && <Text>{helpText}</Text>}
                 </div>
             ) : null}
             {item && (
@@ -56,4 +64,8 @@ export function Col(props: GroupItemProps) {
 
 export function Row(props: GroupItemProps) {
     return <Flex {...props} type="row" />;
+}
+
+export function Gtable(props: GroupItemProps) {
+    return <Flex {...props} type="gtable" />;
 }
