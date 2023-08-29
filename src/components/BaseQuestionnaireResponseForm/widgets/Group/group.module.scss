@@ -1,5 +1,4 @@
 .groupContainer {
-    padding-bottom: 10px;
 }
 
 .groupTitle {
@@ -11,11 +10,15 @@
 .row {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
 }
 
 .col {
     display: flex;
     flex-direction: column;
+    gap: 16px;
 }
 
 .group {

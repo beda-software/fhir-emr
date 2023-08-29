@@ -5,7 +5,6 @@ import {
     QuestionItemComponentMapping,
 } from 'sdc-qrf/lib/types';
 
-import { TextWithMacroFill } from '../TextWithMacroFill';
 import {
     Col,
     Group,
@@ -26,6 +25,7 @@ import {
 } from './widgets';
 import { Display } from './widgets/display';
 import { QuestionReference } from './widgets/reference';
+import { TextWithMacroFill } from '../TextWithMacroFill';
 
 export const itemComponents: QuestionItemComponentMapping = {
     text: QuestionText,

@@ -1,0 +1,44 @@
+.group {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+
+.row {
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.groupHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.rowControls {
+    display: flex;
+    justify-content: center;
+}
+
+.removeButton {
+    padding: 0;
+    width: auto !important;
+}
+
+.addButton {
+    background: 0;
+    padding: 0;
+}
+
+.groupTitle {
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 24px;
+    margin-bottom: 0 !important;
+}

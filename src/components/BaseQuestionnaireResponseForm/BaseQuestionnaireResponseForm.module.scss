@@ -4,13 +4,14 @@
     }
 
     :global .ant-form-item-row {
+        flex: 1;
         flex-direction: column;
-        justify-content: flex-start;
+        justify-content: space-between;
+        gap: 12px;
     }
 
     :global .ant-form-item-label {
         text-align: start;
-        margin-bottom: 12px;
         white-space: normal;
 
         label {
@@ -20,6 +21,26 @@
                 display: none;
             }
         }
+    }
+
+    :global .ant-form-item-control {
+        flex-grow: 0;
+    }
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.field {
+    width: 100%;
+    margin-bottom: 0;
+    display: flex;
+
+    &._hidden {
+        display: none;
     }
 }
 

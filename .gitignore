@@ -5,6 +5,7 @@ coverage
 .idea
 htmlcov
 build
+storybook-static
 
 # Project-specific files
 shared/src/config.ts

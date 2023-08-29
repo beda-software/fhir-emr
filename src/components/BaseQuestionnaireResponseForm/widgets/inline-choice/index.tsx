@@ -17,9 +17,8 @@ interface InlineChoiceProps extends QuestionItemProps {
 }
 
 export function InlineChoice(props: InlineChoiceProps) {
-    console.log('props', props);
     const { parentPath, questionItem } = props;
-    const { linkId, answerOption: answerOptionList, repeats, inlineChoiceDirection } = questionItem;
+    const { linkId, answerOption: answerOptionList, repeats, inlineChoiceDirection = 'vertical' } = questionItem;
 
     const fieldName = repeats ? [...parentPath, linkId] : [...parentPath, linkId, 0];
 
@@ -30,7 +29,7 @@ export function InlineChoice(props: InlineChoiceProps) {
 
         return (
             <Form.Item {...formItem} data-testid="question-inline-choice">
-                <Space direction={inlineChoiceDirection ?? 'vertical'}>
+                <Space direction={inlineChoiceDirection}>
                     {answerOptionList?.map((answerOption) => (
                         <Checkbox
                             checked={arrayValue.findIndex((v) => _.isEqual(v?.value, answerOption.value)) !== -1}
@@ -50,7 +49,7 @@ export function InlineChoice(props: InlineChoiceProps) {
     } else {
         return (
             <Form.Item {...formItem} data-testid="question-inline-choice">
-                <Space direction={inlineChoiceDirection ?? 'vertical'}>
+                <Space direction={inlineChoiceDirection}>
                     {answerOptionList?.map((answerOption) => (
                         <Radio
                             key={JSON.stringify(answerOption)}

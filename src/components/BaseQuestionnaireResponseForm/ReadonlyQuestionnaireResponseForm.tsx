@@ -8,9 +8,11 @@ import {
     QuestionnaireResponseFormProvider,
 } from 'sdc-qrf';
 
+import { QuestionBoolean } from './readonly-widgets/boolean';
 import { QuestionChoice } from './readonly-widgets/choice';
 import { QuestionDateTime } from './readonly-widgets/date';
-import { Group } from './readonly-widgets/group';
+import { Display } from './readonly-widgets/display';
+import { Col, Group, Row } from './readonly-widgets/group';
 import { QuestionInteger, QuestionDecimal } from './readonly-widgets/number';
 import { QuestionReference } from './readonly-widgets/reference';
 import { AnxietyScore, DepressionScore } from './readonly-widgets/score';
@@ -46,6 +48,8 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
                     setFormValues={() => {}}
                     groupItemComponent={Group}
                     itemControlGroupItemComponents={{
+                        col: Col,
+                        row: Row,
                         'time-range-picker': TimeRangePickerControl,
                         ...itemControlGroupItemComponents,
                     }}
@@ -58,6 +62,8 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
                         date: QuestionDateTime,
                         dateTime: QuestionDateTime,
                         reference: QuestionReference,
+                        display: Display,
+                        boolean: QuestionBoolean,
                         ...questionItemComponents,
                     }}
                     itemControlQuestionItemComponents={{

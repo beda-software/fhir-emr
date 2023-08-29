@@ -9,7 +9,7 @@ export function QuestionBoolean({ parentPath, questionItem }: QuestionItemProps)
     const { value, onChange, disabled, formItem } = useFieldController(fieldName, questionItem);
 
     return (
-        <Form.Item {...formItem} valuePropName="checked" data-testid="question-boolean">
+        <Form.Item {...formItem} valuePropName="checked" data-testid="question-boolean" label={undefined}>
             <Checkbox disabled={disabled} onChange={onChange} checked={value} data-testid="checkbox">
                 {text}
             </Checkbox>
