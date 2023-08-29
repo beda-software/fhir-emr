@@ -1,10 +1,11 @@
 import { Trans } from '@lingui/macro';
 import { notification } from 'antd';
-import { axiosInstance as axiosFHIRInstance } from 'fhir-react/lib/services/instance';
-import { uuid4 } from 'fhir-react/lib/utils/uuid';
 import { useEffect, useState } from 'react';
 
 import { axiosInstance as axiosAidboxInstance } from 'aidbox-react/lib/services/instance';
+
+import { axiosInstance as axiosFHIRInstance } from 'fhir-react/lib/services/instance';
+import { uuid4 } from 'fhir-react/lib/utils/uuid';
 
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
@@ -21,24 +22,25 @@ import { S } from './PublicAppointment.styles';
 export function PublicAppointment() {
     const practitionerRolePath = ['practitioner-role', 0, 'value', 'Reference'];
     const appToken = getToken();
-    const [isLoading, setIsloading] = useState(!appToken);
+    const isAnonymousUser = !appToken;
+    const [isLoading, setIsLoading] = useState(!appToken);
 
     useEffect(() => {
-        if (!appToken) {
+        if (isAnonymousUser) {
             axiosFHIRInstance.defaults.headers.Authorization = `Basic ${window.btoa('anonymous:secret')}`;
             axiosAidboxInstance.defaults.headers.Authorization = `Basic ${window.btoa('anonymous:secret')}`;
-            setIsloading(false);
+            setIsLoading(false);
 
             return;
         }
 
         return () => {
-            if (!appToken) {
+            if (isAnonymousUser) {
                 axiosFHIRInstance.defaults.headers.Authorization = undefined;
                 axiosAidboxInstance.defaults.headers.Authorization = undefined;
             }
         };
-    }, [appToken]);
+    }, [isAnonymousUser]);
 
     return (
         <S.Container>

@@ -49,7 +49,6 @@ function usePatientQuestionnaire() {
 }
 
 export function PatientQuestionnaire() {
-    const { response, questionnaireId, encounterId } = usePatientQuestionnaire();
     const appToken = getToken();
     const isAnonymousUser = !appToken;
     const [isLoading, setIsLoading] = useState(!appToken);
@@ -80,25 +79,34 @@ export function PatientQuestionnaire() {
             </BasePageHeader>
 
             <BasePageContent style={{ alignItems: 'center' }}>
-                {isLoading ? (
-                    <Spinner />
-                ) : (
-                    <RenderRemoteData
-                        remoteData={response}
-                        renderLoading={Spinner}
-                        renderFailure={(error: any) => <Paragraph>{error?.text?.div}</Paragraph>}
-                    >
-                        {(patient) => (
-                            <PatientDocument
-                                patient={patient}
-                                author={isAnonymousUser ? patient : selectCurrentUserRoleResource()}
-                                questionnaireId={questionnaireId!}
-                                encounterId={encounterId}
-                            />
-                        )}
-                    </RenderRemoteData>
-                )}
+                {isLoading ? <Spinner /> : <PatientQuestionnaireForm />}
             </BasePageContent>
         </S.Container>
+    );
+}
+
+function PatientQuestionnaireForm() {
+    const { response, questionnaireId, encounterId } = usePatientQuestionnaire();
+    const appToken = getToken();
+    const isAnonymousUser = !appToken;
+
+    return (
+        <RenderRemoteData
+            remoteData={response}
+            renderLoading={Spinner}
+            renderFailure={(error: any) => {
+                console.log('error', error);
+                return <Paragraph>{error?.text?.div}</Paragraph>;
+            }}
+        >
+            {(patient) => (
+                <PatientDocument
+                    patient={patient}
+                    author={isAnonymousUser ? patient : selectCurrentUserRoleResource()}
+                    questionnaireId={questionnaireId!}
+                    encounterId={encounterId}
+                />
+            )}
+        </RenderRemoteData>
     );
 }
