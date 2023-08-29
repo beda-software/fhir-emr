@@ -1,16 +1,14 @@
 import classNames from 'classnames';
 import { GroupItemProps, QuestionItems } from 'sdc-qrf';
 
+import { Paragraph } from 'src/components/Typography';
+
 import s from './group.module.scss';
 import { RepeatableGroupRow, RepeatableGroups } from './RepeatableGroups';
 
 function Flex(groupItem: GroupItemProps & { type?: 'row' | 'col' }) {
     const { parentPath, questionItem, context, type } = groupItem;
-    const { linkId, item, repeats } = questionItem;
-
-    if (!item) {
-        return null;
-    }
+    const { linkId, item, repeats, text, helpText } = questionItem;
 
     if (repeats) {
         if (type === 'row') {
@@ -23,7 +21,13 @@ function Flex(groupItem: GroupItemProps & { type?: 'row' | 'col' }) {
     }
 
     return (
-        <>
+        <div className={s.group}>
+            {text || helpText ? (
+                <div>
+                    {text && <Paragraph className={s.groupTitle}>{text}</Paragraph>}
+                    {helpText && <Paragraph style={{ margin: 0 }}>{helpText}</Paragraph>}
+                </div>
+            ) : null}
             {item && (
                 <div
                     className={classNames({
@@ -38,7 +42,7 @@ function Flex(groupItem: GroupItemProps & { type?: 'row' | 'col' }) {
                     />
                 </div>
             )}
-        </>
+        </div>
     );
 }
 
