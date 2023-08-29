@@ -23,22 +23,22 @@ export const Default: Story = {
         const getQuestion = () => canvas.findAllByTestId('question-inline-choice');
 
         const questions: HTMLElement[] = await getQuestion();
-        await expect(questions.length > 0).toBe(true);
+        expect(questions.length > 0).toBe(true);
 
         // Choose an item in the list
         const checkbox1 = await findByTestId<HTMLInputElement>(questions[0]!, 'inline-choice__medication');
-        expect(checkbox1.checked).toBe(false);
+        expect(checkbox1).not.toBeChecked;
 
-        await userEvent.click(checkbox1);
-        await expect(checkbox1.checked).toBe(true);
+        userEvent.click(checkbox1);
+        expect(checkbox1).toBeChecked;
 
         // Choose another item in the list
         const checkbox2 = await findByTestId<HTMLInputElement>(questions[0]!, 'inline-choice__food');
-        expect(checkbox2.checked).toBe(false);
+        expect(checkbox2).not.toBeChecked;
 
-        await userEvent.click(checkbox2);
-        await expect(checkbox1.checked).toBe(false);
-        await expect(checkbox2.checked).toBe(true);
+        userEvent.click(checkbox2);
+        expect(checkbox1).not.toBeChecked;
+        expect(checkbox2).toBeChecked;
     },
 };
 
@@ -49,22 +49,22 @@ export const Multiple: Story = {
         const getQuestion = () => canvas.findAllByTestId('question-inline-choice');
 
         const questions: HTMLElement[] = await getQuestion();
-        await expect(questions.length > 0).toBe(true);
+        expect(questions.length > 0).toBe(true);
 
         // Choose an item in the list
         const checkbox1 = await findByTestId<HTMLInputElement>(questions[0]!, 'inline-choice__headache');
-        expect(checkbox1.checked).toBe(false);
+        expect(checkbox1).not.toBeChecked;
 
-        await userEvent.click(checkbox1);
-        await expect(checkbox1.checked).toBe(true);
+        userEvent.click(checkbox1);
+        expect(checkbox1).toBeChecked;
 
         // Choose another item in the list
         const checkbox2 = await findByTestId<HTMLInputElement>(questions[0]!, 'inline-choice__nausea');
-        expect(checkbox2.checked).toBe(false);
+        expect(checkbox2).not.toBeChecked;
 
-        await userEvent.click(checkbox2);
-        await expect(checkbox1.checked).toBe(true);
-        await expect(checkbox2.checked).toBe(true);
+        userEvent.click(checkbox2);
+        expect(checkbox1).toBeChecked;
+        expect(checkbox2).toBeChecked;
     },
 };
 

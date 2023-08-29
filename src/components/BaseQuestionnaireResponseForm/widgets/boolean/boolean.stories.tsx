@@ -34,14 +34,14 @@ export const Default: Story = {
         const getQuestion = () => canvas.findAllByTestId('question-boolean');
 
         const questions: HTMLElement[] = await getQuestion();
-        await expect(questions.length > 0).toBe(true);
+        expect(questions.length > 0).toBe(true);
         const checkbox = await findByTestId<HTMLInputElement>(questions[0]!, 'checkbox');
-        expect(checkbox.checked).toBe(false);
+        expect(checkbox).not.toBeChecked;
 
-        await userEvent.click(checkbox);
-        await expect(checkbox.checked).toBe(true);
+        userEvent.click(checkbox);
+        expect(checkbox).toBeChecked;
 
-        await userEvent.click(checkbox);
-        await expect(checkbox.checked).toBe(false);
+        userEvent.click(checkbox);
+        expect(checkbox).not.toBeChecked;
     },
 };
