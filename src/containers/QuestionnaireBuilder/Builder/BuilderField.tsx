@@ -2,10 +2,10 @@ import { SettingOutlined } from '@ant-design/icons';
 import classNames from 'classnames';
 import { QuestionItemProps } from 'sdc-qrf';
 
-import { OnItemDrag } from '../hooks';
 import s from './Builder.module.scss';
 import { S } from './Builder.styles';
 import { FieldSource, FieldTarget } from './DragAndDrop';
+import { OnItemDrag } from '../hooks';
 
 interface Props {
     children: React.ReactNode;
@@ -30,7 +30,6 @@ export function BuilderField(props: Props) {
                     className={classNames({
                         _active: item.questionItem.linkId === activeQuestionItem?.questionItem.linkId,
                     })}
-                    style={{ paddingBottom: 0 }}
                 >
                     <div className={s.toolBox}>
                         <S.Button type="text" onClick={() => onEditClick?.(item)}>

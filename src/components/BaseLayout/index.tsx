@@ -26,6 +26,18 @@ export function BaseLayout({ children, style }: Props) {
     );
 }
 
+export function AnonymousLayout({ children, style }: Props) {
+    return (
+        <S.Container style={style}>
+            <AppSidebar />
+            <Layout className={s.content}>
+                {children}
+                <AppFooter />
+            </Layout>
+        </S.Container>
+    );
+}
+
 export function BasePageHeader(props: React.HTMLAttributes<HTMLDivElement>) {
     const { className, ...rest } = props;
 

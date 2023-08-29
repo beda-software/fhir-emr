@@ -9,7 +9,7 @@ import { uuid4 } from 'fhir-react/lib/utils/uuid';
 
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
-import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
+import { AnonymousLayout, BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { DateTimeSlotPicker } from 'src/components/BaseQuestionnaireResponseForm/widgets';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
@@ -43,12 +43,12 @@ export function PublicAppointment() {
     }, [isAnonymousUser]);
 
     return (
-        <S.Container>
-            <BasePageHeader>
+        <AnonymousLayout>
+            <S.Header>
                 <Title>
                     <Trans>Appointment booking</Trans>
                 </Title>
-            </BasePageHeader>
+            </S.Header>
 
             <BasePageContent style={{ alignItems: 'center' }}>
                 <S.Content>
@@ -84,6 +84,6 @@ export function PublicAppointment() {
                     )}
                 </S.Content>
             </BasePageContent>
-        </S.Container>
+        </AnonymousLayout>
     );
 }

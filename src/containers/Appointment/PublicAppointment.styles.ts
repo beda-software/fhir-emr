@@ -1,10 +1,9 @@
-import { Layout } from 'antd';
 import styled from 'styled-components/macro';
 
+import { BasePageHeader } from 'src/components/BaseLayout';
+
 export const S = {
-    Container: styled(Layout)`
-        min-height: 100vh;
-    `,
+    Header: styled(BasePageHeader)``,
     Content: styled.div`
         width: 540px;
         background-color: ${({ theme }) => theme.antdTheme?.colorBgContainer};

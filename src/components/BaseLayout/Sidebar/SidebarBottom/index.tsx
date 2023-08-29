@@ -14,7 +14,7 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { MenuIcon } from 'src/icons/general/Menu';
 import { AvatarImage } from 'src/images/AvatarImage';
-import { logout } from 'src/services/auth';
+import { getToken, logout } from 'src/services/auth';
 import { sharedAuthorizedPatient, sharedAuthorizedPractitioner } from 'src/sharedState';
 import { Role, matchCurrentUserRole } from 'src/utils/role';
 
@@ -36,6 +36,8 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 
 export function SidebarBottom(props: Props) {
     const { collapsed, toggleCollapsed, onItemClick, ...other } = props;
+    const appToken = getToken();
+    const isAnonymousUser = !appToken;
 
     return (
         <S.Container
@@ -46,8 +48,12 @@ export function SidebarBottom(props: Props) {
         >
             <S.Divider $hidden={collapsed} />
             <LocaleSwitcher onItemClick={onItemClick} />
-            <S.Divider $hidden={collapsed} />
-            <UserMenu onItemClick={onItemClick} />
+            {!isAnonymousUser ? (
+                <>
+                    <S.Divider $hidden={collapsed} />
+                    <UserMenu onItemClick={onItemClick} />
+                </>
+            ) : null}
             {toggleCollapsed && (
                 <>
                     <S.Divider $hidden={collapsed} />
