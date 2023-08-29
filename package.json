@@ -54,7 +54,6 @@
         "@lingui/cli": "^4.3.0",
         "@lingui/macro": "^4.3.0",
         "@lingui/vite-plugin": "^4.3.0",
-        "@originjs/vite-plugin-commonjs": "^1.0.3",
         "@storybook/addon-essentials": "^7.0.26",
         "@storybook/addon-interactions": "^7.0.26",
         "@storybook/addon-links": "^7.0.26",
@@ -104,6 +103,7 @@
         "style-loader": "^3.3.3",
         "typescript": "^5.1.6",
         "vite": "^4.1.5",
+        "vite-plugin-turbosnap": "^1.0.2",
         "vitest": "^0.33.0"
     }
 }

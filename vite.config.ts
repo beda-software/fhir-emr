@@ -2,9 +2,9 @@ import { createRequire } from 'module';
 import * as path from 'path';
 
 import { lingui } from '@lingui/vite-plugin';
-import { viteCommonjs } from '@originjs/vite-plugin-commonjs';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
+import turbosnap from 'vite-plugin-turbosnap';
 
 const require = createRequire(import.meta.url);
 
@@ -14,22 +14,24 @@ export default defineConfig(({ command }) => ({
         port: command === 'build' ? 5000 : 3000,
     },
     plugins: [
-        viteCommonjs(),
-        react({
-            babel: {
-                plugins: [
-                    'macros',
-                    [
-                        'babel-plugin-styled-components',
-                        {
-                            displayName: true,
-                            fileName: false,
-                        },
+        ...[
+            react({
+                babel: {
+                    plugins: [
+                        'macros',
+                        [
+                            'babel-plugin-styled-components',
+                            {
+                                displayName: true,
+                                fileName: false,
+                            },
+                        ],
                     ],
-                ],
-            },
-        }),
-        lingui(),
+                },
+            }),
+            lingui(),
+        ],
+        command === 'build' ? [turbosnap({ rootDir: process.cwd() })] : [],
     ],
     define: {
         'process.env': {},
