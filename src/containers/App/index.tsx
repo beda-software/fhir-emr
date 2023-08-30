@@ -9,7 +9,7 @@ import { success } from 'aidbox-react/lib/libs/remoteData';
 
 import { User } from 'shared/src/contrib/aidbox';
 
-import { BaseLayout } from 'src/components/BaseLayout';
+import { AnonymousLayout, BaseLayout } from 'src/components/BaseLayout';
 import { Spinner } from 'src/components/Spinner';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { EncounterList } from 'src/containers/EncounterList';
@@ -95,8 +95,22 @@ function AnonymousUserApp() {
                     </div>
                 }
             />
-            <Route path="/appointment/book" element={<PublicAppointment />} />
-            <Route path="/questionnaire" element={<PatientQuestionnaire />} />
+            <Route
+                path="/appointment/book"
+                element={
+                    <AnonymousLayout>
+                        <PublicAppointment />
+                    </AnonymousLayout>
+                }
+            />
+            <Route
+                path="/questionnaire"
+                element={
+                    <AnonymousLayout>
+                        <PatientQuestionnaire />
+                    </AnonymousLayout>
+                }
+            />
             <Route
                 path="*"
                 element={

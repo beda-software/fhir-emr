@@ -11,7 +11,7 @@ import { useService } from 'fhir-react/lib/hooks/service';
 import { getFHIRResource } from 'fhir-react/lib/services/fhir';
 import { axiosInstance as axiosFHIRInstance } from 'fhir-react/lib/services/instance';
 
-import { AnonymousLayout, BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
+import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { Spinner } from 'src/components/Spinner';
 import { Paragraph, Title } from 'src/components/Typography';
 import { getToken } from 'src/services/auth';
@@ -70,7 +70,7 @@ export function PatientQuestionnaire() {
     }, [isAnonymousUser]);
 
     return (
-        <AnonymousLayout>
+        <>
             <BasePageHeader>
                 <Title>
                     <Trans>Questionnaire</Trans>
@@ -80,7 +80,7 @@ export function PatientQuestionnaire() {
             <BasePageContent style={{ alignItems: 'center' }}>
                 {isLoading ? <Spinner /> : <PatientQuestionnaireForm />}
             </BasePageContent>
-        </AnonymousLayout>
+        </>
     );
 }
 
