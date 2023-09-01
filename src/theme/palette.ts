@@ -83,6 +83,30 @@ const neutralPalette: {
 };
 
 export function getPalette({ dark }: { dark?: boolean }): DefaultTheme {
+    const primaryPalette = _.fromPairs(
+        ANTDColors.generate(brandColors.primary, {
+            theme: dark ? 'dark' : undefined,
+        }).map((c, index) => [`bcp_${index + 1}`, c]),
+    ) as DefaultTheme['primaryPalette'];
+    const secondaryPalette = _.fromPairs(
+        ANTDColors.generate(brandColors.secondary, {
+            theme: dark ? 'dark' : undefined,
+        }).map((c, index) => [`bcs_${index + 1}`, c]),
+    ) as DefaultTheme['secondaryPalette'];
+    const iconColors: {
+        light: DefaultTheme['iconColors'];
+        dark: DefaultTheme['iconColors'];
+    } = {
+        light: {
+            primary: primaryPalette.bcp_6,
+            secondary: secondaryPalette.bcs_2,
+        },
+        dark: {
+            primary: neutralPalette.dark.gray_12,
+            secondary: neutralPalette.dark.gray_6,
+        },
+    };
+
     return {
         ..._.chain(colors)
             .toPairs()
@@ -100,15 +124,10 @@ export function getPalette({ dark }: { dark?: boolean }): DefaultTheme {
         neutralPalette: {
             ...(dark ? neutralPalette.dark : neutralPalette.light),
         },
-        primaryPalette: _.fromPairs(
-            ANTDColors.generate(brandColors.primary, {
-                theme: dark ? 'dark' : undefined,
-            }).map((c, index) => [`bcp_${index + 1}`, c]),
-        ),
-        secondaryPalette: _.fromPairs(
-            ANTDColors.generate(brandColors.secondary, {
-                theme: dark ? 'dark' : undefined,
-            }).map((c, index) => [`bcs_${index + 1}`, c]),
-        ),
+        iconColors: {
+            ...(dark ? iconColors.dark : iconColors.light),
+        },
+        primaryPalette,
+        secondaryPalette,
     } as DefaultTheme;
 }

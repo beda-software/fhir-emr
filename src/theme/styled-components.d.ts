@@ -62,5 +62,9 @@ declare module 'styled-components' {
         gray_12: string;
         gray_13: string;
     };
+    iconColors: {
+        primary: string;
+        secondary: string;
+    };
   }
 }
