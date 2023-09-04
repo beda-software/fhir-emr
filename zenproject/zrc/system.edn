@@ -81,7 +81,11 @@
                :connectionType {:system "https://spec.openapis.org/oas/v3.1.0"
                                 :code "openapi"}
                :payloadType [{:coding [{:system "http://terminology.hl7.org/CodeSystem/endpoint-payload-type"
-                                        :code "urn:ihe:pcc:xphr:2007"}]}]}}}}
+                                        :code "urn:ihe:pcc:xphr:2007"}]}]}}
+   :Attribute {:Mapping.type {:type {:resourceType "Entity" :id "code"}
+                              :path [:type]
+                              :resource {:resourceType "Entity" :id "Mapping"}
+                              :enum ["JUTE", "FHIRPath"]}}}}
 
  encounter-participant-display
  {:zen/tags #{aidbox.search-parameter.v1/search-parameter}
