@@ -9,6 +9,7 @@ services:
         environment:
           BASE_URL: http:\/\/localhost:8080
           JUTE_URL: http:\/\/localhost:8090
+          FHIRPATH_MAPPING_URL: http:\/\/localhost:8091
     sdc:
         image: bedasoftware/fhir-sdc:develop
         depends_on:
@@ -16,6 +17,7 @@ services:
                 condition: service_healthy
         links:
             - devbox
+            - fhirpath_mapping
         env_file:
             - .env.sdc
         tty: true
@@ -124,3 +126,8 @@ services:
         image: bedasoftware/jute-microservice:latest
         ports:
             - '8090:8090'
+    fhirpath_mapping:
+        image: bedasoftware/fhirpath-extract:main
+        ports:
+            - '8091:8090'
+

@@ -10,3 +10,5 @@ AIO_PORT=8081
 AIO_HOST=0.0.0.0
 
 CREATE_MANIFEST_ATTRS="False"
+
+FHIRPATH_MAPPING_SERVICE=http://fhirpath_mapping:8090/parse-template
