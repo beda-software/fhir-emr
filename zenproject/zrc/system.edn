@@ -12,7 +12,6 @@
   :zen/desc "Beda EMR"
   :services {:seed seed
              :seed-fixtures seed-fixtures
-             :seed-fixtrures-policy access-policies
              :repositories repositories}}
 
  seed
@@ -36,7 +35,25 @@
                         :secret "secret"}
             :patient-questionnaire {:grant_types [:basic]
                                     :secret "secret"}}
-  :Practitioner {:admin {:name [{:given ["Alex"], :family "Admin"}]}
+   :AccessPolicy {:test-wildcard-policy {:engine "allow" :link [{:resourceType "User"}]}
+                  :admin-policy {:engine "allow"
+                                 :roleName "admin"}
+                  :patient-role-policy {:engine "allow"
+                                        :roleName "patient"}
+                  :public-appointment-policy
+                  {:engine "allow"
+                   :link [{:resourceType "Client" :id "anonymous"}]}
+                  :patient-questionnaire-policy
+                  {:engine "allow"
+                   :link [{:resourceType "Client" :id "patient-questionnaire"}]}
+                  :federated-identity-signin {:engine "json-schema"
+                                              :schema {:required ["jwt"]
+                                                       :properties {:jwt {:required ["iss", "aud", "sub"]
+                                                                          :properties {:iss {:const "https://appleid.apple.com"}
+                                                                                       :aud {:enum ["software.beda.emr", "software.beda.fhirmhealth.fhirmhealth"]}
+                                                                                       :sub {:type "string"
+                                                                                             :minLength 1}}}}}}}
+   :Practitioner {:admin {:name [{:given ["Alex"], :family "Admin"}]}
                   :practitioner {:name [{:given ["John"], :family "Practitioner"}]}}
    :User {:practitioner {:password "password" :fhirUser {:id "practitioner" :resourceType "Practitioner"}}}
    :Role {:admin {:name "admin"
@@ -69,28 +86,6 @@
                               :path [:type]
                               :resource {:resourceType "Entity" :id "Mapping"}
                               :enum ["JUTE", "FHIRPath"]}}}}
-
- access-policies
- {:zen/tags  #{aidbox/service}
-  :engine    aidbox/seed-v2
-  :resources {:AccessPolicy {:test-wildcard-policy {:engine "allow" :link [{:resourceType "User"}]}
-                             :admin-policy {:engine "allow"
-                                            :roleName "admin"}
-                             :patient-role-policy {:engine "allow"
-                                                   :roleName "patient"}
-                             :public-appointment-policy
-                             {:engine "allow"
-                              :link [{:resourceType "Client" :id "anonymous"}]}
-                             :patient-questionnaire-policy
-                             {:engine "allow"
-                              :link [{:resourceType "Client" :id "patient-questionnaire"}]}
-                             :federated-identity-signin {:engine "json-schema"
-                                                         :schema {:required ["jwt"]
-                                                                  :properties {:jwt {:required ["iss", "aud", "sub"]
-                                                                                     :properties {:iss {:const "https://appleid.apple.com"}
-                                                                                                  :aud {:enum ["software.beda.emr", "software.beda.fhirmhealth.fhirmhealth"]}
-                                                                                                  :sub {:type "string"
-                                                                                                        :minLength 1}}}}}}}}}
 
  encounter-participant-display
  {:zen/tags #{aidbox.search-parameter.v1/search-parameter}
