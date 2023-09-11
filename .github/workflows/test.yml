@@ -55,7 +55,7 @@ jobs:
             - name: Run tests
               run: yarn test --silent
             - run: yarn build
-   Chromatic:
+    Chromatic:
         needs: StoryBook,Tests
         runs-on: ubuntu-latest
         steps:
