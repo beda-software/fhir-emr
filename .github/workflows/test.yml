@@ -20,34 +20,16 @@ jobs:
               run: yarn install --network-concurrency 1
             - run: yarn extract
             - run: yarn compile
-            - uses: actions/upload-artifact@v3
-              with:
-                name: source-code
-                path: .
     StaticAnalysis:
         needs: InstallDeps
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/setup-node@v3
-              with:
-                  node-version: 16
-            - uses: actions/download-artifact@v3
-              with:
-                name: source-code
-                path: .
             - name: Check types
               run: yarn typecheck
     StoryBook:
         needs: StaticAnalysis
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/setup-node@v3
-              with:
-                  node-version: 16
-            - uses: actions/download-artifact@v3
-              with:
-                name: source-code
-                path: .
             - name: Install Playwright
               run: npx playwright install --with-deps
             - name: Build Storybook
@@ -63,13 +45,6 @@ jobs:
         needs: StaticAnalysis
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/setup-node@v3
-              with:
-                  node-version: 16
-            - uses: actions/download-artifact@v3
-              with:
-                name: source-code
-                path: .
             - name: Create deps dir
               run: mkdir -p zenproject/zen-packages && chmod 0777 zenproject/zen-packages
             - name: Run aidbox
@@ -86,13 +61,6 @@ jobs:
           - Tests
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/setup-node@v3
-              with:
-                  node-version: 16
-            - uses: actions/download-artifact@v3
-              with:
-                name: source-code
-                path: .
             - name: Publish to Chromatic
               uses: chromaui/action@v1
               env:
