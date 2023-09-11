@@ -1,10 +1,8 @@
 name: test
 on: push
 jobs:
-    InstallDeps:
+    StoryBook:
         runs-on: ubuntu-latest
-        env:
-            AIDBOX_LICENSE: ${{ secrets.AIDBOX_LICENSE }}
         steps:
             - uses: actions/checkout@v2
               with:
@@ -20,16 +18,8 @@ jobs:
               run: yarn install --network-concurrency 1
             - run: yarn extract
             - run: yarn compile
-    StaticAnalysis:
-        needs: InstallDeps
-        runs-on: ubuntu-latest
-        steps:
             - name: Check types
               run: yarn typecheck
-    StoryBook:
-        needs: StaticAnalysis
-        runs-on: ubuntu-latest
-        steps:
             - name: Install Playwright
               run: npx playwright install --with-deps
             - name: Build Storybook
@@ -41,10 +31,33 @@ jobs:
                 npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
                   "npx http-server storybook-static --port 6006 --silent" \
                   "npx wait-on tcp:6006 && yarn test-storybook"
+            - name: Publish to Chromatic
+                  uses: chromaui/action@v1
+                  env:
+                    NODE_OPTIONS: "--max_old_space_size=4096"
+                  with:
+                    projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+                    onlyChanged: true
+
     Tests:
-        needs: StaticAnalysis
+        env:
+            AIDBOX_LICENSE: ${{ secrets.AIDBOX_LICENSE }}
         runs-on: ubuntu-latest
         steps:
+            - uses: actions/checkout@v2
+              with:
+                fetch-depth: 0
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 16
+            - name: Prepare config
+              run: cp shared/src/config.local.ts shared/src/config.ts
+            - name: Prepare secrets
+              run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
+            - name: Install deps
+              run: yarn install --network-concurrency 1
+            - run: yarn extract
+            - run: yarn compile
             - name: Create deps dir
               run: mkdir -p zenproject/zen-packages && chmod 0777 zenproject/zen-packages
             - name: Run aidbox
@@ -54,17 +67,3 @@ jobs:
               run: docker-compose logs
             - name: Run tests
               run: yarn test --silent
-            - run: yarn build
-    Chromatic:
-        needs:
-          - StoryBook
-          - Tests
-        runs-on: ubuntu-latest
-        steps:
-            - name: Publish to Chromatic
-              uses: chromaui/action@v1
-              env:
-                NODE_OPTIONS: "--max_old_space_size=4096"
-              with:
-                projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-                onlyChanged: true
