@@ -1,7 +1,7 @@
 name: test
 on: push
 jobs:
-    Test:
+    InstallDeps:
         runs-on: ubuntu-latest
         env:
             AIDBOX_LICENSE: ${{ secrets.AIDBOX_LICENSE }}
@@ -20,8 +20,16 @@ jobs:
               run: yarn install --network-concurrency 1
             - run: yarn extract
             - run: yarn compile
+    StaticAnalysis:
+        needs: InstallDeps
+        runs-on: ubuntu-latest
+        steps:
             - name: Check types
               run: yarn typecheck
+    StoryBook:
+        needs: StaticAnalysis
+        runs-on: ubuntu-latest
+        steps:
             - name: Install Playwright
               run: npx playwright install --with-deps
             - name: Build Storybook
@@ -33,6 +41,10 @@ jobs:
                 npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
                   "npx http-server storybook-static --port 6006 --silent" \
                   "npx wait-on tcp:6006 && yarn test-storybook"
+    Tests:
+        needs: StaticAnalysis
+        runs-on: ubuntu-latest
+        steps:
             - name: Create deps dir
               run: mkdir -p zenproject/zen-packages && chmod 0777 zenproject/zen-packages
             - name: Run aidbox
@@ -43,6 +55,10 @@ jobs:
             - name: Run tests
               run: yarn test --silent
             - run: yarn build
+   Chromatic:
+        needs: StoryBook,Tests
+        runs-on: ubuntu-latest
+        steps:
             - name: Publish to Chromatic
               uses: chromaui/action@v1
               env:
