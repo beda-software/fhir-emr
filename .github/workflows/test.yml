@@ -56,7 +56,9 @@ jobs:
               run: yarn test --silent
             - run: yarn build
     Chromatic:
-        needs: StoryBook,Tests
+        needs:
+          - StoryBook
+          - Tests
         runs-on: ubuntu-latest
         steps:
             - name: Publish to Chromatic
