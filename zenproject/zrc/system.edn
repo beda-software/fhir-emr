@@ -35,15 +35,35 @@
                         :secret "secret"}
             :patient-questionnaire {:grant_types [:basic]
                                     :secret "secret"}}
-  :Practitioner {:admin {:name [{:given ["Alex"], :family "Admin"}]}
-                  :practitioner {:name [{:given ["John"], :family "Practitioner"}]}}
-   :User {:practitioner {:password "password" :fhirUser {:id "practitioner" :resourceType "Practitioner"}}}
+   :Patient {:patient-1 {:name [{:given ["First" "Jr."] :family "Patient"}] :active true :gender "male" :birthDate "1989-01-01" :resourceType "Patient"}
+             :patient-2 {:name [{:given ["Second" "Jr."] :family "Patient"}] :active true :gender "male" :birthDate "1990-02-02" :resourceType "Patient"}}
+   :Practitioner {:admin {:name [{:given ["Alex"], :family "Admin"}]}
+                  :practitioner {:name [{:given ["John"], :family "Practitioner"}]}
+                  :basic-practitioner-1 {:name [{:given ["Basic-1"], :family "Practitioner"}]}
+                  :basic-practitioner-2 {:name [{:given ["Basic-2"], :family "Practitioner"}]}}
+   :User {:practitioner {:password "password" :fhirUser {:id "practitioner" :resourceType "Practitioner"}}
+          :basic-practitioner-1 {:password "password" :fhirUser {:id "basic-practitioner-1" :resourceType "Practitioner"}}
+          :basic-practitioner-2 {:password "password" :fhirUser {:id "basic-practitioner-2" :resourceType "Practitioner"}}
+          :patient-1 {:password "password" :fhirUser {:id "patient-1" :resourceType "Patient"}}
+          :patient-2 {:password "password" :fhirUser {:id "patient-2" :resourceType "Patient"}}}
    :Role {:admin {:name "admin"
                   :user {:id "admin" :resourceType "User"}
                   :links {:practitioner {:id "admin" :resourceType "Practitioner"}}}
           :practitioner {:name "admin"
                          :user {:id "practitioner" :resourceType "User"}
-                         :links {:practitioner {:id "practitioner" :resourceType "Practitioner"}}}}
+                         :links {:practitioner {:id "practitioner" :resourceType "Practitioner"}}}
+          :basic-practitioner-1 {:name "practitioner"
+                                 :user {:id "basic-practitioner-1" :resourceType "User"}
+                                 :links {:practitioner {:id "basic-practitioner-1" :resourceType "Practitioner"}}}
+          :basic-practitioner-2 {:name "practitioner"
+                                 :user {:id "basic-practitioner-2" :resourceType "User"}
+                                 :links {:practitioner {:id "basic-practitioner-2" :resourceType "Practitioner"}}}
+          :patient-1 {:name "patient"
+                      :user {:id "patient-1" :resourceType "User"}
+                      :links {:patient {:id "patient-1" :resourceType "Patient"}}}
+          :patient-2 {:name "patient"
+                      :user {:id "patient-2" :resourceType "User"}
+                      :links {:patient {:id "patient-2" :resourceType "Patient"}}}}
    :AidboxQuery {:provenance-by-source
                  {:query "select resource || jsonb_build_object('resourceType', 'Provenance', 'id', id) as resource from provenance  where array_to_string(knife_extract_text(resource,'[[\"entity\",\"what\",\"uri\"]]'),'') like {{params.source}}"
                   :params {:source {:type "string" :format "%%%s%%" :isRequired true}}}
@@ -67,7 +87,7 @@
    :Attribute {:Mapping.type {:type {:resourceType "Entity" :id "code"}
                               :path [:type]
                               :resource {:resourceType "Entity" :id "Mapping"}
-                              :enum ["JUTE", "FHIRPath"]}}}}
+                              :enum ["JUTE" "FHIRPath"]}}}}
 
  access-policies
  {:zen/tags  #{aidbox/service}
@@ -75,6 +95,8 @@
   :resources {:AccessPolicy {:test-wildcard-policy {:engine "allow" :link [{:resourceType "User"}]}
                              :admin-policy {:engine "allow"
                                             :roleName "admin"}
+                             :practitioner-policy {:engine "allow"
+                                                   :roleName "practitioner"}
                              :patient-role-policy {:engine "allow"
                                                    :roleName "patient"}
                              :public-appointment-policy
