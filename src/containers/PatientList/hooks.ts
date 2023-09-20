@@ -1,5 +1,7 @@
 import { Consent, Patient } from 'fhir/r4b';
 
+import { formatFHIRDate } from 'aidbox-react/lib/utils/date';
+
 import { extractBundleResources } from 'fhir-react/lib/services/fhir';
 import { mapSuccess } from 'fhir-react/lib/services/service';
 
@@ -13,7 +15,10 @@ export function usePatientList(filterValues: StringTypeColumnFilterValue[], prac
     const patientFilterValue = debouncedFilterValues[0];
 
     const queryParameters = {
+        status: 'active',
         actor: practitionerId,
+        category: 'data-sharing',
+        period: formatFHIRDate(new Date()),
         _include: ['patient'],
         _sort: '-_lastUpdated',
         // ...(patientFilterValue ? { name: patientFilterValue.value } : {}), TODO: Fix search by name
