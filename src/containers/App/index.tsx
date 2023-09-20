@@ -39,6 +39,9 @@ export function App() {
             return matchCurrentUserRole({
                 [Role.Admin]: () => <AuthenticatedAdminUserApp />,
                 [Role.Patient]: () => <AuthenticatedPatientUserApp />,
+                [Role.Practitioner]: (practitioner) => (
+                    <AuthenticatedPractitionerUserApp currentPractitionerId={practitioner.id} />
+                ),
             });
         }
 
@@ -127,7 +130,31 @@ function AuthenticatedAdminUserApp() {
     return (
         <BaseLayout>
             <Routes>
-                <Route path="/patients" element={<PatientList />} />
+                {/* TODO: in the current implementation admin will get all patients via /patients, but it's wrong */}
+                <Route path="/patients" element={<PatientList currentPractitionerId="" />} />
+                <Route path="/encounters" element={<EncounterList />} />
+                <Route path="/appointment/book" element={<PublicAppointment />} />
+                <Route path="/questionnaire" element={<PatientQuestionnaire />} />
+                <Route path="/patients/:id/*" element={<PatientDetails />} />
+                <Route path="/documents/:id/edit" element={<div>documents/:id/edit</div>} />
+                <Route path="/encounters/:encounterId/video" element={<VideoCall />} />
+                <Route path="/practitioners" element={<PractitionerList />} />
+                <Route path="/practitioners/:id/*" element={<PractitionerDetails />} />
+                <Route path="/questionnaires" element={<QuestionnaireList />} />
+                <Route path="/questionnaires/builder" element={<QuestionnaireBuilder />} />
+                <Route path="/questionnaires/:id/edit" element={<QuestionnaireBuilder />} />
+                <Route path="/questionnaires/:id" element={<div>questionnaires/:id</div>} />
+                <Route path="*" element={<Navigate to="/encounters" />} />
+            </Routes>
+        </BaseLayout>
+    );
+}
+
+function AuthenticatedPractitionerUserApp({ currentPractitionerId }: { currentPractitionerId: string }) {
+    return (
+        <BaseLayout>
+            <Routes>
+                <Route path="/patients" element={<PatientList currentPractitionerId={currentPractitionerId} />} />
                 <Route path="/encounters" element={<EncounterList />} />
                 <Route path="/appointment/book" element={<PublicAppointment />} />
                 <Route path="/questionnaire" element={<PatientQuestionnaire />} />

@@ -112,6 +112,7 @@ function UserMenu(props: { onItemClick?: () => void }) {
                             {matchCurrentUserRole({
                                 [Role.Admin]: () => <AdminName />,
                                 [Role.Patient]: () => <PatientName />,
+                                [Role.Practitioner]: () => <AdminName />,
                             })}
                         </>
                     ),

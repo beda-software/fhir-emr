@@ -29,6 +29,8 @@ export function usePatientWearablesData(patient: WithId<Patient>) {
         const consentResponse = await matchCurrentUserRole({
             [Role.Admin]: (practitioner: WithId<Practitioner>) =>
                 fetchConsentStatus(practitioner, patient, 'emr-datasequence-records'),
+            [Role.Practitioner]: (practitioner: WithId<Practitioner>) =>
+                fetchConsentStatus(practitioner, patient, 'emr-datasequence-records'),
             [Role.Patient]: () => Promise.resolve(success({ hasConsent: true })),
         });
 
@@ -85,6 +87,7 @@ async function fetchPatientRecords(patient: WithId<Patient>) {
         matchCurrentUserRole({
             [Role.Patient]: () => `${config.wearablesDataStreamService}/api/v1/records`,
             [Role.Admin]: () => `${config.wearablesDataStreamService}/api/v1/${patient.id}/records`,
+            [Role.Practitioner]: () => `${config.wearablesDataStreamService}/api/v1/${patient.id}/records`,
         }),
         {
             method: 'GET',
@@ -100,6 +103,7 @@ async function fetchPatientMetriportRecords(patient: WithId<Patient>) {
         matchCurrentUserRole({
             [Role.Patient]: () => `${config.wearablesDataStreamService}/metriport/records`,
             [Role.Admin]: () => `${config.wearablesDataStreamService}/metriport/${patient.id}/records`,
+            [Role.Practitioner]: () => `${config.wearablesDataStreamService}/metriport/${patient.id}/records`,
         }),
         {
             method: 'GET',

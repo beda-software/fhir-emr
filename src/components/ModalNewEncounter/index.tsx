@@ -22,6 +22,7 @@ export const ModalNewEncounter = ({ patient, reloadEncounter }: ModalNewEncounte
             matchCurrentUserRole({
                 [Role.Admin]: () => t`Create Encounter`,
                 [Role.Patient]: () => t`Request Appointment`,
+                [Role.Practitioner]: () => t`Create Encounter`,
             }),
         [],
     );

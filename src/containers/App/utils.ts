@@ -1,10 +1,3 @@
-import { isSuccess, success } from 'fhir-react/lib/libs/remoteData';
-import { getFHIRResource } from 'fhir-react/lib/services/fhir';
-import {
-    resetInstanceToken as resetFHIRInstanceToken,
-    setInstanceToken as setFHIRInstanceToken,
-} from 'fhir-react/lib/services/instance';
-import { extractErrorCode, formatError } from 'fhir-react/lib/utils/error';
 import { Patient, Practitioner } from 'fhir/r4b';
 
 import * as aidboxReactRemoteData from 'aidbox-react/lib/libs/remoteData';
@@ -12,6 +5,14 @@ import {
     resetInstanceToken as resetAidboxInstanceToken,
     setInstanceToken as setAidboxInstanceToken,
 } from 'aidbox-react/lib/services/instance';
+
+import { isSuccess, success } from 'fhir-react/lib/libs/remoteData';
+import { getFHIRResource } from 'fhir-react/lib/services/fhir';
+import {
+    resetInstanceToken as resetFHIRInstanceToken,
+    setInstanceToken as setFHIRInstanceToken,
+} from 'fhir-react/lib/services/instance';
+import { extractErrorCode, formatError } from 'fhir-react/lib/utils/error';
 
 import { User } from 'shared/src/contrib/aidbox';
 
@@ -29,6 +30,17 @@ async function populateUserInfoSharedState(user: User) {
 
     const fetchUserRoleDetails = selectUserRole(user, {
         [Role.Admin]: async () => {
+            const practitionerId = user.role![0]!.links!.practitioner!.id;
+            const practitionerResponse = await getFHIRResource<Practitioner>({
+                reference: `Practitioner/${practitionerId}`,
+            });
+            if (isSuccess(practitionerResponse)) {
+                sharedAuthorizedPractitioner.setSharedState(practitionerResponse.data);
+            } else {
+                console.error(practitionerResponse.error);
+            }
+        },
+        [Role.Practitioner]: async () => {
             const practitionerId = user.role![0]!.links!.practitioner!.id;
             const practitionerResponse = await getFHIRResource<Practitioner>({
                 reference: `Practitioner/${practitionerId}`,
@@ -68,10 +80,7 @@ export async function restoreUserSession(token: string) {
             sharedJitsiAuthToken.setSharedState(jitsiAuthTokenResponse.data.jwt);
         }
         if (aidboxReactRemoteData.isFailure(jitsiAuthTokenResponse)) {
-            console.warn(
-                'Error, while fetching Jitsi auth token: ',
-                formatError(jitsiAuthTokenResponse.error),
-            );
+            console.warn('Error, while fetching Jitsi auth token: ', formatError(jitsiAuthTokenResponse.error));
         }
     } else {
         if (extractErrorCode(userResponse.error) !== 'network_error') {
