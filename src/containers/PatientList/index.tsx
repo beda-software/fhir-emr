@@ -1,8 +1,9 @@
 import { t, Trans } from '@lingui/macro';
 import { Button, Empty, Row, Col, notification } from 'antd';
-import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { Patient } from 'fhir/r4b';
 import { useNavigate } from 'react-router-dom';
+
+import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
 
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 import { renderHumanName } from 'shared/src/utils/fhir';
@@ -21,7 +22,12 @@ import { formatHumanDate } from 'src/utils/date';
 
 import { usePatientList } from './hooks';
 
-export function PatientList() {
+interface PatientListProps {
+    currentPractitionerId: string;
+}
+
+export function PatientList(props: PatientListProps) {
+    const { currentPractitionerId } = props;
     const navigate = useNavigate();
 
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
@@ -36,6 +42,7 @@ export function PatientList() {
 
     const { patientsResponse, pagerManager, pagination, handleTableChange } = usePatientList(
         columnsFilterValues as StringTypeColumnFilterValue[],
+        currentPractitionerId,
     );
 
     return (
