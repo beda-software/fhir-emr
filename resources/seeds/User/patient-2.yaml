@@ -1,0 +1,6 @@
+password: "password"
+id: patient-2
+resourceType: User
+fhirUser:
+  id: "patient-2"
+  resourceType: "Patient"

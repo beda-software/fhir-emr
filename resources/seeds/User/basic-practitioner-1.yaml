@@ -1,0 +1,6 @@
+password: "password"
+id: basic-practitioner-1
+resourceType: User
+fhirUser:
+  id: "basic-practitioner-1"
+  resourceType: "Practitioner"

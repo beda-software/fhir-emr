@@ -1,0 +1,31 @@
+item:
+  - answer:
+      - value:
+          Reference:
+            id: basic-practitioner-2
+            display: Basic-2 Practitioner
+            resourceType: Practitioner
+    linkId: practitioner
+  - answer:
+      - value:
+          Coding:
+            code: permit
+            system: http://hl7.org/fhir/consent-provision-type
+            display: Permit
+    linkId: provision
+  - answer:
+      - value:
+          date: '2023-09-21'
+    linkId: date-start
+  - answer:
+      - value:
+          date: '2030-09-21'
+    linkId: date-end
+status: completed
+subject:
+  id: patient-2
+  resourceType: Patient
+authored: '2023-09-21T10:38:43Z'
+questionnaire: data-sharing-consent
+id: patient-2-basic-practitioner-2-data-sharing-consent
+resourceType: QuestionnaireResponse
