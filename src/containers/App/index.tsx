@@ -39,9 +39,7 @@ export function App() {
             return matchCurrentUserRole({
                 [Role.Admin]: () => <AuthenticatedAdminUserApp />,
                 [Role.Patient]: () => <AuthenticatedPatientUserApp />,
-                [Role.Practitioner]: (practitioner) => (
-                    <AuthenticatedPractitionerUserApp currentPractitionerId={practitioner.id} />
-                ),
+                [Role.Practitioner]: () => <AuthenticatedPractitionerUserApp />,
             });
         }
 
@@ -131,7 +129,7 @@ function AuthenticatedAdminUserApp() {
         <BaseLayout>
             <Routes>
                 {/* TODO: in the current implementation admin will get all patients via /patients, but it's wrong */}
-                <Route path="/patients" element={<PatientList currentPractitionerId="" />} />
+                <Route path="/patients" element={<PatientList />} />
                 <Route path="/encounters" element={<EncounterList />} />
                 <Route path="/appointment/book" element={<PublicAppointment />} />
                 <Route path="/questionnaire" element={<PatientQuestionnaire />} />
@@ -150,11 +148,11 @@ function AuthenticatedAdminUserApp() {
     );
 }
 
-function AuthenticatedPractitionerUserApp({ currentPractitionerId }: { currentPractitionerId: string }) {
+function AuthenticatedPractitionerUserApp() {
     return (
         <BaseLayout>
             <Routes>
-                <Route path="/patients" element={<PatientList currentPractitionerId={currentPractitionerId} />} />
+                <Route path="/patients" element={<PatientList />} />
                 <Route path="/encounters" element={<EncounterList />} />
                 <Route path="/appointment/book" element={<PublicAppointment />} />
                 <Route path="/questionnaire" element={<PatientQuestionnaire />} />

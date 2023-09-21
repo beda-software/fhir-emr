@@ -22,12 +22,7 @@ import { formatHumanDate } from 'src/utils/date';
 
 import { usePatientList } from './hooks';
 
-interface PatientListProps {
-    currentPractitionerId: string;
-}
-
-export function PatientList(props: PatientListProps) {
-    const { currentPractitionerId } = props;
+export function PatientList() {
     const navigate = useNavigate();
 
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
@@ -42,7 +37,6 @@ export function PatientList(props: PatientListProps) {
 
     const { patientsResponse, pagerManager, pagination, handleTableChange } = usePatientList(
         columnsFilterValues as StringTypeColumnFilterValue[],
-        currentPractitionerId,
     );
 
     return (
