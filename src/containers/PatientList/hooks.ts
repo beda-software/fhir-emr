@@ -1,4 +1,4 @@
-import { Consent, Patient } from 'fhir/r4b';
+import { Patient } from 'fhir/r4b';
 
 import { formatFHIRDate } from 'aidbox-react/lib/utils/date';
 
@@ -15,19 +15,18 @@ export function usePatientList(filterValues: StringTypeColumnFilterValue[], prac
     const patientFilterValue = debouncedFilterValues[0];
 
     const queryParameters = {
-        status: 'active',
-        actor: practitionerId,
-        category: 'data-sharing',
-        period: formatFHIRDate(new Date()),
-        _include: ['patient'],
+        '_has:Consent:patient:status': 'active',
+        '_has:Consent:patient:category': 'data-sharing',
+        '_has:Consent:patient:period': formatFHIRDate(new Date()),
+        '_has:Consent:patient:actor': practitionerId,
         _sort: '-_lastUpdated',
-        // ...(patientFilterValue ? { name: patientFilterValue.value } : {}), TODO: Fix search by name
+        ...(patientFilterValue ? { name: patientFilterValue.value } : {}),
     };
 
     const { resourceResponse, pagerManager, handleTableChange, pagination } = usePagerExtended<
-        Consent | Patient,
+        Patient,
         StringTypeColumnFilterValue[]
-    >('Consent', queryParameters, debouncedFilterValues);
+    >('Patient', queryParameters, debouncedFilterValues);
 
     const patientsResponse = mapSuccess(resourceResponse, (bundle) => extractBundleResources(bundle).Patient);
 
