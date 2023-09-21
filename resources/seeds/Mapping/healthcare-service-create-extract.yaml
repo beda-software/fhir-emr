@@ -1,0 +1,22 @@
+body:
+  $let:
+    # duration: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='duration').answer.valueInteger").0
+    visitTypeCoding: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='visit-type').answer.valueCoding").0
+  $body:
+    type: transaction
+    entry:
+      - request:
+          url: /HealthcareService
+          method: POST
+        resource:
+          # duration: $ duration
+          type:
+            - text: $ visitTypeCoding.display
+              coding:
+                - $ visitTypeCoding
+          active: true
+          appointmentRequired: true
+          resourceType: HealthcareService
+    resourceType: Bundle
+id: healthcare-service-create-extract
+resourceType: Mapping

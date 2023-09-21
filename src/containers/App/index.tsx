@@ -27,6 +27,7 @@ import { sharedAuthorizedPatient } from 'src/sharedState';
 import { Role, matchCurrentUserRole } from 'src/utils/role';
 
 import { restoreUserSession } from './utils';
+import { HealthcareServiceList } from '../HealthcareServiceList';
 
 export function App() {
     const [userResponse] = useService(async () => {
@@ -142,6 +143,7 @@ function AuthenticatedAdminUserApp() {
                 <Route path="/questionnaires/builder" element={<QuestionnaireBuilder />} />
                 <Route path="/questionnaires/:id/edit" element={<QuestionnaireBuilder />} />
                 <Route path="/questionnaires/:id" element={<div>questionnaires/:id</div>} />
+                <Route path="/healthcare-services" element={<HealthcareServiceList />} />
                 <Route path="*" element={<Navigate to="/encounters" />} />
             </Routes>
         </BaseLayout>
