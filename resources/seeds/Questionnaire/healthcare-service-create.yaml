@@ -7,9 +7,9 @@ mapping:
   - id: healthcare-service-create-extract
     resourceType: Mapping
 item:
-  # - linkId: duration
-  #   type: integer
-  #   text: Duration
+  - linkId: duration
+    type: integer
+    text: Duration
   - text: Visit type
     type: choice
     linkId: visit-type

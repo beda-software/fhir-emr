@@ -1,6 +1,6 @@
 body:
   $let:
-    # duration: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='duration').answer.valueInteger").0
+    duration: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='duration').answer.valueInteger").0
     visitTypeCoding: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='visit-type').answer.valueCoding").0
   $body:
     type: transaction
@@ -9,7 +9,7 @@ body:
           url: /HealthcareService
           method: POST
         resource:
-          # duration: $ duration
+          duration: $ duration
           type:
             - text: $ visitTypeCoding.display
               coding:
@@ -17,6 +17,14 @@ body:
           active: true
           appointmentRequired: true
           resourceType: HealthcareService
+      - request:
+          url: /Concept
+          method: POST
+        resource:
+          code: $ visitTypeCoding.code
+          system: http://beda.software/custom-healthcare-service-list
+          display: $ visitTypeCoding.display
+          resourceType: Concept
     resourceType: Bundle
 id: healthcare-service-create-extract
 resourceType: Mapping
