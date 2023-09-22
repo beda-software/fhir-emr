@@ -46,6 +46,19 @@ item:
             code: "419772000"
             system: http://snomed.info/sct
             display: Family practice
+  - text: Available services
+    type: reference
+    referenceResource:
+      - HealthcareService
+    required: false
+    repeats: true
+    linkId: services
+    answerExpression:
+      language: application/x-fhir-query
+      expression: "HealthcareService"
+    choiceColumn:
+      - forDisplay: true
+        path: type.first().coding.first().display
 meta:
   profile:
     - https://beda.software/beda-emr-questionnaire

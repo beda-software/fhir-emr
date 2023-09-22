@@ -1,8 +1,9 @@
 import { ContactsOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
+import { HealthcareService, Practitioner, PractitionerRole } from 'fhir/r4b';
+
 import { WithId } from 'fhir-react/lib/services/fhir';
-import { Practitioner, PractitionerRole } from 'fhir/r4b';
 
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
@@ -16,13 +17,14 @@ import { S } from './PractitionerOverview.styles';
 interface Props {
     practitioner: WithId<Practitioner>;
     practitionerRole?: WithId<PractitionerRole>;
+    healthcareServices?: WithId<HealthcareService>[];
     reload: () => void;
 }
 
 function usePractitionerOverview(props: Props) {
-    const { practitioner, practitionerRole } = props;
+    const { practitioner, practitionerRole, healthcareServices } = props;
 
-    let details = [
+    const details = [
         {
             title: 'First name',
             value: practitioner.name?.[0]?.given?.[0],
@@ -38,6 +40,10 @@ function usePractitionerOverview(props: Props) {
         {
             title: 'Specialty',
             value: practitionerRole?.specialty?.[0]?.coding?.[0]?.display,
+        },
+        {
+            title: 'Available services',
+            value: healthcareServices?.map((hs) => hs.type?.[0]?.coding?.[0]?.display).join(', '),
         },
     ];
 
