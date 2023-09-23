@@ -70,6 +70,23 @@ export function HealthcareServiceList() {
                             render: (_text, resource) => resource.type?.[0]?.text,
                         },
                         {
+                            title: <Trans>Comment</Trans>,
+                            dataIndex: 'comment',
+                            key: 'comment',
+                            width: '20%',
+                            render: (_text, resource) => resource.comment,
+                        },
+                        {
+                            title: <Trans>Duration (minutes)</Trans>,
+                            dataIndex: 'duration',
+                            key: 'duration',
+                            width: '20%',
+                            render: (_text, resource) => {
+                                console.log('resource', resource);
+                                return resource.duration;
+                            },
+                        },
+                        {
                             title: <Trans>Status</Trans>,
                             dataIndex: 'active',
                             key: 'active',
