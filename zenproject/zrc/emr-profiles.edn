@@ -1,0 +1,10 @@
+{ns emr-profiles
+ import #{hl7-fhir-r4-core}
+
+ HealthcareServiceProfile
+ {:zen/tags #{zen.fhir/base-schema zen.fhir/profile-schema}
+  :zen.fhir/type "HealthcareService" 
+  :zen.fhir/profileUri "urn:profile:HealthcareService"
+  :zen.fhir/version "0.6.32"
+  :keys {:duration {:confirms #{hl7-fhir-r4-core.integer/schema}
+                    :fhir/extensionUri "https://beda.software/fhir-emr-healthcareservice/duration"}}}}

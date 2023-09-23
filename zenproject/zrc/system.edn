@@ -4,7 +4,8 @@
           aidbox.search-parameter.v1
           aidbox.repository.v1
           beda-emr-core.questionnaire
-          hl7-fhir-r4-core}
+          hl7-fhir-r4-core
+          emr-profiles}
 
  box
  {:zen/tags #{aidbox/system}
