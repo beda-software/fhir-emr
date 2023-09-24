@@ -36,19 +36,6 @@
                         :secret "secret"}
             :patient-questionnaire {:grant_types [:basic]
                                     :secret "secret"}}
-   :Practitioner {:admin {:name [{:given ["Alex"], :family "Admin"}]}
-                  :practitioner {:name [{:given ["John"], :family "Practitioner"}]}}
-   :User {:practitioner {:password "password" :fhirUser {:id "practitioner" :resourceType "Practitioner"}}
-          :basic-practitioner-1 {:password "password"}
-          :basic-practitioner-2 {:password "password"}
-          :patient-1 {:password "password"}
-          :patient-2 {:password "password"}}
-   :Role {:admin {:name "admin"
-                  :user {:id "admin" :resourceType "User"}
-                  :links {:practitioner {:id "admin" :resourceType "Practitioner"}}}
-          :practitioner {:name "admin"
-                         :user {:id "practitioner" :resourceType "User"}
-                         :links {:practitioner {:id "practitioner" :resourceType "Practitioner"}}}} 
    :AidboxQuery {:provenance-by-source
                  {:query "select resource || jsonb_build_object('resourceType', 'Provenance', 'id', id) as resource from provenance  where array_to_string(knife_extract_text(resource,'[[\"entity\",\"what\",\"uri\"]]'),'') like {{params.source}}"
                   :params {:source {:type "string" :format "%%%s%%" :isRequired true}}}

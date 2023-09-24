@@ -1,0 +1,10 @@
+name: admin
+user:
+  id: super-user
+  resourceType: User
+links:
+  practitioner:
+    id: super-user
+    resourceType: Practitioner
+id: super-user
+resourceType: Role
