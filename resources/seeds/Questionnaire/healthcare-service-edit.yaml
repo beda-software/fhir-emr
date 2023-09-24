@@ -1,0 +1,80 @@
+id: healthcare-service-edit
+resourceType: Questionnaire
+name: healthcare-service-edit
+title: healthcare-service edit
+status: active
+launchContext:
+  - name:
+      code: HealthcareService
+    type:
+      - HealthcareService
+contained:
+  - resourceType: Bundle
+    id: HealthcareServiceBundle
+    type: transaction
+    entry:
+      - request:
+          method: GET
+          url: /HealthcareService?_id={{%HealthcareService.id}}
+  - resourceType: Bundle
+    id: ConceptBundle
+    type: transaction
+    entry:
+      - request:
+          method: GET
+          url: /Concept?code={{%HealthcareService.type.first().coding.first().code}}&system=http://beda.software/custom-healthcare-service-list
+sourceQueries:
+  - localRef: "Bundle#HealthcareServiceBundle"
+  - localRef: "Bundle#ConceptBundle"
+mapping:
+  - id: healthcare-service-edit-extract
+    resourceType: Mapping
+item:
+  - text: HealthcareServiceId
+    type: string
+    linkId: healthcareServiceId
+    required: true
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%HealthcareServiceBundle.entry[0].resource.entry.resource.id"
+  - text: ConceptId
+    type: string
+    linkId: conceptId
+    required: true
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%ConceptBundle.entry[0].resource.entry.resource.id"
+  - linkId: duration
+    type: integer
+    text: Duration
+    required: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%HealthcareServiceBundle.entry[0].resource.entry.resource.duration"
+  - text: Visit type name
+    required: true
+    type: string
+    linkId: visit-type-name
+    initialExpression:
+      language: text/fhirpath
+      expression: "%HealthcareServiceBundle.entry[0].resource.entry.resource.type.first().coding.first().display"
+  - text: Visit type code
+    required: true
+    type: string
+    linkId: visit-type-code
+    initialExpression:
+      language: text/fhirpath
+      expression: "%HealthcareServiceBundle.entry[0].resource.entry.resource.type.first().coding.first().code"
+  - text: Comment
+    type: string
+    linkId: comment
+    initialExpression:
+      language: text/fhirpath
+      expression: "%HealthcareServiceBundle.entry[0].resource.entry.resource.comment"
+
+meta:
+  profile:
+    - https://beda.software/beda-emr-questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/healthcare-service-create

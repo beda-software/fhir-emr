@@ -1,9 +1,11 @@
 import { t, Trans } from '@lingui/macro';
 import { Col, Empty, Row, Table } from 'antd';
+import { Link } from 'react-router-dom';
 
 import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
 
 import { BasePageHeader, BasePageContent } from 'src/components/BaseLayout';
+import { ModalEditHealthcareService } from 'src/components/ModalEditHealthcareService';
 import { ModalNewHealthcareService } from 'src/components/ModalNewHealthcareService';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
@@ -92,6 +94,25 @@ export function HealthcareServiceList() {
                             key: 'active',
                             width: '20%',
                             render: (_text, resource) => (resource.active ? 'Active' : 'Inactive'),
+                        },
+                        {
+                            title: <Trans>Actions</Trans>,
+                            dataIndex: 'actions',
+                            key: 'actions',
+                            width: '20%',
+                            render: (_text, resource) => (
+                                <Row>
+                                    <Col>
+                                        <ModalEditHealthcareService
+                                            onSuccess={pagerManager.reload}
+                                            healthcareService={resource}
+                                        />
+                                    </Col>
+                                    <Col>
+                                        <Link to={`/encounters/`}>Disable</Link>
+                                    </Col>
+                                </Row>
+                            ),
                         },
                     ]}
                     loading={isLoading(healthcareServiceResponse) && { indicator: SpinIndicator }}
