@@ -33,6 +33,7 @@ body:
           system: http://beda.software/custom-healthcare-service-list
           display: $ visitTypeName
           resourceType: Concept
+          deprecated: false
     resourceType: Bundle
 id: healthcare-service-create-extract
 resourceType: Mapping

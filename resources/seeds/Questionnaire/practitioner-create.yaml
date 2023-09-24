@@ -55,7 +55,7 @@ item:
     linkId: services
     answerExpression:
       language: application/x-fhir-query
-      expression: "HealthcareService"
+      expression: "HealthcareService?active=true"
     choiceColumn:
       - forDisplay: true
         path: type.first().coding.first().display

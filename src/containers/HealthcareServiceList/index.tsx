@@ -1,10 +1,10 @@
 import { t, Trans } from '@lingui/macro';
 import { Col, Empty, Row, Table } from 'antd';
-import { Link } from 'react-router-dom';
 
 import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
 
 import { BasePageHeader, BasePageContent } from 'src/components/BaseLayout';
+import { ModalChangeActiveHealthcareService } from 'src/components/ModalChangeActiveHealthcareService';
 import { ModalEditHealthcareService } from 'src/components/ModalEditHealthcareService';
 import { ModalNewHealthcareService } from 'src/components/ModalNewHealthcareService';
 import { SearchBar } from 'src/components/SearchBar';
@@ -109,7 +109,10 @@ export function HealthcareServiceList() {
                                         />
                                     </Col>
                                     <Col>
-                                        <Link to={`/encounters/`}>Disable</Link>
+                                        <ModalChangeActiveHealthcareService
+                                            onSuccess={pagerManager.reload}
+                                            healthcareService={resource}
+                                        />
                                     </Col>
                                 </Row>
                             ),
