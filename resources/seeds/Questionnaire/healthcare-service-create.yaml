@@ -8,8 +8,13 @@ mapping:
     resourceType: Mapping
 item:
   - linkId: duration
+    required: true
     type: integer
     text: Duration
+    unit:
+      code: min
+      system: http://unitsofmeasure.org
+      display: min
   - text: Visit type name
     required: true
     type: string

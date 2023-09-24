@@ -50,6 +50,10 @@ item:
     type: integer
     text: Duration
     required: true
+    unit:
+      code: min
+      system: http://unitsofmeasure.org
+      display: min
     initialExpression:
       language: text/fhirpath
       expression: "%HealthcareServiceBundle.entry[0].resource.entry.resource.duration"
