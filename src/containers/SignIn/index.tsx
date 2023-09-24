@@ -45,7 +45,8 @@ export function SignIn(props: SignInProps) {
                         <S.Message>
                             <b>{t`On the next page, please, use the following credentials`}</b>
                             <div>
-                                {t`Username`}: practitioner <br />
+                                {t`Username`}: super-user or basic-practitioner-1 or basic-practitioner-2 or patient-1
+                                or patient-2 <br />
                                 {t`Password`}: password
                             </div>
                         </S.Message>

@@ -15,10 +15,11 @@ item:
     linkId: provision
   - answer:
       - value:
-          date: '2023-09-21'
+          date: '2024-09-21'
     linkId: date-start
   - answer:
-      - {}
+      - value:
+          date: '2024-09-21'
     linkId: date-end
 status: completed
 subject:
