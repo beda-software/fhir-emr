@@ -9,6 +9,7 @@ import { EncountersIcon } from 'src/icons/menu/EncountersIcon';
 import { PatientsIcon } from 'src/icons/menu/PatientsIcon';
 import { PractitionersIcon } from 'src/icons/menu/PractitionersIcon';
 import { QuestionnairesIcon } from 'src/icons/menu/QuestionnairesIcon';
+import { ServicesIcon } from 'src/icons/menu/ServicesIcon';
 import { getToken } from 'src/services/auth';
 import { Role, matchCurrentUserRole } from 'src/utils/role';
 
@@ -39,7 +40,7 @@ export function SidebarTop(props: Props) {
     const menuItems: RouteItem[] = !isAnonymousUser
         ? matchCurrentUserRole({
               [Role.Admin]: () => [
-                  { label: t`Services`, path: '/healthcare-services', icon: <QuestionnairesIcon /> },
+                  { label: t`Services`, path: '/healthcare-services', icon: <ServicesIcon /> },
                   { label: t`Encounters`, path: '/encounters', icon: <EncountersIcon /> },
                   { label: t`Patients`, path: '/patients', icon: <PatientsIcon /> },
                   { label: t`Practitioners`, path: '/practitioners', icon: <PractitionersIcon /> },
