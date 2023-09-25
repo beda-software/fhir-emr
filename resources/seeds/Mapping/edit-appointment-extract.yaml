@@ -6,7 +6,7 @@ body:
     selectedPatientReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patient').answer.valueReference").0
     selectedPractitionerRoleReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-role').answer.valueReference").0
     startDateTime: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='start-datetime').answer.valueDateTime").0
-    serviceTypeCoding: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='service-type').answer.valueCoding").0
+    selectedHealthcareServiceReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='service-type').answer.valueReference").0
   $body:
     $let:
       selectedPatientReferenceSplit:
@@ -18,6 +18,11 @@ body:
         $call: splitStr
         $args:
           - $ selectedPractitionerRoleReference.reference
+          - "/"
+      selectedHealthcareServiceReferenceSplit:
+        $call: splitStr
+        $args:
+          - $ selectedHealthcareServiceReference.reference
           - "/"
     $body:
       resourceType: Bundle
@@ -38,18 +43,30 @@ body:
                   resourceType: Appointment
                   participant:
                     - actor:
-                        resourceType: $ selectedPatientReferenceSplit.0
-                        id: $ selectedPatientReferenceSplit.1
-                        display: $ selectedPatientReference.display
+                        $if: $ selectedPatientReference
+                        $then:
+                          resourceType: $ selectedPatientReferenceSplit.0
+                          id: $ selectedPatientReferenceSplit.1
+                          display: $ selectedPatientReference.display
+                        $else:
+                          id: $ patientId
+                          resourceType: Patient
                       status: accepted
                     - actor:
-                        resourceType: $ selectedPractitionerRoleReferenceSplit.0
-                        id: $ selectedPractitionerRoleReferenceSplit.1
-                        display: $ selectedPractitionerRoleReference.display
+                        $if: $ selectedPractitionerRoleReference
+                        $then:
+                          resourceType: $ selectedPractitionerRoleReferenceSplit.0
+                          id: $ selectedPractitionerRoleReferenceSplit.1
+                          display: $ selectedPractitionerRoleReference.display
+                        $else:
+                          resourceType: PractitionerRole
+                          id: $ practitionerRoleId
+                          display: $ predefinedPractitionerRoleDisplay
                       status: accepted
-                  serviceType:
-                    - text: $ serviceTypeCoding.display
-                      coding:
-                        - $ serviceTypeCoding
+                    - actor:
+                        resourceType: $ selectedHealthcareServiceReferenceSplit.0
+                        id: $ selectedHealthcareServiceReferenceSplit.1
+                        display: $ selectedHealthcareServiceReference.display
+                      status: accepted
                   status: pending
                   start: $ startDateTime

@@ -1,5 +1,6 @@
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { PractitionerRole } from 'fhir/r4b';
+
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 
 import { inMemorySaveService } from 'shared/src/hooks/questionnaire-response-form-data';
 
@@ -17,8 +18,7 @@ interface Props {
 }
 
 export function EditAppointmentModal(props: Props) {
-    const { showModal, onClose, appointmentId } = props;
-    console.log('props.appointmentId', props.appointmentId);
+    const { showModal, onClose, appointmentId, practitionerRole } = props;
 
     const { response, onSubmit } = useQuestionnaireResponseForm({
         questionnaireLoader: { type: 'id', questionnaireId: 'edit-appointment' },
@@ -32,6 +32,10 @@ export function EditAppointmentModal(props: Props) {
                     status: 'booked',
                     participant: [{ status: 'accepted' }],
                 },
+            },
+            {
+                name: 'practitionerRole',
+                resource: practitionerRole,
             },
         ],
         onSuccess: props.onSubmit,
