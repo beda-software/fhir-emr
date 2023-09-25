@@ -45,6 +45,7 @@ item:
   - text: Date end
     type: date
     linkId: date-end
+    required: true
 meta:
   profile:
     - https://beda.software/beda-emr-questionnaire
