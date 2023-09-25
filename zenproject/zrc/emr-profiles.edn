@@ -7,8 +7,8 @@
   :confirms #{hl7-fhir-r4-core.HealthcareService/schema}
   :zen.fhir/type "HealthcareService"
   :zen.fhir/version "0.6.32"
-  :zen.fhir/profileUri "urn:profile:HealthcareServiceProfile"
+  :zen.fhir/profileUri "https://beda.software/beda-emr-healthcare-service"
   :type zen/map
   :require #{:duration}
   :keys {:duration {:confirms #{hl7-fhir-r4-core.integer/schema}
-                    :fhir/extensionUri "https://beda.software/healthcareservice/duration"}}}}
+                    :fhir/extensionUri "http://beda.software/fhir-extensions/healthcareservice-duration"}}}}

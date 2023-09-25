@@ -11,4 +11,4 @@ appointmentRequired: true
 duration: 30
 meta:
   profile:
-    - urn:profile:HealthcareServiceProfile
+    - https://beda.software/beda-emr-healthcare-service

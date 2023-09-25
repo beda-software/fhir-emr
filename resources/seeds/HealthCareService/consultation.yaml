@@ -1,6 +1,6 @@
 meta:
   profile:
-    - urn:profile:HealthcareServiceProfile
+    - https://beda.software/beda-emr-healthcare-service
 type:
   - text: The first appointment
     coding:

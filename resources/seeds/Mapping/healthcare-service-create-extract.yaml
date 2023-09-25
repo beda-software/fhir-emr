@@ -24,7 +24,7 @@ body:
           resourceType: HealthcareService
           meta:
             profile:
-              - urn:profile:HealthcareServiceProfile
+              - https://beda.software/beda-emr-healthcare-service
       - request:
           url: /Concept
           method: POST
