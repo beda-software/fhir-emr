@@ -72,21 +72,14 @@ export function HealthcareServiceList() {
                             render: (_text, resource) => resource.type?.[0]?.text,
                         },
                         {
-                            title: <Trans>Comment</Trans>,
-                            dataIndex: 'comment',
-                            key: 'comment',
-                            width: '20%',
-                            render: (_text, resource) => resource.comment,
-                        },
-                        {
                             title: <Trans>Duration (minutes)</Trans>,
                             dataIndex: 'duration',
                             key: 'duration',
                             width: '20%',
-                            render: (_text, resource) => {
-                                console.log('resource', resource);
-                                return resource.duration;
-                            },
+                            render: (_text, resource) =>
+                                resource.extension?.find(
+                                    (extension) => extension.url === 'urn:extensions:healthcare-service-duration',
+                                )?.valueInteger,
                         },
                         {
                             title: <Trans>Status</Trans>,

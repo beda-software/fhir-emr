@@ -24,7 +24,7 @@ item:
     type: string
     linkId: visit-type-code
   - text: Comment
-    type: string
+    type: text
     linkId: comment
 
 meta:

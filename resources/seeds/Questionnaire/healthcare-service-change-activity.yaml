@@ -45,7 +45,7 @@ item:
       language: text/fhirpath
       expression: "%HealthcareService.type.first().coding.first().code"
   - text: Comment
-    type: string
+    type: text
     linkId: comment
     readOnly: true
     initialExpression:
