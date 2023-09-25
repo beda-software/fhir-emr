@@ -8,7 +8,7 @@ body:
     predefinedPractitionerRoleId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='predefined-practitioner-role-id').answer.valueString").0
     selectedPractitionerRoleReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-role').answer.valueReference").0
     startDateTime: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='start-datetime').answer.valueDateTime").0
-    serviceTypeCoding: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='service-type').answer.valueCoding").0
+    selectedHealthcareServiceReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='service-type').answer.valueReference").0
   $body:
     $let:
       selectedPatientReferenceSplit:
@@ -20,6 +20,11 @@ body:
         $call: splitStr
         $args:
           - $ selectedPractitionerRoleReference.reference
+          - "/"
+      selectedHealthcareServiceReferenceSplit:
+        $call: splitStr
+        $args:
+          - $ selectedHealthcareServiceReference.reference
           - "/"
     $body:
       $let:
@@ -59,9 +64,10 @@ body:
                             id: $ practitionerRoleId
                             display: $ predefinedPractitionerRoleDisplay
                         status: accepted
-                    serviceType:
-                      - text: $ serviceTypeCoding.display
-                        coding:
-                          - $ serviceTypeCoding
+                      - actor:
+                          resourceType: $ selectedHealthcareServiceReferenceSplit.0
+                          id: $ selectedHealthcareServiceReferenceSplit.1
+                          display: $ selectedHealthcareServiceReference.display
+                        status: accepted
                     status: pending
                     start: $ startDateTime

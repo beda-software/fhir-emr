@@ -8,24 +8,6 @@ launchContext:
       code: HealthcareService
     type:
       - HealthcareService
-contained:
-  - resourceType: Bundle
-    id: HealthcareServiceBundle
-    type: transaction
-    entry:
-      - request:
-          method: GET
-          url: /HealthcareService?_id={{%HealthcareService.id}}
-  - resourceType: Bundle
-    id: ConceptBundle
-    type: transaction
-    entry:
-      - request:
-          method: GET
-          url: /Concept?code={{%HealthcareService.type.first().coding.first().code}}&system=http://beda.software/custom-healthcare-service-list
-sourceQueries:
-  - localRef: "Bundle#HealthcareServiceBundle"
-  - localRef: "Bundle#ConceptBundle"
 mapping:
   - id: healthcare-service-edit-extract
     resourceType: Mapping
@@ -37,15 +19,7 @@ item:
     hidden: true
     initialExpression:
       language: text/fhirpath
-      expression: "%HealthcareServiceBundle.entry[0].resource.entry.resource.id"
-  - text: ConceptId
-    type: string
-    linkId: conceptId
-    required: true
-    hidden: true
-    initialExpression:
-      language: text/fhirpath
-      expression: "%ConceptBundle.entry[0].resource.entry.resource.id"
+      expression: "%HealthcareService.id"
   - linkId: duration
     type: integer
     text: Duration
@@ -56,27 +30,27 @@ item:
       display: min
     initialExpression:
       language: text/fhirpath
-      expression: "%HealthcareServiceBundle.entry[0].resource.entry.resource.duration"
+      expression: "%HealthcareService.extension('urn:extensions:healthcare-service-duration').valueInteger"
   - text: Visit type name
     required: true
     type: string
     linkId: visit-type-name
     initialExpression:
       language: text/fhirpath
-      expression: "%HealthcareServiceBundle.entry[0].resource.entry.resource.type.first().coding.first().display"
+      expression: "%HealthcareService.type.first().coding.first().display"
   - text: Visit type code
     required: true
     type: string
     linkId: visit-type-code
     initialExpression:
       language: text/fhirpath
-      expression: "%HealthcareServiceBundle.entry[0].resource.entry.resource.type.first().coding.first().code"
+      expression: "%HealthcareService.type.first().coding.first().code"
   - text: Comment
     type: string
     linkId: comment
     initialExpression:
       language: text/fhirpath
-      expression: "%HealthcareServiceBundle.entry[0].resource.entry.resource.comment"
+      expression: "%HealthcareService.comment"
 
 meta:
   profile:

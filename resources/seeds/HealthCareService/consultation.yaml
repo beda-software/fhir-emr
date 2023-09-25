@@ -8,7 +8,7 @@ type:
         system: http://beda.software/custom-healthcare-service-list
         display: The first appointment
 active: true
-comment: comment: "A first appointment, often called an "initial consultation," is the preliminary meeting between an individual and a professional. This session allows both parties to get acquainted, assess the individual's needs and goals, and set expectations for future interactions. It's a crucial step in building trust and outlining the course of action or treatment. The specifics of the appointment can vary based on the context, from medical assessments to financial planning discussions."
+comment: "A first appointment, often called an initial consultation, is the preliminary meeting between an individual and a professional. This session allows both parties to get acquainted, assess the individual's needs and goals, and set expectations for future interactions. It's a crucial step in building trust and outlining the course of action or treatment. The specifics of the appointment can vary based on the context, from medical assessments to financial planning discussions."
 duration: 45
 appointmentRequired: true
 id: consultation

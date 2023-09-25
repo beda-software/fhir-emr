@@ -104,7 +104,9 @@ item:
           - forDisplay: true
             path: "name.given.first() + ' ' + name.family"
       - text: Service
-        type: choice
+        type: reference
+        referenceResource:
+          - HealthcareService
         required: true
         linkId: service-type
         enableBehavior: any
@@ -117,7 +119,12 @@ item:
             operator: "exists"
             answer:
               boolean: true
-        answerValueSet: custom-appointment-services
+        answerExpression:
+          language: application/x-fhir-query
+          expression: "HealthcareService?active=true&_has:PractitionerRole:service:id={{%practitionerRole.id}}"
+        choiceColumn:
+          - forDisplay: true
+            path: type.first().coding.first().display
       - text: Start time
         required: true
         type: dateTime

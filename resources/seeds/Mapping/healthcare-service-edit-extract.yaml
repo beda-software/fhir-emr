@@ -1,7 +1,6 @@
 body:
   $let:
     healthcareServiceId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='healthcareServiceId').answer.valueString").0
-    conceptId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='conceptId').answer.valueString").0
     duration: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='duration').answer.valueInteger").0
     visitTypeCode: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='visit-type-code').answer.valueString").0
     visitTypeName: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='visit-type-name').answer.valueString").0
@@ -21,12 +20,6 @@ body:
                 - code: $ visitTypeCode
                   display: $ visitTypeName
                   system: http://beda.software/custom-healthcare-service-list
-      - request:
-          url: $ "/Concept/" + conceptId
-          method: PATCH
-        resource:
-          code: $ visitTypeCode
-          display: $ visitTypeName
     resourceType: Bundle
 id: healthcare-service-edit-extract
 resourceType: Mapping
