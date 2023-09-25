@@ -26,6 +26,7 @@ item:
   - text: Comment
     type: text
     linkId: comment
+    rowsNumber: 4
 
 meta:
   profile:

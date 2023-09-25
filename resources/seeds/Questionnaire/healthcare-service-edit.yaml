@@ -48,6 +48,7 @@ item:
   - text: Comment
     type: text
     linkId: comment
+    rowsNumber: 4
     initialExpression:
       language: text/fhirpath
       expression: "%HealthcareService.comment"

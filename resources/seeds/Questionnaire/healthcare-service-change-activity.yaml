@@ -48,6 +48,7 @@ item:
     type: text
     linkId: comment
     readOnly: true
+    rowsNumber: 4
     initialExpression:
       language: text/fhirpath
       expression: "%HealthcareService.comment"
