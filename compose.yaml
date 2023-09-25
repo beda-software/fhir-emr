@@ -11,7 +11,7 @@ services:
           JUTE_URL: http:\/\/localhost:8090
           FHIRPATH_MAPPING_URL: http:\/\/localhost:8091
     sdc:
-        image: bedasoftware/fhir-sdc:develop
+        image: bedasoftware/fhir-sdc:master
         depends_on:
             devbox-healthcheck:
                 condition: service_healthy

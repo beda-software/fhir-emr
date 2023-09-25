@@ -2,7 +2,7 @@ build-seeds:
 	docker compose -f docker-compose.seeds.yaml up
 seeds:
 	docker compose -f docker-compose.seeds.yaml up
-	docker compose restart devbox
+	docker compose up -d --force-recreate --no-deps devbox
 
 up:
 	docker compose pull --quiet
