@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro';
-import { Button, Segmented } from 'antd';
+import { Button, Segmented, Tooltip } from 'antd';
 import { useState } from 'react';
 
 import { AppFooter } from 'src/components/BaseLayout/Footer';
@@ -43,10 +43,29 @@ export function SignIn(props: SignInProps) {
                 {signInService === SignInService.EMR ? (
                     <>
                         <S.Message>
-                            <b>{t`On the next page, please, use the following credentials`}</b>
+                            <b>{t`On the next page, please, use one of the following credentials`}</b>
                             <div>
-                                {t`Username`}: super-user or basic-practitioner-1 or basic-practitioner-2 or patient-1
-                                or patient-2 <br />
+                                <div style={{ display: 'flex', flexDirection: 'row', gap: '4px' }}>
+                                    <div>Username:</div>
+                                    <div>
+                                        <Tooltip title="As admin, you have full access to settings and data">
+                                            <span style={{ textDecoration: 'underline dotted' }}>admin</span>
+                                        </Tooltip>
+                                    </div>
+                                    <span>/</span>
+                                    <div>
+                                        <Tooltip title="Practitioner #1 does not have access to Practitioner #2's patients">
+                                            <span style={{ textDecoration: 'underline dotted' }}>practitioner1</span>
+                                        </Tooltip>
+                                    </div>
+                                    <span>/</span>
+                                    <div>
+                                        <Tooltip title="Practitioner #2 does not have access to Practitioner #1's patients">
+                                            <span style={{ textDecoration: 'underline dotted' }}>practitioner2</span>
+                                        </Tooltip>
+                                    </div>
+                                </div>
+                                {/* {t`Username`}: admin, practitioner-1, practitioner-2 <br /> */}
                                 {t`Password`}: password
                             </div>
                         </S.Message>
@@ -55,7 +74,7 @@ export function SignIn(props: SignInProps) {
                             onClick={() => authorize({ nextUrl: props.originPathName })}
                             size="large"
                         >
-                            {t`Log in as Practitioner`}
+                            {t`Log in`}
                         </Button>
                     </>
                 ) : (

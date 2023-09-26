@@ -1,7 +1,0 @@
-fhirUser:
-  id: super-user
-  resourceType: Practitioner
-password: >-
-  $s0$f0801$zwAi/mAU3l8nLIPEWQPBmg==$LkqmukhgZbYtmaBUS9jDCGdZghNKS2tn/WAFbGyoG/0=
-id: super-user
-resourceType: User

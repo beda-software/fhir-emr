@@ -1,4 +1,4 @@
-import { Patient, Practitioner } from 'fhir/r4b';
+import { Organization, Patient, Practitioner } from 'fhir/r4b';
 
 import { createSharedState } from 'fhir-react/lib/hooks/shared-state';
 import { WithId } from 'fhir-react/lib/services/fhir';
@@ -10,5 +10,7 @@ export const sharedAuthorizedUser = createSharedState<User | undefined>(undefine
 export const sharedAuthorizedPatient = createSharedState<WithId<Patient> | undefined>(undefined);
 
 export const sharedAuthorizedPractitioner = createSharedState<WithId<Practitioner> | undefined>(undefined);
+
+export const sharedAuthorizedOrganization = createSharedState<WithId<Organization> | undefined>(undefined);
 
 export const sharedJitsiAuthToken = createSharedState<string>('');

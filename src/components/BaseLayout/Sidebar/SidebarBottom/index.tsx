@@ -15,7 +15,7 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 import { MenuIcon } from 'src/icons/general/Menu';
 import { AvatarImage } from 'src/images/AvatarImage';
 import { getToken, logout } from 'src/services/auth';
-import { sharedAuthorizedPatient, sharedAuthorizedPractitioner } from 'src/sharedState';
+import { sharedAuthorizedOrganization, sharedAuthorizedPatient, sharedAuthorizedPractitioner } from 'src/sharedState';
 import { Role, matchCurrentUserRole } from 'src/utils/role';
 
 import s from './SidebarBottom.module.scss';
@@ -110,9 +110,9 @@ function UserMenu(props: { onItemClick?: () => void }) {
                     label: (
                         <>
                             {matchCurrentUserRole({
-                                [Role.Admin]: () => <AdminName />,
+                                [Role.Admin]: () => <OrganizationName />,
                                 [Role.Patient]: () => <PatientName />,
-                                [Role.Practitioner]: () => <AdminName />,
+                                [Role.Practitioner]: () => <PractitionerName />,
                             })}
                         </>
                     ),
@@ -129,10 +129,16 @@ function PatientName() {
     return <span>{renderHumanName(patient?.name?.[0])}</span>;
 }
 
-function AdminName() {
+function PractitionerName() {
     const [practitioner] = sharedAuthorizedPractitioner.useSharedState();
 
     return <span>{renderHumanName(practitioner?.name?.[0])}</span>;
+}
+
+function OrganizationName() {
+    const [organization] = sharedAuthorizedOrganization.useSharedState();
+
+    return <span>{organization?.name}</span>;
 }
 
 function LocaleSwitcher(props: { onItemClick?: () => void }) {

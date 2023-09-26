@@ -14,7 +14,7 @@ provision:
           - code: PROV
             system: http://terminology.hl7.org/CodeSystem/v3-RoleClass
       reference:
-        id: basic-practitioner-2
+        id: practitioner2
         display: Basic-2 Practitioner
         resourceType: Practitioner
   action:
@@ -31,13 +31,13 @@ provision:
 resourceType: Consent
 source:
   Reference:
-    id: patient-2-basic-practitioner-2-data-sharing-consent
+    id: patient-2-practitioner2-data-sharing-consent
     resourceType: QuestionnaireResponse
 scope:
   coding:
     - code: patient-privacy
       system: http://terminology.hl7.org/CodeSystem/consentscope
-id: patient-2-basic-practitioner-2-data-sharing-consent
+id: patient-2-practitioner2-data-sharing-consent
 status: active
 performer:
   - id: practitioner

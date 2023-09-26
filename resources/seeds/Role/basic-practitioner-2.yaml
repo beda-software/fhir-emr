@@ -1,10 +1,10 @@
 name: "practitioner"
 user:
-  id: "basic-practitioner-2"
+  id: "practitioner2"
   resourceType: "User"
 links:
   practitioner:
-    id: "basic-practitioner-2"
+    id: "practitioner2"
     resourceType: "Practitioner"
-id: basic-practitioner-2
+id: practitioner2
 resourceType: Role

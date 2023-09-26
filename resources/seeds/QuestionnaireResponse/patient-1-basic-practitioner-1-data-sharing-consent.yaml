@@ -2,7 +2,7 @@ item:
   - answer:
       - value:
           Reference:
-            id: basic-practitioner-1
+            id: practitioner1
             display: Basic-1 Practitioner
             resourceType: Practitioner
     linkId: practitioner
@@ -27,5 +27,5 @@ subject:
   resourceType: Patient
 authored: '2023-09-21T10:38:43Z'
 questionnaire: data-sharing-consent
-id: patient-1-basic-practitioner-1-data-sharing-consent
+id: patient-1-practitioner1-data-sharing-consent
 resourceType: QuestionnaireResponse

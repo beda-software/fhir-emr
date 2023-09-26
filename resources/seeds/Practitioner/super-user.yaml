@@ -1,6 +1,0 @@
-name:
-  - given:
-      - Super
-    family: User
-id: super-user
-resourceType: Practitioner

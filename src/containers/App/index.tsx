@@ -30,10 +30,13 @@ import { restoreUserSession } from './utils';
 import { HealthcareServiceList } from '../HealthcareServiceList';
 
 export function App() {
+    console.log('HI');
     const [userResponse] = useService(async () => {
         const appToken = getToken();
+        console.log('appToken', appToken);
         return appToken ? restoreUserSession(appToken) : success(null);
     });
+    console.log('HI2');
 
     const renderRoutes = (user: User | null) => {
         if (user) {
@@ -47,6 +50,8 @@ export function App() {
         return <AnonymousUserApp />;
     };
 
+    console.log('HI3');
+    console.log('userResponse', userResponse);
     return (
         <div data-testid="app-container">
             <RenderRemoteData remoteData={userResponse} renderLoading={Spinner}>

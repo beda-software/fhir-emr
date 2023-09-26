@@ -1,4 +1,4 @@
-import { Patient, Practitioner } from 'fhir/r4b';
+import { Organization, Patient, Practitioner } from 'fhir/r4b';
 
 import * as aidboxReactRemoteData from 'aidbox-react/lib/libs/remoteData';
 import {
@@ -18,6 +18,7 @@ import { User } from 'shared/src/contrib/aidbox';
 
 import { getJitsiAuthToken, getUserInfo } from 'src/services/auth';
 import {
+    sharedAuthorizedOrganization,
     sharedAuthorizedPatient,
     sharedAuthorizedPractitioner,
     sharedAuthorizedUser,
@@ -30,14 +31,14 @@ async function populateUserInfoSharedState(user: User) {
 
     const fetchUserRoleDetails = selectUserRole(user, {
         [Role.Admin]: async () => {
-            const practitionerId = user.role![0]!.links!.practitioner!.id;
-            const practitionerResponse = await getFHIRResource<Practitioner>({
-                reference: `Practitioner/${practitionerId}`,
+            const organizationId = user.role![0]!.links!.organization!.id;
+            const organizationResponse = await getFHIRResource<Organization>({
+                reference: `Organization/${organizationId}`,
             });
-            if (isSuccess(practitionerResponse)) {
-                sharedAuthorizedPractitioner.setSharedState(practitionerResponse.data);
+            if (isSuccess(organizationResponse)) {
+                sharedAuthorizedOrganization.setSharedState(organizationResponse.data);
             } else {
-                console.error(practitionerResponse.error);
+                console.error(organizationResponse.error);
             }
         },
         [Role.Practitioner]: async () => {
@@ -71,6 +72,8 @@ export async function restoreUserSession(token: string) {
     setFHIRInstanceToken({ access_token: token, token_type: 'Bearer' });
 
     const userResponse = await getUserInfo();
+
+    console.log('userInfo', userResponse);
 
     if (aidboxReactRemoteData.isSuccess(userResponse)) {
         await populateUserInfoSharedState(userResponse.data);

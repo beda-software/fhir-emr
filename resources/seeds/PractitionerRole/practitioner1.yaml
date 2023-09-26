@@ -4,7 +4,7 @@ specialty:
         system: http://snomed.info/sct
         display: Endocrinology
 practitioner:
-  id: basic-practitioner-1
+  id: practitioner1
   resourceType: Practitioner
 healthcareService:
   - id: consultation
@@ -13,5 +13,5 @@ healthcareService:
   - id: follow-up
     display: A follow up visit
     resourceType: HealthcareService
-id: basic-practitioner-1
+id: practitioner1
 resourceType: PractitionerRole

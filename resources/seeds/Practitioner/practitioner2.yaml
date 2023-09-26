@@ -1,4 +1,4 @@
-id: basic-practitioner-2
+id: practitioner2
 resourceType: Practitioner
 name:
   - given: ["Basic-2"]
