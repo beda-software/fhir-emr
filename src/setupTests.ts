@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { Encounter, Patient, Practitioner, PractitionerRole, Reference, Resource } from 'fhir/r4b';
+import { Consent, Encounter, Patient, Practitioner, PractitionerRole, Reference, Resource } from 'fhir/r4b';
 
 import { saveFHIRResource as aidboxSaveFHIRResource } from 'aidbox-react/lib/services/fhir';
 import {
@@ -34,6 +34,34 @@ global.AppleID = {
         init: vi.fn(),
     },
 };
+
+export async function createConsent(consent: Partial<Consent> = {}) {
+    return ensure(
+        await createFHIRResource<Consent>({
+            resourceType: 'Consent',
+            category: [
+                {
+                    coding: [
+                        {
+                            code: 'some-demo-category',
+                            system: 'http://terminology.hl7.org/CodeSystem/v3-ActCode',
+                        },
+                    ],
+                },
+            ],
+            scope: {
+                coding: [
+                    {
+                        code: 'patient-privacy',
+                        system: 'http://terminology.hl7.org/CodeSystem/consentscope',
+                    },
+                ],
+            },
+            status: 'active',
+            ...consent,
+        }),
+    );
+}
 
 // 'jose' library import fails in non-node jest test environments
 // complaining about TextEncoder not being found:

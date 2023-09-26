@@ -3,6 +3,8 @@ import { Button, Empty, Row, Col, notification } from 'antd';
 import { Patient } from 'fhir/r4b';
 import { useNavigate } from 'react-router-dom';
 
+import { formatFHIRDate } from 'aidbox-react/lib/utils/date';
+
 import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
 
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
@@ -19,8 +21,10 @@ import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 import { Title } from 'src/components/Typography';
 import { formatHumanDate } from 'src/utils/date';
+import { matchCurrentUserRole, Role } from 'src/utils/role';
 
 import { usePatientList } from './hooks';
+import { getPatientSearchParamsForPractitioner } from './utils';
 
 export function PatientList() {
     const navigate = useNavigate();
@@ -35,8 +39,21 @@ export function PatientList() {
         ],
     });
 
+    const queryParameters = matchCurrentUserRole({
+        [Role.Admin]: () => {
+            return {};
+        },
+        [Role.Practitioner]: (practitioner) => {
+            return getPatientSearchParamsForPractitioner(practitioner.id);
+        },
+        [Role.Patient]: () => {
+            return {};
+        },
+    });
+
     const { patientsResponse, pagerManager, pagination, handleTableChange } = usePatientList(
         columnsFilterValues as StringTypeColumnFilterValue[],
+        queryParameters,
     );
 
     return (
