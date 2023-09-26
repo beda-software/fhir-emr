@@ -89,7 +89,10 @@ body:
                       - who:
                             id: $ author.id
                             resourceType: $ author.resourceType
-                            display: $ author.name.0.given.0 + " " + author.name.0.family
+                            display:
+                                $switch: $ author.resourceType
+                                Organization: $ author.name
+                                $default: $ author.name.0.given.0 + " " + author.name.0.family
                   entity:
                       - role: source
                         what:

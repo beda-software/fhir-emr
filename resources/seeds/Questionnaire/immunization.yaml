@@ -17,6 +17,7 @@ launchContext:
         - PractitionerRole
         - Practitioner
         - Patient
+        - Organization
 mapping:
     - id: immunization-extract
       resourceType: Mapping

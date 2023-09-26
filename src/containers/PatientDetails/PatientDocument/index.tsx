@@ -1,9 +1,10 @@
+import { Organization, Patient, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { isSuccess, notAsked, RemoteData } from 'fhir-react/lib/libs/remoteData';
 import { WithId } from 'fhir-react/lib/services/fhir';
-import { Patient, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { AnxietyScore, DepressionScore } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/score';
@@ -17,7 +18,7 @@ import { usePatientDocument } from './usePatientDocument';
 
 interface Props {
     patient: Patient;
-    author: WithId<Practitioner | Patient>;
+    author: WithId<Practitioner | Patient | Organization>;
     questionnaireResponse?: WithId<QuestionnaireResponse>;
     questionnaireId?: string;
     encounterId?: string;
