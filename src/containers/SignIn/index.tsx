@@ -45,27 +45,26 @@ export function SignIn(props: SignInProps) {
                         <S.Message>
                             <b>{t`On the next page, please, use one of the following credentials`}</b>
                             <div>
-                                <div style={{ display: 'flex', flexDirection: 'row', gap: '4px' }}>
+                                <S.CredentialsList>
                                     <div>Username:</div>
                                     <div>
                                         <Tooltip title="As admin, you have full access to settings and data">
-                                            <span style={{ textDecoration: 'underline dotted' }}>admin</span>
+                                            <S.CredentialName>admin</S.CredentialName>
                                         </Tooltip>
                                     </div>
                                     <span>/</span>
                                     <div>
                                         <Tooltip title="Practitioner #1 does not have access to Practitioner #2's patients">
-                                            <span style={{ textDecoration: 'underline dotted' }}>practitioner1</span>
+                                            <S.CredentialName>practitioner1</S.CredentialName>
                                         </Tooltip>
                                     </div>
                                     <span>/</span>
                                     <div>
                                         <Tooltip title="Practitioner #2 does not have access to Practitioner #1's patients">
-                                            <span style={{ textDecoration: 'underline dotted' }}>practitioner2</span>
+                                            <S.CredentialName>practitioner2</S.CredentialName>
                                         </Tooltip>
                                     </div>
-                                </div>
-                                {/* {t`Username`}: admin, practitioner-1, practitioner-2 <br /> */}
+                                </S.CredentialsList>
                                 {t`Password`}: password
                             </div>
                         </S.Message>

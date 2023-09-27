@@ -40,4 +40,12 @@ export const S = {
         font-size: 14px;
         line-height: 22px;
     `,
+    CredentialsList: styled.div`
+        display: flex;
+        flex-direction: row;
+        gap: 4px;
+    `,
+    CredentialName: styled.span`
+        text-decoration: underline dotted;
+    `,
 };
