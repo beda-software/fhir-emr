@@ -147,7 +147,7 @@ export const createUser = async ({ patient, user }: { patient: Patient; user?: P
     return ensure(result);
 };
 
-async function login(user: User) {
+export async function login(user: User) {
     resetAidboxInstanceToken();
     resetFHIRInstanceToken();
 

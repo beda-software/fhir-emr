@@ -1,14 +1,20 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { Consent, Period, Reference } from 'fhir/r4b';
 
+import { service } from 'aidbox-react/lib/services/service';
+
+import { useService } from 'fhir-react/lib/hooks/service';
 import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
-import { getReference } from 'fhir-react/lib/services/fhir';
-import { withRootAccess } from 'fhir-react/lib/utils/tests';
+import { createFHIRResource, getReference } from 'fhir-react/lib/services/fhir';
+import { ensure, withRootAccess } from 'fhir-react/lib/utils/tests';
 import { uuid4 } from 'fhir-react/lib/utils/uuid';
+
+import config from 'shared/src/config';
+import { Role, User } from 'shared/src/contrib/aidbox';
 
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
-import { createConsent, createPatient, createPractitioner, loginAdminUser } from 'src/setupTests';
+import { createConsent, createPatient, createPractitioner, ensureSave, login, loginAdminUser } from 'src/setupTests';
 
 import { usePatientList } from '../hooks';
 import { getPatientSearchParamsForPractitioner } from '../utils';
@@ -351,5 +357,118 @@ describe('Patient list get by consent', () => {
             expect(result.current.patientsResponse.data.length).toEqual(1);
             expect(result.current.patientsResponse.data?.[0]?.id).toEqual(data.patients[2]?.id);
         }
+    });
+});
+
+export async function createUser(userData: Partial<User>) {
+    return ensure(
+        await createFHIRResource<User>({
+            resourceType: 'User',
+            ...userData,
+        }),
+    );
+}
+
+export async function createRole(roleData: Role) {
+    return ensure(
+        await createFHIRResource<Role>({
+            ...roleData,
+        }),
+    );
+}
+
+function practitionerAccessPolicySetup() {
+    const data = withRootAccess(async () => {
+        const practitioner = await createPractitioner();
+        const user = await createUser({
+            fhirUser: {
+                id: practitioner.id!,
+                resourceType: 'Practitioner',
+            },
+            password: 'password',
+            resourceType: 'User',
+            email: 'test@beda.software',
+        });
+        const role = await ensureSave({
+            name: 'practitioner',
+            user: {
+                id: user.id!,
+                resourceType: 'User',
+            },
+            links: {
+                practitioner: {
+                    id: practitioner.id,
+                    resourceType: 'Practitioner',
+                },
+            },
+            resourceType: 'Role',
+        });
+
+        return {
+            practitioner,
+            user,
+            role,
+        };
+    });
+
+    return data;
+}
+
+describe('Access policy', () => {
+    const initialSetup = async () => {
+        const data = await practitionerAccessPolicySetup();
+        await login({ ...data.user, password: 'password' });
+
+        return data;
+    };
+
+    const getResult = async (url: string) => {
+        const { result } = renderHook(() => {
+            const [response] = useService<Consent>(async () =>
+                service({
+                    baseURL: config.baseURL,
+                    method: 'GET',
+                    url: url,
+                }),
+            );
+
+            return response;
+        });
+
+        return result;
+    };
+
+    test.skip('Practitioner can get consent list where practitioner is actor', async () => {
+        const data = await initialSetup();
+        const result = await getResult(`/Consent?actor=${data.practitioner.id}`);
+
+        await waitFor(
+            () => {
+                expect(result.current.status).toEqual('Success');
+            },
+            { timeout: 30000 },
+        );
+    });
+    test.skip('Practitioner cant get consent list with incorrect actor parameter', async () => {
+        await initialSetup();
+        const result = await getResult('/Consent?actor=unknown-practitioner');
+
+        await waitFor(
+            () => {
+                expect(result.current.status).toEqual('Failure');
+            },
+            { timeout: 30000 },
+        );
+    });
+    test.skip('Practitioner cant get consent list without actor parameter', async () => {
+        await initialSetup();
+        const result = await getResult('/Consent');
+
+        await waitFor(
+            () => {
+                expect(result.current.status).toEqual('Failure');
+            },
+            { timeout: 30000 },
+        );
     });
 });

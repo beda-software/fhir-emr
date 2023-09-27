@@ -1,6 +1,4 @@
-import { Consent, Parameters, Patient } from 'fhir/r4b';
-
-import { formatFHIRDate } from 'aidbox-react/lib/utils/date';
+import { Consent, Patient } from 'fhir/r4b';
 
 import { extractBundleResources } from 'fhir-react/lib/services/fhir';
 import { SearchParams } from 'fhir-react/lib/services/search';
