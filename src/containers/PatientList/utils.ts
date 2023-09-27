@@ -4,9 +4,10 @@ import { SearchParams } from 'fhir-react/lib/services/search';
 
 export function getPatientSearchParamsForPractitioner(practitionerId: string): SearchParams {
     return {
-        '_has:Consent:patient:status': 'active',
-        '_has:Consent:patient:category': 'data-sharing',
-        '_has:Consent:patient:period': formatFHIRDate(new Date()),
-        '_has:Consent:patient:actor': practitionerId,
+        status: 'active',
+        category: 'data-sharing',
+        period: formatFHIRDate(new Date()),
+        actor: practitionerId,
+        _include: ['Consent:patient:Patient'],
     };
 }

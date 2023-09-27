@@ -1,4 +1,4 @@
-import { Parameters, Patient } from 'fhir/r4b';
+import { Consent, Parameters, Patient } from 'fhir/r4b';
 
 import { formatFHIRDate } from 'aidbox-react/lib/utils/date';
 
@@ -12,18 +12,21 @@ import { useDebounce } from 'src/utils/debounce';
 
 export function usePatientList(filterValues: StringTypeColumnFilterValue[], searchParams: SearchParams) {
     const debouncedFilterValues = useDebounce(filterValues, 300);
-
+    const isSearchConsent = Object.keys(searchParams).includes('_include');
     const patientFilterValue = debouncedFilterValues[0];
+    const searchParamKeyForPatientName = isSearchConsent
+        ? { 'patient:Patient.name': patientFilterValue?.value }
+        : { name: patientFilterValue?.value };
 
     const defaultQueryParameters = {
         _sort: '-_lastUpdated',
-        ...(patientFilterValue ? { name: patientFilterValue.value } : {}),
+        ...(patientFilterValue ? searchParamKeyForPatientName : {}),
     };
 
     const { resourceResponse, pagerManager, handleTableChange, pagination } = usePagerExtended<
-        Patient,
+        typeof isSearchConsent extends true ? Consent | Patient : Patient,
         StringTypeColumnFilterValue[]
-    >('Patient', { ...searchParams, ...defaultQueryParameters }, debouncedFilterValues);
+    >(isSearchConsent ? 'Consent' : 'Patient', { ...searchParams, ...defaultQueryParameters }, debouncedFilterValues);
 
     const patientsResponse = mapSuccess(resourceResponse, (bundle) => extractBundleResources(bundle).Patient);
 

@@ -3,8 +3,6 @@ import { Button, Empty, Row, Col, notification } from 'antd';
 import { Patient } from 'fhir/r4b';
 import { useNavigate } from 'react-router-dom';
 
-import { formatFHIRDate } from 'aidbox-react/lib/utils/date';
-
 import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
 
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';

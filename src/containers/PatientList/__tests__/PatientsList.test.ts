@@ -38,30 +38,6 @@ const PATIENTS_ADDITION_DATA = [
             },
         ],
     },
-    {
-        name: [
-            {
-                given: ['4', '4'],
-                family: 'Patient',
-            },
-        ],
-    },
-    {
-        name: [
-            {
-                given: ['5', '5'],
-                family: 'Patient',
-            },
-        ],
-    },
-    {
-        name: [
-            {
-                given: ['6', '6'],
-                family: 'Patient',
-            },
-        ],
-    },
 ];
 
 describe('Patient list filters testing', () => {
@@ -236,11 +212,9 @@ async function patientsListWithConsentSetup(practitionerId: string) {
     const data = withRootAccess(async () => {
         const practitioner1 = await createPractitioner({ id: practitionerId });
         const practitioner2 = await createPractitioner();
-
-        const patients = [];
-        for (let i = 0; i < PATIENTS_ADDITION_DATA.length; i++) {
-            patients.push(await createPatient(PATIENTS_ADDITION_DATA[i]));
-        }
+        const patient1 = await createPatient(PATIENTS_ADDITION_DATA[0]);
+        const patient2 = await createPatient(PATIENTS_ADDITION_DATA[1]);
+        const patient3 = await createPatient(PATIENTS_ADDITION_DATA[2]);
 
         const consentStatus: { incorrect: 'proposed' | 'active'; correct: 'proposed' | 'active' } = {
             incorrect: 'proposed',
@@ -270,7 +244,7 @@ async function patientsListWithConsentSetup(practitionerId: string) {
 
         const consent1 = await createConsent(
             createConsentData(
-                getReference(patients[0]!),
+                getReference(patient1),
                 actor['incorrect'],
                 consentStatus['incorrect'],
                 consentType['incorrect'],
@@ -279,7 +253,7 @@ async function patientsListWithConsentSetup(practitionerId: string) {
         );
         const consent2 = await createConsent(
             createConsentData(
-                getReference(patients[1]!),
+                getReference(patient2),
                 actor['incorrect'],
                 consentStatus['incorrect'],
                 consentType['incorrect'],
@@ -288,7 +262,7 @@ async function patientsListWithConsentSetup(practitionerId: string) {
         );
         const consent3 = await createConsent(
             createConsentData(
-                getReference(patients[2]!),
+                getReference(patient2),
                 actor['incorrect'],
                 consentStatus['incorrect'],
                 consentType['correct'],
@@ -297,7 +271,7 @@ async function patientsListWithConsentSetup(practitionerId: string) {
         );
         const consent4 = await createConsent(
             createConsentData(
-                getReference(patients[3]!),
+                getReference(patient2),
                 actor['incorrect'],
                 consentStatus['correct'],
                 consentType['incorrect'],
@@ -306,7 +280,7 @@ async function patientsListWithConsentSetup(practitionerId: string) {
         );
         const consent5 = await createConsent(
             createConsentData(
-                getReference(patients[4]!),
+                getReference(patient2),
                 actor['correct'],
                 consentStatus['incorrect'],
                 consentType['incorrect'],
@@ -315,7 +289,7 @@ async function patientsListWithConsentSetup(practitionerId: string) {
         );
         const consent6 = await createConsent(
             createConsentData(
-                getReference(patients[5]!),
+                getReference(patient3),
                 actor['correct'],
                 consentStatus['correct'],
                 consentType['correct'],
@@ -325,7 +299,7 @@ async function patientsListWithConsentSetup(practitionerId: string) {
 
         return {
             consents: [consent1, consent2, consent3, consent4, consent5, consent6],
-            patients: patients,
+            patients: [patient1, patient2, patient3],
         };
     });
 
@@ -375,7 +349,7 @@ describe('Patient list get by consent', () => {
         );
         if (isSuccess(result.current.patientsResponse)) {
             expect(result.current.patientsResponse.data.length).toEqual(1);
-            expect(result.current.patientsResponse.data?.[0]?.id).toEqual(data.patients[5]?.id);
+            expect(result.current.patientsResponse.data?.[0]?.id).toEqual(data.patients[2]?.id);
         }
     });
 });
