@@ -14,11 +14,10 @@ export const S = {
     `,
     DetailsTitle: styled.div`
         color: ${({ theme }) => theme.neutralPalette.gray_7};
-        flex: 1;
         padding: 13px 12px;
+        width: 200px;
     `,
     DetailsValue: styled.div`
-        width: 200px;
         padding: 13px 12px;
         border-left: 1px solid ${({ theme }) => theme.neutralPalette.gray_4};
     `,

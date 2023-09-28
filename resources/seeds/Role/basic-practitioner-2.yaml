@@ -1,0 +1,10 @@
+name: "practitioner"
+user:
+  id: "practitioner2"
+  resourceType: "User"
+links:
+  practitioner:
+    id: "practitioner2"
+    resourceType: "Practitioner"
+id: practitioner2
+resourceType: Role

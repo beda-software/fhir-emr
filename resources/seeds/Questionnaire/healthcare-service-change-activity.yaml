@@ -1,0 +1,59 @@
+id: healthcare-service-change-activity
+resourceType: Questionnaire
+name: healthcare-service-change-activity
+title: healthcare-service change activity
+status: active
+launchContext:
+  - name:
+      code: HealthcareService
+    type:
+      - HealthcareService
+mapping:
+  - id: healthcare-service-change-activity-extract
+    resourceType: Mapping
+item:
+  - text: HealthcareServiceId
+    type: string
+    linkId: healthcareServiceId
+    required: true
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%HealthcareService.id"
+  - linkId: activity
+    type: boolean
+    text: Activity
+    required: true
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%HealthcareService.active"
+  - text: Visit type name
+    required: false
+    type: string
+    linkId: visit-type-name
+    readOnly: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%HealthcareService.type.first().coding.first().display"
+  - text: Visit type code
+    required: false
+    type: string
+    linkId: visit-type-code
+    readOnly: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%HealthcareService.type.first().coding.first().code"
+  - text: Comment
+    type: text
+    linkId: comment
+    readOnly: true
+    rowsNumber: 4
+    initialExpression:
+      language: text/fhirpath
+      expression: "%HealthcareService.comment"
+
+meta:
+  profile:
+    - https://beda.software/beda-emr-questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/healthcare-service-create

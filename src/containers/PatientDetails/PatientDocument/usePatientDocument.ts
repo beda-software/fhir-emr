@@ -1,4 +1,4 @@
-import { Encounter, Patient, Practitioner, Provenance, QuestionnaireResponse } from 'fhir/r4b';
+import { Encounter, Organization, Patient, Practitioner, Provenance, QuestionnaireResponse } from 'fhir/r4b';
 import { RemoteDataResult } from 'fhir-react';
 import _ from 'lodash';
 import { useNavigate } from 'react-router-dom';
@@ -21,7 +21,7 @@ import { getProvenanceByEntity } from 'src/services/provenance';
 
 export interface Props {
     patient: Patient;
-    author: WithId<Practitioner | Patient>;
+    author: WithId<Practitioner | Patient | Organization>;
     questionnaireResponse?: WithId<QuestionnaireResponse>;
     questionnaireId: string;
     encounterId?: string;
@@ -59,7 +59,7 @@ async function onFormSubmit(
 function prepareFormInitialParams(
     props: Props & {
         provenance?: WithId<Provenance>;
-        author?: WithId<Practitioner | Patient>;
+        author?: WithId<Practitioner | Patient | Organization>;
     },
 ): QuestionnaireResponseFormProps {
     const { patient, questionnaireResponse, questionnaireId, encounterId, provenance, author } = props;

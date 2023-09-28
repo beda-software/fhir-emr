@@ -110,6 +110,7 @@ export function PatientHeader() {
                 crumbs={matchCurrentUserRole({
                     [Role.Admin]: () => breadcrumbs,
                     [Role.Patient]: () => breadcrumbs.slice(1),
+                    [Role.Practitioner]: () => breadcrumbs,
                 })}
             />
             <Title style={{ marginBottom: 21 }}>{title}</Title>

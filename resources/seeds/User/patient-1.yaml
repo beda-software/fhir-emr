@@ -1,0 +1,7 @@
+id: patient-1
+resourceType: User
+password: >-
+  $s0$f0801$iurVQlhN/Yscrqf6wBH7lQ==$lEFl+TeA6M0G1mOfoIRGJtfUTHF8nuMPfD7A2x1lON8=
+fhirUser:
+  id: "patient-1"
+  resourceType: "Patient"

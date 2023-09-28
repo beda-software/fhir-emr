@@ -5,7 +5,6 @@ export const S = {
         .react-select__control {
             border-color: ${({ theme }) => theme.antdTheme?.colorBorder};
             min-height: 32px;
-            height: 32px;
             box-shadow: none;
             border-radius: 6px;
             background-color: ${({ theme }) => theme.antdTheme?.colorBgContainer};
@@ -22,7 +21,6 @@ export const S = {
         }
 
         .react-select__value-container {
-            height: 30px;
             padding: 3px 11px;
             line-height: 24px;
         }

@@ -62,7 +62,7 @@ services:
           - ./zenproject:/app/zenproject
           - ./resources/seeds:/app/resources/seeds
     scheduling:
-        image: bedasoftware/aidbox-scheduling-node-app
+        image: bedasoftware/aidbox-scheduling-node-app:develop
         depends_on:
             devbox-healthcheck:
                 condition: service_healthy

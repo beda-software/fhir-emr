@@ -1,10 +1,15 @@
-resourceType: HealthcareService
-active: true
+meta:
+  profile:
+    - https://beda.software/beda-emr-healthcare-service
 type:
   - text: The first appointment
     coding:
       - code: consultation
-        system: http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type
+        system: http://beda.software/custom-healthcare-service-list
         display: The first appointment
-appointmentRequired: true
+active: true
+comment: "A first appointment, often called an initial consultation, is the preliminary meeting between an individual and a professional. This session allows both parties to get acquainted, assess the individual's needs and goals, and set expectations for future interactions. It's a crucial step in building trust and outlining the course of action or treatment. The specifics of the appointment can vary based on the context, from medical assessments to financial planning discussions."
 duration: 45
+appointmentRequired: true
+id: consultation
+resourceType: HealthcareService

@@ -4,7 +4,8 @@
           aidbox.search-parameter.v1
           aidbox.repository.v1
           beda-emr-core.questionnaire
-          hl7-fhir-r4-core}
+          hl7-fhir-r4-core
+          emr-profiles}
 
  box
  {:zen/tags #{aidbox/system}
@@ -35,15 +36,6 @@
                         :secret "secret"}
             :patient-questionnaire {:grant_types [:basic]
                                     :secret "secret"}}
-  :Practitioner {:admin {:name [{:given ["Alex"], :family "Admin"}]}
-                  :practitioner {:name [{:given ["John"], :family "Practitioner"}]}}
-   :User {:practitioner {:password "password" :fhirUser {:id "practitioner" :resourceType "Practitioner"}}}
-   :Role {:admin {:name "admin"
-                  :user {:id "admin" :resourceType "User"}
-                  :links {:practitioner {:id "admin" :resourceType "Practitioner"}}}
-          :practitioner {:name "admin"
-                         :user {:id "practitioner" :resourceType "User"}
-                         :links {:practitioner {:id "practitioner" :resourceType "Practitioner"}}}}
    :AidboxQuery {:provenance-by-source
                  {:query "select resource || jsonb_build_object('resourceType', 'Provenance', 'id', id) as resource from provenance  where array_to_string(knife_extract_text(resource,'[[\"entity\",\"what\",\"uri\"]]'),'') like {{params.source}}"
                   :params {:source {:type "string" :format "%%%s%%" :isRequired true}}}
@@ -67,7 +59,7 @@
    :Attribute {:Mapping.type {:type {:resourceType "Entity" :id "code"}
                               :path [:type]
                               :resource {:resourceType "Entity" :id "Mapping"}
-                              :enum ["JUTE", "FHIRPath"]}}}}
+                              :enum ["JUTE" "FHIRPath"]}}}}
 
  access-policies
  {:zen/tags  #{aidbox/service}
@@ -75,6 +67,8 @@
   :resources {:AccessPolicy {:test-wildcard-policy {:engine "allow" :link [{:resourceType "User"}]}
                              :admin-policy {:engine "allow"
                                             :roleName "admin"}
+                             :practitioner-policy {:engine "allow"
+                                                   :roleName "practitioner"}
                              :patient-role-policy {:engine "allow"
                                                    :roleName "patient"}
                              :public-appointment-policy

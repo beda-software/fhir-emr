@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro';
-import { Button, Segmented } from 'antd';
+import { Button, Segmented, Tooltip } from 'antd';
 import { useState } from 'react';
 
 import { AppFooter } from 'src/components/BaseLayout/Footer';
@@ -43,9 +43,28 @@ export function SignIn(props: SignInProps) {
                 {signInService === SignInService.EMR ? (
                     <>
                         <S.Message>
-                            <b>{t`On the next page, please, use the following credentials`}</b>
+                            <b>{t`On the next page, please, use one of the following credentials`}</b>
                             <div>
-                                {t`Username`}: practitioner <br />
+                                <S.CredentialsList>
+                                    <div>Username:</div>
+                                    <div>
+                                        <Tooltip title="As admin, you have full access to settings and data">
+                                            <S.CredentialName>admin</S.CredentialName>
+                                        </Tooltip>
+                                    </div>
+                                    <span>/</span>
+                                    <div>
+                                        <Tooltip title="Practitioner #1 does not have access to Practitioner #2's patients">
+                                            <S.CredentialName>practitioner1</S.CredentialName>
+                                        </Tooltip>
+                                    </div>
+                                    <span>/</span>
+                                    <div>
+                                        <Tooltip title="Practitioner #2 does not have access to Practitioner #1's patients">
+                                            <S.CredentialName>practitioner2</S.CredentialName>
+                                        </Tooltip>
+                                    </div>
+                                </S.CredentialsList>
                                 {t`Password`}: password
                             </div>
                         </S.Message>
@@ -54,7 +73,7 @@ export function SignIn(props: SignInProps) {
                             onClick={() => authorize({ nextUrl: props.originPathName })}
                             size="large"
                         >
-                            {t`Log in as Practitioner`}
+                            {t`Log in`}
                         </Button>
                     </>
                 ) : (

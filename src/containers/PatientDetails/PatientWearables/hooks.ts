@@ -1,4 +1,4 @@
-import { Consent, Patient, Practitioner } from 'fhir/r4b';
+import { Consent, Organization, Patient, Practitioner } from 'fhir/r4b';
 
 import { useService } from 'fhir-react/lib/hooks/service';
 import { isFailure, isSuccess, success } from 'fhir-react/lib/libs/remoteData';
@@ -27,7 +27,9 @@ type WearablesData = { records: WearablesDataRecord[] };
 export function usePatientWearablesData(patient: WithId<Patient>) {
     return useService(async () => {
         const consentResponse = await matchCurrentUserRole({
-            [Role.Admin]: (practitioner: WithId<Practitioner>) =>
+            [Role.Admin]: (organization: WithId<Organization>) =>
+                fetchConsentStatus(organization, patient, 'emr-datasequence-records'),
+            [Role.Practitioner]: (practitioner: WithId<Practitioner>) =>
                 fetchConsentStatus(practitioner, patient, 'emr-datasequence-records'),
             [Role.Patient]: () => Promise.resolve(success({ hasConsent: true })),
         });
@@ -61,7 +63,11 @@ export function usePatientWearablesData(patient: WithId<Patient>) {
     });
 }
 
-async function fetchConsentStatus(actor: WithId<Practitioner>, patient: WithId<Patient>, consentSubject: string) {
+async function fetchConsentStatus(
+    actor: WithId<Practitioner | Organization>,
+    patient: WithId<Patient>,
+    consentSubject: string,
+) {
     return mapSuccess(
         await getFHIRResources<Consent>('Consent', {
             patient: patient.id,
@@ -85,6 +91,7 @@ async function fetchPatientRecords(patient: WithId<Patient>) {
         matchCurrentUserRole({
             [Role.Patient]: () => `${config.wearablesDataStreamService}/api/v1/records`,
             [Role.Admin]: () => `${config.wearablesDataStreamService}/api/v1/${patient.id}/records`,
+            [Role.Practitioner]: () => `${config.wearablesDataStreamService}/api/v1/${patient.id}/records`,
         }),
         {
             method: 'GET',
@@ -100,6 +107,7 @@ async function fetchPatientMetriportRecords(patient: WithId<Patient>) {
         matchCurrentUserRole({
             [Role.Patient]: () => `${config.wearablesDataStreamService}/metriport/records`,
             [Role.Admin]: () => `${config.wearablesDataStreamService}/metriport/${patient.id}/records`,
+            [Role.Practitioner]: () => `${config.wearablesDataStreamService}/metriport/${patient.id}/records`,
         }),
         {
             method: 'GET',

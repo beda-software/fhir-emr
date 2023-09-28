@@ -1,0 +1,59 @@
+id: healthcare-service-edit
+resourceType: Questionnaire
+name: healthcare-service-edit
+title: healthcare-service edit
+status: active
+launchContext:
+  - name:
+      code: HealthcareService
+    type:
+      - HealthcareService
+mapping:
+  - id: healthcare-service-edit-extract
+    resourceType: Mapping
+item:
+  - text: HealthcareServiceId
+    type: string
+    linkId: healthcareServiceId
+    required: true
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%HealthcareService.id"
+  - linkId: duration
+    type: integer
+    text: Duration
+    required: true
+    unit:
+      code: min
+      system: http://unitsofmeasure.org
+      display: min
+    initialExpression:
+      language: text/fhirpath
+      expression: "%HealthcareService.extension('urn:extensions:healthcare-service-duration').valueInteger"
+  - text: Visit type name
+    required: true
+    type: string
+    linkId: visit-type-name
+    initialExpression:
+      language: text/fhirpath
+      expression: "%HealthcareService.type.first().coding.first().display"
+  - text: Visit type code
+    required: true
+    type: string
+    linkId: visit-type-code
+    initialExpression:
+      language: text/fhirpath
+      expression: "%HealthcareService.type.first().coding.first().code"
+  - text: Comment
+    type: text
+    linkId: comment
+    rowsNumber: 4
+    initialExpression:
+      language: text/fhirpath
+      expression: "%HealthcareService.comment"
+
+meta:
+  profile:
+    - https://beda.software/beda-emr-questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/healthcare-service-create

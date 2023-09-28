@@ -1,0 +1,7 @@
+id: practitioner2
+resourceType: User
+password: >-
+  $s0$f0801$Dbh8BhSVJ6UGXal5oaWFFQ==$KP1VgUGAdAloN1Vw+WzUUGoVcqyLXFh1N8kbavgaXRw=
+fhirUser:
+  id: "practitioner2"
+  resourceType: "Practitioner"
