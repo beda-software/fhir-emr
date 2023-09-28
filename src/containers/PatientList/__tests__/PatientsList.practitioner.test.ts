@@ -1,8 +1,6 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { SearchParams } from 'fhir-react';
 
-import { formatFHIRDate } from 'aidbox-react/lib/utils/date';
-
 import { isFailure, isSuccess } from 'fhir-react/lib/libs/remoteData';
 
 import { useSearchBar } from 'src/components/SearchBar/hooks';

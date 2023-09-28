@@ -5,7 +5,7 @@ import { formatFHIRDate } from 'aidbox-react/lib/utils/date';
 import { createFHIRResource, getReference } from 'fhir-react/lib/services/fhir';
 import { ensure, withRootAccess } from 'fhir-react/lib/utils/tests';
 
-import { Role, User } from 'shared/src/contrib/aidbox';
+import { User } from 'shared/src/contrib/aidbox';
 
 import { createConsent, createPatient, createPractitioner, ensureSave, login } from 'src/setupTests';
 
@@ -48,14 +48,6 @@ export async function createUser(userData: Partial<User>) {
         await createFHIRResource<User>({
             resourceType: 'User',
             ...userData,
-        }),
-    );
-}
-
-export async function createRole(roleData: Role) {
-    return ensure(
-        await createFHIRResource<Role>({
-            ...roleData,
         }),
     );
 }
