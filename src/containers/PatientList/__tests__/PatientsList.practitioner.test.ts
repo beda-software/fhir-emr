@@ -36,7 +36,7 @@ async function renderPatientsHooks(searchParams: SearchParams) {
 }
 
 describe('Patient list get by consent', () => {
-    test.skip('Get patients with signed consent', async () => {
+    test('Get patients with signed consent', async () => {
         const data = await initialSetup();
         const searchParams = getPatientSearchParamsForPractitioner(data.practitioner.id);
         const result = await renderPatientsHooks(searchParams);

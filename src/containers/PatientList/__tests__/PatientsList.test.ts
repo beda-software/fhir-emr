@@ -12,24 +12,16 @@ const PATIENTS_ADDITION_DATA = [
     {
         name: [
             {
-                given: ['1', '1'],
-                family: 'Patient',
+                given: ['Doe'],
+                family: 'John',
             },
         ],
     },
     {
         name: [
             {
-                given: ['2', '2'],
-                family: 'Patient',
-            },
-        ],
-    },
-    {
-        name: [
-            {
-                given: ['3', '3'],
-                family: 'Patient',
+                given: ['Ivan', 'Ivanovich'],
+                family: 'Ivanov',
             },
         ],
     },
