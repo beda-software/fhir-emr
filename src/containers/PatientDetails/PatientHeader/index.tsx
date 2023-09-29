@@ -111,6 +111,7 @@ export function PatientHeader() {
                     [Role.Admin]: () => breadcrumbs,
                     [Role.Patient]: () => breadcrumbs.slice(1),
                     [Role.Practitioner]: () => breadcrumbs,
+                    [Role.Receptionist]: () => breadcrumbs,
                 })}
             />
             <Title style={{ marginBottom: 21 }}>{title}</Title>

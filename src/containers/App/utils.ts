@@ -52,6 +52,17 @@ async function populateUserInfoSharedState(user: User) {
                 console.error(practitionerResponse.error);
             }
         },
+        [Role.Receptionist]: async () => {
+            const practitionerId = user.role![0]!.links!.practitioner!.id;
+            const practitionerResponse = await getFHIRResource<Practitioner>({
+                reference: `Practitioner/${practitionerId}`,
+            });
+            if (isSuccess(practitionerResponse)) {
+                sharedAuthorizedPractitioner.setSharedState(practitionerResponse.data);
+            } else {
+                console.error(practitionerResponse.error);
+            }
+        },
         [Role.Patient]: async () => {
             const patientId = user.role![0]!.links!.patient!.id;
             const patientResponse = await getFHIRResource<Patient>({

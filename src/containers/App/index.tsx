@@ -28,6 +28,7 @@ import { Role, matchCurrentUserRole } from 'src/utils/role';
 
 import { restoreUserSession } from './utils';
 import { HealthcareServiceList } from '../HealthcareServiceList';
+import { OrganizationScheduling } from '../OrganizationScheduling';
 
 export function App() {
     const [userResponse] = useService(async () => {
@@ -41,6 +42,7 @@ export function App() {
                 [Role.Admin]: () => <AuthenticatedAdminUserApp />,
                 [Role.Patient]: () => <AuthenticatedPatientUserApp />,
                 [Role.Practitioner]: () => <AuthenticatedPractitionerUserApp />,
+                [Role.Receptionist]: () => <AuthenticatedReceptionistUserApp />,
             });
         }
 
@@ -168,6 +170,17 @@ function AuthenticatedPractitionerUserApp() {
                 <Route path="/questionnaires/:id/edit" element={<QuestionnaireBuilder />} />
                 <Route path="/questionnaires/:id" element={<div>questionnaires/:id</div>} />
                 <Route path="*" element={<Navigate to="/encounters" />} />
+            </Routes>
+        </BaseLayout>
+    );
+}
+
+function AuthenticatedReceptionistUserApp() {
+    return (
+        <BaseLayout>
+            <Routes>
+                <Route path="/scheduling" element={<OrganizationScheduling />} />
+                <Route path="*" element={<Navigate to="/scheduling" />} />
             </Routes>
         </BaseLayout>
     );

@@ -113,6 +113,7 @@ function UserMenu(props: { onItemClick?: () => void }) {
                                 [Role.Admin]: () => <OrganizationName />,
                                 [Role.Patient]: () => <PatientName />,
                                 [Role.Practitioner]: () => <PractitionerName />,
+                                [Role.Receptionist]: () => <PractitionerName />,
                             })}
                         </>
                     ),

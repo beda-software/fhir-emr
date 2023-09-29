@@ -44,6 +44,9 @@ export function PatientList() {
         [Role.Practitioner]: (practitioner) => {
             return getPatientSearchParamsForPractitioner(practitioner.id);
         },
+        [Role.Receptionist]: () => {
+            return {};
+        },
         [Role.Patient]: () => {
             return {};
         },

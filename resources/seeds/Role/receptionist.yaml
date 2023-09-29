@@ -1,0 +1,10 @@
+name: "receptionist"
+user:
+  id: "receptionist"
+  resourceType: "User"
+links:
+  practitioner:
+    id: "receptionist"
+    resourceType: "Practitioner"
+id: receptionist
+resourceType: Role

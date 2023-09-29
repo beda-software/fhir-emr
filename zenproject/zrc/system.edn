@@ -71,6 +71,8 @@
                                                    :roleName "practitioner"}
                              :patient-role-policy {:engine "allow"
                                                    :roleName "patient"}
+                             :receptionist-role-policy {:engine "allow"
+                                                   :roleName "receptionist"}
                              :public-appointment-policy
                              {:engine "allow"
                               :link [{:resourceType "Client" :id "anonymous"}]}
