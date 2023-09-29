@@ -1,38 +1,24 @@
 import { Form } from 'antd';
-import classNames from 'classnames';
-import { useState } from 'react';
-import PI, { PhoneInputProps } from 'react-phone-input-2';
+import PhoneInput from 'antd-phone-input';
 import { QuestionItemProps } from 'sdc-qrf';
 
-import { S } from './PhoneInput.styles';
 import { useFieldController } from '../../hooks';
-
-// https://github.com/bl00mber/react-phone-input-2/issues/533#issuecomment-1508211907
-const PhoneInput: React.FC<PhoneInputProps> = (PI as any).default || PI;
 
 export function QuestionPhone({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
     const { value, onChange, disabled, formItem } = useFieldController(fieldName, questionItem);
-    const [focused, setFocused] = useState(false);
 
     return (
         <Form.Item {...formItem}>
-            <S.Container>
-                <PhoneInput
-                    country={'us'}
-                    value={value}
-                    onChange={(phone) => onChange(phone)}
-                    disabled={disabled}
-                    inputClass={'react-phone-input'}
-                    containerClass={classNames({
-                        _focused: focused,
-                    })}
-                    buttonClass={'react-phone-input__button'}
-                    onFocus={() => setFocused(true)}
-                    onBlur={() => setFocused(false)}
-                />
-            </S.Container>
+            <PhoneInput
+                country="us"
+                value={value}
+                disabled={disabled}
+                onChange={({ countryCode, areaCode, phoneNumber }) => {
+                    onChange([countryCode, areaCode, phoneNumber].filter(Boolean).join(''));
+                }}
+            />
         </Form.Item>
     );
 }
