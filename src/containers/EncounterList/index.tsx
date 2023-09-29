@@ -12,6 +12,7 @@ import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { Title } from 'src/components/Typography';
 import { formatPeriodDateTime } from 'src/utils/date';
+import { matchCurrentUserRole, Role } from 'src/utils/role';
 
 import { useEncounterList } from './hooks';
 import { EncounterListFilters, EncounterListFilterValues } from './types';
@@ -37,8 +38,21 @@ export function EncounterList() {
         ] as EncounterListFilters,
     });
 
+    const roleSearchParams = matchCurrentUserRole({
+        [Role.Admin]: () => {
+            return {};
+        },
+        [Role.Patient]: () => {
+            return {};
+        },
+        [Role.Practitioner]: (practitioner) => {
+            return { participant: practitioner.id };
+        },
+    });
+
     const { encounterDataListRD, handleTableChange, pagination } = useEncounterList(
         columnsFilterValues as EncounterListFilterValues,
+        roleSearchParams,
     );
 
     const columns = [
