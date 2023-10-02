@@ -24,7 +24,7 @@ export interface SearchBarColumnReferenceTypeProps {
     onChange: (value: string, columnId: string) => void;
     columnFilterValue: {
         column: {
-            id: string;
+            id: 'healthcareService' | 'practitioner';
         };
     };
 }

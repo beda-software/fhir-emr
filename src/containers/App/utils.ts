@@ -84,8 +84,6 @@ export async function restoreUserSession(token: string) {
 
     const userResponse = await getUserInfo();
 
-    console.log('userInfo', userResponse);
-
     if (aidboxReactRemoteData.isSuccess(userResponse)) {
         await populateUserInfoSharedState(userResponse.data);
 
