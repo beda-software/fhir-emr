@@ -1,23 +1,35 @@
 import { Trans } from '@lingui/macro';
-import { Col, Row } from 'antd';
 
 import { BasePageHeader, BasePageContent } from 'src/components/BaseLayout';
+import { SearchBar } from 'src/components/SearchBar';
+import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { Title } from 'src/components/Typography';
 
 export function OrganizationScheduling() {
+    const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
+        columns: [
+            {
+                id: 'healthcareService',
+                type: 'reference',
+                placeholder: 'Search by service',
+            },
+        ],
+    });
     return (
         <>
             <BasePageHeader style={{ paddingTop: 40, paddingBottom: 92 }}>
-                <Row justify="space-between" align="middle" style={{ marginBottom: 40 }} gutter={[16, 16]}>
-                    <Col>
-                        <Title style={{ marginBottom: 0 }}>
-                            <Trans>Scheduling</Trans>
-                        </Title>
-                    </Col>
-                </Row>
+                <Title style={{ marginBottom: 40 }}>
+                    <Trans>Scheduling</Trans>
+                </Title>
+
+                <SearchBar
+                    columnsFilterValues={columnsFilterValues}
+                    onChangeColumnFilter={onChangeColumnFilter}
+                    onResetFilters={onResetFilters}
+                />
             </BasePageHeader>
             <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
-                <p>Scheduling content</p>
+                {JSON.stringify(columnsFilterValues, undefined, 2)}
             </BasePageContent>
         </>
     );

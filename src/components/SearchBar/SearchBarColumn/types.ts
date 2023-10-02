@@ -19,3 +19,12 @@ export interface SearchBarColumnDateTypeProps {
     columnFilterValue: DateTypeColumnFilterValue;
     onChange: (value: DateColumnFilterValue, key: string) => void;
 }
+
+export interface SearchBarColumnReferenceTypeProps {
+    onChange: (value: string, columnId: string) => void;
+    columnFilterValue: {
+        column: {
+            id: string;
+        };
+    };
+}
