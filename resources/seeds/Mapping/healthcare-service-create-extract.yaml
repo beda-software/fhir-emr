@@ -11,6 +11,7 @@ body:
           url: /HealthcareService
           method: POST
         resource:
+          name: $ visitTypeName
           duration: $ duration
           comment: $ comment
           type:
@@ -25,15 +26,6 @@ body:
           meta:
             profile:
               - https://beda.software/beda-emr-healthcare-service
-      - request:
-          url: /Concept
-          method: POST
-        resource:
-          code: $ visitTypeCode
-          system: http://beda.software/custom-healthcare-service-list
-          display: $ visitTypeName
-          resourceType: Concept
-          deprecated: false
     resourceType: Bundle
 id: healthcare-service-create-extract
 resourceType: Mapping

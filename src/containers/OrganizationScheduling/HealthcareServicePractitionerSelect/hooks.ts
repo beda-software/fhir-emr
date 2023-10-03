@@ -36,10 +36,11 @@ export function useHealthcareServicePractitionerSelect() {
         async (search: string) => {
             const healthcareServicesResponse = selectedPractitionerRole
                 ? await getFHIRResources<PractitionerRole | HealthcareService>('PractitionerRole', {
+                      'service:HealthcareService.name': search,
                       _id: getSelectedValue(selectedPractitionerRole),
                       _include: ['PractitionerRole:service:HealthcareService'],
                   })
-                : await getFHIRResources<HealthcareService>('HealthcareService', { 'service-type': search });
+                : await getFHIRResources<HealthcareService>('HealthcareService', { name: search });
             const response = mapSuccess(
                 healthcareServicesResponse,
                 (bundle) => extractBundleResources(bundle).HealthcareService,
@@ -64,7 +65,7 @@ export function useHealthcareServicePractitionerSelect() {
             const practitionerRoleResponse = await getFHIRResources<PractitionerRole | Practitioner>(
                 'PractitionerRole',
                 {
-                    'PractitionerRole:practitioner.name': search,
+                    'practitioner:Practitioner.name': search,
                     _include: ['PractitionerRole:practitioner:Practitioner'],
                     ...(selectedHealthcareService ? { service: getSelectedValue(selectedHealthcareService) } : {}),
                 },
