@@ -12,19 +12,12 @@ export type SearchBarDateColumn = {
     placeholder: [string, string];
 };
 
-export type SearchBarReferenceColumn = {
-    id: string;
-    type: 'select-service-practitioner';
-    placeholder: string;
-};
-
 export type DateColumnFilterValue = [moment.Moment, moment.Moment];
-export type ReferenceColumnFilterValue = { healthcareService?: string; practitionerRole?: string };
 
-export type SearchBarColumn = SearchBarStringColumn | SearchBarDateColumn | SearchBarReferenceColumn;
+export type SearchBarColumn = SearchBarStringColumn | SearchBarDateColumn;
 export interface ColumnFilterValue {
     column: SearchBarColumn;
-    value?: DateColumnFilterValue | ReferenceColumnFilterValue | string;
+    value?: DateColumnFilterValue | string;
 }
 export interface StringTypeColumnFilterValue {
     column: SearchBarStringColumn;
@@ -35,13 +28,8 @@ export interface DateTypeColumnFilterValue {
     value?: DateColumnFilterValue;
 }
 
-export interface ReferenceTypeColumnFilterValue {
-    column: SearchBarReferenceColumn;
-    value?: ReferenceColumnFilterValue;
-}
-
 export interface SearchBarData {
     columnsFilterValues: ColumnFilterValue[];
-    onChangeColumnFilter: (value: DateColumnFilterValue | ReferenceColumnFilterValue | string, key: string) => void;
+    onChangeColumnFilter: (value: DateColumnFilterValue | string, key: string) => void;
     onResetFilters: () => void;
 }

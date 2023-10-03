@@ -1,12 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 
-import {
-    ColumnFilterValue,
-    DateColumnFilterValue,
-    ReferenceColumnFilterValue,
-    SearchBarData,
-    SearchBarProps,
-} from './types';
+import { ColumnFilterValue, DateColumnFilterValue, SearchBarData, SearchBarProps } from './types';
 
 export function useSearchBar(props: SearchBarProps): SearchBarData {
     const { columns } = props;
@@ -18,7 +12,7 @@ export function useSearchBar(props: SearchBarProps): SearchBarData {
     const [columnsFilterValues, setColumnsFilterValues] = useState<ColumnFilterValue[]>(defaultFiltersValues);
 
     const onChangeColumnFilter = useCallback(
-        (value: DateColumnFilterValue | ReferenceColumnFilterValue | string, id: string) => {
+        (value: DateColumnFilterValue | string, id: string) => {
             setColumnsFilterValues((prevFilterValue) => {
                 const newFilterValue = [...prevFilterValue];
 
