@@ -24,8 +24,7 @@ export function OrganizationScheduling() {
         selectedPractitionerRole,
         practitionerRoleOptions,
         healthcareServiceOptions,
-        onChangeHealthcareService,
-        onChangePractitionerRole,
+        onChange,
         resetFilter,
     } = useHealthcareServicePractitionerSelect();
     const { remoteResponses } = useOrganizationSchedulingSlots({
@@ -46,8 +45,10 @@ export function OrganizationScheduling() {
                             selectedPractitionerRole={selectedPractitionerRole}
                             loadHealthcareServiceOptions={healthcareServiceOptions}
                             loadPractitionerRoleOptions={practitionerRoleOptions}
-                            onChangeHealthcareService={onChangeHealthcareService}
-                            onChangePractitionerRole={onChangePractitionerRole}
+                            onChangeHealthcareService={(selectedOption) =>
+                                onChange(selectedOption, 'healthcareService')
+                            }
+                            onChangePractitionerRole={(selectedOption) => onChange(selectedOption, 'practitionerRole')}
                         />
                     </Row>
                     <Button onClick={resetFilter}>

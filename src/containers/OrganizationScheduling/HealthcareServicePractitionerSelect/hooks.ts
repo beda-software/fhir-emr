@@ -14,27 +14,20 @@ export function useHealthcareServicePractitionerSelect() {
     const [selectedHealthcareService, setSelectedHealthcareService] = useState<SelectOption>(null);
     const [selectedPractitionerRole, setSelectedPractitionerRole] = useState<SelectOption>(null);
 
-    const onChangeHealthcareService = useCallback(
-        (selectedOption: SelectOption) => {
-            const combinedValue = {
-                healthcareService: getSelectedValue(selectedHealthcareService),
-                practitionerRole: getSelectedValue(selectedPractitionerRole),
-            };
-            setSelectedHealthcareService(selectedOption);
-            combinedValue.healthcareService = getSelectedValue(selectedOption);
-        },
-        [selectedHealthcareService, selectedPractitionerRole],
-    );
-
-    const onChangePractitionerRole = useCallback(
-        (selectedOption: SelectOption) => {
+    const onChange = useCallback(
+        (selectedOption: SelectOption, type: 'healthcareService' | 'practitionerRole') => {
             const combinedValue = {
                 healthcareService: getSelectedValue(selectedHealthcareService),
                 practitionerRole: getSelectedValue(selectedPractitionerRole),
             };
 
-            setSelectedPractitionerRole(selectedOption);
-            combinedValue.practitionerRole = getSelectedValue(selectedOption);
+            if (type === 'healthcareService') {
+                setSelectedHealthcareService(selectedOption);
+                combinedValue.healthcareService = getSelectedValue(selectedOption);
+            } else if (type === 'practitionerRole') {
+                setSelectedPractitionerRole(selectedOption);
+                combinedValue.practitionerRole = getSelectedValue(selectedOption);
+            }
         },
         [selectedHealthcareService, selectedPractitionerRole],
     );
@@ -117,8 +110,7 @@ export function useHealthcareServicePractitionerSelect() {
         selectedPractitionerRole,
         healthcareServiceOptions,
         practitionerRoleOptions,
-        onChangeHealthcareService,
-        onChangePractitionerRole,
+        onChange,
         resetFilter,
     };
 }
