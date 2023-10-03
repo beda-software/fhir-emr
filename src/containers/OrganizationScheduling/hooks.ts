@@ -13,17 +13,18 @@ import { mapSuccess, sequenceMap } from 'fhir-react/lib/services/service';
 import { extractAppointmentPatient } from 'shared/src/utils/appointment';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
-import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
+import { ReferenceTypeColumnFilterValue } from 'src/components/SearchBar/types';
 import { useDebounce } from 'src/utils/debounce';
 
 import { days } from '../Scheduling/available-time';
 
-export function useOrganizationSchedulingSlots(filterValues: StringTypeColumnFilterValue[]) {
+export function useOrganizationSchedulingSlots(filterValues: ReferenceTypeColumnFilterValue[]) {
     const debouncedFilterValues = useDebounce(filterValues, 300);
-    const practitionerRoleFilterValue = debouncedFilterValues[1]?.value;
+    const practitionerRoleId = debouncedFilterValues[0]?.value?.practitionerRole;
+    const healthcareServiceId = debouncedFilterValues[0]?.value?.healthcareService;
     const [slots] = useService(async () => {
         const response = await getAllFHIRResources<Appointment>('Appointment', {
-            actor: practitionerRoleFilterValue,
+            actor: practitionerRoleId,
             _include: 'Appointment:patient',
         });
 
@@ -45,11 +46,11 @@ export function useOrganizationSchedulingSlots(filterValues: StringTypeColumnFil
                 };
             });
         });
-    }, [practitionerRoleFilterValue]);
+    }, [practitionerRoleId]);
 
     const [businessHours] = useService(async () => {
         const response = await getFHIRResources<PractitionerRole>('PractitionerRole', {
-            _id: practitionerRoleFilterValue,
+            ...(practitionerRoleId ? { _id: practitionerRoleId } : { service: healthcareServiceId }),
         });
 
         return mapSuccess(response, (bundle) => {
@@ -58,7 +59,7 @@ export function useOrganizationSchedulingSlots(filterValues: StringTypeColumnFil
 
             return practitionerRoles.map((practitionerRole) => {
                 const availableTime = practitionerRole.availableTime?.map((item) => ({
-                    daysOfWeek: item.daysOfWeek!.map((dow) => days.indexOf(dow) + 1),
+                    daysOfWeek: item.daysOfWeek?.map((dow) => days.indexOf(dow) + 1),
                     startTime: item.availableStartTime,
                     endTime: item.availableEndTime,
                 }));
@@ -66,7 +67,7 @@ export function useOrganizationSchedulingSlots(filterValues: StringTypeColumnFil
                 return availableTime;
             });
         });
-    }, [practitionerRoleFilterValue]);
+    }, [practitionerRoleId, healthcareServiceId]);
 
     const remoteResponses = React.useMemo(
         () =>

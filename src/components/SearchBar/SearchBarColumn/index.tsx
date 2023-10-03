@@ -16,7 +16,8 @@ export function SearchBarColumn<T>(props: SearchBarColumnProps<T>) {
             return <StringColumn<T> {...(props as SearchBarColumnStringTypeProps)} />;
         case 'date':
             return <DateColumn<T> {...(props as SearchBarColumnDateTypeProps)} />;
-        case 'reference':
+        // TODO: Remove it to the component
+        case 'select-service-practitioner':
             return <ReferenceColumn {...(props as SearchBarColumnReferenceTypeProps)} />;
         default:
             return null;

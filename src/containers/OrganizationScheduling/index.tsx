@@ -9,29 +9,26 @@ import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { BasePageHeader, BasePageContent } from 'src/components/BaseLayout';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
-import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
+import { ReferenceTypeColumnFilterValue } from 'src/components/SearchBar/types';
 import { Title } from 'src/components/Typography';
 
 import { S } from './Calendar.styles';
 import { useOrganizationSchedulingSlots } from './hooks';
+import { useCalendarOptions } from '../Scheduling/ScheduleCalendar/hooks/useCalendarOptions';
 
 export function OrganizationScheduling() {
+    const { calendarOptions } = useCalendarOptions();
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
         columns: [
             {
-                id: 'healthcareService',
-                type: 'reference',
+                id: 'select-service-practitioner',
+                type: 'select-service-practitioner',
                 placeholder: 'Search by service',
-            },
-            {
-                id: 'practitionerRole',
-                type: 'reference',
-                placeholder: 'Search by practitioner',
             },
         ],
     });
 
-    const { remoteResponses } = useOrganizationSchedulingSlots(columnsFilterValues as StringTypeColumnFilterValue[]);
+    const { remoteResponses } = useOrganizationSchedulingSlots(columnsFilterValues as ReferenceTypeColumnFilterValue[]);
 
     return (
         <>
@@ -39,7 +36,6 @@ export function OrganizationScheduling() {
                 <Title style={{ marginBottom: 40 }}>
                     <Trans>Scheduling</Trans>
                 </Title>
-
                 <SearchBar
                     columnsFilterValues={columnsFilterValues}
                     onChangeColumnFilter={onChangeColumnFilter}
@@ -84,6 +80,7 @@ export function OrganizationScheduling() {
                                     slotLabelFormat={{
                                         timeStyle: 'short',
                                     }}
+                                    {...calendarOptions}
                                 />
                             </S.Calendar>
                         </S.Wrapper>
