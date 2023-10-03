@@ -2,20 +2,20 @@ import { Col } from 'antd';
 
 import { AsyncSelect } from 'src/components/Select';
 
-import { useReferenceColumn } from './hooks';
-import { S } from './ReferenceColumn.styles';
-import { OptionType } from './types';
-import { SearchBarColumnReferenceTypeProps } from '../types';
+import { S } from './HealthcareServicePractitionerSelect.styles';
+import { AsyncDropdownProps, HealthcareServicePractitionerSelectProps, OptionType } from './types';
+import { getSelectedValue } from '../utils';
 
-export function ReferenceColumn(props: SearchBarColumnReferenceTypeProps) {
+export function HealthcareServicePractitionerSelect(props: HealthcareServicePractitionerSelectProps) {
     const {
-        onColumnChange,
         selectedHealthcareService,
         selectedPractitionerRole,
-        healthcareServiceOptions,
-        practitionerRoleOptions,
-        getSelectedValue,
-    } = useReferenceColumn(props);
+        loadHealthcareServiceOptions,
+        loadPractitionerRoleOptions,
+        onChangeHealthcareService,
+        onChangePractitionerRole,
+    } = props;
+
     return (
         <Col>
             <S.Container>
@@ -25,10 +25,8 @@ export function ReferenceColumn(props: SearchBarColumnReferenceTypeProps) {
                             ? getSelectedValue(selectedPractitionerRole)
                             : 'initial-healthcareservice-select'
                     }
-                    onChange={(option) => {
-                        onColumnChange(option, 'healthcare');
-                    }}
-                    loadOptions={healthcareServiceOptions}
+                    onChange={onChangeHealthcareService}
+                    loadOptions={loadHealthcareServiceOptions}
                     value={selectedHealthcareService as OptionType}
                 />
                 <AsyncDropdown
@@ -37,10 +35,8 @@ export function ReferenceColumn(props: SearchBarColumnReferenceTypeProps) {
                             ? getSelectedValue(selectedHealthcareService)
                             : 'initial-practitionerrole-select'
                     }
-                    onChange={(option) => {
-                        onColumnChange(option, 'practitioner');
-                    }}
-                    loadOptions={practitionerRoleOptions}
+                    onChange={onChangePractitionerRole}
+                    loadOptions={loadPractitionerRoleOptions}
                     value={selectedPractitionerRole as OptionType}
                 />
             </S.Container>
@@ -48,15 +44,8 @@ export function ReferenceColumn(props: SearchBarColumnReferenceTypeProps) {
     );
 }
 
-function AsyncDropdown({
-    onChange,
-    loadOptions,
-    value,
-}: {
-    onChange: (selectedOption: OptionType | readonly OptionType[] | null) => void;
-    loadOptions: (search: string) => void;
-    value?: OptionType;
-}) {
+function AsyncDropdown(props: AsyncDropdownProps) {
+    const { onChange, loadOptions, value } = props;
     return (
         <S.SelectWrapper>
             <AsyncSelect

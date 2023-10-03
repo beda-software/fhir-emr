@@ -13,15 +13,15 @@ import { mapSuccess, sequenceMap } from 'fhir-react/lib/services/service';
 import { extractAppointmentPatient } from 'shared/src/utils/appointment';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
-import { ReferenceTypeColumnFilterValue } from 'src/components/SearchBar/types';
-import { useDebounce } from 'src/utils/debounce';
-
 import { days } from '../Scheduling/available-time';
 
-export function useOrganizationSchedulingSlots(filterValues: ReferenceTypeColumnFilterValue[]) {
-    const debouncedFilterValues = useDebounce(filterValues, 300);
-    const practitionerRoleId = debouncedFilterValues[0]?.value?.practitionerRole;
-    const healthcareServiceId = debouncedFilterValues[0]?.value?.healthcareService;
+export function useOrganizationSchedulingSlots({
+    healthcareServiceId,
+    practitionerRoleId,
+}: {
+    healthcareServiceId?: string;
+    practitionerRoleId?: string;
+}) {
     const [slots] = useService(async () => {
         const response = await getAllFHIRResources<Appointment>('Appointment', {
             actor: practitionerRoleId,

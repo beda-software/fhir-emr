@@ -1,12 +1,6 @@
 import { DateColumn } from './DateColumn';
-import { ReferenceColumn } from './ReferenceColumn';
 import { StringColumn } from './StringColumn';
-import {
-    SearchBarColumnDateTypeProps,
-    SearchBarColumnProps,
-    SearchBarColumnReferenceTypeProps,
-    SearchBarColumnStringTypeProps,
-} from './types';
+import { SearchBarColumnDateTypeProps, SearchBarColumnProps, SearchBarColumnStringTypeProps } from './types';
 
 export function SearchBarColumn<T>(props: SearchBarColumnProps<T>) {
     const { columnFilterValue } = props;
@@ -16,9 +10,6 @@ export function SearchBarColumn<T>(props: SearchBarColumnProps<T>) {
             return <StringColumn<T> {...(props as SearchBarColumnStringTypeProps)} />;
         case 'date':
             return <DateColumn<T> {...(props as SearchBarColumnDateTypeProps)} />;
-        // TODO: Remove it to the component
-        case 'select-service-practitioner':
-            return <ReferenceColumn {...(props as SearchBarColumnReferenceTypeProps)} />;
         default:
             return null;
     }

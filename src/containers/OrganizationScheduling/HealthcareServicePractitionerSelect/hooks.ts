@@ -7,54 +7,36 @@ import { mapSuccess } from 'fhir-react/lib/services/service';
 
 import { renderHumanName } from 'shared/src/utils/fhir';
 
-import { MultiValue, OptionType, SingleValue } from './types';
-import { SearchBarColumnReferenceTypeProps } from '../types';
+import { SelectOption } from './types';
+import { getSelectedValue } from '../utils';
 
-export function useReferenceColumn(props: SearchBarColumnReferenceTypeProps) {
-    const { onChange, columnFilterValue } = props;
-    const [selectedHealthcareService, setSelectedHealthcareService] = useState<
-        MultiValue<OptionType> | SingleValue<OptionType>
-    >(null);
-    const [selectedPractitionerRole, setSelectedPractitionerRole] = useState<
-        MultiValue<OptionType> | SingleValue<OptionType>
-    >(null);
+export function useHealthcareServicePractitionerSelect() {
+    const [selectedHealthcareService, setSelectedHealthcareService] = useState<SelectOption>(null);
+    const [selectedPractitionerRole, setSelectedPractitionerRole] = useState<SelectOption>(null);
 
-    // TODO: Move it to
-    const isSingleValue = (
-        value: MultiValue<OptionType> | SingleValue<OptionType>,
-    ): value is SingleValue<OptionType> => {
-        return !Array.isArray(value);
-    };
+    const onChangeHealthcareService = useCallback(
+        (selectedOption: SelectOption) => {
+            const combinedValue = {
+                healthcareService: getSelectedValue(selectedHealthcareService),
+                practitionerRole: getSelectedValue(selectedPractitionerRole),
+            };
+            setSelectedHealthcareService(selectedOption);
+            combinedValue.healthcareService = getSelectedValue(selectedOption);
+        },
+        [selectedHealthcareService, selectedPractitionerRole],
+    );
 
-    const getSelectedValue = (selectedValue: MultiValue<OptionType> | SingleValue<OptionType>): string => {
-        if (!selectedValue) {
-            return '';
-        }
-
-        if (isSingleValue(selectedValue)) {
-            return selectedValue.value;
-        }
-
-        return selectedValue?.[0]?.value ?? '';
-    };
-
-    const onColumnChange = useCallback(
-        (selectedOption: MultiValue<OptionType> | SingleValue<OptionType>, type: 'healthcare' | 'practitioner') => {
+    const onChangePractitionerRole = useCallback(
+        (selectedOption: SelectOption) => {
             const combinedValue = {
                 healthcareService: getSelectedValue(selectedHealthcareService),
                 practitionerRole: getSelectedValue(selectedPractitionerRole),
             };
 
-            if (type === 'healthcare') {
-                setSelectedHealthcareService(selectedOption);
-                combinedValue.healthcareService = getSelectedValue(selectedOption);
-            } else if (type === 'practitioner') {
-                setSelectedPractitionerRole(selectedOption);
-                combinedValue.practitionerRole = getSelectedValue(selectedOption);
-            }
-            onChange(combinedValue, columnFilterValue.column.id);
+            setSelectedPractitionerRole(selectedOption);
+            combinedValue.practitionerRole = getSelectedValue(selectedOption);
         },
-        [onChange, columnFilterValue, selectedHealthcareService, selectedPractitionerRole],
+        [selectedHealthcareService, selectedPractitionerRole],
     );
 
     const healthcareServiceOptions = useCallback(
@@ -125,14 +107,18 @@ export function useReferenceColumn(props: SearchBarColumnReferenceTypeProps) {
         [selectedHealthcareService],
     );
 
+    const resetFilter = () => {
+        setSelectedHealthcareService(null);
+        setSelectedPractitionerRole(null);
+    };
+
     return {
-        onColumnChange,
         selectedHealthcareService,
-        setSelectedHealthcareService,
         selectedPractitionerRole,
-        setSelectedPractitionerRole,
         healthcareServiceOptions,
         practitionerRoleOptions,
-        getSelectedValue,
+        onChangeHealthcareService,
+        onChangePractitionerRole,
+        resetFilter,
     };
 }

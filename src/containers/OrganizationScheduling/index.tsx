@@ -3,32 +3,35 @@ import interactionPlugin from '@fullcalendar/interaction';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { Trans, t } from '@lingui/macro';
+import { Button, Row } from 'antd';
 
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 
 import { BasePageHeader, BasePageContent } from 'src/components/BaseLayout';
-import { SearchBar } from 'src/components/SearchBar';
-import { useSearchBar } from 'src/components/SearchBar/hooks';
-import { ReferenceTypeColumnFilterValue } from 'src/components/SearchBar/types';
 import { Title } from 'src/components/Typography';
 
 import { S } from './Calendar.styles';
+import { HealthcareServicePractitionerSelect } from './HealthcareServicePractitionerSelect';
+import { useHealthcareServicePractitionerSelect } from './HealthcareServicePractitionerSelect/hooks';
 import { useOrganizationSchedulingSlots } from './hooks';
+import { getSelectedValue } from './utils';
 import { useCalendarOptions } from '../Scheduling/ScheduleCalendar/hooks/useCalendarOptions';
 
 export function OrganizationScheduling() {
     const { calendarOptions } = useCalendarOptions();
-    const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
-        columns: [
-            {
-                id: 'select-service-practitioner',
-                type: 'select-service-practitioner',
-                placeholder: 'Search by service',
-            },
-        ],
+    const {
+        selectedHealthcareService,
+        selectedPractitionerRole,
+        practitionerRoleOptions,
+        healthcareServiceOptions,
+        onChangeHealthcareService,
+        onChangePractitionerRole,
+        resetFilter,
+    } = useHealthcareServicePractitionerSelect();
+    const { remoteResponses } = useOrganizationSchedulingSlots({
+        healthcareServiceId: getSelectedValue(selectedHealthcareService),
+        practitionerRoleId: getSelectedValue(selectedPractitionerRole),
     });
-
-    const { remoteResponses } = useOrganizationSchedulingSlots(columnsFilterValues as ReferenceTypeColumnFilterValue[]);
 
     return (
         <>
@@ -36,11 +39,21 @@ export function OrganizationScheduling() {
                 <Title style={{ marginBottom: 40 }}>
                     <Trans>Scheduling</Trans>
                 </Title>
-                <SearchBar
-                    columnsFilterValues={columnsFilterValues}
-                    onChangeColumnFilter={onChangeColumnFilter}
-                    onResetFilters={onResetFilters}
-                />
+                <S.SearchBarContainer>
+                    <Row gutter={[32, 16]}>
+                        <HealthcareServicePractitionerSelect
+                            selectedHealthcareService={selectedHealthcareService}
+                            selectedPractitionerRole={selectedPractitionerRole}
+                            loadHealthcareServiceOptions={healthcareServiceOptions}
+                            loadPractitionerRoleOptions={practitionerRoleOptions}
+                            onChangeHealthcareService={onChangeHealthcareService}
+                            onChangePractitionerRole={onChangePractitionerRole}
+                        />
+                    </Row>
+                    <Button onClick={resetFilter}>
+                        <Trans>Reset</Trans>
+                    </Button>
+                </S.SearchBarContainer>
             </BasePageHeader>
             <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
                 <RenderRemoteData remoteData={remoteResponses}>
