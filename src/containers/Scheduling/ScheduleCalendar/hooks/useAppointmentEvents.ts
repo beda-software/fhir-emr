@@ -1,5 +1,4 @@
 import { DateSelectArg, EventClickArg } from '@fullcalendar/core';
-import { PractitionerRole } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
 
 export interface NewAppointmentData {
@@ -7,7 +6,7 @@ export interface NewAppointmentData {
     end: Date;
 }
 
-export function useAppointmentEvents(practitionerRole: PractitionerRole) {
+export function useAppointmentEvents() {
     const [newAppointmentData, setNewAppointmentData] = useState<NewAppointmentData | undefined>();
     const [appointmentDetails, setAppointmentDetails] = useState<EventClickArg['event'] | undefined>();
     const [editingAppointmentId, setEditingAppointmentId] = useState<string | undefined>();

@@ -22,17 +22,18 @@ export function useOrganizationSchedulingSlots({
     healthcareServiceId?: string;
     practitionerRoleId?: string;
 }) {
-    const [slots] = useService(async () => {
-        const response = await getAllFHIRResources<Appointment>('Appointment', {
+    const [slots, slotsManager] = useService(async () => {
+        const response = await getAllFHIRResources<Appointment | Patient | PractitionerRole>('Appointment', {
             actor: practitionerRoleId,
-            _include: 'Appointment:patient',
+            _include: ['Appointment:patient', 'Appointment:actor:PractitionerRole'],
         });
 
         return mapSuccess(response, (bundle) => {
             const resMap = extractBundleResources(bundle);
             const appointments = resMap.Appointment;
+            const practitionerRoles = resMap.PractitionerRole;
 
-            return appointments.map((appointment) => {
+            const slotsData = appointments.map((appointment) => {
                 const patientRef = extractAppointmentPatient(appointment)!;
                 const patient = getIncludedResource<Patient>(resMap, patientRef)!;
 
@@ -45,6 +46,12 @@ export function useOrganizationSchedulingSlots({
                     classNames: [`_${appointment.status}`],
                 };
             });
+
+            return {
+                slotsData,
+                appointments,
+                practitionerRoles,
+            };
         });
     }, [practitionerRoleId]);
 
@@ -78,5 +85,5 @@ export function useOrganizationSchedulingSlots({
         [businessHours, slots],
     );
 
-    return { remoteResponses };
+    return { remoteResponses, slotsManager };
 }

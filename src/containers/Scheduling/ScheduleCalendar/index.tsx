@@ -5,8 +5,9 @@ import FullCalendar from '@fullcalendar/react'; // import it first
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { t, Trans } from '@lingui/macro';
 import { notification } from 'antd';
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { PractitionerRole } from 'fhir/r4b';
+
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 
 import { Title } from 'src/components/Typography';
 
@@ -38,7 +39,7 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
         openEditAppointment,
         editingAppointmentId,
         closeEditAppointment,
-    } = useAppointmentEvents(practitionerRole);
+    } = useAppointmentEvents();
 
     return (
         <>
@@ -89,7 +90,6 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
                                 {appointmentDetails && (
                                     <AppointmentDetailsModal
                                         key={`appointment-details__${appointmentDetails.id}`}
-                                        practitionerRole={practitionerRole}
                                         appointmentId={appointmentDetails.id}
                                         status={appointmentDetails.extendedProps.status}
                                         showModal={true}
@@ -140,7 +140,7 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
     );
 }
 
-function AppointmentBubble(eventContent: EventContentArg) {
+export function AppointmentBubble(eventContent: EventContentArg) {
     const status = eventContent.event.extendedProps.status;
     // const statusColorMap = {
     //     cancelled: '#f6bf26',

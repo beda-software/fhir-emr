@@ -3,6 +3,11 @@ specialty:
       - code: '394583002'
         system: http://snomed.info/sct
         display: Endocrinology
+availableTime:
+  - daysOfWeek:
+      - tue
+    availableEndTime: '17:00:00'
+    availableStartTime: '08:00:00'
 practitioner:
   id: practitioner2
   resourceType: Practitioner
