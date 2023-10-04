@@ -1,4 +1,5 @@
 import { Appointment, HealthcareService, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
+import _ from 'lodash';
 import React from 'react';
 
 import { useService } from 'fhir-react/lib/hooks/service';
@@ -61,15 +62,16 @@ export function useOrganizationSchedulingSlots({
         return mapSuccess(response, (bundle) => {
             const resMap = extractBundleResources(bundle);
             const practitionerRoles = resMap.PractitionerRole;
+            const practitionerRolesWithAvailableTime = practitionerRoles.filter((pr) => !!pr.availableTime);
 
-            return practitionerRoles.map((practitionerRole) => {
+            return practitionerRolesWithAvailableTime.map((practitionerRole) => {
                 const availableTime = practitionerRole.availableTime?.map((item) => ({
                     daysOfWeek: item.daysOfWeek?.map((dow) => days.indexOf(dow) + 1),
                     startTime: item.availableStartTime,
                     endTime: item.availableEndTime,
                 }));
 
-                return availableTime;
+                return availableTime?.filter((aTime) => !_.isUndefined(aTime.daysOfWeek));
             });
         });
     }, [practitionerRoleId, healthcareServiceId]);

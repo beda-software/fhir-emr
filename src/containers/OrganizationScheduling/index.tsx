@@ -57,6 +57,17 @@ export function OrganizationScheduling() {
     ): boolean => !!appointmentData && !!selectedPractitionerRole && !!selectedHealthcareService;
     const isSelectable = (selectedPractitionerRole: SelectOption, selectedHealthcareService: SelectOption): boolean =>
         !!selectedPractitionerRole && !!selectedHealthcareService;
+    // NOTE: In case we don't have business hours (didn't set up for practitioner
+    // empty filters results, etc.) We should show the visual sign to the receptionist
+    // that there is no available time. By default, the calendar can get false as businessHours property.
+    // But in this case, it looks like all day is available.
+    const emptyBusinessHours = [
+        {
+            daysOfWeek: [1, 2, 3, 4, 5, 6, 7],
+            startTime: '08:00',
+            endTime: '08:00',
+        },
+    ];
 
     return (
         <>
@@ -95,7 +106,7 @@ export function OrganizationScheduling() {
                                         center: 'title',
                                         right: 'timeGridWeek,timeGridDay',
                                     }}
-                                    businessHours={businessHours.flat()}
+                                    businessHours={businessHours.length ? businessHours.flat() : emptyBusinessHours}
                                     initialView="timeGridWeek"
                                     editable={true}
                                     selectable={isSelectable(selectedHealthcareService, selectedPractitionerRole)}

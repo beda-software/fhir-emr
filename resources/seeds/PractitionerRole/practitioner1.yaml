@@ -5,8 +5,28 @@ specialty:
         display: Endocrinology
 availableTime:
   - daysOfWeek:
-      - mon
+      - sat
+    availableEndTime: '10:00:00'
+    availableStartTime: '08:00:00'
+  - daysOfWeek:
+      - fri
     availableEndTime: '17:00:00'
+    availableStartTime: '14:00:00'
+  - daysOfWeek:
+      - thu
+    availableEndTime: '17:00:00'
+    availableStartTime: '14:00:00'
+  - daysOfWeek:
+      - wed
+    availableEndTime: '14:00:00'
+    availableStartTime: '08:00:00'
+  - daysOfWeek:
+      - tue
+    availableEndTime: '14:00:00'
+    availableStartTime: '08:00:00'
+  - daysOfWeek:
+      - mon
+    availableEndTime: '14:00:00'
     availableStartTime: '08:00:00'
 practitioner:
   id: practitioner1
