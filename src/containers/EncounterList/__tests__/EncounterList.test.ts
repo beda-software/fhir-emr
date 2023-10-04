@@ -1,7 +1,8 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
+import moment from 'moment';
+
 import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { getReference } from 'fhir-react/lib/services/fhir';
-import moment from 'moment';
 
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { createEncounter, createPatient, createPractitionerRole, loginAdminUser } from 'src/setupTests';

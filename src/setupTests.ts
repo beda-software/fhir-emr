@@ -1,6 +1,15 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { Consent, Encounter, Patient, Practitioner, PractitionerRole, Reference, Resource } from 'fhir/r4b';
+import {
+    Consent,
+    Encounter,
+    HealthcareService,
+    Patient,
+    Practitioner,
+    PractitionerRole,
+    Reference,
+    Resource,
+} from 'fhir/r4b';
 
 import { saveFHIRResource as aidboxSaveFHIRResource } from 'aidbox-react/lib/services/fhir';
 import {
@@ -59,6 +68,16 @@ export async function createConsent(consent: Partial<Consent> = {}) {
             },
             status: 'active',
             ...consent,
+        }),
+    );
+}
+
+export async function createHealthcareService(healthcareService: Partial<HealthcareService> = {}) {
+    return ensure(
+        await createFHIRResource<HealthcareService>({
+            resourceType: 'HealthcareService',
+            active: true,
+            ...healthcareService,
         }),
     );
 }
