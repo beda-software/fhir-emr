@@ -1,4 +1,4 @@
-import { PractitionerRole } from 'fhir/r4b';
+import { HealthcareService, Practitioner, PractitionerRole } from 'fhir/r4b';
 
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 
@@ -12,6 +12,8 @@ import { Spinner } from 'src/components/Spinner';
 
 interface NewAppointmentModalProps {
     practitionerRole: PractitionerRole;
+    healthcareService: HealthcareService;
+    practitioner: Practitioner;
     start: Date;
     end: Date;
     showModal: boolean;
@@ -22,7 +24,6 @@ interface NewAppointmentModalProps {
 export function NewAppointmentModal(props: NewAppointmentModalProps) {
     const { showModal, start, onOk, onCancel } = props;
     const appointmentStartDateTime = start ? formatFHIRDateTime(start) : formatFHIRDateTime(new Date());
-    console.log(props.practitionerRole);
     const { response, onSubmit, readOnly } = useQuestionnaireResponseForm({
         onSuccess: onOk,
         questionnaireResponseSaveService: inMemorySaveService,
@@ -35,6 +36,14 @@ export function NewAppointmentModal(props: NewAppointmentModalProps) {
             {
                 name: 'practitionerRole',
                 resource: props.practitionerRole,
+            },
+            {
+                name: 'practitioner',
+                resource: props.practitioner,
+            },
+            {
+                name: 'healthcareService',
+                resource: props.healthcareService,
             },
             {
                 name: 'appointment',

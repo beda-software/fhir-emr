@@ -13,6 +13,7 @@ import { Title } from 'src/components/Typography';
 import { S } from './Calendar.styles';
 import { HealthcareServicePractitionerSelect } from './HealthcareServicePractitionerSelect';
 import { useHealthcareServicePractitionerSelect } from './HealthcareServicePractitionerSelect/hooks';
+import { SelectOption } from './HealthcareServicePractitionerSelect/types';
 import { useOrganizationSchedulingSlots } from './hooks';
 import { NewAppointmentModal } from './NewAppointmentModal';
 import { EditAppointmentWrapperProps, NewAppointmentModalProps } from './types';
@@ -20,7 +21,7 @@ import { getSelectedValue } from './utils';
 import { AppointmentBubble } from '../Scheduling/ScheduleCalendar';
 import { AppointmentDetailsModal } from '../Scheduling/ScheduleCalendar/components/AppointmentDetailsModal';
 import { EditAppointmentModal } from '../Scheduling/ScheduleCalendar/components/EditAppointmentModal';
-import { useAppointmentEvents } from '../Scheduling/ScheduleCalendar/hooks/useAppointmentEvents';
+import { NewAppointmentData, useAppointmentEvents } from '../Scheduling/ScheduleCalendar/hooks/useAppointmentEvents';
 import { useCalendarOptions } from '../Scheduling/ScheduleCalendar/hooks/useCalendarOptions';
 
 export function OrganizationScheduling() {
@@ -49,6 +50,14 @@ export function OrganizationScheduling() {
         practitionerRoleId: getSelectedValue(selectedPractitionerRole),
     });
 
+    const isAppointmentCreatingAvailable = (
+        appointmentData: NewAppointmentData,
+        selectedPractitionerRole: SelectOption,
+        selectedHealthcareService: SelectOption,
+    ): boolean => !!appointmentData && !!selectedPractitionerRole && !!selectedHealthcareService;
+    const isSelectable = (selectedPractitionerRole: SelectOption, selectedHealthcareService: SelectOption): boolean =>
+        !!selectedPractitionerRole && !!selectedHealthcareService;
+
     return (
         <>
             <BasePageHeader style={{ paddingTop: 40, paddingBottom: 92 }}>
@@ -75,7 +84,7 @@ export function OrganizationScheduling() {
             </BasePageHeader>
             <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
                 <RenderRemoteData remoteData={remoteResponses}>
-                    {({ slots, businessHours }) => (
+                    {({ slots, businessHours, allPractitionersAndPractitionerRoles, healthcareServices }) => (
                         <S.Wrapper>
                             <S.Calendar>
                                 <FullCalendar
@@ -89,7 +98,7 @@ export function OrganizationScheduling() {
                                     businessHours={businessHours.flat()}
                                     initialView="timeGridWeek"
                                     editable={true}
-                                    selectable={true}
+                                    selectable={isSelectable(selectedHealthcareService, selectedPractitionerRole)}
                                     selectMirror={true}
                                     dayMaxEvents={true}
                                     initialEvents={slots.slotsData}
@@ -130,19 +139,27 @@ export function OrganizationScheduling() {
                                         reload={slotsManager.reload}
                                         onClose={closeEditAppointment}
                                         appointments={slots.appointments}
-                                        practitionerRoles={slots.practitionerRoles}
+                                        practitionerRoles={allPractitionersAndPractitionerRoles.practitionerRoles}
                                     />
                                 )}
-                                {newAppointmentData && selectedHealthcareService && selectedPractitionerRole && (
-                                    <NewAppointmentModalWrapper
-                                        newAppointmentData={newAppointmentData}
-                                        closeNewAppointment={closeNewAppointmentModal}
-                                        reload={slotsManager.reload}
-                                        onClose={closeNewAppointmentModal}
-                                        selectedPractitionerRoleId={getSelectedValue(selectedPractitionerRole)}
-                                        practitionerRoles={slots.practitionerRoles}
-                                    />
-                                )}
+                                {newAppointmentData &&
+                                    isAppointmentCreatingAvailable(
+                                        newAppointmentData,
+                                        selectedHealthcareService,
+                                        selectedPractitionerRole,
+                                    ) && (
+                                        <NewAppointmentModalWrapper
+                                            newAppointmentData={newAppointmentData!}
+                                            closeNewAppointment={closeNewAppointmentModal}
+                                            reload={slotsManager.reload}
+                                            onClose={closeNewAppointmentModal}
+                                            selectedPractitionerRoleId={getSelectedValue(selectedPractitionerRole)}
+                                            selectedHealthcareServiceId={getSelectedValue(selectedHealthcareService)}
+                                            practitionerRoles={allPractitionersAndPractitionerRoles.practitionerRoles}
+                                            practitioners={allPractitionersAndPractitionerRoles.practitioners}
+                                            healthcareServices={healthcareServices}
+                                        />
+                                    )}
                             </S.Calendar>
                         </S.Wrapper>
                     )}
@@ -188,13 +205,28 @@ function EditAppointmentWrapper(props: EditAppointmentWrapperProps) {
 }
 
 function NewAppointmentModalWrapper(props: NewAppointmentModalProps) {
-    const { newAppointmentData, closeNewAppointment, reload, onClose, selectedPractitionerRoleId, practitionerRoles } =
-        props;
+    const {
+        newAppointmentData,
+        closeNewAppointment,
+        reload,
+        onClose,
+        selectedPractitionerRoleId,
+        selectedHealthcareServiceId,
+        practitionerRoles,
+        healthcareServices,
+        practitioners,
+    } = props;
     const currentPractitionerRole = practitionerRoles.find(
         (practitionerRole) => practitionerRole.id === selectedPractitionerRoleId,
     );
+    const currentPractitioner = practitioners.find(
+        (practitioner) => practitioner.id === currentPractitionerRole?.practitioner?.reference?.split('/')[1],
+    );
+    const currentHealthcareService = healthcareServices.find(
+        (healthcareService) => healthcareService.id === selectedHealthcareServiceId,
+    );
 
-    if (!currentPractitionerRole) {
+    if (!currentPractitionerRole || !currentHealthcareService || !currentPractitioner) {
         return null;
     }
 
@@ -202,6 +234,8 @@ function NewAppointmentModalWrapper(props: NewAppointmentModalProps) {
         <NewAppointmentModal
             key={`new-appointment`}
             practitionerRole={currentPractitionerRole}
+            healthcareService={currentHealthcareService}
+            practitioner={currentPractitioner}
             start={newAppointmentData.start}
             end={newAppointmentData.end}
             showModal={true}

@@ -1,5 +1,6 @@
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { PractitionerRole } from 'fhir/r4b';
+
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 
 import { inMemorySaveService } from 'shared/src/hooks/questionnaire-response-form-data';
 import { formatFHIRDateTime } from 'shared/src/utils/date';

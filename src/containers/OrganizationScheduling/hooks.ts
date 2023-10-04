@@ -1,4 +1,4 @@
-import { Appointment, Patient, PractitionerRole } from 'fhir/r4b';
+import { Appointment, HealthcareService, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
 import React from 'react';
 
 import { useService } from 'fhir-react/lib/hooks/service';
@@ -31,7 +31,6 @@ export function useOrganizationSchedulingSlots({
         return mapSuccess(response, (bundle) => {
             const resMap = extractBundleResources(bundle);
             const appointments = resMap.Appointment;
-            const practitionerRoles = resMap.PractitionerRole;
 
             const slotsData = appointments.map((appointment) => {
                 const patientRef = extractAppointmentPatient(appointment)!;
@@ -50,7 +49,6 @@ export function useOrganizationSchedulingSlots({
             return {
                 slotsData,
                 appointments,
-                practitionerRoles,
             };
         });
     }, [practitionerRoleId]);
@@ -76,13 +74,34 @@ export function useOrganizationSchedulingSlots({
         });
     }, [practitionerRoleId, healthcareServiceId]);
 
+    const [allPractitionersAndPractitionerRoles] = useService(async () => {
+        const response = await getAllFHIRResources<PractitionerRole | Practitioner>('PractitionerRole', {
+            _include: ['PractitionerRole:practitioner:Practitioner'],
+        });
+
+        return mapSuccess(response, (bundle) => {
+            return {
+                practitioners: extractBundleResources(bundle).Practitioner,
+                practitionerRoles: extractBundleResources(bundle).PractitionerRole,
+            };
+        });
+    }, []);
+
+    const [healthcareServices] = useService(async () => {
+        const response = await getAllFHIRResources<HealthcareService>('HealthcareService', {});
+
+        return mapSuccess(response, (bundle) => extractBundleResources(bundle).HealthcareService);
+    }, []);
+
     const remoteResponses = React.useMemo(
         () =>
             sequenceMap({
                 businessHours: businessHours,
                 slots: slots,
+                allPractitionersAndPractitionerRoles: allPractitionersAndPractitionerRoles,
+                healthcareServices: healthcareServices,
             }),
-        [businessHours, slots],
+        [allPractitionersAndPractitionerRoles, businessHours, healthcareServices, slots],
     );
 
     return { remoteResponses, slotsManager };

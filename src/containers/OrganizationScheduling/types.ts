@@ -1,4 +1,4 @@
-import { Appointment, PractitionerRole } from 'fhir/r4b';
+import { Appointment, HealthcareService, Practitioner, PractitionerRole } from 'fhir/r4b';
 
 import { NewAppointmentData } from '../Scheduling/ScheduleCalendar/hooks/useAppointmentEvents';
 
@@ -17,5 +17,8 @@ export interface NewAppointmentModalProps {
     reload: () => void;
     onClose: () => void;
     selectedPractitionerRoleId: string;
+    selectedHealthcareServiceId: string;
     practitionerRoles: PractitionerRole[];
+    healthcareServices: HealthcareService[];
+    practitioners: Practitioner[];
 }
