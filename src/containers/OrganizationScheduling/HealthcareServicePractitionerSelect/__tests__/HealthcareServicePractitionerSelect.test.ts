@@ -1,9 +1,8 @@
 import { renderHook } from '@testing-library/react';
+import { HealthcareService } from 'fhir/r4b';
 import { act } from 'react-dom/test-utils';
 
-import { renderHumanName } from 'shared/src/utils/fhir';
-
-import { initialSetup, optionExistInOptionList } from './utils';
+import { getPractitionerRoleNamesMapping, initialSetup, optionExistInOptionList } from './utils';
 import { useHealthcareServicePractitionerSelect } from '../hooks';
 import { SelectOption } from '../types';
 
@@ -14,31 +13,20 @@ describe('useHealthcareServicePractitionerSelect', () => {
 
         const options = await result.current.healthcareServiceOptions('');
 
+        const expectOptionToExist = (healthcareService?: HealthcareService) => {
+            const option = { value: healthcareService?.id, label: healthcareService?.name } as SelectOption;
+            expect(optionExistInOptionList(options as SelectOption[], option)).toEqual(true);
+        };
+
         expect(options.length).toBeGreaterThan(0);
-        expect(
-            optionExistInOptionList(
-                options as SelectOption[],
-                { value: healthcareServices?.[0]?.id, label: healthcareServices?.[0]?.name } as SelectOption,
-            ),
-        ).toEqual(true);
-        expect(
-            optionExistInOptionList(
-                options as SelectOption[],
-                { value: healthcareServices?.[1]?.id, label: healthcareServices?.[1]?.name } as SelectOption,
-            ),
-        ).toEqual(true);
+        expectOptionToExist(healthcareServices?.[0]);
+        expectOptionToExist(healthcareServices?.[1]);
     });
 
     it('should fetch practitionerRoleOptions', async () => {
         const { practitionerRoles, practitioners } = await initialSetup();
         const { result } = renderHook(() => useHealthcareServicePractitionerSelect());
-        const practitionerRoleNamesMapping = practitionerRoles.map((pr) => {
-            const currentPractitioner = practitioners.find((p) => p.id === pr.practitioner?.reference?.split('/')[1]);
-            return {
-                id: pr.id,
-                name: renderHumanName(currentPractitioner?.name?.[0]),
-            };
-        });
+        const practitionerRoleNamesMapping = getPractitionerRoleNamesMapping(practitionerRoles, practitioners);
 
         const options: SelectOption[] = await result.current.practitionerRoleOptions('');
 
@@ -60,13 +48,7 @@ describe('useHealthcareServicePractitionerSelect', () => {
     it('should fetch practitionerRoles based on healthcare service selected', async () => {
         const { practitionerRoles, practitioners, healthcareServices } = await initialSetup();
         const { result } = renderHook(() => useHealthcareServicePractitionerSelect());
-        const practitionerRoleNamesMapping = practitionerRoles.map((pr) => {
-            const currentPractitioner = practitioners.find((p) => p.id === pr.practitioner?.reference?.split('/')[1]);
-            return {
-                id: pr.id,
-                name: renderHumanName(currentPractitioner?.name?.[0]),
-            };
-        });
+        const practitionerRoleNamesMapping = getPractitionerRoleNamesMapping(practitionerRoles, practitioners);
 
         act(() => {
             result.current.onChange(
@@ -101,13 +83,7 @@ describe('useHealthcareServicePractitionerSelect', () => {
     it('should fetch healthcareServiceOptions based on selected practitionerRole', async () => {
         const { healthcareServices, practitionerRoles, practitioners } = await initialSetup();
         const { result } = renderHook(() => useHealthcareServicePractitionerSelect());
-        const practitionerRoleNamesMapping = practitionerRoles.map((pr) => {
-            const currentPractitioner = practitioners.find((p) => p.id === pr.practitioner?.reference?.split('/')[1]);
-            return {
-                id: pr.id,
-                name: renderHumanName(currentPractitioner?.name?.[0]),
-            };
-        });
+        const practitionerRoleNamesMapping = getPractitionerRoleNamesMapping(practitionerRoles, practitioners);
 
         act(() => {
             result.current.onChange(

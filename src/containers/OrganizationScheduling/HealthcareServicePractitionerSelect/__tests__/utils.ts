@@ -1,9 +1,10 @@
-import { PractitionerRole } from 'fhir/r4b';
+import { Practitioner, PractitionerRole } from 'fhir/r4b';
 
 import { createFHIRResource, getReference } from 'fhir-react/lib/services/fhir';
 import { ensure, withRootAccess } from 'fhir-react/lib/utils/tests';
 
 import { User } from 'shared/src/contrib/aidbox';
+import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { createHealthcareService, createPractitioner, ensureSave, login } from 'src/setupTests';
 
@@ -123,13 +124,23 @@ async function createPractitionerRole(practitionerRoleData: Partial<Practitioner
     );
 }
 
-export const initialSetup = async () => {
+export async function initialSetup() {
     const data = await dataSetup();
     await login({ ...data.user, password: 'password' });
 
     return data;
-};
+}
 
 export function optionExistInOptionList(optionList: SelectOption[], targetList: SelectOption): boolean {
     return optionList.some((dict) => JSON.stringify(dict) === JSON.stringify(targetList));
+}
+
+export function getPractitionerRoleNamesMapping(practitionerRoles: PractitionerRole[], practitioners: Practitioner[]) {
+    return practitionerRoles.map((pr) => {
+        const currentPractitioner = practitioners.find((p) => p.id === pr.practitioner?.reference?.split('/')[1]);
+        return {
+            id: pr.id,
+            name: renderHumanName(currentPractitioner?.name?.[0]),
+        };
+    });
 }
