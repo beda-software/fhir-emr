@@ -4670,6 +4670,13 @@ ansi-styles@^6.0.0, ansi-styles@^6.1.0:
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-6.2.1.tgz#0e62320cf99c21afff3b3012192546aacbfb05c5"
   integrity sha512-bN798gFfQX+viw3R7yrGWRqnrN2oRkEkUjjl4JNn4E8GxxbjtG3FbrEIIY3l8/hrwUwIeCZvi4QuOTP4MErVug==
 
+antd-phone-input@^0.2.2:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/antd-phone-input/-/antd-phone-input-0.2.3.tgz#1c46939418250f3241cf7b5f88e7998d27f385b6"
+  integrity sha512-PUJAYIe4lzMo1JgiqdEcbWepkeAKLmm+2IKTmNALSO7WByY/aD701JmLBEdNRPYQitegT6eAQdVF7Uj7a492EQ==
+  dependencies:
+    react-phone-input-2 "^2.15.1"
+
 antd@^5.6.4:
   version "5.6.4"
   resolved "https://registry.yarnpkg.com/antd/-/antd-5.6.4.tgz#689d74ba61181ba6ea87a0c5d249d30d116ce602"

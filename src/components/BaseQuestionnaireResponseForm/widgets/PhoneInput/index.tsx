@@ -4,6 +4,10 @@ import { QuestionItemProps } from 'sdc-qrf';
 
 import { useFieldController } from '../../hooks';
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+const PhoneInputFixed: typeof PhoneInput = PhoneInput.default ? PhoneInput.default : PhoneInput;
+
 export function QuestionPhone({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
@@ -11,7 +15,7 @@ export function QuestionPhone({ parentPath, questionItem }: QuestionItemProps) {
 
     return (
         <Form.Item {...formItem}>
-            <PhoneInput
+            <PhoneInputFixed
                 country="us"
                 value={value}
                 disabled={disabled}
