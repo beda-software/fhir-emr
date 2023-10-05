@@ -52,6 +52,7 @@ export function SidebarTop(props: Props) {
                   { label: t`Questionnaires`, path: '/questionnaires', icon: <QuestionnairesIcon /> },
               ],
               [Role.Patient]: () => [],
+              [Role.Receptionist]: () => [{ label: t`Scheduling`, path: '/scheduling', icon: <EncountersIcon /> }],
           })
         : [];
 

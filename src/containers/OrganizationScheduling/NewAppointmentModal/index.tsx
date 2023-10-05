@@ -1,4 +1,4 @@
-import { PractitionerRole } from 'fhir/r4b';
+import { HealthcareService, Practitioner, PractitionerRole } from 'fhir/r4b';
 
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 
@@ -12,6 +12,8 @@ import { Spinner } from 'src/components/Spinner';
 
 interface NewAppointmentModalProps {
     practitionerRole: PractitionerRole;
+    healthcareService: HealthcareService;
+    practitioner: Practitioner;
     start: Date;
     end: Date;
     showModal: boolean;
@@ -25,7 +27,7 @@ export function NewAppointmentModal(props: NewAppointmentModalProps) {
     const { response, onSubmit, readOnly } = useQuestionnaireResponseForm({
         onSuccess: onOk,
         questionnaireResponseSaveService: inMemorySaveService,
-        questionnaireLoader: { type: 'id', questionnaireId: 'new-appointment' },
+        questionnaireLoader: { type: 'id', questionnaireId: 'new-appointment-prefilled' },
         launchContextParameters: [
             {
                 name: 'patient',
@@ -34,6 +36,14 @@ export function NewAppointmentModal(props: NewAppointmentModalProps) {
             {
                 name: 'practitionerRole',
                 resource: props.practitionerRole,
+            },
+            {
+                name: 'practitioner',
+                resource: props.practitioner,
+            },
+            {
+                name: 'healthcareService',
+                resource: props.healthcareService,
             },
             {
                 name: 'appointment',

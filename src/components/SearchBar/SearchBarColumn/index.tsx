@@ -1,10 +1,6 @@
 import { DateColumn } from './DateColumn';
 import { StringColumn } from './StringColumn';
-import {
-    SearchBarColumnDateTypeProps,
-    SearchBarColumnProps,
-    SearchBarColumnStringTypeProps,
-} from './types';
+import { SearchBarColumnDateTypeProps, SearchBarColumnProps, SearchBarColumnStringTypeProps } from './types';
 
 export function SearchBarColumn<T>(props: SearchBarColumnProps<T>) {
     const { columnFilterValue } = props;

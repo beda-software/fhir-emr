@@ -1,5 +1,6 @@
 resourceType: HealthcareService
 active: true
+name: A follow up visit
 type:
   - text: A follow up visit
     coding:
