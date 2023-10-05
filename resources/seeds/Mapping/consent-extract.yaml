@@ -11,7 +11,10 @@ body:
       display: $ Patient.name.0.given.0 + ' ' + Patient.name.0.family
     author:
       reference: $ Author.resourceType + "/" + Author.id
-      display: $ Author.name.0.given.0 + " " + Author.name.0.family
+      display:
+        $switch: $ Author.resourceType
+        Organization: $ Author.name
+        $default: $ Author.name.0.given.0 + " " + Author.name.0.family
     provision: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='provision').answer.valueCoding").0
   $body:
     type: transaction

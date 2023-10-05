@@ -2,6 +2,7 @@ import { t, Trans } from '@lingui/macro';
 import { Col, Row } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { Patient } from 'fhir/r4b';
+import { SearchParams } from 'fhir-react';
 import { Link } from 'react-router-dom';
 
 import { renderHumanName } from 'shared/src/utils/fhir';
@@ -16,6 +17,7 @@ import { formatPeriodDateTime } from 'src/utils/date';
 
 interface Props {
     patient: Patient;
+    searchParams?: SearchParams;
 }
 
 const columns: ColumnsType<EncounterData> = [
@@ -65,9 +67,12 @@ const columns: ColumnsType<EncounterData> = [
     },
 ];
 
-export const PatientEncounter = ({ patient }: Props) => {
+export const PatientEncounter = ({ patient, searchParams }: Props) => {
     const { encounterDataListRD, reloadEncounter, handleTableChange, pagination } = useEncounterList(undefined, {
-        subject: patient.id,
+        ...{
+            subject: patient.id,
+        },
+        ...searchParams,
     });
 
     usePatientHeaderLocationTitle({ title: t`Encounters` });

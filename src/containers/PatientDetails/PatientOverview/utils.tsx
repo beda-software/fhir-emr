@@ -153,13 +153,18 @@ export function prepareConsents(
             {
                 title: t`Name`,
                 key: 'name',
-                render: (resource: Consent) => (
-                    <LinkToEdit
-                        name={resource.provision?.data?.[0]?.reference.display}
-                        resource={resource}
-                        provenanceList={provenanceList}
-                    />
-                ),
+                render: (resource: Consent) => {
+                    const provisionName = resource.provision?.data?.[0]?.reference.display;
+                    const purposeName = resource.provision?.purpose?.[0]?.display;
+
+                    return (
+                        <LinkToEdit
+                            name={provisionName ?? purposeName}
+                            resource={resource}
+                            provenanceList={provenanceList}
+                        />
+                    );
+                },
                 width: 200,
             },
             {

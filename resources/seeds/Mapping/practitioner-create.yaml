@@ -35,12 +35,19 @@ body:
               uri: urn:uuid:practitioner-id
             resourceType: practitionerRole
             healthcareService:
-              - id: consultation
-                resourceType: HealthcareService
-                display: The first appointment
-              - id: follow-up
-                resourceType: HealthcareService
-                display: A follow up visit
+              $map: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='services').answer.valueReference")
+              $as: serviceRef
+              $body:
+                $let:
+                  selectedHealthcareServiceReferenceSplit:
+                    $call: splitStr
+                    $args:
+                      - $ serviceRef.reference
+                      - "/"
+                $body:
+                  resourceType: $ selectedHealthcareServiceReferenceSplit.0
+                  id: $ selectedHealthcareServiceReferenceSplit.1
+                  display: $ serviceRef.display
     $call: concat
 id: practitioner-create
 resourceType: Mapping

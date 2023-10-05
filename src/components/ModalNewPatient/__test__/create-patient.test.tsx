@@ -25,7 +25,7 @@ describe('createPatient', () => {
         );
 
         let patientsBundle = ensure(await getFHIRResources<Patient>('Patient', {}));
-        expect(patientsBundle.total).toBe(0);
+        const defaultPatientsNumber = patientsBundle.total ?? 0;
 
         const formData: QuestionnaireResponseFormData = {
             context: {
@@ -104,9 +104,10 @@ describe('createPatient', () => {
         });
 
         patientsBundle = ensure(await getFHIRResources<Patient>('Patient', {}));
-        expect(patientsBundle.total).toBe(1);
+        expect(patientsBundle.total).toBe(defaultPatientsNumber + 1);
+        const currentPatientIndex = defaultPatientsNumber;
 
-        const patient = patientsBundle!.entry![0]!.resource!;
+        const patient = patientsBundle!.entry![currentPatientIndex]!.resource!;
 
         expect(patient.id).toBeDefined();
         expect(patient.name![0]!.family).toBe('Doe');

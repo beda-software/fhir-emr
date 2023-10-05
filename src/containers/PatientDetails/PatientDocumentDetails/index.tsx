@@ -1,6 +1,6 @@
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
-import { Encounter, Patient, Practitioner, Provenance, QuestionnaireResponse } from 'fhir/r4b';
+import { Encounter, Organization, Patient, Practitioner, Provenance, QuestionnaireResponse } from 'fhir/r4b';
 import { ReactElement } from 'react';
 import { NavigateFunction, Outlet, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
@@ -194,7 +194,7 @@ function PatientDocumentDetailsReadonly(props: {
 function PatientDocumentDetailsFormData(props: {
     questionnaireResponse: WithId<QuestionnaireResponse>;
     patient: WithId<Patient>;
-    author: WithId<Practitioner | Patient>;
+    author: WithId<Practitioner | Patient | Organization>;
     children: (props: PatientDocumentData) => ReactElement;
 }) {
     const { questionnaireResponse, children, patient } = props;

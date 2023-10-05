@@ -16,13 +16,13 @@ export function QuestionString({ parentPath, questionItem }: QuestionItemProps) 
 }
 
 export function QuestionText({ parentPath, questionItem }: QuestionItemProps) {
-    const { linkId } = questionItem;
+    const { linkId, rowsNumber } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
     const { value, onChange, disabled, formItem } = useFieldController(fieldName, questionItem);
 
     return (
         <Form.Item {...formItem}>
-            <Input.TextArea value={value} rows={1} disabled={disabled} onChange={onChange} />
+            <Input.TextArea value={value} rows={rowsNumber ?? 1} disabled={disabled} onChange={onChange} />
         </Form.Item>
     );
 }

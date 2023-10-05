@@ -1,9 +1,10 @@
 import { TablePaginationConfig } from 'antd';
+import { Resource } from 'fhir/r4b';
+import { useState } from 'react';
+
 import { usePager } from 'fhir-react/lib/hooks/pager';
 import { isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { SearchParams } from 'fhir-react/lib/services/search';
-import { Resource } from 'fhir/r4b';
-import { useState } from 'react';
 
 export function usePagerExtended<T extends Resource, F = unknown>(
     resourceType: string,

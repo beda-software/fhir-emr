@@ -27,6 +27,7 @@ import { sharedAuthorizedPatient } from 'src/sharedState';
 import { Role, matchCurrentUserRole } from 'src/utils/role';
 
 import { restoreUserSession } from './utils';
+import { HealthcareServiceList } from '../HealthcareServiceList';
 
 export function App() {
     const [userResponse] = useService(async () => {
@@ -39,6 +40,7 @@ export function App() {
             return matchCurrentUserRole({
                 [Role.Admin]: () => <AuthenticatedAdminUserApp />,
                 [Role.Patient]: () => <AuthenticatedPatientUserApp />,
+                [Role.Practitioner]: () => <AuthenticatedPractitionerUserApp />,
             });
         }
 
@@ -124,6 +126,31 @@ function AnonymousUserApp() {
 }
 
 function AuthenticatedAdminUserApp() {
+    return (
+        <BaseLayout>
+            <Routes>
+                {/* TODO: in the current implementation admin will get all patients via /patients, but it's wrong */}
+                <Route path="/patients" element={<PatientList />} />
+                <Route path="/encounters" element={<EncounterList />} />
+                <Route path="/appointment/book" element={<PublicAppointment />} />
+                <Route path="/questionnaire" element={<PatientQuestionnaire />} />
+                <Route path="/patients/:id/*" element={<PatientDetails />} />
+                <Route path="/documents/:id/edit" element={<div>documents/:id/edit</div>} />
+                <Route path="/encounters/:encounterId/video" element={<VideoCall />} />
+                <Route path="/practitioners" element={<PractitionerList />} />
+                <Route path="/practitioners/:id/*" element={<PractitionerDetails />} />
+                <Route path="/questionnaires" element={<QuestionnaireList />} />
+                <Route path="/questionnaires/builder" element={<QuestionnaireBuilder />} />
+                <Route path="/questionnaires/:id/edit" element={<QuestionnaireBuilder />} />
+                <Route path="/questionnaires/:id" element={<div>questionnaires/:id</div>} />
+                <Route path="/healthcare-services" element={<HealthcareServiceList />} />
+                <Route path="*" element={<Navigate to="/encounters" />} />
+            </Routes>
+        </BaseLayout>
+    );
+}
+
+function AuthenticatedPractitionerUserApp() {
     return (
         <BaseLayout>
             <Routes>

@@ -24,6 +24,7 @@ launchContext:
         - PractitionerRole
         - Practitioner
         - Patient
+        - Organization
 item:
     - text: DateTime
       type: dateTime

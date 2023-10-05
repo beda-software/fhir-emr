@@ -5,7 +5,7 @@ import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { BasePageContent } from 'src/components/BaseLayout';
 import { PatientEncounter } from 'src/components/PatientEncounter';
 import { Spinner } from 'src/components/Spinner';
-import { selectCurrentUserRoleResource } from 'src/utils/role';
+import { matchCurrentUserRole, selectCurrentUserRoleResource, Role } from 'src/utils/role';
 
 import { usePatientResource } from './hooks';
 import { PatientApps } from './PatientApps';
@@ -44,7 +44,25 @@ export const PatientDetails = () => {
                                         path="/"
                                         element={<PatientOverview patient={patient} reload={manager.softReloadAsync} />}
                                     />
-                                    <Route path="/encounters" element={<PatientEncounter patient={patient} />} />
+                                    <Route
+                                        path="/encounters"
+                                        element={
+                                            <PatientEncounter
+                                                patient={patient}
+                                                searchParams={matchCurrentUserRole({
+                                                    [Role.Admin]: () => {
+                                                        return {};
+                                                    },
+                                                    [Role.Practitioner]: (practitioner) => {
+                                                        return { participant: practitioner.id };
+                                                    },
+                                                    [Role.Patient]: () => {
+                                                        return {};
+                                                    },
+                                                })}
+                                            />
+                                        }
+                                    />
                                     <Route
                                         path="/encounters/:encounterId"
                                         element={<EncounterDetails patient={patient} />}

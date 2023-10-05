@@ -50,7 +50,7 @@ describe('Patient list filters testing', () => {
                 ],
             });
 
-            const { patientsResponse } = usePatientList(columnsFilterValues as StringTypeColumnFilterValue[]);
+            const { patientsResponse } = usePatientList(columnsFilterValues as StringTypeColumnFilterValue[], {});
 
             return {
                 columnsFilterValues,

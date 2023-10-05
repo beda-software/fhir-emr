@@ -72,6 +72,22 @@ item:
     initialExpression:
       language: text/fhirpath
       expression: "%PractitionerRole.where(id.exists()).specialty[0].coding"
+  - text: Available services
+    type: reference
+    referenceResource:
+      - HealthcareService
+    required: false
+    repeats: true
+    linkId: services
+    initialExpression:
+      language: text/fhirpath
+      expression: "%PractitionerRole.where(id.exists()).healthcareService"
+    answerExpression:
+      language: application/x-fhir-query
+      expression: "HealthcareService?active=true"
+    choiceColumn:
+      - forDisplay: true
+        path: type.first().coding.first().display
 mapping:
   - id: practitioner-edit
     resourceType: Mapping

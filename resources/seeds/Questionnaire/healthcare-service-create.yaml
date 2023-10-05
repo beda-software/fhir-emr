@@ -1,0 +1,34 @@
+id: healthcare-service-create
+resourceType: Questionnaire
+name: healthcare-service-create
+title: healthcare-service create
+status: active
+mapping:
+  - id: healthcare-service-create-extract
+    resourceType: Mapping
+item:
+  - linkId: duration
+    required: true
+    type: integer
+    text: Duration
+    unit:
+      code: min
+      system: http://unitsofmeasure.org
+      display: min
+  - text: Visit type name
+    required: true
+    type: string
+    linkId: visit-type-name
+  - text: Visit type code
+    required: true
+    type: string
+    linkId: visit-type-code
+  - text: Comment
+    type: text
+    linkId: comment
+    rowsNumber: 4
+
+meta:
+  profile:
+    - https://beda.software/beda-emr-questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/healthcare-service-create

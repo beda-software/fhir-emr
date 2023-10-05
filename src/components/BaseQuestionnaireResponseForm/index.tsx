@@ -24,8 +24,6 @@ import * as yup from 'yup';
 
 import { isSuccess, loading, RemoteData } from 'fhir-react/lib/libs/remoteData';
 
-import 'react-phone-input-2/lib/style.css';
-
 import { saveQuestionnaireResponseDraft } from 'src/components/QuestionnaireResponseForm';
 import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
 

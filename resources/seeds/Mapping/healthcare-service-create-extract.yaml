@@ -1,0 +1,39 @@
+body:
+  $let:
+    duration: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='duration').answer.valueInteger").0
+    visitTypeCode: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='visit-type-code').answer.valueString").0
+    visitTypeName: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='visit-type-name').answer.valueString").0
+    comment: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='comment').answer.valueString").0
+  $body:
+    type: transaction
+    entry:
+      - request:
+          url: /HealthcareService
+          method: POST
+        resource:
+          duration: $ duration
+          comment: $ comment
+          type:
+            - text: $ visitTypeName
+              coding:
+                - code: $ visitTypeCode
+                  display: $ visitTypeName
+                  system: http://beda.software/custom-healthcare-service-list
+          active: true
+          appointmentRequired: true
+          resourceType: HealthcareService
+          meta:
+            profile:
+              - https://beda.software/beda-emr-healthcare-service
+      - request:
+          url: /Concept
+          method: POST
+        resource:
+          code: $ visitTypeCode
+          system: http://beda.software/custom-healthcare-service-list
+          display: $ visitTypeName
+          resourceType: Concept
+          deprecated: false
+    resourceType: Bundle
+id: healthcare-service-create-extract
+resourceType: Mapping

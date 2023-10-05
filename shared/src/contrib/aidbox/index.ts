@@ -7784,6 +7784,8 @@ export interface Flag {
 }
 
 /** Function manifest */
+// TODO: discuss eslist-disable with team
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface Function {}
 
 export interface GcpServiceAccount {
@@ -9613,6 +9615,8 @@ export interface Manifest {
 }
 
 /** Key-value container */
+// TODO: discuss eslist-disable with team
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface Map {}
 
 export interface Mapping {
@@ -14198,6 +14202,7 @@ export interface QuestionnaireItem {
     stop?: integer;
     helpText?: string;
     stopLabel?: string;
+    rowsNumber?: integer;
 }
 
 export interface QuestionnaireItemAnswerOption {
@@ -15424,6 +15429,8 @@ export interface SearchParameter {
     type: 'string' | 'number' | 'date' | 'token' | 'quantity' | 'reference' | 'uri' | 'composite';
 }
 
+// TODO: discuss eslist-disable with team
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface SearchParameterExpression {}
 
 /** Custom Search Query */

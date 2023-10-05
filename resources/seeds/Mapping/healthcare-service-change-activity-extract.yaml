@@ -1,0 +1,18 @@
+body:
+  $let:
+    healthcareServiceId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='healthcareServiceId').answer.valueString").0
+    activity: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='activity').answer.valueBoolean").0
+  $body:
+    type: transaction
+    entry:
+      - request:
+          url: $ "/HealthcareService/" + healthcareServiceId
+          method: PATCH
+        resource:
+          active:
+            $switch: $ activity
+            true: false
+            false: true
+    resourceType: Bundle
+id: healthcare-service-change-activity-extract
+resourceType: Mapping
