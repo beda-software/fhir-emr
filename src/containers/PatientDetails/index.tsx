@@ -59,6 +59,9 @@ export const PatientDetails = () => {
                                                     [Role.Patient]: () => {
                                                         return {};
                                                     },
+                                                    [Role.Receptionist]: () => {
+                                                        return {};
+                                                    },
                                                 })}
                                             />
                                         }

@@ -48,6 +48,9 @@ export function EncounterList() {
         [Role.Practitioner]: (practitioner) => {
             return { participant: practitioner.id };
         },
+        [Role.Receptionist]: () => {
+            return {};
+        },
     });
 
     const { encounterDataListRD, handleTableChange, pagination } = useEncounterList(
