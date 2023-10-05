@@ -54,6 +54,7 @@ function AsyncDropdown(props: AsyncDropdownProps) {
                 defaultOptions
                 onChange={onChange}
                 cacheOptions={false}
+                maxMenuHeight={90}
                 isClearable
             />
         </S.SelectWrapper>
