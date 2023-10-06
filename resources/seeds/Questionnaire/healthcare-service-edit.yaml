@@ -33,7 +33,7 @@ item:
   - text: Charge item definition id
     type: string
     linkId: charge-item-definition-id
-    hidden: false
+    hidden: true
     initialExpression:
       language: text/fhirpath
       expression: "%ChargeItemDefinitionBundle.entry[0].resource.entry.resource.id"
