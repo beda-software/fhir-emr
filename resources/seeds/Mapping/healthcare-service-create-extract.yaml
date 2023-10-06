@@ -4,12 +4,15 @@ body:
     visitTypeCode: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='visit-type-code').answer.valueString").0
     visitTypeName: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='visit-type-name').answer.valueString").0
     comment: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='comment').answer.valueString").0
+    priceBase: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='price-base').answer.valueDecimal").0
+    priceTax: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='price-tax').answer.valueDecimal").0
   $body:
     type: transaction
     entry:
       - request:
           url: /HealthcareService
           method: POST
+        fullUrl: urn:uuid:healthcare-service-id
         resource:
           name: $ visitTypeName
           duration: $ duration
@@ -26,6 +29,28 @@ body:
           meta:
             profile:
               - https://beda.software/beda-emr-healthcare-service
+      - request:
+          url: /ChargeItemDefinition
+          method: POST
+        resource:
+          url: 'https://emr.beda.software/'
+          status: active
+          propertyGroup:
+            - priceComponent:
+                - type: base
+                  amount:
+                    value: $ priceBase
+                    currency: USD
+                - type: tax
+                  amount:
+                    value: $ priceTax
+                    currency: USD
+          healthcareService:
+            uri: urn:uuid:healthcare-service-id
+          resourceType: HealthcareService
+          meta:
+            profile:
+              - https://beda.software/beda-emr-charge-item-definition
     resourceType: Bundle
 id: healthcare-service-create-extract
 resourceType: Mapping

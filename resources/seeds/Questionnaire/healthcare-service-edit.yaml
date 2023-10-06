@@ -8,6 +8,16 @@ launchContext:
       code: HealthcareService
     type:
       - HealthcareService
+contained:
+  - resourceType: Bundle
+    id: ChargeItemDefinitionBundle
+    type: transaction
+    entry:
+      - request:
+            method: GET
+            url: /ChargeItemDefinition?healthcare-service={{%HealthcareService.id}}
+sourceQueries:
+    - localRef: "Bundle#ChargeItemDefinitionBundle"
 mapping:
   - id: healthcare-service-edit-extract
     resourceType: Mapping
@@ -20,6 +30,13 @@ item:
     initialExpression:
       language: text/fhirpath
       expression: "%HealthcareService.id"
+  - text: Charge item definition id
+    type: string
+    linkId: charge-item-definition-id
+    hidden: false
+    initialExpression:
+      language: text/fhirpath
+      expression: "%ChargeItemDefinitionBundle.entry[0].resource.entry.resource.id"
   - linkId: duration
     type: integer
     text: Duration
@@ -52,7 +69,26 @@ item:
     initialExpression:
       language: text/fhirpath
       expression: "%HealthcareService.comment"
-
+  - text: Price base
+    type: decimal
+    linkId: price-base
+    unit:
+      code: usd
+      system: http://unitsofmeasure.org
+      display: USD
+    initialExpression:
+      language: text/fhirpath
+      expression: "%ChargeItemDefinitionBundle.entry[0].resource.entry.resource.propertyGroup.priceComponent.where(type='base').amount.value"
+  - text: Price tax
+    type: decimal
+    linkId: price-tax
+    unit:
+      code: usd
+      system: http://unitsofmeasure.org
+      display: USD
+    initialExpression:
+      language: text/fhirpath
+      expression: "%ChargeItemDefinitionBundle.entry[0].resource.entry.resource.propertyGroup.priceComponent.where(type='tax').amount.value"
 meta:
   profile:
     - https://beda.software/beda-emr-questionnaire
