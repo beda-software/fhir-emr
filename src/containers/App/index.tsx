@@ -28,6 +28,7 @@ import { Role, matchCurrentUserRole } from 'src/utils/role';
 
 import { restoreUserSession } from './utils';
 import { HealthcareServiceList } from '../HealthcareServiceList';
+import { InvoiceList } from '../InvoiceList';
 import { OrganizationScheduling } from '../OrganizationScheduling';
 
 export function App() {
@@ -134,6 +135,7 @@ function AuthenticatedAdminUserApp() {
                 {/* TODO: in the current implementation admin will get all patients via /patients, but it's wrong */}
                 <Route path="/patients" element={<PatientList />} />
                 <Route path="/encounters" element={<EncounterList />} />
+                <Route path="/Invoices" element={<InvoiceList />} />
                 <Route path="/appointment/book" element={<PublicAppointment />} />
                 <Route path="/questionnaire" element={<PatientQuestionnaire />} />
                 <Route path="/patients/:id/*" element={<PatientDetails />} />

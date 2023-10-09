@@ -32,9 +32,11 @@ body:
       - request:
           url: /ChargeItemDefinition
           method: POST
+        fullUrl: urn:uuid:charge-item-definition-id
         resource:
           url: 'https://emr.beda.software/'
           status: active
+          title: $ visitTypeName
           propertyGroup:
             - priceComponent:
                 - type: base
@@ -51,6 +53,28 @@ body:
           meta:
             profile:
               - https://beda.software/beda-emr-charge-item-definition
+      # - request:
+      #     url: /ChargeItem
+      #     method: POST
+      #   resource:
+      #     status: planned
+      #     definitionCanonical:
+      #       - urn:uuid:charge-item-definition-id
+      #     resourceType: ChargeItem
+      #     subject:
+      #       resourceType: Group
+      #       id: patients-group
+      #     quantity:
+      #       value: 1
+      #       unit: "procedure"
+      #       system: "http://unitsofmeasure.org"
+      #       code: "proc"
+      #     code:
+      #       text: $ visitTypeName
+      #       coding:
+      #         - code: $ visitTypeCode
+      #           display: $ visitTypeName
+      #           system: http://beda.software/custom-healthcare-service-list
     resourceType: Bundle
 id: healthcare-service-create-extract
 resourceType: Mapping

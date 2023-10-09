@@ -1,0 +1,46 @@
+resourceType: Mapping
+id: complete-encounter-extract
+body:
+  $let:
+    currentEncounterId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='current-encounter-id').answer.valueString").0
+    startDateTime: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='start-dateTime').answer.valueDateTime").0
+    endDateTime: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='end-dateTime').answer.valueDateTime").0
+  $body:
+    $let:
+      selectedSubjectReference:
+        $call: splitStr
+        $args:
+          - $ CurrentEncounter.subject.reference
+          - "/"
+      selectedPractitionerRoleReferenceSplit:
+        $call: splitStr
+        $args:
+          - $ CurrentEncounter.participant.0.individual.reference
+          - "/"
+    $body:
+      resourceType: Bundle
+      type: transaction
+      entry:
+        - request:
+            url: $ "/Encounter/" + currentEncounterId
+            method: PATCH
+          resource:
+            status: finished
+            period:
+              start: $ startDateTime
+              end: $ endDateTime
+        - request:
+            url: "/Invoice/"
+            method: POST
+          resource:
+            date: $ endDateTime
+            status: issued
+            subject:
+              resourceType: $ selectedSubjectReference.0
+              id: $ selectedSubjectReference.1
+              display: $ CurrentEncounter.subject.display
+            participant:
+              - actor:
+                  resourceType: $ selectedPractitionerRoleReferenceSplit.0
+                  id: $ selectedPractitionerRoleReferenceSplit.1
+                  display: $ CurrentEncounter.participant.0.individual.display

@@ -40,6 +40,7 @@ export function SidebarTop(props: Props) {
     const menuItems: RouteItem[] = !isAnonymousUser
         ? matchCurrentUserRole({
               [Role.Admin]: () => [
+                  { label: t`Invoices`, path: '/invoices', icon: <ServicesIcon /> },
                   { label: t`Services`, path: '/healthcare-services', icon: <ServicesIcon /> },
                   { label: t`Encounters`, path: '/encounters', icon: <EncountersIcon /> },
                   { label: t`Patients`, path: '/patients', icon: <PatientsIcon /> },
