@@ -1,16 +1,29 @@
+import {
+    CheckCircleOutlined,
+    CloseCircleOutlined,
+    ExclamationCircleOutlined,
+    FormOutlined,
+    InfoCircleOutlined,
+    IssuesCloseOutlined,
+    StopOutlined,
+} from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
-import { Empty, Table } from 'antd';
-import { Invoice, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
+import { Button, Col, Empty, notification, Row, Table, Tag } from 'antd';
+import { FhirResource, Invoice, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
 
 import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { extractBundleResources } from 'fhir-react/lib/services/fhir';
 import { mapSuccess } from 'fhir-react/lib/services/service';
 
+import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
+import { ModalTrigger } from 'src/components/ModalTrigger';
 import { PageContainer } from 'src/components/PageContainer';
+import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { SpinIndicator } from 'src/components/Spinner';
 import { usePagerExtended } from 'src/hooks/pager';
+import { formatHumanDateTime } from 'src/utils/date';
 
 export function useInvoicesList() {
     // const debouncedFilterValues = useDebounce(filterValues, 300);
@@ -81,7 +94,7 @@ function getPatientName(patient?: Patient): string {
 }
 
 export function InvoiceList() {
-    const { invoiceResponse, pagination, handleTableChange } = useInvoicesList();
+    const { invoiceResponse, pagination, handleTableChange, pagerManager } = useInvoicesList();
     console.log('invoice', invoiceResponse);
     return (
         <PageContainer
@@ -135,41 +148,134 @@ export function InvoiceList() {
                             dataIndex: 'date',
                             key: 'date',
                             width: '20%',
-                            render: (_text, resource) => resource.date,
+                            render: (_text, resource) => formatHumanDateTime(resource.date ?? ''),
                         },
                         {
                             title: <Trans>Status</Trans>,
                             dataIndex: 'status',
                             key: 'status',
                             width: '20%',
-                            render: (_text, resource) => resource.status,
+                            render: (_text, resource) => {
+                                const statusDataMapping = {
+                                    balanced: {
+                                        icon: <CheckCircleOutlined />,
+                                        color: 'success',
+                                        name: 'Balanced',
+                                    },
+                                    cancelled: {
+                                        icon: <IssuesCloseOutlined />,
+                                        color: 'warning',
+                                        name: 'Cancelled',
+                                    },
+                                    issued: {
+                                        icon: <InfoCircleOutlined />,
+                                        color: 'processing',
+                                        name: 'Issued',
+                                    },
+                                    draft: {
+                                        icon: <FormOutlined />,
+                                        color: 'default',
+                                        name: 'Draft',
+                                    },
+                                    'entered-in-error': {
+                                        icon: <StopOutlined />,
+                                        color: 'error',
+                                        name: 'Entered in error',
+                                    },
+                                };
+
+                                const { icon, color, name } = statusDataMapping[resource.status];
+
+                                return (
+                                    <Tag icon={icon} color={color}>
+                                        {name}
+                                    </Tag>
+                                );
+                            },
                         },
-                        // {
-                        //     title: <Trans>Actions</Trans>,
-                        //     dataIndex: 'actions',
-                        //     key: 'actions',
-                        //     width: '20%',
-                        //     render: (_text, resource) => (
-                        //         <Row>
-                        //             <Col>
-                        //                 <ModalEditHealthcareService
-                        //                     onSuccess={pagerManager.reload}
-                        //                     healthcareService={resource}
-                        //                 />
-                        //             </Col>
-                        //             <Col>
-                        //                 <ModalChangeActiveHealthcareService
-                        //                     onSuccess={pagerManager.reload}
-                        //                     healthcareService={resource}
-                        //                 />
-                        //             </Col>
-                        //         </Row>
-                        //     ),
-                        // },
+                        {
+                            title: <Trans>Actions</Trans>,
+                            dataIndex: 'actions',
+                            key: 'actions',
+                            width: '20%',
+                            render: (_text, resource) => {
+                                return (
+                                    <Row>
+                                        <Col>
+                                            <ModelCancelInvoice onSuccess={pagerManager.reload} invoice={resource} />
+                                        </Col>
+                                        <Col>
+                                            <ModelPayInvoice onSuccess={pagerManager.reload} invoice={resource} />
+                                        </Col>
+                                    </Row>
+                                );
+                            },
+                        },
                     ]}
                     loading={isLoading(invoiceResponse) && { indicator: SpinIndicator }}
                 />
             }
         />
+    );
+}
+
+interface ModelCancelInvoiceProps {
+    onSuccess: () => void;
+    invoice: Invoice;
+}
+
+function ModelCancelInvoice(props: ModelCancelInvoiceProps) {
+    return (
+        <ModalTrigger
+            title={t`Cancel Invoice`}
+            trigger={
+                <Button type="link" disabled={props.invoice.status !== 'issued'}>
+                    <span>
+                        <Trans>Cancel</Trans>
+                    </span>
+                </Button>
+            }
+        >
+            {({ closeModal }) => (
+                <QuestionnaireResponseForm
+                    questionnaireLoader={questionnaireIdLoader('cancel-invoice')}
+                    launchContextParameters={[{ name: 'Invoice', resource: props.invoice as FhirResource }]}
+                    onSuccess={() => {
+                        closeModal();
+                        notification.success({ message: t`Invoice was successfully cancelled` });
+                        props.onSuccess();
+                    }}
+                    onCancel={closeModal}
+                />
+            )}
+        </ModalTrigger>
+    );
+}
+
+function ModelPayInvoice(props: ModelCancelInvoiceProps) {
+    return (
+        <ModalTrigger
+            title={t`Payment`}
+            trigger={
+                <Button type="link" disabled={props.invoice.status !== 'issued'}>
+                    <span>
+                        <Trans>Payment</Trans>
+                    </span>
+                </Button>
+            }
+        >
+            {({ closeModal }) => (
+                <QuestionnaireResponseForm
+                    questionnaireLoader={questionnaireIdLoader('pay-invoice')}
+                    launchContextParameters={[{ name: 'Invoice', resource: props.invoice as FhirResource }]}
+                    onSuccess={() => {
+                        closeModal();
+                        notification.success({ message: t`Invoice was successfully payed` });
+                        props.onSuccess();
+                    }}
+                    onCancel={closeModal}
+                />
+            )}
+        </ModalTrigger>
     );
 }

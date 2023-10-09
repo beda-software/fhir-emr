@@ -1,0 +1,14 @@
+resourceType: Mapping
+id: cancel-invoice-extract
+body:
+  $let:
+    currentInvoiceId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='current-invoice-id').answer.valueString").0
+  $body:
+    resourceType: Bundle
+    type: transaction
+    entry:
+      - request:
+          url: $ "/Invoice/" + currentInvoiceId
+          method: PATCH
+        resource:
+          status: cancelled
