@@ -3,26 +3,22 @@ import { mapSuccess, extractBundleResources } from 'fhir-react';
 
 import { usePagerExtended } from 'src/hooks/pager';
 
-export function useInvoicesList() {
-    // const debouncedFilterValues = useDebounce(filterValues, 300);
-
-    // const healthcareServiceFilterValue = debouncedFilterValues[0];
-
+export function useInvoicesList(practitionerId?: string, patientId?: string, status?: string) {
     const queryParameters = {
         _sort: '-_lastUpdated',
+        status: status,
+        subject: patientId,
+        participant: practitionerId,
         _include: [
             'Invoice:patient:Patient',
             'Invoice:participant:PractitionerRole',
             'PractitionerRole:practitioner:Practitioner',
         ],
-        // _revinclude: ['Practitioner:practitioner:PractitionerRole'],
-        // ...(healthcareServiceFilterValue ? { ilike: healthcareServiceFilterValue.value } : {}),
     };
 
     const { resourceResponse, pagerManager, handleTableChange, pagination } = usePagerExtended<
         Invoice | Patient | Practitioner | PractitionerRole
-        // StringTypeColumnFilterValue[]
-    >('Invoice', queryParameters, {});
+    >('Invoice', queryParameters);
 
     const invoiceResponse = mapSuccess(resourceResponse, (bundle) => {
         return {

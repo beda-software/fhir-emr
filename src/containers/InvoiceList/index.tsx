@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro';
 import { Empty, Table } from 'antd';
-import _ from 'lodash';
 
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { isLoading } from 'fhir-react/lib/libs/remoteData';
@@ -9,15 +8,47 @@ import { PageContainer } from 'src/components/PageContainer';
 import { SpinIndicator } from 'src/components/Spinner';
 import { formatHumanDateTime } from 'src/utils/date';
 
+import { InvoiceListSearchBar } from './components/InvoiceListSearchBar';
+import { useInvoiceSearchBarSelect } from './components/InvoiceListSearchBar/hooks';
 import { useInvoicesList } from './hooks';
 import { InvoiceStatus, InvoiceAmount, InvoiceActions } from './tableUtils';
 import { getPractitionerName, getInvoicePractitioner, getPatientName, getInvoicePatient } from './utils';
+import { getSelectedValue } from '../OrganizationScheduling/utils';
 
 export function InvoiceList() {
-    const { invoiceResponse, pagination, handleTableChange, pagerManager } = useInvoicesList();
+    const {
+        selectedPatient,
+        selectedPractitionerRole,
+        selectedStatus,
+        patientOptions,
+        practitionerRoleOptions,
+        statusOptions,
+        onChange,
+        resetFilter,
+    } = useInvoiceSearchBarSelect();
+
+    const { invoiceResponse, pagination, handleTableChange, pagerManager } = useInvoicesList(
+        getSelectedValue(selectedPractitionerRole),
+        getSelectedValue(selectedPatient),
+        getSelectedValue(selectedStatus),
+    );
     return (
         <PageContainer
             title="Invoices"
+            headerContent={
+                <InvoiceListSearchBar
+                    selectedPatient={selectedPatient}
+                    selectedPractitionerRole={selectedPractitionerRole}
+                    selectedStatus={selectedStatus}
+                    loadPatientOptions={patientOptions}
+                    loadPractitionerRoleOptions={practitionerRoleOptions}
+                    loadStatusOptions={statusOptions}
+                    onChangePatient={(selectedOption) => onChange(selectedOption, 'patient')}
+                    onChangePractitionerRole={(selectedOption) => onChange(selectedOption, 'practitionerRole')}
+                    onChangeStatus={(selectedOption) => onChange(selectedOption, 'status')}
+                    reset={resetFilter}
+                />
+            }
             content={
                 <RenderRemoteData remoteData={invoiceResponse}>
                     {({ invoices, practitioners, practitionerRoles, patients }) => (
