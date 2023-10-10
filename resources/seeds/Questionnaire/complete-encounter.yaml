@@ -33,9 +33,18 @@ contained:
           - request:
                 method: GET
                 url: /ChargeItemDefinition?healthcare-service={{%CurrentEncounter.class.code}}
+    - resourceType: Bundle
+      id: HealthcareServiceBundle
+      type: transaction
+      entry:
+          - request:
+                method: GET
+                url: /HealthcareService?_id={{%CurrentEncounter.class.code}}
 sourceQueries:
     - localRef: "Bundle#CurrentEncounterBundle"
     - localRef: "Bundle#CurrentPatientBundle"
+    - localRef: "Bundle#CurrentChargeItemDefinitionBundle"
+    - localRef: "Bundle#HealthcareServiceBundle"
 item:
     - type: group
       linkId: root-group
@@ -75,24 +84,53 @@ item:
         initialExpression:
             language: text/fhirpath
             expression: 'now()'
-      # - text: ChargeItemDefinitionReferences
-      #   type: reference
-      #   referenceResource:
-      #     - ChargeItemDefinition
-      #   required: true
-      #   hidden: false
-      #   repeats: true
-      #   linkId: charge-item-definition-references
-      #   answerExpression:
-      #       language: application/x-fhir-query
-      #       expression: "ChargeItemDefinition"
-      #   choiceColumn:
-      #       - forDisplay: true
-      #         path: >-
-      #               id
-      #   initialExpression:
-      #       language: application/x-fhir-query
-      #       expression: "ChargeItemDefinition?healthcare-service={{%CurrentEncounter.class.code}}"
+      - text: ChargeItemDefinitionUrl
+        type: string
+        required: true
+        hidden: true
+        linkId: charge-item-definition-url
+        initialExpression:
+          language: text/fhirpath
+          expression: "%CurrentChargeItemDefinitionBundle.entry[0].resource.entry.resource.url"
+      - text: Price base
+        type: decimal
+        linkId: price-base
+        hidden: true
+        unit:
+          code: usd
+          system: http://unitsofmeasure.org
+          display: USD
+        initialExpression:
+          language: text/fhirpath
+          expression: "%CurrentChargeItemDefinitionBundle.entry[0].resource.entry.resource.propertyGroup.priceComponent.where(type='base').amount.value"
+      - text: Price tax
+        type: decimal
+        linkId: price-tax
+        hidden: true
+        unit:
+          code: usd
+          system: http://unitsofmeasure.org
+          display: USD
+        initialExpression:
+          language: text/fhirpath
+          expression: "%CurrentChargeItemDefinitionBundle.entry[0].resource.entry.resource.propertyGroup.priceComponent.where(type='tax').amount.value"
+      - text: HealthcareService code
+        type: string
+        linkId: healthcare-service-code
+        hidden: true
+        initialExpression:
+          language: text/fhirpath
+          expression: "%HealthcareServiceBundle.entry[0].resource.entry.resource.type.first().coding.first().code"
+      - text: HealthcareService name
+        type: string
+        linkId: healthcare-service-name
+        hidden: true
+        initialExpression:
+          language: text/fhirpath
+          expression: "%HealthcareServiceBundle.entry[0].resource.entry.resource.type.first().coding.first().display"
+      - text: Are you sure you want to finish this encounter?
+        type: display
+        linkId: are-you-sure-message
 url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/complete-encounter
 meta:
     profile:

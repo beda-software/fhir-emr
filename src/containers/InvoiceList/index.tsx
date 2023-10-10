@@ -10,6 +10,7 @@ import {
 import { t, Trans } from '@lingui/macro';
 import { Button, Col, Empty, notification, Row, Table, Tag } from 'antd';
 import { FhirResource, Invoice, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
+import _ from 'lodash';
 
 import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { extractBundleResources } from 'fhir-react/lib/services/fhir';
@@ -147,14 +148,14 @@ export function InvoiceList() {
                             title: <Trans>Date</Trans>,
                             dataIndex: 'date',
                             key: 'date',
-                            width: '20%',
+                            width: '15%',
                             render: (_text, resource) => formatHumanDateTime(resource.date ?? ''),
                         },
                         {
                             title: <Trans>Status</Trans>,
                             dataIndex: 'status',
                             key: 'status',
-                            width: '20%',
+                            width: '10%',
                             render: (_text, resource) => {
                                 const statusDataMapping = {
                                     balanced: {
@@ -190,6 +191,20 @@ export function InvoiceList() {
                                     <Tag icon={icon} color={color}>
                                         {name}
                                     </Tag>
+                                );
+                            },
+                        },
+                        {
+                            title: <Trans>Amount</Trans>,
+                            dataIndex: 'amount',
+                            key: 'amount',
+                            width: '10%',
+                            render: (_text, resource) => {
+                                const priceComponents = _.flatten(
+                                    resource.lineItem?.map((lineItem) => lineItem.priceComponent),
+                                );
+                                return _.sum(
+                                    priceComponents.map((priceComponent) => priceComponent?.amount?.value ?? 0),
                                 );
                             },
                         },

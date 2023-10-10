@@ -34,7 +34,7 @@ body:
           method: POST
         fullUrl: urn:uuid:charge-item-definition-id
         resource:
-          url: 'https://emr.beda.software/'
+          url: $ 'https://emr.beda.software/charge-item/' + visitTypeCode
           status: active
           title: $ visitTypeName
           propertyGroup:
