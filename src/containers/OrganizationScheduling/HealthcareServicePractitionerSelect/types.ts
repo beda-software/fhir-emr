@@ -21,4 +21,5 @@ export interface AsyncDropdownProps {
     onChange: (selectedOption: OptionType | readonly OptionType[] | null) => void;
     loadOptions: (search: string) => void;
     value?: OptionType;
+    placeholder?: string;
 }

@@ -25,19 +25,22 @@ export function InvoiceListSearchBar(props: InvoiceListSearchBarSelectProps) {
             <Row gutter={[32, 16]}>
                 <S.SelectContainer>
                     <AsyncDropdown
-                        onChange={onChangePatient}
-                        loadOptions={loadPatientOptions}
-                        value={selectedPatient as OptionType}
-                    />
-                    <AsyncDropdown
                         onChange={onChangePractitionerRole}
                         loadOptions={loadPractitionerRoleOptions}
                         value={selectedPractitionerRole as OptionType}
+                        placeholder="Practitioner"
+                    />
+                    <AsyncDropdown
+                        onChange={onChangePatient}
+                        loadOptions={loadPatientOptions}
+                        value={selectedPatient as OptionType}
+                        placeholder="Patient"
                     />
                     <AsyncDropdown
                         onChange={onChangeStatus}
                         loadOptions={loadStatusOptions}
                         value={selectedStatus as OptionType}
+                        placeholder="Status"
                     />
                 </S.SelectContainer>
             </Row>
