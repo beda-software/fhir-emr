@@ -155,7 +155,7 @@ export function getInvoiceTableColumns(
             title: <Trans>Actions</Trans>,
             dataIndex: 'actions',
             key: 'patientActions',
-            width: '30%',
+            width: '10%',
             render: (_text, resource) => <InvoiceActions manager={pagerManager} invoice={resource} simplified />,
         },
     ];
