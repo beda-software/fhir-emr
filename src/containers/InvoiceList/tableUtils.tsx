@@ -6,18 +6,19 @@ import {
     ExclamationCircleOutlined,
 } from '@ant-design/icons';
 import { Trans } from '@lingui/macro';
-import { Tag, Row, Col } from 'antd';
+import { Tag, Button } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { Invoice, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
 import { PagerManager } from 'fhir-react';
 import _ from 'lodash';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { formatHumanDateTime } from 'src/utils/date';
 import { matchCurrentUserRole, Role } from 'src/utils/role';
 
 import { ModalCancelInvoice } from './components/ModalCancelInvoice';
 import { ModalPayInvoice } from './components/ModalPayInvoice';
-import { getPractitionerName, getInvoicePractitioner, getPatientName, getInvoicePatient } from './utils';
+import { getPractitionerName, getInvoicePractitioner, getPatientName, getInvoicePatient, formatMoney } from './utils';
 
 export function InvoiceStatus({ invoice }: { invoice: Invoice }) {
     const statusDataMapping = {
@@ -59,19 +60,37 @@ export function InvoiceStatus({ invoice }: { invoice: Invoice }) {
 
 export function InvoiceAmount({ invoice }: { invoice: Invoice }) {
     const priceComponents = _.flatten(invoice.lineItem?.map((lineItem) => lineItem.priceComponent));
-    return _.sum(priceComponents.map((priceComponent) => priceComponent?.amount?.value ?? 0));
+    return formatMoney(_.sum(priceComponents.map((priceComponent) => priceComponent?.amount?.value ?? 0)));
 }
 
-export function InvoiceActions({ manager, invoice }: { manager: PagerManager; invoice: Invoice }) {
+export function InvoiceActions({
+    manager,
+    invoice,
+    simplified,
+}: {
+    manager: PagerManager;
+    invoice: Invoice;
+    simplified?: boolean;
+}) {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const routeToOpen = `${location.pathname}/${invoice.id}`;
+    const openDetailsButton = (
+        <Button key={`open-invoice-${invoice.id}`} onClick={() => navigate(routeToOpen)} type="link">
+            <Trans>Open</Trans>
+        </Button>
+    );
+
+    if (simplified) {
+        return openDetailsButton;
+    }
+
     return (
-        <Row>
-            <Col>
-                <ModalCancelInvoice onSuccess={manager.reload} invoice={invoice} />
-            </Col>
-            <Col>
-                <ModalPayInvoice onSuccess={manager.reload} invoice={invoice} />
-            </Col>
-        </Row>
+        <>
+            <ModalCancelInvoice onSuccess={manager.reload} invoice={invoice} />
+            <ModalPayInvoice onSuccess={manager.reload} invoice={invoice} />
+            {openDetailsButton}
+        </>
     );
 }
 
@@ -82,10 +101,10 @@ export function getInvoiceTableColumns(
     pagerManager: PagerManager,
 ) {
     const excludeColumnKeys = matchCurrentUserRole({
-        [Role.Admin]: () => [],
+        [Role.Admin]: () => ['patientActions'],
         [Role.Patient]: () => ['patient', 'actions'],
-        [Role.Practitioner]: () => [],
-        [Role.Receptionist]: () => [],
+        [Role.Practitioner]: () => ['patientActions'],
+        [Role.Receptionist]: () => ['patientActions'],
     });
 
     const tableColumns: ColumnsType<Invoice> = [
@@ -93,7 +112,7 @@ export function getInvoiceTableColumns(
             title: <Trans>Practitioner</Trans>,
             dataIndex: 'practitioner',
             key: 'practitioner',
-            width: '20%',
+            width: '15%',
             render: (_text, resource) =>
                 getPractitionerName(getInvoicePractitioner(resource, practitioners, practitionerRoles)),
         },
@@ -101,7 +120,7 @@ export function getInvoiceTableColumns(
             title: <Trans>Patient</Trans>,
             dataIndex: 'patient',
             key: 'patient',
-            width: '20%',
+            width: '15%',
             render: (_text, resource) => getPatientName(getInvoicePatient(resource, patients)),
         },
         {
@@ -129,8 +148,15 @@ export function getInvoiceTableColumns(
             title: <Trans>Actions</Trans>,
             dataIndex: 'actions',
             key: 'actions',
-            width: '20%',
+            width: '30%',
             render: (_text, resource) => <InvoiceActions manager={pagerManager} invoice={resource} />,
+        },
+        {
+            title: <Trans>Actions</Trans>,
+            dataIndex: 'actions',
+            key: 'patientActions',
+            width: '30%',
+            render: (_text, resource) => <InvoiceActions manager={pagerManager} invoice={resource} simplified />,
         },
     ];
 

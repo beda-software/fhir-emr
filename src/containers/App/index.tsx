@@ -28,6 +28,7 @@ import { Role, matchCurrentUserRole } from 'src/utils/role';
 
 import { restoreUserSession } from './utils';
 import { HealthcareServiceList } from '../HealthcareServiceList';
+import { InvoiceDetails } from '../InvoiceDetails';
 import { InvoiceList } from '../InvoiceList';
 import { OrganizationScheduling } from '../OrganizationScheduling';
 
@@ -135,7 +136,8 @@ function AuthenticatedAdminUserApp() {
                 {/* TODO: in the current implementation admin will get all patients via /patients, but it's wrong */}
                 <Route path="/patients" element={<PatientList />} />
                 <Route path="/encounters" element={<EncounterList />} />
-                <Route path="/Invoices" element={<InvoiceList />} />
+                <Route path="/invoices" element={<InvoiceList />} />
+                <Route path="/invoices/:id" element={<InvoiceDetails />} />
                 <Route path="/appointment/book" element={<PublicAppointment />} />
                 <Route path="/questionnaire" element={<PatientQuestionnaire />} />
                 <Route path="/patients/:id/*" element={<PatientDetails />} />
@@ -182,7 +184,8 @@ function AuthenticatedReceptionistUserApp() {
         <BaseLayout>
             <Routes>
                 <Route path="/scheduling" element={<OrganizationScheduling />} />
-                <Route path="/Invoices" element={<InvoiceList />} />
+                <Route path="/invoices" element={<InvoiceList />} />
+                <Route path="/invoices/:id" element={<InvoiceDetails />} />
                 <Route path="*" element={<Navigate to="/scheduling" />} />
             </Routes>
         </BaseLayout>
@@ -195,7 +198,8 @@ function AuthenticatedPatientUserApp() {
     return (
         <BaseLayout>
             <Routes>
-                <Route path="/Invoices" element={<InvoiceList />} />
+                <Route path="/invoices" element={<InvoiceList />} />
+                <Route path="/invoices/:id" element={<InvoiceDetails />} />
                 <Route path={`/patients/:id/*`} element={<PatientDetails />} />
                 <Route path="*" element={<Navigate to={`/patients/${patient!.id}`} />} />
             </Routes>

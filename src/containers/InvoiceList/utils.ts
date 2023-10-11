@@ -31,3 +31,14 @@ export function getPractitionerName(practitioner?: Practitioner): string {
 export function getPatientName(patient?: Patient): string {
     return patient ? renderHumanName(patient?.name?.[0]) : 'Does not exist';
 }
+
+export function formatMoney(amount: number) {
+    // TODO: Implement more general solution for render money
+    return (
+        '$' +
+        amount.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        })
+    );
+}
