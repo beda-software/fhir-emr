@@ -19,7 +19,7 @@ item:
     linkId: practitioner
     answerExpression:
       language: application/x-fhir-query
-      expression: "Practitioner"
+      expression: "Practitioner?_has:PractitionerRole:practitioner:role=doctor"
     choiceColumn:
       - forDisplay: true
         path: name.given.first() + ' ' + name.family
