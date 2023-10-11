@@ -6,13 +6,12 @@ import { isLoading } from 'fhir-react/lib/libs/remoteData';
 
 import { PageContainer } from 'src/components/PageContainer';
 import { SpinIndicator } from 'src/components/Spinner';
-import { formatHumanDateTime } from 'src/utils/date';
+import { Role, matchCurrentUserRole, selectCurrentUserRoleResource } from 'src/utils/role';
 
 import { InvoiceListSearchBar } from './components/InvoiceListSearchBar';
 import { useInvoiceSearchBarSelect } from './components/InvoiceListSearchBar/hooks';
 import { useInvoicesList } from './hooks';
-import { InvoiceStatus, InvoiceAmount, InvoiceActions } from './tableUtils';
-import { getPractitionerName, getInvoicePractitioner, getPatientName, getInvoicePatient } from './utils';
+import { getInvoiceTableColumns } from './tableUtils';
 import { getSelectedValue } from '../OrganizationScheduling/utils';
 
 export function InvoiceList() {
@@ -27,11 +26,19 @@ export function InvoiceList() {
         resetFilter,
     } = useInvoiceSearchBarSelect();
 
+    const selectedPatientValue = matchCurrentUserRole({
+        [Role.Admin]: () => getSelectedValue(selectedPatient),
+        [Role.Patient]: () => selectCurrentUserRoleResource().id,
+        [Role.Practitioner]: () => getSelectedValue(selectedPatient),
+        [Role.Receptionist]: () => getSelectedValue(selectedPatient),
+    });
+
     const { invoiceResponse, pagination, handleTableChange, pagerManager } = useInvoicesList(
         getSelectedValue(selectedPractitionerRole),
-        getSelectedValue(selectedPatient),
+        selectedPatientValue,
         getSelectedValue(selectedStatus),
     );
+
     return (
         <PageContainer
             title="Invoices"
@@ -67,55 +74,7 @@ export function InvoiceList() {
                                 ),
                             }}
                             dataSource={invoices}
-                            columns={[
-                                {
-                                    title: <Trans>Practitioner</Trans>,
-                                    dataIndex: 'practitioner',
-                                    key: 'practitioner',
-                                    width: '20%',
-                                    render: (_text, resource) =>
-                                        getPractitionerName(
-                                            getInvoicePractitioner(resource, practitioners, practitionerRoles),
-                                        ),
-                                },
-                                {
-                                    title: <Trans>Patient</Trans>,
-                                    dataIndex: 'patient',
-                                    key: 'patient',
-                                    width: '20%',
-                                    render: (_text, resource) => getPatientName(getInvoicePatient(resource, patients)),
-                                },
-                                {
-                                    title: <Trans>Date</Trans>,
-                                    dataIndex: 'date',
-                                    key: 'date',
-                                    width: '15%',
-                                    render: (_text, resource) => formatHumanDateTime(resource.date ?? ''),
-                                },
-                                {
-                                    title: <Trans>Status</Trans>,
-                                    dataIndex: 'status',
-                                    key: 'status',
-                                    width: '10%',
-                                    render: (_text, resource) => <InvoiceStatus invoice={resource} />,
-                                },
-                                {
-                                    title: <Trans>Amount</Trans>,
-                                    dataIndex: 'amount',
-                                    key: 'amount',
-                                    width: '10%',
-                                    render: (_text, resource) => <InvoiceAmount invoice={resource} />,
-                                },
-                                {
-                                    title: <Trans>Actions</Trans>,
-                                    dataIndex: 'actions',
-                                    key: 'actions',
-                                    width: '20%',
-                                    render: (_text, resource) => (
-                                        <InvoiceActions manager={pagerManager} invoice={resource} />
-                                    ),
-                                },
-                            ]}
+                            columns={getInvoiceTableColumns(practitioners, practitionerRoles, patients, pagerManager)}
                             loading={isLoading(invoiceResponse) && { indicator: SpinIndicator }}
                         />
                     )}

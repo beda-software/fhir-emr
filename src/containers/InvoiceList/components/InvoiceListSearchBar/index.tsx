@@ -2,6 +2,7 @@ import { Row, Button } from 'antd';
 
 import { AsyncDropdown } from 'src/containers/OrganizationScheduling/HealthcareServicePractitionerSelect';
 import { OptionType } from 'src/containers/OrganizationScheduling/HealthcareServicePractitionerSelect/types';
+import { Role, matchCurrentUserRole } from 'src/utils/role';
 
 import { S } from './InvoiceListSearchBar.styles';
 import { InvoiceListSearchBarSelectProps } from '../../types';
@@ -35,6 +36,12 @@ export function InvoiceListSearchBar(props: InvoiceListSearchBarSelectProps) {
                         loadOptions={loadPatientOptions}
                         value={selectedPatient as OptionType}
                         placeholder="Patient"
+                        hidden={matchCurrentUserRole({
+                            [Role.Admin]: () => false,
+                            [Role.Patient]: () => true,
+                            [Role.Practitioner]: () => false,
+                            [Role.Receptionist]: () => false,
+                        })}
                     />
                     <AsyncDropdown
                         onChange={onChangeStatus}

@@ -182,6 +182,7 @@ function AuthenticatedReceptionistUserApp() {
         <BaseLayout>
             <Routes>
                 <Route path="/scheduling" element={<OrganizationScheduling />} />
+                <Route path="/Invoices" element={<InvoiceList />} />
                 <Route path="*" element={<Navigate to="/scheduling" />} />
             </Routes>
         </BaseLayout>
@@ -194,6 +195,7 @@ function AuthenticatedPatientUserApp() {
     return (
         <BaseLayout>
             <Routes>
+                <Route path="/Invoices" element={<InvoiceList />} />
                 <Route path={`/patients/:id/*`} element={<PatientDetails />} />
                 <Route path="*" element={<Navigate to={`/patients/${patient!.id}`} />} />
             </Routes>

@@ -5,13 +5,19 @@ import {
     ClockCircleOutlined,
     ExclamationCircleOutlined,
 } from '@ant-design/icons';
+import { Trans } from '@lingui/macro';
 import { Tag, Row, Col } from 'antd';
-import { Invoice } from 'fhir/r4b';
+import type { ColumnsType } from 'antd/es/table';
+import { Invoice, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
 import { PagerManager } from 'fhir-react';
 import _ from 'lodash';
 
+import { formatHumanDateTime } from 'src/utils/date';
+import { matchCurrentUserRole, Role } from 'src/utils/role';
+
 import { ModalCancelInvoice } from './components/ModalCancelInvoice';
 import { ModalPayInvoice } from './components/ModalPayInvoice';
+import { getPractitionerName, getInvoicePractitioner, getPatientName, getInvoicePatient } from './utils';
 
 export function InvoiceStatus({ invoice }: { invoice: Invoice }) {
     const statusDataMapping = {
@@ -67,4 +73,66 @@ export function InvoiceActions({ manager, invoice }: { manager: PagerManager; in
             </Col>
         </Row>
     );
+}
+
+export function getInvoiceTableColumns(
+    practitioners: Practitioner[],
+    practitionerRoles: PractitionerRole[],
+    patients: Patient[],
+    pagerManager: PagerManager,
+) {
+    const excludeColumnKeys = matchCurrentUserRole({
+        [Role.Admin]: () => [],
+        [Role.Patient]: () => ['patient', 'actions'],
+        [Role.Practitioner]: () => [],
+        [Role.Receptionist]: () => [],
+    });
+
+    const tableColumns: ColumnsType<Invoice> = [
+        {
+            title: <Trans>Practitioner</Trans>,
+            dataIndex: 'practitioner',
+            key: 'practitioner',
+            width: '20%',
+            render: (_text, resource) =>
+                getPractitionerName(getInvoicePractitioner(resource, practitioners, practitionerRoles)),
+        },
+        {
+            title: <Trans>Patient</Trans>,
+            dataIndex: 'patient',
+            key: 'patient',
+            width: '20%',
+            render: (_text, resource) => getPatientName(getInvoicePatient(resource, patients)),
+        },
+        {
+            title: <Trans>Date</Trans>,
+            dataIndex: 'date',
+            key: 'date',
+            width: '15%',
+            render: (_text, resource) => formatHumanDateTime(resource.date ?? ''),
+        },
+        {
+            title: <Trans>Status</Trans>,
+            dataIndex: 'status',
+            key: 'status',
+            width: '10%',
+            render: (_text, resource) => <InvoiceStatus invoice={resource} />,
+        },
+        {
+            title: <Trans>Amount</Trans>,
+            dataIndex: 'amount',
+            key: 'amount',
+            width: '10%',
+            render: (_text, resource) => <InvoiceAmount invoice={resource} />,
+        },
+        {
+            title: <Trans>Actions</Trans>,
+            dataIndex: 'actions',
+            key: 'actions',
+            width: '20%',
+            render: (_text, resource) => <InvoiceActions manager={pagerManager} invoice={resource} />,
+        },
+    ];
+
+    return tableColumns.filter((column) => !excludeColumnKeys.includes(String(column.key)));
 }

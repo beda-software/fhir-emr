@@ -45,7 +45,12 @@ export function HealthcareServicePractitionerSelect(props: HealthcareServicePrac
 }
 
 export function AsyncDropdown(props: AsyncDropdownProps) {
-    const { onChange, loadOptions, value, placeholder } = props;
+    const { onChange, loadOptions, value, placeholder, hidden } = props;
+
+    if (hidden) {
+        return null;
+    }
+
     return (
         <S.SelectWrapper>
             <AsyncSelect

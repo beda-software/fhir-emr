@@ -22,4 +22,5 @@ export interface AsyncDropdownProps {
     loadOptions: (search: string) => void;
     value?: OptionType;
     placeholder?: string;
+    hidden?: boolean;
 }
