@@ -6,6 +6,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { CompanyName } from 'src/icons/brand/CompanyName';
 import { LogoSmall } from 'src/icons/brand/LogoSmall';
 import { EncountersIcon } from 'src/icons/menu/EncountersIcon';
+import { InvoicesIcon } from 'src/icons/menu/InvoicesIcon';
 import { PatientsIcon } from 'src/icons/menu/PatientsIcon';
 import { PractitionersIcon } from 'src/icons/menu/PractitionersIcon';
 import { QuestionnairesIcon } from 'src/icons/menu/QuestionnairesIcon';
@@ -40,7 +41,7 @@ export function SidebarTop(props: Props) {
     const menuItems: RouteItem[] = !isAnonymousUser
         ? matchCurrentUserRole({
               [Role.Admin]: () => [
-                  { label: t`Invoices`, path: '/invoices', icon: <ServicesIcon /> },
+                  { label: t`Invoices`, path: '/invoices', icon: <InvoicesIcon /> },
                   { label: t`Services`, path: '/healthcare-services', icon: <ServicesIcon /> },
                   { label: t`Encounters`, path: '/encounters', icon: <EncountersIcon /> },
                   { label: t`Patients`, path: '/patients', icon: <PatientsIcon /> },

@@ -1,9 +1,9 @@
 import {
     CheckCircleOutlined,
-    IssuesCloseOutlined,
-    InfoCircleOutlined,
     FormOutlined,
     StopOutlined,
+    ClockCircleOutlined,
+    ExclamationCircleOutlined,
 } from '@ant-design/icons';
 import { Tag, Row, Col } from 'antd';
 import { Invoice } from 'fhir/r4b';
@@ -21,12 +21,12 @@ export function InvoiceStatus({ invoice }: { invoice: Invoice }) {
             name: 'Balanced',
         },
         cancelled: {
-            icon: <IssuesCloseOutlined />,
+            icon: <StopOutlined />,
             color: 'warning',
             name: 'Cancelled',
         },
         issued: {
-            icon: <InfoCircleOutlined />,
+            icon: <ClockCircleOutlined />,
             color: 'processing',
             name: 'Issued',
         },
@@ -36,7 +36,7 @@ export function InvoiceStatus({ invoice }: { invoice: Invoice }) {
             name: 'Draft',
         },
         'entered-in-error': {
-            icon: <StopOutlined />,
+            icon: <ExclamationCircleOutlined />,
             color: 'error',
             name: 'Entered in error',
         },

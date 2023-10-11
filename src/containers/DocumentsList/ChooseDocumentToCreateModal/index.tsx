@@ -30,6 +30,7 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
         mapSuccess(
             await getFHIRResources<Questionnaire>('Questionnaire', {
                 'subject-type': subjectType ? [subjectType] : [],
+                _sort: 'title',
             }),
             (bundle) => extractBundleResources(bundle).Questionnaire,
         ),
