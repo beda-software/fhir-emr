@@ -7,6 +7,8 @@ import { mapSuccess } from 'fhir-react/lib/services/service';
 
 import { renderHumanName } from 'shared/src/utils/fhir';
 
+import { practitionerRoleDoctor } from 'src/utils/constants';
+
 import { SelectOption } from './types';
 import { getSelectedValue } from '../utils';
 
@@ -65,6 +67,7 @@ export function useHealthcareServicePractitionerSelect() {
             const practitionerRoleResponse = await getFHIRResources<PractitionerRole | Practitioner>(
                 'PractitionerRole',
                 {
+                    role: practitionerRoleDoctor,
                     'practitioner:Practitioner.name': search,
                     _include: ['PractitionerRole:practitioner:Practitioner'],
                     ...(selectedHealthcareService ? { service: getSelectedValue(selectedHealthcareService) } : {}),

@@ -9,6 +9,7 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { SelectOption } from 'src/containers/OrganizationScheduling/HealthcareServicePractitionerSelect/types';
 import { getSelectedValue } from 'src/containers/OrganizationScheduling/utils';
+import { practitionerRoleDoctor } from 'src/utils/constants';
 
 export function useInvoiceSearchBarSelect() {
     const [selectedPatient, setSelectedPatient] = useState<SelectOption>(null);
@@ -57,6 +58,7 @@ export function useInvoiceSearchBarSelect() {
 
     const practitionerRoleOptions = useCallback(async (search: string) => {
         const practitionerRoleResponse = await getFHIRResources<PractitionerRole | Practitioner>('PractitionerRole', {
+            role: practitionerRoleDoctor,
             'practitioner:Practitioner.name': search,
             _include: ['PractitionerRole:practitioner:Practitioner'],
         });
