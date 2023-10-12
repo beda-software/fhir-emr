@@ -13,22 +13,22 @@ export function InvoiceDetailsHeader({
     patient,
     practitioner,
 }: {
-    invoice: Invoice;
-    patient: Patient;
-    practitioner: Practitioner;
+    invoice?: Invoice;
+    patient?: Patient;
+    practitioner?: Practitioner;
 }) {
     return (
         <BasePageHeader style={{ paddingBottom: 0 }}>
             <Title style={{ marginBottom: 21 }}>Medical Services Invoice</Title>
             <Row gutter={16}>
                 <Col span={6}>
-                    <Statistic title="Patient" value={renderHumanName(patient.name?.[0])} />
+                    <Statistic title="Patient" value={renderHumanName(patient?.name?.[0])} />
                 </Col>
                 <Col span={6}>
-                    <Statistic title="Practitioner" value={renderHumanName(practitioner.name?.[0])} />
+                    <Statistic title="Practitioner" value={renderHumanName(practitioner?.name?.[0])} />
                 </Col>
                 <Col span={6}>
-                    <Statistic title="Date" value={formatHumanDateTime(invoice.date)} />
+                    <Statistic title="Date" value={formatHumanDateTime(invoice?.date)} />
                 </Col>
                 <Col span={6}>
                     <Statistic title="Status" value={getInvoiceStatusHumanized(invoice)} />

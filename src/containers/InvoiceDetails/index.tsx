@@ -44,7 +44,7 @@ export function InvoiceDetails() {
 
 function LineItemsTable(props: InvoiceDetailsLineItemsProps) {
     const [response] = useInvoiceLineItems(props);
-    const lineItems = props.invoice.lineItem?.map((lineItem) => {
+    const lineItems = props.invoice?.lineItem?.map((lineItem) => {
         return {
             id: getFHIRReferenceResourceId(lineItem.chargeItemReference),
             tax: lineItem.priceComponent?.filter((priceComponent) => priceComponent.type === 'tax'),

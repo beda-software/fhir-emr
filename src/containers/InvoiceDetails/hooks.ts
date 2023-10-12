@@ -23,10 +23,10 @@ export function useInvoiceDetails(invoiceId?: string) {
                 const resources = extractBundleResources(bundle);
 
                 return {
-                    invoice: resources.Invoice[0]!,
-                    patient: resources.Patient[0]!,
-                    practitionerRole: resources.PractitionerRole[0]!,
-                    practitioner: resources.Practitioner[0]!,
+                    invoice: resources.Invoice[0],
+                    patient: resources.Patient[0],
+                    practitionerRole: resources.PractitionerRole[0],
+                    practitioner: resources.Practitioner[0],
                 };
             },
         );
@@ -38,7 +38,7 @@ export function useInvoiceDetails(invoiceId?: string) {
 }
 
 export function useInvoiceLineItems(props: InvoiceDetailsLineItemsProps) {
-    const chargeItemIds = props.invoice.lineItem
+    const chargeItemIds = props.invoice?.lineItem
         ?.map((lineItem) => getFHIRReferenceResourceId(lineItem.chargeItemReference))
         .join(',');
     return useService(async () => {

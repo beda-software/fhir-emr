@@ -20,7 +20,7 @@ import { ModalCancelInvoice } from './components/ModalCancelInvoice';
 import { ModalPayInvoice } from './components/ModalPayInvoice';
 import { getPractitionerName, getInvoicePractitioner, getPatientName, getInvoicePatient, formatMoney } from './utils';
 
-export function getInvoiceStatusHumanized(invoice: Invoice) {
+export function getInvoiceStatusHumanized(invoice?: Invoice) {
     const invoiceStatusMapping = {
         balanced: 'Balanced',
         cancelled: 'Cancelled',
@@ -29,7 +29,7 @@ export function getInvoiceStatusHumanized(invoice: Invoice) {
         'entered-in-error': 'Entered in error',
     };
 
-    return invoiceStatusMapping[invoice.status];
+    return invoice ? invoiceStatusMapping[invoice.status] : 'unknown';
 }
 
 export function InvoiceStatus({ invoice }: { invoice: Invoice }) {
