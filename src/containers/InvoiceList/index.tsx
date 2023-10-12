@@ -5,7 +5,7 @@ import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { isLoading } from 'fhir-react/lib/libs/remoteData';
 
 import { PageContainer } from 'src/components/PageContainer';
-import { SpinIndicator } from 'src/components/Spinner';
+import { SpinIndicator, Spinner } from 'src/components/Spinner';
 import { Role, matchCurrentUserRole, selectCurrentUserRoleResource } from 'src/utils/role';
 
 import { InvoiceListSearchBar } from './components/InvoiceListSearchBar';
@@ -57,7 +57,7 @@ export function InvoiceList() {
                 />
             }
             content={
-                <RenderRemoteData remoteData={invoiceResponse}>
+                <RenderRemoteData remoteData={invoiceResponse} renderLoading={Spinner}>
                     {({ invoices, practitioners, practitionerRoles, patients }) => (
                         <Table
                             pagination={pagination}

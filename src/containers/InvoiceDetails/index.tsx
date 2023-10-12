@@ -5,6 +5,7 @@ import { Outlet, Route, Routes, useParams } from 'react-router-dom';
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
 import { BasePageContent } from 'src/components/BaseLayout';
+import { Spinner } from 'src/components/Spinner';
 
 import { InvoiceDetailsHeader } from './components/InvoiceDetailsHeader';
 import { useInvoiceDetails, useInvoiceLineItems } from './hooks';
@@ -16,7 +17,7 @@ export function InvoiceDetails() {
     const { invoiceDetailsResponse } = useInvoiceDetails(params.id!);
 
     return (
-        <RenderRemoteData remoteData={invoiceDetailsResponse}>
+        <RenderRemoteData remoteData={invoiceDetailsResponse} renderLoading={Spinner}>
             {({ invoice, patient, practitioner }) => (
                 <>
                     <InvoiceDetailsHeader invoice={invoice} patient={patient} practitioner={practitioner} />
@@ -52,7 +53,7 @@ function LineItemsTable(props: InvoiceDetailsLineItemsProps) {
     });
 
     return (
-        <RenderRemoteData remoteData={response}>
+        <RenderRemoteData remoteData={response} renderLoading={Spinner}>
             {(data) => (
                 <Table
                     pagination={false}
