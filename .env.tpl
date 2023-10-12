@@ -4,3 +4,8 @@ TSC_COMPILE_ON_ERROR=true
 ESLINT_NO_DEV_ERRORS=true
 
 CHROMATIC_PROJECT_TOKEN=
+
+# Set up variable below if you'd to configure video calls service
+AUTH_JWT_SECRET=
+AUTH_JWT_ACCEPTED_ISSUERS=
+AUTH_JWT_ACCEPTED_AUDIENCES=f

@@ -74,6 +74,24 @@ cp .env.tpl .env
 
 ### Local setup
 
+#### Video calls local setup
+Before you start you need to setup your own Jitsi Meet video instance. See this [guide from Jitsi](https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-docker/)
+
+Also you need to configure JWT authentication on the video server side. See this [guide](https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-docker/#authentication-using-jwt-tokens)
+
+In the EMR folder add these variables to `.env` file with values you generated on the video server side:
+
+```
+# Application identifier
+JWT_APP_ID=
+JWT_APP_SECRET=
+JWT_ACCEPTED_ISSUERS=
+JWT_ACCEPTED_AUDIENCES=
+```
+
+To run our jitsi authentication service run:
+`docker compose -f compose.yaml -f compose.video.yaml up`
+
 #### Prepare frontend configuration
 
 ```

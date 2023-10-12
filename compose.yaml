@@ -69,18 +69,6 @@ services:
         env_file:
             - .env.scheduling
             - .env.aidbox
-    # jitsi-auth:
-    #     image: bedasoftware/jitsi-auth-backend:latest
-    #     depends_on:
-    #         devbox-healthcheck:
-    #             condition: service_healthy
-    #     env_file:
-    #         - .env.jitsi-auth
-    #         - .env.aidbox
-    #     environment:
-    #         - AUTH_JWT_SECRET
-    #         - AUTH_JWT_ACCEPTED_ISSUERS
-    #         - AUTH_JWT_ACCEPTED_AUDIENCES
     datastream-timescaledb:
         image: timescale/timescaledb:latest-pg15
         healthcheck:
