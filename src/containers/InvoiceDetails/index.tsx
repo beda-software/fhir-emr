@@ -14,8 +14,8 @@ import { InvoiceDetailsLineItemsProps } from './types';
 import { formatMoney } from '../InvoiceList/utils';
 
 export function InvoiceDetails() {
-    const params = useParams();
-    const { invoiceDetailsResponse } = useInvoiceDetails(params.id!);
+    const { id } = useParams<{ id: string }>();
+    const { invoiceDetailsResponse } = useInvoiceDetails(id);
 
     return (
         <RenderRemoteData remoteData={invoiceDetailsResponse} renderLoading={Spinner}>

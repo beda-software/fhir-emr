@@ -8,7 +8,7 @@ import { getFHIRReferenceResourceId } from 'src/utils/reference';
 
 import { InvoiceDetailsLineItemsProps } from './types';
 
-export function useInvoiceDetails(invoiceId: string) {
+export function useInvoiceDetails(invoiceId?: string) {
     const [response] = useService(async () => {
         return mapSuccess(
             await getFHIRResources<Invoice | PractitionerRole | Patient | Practitioner>('Invoice', {
