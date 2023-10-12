@@ -10,6 +10,7 @@ import { getFHIRReferenceResourceId } from 'src/utils/reference';
 
 import { InvoiceDetailsHeader } from './components/InvoiceDetailsHeader';
 import { useInvoiceDetails, useInvoiceLineItems } from './hooks';
+import { S } from './InvoiceDetails.styles';
 import { InvoiceDetailsLineItemsProps } from './types';
 import { formatMoney } from '../InvoiceList/utils';
 
@@ -110,9 +111,9 @@ function LineItemsTable(props: InvoiceDetailsLineItemsProps) {
 
 function InvoiceTableFooter({ totalAmount }: { totalAmount: number }) {
     return (
-        <div style={{ display: 'flex', fontWeight: 'bold', justifyContent: 'space-between' }}>
+        <S.InvoiceTableFooterContainer>
             <div>Total</div>
             <div>{formatMoney(totalAmount)}</div>
-        </div>
+        </S.InvoiceTableFooterContainer>
     );
 }
