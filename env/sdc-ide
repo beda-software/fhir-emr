@@ -1,0 +1,3 @@
+BASE_URL=http:\/\/localhost:8080
+JUTE_URL=http:\/\/localhost:8099
+FHIRPATH_MAPPING_URL=http:\/\/localhost:8091

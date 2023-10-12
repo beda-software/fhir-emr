@@ -15,7 +15,7 @@ services:
         links:
             - devbox
         env_file:
-            - .env.sdc
+            - ./env/sdc
         # Colored logs
         tty: true
     devbox:
@@ -28,7 +28,7 @@ services:
         ports:
             - '8080:8080'
         env_file:
-            - .env.aidbox
+            - ./env/aidbox
             - .env
         volumes:
             - ./config:/var/config:cached

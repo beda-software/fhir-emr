@@ -6,10 +6,8 @@ services:
                 condition: service_healthy
         ports:
             - '3001:5000'
-        environment:
-          BASE_URL: http:\/\/localhost:8080
-          JUTE_URL: http:\/\/localhost:8090
-          FHIRPATH_MAPPING_URL: http:\/\/localhost:8091
+        env_file:
+            - ./env/sdc-ide
     sdc:
         image: bedasoftware/fhir-sdc:master
         depends_on:
@@ -19,7 +17,7 @@ services:
             - devbox
             - fhirpath_mapping
         env_file:
-            - .env.sdc
+            - ./env/sdc
         tty: true
     devbox:
         image: healthsamurai/aidboxone:stable
@@ -31,7 +29,7 @@ services:
         ports:
             - '8080:8080'
         env_file:
-            - .env.aidbox
+            - ./env/aidbox
             - .env
         volumes:
             - ./config:/var/config:cached
@@ -67,8 +65,8 @@ services:
             devbox-healthcheck:
                 condition: service_healthy
         env_file:
-            - .env.scheduling
-            - .env.aidbox
+            - ./env/scheduling
+            - ./env/aidbox
     datastream-timescaledb:
         image: timescale/timescaledb:latest-pg15
         healthcheck:
@@ -113,7 +111,7 @@ services:
     jute:
         image: bedasoftware/jute-microservice:latest
         ports:
-            - '8090:8090'
+            - '8099:8090'
     fhirpath_mapping:
         image: bedasoftware/fhirpath-extract:main
         ports:
