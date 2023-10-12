@@ -1,3 +1,4 @@
+import { Trans, t } from '@lingui/macro';
 import { Table } from 'antd';
 import _ from 'lodash';
 import { Outlet, Route, Routes, useParams } from 'react-router-dom';
@@ -63,7 +64,7 @@ function LineItemsTable(props: InvoiceDetailsLineItemsProps) {
                     dataSource={lineItems}
                     columns={[
                         {
-                            title: 'Item',
+                            title: t`Item`,
                             dataIndex: 'item',
                             key: 'item',
                             render: (_text, resource) => {
@@ -72,28 +73,28 @@ function LineItemsTable(props: InvoiceDetailsLineItemsProps) {
                             },
                         },
                         {
-                            title: 'Quantity',
+                            title: t`Quantity`,
                             dataIndex: 'quantity',
                             key: 'quantity',
                             align: 'right',
                             render: () => 1,
                         },
                         {
-                            title: 'Rate',
+                            title: t`Rate`,
                             dataIndex: 'rate',
                             key: 'rate',
                             align: 'right',
                             render: (_text, resource) => formatMoney(resource.base?.[0]?.amount?.value ?? 0),
                         },
                         {
-                            title: 'Tax',
+                            title: t`Tax`,
                             dataIndex: 'tax',
                             key: 'tax',
                             align: 'right',
                             render: (_text, resource) => formatMoney(resource.tax?.[0]?.amount?.value ?? 0),
                         },
                         {
-                            title: 'Amount',
+                            title: t`Amount`,
                             dataIndex: 'amount',
                             key: 'amount',
                             align: 'right',
@@ -112,7 +113,9 @@ function LineItemsTable(props: InvoiceDetailsLineItemsProps) {
 function InvoiceTableFooter({ totalAmount }: { totalAmount: number }) {
     return (
         <S.InvoiceTableFooterContainer>
-            <div>Total</div>
+            <div>
+                <Trans>Total</Trans>
+            </div>
             <div>{formatMoney(totalAmount)}</div>
         </S.InvoiceTableFooterContainer>
     );

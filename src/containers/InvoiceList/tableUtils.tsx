@@ -18,6 +18,7 @@ import { matchCurrentUserRole, Role } from 'src/utils/role';
 
 import { ModalCancelInvoice } from './components/ModalCancelInvoice';
 import { ModalPayInvoice } from './components/ModalPayInvoice';
+import { InvoiceActionsProps } from './types';
 import { getPractitionerName, getInvoicePractitioner, getPatientName, getInvoicePatient, formatMoney } from './utils';
 
 export function getInvoiceStatusHumanized(invoice?: Invoice) {
@@ -70,15 +71,8 @@ export function InvoiceAmount({ invoice }: { invoice: Invoice }) {
     return formatMoney(_.sum(priceComponents.map((priceComponent) => priceComponent?.amount?.value ?? 0)));
 }
 
-export function InvoiceActions({
-    manager,
-    invoice,
-    simplified,
-}: {
-    manager: PagerManager;
-    invoice: Invoice;
-    simplified?: boolean;
-}) {
+export function InvoiceActions(props: InvoiceActionsProps) {
+    const { manager, invoice, simplified } = props;
     const location = useLocation();
     const navigate = useNavigate();
     const routeToOpen = `${location.pathname}/${invoice.id}`;

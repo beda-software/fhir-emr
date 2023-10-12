@@ -1,5 +1,4 @@
 import { Col, Row, Statistic } from 'antd';
-import { Invoice, Patient, Practitioner } from 'fhir/r4b';
 
 import { formatHumanDateTime } from 'shared/src/utils/date';
 import { renderHumanName } from 'shared/src/utils/fhir';
@@ -8,15 +7,10 @@ import { BasePageHeader } from 'src/components/BaseLayout';
 import { Title } from 'src/components/Typography';
 import { getInvoiceStatusHumanized } from 'src/containers/InvoiceList/tableUtils';
 
-export function InvoiceDetailsHeader({
-    invoice,
-    patient,
-    practitioner,
-}: {
-    invoice?: Invoice;
-    patient?: Patient;
-    practitioner?: Practitioner;
-}) {
+import { InvoiceDetailsHeaderProps } from './types';
+
+export function InvoiceDetailsHeader(props: InvoiceDetailsHeaderProps) {
+    const { invoice, patient, practitioner } = props;
     return (
         <BasePageHeader style={{ paddingBottom: 0 }}>
             <Title style={{ marginBottom: 21 }}>Medical Services Invoice</Title>

@@ -1,5 +1,7 @@
 import { Invoice } from 'fhir/r4b';
 
+import { PagerManager } from 'fhir-react/lib/hooks/pager';
+
 import { SelectOption } from '../OrganizationScheduling/HealthcareServicePractitionerSelect/types';
 
 export interface ModalCancelInvoiceProps {
@@ -17,4 +19,10 @@ export interface InvoiceListSearchBarSelectProps {
     onChangePractitionerRole: (option: SelectOption) => void;
     onChangeStatus: (option: SelectOption) => void;
     reset: () => void;
+}
+
+export interface InvoiceActionsProps {
+    manager: PagerManager;
+    invoice: Invoice;
+    simplified?: boolean;
 }

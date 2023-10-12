@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/macro';
+import { Trans, t } from '@lingui/macro';
 import { Empty, Table } from 'antd';
 
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
@@ -41,7 +41,7 @@ export function InvoiceList() {
 
     return (
         <PageContainer
-            title="Invoices"
+            title={t`Invoices`}
             headerContent={
                 <InvoiceListSearchBar
                     selectedPatient={selectedPatient}
