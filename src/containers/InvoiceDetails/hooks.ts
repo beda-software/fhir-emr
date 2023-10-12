@@ -4,6 +4,8 @@ import { useService } from 'fhir-react/lib/hooks/service';
 import { extractBundleResources, getFHIRResources } from 'fhir-react/lib/services/fhir';
 import { mapSuccess } from 'fhir-react/lib/services/service';
 
+import { getFHIRReferenceResourceId } from 'src/utils/reference';
+
 import { InvoiceDetailsLineItemsProps } from './types';
 
 export function useInvoiceDetails(invoiceId: string) {
@@ -37,7 +39,7 @@ export function useInvoiceDetails(invoiceId: string) {
 
 export function useInvoiceLineItems(props: InvoiceDetailsLineItemsProps) {
     const chargeItemIds = props.invoice.lineItem
-        ?.map((lineItem) => lineItem.chargeItemReference?.reference?.split('/')[1])
+        ?.map((lineItem) => getFHIRReferenceResourceId(lineItem.chargeItemReference))
         .join(',');
     return useService(async () => {
         return mapSuccess(

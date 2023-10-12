@@ -6,6 +6,7 @@ import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
 import { BasePageContent } from 'src/components/BaseLayout';
 import { Spinner } from 'src/components/Spinner';
+import { getFHIRReferenceResourceId } from 'src/utils/reference';
 
 import { InvoiceDetailsHeader } from './components/InvoiceDetailsHeader';
 import { useInvoiceDetails, useInvoiceLineItems } from './hooks';
@@ -45,7 +46,7 @@ function LineItemsTable(props: InvoiceDetailsLineItemsProps) {
     const [response] = useInvoiceLineItems(props);
     const lineItems = props.invoice.lineItem?.map((lineItem) => {
         return {
-            id: lineItem.chargeItemReference?.reference?.split('/')[1],
+            id: getFHIRReferenceResourceId(lineItem.chargeItemReference),
             tax: lineItem.priceComponent?.filter((priceComponent) => priceComponent.type === 'tax'),
             base: lineItem.priceComponent?.filter((priceComponent) => priceComponent.type === 'base'),
             amount: _.sum(lineItem.priceComponent?.map((priceComponent) => priceComponent.amount?.value)),
