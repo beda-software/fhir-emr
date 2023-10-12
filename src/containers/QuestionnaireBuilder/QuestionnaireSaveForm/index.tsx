@@ -2,7 +2,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Trans, t } from '@lingui/macro';
 import { Button, Form, Input, Select } from 'antd';
 import { Questionnaire } from 'fhir/r4b';
-import _ from 'lodash';
 import { useMemo } from 'react';
 import { FormProvider, UseControllerReturn, useController, useForm, useFormContext } from 'react-hook-form';
 import * as yup from 'yup';
@@ -11,6 +10,8 @@ import { RemoteDataResult, isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { WithId } from 'fhir-react/lib/services/fhir';
 
 import { Title } from 'src/components/Typography';
+
+import { prepareQuestionnaire } from './utils';
 
 interface QuestionnaireSaveFormProps {
     questionnaire: Questionnaire;
@@ -36,8 +37,8 @@ export function QuestionnaireSaveForm(props: QuestionnaireSaveFormProps) {
         <FormProvider {...methods}>
             <Form
                 onFinish={handleSubmit(async () => {
-                    const questionnaireName = _.kebabCase(formValues.title?.toLowerCase());
-                    const saveResponse = await onSave({ ...formValues, name: questionnaireName } as Questionnaire);
+                    const questionnaire = prepareQuestionnaire(formValues as Questionnaire);
+                    const saveResponse = await onSave(questionnaire);
                     if (isSuccess(saveResponse) && onSuccess) {
                         onSuccess();
                     }

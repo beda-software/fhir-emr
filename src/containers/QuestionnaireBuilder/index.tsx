@@ -1,11 +1,12 @@
 import { CloseOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, Col, Row } from 'antd';
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { isLoading } from 'fhir-react/lib/libs/remoteData';
 import { Questionnaire } from 'fhir/r4b';
 import React, { useState } from 'react';
 import { GroupItemProps, QuestionItemProps } from 'sdc-qrf/lib/types';
+
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { isLoading } from 'fhir-react/lib/libs/remoteData';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { ModalTrigger } from 'src/components/ModalTrigger';
@@ -24,8 +25,6 @@ export function QuestionnaireBuilder() {
         useQuestionnaireBuilder();
     const [questionnaireItem, setQuestionnaireItem] = useState<QuestionItemProps | undefined>();
     const [groupItem, setGroupItem] = useState<GroupItemProps | undefined>();
-    console.log('questionnaireItem', questionnaireItem);
-    console.log('response', response);
 
     return (
         <>
