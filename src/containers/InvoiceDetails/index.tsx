@@ -1,4 +1,5 @@
-import { Col, Row } from 'antd';
+import { Table } from 'antd';
+import _ from 'lodash';
 import { Outlet, Route, Routes, useParams } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
@@ -6,19 +7,19 @@ import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { BasePageContent } from 'src/components/BaseLayout';
 
 import { InvoiceDetailsHeader } from './components/InvoiceDetailsHeader';
-import { InvoiceDetailsLineItems } from './components/InvoiceDetailsLineItems';
-import { InvoiceOverview } from './components/InvoiceOverview';
-import { useInvoiceDetails } from './hooks';
+import { useInvoiceDetails, useInvoiceLineItems } from './hooks';
+import { InvoiceDetailsLineItemsProps } from './types';
+import { formatMoney } from '../InvoiceList/utils';
 
 export function InvoiceDetails() {
     const params = useParams();
-    const [response] = useInvoiceDetails(params.id!);
+    const { invoiceDetailsResponse } = useInvoiceDetails(params.id!);
 
     return (
-        <RenderRemoteData remoteData={response}>
-            {({ invoice, patient, practitioner, practitionerRole }) => (
+        <RenderRemoteData remoteData={invoiceDetailsResponse}>
+            {({ invoice, patient, practitioner }) => (
                 <>
-                    <InvoiceDetailsHeader />
+                    <InvoiceDetailsHeader invoice={invoice} patient={patient} practitioner={practitioner} />
                     <BasePageContent>
                         <Routes>
                             <Route
@@ -29,29 +30,87 @@ export function InvoiceDetails() {
                                     </>
                                 }
                             >
-                                <Route
-                                    path="/"
-                                    element={
-                                        <Row>
-                                            <Col span={12}>
-                                                <InvoiceOverview
-                                                    invoice={invoice}
-                                                    patient={patient}
-                                                    practitioner={practitioner}
-                                                    practitionerRole={practitionerRole}
-                                                />
-                                            </Col>
-                                            <Col span={12}>
-                                                <InvoiceDetailsLineItems invoice={invoice} />
-                                            </Col>
-                                        </Row>
-                                    }
-                                />
+                                <Route path="/" element={<LineItemsTable invoice={invoice} />} />
                             </Route>
                         </Routes>
                     </BasePageContent>
                 </>
             )}
         </RenderRemoteData>
+    );
+}
+
+function LineItemsTable(props: InvoiceDetailsLineItemsProps) {
+    const [response] = useInvoiceLineItems(props);
+    const lineItems = props.invoice.lineItem?.map((lineItem) => {
+        return {
+            id: lineItem.chargeItemReference?.reference?.split('/')[1],
+            tax: lineItem.priceComponent?.filter((priceComponent) => priceComponent.type === 'tax'),
+            base: lineItem.priceComponent?.filter((priceComponent) => priceComponent.type === 'base'),
+            amount: _.sum(lineItem.priceComponent?.map((priceComponent) => priceComponent.amount?.value)),
+        };
+    });
+
+    return (
+        <RenderRemoteData remoteData={response}>
+            {(data) => (
+                <Table
+                    pagination={false}
+                    bordered
+                    dataSource={lineItems}
+                    columns={[
+                        {
+                            title: 'Item',
+                            dataIndex: 'item',
+                            key: 'item',
+                            render: (_text, resource) => {
+                                const currentName = data.find((item) => item.id === resource.id)?.serviceName;
+                                return currentName;
+                            },
+                        },
+                        {
+                            title: 'Quantity',
+                            dataIndex: 'quantity',
+                            key: 'quantity',
+                            align: 'right',
+                            render: () => 1,
+                        },
+                        {
+                            title: 'Rate',
+                            dataIndex: 'rate',
+                            key: 'rate',
+                            align: 'right',
+                            render: (_text, resource) => formatMoney(resource.base?.[0]?.amount?.value ?? 0),
+                        },
+                        {
+                            title: 'Tax',
+                            dataIndex: 'tax',
+                            key: 'tax',
+                            align: 'right',
+                            render: (_text, resource) => formatMoney(resource.tax?.[0]?.amount?.value ?? 0),
+                        },
+                        {
+                            title: 'Amount',
+                            dataIndex: 'amount',
+                            key: 'amount',
+                            align: 'right',
+                            render: (_text, resource) => formatMoney(resource.amount),
+                        },
+                    ]}
+                    footer={() => (
+                        <InvoiceTableFooter totalAmount={_.sum(lineItems?.map((lineItem) => lineItem.amount))} />
+                    )}
+                />
+            )}
+        </RenderRemoteData>
+    );
+}
+
+function InvoiceTableFooter({ totalAmount }: { totalAmount: number }) {
+    return (
+        <div style={{ display: 'flex', fontWeight: 'bold', justifyContent: 'space-between' }}>
+            <div>Total</div>
+            <div>{formatMoney(totalAmount)}</div>
+        </div>
     );
 }
