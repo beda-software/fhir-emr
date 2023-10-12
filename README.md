@@ -79,6 +79,8 @@ Before you start you need to setup your own Jitsi Meet video instance. See this 
 
 Also you need to configure JWT authentication on the video server side. See this [guide](https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-docker/#authentication-using-jwt-tokens)
 
+**Important note**: We use react component to represent video call frame from [jitsi-meet-react-sdk](https://github.com/jitsi/jitsi-meet-react-sdk/tree/main). This component requires HTTPS schema for Jitsi server, so you need to publish your server with this requirement
+
 In the EMR folder add these variables to `.env` file with values you generated on the video server side:
 
 ```
@@ -89,8 +91,8 @@ JWT_ACCEPTED_ISSUERS=
 JWT_ACCEPTED_AUDIENCES=
 ```
 
-To run our jitsi authentication service run:
-`docker compose -f compose.yaml -f compose.video.yaml up`
+To run EMR with our Jitsi authentication backend service run:
+`make up-video`
 
 #### Prepare frontend configuration
 

@@ -8,3 +8,8 @@ up:
 	docker compose pull --quiet
 	docker compose build
 	docker compose up -d
+
+up-video:
+	docker compose -f compose.yaml -f compose.video.yaml pull --quiet
+	docker compose build
+	docker compose -f compose.yaml -f compose.video.yaml up -d
