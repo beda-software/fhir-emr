@@ -8,7 +8,7 @@ mapping:
 launchContext:
     - name:
           code: CurrentEncounter
-      type: 
+      type:
         - Encounter
       description: The encounter to complete
 contained:
@@ -32,14 +32,14 @@ contained:
       entry:
           - request:
                 method: GET
-                url: /ChargeItemDefinition?healthcare-service={{%CurrentEncounter.class.code}}
+                url: /HealthcareService?service-type={{%CurrentEncounter.class.code}}&_revinclude=ChargeItemDefinition:healthcare-service
     - resourceType: Bundle
       id: HealthcareServiceBundle
       type: transaction
       entry:
           - request:
                 method: GET
-                url: /HealthcareService?_id={{%CurrentEncounter.class.code}}
+                url: /HealthcareService?service-type={{%CurrentEncounter.class.code}}
 sourceQueries:
     - localRef: "Bundle#CurrentEncounterBundle"
     - localRef: "Bundle#CurrentPatientBundle"
@@ -91,7 +91,7 @@ item:
         linkId: charge-item-definition-url
         initialExpression:
           language: text/fhirpath
-          expression: "%CurrentChargeItemDefinitionBundle.entry[0].resource.entry.resource.url"
+          expression: "%CurrentChargeItemDefinitionBundle.entry[0].resource.entry.resource.where(resourceType='ChargeItemDefinition').url"
       - text: Price base
         type: decimal
         linkId: price-base
@@ -102,7 +102,7 @@ item:
           display: USD
         initialExpression:
           language: text/fhirpath
-          expression: "%CurrentChargeItemDefinitionBundle.entry[0].resource.entry.resource.propertyGroup.priceComponent.where(type='base').amount.value"
+          expression: "%CurrentChargeItemDefinitionBundle.entry[0].resource.entry.resource.where(resourceType='ChargeItemDefinition').propertyGroup.priceComponent.where(type='base').amount.value"
       - text: Price tax
         type: decimal
         linkId: price-tax
@@ -113,7 +113,7 @@ item:
           display: USD
         initialExpression:
           language: text/fhirpath
-          expression: "%CurrentChargeItemDefinitionBundle.entry[0].resource.entry.resource.propertyGroup.priceComponent.where(type='tax').amount.value"
+          expression: "%CurrentChargeItemDefinitionBundle.entry[0].resource.entry.resource.where(resourceType='ChargeItemDefinition').propertyGroup.priceComponent.where(type='tax').amount.value"
       - text: HealthcareService code
         type: string
         linkId: healthcare-service-code
