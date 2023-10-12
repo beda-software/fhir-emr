@@ -100,3 +100,4 @@ jobs:
                       cd ~/web
                       make restart
                       echo Current branch is ${{ github.ref }}
+                      docker image prune -f
