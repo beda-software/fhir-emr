@@ -1,6 +1,12 @@
 ;; zrc/emr-profiles.edn
-{ns emr-profiles
- import #{hl7-fhir-r4-core}
+{ns emr-profiles 
+ import #{hl7-fhir-r4-core.Reference
+          hl7-fhir-r4-core.ChargeItemDefinition
+          hl7-fhir-r4-core.Medication
+          hl7-fhir-r4-core.Device
+          hl7-fhir-r4-core.Substance
+          hl7-fhir-r4-core.HealthcareService
+          zen.fhir}
 
  HealthcareServiceProfile
  {:zen/tags #{zen/schema zen.fhir/profile-schema}
@@ -11,4 +17,14 @@
   :type zen/map
   :require #{:duration}
   :keys {:duration {:confirms #{hl7-fhir-r4-core.integer/schema}
-                    :fhir/extensionUri "http://beda.software/fhir-extensions/healthcareservice-duration"}}}}
+                    :fhir/extensionUri "http://beda.software/fhir-extensions/healthcareservice-duration"}}}
+ ChargeItemDefinitionProfile
+  {:zen/tags #{zen/schema zen.fhir/profile-schema}
+   :confirms #{hl7-fhir-r4-core.ChargeItemDefinition/schema}
+   :zen.fhir/type "ChargeItemDefinition"
+   :zen.fhir/version "0.6.32"
+   :zen.fhir/profileUri "https://beda.software/beda-emr-charge-item-definition"
+   :type zen/map
+   :keys {:healthcareService {:fhir/extensionUri "http://beda.software/fhir-extensions/charge-item-healthcareservices"
+                              :confirms #{hl7-fhir-r4-core.Reference/schema zen.fhir/Reference}
+                              :zen.fhir/reference {:refers #{hl7-fhir-r4-core.HealthcareService/schema}}}}}}

@@ -5,7 +5,8 @@
           aidbox.repository.v1
           beda-emr-core.questionnaire
           hl7-fhir-r4-core
-          emr-profiles}
+          emr-profiles
+          zen.fhir}
 
  box
  {:zen/tags #{aidbox/system}
@@ -72,7 +73,7 @@
                              :patient-role-policy {:engine "allow"
                                                    :roleName "patient"}
                              :receptionist-role-policy {:engine "allow"
-                                                   :roleName "receptionist"}
+                                                        :roleName "receptionist"}
                              :public-appointment-policy
                              {:engine "allow"
                               :link [{:resourceType "Client" :id "anonymous"}]}
@@ -100,8 +101,21 @@
   :extra-parameter-sources :all ; allow to use SearchParameters from outside of repo
   :search-parameters #{encounter-participant-display}}
 
+ charge-item-definition-healthcare-service
+ {:zen/tags #{aidbox.search-parameter.v1/search-parameter}
+  :name "healthcare-service"
+  :type :reference
+  :resource {:resourceType "Entity" :id "ChargeItemDefinition"}
+  :expression [["healthcareService"]]}
+
+ charge-item-definition-repository
+ {:zen/tags #{aidbox.repository.v1/repository}
+  :resourceType "ChargeItemDefinition"
+  :extra-parameter-sources :all ; allow to use SearchParameters from outside of repo
+  :search-parameters #{charge-item-definition-healthcare-service}}
+
  repositories
  {:zen/tags #{aidbox/service}
   :engine aidbox.repository.v1/engine
-  :repositories #{encounter-repository}
+  :repositories #{encounter-repository charge-item-definition-repository}
   :load-default true}}

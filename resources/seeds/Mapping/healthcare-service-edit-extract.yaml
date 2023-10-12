@@ -1,10 +1,13 @@
 body:
   $let:
     healthcareServiceId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='healthcareServiceId').answer.valueString").0
+    chargeItemDefinitionId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='charge-item-definition-id').answer.valueString").0
     duration: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='duration').answer.valueInteger").0
     visitTypeCode: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='visit-type-code').answer.valueString").0
     visitTypeName: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='visit-type-name').answer.valueString").0
     comment: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='comment').answer.valueString").0
+    priceBase: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='price-base').answer.valueDecimal").0
+    priceTax: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='price-tax').answer.valueDecimal").0
   $body:
     type: transaction
     entry:
@@ -20,6 +23,20 @@ body:
                 - code: $ visitTypeCode
                   display: $ visitTypeName
                   system: http://beda.software/custom-healthcare-service-list
+      - request:
+          url: $ "/ChargeItemDefinition/" + chargeItemDefinitionId
+          method: PATCH
+        resource:
+          propertyGroup:
+            - priceComponent:
+                - type: base
+                  amount:
+                    value: $ priceBase
+                    currency: USD
+                - type: tax
+                  amount:
+                    value: $ priceTax
+                    currency: USD
     resourceType: Bundle
 id: healthcare-service-edit-extract
 resourceType: Mapping

@@ -1,0 +1,25 @@
+date: '2023-10-12T12:40:33+00:00'
+status: cancelled
+subject:
+  id: patient-2
+  display: Second Patient
+  resourceType: Patient
+lineItem:
+  - chargeItem:
+      Reference:
+        id: patient-2-consult
+        resourceType: ChargeItem
+    priceComponent:
+      - type: base
+        amount:
+          value: 50
+      - type: tax
+        amount:
+          value: 10
+participant:
+  - actor:
+      id: practitioner2
+      display: Basic-2 Practitioner - Endocrinology
+      resourceType: PractitionerRole
+id: patient-2-practitioner-2-consult-cancelled
+resourceType: Invoice

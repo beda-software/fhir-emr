@@ -1,16 +1,21 @@
 import { CheckOutlined, PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
+import { Encounter, Patient } from 'fhir/r4b';
+import { useCallback, useState } from 'react';
+import { useParams } from 'react-router-dom';
+
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { useService } from 'fhir-react/lib/hooks/service';
 import { isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { getFHIRResource, saveFHIRResource } from 'fhir-react/lib/services/fhir';
 import { formatFHIRDateTime } from 'fhir-react/lib/utils/date';
 import { formatError } from 'fhir-react/lib/utils/error';
-import { Encounter, Patient } from 'fhir/r4b';
-import { useCallback, useState } from 'react';
-import { useParams } from 'react-router-dom';
 
+import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
+
+import { ModalTrigger } from 'src/components/ModalTrigger';
+import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
 import { DocumentsList } from 'src/containers/DocumentsList';
 import { ChooseDocumentToCreateModal } from 'src/containers/DocumentsList/ChooseDocumentToCreateModal';
@@ -51,12 +56,12 @@ function useEncounterDetails() {
         }
     }, [manager, response]);
 
-    return { response, completeEncounter };
+    return { response, completeEncounter, manager };
 }
 
 export const EncounterDetails = ({ patient }: Props) => {
     const [modalOpened, setModalOpened] = useState(false);
-    const { response, completeEncounter } = useEncounterDetails();
+    const { response, completeEncounter, manager } = useEncounterDetails();
 
     usePatientHeaderLocationTitle({ title: t`Consultation` });
 
@@ -79,15 +84,15 @@ export const EncounterDetails = ({ patient }: Props) => {
                                         </span>
                                     </Button>
                                 ) : null}
-                                <Button icon={<CheckOutlined />} type="primary" onClick={() => completeEncounter()}>
-                                    <span>
-                                        {isEncounterCompleted ? (
+                                {isEncounterCompleted ? (
+                                    <Button icon={<CheckOutlined />} type="primary" onClick={() => completeEncounter()}>
+                                        <span>
                                             <Trans>Encounter completed</Trans>
-                                        ) : (
-                                            <Trans>Complete encounter</Trans>
-                                        )}
-                                    </span>
-                                </Button>
+                                        </span>
+                                    </Button>
+                                ) : (
+                                    <ModalCompleteEncounter onSuccess={manager.reload} encounter={encounter} />
+                                )}
                                 <ChooseDocumentToCreateModal
                                     open={modalOpened}
                                     onCancel={() => setModalOpened(false)}
@@ -105,3 +110,36 @@ export const EncounterDetails = ({ patient }: Props) => {
         </>
     );
 };
+
+function ModalCompleteEncounter(props: { encounter: Encounter; onSuccess: () => void }) {
+    return (
+        <ModalTrigger
+            title={t`Complete encounter`}
+            trigger={
+                <Button icon={<CheckOutlined />} type="primary">
+                    <span>
+                        <Trans>Complete encounter</Trans>
+                    </span>
+                </Button>
+            }
+        >
+            {({ closeModal }) => (
+                <QuestionnaireResponseForm
+                    questionnaireLoader={questionnaireIdLoader('complete-encounter')}
+                    launchContextParameters={[
+                        {
+                            name: 'CurrentEncounter',
+                            resource: props.encounter,
+                        },
+                    ]}
+                    onSuccess={() => {
+                        closeModal();
+                        notification.success({ message: t`Encounter was successfully completed` });
+                        props.onSuccess();
+                    }}
+                    onCancel={closeModal}
+                />
+            )}
+        </ModalTrigger>
+    );
+}

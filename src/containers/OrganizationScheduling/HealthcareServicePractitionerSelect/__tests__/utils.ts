@@ -84,11 +84,33 @@ export function dataSetup() {
         });
 
         const pr1 = await createPractitionerRole({
+            code: [
+                {
+                    coding: [
+                        {
+                            code: 'doctor',
+                            system: 'http://terminology.hl7.org/CodeSystem/practitioner-role',
+                            display: 'Doctor',
+                        },
+                    ],
+                },
+            ],
             practitioner: getReference(practitioner),
             healthcareService: [getReference(hs1)],
         });
 
         const pr2 = await createPractitionerRole({
+            code: [
+                {
+                    coding: [
+                        {
+                            code: 'doctor',
+                            system: 'http://terminology.hl7.org/CodeSystem/practitioner-role',
+                            display: 'Doctor',
+                        },
+                    ],
+                },
+            ],
             practitioner: getReference(practitioner2),
             healthcareService: [getReference(hs2)],
         });

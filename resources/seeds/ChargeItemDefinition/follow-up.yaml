@@ -1,0 +1,20 @@
+url: https://emr.beda.software/charge-item/follow-up
+meta:
+  profile:
+    - https://beda.software/beda-emr-charge-item-definition
+status: active
+propertyGroup:
+  - priceComponent:
+      - type: base
+        amount:
+          value: 25
+          currency: USD
+      - type: tax
+        amount:
+          value: 2
+          currency: USD
+healthcareService:
+  id: follow-up
+  resourceType: HealthcareService
+id: follow-up
+resourceType: ChargeItemDefinition

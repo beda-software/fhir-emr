@@ -27,6 +27,20 @@ item:
     type: text
     linkId: comment
     rowsNumber: 4
+  - text: Price base
+    type: decimal
+    linkId: price-base
+    unit:
+      code: usd
+      system: http://unitsofmeasure.org
+      display: USD
+  - text: Price tax
+    type: decimal
+    linkId: price-tax
+    unit:
+      code: usd
+      system: http://unitsofmeasure.org
+      display: USD
 
 meta:
   profile:
