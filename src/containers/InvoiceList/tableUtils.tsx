@@ -20,40 +20,47 @@ import { ModalCancelInvoice } from './components/ModalCancelInvoice';
 import { ModalPayInvoice } from './components/ModalPayInvoice';
 import { getPractitionerName, getInvoicePractitioner, getPatientName, getInvoicePatient, formatMoney } from './utils';
 
+export function getInvoiceStatusHumanized(invoice: Invoice) {
+    const invoiceStatusMapping = {
+        balanced: 'Balanced',
+        cancelled: 'Cancelled',
+        issued: 'Issued',
+        draft: 'Draft',
+        'entered-in-error': 'Entered in error',
+    };
+
+    return invoiceStatusMapping[invoice.status];
+}
+
 export function InvoiceStatus({ invoice }: { invoice: Invoice }) {
     const statusDataMapping = {
         balanced: {
             icon: <CheckCircleOutlined />,
             color: 'success',
-            name: 'Balanced',
         },
         cancelled: {
             icon: <StopOutlined />,
             color: 'warning',
-            name: 'Cancelled',
         },
         issued: {
             icon: <ClockCircleOutlined />,
             color: 'processing',
-            name: 'Issued',
         },
         draft: {
             icon: <FormOutlined />,
             color: 'default',
-            name: 'Draft',
         },
         'entered-in-error': {
             icon: <ExclamationCircleOutlined />,
             color: 'error',
-            name: 'Entered in error',
         },
     };
 
-    const { icon, color, name } = statusDataMapping[invoice.status];
+    const { icon, color } = statusDataMapping[invoice.status];
 
     return (
         <Tag icon={icon} color={color}>
-            {name}
+            {getInvoiceStatusHumanized(invoice)}
         </Tag>
     );
 }

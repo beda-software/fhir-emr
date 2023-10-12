@@ -6,6 +6,7 @@ import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { BasePageHeader } from 'src/components/BaseLayout';
 import { Title } from 'src/components/Typography';
+import { getInvoiceStatusHumanized } from 'src/containers/InvoiceList/tableUtils';
 
 export function InvoiceDetailsHeader({
     invoice,
@@ -30,7 +31,7 @@ export function InvoiceDetailsHeader({
                     <Statistic title="Date" value={formatHumanDateTime(invoice.date)} />
                 </Col>
                 <Col span={6}>
-                    <Statistic title="Status" value={invoice.status} />
+                    <Statistic title="Status" value={getInvoiceStatusHumanized(invoice)} />
                 </Col>
             </Row>
         </BasePageHeader>
