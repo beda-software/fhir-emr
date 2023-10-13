@@ -21,10 +21,19 @@ import { QuestionnaireItemSettings } from './QuestionnaireItemSettings';
 import { QuestionnaireSaveForm } from './QuestionnaireSaveForm';
 
 export function QuestionnaireBuilder() {
-    const { response, onSubmitPrompt, error, onItemChange, onItemDrag, onSaveQuestionnaire, onItemDelete } =
-        useQuestionnaireBuilder();
+    const {
+        response,
+        updateResponse,
+        onSubmitPrompt,
+        error,
+        onItemChange,
+        onItemDrag,
+        onSaveQuestionnaire,
+        onItemDelete,
+    } = useQuestionnaireBuilder();
     const [questionnaireItem, setQuestionnaireItem] = useState<QuestionItemProps | undefined>();
     const [groupItem, setGroupItem] = useState<GroupItemProps | undefined>();
+    console.log(response, updateResponse);
 
     return (
         <>
@@ -68,6 +77,7 @@ export function QuestionnaireBuilder() {
                     <div className={s.rightColumn}>
                         <Builder
                             response={response}
+                            updateResponse={updateResponse}
                             error={error}
                             activeQuestionItem={questionnaireItem || groupItem}
                             onQuestionnaireItemClick={(item) => {
@@ -116,7 +126,7 @@ export function QuestionnaireBuilder() {
                             className={s.promptForm}
                             visible={!questionnaireItem && !groupItem}
                             onSubmit={(prompt) => onSubmitPrompt(prompt)}
-                            isLoading={isLoading(response)}
+                            isLoading={isLoading(response) || isLoading(updateResponse)}
                         />
                     </S.LeftColumn>
                 </S.Content>

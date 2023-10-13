@@ -2,10 +2,10 @@ import { SettingOutlined } from '@ant-design/icons';
 import classNames from 'classnames';
 import { GroupItemProps } from 'sdc-qrf';
 
-import { OnItemDrag } from '../hooks';
 import s from './Builder.module.scss';
 import { S } from './Builder.styles';
 import { FieldSource, FieldTarget } from './DragAndDrop';
+import { OnItemDrag } from '../hooks';
 
 interface Props {
     children: React.ReactNode;
@@ -32,9 +32,11 @@ export function BuilderGroup(props: Props) {
                     })}
                 >
                     <div className={s.toolBox}>
-                        <S.Button type="text" onClick={() => onEditClick?.(item)}>
-                            <SettingOutlined />
-                        </S.Button>
+                        {onEditClick && (
+                            <S.Button type="text" onClick={() => onEditClick(item)}>
+                                <SettingOutlined />
+                            </S.Button>
+                        )}
                     </div>
                     {children}
                 </S.Container>

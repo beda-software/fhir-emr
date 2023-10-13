@@ -1,13 +1,14 @@
 import { notification } from 'antd';
-import { notAsked, RemoteData } from 'fhir-react';
-import { isFailure, isSuccess, loading, success } from 'fhir-react/lib/libs/remoteData';
-import { getFHIRResource, saveFHIRResource } from 'fhir-react/lib/services/fhir';
-import { formatError } from 'fhir-react/lib/utils/error';
 import { Questionnaire as FHIRQuestionnaire, QuestionnaireItem as FHIRQuestionnaireItem } from 'fhir/r4b';
+import { notAsked, RemoteData } from 'fhir-react';
 import _ from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { GroupItemProps, QuestionItemProps } from 'sdc-qrf';
+
+import { isFailure, isSuccess, loading, success } from 'fhir-react/lib/libs/remoteData';
+import { getFHIRResource, saveFHIRResource } from 'fhir-react/lib/services/fhir';
+import { formatError } from 'fhir-react/lib/utils/error';
 
 import { fromFirstClassExtension, toFirstClassExtension } from 'shared/src/utils/converter';
 
@@ -39,6 +40,7 @@ export function useQuestionnaireBuilder() {
     const navigate = useNavigate();
     const params = useParams();
     const [response, setResponse] = useState<RemoteData<FHIRQuestionnaire>>(notAsked);
+    const [updateResponse, setUpdateResponse] = useState<RemoteData<FHIRQuestionnaire>>(notAsked);
     const [error, setError] = useState<string | undefined>();
 
     useEffect(() => {
@@ -83,12 +85,13 @@ export function useQuestionnaireBuilder() {
     const onSubmitPrompt = useCallback(
         async (prompt: string) => {
             if (isSuccess(response)) {
-                setResponse(loading);
+                setUpdateResponse(loading);
                 setError(undefined);
                 const questionnaire = response.data;
                 const saveResponse = await generateQuestionnaire(prompt, JSON.stringify(questionnaire));
                 console.log('saveResponse', saveResponse);
 
+                setUpdateResponse(saveResponse);
                 if (isSuccess(saveResponse)) {
                     const newQuestionnaire = saveResponse.data;
                     setResponse(success(newQuestionnaire));
@@ -157,5 +160,14 @@ export function useQuestionnaireBuilder() {
         [response],
     );
 
-    return { response, onSaveQuestionnaire, onSubmitPrompt, onItemChange, onItemDrag, onItemDelete, error };
+    return {
+        response,
+        updateResponse,
+        onSaveQuestionnaire,
+        onSubmitPrompt,
+        onItemChange,
+        onItemDrag,
+        onItemDelete,
+        error,
+    };
 }

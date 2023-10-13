@@ -32,9 +32,11 @@ export function BuilderField(props: Props) {
                     })}
                 >
                     <div className={s.toolBox}>
-                        <S.Button type="text" onClick={() => onEditClick?.(item)}>
-                            <SettingOutlined />
-                        </S.Button>
+                        {onEditClick && (
+                            <S.Button type="text" onClick={() => onEditClick(item)}>
+                                <SettingOutlined />
+                            </S.Button>
+                        )}
                     </div>
                     {children}
                 </S.Container>
