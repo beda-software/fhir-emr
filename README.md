@@ -26,18 +26,20 @@ __Design__: [Figma](https://www.figma.com/file/2bxMDfG3lRPEZpRwDC4gTB/SaaS-EMR-S
 
 ## Features
 
--   Patients management
--   Practitioners management
--   Appointment and Encounters (visits management, scheduling)
--   Treatment notes
--   Patient medical information
--   Medication management
--   Telemedicine
--   EMR Questionnaire form builder
--   Electronic Medical Records
-    -   based on Questionnaire and QuestionnaireResponse resources
-    -   Questionnaire population, initial and calculated expressions
-    -   extraction FHIR data from QuestionnaireResponse on save
+- Appointment and Encounters (visits management, scheduling)
+- Electronic Medical Records
+  - based on Questionnaire and QuestionnaireResponse resources
+  - Questionnaire population, initial and calculated expressions
+  - extraction FHIR data from QuestionnaireResponse on save
+- EMR Questionnaire form builder
+- HealthcareService management
+- Invoice management
+- Medication management
+- Patient medical information
+- Patients management
+- Practitioners management
+- Telemedicine
+- Treatment notes
 
 ### Demo
 
