@@ -1,13 +1,13 @@
 date: '2023-10-12T12:43:27+00:00'
 status: issued
 subject:
-  id: patient-1
+  id: patient1
   display: First Patient
   resourceType: Patient
 lineItem:
   - chargeItem:
       Reference:
-        id: patient-1-follow-up-2
+        id: patient1-follow-up-2
         resourceType: ChargeItem
     priceComponent:
       - type: base
@@ -21,5 +21,5 @@ participant:
       id: practitioner1
       display: Basic-1 Practitioner - Endocrinology
       resourceType: PractitionerRole
-id: patient-1-practitioner-1-follow-up-issued
+id: patient1-practitioner-1-follow-up-issued
 resourceType: Invoice

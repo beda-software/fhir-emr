@@ -5,4 +5,4 @@ active: true
 gender: "male"
 birthDate: "1990-02-02"
 resourceType: "Patient"
-id: patient-2
+id: patient2

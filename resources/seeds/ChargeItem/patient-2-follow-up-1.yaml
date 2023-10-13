@@ -6,10 +6,10 @@ code:
       display: A follow up visit
 status: planned
 subject:
-  id: patient-2
+  id: patient2
   display: Second Patient
   resourceType: Patient
 definitionCanonical:
   - https://emr.beda.software/charge-item/follow-up
-id: patient-2-follow-up-1
+id: patient2-follow-up-1
 resourceType: ChargeItem

@@ -6,10 +6,10 @@ code:
       display: The first appointment
 status: planned
 subject:
-  id: patient-2
+  id: patient2
   display: Second Patient
   resourceType: Patient
 definitionCanonical:
   - https://emr.beda.software/charge-item/consultation
-id: patient-2-consult
+id: patient2-consult
 resourceType: ChargeItem

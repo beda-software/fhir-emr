@@ -8,17 +8,17 @@ export const S = {
         position: relative;
         padding: 0 16px 64px;
         background-color: ${({ theme }) => theme.primary};
-        display: flex;
         flex-direction: column;
         align-items: center;
-        padding-top: 25vh;
+        padding-top: 20vh;
+        display: flex;
     `,
     Form: styled.div`
         display: flex;
         flex-direction: column;
-        max-width: 382px;
+        max-width: 390px;
         width: 100%;
-        padding: 18px;
+        padding: 16px;
         background-color: ${({ theme }) => theme.antdTheme?.colorBgContainer};
         gap: 32px;
         border-radius: 16px;
@@ -40,12 +40,29 @@ export const S = {
         font-size: 14px;
         line-height: 22px;
     `,
+    CredentialsWrapper: styled.div`
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    `,
+    CredentialsBlock: styled.div`
+        display: flex;
+        flex-direction: column;
+    `,
     CredentialsList: styled.div`
         display: flex;
         flex-direction: row;
         gap: 4px;
     `,
+    CredentialLabel: styled.span`
+        font-weight: bold;
+    `,
     CredentialName: styled.span`
         text-decoration: underline dotted;
+    `,
+    ButtonsWrapper: styled.div`
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
     `,
 };

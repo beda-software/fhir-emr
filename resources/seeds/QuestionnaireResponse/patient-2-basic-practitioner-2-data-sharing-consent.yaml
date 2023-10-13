@@ -23,9 +23,9 @@ item:
     linkId: date-end
 status: completed
 subject:
-  id: patient-2
+  id: patient2
   resourceType: Patient
 authored: '2023-09-21T10:38:43Z'
 questionnaire: data-sharing-consent
-id: patient-2-practitioner2-data-sharing-consent
+id: patient2-practitioner2-data-sharing-consent
 resourceType: QuestionnaireResponse

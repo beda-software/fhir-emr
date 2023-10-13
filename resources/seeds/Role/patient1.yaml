@@ -1,10 +1,10 @@
 name: "patient"
 user:
-  id: "patient-1"
+  id: "patient1"
   resourceType: "User"
 links:
   patient:
-    id: "patient-1"
+    id: "patient1"
     resourceType: "Patient"
-id: patient-1
+id: patient1
 resourceType: Role

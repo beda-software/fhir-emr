@@ -1,13 +1,13 @@
 date: '2023-10-12T12:40:26+00:00'
 status: balanced
 subject:
-  id: patient-2
+  id: patient2
   display: Second Patient
   resourceType: Patient
 lineItem:
   - chargeItem:
       Reference:
-        id: patient-1-follow-up-1
+        id: patient1-follow-up-1
         resourceType: ChargeItem
     priceComponent:
       - type: base
@@ -21,5 +21,5 @@ participant:
       id: practitioner2
       display: Basic-2 Practitioner - Endocrinology
       resourceType: PractitionerRole
-id: patient-2-practitioner-2-follow-up-balanced
+id: patient2-practitioner-2-follow-up-balanced
 resourceType: Invoice
