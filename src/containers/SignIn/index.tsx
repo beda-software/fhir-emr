@@ -1,4 +1,4 @@
-import { Trans, t } from '@lingui/macro';
+import { t } from '@lingui/macro';
 import { Button, Segmented, Tooltip } from 'antd';
 import { useState } from 'react';
 
@@ -46,9 +46,7 @@ export function SignIn(props: SignInProps) {
                             <b>{t`On the next page, please, use one of the following credentials`}</b>
                             <S.CredentialsWrapper>
                                 <S.CredentialsBlock>
-                                    <S.CredentialLabel>
-                                        <Trans>Username</Trans>
-                                    </S.CredentialLabel>
+                                    <S.CredentialLabel>{t`Username`}</S.CredentialLabel>
                                     <S.CredentialsList>
                                         <div>
                                             <Tooltip title="As an admin, you have full access to settings and data">
@@ -76,9 +74,7 @@ export function SignIn(props: SignInProps) {
                                     </S.CredentialsList>
                                 </S.CredentialsBlock>
                                 <S.CredentialsBlock>
-                                    <S.CredentialLabel>
-                                        <Trans>Password</Trans>
-                                    </S.CredentialLabel>
+                                    <S.CredentialLabel>{t`Password`}</S.CredentialLabel>
                                     <S.CredentialsList>
                                         <span>password</span>
                                     </S.CredentialsList>
@@ -99,9 +95,7 @@ export function SignIn(props: SignInProps) {
                             <b>{t`On the next page, please, use one of the following credentials`}</b>
                             <S.CredentialsWrapper>
                                 <S.CredentialsBlock>
-                                    <S.CredentialLabel>
-                                        <Trans>Username</Trans>
-                                    </S.CredentialLabel>
+                                    <S.CredentialLabel>{t`Username`}</S.CredentialLabel>
                                     <S.CredentialsList>
                                         <div>
                                             <Tooltip title="As a patient, you have access to your health data and invoices">
@@ -117,9 +111,7 @@ export function SignIn(props: SignInProps) {
                                     </S.CredentialsList>
                                 </S.CredentialsBlock>
                                 <S.CredentialsBlock>
-                                    <S.CredentialLabel>
-                                        <Trans>Password</Trans>
-                                    </S.CredentialLabel>
+                                    <S.CredentialLabel>{t`Password`}</S.CredentialLabel>
                                     <S.CredentialsList>
                                         <span>password</span>
                                     </S.CredentialsList>

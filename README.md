@@ -38,6 +38,7 @@ __Design__: [Figma](https://www.figma.com/file/2bxMDfG3lRPEZpRwDC4gTB/SaaS-EMR-S
 - Patient medical information
 - Patients management
 - Practitioners management
+- Role-based functionality (Admin, Receptionist, Practitioner, Patient)
 - Telemedicine
 - Treatment notes
 
