@@ -42,7 +42,11 @@
                   :params {:source {:type "string" :format "%%%s%%" :isRequired true}}}
                  :provenance-by-target
                  {:query "select resource || jsonb_build_object('resourceType', 'Provenance', 'id', id) as resource from provenance where array_to_string(knife_extract_text(resource,'[[\"target\",\"uri\"]]'),'') like {{params.target}}"
-                  :params {:source {:type "string" :format "%%%s%%" :isRequired true}}}}
+                  :params {:source {:type "string" :format "%%%s%%" :isRequired true}}}
+                 :clear-patient-observations
+                 {:type :execute
+                  :query "DELETE FROM \"observation\" WHERE resource#>>'{subject, id}' = {{params.patient}}"
+                  :params {:patient {:type "string" :isRequired true}}}}
    :TokenIntrospector {:appleid
                        {:type "jwt"
                         :jwks_uri "https://appleid.apple.com/auth/keys"

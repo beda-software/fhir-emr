@@ -1,0 +1,92 @@
+resourceType: TestScript
+url: https://beda.software/TestScript/allergies
+name: allergies-questionnaire-sdc-tests
+status: draft
+date: "2023-03-17"
+publisher: Beda Software
+contact:
+  - name: Support
+    telecom:
+      - system: email
+        value: ilya@beda.software
+        use: work
+contained:
+  - resourceType: Parameters
+    id: populate-launch-context-params
+    parameter:
+      - name: Patient
+        resource:
+          resourceType: Patient
+          id: test-patient
+          name:
+            - use: official
+              given:
+                - Peter
+                - James
+              family: Chalmers
+      - name: Author
+        resource:
+          resourceType: Patient
+          id: test-patient
+          name:
+            - use: official
+              given:
+                - Peter
+                - James
+              family: Chalmers
+fixture:
+  - id: launched-patient
+    resource:
+      reference: file://tests/resources/patient.yaml
+  - id: allergies-questionnaire-from-file
+    resource:
+      reference: file://tests/resources/allergies-questionnaire.yaml
+  - id: allergies-questionnaire-from-server
+    resource:
+      reference: Questionnaire/allergies
+  - id: launch-context-params
+    resource:
+      reference: "#Parameters/populate-launch-context-params"
+variable:
+  - name: launched-patient-id
+    sourceId: launched-patient
+    expression: Patient.id
+setup:
+  action:
+    - operation:
+        type:
+          system: http://terminology.hl7.org/CodeSystem/testscript-operation-codes
+          code: read
+        resource: Questionnaire
+        description:
+          Read the allergies questionnaire resource on the test server using
+          the id from allergies-questionnaire. Verify contents.
+        encodeRequestUrl: true
+        targetId: allergies-questionnaire-from-server
+        responseId: allergies-questionnaire-resource
+    - assert:
+        description: Confirm that the returned HTTP status is 200(OK).
+        direction: response
+        response: okay
+test:
+  - name: allergies-populate
+    description: Allergies questionnaire SDC populate
+    action:
+      - operation:
+          type:
+            system: http://terminology.hl7.org/CodeSystem/testscript-operation-codes
+            code: populate
+          resource: Questionnaire
+          description: Questionnaire population
+          accept: json
+          method: post
+          targetId: allergies-questionnaire-from-server
+          sourceId: launch-context-params
+          responseId: populate-response
+      - assert:
+          description: check populated patient ID
+          resource: QuestionnaireResponse
+          sourceId: populate-response
+          expression: QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.value.string
+          value: "${launched-patient-id}"
+          operator: equals

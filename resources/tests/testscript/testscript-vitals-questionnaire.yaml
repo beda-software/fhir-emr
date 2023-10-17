@@ -1,0 +1,177 @@
+resourceType: TestScript
+url: https://beda.software/TestScript/vitals
+name: vitals-questionnaire-sdc-tests
+status: draft
+date: "2023-03-21"
+publisher: Beda Software
+contact:
+  - name: Support
+    telecom:
+      - system: email
+        value: ilya@beda.software
+        use: work
+contained:
+  - resourceType: Parameters
+    id: populate-launch-context-params
+    parameter:
+      - name: Patient
+        resource:
+          resourceType: Patient
+          id: test-patient
+          name:
+            - use: official
+              given:
+                - Peter
+                - James
+              family: Chalmers
+fixture:
+  - id: launched-patient
+    resource:
+      reference: file://tests/resources/patient.yaml
+  - id: vitals-questionnaire-fixture
+    resource:
+      reference: Questionnaire/vitals
+  - id: launch-context-params
+    resource:
+      reference: "#Parameters/populate-launch-context-params"
+  - id: vitals-extract-parameters-fixture
+    resource:
+      reference: file://tests/resources/vitals-extract-request-body.yaml
+  - id: vitals-questionnaire-response
+    resource:
+      reference: file://tests/resources/vitals-questionnaire-response.yaml
+variable:
+  - name: launched-patient-id
+    sourceId: launched-patient
+    expression: Patient.id
+  - name: launched-patient-name
+    defaultValue: Peter Chalmers
+setup:
+  action:
+    - operation:
+        type:
+          system: http://terminology.hl7.org/CodeSystem/testscript-operation-codes
+          code: create
+        resource: Patient
+        description: Create test patient with ID = test-patient
+        sourceId: launched-patient
+    - assert:
+        description: Confirm that the returned HTTP status is 201(created).
+        direction: response
+        response: created
+test:
+  - name: vitals-populate
+    description: >
+      Run SDC $populate against the vitals questionnaire
+      and check populated fields
+    action:
+      - operation:
+          type:
+            system: http://terminology.hl7.org/CodeSystem/testscript-operation-codes
+            code: populate
+          resource: Questionnaire
+          description: Questionnaire population
+          accept: json
+          method: post
+          targetId: vitals-questionnaire-fixture
+          sourceId: launch-context-params
+          responseId: populate-response
+      - assert:
+          description: check populated patient ID
+          resource: QuestionnaireResponse
+          sourceId: populate-response
+          expression: QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.value.string
+          value: "${launched-patient-id}"
+          operator: equals
+      - assert:
+          description: check populated patient name
+          resource: QuestionnaireResponse
+          sourceId: populate-response
+          expression: QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.value.string
+          value: "${launched-patient-name}"
+          operator: equals
+  - name: vitals-extract
+    description: >
+      Run SDC $extract against the vitals questionnaire
+      and check created resources
+    action:
+      - operation:
+          type:
+            system: http://hl7.org/fhir/uv/sdc/OperationDefinition/QuestionnaireResponse-extract
+            code: extract
+          resource: Questionnaire
+          description: Questionnaire data extract
+          accept: json
+          method: post
+          targetId: vitals-questionnaire-fixture
+          sourceId: vitals-extract-parameters-fixture
+          responseId: extract-response
+      - assert:
+          description: Confirm that the extract returned HTTP status is 200(OK).
+          direction: response
+          response: okay
+      - operation:
+          description: Get observations created during the extract
+          type:
+            system: http://hl7.org/fhir/uv/sdc/OperationDefinition/QuestionnaireResponse-extract
+            code: search
+          resource: Observation
+          encodeRequestUrl: true
+          params: "?subject=${launched-patient-id}"
+          responseId: searched-observations
+      - assert:
+          description: Check the total number of returned observations
+          resource: Bundle
+          expression: Bundle.total
+          operator: equals
+          value: 8
+      - assert:
+          description: Check body height observation (LOINC code is 8302-2) has correct value
+          compareToSourceId: vitals-questionnaire-response
+          compareToSourceExpression: QuestionnaireResponse.repeat(item).where(linkId='height').answer.children()
+          expression: Bundle.entry.repeat(resource).where(code.coding.code='8302-2').value.Quantity.value
+          operator: equals
+      - assert:
+          description: Check body weight observation (LOINC code is 29463-7) has correct value
+          compareToSourceId: vitals-questionnaire-response
+          compareToSourceExpression: QuestionnaireResponse.repeat(item).where(linkId='weight').answer.children()
+          expression: Bundle.entry.repeat(resource).where(code.coding.code='29463-7').value.Quantity.value
+          operator: equals
+      - assert:
+          description: Check BMI observation (LOINC code is 39156-5) has correct value
+          compareToSourceId: vitals-questionnaire-response
+          compareToSourceExpression: QuestionnaireResponse.repeat(item).where(linkId='bmi').answer.children()
+          expression: Bundle.entry.repeat(resource).where(code.coding.code='39156-5').value.Quantity.value
+          operator: equals
+      - assert:
+          description: Check blood pressure (LOINC code is 85354-9) has correct value for systolic (8480-6)
+          compareToSourceId: vitals-questionnaire-response
+          compareToSourceExpression: QuestionnaireResponse.repeat(item).where(linkId='blood-pressure-systolic').answer.children()
+          expression: Bundle.entry.repeat(resource).where(code.coding.code='85354-9').component.where(code.coding.code='8480-6').children().children().value
+          operator: equals
+      - assert:
+          description: Check blood pressure (LOINC code is 85354-9) has correct value for systolic (8480-6)
+          compareToSourceId: vitals-questionnaire-response
+          compareToSourceExpression: QuestionnaireResponse.repeat(item).where(linkId='blood-pressure-systolic').answer.children()
+          expression: Bundle.entry.repeat(resource).where(code.coding.code='85354-9').component.where(code.coding.code='8480-6').children().children().value
+          operator: equals
+      - assert:
+          description: Check the patient with ID 'test-patient' is the subject for all created observations
+          expression: Bundle.entry.repeat(resource).subject.id.all($this = 'test-patient')
+          operator: equals
+          value: true
+teardown:
+  action:
+    - operation:
+        type:
+          system: http://terminology.hl7.org/CodeSystem/testscript-operation-codes
+          code: delete
+        resource: Patient
+        targetId: launched-patient
+        description:
+          Delete the patient resource on the test server using the id from
+          launched-patient fixture.
+    - operation:
+        method: get
+        params: "$query/clear-patient-observations?patient=${launched-patient-id}"
+        description: Delete patient observations on the test server via AidboxQuery

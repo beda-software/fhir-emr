@@ -1,0 +1,285 @@
+resourceType: TestScript
+url: https://beda.software/TestScript/vitals
+name: complete-encounter-questionnaire-sc-test
+status: draft
+date: "2023-03-21"
+publisher: Beda Software
+contact:
+  - name: Support
+    telecom:
+      - system: email
+        value: ilya@beda.software
+        use: work
+      - system: email
+        value: pavel.r@beda.software
+        use: work
+contained:
+  - resourceType: Parameters
+    id: populate-launch-context-params
+    parameter:
+      - name: CurrentEncounter
+        resource:
+          appointment:
+            - id: appointment1
+              resourceType: Appointment
+          participant:
+            - individual:
+                id: practitioner1
+                display: Basic-1 Practitioner - Endocrinology
+                resourceType: PractitionerRole
+          resourceType: Encounter
+          status: in-progress
+          id: encounter1
+          class:
+            code: consultation
+            system: http://beda.software/custom-healthcare-service-list
+            display: The first appointment
+          period:
+            start: '2023-10-14T06:00:00Z'
+          subject:
+            id: patient3
+            display: First Patient
+            resourceType: Patient
+fixture:
+  - id: patient
+    resource:
+      reference: file://tests/resources/patient1.yaml
+  - id: appointment
+    resource:
+      reference: file://tests/resources/appointment.yaml
+  - id: launched-encounter
+    resource:
+      reference: file://tests/resources/encounter.yaml
+  - id: complete-encounter-questionnaire-fixture
+    resource:
+      reference: Questionnaire/complete-encounter
+  - id: complete-encounter-questionnaire-response
+    resource:
+      reference: file://tests/resources/complete-encounter-questionnaire-response.yaml
+  - id: launch-context-params
+    resource:
+      reference: "#Parameters/populate-launch-context-params"
+  - id: complete-encounter-extract-parameters-fixture
+    resource:
+      reference: file://tests/resources/complete-encounter-extract-request-body.yaml
+variable:
+  - name: launched-encounter-id
+    sourceId: launched-encounter
+    expression: Encounter.id
+  - name: launched-encounter-class-code
+    sourceId: launched-encounter
+    expression: Encounter.class.code
+  - name: launched-encounter-class-display
+    sourceId: launched-encounter
+    expression: Encounter.class.display
+setup:
+  action:
+    - operation:
+        type:
+          system: http://terminology.hl7.org/CodeSystem/testscript-operation-codes
+          code: create
+        resource: Patient
+        description: Create Patient
+        sourceId: patient
+        responseId: create-test-patient
+    - assert:
+        description: Confirm that the returned HTTP status is 201(created).
+        direction: response
+        response: created
+    - operation:
+        type:
+          system: http://terminology.hl7.org/CodeSystem/testscript-operation-codes
+          code: create
+        resource: Appointment
+        description: Create Appointment
+        sourceId: appointment
+        responseId: create-test-appointment
+    - assert:
+        description: Confirm that the returned HTTP status is 201(created).
+        direction: response
+        response: created
+    - operation:
+        type:
+          system: http://terminology.hl7.org/CodeSystem/testscript-operation-codes
+          code: create
+        resource: Encounter
+        description: Create Encounter
+        sourceId: launched-encounter
+        responseId: create-test-encounter
+    - assert:
+        description: Confirm that the returned HTTP status is 201(created).
+        direction: response
+        response: created
+test:
+  - name: complete-encounter-populate
+    description: >
+      Run SDC $populate against the vitals questionnaire
+      and check populated fields
+    action:
+      - operation:
+          type:
+            system: http://terminology.hl7.org/CodeSystem/testscript-operation-codes
+            code: populate
+          resource: Questionnaire
+          description: Questionnaire population
+          accept: json
+          method: post
+          targetId: complete-encounter-questionnaire-fixture
+          sourceId: launch-context-params
+          responseId: populate-response
+      - assert:
+          description: check populated encounter ID
+          resource: QuestionnaireResponse
+          sourceId: populate-response
+          expression: QuestionnaireResponse.repeat(item).where(linkId='current-encounter-id').answer.value.string
+          value: "encounter1"
+          operator: equals
+      - assert:
+          description: check populated service code
+          resource: QuestionnaireResponse
+          sourceId: populate-response
+          expression: QuestionnaireResponse.repeat(item).where(linkId='healthcare-service-code').answer.value.string
+          value: "consultation"
+          operator: equals
+      - assert:
+          description: check populated service name
+          resource: QuestionnaireResponse
+          sourceId: populate-response
+          expression: QuestionnaireResponse.repeat(item).where(linkId='healthcare-service-name').answer.value.string
+          value: "The first appointment"
+          operator: equals
+  - name: complete-encounter-extract
+    description: >
+      Run SDC $extract against the vitals questionnaire
+      and check created resources
+    action:
+      - operation:
+          type:
+            system: http://hl7.org/fhir/uv/sdc/OperationDefinition/QuestionnaireResponse-extract
+            code: extract
+          resource: Questionnaire
+          description: Questionnaire data extract
+          accept: json
+          method: post
+          targetId: complete-encounter-questionnaire-fixture
+          sourceId: complete-encounter-extract-parameters-fixture
+          responseId: extract-response
+      - assert:
+          description: Confirm that the extract returned HTTP status is 200(OK).
+          direction: response
+          response: okay
+      - operation:
+          description: Get invoices created during the extract
+          type:
+            system: http://hl7.org/fhir/uv/sdc/OperationDefinition/QuestionnaireResponse-extract
+            code: search
+          resource: Invoice
+          encodeRequestUrl: true
+          params: "?subject=patient3"
+          responseId: searched-invoices
+      - assert:
+          description: Check the total number of returned invoices
+          resource: Bundle
+          expression: Bundle.total
+          operator: equals
+          value: 1
+      - assert:
+          description: Check the subject id of returned Invoice
+          resource: Bundle
+          expression: Bundle.entry.resource.subject.id
+          operator: equals
+          value: patient3
+      - assert:
+          description: Check the participant id of returned Invoice
+          resource: Bundle
+          expression: Bundle.entry.resource.participant.actor.id
+          operator: equals
+          value: practitioner1
+      - assert:
+          description: Check the length of line items
+          resource: Bundle
+          expression: Bundle.entry.resource.lineItem.count()
+          operator: equals
+          value: 1
+      - assert:
+          description: Check the price component base data
+          resource: Bundle
+          expression: Bundle.entry.resource.lineItem.priceComponent.where(type='base').amount.value
+          operator: equals
+          value: 50
+      - assert:
+          description: Check the price component tax data
+          resource: Bundle
+          expression: Bundle.entry.resource.lineItem.priceComponent.where(type='tax').amount.value
+          operator: equals
+          value: 10
+      - operation:
+          description: Get charge items created during the extract
+          type:
+            system: http://hl7.org/fhir/uv/sdc/OperationDefinition/QuestionnaireResponse-extract
+            code: search
+          resource: ChargeItem
+          encodeRequestUrl: true
+          params: "?subject=patient3"
+          responseId: searched-charge-items
+      - assert:
+          description: Check number of charge items
+          resource: Bundle
+          expression: Bundle.total
+          operator: equals
+          value: 1
+      - assert:
+          description: Check the subject of charge item
+          resource: Bundle
+          expression: Bundle.entry.resource.subject.id
+          operator: equals
+          value: patient3
+      - assert:
+          description: ChargeItem code is equal to encounter class code
+          resource: Bundle
+          expression: Bundle.entry.resource.code.coding.code
+          operator: equals
+          value: "${launched-encounter-class-code}"
+      - assert:
+          description: ChargeItem code is equal to encounter class display
+          resource: Bundle
+          expression: Bundle.entry.resource.code.coding.display
+          operator: equals
+          value: "${launched-encounter-class-display}"
+teardown:
+  action:
+    - operation:
+        type:
+          system: http://terminology.hl7.org/CodeSystem/testscript-operation-codes
+          code: delete
+        resource: Patient
+        targetId: create-test-patient
+        description: Delete test patient resource
+    - operation:
+        type:
+          system: http://terminology.hl7.org/CodeSystem/testscript-operation-codes
+          code: delete
+        resource: Encounter
+        targetId: create-test-encounter
+        description: Delete test encounter resource
+    - operation:
+        type:
+          system: http://terminology.hl7.org/CodeSystem/testscript-operation-codes
+          code: delete
+        resource: Appointment
+        targetId: create-test-appointment
+        description: Delete test appointment resource
+    - operation:
+        type:
+          system: http://terminology.hl7.org/CodeSystem/testscript-operation-codes
+          code: delete
+        resource: Invoice
+        description: Delete test invoice resource
+        params: "?subject=patient3"
+    - operation:
+        type:
+          system: http://terminology.hl7.org/CodeSystem/testscript-operation-codes
+          code: delete
+        resource: ChargeItem
+        description: Delete test chargeitem resource
+        params: "?subject=patient3"
