@@ -59,6 +59,7 @@ services:
             - ./zenproject:/app/zenproject
             - ./resources/seeds:/app/resources/seeds
     testscript:
+        tty: true
         depends_on:
             devbox-healthcheck:
                 condition:
@@ -67,10 +68,8 @@ services:
             context: .
             dockerfile: Dockerfile.testscript
         volumes:
-            - ./resources/tests/resources:/app/resources
-            - ./resources/tests/TestScript:/app/TestScript
+            - ./resources:/app
         environment:
             PYTHONPATH: .
             FHIR_SERVER_AUTHORIZATION: Basic cm9vdDpzZWNyZXQ=
             FHIR_SERVER_BASE_URL: http://devbox:8080
-        command: pipenv run pytest

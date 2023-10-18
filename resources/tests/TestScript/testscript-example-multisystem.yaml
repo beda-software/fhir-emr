@@ -111,7 +111,7 @@ test:
       - assert:
           description: Confirm that the returned format is JSON.
           direction: response
-          contentType: application/json
+          contentType: application/fhir+json
           warningOnly: false
       - assert:
           description: Confirm that the returned resource type is Patient.
@@ -149,7 +149,7 @@ test:
       - assert:
           description: Confirm that the returned format is JSON.
           direction: response
-          contentType: application/json
+          contentType: application/fhir+json
           warningOnly: false
       - assert:
           description: Confirm that the returned resource type is Patient.

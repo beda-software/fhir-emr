@@ -1,17 +1,10 @@
 FROM python:3.11-slim
+
 WORKDIR /app
+
 RUN apt-get update \
-    && apt-get install -y git tree \
-    && git clone https://github.com/beda-software/testscript-eval-py /app/testscript-eval-py
+    && apt-get install -y git tree
 
-WORKDIR /app/testscript-eval-py/tests/resources
-COPY /resources/tests/resources ./
+RUN pip install pytest
+RUN pip install git+https://github.com/beda-software/testscript-eval-py.git@main#egg=testscript
 
-WORKDIR /app/testscript-eval-py/tests/TestScript
-COPY /resources/tests/TestScript ./
-
-WORKDIR /app/testscript-eval-py
-RUN pip install pipenv \
-    && pipenv install
-
-CMD ["pipenv", "run", "pytest"]

@@ -72,7 +72,7 @@ test:
           warningOnly: false
       - assert:
           description: Confirm that the returned format is JSON.
-          contentType: application/json
+          contentType: application/fhir+json
           warningOnly: false
       - assert:
           description:
