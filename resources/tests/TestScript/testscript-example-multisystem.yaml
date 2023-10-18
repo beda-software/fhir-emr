@@ -1,0 +1,158 @@
+resourceType: TestScript
+id: testscript-example-multisystem
+text:
+  status: generated
+url: http://hl7.org/fhir/TestScript/testscript-example-multisystem
+identifier:
+  system: urn:ietf:rfc:3986
+  value: urn:oid:1.3.6.1.4.1.21367.2005.3.7.9878
+version: "1.0"
+name: testscript-example-multisystem
+title: Multisystem Test Script
+status: draft
+experimental: true
+date: "2017-01-18"
+publisher: HL7
+contact:
+  - name: Support
+    telecom:
+      - system: email
+        value: support@HL7.org
+        use: work
+description:
+  TestScript example resource showing use of origin and destination for
+  multisystem support. The single origin will execute a Patient read against the two
+  destination systems using user defined dynamic variables. The test engine will wait
+  at each operation action with a defined origin and destination for the origin test
+  system to send the expected FHIR operation to the destination test system. Once
+  the expected request and response is observed, the test engine will continue with
+  the test execution.
+jurisdiction:
+  - coding:
+      - system: urn:iso:std:iso:3166
+        code: US
+        display: United States of America (the)
+purpose: Patient Read Operation
+copyright: "© HL7.org 2011+"
+origin:
+  - index: 1
+    profile:
+      code: FHIR-Client
+destination:
+  - index: 1
+    profile:
+      code: FHIR-Server
+  - index: 2
+    profile:
+      code: FHIR-Server
+metadata:
+  link:
+    - url: http://hl7.org/fhir/patient.html
+      description:
+        Demographics and other administrative information about an individual
+        or animal receiving care or other health-related services.
+  capability:
+    - required: true
+      validated: false
+      description: Patient Read Operation
+      origin:
+        - 1
+      destination: 1
+      link:
+        - http://hl7.org/fhir/http.html#read
+      capabilities: CapabilityStatement/example
+    - required: true
+      validated: false
+      description: Patient Read Operation
+      origin:
+        - 1
+      destination: 2
+      link:
+        - http://hl7.org/fhir/http.html#read
+      capabilities: CapabilityStatement/example
+variable:
+  - name: Dest1PatientResourceId
+    defaultValue: example
+  - name: Dest2PatientResourceId
+    defaultValue: example
+test:
+  - id: 01-ReadPatient-Destination1
+    name: ReadPatient-Destination1
+    description:
+      Read a Patient from the first destination test system using the user
+      defined dynamic variable ${Dest1PatientResourceId}. Perform basic validation.
+    action:
+      - operation:
+          type:
+            system: http://terminology.hl7.org/CodeSystem/testscript-operation-codes
+            code: read
+          resource: Patient
+          description:
+            Read a Patient from the first destination test system and perform
+            basic validation.
+          accept: json
+          contentType: json
+          destination: 1
+          encodeRequestUrl: true
+          origin: 1
+          params: "/${Dest1PatientResourceId}"
+          requestId: request-read-patient-01
+      - assert:
+          description:
+            Confirm that the request method GET was sent by the client system
+            under test.
+          requestMethod: get
+          warningOnly: false
+      - assert:
+          description: Confirm that the returned HTTP status is 200(OK).
+          direction: response
+          response: okay
+          warningOnly: false
+      - assert:
+          description: Confirm that the returned format is JSON.
+          direction: response
+          contentType: application/json
+          warningOnly: false
+      - assert:
+          description: Confirm that the returned resource type is Patient.
+          direction: response
+          resource: Patient
+          warningOnly: false
+  - id: 02-ReadPatient-Destination2
+    name: ReadPatient-Destination2
+    description:
+      Read a Patient from the second destination test system using the user
+      defined dynamic variable ${Dest2PatientResourceId}. Perform basic validation.
+    action:
+      - operation:
+          type:
+            system: http://terminology.hl7.org/CodeSystem/testscript-operation-codes
+            code: read
+          resource: Patient
+          description:
+            Read a Patient from the second destination test system and perform
+            basic validation.
+          accept: json
+          contentType: json
+          destination: 2
+          encodeRequestUrl: true
+          origin: 1
+          params: "/${Dest2PatientResourceId}"
+          requestHeader:
+            - field: Accept-Charset
+              value: utf-8
+      - assert:
+          description: Confirm that the returned HTTP status is 200(OK).
+          direction: response
+          response: okay
+          warningOnly: false
+      - assert:
+          description: Confirm that the returned format is JSON.
+          direction: response
+          contentType: application/json
+          warningOnly: false
+      - assert:
+          description: Confirm that the returned resource type is Patient.
+          direction: response
+          resource: Patient
+          warningOnly: false
