@@ -6,5 +6,5 @@ RUN apt-get update \
     && apt-get install -y git tree
 
 RUN pip install pytest
-RUN pip install git+https://github.com/beda-software/testscript-eval-py.git@main#egg=testscript
+RUN pip install git+https://github.com/beda-software/testscript-eval-py.git@main#egg=testscript_eval
 
