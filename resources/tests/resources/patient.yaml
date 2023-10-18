@@ -1,0 +1,8 @@
+resourceType: Patient
+id: test-patient
+name:
+  - use: official
+    given:
+      - Peter
+      - James
+    family: Chalmers

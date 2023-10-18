@@ -1,0 +1,181 @@
+meta:
+  profile:
+  - https://beda.software/beda-emr-questionnaire
+  lastUpdated: '2023-10-16T09:33:27.706095Z'
+  versionId: '511'
+  extension:
+  - url: ex:createdAt
+    valueInstant: '2023-10-16T08:40:03.205502Z'
+item:
+- linkId: root-group
+  type: group
+  item:
+  - text: Current Encounter ID
+    linkId: current-encounter-id
+    extension:
+    - valueBoolean: true
+      url: http://hl7.org/fhir/StructureDefinition/questionnaire-hidden
+    - valueExpression:
+        language: text/fhirpath
+        expression: "%CurrentEncounterBundle.entry[0].resource.entry.resource.id"
+      url: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression
+    type: string
+  - text: Encounter class
+    linkId: encounter-class
+    readOnly: true
+    extension:
+    - valueExpression:
+        language: text/fhirpath
+        expression: "%CurrentEncounterBundle.entry[0].resource.entry.resource.class.display"
+      url: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression
+    type: string
+  - text: Patient
+    linkId: patient
+    readOnly: true
+    extension:
+    - valueExpression:
+        language: text/fhirpath
+        expression: "%CurrentPatientBundle.entry[0].resource.entry.resource.name.given[0]
+          + ' ' + %CurrentPatientBundle.entry[0].resource.entry.resource.name.first().family"
+      url: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression
+    type: string
+  - text: Start
+    linkId: start-dateTime
+    readOnly: true
+    extension:
+    - valueExpression:
+        language: text/fhirpath
+        expression: "%CurrentEncounterBundle.entry[0].resource.entry.resource.period.start"
+      url: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression
+    type: dateTime
+  - text: End
+    linkId: end-dateTime
+    readOnly: true
+    extension:
+    - valueExpression:
+        language: text/fhirpath
+        expression: now()
+      url: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression
+    type: dateTime
+  - text: ChargeItemDefinitionUrl
+    linkId: charge-item-definition-url
+    required: true
+    extension:
+    - valueBoolean: true
+      url: http://hl7.org/fhir/StructureDefinition/questionnaire-hidden
+    - valueExpression:
+        language: text/fhirpath
+        expression: "%CurrentChargeItemDefinitionBundle.entry[0].resource.entry.resource.where(resourceType='ChargeItemDefinition').url"
+      url: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression
+    type: string
+  - text: Price base
+    linkId: price-base
+    extension:
+    - valueBoolean: true
+      url: http://hl7.org/fhir/StructureDefinition/questionnaire-hidden
+    - valueCoding:
+        code: usd
+        system: http://unitsofmeasure.org
+        display: USD
+      url: http://hl7.org/fhir/StructureDefinition/questionnaire-unit
+    - valueExpression:
+        language: text/fhirpath
+        expression: "%CurrentChargeItemDefinitionBundle.entry[0].resource.entry.resource.where(resourceType='ChargeItemDefinition').propertyGroup.priceComponent.where(type='base').amount.value"
+      url: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression
+    type: decimal
+  - text: Price tax
+    linkId: price-tax
+    extension:
+    - valueBoolean: true
+      url: http://hl7.org/fhir/StructureDefinition/questionnaire-hidden
+    - valueCoding:
+        code: usd
+        system: http://unitsofmeasure.org
+        display: USD
+      url: http://hl7.org/fhir/StructureDefinition/questionnaire-unit
+    - valueExpression:
+        language: text/fhirpath
+        expression: "%CurrentChargeItemDefinitionBundle.entry[0].resource.entry.resource.where(resourceType='ChargeItemDefinition').propertyGroup.priceComponent.where(type='tax').amount.value"
+      url: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression
+    type: decimal
+  - text: HealthcareService code
+    linkId: healthcare-service-code
+    extension:
+    - valueBoolean: true
+      url: http://hl7.org/fhir/StructureDefinition/questionnaire-hidden
+    - valueExpression:
+        language: text/fhirpath
+        expression: "%HealthcareServiceBundle.entry[0].resource.entry.resource.type.first().coding.first().code"
+      url: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression
+    type: string
+  - text: HealthcareService name
+    linkId: healthcare-service-name
+    extension:
+    - valueBoolean: true
+      url: http://hl7.org/fhir/StructureDefinition/questionnaire-hidden
+    - valueExpression:
+        language: text/fhirpath
+        expression: "%HealthcareServiceBundle.entry[0].resource.entry.resource.type.first().coding.first().display"
+      url: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression
+    type: string
+  - text: Are you sure you want to finish this encounter?
+    linkId: are-you-sure-message
+    type: display
+resourceType: Questionnaire
+title: Complete encounter
+contained:
+- id: CurrentEncounterBundle
+  type: transaction
+  entry:
+  - request:
+      url: "/Encounter?_id={{%CurrentEncounter.id}}"
+      method: GET
+  resourceType: Bundle
+- id: CurrentPatientBundle
+  type: transaction
+  entry:
+  - request:
+      url: "/Patient?_id={{%CurrentEncounter.subject.id}}"
+      method: GET
+  resourceType: Bundle
+- id: CurrentChargeItemDefinitionBundle
+  type: transaction
+  entry:
+  - request:
+      url: "/HealthcareService?service-type={{%CurrentEncounter.class.code}}&_revinclude=ChargeItemDefinition:healthcare-service"
+      method: GET
+  resourceType: Bundle
+- id: HealthcareServiceBundle
+  type: transaction
+  entry:
+  - request:
+      url: "/HealthcareService?service-type={{%CurrentEncounter.class.code}}"
+      method: GET
+  resourceType: Bundle
+status: active
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/complete-encounter
+extension:
+- url: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext
+  extension:
+  - url: name
+    valueCoding:
+      code: CurrentEncounter
+  - url: type
+    valueCode: Encounter
+  - url: description
+    valueString: The encounter to complete
+- url: http://beda.software/fhir-extensions/questionnaire-mapper
+  valueReference:
+    reference: Mapping/complete-encounter-extract
+- url: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-sourceQueries
+  valueReference:
+    reference: "#Bundle#CurrentEncounterBundle"
+- url: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-sourceQueries
+  valueReference:
+    reference: "#Bundle#CurrentPatientBundle"
+- url: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-sourceQueries
+  valueReference:
+    reference: "#Bundle#CurrentChargeItemDefinitionBundle"
+- url: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-sourceQueries
+  valueReference:
+    reference: "#Bundle#HealthcareServiceBundle"

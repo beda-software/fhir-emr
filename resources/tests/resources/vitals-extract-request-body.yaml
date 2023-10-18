@@ -1,0 +1,8 @@
+resourceType: Parameters
+parameter:
+- name: questionnaire
+  resource: !include vitals-questionnaire.yaml
+- name: questionnaire_response
+  resource: !include vitals-questionnaire-response.yaml
+- name: Patient
+  resource: !include patient.yaml

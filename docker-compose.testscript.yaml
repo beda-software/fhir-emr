@@ -1,0 +1,76 @@
+name: fhir-emr-testscript
+services:
+    sdc-ide:
+        image: bedasoftware/sdc-ide:master
+        depends_on:
+            devbox-healthcheck:
+                condition: service_healthy
+        ports:
+            - '3001:5000'
+    sdc:
+        image: bedasoftware/fhir-sdc:develop
+        depends_on:
+            devbox-healthcheck:
+                condition: service_healthy
+        links:
+            - devbox
+        env_file:
+            - ./env/sdc
+        # Colored logs
+        tty: true
+    devbox:
+        image: healthsamurai/aidboxone:stable
+        depends_on:
+            - devbox-db_test
+            - build-seeds
+        links:
+            - 'devbox-db_test:database'
+        ports:
+            - '8080:8080'
+        env_file:
+            - ./env/aidbox
+            - .env
+        volumes:
+            - ./config:/var/config:cached
+            - ./zenproject:/zenproject
+    devbox-db_test:
+        image: 'healthsamurai/aidboxdb:13.2'
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: devbox
+    devbox-healthcheck:
+        image: curlimages/curl
+        entrypoint: /bin/sleep 10000
+        links:
+            - devbox
+        depends_on:
+            - devbox
+        healthcheck:
+            test: curl --fail http://devbox:8080/health || exit 1
+            interval: 5s
+            timeout: 30s
+            retries: 100
+    build-seeds:
+        build:
+            context: .
+            dockerfile: Dockerfile.seeds
+        volumes:
+            - ./zenproject:/app/zenproject
+            - ./resources/seeds:/app/resources/seeds
+    testscript:
+        depends_on:
+            devbox-healthcheck:
+                condition:
+                    service_healthy
+        build:
+            context: .
+            dockerfile: Dockerfile.testscript
+        volumes:
+            - ./resources/tests/resources:/app/resources
+            - ./resources/tests/TestScript:/app/TestScript
+        environment:
+            PYTHONPATH: .
+            FHIR_SERVER_AUTHORIZATION: Basic cm9vdDpzZWNyZXQ=
+            FHIR_SERVER_BASE_URL: http://devbox:8080
+        command: pipenv run pytest

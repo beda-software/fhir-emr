@@ -1,0 +1,19 @@
+appointment:
+  - id: appointment1
+    resourceType: Appointment
+participant:
+  - individual:
+      display: Basic-1 Practitioner - Endocrinology
+      reference: PractitionerRole/practitioner1
+resourceType: Encounter
+status: in-progress
+id: encounter1
+class:
+  code: consultation
+  system: http://beda.software/custom-healthcare-service-list
+  display: The first appointment
+period:
+  start: '2023-10-14T06:00:00Z'
+subject:
+  display: Third Patient
+  reference: Patient/patient3
