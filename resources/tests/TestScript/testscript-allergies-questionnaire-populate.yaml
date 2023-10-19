@@ -17,7 +17,7 @@ contained:
       - name: Patient
         resource:
           resourceType: Patient
-          id: test-patient
+          id: patient1
           name:
             - use: official
               given:
@@ -37,7 +37,7 @@ contained:
 fixture:
   - id: launched-patient
     resource:
-      reference: file://tests/resources/patient.yaml
+      reference: Patient/patient1
   - id: allergies-questionnaire-from-file
     resource:
       reference: file://tests/resources/allergies-questionnaire.yaml

@@ -18,6 +18,18 @@ services:
             - ./env/sdc
         # Colored logs
         tty: true
+    sdc-healthcheck:
+        image: curlimages/curl
+        entrypoint: /bin/sleep 10000
+        links:
+            - sdc
+        depends_on:
+            - sdc
+        healthcheck:
+            test: curl --fail http://sdc:8081/live || exit 1
+            interval: 1s
+            timeout: 20s
+            retries: 100
     devbox:
         image: healthsamurai/aidboxone:stable
         depends_on:
@@ -61,15 +73,12 @@ services:
     testscript:
         tty: true
         depends_on:
-            devbox-healthcheck:
-                condition:
-                    service_healthy
+            sdc-healthcheck:
+                condition: service_healthy
         build:
             context: .
             dockerfile: Dockerfile.testscript
         volumes:
             - ./resources:/app
-        environment:
-            PYTHONPATH: .
-            FHIR_SERVER_AUTHORIZATION: Basic cm9vdDpzZWNyZXQ=
-            FHIR_SERVER_BASE_URL: http://devbox:8080
+        env_file:
+            - ./env/testscript
