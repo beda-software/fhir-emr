@@ -71,14 +71,12 @@ services:
             - ./zenproject:/app/zenproject
             - ./resources/seeds:/app/resources/seeds
     testscript:
-        tty: true
+        image: bedasoftware/testscript-eval:latest
         depends_on:
             sdc-healthcheck:
                 condition: service_healthy
-        build:
-            context: .
-            dockerfile: Dockerfile.testscript
         volumes:
             - ./resources:/app
         env_file:
             - ./env/testscript
+        command: sleep 15
