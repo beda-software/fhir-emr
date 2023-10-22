@@ -79,4 +79,4 @@ services:
             - ./resources:/app
         env_file:
             - ./env/testscript
-        command: sleep 15
+        command: pytest
