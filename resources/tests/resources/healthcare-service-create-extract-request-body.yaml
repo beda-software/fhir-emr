@@ -1,0 +1,6 @@
+resourceType: Parameters
+parameter:
+- name: questionnaire
+  resource: !include healthcare-service-create.yaml
+- name: questionnaire_response
+  resource: !include healthcare-service-create-questionnaire-response.yaml

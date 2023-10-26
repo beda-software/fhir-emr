@@ -1,0 +1,163 @@
+resourceType: TestScript
+id: healthcare-service-create-questionnaire-ts-test
+url: https://beda.software/TestScript/healthcare-service-create-questionnaire-ts-test
+name: complete-encounter-questionnaire-sc-test
+status: draft
+date: '2023-10-26'
+publisher: Beda Software
+contact:
+- name: Support
+  telecom:
+  - system: email
+    value: ilya@beda.software
+    use: work
+  - system: email
+    value: pavel.r@beda.software
+    use: work
+fixture:
+- id: healthcare-service-questionnaire-response
+  resource:
+    reference: file://tests/resources/healthcare-service-create-questionnaire-response.yaml
+  autocreate: false
+  autodelete: false
+- id: healthcare-service-create-body
+  resource:
+    reference: file://tests/resources/healthcare-service-create-extract-request-body.yaml
+  autocreate: false
+  autodelete: false
+- id: healthcare-service-create-questionnaire
+  resource:
+    reference: Questionnaire/healthcare-service-create
+  autocreate: false
+  autodelete: false
+test:
+- name: Create new encounter
+  description: Test extract operation
+  action:
+  - operation:
+      type:
+        code: extract
+        system: http://terminology.hl7.org/CodeSystem/testscript-operation-codes
+      resource: Questionnaire
+      description: Questionnaire data extract
+      accept: json
+      method: post
+      targetId: healthcare-service-create-questionnaire
+      sourceId: healthcare-service-create-body
+      encodeRequestUrl: false
+  - assert:
+      description: Confirm that the extract returned HTTP status is 200(OK).
+      direction: response
+      response: okay
+      warningOnly: false
+  - operation:
+      description: Search FHIR resources
+      type:
+        code: search
+        system: http://hl7.org/fhir/uv/sdc/OperationDefinition/QuestionnaireResponse-extract
+      resource: HealthcareService
+      encodeRequestUrl: false
+      params: "?service-type=ecg"
+  - assert:
+      description: Check is equal
+      resource: Bundle
+      value: '1'
+      operator: equals
+      warningOnly: false
+      expression: Bundle.total.toString()
+  - assert:
+      description: Check is equal
+      resource: Bundle
+      value: ECG
+      operator: equals
+      warningOnly: false
+      expression: Bundle.entry.resource.name
+  - assert:
+      description: Check is equal
+      resource: Bundle
+      value: ECG
+      operator: equals
+      warningOnly: false
+      expression: Bundle.entry.resource.type.first().coding.first().display
+  - assert:
+      description: Check is equal
+      resource: Bundle
+      value: ecg
+      operator: equals
+      warningOnly: false
+      expression: Bundle.entry.resource.type.first().coding.first().code
+  - assert:
+      description: Check is equal
+      resource: Bundle
+      value: '35'
+      operator: equals
+      warningOnly: false
+      expression: Bundle.entry.resource.duration.toString()
+  - assert:
+      description: Check is equal
+      resource: Bundle
+      value: ECG description
+      operator: equals
+      warningOnly: false
+      expression: Bundle.entry.resource.comment
+  - operation:
+      description: Search FHIR resources
+      type:
+        code: search
+        system: http://hl7.org/fhir/uv/sdc/OperationDefinition/QuestionnaireResponse-extract
+      resource: ChargeItemDefinition
+      encodeRequestUrl: false
+      params: "?url=https://emr.beda.software/charge-item/ecg"
+  - assert:
+      description: Check is equal
+      resource: Bundle
+      value: '1'
+      operator: equals
+      warningOnly: false
+      expression: Bundle.total.toString()
+  - assert:
+      description: Check is equal
+      resource: Bundle
+      value: ECG
+      operator: equals
+      warningOnly: false
+      expression: Bundle.entry.resource.title
+  - assert:
+      description: Check is equal
+      resource: Bundle
+      value: '1'
+      operator: equals
+      warningOnly: false
+      expression: Bundle.entry.resource.propertyGroup.count().toString()
+  - assert:
+      description: Check is equal
+      resource: Bundle
+      value: '50'
+      operator: equals
+      warningOnly: false
+      expression: Bundle.entry.resource.propertyGroup.priceComponent.where(type='base').amount.value.toString()
+  - assert:
+      description: Check is equal
+      resource: Bundle
+      value: '10'
+      operator: equals
+      warningOnly: false
+      expression: Bundle.entry.resource.propertyGroup.priceComponent.where(type='tax').amount.value.toString()
+teardown:
+  action:
+  - operation:
+      type:
+        code: delete
+        system: http://terminology.hl7.org/CodeSystem/testscript-operation-codes
+      resource: HealthcareService
+      description: Delete test resources
+      params: "?service-type=ecg"
+      encodeRequestUrl: true
+  - operation:
+      type:
+        code: delete
+        system: http://terminology.hl7.org/CodeSystem/testscript-operation-codes
+      resource: ChargeItemDefinition
+      description: Delete test resources
+      params: "?url=https://emr.beda.software/charge-item/ecg"
+      encodeRequestUrl: true

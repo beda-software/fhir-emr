@@ -1,0 +1,29 @@
+item:
+- answer:
+  - valueInteger: 35
+  linkId: duration
+- answer:
+  - valueString: ECG
+  linkId: visit-type-name
+- answer:
+  - valueString: ecg
+  linkId: visit-type-code
+- answer:
+  - valueString: ECG description
+  linkId: comment
+- answer:
+  - valueDecimal: 50
+  linkId: price-base
+- answer:
+  - valueDecimal: 10
+  linkId: price-tax
+status: completed
+authored: '2023-10-26T13:33:27Z'
+id: 16e733f4-1823-4b7b-ae8b-9b8d44719a83
+resourceType: QuestionnaireResponse
+meta:
+  lastUpdated: '2023-10-26T13:33:27.848810Z'
+  versionId: '104'
+  extension:
+  - url: ex:createdAt
+    valueInstant: '2023-10-26T13:33:27.848810Z'
