@@ -15,11 +15,6 @@ contact:
     value: pavel.r@beda.software
     use: work
 fixture:
-- id: healthcare-service-questionnaire-response
-  resource:
-    reference: file://tests/resources/healthcare-service-create-questionnaire-response.yaml
-  autocreate: false
-  autodelete: false
 - id: healthcare-service-create-body
   resource:
     reference: file://tests/resources/healthcare-service-create-extract-request-body.yaml
