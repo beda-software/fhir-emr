@@ -8,7 +8,7 @@ services:
         ports:
             - '3001:5000'
     sdc:
-        image: bedasoftware/fhir-sdc:develop
+        image: bedasoftware/fhir-sdc:master
         depends_on:
             devbox-healthcheck:
                 condition: service_healthy

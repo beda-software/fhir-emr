@@ -15,6 +15,7 @@ body:
           url: $ "/HealthcareService/" + healthcareServiceId
           method: PATCH
         resource:
+          name: $ visitTypeName
           duration: $ duration
           comment: $ comment
           type:
@@ -27,6 +28,8 @@ body:
           url: $ "/ChargeItemDefinition/" + chargeItemDefinitionId
           method: PATCH
         resource:
+          url: $ 'https://emr.beda.software/charge-item/' + visitTypeCode
+          title: $ visitTypeName
           propertyGroup:
             - priceComponent:
                 - type: base
