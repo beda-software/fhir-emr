@@ -66,19 +66,10 @@ jobs:
               run: docker-compose logs
             - name: Run tests
               run: yarn test --silent
-    Kaitenzushi:
-      runs-on: ubuntu-latest
-      steps:
-          - uses: actions/checkout@v2
-            with:
-              fetch-depth: 0
-          - name: Build TestScript files from FSH sources
-            run: ./run_kaitenzushi.sh
     TestScript:
         env:
             AIDBOX_LICENSE: ${{ secrets.AIDBOX_LICENSE }}
         runs-on: ubuntu-latest
-        needs: Kaitenzushi
         steps:
             - uses: actions/checkout@v2
               with:
@@ -87,6 +78,8 @@ jobs:
               run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
             - name: Create deps dir
               run: mkdir -p zenproject/zen-packages && chmod 0777 zenproject/zen-packages
+            - name: Build TestScript files from FSH sources
+              run: ./run_kaitenzushi.sh
             - name: Run tests
               run: ./run_testscript.sh
             - name: Show logs
