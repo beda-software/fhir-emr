@@ -66,6 +66,14 @@ jobs:
               run: docker-compose logs
             - name: Run tests
               run: yarn test --silent
+    Kaitenzushi:
+      runs-on: ubuntu-latest
+      steps:
+          - uses: actions/checkout@v2
+            with:
+              fetch-depth: 0
+          - name: Build TestScript files from FSH sources
+            run: ./run_kaitenzushi.sh
     TestScript:
         env:
             AIDBOX_LICENSE: ${{ secrets.AIDBOX_LICENSE }}
