@@ -78,6 +78,7 @@ jobs:
         env:
             AIDBOX_LICENSE: ${{ secrets.AIDBOX_LICENSE }}
         runs-on: ubuntu-latest
+        needs: Kaitenzushi
         steps:
             - uses: actions/checkout@v2
               with:
