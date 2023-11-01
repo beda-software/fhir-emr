@@ -1,7 +1,0 @@
-name: fhir-emr-kaitenzushi
-services:
-  kaitenzushi:
-    image: bedasoftware/kaitenzushi:main
-    volumes:
-        - ./resources:/app/resources
-    command: yarn fshToFHIR -i resources/tests/TestScript -o resources/tests/TestScript

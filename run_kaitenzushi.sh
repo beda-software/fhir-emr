@@ -1,5 +1,14 @@
 #!/bin/sh
 
-docker compose -f docker-compose.kaitenzushi.yaml pull --quite
-docker compose -f docker-compose.kaitenzushi.yaml up --exit-code-from kaitenzushi kaitenzushi
-exit $?
+docker pull bedasoftware/kaitenzushi:main
+
+docker run -d --name fhir-emr-kaitenzushi \
+    -v $(pwd)/resources:/app/resources \
+    bedasoftware/kaitenzushi:main \
+    yarn fshToFHIR -i resources/tests/TestScript -o resources/tests/TestScript
+
+CONTAINER_EXIT_CODE=$(docker wait fhir-emr-kaitenzushi)
+
+docker rm fhir-emr-kaitenzushi
+
+exit $CONTAINER_EXIT_CODE
