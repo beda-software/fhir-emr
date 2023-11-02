@@ -78,6 +78,8 @@ jobs:
               run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
             - name: Create deps dir
               run: mkdir -p zenproject/zen-packages && chmod 0777 zenproject/zen-packages
+            - name: Build TestScript files from FSH sources
+              run: ./run_kaitenzushi.sh
             - name: Run tests
               run: ./run_testscript.sh
             - name: Show logs
