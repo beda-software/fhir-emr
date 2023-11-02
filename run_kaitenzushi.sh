@@ -1,11 +1,10 @@
 #!/bin/sh
 
-docker pull bedasoftware/kaitenzushi:main
+docker pull bedasoftware/kaitenzushi:develop
 
 docker run -d --name fhir-emr-kaitenzushi \
     -v $(pwd)/resources:/app/resources \
-    bedasoftware/kaitenzushi:main \
-    yarn fshToFHIR -i resources/tests/TestScript -o resources/tests/TestScript
+    bedasoftware/kaitenzushi:develop
 
 CONTAINER_EXIT_CODE=$(docker wait fhir-emr-kaitenzushi)
 
