@@ -1,11 +1,13 @@
 #!/bin/sh
 
-docker pull bedasoftware/kaitenzushi:main
+docker pull bedasoftware/kaitenzushi:latest
 
 docker run -d --name fhir-emr-kaitenzushi \
     -v $(pwd)/resources:/app/resources \
-    bedasoftware/kaitenzushi:main \
-    -i resources/tests/TestScript -o resources/tests/TestScript
+    bedasoftware/kaitenzushi:latest \
+    -i resources/tests/TestScript \
+    -o resources/tests/TestScript \
+    -d https://github.com/beda-software/beda-emr-core
 
 CONTAINER_EXIT_CODE=$(docker wait fhir-emr-kaitenzushi)
 
