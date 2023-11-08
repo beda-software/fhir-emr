@@ -68,7 +68,7 @@ item:
           - Patient
         answerExpression:
           language: application/x-fhir-query
-          expression: "Patient"
+          expression: "Patient?_count=25"
         choiceColumn:
           - forDisplay: true
             path: "name.given.first() + ' ' + name.family"
