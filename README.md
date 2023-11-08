@@ -12,6 +12,8 @@ __Promo web page__: [beda.software/emr](https://beda.software/emr)
 
 __Design__: [Figma](https://www.figma.com/file/2bxMDfG3lRPEZpRwDC4gTB/SaaS-EMR-System)
 
+__Documentation__: https://doc.emr.beda.software/
+
 ## Benefits
 
 -   Fully FHIR compatible:
