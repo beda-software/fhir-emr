@@ -23,7 +23,7 @@ jobs:
           - name: Install zen deps
             run: cd zenproject && java -jar ../zen.jar zen pull-deps
           - name: Build zen project
-            run: java -jar ../zen.jar zen build zenproject beda-emr
+            run: java -jar zen.jar zen build zenproject beda-emr
           - uses: marvinpinto/action-automatic-releases@latest
             with:
               repo_token: "${{ secrets.GITHUB_TOKEN }}"
