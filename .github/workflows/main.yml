@@ -21,9 +21,9 @@ jobs:
           - name: Load zen cli
             run: curl -L  https://github.com/HealthSamurai/ftr/releases/latest/download/zen.jar -o ./zen.jar
           - name: Install zen deps
-            run: cd zenproject && java -jar ../zen.jar pull-deps
+            run: cd zenproject && java -jar ../zen.jar zen pull-deps
           - name: Build zen project
-            run: cd zenproject && java -jar ../zen.jar build output beda-emr
+            run: java -jar ../zen.jar zen build zenproject beda-emr
           - uses: marvinpinto/action-automatic-releases@latest
             with:
               repo_token: "${{ secrets.GITHUB_TOKEN }}"
@@ -31,7 +31,7 @@ jobs:
               title: Development build
               draft: true
               files: |
-                zenproject/output/beda-emr.zip
+                zenproject/beda-emr.zip
     Release:
         runs-on: ubuntu-latest
         needs: ZenProject
