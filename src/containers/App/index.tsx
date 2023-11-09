@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro';
 import queryString from 'query-string';
 import { useEffect, useRef } from 'react';
-import { Route, BrowserRouter, Routes, Navigate, useLocation } from 'react-router-dom';
+import { Route, BrowserRouter, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
@@ -30,6 +30,7 @@ import { restoreUserSession } from './utils';
 import { HealthcareServiceList } from '../HealthcareServiceList';
 import { InvoiceDetails } from '../InvoiceDetails';
 import { InvoiceList } from '../InvoiceList';
+import { NotificationPage } from '../NotificationPage';
 import { OrganizationScheduling } from '../OrganizationScheduling';
 
 export function App() {
@@ -80,6 +81,7 @@ export function Auth() {
 function AnonymousUserApp() {
     const location = useLocation();
     const originPathRef = useRef(location.pathname);
+    const navigate = useNavigate();
 
     return (
         <Routes>
@@ -113,7 +115,7 @@ function AnonymousUserApp() {
                 path="/questionnaire"
                 element={
                     <AnonymousLayout>
-                        <PatientQuestionnaire />
+                        <PatientQuestionnaire onSuccess={() => navigate('thanks')} />
                     </AnonymousLayout>
                 }
             />
@@ -123,6 +125,15 @@ function AnonymousUserApp() {
                     <>
                         <Navigate to="/signin" replace={true} />
                     </>
+                }
+            />
+            <Route
+                path="/thanks"
+                element={
+                    <NotificationPage
+                        title="Thank you!"
+                        text="Thank you for filling out the questionnaire. Now you can close this page."
+                    />
                 }
             />
         </Routes>

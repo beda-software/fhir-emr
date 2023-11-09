@@ -47,7 +47,7 @@ function usePatientQuestionnaire() {
     };
 }
 
-export function PatientQuestionnaire() {
+export function PatientQuestionnaire({ onSuccess }: { onSuccess?: () => void }) {
     const appToken = getToken();
     const isAnonymousUser = !appToken;
     const [isLoading, setIsLoading] = useState(!appToken);
@@ -78,13 +78,13 @@ export function PatientQuestionnaire() {
             </BasePageHeader>
 
             <BasePageContent style={{ alignItems: 'center' }}>
-                {isLoading ? <Spinner /> : <PatientQuestionnaireForm />}
+                {isLoading ? <Spinner /> : <PatientQuestionnaireForm onSuccess={onSuccess} />}
             </BasePageContent>
         </>
     );
 }
 
-function PatientQuestionnaireForm() {
+function PatientQuestionnaireForm({ onSuccess }: { onSuccess?: () => void }) {
     const { response, questionnaireId, encounterId } = usePatientQuestionnaire();
     const appToken = getToken();
     const isAnonymousUser = !appToken;
@@ -104,6 +104,7 @@ function PatientQuestionnaireForm() {
                     author={isAnonymousUser ? patient : selectCurrentUserRoleResource()}
                     questionnaireId={questionnaireId!}
                     encounterId={encounterId}
+                    onSuccess={onSuccess}
                 />
             )}
         </RenderRemoteData>
