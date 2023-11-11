@@ -37,10 +37,7 @@ export function useEncounterList(
     const dateFilterValue = filterValues?.[2]?.value ?? undefined;
 
     const dateParameter = dateFilterValue
-        ? [
-              `ge${formatFHIRDateTime(dateFilterValue[0])}`,
-              `le${formatFHIRDateTime(dateFilterValue[1])}`,
-          ]
+        ? [`ge${formatFHIRDateTime(dateFilterValue[0])}`, `le${formatFHIRDateTime(dateFilterValue[1])}`]
         : undefined;
 
     const queryParameters = {
@@ -74,34 +71,36 @@ export function useEncounterList(
                 PractitionerRole: practitionerRoles,
             } = sourceMap;
 
-            return encounters.map((encounter) => {
-                const patient = patients.find(
-                    (patient) =>
-                        encounter.subject &&
-                        patient.id === parseFHIRReference(encounter.subject).id,
-                );
+            const filteredEncounters = encounters
+                .filter((encounter) => encounter.status !== 'finished') // Filter out "completed" encounters
+                .map((encounter) => {
+                    const patient = patients.find(
+                        (patient) => encounter.subject && patient.id === parseFHIRReference(encounter.subject).id,
+                    );
 
-                const practitionerRole = practitionerRoles.find(
-                    (practitionerRole) =>
-                        encounter.participant?.[0]!.individual &&
-                        practitionerRole.id ===
-                            parseFHIRReference(encounter.participant?.[0]!.individual).id,
-                );
+                    const practitionerRole = practitionerRoles.find(
+                        (practitionerRole) =>
+                            encounter.participant?.[0]!.individual &&
+                            practitionerRole.id === parseFHIRReference(encounter.participant?.[0]!.individual).id,
+                    );
 
-                const practitioner = practitioners.find(
-                    (practitioner) => practitionerRole?.practitioner && practitioner.id === parseFHIRReference(practitionerRole?.practitioner).id,
-                );
+                    const practitioner = practitioners.find(
+                        (practitioner) =>
+                            practitionerRole?.practitioner &&
+                            practitioner.id === parseFHIRReference(practitionerRole?.practitioner).id,
+                    );
 
-                return {
-                    id: encounter.id!,
-                    patient,
-                    practitioner,
-                    status: encounter.status,
-                    period: encounter?.period,
-                    humanReadableDate:
-                        encounter?.period?.start && formatHumanDateTime(encounter?.period?.start),
-                };
-            });
+                    return {
+                        id: encounter.id!,
+                        patient,
+                        practitioner,
+                        status: encounter.status,
+                        period: encounter?.period,
+                        humanReadableDate: encounter?.period?.start && formatHumanDateTime(encounter?.period?.start),
+                    };
+                });
+
+            return filteredEncounters;
         });
     }, [resourceResponse]);
 
