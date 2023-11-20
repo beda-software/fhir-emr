@@ -22,7 +22,7 @@ interface LaunchProps {
     user: string;
     client: string;
     patient: string;
-    practitioner: string | null;
+    practitioner?: string;
 }
 
 interface LaunchRPCResult {
