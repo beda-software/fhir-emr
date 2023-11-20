@@ -22,6 +22,7 @@ interface LaunchProps {
     user: string;
     client: string;
     patient: string;
+    practitioner: string | null;
 }
 
 interface LaunchRPCResult {
@@ -30,13 +31,13 @@ interface LaunchRPCResult {
     };
 }
 
-export async function launch({ user, client, patient }: LaunchProps) {
+export async function launch({ user, client, patient, practitioner }: LaunchProps) {
     const response = await service<LaunchRPCResult>({
         url: '/rpc',
         method: 'POST',
         data: {
             method: 'aidbox.smart/get-launch-uri',
-            params: { user, iss: encodeURIComponent(`${config.baseURL}/fhir`), client, ctx: { patient } },
+            params: { user, iss: encodeURIComponent(`${config.baseURL}/fhir`), client, ctx: { patient, practitioner } },
         },
     });
     if (isSuccess(response)) {

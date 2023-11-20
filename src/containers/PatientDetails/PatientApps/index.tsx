@@ -5,7 +5,7 @@ import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
 import { Client } from 'shared/src/contrib/aidbox';
 
-import { sharedAuthorizedUser } from 'src/sharedState';
+import { sharedAuthorizedUser, sharedAuthorizedPractitioner } from 'src/sharedState';
 
 import { launch, useSmartApps } from './hooks';
 
@@ -21,6 +21,7 @@ interface SmartAppProps {
 
 function SmartApp({ app, patient }: SmartAppProps) {
     const user = sharedAuthorizedUser.getSharedState();
+    const practitioner = sharedAuthorizedPractitioner.getSharedState();
     return (
         <Card
             title={app.smart?.name ?? 'UNKNOWN'}
@@ -28,7 +29,14 @@ function SmartApp({ app, patient }: SmartAppProps) {
             extra={
                 <Button
                     type="primary"
-                    onClick={() => launch({ client: app.id!, user: user!.id!, patient: patient.id! })}
+                    onClick={() =>
+                        launch({
+                            client: app.id!,
+                            user: user!.id!,
+                            patient: patient.id!,
+                            ...(practitioner ? { practitioner: practitioner.id } : {}),
+                        })
+                    }
                 >
                     Launch
                 </Button>
