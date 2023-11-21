@@ -8,7 +8,7 @@ body:
         entry:
             - request:
                   method: Post
-                  url: '/User'
+                  url: $ '/User?_id=' + federatedIdentity.value
               resource:
                   resourceType: User
                   # Use fixed User.id here as required by Aidbox
@@ -18,7 +18,7 @@ body:
                   id: $ federatedIdentity.value
             - request:
                   method: Post
-                  url: '/Patient'
+                  url: $ '/Patient?identifier=' + federatedIdentity.value
               resource:
                   resourceType: Patient
                   identifier:
@@ -30,7 +30,7 @@ body:
               fullUrl: urn:uuid:cf3923f0-2eaa-4feb-94eb-3a3db62f0705
             - request:
                   method: Post
-                  url: '/Role'
+                  url: $ '/Role?user=' + federatedIdentity.value
               resource:
                   resourceType: Role
                   name: 'patient'
