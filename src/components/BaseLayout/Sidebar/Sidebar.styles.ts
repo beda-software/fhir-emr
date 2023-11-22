@@ -25,5 +25,6 @@ export const S = {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        overflow-x: hidden;
     `,
 };
