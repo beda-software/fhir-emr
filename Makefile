@@ -9,6 +9,12 @@ up:
 	docker compose build
 	docker compose up -d
 
+stop:
+	docker compose stop
+
+down:
+	docker compose down
+
 up-video:
 	docker compose -f compose.yaml -f compose.video.yaml pull --quiet
 	docker compose build
