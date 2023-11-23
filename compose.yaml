@@ -104,7 +104,7 @@ services:
             - TIMESCALEDB_SERVICE_NAME=datastream-timescaledb
             - PGUSER=postgres
             - PGPASSWORD=postgres
-            - EMR_WEB_URL="http://localhost:3000"
+            - EMR_WEB_URL=http://localhost:3000
             - METRIPORT_USE_SANDBOX=true
             - METRIPORT_WEBHOOK_AUTH_KEY
             - METRIPORT_API_SECRET
