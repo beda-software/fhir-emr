@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { GroupItemProps, QuestionItemProps } from 'sdc-qrf/lib/types';
 
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { isLoading } from 'fhir-react/lib/libs/remoteData';
+import { isLoading, success } from 'fhir-react/lib/libs/remoteData';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { ModalTrigger } from 'src/components/ModalTrigger';
@@ -30,6 +30,9 @@ export function QuestionnaireBuilder() {
         onItemDrag,
         onSaveQuestionnaire,
         onItemDelete,
+        selectedQuestionnaire,
+        onPromptSelect,
+        selectedPrompt,
     } = useQuestionnaireBuilder();
     const [questionnaireItem, setQuestionnaireItem] = useState<QuestionItemProps | undefined>();
     const [groupItem, setGroupItem] = useState<GroupItemProps | undefined>();
@@ -46,7 +49,9 @@ export function QuestionnaireBuilder() {
                             </Title>
                         </Col>
                         <Col>
-                            <RenderRemoteData remoteData={response}>
+                            <RenderRemoteData
+                                remoteData={selectedQuestionnaire ? success(selectedQuestionnaire) : response}
+                            >
                                 {(questionnaire: Questionnaire) => {
                                     return questionnaire.item ? (
                                         <ModalTrigger
@@ -76,7 +81,7 @@ export function QuestionnaireBuilder() {
                 <S.Content>
                     <div className={s.rightColumn}>
                         <Builder
-                            response={response}
+                            response={selectedQuestionnaire ? success(selectedQuestionnaire) : response}
                             updateResponse={updateResponse}
                             error={error}
                             activeQuestionItem={questionnaireItem || groupItem}
@@ -126,6 +131,8 @@ export function QuestionnaireBuilder() {
                             className={s.promptForm}
                             visible={!questionnaireItem && !groupItem}
                             onSubmit={(prompt) => onSubmitPrompt(prompt)}
+                            onPromptSelect={(prompt) => onPromptSelect(prompt)}
+                            selectedPrompt={selectedPrompt}
                             isLoading={isLoading(response) || isLoading(updateResponse)}
                         />
                     </S.LeftColumn>

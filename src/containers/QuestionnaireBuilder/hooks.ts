@@ -1,5 +1,9 @@
 import { notification } from 'antd';
-import { Questionnaire as FHIRQuestionnaire, QuestionnaireItem as FHIRQuestionnaireItem } from 'fhir/r4b';
+import {
+    Questionnaire as FHIRQuestionnaire,
+    QuestionnaireItem as FHIRQuestionnaireItem,
+    Questionnaire,
+} from 'fhir/r4b';
 import { notAsked, RemoteData } from 'fhir-react';
 import _ from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
@@ -42,6 +46,9 @@ export function useQuestionnaireBuilder() {
     const [response, setResponse] = useState<RemoteData<FHIRQuestionnaire>>(notAsked);
     const [updateResponse, setUpdateResponse] = useState<RemoteData<FHIRQuestionnaire>>(notAsked);
     const [error, setError] = useState<string | undefined>();
+    const [editHistory, setEditHistory] = useState({});
+    const [selectedPrompt, setSelectedPrompt] = useState<string | undefined>(undefined);
+    const [selectedQuestionnaire, setSelectedQuestionnaire] = useState<Questionnaire>();
 
     useEffect(() => {
         (async () => {
@@ -95,6 +102,9 @@ export function useQuestionnaireBuilder() {
                 if (isSuccess(saveResponse)) {
                     const newQuestionnaire = saveResponse.data;
                     setResponse(success(newQuestionnaire));
+                    setEditHistory({ ...{ [prompt]: newQuestionnaire }, ...editHistory });
+                    setSelectedQuestionnaire(undefined);
+                    setSelectedPrompt(prompt);
                 }
 
                 if (isFailure(saveResponse)) {
@@ -105,7 +115,7 @@ export function useQuestionnaireBuilder() {
                 }
             }
         },
-        [response],
+        [editHistory, response],
     );
 
     const onItemChange = useCallback(
@@ -160,6 +170,14 @@ export function useQuestionnaireBuilder() {
         [response],
     );
 
+    const onPromptSelect = useCallback(
+        (prompt: string) => {
+            setSelectedQuestionnaire(editHistory[prompt]);
+            setSelectedPrompt(prompt);
+        },
+        [editHistory],
+    );
+
     return {
         response,
         updateResponse,
@@ -169,5 +187,9 @@ export function useQuestionnaireBuilder() {
         onItemDrag,
         onItemDelete,
         error,
+        editHistory,
+        selectedQuestionnaire,
+        onPromptSelect,
+        selectedPrompt,
     };
 }
