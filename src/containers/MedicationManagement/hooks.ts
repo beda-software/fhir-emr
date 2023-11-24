@@ -1,4 +1,4 @@
-import { Medication } from 'fhir/r4b';
+import { Medication, MedicationKnowledge } from 'fhir/r4b';
 
 import { extractBundleResources } from 'fhir-react/lib/services/fhir';
 import { mapSuccess } from 'fhir-react/lib/services/service';
@@ -19,6 +19,27 @@ export function useMedicationList() {
     return {
         pagination,
         medicationResponse,
+        pagerManager,
+        handleTableChange,
+    };
+}
+
+export function useMedicationKnowledge() {
+    const queryParameters = {};
+
+    const { resourceResponse, pagerManager, handleTableChange, pagination } = usePagerExtended<
+        MedicationKnowledge,
+        StringTypeColumnFilterValue[]
+    >('MedicationKnowledge', queryParameters);
+
+    const medicationKnowledgeResponse = mapSuccess(
+        resourceResponse,
+        (bundle) => extractBundleResources(bundle).MedicationKnowledge,
+    );
+
+    return {
+        pagination,
+        medicationKnowledgeResponse,
         pagerManager,
         handleTableChange,
     };
