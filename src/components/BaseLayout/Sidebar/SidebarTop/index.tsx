@@ -57,6 +57,7 @@ export function SidebarTop(props: Props) {
               [Role.Receptionist]: () => [
                   { label: t`Scheduling`, path: '/scheduling', icon: <EncountersIcon /> },
                   { label: t`Invoices`, path: '/invoices', icon: <InvoicesIcon /> },
+                  { label: t`Medications`, path: '/medications', icon: <InvoicesIcon /> },
               ],
           })
         : [];
