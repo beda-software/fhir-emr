@@ -103,6 +103,7 @@ services:
         environment:
             - METRIPORT_WEBHOOK_AUTH_KEY
             - METRIPORT_API_SECRET
+            - JWT_TOKEN_ENCODE_SECRET=${DATASEQUENCE_JWT_SECRET}
     jute:
         image: bedasoftware/jute-microservice:latest
         ports:

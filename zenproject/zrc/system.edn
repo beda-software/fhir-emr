@@ -50,7 +50,10 @@
    :TokenIntrospector {:appleid
                        {:type "jwt"
                         :jwks_uri "https://appleid.apple.com/auth/keys"
-                        :jwt {:iss "https://appleid.apple.com"}}}
+                        :jwt {:iss "https://appleid.apple.com"}}
+                       :datasequence
+                       {:type "jwt"
+                        :jwt {:iss "https://ingest.emr.beda.software" :secret #env DATASEQUENCE_JWT_SECRET}}}
    :Endpoint {:emr-datasequence-records
               {:identifier [{:system "https://fhir.emr.beda.software/CodeSystem/consent-subject"
                              :value "emr-datasequence-records"}]
