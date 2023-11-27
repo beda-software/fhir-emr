@@ -87,10 +87,8 @@ services:
         depends_on:
             datastream-timescaledb:
                 condition: service_healthy
-        environment:
-            TIMESCALEDB_SERVICE_NAME: datastream-timescaledb
-            PGUSER: postgres
-            PGPASSWORD: postgres
+        env_file:
+            - ./env/ingestion
     datastream:
         image: bedasoftware/fhir-datasequence:latest
         depends_on:
@@ -100,12 +98,9 @@ services:
                 condition: service_completed_successfully
         ports:
             - '8082:8081'
+        env_file:
+            - ./env/ingestion
         environment:
-            - TIMESCALEDB_SERVICE_NAME=datastream-timescaledb
-            - PGUSER=postgres
-            - PGPASSWORD=postgres
-            - EMR_WEB_URL=http://localhost:3000
-            - METRIPORT_USE_SANDBOX=true
             - METRIPORT_WEBHOOK_AUTH_KEY
             - METRIPORT_API_SECRET
     jute:

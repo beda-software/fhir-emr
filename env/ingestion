@@ -1,0 +1,4 @@
+TIMESCALEDB_SERVICE_NAME=datastream-timescaledb
+PGUSER=postgres
+PGPASSWORD=postgres
+EMR_WEB_URL=http://localhost:3000
