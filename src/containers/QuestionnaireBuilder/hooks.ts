@@ -42,6 +42,8 @@ export function useQuestionnaireBuilder() {
     const [response, setResponse] = useState<RemoteData<FHIRQuestionnaire>>(notAsked);
     const [updateResponse, setUpdateResponse] = useState<RemoteData<FHIRQuestionnaire>>(notAsked);
     const [error, setError] = useState<string | undefined>();
+    const [editHistory, setEditHistory] = useState({});
+    const [selectedPrompt, setSelectedPrompt] = useState<string | undefined>(undefined);
 
     useEffect(() => {
         (async () => {
@@ -89,12 +91,13 @@ export function useQuestionnaireBuilder() {
                 setError(undefined);
                 const questionnaire = response.data;
                 const saveResponse = await generateQuestionnaire(prompt, JSON.stringify(questionnaire));
-                console.log('saveResponse', saveResponse);
 
                 setUpdateResponse(saveResponse);
                 if (isSuccess(saveResponse)) {
                     const newQuestionnaire = saveResponse.data;
                     setResponse(success(newQuestionnaire));
+                    setEditHistory({ ...{ [prompt]: newQuestionnaire }, ...editHistory });
+                    setSelectedPrompt(prompt);
                 }
 
                 if (isFailure(saveResponse)) {
@@ -105,7 +108,7 @@ export function useQuestionnaireBuilder() {
                 }
             }
         },
-        [response],
+        [editHistory, response],
     );
 
     const onItemChange = useCallback(
@@ -160,6 +163,26 @@ export function useQuestionnaireBuilder() {
         [response],
     );
 
+    const onPromptSelect = useCallback(
+        (prompt: string) => {
+            setResponse(success(editHistory[prompt]));
+            setSelectedPrompt(prompt);
+        },
+        [editHistory],
+    );
+
+    const onPromptDelete = useCallback(
+        (prompt: string) => {
+            const currentPrompts = editHistory;
+            delete currentPrompts[prompt];
+            setEditHistory(currentPrompts);
+            const activePrompt = Object.keys(currentPrompts)[0]!;
+            onPromptSelect(activePrompt);
+            setResponse(success(editHistory[activePrompt]));
+        },
+        [editHistory, onPromptSelect],
+    );
+
     return {
         response,
         updateResponse,
@@ -169,5 +192,10 @@ export function useQuestionnaireBuilder() {
         onItemDrag,
         onItemDelete,
         error,
+        editHistory,
+        setEditHistory,
+        onPromptSelect,
+        selectedPrompt,
+        onPromptDelete,
     };
 }

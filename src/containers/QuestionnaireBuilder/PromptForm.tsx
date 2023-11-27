@@ -1,7 +1,7 @@
+import { DeleteOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, Timeline } from 'antd';
 import { FormProps } from 'antd/lib/form';
-import { useState } from 'react';
 
 import s from './QuestionnaireBuilder.module.scss';
 
@@ -13,15 +13,48 @@ interface PromptFormInterface {
 
 interface Props extends FormProps {
     onSubmit: (prompt: string) => Promise<any>;
+    onPromptSelect: (prompt: string) => void;
+    editHistory: object;
+    onPromptDelete: (prompt: string) => void;
+    selectedPrompt?: string;
     isLoading?: boolean;
     visible?: boolean;
 }
 
 export function PromptForm(props: Props) {
-    const { onSubmit, isLoading, visible, ...rest } = props;
+    const { onSubmit, onPromptSelect, selectedPrompt, editHistory, onPromptDelete, isLoading, visible, ...rest } =
+        props;
     const [promptForm] = Form.useForm<PromptFormInterface>();
-    const [prompts, setPrompts] = useState<string[]>([]);
     const disabled = isLoading;
+
+    const items = Object.keys(editHistory).map((prompt, index) => {
+        return {
+            color: isLoading ? 'gray' : prompt === selectedPrompt ? 'green' : 'blue',
+            children: (
+                <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <div
+                        key={`${prompt}-${index}-div`}
+                        onClick={() => onPromptSelect(prompt)}
+                        className={s.singlePromptContainer}
+                        style={disabled ? { pointerEvents: 'none' } : {}}
+                    >
+                        <pre key={`${prompt} - ${index}`} className={s.prompt}>
+                            {prompt}
+                        </pre>
+                    </div>
+                    <div>
+                        <Button
+                            onClick={() => onPromptDelete(prompt)}
+                            type="primary"
+                            disabled={isLoading || Object.keys(editHistory).length === 1}
+                        >
+                            <DeleteOutlined />
+                        </Button>
+                    </div>
+                </div>
+            ),
+        };
+    });
 
     return (
         <Form<PromptFormInterface>
@@ -30,7 +63,6 @@ export function PromptForm(props: Props) {
             onFinish={(values) => {
                 if (values.prompt) {
                     onSubmit(values.prompt);
-                    setPrompts([values.prompt, ...prompts]);
                     promptForm.resetFields();
                 }
             }}
@@ -44,11 +76,7 @@ export function PromptForm(props: Props) {
                 <Button htmlType="submit" disabled={disabled}>{t`Submit`}</Button>
             </Form.Item>
             <div className={s.prompts}>
-                {prompts.map((prompt, index) => (
-                    <pre key={`${prompt}-${index}`} className={s.prompt}>
-                        {prompt}
-                    </pre>
-                ))}
+                <Timeline items={items} />
             </div>
         </Form>
     );
