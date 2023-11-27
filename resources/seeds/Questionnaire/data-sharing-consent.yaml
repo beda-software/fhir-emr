@@ -38,7 +38,7 @@ item:
             code: "deny"
             system: http://hl7.org/fhir/consent-provision-type
             display: Deny access
- - text: Date start
+  - text: Date start
     type: date
     linkId: date-start
     required: true
