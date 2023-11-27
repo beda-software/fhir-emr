@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { GroupItemProps, QuestionItemProps } from 'sdc-qrf/lib/types';
 
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { isLoading, success } from 'fhir-react/lib/libs/remoteData';
+import { isLoading } from 'fhir-react/lib/libs/remoteData';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { ModalTrigger } from 'src/components/ModalTrigger';
@@ -30,7 +30,6 @@ export function QuestionnaireBuilder() {
         onItemDrag,
         onSaveQuestionnaire,
         onItemDelete,
-        selectedQuestionnaire,
         onPromptSelect,
         selectedPrompt,
         editHistory,
@@ -50,9 +49,7 @@ export function QuestionnaireBuilder() {
                             </Title>
                         </Col>
                         <Col>
-                            <RenderRemoteData
-                                remoteData={selectedQuestionnaire ? success(selectedQuestionnaire) : response}
-                            >
+                            <RenderRemoteData remoteData={response}>
                                 {(questionnaire: Questionnaire) => {
                                     return questionnaire.item ? (
                                         <ModalTrigger
@@ -82,7 +79,7 @@ export function QuestionnaireBuilder() {
                 <S.Content>
                     <div className={s.rightColumn}>
                         <Builder
-                            response={selectedQuestionnaire ? success(selectedQuestionnaire) : response}
+                            response={response}
                             updateResponse={updateResponse}
                             error={error}
                             activeQuestionItem={questionnaireItem || groupItem}

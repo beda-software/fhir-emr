@@ -1,9 +1,5 @@
 import { notification } from 'antd';
-import {
-    Questionnaire as FHIRQuestionnaire,
-    QuestionnaireItem as FHIRQuestionnaireItem,
-    Questionnaire,
-} from 'fhir/r4b';
+import { Questionnaire as FHIRQuestionnaire, QuestionnaireItem as FHIRQuestionnaireItem } from 'fhir/r4b';
 import { notAsked, RemoteData } from 'fhir-react';
 import _ from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
@@ -48,7 +44,6 @@ export function useQuestionnaireBuilder() {
     const [error, setError] = useState<string | undefined>();
     const [editHistory, setEditHistory] = useState({});
     const [selectedPrompt, setSelectedPrompt] = useState<string | undefined>(undefined);
-    const [selectedQuestionnaire, setSelectedQuestionnaire] = useState<Questionnaire>();
 
     useEffect(() => {
         (async () => {
@@ -96,14 +91,12 @@ export function useQuestionnaireBuilder() {
                 setError(undefined);
                 const questionnaire = response.data;
                 const saveResponse = await generateQuestionnaire(prompt, JSON.stringify(questionnaire));
-                console.log('saveResponse', saveResponse);
 
                 setUpdateResponse(saveResponse);
                 if (isSuccess(saveResponse)) {
                     const newQuestionnaire = saveResponse.data;
                     setResponse(success(newQuestionnaire));
                     setEditHistory({ ...{ [prompt]: newQuestionnaire }, ...editHistory });
-                    setSelectedQuestionnaire(undefined);
                     setSelectedPrompt(prompt);
                 }
 
@@ -172,7 +165,7 @@ export function useQuestionnaireBuilder() {
 
     const onPromptSelect = useCallback(
         (prompt: string) => {
-            setSelectedQuestionnaire(editHistory[prompt]);
+            setResponse(success(editHistory[prompt]));
             setSelectedPrompt(prompt);
         },
         [editHistory],
@@ -201,7 +194,6 @@ export function useQuestionnaireBuilder() {
         error,
         editHistory,
         setEditHistory,
-        selectedQuestionnaire,
         onPromptSelect,
         selectedPrompt,
         onPromptDelete,
