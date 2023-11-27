@@ -30,15 +30,15 @@ item:
     answerOption:
       - value:
           Coding:
-            code: "deny"
-            system: http://hl7.org/fhir/consent-provision-type
-            display: Deny
-      - value:
-          Coding:
             code: "permit"
             system: http://hl7.org/fhir/consent-provision-type
-            display: Permit
-  - text: Date start
+            display: Allow access
+      - value:
+          Coding:
+            code: "deny"
+            system: http://hl7.org/fhir/consent-provision-type
+            display: Deny access
+ - text: Date start
     type: date
     linkId: date-start
     required: true
