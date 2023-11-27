@@ -1,7 +1,7 @@
+import { DeleteOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 import { Button, Form, Input, Timeline } from 'antd';
 import { FormProps } from 'antd/lib/form';
-import { useEffect, useState } from 'react';
 
 import s from './QuestionnaireBuilder.module.scss';
 
@@ -27,8 +27,6 @@ export function PromptForm(props: Props) {
     const [promptForm] = Form.useForm<PromptFormInterface>();
     const disabled = isLoading;
 
-    console.log('PromptForm', editHistory);
-
     const items = Object.keys(editHistory).map((prompt, index) => {
         return {
             color: isLoading ? 'gray' : prompt === selectedPrompt ? 'green' : 'blue',
@@ -50,7 +48,7 @@ export function PromptForm(props: Props) {
                             type="primary"
                             disabled={isLoading || Object.keys(editHistory).length === 1}
                         >
-                            Delete
+                            <DeleteOutlined />
                         </Button>
                     </div>
                 </div>
