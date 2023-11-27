@@ -73,8 +73,6 @@ export function Builder(props: Props) {
                         resourceType: 'QuestionnaireResponse',
                         status: 'completed',
                     });
-                    console.log('FHIR Questionnaire', questionnaire);
-                    console.log('formData', formData);
                     const title = formData.context.questionnaire.title || formData.context.questionnaire.name;
 
                     if (questionnaire.item) {

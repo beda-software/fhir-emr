@@ -178,6 +178,18 @@ export function useQuestionnaireBuilder() {
         [editHistory],
     );
 
+    const onPromptDelete = useCallback(
+        (prompt: string) => {
+            const currentPrompts = editHistory;
+            delete currentPrompts[prompt];
+            setEditHistory(currentPrompts);
+            const activePrompt = Object.keys(currentPrompts)[0]!;
+            onPromptSelect(activePrompt);
+            setResponse(success(editHistory[activePrompt]));
+        },
+        [editHistory, onPromptSelect],
+    );
+
     return {
         response,
         updateResponse,
@@ -188,8 +200,10 @@ export function useQuestionnaireBuilder() {
         onItemDelete,
         error,
         editHistory,
+        setEditHistory,
         selectedQuestionnaire,
         onPromptSelect,
         selectedPrompt,
+        onPromptDelete,
     };
 }

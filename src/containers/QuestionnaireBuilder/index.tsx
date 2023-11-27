@@ -33,10 +33,11 @@ export function QuestionnaireBuilder() {
         selectedQuestionnaire,
         onPromptSelect,
         selectedPrompt,
+        editHistory,
+        onPromptDelete,
     } = useQuestionnaireBuilder();
     const [questionnaireItem, setQuestionnaireItem] = useState<QuestionItemProps | undefined>();
     const [groupItem, setGroupItem] = useState<GroupItemProps | undefined>();
-    console.log(response, updateResponse);
 
     return (
         <>
@@ -134,6 +135,8 @@ export function QuestionnaireBuilder() {
                             onPromptSelect={(prompt) => onPromptSelect(prompt)}
                             selectedPrompt={selectedPrompt}
                             isLoading={isLoading(response) || isLoading(updateResponse)}
+                            editHistory={editHistory}
+                            onPromptDelete={onPromptDelete}
                         />
                     </S.LeftColumn>
                 </S.Content>
