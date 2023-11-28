@@ -1,0 +1,66 @@
+body:
+  $let:
+    name: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='name').answer.valueString").0
+    code: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='code').answer.valueString").0
+    doseForm: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='dose-form').answer.valueCoding").0
+    amountUnit: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='amount-unit').answer.valueCoding").0
+    amountValue: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='amount-value').answer.valueInteger").0
+    ingredients: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='ingredients')")
+  $body:
+    type: transaction
+    entry:
+      - request:
+          url: /MedicationKnowledge
+          method: POST
+        fullUrl: urn:uuid:medication-knowledge-id
+        resource:
+          code:
+            coding:
+              - code: $ code
+                display: $ name
+                system: http://beda.software/custom-medication-list
+          doseForm:
+            coding:
+              - $ doseForm
+          amount:
+            code: $ amountUnit.code
+            unit: $ amountUnit.display
+            value: $ amountValue
+            system: http://unitsofmeasure.org
+          ingredient:
+            $map: $ ingredients
+            $as: ingredientData
+            $body:
+              $let:
+                itemCode: $ fhirpath("%context.item.where(linkId='ingredientsIngredient').answer.valueCoding.code", ingredientData).0
+                itemDisplay: $ fhirpath("%context.item.where(linkId='ingredientsIngredient').answer.valueCoding.display", ingredientData).0
+                numeratorCode: $ fhirpath("%context.item.where(linkId='numerator-unit').answer.valueCoding.code", ingredientData).0
+                numeratorUnit: $ fhirpath("%context.item.where(linkId='numerator-unit').answer.valueCoding.display", ingredientData).0
+                numeratorValue: $ fhirpath("%context.item.where(linkId='numerator-value').answer.valueDecimal", ingredientData).0
+                denominatorCode: $ fhirpath("%context.item.where(linkId='denominator-unit').answer.valueCoding.code", ingredientData).0
+                denominatorUnit: $ fhirpath("%context.item.where(linkId='denominator-unit').answer.valueCoding.display", ingredientData).0
+                denominatorValue: $ fhirpath("%context.item.where(linkId='denominator-value').answer.valueDecimal", ingredientData).0
+              $body:
+                item:
+                  CodeableConcept:
+                    coding:
+                      - code: $ itemCode
+                        system: http://www.nlm.nih.gov/research/umls/rxnorm
+                        display: $ itemDisplay
+                isActive: true
+                strength:
+                  numerator:
+                    code: $ numeratorCode
+                    unit: $ numeratorUnit
+                    value: $ numeratorValue
+                    system: http://unitsofmeasure.org
+                  denominator:
+                    code: $ denominatorCode
+                    unit: $ denominatorUnit
+                    value: $ denominatorValue
+                    system: http://unitsofmeasure.org
+          status: active
+          resourceType: MedicationKnowledge
+    resourceType: Bundle
+id: medication-knowledge-create-extract
+resourceType: Mapping

@@ -1,0 +1,133 @@
+id: medication-knowledge-create
+resourceType: Questionnaire
+name: medication-knowledge-create
+title: medication-knowledge create
+status: active
+mapping:
+  - id: medication-knowledge-create-extract
+    resourceType: Mapping
+item:
+  - text: Name
+    type: string
+    linkId: name
+  - text: Code
+    type: string
+    linkId: code
+  - text: Dose form
+    type: choice
+    linkId: dose-form
+    answerOption:
+      - value:
+          Coding:
+            code: '7946007'
+            display: Drug suspension
+            system: http://snomed.info/sct
+      - value:
+          Coding:
+            code: '11190007'
+            display: Drug stick
+            system: http://snomed.info/sct
+      - value:
+          Coding:
+            code: '17519006'
+            display: Lotion
+            system: http://snomed.info/sct
+  - text: Amount unit
+    type: choice
+    linkId: amount-unit
+    answerOption:
+      - value:
+          Coding:
+            code: '7946007'
+            display: Drug suspension
+            system: http://snomed.info/sct
+      - value:
+          Coding:
+            code: '11190007'
+            display: Drug stick
+            system: http://snomed.info/sct
+  - text: Amount value
+    type: integer
+    linkId: amount-value
+  - item:
+      - text: Ingredient
+        type: choice
+        linkId: ingredientsIngredient
+        answerOption:
+          - value:
+              Coding:
+                code: '1091643'
+                display: azilsartan
+                system: https://mor.nlm.nih.gov/
+          - value:
+              Coding:
+                code: '1191'
+                display: aspirin
+                system: https://mor.nlm.nih.gov/
+      - text: Numerator unit
+        type: choice
+        linkId: numerator-unit
+        answerOption:
+          - value:
+              Coding:
+                code: kg
+                display: kilogram
+                system: http://unitsofmeasure.org
+          - value:
+              Coding:
+                code: mg
+                display: milligram
+                system: http://unitsofmeasure.org
+          - value:
+              Coding:
+                code: tablet
+                display: tablet
+                system: http://unitsofmeasure.org
+      - text: Numerator value
+        type: decimal
+        linkId: numerator-value
+      - text: Denominator unit
+        type: choice
+        linkId: denominator-unit
+        answerOption:
+          - value:
+              Coding:
+                code: kg
+                display: kilogram
+                system: http://unitsofmeasure.org
+          - value:
+              Coding:
+                code: mg
+                display: milligram
+                system: http://unitsofmeasure.org
+          - value:
+              Coding:
+                code: tablet
+                display: tablet
+                system: http://unitsofmeasure.org
+      - text: Denominator value
+        type: decimal
+        linkId: denominator-value
+    text: Ingredients
+    type: group
+    linkId: ingredients
+    repeats: true
+  - text: Price base
+    type: decimal
+    linkId: priceBase
+    unit:
+      code: usd
+      system: http://unitsofmeasure.org
+      display: USD
+  - text: Price tax
+    type: decimal
+    linkId: priceTax
+    unit:
+      code: usd
+      system: http://unitsofmeasure.org
+      display: USD
+
+meta:
+  profile:
+    - https://beda.software/beda-emr-questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/healthcare-service-create

@@ -1,19 +1,25 @@
-import { Trans } from '@lingui/macro';
-import { Table } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { t, Trans } from '@lingui/macro';
+import { Table, Button, notification } from 'antd';
 import { Medication, MedicationKnowledge } from 'fhir/r4b';
 
 import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
 
+import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
+
+import { ModalTrigger } from 'src/components/ModalTrigger';
+import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { SpinIndicator } from 'src/components/Spinner';
 
 import { useMedicationKnowledge } from './hooks';
 import { RenderStrength } from './MedicationList';
 
 export function MedicationKnowledgeList() {
-    const { medicationKnowledgeResponse, pagination, handleTableChange } = useMedicationKnowledge();
+    const { medicationKnowledgeResponse, pagination, handleTableChange, pagerManager } = useMedicationKnowledge();
 
     return (
         <>
+            <ModalNewMedicationKnowledge onCreate={pagerManager.reload} />
             <Table
                 pagination={pagination}
                 onChange={handleTableChange}
@@ -60,3 +66,33 @@ function OtherDetails({ medicationKnowledge }: { medicationKnowledge: Medication
         </ul>
     );
 }
+
+interface ModalNewMedicationKnowledgeProps {
+    onCreate: () => void;
+}
+export const ModalNewMedicationKnowledge = (props: ModalNewMedicationKnowledgeProps) => {
+    return (
+        <ModalTrigger
+            title={t`Add Medication Knowledge`}
+            trigger={
+                <Button icon={<PlusOutlined />} type="primary">
+                    <span>
+                        <Trans>Add medication knowledge</Trans>
+                    </span>
+                </Button>
+            }
+        >
+            {({ closeModal }) => (
+                <QuestionnaireResponseForm
+                    questionnaireLoader={questionnaireIdLoader('medication-knowledge-create')}
+                    onSuccess={() => {
+                        closeModal();
+                        notification.success({ message: t`Medication knowledge successfully created` });
+                        props.onCreate();
+                    }}
+                    onCancel={closeModal}
+                />
+            )}
+        </ModalTrigger>
+    );
+};
