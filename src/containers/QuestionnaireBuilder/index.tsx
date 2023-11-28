@@ -30,10 +30,13 @@ export function QuestionnaireBuilder() {
         onItemDrag,
         onSaveQuestionnaire,
         onItemDelete,
+        onPromptSelect,
+        selectedPrompt,
+        editHistory,
+        onPromptDelete,
     } = useQuestionnaireBuilder();
     const [questionnaireItem, setQuestionnaireItem] = useState<QuestionItemProps | undefined>();
     const [groupItem, setGroupItem] = useState<GroupItemProps | undefined>();
-    console.log(response, updateResponse);
 
     return (
         <>
@@ -126,7 +129,11 @@ export function QuestionnaireBuilder() {
                             className={s.promptForm}
                             visible={!questionnaireItem && !groupItem}
                             onSubmit={(prompt) => onSubmitPrompt(prompt)}
+                            onPromptSelect={(prompt) => onPromptSelect(prompt)}
+                            selectedPrompt={selectedPrompt}
                             isLoading={isLoading(response) || isLoading(updateResponse)}
+                            editHistory={editHistory}
+                            onPromptDelete={onPromptDelete}
                         />
                     </S.LeftColumn>
                 </S.Content>

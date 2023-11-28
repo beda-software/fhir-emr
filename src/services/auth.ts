@@ -4,6 +4,8 @@ import { setInstanceToken as setAidboxInstanceToken } from 'aidbox-react/lib/ser
 import { service } from 'aidbox-react/lib/services/service';
 import { Token } from 'aidbox-react/lib/services/token';
 
+import { isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { service as fetchService } from 'fhir-react/lib/services/fetch';
 import { setInstanceToken as setFHIRInstanceToken } from 'fhir-react/lib/services/instance';
 
 import config from 'shared/src/config';
@@ -11,6 +13,10 @@ import { User } from 'shared/src/contrib/aidbox';
 
 export interface OAuthState {
     nextUrl?: string;
+}
+
+export interface AuthTokenResponse {
+    access_token: string;
 }
 
 export function parseOAuthState(state?: string): OAuthState {
@@ -95,43 +101,57 @@ export async function signinWithIdentityToken(
     user: { firstName: string; lastName: string } | undefined,
     identityToken: string,
 ) {
-    setToken(identityToken);
-    setAidboxInstanceToken({ access_token: identityToken, token_type: 'Bearer' });
-    setFHIRInstanceToken({ access_token: identityToken, token_type: 'Bearer' });
+    const authTokenResponse = await getAuthToken(identityToken);
+    console.log('authTokenResponse', authTokenResponse);
+    if (isSuccess(authTokenResponse)) {
+        const authToken = authTokenResponse.data.access_token;
+        setToken(authToken);
+        setAidboxInstanceToken({ access_token: authToken, token_type: 'Bearer' });
+        setFHIRInstanceToken({ access_token: authToken, token_type: 'Bearer' });
 
-    return await service({
-        method: 'POST',
-        url: '/Questionnaire/federated-identity-signin/$extract',
-        data: {
-            resourceType: 'Parameters',
-            parameter: [
-                {
-                    name: 'FederatedIdentity',
-                    value: {
-                        Identifier: {
-                            system: decodeJwt(identityToken).iss,
-                            value: decodeJwt(identityToken).sub,
+        return await service({
+            method: 'POST',
+            url: '/Questionnaire/federated-identity-signin/$extract',
+            data: {
+                resourceType: 'Parameters',
+                parameter: [
+                    {
+                        name: 'FederatedIdentity',
+                        value: {
+                            Identifier: {
+                                system: decodeJwt(identityToken).iss,
+                                value: decodeJwt(identityToken).sub,
+                            },
                         },
                     },
-                },
-                {
-                    name: 'questionnaire_response',
-                    resource: {
-                        resourceType: 'QuestionnaireResponse',
-                        questionnaire: 'federated-identity-signin',
-                        item: [
-                            {
-                                linkId: 'firstname',
-                                answer: [{ valueString: user?.firstName }],
-                            },
-                            {
-                                linkId: 'lastname',
-                                answer: [{ valueString: user?.lastName }],
-                            },
-                        ],
+                    {
+                        name: 'questionnaire_response',
+                        resource: {
+                            resourceType: 'QuestionnaireResponse',
+                            questionnaire: 'federated-identity-signin',
+                            item: [
+                                {
+                                    linkId: 'firstname',
+                                    answer: [{ valueString: user?.firstName }],
+                                },
+                                {
+                                    linkId: 'lastname',
+                                    answer: [{ valueString: user?.lastName }],
+                                },
+                            ],
+                        },
                     },
-                },
-            ],
-        },
+                ],
+            },
+        });
+    } else {
+        return authTokenResponse;
+    }
+}
+
+async function getAuthToken(appleToken: string) {
+    return await fetchService<AuthTokenResponse>(`${config.wearablesDataStreamService}/auth/token`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${appleToken}` },
     });
 }

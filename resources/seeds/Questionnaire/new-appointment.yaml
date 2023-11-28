@@ -99,10 +99,10 @@ item:
               boolean: false
         answerExpression:
           language: application/x-fhir-query
-          expression: "Patient"
+          expression: "Patient?_count=25"
         choiceColumn:
           - forDisplay: true
-            path: "name.given.first() + ' ' + name.family"
+            path: "name.first().given.first() + ' ' + name.first().family"
       - text: Service
         type: reference
         referenceResource:
