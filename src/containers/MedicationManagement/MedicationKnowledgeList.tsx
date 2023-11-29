@@ -53,15 +53,13 @@ function RenderMedicationKnowledgeName({ medicationKnowledge }: { medicationKnow
     const medicationDisplay = medicationKnowledge.code?.coding?.[0]?.display;
     const packageName = medicationKnowledge.packaging?.type?.coding?.[0]?.display;
     const amount = `${medicationKnowledge.amount?.value} ${medicationKnowledge.amount?.unit}`;
-    const synonym = medicationKnowledge.synonym?.join(', ');
 
-    return `${medicationForm} ${medicationDisplay} (${packageName}, ${amount}), ${synonym}`;
+    return `${medicationForm} ${medicationDisplay} (${packageName}, ${amount})`;
 }
 
 function OtherDetails({ medicationKnowledge }: { medicationKnowledge: MedicationKnowledge }) {
     return (
         <ul>
-            <li>Synonym: {medicationKnowledge.synonym?.join(', ')}</li>
             <li>Strength: {<RenderStrength medication={medicationKnowledge} />}</li>
         </ul>
     );
