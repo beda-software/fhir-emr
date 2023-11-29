@@ -1,0 +1,43 @@
+body:
+  $let:
+    system: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='system').answer.valueString").0
+    display: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='display').answer.valueString").0
+    code: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='code').answer.valueString").0
+    batchNumber: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='batch-number').answer.valueString").0
+    itemsNumber: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='items-number').answer.valueInteger").0
+    expirationDate: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='expiration-date').answer.valueDate").0
+  $body:
+    type: transaction
+    entry:
+      $map: $ range(0, itemsNumber, 1)
+      $body:
+        request:
+          url: /Medication
+          method: POST
+        resource:
+          code:
+            coding:
+              - code: $ code
+                display: $ display
+                system: $ system
+          batch:
+            lotNumber: $ batchNumber
+            expirationDate: $ expirationDate
+          status: active
+          resourceType: Medication
+    resourceType: Bundle
+type: JUTE
+id: medication-batch-create-extract
+resourceType: Mapping

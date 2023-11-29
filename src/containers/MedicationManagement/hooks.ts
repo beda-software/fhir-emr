@@ -1,4 +1,5 @@
 import { Medication, MedicationKnowledge } from 'fhir/r4b';
+import { SearchParams } from 'fhir-react';
 
 import { extractBundleResources } from 'fhir-react/lib/services/fhir';
 import { mapSuccess } from 'fhir-react/lib/services/service';
@@ -6,8 +7,8 @@ import { mapSuccess } from 'fhir-react/lib/services/service';
 import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 import { usePagerExtended } from 'src/hooks/pager';
 
-export function useMedicationList() {
-    const queryParameters = {};
+export function useMedicationList(searchParameters: SearchParams) {
+    const queryParameters = searchParameters ?? {};
 
     const { resourceResponse, pagerManager, handleTableChange, pagination } = usePagerExtended<
         Medication,

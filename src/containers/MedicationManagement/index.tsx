@@ -5,13 +5,11 @@ import { BasePageHeader, BasePageContent } from 'src/components/BaseLayout';
 import { Title } from 'src/components/Typography';
 
 import { MedicationKnowledgeList } from './MedicationKnowledgeList';
-import { MedicationList } from './MedicationList';
 
 export function MedicationManagement() {
     const items = [
-        { label: 'Prescriptions', key: 'prescriptions', children: <MedicationList /> },
-        { label: 'Warehouse', key: 'warehouse', children: <MedicationList /> },
-        { label: 'Knowledge base', key: 'knowledge', children: <MedicationKnowledgeList /> },
+        { label: 'Prescriptions', key: 'prescriptions', children: <div>Hi</div> },
+        { label: 'Management', key: 'management', children: <MedicationKnowledgeList /> },
     ];
 
     return (
