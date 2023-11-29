@@ -24,8 +24,10 @@ export function getMedicationTableData(medicationList: Medication[]) {
 
 export function MedicationKnowledgeCharacteristics({
     medicationKnowledge,
+    medicationList,
 }: {
     medicationKnowledge: MedicationKnowledge;
+    medicationList: Medication[];
 }) {
     const descriptionItemData = [
         { label: 'Strength', children: <RenderStrength medication={medicationKnowledge} /> },
@@ -35,6 +37,10 @@ export function MedicationKnowledgeCharacteristics({
         {
             label: 'Cost',
             children: `${medicationKnowledge.cost?.[0]?.cost.value} ${medicationKnowledge.cost?.[0]?.cost.currency}`,
+        },
+        {
+            label: 'Available units',
+            children: medicationList.length,
         },
     ];
 

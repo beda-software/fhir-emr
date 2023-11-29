@@ -69,13 +69,16 @@ function OtherDetails({ medicationKnowledge }: { medicationKnowledge: Medication
 
     return (
         <RenderRemoteData remoteData={medicationResponse}>
-            {(data) => {
+            {(medications) => {
                 return (
                     <div
                         style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '12px' }}
                     >
                         <div style={{ flex: 0.8 }}>
-                            <MedicationKnowledgeCharacteristics medicationKnowledge={medicationKnowledge} />
+                            <MedicationKnowledgeCharacteristics
+                                medicationKnowledge={medicationKnowledge}
+                                medicationList={medications}
+                            />
                         </div>
                         <div style={{ flex: 0.3 }}>
                             <div>
@@ -84,7 +87,7 @@ function OtherDetails({ medicationKnowledge }: { medicationKnowledge: Medication
                             <Table
                                 pagination={false}
                                 onChange={handleTableChange}
-                                dataSource={getMedicationTableData(data)}
+                                dataSource={getMedicationTableData(medications)}
                                 columns={[
                                     {
                                         title: <Trans>Units</Trans>,
