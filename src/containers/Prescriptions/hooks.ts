@@ -7,8 +7,17 @@ import { mapSuccess } from 'fhir-react/lib/services/service';
 import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 import { usePagerExtended } from 'src/hooks/pager';
 
-export function useMedicationRequest(searchParameters: SearchParams) {
-    const queryParameters = searchParameters ?? {};
+export function useMedicationRequest(requesterId?: string, subjectId?: string, status?: string) {
+    const queryParameters = {
+        requester: requesterId,
+        patient: subjectId,
+        status: status,
+        _include: [
+            'MedicationRequest:subject:Patient',
+            'MedicationRequest:requester',
+            'MedicationRequest:medication:Medication',
+        ],
+    };
 
     const { resourceResponse, pagerManager, handleTableChange, pagination } = usePagerExtended<
         MedicationRequest | Patient | Organization | Practitioner | Medication,
@@ -17,11 +26,11 @@ export function useMedicationRequest(searchParameters: SearchParams) {
 
     const medicationRequestResponse = mapSuccess(resourceResponse, (bundle) => {
         return {
-            medicationRequest: extractBundleResources(bundle).MedicationRequest,
-            patient: extractBundleResources(bundle).Patient,
-            organization: extractBundleResources(bundle).Organization,
-            practitioner: extractBundleResources(bundle).Practitioner,
-            medication: extractBundleResources(bundle).Medication,
+            medicationRequests: extractBundleResources(bundle).MedicationRequest,
+            patients: extractBundleResources(bundle).Patient,
+            organizations: extractBundleResources(bundle).Organization,
+            practitioners: extractBundleResources(bundle).Practitioner,
+            medications: extractBundleResources(bundle).Medication,
         };
     });
 
