@@ -34,14 +34,14 @@ item:
     - text: AuthorId
       type: string
       linkId: authorId
-      hidden: false
+      hidden: true
       initialExpression:
           language: text/fhirpath
           expression: '%Author.id'
     - text: AuthorType
       type: string
       linkId: authorType
-      hidden: false
+      hidden: true
       initialExpression:
           language: text/fhirpath
           expression: '%Author.resourceType'
@@ -53,7 +53,7 @@ item:
       linkId: medication
       answerExpression:
         language: application/x-fhir-query
-        expression: "Medication"
+        expression: "Medication?status=active"
       choiceColumn:
         - forDisplay: true
           path: code.coding.first().display

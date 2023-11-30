@@ -1,0 +1,14 @@
+resourceType: Mapping
+id: prescription-confirm
+body:
+  $let:
+    currentMedicationRequestId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='current-medication-request-id').answer.valueString").0
+  $body:
+    resourceType: Bundle
+    type: transaction
+    entry:
+      - request:
+          url: $ "/MedicationRequest/" + currentMedicationRequestId
+          method: PATCH
+        resource:
+          status: completed

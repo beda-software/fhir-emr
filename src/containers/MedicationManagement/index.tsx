@@ -5,10 +5,11 @@ import { BasePageHeader, BasePageContent } from 'src/components/BaseLayout';
 import { Title } from 'src/components/Typography';
 
 import { MedicationKnowledgeList } from './MedicationKnowledgeList';
+import { MedicationRequestList } from './MedicationRequestList';
 
 export function MedicationManagement() {
     const items = [
-        { label: 'Prescriptions', key: 'prescriptions', children: <div>Hi</div> },
+        { label: 'Prescriptions', key: 'prescriptions', children: <MedicationRequestList /> },
         { label: 'Management', key: 'management', children: <MedicationKnowledgeList /> },
     ];
 
