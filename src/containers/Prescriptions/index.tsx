@@ -16,7 +16,6 @@ import { ModalMedicationRequestConfirm } from './ModalMedicationRequestConfirm';
 
 export function Prescriptions() {
     const { pagination, medicationRequestResponse, pagerManager, handleTableChange } = useMedicationRequest({
-        status: 'active',
         _include: [
             'MedicationRequest:subject:Patient',
             'MedicationRequest:requester',
@@ -128,7 +127,7 @@ export function Prescriptions() {
                                             key: 'actions',
                                             render: (_text, resource) => {
                                                 return (
-                                                    <div>
+                                                    <div style={{ display: 'flex', flexDirection: 'row', gap: '5px' }}>
                                                         <ModalMedicationRequestConfirm
                                                             medicationRequest={resource}
                                                             onCreate={pagerManager.reload}
