@@ -13,11 +13,11 @@ interface ModalNewMedicationKnowledgeProps {
 export const ModalNewMedicationKnowledge = (props: ModalNewMedicationKnowledgeProps) => {
     return (
         <ModalTrigger
-            title={t`Add Medication Knowledge`}
+            title={t`Add Medication`}
             trigger={
                 <Button icon={<PlusOutlined />} type="primary">
                     <span>
-                        <Trans>Add medication knowledge</Trans>
+                        <Trans>Add Medication</Trans>
                     </span>
                 </Button>
             }

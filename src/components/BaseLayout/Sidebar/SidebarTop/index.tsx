@@ -58,6 +58,7 @@ export function SidebarTop(props: Props) {
                   { label: t`Scheduling`, path: '/scheduling', icon: <EncountersIcon /> },
                   { label: t`Invoices`, path: '/invoices', icon: <InvoicesIcon /> },
                   { label: t`Medications`, path: '/medications', icon: <InvoicesIcon /> },
+                  { label: t`Prescriptions`, path: '/prescriptions', icon: <InvoicesIcon /> },
               ],
           })
         : [];
