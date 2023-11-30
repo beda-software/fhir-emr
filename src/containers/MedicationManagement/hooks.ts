@@ -25,13 +25,11 @@ export function useMedicationList(searchParameters: SearchParams) {
     };
 }
 
-export function useMedicationKnowledge() {
-    const queryParameters = {};
-
+export function useMedicationKnowledge(code?: string) {
     const { resourceResponse, pagerManager, handleTableChange, pagination } = usePagerExtended<
         MedicationKnowledge,
         StringTypeColumnFilterValue[]
-    >('MedicationKnowledge', queryParameters);
+    >('MedicationKnowledge', { code: code });
 
     const medicationKnowledgeResponse = mapSuccess(
         resourceResponse,

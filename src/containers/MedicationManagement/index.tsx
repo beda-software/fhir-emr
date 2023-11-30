@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro';
-import { Row, Col, Typography, Table } from 'antd';
+import { Typography, Table } from 'antd';
 import { MedicationKnowledge } from 'fhir/r4b';
 import { RenderRemoteData } from 'fhir-react';
 
@@ -7,33 +7,36 @@ import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
 
 import { formatHumanDate } from 'shared/src/utils/date';
 
-import { BasePageHeader, BasePageContent } from 'src/components/BaseLayout';
+import { PageContainer } from 'src/components/PageContainer';
 import { SpinIndicator } from 'src/components/Spinner';
-import { Title } from 'src/components/Typography';
 
+import { MedicationsSearchBar } from './components/MedicationsSearchBar';
+import { useMedicationsSearchBarSelect } from './components/MedicationsSearchBar/hooks';
 import { useMedicationKnowledge, useMedicationList } from './hooks';
 import { ModalNewMedicationBatch } from './ModalNewMedicationBatch';
 import { ModalNewMedicationKnowledge } from './ModalNewMedicationKnowledge';
 import { MedicationKnowledgeCharacteristics, getMedicationTableData } from './utils';
+import { getSelectedValue } from '../OrganizationScheduling/utils';
 
 export function MedicationManagement() {
-    const { medicationKnowledgeResponse, pagination, handleTableChange, pagerManager } = useMedicationKnowledge();
+    const { selectedMedication, medicationOptions, onChange, resetFilter } = useMedicationsSearchBarSelect();
+    const { medicationKnowledgeResponse, pagination, handleTableChange, pagerManager } = useMedicationKnowledge(
+        getSelectedValue(selectedMedication),
+    );
 
     return (
-        <>
-            <BasePageHeader style={{ paddingTop: 40, paddingBottom: 92 }}>
-                <Row justify="space-between" align="middle" style={{ marginBottom: 40 }} gutter={[16, 16]}>
-                    <Col>
-                        <Title style={{ marginBottom: 0 }}>
-                            <Trans>Medications</Trans>
-                        </Title>
-                    </Col>
-                    <Col>
-                        <ModalNewMedicationKnowledge onCreate={pagerManager.reload} />
-                    </Col>
-                </Row>
-            </BasePageHeader>
-            <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
+        <PageContainer
+            title="Medication"
+            titleRightContent={<ModalNewMedicationKnowledge onCreate={pagerManager.reload} />}
+            headerContent={
+                <MedicationsSearchBar
+                    selectedMedication={selectedMedication}
+                    loadMedicationOptions={medicationOptions}
+                    onChangeMedication={(selectedOption) => onChange(selectedOption, 'medication')}
+                    reset={resetFilter}
+                />
+            }
+            content={
                 <Table
                     pagination={pagination}
                     onChange={handleTableChange}
@@ -75,8 +78,8 @@ export function MedicationManagement() {
                     ]}
                     loading={isLoading(medicationKnowledgeResponse) && { indicator: SpinIndicator }}
                 />
-            </BasePageContent>
-        </>
+            }
+        />
     );
 }
 
