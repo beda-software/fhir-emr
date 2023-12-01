@@ -7,8 +7,10 @@ import { CompanyName } from 'src/icons/brand/CompanyName';
 import { LogoSmall } from 'src/icons/brand/LogoSmall';
 import { EncountersIcon } from 'src/icons/menu/EncountersIcon';
 import { InvoicesIcon } from 'src/icons/menu/InvoicesIcon';
+import { MedicationsIcon } from 'src/icons/menu/MedicationsIcon';
 import { PatientsIcon } from 'src/icons/menu/PatientsIcon';
 import { PractitionersIcon } from 'src/icons/menu/PractitionersIcon';
+import { PrescriptionsIcon } from 'src/icons/menu/PrescriptionsIcon';
 import { QuestionnairesIcon } from 'src/icons/menu/QuestionnairesIcon';
 import { ServicesIcon } from 'src/icons/menu/ServicesIcon';
 import { getToken } from 'src/services/auth';
@@ -57,8 +59,8 @@ export function SidebarTop(props: Props) {
               [Role.Receptionist]: () => [
                   { label: t`Scheduling`, path: '/scheduling', icon: <EncountersIcon /> },
                   { label: t`Invoices`, path: '/invoices', icon: <InvoicesIcon /> },
-                  { label: t`Medications`, path: '/medications', icon: <InvoicesIcon /> },
-                  { label: t`Prescriptions`, path: '/prescriptions', icon: <InvoicesIcon /> },
+                  { label: t`Medications`, path: '/medications', icon: <MedicationsIcon /> },
+                  { label: t`Prescriptions`, path: '/prescriptions', icon: <PrescriptionsIcon /> },
               ],
           })
         : [];
