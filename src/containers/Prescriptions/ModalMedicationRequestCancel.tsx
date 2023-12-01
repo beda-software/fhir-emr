@@ -17,7 +17,7 @@ export const ModalMedicationRequestCancel = (props: ModalMedicationRequestCancel
         <ModalTrigger
             title={t`Cancel Medication Request`}
             trigger={
-                <Button type="primary">
+                <Button type="primary" disabled={props.medicationRequest.status !== 'active'}>
                     <span>
                         <Trans>Cancel</Trans>
                     </span>

@@ -17,7 +17,7 @@ export const ModalMedicationRequestConfirm = (props: ModalMedicationRequestConfi
         <ModalTrigger
             title={t`Confirm Medication Request`}
             trigger={
-                <Button type="primary">
+                <Button type="primary" disabled={props.medicationRequest.status !== 'active'}>
                     <span>
                         <Trans>Confirm</Trans>
                     </span>
