@@ -5,10 +5,8 @@ import {
     OptionType,
     SelectOption,
 } from 'src/containers/OrganizationScheduling/HealthcareServicePractitionerSelect/types';
-import { getSelectedValue } from 'src/containers/OrganizationScheduling/utils';
-import { Role, matchCurrentUserRole, selectCurrentUserRoleResource } from 'src/utils/role';
+import { Role, matchCurrentUserRole } from 'src/utils/role';
 
-import { usePrescriptionsSearchBarSelect } from './hooks';
 import { S } from './PrescriptionsSearchBar.styles';
 
 export interface PrescriptionsSearchBarSelectProps {

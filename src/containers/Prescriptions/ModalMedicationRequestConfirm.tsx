@@ -1,4 +1,3 @@
-import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
 import { MedicationRequest } from 'fhir/r4b';

@@ -1,5 +1,4 @@
 import { Medication, MedicationRequest, Organization, Patient, Practitioner } from 'fhir/r4b';
-import { SearchParams } from 'fhir-react';
 
 import { extractBundleResources } from 'fhir-react/lib/services/fhir';
 import { mapSuccess } from 'fhir-react/lib/services/service';
