@@ -63,4 +63,4 @@ item:
 meta:
   profile:
     - https://beda.software/beda-emr-questionnaire
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/healthcare-service-create
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/medication-batch-create
