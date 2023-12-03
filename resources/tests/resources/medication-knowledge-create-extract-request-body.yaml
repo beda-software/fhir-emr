@@ -1,0 +1,6 @@
+resourceType: Parameters
+parameter:
+- name: questionnaire
+  resource: !include medication-knowledge-create.yaml
+- name: questionnaire_response
+  resource: !include medication-knowledge-create-questionnaire-response.yaml
