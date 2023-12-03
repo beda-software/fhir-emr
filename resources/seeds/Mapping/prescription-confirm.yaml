@@ -3,6 +3,7 @@ id: prescription-confirm
 body:
   $let:
     currentMedicationRequestId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='current-medication-request-id').answer.valueString").0
+    currentMedication: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='current-medication-id').answer.valueString").0
   $body:
     resourceType: Bundle
     type: transaction
@@ -12,3 +13,8 @@ body:
           method: PATCH
         resource:
           status: completed
+      - request:
+          url: $ "/Medication/" + currentMedication
+          method: PATCH
+        resource:
+          status: inactive
