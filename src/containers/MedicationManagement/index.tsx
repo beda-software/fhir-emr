@@ -26,7 +26,7 @@ export function MedicationManagement() {
 
     return (
         <PageContainer
-            title="Medication"
+            title="Medications"
             titleRightContent={<ModalNewMedicationKnowledge onCreate={pagerManager.reload} />}
             headerContent={
                 <MedicationsSearchBar
