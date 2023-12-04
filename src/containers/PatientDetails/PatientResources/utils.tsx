@@ -66,7 +66,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     resourceType="Condition"
                     params={{
                         patient: patient.id,
-                        _sort: ['-_lastUpdated'],
+                        _sort: ['-_createdAt'],
                         _revinclude: ['Provenance:target'],
                     }}
                     option={option}
