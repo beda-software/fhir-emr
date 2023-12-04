@@ -1,6 +1,6 @@
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
-import { MedicationRequest } from 'fhir/r4b';
+import { Medication, MedicationRequest } from 'fhir/r4b';
 
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
@@ -9,6 +9,7 @@ import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseF
 
 interface ModalMedicationRequestConfirmProps {
     medicationRequest: MedicationRequest;
+    medication: Medication;
     onCreate: () => void;
 }
 export const ModalMedicationRequestConfirm = (props: ModalMedicationRequestConfirmProps) => {
@@ -30,6 +31,10 @@ export const ModalMedicationRequestConfirm = (props: ModalMedicationRequestConfi
                         {
                             name: 'MedicationRequest',
                             resource: props.medicationRequest,
+                        },
+                        {
+                            name: 'Medication',
+                            resource: props.medication,
                         },
                     ]}
                     onSuccess={() => {

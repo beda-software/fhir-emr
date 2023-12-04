@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro';
 import { Table } from 'antd';
+import { Medication, MedicationRequest } from 'fhir/r4b';
 import { RenderRemoteData } from 'fhir-react';
 
 import { renderHumanName } from 'shared/src/utils/fhir';
@@ -108,22 +109,14 @@ export function Prescriptions() {
                                         dataIndex: 'medication',
                                         key: 'medication',
                                         render: (_text, resource) =>
-                                            medications.find(
-                                                (medication) =>
-                                                    medication.id ===
-                                                    resource.medicationReference?.reference?.split('/')?.[1],
-                                            )?.code?.coding?.[0]?.display,
+                                            findCurrentMedication(medications, resource)?.code?.coding?.[0]?.display,
                                     },
                                     {
                                         title: <Trans>Batch Number</Trans>,
                                         dataIndex: 'batchNumber',
                                         key: 'batchNumber',
                                         render: (_text, resource) =>
-                                            medications.find(
-                                                (medication) =>
-                                                    medication.id ===
-                                                    resource.medicationReference?.reference?.split('/')?.[1],
-                                            )?.batch?.lotNumber,
+                                            findCurrentMedication(medications, resource)?.batch?.lotNumber,
                                     },
                                     {
                                         title: <Trans>Status</Trans>,
@@ -136,24 +129,18 @@ export function Prescriptions() {
                                         dataIndex: 'actions',
                                         key: 'actions',
                                         render: (_text, resource) => {
+                                            const currentMedication = findCurrentMedication(medications, resource);
                                             return (
                                                 <div style={{ display: 'flex', flexDirection: 'row', gap: '5px' }}>
                                                     <ModalMedicationRequestConfirm
                                                         medicationRequest={resource}
+                                                        medication={currentMedication}
                                                         onCreate={pagerManager.reload}
                                                     />
                                                     <ModalMedicationRequestCancel
                                                         medicationRequest={resource}
                                                         onCreate={pagerManager.reload}
-                                                        medication={
-                                                            medications.find(
-                                                                (medication) =>
-                                                                    medication.id ===
-                                                                    resource.medicationReference?.reference?.split(
-                                                                        '/',
-                                                                    )?.[1],
-                                                            )!
-                                                        }
+                                                        medication={currentMedication}
                                                     />
                                                 </div>
                                             );
@@ -167,4 +154,10 @@ export function Prescriptions() {
             }
         />
     );
+}
+
+function findCurrentMedication(medications: Medication[], medicationRequest: MedicationRequest) {
+    return medications.find(
+        (medication) => medication.id === medicationRequest.medicationReference?.reference?.split('/')?.[1],
+    )!;
 }
