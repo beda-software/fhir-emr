@@ -25,7 +25,6 @@ item:
       - text: Are you sure to confirm this request?
         linkId: are-you-sure
         type: display
-type: JUTE
 url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/medication-request-confirm
 meta:
     profile:

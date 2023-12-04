@@ -2,6 +2,7 @@ resourceType: Questionnaire
 id: medication-request-cancel
 status: active
 title: Medication Request Cancel
+name: medication-request-cancel
 mapping:
     - id: prescription-cancel
       resourceType: Mapping
@@ -37,7 +38,6 @@ item:
       - text: Are you sure to cancel this request?
         linkId: are-you-sure
         type: display
-type: JUTE
 url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/medication-request-cancel
 meta:
     profile:
