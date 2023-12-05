@@ -47,6 +47,7 @@ body:
               fullUrl: urn:uuid:allergy-id
               resource:
                   resourceType: AllergyIntolerance
+                  recordedDate: $ qrLastUpdated
                   clinicalStatus:
                       coding:
                           - $ status
