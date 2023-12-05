@@ -105,7 +105,7 @@ export function usePatientOverview(props: Props) {
                     }),
                     immunizationsBundle: getFHIRResources<Immunization | Provenance>('Immunization', {
                         patient: patient.id,
-                        _sort: ['-_lastUpdated'],
+                        _sort: ['-_date'],
                         _revinclude: ['Provenance:target'],
                         _count: 7,
                     }),
