@@ -93,7 +93,7 @@ export function usePatientOverview(props: Props) {
                     }),
                     allergiesBundle: getFHIRResources<AllergyIntolerance | Provenance>('AllergyIntolerance', {
                         patient: patient.id,
-                        _sort: ['-_lastUpdated'],
+                        _sort: ['-_date'],
                         _revinclude: ['Provenance:target'],
                         _count: 7,
                     }),
