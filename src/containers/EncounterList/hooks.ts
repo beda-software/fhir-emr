@@ -52,7 +52,7 @@ export function useEncounterList(
         'participant-display': practitionerFilterValue,
         'subject:Patient.name': patientFilterValue,
         date: dateParameter,
-        _sort: '-_lastUpdated',
+        _sort: '-_date',
     };
 
     const { resourceResponse, pagerManager, handleTableChange, pagination } = usePagerExtended<
