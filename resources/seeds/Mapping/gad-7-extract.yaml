@@ -58,6 +58,7 @@ body:
               fullUrl: urn:uuid:condition-id
               resource:
                   resourceType: Condition
+                  recordedDate: $ qrLastUpdated
                   clinicalStatus:
                       coding:
                           - code: 'active'

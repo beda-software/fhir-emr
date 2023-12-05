@@ -99,7 +99,7 @@ export function usePatientOverview(props: Props) {
                     }),
                     conditionsBundle: getFHIRResources<Condition | Provenance>('Condition', {
                         patient: patient.id,
-                        _sort: ['-_createdAt'],
+                        _sort: ['-_recorded-date'],
                         _revinclude: ['Provenance:target'],
                         _count: 7,
                     }),
