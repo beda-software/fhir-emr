@@ -42,7 +42,7 @@ item:
       hidden: true
       initialExpression:
           language: text/fhirpath
-          expression: "%Patient.name.given[0] + ' ' + %Patient.name.family"
+          expression: "%Patient.name.first().given.first() + ' ' + %Patient.name.first().family"
     - text: Over the last two weeks, how often have you been bothered by the following problems?
       type: group
       linkId: gad-7

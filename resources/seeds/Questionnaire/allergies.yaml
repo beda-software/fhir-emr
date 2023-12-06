@@ -46,7 +46,7 @@ item:
       hidden: true
       initialExpression:
           language: text/fhirpath
-          expression: "%Patient.name.given[0] + ' ' + %Patient.name.family"
+          expression: "%Patient.name.first().given.first() + ' ' + %Patient.name.first().family"
     - linkId: type
       text: Type
       required: true
