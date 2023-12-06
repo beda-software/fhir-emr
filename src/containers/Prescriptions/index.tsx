@@ -3,6 +3,8 @@ import { Table } from 'antd';
 import { Medication, MedicationRequest } from 'fhir/r4b';
 import { RenderRemoteData } from 'fhir-react';
 
+import { extractExtension } from 'shared/src/utils/converter';
+import { formatHumanDate } from 'shared/src/utils/date';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { PageContainer } from 'src/components/PageContainer';
@@ -66,6 +68,9 @@ export function Prescriptions() {
                                 pagination={pagination}
                                 onChange={handleTableChange}
                                 dataSource={medicationRequests}
+                                tableLayout={'auto'}
+                                rowClassName={'valign-top'}
+                                size={'middle'}
                                 columns={[
                                     {
                                         title: <Trans>Patient</Trans>,
@@ -108,21 +113,39 @@ export function Prescriptions() {
                                         title: <Trans>Medication</Trans>,
                                         dataIndex: 'medication',
                                         key: 'medication',
-                                        render: (_text, resource) =>
-                                            findCurrentMedication(medications, resource)?.code?.coding?.[0]?.display,
+                                        render: (_text, resource) => {
+                                            const medicationResource = findCurrentMedication(medications, resource);
+                                            const medicationName = medicationResource
+                                                ? medicationResource.code?.coding?.[0]?.display
+                                                : resource?.medicationCodeableConcept?.coding?.[0]?.display;
+                                            return medicationName ?? 'Unknown';
+                                        },
                                     },
                                     {
                                         title: <Trans>Batch Number</Trans>,
                                         dataIndex: 'batchNumber',
                                         key: 'batchNumber',
                                         render: (_text, resource) =>
-                                            findCurrentMedication(medications, resource)?.batch?.lotNumber,
+                                            findCurrentMedication(medications, resource)?.batch?.lotNumber ?? 'Unknown',
                                     },
                                     {
                                         title: <Trans>Status</Trans>,
                                         dataIndex: 'status',
                                         key: 'status',
-                                        render: (_text, resource) => resource.status,
+                                        render: (_text, resource) => mapPrescriptionStatus(resource),
+                                    },
+                                    {
+                                        title: <Trans>Date</Trans>,
+                                        dataIndex: 'date',
+                                        key: 'date',
+                                        render: (_text, resource) => {
+                                            const createdAt = extractExtension(
+                                                resource.meta?.extension,
+                                                'ex:createdAt',
+                                            );
+
+                                            return createdAt ? formatHumanDate(createdAt) : null;
+                                        },
                                     },
                                     {
                                         title: <Trans>Actions</Trans>,
@@ -157,7 +180,23 @@ export function Prescriptions() {
 }
 
 function findCurrentMedication(medications: Medication[], medicationRequest: MedicationRequest) {
+    console.log('medications', medications);
     return medications.find(
         (medication) => medication.id === medicationRequest.medicationReference?.reference?.split('/')?.[1],
     )!;
+}
+
+function mapPrescriptionStatus(medicationRequest: MedicationRequest): string {
+    const statusMap = {
+        active: 'Active',
+        'on-hold': 'On Hold',
+        cancelled: 'Cancelled',
+        completed: 'Completed',
+        'entered-in-error': 'Entered in error',
+        stopped: 'Stopped',
+        draft: 'Draft',
+        unknown: 'Unknown',
+    };
+
+    return statusMap[medicationRequest.status];
 }

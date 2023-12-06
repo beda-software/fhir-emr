@@ -105,6 +105,26 @@ export function usePrescriptionsSearchBarSelect() {
                 label: 'Completed',
                 value: 'completed',
             },
+            {
+                label: 'On Hold',
+                value: 'on-hold',
+            },
+            {
+                label: 'Entered in error',
+                value: 'entered-in-error',
+            },
+            {
+                label: 'Stopped',
+                value: 'stopped',
+            },
+            {
+                label: 'Draft',
+                value: 'draft',
+            },
+            {
+                label: 'Unknown',
+                value: 'unknown',
+            },
         ];
 
         const filterStatus = (inputValue: string) => {

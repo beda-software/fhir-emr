@@ -41,12 +41,6 @@ export function PrescriptionsSearchBar(props: PrescriptionsSearchBarSelectProps)
             <Row gutter={[32, 16]}>
                 <S.SelectContainer>
                     <AsyncDropdown
-                        onChange={onChangePractitionerRole}
-                        loadOptions={loadPractitionerRoleOptions}
-                        value={selectedPractitionerRole as OptionType}
-                        placeholder="Practitioner"
-                    />
-                    <AsyncDropdown
                         onChange={onChangePatient}
                         loadOptions={loadPatientOptions}
                         value={selectedPatient as OptionType}
@@ -57,6 +51,12 @@ export function PrescriptionsSearchBar(props: PrescriptionsSearchBarSelectProps)
                             [Role.Practitioner]: () => false,
                             [Role.Receptionist]: () => false,
                         })}
+                    />
+                    <AsyncDropdown
+                        onChange={onChangePractitionerRole}
+                        loadOptions={loadPractitionerRoleOptions}
+                        value={selectedPractitionerRole as OptionType}
+                        placeholder="Practitioner"
                     />
                     <AsyncDropdown
                         onChange={onChangeStatus}

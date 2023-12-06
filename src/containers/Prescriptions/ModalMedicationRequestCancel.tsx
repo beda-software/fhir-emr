@@ -9,15 +9,16 @@ import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseF
 
 interface ModalMedicationRequestCancelProps {
     medicationRequest: MedicationRequest;
-    medication: Medication;
+    medication?: Medication;
     onCreate: () => void;
 }
 export const ModalMedicationRequestCancel = (props: ModalMedicationRequestCancelProps) => {
+    const { medicationRequest, medication, onCreate } = props;
     return (
         <ModalTrigger
             title={t`Cancel Medication Request`}
             trigger={
-                <Button type="primary" disabled={props.medicationRequest.status !== 'active'}>
+                <Button type="default" disabled={medicationRequest.status !== 'active' || !medication}>
                     <span>
                         <Trans>Cancel</Trans>
                     </span>
@@ -30,17 +31,17 @@ export const ModalMedicationRequestCancel = (props: ModalMedicationRequestCancel
                     launchContextParameters={[
                         {
                             name: 'MedicationRequest',
-                            resource: props.medicationRequest,
+                            resource: medicationRequest,
                         },
                         {
                             name: 'Medication',
-                            resource: props.medication,
+                            resource: medication,
                         },
                     ]}
                     onSuccess={() => {
                         closeModal();
                         notification.success({ message: t`Medication request successfully cancelled` });
-                        props.onCreate();
+                        onCreate();
                     }}
                     onCancel={closeModal}
                 />

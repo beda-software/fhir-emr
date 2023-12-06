@@ -9,15 +9,16 @@ import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseF
 
 interface ModalMedicationRequestConfirmProps {
     medicationRequest: MedicationRequest;
-    medication: Medication;
+    medication?: Medication;
     onCreate: () => void;
 }
 export const ModalMedicationRequestConfirm = (props: ModalMedicationRequestConfirmProps) => {
+    const { medicationRequest, medication, onCreate } = props;
     return (
         <ModalTrigger
             title={t`Confirm Medication Request`}
             trigger={
-                <Button type="primary" disabled={props.medicationRequest.status !== 'active'}>
+                <Button type="primary" disabled={medicationRequest.status !== 'active' || !medication}>
                     <span>
                         <Trans>Confirm</Trans>
                     </span>
@@ -30,17 +31,17 @@ export const ModalMedicationRequestConfirm = (props: ModalMedicationRequestConfi
                     launchContextParameters={[
                         {
                             name: 'MedicationRequest',
-                            resource: props.medicationRequest,
+                            resource: medicationRequest,
                         },
                         {
                             name: 'Medication',
-                            resource: props.medication,
+                            resource: medication,
                         },
                     ]}
                     onSuccess={() => {
                         closeModal();
                         notification.success({ message: t`Medication request successfully confirmed` });
-                        props.onCreate();
+                        onCreate();
                     }}
                     onCancel={closeModal}
                 />
