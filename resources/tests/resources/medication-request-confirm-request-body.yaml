@@ -1,0 +1,10 @@
+resourceType: Parameters
+parameter:
+- name: questionnaire
+  resource: !include medication-request-confirm.yaml
+- name: questionnaire_response
+  resource: !include medication-request-confirm-questionnaire-response.yaml
+- name: MedicationRequest
+  resource: !include medication-request-3.yaml
+- name: Medication
+  resource: !include medication-3.yaml

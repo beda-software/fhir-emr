@@ -1,0 +1,8 @@
+resourceType: Parameters
+parameter:
+- name: questionnaire
+  resource: !include medication-batch-create.yaml
+- name: questionnaire_response
+  resource: !include medication-batch-create-questionnaire-response.yaml
+- name: CurrentMedicationKnowledge
+  resource: !include medicationKnowledgeEdarbi20.yaml

@@ -1,0 +1,43 @@
+resourceType: Questionnaire
+id: medication-request-confirm
+status: active
+title: Medication Request Confirm
+mapping:
+    - id: prescription-confirm
+      resourceType: Mapping
+launchContext:
+    - name:
+          code: MedicationRequest
+      type:
+        - MedicationRequest
+      description: The MedicationRequest to change status
+    - name:
+          code: Medication
+      type:
+        - Medication
+      description: The Medication to change status
+item:
+    - type: group
+      linkId: root-group
+      item:
+      - text: Current MedicationRequest ID
+        type: string
+        linkId: current-medication-request-id
+        hidden: true
+        initialExpression:
+            language: text/fhirpath
+            expression: "%MedicationRequest.id"
+      - text: Current Medication ID
+        type: string
+        linkId: current-medication-id
+        hidden: true
+        initialExpression:
+            language: text/fhirpath
+            expression: "%Medication.id"
+      - text: Are you sure to confirm this request?
+        linkId: are-you-sure
+        type: display
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/medication-request-confirm
+meta:
+    profile:
+        - https://beda.software/beda-emr-questionnaire

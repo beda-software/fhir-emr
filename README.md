@@ -37,6 +37,8 @@ __Documentation__: https://docs.emr.beda.software/
 - HealthcareService management
 - Invoice management
 - Medication management
+  - Warehouse management
+  - Prescriptions management
 - Patient medical information
 - Patients management
 - Practitioners management

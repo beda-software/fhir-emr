@@ -1,0 +1,52 @@
+amount:
+  code: '385055001'
+  unit: Tablet
+  value: 25
+  system: http://unitsofmeasure.org
+doseForm:
+  coding:
+    - code: '385055001'
+      system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      display: Tablet
+packaging:
+  type:
+    coding:
+      - code: box
+        system: http://terminology.hl7.org/CodeSystem/medicationknowledge-package-type
+        display: Box
+resourceType: MedicationKnowledge
+ingredient:
+  - item:
+      CodeableConcept:
+        coding:
+          - code: '1091643'
+            system: http://www.nlm.nih.gov/research/umls/rxnorm
+            display: azilsartan
+    isActive: true
+    strength:
+      numerator:
+        code: mg
+        unit: Milligram
+        value: 20
+        system: http://unitsofmeasure.org
+      denominator:
+        code: tablet
+        unit: Tablet
+        value: 1
+        system: http://unitsofmeasure.org
+status: active
+id: edarbi-20mg-25tablets
+code:
+  coding:
+    - code: edarbi-20mg-25tablets
+      system: http://beda.software/custom-medication-list
+      display: Edarbi 20mg 25 tablets
+cost:
+  - cost:
+      value: 4
+      currency: usd
+    type:
+      coding:
+        - code: wholesale
+          system: http://terminology.hl7.org/CodeSystem/cost-type
+          display: Wholesale Price

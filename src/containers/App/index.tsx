@@ -30,8 +30,10 @@ import { restoreUserSession } from './utils';
 import { HealthcareServiceList } from '../HealthcareServiceList';
 import { InvoiceDetails } from '../InvoiceDetails';
 import { InvoiceList } from '../InvoiceList';
+import { MedicationManagement } from '../MedicationManagement';
 import { NotificationPage } from '../NotificationPage';
 import { OrganizationScheduling } from '../OrganizationScheduling';
+import { Prescriptions } from '../Prescriptions';
 
 export function App() {
     const [userResponse] = useService(async () => {
@@ -197,6 +199,8 @@ function AuthenticatedReceptionistUserApp() {
                 <Route path="/scheduling" element={<OrganizationScheduling />} />
                 <Route path="/invoices" element={<InvoiceList />} />
                 <Route path="/invoices/:id" element={<InvoiceDetails />} />
+                <Route path="/medications" element={<MedicationManagement />} />
+                <Route path="/prescriptions" element={<Prescriptions />} />
                 <Route path="*" element={<Navigate to="/scheduling" />} />
             </Routes>
         </BaseLayout>

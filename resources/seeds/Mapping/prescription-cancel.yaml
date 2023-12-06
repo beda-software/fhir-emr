@@ -1,0 +1,20 @@
+resourceType: Mapping
+id: prescription-cancel
+body:
+  $let:
+    currentMedicationRequestId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='current-medication-request-id').answer.valueString").0
+    currentMedication: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='current-medication-id').answer.valueString").0
+  $body:
+    resourceType: Bundle
+    type: transaction
+    entry:
+      - request:
+          url: $ "/MedicationRequest/" + currentMedicationRequestId
+          method: PATCH
+        resource:
+          status: cancelled
+      - request:
+          url: $ "/Medication/" + currentMedication
+          method: PATCH
+        resource:
+          status: active

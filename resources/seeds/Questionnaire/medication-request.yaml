@@ -1,0 +1,59 @@
+id: medication-request
+resourceType: Questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/medication-request
+meta:
+    profile:
+        - https://beda.software/beda-emr-questionnaire
+name: medication-request
+title: Medication Prescription
+status: active
+subjectType:
+    - Encounter
+mapping:
+    - id: medication-request-extract
+      resourceType: Mapping
+launchContext:
+    - name:
+          code: Patient
+      type:
+        - Patient
+    - name:
+          code: Author
+      type:
+        - PractitionerRole
+        - Practitioner
+        - Organization
+item:
+    - text: PatientId
+      type: string
+      linkId: patientId
+      hidden: true
+      initialExpression:
+          language: text/fhirpath
+          expression: '%Patient.id'
+    - text: AuthorId
+      type: string
+      linkId: authorId
+      hidden: true
+      initialExpression:
+          language: text/fhirpath
+          expression: '%Author.id'
+    - text: AuthorType
+      type: string
+      linkId: authorType
+      hidden: true
+      initialExpression:
+          language: text/fhirpath
+          expression: '%Author.resourceType'
+    - text: Medications
+      type: reference
+      referenceResource:
+        - Medication
+      required: true
+      linkId: medication
+      answerExpression:
+        language: application/x-fhir-query
+        expression: "Medication?status=active"
+      choiceColumn:
+        - forDisplay: true
+          path: code.coding.first().display

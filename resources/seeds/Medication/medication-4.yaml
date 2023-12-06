@@ -1,0 +1,11 @@
+code:
+  coding:
+    - code: edarbi-40mg-25tablets
+      system: http://beda.software/custom-medication-list
+      display: Edarbi 40mg 25 tablets
+batch:
+  lotNumber: 000-002
+  expirationDate: '2027-12-17'
+status: active
+id: medication-4
+resourceType: Medication

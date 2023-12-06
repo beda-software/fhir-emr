@@ -1,0 +1,35 @@
+questionnaire: medication-request
+meta:
+  lastUpdated: '2023-12-03T09:29:22.024836Z'
+  createdAt: '2023-12-03T09:29:22.024836Z'
+  versionId: '146'
+encounter:
+  id: e9436c91-101b-47f7-bf21-78ebc7f8e6f1
+  resourceType: Encounter
+item:
+  - answer:
+      - value:
+          string: patient1
+    linkId: patientId
+  - answer:
+      - value:
+          string: practitioner1
+    linkId: authorId
+  - answer:
+      - value:
+          string: Practitioner
+    linkId: authorType
+  - answer:
+      - value:
+          Reference:
+            id: medication-2
+            display: Edarbi 80mg 25 tablets
+            resourceType: Medication
+    linkId: medication
+resourceType: QuestionnaireResponse
+status: completed
+id: faf0d817-8e5a-45d4-a2f9-65be5d34505a
+authored: '2023-12-03T09:29:21Z'
+subject:
+  id: patient1
+  resourceType: Patient

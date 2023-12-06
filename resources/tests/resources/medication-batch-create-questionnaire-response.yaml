@@ -1,0 +1,24 @@
+resourceType: QuestionnaireResponse
+questionnaire: medication-batch-create
+item:
+  - linkId: current-medication-knowledge-id
+    answer:
+      - valueString: edarbi-20mg-25tablets
+  - linkId: display
+    answer:
+      - valueString: Edarbi 20mg 25 tablets
+  - linkId: code
+    answer:
+      - valueString: edarbi-20mg-25tablets
+  - linkId: system
+    answer:
+      - valueString: http://beda.software/custom-medication-list
+  - linkId: items-number
+    answer:
+      - valueInteger: 2
+  - linkId: batch-number
+    answer:
+      - valueString: '1'
+  - linkId: expiration-date
+    answer:
+      - valueDate: '2025-01-01'
