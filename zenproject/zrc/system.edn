@@ -90,8 +90,8 @@
                              :federated-identity-signin {:engine "json-schema"
                                                          :schema {:required ["jwt"]
                                                                   :properties {:jwt {:required ["iss", "aud", "sub"]
-                                                                                     :properties {:iss {:const "https://appleid.apple.com"}
-                                                                                                  :aud {:enum ["software.beda.emr", "software.beda.fhirmhealth.fhirmhealth"]}
+                                                                                     :properties {:iss {:const "https://ingest.emr.beda.software"}
+                                                                                                  :aud {:type "array", :maxItems 2, :minItems 2, :items {:enum ["software.beda.emr", "software.beda.fhirmhealth.fhirmhealth"], :type "string"}}
                                                                                                   :sub {:type "string"
                                                                                                         :minLength 1}}}}}}}}}
 
