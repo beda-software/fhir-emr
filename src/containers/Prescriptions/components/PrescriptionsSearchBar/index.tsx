@@ -56,7 +56,7 @@ export function PrescriptionsSearchBar(props: PrescriptionsSearchBarSelectProps)
                         onChange={onChangePractitionerRole}
                         loadOptions={loadPractitionerRoleOptions}
                         value={selectedPractitionerRole as OptionType}
-                        placeholder="Practitioner"
+                        placeholder="Requester"
                     />
                     <AsyncDropdown
                         onChange={onChangeStatus}
