@@ -5,9 +5,9 @@ import { Patient } from 'fhir/r4b';
 import { WithId } from 'fhir-react';
 
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { isLoading } from 'fhir-react/lib/libs/remoteData';
+import { isFailure, isLoading } from 'fhir-react/lib/libs/remoteData';
 
-import { SpinIndicator } from 'src/components/Spinner';
+import { SpinIndicator, Spinner } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
 
@@ -64,8 +64,12 @@ export function PatientWearables(props: PatientWearablesProps) {
 
     usePatientHeaderLocationTitle({ title: t`Wearables` });
 
+    if (isFailure(wearablesData)) {
+        console.log(wearablesData.status, wearablesData.error);
+    }
+
     return (
-        <RenderRemoteData remoteData={wearablesData}>
+        <RenderRemoteData remoteData={wearablesData} renderLoading={Spinner} renderFailure={() => <></>}>
             {(data) => (
                 <>
                     {data.patientRecordsWarning ? <Alert message={data.patientRecordsWarning} type="warning" /> : null}
