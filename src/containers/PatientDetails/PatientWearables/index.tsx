@@ -2,7 +2,7 @@ import { t } from '@lingui/macro';
 import { Alert, Empty, Result } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { Patient } from 'fhir/r4b';
-import { WithId } from 'fhir-react';
+import { RemoteData, WithId } from 'fhir-react';
 
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { isFailure, isLoading } from 'fhir-react/lib/libs/remoteData';
@@ -70,7 +70,11 @@ export function PatientWearables(props: PatientWearablesProps) {
     }
 
     return (
-        <RenderRemoteData remoteData={wearablesData} renderLoading={Spinner} renderFailure={() => <></>}>
+        <RenderRemoteData
+            remoteData={wearablesData}
+            renderLoading={Spinner}
+            renderFailure={(e) => <RenderError error={e} />}
+        >
             {(data) => (
                 <>
                     {data.patientRecordsWarning ? <Alert message={data.patientRecordsWarning} type="warning" /> : null}
@@ -98,4 +102,16 @@ export function PatientWearables(props: PatientWearablesProps) {
             )}
         </RenderRemoteData>
     );
+}
+
+function RenderError(error: any) {
+    const errorTextMapping = {
+        '403: Forbidden':
+            "You currently lack access to the patient's data. To obtain it, you must secure the patient's signed consent authorizing the release of their activity data.",
+        '401: Unauthorized':
+            'To obtain this information, you need to authorize your account in the mobile application and link it with your health data providers.',
+    };
+    const errorText = errorTextMapping[error.error] ?? error.error;
+
+    return <Empty description={<span>{errorText}</span>} />;
 }
