@@ -65,7 +65,8 @@ export function PatientWearables(props: PatientWearablesProps) {
     usePatientHeaderLocationTitle({ title: t`Wearables` });
 
     if (isFailure(wearablesData)) {
-        console.log(wearablesData.status, wearablesData.error);
+        console.log('status', wearablesData.status);
+        console.log('error', wearablesData.error);
     }
 
     return (
