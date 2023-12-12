@@ -2,7 +2,7 @@ import { t } from '@lingui/macro';
 import { Alert, Empty, Result } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { Patient } from 'fhir/r4b';
-import { RemoteData, WithId } from 'fhir-react';
+import { WithId } from 'fhir-react';
 
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { isFailure, isLoading } from 'fhir-react/lib/libs/remoteData';
