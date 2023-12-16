@@ -4,6 +4,7 @@ import { Button, Form, Input, Timeline } from 'antd';
 import { FormProps } from 'antd/lib/form';
 
 import s from './QuestionnaireBuilder.module.scss';
+import { QuestionnaireFromPdfButton } from './QuestionnaireFromPdfButton';
 
 const { TextArea } = Input;
 
@@ -72,9 +73,12 @@ export function PromptForm(props: Props) {
             <Form.Item name="prompt" label={t`Describe requirements to a questionnaire`}>
                 <TextArea rows={5} disabled={disabled} />
             </Form.Item>
-            <Form.Item>
-                <Button htmlType="submit" disabled={disabled}>{t`Submit`}</Button>
-            </Form.Item>
+            <div className={s.submitButtons}>
+                <Form.Item>
+                    <Button htmlType="submit" disabled={disabled}>{t`Submit`}</Button>
+                </Form.Item>
+                <QuestionnaireFromPdfButton onSubmit={onSubmit} disabled={disabled} />
+            </div>
             <div className={s.prompts}>
                 <Timeline items={items} />
             </div>
