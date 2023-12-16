@@ -8,49 +8,83 @@ status: draft
 subjectType:
   - Patient
   - Encounter
-date: '2023-12-16'
+date: "2023-12-16"
 item:
-  - linkId: '1'
+  - linkId: "1"
     text: Patient ID
     type: string
-  - linkId: '2'
+  - linkId: "2"
     text: Full Name
     type: string
-  - linkId: '3'
+  - linkId: "3"
     text: Date of Birth
     type: date
-  - linkId: '4'
+  - linkId: "4"
     text: Gestational Age
     type: integer
-  - linkId: '5'
+  - linkId: "5"
     text: Previous Pregnancies
     type: integer
-  - linkId: '6'
+  - linkId: "6"
     text: Previous Ultrasound Examinations
     type: boolean
   - linkId: 6a
     text: Details of previous findings
     type: text
     enableWhen:
-    - question: '6'
-      operator: "="
-      answerBoolean: true
-  - linkId: '7'
+      - question: "6"
+        operator: "="
+        answerBoolean: true
+  - linkId: "7"
     text: Known Complications
     type: boolean
   - linkId: 7a
     text: Specify known complications
     type: text
     enableWhen:
-    - question: '7'
-      operator: "="
-      answerBoolean: true
-  - linkId: '8'
+      - question: "7"
+        operator: "="
+        answerBoolean: true
+  - linkId: "8"
     text: Medications
     type: text
-  - linkId: '9'
+  - linkId: "9"
     text: Date of Ultrasound
     type: date
-  - linkId: '10'
+  - linkId: "10"
     text: Time of Ultrasound
     type: time
+  - linkId: measurements-group
+    type: group
+    text: Measurements
+    item:
+      - linkId: "bpd"
+        text: "Fetal Biparietal Diameter (BPD)"
+        type: "decimal"
+        unit: "mm"
+      - linkId: "hc"
+        text: "Head Circumference (HC)"
+        type: "decimal"
+        unit: "mm"
+      - linkId: "ac"
+        text: "Abdominal Circumference (AC)"
+        type: "decimal"
+        unit: "mm"
+      - linkId: "fl"
+        text: "Femur Length (FL)"
+        type: "decimal"
+        unit: "mm"
+      - linkId: "efw"
+        text: "Estimated Fetal Weight (EFW)"
+        type: "decimal"
+        unit: "g"
+      - linkId: "afi"
+        text: "Amniotic Fluid Index (AFI)"
+        type: "decimal"
+      - linkId: "pp"
+        text: "Placental Position"
+        type: "string"
+      - linkId: "clm"
+        text: "Cervical Length Measurement"
+        type: "decimal"
+        unit: "mm"
