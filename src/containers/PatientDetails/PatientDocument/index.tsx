@@ -19,6 +19,7 @@ import s from './PatientDocument.module.scss';
 import { S } from './PatientDocument.styles';
 import { PatientDocumentHeader } from './PatientDocumentHeader';
 import { usePatientDocument } from './usePatientDocument';
+import { getToken } from 'src/services/auth';
 
 interface Props {
     patient: Patient;
@@ -29,14 +30,25 @@ interface Props {
     onSuccess?: () => void;
 }
 
-function FillWithAudio() {
+interface FillWithAudioProps {
+    questionnaireId: string;
+}
+function FillWithAudio(props: FillWithAudioProps) {
     const recorderControls = useAudioRecorder();
     const onRecordStop = async (blob: Blob) => {
         const audioFile = new File([blob], 'voice.webm', { type: blob.type });
         const formData = new FormData();
         formData.append('file', audioFile);
-        const response = await service(`${config.aiAssistantServiceUrl}/convert`, { method: 'POST', body: formData });
-        console.log('response', response);
+        const response = await service(
+            `${config.aiAssistantServiceUrl}/convert?questionnaire=${props.questionnaireId}`,
+            {
+                method: 'POST',
+                body: formData,
+                headers: { Authorization: `Bearer ${getToken()}` },
+            },
+        );
+
+        return response;
     };
 
     return (
@@ -93,7 +105,7 @@ export function PatientDocument(props: Props) {
                                     savedMessage={savedMessage}
                                 />
                                 {questionnaireId === 'ultrasound-pregnancy-screening-second-trimester' && (
-                                    <FillWithAudio />
+                                    <FillWithAudio questionnaireId={questionnaireId} />
                                 )}
                             </div>
                             <BaseQuestionnaireResponseForm
