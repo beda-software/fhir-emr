@@ -32,6 +32,8 @@ interface Props {
 
 interface FillWithAudioProps {
     questionnaireId: string;
+    patientId: string;
+    encounterId: string;
 }
 function FillWithAudio(props: FillWithAudioProps) {
     const recorderControls = useAudioRecorder();
@@ -40,7 +42,7 @@ function FillWithAudio(props: FillWithAudioProps) {
         const formData = new FormData();
         formData.append('file', audioFile);
         const response = await service(
-            `${config.aiAssistantServiceUrl}/convert?questionnaire=${props.questionnaireId}`,
+            `${config.aiAssistantServiceUrl}/convert?questionnaire=${props.questionnaireId}&patient=${props.patientId}&encounter=${props.encounterId}`,
             {
                 method: 'POST',
                 body: formData,
@@ -104,9 +106,14 @@ export function PatientDocument(props: Props) {
                                     draftSaveResponse={draftSaveResponse}
                                     savedMessage={savedMessage}
                                 />
-                                {questionnaireId === 'ultrasound-pregnancy-screening-second-trimester' && (
-                                    <FillWithAudio questionnaireId={questionnaireId} />
-                                )}
+                                {questionnaireId === 'ultrasound-pregnancy-screening-second-trimester' &&
+                                encounterId ? (
+                                    <FillWithAudio
+                                        questionnaireId={questionnaireId}
+                                        encounterId={encounterId}
+                                        patientId={props.patient.id!}
+                                    />
+                                ) : null}
                             </div>
                             <BaseQuestionnaireResponseForm
                                 formData={formData}
