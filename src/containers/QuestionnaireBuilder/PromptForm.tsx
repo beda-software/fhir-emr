@@ -4,7 +4,7 @@ import { Button, Form, Input, Timeline } from 'antd';
 import { FormProps } from 'antd/lib/form';
 
 import s from './QuestionnaireBuilder.module.scss';
-import { QuestionnaireFromPdfButton } from './QuestionnaireFromPdfButton';
+import { QuestionnaireFromFileButton } from './QuestionnaireFromPdfButton';
 
 const { TextArea } = Input;
 
@@ -14,6 +14,7 @@ interface PromptFormInterface {
 
 interface Props extends FormProps {
     onSubmit: (prompt: string) => Promise<any>;
+    onUploadFile: (formData: File) => Promise<any>;
     onPromptSelect: (prompt: string) => void;
     editHistory: object;
     onPromptDelete: (prompt: string) => void;
@@ -23,8 +24,17 @@ interface Props extends FormProps {
 }
 
 export function PromptForm(props: Props) {
-    const { onSubmit, onPromptSelect, selectedPrompt, editHistory, onPromptDelete, isLoading, visible, ...rest } =
-        props;
+    const {
+        onSubmit,
+        onUploadFile,
+        onPromptSelect,
+        selectedPrompt,
+        editHistory,
+        onPromptDelete,
+        isLoading,
+        visible,
+        ...rest
+    } = props;
     const [promptForm] = Form.useForm<PromptFormInterface>();
     const disabled = isLoading;
 
@@ -70,14 +80,21 @@ export function PromptForm(props: Props) {
             style={{ display: visible ? 'block' : 'none' }}
             {...rest}
         >
-            <Form.Item name="prompt" label={t`Describe requirements to a questionnaire`}>
+            <Form.Item
+                name="prompt"
+                label={
+                    !items.length
+                        ? t`Describe requirements to a questionnaire or upload file`
+                        : t`Describe what to adjust in the questionnsaire`
+                }
+            >
                 <TextArea rows={5} disabled={disabled} />
             </Form.Item>
             <div className={s.submitButtons}>
                 <Form.Item>
                     <Button htmlType="submit" disabled={disabled}>{t`Submit`}</Button>
                 </Form.Item>
-                <QuestionnaireFromPdfButton onSubmit={onSubmit} disabled={disabled} />
+                <QuestionnaireFromFileButton onUploadFile={onUploadFile} disabled={disabled || items.length > 0} />
             </div>
             <div className={s.prompts}>
                 <Timeline items={items} />

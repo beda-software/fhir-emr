@@ -25,6 +25,7 @@ export function QuestionnaireBuilder() {
         response,
         updateResponse,
         onSubmitPrompt,
+        onUploadFile,
         error,
         onItemChange,
         onItemDrag,
@@ -129,6 +130,7 @@ export function QuestionnaireBuilder() {
                             className={s.promptForm}
                             visible={!questionnaireItem && !groupItem}
                             onSubmit={(prompt) => onSubmitPrompt(prompt)}
+                            onUploadFile={onUploadFile}
                             onPromptSelect={(prompt) => onPromptSelect(prompt)}
                             selectedPrompt={selectedPrompt}
                             isLoading={isLoading(response) || isLoading(updateResponse)}

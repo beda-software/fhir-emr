@@ -12,9 +12,17 @@ import { formatError } from 'fhir-react/lib/utils/error';
 
 import { fromFirstClassExtension, toFirstClassExtension } from 'shared/src/utils/converter';
 
-import { generateQuestionnaire } from 'src/services/questionnaire-builder';
+import { generateQuestionnaire, generateQuestionnaireFromFile } from 'src/services/questionnaire-builder';
 
 import { deleteQuestionnaireItem, getQuestionPath, moveQuestionnaireItem } from './utils';
+
+const initialQuestionnaire: FHIRQuestionnaire = {
+    resourceType: 'Questionnaire',
+    status: 'draft',
+    meta: {
+        profile: ['https://beda.software/beda-emr-questionnaire'],
+    },
+};
 
 export interface OnItemDrag {
     dropTargetItem: QuestionItemProps | GroupItemProps;
@@ -56,15 +64,6 @@ export function useQuestionnaireBuilder() {
 
                 return;
             }
-
-            const initialQuestionnaire: FHIRQuestionnaire = {
-                resourceType: 'Questionnaire',
-                status: 'draft',
-                meta: {
-                    profile: ['https://beda.software/beda-emr-questionnaire'],
-                },
-            };
-
             setResponse(success(initialQuestionnaire));
         })();
     }, [params.id]);
@@ -109,6 +108,33 @@ export function useQuestionnaireBuilder() {
             }
         },
         [editHistory, response],
+    );
+
+    const onUploadFile = useCallback(
+        async (file: File) => {
+            if (isSuccess(response)) {
+                setUpdateResponse(loading);
+                setError(undefined);
+                const saveResponse = await generateQuestionnaireFromFile(file, JSON.stringify(initialQuestionnaire));
+
+                setUpdateResponse(saveResponse);
+                if (isSuccess(saveResponse)) {
+                    const newQuestionnaire = saveResponse.data.questionnaire;
+                    const markdown = saveResponse.data.markdown;
+                    setResponse(success(newQuestionnaire));
+                    setEditHistory({ ...{ [markdown]: newQuestionnaire } });
+                    setSelectedPrompt(markdown);
+                }
+
+                if (isFailure(saveResponse)) {
+                    setError(
+                        saveResponse.error?.message || 'Something went wrong please try again or reupload the file',
+                    );
+                    setResponse(success(response.data));
+                }
+            }
+        },
+        [response],
     );
 
     const onItemChange = useCallback(
@@ -188,6 +214,7 @@ export function useQuestionnaireBuilder() {
         updateResponse,
         onSaveQuestionnaire,
         onSubmitPrompt,
+        onUploadFile,
         onItemChange,
         onItemDrag,
         onItemDelete,
