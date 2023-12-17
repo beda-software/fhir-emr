@@ -1,3 +1,4 @@
+import { notification } from 'antd';
 import { Organization, Patient, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
 import { useEffect, useState } from 'react';
 import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder';
@@ -14,12 +15,12 @@ import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireR
 import { AnxietyScore, DepressionScore } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/score';
 import { Spinner } from 'src/components/Spinner';
 import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
+import { getToken } from 'src/services/auth';
 
 import s from './PatientDocument.module.scss';
 import { S } from './PatientDocument.styles';
 import { PatientDocumentHeader } from './PatientDocumentHeader';
 import { usePatientDocument } from './usePatientDocument';
-import { getToken } from 'src/services/auth';
 
 interface Props {
     patient: Patient;
@@ -37,11 +38,13 @@ interface FillWithAudioProps {
 }
 function FillWithAudio(props: FillWithAudioProps) {
     const recorderControls = useAudioRecorder();
+    const navigate = useNavigate();
+
     const onRecordStop = async (blob: Blob) => {
         const audioFile = new File([blob], 'voice.webm', { type: blob.type });
         const formData = new FormData();
         formData.append('file', audioFile);
-        const response = await service(
+        const response = await service<{ questionnaireResponseId: string }>(
             `${config.aiAssistantServiceUrl}/convert?questionnaire=${props.questionnaireId}&patient=${props.patientId}&encounter=${props.encounterId}`,
             {
                 method: 'POST',
@@ -50,7 +53,14 @@ function FillWithAudio(props: FillWithAudioProps) {
             },
         );
 
-        return response;
+        if (isSuccess(response)) {
+            console.log('questionnaireResponseId', response.data.questionnaireResponseId);
+            navigate(`/questionnaire-response-waiting/${response.data.questionnaireResponseId}`, {
+                state: { encounterId: props.encounterId, patientId: props.patientId },
+            });
+        } else {
+            notification.error({ message: JSON.stringify(response.error) });
+        }
     };
 
     return (
