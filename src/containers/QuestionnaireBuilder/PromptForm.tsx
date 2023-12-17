@@ -2,6 +2,7 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 import { Button, Form, Input, Timeline } from 'antd';
 import { FormProps } from 'antd/lib/form';
+import Markdown from 'react-markdown';
 
 import s from './QuestionnaireBuilder.module.scss';
 import { QuestionnaireFromFileButton } from './QuestionnaireFromPdfButton';
@@ -38,7 +39,9 @@ export function PromptForm(props: Props) {
     const [promptForm] = Form.useForm<PromptFormInterface>();
     const disabled = isLoading;
 
-    const items = Object.keys(editHistory).map((prompt, index) => {
+    const hasHistory = Object.keys(editHistory).length > 0;
+
+    const items = Object.entries(editHistory).map(([prompt, { inputType }], index) => {
         return {
             color: isLoading ? 'gray' : prompt === selectedPrompt ? 'green' : 'blue',
             children: (
@@ -49,9 +52,15 @@ export function PromptForm(props: Props) {
                         className={s.singlePromptContainer}
                         style={disabled ? { pointerEvents: 'none' } : {}}
                     >
-                        <pre key={`${prompt} - ${index}`} className={s.prompt}>
-                            {prompt}
-                        </pre>
+                        {inputType === 'markdown' ? (
+                            <Markdown key={`${prompt} - ${index}`} className={s.markdown}>
+                                {prompt}
+                            </Markdown>
+                        ) : (
+                            <pre key={`${prompt} - ${index}`} className={s.prompt}>
+                                {prompt}
+                            </pre>
+                        )}
                     </div>
                     <div>
                         <Button
@@ -83,9 +92,9 @@ export function PromptForm(props: Props) {
             <Form.Item
                 name="prompt"
                 label={
-                    !items.length
-                        ? t`Describe requirements to a questionnaire or upload file`
-                        : t`Describe what to adjust in the questionnsaire`
+                    hasHistory
+                        ? t`Describe what to adjust in the questionnaire`
+                        : t`Describe requirements to a questionnaire or upload file`
                 }
             >
                 <TextArea rows={5} disabled={disabled} />
@@ -94,7 +103,7 @@ export function PromptForm(props: Props) {
                 <Form.Item>
                     <Button htmlType="submit" disabled={disabled}>{t`Submit`}</Button>
                 </Form.Item>
-                <QuestionnaireFromFileButton onUploadFile={onUploadFile} disabled={disabled || items.length > 0} />
+                <QuestionnaireFromFileButton onUploadFile={onUploadFile} disabled={disabled || hasHistory} />
             </div>
             <div className={s.prompts}>
                 <Timeline items={items} />

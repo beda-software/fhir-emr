@@ -43,6 +43,11 @@ function cleanUpQuestionnaire(questionnaire: FHIRQuestionnaire) {
 
     return { ...questionnaire, item: cleanUpItems(questionnaire.item) };
 }
+interface HistoryItem {
+    questionnaire: FHIRQuestionnaire;
+    inputType: 'markdown' | 'text';
+    input: string;
+}
 
 export function useQuestionnaireBuilder() {
     const navigate = useNavigate();
@@ -50,7 +55,7 @@ export function useQuestionnaireBuilder() {
     const [response, setResponse] = useState<RemoteData<FHIRQuestionnaire>>(notAsked);
     const [updateResponse, setUpdateResponse] = useState<RemoteData<FHIRQuestionnaire>>(notAsked);
     const [error, setError] = useState<string | undefined>();
-    const [editHistory, setEditHistory] = useState({});
+    const [editHistory, setEditHistory] = useState<Record<string, HistoryItem>>({});
     const [selectedPrompt, setSelectedPrompt] = useState<string | undefined>(undefined);
 
     useEffect(() => {
@@ -95,7 +100,10 @@ export function useQuestionnaireBuilder() {
                 if (isSuccess(saveResponse)) {
                     const newQuestionnaire = saveResponse.data;
                     setResponse(success(newQuestionnaire));
-                    setEditHistory({ ...{ [prompt]: newQuestionnaire }, ...editHistory });
+                    setEditHistory({
+                        ...{ [prompt]: { questionnaire: newQuestionnaire, inputType: 'text', input: prompt } },
+                        ...editHistory,
+                    });
                     setSelectedPrompt(prompt);
                 }
 
@@ -117,20 +125,22 @@ export function useQuestionnaireBuilder() {
                 setError(undefined);
                 const saveResponse = await generateQuestionnaireFromFile(file, JSON.stringify(initialQuestionnaire));
 
-                setUpdateResponse(saveResponse);
                 if (isSuccess(saveResponse)) {
                     const newQuestionnaire = saveResponse.data.questionnaire;
                     const markdown = saveResponse.data.markdown;
+                    setUpdateResponse(success(saveResponse.data.questionnaire));
                     setResponse(success(newQuestionnaire));
-                    setEditHistory({ ...{ [markdown]: newQuestionnaire } });
+                    setEditHistory({
+                        [markdown]: { questionnaire: newQuestionnaire, input: markdown, inputType: 'markdown' },
+                    });
                     setSelectedPrompt(markdown);
                 }
-
                 if (isFailure(saveResponse)) {
                     setError(
                         saveResponse.error?.message || 'Something went wrong please try again or reupload the file',
                     );
                     setResponse(success(response.data));
+                    setUpdateResponse(saveResponse);
                 }
             }
         },
@@ -191,7 +201,7 @@ export function useQuestionnaireBuilder() {
 
     const onPromptSelect = useCallback(
         (prompt: string) => {
-            setResponse(success(editHistory[prompt]));
+            setResponse(success(editHistory[prompt]!.questionnaire));
             setSelectedPrompt(prompt);
         },
         [editHistory],
@@ -204,7 +214,7 @@ export function useQuestionnaireBuilder() {
             setEditHistory(currentPrompts);
             const activePrompt = Object.keys(currentPrompts)[0]!;
             onPromptSelect(activePrompt);
-            setResponse(success(editHistory[activePrompt]));
+            setResponse(success(editHistory[activePrompt]!.questionnaire));
         },
         [editHistory, onPromptSelect],
     );

@@ -9,7 +9,23 @@
 .prompt {
     padding: 4px 0;
     font-size: 14px;
-    line-height: 16px;
+    line-height: 20x;
+}
+
+.markdown {
+    padding: 4px 0;
+    line-height: 20px;
+    font-size: 14px;
+
+    * {
+        font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    p {
+        margin-bottom: 0;
+    }
 }
 
 .container {

@@ -1,3 +1,4 @@
+import { Questionnaire } from 'fhir/r4b';
 import { service } from 'fhir-react';
 
 import config from 'shared/src/config';
@@ -7,7 +8,7 @@ import { getToken } from './auth';
 export async function generateQuestionnaire(prompt: string, questionnaire?: string) {
     const appToken = getToken();
 
-    return await service<any>({
+    return await service<Questionnaire>({
         baseURL: config.aiQuestionnaireBuilderUrl,
         url: `/questionnaire`,
         method: 'POST',
@@ -26,7 +27,7 @@ export async function generateQuestionnaireFromFile(file: File, questionnaire?: 
     }
     const appToken = getToken();
 
-    return await service<any>({
+    return await service<{ questionnaire: Questionnaire; markdown: string }>({
         baseURL: config.aiQuestionnaireBuilderUrl,
         url: `/questionnaire-from-file`,
         method: 'POST',
