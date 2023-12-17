@@ -10,81 +10,89 @@ subjectType:
   - Encounter
 date: "2023-12-16"
 item:
-  - linkId: "1"
-    text: Patient ID
+  - text: Patient ID
     type: string
-  - linkId: "2"
-    text: Full Name
-    type: string
-  - linkId: "3"
-    text: Date of Birth
-    type: date
-  - linkId: "4"
-    text: Gestational Age
+    hidden: true
+    linkId: "1"
+  - text: Gestational Age
     type: integer
-  - linkId: "5"
-    text: Previous Pregnancies
-    type: integer
-  - linkId: "6"
-    text: Previous Ultrasound Examinations
-    type: boolean
-  - linkId: 6a
-    text: Details of previous findings
-    type: text
-    enableWhen:
-      - question: "6"
-        operator: "="
-        answerBoolean: true
-  - linkId: "7"
-    text: Known Complications
-    type: boolean
-  - linkId: 7a
-    text: Specify known complications
-    type: text
-    enableWhen:
-      - question: "7"
-        operator: "="
-        answerBoolean: true
-  - linkId: "8"
-    text: Medications
-    type: text
-  - linkId: "9"
-    text: Date of Ultrasound
-    type: date
-  - linkId: "10"
-    text: Time of Ultrasound
-    type: time
-  - linkId: measurements-group
-    type: group
+    linkId: "4"
+  - item:
+      - text: Fetal Biparietal Diameter (BPD) mm
+        type: decimal
+        linkId: bpd
+      - text: Head Circumference (HC) mm
+        type: decimal
+        linkId: hc
+      - text: Abdominal Circumference (HC) mm
+        type: decimal
+        linkId: ac
+      - text: Femur Length (FL) mm
+        type: decimal
+        linkId: fl
+      - text: Humeral Length (HL) mm
+        type: decimal
+        linkId: hl
+      - text: Estimated Fetal Weight (EFW) g
+        type: integer
+        linkId: efw
+      - text: Fetal Heart Rate (FHR) bpm
+        type: decimal
+        linkId: fhr
+      - text: Placental Position
+        type: choice
+        linkId: pp
+        answerOption:
+          - value:
+              Coding:
+                code: "245486001"
+                system: http://snomed.info/sct
+                display: Anterior
+          - value:
+              Coding:
+                code: "245487005"
+                system: http://snomed.info/sct
+                display: Posterior
+          - value:
+              Coding:
+                code: "27485007"
+                system: http://snomed.info/sct
+                display: Fundal
+          - value:
+              Coding:
+                code: "263379001"
+                system: http://snomed.info/sct
+                display: Lateral
+          - value:
+              Coding:
+                code: "445122007"
+                system: http://snomed.info/sct
+                display: Low-Lying
+          - value:
+              Coding:
+                code: "36813001"
+                system: http://snomed.info/sct
+                display: Placenta Previa
+          - value:
+              Coding:
+                code: "62531004"
+                system: http://snomed.info/sct
+                display: Marginal
+          - value:
+              Coding:
+                code: "79668009"
+                system: http://snomed.info/sct
+                display: Vasa Previa
     text: Measurements
-    item:
-      - linkId: "bpd"
-        text: "Fetal Biparietal Diameter (BPD)"
-        type: "decimal"
-        unit: "mm"
-      - linkId: "hc"
-        text: "Head Circumference (HC)"
-        type: "decimal"
-        unit: "mm"
-      - linkId: "ac"
-        text: "Abdominal Circumference (AC)"
-        type: "decimal"
-        unit: "mm"
-      - linkId: "fl"
-        text: "Femur Length (FL)"
-        type: "decimal"
-        unit: "mm"
-      - linkId: "efw"
-        text: "Estimated Fetal Weight (EFW)"
-        type: "decimal"
-        unit: "g"
-      - linkId: "afi"
-        text: "Amniotic Fluid Index (AFI)"
-        type: "decimal"
-      - linkId: "pp"
-        text: "Placental Position"
-        type: "string"
-      - linkId: "clm"
-        text: "Cervical Length Measurement"
-        type: "decimal"
-        unit: "mm"
+    type: group
+    linkId: measurements-group
+  - item:
+      - text: Right lateral ventricle mm
+        type: decimal
+        linkId: rlv
+      - text: Left lateral ventricle mm
+        type: decimal
+        linkId: llv
+    text: Anatomy
+    type: group
+    linkId: anatomy-group
