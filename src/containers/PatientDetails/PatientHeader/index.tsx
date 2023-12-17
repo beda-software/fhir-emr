@@ -79,6 +79,7 @@ export function PatientHeader() {
             { label: t`Wearables`, path: `/patients/${params.id}/wearables` },
             { label: t`Resources`, path: `/patients/${params.id}/resources` },
             { label: t`Smart Apps`, path: `/patients/${params.id}/apps` },
+            { label: t`Recommendations`, path: `/patients/${params.id}/recommendations` },
         ],
         [params.id],
     );

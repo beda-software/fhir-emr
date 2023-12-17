@@ -14,6 +14,7 @@ import { PatientDocumentDetails } from './PatientDocumentDetails';
 import { PatientDocuments } from './PatientDocuments';
 import { PatientHeader, PatientHeaderContextProvider } from './PatientHeader';
 import { PatientOverview } from './PatientOverview';
+import { PatientRecommendations } from './PatientRecommendations';
 import { PatientResources } from './PatientResources';
 import { PatientWearables } from './PatientWearables';
 import { EncounterDetails } from '../EncounterDetails';
@@ -88,6 +89,10 @@ export const PatientDetails = () => {
                                         element={<PatientDocumentDetails patient={patient} />}
                                     />
                                     <Route path="/wearables" element={<PatientWearables patient={patient} />} />
+                                    <Route
+                                        path="/recommendations"
+                                        element={<PatientRecommendations patient={patient} />}
+                                    />
                                     <Route path="/resources/:type" element={<PatientResources patient={patient} />} />
                                     <Route path="/resources" element={<PatientResources patient={patient} />} />
                                     <Route path="/apps" element={<PatientApps patient={patient} />} />
