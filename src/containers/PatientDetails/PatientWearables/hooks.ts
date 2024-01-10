@@ -99,6 +99,7 @@ async function fetchPatientRecords(patient: WithId<Patient>) {
         {
             method: 'GET',
             headers: {
+                'Content-Type': 'application/json',
                 Authorization: `Bearer ${getToken()}`,
             },
         },
@@ -116,6 +117,7 @@ async function fetchPatientMetriportRecords(patient: WithId<Patient>) {
         {
             method: 'GET',
             headers: {
+                'Content-Type': 'application/json',
                 Authorization: `Bearer ${getToken()}`,
             },
         },
