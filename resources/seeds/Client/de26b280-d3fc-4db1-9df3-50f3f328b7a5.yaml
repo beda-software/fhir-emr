@@ -11,5 +11,5 @@ smart:
   description: CSIRO Smart Forms App
 grant_types:
   - authorization_code
-id: 9cbba311-bf9b-4200-8dd3-8459046fc522
+id: a57d90e3-5f69-4b92-aa2e-2992180863c1
 resourceType: Client
