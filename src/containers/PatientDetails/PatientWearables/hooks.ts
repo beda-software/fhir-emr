@@ -5,6 +5,7 @@ import { isFailure, isSuccess, success } from 'fhir-react/lib/libs/remoteData';
 import { service } from 'fhir-react/lib/services/fetch';
 import { WithId, getFHIRResources, extractBundleResources } from 'fhir-react/lib/services/fhir';
 import { mapSuccess } from 'fhir-react/lib/services/service';
+import { formatError } from 'fhir-react/lib/utils/error';
 
 import config from 'shared/src/config';
 
@@ -59,7 +60,7 @@ export function usePatientWearablesData(patient: WithId<Patient>) {
             aggregatedRecords,
             patientRecordsWarning: isFailure(patientRecordsResponse) ? patientRecordsResponse.error : undefined,
             patientMetriportRecordsWarning: isFailure(patientMetriportRecordsResponse)
-                ? patientMetriportRecordsResponse.error
+                ? formatError(JSON.parse(patientMetriportRecordsResponse.error))
                 : undefined,
         });
     });
