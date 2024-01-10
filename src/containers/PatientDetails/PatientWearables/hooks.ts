@@ -107,7 +107,7 @@ async function fetchPatientRecords(patient: WithId<Patient>) {
 }
 
 async function fetchPatientMetriportRecords(patient: WithId<Patient>) {
-    return await service<WearablesData>(
+    return service<WearablesData>(
         matchCurrentUserRole({
             [Role.Patient]: () => `${config.wearablesDataStreamService}/metriport/records`,
             [Role.Admin]: () => `${config.wearablesDataStreamService}/metriport/${patient.id}/records`,
