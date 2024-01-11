@@ -1,15 +1,15 @@
 auth:
   authorization_code:
-    redirect_uri: https://www.smartforms.io/
+    redirect_uri: https://beda.caresofa.com
     refresh_token: true
     secret_required: false
     access_token_expiration: 36000
 type: smart-on-fhir
 smart:
-  launch_uri: https://www.smartforms.io/launch
-  name: SmartForms
-  description: CSIRO Smart Forms App
+  name: Clinical guidelines
+  launch_uri: https://beda.caresofa.com/
+  description: Clinical guidelines
 grant_types:
   - authorization_code
-id: a57d90e3-5f69-4b92-aa2e-2992180863c1
+id: de26b280-d3fc-4db1-9df3-50f3f328b7a5
 resourceType: Client
