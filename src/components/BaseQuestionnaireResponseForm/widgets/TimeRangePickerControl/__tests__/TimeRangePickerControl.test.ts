@@ -2,7 +2,7 @@ import { act, renderHook } from '@testing-library/react';
 import moment from 'moment';
 import { GroupItemProps } from 'sdc-qrf';
 
-import { FHIRTimeFormat } from 'fhir-react/lib/utils/date';
+import { FHIRTimeFormat } from '@beda.software/fhir-react';
 
 import { useTimeRangePickerControl } from '../hooks';
 

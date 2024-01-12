@@ -1,11 +1,12 @@
 import { Trans } from '@lingui/macro';
 import { Empty, TablePaginationConfig } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
-import { isLoading, isSuccess, RemoteData } from 'fhir-react/lib/libs/remoteData';
 
+import { RemoteData, isLoading, isSuccess } from '@beda.software/fhir-react';
+
+import { EncounterData } from './types';
 import { SpinIndicator } from '../Spinner';
 import { Table } from '../Table';
-import { EncounterData } from './types';
 
 interface EncountersTableProps {
     columns: ColumnsType<EncounterData>;
@@ -26,10 +27,7 @@ export function EncountersTable(props: EncountersTableProps) {
             locale={{
                 emptyText: (
                     <>
-                        <Empty
-                            description={<Trans>No data</Trans>}
-                            image={Empty.PRESENTED_IMAGE_SIMPLE}
-                        />
+                        <Empty description={<Trans>No data</Trans>} image={Empty.PRESENTED_IMAGE_SIMPLE} />
                     </>
                 ),
             }}

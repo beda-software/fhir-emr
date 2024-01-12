@@ -1,14 +1,13 @@
 import { Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
 
-import { isSuccess } from 'fhir-react/lib/libs/remoteData';
-import { extractBundleResources, getFHIRResources, getReference } from 'fhir-react/lib/services/fhir';
-import { mapSuccess } from 'fhir-react/lib/services/service';
+import { extractBundleResources, getReference, isSuccess, mapSuccess } from '@beda.software/fhir-react';
 
 import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { SelectOption } from 'src/containers/OrganizationScheduling/HealthcareServicePractitionerSelect/types';
 import { getSelectedValue } from 'src/containers/OrganizationScheduling/utils';
+import { getFHIRResources } from 'src/services/fhir';
 import { practitionerRoleDoctor } from 'src/utils/constants';
 
 export function useInvoiceSearchBarSelect() {

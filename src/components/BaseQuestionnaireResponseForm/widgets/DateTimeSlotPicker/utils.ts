@@ -2,7 +2,7 @@ import { Appointment, PractitionerRole, PractitionerRoleAvailableTime } from 'fh
 import _ from 'lodash';
 import moment from 'moment';
 
-import { FHIRDateFormat, formatFHIRDateTime, parseFHIRDateTime } from 'fhir-react/lib/utils/date';
+import { FHIRDateFormat, formatFHIRDateTime, parseFHIRDateTime } from '@beda.software/fhir-react';
 
 import { days } from 'src/containers/Scheduling/available-time';
 

@@ -6,17 +6,23 @@ import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { QuestionItemProps } from 'sdc-qrf';
 
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { useService } from 'fhir-react/lib/hooks/service';
-import { extractBundleResources, getAllFHIRResources, getFHIRResource } from 'fhir-react/lib/services/fhir';
-import { mapSuccess, resolveMap } from 'fhir-react/lib/services/service';
-import { formatFHIRDate, formatFHIRDateTime, parseFHIRDateTime } from 'fhir-react/lib/utils/date';
+import {
+    RenderRemoteData,
+    extractBundleResources,
+    formatFHIRDate,
+    formatFHIRDateTime,
+    mapSuccess,
+    parseFHIRDateTime,
+    resolveMap,
+    useService,
+} from '@beda.software/fhir-react';
 
 import { humanDateTime } from 'shared/src/utils/date';
 
 import { DatePicker } from 'src/components/DatePicker';
 import { Spinner } from 'src/components/Spinner';
 import { useCalendarOptions } from 'src/containers/Scheduling/ScheduleCalendar/hooks/useCalendarOptions';
+import { getAllFHIRResources, getFHIRResource } from 'src/services/fhir';
 
 import { TimeSlots, getTimeSlots } from './utils';
 import { useFieldController } from '../../hooks';
