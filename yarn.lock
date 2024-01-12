@@ -1470,22 +1470,22 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@beda.software/fhir-react@^1.8.2":
-  version "1.8.2"
-  resolved "https://registry.yarnpkg.com/@beda.software/fhir-react/-/fhir-react-1.8.2.tgz#affa3e9527762f07c61a041a4b51b216570b702b"
-  integrity sha512-cWK1B2Q+kVcoDk+F7jN1kckEkps1NNdXzf+c1VLlmGQIb8WG4t2/hPd1oobRjDyPmhg49g7jzbYPvNQkBcJ9oA==
+"@beda.software/fhir-react@^1.8.3":
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/@beda.software/fhir-react/-/fhir-react-1.8.3.tgz#85a0b5a0e2514b5daae1cf14a88c4d5f475eeea7"
+  integrity sha512-Ab5hjaDdHad81Brr890duyZBxXwn/Dhx+P6uLJ+2+7UMn16ZFPGxiifnYo7fWJKYlnHTJasPhFfagqjfD/rFeg==
   dependencies:
-    "@beda.software/remote-data" "^1.1.1"
+    "@beda.software/remote-data" "^1.1.2"
     axios "^1.6.2"
     lodash "^4.17.21"
     moment "^2.29.1"
   optionalDependencies:
     lint-staged "^15.2.0"
 
-"@beda.software/remote-data@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@beda.software/remote-data/-/remote-data-1.1.1.tgz#bfec5141366e8fa3d7b034ef62a9795a538c99fc"
-  integrity sha512-VQSilsUeQr+VuLEN2Q8nt2o9YOyXapLYecBrkt6Q4aiHZjupWVDLrRr8B71HH4FUz0ZhPc0zb0qxOnWrYCe6sA==
+"@beda.software/remote-data@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@beda.software/remote-data/-/remote-data-1.1.2.tgz#2208ad26f4b7f56f5885517b11990cbedae81b1e"
+  integrity sha512-KylWiLYRF/mVMfVFrre1sBI/v8jCT2dBgV4+vdQoS5LdGaM/svGRvPHM2VUunrIoQT6uA6/cPf4LPRhP9sY/lA==
   dependencies:
     axios "^1.6.2"
 
