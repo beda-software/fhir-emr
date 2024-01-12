@@ -2,6 +2,10 @@ import { Resource } from 'fhir/r4b';
 
 import { getReference } from 'aidbox-react/lib/services/fhir';
 
+import { ResourcesMap, SearchParams, extractBundleResources, mapSuccess } from '@beda.software/fhir-react';
+
+import { getFHIRResources } from 'src/services/fhir';
+
 export async function loadResourceOptions<R extends Resource, IR extends Resource = any>(
     resourceType: R['resourceType'],
     searchParams: SearchParams,

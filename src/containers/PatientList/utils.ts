@@ -1,6 +1,6 @@
 import { formatFHIRDate } from 'aidbox-react/lib/utils/date';
 
-import { SearchParams } from 'fhir-react/lib/services/search';
+import { SearchParams } from '@beda.software/fhir-react';
 
 export function getPatientSearchParamsForPractitioner(practitionerId: string): SearchParams {
     return {

@@ -12,7 +12,7 @@ import {
 } from 'fhir/r4b';
 import { Link, useLocation } from 'react-router-dom';
 
-import { WithId } from 'fhir-react/lib/services/fhir';
+import { WithId } from '@beda.software/fhir-react';
 
 import { extractExtension, fromFHIRReference } from 'shared/src/utils/converter';
 

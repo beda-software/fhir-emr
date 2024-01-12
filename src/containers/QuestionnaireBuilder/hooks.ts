@@ -1,17 +1,15 @@
 import { notification } from 'antd';
 import { Questionnaire as FHIRQuestionnaire, QuestionnaireItem as FHIRQuestionnaireItem } from 'fhir/r4b';
-import { notAsked, RemoteData } from 'fhir-react';
 import _ from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { GroupItemProps, QuestionItemProps } from 'sdc-qrf';
 
-import { isFailure, isSuccess, loading, success } from 'fhir-react/lib/libs/remoteData';
-import { getFHIRResource, saveFHIRResource } from 'fhir-react/lib/services/fhir';
-import { formatError } from 'fhir-react/lib/utils/error';
+import { RemoteData, formatError, isFailure, isSuccess, loading, notAsked, success } from '@beda.software/fhir-react';
 
 import { fromFirstClassExtension, toFirstClassExtension } from 'shared/src/utils/converter';
 
+import { getFHIRResource, saveFHIRResource } from 'src/services/fhir';
 import { generateQuestionnaire, generateQuestionnaireFromFile } from 'src/services/questionnaire-builder';
 
 import { deleteQuestionnaireItem, getQuestionPath, moveQuestionnaireItem } from './utils';

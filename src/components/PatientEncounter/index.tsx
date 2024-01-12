@@ -2,8 +2,9 @@ import { t, Trans } from '@lingui/macro';
 import { Col, Row } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { Patient } from 'fhir/r4b';
-import { SearchParams } from 'fhir-react';
 import { Link } from 'react-router-dom';
+
+import { SearchParams } from '@beda.software/fhir-react';
 
 import { renderHumanName } from 'shared/src/utils/fhir';
 

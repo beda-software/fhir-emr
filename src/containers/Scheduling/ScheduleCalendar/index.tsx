@@ -7,7 +7,7 @@ import { t, Trans } from '@lingui/macro';
 import { notification } from 'antd';
 import { PractitionerRole } from 'fhir/r4b';
 
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { Title } from 'src/components/Typography';
 

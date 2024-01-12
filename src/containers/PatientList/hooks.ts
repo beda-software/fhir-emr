@@ -1,8 +1,6 @@
 import { Consent, Patient } from 'fhir/r4b';
 
-import { extractBundleResources } from 'fhir-react/lib/services/fhir';
-import { SearchParams } from 'fhir-react/lib/services/search';
-import { mapSuccess } from 'fhir-react/lib/services/service';
+import { SearchParams, extractBundleResources, mapSuccess } from '@beda.software/fhir-react';
 
 import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 import { usePagerExtended } from 'src/hooks/pager';

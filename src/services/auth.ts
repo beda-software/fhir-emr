@@ -4,12 +4,12 @@ import { setInstanceToken as setAidboxInstanceToken } from 'aidbox-react/lib/ser
 import { service } from 'aidbox-react/lib/services/service';
 import { Token } from 'aidbox-react/lib/services/token';
 
-import { isSuccess } from 'fhir-react/lib/libs/remoteData';
-import { service as fetchService } from 'fhir-react/lib/services/fetch';
-import { setInstanceToken as setFHIRInstanceToken } from 'fhir-react/lib/services/instance';
+import { isSuccess, serviceFetch } from '@beda.software/fhir-react';
 
 import config from 'shared/src/config';
 import { User } from 'shared/src/contrib/aidbox';
+
+import { setInstanceToken as setFHIRInstanceToken } from 'src/services/fhir';
 
 export interface OAuthState {
     nextUrl?: string;
@@ -150,7 +150,7 @@ export async function signinWithIdentityToken(
 }
 
 async function getAuthToken(appleToken: string) {
-    return await fetchService<AuthTokenResponse>(`${config.wearablesDataStreamService}/auth/token`, {
+    return await serviceFetch<AuthTokenResponse>(`${config.wearablesDataStreamService}/auth/token`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${appleToken}` },
     });

@@ -1,17 +1,17 @@
 import { Practitioner, PractitionerRole } from 'fhir/r4b';
 
-import { createFHIRResource, getReference } from 'fhir-react/lib/services/fhir';
-import { ensure, withRootAccess } from 'fhir-react/lib/utils/tests';
+import { ensure, getReference, withRootAccess } from '@beda.software/fhir-react';
 
 import { User } from 'shared/src/contrib/aidbox';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
+import { axiosInstance, createFHIRResource } from 'src/services/fhir';
 import { createHealthcareService, createPractitioner, ensureSave, login } from 'src/setupTests';
 
 import { SelectOption } from '../types';
 
 export function dataSetup() {
-    const data = withRootAccess(async () => {
+    const data = withRootAccess(axiosInstance, async () => {
         const practitioner = await createPractitioner({
             name: [
                 {

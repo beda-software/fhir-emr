@@ -2,9 +2,7 @@ import { Organization, Patient, Practitioner, QuestionnaireResponse } from 'fhir
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { isSuccess, notAsked, RemoteData } from 'fhir-react/lib/libs/remoteData';
-import { WithId } from 'fhir-react/lib/services/fhir';
+import { RemoteData, RenderRemoteData, WithId, isSuccess, notAsked } from '@beda.software/fhir-react';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { AnxietyScore, DepressionScore } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/score';

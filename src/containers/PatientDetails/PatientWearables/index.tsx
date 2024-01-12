@@ -2,10 +2,8 @@ import { t } from '@lingui/macro';
 import { Alert, Empty, Result } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { Patient } from 'fhir/r4b';
-import { WithId } from 'fhir-react';
 
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { isFailure, isLoading } from 'fhir-react/lib/libs/remoteData';
+import { isFailure, isLoading, RenderRemoteData, WithId } from '@beda.software/fhir-react';
 
 import { SpinIndicator, Spinner } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
@@ -77,7 +75,9 @@ export function PatientWearables(props: PatientWearablesProps) {
         >
             {(data) => (
                 <>
-                    {data.patientRecordsWarning ? <Alert message={data.patientRecordsWarning} type="warning" /> : null}
+                    {data.patientRecordsWarning ? (
+                        <Alert message={data.patientRecordsWarning.message} type="warning" />
+                    ) : null}
                     {data.patientMetriportRecordsWarning ? (
                         <Alert message={data.patientMetriportRecordsWarning} type="warning" />
                     ) : null}

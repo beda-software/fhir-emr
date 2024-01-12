@@ -1,7 +1,6 @@
 import { Medication, MedicationRequest, Organization, Patient, Practitioner } from 'fhir/r4b';
 
-import { extractBundleResources } from 'fhir-react/lib/services/fhir';
-import { mapSuccess } from 'fhir-react/lib/services/service';
+import { extractBundleResources, mapSuccess } from '@beda.software/fhir-react';
 
 import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 import { usePagerExtended } from 'src/hooks/pager';

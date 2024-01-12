@@ -1,12 +1,11 @@
 import { t } from '@lingui/macro';
 import { Alert } from 'antd';
-import { isLoading, RemoteData } from 'fhir-react';
 import { useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { GroupItemProps, QuestionItemProps } from 'sdc-qrf';
 
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { RemoteData, RenderRemoteData, isLoading } from '@beda.software/fhir-react';
 
 import { toQuestionnaireResponseFormData } from 'shared/src/hooks/questionnaire-response-form-data';
 

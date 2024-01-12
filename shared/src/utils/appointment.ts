@@ -1,5 +1,6 @@
-import { parseFHIRReference } from 'fhir-react/lib/utils/fhir';
 import { Appointment, Reference } from 'fhir/r4b';
+
+import { parseFHIRReference } from '@beda.software/fhir-react';
 
 export function extractAppointmentPatient(appointment: Appointment): Reference | undefined {
     return extractAppointmentActor(appointment, 'Patient') as Reference | undefined;

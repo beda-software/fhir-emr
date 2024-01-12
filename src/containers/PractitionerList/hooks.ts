@@ -1,15 +1,20 @@
-import { WithId } from 'fhir-react';
-import { useService } from 'fhir-react/lib/hooks/service';
-import { isSuccess, success } from 'fhir-react/lib/libs/remoteData';
-import { extractBundleResources, getFHIRResources } from 'fhir-react/lib/services/fhir';
-import { mapSuccess } from 'fhir-react/lib/services/service';
-import { parseFHIRReference } from 'fhir-react/lib/utils/fhir';
 import { Practitioner, PractitionerRole } from 'fhir/r4b';
+
+import {
+    WithId,
+    extractBundleResources,
+    isSuccess,
+    mapSuccess,
+    parseFHIRReference,
+    success,
+    useService,
+} from '@beda.software/fhir-react';
 
 import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 import { usePagerExtended } from 'src/hooks/pager';
+import { getFHIRResources } from 'src/services/fhir';
 import { useDebounce } from 'src/utils/debounce';
 
 export interface PractitionerListRowData {

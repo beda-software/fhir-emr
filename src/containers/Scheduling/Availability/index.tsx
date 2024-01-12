@@ -1,22 +1,22 @@
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { Trans } from '@lingui/macro';
 import { Button, Checkbox, Col, notification, Row } from 'antd';
-import { isSuccess } from 'fhir-react/lib/libs/remoteData';
-import { saveFHIRResource, WithId } from 'fhir-react/lib/services/fhir';
-import { formatError } from 'fhir-react/lib/utils/error';
 import { PractitionerRole } from 'fhir/r4b';
 import moment from 'moment';
 import React from 'react';
+
+import { WithId, formatError, isSuccess } from '@beda.software/fhir-react';
 
 import { formatFHIRTime } from 'shared/src/utils/date';
 
 import { RangeTimePicker } from 'src/components/TimePicker';
 import { Text, Title } from 'src/components/Typography';
+import { saveFHIRResource } from 'src/services/fhir';
 
-import { DaySchedule, daysMapping, toAvailableTime } from '../available-time';
 import s from './Availability.module.scss';
 import { S } from './Availability.styles';
 import { useAvailability } from './hooks';
+import { DaySchedule, daysMapping, toAvailableTime } from '../available-time';
 
 interface Props {
     practitionerRole: PractitionerRole;

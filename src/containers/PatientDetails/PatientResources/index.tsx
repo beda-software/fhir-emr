@@ -1,8 +1,9 @@
 import { Select } from 'antd';
-import { WithId } from 'fhir-react/lib/services/fhir';
 import { Patient } from 'fhir/r4b';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
+
+import { WithId } from '@beda.software/fhir-react';
 
 import { Option } from './ResourceTable';
 import { getOptions } from './utils';

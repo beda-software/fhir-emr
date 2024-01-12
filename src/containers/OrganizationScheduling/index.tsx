@@ -5,7 +5,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import { Trans, t } from '@lingui/macro';
 import { Button, Row, notification } from 'antd';
 
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { BasePageHeader, BasePageContent } from 'src/components/BaseLayout';
 import { Title } from 'src/components/Typography';

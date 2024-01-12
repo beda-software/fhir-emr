@@ -1,13 +1,8 @@
-import {
-    differenceInDays,
-    differenceInMonths,
-    differenceInYears,
-    format,
-    parseISO,
-} from 'date-fns';
-import { parseFHIRDateTime } from 'fhir-react/lib/utils/date';
+import { differenceInDays, differenceInMonths, differenceInYears, format, parseISO } from 'date-fns';
 import { Period } from 'fhir/r4b';
 import _ from 'lodash';
+
+import { parseFHIRDateTime } from '@beda.software/fhir-react';
 
 const DATE_TIME_FORMAT = 'dd/MM/yyyy HH:mm';
 const DATE_FORMAT = 'dd/MM/yyyy';

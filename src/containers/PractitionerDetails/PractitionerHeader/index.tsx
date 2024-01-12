@@ -1,10 +1,11 @@
 import { t } from '@lingui/macro';
 import { Menu } from 'antd';
-import { WithId } from 'fhir-react/lib/services/fhir';
 import { Practitioner, PractitionerRole } from 'fhir/r4b';
 import _ from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
+
+import { WithId } from '@beda.software/fhir-react';
 
 import { renderHumanName } from 'shared/src/utils/fhir';
 

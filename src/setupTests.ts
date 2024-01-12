@@ -21,17 +21,18 @@ import {
 import { formatFHIRDateTime } from 'aidbox-react/lib/utils/date';
 import { withRootAccess, LoginService, getToken } from 'aidbox-react/lib/utils/tests';
 
-import { createFHIRResource, getReference, saveFHIRResource } from 'fhir-react/lib/services/fhir';
-import {
-    resetInstanceToken as resetFHIRInstanceToken,
-    setInstanceBaseURL as setFHIRInstanceBaseURL,
-    setInstanceToken as setFHIRInstanceToken,
-} from 'fhir-react/lib/services/instance';
-import { ensure } from 'fhir-react/lib/utils/tests';
+import { ensure, getReference } from '@beda.software/fhir-react';
 
 import { User } from 'shared/src/contrib/aidbox';
 
 import { login as loginService } from 'src/services/auth';
+
+import {
+    createFHIRResource,
+    saveFHIRResource,
+    resetInstanceToken as resetFHIRInstanceToken,
+    setInstanceToken as setFHIRInstanceToken,
+} from './services/fhir';
 
 declare global {
     // eslint-disable-next-line no-var
@@ -189,7 +190,6 @@ export const loginUser = async (user: User) => {
 beforeAll(async () => {
     // vi.useFakeTimers();
     setAidboxInstanceBaseURL('http://localhost:8080');
-    setFHIRInstanceBaseURL('http://localhost:8080/fhir');
 });
 
 let txId: string;

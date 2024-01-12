@@ -1,7 +1,8 @@
 import { Trans } from '@lingui/macro';
 import { Table } from 'antd';
 import { Medication, MedicationRequest } from 'fhir/r4b';
-import { RenderRemoteData } from 'fhir-react';
+
+import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { extractExtension } from 'shared/src/utils/converter';
 import { formatHumanDate } from 'shared/src/utils/date';

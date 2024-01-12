@@ -5,17 +5,16 @@ import { ReactElement } from 'react';
 import { NavigateFunction, Outlet, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { useService } from 'fhir-react/lib/hooks/service';
-import { failure, isFailure, isSuccess } from 'fhir-react/lib/libs/remoteData';
 import {
     extractBundleResources,
-    forceDeleteFHIRResource,
-    getFHIRResources,
-    patchFHIRResource,
+    failure,
+    isFailure,
+    isSuccess,
+    mapSuccess,
+    RenderRemoteData,
+    useService,
     WithId,
-} from 'fhir-react/lib/services/fhir';
-import { mapSuccess } from 'fhir-react/lib/services/service';
+} from '@beda.software/fhir-react';
 
 import { ReadonlyQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm/ReadonlyQuestionnaireResponseForm';
 import { ConfirmActionButton } from 'src/components/ConfirmActionButton';
@@ -28,6 +27,7 @@ import {
     usePatientDocument,
 } from 'src/containers/PatientDetails/PatientDocument/usePatientDocument';
 import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
+import { forceDeleteFHIRResource, getFHIRResources, patchFHIRResource } from 'src/services/fhir';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 import { isExternalQuestionnaire } from 'src/utils/smart-apps';
 
