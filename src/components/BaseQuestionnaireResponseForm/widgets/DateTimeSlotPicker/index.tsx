@@ -11,11 +11,10 @@ import {
     extractBundleResources,
     formatFHIRDate,
     formatFHIRDateTime,
-    mapSuccess,
     parseFHIRDateTime,
-    resolveMap,
     useService,
 } from '@beda.software/fhir-react';
+import { mapSuccess, resolveMap } from '@beda.software/remote-data';
 
 import { humanDateTime } from 'shared/src/utils/date';
 

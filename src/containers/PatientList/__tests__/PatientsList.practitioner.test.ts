@@ -1,6 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react';
 
-import { SearchParams, isFailure, isSuccess } from '@beda.software/fhir-react';
+import { SearchParams } from '@beda.software/fhir-react';
+import { isFailure, isSuccess } from '@beda.software/remote-data';
 
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';

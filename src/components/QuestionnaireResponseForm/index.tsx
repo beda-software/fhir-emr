@@ -9,7 +9,8 @@ import {
     mapFormToResponse,
 } from 'sdc-qrf';
 
-import { RemoteDataResult, RenderRemoteData, formatError, isFailure, isSuccess } from '@beda.software/fhir-react';
+import { RenderRemoteData, formatError } from '@beda.software/fhir-react';
+import { RemoteDataResult, isFailure, isSuccess } from '@beda.software/remote-data';
 
 import {
     QuestionnaireResponseFormData,

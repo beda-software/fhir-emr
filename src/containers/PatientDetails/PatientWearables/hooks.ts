@@ -1,16 +1,7 @@
 import { Consent, Organization, Patient, Practitioner } from 'fhir/r4b';
 
-import {
-    WithId,
-    extractBundleResources,
-    formatError,
-    isFailure,
-    isSuccess,
-    mapSuccess,
-    serviceFetch,
-    success,
-    useService,
-} from '@beda.software/fhir-react';
+import { WithId, extractBundleResources, formatError, useService } from '@beda.software/fhir-react';
+import { isFailure, isSuccess, mapSuccess, serviceFetch, success } from '@beda.software/remote-data';
 
 import config from 'shared/src/config';
 

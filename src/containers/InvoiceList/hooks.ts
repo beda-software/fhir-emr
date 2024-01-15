@@ -1,6 +1,7 @@
 import { Invoice, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
 
-import { extractBundleResources, mapSuccess } from '@beda.software/fhir-react';
+import { extractBundleResources } from '@beda.software/fhir-react';
+import { mapSuccess } from '@beda.software/remote-data';
 
 import { usePagerExtended } from 'src/hooks/pager';
 

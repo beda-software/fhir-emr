@@ -13,15 +13,8 @@ import {
 import _ from 'lodash';
 import moment from 'moment';
 
-import {
-    extractBundleResources,
-    formatFHIRDate,
-    formatFHIRDateTime,
-    isSuccess,
-    mapSuccess,
-    resolveMap,
-    useService,
-} from '@beda.software/fhir-react';
+import { extractBundleResources, formatFHIRDate, formatFHIRDateTime, useService } from '@beda.software/fhir-react';
+import { isSuccess, mapSuccess, resolveMap } from '@beda.software/remote-data';
 
 import { getAllFHIRResources, getFHIRResources } from 'src/services/fhir';
 import { formatHumanDate, getPersonAge } from 'src/utils/date';

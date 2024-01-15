@@ -5,7 +5,8 @@ import { Appointment, Bundle, Patient } from 'fhir/r4b';
 import _ from 'lodash';
 import { Link, useLocation } from 'react-router-dom';
 
-import { extractBundleResources, isLoading, isSuccess, RenderRemoteData, WithId } from '@beda.software/fhir-react';
+import { extractBundleResources, RenderRemoteData, WithId } from '@beda.software/fhir-react';
+import { isLoading, isSuccess } from '@beda.software/remote-data';
 
 import { Encounter } from 'shared/src/contrib/aidbox';
 import { inMemorySaveService, questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';

@@ -5,7 +5,8 @@ import { PractitionerRole } from 'fhir/r4b';
 import moment from 'moment';
 import React from 'react';
 
-import { WithId, formatError, isSuccess } from '@beda.software/fhir-react';
+import { WithId, formatError } from '@beda.software/fhir-react';
+import { isSuccess } from '@beda.software/remote-data';
 
 import { formatFHIRTime } from 'shared/src/utils/date';
 

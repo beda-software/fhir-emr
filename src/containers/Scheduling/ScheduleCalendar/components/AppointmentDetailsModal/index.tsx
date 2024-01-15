@@ -2,14 +2,8 @@ import { t, Trans } from '@lingui/macro';
 import { Button } from 'antd';
 import { Appointment, Encounter } from 'fhir/r4b';
 
-import {
-    extractBundleResources,
-    isSuccess,
-    mapSuccess,
-    parseFHIRReference,
-    RenderRemoteData,
-    useService,
-} from '@beda.software/fhir-react';
+import { extractBundleResources, parseFHIRReference, RenderRemoteData, useService } from '@beda.software/fhir-react';
+import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 
 import { ReadonlyQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm/ReadonlyQuestionnaireResponseForm';
 import { Modal } from 'src/components/Modal';

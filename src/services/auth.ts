@@ -4,7 +4,7 @@ import { setInstanceToken as setAidboxInstanceToken } from 'aidbox-react/lib/ser
 import { service } from 'aidbox-react/lib/services/service';
 import { Token } from 'aidbox-react/lib/services/token';
 
-import { isSuccess, serviceFetch } from '@beda.software/fhir-react';
+import { isSuccess, serviceFetch } from '@beda.software/remote-data';
 
 import config from 'shared/src/config';
 import { User } from 'shared/src/contrib/aidbox';

@@ -13,13 +13,11 @@ import {
     extractBundleResources,
     formatFHIRDate,
     formatFHIRTime,
-    isLoading,
-    isSuccess,
-    mapSuccess,
     parseFHIRDate,
     parseFHIRTime,
     useService,
 } from '@beda.software/fhir-react';
+import { isLoading, isSuccess, mapSuccess } from '@beda.software/remote-data';
 
 import { QuestionnaireItemAnswerOption } from 'shared/src/contrib/aidbox';
 import { humanDate, humanTime } from 'shared/src/utils/date';

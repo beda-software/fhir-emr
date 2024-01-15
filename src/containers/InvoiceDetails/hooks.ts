@@ -1,6 +1,7 @@
 import { Invoice, Practitioner, PractitionerRole, Patient, ChargeItem } from 'fhir/r4b';
 
-import { extractBundleResources, mapSuccess, useService } from '@beda.software/fhir-react';
+import { extractBundleResources, useService } from '@beda.software/fhir-react';
+import { mapSuccess } from '@beda.software/remote-data';
 
 import { getFHIRResources } from 'src/services/fhir';
 import { getFHIRReferenceResourceId } from 'src/utils/reference';

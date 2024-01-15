@@ -1,14 +1,8 @@
 import { Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import { useParams } from 'react-router-dom';
 
-import {
-    WithId,
-    extractBundleResources,
-    isSuccess,
-    mapSuccess,
-    resolveMap,
-    useService,
-} from '@beda.software/fhir-react';
+import { WithId, extractBundleResources, useService } from '@beda.software/fhir-react';
+import { isSuccess, mapSuccess, resolveMap } from '@beda.software/remote-data';
 
 import { Provenance } from 'shared/src/contrib/aidbox';
 import { fromFirstClassExtension, toFirstClassExtension } from 'shared/src/utils/converter';

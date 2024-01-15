@@ -6,7 +6,7 @@ import { QuestionItemProps } from 'sdc-qrf';
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { service } from 'aidbox-react/lib/services/service';
 
-import { mapSuccess } from '@beda.software/fhir-react';
+import { mapSuccess } from '@beda.software/remote-data';
 
 import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer, ValueSet } from 'shared/src/contrib/aidbox';
 

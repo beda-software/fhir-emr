@@ -3,7 +3,8 @@ import { Tag } from 'antd';
 import { QuestionnaireResponse } from 'fhir/r4b';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
-import { RemoteData, RenderRemoteData } from '@beda.software/fhir-react';
+import { RenderRemoteData } from '@beda.software/fhir-react';
+import { RemoteData } from '@beda.software/remote-data';
 
 import { Title } from 'src/components/Typography';
 

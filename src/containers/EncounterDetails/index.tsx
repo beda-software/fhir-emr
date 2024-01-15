@@ -5,7 +5,8 @@ import { Encounter, Patient } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { RenderRemoteData, formatError, formatFHIRDateTime, isSuccess, useService } from '@beda.software/fhir-react';
+import { RenderRemoteData, formatError, formatFHIRDateTime, useService } from '@beda.software/fhir-react';
+import { isSuccess } from '@beda.software/remote-data';
 
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 

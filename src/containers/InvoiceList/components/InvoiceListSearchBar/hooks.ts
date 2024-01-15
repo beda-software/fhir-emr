@@ -1,7 +1,8 @@
 import { Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
 
-import { extractBundleResources, getReference, isSuccess, mapSuccess } from '@beda.software/fhir-react';
+import { extractBundleResources, getReference } from '@beda.software/fhir-react';
+import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 
 import { renderHumanName } from 'shared/src/utils/fhir';
 

@@ -5,16 +5,8 @@ import { ReactElement } from 'react';
 import { NavigateFunction, Outlet, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
-import {
-    extractBundleResources,
-    failure,
-    isFailure,
-    isSuccess,
-    mapSuccess,
-    RenderRemoteData,
-    useService,
-    WithId,
-} from '@beda.software/fhir-react';
+import { extractBundleResources, RenderRemoteData, useService, WithId } from '@beda.software/fhir-react';
+import { failure, isFailure, isSuccess, mapSuccess } from '@beda.software/remote-data';
 
 import { ReadonlyQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm/ReadonlyQuestionnaireResponseForm';
 import { ConfirmActionButton } from 'src/components/ConfirmActionButton';

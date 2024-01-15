@@ -3,7 +3,7 @@ import { Button, Empty, Row, Col, notification } from 'antd';
 import { Patient } from 'fhir/r4b';
 import { useNavigate } from 'react-router-dom';
 
-import { isLoading, isSuccess } from '@beda.software/fhir-react';
+import { isLoading, isSuccess } from '@beda.software/remote-data';
 
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 import { renderHumanName } from 'shared/src/utils/fhir';

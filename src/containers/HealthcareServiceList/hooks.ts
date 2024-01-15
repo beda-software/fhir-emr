@@ -1,4 +1,5 @@
-import { extractBundleResources, mapSuccess } from '@beda.software/fhir-react';
+import { extractBundleResources } from '@beda.software/fhir-react';
+import { mapSuccess } from '@beda.software/remote-data';
 
 import { HealthcareService } from 'shared/src/contrib/aidbox';
 

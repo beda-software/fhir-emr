@@ -2,7 +2,8 @@ import { TablePaginationConfig } from 'antd';
 import { Resource } from 'fhir/r4b';
 import { useState } from 'react';
 
-import { SearchParams, isSuccess, usePager } from '@beda.software/fhir-react';
+import { SearchParams, usePager } from '@beda.software/fhir-react';
+import { isSuccess } from '@beda.software/remote-data';
 
 import { service } from 'src/services/fhir';
 

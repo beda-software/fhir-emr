@@ -5,7 +5,8 @@ import _ from 'lodash';
 import { useCallback, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { extractBundleResources, mapSuccess, RenderRemoteData, useService, WithId } from '@beda.software/fhir-react';
+import { extractBundleResources, RenderRemoteData, useService, WithId } from '@beda.software/fhir-react';
+import { mapSuccess } from '@beda.software/remote-data';
 
 import { Modal } from 'src/components/Modal';
 import { Spinner } from 'src/components/Spinner';

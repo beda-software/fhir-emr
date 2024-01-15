@@ -3,13 +3,12 @@ import { Encounter, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
 import { useMemo } from 'react';
 
 import {
-    RemoteData,
     SearchParams,
     extractBundleResources,
     formatFHIRDateTime,
-    mapSuccess,
     parseFHIRReference,
 } from '@beda.software/fhir-react';
+import { RemoteData, mapSuccess } from '@beda.software/remote-data';
 
 import { EncounterData } from 'src/components/EncountersTable/types';
 import { usePagerExtended } from 'src/hooks/pager';

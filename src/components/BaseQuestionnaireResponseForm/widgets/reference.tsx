@@ -4,7 +4,8 @@ import _ from 'lodash';
 import { ActionMeta, MultiValue, SingleValue } from 'react-select';
 import { parseFhirQueryExpression, QuestionItemProps } from 'sdc-qrf';
 
-import { ResourcesMap, buildQueryParams, isSuccess } from '@beda.software/fhir-react';
+import { ResourcesMap } from '@beda.software/fhir-react';
+import { buildQueryParams, isSuccess } from '@beda.software/remote-data';
 
 import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer, Resource } from 'shared/src/contrib/aidbox';
 import { loadResourceOptions } from 'shared/src/services/questionnaire';

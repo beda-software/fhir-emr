@@ -1,13 +1,8 @@
 import { t } from '@lingui/macro';
 import { Reference, Patient, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 
-import {
-    extractBundleResources,
-    isSuccess,
-    mapSuccess,
-    parseFHIRReference,
-    useService,
-} from '@beda.software/fhir-react';
+import { extractBundleResources, parseFHIRReference, useService } from '@beda.software/fhir-react';
+import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 
 import { getFHIRResources } from 'src/services/fhir';
 import { getExternalQuestionnaireName } from 'src/utils/smart-apps';

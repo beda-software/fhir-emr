@@ -1,7 +1,8 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import moment from 'moment';
 
-import { getReference, isLoading, isSuccess } from '@beda.software/fhir-react';
+import { getReference } from '@beda.software/fhir-react';
+import { isLoading, isSuccess } from '@beda.software/remote-data';
 
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { createEncounter, createPatient, createPractitionerRole, loginAdminUser } from 'src/setupTests';

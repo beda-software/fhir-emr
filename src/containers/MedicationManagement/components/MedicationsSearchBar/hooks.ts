@@ -1,7 +1,8 @@
 import { MedicationKnowledge } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
 
-import { extractBundleResources, isSuccess, mapSuccess } from '@beda.software/fhir-react';
+import { extractBundleResources } from '@beda.software/fhir-react';
+import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 
 import { SelectOption } from 'src/containers/OrganizationScheduling/HealthcareServicePractitionerSelect/types';
 import { getSelectedValue } from 'src/containers/OrganizationScheduling/utils';

@@ -6,7 +6,8 @@ import {
     setInstanceToken as setAidboxInstanceToken,
 } from 'aidbox-react/lib/services/instance';
 
-import { extractErrorCode, formatError, isSuccess, success } from '@beda.software/fhir-react';
+import { extractErrorCode, formatError } from '@beda.software/fhir-react';
+import { isSuccess, success } from '@beda.software/remote-data';
 
 import { User } from 'shared/src/contrib/aidbox';
 

@@ -2,18 +2,16 @@ import { Encounter, Organization, Patient, Practitioner, Provenance, Questionnai
 import _ from 'lodash';
 import { useNavigate } from 'react-router-dom';
 
+import { getReference, useService, WithId } from '@beda.software/fhir-react';
 import {
     failure,
-    getReference,
     isSuccess,
     mapSuccess,
     RemoteData,
     RemoteDataResult,
     resolveMap,
     success,
-    useService,
-    WithId,
-} from '@beda.software/fhir-react';
+} from '@beda.software/remote-data';
 
 import {
     handleFormDataSave,

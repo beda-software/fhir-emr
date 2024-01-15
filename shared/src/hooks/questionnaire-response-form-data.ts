@@ -14,16 +14,8 @@ import {
     removeDisabledAnswers,
 } from 'sdc-qrf';
 
-import {
-    RemoteDataResult,
-    formatFHIRDateTime,
-    getReference,
-    isFailure,
-    isSuccess,
-    mapSuccess,
-    success,
-    useService,
-} from '@beda.software/fhir-react';
+import { formatFHIRDateTime, getReference, useService } from '@beda.software/fhir-react';
+import { RemoteDataResult, isFailure, isSuccess, mapSuccess, success } from '@beda.software/remote-data';
 
 import { saveFHIRResource, service } from 'src/services/fhir';
 

@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro';
 import { Empty, TablePaginationConfig } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 
-import { RemoteData, isLoading, isSuccess } from '@beda.software/fhir-react';
+import { RemoteData, isLoading, isSuccess } from '@beda.software/remote-data';
 
 import { EncounterData } from './types';
 import { SpinIndicator } from '../Spinner';

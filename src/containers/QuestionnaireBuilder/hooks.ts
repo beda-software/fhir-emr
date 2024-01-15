@@ -5,7 +5,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { GroupItemProps, QuestionItemProps } from 'sdc-qrf';
 
-import { RemoteData, formatError, isFailure, isSuccess, loading, notAsked, success } from '@beda.software/fhir-react';
+import { formatError } from '@beda.software/fhir-react';
+import { RemoteData, isFailure, isSuccess, loading, notAsked, success } from '@beda.software/remote-data';
 
 import { fromFirstClassExtension, toFirstClassExtension } from 'shared/src/utils/converter';
 

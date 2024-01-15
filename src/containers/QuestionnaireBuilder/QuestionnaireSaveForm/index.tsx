@@ -6,7 +6,8 @@ import { useMemo } from 'react';
 import { FormProvider, UseControllerReturn, useController, useForm, useFormContext } from 'react-hook-form';
 import * as yup from 'yup';
 
-import { RemoteDataResult, WithId, isSuccess } from '@beda.software/fhir-react';
+import { WithId } from '@beda.software/fhir-react';
+import { RemoteDataResult, isSuccess } from '@beda.software/remote-data';
 
 import { Title } from 'src/components/Typography';
 

@@ -24,7 +24,7 @@ import * as yup from 'yup';
 
 import 'react-phone-input-2/lib/style.css';
 
-import { RemoteData, isSuccess, loading } from '@beda.software/fhir-react';
+import { RemoteData, isSuccess, loading } from '@beda.software/remote-data';
 
 import { saveQuestionnaireResponseDraft } from 'src/components/QuestionnaireResponseForm';
 import { questionnaireToValidationSchema } from 'src/utils/questionnaire';

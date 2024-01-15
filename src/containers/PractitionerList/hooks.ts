@@ -1,14 +1,7 @@
 import { Practitioner, PractitionerRole } from 'fhir/r4b';
 
-import {
-    WithId,
-    extractBundleResources,
-    isSuccess,
-    mapSuccess,
-    parseFHIRReference,
-    success,
-    useService,
-} from '@beda.software/fhir-react';
+import { WithId, extractBundleResources, parseFHIRReference, useService } from '@beda.software/fhir-react';
+import { isSuccess, mapSuccess, success } from '@beda.software/remote-data';
 
 import { renderHumanName } from 'shared/src/utils/fhir';
 

@@ -3,7 +3,8 @@ import { Alert, Empty, Result } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { Patient } from 'fhir/r4b';
 
-import { isFailure, isLoading, RenderRemoteData, WithId } from '@beda.software/fhir-react';
+import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
+import { isFailure, isLoading } from '@beda.software/remote-data';
 
 import { SpinIndicator, Spinner } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';

@@ -2,13 +2,8 @@ import { Appointment, HealthcareService, Patient, Practitioner, PractitionerRole
 import _ from 'lodash';
 import React from 'react';
 
-import {
-    extractBundleResources,
-    getIncludedResource,
-    mapSuccess,
-    sequenceMap,
-    useService,
-} from '@beda.software/fhir-react';
+import { extractBundleResources, getIncludedResource, useService } from '@beda.software/fhir-react';
+import { mapSuccess, sequenceMap } from '@beda.software/remote-data';
 
 import { extractAppointmentPatient } from 'shared/src/utils/appointment';
 import { renderHumanName } from 'shared/src/utils/fhir';
