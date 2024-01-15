@@ -1,10 +1,9 @@
 import { Trans } from '@lingui/macro';
 import { Empty } from 'antd';
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { extractBundleResources } from 'fhir-react/lib/services/fhir';
-import { SearchParams } from 'fhir-react/lib/services/search';
 import { Provenance, Resource } from 'fhir/r4b';
 import { ReactNode } from 'react';
+
+import { RenderRemoteData, SearchParams, extractBundleResources } from '@beda.software/fhir-react';
 
 import { Spinner } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';

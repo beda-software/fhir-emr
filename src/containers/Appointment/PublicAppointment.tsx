@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { axiosInstance as axiosAidboxInstance } from 'aidbox-react/lib/services/instance';
 
-import { axiosInstance as axiosFHIRInstance } from 'fhir-react/lib/services/instance';
-import { uuid4 } from 'fhir-react/lib/utils/uuid';
+import { uuid4 } from '@beda.software/fhir-react';
 
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
@@ -15,6 +14,7 @@ import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseF
 import { Spinner } from 'src/components/Spinner';
 import { Title } from 'src/components/Typography';
 import { getToken } from 'src/services/auth';
+import { axiosInstance as axiosFHIRInstance } from 'src/services/fhir';
 import { history } from 'src/services/history';
 
 import { S } from './PublicAppointment.styles';
@@ -36,7 +36,7 @@ export function PublicAppointment() {
 
         return () => {
             if (isAnonymousUser) {
-                axiosFHIRInstance.defaults.headers.Authorization = undefined;
+                axiosFHIRInstance.defaults.headers.Authorization = null;
                 axiosAidboxInstance.defaults.headers.Authorization = undefined;
             }
         };

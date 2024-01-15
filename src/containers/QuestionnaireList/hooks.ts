@@ -1,6 +1,7 @@
-import { extractBundleResources } from 'fhir-react/lib/services/fhir';
-import { mapSuccess } from 'fhir-react/lib/services/service';
 import { Questionnaire } from 'fhir/r4b';
+
+import { extractBundleResources } from '@beda.software/fhir-react';
+import { mapSuccess } from '@beda.software/remote-data';
 
 import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 import { usePagerExtended } from 'src/hooks/pager';
@@ -21,10 +22,7 @@ export function useQuestionnaireList(filterValues: StringTypeColumnFilterValue[]
         StringTypeColumnFilterValue[]
     >('Questionnaire', queryParameters, debouncedFilterValues);
 
-    const questionnaireListRD = mapSuccess(
-        resourceResponse,
-        (bundle) => extractBundleResources(bundle).Questionnaire,
-    );
+    const questionnaireListRD = mapSuccess(resourceResponse, (bundle) => extractBundleResources(bundle).Questionnaire);
 
     return { pagination, questionnaireListRD, pagerManager, handleTableChange };
 }

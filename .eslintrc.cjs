@@ -64,7 +64,7 @@ module.exports = {
                         position: 'after',
                     },
                     {
-                        pattern: 'fhir-react/**',
+                        pattern: '@beda.software/**',
                         group: 'external',
                         position: 'after',
                     },

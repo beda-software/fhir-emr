@@ -10,16 +10,13 @@ import {
     Condition,
     Consent,
 } from 'fhir/r4b';
-import { formatFHIRDate } from 'fhir-react';
 import _ from 'lodash';
 import moment from 'moment';
 
-import { useService } from 'fhir-react/lib/hooks/service';
-import { isSuccess } from 'fhir-react/lib/libs/remoteData';
-import { extractBundleResources, getAllFHIRResources, getFHIRResources } from 'fhir-react/lib/services/fhir';
-import { mapSuccess, resolveMap } from 'fhir-react/lib/services/service';
-import { formatFHIRDateTime } from 'fhir-react/lib/utils/date';
+import { extractBundleResources, formatFHIRDate, formatFHIRDateTime, useService } from '@beda.software/fhir-react';
+import { isSuccess, mapSuccess, resolveMap } from '@beda.software/remote-data';
 
+import { getAllFHIRResources, getFHIRResources } from 'src/services/fhir';
 import { formatHumanDate, getPersonAge } from 'src/utils/date';
 
 import {

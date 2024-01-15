@@ -1,8 +1,3 @@
-import { useService } from 'fhir-react/lib/hooks/service';
-import { isFailure, isSuccess, RemoteDataResult, success } from 'fhir-react/lib/libs/remoteData';
-import { getReference, saveFHIRResource } from 'fhir-react/lib/services/fhir';
-import { mapSuccess, service } from 'fhir-react/lib/services/service';
-import { formatFHIRDateTime } from 'fhir-react/lib/utils/date';
 import {
     QuestionnaireResponse as FHIRQuestionnaireResponse,
     Patient,
@@ -18,6 +13,11 @@ import {
     calcInitialContext,
     removeDisabledAnswers,
 } from 'sdc-qrf';
+
+import { formatFHIRDateTime, getReference, useService } from '@beda.software/fhir-react';
+import { RemoteDataResult, isFailure, isSuccess, mapSuccess, success } from '@beda.software/remote-data';
+
+import { saveFHIRResource, service } from 'src/services/fhir';
 
 import {
     QuestionnaireResponse as FCEQuestionnaireResponse,

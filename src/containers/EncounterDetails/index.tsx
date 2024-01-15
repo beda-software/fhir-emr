@@ -5,12 +5,8 @@ import { Encounter, Patient } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { useService } from 'fhir-react/lib/hooks/service';
-import { isSuccess } from 'fhir-react/lib/libs/remoteData';
-import { getFHIRResource, saveFHIRResource } from 'fhir-react/lib/services/fhir';
-import { formatFHIRDateTime } from 'fhir-react/lib/utils/date';
-import { formatError } from 'fhir-react/lib/utils/error';
+import { RenderRemoteData, formatError, formatFHIRDateTime, useService } from '@beda.software/fhir-react';
+import { isSuccess } from '@beda.software/remote-data';
 
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
@@ -20,6 +16,7 @@ import { Spinner } from 'src/components/Spinner';
 import { DocumentsList } from 'src/containers/DocumentsList';
 import { ChooseDocumentToCreateModal } from 'src/containers/DocumentsList/ChooseDocumentToCreateModal';
 import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
+import { getFHIRResource, saveFHIRResource } from 'src/services/fhir';
 
 import { S } from './EncounterDetails.styles';
 

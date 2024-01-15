@@ -1,11 +1,12 @@
 import { Form } from 'antd';
-import { mapSuccess } from 'fhir-react';
 import _, { debounce } from 'lodash';
 import { useCallback } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { service } from 'aidbox-react/lib/services/service';
+
+import { mapSuccess } from '@beda.software/remote-data';
 
 import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer, ValueSet } from 'shared/src/contrib/aidbox';
 

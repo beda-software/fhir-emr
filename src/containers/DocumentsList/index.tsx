@@ -5,8 +5,8 @@ import { Encounter, Patient, QuestionnaireResponse } from 'fhir/r4b';
 import { useMemo } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-import { isLoading, isSuccess, RemoteData } from 'fhir-react/lib/libs/remoteData';
-import { WithId } from 'fhir-react/lib/services/fhir';
+import { WithId } from '@beda.software/fhir-react';
+import { RemoteData, isLoading, isSuccess } from '@beda.software/remote-data';
 
 import { Empty } from 'src/components/Empty';
 import { StatusBadge } from 'src/components/EncounterStatusBadge';

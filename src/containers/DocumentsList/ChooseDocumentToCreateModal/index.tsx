@@ -5,13 +5,12 @@ import _ from 'lodash';
 import { useCallback, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { useService } from 'fhir-react/lib/hooks/service';
-import { extractBundleResources, getFHIRResources, WithId } from 'fhir-react/lib/services/fhir';
-import { mapSuccess } from 'fhir-react/lib/services/service';
+import { extractBundleResources, RenderRemoteData, useService, WithId } from '@beda.software/fhir-react';
+import { mapSuccess } from '@beda.software/remote-data';
 
 import { Modal } from 'src/components/Modal';
 import { Spinner } from 'src/components/Spinner';
+import { getFHIRResources } from 'src/services/fhir';
 
 interface Props extends ModalProps {
     patient: Patient;

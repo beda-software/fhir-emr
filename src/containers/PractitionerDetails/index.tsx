@@ -1,13 +1,12 @@
 import { HealthcareService, Practitioner, PractitionerRole } from 'fhir/r4b';
 import { Outlet, Route, Routes, useNavigate, useParams } from 'react-router-dom';
 
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { useService } from 'fhir-react/lib/hooks/service';
-import { extractBundleResources, getFHIRResources, WithId } from 'fhir-react/lib/services/fhir';
-import { mapSuccess } from 'fhir-react/lib/services/service';
+import { RenderRemoteData, WithId, extractBundleResources, useService } from '@beda.software/fhir-react';
+import { mapSuccess } from '@beda.software/remote-data';
 
 import { BasePageContent } from 'src/components/BaseLayout';
 import { Spinner } from 'src/components/Spinner';
+import { getFHIRResources } from 'src/services/fhir';
 
 import { PractitionerHeader } from './PractitionerHeader';
 import { PractitionerOverview } from './PractitionerOverview';

@@ -1,12 +1,17 @@
 import { Encounter, Organization, Patient, Practitioner, Provenance, QuestionnaireResponse } from 'fhir/r4b';
-import { RemoteDataResult } from 'fhir-react';
 import _ from 'lodash';
 import { useNavigate } from 'react-router-dom';
 
-import { useService } from 'fhir-react/lib/hooks/service';
-import { failure, isSuccess, RemoteData, success } from 'fhir-react/lib/libs/remoteData';
-import { getReference, WithId } from 'fhir-react/lib/services/fhir';
-import { mapSuccess, resolveMap } from 'fhir-react/lib/services/service';
+import { getReference, useService, WithId } from '@beda.software/fhir-react';
+import {
+    failure,
+    isSuccess,
+    mapSuccess,
+    RemoteData,
+    RemoteDataResult,
+    resolveMap,
+    success,
+} from '@beda.software/remote-data';
 
 import {
     handleFormDataSave,

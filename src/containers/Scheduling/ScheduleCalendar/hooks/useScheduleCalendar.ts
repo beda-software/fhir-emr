@@ -1,30 +1,28 @@
-import { useService } from 'fhir-react/lib/hooks/service';
-import {
-    extractBundleResources,
-    getAllFHIRResources,
-    getFHIRResource,
-    getIncludedResource,
-    getReference,
-} from 'fhir-react/lib/services/fhir';
-import { mapSuccess, sequenceMap } from 'fhir-react/lib/services/service';
 import { Appointment, Patient, PractitionerRole } from 'fhir/r4b';
 import moment from 'moment';
 import React from 'react';
+
+import { extractBundleResources, getIncludedResource, getReference, useService } from '@beda.software/fhir-react';
+import { mapSuccess, sequenceMap } from '@beda.software/remote-data';
 
 import { extractAppointmentPatient } from 'shared/src/utils/appointment';
 import { formatFHIRDateTime } from 'shared/src/utils/date';
 import { renderHumanName } from 'shared/src/utils/fhir';
 
+import { getAllFHIRResources, getFHIRResource } from 'src/services/fhir';
+
 import { days } from '../../available-time';
 
 export function useScheduleCalendar(practitionerRole: PractitionerRole) {
     const [businessHoursRD] = useService(async () => {
-        return mapSuccess(await getFHIRResource<PractitionerRole>(getReference(practitionerRole)), (resource) =>
-            resource.availableTime?.map((item) => ({
-                daysOfWeek: item.daysOfWeek!.map((dow) => days.indexOf(dow) + 1),
-                startTime: item.availableStartTime,
-                endTime: item.availableEndTime,
-            })),
+        return mapSuccess(
+            await getFHIRResource<PractitionerRole>(getReference(practitionerRole)),
+            (resource) =>
+                resource.availableTime?.map((item) => ({
+                    daysOfWeek: item.daysOfWeek!.map((dow) => days.indexOf(dow) + 1),
+                    startTime: item.availableStartTime,
+                    endTime: item.availableEndTime,
+                })),
         );
     }, []);
 

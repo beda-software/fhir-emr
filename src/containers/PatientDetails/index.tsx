@@ -1,6 +1,6 @@
 import { useParams, Outlet, Route, Routes } from 'react-router-dom';
 
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { BasePageContent } from 'src/components/BaseLayout';
 import { PatientEncounter } from 'src/components/PatientEncounter';

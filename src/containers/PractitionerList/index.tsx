@@ -1,9 +1,10 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, Col, Empty, notification, Row } from 'antd';
-import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { Practitioner } from 'fhir/r4b';
 import { useNavigate } from 'react-router-dom';
+
+import { isLoading, isSuccess } from '@beda.software/remote-data';
 
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 

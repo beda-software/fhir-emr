@@ -1,7 +1,7 @@
 import { t, Trans } from '@lingui/macro';
 import { Col, Empty, Row, Table } from 'antd';
 
-import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { isLoading, isSuccess } from '@beda.software/remote-data';
 
 import { BasePageHeader, BasePageContent } from 'src/components/BaseLayout';
 import { ModalChangeActiveHealthcareService } from 'src/components/ModalChangeActiveHealthcareService';

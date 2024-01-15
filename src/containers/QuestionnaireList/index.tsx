@@ -5,7 +5,7 @@ import { ColumnsType } from 'antd/lib/table';
 import { Questionnaire } from 'fhir/r4b';
 import { Link } from 'react-router-dom';
 
-import { isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { isLoading, isSuccess } from '@beda.software/remote-data';
 
 import config from 'shared/src/config';
 

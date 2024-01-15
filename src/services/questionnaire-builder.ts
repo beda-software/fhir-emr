@@ -1,9 +1,9 @@
 import { Questionnaire } from 'fhir/r4b';
-import { service } from 'fhir-react';
 
 import config from 'shared/src/config';
 
 import { getToken } from './auth';
+import { service } from './fhir';
 
 export async function generateQuestionnaire(prompt: string, questionnaire?: string) {
     const appToken = getToken();

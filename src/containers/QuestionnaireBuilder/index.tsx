@@ -5,8 +5,8 @@ import { Questionnaire } from 'fhir/r4b';
 import React, { useState } from 'react';
 import { GroupItemProps, QuestionItemProps } from 'sdc-qrf/lib/types';
 
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { isLoading } from 'fhir-react/lib/libs/remoteData';
+import { RenderRemoteData } from '@beda.software/fhir-react';
+import { isLoading } from '@beda.software/remote-data';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { ModalTrigger } from 'src/components/ModalTrigger';

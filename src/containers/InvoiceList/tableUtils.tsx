@@ -9,9 +9,10 @@ import { Trans } from '@lingui/macro';
 import { Tag, Button } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { Invoice, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
-import { PagerManager } from 'fhir-react';
 import _ from 'lodash';
 import { useLocation, useNavigate } from 'react-router-dom';
+
+import { PagerManager } from '@beda.software/fhir-react';
 
 import { formatHumanDateTime } from 'src/utils/date';
 import { matchCurrentUserRole, Role } from 'src/utils/role';

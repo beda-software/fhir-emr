@@ -4,7 +4,7 @@ import moment, { type Moment } from 'moment';
 import { useCallback, useMemo } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 
-import { FHIRDateFormat, formatFHIRDate, formatFHIRDateTime } from 'fhir-react/lib/utils/date';
+import { FHIRDateFormat, formatFHIRDate, formatFHIRDateTime } from '@beda.software/fhir-react';
 
 import { DatePicker } from 'src/components/DatePicker';
 

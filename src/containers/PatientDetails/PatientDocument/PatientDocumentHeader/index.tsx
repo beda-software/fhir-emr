@@ -1,9 +1,10 @@
 import { SyncOutlined } from '@ant-design/icons';
 import { Tag } from 'antd';
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { RemoteData } from 'fhir-react/lib/libs/remoteData';
 import { QuestionnaireResponse } from 'fhir/r4b';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
+
+import { RenderRemoteData } from '@beda.software/fhir-react';
+import { RemoteData } from '@beda.software/remote-data';
 
 import { Title } from 'src/components/Typography';
 

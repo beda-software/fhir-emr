@@ -1,8 +1,8 @@
 import { Trans, t } from '@lingui/macro';
 import { Empty, Table } from 'antd';
 
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { isLoading } from 'fhir-react/lib/libs/remoteData';
+import { RenderRemoteData } from '@beda.software/fhir-react';
+import { isLoading } from '@beda.software/remote-data';
 
 import { PageContainer } from 'src/components/PageContainer';
 import { SpinIndicator, Spinner } from 'src/components/Spinner';

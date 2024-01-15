@@ -2,18 +2,15 @@ import { t, Trans } from '@lingui/macro';
 import { Button } from 'antd';
 import { Appointment, Encounter } from 'fhir/r4b';
 
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { useService } from 'fhir-react/lib/hooks/service';
-import { isSuccess } from 'fhir-react/lib/libs/remoteData';
-import { extractBundleResources, getFHIRResources } from 'fhir-react/lib/services/fhir';
-import { mapSuccess } from 'fhir-react/lib/services/service';
-import { parseFHIRReference } from 'fhir-react/lib/utils/fhir';
+import { extractBundleResources, parseFHIRReference, RenderRemoteData, useService } from '@beda.software/fhir-react';
+import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 
 import { ReadonlyQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm/ReadonlyQuestionnaireResponseForm';
 import { Modal } from 'src/components/Modal';
 import { Spinner } from 'src/components/Spinner';
 import { useNavigateToEncounter } from 'src/containers/EncounterDetails/hooks';
 import { useStartEncounter } from 'src/containers/PatientDetails/PatientOverview';
+import { getFHIRResources } from 'src/services/fhir';
 import { matchCurrentUserRole, Role } from 'src/utils/role';
 
 interface Props {

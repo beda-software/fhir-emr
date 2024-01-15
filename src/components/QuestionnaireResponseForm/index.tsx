@@ -9,10 +9,8 @@ import {
     mapFormToResponse,
 } from 'sdc-qrf';
 
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { isFailure, isSuccess, RemoteDataResult } from 'fhir-react/lib/libs/remoteData';
-import { saveFHIRResource, updateFHIRResource } from 'fhir-react/lib/services/fhir';
-import { formatError } from 'fhir-react/lib/utils/error';
+import { RenderRemoteData, formatError } from '@beda.software/fhir-react';
+import { RemoteDataResult, isFailure, isSuccess } from '@beda.software/remote-data';
 
 import {
     QuestionnaireResponseFormData,
@@ -22,6 +20,7 @@ import {
 } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
+import { saveFHIRResource, updateFHIRResource } from 'src/services/fhir';
 
 import { Spinner } from '../Spinner';
 

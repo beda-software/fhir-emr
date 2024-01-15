@@ -6,17 +6,17 @@ import {
     setInstanceToken as setAidboxInstanceToken,
 } from 'aidbox-react/lib/services/instance';
 
-import { isSuccess, success } from 'fhir-react/lib/libs/remoteData';
-import { getFHIRResource } from 'fhir-react/lib/services/fhir';
-import {
-    resetInstanceToken as resetFHIRInstanceToken,
-    setInstanceToken as setFHIRInstanceToken,
-} from 'fhir-react/lib/services/instance';
-import { extractErrorCode, formatError } from 'fhir-react/lib/utils/error';
+import { extractErrorCode, formatError } from '@beda.software/fhir-react';
+import { isSuccess, success } from '@beda.software/remote-data';
 
 import { User } from 'shared/src/contrib/aidbox';
 
 import { getJitsiAuthToken, getUserInfo } from 'src/services/auth';
+import {
+    getFHIRResource,
+    resetInstanceToken as resetFHIRInstanceToken,
+    setInstanceToken as setFHIRInstanceToken,
+} from 'src/services/fhir';
 import {
     sharedAuthorizedOrganization,
     sharedAuthorizedPatient,

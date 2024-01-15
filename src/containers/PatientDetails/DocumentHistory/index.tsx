@@ -2,8 +2,7 @@ import { Trans } from '@lingui/macro';
 import { QuestionnaireResponse, Questionnaire } from 'fhir/r4b';
 import { useMemo } from 'react';
 
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { WithId } from 'fhir-react/lib/services/fhir';
+import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
 
 import { Provenance } from 'shared/src/contrib/aidbox';
 

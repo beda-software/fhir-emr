@@ -1,6 +1,7 @@
-import { FHIRTimeFormat } from 'fhir-react/lib/utils/date';
 import { useCallback } from 'react';
 import { GroupItemProps } from 'sdc-qrf';
+
+import { FHIRTimeFormat } from '@beda.software/fhir-react';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { RangeValue } from 'src/components/TimePicker/types';

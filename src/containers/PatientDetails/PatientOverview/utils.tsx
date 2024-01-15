@@ -13,13 +13,11 @@ import {
     Consent,
     Observation,
 } from 'fhir/r4b';
-import { formatFHIRDate } from 'fhir-react';
 import _ from 'lodash';
 import moment from 'moment';
 import { Link, useLocation } from 'react-router-dom';
 
-import { extractBundleResources, WithId } from 'fhir-react/lib/services/fhir';
-import { parseFHIRDateTime } from 'fhir-react/lib/utils/date';
+import { WithId, extractBundleResources, formatFHIRDate, parseFHIRDateTime } from '@beda.software/fhir-react';
 
 import { extractExtension, fromFHIRReference } from 'shared/src/utils/converter';
 

@@ -1,7 +1,6 @@
 import { Organization, Patient, Practitioner } from 'fhir/r4b';
 
-import { createSharedState } from 'fhir-react/lib/hooks/shared-state';
-import { WithId } from 'fhir-react/lib/services/fhir';
+import { WithId, createSharedState } from '@beda.software/fhir-react';
 
 import { User } from 'shared/src/contrib/aidbox';
 

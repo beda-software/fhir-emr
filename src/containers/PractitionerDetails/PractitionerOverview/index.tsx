@@ -3,7 +3,7 @@ import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
 import { HealthcareService, Practitioner, PractitionerRole } from 'fhir/r4b';
 
-import { WithId } from 'fhir-react/lib/services/fhir';
+import { WithId } from '@beda.software/fhir-react';
 
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 

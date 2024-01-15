@@ -3,10 +3,9 @@ import { parse as parsePath } from 'path';
 
 import { OperationOutcome, Questionnaire } from 'fhir/r4b';
 
-import { getFHIRResource } from 'fhir-react/lib/services/fhir';
-import { service } from 'fhir-react/lib/services/service';
-import { ensure } from 'fhir-react/lib/utils/tests';
+import { ensure } from '@beda.software/fhir-react';
 
+import { getFHIRResource, service } from 'src/services/fhir';
 import { loginAdminUser } from 'src/setupTests';
 
 describe('Validate all questionnaires', () => {

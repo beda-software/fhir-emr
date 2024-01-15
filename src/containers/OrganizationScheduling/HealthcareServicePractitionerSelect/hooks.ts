@@ -1,12 +1,12 @@
 import { HealthcareService, Practitioner, PractitionerRole } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
 
-import { isSuccess } from 'fhir-react/lib/libs/remoteData';
-import { extractBundleResources, getFHIRResources, getReference } from 'fhir-react/lib/services/fhir';
-import { mapSuccess } from 'fhir-react/lib/services/service';
+import { extractBundleResources, getReference } from '@beda.software/fhir-react';
+import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 
 import { renderHumanName } from 'shared/src/utils/fhir';
 
+import { getFHIRResources } from 'src/services/fhir';
 import { practitionerRoleDoctor } from 'src/utils/constants';
 
 import { SelectOption } from './types';

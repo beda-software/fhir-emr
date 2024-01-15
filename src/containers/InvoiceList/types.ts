@@ -1,6 +1,6 @@
 import { Invoice } from 'fhir/r4b';
 
-import { PagerManager } from 'fhir-react/lib/hooks/pager';
+import { PagerManager } from '@beda.software/fhir-react';
 
 import { SelectOption } from '../OrganizationScheduling/HealthcareServicePractitionerSelect/types';
 

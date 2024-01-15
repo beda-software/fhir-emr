@@ -2,9 +2,10 @@ import { TablePaginationConfig } from 'antd';
 import { Resource } from 'fhir/r4b';
 import { useState } from 'react';
 
-import { usePager } from 'fhir-react/lib/hooks/pager';
-import { isSuccess } from 'fhir-react/lib/libs/remoteData';
-import { SearchParams } from 'fhir-react/lib/services/search';
+import { SearchParams, usePager } from '@beda.software/fhir-react';
+import { isSuccess } from '@beda.software/remote-data';
+
+import { service } from 'src/services/fhir';
 
 export function usePagerExtended<T extends Resource, F = unknown>(
     resourceType: string,
@@ -13,7 +14,12 @@ export function usePagerExtended<T extends Resource, F = unknown>(
 ) {
     const [pageSize, setPageSize] = useState(10);
 
-    const [resourceResponse, pagerManager] = usePager<T>(resourceType, pageSize, searchParams);
+    const [resourceResponse, pagerManager] = usePager<T>({
+        resourceType,
+        requestService: service,
+        resourcesOnPage: pageSize,
+        initialSearchParams: searchParams,
+    });
 
     const handleTableChange = async (pagination: TablePaginationConfig) => {
         if (typeof pagination.current !== 'number') return;

@@ -1,15 +1,12 @@
 import { Consent, Organization, Patient, Practitioner } from 'fhir/r4b';
 
-import { useService } from 'fhir-react/lib/hooks/service';
-import { isFailure, isSuccess, success } from 'fhir-react/lib/libs/remoteData';
-import { service } from 'fhir-react/lib/services/fetch';
-import { WithId, getFHIRResources, extractBundleResources } from 'fhir-react/lib/services/fhir';
-import { mapSuccess } from 'fhir-react/lib/services/service';
-import { formatError } from 'fhir-react/lib/utils/error';
+import { WithId, extractBundleResources, formatError, useService } from '@beda.software/fhir-react';
+import { isFailure, isSuccess, mapSuccess, serviceFetch, success } from '@beda.software/remote-data';
 
 import config from 'shared/src/config';
 
 import { getToken } from 'src/services/auth';
+import { getFHIRResources } from 'src/services/fhir';
 import { Role, matchCurrentUserRole } from 'src/utils/role';
 
 export interface WearablesDataRecord {
@@ -60,7 +57,7 @@ export function usePatientWearablesData(patient: WithId<Patient>) {
             aggregatedRecords,
             patientRecordsWarning: isFailure(patientRecordsResponse) ? patientRecordsResponse.error : undefined,
             patientMetriportRecordsWarning: isFailure(patientMetriportRecordsResponse)
-                ? formatError(JSON.parse(patientMetriportRecordsResponse.error))
+                ? formatError(JSON.parse(patientMetriportRecordsResponse.error.message))
                 : undefined,
         });
     });
@@ -90,7 +87,7 @@ async function fetchConsentStatus(
 }
 
 async function fetchPatientRecords(patient: WithId<Patient>) {
-    return service<WearablesData>(
+    return serviceFetch<WearablesData>(
         matchCurrentUserRole({
             [Role.Patient]: () => `${config.wearablesDataStreamService}/api/v1/records`,
             [Role.Admin]: () => `${config.wearablesDataStreamService}/api/v1/${patient.id}/records`,
@@ -108,7 +105,7 @@ async function fetchPatientRecords(patient: WithId<Patient>) {
 }
 
 async function fetchPatientMetriportRecords(patient: WithId<Patient>) {
-    return service<WearablesData>(
+    return serviceFetch<WearablesData>(
         matchCurrentUserRole({
             [Role.Patient]: () => `${config.wearablesDataStreamService}/metriport/records`,
             [Role.Admin]: () => `${config.wearablesDataStreamService}/metriport/${patient.id}/records`,

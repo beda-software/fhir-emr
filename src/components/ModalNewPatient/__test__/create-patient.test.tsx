@@ -1,8 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
 import { Patient, Questionnaire } from 'fhir/r4b';
 
-import { getFHIRResource, getFHIRResources } from 'fhir-react/lib/services/fhir';
-import { ensure } from 'fhir-react/lib/utils/tests';
+import { ensure } from '@beda.software/fhir-react';
 
 import {
     questionnaireIdLoader,
@@ -10,6 +9,7 @@ import {
 } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { getFHIRResource, getFHIRResources } from 'src/services/fhir';
 import { loginAdminUser } from 'src/setupTests';
 
 describe('createPatient', () => {
