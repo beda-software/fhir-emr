@@ -21,7 +21,7 @@
     "dependencies": {
         "@ant-design/colors": "^7.0.0",
         "@ant-design/icons": "^5.1.4",
-        "@beda.software/fhir-react": "^1.8.5",
+        "@beda.software/fhir-react": "^1.8.6",
         "@beda.software/remote-data": "^1.1.3",
         "@fullcalendar/react": "^6.1.8",
         "@hookform/resolvers": "^3.1.1",

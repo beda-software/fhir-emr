@@ -1470,10 +1470,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@beda.software/fhir-react@^1.8.5":
-  version "1.8.5"
-  resolved "https://registry.yarnpkg.com/@beda.software/fhir-react/-/fhir-react-1.8.5.tgz#c3c5e430ba3471417122ce7e416e45948de95f39"
-  integrity sha512-exOLzLBvJhaczK+vbFiRog0PB1rKulc6X+7kWgzN//9s1SpfovWFKP9WBoP2vZgRxWZ+LCeWlGPNxb8GKxDE9w==
+"@beda.software/fhir-react@^1.8.6":
+  version "1.8.6"
+  resolved "https://registry.yarnpkg.com/@beda.software/fhir-react/-/fhir-react-1.8.6.tgz#d996c28a47edb776786fa033f415b22d90e00f21"
+  integrity sha512-ip+TLFp1BN2/NlxPMzIsVisGhb8GM5EvZXm6o/9+06tggBetIgaYk/Ye+nLmAc1l83DtdqQMfJkyhBnSCJ9Avw==
   dependencies:
     "@beda.software/remote-data" "^1.1.3"
     axios "^1.6.2"
