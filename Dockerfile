@@ -8,7 +8,7 @@ WORKDIR /app
 ADD package.json package.json
 ADD yarn.lock yarn.lock
 
-RUN yarn --network-concurrency=1
+RUN yarn install
 
 ADD . /app
 

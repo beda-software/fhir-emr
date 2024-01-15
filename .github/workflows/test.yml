@@ -15,7 +15,7 @@ jobs:
             - name: Prepare secrets
               run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
             - name: Install deps
-              run: yarn install --network-concurrency 1
+              run: yarn install
             - run: yarn extract
             - run: yarn compile
             - name: Install Playwright
@@ -52,7 +52,7 @@ jobs:
             - name: Prepare secrets
               run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
             - name: Install deps
-              run: yarn install --network-concurrency 1
+              run: yarn install
             - run: yarn extract
             - run: yarn compile
             - name: Check types

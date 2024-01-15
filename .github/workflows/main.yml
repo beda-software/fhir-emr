@@ -48,7 +48,7 @@ jobs:
             - name: Prepare index.html
               run: cp public/index.production.html index.html
             - name: Install deps
-              run: yarn install --network-concurrency 1
+              run: yarn install
             - run: yarn extract
             - run: yarn compile
             - run: yarn build
