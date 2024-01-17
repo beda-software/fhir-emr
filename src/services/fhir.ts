@@ -15,4 +15,5 @@ export const {
     createFHIRResource,
     forceDeleteFHIRResource,
     patchFHIRResource,
+    setInstanceBaseURL,
 } = initServices(config.baseURL + '/fhir');
