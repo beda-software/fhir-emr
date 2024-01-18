@@ -25,6 +25,7 @@ import {
     Gtable,
 } from './widgets';
 import { Display } from './widgets/display';
+import { PasswordInput } from './widgets/PasswordInput';
 import { QuestionReference } from './widgets/reference';
 import { TextWithMacroFill } from '../TextWithMacroFill';
 
@@ -46,6 +47,7 @@ export const groupComponent: GroupItemComponent = Group;
 
 export const itemControlComponents: ItemControlQuestionItemComponentMapping = {
     phoneWidget: QuestionPhone,
+    passwordWidget: PasswordInput,
     slider: QuestionSlider,
     'solid-radio-button': QuestionSolidRadio,
     'inline-choice': InlineChoice,
