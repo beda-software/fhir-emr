@@ -12,6 +12,7 @@ import {
     Provenance,
     Consent,
     Observation,
+    ServiceRequest,
 } from 'fhir/r4b';
 import _ from 'lodash';
 import moment from 'moment';
@@ -316,4 +317,28 @@ export function prepareAppointmentDetails(appointment: Appointment) {
     ];
 
     return appointmentDetails;
+}
+
+export function prepareSeriveRequest(serviceRequests: ServiceRequest[], total: number): OverviewCard<ServiceRequest> {
+    return {
+        title: t`Orders`,
+        key: 'service-reuqest',
+        icon: <HeartOutlined />,
+        data: serviceRequests,
+        total,
+        getKey: (r: ServiceRequest) => r.id!,
+        columns: [
+            {
+                title: t`Name`,
+                key: 'name',
+                render: (resource: ServiceRequest) => resource.code?.coding?.[0]?.display,
+            },
+            {
+                title: t`Intent`,
+                key: 'intent',
+                render: (r: ServiceRequest) => r.intent,
+                width: 120,
+            },
+        ],
+    };
 }

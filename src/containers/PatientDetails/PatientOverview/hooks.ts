@@ -9,6 +9,7 @@ import {
     Provenance,
     Condition,
     Consent,
+    ServiceRequest,
 } from 'fhir/r4b';
 import _ from 'lodash';
 import moment from 'moment';
@@ -27,6 +28,7 @@ import {
     prepareConditions,
     prepareConsents,
     prepareActivitySummary,
+    prepareSeriveRequest,
 } from './utils';
 
 interface Props {
@@ -125,6 +127,9 @@ export function usePatientOverview(props: Props) {
                         code: 'activity-summary',
                         date: `ge${formatFHIRDate(moment().subtract(6, 'days'))}`,
                     }),
+                    serviceRequestBundle: getFHIRResources<ServiceRequest>('ServiceRequest', {
+                        subject: patient.id,
+                    }),
                 }),
                 ({
                     allergiesBundle,
@@ -134,6 +139,7 @@ export function usePatientOverview(props: Props) {
                     appointmentsBundle,
                     consentsBundle,
                     activitySummaryBundle,
+                    serviceRequestBundle,
                 }) => {
                     const allergies = extractBundleResources(allergiesBundle).AllergyIntolerance;
                     const allergiesProvenance = extractBundleResources(allergiesBundle).Provenance;
@@ -146,6 +152,7 @@ export function usePatientOverview(props: Props) {
                     const medications = extractBundleResources(medicationsBundle).MedicationStatement;
                     const medicationsProvenance = extractBundleResources(medicationsBundle).Provenance;
                     const activitySummary = extractBundleResources(activitySummaryBundle).Observation;
+                    const serviceRequest = extractBundleResources(serviceRequestBundle).ServiceRequest;
                     const cards = [
                         prepareConditions(conditions, conditionsProvenance, conditionsBundle.total),
                         prepareMedications(medications, medicationsProvenance, medicationsBundle.total),
@@ -153,6 +160,7 @@ export function usePatientOverview(props: Props) {
                         prepareImmunizations(immunizations, immunizationsProvenance, immunizationsBundle.total),
                         prepareConsents(consents, consentsProvenance, consentsBundle.total),
                         prepareActivitySummary(activitySummary),
+                        prepareSeriveRequest(serviceRequest, serviceRequestBundle.total ?? 0),
                     ];
                     const appointments = prepareAppointments(appointmentsBundle);
 
