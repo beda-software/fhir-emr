@@ -3,6 +3,7 @@ import { useParams, Outlet, Route, Routes } from 'react-router-dom';
 import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { BasePageContent } from 'src/components/BaseLayout';
+import { RouteItem } from 'src/components/BaseLayout/Sidebar/SidebarTop';
 import { PatientEncounter } from 'src/components/PatientEncounter';
 import { Spinner } from 'src/components/Spinner';
 import { matchCurrentUserRole, selectCurrentUserRoleResource, Role } from 'src/utils/role';
@@ -18,7 +19,15 @@ import { PatientResources } from './PatientResources';
 import { PatientWearables } from './PatientWearables';
 import { EncounterDetails } from '../EncounterDetails';
 
-export const PatientDetails = () => {
+export interface PatientDetailsEmbeddedPageDefinition extends RouteItem {
+    routes: Array<ReturnType<typeof Route>>;
+}
+
+export interface PatientDetailsProps {
+    embeddedPages?: PatientDetailsEmbeddedPageDefinition[];
+}
+
+export const PatientDetails = (props: PatientDetailsProps) => {
     const params = useParams<{ id: string }>();
 
     const [patientResponse, manager] = usePatientResource({ id: params.id! });
@@ -29,7 +38,7 @@ export const PatientDetails = () => {
             {(patient) => {
                 return (
                     <PatientHeaderContextProvider patient={patient}>
-                        <PatientHeader />
+                        <PatientHeader extraMenuItems={props.embeddedPages} />
                         <BasePageContent>
                             <Routes>
                                 <Route
@@ -91,6 +100,7 @@ export const PatientDetails = () => {
                                     <Route path="/resources/:type" element={<PatientResources patient={patient} />} />
                                     <Route path="/resources" element={<PatientResources patient={patient} />} />
                                     <Route path="/apps" element={<PatientApps patient={patient} />} />
+                                    {props.embeddedPages?.flatMap(({ routes }) => routes)}
                                 </Route>
                             </Routes>
                         </BasePageContent>
