@@ -1,6 +1,8 @@
+import { useMemo } from 'react';
 import { useParams, Outlet, Route, Routes } from 'react-router-dom';
 
 import { RenderRemoteData } from '@beda.software/fhir-react';
+import { Patient } from 'fhir/r4b';
 
 import { BasePageContent } from 'src/components/BaseLayout';
 import { RouteItem } from 'src/components/BaseLayout/Sidebar/SidebarTop';
@@ -24,7 +26,7 @@ export interface PatientDetailsEmbeddedPageDefinition extends RouteItem {
 }
 
 export interface PatientDetailsProps {
-    embeddedPages?: PatientDetailsEmbeddedPageDefinition[];
+    embeddedPages?: (patient: Patient) => PatientDetailsEmbeddedPageDefinition[];
 }
 
 export const PatientDetails = (props: PatientDetailsProps) => {
@@ -36,9 +38,11 @@ export const PatientDetails = (props: PatientDetailsProps) => {
     return (
         <RenderRemoteData remoteData={patientResponse} renderLoading={Spinner}>
             {(patient) => {
+                const embeddedPages = useMemo(() => props.embeddedPages?.(patient), [patient]);
+
                 return (
                     <PatientHeaderContextProvider patient={patient}>
-                        <PatientHeader extraMenuItems={props.embeddedPages} />
+                        <PatientHeader extraMenuItems={embeddedPages} />
                         <BasePageContent>
                             <Routes>
                                 <Route
@@ -100,7 +104,7 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                     <Route path="/resources/:type" element={<PatientResources patient={patient} />} />
                                     <Route path="/resources" element={<PatientResources patient={patient} />} />
                                     <Route path="/apps" element={<PatientApps patient={patient} />} />
-                                    {props.embeddedPages?.flatMap(({ routes }) => routes)}
+                                    {embeddedPages?.flatMap(({ routes }) => routes)}
                                 </Route>
                             </Routes>
                         </BasePageContent>
