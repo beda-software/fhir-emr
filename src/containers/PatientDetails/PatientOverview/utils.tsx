@@ -331,7 +331,7 @@ export function prepareSeriveRequest(serviceRequests: ServiceRequest[], total: n
             {
                 title: t`Name`,
                 key: 'name',
-                render: (resource: ServiceRequest) => resource.code?.coding?.[0]?.display,
+                render: (resource: ServiceRequest) => resource.code?.text ?? resource.code?.coding?.[0]?.display,
             },
             {
                 title: t`Intent`,
