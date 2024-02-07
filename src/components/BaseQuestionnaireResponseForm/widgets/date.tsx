@@ -1,5 +1,4 @@
 import { Form } from 'antd';
-import { PickerProps } from 'antd/lib/date-picker/generatePicker';
 import moment, { type Moment } from 'moment';
 import { useCallback, useMemo } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
@@ -22,22 +21,22 @@ export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps
     );
 }
 
-type DateTimePickerWrapperProps = PickerProps<moment.Moment> & { type: string };
+interface DateTimePickerWrapperProps {
+    type: string;
+    value?: string;
+    onChange?: (value?: string) => void;
+    disabled?: boolean;
+}
 
 function DateTimePickerWrapper({ value, onChange, type, disabled }: DateTimePickerWrapperProps) {
-    const newValue = useMemo(() => (value ? moment(value) : value), [value]);
+    const newValue = useMemo(() => (value !== undefined ? moment(value) : value), [value]);
     const format = type === 'date' ? FHIRDateFormat : 'YYYY-MM-DD HH:mm';
     const showTime = type === 'date' ? false : { format: 'HH:mm' };
     const formatFunction = type === 'date' ? formatFHIRDate : formatFHIRDateTime;
 
     const newOnChange = useCallback(
         (v: Moment | null, dateString: string) => {
-            if (v) {
-                v.toJSON = () => {
-                    return formatFunction(v);
-                };
-            }
-            onChange && onChange(v, dateString);
+            onChange?.(v !== null ? formatFunction(v) : undefined);
         },
         [onChange, formatFunction],
     );
