@@ -1,4 +1,4 @@
-import { Organization, Patient, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
+import { Organization, ParametersParameter, Patient, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -15,16 +15,17 @@ import { S } from './PatientDocument.styles';
 import { PatientDocumentHeader } from './PatientDocumentHeader';
 import { usePatientDocument } from './usePatientDocument';
 
-interface Props {
+export interface PatientDocumentProps {
     patient: Patient;
     author: WithId<Practitioner | Patient | Organization>;
     questionnaireResponse?: WithId<QuestionnaireResponse>;
+    launchContextParameters?: ParametersParameter[];
     questionnaireId?: string;
     encounterId?: string;
     onSuccess?: () => void;
 }
 
-export function PatientDocument(props: Props) {
+export function PatientDocument(props: PatientDocumentProps) {
     const params = useParams<{ questionnaireId: string; encounterId?: string }>();
     const encounterId = props.encounterId || params.encounterId;
     const questionnaireId = props.questionnaireId || params.questionnaireId!;

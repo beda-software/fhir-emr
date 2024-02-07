@@ -1,4 +1,12 @@
-import { Encounter, Organization, Patient, Practitioner, Provenance, QuestionnaireResponse } from 'fhir/r4b';
+import {
+    Encounter,
+    Organization,
+    ParametersParameter,
+    Patient,
+    Practitioner,
+    Provenance,
+    QuestionnaireResponse,
+} from 'fhir/r4b';
 import _ from 'lodash';
 import { useNavigate } from 'react-router-dom';
 
@@ -30,6 +38,7 @@ export interface Props {
     questionnaireResponse?: WithId<QuestionnaireResponse>;
     questionnaireId: string;
     encounterId?: string;
+    launchContextParameters?: ParametersParameter[];
     onSuccess?: () => void;
 }
 
@@ -67,7 +76,15 @@ function prepareFormInitialParams(
         author?: WithId<Practitioner | Patient | Organization>;
     },
 ): QuestionnaireResponseFormProps {
-    const { patient, questionnaireResponse, questionnaireId, encounterId, provenance, author } = props;
+    const {
+        patient,
+        questionnaireResponse,
+        questionnaireId,
+        encounterId,
+        provenance,
+        author,
+        launchContextParameters = [],
+    } = props;
 
     const params = {
         questionnaireLoader: questionnaireIdLoader(questionnaireId),
@@ -93,6 +110,7 @@ function prepareFormInitialParams(
                       },
                   ]
                 : []),
+            ...launchContextParameters,
         ],
         initialQuestionnaireResponse: questionnaireResponse || {
             subject: getReference(patient),
