@@ -84,4 +84,4 @@ jobs:
               run: make testscript
             - name: Show logs
               if: ${{ failure() }}
-              run: docker-compose -f docker-compose.testscript.yaml logs testscript
+              run: docker compose -f docker-compose.testscript.yaml logs testscript sdc
