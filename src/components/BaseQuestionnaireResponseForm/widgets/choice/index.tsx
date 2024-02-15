@@ -46,21 +46,19 @@ function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
 
 export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, answerOption, repeats, answerValueSet } = questionItem;
-    let fieldName = [...parentPath, linkId, 0];
-
-    if (repeats) {
-        fieldName = [...parentPath, linkId];
-    }
+    const fieldName = [...parentPath, linkId];
 
     const { value, formItem, onChange } = useFieldController(fieldName, questionItem);
+
+    const onSelect = useCallback((option: any) => onChange([].concat(option)), [onChange]);
 
     if (answerValueSet) {
         return (
             <Form.Item {...formItem} data-testid="question-choice">
                 <ChoiceQuestionValueSet
                     answerValueSet={answerValueSet}
-                    value={!repeats && value ? [value] : value}
-                    onChange={onChange}
+                    value={value}
+                    onChange={onSelect}
                     repeats={repeats}
                 />
             </Form.Item>
@@ -69,12 +67,7 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
 
     return (
         <Form.Item {...formItem} data-testid="question-choice">
-            <ChoiceQuestionSelect
-                options={answerOption!}
-                value={!repeats && value ? [value] : value}
-                onChange={onChange}
-                repeats={repeats}
-            />
+            <ChoiceQuestionSelect options={answerOption!} value={value} onChange={onSelect} repeats={repeats} />
         </Form.Item>
     );
 }
