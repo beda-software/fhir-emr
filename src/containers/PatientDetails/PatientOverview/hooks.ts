@@ -88,6 +88,7 @@ export function usePatientOverview(props: Props) {
     const [_creatinine, manager] = useService(async () => {
         const result = mapSuccess(
             await getFHIRResources<Observation>('Observation', {
+                patient: patient.id,
                 code: 'http://loinc.org|2160-0',
                 _sort: ['-date'],
             }),
