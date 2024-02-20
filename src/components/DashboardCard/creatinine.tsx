@@ -1,6 +1,5 @@
 import { InfoOutlined } from '@ant-design/icons';
 import { isSuccess } from 'aidbox-react';
-import classNames from 'classnames';
 import { Observation, Patient } from 'fhir/r4b';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 
@@ -61,7 +60,9 @@ export function CreatinineDashoboard({ observationsRemoteData, patient, reload }
                                         <YAxis />
                                         <Tooltip />
                                     </LineChart>
-                                ) : null;
+                                ) : (
+                                    <></>
+                                );
                             }}
                         </RenderRemoteData>
                         <QuestionnaireResponseForm
