@@ -39,7 +39,7 @@ export function CreatinineDashoboard({ observationsRemoteData, patient, reload }
                             <InfoOutlined />
                         </S.Icon>
                         <S.Title>Creatinine Dashoboard</S.Title>
-                        {total > 0 ? `Total ${total}` : null}
+                        {total != false && total > 0 ? `Total ${total}` : null}
                     </div>
                 </S.Header>
                 <S.Content>

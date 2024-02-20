@@ -13,7 +13,7 @@ import {
 } from 'fhir/r4b';
 import _ from 'lodash';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { extractBundleResources, formatFHIRDate, formatFHIRDateTime, useService } from '@beda.software/fhir-react';
 import { isSuccess, loading, mapSuccess, RemoteData, resolveMap } from '@beda.software/remote-data';
