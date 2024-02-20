@@ -26,7 +26,7 @@ kaitenzushi:
 		-v $$(pwd)/resources:/app/resources \
 		bedasoftware/kaitenzushi:latest \
 		-i resources/tests/TestScript \
-		-o resources/tests/TestScript \
+		-o resources/tests/generated/TestScript \
 		-d https://github.com/beda-software/beda-emr-core
 	@CONTAINER_EXIT_CODE=$$(docker wait fhir-emr-kaitenzushi); \
 	docker rm fhir-emr-kaitenzushi; \
