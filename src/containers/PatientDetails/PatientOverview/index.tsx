@@ -12,6 +12,7 @@ import { Encounter } from 'shared/src/contrib/aidbox';
 import { inMemorySaveService, questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { DashboardCard, DashboardCardTable } from 'src/components/DashboardCard';
+import { CreatinineDashoboard } from 'src/components/DashboardCard/creatinine';
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm, useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
@@ -28,7 +29,8 @@ export interface PatientOverviewProps {
 }
 
 export function PatientOverview(props: PatientOverviewProps) {
-    const { response, patientDetails } = usePatientOverview(props);
+    const { response, patientDetails, creatinineObservations, reloadCreatinineObservations } =
+        usePatientOverview(props);
     const location = useLocation();
 
     const renderAppointmentCards = (appointments: Appointment[]) => {
@@ -108,6 +110,11 @@ export function PatientOverview(props: PatientOverviewProps) {
                                     ))}
                                 </div>
                             </DashboardCard>
+                            <CreatinineDashoboard
+                                patient={props.patient}
+                                observationsRemoteData={creatinineObservations}
+                                reload={reloadCreatinineObservations}
+                            />
                             <div className={s.cards}>
                                 <div className={s.column}>{renderCards(leftColCards)}</div>
                                 <div className={s.column}>{renderCards(rightColCards)}</div>

@@ -13,10 +13,12 @@ import {
 } from 'fhir/r4b';
 import _ from 'lodash';
 import moment from 'moment';
+import { useEffect, useState } from 'react';
 
 import { extractBundleResources, formatFHIRDate, formatFHIRDateTime, useService } from '@beda.software/fhir-react';
-import { isSuccess, mapSuccess, resolveMap } from '@beda.software/remote-data';
+import { isSuccess, loading, mapSuccess, RemoteData, resolveMap } from '@beda.software/remote-data';
 
+import { ObservationWithDate } from 'src/components/DashboardCard/creatinine';
 import { getAllFHIRResources, getFHIRResources } from 'src/services/fhir';
 import { formatHumanDate, getPersonAge } from 'src/utils/date';
 
@@ -79,6 +81,33 @@ export function usePatientOverview(props: Props) {
             value: patient.identifier?.find(({ system }) => system === '1.2.643.100.3')?.value,
         },
     ];
+
+    const [creatinineObservations, setCreatinineObservations] =
+        useState<RemoteData<Array<ObservationWithDate>>>(loading);
+
+    const [_creatinine, manager] = useService(async () => {
+        const result = mapSuccess(
+            await getFHIRResources<Observation>('Observation', {
+                code: 'http://loinc.org|2160-0',
+                _sort: ['-date'],
+            }),
+            (data) => {
+                const result = (extractBundleResources(data).Observation ?? []).map((o) => {
+                    console.log(o.effectiveDateTime, new Date(o.effectiveDateTime!));
+                    const r: ObservationWithDate = {
+                        ...o,
+                        // effective: new Date(o.effectiveDateTime!)
+                        // TODO use effectiveDateTime once fhirpath now bug is fixed
+                        effective: new Date(o.meta!.lastUpdated!),
+                    };
+                    return r;
+                });
+                return result;
+            },
+        );
+        setCreatinineObservations(result);
+        return result;
+    });
 
     const [response] = useService(
         async () =>
@@ -170,5 +199,5 @@ export function usePatientOverview(props: Props) {
         [],
     );
 
-    return { response, patientDetails };
+    return { response, patientDetails, creatinineObservations, reloadCreatinineObservations: manager.reload };
 }
