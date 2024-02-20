@@ -2,7 +2,7 @@ import { InfoOutlined } from '@ant-design/icons';
 import { isSuccess } from 'aidbox-react';
 import classNames from 'classnames';
 import { Observation, Patient } from 'fhir/r4b';
-import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 
 import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
 import { RemoteData } from '@beda.software/remote-data';
@@ -25,17 +25,12 @@ interface Props {
 export function CreatinineDashoboard({ observationsRemoteData, patient, reload }: Props) {
     const author = selectCurrentUserRoleResource();
     const total = isSuccess(observationsRemoteData) && observationsRemoteData.data.length;
-    const empty = total === 0;
     return (
         <S.Wrapper>
-            <S.Card
-                className={classNames({
-                    _empty: empty,
-                })}
-            >
+            <S.Card>
                 <S.Header>
                     <div>
-                        <S.Icon className={classNames({ _empty: empty })}>
+                        <S.Icon>
                             <InfoOutlined />
                         </S.Icon>
                         <S.Title>Creatinine Dashoboard</S.Title>
@@ -58,15 +53,15 @@ export function CreatinineDashoboard({ observationsRemoteData, patient, reload }
                                     value: valueQuantity?.value,
                                 }));
                                 data.sort((o1, o2) => o1.effective.getTime() - o2.effective.getTime());
-                                console.log(data);
-                                return (
+                                return data.length > 0 ? (
                                     <LineChart width={600} height={300} data={data}>
                                         <Line type="monotone" dataKey="value" stroke="#8884d8" />
                                         <CartesianGrid stroke="#ccc" />
                                         <XAxis dataKey="effective" />
                                         <YAxis />
+                                        <Tooltip />
                                     </LineChart>
-                                );
+                                ) : null;
                             }}
                         </RenderRemoteData>
                         <QuestionnaireResponseForm
