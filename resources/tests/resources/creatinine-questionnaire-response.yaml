@@ -1,0 +1,23 @@
+item:
+  - answer:
+    - valueDateTime: '2023-10-21T06:00:00Z'
+    linkId: dateTime
+  - answer:
+    - valueString: patient3
+    linkId: patientId
+  - answer:
+    - valueString: Patient Third
+    linkId: patientName
+  - answer:
+    - valueDecimal: 2.46
+    linkId: creatinine-level
+status: completed
+authored: '2023-10-16T09:46:54Z'
+id: 6c0548fe-461c-49a4-8c21-9d3ba6bcb814
+resourceType: QuestionnaireResponse
+meta:
+  lastUpdated: '2023-10-16T09:46:55.249235Z'
+  versionId: '709'
+  extension:
+  - url: ex:createdAt
+    valueInstant: '2023-10-16T09:46:55.249235Z'

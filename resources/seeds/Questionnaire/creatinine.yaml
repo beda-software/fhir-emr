@@ -1,0 +1,57 @@
+id: creatinine-test
+resourceType: Questionnaire
+name: creatinine-test
+title: Creatinine test
+status: active
+subjectType:
+    - Encounter
+    - Patient
+launchContext:
+    - name:
+          code: Patient
+      type:
+        - Patient
+    - name:
+          code: Author
+      type:
+        - PractitionerRole
+        - Practitioner
+        - Patient
+        - Organization
+mapping:
+    - id: creatinine-extract
+      resourceType: Mapping
+item:
+    - text: DateTime
+      type: dateTime
+      linkId: dateTime
+      hidden: true
+      initialExpression:
+          language: text/fhirpath
+          expression: 'now()'
+    - text: PatientId
+      type: string
+      linkId: patientId
+      hidden: true
+      required: true
+      initialExpression:
+          language: text/fhirpath
+          expression: '%Patient.id'
+    - text: PatientName
+      type: string
+      linkId: patientName
+      hidden: true
+      initialExpression:
+          language: text/fhirpath
+          expression: "%Patient.name.first().given.first() + ' ' + %Patient.name.first().family"
+    - type: decimal
+      linkId: creatinine-level
+      text: Creatinine level
+      unit:
+        code: "mg/dL"
+        system: http://unitsofmeasure.org
+        display: "mg/dL"
+meta:
+    profile:
+        - https://beda.software/beda-emr-questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/creatinine
