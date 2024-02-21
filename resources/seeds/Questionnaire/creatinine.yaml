@@ -4,7 +4,6 @@ name: creatinine-test
 title: Creatinine test
 status: active
 subjectType:
-    - Encounter
     - Patient
 launchContext:
     - name:
