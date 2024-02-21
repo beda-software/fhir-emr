@@ -61,10 +61,10 @@ export function CreatinineDashoboard({ observationsRemoteData, patient, reload }
                                 const { min, max } = referenceValue;
 
                                 return data.length > 0 ? (
-                                    <LineChart width={600} height={300} data={data}>
+                                    <LineChart width={800} height={300} data={data}>
                                         <Line type="monotone" dataKey="value" stroke="#8884d8" />
                                         <CartesianGrid stroke="#ccc" />
-                                        <XAxis dataKey="effective" />
+                                        <XAxis dataKey="effective" scale="linear" />
                                         <YAxis />
                                         {min > 0 ? <ReferenceLine y={min} label="Min" stroke="red" /> : null}
                                         {max > 0 ? <ReferenceLine y={max} label="Max" stroke="red" /> : null}
