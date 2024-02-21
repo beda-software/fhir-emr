@@ -2,7 +2,7 @@ import { InfoOutlined } from '@ant-design/icons';
 import { isSuccess } from 'aidbox-react';
 import { Observation, Patient } from 'fhir/r4b';
 import moment from 'moment';
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine } from 'recharts';
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine, TooltipProps } from 'recharts';
 
 import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
 import { RemoteData } from '@beda.software/remote-data';
@@ -24,7 +24,7 @@ interface Props {
 
 const formatTime = (unixTime: number) => moment(unixTime).format('HH:mm Do');
 
-function CustomTooltip({ payload, label }: any) {
+function CustomTooltip({ payload, label }: TooltipProps<number,number>) {
     return (
         <div>
             <span>{formatTime(label)}</span>
