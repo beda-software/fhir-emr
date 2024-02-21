@@ -76,6 +76,11 @@ export function CreatinineDashoboard({ observationsRemoteData, patient, reload }
                             }}
                         </RenderRemoteData>
                         <QuestionnaireResponseForm
+                            initialQuestionnaireResponse={{
+                                resourceType: 'QuestionnaireResponse',
+                                questionnaire: 'creatinine',
+                                subject: { reference: `Patient/${patient.id}` },
+                            }}
                             questionnaireLoader={questionnaireIdLoader('creatinine')}
                             launchContextParameters={[
                                 { name: 'Patient', resource: patient },
