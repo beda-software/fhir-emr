@@ -94,12 +94,9 @@ export function usePatientOverview(props: Props) {
             }),
             (data) => {
                 const result = (extractBundleResources(data).Observation ?? []).map((o) => {
-                    console.log(o.effectiveDateTime, new Date(o.effectiveDateTime!));
                     const r: ObservationWithDate = {
                         ...o,
-                        // effective: new Date(o.effectiveDateTime!)
-                        // TODO use effectiveDateTime once fhirpath now bug is fixed
-                        effective: new Date(o.meta!.lastUpdated!),
+                        effective: new Date(o.effectiveDateTime!),
                     };
                     return r;
                 });

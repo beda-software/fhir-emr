@@ -21,13 +21,6 @@ mapping:
     - id: creatinine-extract
       resourceType: Mapping
 item:
-    - text: DateTime
-      type: dateTime
-      linkId: dateTime
-      hidden: true
-      initialExpression:
-          language: text/fhirpath
-          expression: 'now()'
     - text: PatientId
       type: string
       linkId: patientId
@@ -45,11 +38,20 @@ item:
           expression: "%Patient.name.first().given.first() + ' ' + %Patient.name.first().family"
     - type: decimal
       linkId: creatinine-level
-      text: Creatinine level
+      required: true
+      text: Serum creatinine level
       unit:
         code: "mg/dL"
         system: http://unitsofmeasure.org
         display: "mg/dL"
+    - text: Collected date
+      type: dateTime
+      linkId: dateTime
+      required: true
+      initialExpression:
+          language: text/fhirpath
+          expression: 'now()'
+ 
 meta:
     profile:
         - https://beda.software/beda-emr-questionnaire
