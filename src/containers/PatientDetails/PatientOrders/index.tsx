@@ -1,12 +1,21 @@
-import { t } from '@lingui/macro';
+import { DownOutlined } from '@ant-design/icons';
+import { t, Trans } from '@lingui/macro';
+import type { MenuProps } from 'antd';
+import { notification, Dropdown, Space } from 'antd';
 import { Observation, Patient, Provenance } from 'fhir/r4b';
+import { useState } from 'react';
+import styled from 'styled-components/macro';
 
 import { WithId } from '@beda.software/fhir-react';
 
+import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 import { extractExtension } from 'shared/src/utils/converter';
 
+import { Modal } from 'src/components/Modal';
+import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { ResourceTable, LinkToEdit } from 'src/components/ResourceTable';
 import { formatHumanDate } from 'src/utils/date';
+import { selectCurrentUserRoleResource } from 'src/utils/role';
 
 interface Props {
     patient: WithId<Patient>;
@@ -68,18 +77,88 @@ function getTableColumns(provenanceList: Array<Provenance> = []) {
     ];
 }
 
+const Pannel = styled.div`
+    display: flex;
+    flex-directon: row;
+    justify-content: flex-end;
+    padding-bottom: 20px;
+    padding-right: 50px;
+`;
+
 export function PatientOrders({ patient }: Props) {
+    const [key, setKey] = useState(0);
+    const author = selectCurrentUserRoleResource();
+    const [questionnaire, setQuestionnaire] = useState<string | undefined>(undefined);
+    const items: MenuProps['items'] = [
+        {
+            key: '1',
+            label: (
+                <a onClick={() => setQuestionnaire('creatinine')}>
+                    <Trans>Serum creatinin</Trans>
+                </a>
+            ),
+        },
+        {
+            key: '2',
+            label: (
+                <a onClick={() => setQuestionnaire('vitals')}>
+                    <Trans>Vitals</Trans>
+                </a>
+            ),
+        },
+    ];
     return (
-        <ResourceTable<Observation>
-            resourceType="Observation"
-            params={{
-                patient: patient.id,
-                category: 'laboratory',
-                status: 'final',
-                _sort: ['-_lastUpdated'],
-                _revinclude: ['Provenance:target'],
-            }}
-            getTableColumns={getTableColumns}
-        />
+        <div>
+            <Pannel>
+                <Dropdown menu={{ items }}>
+                    <a onClick={(e) => e.preventDefault()}>
+                        <Space>
+                            <Trans>Add Order</Trans>
+                            <DownOutlined />
+                        </Space>
+                    </a>
+                </Dropdown>
+            </Pannel>
+            <Modal
+                open={typeof questionnaire !== 'undefined'}
+                title={t`Add Order`}
+                onCancel={() => setQuestionnaire(undefined)}
+                destroyOnClose
+                footer={[]}
+            >
+                <QuestionnaireResponseForm
+                    initialQuestionnaireResponse={{
+                        resourceType: 'QuestionnaireResponse',
+                        questionnaire: 'creatinine',
+                        subject: { reference: `Patient/${patient.id}` },
+                    }}
+                    questionnaireLoader={questionnaireIdLoader(questionnaire!)}
+                    launchContextParameters={[
+                        { name: 'Patient', resource: patient },
+                        { name: 'Author', resource: author },
+                    ]}
+                    onSuccess={() => {
+                        notification.success({
+                            message: t`Order added`,
+                        });
+                        setKey((k) => k + 1);
+                        setQuestionnaire(undefined);
+                    }}
+                    onCancel={() => setQuestionnaire(undefined)}
+                />
+            </Modal>
+            <ResourceTable<Observation>
+                key={key}
+                resourceType="Observation"
+                params={{
+                    patient: patient.id,
+                    category: 'laboratory',
+                    status: 'final',
+                    _sort: ['-_lastUpdated'],
+                    _revinclude: ['Provenance:target'],
+                }}
+                getTableColumns={getTableColumns}
+            />
+        </div>
     );
 }
