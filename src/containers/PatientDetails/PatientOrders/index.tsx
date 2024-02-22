@@ -1,9 +1,8 @@
 import { DownOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
-import type { MenuProps } from 'antd';
-import { notification, Dropdown, Space } from 'antd';
+import { Input, MenuProps, notification, Dropdown, Space } from 'antd';
 import { Observation, Patient, Provenance } from 'fhir/r4b';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import styled from 'styled-components/macro';
 
 import { WithId } from '@beda.software/fhir-react';
@@ -16,6 +15,8 @@ import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseF
 import { ResourceTable, LinkToEdit } from 'src/components/ResourceTable';
 import { formatHumanDate } from 'src/utils/date';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
+
+const { Search } = Input;
 
 interface Props {
     patient: WithId<Patient>;
@@ -36,11 +37,21 @@ function getTableColumns(provenanceList: Array<Provenance> = []) {
             width: 200,
         },
         {
-            title: t`Date`,
-            key: 'date',
+            title: t`Date added`,
+            key: 'date-added',
             render: (r: Observation) => {
                 const createdAt = extractExtension(r.meta?.extension, 'ex:createdAt');
                 const date = r.issued || createdAt;
+
+                return date ? formatHumanDate(date) : null;
+            },
+            width: 200,
+        },
+        {
+            title: t`Date collected`,
+            key: 'date-collected',
+            render: (r: Observation) => {
+                const date = r.effectiveDateTime;
 
                 return date ? formatHumanDate(date) : null;
             },
@@ -80,15 +91,40 @@ function getTableColumns(provenanceList: Array<Provenance> = []) {
 const Pannel = styled.div`
     display: flex;
     flex-directon: row;
-    justify-content: flex-end;
+    justify-content: space-between;
     padding-bottom: 20px;
     padding-right: 50px;
 `;
 
-export function PatientOrders({ patient }: Props) {
+function useOrders() {
     const [key, setKey] = useState(0);
     const author = selectCurrentUserRoleResource();
     const [questionnaire, setQuestionnaire] = useState<string | undefined>(undefined);
+
+    const close = useCallback(() => {
+        setQuestionnaire(undefined);
+    }, []);
+
+    const reloadListAndClose = useCallback(() => {
+        notification.success({
+            message: t`Order added`,
+        });
+        setKey((k) => k + 1);
+        close();
+    }, [close]);
+
+    return {
+        author,
+        key,
+        questionnaire,
+        setQuestionnaire,
+        reloadListAndClose,
+        close,
+    };
+}
+
+export function PatientOrders({ patient }: Props) {
+    const { key, author, questionnaire, setQuestionnaire, reloadListAndClose, close } = useOrders();
     const items: MenuProps['items'] = [
         {
             key: '1',
@@ -107,9 +143,16 @@ export function PatientOrders({ patient }: Props) {
             ),
         },
     ];
+    const [search, setSearch] = useState('');
     return (
         <div>
             <Pannel>
+                <Search
+                    style={{ width: '50%' }}
+                    allowClear
+                    onSearch={(value) => setSearch(value)}
+                    placeholder={t`Search orders`}
+                />
                 <Dropdown menu={{ items }}>
                     <a onClick={(e) => e.preventDefault()}>
                         <Space>
@@ -122,7 +165,7 @@ export function PatientOrders({ patient }: Props) {
             <Modal
                 open={typeof questionnaire !== 'undefined'}
                 title={t`Add Order`}
-                onCancel={() => setQuestionnaire(undefined)}
+                onCancel={close}
                 destroyOnClose
                 footer={[]}
             >
@@ -137,14 +180,8 @@ export function PatientOrders({ patient }: Props) {
                         { name: 'Patient', resource: patient },
                         { name: 'Author', resource: author },
                     ]}
-                    onSuccess={() => {
-                        notification.success({
-                            message: t`Order added`,
-                        });
-                        setKey((k) => k + 1);
-                        setQuestionnaire(undefined);
-                    }}
-                    onCancel={() => setQuestionnaire(undefined)}
+                    onSuccess={reloadListAndClose}
+                    onCancel={close}
                 />
             </Modal>
             <ResourceTable<Observation>
@@ -156,6 +193,7 @@ export function PatientOrders({ patient }: Props) {
                     status: 'final',
                     _sort: ['-_lastUpdated'],
                     _revinclude: ['Provenance:target'],
+                    _ilike: search,
                 }}
                 getTableColumns={getTableColumns}
             />
