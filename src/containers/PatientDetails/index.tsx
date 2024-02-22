@@ -1,8 +1,9 @@
+import { Patient } from 'fhir/r4b';
 import { useMemo } from 'react';
 import { useParams, Outlet, Route, Routes } from 'react-router-dom';
 
 import { RenderRemoteData } from '@beda.software/fhir-react';
-import { Patient } from 'fhir/r4b';
+import { isSuccess } from '@beda.software/remote-data';
 
 import { BasePageContent } from 'src/components/BaseLayout';
 import { RouteItem } from 'src/components/BaseLayout/Sidebar/SidebarTop';
@@ -16,6 +17,7 @@ import { PatientDocument } from './PatientDocument';
 import { PatientDocumentDetails } from './PatientDocumentDetails';
 import { PatientDocuments } from './PatientDocuments';
 import { PatientHeader, PatientHeaderContextProvider } from './PatientHeader';
+import { PatientOrders } from './PatientOrders';
 import { PatientOverview } from './PatientOverview';
 import { PatientResources } from './PatientResources';
 import { PatientWearables } from './PatientWearables';
@@ -34,12 +36,15 @@ export const PatientDetails = (props: PatientDetailsProps) => {
 
     const [patientResponse, manager] = usePatientResource({ id: params.id! });
     const author = selectCurrentUserRoleResource();
+    const embeddedPages = useMemo(() => {
+        if (isSuccess(patientResponse)) {
+            return props.embeddedPages?.(patientResponse.data);
+        }
+    }, [patientResponse]);
 
     return (
         <RenderRemoteData remoteData={patientResponse} renderLoading={Spinner}>
             {(patient) => {
-                const embeddedPages = useMemo(() => props.embeddedPages?.(patient), [patient]);
-
                 return (
                     <PatientHeaderContextProvider patient={patient}>
                         <PatientHeader extraMenuItems={embeddedPages} />
@@ -104,6 +109,7 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                     <Route path="/resources/:type" element={<PatientResources patient={patient} />} />
                                     <Route path="/resources" element={<PatientResources patient={patient} />} />
                                     <Route path="/apps" element={<PatientApps patient={patient} />} />
+                                    <Route path="/orders" element={<PatientOrders patient={patient} />} />
                                     {embeddedPages?.flatMap(({ routes }) => routes)}
                                 </Route>
                             </Routes>

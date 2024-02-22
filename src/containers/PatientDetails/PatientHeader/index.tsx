@@ -79,8 +79,9 @@ export function PatientHeader(props: { extraMenuItems?: RouteItem[] }) {
                 { label: t`Encounters`, path: `/patients/${params.id}/encounters` },
                 { label: t`Documents`, path: `/patients/${params.id}/documents` },
                 { label: t`Wearables`, path: `/patients/${params.id}/wearables` },
-                { label: t`Resources`, path: `/patients/${params.id}/resources` },
+                { label: t`Orders`, path: `/patients/${params.id}/orders` },
                 { label: t`Smart Apps`, path: `/patients/${params.id}/apps` },
+                { label: t`Resources`, path: `/patients/${params.id}/resources` },
             ].concat(
                 extraMenuItems.map(({ label, path }) => ({
                     label,

@@ -5,7 +5,8 @@ import { useParams } from 'react-router-dom';
 
 import { WithId } from '@beda.software/fhir-react';
 
-import { Option } from './ResourceTable';
+import { Option } from 'src/components/ResourceTable';
+
 import { getOptions } from './utils';
 
 interface Props {

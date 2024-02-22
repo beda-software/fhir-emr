@@ -8,17 +8,14 @@ import {
     Observation,
     Patient,
     Provenance,
-    Resource,
 } from 'fhir/r4b';
-import { Link, useLocation } from 'react-router-dom';
 
 import { WithId } from '@beda.software/fhir-react';
 
-import { extractExtension, fromFHIRReference } from 'shared/src/utils/converter';
+import { extractExtension } from 'shared/src/utils/converter';
 
+import { ResourceTable, Option, LinkToEdit } from 'src/components/ResourceTable';
 import { formatHumanDate } from 'src/utils/date';
-
-import { ResourceTable, Option } from './ResourceTable';
 
 export function getOptions(patient: WithId<Patient>): Option[] {
     return [
@@ -34,7 +31,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                         _sort: ['-_lastUpdated'],
                         _revinclude: ['Provenance:target'],
                     }}
-                    option={option}
+                    getTableColumns={option.getTableColumns}
                 />
             ),
             getTableColumns: (provenanceList: Provenance[] = []) => [
@@ -69,7 +66,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                         _sort: ['-_recorded-date'],
                         _revinclude: ['Provenance:target'],
                     }}
-                    option={option}
+                    getTableColumns={option.getTableColumns}
                 />
             ),
             getTableColumns: (provenanceList: Provenance[] = []) => [
@@ -108,7 +105,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                         _sort: ['-_date'],
                         _revinclude: ['Provenance:target'],
                     }}
-                    option={option}
+                    getTableColumns={option.getTableColumns}
                 />
             ),
             getTableColumns: (provenanceList: Provenance[] = []) => [
@@ -147,7 +144,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                         _sort: ['-_date'],
                         _revinclude: ['Provenance:target'],
                     }}
-                    option={option}
+                    getTableColumns={option.getTableColumns}
                 />
             ),
             getTableColumns: (provenanceList: Provenance[] = []) => [
@@ -183,7 +180,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                         _sort: ['-_lastUpdated'],
                         _revinclude: ['Provenance:target'],
                     }}
-                    option={option}
+                    getTableColumns={option.getTableColumns}
                 />
             ),
             getTableColumns: (provenanceList: Provenance[] = []) => [
@@ -230,7 +227,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                         _sort: ['-_lastUpdated'],
                         _revinclude: ['Provenance:target'],
                     }}
-                    option={option}
+                    getTableColumns={option.getTableColumns}
                 />
             ),
             getTableColumns: (provenanceList: Provenance[] = []) => [
@@ -290,23 +287,4 @@ export function getOptions(patient: WithId<Patient>): Option[] {
             ],
         },
     ];
-}
-
-export function LinkToEdit(props: { name?: string; resource: Resource; provenanceList: Provenance[] }) {
-    const { name, resource, provenanceList } = props;
-    const location = useLocation();
-    const provenance = provenanceList.find(
-        (p) =>
-            fromFHIRReference(p.target[0])?.id === resource.id &&
-            fromFHIRReference(p.target[0])?.resourceType === resource.resourceType,
-    );
-    const entity = provenance?.entity?.[0]?.what;
-    const qrId = fromFHIRReference(entity)?.id;
-    const pathname = location.pathname.split('/').slice(0, 3).join('/');
-
-    if (qrId) {
-        return <Link to={`${pathname}/documents/${qrId}`}>{name}</Link>;
-    }
-
-    return <>{name}</>;
 }

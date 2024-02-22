@@ -1,9 +1,13 @@
 import { Trans } from '@lingui/macro';
 import { Empty } from 'antd';
+import { ColumnsType } from 'antd/lib/table';
 import { Provenance, Resource } from 'fhir/r4b';
 import { ReactNode } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
-import { RenderRemoteData, SearchParams, extractBundleResources } from '@beda.software/fhir-react';
+import { RenderRemoteData, SearchParams, extractBundleResources, ResourcesMap } from '@beda.software/fhir-react';
+
+import { fromFHIRReference } from 'shared/src/utils/converter';
 
 import { Spinner } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
@@ -13,13 +17,13 @@ export interface Option {
     value: string;
     label: string;
     renderTable: (option: Option) => ReactNode;
-    getTableColumns: (provenanceList: Provenance[]) => any;
+    getTableColumns: (provenanceList: Provenance[]) => ColumnsType<Resource>;
 }
 
 interface ResourceTableProps<R extends Resource> {
     resourceType: R['resourceType'];
     params?: SearchParams;
-    option: Option;
+    getTableColumns: (provenances: Array<Provenance>) => ColumnsType<R>;
 }
 
 function useResourceTable<R extends Resource>(props: ResourceTableProps<R>) {
@@ -39,14 +43,15 @@ function useResourceTable<R extends Resource>(props: ResourceTableProps<R>) {
 }
 
 export function ResourceTable<R extends Resource>(props: ResourceTableProps<R>) {
-    const { resourceType, option } = props;
+    const { resourceType, getTableColumns } = props;
     const { response, pagination, handleTableChange } = useResourceTable<R>(props);
 
     return (
         <RenderRemoteData remoteData={response} renderLoading={Spinner}>
             {(bundle) => {
                 const resources = extractBundleResources(bundle)[resourceType] as R[];
-                const provenanceList = (extractBundleResources(bundle) as any).Provenance || [];
+                const provenanceList: Array<Provenance> =
+                    (extractBundleResources(bundle) as ResourcesMap<Provenance>).Provenance ?? [];
 
                 return (
                     <Table<R>
@@ -61,10 +66,29 @@ export function ResourceTable<R extends Resource>(props: ResourceTableProps<R>) 
                         }}
                         rowKey={(r) => r.id!}
                         dataSource={resources}
-                        columns={option.getTableColumns(provenanceList)}
+                        columns={getTableColumns(provenanceList)}
                     />
                 );
             }}
         </RenderRemoteData>
     );
+}
+
+export function LinkToEdit(props: { name?: string; resource: Resource; provenanceList: Provenance[] }) {
+    const { name, resource, provenanceList } = props;
+    const location = useLocation();
+    const provenance = provenanceList.find(
+        (p) =>
+            fromFHIRReference(p.target[0])?.id === resource.id &&
+            fromFHIRReference(p.target[0])?.resourceType === resource.resourceType,
+    );
+    const entity = provenance?.entity?.[0]?.what;
+    const qrId = fromFHIRReference(entity)?.id;
+    const pathname = location.pathname.split('/').slice(0, 3).join('/');
+
+    if (qrId) {
+        return <Link to={`${pathname}/documents/${qrId}`}>{name}</Link>;
+    }
+
+    return <>{name}</>;
 }
