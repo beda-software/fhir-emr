@@ -52,7 +52,7 @@ item:
           Coding:
             code: 'medline'
             display: 'Medline'
-    - type: number
+    - type: string
       linkId: order-number
       text: "Order #"
     - type: decimal
