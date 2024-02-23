@@ -13,17 +13,19 @@ import { Spinner } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 import { usePagerExtended } from 'src/hooks/pager';
 
+type GetTableColumns<R> = (provenanceList: Provenance[]) => ColumnsType<R>;
+
 export interface Option {
     value: string;
     label: string;
     renderTable: (option: Option) => ReactNode;
-    getTableColumns: (provenanceList: Provenance[]) => ColumnsType<Resource>;
+    getTableColumns: GetTableColumns<Resource>;
 }
 
 interface ResourceTableProps<R extends Resource> {
     resourceType: R['resourceType'];
     params?: SearchParams;
-    getTableColumns: (provenances: Array<Provenance>) => ColumnsType<R>;
+    getTableColumns: GetTableColumns<Resource>;
 }
 
 function useResourceTable<R extends Resource>(props: ResourceTableProps<R>) {
@@ -66,7 +68,7 @@ export function ResourceTable<R extends Resource>(props: ResourceTableProps<R>) 
                         }}
                         rowKey={(r) => r.id!}
                         dataSource={resources}
-                        columns={getTableColumns(provenanceList)}
+                        columns={(getTableColumns as unknown as GetTableColumns<R>)(provenanceList)}
                     />
                 );
             }}
