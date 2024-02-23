@@ -137,8 +137,8 @@ export function PatientOrders({ patient }: Props) {
         {
             key: '2',
             label: (
-                <a onClick={() => setQuestionnaire('vitals')}>
-                    <Trans>Vitals</Trans>
+                <a onClick={() => setQuestionnaire('glucose')}>
+                    <Trans>Glucose</Trans>
                 </a>
             ),
         },
