@@ -11,10 +11,36 @@ import 'antd/dist/reset.css';
 import 'src/styles/index.scss';
 import 'shared/src/services/i18n';
 
+import { CreatinineDashoboard } from 'src/components/DashboardCard/creatinine';
 import { App } from 'src/containers/App';
+import { PatientDashboardProvider } from 'src/contexts/PatientDashboardContext';
 
 import * as serviceWorker from './serviceWorker';
 import { ThemeProvider } from './theme/ThemeProvider';
+// import { Role } from './utils/role';
+
+export const dashboard = {
+    // TODO WIP
+    default: {
+        top: [
+            {
+                query: {
+                    resourceType: 'Observation',
+                    search: {
+                        code: 'http://loinc.org|2160-0',
+                        _sort: ['date'],
+                    },
+                },
+                widget: CreatinineDashoboard,
+            },
+        ],
+        right: [],
+        left: [],
+        bottom: [],
+    },
+    // [Role.Admin]: {},
+    // [Role.Practitioner]: {},
+};
 
 const AppWithContext = () => {
     useEffect(() => {
@@ -23,9 +49,11 @@ const AppWithContext = () => {
 
     return (
         <I18nProvider i18n={i18n}>
-            <ThemeProvider>
-                <App />
-            </ThemeProvider>
+            <PatientDashboardProvider dashboard={dashboard}>
+                <ThemeProvider>
+                    <App />
+                </ThemeProvider>
+            </PatientDashboardProvider>
         </I18nProvider>
     );
 };

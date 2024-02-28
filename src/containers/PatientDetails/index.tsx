@@ -18,7 +18,7 @@ import { PatientDocumentDetails } from './PatientDocumentDetails';
 import { PatientDocuments } from './PatientDocuments';
 import { PatientHeader, PatientHeaderContextProvider } from './PatientHeader';
 import { PatientOrders } from './PatientOrders';
-import { PatientOverview } from './PatientOverview';
+import { PatientOverview } from './PatientOverviewDynamic';
 import { PatientResources } from './PatientResources';
 import { PatientWearables } from './PatientWearables';
 import { EncounterDetails } from '../EncounterDetails';
