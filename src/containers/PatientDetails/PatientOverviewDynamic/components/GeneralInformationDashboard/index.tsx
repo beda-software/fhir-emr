@@ -35,3 +35,5 @@ export function GeneralInformationDashboard({ patientDetails, props }: Props) {
         </DashboardCard>
     );
 }
+
+GeneralInformationDashboard.displayName = 'GeneralInformation';

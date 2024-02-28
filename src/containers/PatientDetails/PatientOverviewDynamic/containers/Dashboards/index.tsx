@@ -1,10 +1,12 @@
 import { Patient } from 'fhir/r4b';
 
 import { CreatinineDashoboardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/CreatinineDashoboardContainer';
+import { StandardCardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/StandardCardContainer';
 import { WidgetInfo } from 'src/contexts/PatientDashboardContext';
 
 const widgetComponents = {
     CreatinineDashoboard: CreatinineDashoboardContainer,
+    StandardCard: StandardCardContainer,
 };
 
 interface Props {

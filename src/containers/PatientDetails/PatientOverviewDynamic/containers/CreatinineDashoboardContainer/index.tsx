@@ -1,7 +1,7 @@
 import { Patient } from 'fhir/r4b';
 
 import { CreatinineDashoboard } from 'src/components/DashboardCard/creatinine';
-import { useCreatinineDashoboard } from 'src/containers/PatientDetails/PatientOverviewDynamic/hooks/useCreatinineDashoboard';
+import { useCreatinineDashoboard } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/CreatinineDashoboardContainer/hooks';
 import { WidgetInfo } from 'src/contexts/PatientDashboardContext';
 
 interface CreatinineDashoboardContainerProps {
