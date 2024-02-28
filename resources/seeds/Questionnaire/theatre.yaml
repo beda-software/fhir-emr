@@ -1,0 +1,102 @@
+meta:
+  profile:
+    - https://beda.software/beda-emr-questionnaire
+item:
+  - item:
+      - text: Select
+        type: boolean
+        linkId: Select
+      - text: Date
+        type: dateTime
+        linkId: date
+        readOnly: true
+        initialExpression:
+          language: text/fhirpath
+          expression: start
+      - text: ID
+        type: string
+        hidden: true
+        linkId: id
+        readOnly: true
+        initialExpression:
+          language: text/fhirpath
+          expression: id
+      - text: status
+        type: string
+        linkId: status
+        readOnly: true
+        initialExpression:
+          language: text/fhirpath
+          expression: status
+      - text: Patient Name
+        type: string
+        linkId: patient-name
+        readOnly: true
+        initialExpression:
+          language: text/fhirpath
+          expression: participant.where(type.coding.code = '116154003').actor.display
+      - text: Specialist
+        type: string
+        linkId: Specialist
+        readOnly: true
+        initialExpression:
+          language: text/fhirpath
+          expression: participant.where(type.coding.code = 'PPRF').status
+      - text: Patient
+        type: string
+        linkId: patient
+        readOnly: true
+        initialExpression:
+          language: text/fhirpath
+          expression: participant.where(type.coding.code = '116154003').status
+      - text: Assistant
+        type: string
+        linkId: assistant
+        readOnly: true
+        initialExpression:
+          language: text/fhirpath
+          expression: participant.where(type.coding.code = 'SPRF').status
+      - text: Anaesthetist
+        type: string
+        linkId: anaesthetist
+        readOnly: true
+        initialExpression:
+          language: text/fhirpath
+          expression: participant.where(type.coding.code = '88189002').status
+      - text: Hospital
+        type: string
+        linkId: hospital
+        readOnly: true
+        initialExpression:
+          language: text/fhirpath
+          expression: participant.where(type.coding.code = '22232009').status
+    type: group
+    linkId: appointments
+    readOnly: true
+    repeats: true
+    itemControl:
+      coding:
+        - code: gtable
+    itemPopulationContext:
+      language: text/fhirpath
+      expression: '%AppointmentBundle.entry.resource.entry.resource'
+  - text: Updated status
+    type: choice
+    linkId: newStatus
+    answerValueSet: appointmentstatus
+mapping:
+  - id: theatre
+    resourceType: Mapping
+resourceType: Questionnaire
+title: Sport Preferences
+contained:
+  - id: AppointmentBundle
+    type: transaction
+    entry:
+      - request:
+          url: /Appointment?status:not=entered-in-error&_sort=date
+          method: GET
+    resourceType: Bundle
+sourceQueries:
+  - localRef: Bundle#AppointmentBundle
+status: active

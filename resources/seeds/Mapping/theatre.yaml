@@ -1,0 +1,11 @@
+body:
+  type: transaction
+  entry:
+    '{{ QuestionnaireResponse.repeat(item).where(linkId=''appointments'' and item.where(linkId=''Select'' and answer.valueBoolean).exists()).item.where(linkId=''id'').answer }}':
+      request:
+        url: '{{ ''/Appointment/'' + valueString }}'
+        method: PATCH
+      resource:
+        status: '{{ %root.item.where(linkId=''newStatus'').answer.valueCoding.code }}'
+type: FHIRPath
+resourceType: Mapping

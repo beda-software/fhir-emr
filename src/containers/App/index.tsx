@@ -11,6 +11,7 @@ import { User } from 'shared/src/contrib/aidbox';
 
 import { AnonymousLayout, BaseLayout } from 'src/components/BaseLayout';
 import { Spinner } from 'src/components/Spinner';
+import { Theatre } from 'src/components/Theatre';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { EncounterList } from 'src/containers/EncounterList';
 import { PatientDetails } from 'src/containers/PatientDetails';
@@ -201,6 +202,7 @@ function AuthenticatedReceptionistUserApp() {
                 <Route path="/invoices/:id" element={<InvoiceDetails />} />
                 <Route path="/medications" element={<MedicationManagement />} />
                 <Route path="/prescriptions" element={<Prescriptions />} />
+                <Route path="/theatre" element={<Theatre />} />
                 <Route path="*" element={<Navigate to="/scheduling" />} />
             </Routes>
         </BaseLayout>
