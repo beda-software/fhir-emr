@@ -49,23 +49,25 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
                     />
                 );
             })}
-            <div>
-                <Button
-                    icon={<PlusOutlined />}
-                    type="link"
-                    className={s.addButton}
-                    onClick={() => {
-                        const existingItems = items || [];
-                        const updatedInput = { items: [...existingItems, {}] };
-                        onChange(updatedInput);
-                    }}
-                    size="small"
-                >
-                    <span>
-                        <Trans>Add another answer</Trans>
-                    </span>
-                </Button>
-            </div>
+            {groupItem.questionItem.readOnly ? null : (
+                <div>
+                    <Button
+                        icon={<PlusOutlined />}
+                        type="link"
+                        className={s.addButton}
+                        onClick={() => {
+                            const existingItems = items || [];
+                            const updatedInput = { items: [...existingItems, {}] };
+                            onChange(updatedInput);
+                        }}
+                        size="small"
+                    >
+                        <span>
+                            <Trans>Add another answer</Trans>
+                        </span>
+                    </Button>
+                </div>
+            )}
         </div>
     );
 }
@@ -127,13 +129,17 @@ export function RepeatableGroupRow(props: RepeatableGroupProps) {
         <div className={s.row}>
             <QuestionItems questionItems={item!} parentPath={parentPath} context={context} />
             <div className={s.rowControls}>
-                <Button
-                    icon={<CloseCircleOutlined />}
-                    type="link"
-                    danger
-                    className={s.removeButton}
-                    onClick={onRemove}
-                />
+                {questionItem.readOnly ? (
+                    <span style={{ width: 18 }} />
+                ) : (
+                    <Button
+                        icon={<CloseCircleOutlined />}
+                        type="link"
+                        danger
+                        className={s.removeButton}
+                        onClick={onRemove}
+                    />
+                )}
             </div>
         </div>
     );

@@ -52,7 +52,7 @@ export function useHealthcareServicePractitionerSelect() {
                 return response.data.map((resource) => {
                     return {
                         value: resource.id,
-                        label: resource.type?.[0]?.text,
+                        label: resource.type?.[0]?.text ?? resource.name,
                     };
                 });
             }
