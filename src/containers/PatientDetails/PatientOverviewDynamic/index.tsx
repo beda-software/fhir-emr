@@ -11,21 +11,27 @@ export interface PatientOverviewProps {
     reload: () => void;
 }
 
-export function PatientOverview(props: PatientOverviewProps) {
+function useDashboard() {
     const { patientDashboard } = useContext(PatientDashboardContext);
+    // TODO select dashboard based on the role
+    return patientDashboard.default;
+}
+
+export function PatientOverview(props: PatientOverviewProps) {
+    const patientDashboard = useDashboard();
 
     return (
         <div className={s.container}>
-            <Dashboards widgets={patientDashboard.default.top} {...props} />
+            <Dashboards widgets={patientDashboard.top} {...props} />
             <div className={s.cards}>
                 <div className={s.column}>
-                    <Dashboards widgets={patientDashboard.default.left} {...props} />
+                    <Dashboards widgets={patientDashboard.left} {...props} />
                 </div>
                 <div className={s.column}>
-                    <Dashboards widgets={patientDashboard.default.right} {...props} />
+                    <Dashboards widgets={patientDashboard.right} {...props} />
                 </div>
             </div>
-            <Dashboards widgets={patientDashboard.default.bottom} {...props} />
+            <Dashboards widgets={patientDashboard.bottom} {...props} />
         </div>
     );
 }
