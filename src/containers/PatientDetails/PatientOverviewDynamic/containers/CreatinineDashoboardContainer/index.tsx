@@ -10,8 +10,8 @@ interface CreatinineDashoboardContainerProps {
 }
 
 export function CreatinineDashoboardContainer({ patient, widgetInfo }: CreatinineDashoboardContainerProps) {
-    const searchParams = widgetInfo.query.search;
-    const { creatinineObservations, reloadCreatinineObservations } = useCreatinineDashoboard(patient, searchParams);
+    const searchParams = widgetInfo.query.search(patient);
+    const { creatinineObservations, reloadCreatinineObservations } = useCreatinineDashoboard(searchParams);
 
     return (
         <CreatinineDashoboard

@@ -1,28 +1,45 @@
-import { Patient } from 'fhir/r4b';
+import {
+    AllergyIntolerance,
+    Condition,
+    Consent,
+    Immunization,
+    MedicationStatement,
+    Observation,
+    Patient,
+    Provenance,
+    ServiceRequest,
+    Appointment,
+    Encounter,
+} from 'fhir/r4b';
 import { createContext, useState } from 'react';
 
 import { SearchParams } from '@beda.software/fhir-react';
-import { RemoteData } from '@beda.software/remote-data';
 
-import { ObservationWithDate } from 'src/components/DashboardCard/creatinine';
 import { Role } from 'src/utils/role';
 
-interface WidgetProps {
-    // TODO WIP
-    observationsRemoteData: RemoteData<ObservationWithDate[]>;
-    patient: Patient;
-    reload: () => void;
-}
-
-interface WidgetComponent extends React.FunctionComponent<WidgetProps> {
+interface WidgetComponent extends React.FunctionComponent<never> {
     displayName: string;
 }
 
+export type Resource =
+    | AllergyIntolerance
+    | Condition
+    | Immunization
+    | MedicationStatement
+    | Consent
+    | Observation
+    | Provenance
+    | ServiceRequest
+    | Appointment
+    | Encounter;
+
+export interface Query {
+    resourceType: Resource['resourceType'];
+    search: (patient: Patient) => SearchParams;
+}
+
 export interface WidgetInfo {
-    query: {
-        resourceType: string;
-        search: SearchParams;
-    };
+    query: Query;
     widget: WidgetComponent;
 }
 

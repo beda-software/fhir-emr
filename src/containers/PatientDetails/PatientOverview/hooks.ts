@@ -85,6 +85,7 @@ export function usePatientOverview(props: Props) {
     const [creatinineObservations, setCreatinineObservations] =
         useState<RemoteData<Array<ObservationWithDate>>>(loading);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_creatinine, manager] = useService(async () => {
         const result = mapSuccess(
             await getFHIRResources<Observation>('Observation', {

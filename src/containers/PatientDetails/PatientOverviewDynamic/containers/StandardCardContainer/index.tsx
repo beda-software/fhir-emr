@@ -1,8 +1,12 @@
 import { Patient } from 'fhir/r4b';
 
+import { RenderRemoteData } from '@beda.software/fhir-react';
+
+import { Spinner } from 'src/components/Spinner';
 import { WidgetInfo } from 'src/contexts/PatientDashboardContext';
 
 import { useStandardCard } from './hooks';
+import { StandardCard } from '../../components/StandardCard';
 
 interface StandardCardContainerProps {
     patient: Patient;
@@ -10,8 +14,11 @@ interface StandardCardContainerProps {
 }
 
 export function StandardCardContainer({ patient, widgetInfo }: StandardCardContainerProps) {
-    const searchParams = widgetInfo.query.search;
-    useStandardCard(patient, searchParams);
+    const { response } = useStandardCard(patient, widgetInfo.query);
 
-    return <div style={{ color: '#ff0000' }}>{JSON.stringify(searchParams)}</div>;
+    return (
+        <RenderRemoteData remoteData={response} renderLoading={Spinner}>
+            {({ card }) => <StandardCard card={card} />}
+        </RenderRemoteData>
+    );
 }

@@ -1,9 +1,23 @@
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
+import {
+    AllergyIntolerance,
+    Appointment,
+    Condition,
+    Consent,
+    Immunization,
+    MedicationStatement,
+    Observation,
+    Patient,
+    ServiceRequest,
+} from 'fhir/r4b';
+import moment from 'moment';
 import React, { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import 'src/services/initialize';
+
+import { formatFHIRDate } from '@beda.software/fhir-react';
 
 import { dynamicActivate, getCurrentLocale } from 'shared/src/services/i18n';
 
@@ -13,8 +27,10 @@ import 'src/styles/index.scss';
 import { CreatinineDashoboard } from 'src/components/DashboardCard/creatinine';
 import { App } from 'src/containers/App';
 import { StandardCard } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard';
-import { PatientDashboardProvider } from 'src/contexts/PatientDashboardContext';
+import { PatientDashboardProvider, Query } from 'src/contexts/PatientDashboardContext';
 
+import { AppointmentCard } from './containers/PatientDetails/PatientOverviewDynamic/components/AppointmentCard';
+import { GeneralInformationDashboard } from './containers/PatientDetails/PatientOverviewDynamic/components/GeneralInformationDashboard';
 import * as serviceWorker from './serviceWorker';
 import { ThemeProvider } from './theme/ThemeProvider';
 // import { Role } from './utils/role';
@@ -25,48 +41,12 @@ export const dashboard = {
         top: [
             {
                 query: {
-                    resourceType: 'Observation',
-                    search: {
-                        text: 'TOP CARD 1',
-                    },
-                },
-                widget: StandardCard,
-            },
-            {
-                query: {
-                    resourceType: 'Observation',
-                    search: {
-                        text: 'TOP CARD 2',
-                    },
-                },
-                widget: StandardCard,
-            },
-            {
-                query: {
-                    resourceType: 'Observation',
-                    search: {
+                    resourceType: 'Observation' as Observation['resourceType'],
+                    search: (patient: Patient) => ({
+                        patient: patient.id,
                         code: 'http://loinc.org|2160-0',
                         _sort: ['-date'],
-                    },
-                },
-                widget: CreatinineDashoboard,
-            },
-            {
-                query: {
-                    resourceType: 'Observation',
-                    search: {
-                        text: 'TOP CARD 3',
-                    },
-                },
-                widget: StandardCard,
-            },
-            {
-                query: {
-                    resourceType: 'Observation',
-                    search: {
-                        code: 'http://loinc.org|2160-0',
-                        _sort: ['-date'],
-                    },
+                    }),
                 },
                 widget: CreatinineDashoboard,
             },
@@ -74,28 +54,37 @@ export const dashboard = {
         right: [
             {
                 query: {
-                    resourceType: 'Observation',
-                    search: {
-                        text: 'RIGHT CARD 1',
-                    },
+                    resourceType: 'Condition' as Condition['resourceType'],
+                    search: (patient: Patient) => ({
+                        patient: patient.id,
+                        _sort: ['-_recorded-date'],
+                        _revinclude: ['Provenance:target'],
+                        _count: 7,
+                    }),
                 },
                 widget: StandardCard,
             },
             {
                 query: {
-                    resourceType: 'Observation',
-                    search: {
-                        text: 'RIGHT CARD 2',
-                    },
+                    resourceType: 'AllergyIntolerance' as AllergyIntolerance['resourceType'],
+                    search: (patient: Patient) => ({
+                        patient: patient.id,
+                        _sort: ['-_date'],
+                        _revinclude: ['Provenance:target'],
+                        _count: 7,
+                    }),
                 },
                 widget: StandardCard,
             },
             {
                 query: {
-                    resourceType: 'Observation',
-                    search: {
-                        text: 'RIGHT CARD 3',
-                    },
+                    resourceType: 'Immunization' as Immunization['resourceType'],
+                    search: (patient: Patient) => ({
+                        patient: patient.id,
+                        _sort: ['-_date'],
+                        _revinclude: ['Provenance:target'],
+                        _count: 7,
+                    }),
                 },
                 widget: StandardCard,
             },
@@ -103,10 +92,38 @@ export const dashboard = {
         left: [
             {
                 query: {
-                    resourceType: 'Observation',
-                    search: {
-                        text: 'LEFT CARD 1',
-                    },
+                    resourceType: 'MedicationStatement' as MedicationStatement['resourceType'],
+                    search: (patient: Patient) => ({
+                        patient: patient.id,
+                        _sort: ['-_lastUpdated'],
+                        _revinclude: ['Provenance:target'],
+                        _count: 7,
+                    }),
+                },
+                widget: StandardCard,
+            },
+            {
+                query: {
+                    resourceType: 'Consent' as Consent['resourceType'],
+                    search: (patient: Patient) => ({
+                        patient: patient.id,
+                        status: 'active',
+                        _sort: ['-_lastUpdated'],
+                        _revinclude: ['Provenance:target'],
+                        _count: 7,
+                    }),
+                },
+                widget: StandardCard,
+            },
+            {
+                query: {
+                    resourceType: 'Observation' as Observation['resourceType'],
+                    search: (patient: Patient) => ({
+                        patient: patient.id,
+                        status: 'final',
+                        code: 'activity-summary',
+                        date: `ge${formatFHIRDate(moment().subtract(6, 'days'))}`,
+                    }),
                 },
                 widget: StandardCard,
             },
@@ -114,12 +131,28 @@ export const dashboard = {
         bottom: [
             {
                 query: {
-                    resourceType: 'Observation',
-                    search: {
-                        text: 'BOTTOM CARD 1',
-                    },
+                    resourceType: 'ServiceRequest' as ServiceRequest['resourceType'],
+                    search: (patient: Patient) => ({
+                        subject: patient.id,
+                    }),
                 },
                 widget: StandardCard,
+            },
+            {
+                query: {
+                    resourceType: 'Appointment' as Appointment['resourceType'],
+                    search: (patient: Patient) => ({
+                        actor: patient.id,
+                        // date: [`ge${formatFHIRDateTime(moment().startOf('day'))}`],
+                        // _revinclude: ['Encounter:appointment'],
+                        // 'status:not': ['entered-in-error,cancelled,checked-in'],
+                    }),
+                },
+                widget: AppointmentCard,
+            },
+            {
+                query: {} as Query,
+                widget: GeneralInformationDashboard,
             },
         ],
     },

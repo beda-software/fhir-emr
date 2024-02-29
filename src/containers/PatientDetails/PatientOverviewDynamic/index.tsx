@@ -16,16 +16,16 @@ export function PatientOverview(props: PatientOverviewProps) {
 
     return (
         <div className={s.container}>
-            <Dashboards patient={props.patient} widgets={patientDashboard.default.top} />
+            <Dashboards widgets={patientDashboard.default.top} {...props} />
             <div className={s.cards}>
                 <div className={s.column}>
-                    <Dashboards patient={props.patient} widgets={patientDashboard.default.left} />
+                    <Dashboards widgets={patientDashboard.default.left} {...props} />
                 </div>
                 <div className={s.column}>
-                    <Dashboards patient={props.patient} widgets={patientDashboard.default.right} />
+                    <Dashboards widgets={patientDashboard.default.right} {...props} />
                 </div>
             </div>
-            <Dashboards patient={props.patient} widgets={patientDashboard.default.bottom} />
+            <Dashboards widgets={patientDashboard.default.bottom} {...props} />
         </div>
     );
 }

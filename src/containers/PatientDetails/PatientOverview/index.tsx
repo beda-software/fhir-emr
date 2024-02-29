@@ -162,6 +162,7 @@ interface StartEncounterProps {
     onClose?: () => void;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useStartEncounter(props: StartEncounterProps) {
     const { appointmentId } = props;
     const { navigateToEncounter } = useNavigateToEncounter();
