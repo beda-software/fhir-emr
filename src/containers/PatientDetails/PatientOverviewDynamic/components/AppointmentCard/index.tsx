@@ -33,5 +33,3 @@ export function AppointmentCard({ appointment }: Props) {
         </DashboardCard>
     );
 }
-
-AppointmentCard.displayName = 'AppointmentCard';

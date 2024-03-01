@@ -1,23 +1,15 @@
 import { Patient } from 'fhir/r4b';
-import { useContext } from 'react';
 
 import { Dashboards } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/Dashboards';
-import { PatientDashboardContext } from 'src/contexts/PatientDashboardContext';
+import { useDashboard } from 'src/containers/PatientDetails/PatientOverviewDynamic/hooks';
 
 import s from './PatientOverview.module.scss';
 
-export interface PatientOverviewProps {
+interface Props {
     patient: Patient;
-    reload: () => void;
 }
 
-function useDashboard() {
-    const { patientDashboard } = useContext(PatientDashboardContext);
-    // TODO select dashboard based on the role
-    return patientDashboard.default;
-}
-
-export function PatientOverview(props: PatientOverviewProps) {
+export function PatientOverview(props: Props) {
     const patientDashboard = useDashboard();
 
     return (

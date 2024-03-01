@@ -1,16 +1,14 @@
-import { Patient } from 'fhir/r4b';
-
 import { CreatinineDashoboard } from 'src/components/DashboardCard/creatinine';
 import { useCreatinineDashoboard } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/CreatinineDashoboardContainer/hooks';
-import { WidgetInfo } from 'src/contexts/PatientDashboardContext';
+import { ContainerProps } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/Dashboards';
 
-interface CreatinineDashoboardContainerProps {
-    patient: Patient;
-    widgetInfo: WidgetInfo;
-}
-
-export function CreatinineDashoboardContainer({ patient, widgetInfo }: CreatinineDashoboardContainerProps) {
+export function CreatinineDashoboardContainer({ patient, widgetInfo }: ContainerProps) {
+    if (!widgetInfo.query) {
+        return <div>Error: no query parameter for the widget.</div>;
+    }
+    
     const searchParams = widgetInfo.query.search(patient);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const { creatinineObservations, reloadCreatinineObservations } = useCreatinineDashoboard(searchParams);
 
     return (

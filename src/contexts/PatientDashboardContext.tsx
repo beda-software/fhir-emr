@@ -1,46 +1,24 @@
-import {
-    AllergyIntolerance,
-    Condition,
-    Consent,
-    Immunization,
-    MedicationStatement,
-    Observation,
-    Patient,
-    Provenance,
-    ServiceRequest,
-    Appointment,
-    Encounter,
-} from 'fhir/r4b';
+import { FhirResource, Patient } from 'fhir/r4b';
 import { createContext, useState } from 'react';
 
 import { SearchParams } from '@beda.software/fhir-react';
 
 import { Role } from 'src/utils/role';
 
-interface WidgetComponent extends React.FunctionComponent<never> {
-    displayName: string;
-}
-
-export type Resource =
-    | AllergyIntolerance
-    | Condition
-    | Immunization
-    | MedicationStatement
-    | Consent
-    | Observation
-    | Provenance
-    | ServiceRequest
-    | Appointment
-    | Encounter;
-
 export interface Query {
-    resourceType: Resource['resourceType'];
+    resourceType: FhirResource['resourceType'];
     search: (patient: Patient) => SearchParams;
 }
 
+export interface WidgetProps {
+    patient: Patient;
+    widgetInfo: WidgetInfo;
+    reload?: () => void;
+}
+
 export interface WidgetInfo {
-    query: Query;
-    widget: WidgetComponent;
+    widget: React.FunctionComponent<WidgetProps>;
+    query?: Query;
 }
 
 interface Dashboard {

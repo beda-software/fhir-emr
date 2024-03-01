@@ -32,5 +32,3 @@ export function StandardCard({ card }: Props) {
         </DashboardCard>
     );
 }
-
-StandardCard.displayName = 'StandardCard';

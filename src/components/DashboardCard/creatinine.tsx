@@ -115,4 +115,3 @@ export function CreatinineDashoboard({ observationsRemoteData, patient, reload }
     );
 }
 
-CreatinineDashoboard.displayName = 'CreatinineDashoboard';

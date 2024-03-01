@@ -7,11 +7,10 @@ import { WidgetInfo } from 'src/contexts/PatientDashboardContext';
 interface GeneralInformationDashboardContainerProps {
     patient: Patient;
     widgetInfo: WidgetInfo;
-    reload: () => void;
 }
 
-export function GeneralInformationDashboardContainer({ patient, reload }: GeneralInformationDashboardContainerProps) {
+export function GeneralInformationDashboardContainer({ patient }: GeneralInformationDashboardContainerProps) {
     const { patientDetails } = useGeneralInformationDashboard(patient);
 
-    return <GeneralInformationDashboard patientDetails={patientDetails} props={{ patient, reload }} />;
+    return <GeneralInformationDashboard patientDetails={patientDetails} patient={patient} />;
 }

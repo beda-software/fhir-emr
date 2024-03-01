@@ -319,7 +319,11 @@ export function prepareAppointmentDetails(appointment: Appointment) {
     return appointmentDetails;
 }
 
-export function prepareSeriveRequest(serviceRequests: ServiceRequest[], total: number): OverviewCard<ServiceRequest> {
+export function prepareSeriveRequest(
+    serviceRequests: ServiceRequest[],
+    _provenanceList: Provenance[],
+    total: number,
+): OverviewCard<ServiceRequest> {
     return {
         title: t`Orders`,
         key: 'service-reuqest',

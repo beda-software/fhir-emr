@@ -1,18 +1,16 @@
-import { Patient } from 'fhir/r4b';
-
 import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { Spinner } from 'src/components/Spinner';
 import { AppointmentCard } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/AppointmentCard';
 import { useAppointmentCard } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/AppointmentCardContainer/hooks';
-import { WidgetInfo } from 'src/contexts/PatientDashboardContext';
+import { ContainerProps } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/Dashboards';
 
-interface AppointmentCardContainerProps {
-    patient: Patient;
-    widgetInfo: WidgetInfo;
-}
+export function AppointmentCardContainer({ patient, widgetInfo }: ContainerProps) {
+    if (!widgetInfo.query) {
+        return <div>Error: no query parameter for the widget.</div>;
+    }
 
-export function AppointmentCardContainer({ patient, widgetInfo }: AppointmentCardContainerProps) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const { response } = useAppointmentCard(patient, widgetInfo.query);
 
     return (
