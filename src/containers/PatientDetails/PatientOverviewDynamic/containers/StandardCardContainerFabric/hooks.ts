@@ -1,15 +1,14 @@
-import { Patient, Provenance, FhirResource } from 'fhir/r4b';
+import { Patient, FhirResource } from 'fhir/r4b';
 
 import { extractBundleResources, useService } from '@beda.software/fhir-react';
 import { mapSuccess, resolveMap } from '@beda.software/remote-data';
 
 import { Query } from 'src/components/Dashboard/types';
-import { OverviewCard } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/types';
+import {
+    OverviewCard,
+    PrepareFunction,
+} from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/types';
 import { getFHIRResources } from 'src/services/fhir';
-
-export type PrepareFunction =
-    | ((resources: FhirResource[], provenances: Provenance[], total: number) => OverviewCard<FhirResource>)
-    | ((resources: FhirResource[]) => OverviewCard<FhirResource[]>);
 
 export function useStandardCard(patient: Patient, query: Query, prepareFunction: PrepareFunction) {
     const [response] = useService(async () => {

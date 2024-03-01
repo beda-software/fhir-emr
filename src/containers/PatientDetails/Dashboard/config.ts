@@ -13,11 +13,11 @@ import {
     prepareMedications,
     prepareSeriveRequest,
 } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare';
+import { PrepareFunction } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/types';
 import { AppointmentCardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/AppointmentCardContainer';
 import { CreatinineDashoboardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/CreatinineDashoboardContainer';
 import { GeneralInformationDashboardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer';
 import { StandardCardContainerFabric } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/StandardCardContainerFabric';
-import { PrepareFunction } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/StandardCardContainerFabric/hooks';
 
 export const patientDashboardConfig: DashboardInstance = {
     top: [
