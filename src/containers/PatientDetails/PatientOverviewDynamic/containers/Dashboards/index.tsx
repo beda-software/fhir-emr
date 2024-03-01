@@ -21,5 +21,5 @@ export function Dashboards(props: Props) {
         return <WidgetComponent key={index} patient={patient} widgetInfo={widgetInfo} />;
     });
 
-    return <div>{dashboardComponents}</div>;
+    return <>{dashboardComponents}</>;
 }
