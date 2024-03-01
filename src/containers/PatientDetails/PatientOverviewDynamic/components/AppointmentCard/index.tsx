@@ -3,10 +3,10 @@ import { t } from '@lingui/macro';
 import { Appointment } from 'fhir/r4b';
 
 import { DashboardCard } from 'src/components/DashboardCard';
+import { prepareAppointmentDetails } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare';
 import { StartEncounter } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StartEncounter';
 import s from 'src/containers/PatientDetails/PatientOverviewDynamic/PatientOverview.module.scss';
 import { S } from 'src/containers/PatientDetails/PatientOverviewDynamic/PatientOverview.styles';
-import { prepareAppointmentDetails } from 'src/containers/PatientDetails/PatientOverviewDynamic/utils';
 
 interface Props {
     appointment: Appointment;

@@ -6,15 +6,16 @@ import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-f
 
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { usePatientReload } from 'src/containers/PatientDetails/Dashboard/contexts';
 import s from 'src/containers/PatientDetails/PatientOverviewDynamic/PatientOverview.module.scss';
-import { useReload } from 'src/contexts/ReloadContext';
 
 interface Props {
     patient: Patient;
 }
 
 export function EditPatient({ patient }: Props) {
-    const reload = useReload();
+    const reload = usePatientReload();
+
     return (
         <ModalTrigger
             title={t`Edit patient`}

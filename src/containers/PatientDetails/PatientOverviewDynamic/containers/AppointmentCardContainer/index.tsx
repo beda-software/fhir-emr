@@ -1,9 +1,9 @@
 import { RenderRemoteData } from '@beda.software/fhir-react';
 
+import { ContainerProps } from 'src/components/Dashboard/types';
 import { Spinner } from 'src/components/Spinner';
 import { AppointmentCard } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/AppointmentCard';
 import { useAppointmentCard } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/AppointmentCardContainer/hooks';
-import { ContainerProps } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/Dashboards';
 
 export function AppointmentCardContainer({ patient, widgetInfo }: ContainerProps) {
     if (!widgetInfo.query) {

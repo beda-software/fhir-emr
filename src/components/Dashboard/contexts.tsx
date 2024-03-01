@@ -1,39 +1,7 @@
-import { FhirResource, Patient } from 'fhir/r4b';
 import { createContext, useState } from 'react';
 
-import { SearchParams } from '@beda.software/fhir-react';
-
+import { Dashboard } from 'src/components/Dashboard/types';
 import { Role } from 'src/utils/role';
-
-export interface Query {
-    resourceType: FhirResource['resourceType'];
-    search: (patient: Patient) => SearchParams;
-}
-
-export interface WidgetProps {
-    patient: Patient;
-    widgetInfo: WidgetInfo;
-    reload?: () => void;
-}
-
-export interface WidgetInfo {
-    widget: React.FunctionComponent<WidgetProps>;
-    query?: Query;
-}
-
-interface Dashboard {
-    default: {
-        top: WidgetInfo[];
-        right: WidgetInfo[];
-        left: WidgetInfo[];
-        bottom: WidgetInfo[];
-    };
-}
-
-interface Props {
-    dashboard: Dashboard;
-    children: JSX.Element;
-}
 
 interface DashboardContextType {
     patientDashboard: Dashboard;
@@ -55,6 +23,11 @@ const defaultDashboardContextValue: DashboardContextType = {
 };
 
 export const PatientDashboardContext = createContext<DashboardContextType>(defaultDashboardContextValue);
+
+interface Props {
+    dashboard: Dashboard;
+    children: JSX.Element;
+}
 
 export function PatientDashboardProvider({ dashboard, children }: Props) {
     const [patientDashboard, setPatientDashboard] = useState(dashboard);

@@ -1,14 +1,15 @@
 import { Trans } from '@lingui/macro';
+import { Resource } from 'fhir/r4b';
 import { Link, useLocation } from 'react-router-dom';
 
 import { DashboardCard, DashboardCardTable } from 'src/components/DashboardCard';
-import { OverviewCard } from 'src/containers/PatientDetails/PatientOverviewDynamic/utils';
+import { OverviewCard } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/types';
 
-interface Props {
-    card: OverviewCard;
+interface Props<T extends Resource> {
+    card: OverviewCard<T>;
 }
 
-export function StandardCard({ card }: Props) {
+export function StandardCard<T extends Resource>({ card }: Props<T>) {
     const location = useLocation();
 
     return (

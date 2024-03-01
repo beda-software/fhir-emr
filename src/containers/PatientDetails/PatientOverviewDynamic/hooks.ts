@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { PatientDashboardContext } from 'src/contexts/PatientDashboardContext';
+import { PatientDashboardContext } from 'src/components/Dashboard/contexts';
 
 export function useDashboard() {
     const { patientDashboard } = useContext(PatientDashboardContext);

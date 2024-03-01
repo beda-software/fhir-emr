@@ -1,11 +1,6 @@
 import { Patient } from 'fhir/r4b';
 
-import { WidgetInfo } from 'src/contexts/PatientDashboardContext';
-
-export interface ContainerProps {
-    patient: Patient;
-    widgetInfo: WidgetInfo;
-}
+import { WidgetInfo } from 'src/components/Dashboard/types';
 
 interface Props {
     patient: Patient;

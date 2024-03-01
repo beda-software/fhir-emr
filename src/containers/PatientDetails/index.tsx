@@ -9,7 +9,7 @@ import { BasePageContent } from 'src/components/BaseLayout';
 import { RouteItem } from 'src/components/BaseLayout/Sidebar/SidebarTop';
 import { PatientEncounter } from 'src/components/PatientEncounter';
 import { Spinner } from 'src/components/Spinner';
-import { ReloadProvider } from 'src/contexts/ReloadContext';
+import { PatientReloadProvider } from 'src/containers/PatientDetails/Dashboard/contexts';
 import { matchCurrentUserRole, selectCurrentUserRoleResource, Role } from 'src/utils/role';
 
 import { usePatientResource } from './hooks';
@@ -47,7 +47,7 @@ export const PatientDetails = (props: PatientDetailsProps) => {
         <RenderRemoteData remoteData={patientResponse} renderLoading={Spinner}>
             {(patient) => {
                 return (
-                    <ReloadProvider reload={manager.softReloadAsync}>
+                    <PatientReloadProvider reload={manager.softReloadAsync}>
                         <PatientHeaderContextProvider patient={patient}>
                             <PatientHeader extraMenuItems={embeddedPages} />
                             <BasePageContent>
@@ -117,7 +117,7 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                 </Routes>
                             </BasePageContent>
                         </PatientHeaderContextProvider>
-                    </ReloadProvider>
+                    </PatientReloadProvider>
                 );
             }}
         </RenderRemoteData>
