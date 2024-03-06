@@ -27,3 +27,4 @@ FHIR_EMR_AUTH_URL="http://localhost:3000/auth"
 SDC_IDE_AUTH_URL="http://localhost:3001/auth"
 
 BOX_FEATURES_FTR_PULL_ENABLE=false
+AIDBOX_SDC_ENABLED=false

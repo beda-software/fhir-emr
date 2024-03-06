@@ -4,7 +4,7 @@ import { Button } from 'antd';
 import classNames from 'classnames';
 import { QuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
-import React, { ComponentType, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { ComponentType, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
     calcInitialContext,
@@ -30,6 +30,7 @@ import { saveQuestionnaireResponseDraft } from 'src/components/QuestionnaireResp
 import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
 import s from './BaseQuestionnaireResponseForm.module.scss';
+import { ItemControlGroupItemWidgetsContext, ItemControlQuestionItemWidgetsContext } from './context';
 import { groupComponent, groupControlComponents, itemComponents, itemControlComponents } from './controls';
 
 export interface BaseQuestionnaireResponseFormProps {
@@ -159,6 +160,9 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         [GroupWrapper],
     );
 
+    const itemControlQuestionItemFromContext = useContext(ItemControlQuestionItemWidgetsContext);
+    const itemControlQuestionGroupFromContext = useContext(ItemControlGroupItemWidgetsContext);
+
     const questionItemComponents = useMemo(
         () =>
             wrapControls({
@@ -171,18 +175,20 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         () =>
             wrapControls({
                 ...itemControlComponents,
+                ...itemControlQuestionItemFromContext,
                 ...props.itemControlQuestionItemComponents,
             }),
-        [wrapControls, props.itemControlQuestionItemComponents],
+        [wrapControls, itemControlQuestionItemFromContext, props.itemControlQuestionItemComponents],
     );
 
     const itemControlGroupItemComponents = useMemo(
         () =>
             wrapGroups({
                 ...groupControlComponents,
+                ...itemControlQuestionGroupFromContext,
                 ...props.itemControlGroupItemComponents,
             }),
-        [wrapGroups, props.itemControlGroupItemComponents],
+        [wrapGroups, itemControlQuestionGroupFromContext, props.itemControlGroupItemComponents],
     );
     const groupItemComponent = useMemo(
         () =>

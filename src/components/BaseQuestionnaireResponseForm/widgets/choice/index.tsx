@@ -23,7 +23,7 @@ interface ChoiceQuestionSelectProps {
     repeats?: boolean;
 }
 
-function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
+export function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
     const { value, onChange, options, repeats = false } = props;
 
     return (
@@ -79,7 +79,7 @@ interface ChoiceQuestionValueSetProps {
     repeats?: boolean;
 }
 
-function ChoiceQuestionValueSet(props: ChoiceQuestionValueSetProps) {
+export function ChoiceQuestionValueSet(props: ChoiceQuestionValueSetProps) {
     const { answerValueSet, value, onChange, repeats = false } = props;
     const valueSetId = answerValueSet.split('/').slice(-1);
 
