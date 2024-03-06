@@ -1,11 +1,9 @@
 import { createContext, useState } from 'react';
 
 import { Dashboard } from 'src/components/Dashboard/types';
-import { Role } from 'src/utils/role';
 
 interface DashboardContextType {
     patientDashboard: Dashboard;
-    updatePatientDashboard: (role: Role, updatedDashboard: Dashboard) => void;
 }
 
 const defaultDashboardContextValue: DashboardContextType = {
@@ -17,9 +15,6 @@ const defaultDashboardContextValue: DashboardContextType = {
             bottom: [],
         },
     },
-    updatePatientDashboard: () => {
-        console.log('updatePatientDashboard');
-    },
 };
 
 export const PatientDashboardContext = createContext<DashboardContextType>(defaultDashboardContextValue);
@@ -30,18 +25,7 @@ interface Props {
 }
 
 export function PatientDashboardProvider({ dashboard, children }: Props) {
-    const [patientDashboard, setPatientDashboard] = useState(dashboard);
+    const [patientDashboard] = useState(dashboard);
 
-    const updatePatientDashboard = (role: Role, updatedDashboard: Dashboard) => {
-        setPatientDashboard((prevDashboards) => ({
-            ...prevDashboards,
-            [role]: updatedDashboard,
-        }));
-    };
-
-    return (
-        <PatientDashboardContext.Provider value={{ patientDashboard, updatePatientDashboard }}>
-            {children}
-        </PatientDashboardContext.Provider>
-    );
+    return <PatientDashboardContext.Provider value={{ patientDashboard }}>{children}</PatientDashboardContext.Provider>;
 }

@@ -1,4 +1,4 @@
-import { FhirResource } from 'fhir/r4b';
+import { Resource } from 'fhir/r4b';
 
 import { RenderRemoteData } from '@beda.software/fhir-react';
 
@@ -11,7 +11,7 @@ import {
 } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/types';
 import { useStandardCard } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/StandardCardContainerFabric/hooks';
 
-export function StandardCardContainerFabric(prepareFunction: PrepareFunction) {
+export function StandardCardContainerFabric<T extends Resource>(prepareFunction: PrepareFunction<T>) {
     return function StandardCardContainer({ patient, widgetInfo }: ContainerProps) {
         if (!widgetInfo.query) {
             return <div>Error: no query parameter for the widget.</div>;
@@ -22,7 +22,7 @@ export function StandardCardContainerFabric(prepareFunction: PrepareFunction) {
 
         return (
             <RenderRemoteData remoteData={response} renderLoading={Spinner}>
-                {({ card }) => <StandardCard card={card as OverviewCard<FhirResource>} />}
+                {({ card }) => <StandardCard card={card as OverviewCard<T>} />}
             </RenderRemoteData>
         );
     };

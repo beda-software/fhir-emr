@@ -13,14 +13,15 @@ import {
     prepareMedications,
     prepareSeriveRequest,
 } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare';
-import { PrepareFunction } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/types';
-import { AppointmentCardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/AppointmentCardContainer';
 import { CreatinineDashoboardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/CreatinineDashoboardContainer';
 import { GeneralInformationDashboardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer';
 import { StandardCardContainerFabric } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/StandardCardContainerFabric';
 
 export const patientDashboardConfig: DashboardInstance = {
     top: [
+        {
+            widget: GeneralInformationDashboardContainer,
+        },
         {
             query: {
                 resourceType: 'Observation',
@@ -33,19 +34,7 @@ export const patientDashboardConfig: DashboardInstance = {
             widget: CreatinineDashoboardContainer,
         },
     ],
-    right: [
-        {
-            query: {
-                resourceType: 'Condition',
-                search: (patient: Patient) => ({
-                    patient: patient.id,
-                    _sort: ['-_recorded-date'],
-                    _revinclude: ['Provenance:target'],
-                    _count: 7,
-                }),
-            },
-            widget: StandardCardContainerFabric(prepareConditions as PrepareFunction),
-        },
+    left: [
         {
             query: {
                 resourceType: 'AllergyIntolerance',
@@ -56,22 +45,32 @@ export const patientDashboardConfig: DashboardInstance = {
                     _count: 7,
                 }),
             },
-            widget: StandardCardContainerFabric(prepareAllergies as PrepareFunction),
+            widget: StandardCardContainerFabric(prepareAllergies),
         },
         {
             query: {
-                resourceType: 'Immunization',
+                resourceType: 'Condition',
                 search: (patient: Patient) => ({
                     patient: patient.id,
-                    _sort: ['-_date'],
+                    _sort: ['-_recorded-date'],
                     _revinclude: ['Provenance:target'],
                     _count: 7,
                 }),
             },
-            widget: StandardCardContainerFabric(prepareImmunizations as PrepareFunction),
+            widget: StandardCardContainerFabric(prepareConditions),
         },
-    ],
-    left: [
+        {
+            query: {
+                resourceType: 'Observation',
+                search: (patient: Patient) => ({
+                    patient: patient.id,
+                    status: 'final',
+                    code: 'activity-summary',
+                    date: `ge${formatFHIRDate(moment().subtract(6, 'days'))}`,
+                }),
+            },
+            widget: StandardCardContainerFabric(prepareActivitySummary),
+        },
         {
             query: {
                 resourceType: 'MedicationStatement',
@@ -82,7 +81,21 @@ export const patientDashboardConfig: DashboardInstance = {
                     _count: 7,
                 }),
             },
-            widget: StandardCardContainerFabric(prepareMedications as PrepareFunction),
+            widget: StandardCardContainerFabric(prepareMedications),
+        },
+    ],
+    right: [
+        {
+            query: {
+                resourceType: 'Immunization',
+                search: (patient: Patient) => ({
+                    patient: patient.id,
+                    _sort: ['-_date'],
+                    _revinclude: ['Provenance:target'],
+                    _count: 7,
+                }),
+            },
+            widget: StandardCardContainerFabric(prepareImmunizations),
         },
         {
             query: {
@@ -95,22 +108,8 @@ export const patientDashboardConfig: DashboardInstance = {
                     _count: 7,
                 }),
             },
-            widget: StandardCardContainerFabric(prepareConsents as PrepareFunction),
+            widget: StandardCardContainerFabric(prepareConsents),
         },
-        {
-            query: {
-                resourceType: 'Observation',
-                search: (patient: Patient) => ({
-                    patient: patient.id,
-                    status: 'final',
-                    code: 'activity-summary',
-                    date: `ge${formatFHIRDate(moment().subtract(6, 'days'))}`,
-                }),
-            },
-            widget: StandardCardContainerFabric(prepareActivitySummary as PrepareFunction),
-        },
-    ],
-    bottom: [
         {
             query: {
                 resourceType: 'ServiceRequest',
@@ -118,22 +117,8 @@ export const patientDashboardConfig: DashboardInstance = {
                     subject: patient.id,
                 }),
             },
-            widget: StandardCardContainerFabric(prepareSeriveRequest as PrepareFunction),
-        },
-        {
-            query: {
-                resourceType: 'Appointment',
-                search: (patient: Patient) => ({
-                    actor: patient.id,
-                    // date: [`ge${formatFHIRDateTime(moment().startOf('day'))}`],
-                    // _revinclude: ['Encounter:appointment'],
-                    // 'status:not': ['entered-in-error,cancelled,checked-in'],
-                }),
-            },
-            widget: AppointmentCardContainer,
-        },
-        {
-            widget: GeneralInformationDashboardContainer,
+            widget: StandardCardContainerFabric(prepareSeriveRequest),
         },
     ],
+    bottom: [],
 };

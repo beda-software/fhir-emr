@@ -1,4 +1,4 @@
-import { Patient, FhirResource } from 'fhir/r4b';
+import { Patient, FhirResource, Resource } from 'fhir/r4b';
 
 import { extractBundleResources, useService } from '@beda.software/fhir-react';
 import { mapSuccess, resolveMap } from '@beda.software/remote-data';
@@ -10,7 +10,11 @@ import {
 } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/types';
 import { getFHIRResources } from 'src/services/fhir';
 
-export function useStandardCard(patient: Patient, query: Query, prepareFunction: PrepareFunction) {
+export function useStandardCard<T extends Resource>(
+    patient: Patient,
+    query: Query,
+    prepareFunction: PrepareFunction<T>,
+) {
     const [response] = useService(async () => {
         return mapSuccess(
             await resolveMap({
@@ -21,8 +25,8 @@ export function useStandardCard(patient: Patient, query: Query, prepareFunction:
                 const resource = resources[query.resourceType];
                 const provenance = resources.Provenance;
 
-                const card: OverviewCard<FhirResource> | OverviewCard<FhirResource[]> = prepareFunction(
-                    resource as FhirResource[],
+                const card: OverviewCard<T> | OverviewCard<T[]> = prepareFunction(
+                    resource as T[],
                     provenance,
                     resource.length,
                 );

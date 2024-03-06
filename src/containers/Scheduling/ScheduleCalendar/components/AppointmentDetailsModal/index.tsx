@@ -9,7 +9,7 @@ import { ReadonlyQuestionnaireResponseForm } from 'src/components/BaseQuestionna
 import { Modal } from 'src/components/Modal';
 import { Spinner } from 'src/components/Spinner';
 import { useNavigateToEncounter } from 'src/containers/EncounterDetails/hooks';
-import { useStartEncounter } from 'src/containers/PatientDetails/PatientOverview';
+import { useStartEncounter } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StartEncounter/useStartEncounter';
 import { getFHIRResources } from 'src/services/fhir';
 import { matchCurrentUserRole, Role } from 'src/utils/role';
 

@@ -1,4 +1,4 @@
-import { FhirResource, Provenance, Resource } from 'fhir/r4b';
+import { Provenance, Resource } from 'fhir/r4b';
 
 export interface OverviewCard<T extends Resource | Resource[]> {
     title: string;
@@ -15,6 +15,6 @@ export interface OverviewCard<T extends Resource | Resource[]> {
     getKey: (r: T) => string;
 }
 
-export type PrepareFunction =
-    | ((resources: FhirResource[], provenances: Provenance[], total: number) => OverviewCard<FhirResource>)
-    | ((resources: FhirResource[]) => OverviewCard<FhirResource[]>);
+export type PrepareFunction<T extends Resource> =
+    | ((resources: T[], provenances: Provenance[], total: number) => OverviewCard<T>)
+    | ((resources: T[]) => OverviewCard<T[]>);
