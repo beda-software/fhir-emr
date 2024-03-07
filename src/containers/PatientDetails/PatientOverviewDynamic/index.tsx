@@ -1,7 +1,7 @@
 import { Patient } from 'fhir/r4b';
 
 import { Dashboards } from 'src/components/Dashboard';
-import { useDashboard } from 'src/containers/PatientDetails/PatientOverviewDynamic/hooks';
+import { useDashboard } from 'src/components/Dashboard/contexts';
 
 import s from './PatientOverview.module.scss';
 

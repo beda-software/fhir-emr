@@ -1,23 +1,17 @@
-import { createContext, useState } from 'react';
+import { createContext, useContext } from 'react';
 
 import { Dashboard } from 'src/components/Dashboard/types';
 
-interface DashboardContextType {
-    patientDashboard: Dashboard;
-}
-
-const defaultDashboardContextValue: DashboardContextType = {
-    patientDashboard: {
-        default: {
-            top: [],
-            right: [],
-            left: [],
-            bottom: [],
-        },
+const defaultDashboard: Dashboard = {
+    default: {
+        top: [],
+        right: [],
+        left: [],
+        bottom: [],
     },
 };
 
-export const PatientDashboardContext = createContext<DashboardContextType>(defaultDashboardContextValue);
+export const PatientDashboardContext = createContext<Dashboard>(defaultDashboard);
 
 interface Props {
     dashboard: Dashboard;
@@ -25,7 +19,12 @@ interface Props {
 }
 
 export function PatientDashboardProvider({ dashboard, children }: Props) {
-    const [patientDashboard] = useState(dashboard);
+    return <PatientDashboardContext.Provider value={dashboard}>{children}</PatientDashboardContext.Provider>;
+}
 
-    return <PatientDashboardContext.Provider value={{ patientDashboard }}>{children}</PatientDashboardContext.Provider>;
+// eslint-disable-next-line react-refresh/only-export-components
+export function useDashboard() {
+    const patientDashboard = useContext(PatientDashboardContext);
+    // TODO select dashboard based on the role
+    return patientDashboard.default;
 }
