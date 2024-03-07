@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro';
-import { Button, notification } from 'antd';
+import { notification } from 'antd';
 import { Patient } from 'fhir/r4b';
 
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
@@ -7,7 +7,7 @@ import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-f
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { usePatientReload } from 'src/containers/PatientDetails/Dashboard/contexts';
-import s from 'src/containers/PatientDetails/PatientOverviewDynamic/PatientOverview.module.scss';
+import { S } from 'src/containers/PatientDetails/PatientOverviewDynamic/PatientOverview.styles';
 
 interface Props {
     patient: Patient;
@@ -20,9 +20,9 @@ export function EditPatient({ patient }: Props) {
         <ModalTrigger
             title={t`Edit patient`}
             trigger={
-                <Button type="link" className={s.editButton}>
+                <S.EditButton type="link">
                     <Trans>Edit</Trans>
-                </Button>
+                </S.EditButton>
             }
         >
             {({ closeModal }) => (

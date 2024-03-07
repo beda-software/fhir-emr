@@ -5,7 +5,6 @@ import { Appointment } from 'fhir/r4b';
 import { DashboardCard } from 'src/components/DashboardCard';
 import { prepareAppointmentDetails } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare';
 import { StartEncounter } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StartEncounter';
-import s from 'src/containers/PatientDetails/PatientOverviewDynamic/PatientOverview.module.scss';
 import { S } from 'src/containers/PatientDetails/PatientOverviewDynamic/PatientOverview.styles';
 
 interface Props {
@@ -22,14 +21,14 @@ export function AppointmentCard({ appointment }: Props) {
             extra={<StartEncounter appointmentId={appointment.id!} />}
             icon={<CalendarOutlined />}
         >
-            <div className={s.detailsRow}>
+            <S.DetailsRow>
                 {appointmentDetails.map(({ title, value }, index) => (
-                    <div key={`patient-details__${index}`} className={s.detailItem}>
+                    <S.DetailItem key={`patient-details__${index}`}>
                         <S.DetailsTitle>{title}</S.DetailsTitle>
-                        <div className={s.detailsValue}>{value || '-'}</div>
-                    </div>
+                        <div>{value || '-'}</div>
+                    </S.DetailItem>
                 ))}
-            </div>
+            </S.DetailsRow>
         </DashboardCard>
     );
 }
