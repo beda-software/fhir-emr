@@ -9,6 +9,7 @@ import { BasePageContent } from 'src/components/BaseLayout';
 import { RouteItem } from 'src/components/BaseLayout/Sidebar/SidebarTop';
 import { PatientEncounter } from 'src/components/PatientEncounter';
 import { Spinner } from 'src/components/Spinner';
+import { PatientReloadProvider } from 'src/containers/PatientDetails/Dashboard/contexts';
 import { matchCurrentUserRole, selectCurrentUserRoleResource, Role } from 'src/utils/role';
 
 import { usePatientResource } from './hooks';
@@ -18,7 +19,7 @@ import { PatientDocumentDetails } from './PatientDocumentDetails';
 import { PatientDocuments } from './PatientDocuments';
 import { PatientHeader, PatientHeaderContextProvider } from './PatientHeader';
 import { PatientOrders } from './PatientOrders';
-import { PatientOverview } from './PatientOverview';
+import { PatientOverview } from './PatientOverviewDynamic';
 import { PatientResources } from './PatientResources';
 import { PatientWearables } from './PatientWearables';
 import { EncounterDetails } from '../EncounterDetails';
@@ -46,75 +47,77 @@ export const PatientDetails = (props: PatientDetailsProps) => {
         <RenderRemoteData remoteData={patientResponse} renderLoading={Spinner}>
             {(patient) => {
                 return (
-                    <PatientHeaderContextProvider patient={patient}>
-                        <PatientHeader extraMenuItems={embeddedPages} />
-                        <BasePageContent>
-                            <Routes>
-                                <Route
-                                    path="/"
-                                    element={
-                                        <>
-                                            <Outlet />
-                                        </>
-                                    }
-                                >
+                    <PatientReloadProvider reload={manager.softReloadAsync}>
+                        <PatientHeaderContextProvider patient={patient}>
+                            <PatientHeader extraMenuItems={embeddedPages} />
+                            <BasePageContent>
+                                <Routes>
                                     <Route
                                         path="/"
-                                        element={<PatientOverview patient={patient} reload={manager.softReloadAsync} />}
-                                    />
-                                    <Route
-                                        path="/encounters"
                                         element={
-                                            <PatientEncounter
-                                                patient={patient}
-                                                searchParams={matchCurrentUserRole({
-                                                    [Role.Admin]: () => {
-                                                        return {};
-                                                    },
-                                                    [Role.Practitioner]: (practitioner) => {
-                                                        return { participant: practitioner.id };
-                                                    },
-                                                    [Role.Patient]: () => {
-                                                        return {};
-                                                    },
-                                                    [Role.Receptionist]: () => {
-                                                        return {};
-                                                    },
-                                                })}
-                                            />
+                                            <>
+                                                <Outlet />
+                                            </>
                                         }
-                                    />
-                                    <Route
-                                        path="/encounters/:encounterId"
-                                        element={<EncounterDetails patient={patient} />}
-                                    />
-                                    <Route
-                                        path="/encounters/:encounterId/new/:questionnaireId"
-                                        element={<PatientDocument patient={patient} author={author} />}
-                                    />
-                                    <Route
-                                        path="/encounters/:encounterId/:qrId/*"
-                                        element={<PatientDocumentDetails patient={patient} />}
-                                    />
-                                    <Route path="/documents" element={<PatientDocuments patient={patient} />} />
-                                    <Route
-                                        path="/documents/new/:questionnaireId"
-                                        element={<PatientDocument patient={patient} author={author} />}
-                                    />
-                                    <Route
-                                        path="/documents/:qrId/*"
-                                        element={<PatientDocumentDetails patient={patient} />}
-                                    />
-                                    <Route path="/wearables" element={<PatientWearables patient={patient} />} />
-                                    <Route path="/resources/:type" element={<PatientResources patient={patient} />} />
-                                    <Route path="/resources" element={<PatientResources patient={patient} />} />
-                                    <Route path="/apps" element={<PatientApps patient={patient} />} />
-                                    <Route path="/orders" element={<PatientOrders patient={patient} />} />
-                                    {embeddedPages?.flatMap(({ routes }) => routes)}
-                                </Route>
-                            </Routes>
-                        </BasePageContent>
-                    </PatientHeaderContextProvider>
+                                    >
+                                        <Route path="/" element={<PatientOverview patient={patient} />} />
+                                        <Route
+                                            path="/encounters"
+                                            element={
+                                                <PatientEncounter
+                                                    patient={patient}
+                                                    searchParams={matchCurrentUserRole({
+                                                        [Role.Admin]: () => {
+                                                            return {};
+                                                        },
+                                                        [Role.Practitioner]: (practitioner) => {
+                                                            return { participant: practitioner.id };
+                                                        },
+                                                        [Role.Patient]: () => {
+                                                            return {};
+                                                        },
+                                                        [Role.Receptionist]: () => {
+                                                            return {};
+                                                        },
+                                                    })}
+                                                />
+                                            }
+                                        />
+                                        <Route
+                                            path="/encounters/:encounterId"
+                                            element={<EncounterDetails patient={patient} />}
+                                        />
+                                        <Route
+                                            path="/encounters/:encounterId/new/:questionnaireId"
+                                            element={<PatientDocument patient={patient} author={author} />}
+                                        />
+                                        <Route
+                                            path="/encounters/:encounterId/:qrId/*"
+                                            element={<PatientDocumentDetails patient={patient} />}
+                                        />
+                                        <Route path="/documents" element={<PatientDocuments patient={patient} />} />
+                                        <Route
+                                            path="/documents/new/:questionnaireId"
+                                            element={<PatientDocument patient={patient} author={author} />}
+                                        />
+                                        <Route
+                                            path="/documents/:qrId/*"
+                                            element={<PatientDocumentDetails patient={patient} />}
+                                        />
+                                        <Route path="/wearables" element={<PatientWearables patient={patient} />} />
+                                        <Route
+                                            path="/resources/:type"
+                                            element={<PatientResources patient={patient} />}
+                                        />
+                                        <Route path="/resources" element={<PatientResources patient={patient} />} />
+                                        <Route path="/apps" element={<PatientApps patient={patient} />} />
+                                        <Route path="/orders" element={<PatientOrders patient={patient} />} />
+                                        {embeddedPages?.flatMap(({ routes }) => routes)}
+                                    </Route>
+                                </Routes>
+                            </BasePageContent>
+                        </PatientHeaderContextProvider>
+                    </PatientReloadProvider>
                 );
             }}
         </RenderRemoteData>

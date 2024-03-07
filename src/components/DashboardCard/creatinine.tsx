@@ -24,7 +24,7 @@ interface Props {
 
 const formatTime = (unixTime: number) => moment(unixTime).format('HH:mm Do');
 
-function CustomTooltip({ payload, label }: TooltipProps<number,number>) {
+function CustomTooltip({ payload, label }: TooltipProps<number, number>) {
     return (
         <div>
             <span>{formatTime(label)}</span>
@@ -114,3 +114,4 @@ export function CreatinineDashoboard({ observationsRemoteData, patient, reload }
         </S.Wrapper>
     );
 }
+

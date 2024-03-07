@@ -1,7 +1,6 @@
 import { AlertOutlined, ExperimentOutlined, HeartOutlined, TeamOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 import {
-    Resource,
     AllergyIntolerance,
     Appointment,
     Bundle,
@@ -16,49 +15,16 @@ import {
 } from 'fhir/r4b';
 import _ from 'lodash';
 import moment from 'moment';
-import { Link, useLocation } from 'react-router-dom';
 
 import { WithId, extractBundleResources, formatFHIRDate, parseFHIRDateTime } from '@beda.software/fhir-react';
 
 import { extractExtension, fromFHIRReference } from 'shared/src/utils/converter';
 
 import { PatientActivitySummary } from 'src/containers/PatientDetails/PatientActivitySummary';
+import { LinkToEdit } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/LinkToEdit';
+import { OverviewCard } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/types';
+import medicationIcon from 'src/containers/PatientDetails/PatientOverviewDynamic/images/medication.svg';
 import { formatHumanDate } from 'src/utils/date';
-
-import medicationIcon from './images/medication.svg';
-
-export interface OverviewCard<T = any> {
-    title: string;
-    key: string;
-    icon: React.ReactNode;
-    data: T[];
-    total?: number;
-    columns: {
-        key: string;
-        title: string;
-        render: (r: T) => React.ReactNode;
-        width?: string | number;
-    }[];
-    getKey: (r: T) => string;
-}
-
-function LinkToEdit(props: { name?: string; resource: Resource; provenanceList: Provenance[] }) {
-    const { name, resource, provenanceList } = props;
-    const location = useLocation();
-    const provenance = provenanceList.find(
-        (p) =>
-            fromFHIRReference(p.target[0])?.id === resource.id &&
-            fromFHIRReference(p.target[0])?.resourceType === resource.resourceType,
-    );
-    const entity = provenance?.entity?.[0]?.what;
-    const qrId = fromFHIRReference(entity)?.id;
-
-    if (qrId) {
-        return <Link to={`${location.pathname}/documents/${qrId}`}>{name}</Link>;
-    }
-
-    return <>{name}</>;
-}
 
 export function prepareAllergies(
     allergies: AllergyIntolerance[],
@@ -319,7 +285,11 @@ export function prepareAppointmentDetails(appointment: Appointment) {
     return appointmentDetails;
 }
 
-export function prepareSeriveRequest(serviceRequests: ServiceRequest[], total: number): OverviewCard<ServiceRequest> {
+export function prepareSeriveRequest(
+    serviceRequests: ServiceRequest[],
+    _provenanceList: Provenance[],
+    total: number,
+): OverviewCard<ServiceRequest> {
     return {
         title: t`Orders`,
         key: 'service-reuqest',

@@ -9,9 +9,10 @@ import { dynamicActivate, getCurrentLocale } from 'shared/src/services/i18n';
 
 import 'antd/dist/reset.css';
 import 'src/styles/index.scss';
-import 'shared/src/services/i18n';
 
+import { PatientDashboardProvider } from 'src/components/Dashboard/contexts';
 import { App } from 'src/containers/App';
+import { dashboard } from 'src/dashboard.config';
 
 import * as serviceWorker from './serviceWorker';
 import { ThemeProvider } from './theme/ThemeProvider';
@@ -23,9 +24,11 @@ const AppWithContext = () => {
 
     return (
         <I18nProvider i18n={i18n}>
-            <ThemeProvider>
-                <App />
-            </ThemeProvider>
+            <PatientDashboardProvider dashboard={dashboard}>
+                <ThemeProvider>
+                    <App />
+                </ThemeProvider>
+            </PatientDashboardProvider>
         </I18nProvider>
     );
 };
