@@ -89,10 +89,10 @@ async function fetchConsentStatus(
 async function fetchPatientRecords(patient: WithId<Patient>) {
     return serviceFetch<WearablesData>(
         matchCurrentUserRole({
-            [Role.Patient]: () => `${config.wearablesDataStreamService}/api/v1/records`,
-            [Role.Admin]: () => `${config.wearablesDataStreamService}/api/v1/${patient.id}/records`,
-            [Role.Practitioner]: () => `${config.wearablesDataStreamService}/api/v1/${patient.id}/records`,
-            [Role.Receptionist]: () => `${config.wearablesDataStreamService}/api/v1/${patient.id}/records`,
+            [Role.Patient]: () => `${config.wearablesDataStreamService}/records`,
+            [Role.Admin]: () => `${config.wearablesDataStreamService}/${patient.id}/records`,
+            [Role.Practitioner]: () => `${config.wearablesDataStreamService}/${patient.id}/records`,
+            [Role.Receptionist]: () => `${config.wearablesDataStreamService}/${patient.id}/records`,
         }),
         {
             method: 'GET',

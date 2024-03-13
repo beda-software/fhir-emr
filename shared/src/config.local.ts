@@ -13,7 +13,7 @@ export default {
 
     jitsiMeetServer: 'localhost:8443',
 
-    wearablesDataStreamService: 'http://localhost:8082',
+    wearablesDataStreamService: 'http://localhost:8082/api/v1',
 
     metriportIdentifierSystem: 'https://api.sandbox.metriport.com',
 };

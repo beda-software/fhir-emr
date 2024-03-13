@@ -11,6 +11,6 @@ export default {
     webSentryDSN: null,
     mobileSentryDSN: null,
     jitsiMeetServer: 'video.emr.beda.software/',
-    wearablesDataStreamService: 'https://ingest.emr.beda.software',
+    wearablesDataStreamService: 'https://ingest.emr.beda.software/api/v1',
     metriportIdentifierSystem: 'https://api.sandbox.metriport.com',
 };
