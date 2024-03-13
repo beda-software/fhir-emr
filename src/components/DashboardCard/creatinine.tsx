@@ -2,6 +2,7 @@ import { InfoOutlined } from '@ant-design/icons';
 import { isSuccess } from 'aidbox-react';
 import { Observation, Patient } from 'fhir/r4b';
 import moment from 'moment';
+// eslint-disable-next-line import/named
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine, TooltipProps } from 'recharts';
 
 import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
@@ -34,7 +35,7 @@ function CustomTooltip({ payload, label }: TooltipProps<number, number>) {
     );
 }
 
-export function CreatinineDashoboard({ observationsRemoteData, patient, reload }: Props) {
+export function CreatinineDashboard({ observationsRemoteData, patient, reload }: Props) {
     const author = selectCurrentUserRoleResource();
     const total = isSuccess(observationsRemoteData) && observationsRemoteData.data.length;
     return (
@@ -45,7 +46,7 @@ export function CreatinineDashoboard({ observationsRemoteData, patient, reload }
                         <S.Icon>
                             <InfoOutlined />
                         </S.Icon>
-                        <S.Title>Creatinine Dashoboard</S.Title>
+                        <S.Title>Creatinine Dashboard</S.Title>
                         {total != false && total > 0 ? `Total ${total}` : null}
                     </div>
                 </S.Header>
@@ -114,4 +115,3 @@ export function CreatinineDashoboard({ observationsRemoteData, patient, reload }
         </S.Wrapper>
     );
 }
-

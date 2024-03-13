@@ -7,7 +7,7 @@ import { loading, mapSuccess, RemoteData } from '@beda.software/remote-data';
 import { ObservationWithDate } from 'src/components/DashboardCard/creatinine';
 import { getFHIRResources } from 'src/services/fhir';
 
-export function useCreatinineDashoboard(searchParams: SearchParams) {
+export function useCreatinineDashboard(searchParams: SearchParams) {
     const [creatinineObservations, setCreatinineObservations] =
         useState<RemoteData<Array<ObservationWithDate>>>(loading);
 

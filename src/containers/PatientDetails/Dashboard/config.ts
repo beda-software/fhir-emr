@@ -11,9 +11,9 @@ import {
     prepareConsents,
     prepareImmunizations,
     prepareMedications,
-    prepareSeriveRequest,
+    prepareServiceRequest,
 } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare';
-import { CreatinineDashoboardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/CreatinineDashoboardContainer';
+import { CreatinineDashboardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/CreatinineDashboardContainer';
 import { GeneralInformationDashboardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer';
 import { StandardCardContainerFabric } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/StandardCardContainerFabric';
 
@@ -31,7 +31,7 @@ export const patientDashboardConfig: DashboardInstance = {
                     _sort: ['-date'],
                 }),
             },
-            widget: CreatinineDashoboardContainer,
+            widget: CreatinineDashboardContainer,
         },
     ],
     left: [
@@ -117,7 +117,7 @@ export const patientDashboardConfig: DashboardInstance = {
                     subject: patient.id,
                 }),
             },
-            widget: StandardCardContainerFabric(prepareSeriveRequest),
+            widget: StandardCardContainerFabric(prepareServiceRequest),
         },
     ],
     bottom: [],

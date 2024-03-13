@@ -1,18 +1,18 @@
 import { ContainerProps } from 'src/components/Dashboard/types';
-import { CreatinineDashoboard } from 'src/components/DashboardCard/creatinine';
-import { useCreatinineDashoboard } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/CreatinineDashoboardContainer/hooks';
+import { CreatinineDashboard } from 'src/components/DashboardCard/creatinine';
+import { useCreatinineDashboard } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/CreatinineDashboardContainer/hooks';
 
-export function CreatinineDashoboardContainer({ patient, widgetInfo }: ContainerProps) {
+export function CreatinineDashboardContainer({ patient, widgetInfo }: ContainerProps) {
     if (!widgetInfo.query) {
         return <div>Error: no query parameter for the widget.</div>;
     }
 
     const searchParams = widgetInfo.query.search(patient);
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { creatinineObservations, reloadCreatinineObservations } = useCreatinineDashoboard(searchParams);
+    const { creatinineObservations, reloadCreatinineObservations } = useCreatinineDashboard(searchParams);
 
     return (
-        <CreatinineDashoboard
+        <CreatinineDashboard
             patient={patient}
             observationsRemoteData={creatinineObservations}
             reload={reloadCreatinineObservations}

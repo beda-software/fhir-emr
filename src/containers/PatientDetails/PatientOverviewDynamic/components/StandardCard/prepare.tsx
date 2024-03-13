@@ -285,14 +285,14 @@ export function prepareAppointmentDetails(appointment: Appointment) {
     return appointmentDetails;
 }
 
-export function prepareSeriveRequest(
+export function prepareServiceRequest(
     serviceRequests: ServiceRequest[],
     _provenanceList: Provenance[],
     total: number,
 ): OverviewCard<ServiceRequest> {
     return {
         title: t`Orders`,
-        key: 'service-reuqest',
+        key: 'service-request',
         icon: <HeartOutlined />,
         data: serviceRequests,
         total,
