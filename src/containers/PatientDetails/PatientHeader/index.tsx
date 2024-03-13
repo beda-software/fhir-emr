@@ -66,7 +66,7 @@ export function PatientHeaderContextProvider(props: React.HTMLAttributes<HTMLDiv
     );
 }
 
-export function PatientHeader(props: { extraMenuItems?: RouteItem[] }) {
+export function PatientHeader(props: { extraMenuItems?: RouteItem[]; isDefaultRoutesDisabled?: boolean }) {
     const location = useLocation();
     const params = useParams<{ id: string }>();
     const { title, breadcrumbs } = useContext(PatientHeaderContext);
@@ -74,21 +74,24 @@ export function PatientHeader(props: { extraMenuItems?: RouteItem[] }) {
 
     const menuItems: RouteItem[] = useMemo(
         () =>
-            [
-                { label: t`Overview`, path: `/patients/${params.id}` },
-                { label: t`Encounters`, path: `/patients/${params.id}/encounters` },
-                { label: t`Documents`, path: `/patients/${params.id}/documents` },
-                { label: t`Wearables`, path: `/patients/${params.id}/wearables` },
-                { label: t`Orders`, path: `/patients/${params.id}/orders` },
-                { label: t`Smart Apps`, path: `/patients/${params.id}/apps` },
-                { label: t`Resources`, path: `/patients/${params.id}/resources` },
-            ].concat(
+            (!props.isDefaultRoutesDisabled
+                ? [
+                      { label: t`Overview`, path: `/patients/${params.id}` },
+                      { label: t`Encounters`, path: `/patients/${params.id}/encounters` },
+                      { label: t`Documents`, path: `/patients/${params.id}/documents` },
+                      { label: t`Wearables`, path: `/patients/${params.id}/wearables` },
+                      { label: t`Orders`, path: `/patients/${params.id}/orders` },
+                      { label: t`Smart Apps`, path: `/patients/${params.id}/apps` },
+                      { label: t`Resources`, path: `/patients/${params.id}/resources` },
+                  ]
+                : []
+            ).concat(
                 extraMenuItems.map(({ label, path }) => ({
                     label,
                     path: `/patients/${params.id}` + path,
                 })),
             ),
-        [params.id, extraMenuItems],
+        [props.isDefaultRoutesDisabled, params.id, extraMenuItems],
     );
 
     const [currentPath, setCurrentPath] = useState(location?.pathname);

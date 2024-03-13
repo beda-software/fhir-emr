@@ -30,6 +30,7 @@ export interface PatientDetailsEmbeddedPageDefinition extends RouteItem {
 
 export interface PatientDetailsProps {
     embeddedPages?: (patient: Patient) => PatientDetailsEmbeddedPageDefinition[];
+    isDefaultRoutesDisabled?: boolean;
 }
 
 export const PatientDetails = (props: PatientDetailsProps) => {
@@ -49,7 +50,10 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                 return (
                     <PatientReloadProvider reload={manager.softReloadAsync}>
                         <PatientHeaderContextProvider patient={patient}>
-                            <PatientHeader extraMenuItems={embeddedPages} />
+                            <PatientHeader
+                                extraMenuItems={embeddedPages}
+                                isDefaultRoutesDisabled={props.isDefaultRoutesDisabled}
+                            />
                             <BasePageContent>
                                 <Routes>
                                     <Route
@@ -60,58 +64,71 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                             </>
                                         }
                                     >
-                                        <Route path="/" element={<PatientOverview patient={patient} />} />
-                                        <Route
-                                            path="/encounters"
-                                            element={
-                                                <PatientEncounter
-                                                    patient={patient}
-                                                    searchParams={matchCurrentUserRole({
-                                                        [Role.Admin]: () => {
-                                                            return {};
-                                                        },
-                                                        [Role.Practitioner]: (practitioner) => {
-                                                            return { participant: practitioner.id };
-                                                        },
-                                                        [Role.Patient]: () => {
-                                                            return {};
-                                                        },
-                                                        [Role.Receptionist]: () => {
-                                                            return {};
-                                                        },
-                                                    })}
+                                        {!props.isDefaultRoutesDisabled && (
+                                            <>
+                                                <Route path="/" element={<PatientOverview patient={patient} />} />
+                                                <Route
+                                                    path="/encounters"
+                                                    element={
+                                                        <PatientEncounter
+                                                            patient={patient}
+                                                            searchParams={matchCurrentUserRole({
+                                                                [Role.Admin]: () => {
+                                                                    return {};
+                                                                },
+                                                                [Role.Practitioner]: (practitioner) => {
+                                                                    return { participant: practitioner.id };
+                                                                },
+                                                                [Role.Patient]: () => {
+                                                                    return {};
+                                                                },
+                                                                [Role.Receptionist]: () => {
+                                                                    return {};
+                                                                },
+                                                            })}
+                                                        />
+                                                    }
                                                 />
-                                            }
-                                        />
-                                        <Route
-                                            path="/encounters/:encounterId"
-                                            element={<EncounterDetails patient={patient} />}
-                                        />
-                                        <Route
-                                            path="/encounters/:encounterId/new/:questionnaireId"
-                                            element={<PatientDocument patient={patient} author={author} />}
-                                        />
-                                        <Route
-                                            path="/encounters/:encounterId/:qrId/*"
-                                            element={<PatientDocumentDetails patient={patient} />}
-                                        />
-                                        <Route path="/documents" element={<PatientDocuments patient={patient} />} />
-                                        <Route
-                                            path="/documents/new/:questionnaireId"
-                                            element={<PatientDocument patient={patient} author={author} />}
-                                        />
-                                        <Route
-                                            path="/documents/:qrId/*"
-                                            element={<PatientDocumentDetails patient={patient} />}
-                                        />
-                                        <Route path="/wearables" element={<PatientWearables patient={patient} />} />
-                                        <Route
-                                            path="/resources/:type"
-                                            element={<PatientResources patient={patient} />}
-                                        />
-                                        <Route path="/resources" element={<PatientResources patient={patient} />} />
-                                        <Route path="/apps" element={<PatientApps patient={patient} />} />
-                                        <Route path="/orders" element={<PatientOrders patient={patient} />} />
+                                                <Route
+                                                    path="/encounters/:encounterId"
+                                                    element={<EncounterDetails patient={patient} />}
+                                                />
+                                                <Route
+                                                    path="/encounters/:encounterId/new/:questionnaireId"
+                                                    element={<PatientDocument patient={patient} author={author} />}
+                                                />
+                                                <Route
+                                                    path="/encounters/:encounterId/:qrId/*"
+                                                    element={<PatientDocumentDetails patient={patient} />}
+                                                />
+                                                <Route
+                                                    path="/documents"
+                                                    element={<PatientDocuments patient={patient} />}
+                                                />
+                                                <Route
+                                                    path="/documents/new/:questionnaireId"
+                                                    element={<PatientDocument patient={patient} author={author} />}
+                                                />
+                                                <Route
+                                                    path="/documents/:qrId/*"
+                                                    element={<PatientDocumentDetails patient={patient} />}
+                                                />
+                                                <Route
+                                                    path="/wearables"
+                                                    element={<PatientWearables patient={patient} />}
+                                                />
+                                                <Route
+                                                    path="/resources/:type"
+                                                    element={<PatientResources patient={patient} />}
+                                                />
+                                                <Route
+                                                    path="/resources"
+                                                    element={<PatientResources patient={patient} />}
+                                                />
+                                                <Route path="/apps" element={<PatientApps patient={patient} />} />
+                                                <Route path="/orders" element={<PatientOrders patient={patient} />} />
+                                            </>
+                                        )}
                                         {embeddedPages?.flatMap(({ routes }) => routes)}
                                     </Route>
                                 </Routes>
