@@ -74,7 +74,7 @@ async function fetchConsentStatus(
             actor: actor.id,
             status: 'active',
             action: 'access',
-            'data:Endpoint.identifier': `https://fhir.emr.beda.software/CodeSystem/consent-subject|${consentSubject}`,
+            'data:Endpoint.identifier': `${config.wearablesAccessConsentCodingSystem}|${consentSubject}`,
         }),
         (bundle) => {
             return {

@@ -3,5 +3,7 @@
 // environment settings
 
 export default {
-    clientId: 'web'
+    clientId: 'web',
+
+    wearablesAccessConsentCodingSystem: 'https://fhir.emr.beda.software/CodeSystem/consent-subject',
 };
