@@ -107,12 +107,10 @@ export function PatientWearables(props: PatientWearablesProps) {
 
 function RenderError(error: any) {
     const errorTextMapping = {
-        '403: Forbidden':
-            "You currently lack access to the patient's data. To obtain it, you must secure the patient's signed consent authorizing the release of their activity data.",
-        '401: Unauthorized':
-            'To obtain this information, you need to authorize your account in the mobile application and link it with your health data providers.',
+        '403': "You currently lack access to the patient's data. To obtain it, you must secure the patient's signed consent authorizing the release of their activity data.",
+        '401': 'To obtain this information, you need to authorize your account in the mobile application and link it with your health data providers.',
     };
-    const errorText = errorTextMapping[error.error] ?? error.error;
+    const errorText = errorTextMapping[error.error?.status] ?? error.error?.message;
 
     return <Empty description={<span>{errorText}</span>} />;
 }
