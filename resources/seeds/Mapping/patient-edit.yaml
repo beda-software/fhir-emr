@@ -11,6 +11,9 @@ body:
     mobile: >-
       $
       fhirpath("QuestionnaireResponse.repeat(item).where(linkId='mobile').answer.valueString").0
+    email: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='email').answer.valueString").0
     lastName: >-
       $
       fhirpath("QuestionnaireResponse.repeat(item).where(linkId='last-name').answer.valueString").0
@@ -43,6 +46,8 @@ body:
           telecom:
             - value: $ mobile
               system: phone
+            - value: $ email
+              system: email
           birthDate: $ birthDate
           identifier:
             $if: $ ssn && ssn != ""

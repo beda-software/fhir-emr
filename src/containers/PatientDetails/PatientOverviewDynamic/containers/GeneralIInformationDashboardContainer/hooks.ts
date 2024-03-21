@@ -44,6 +44,10 @@ export function useGeneralInformationDashboard(patient: Patient) {
             value: patient.telecom?.filter(({ system }) => system === 'phone')[0]?.value,
         },
         {
+            title: 'Email',
+            value: patient.telecom?.filter(({ system }) => system === 'email')[0]?.value,
+        },
+        {
             title: 'SSN',
             value: patient.identifier?.find(({ system }) => system === '1.2.643.100.3')?.value,
         },

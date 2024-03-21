@@ -48,6 +48,9 @@ item:
     itemControl:
       coding:
         - code: phoneWidget
+  - linkId: email
+    type: string
+    text: Email
 meta:
   profile:
     - https://beda.software/beda-emr-questionnaire

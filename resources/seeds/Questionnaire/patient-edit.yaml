@@ -77,6 +77,12 @@ item:
     initialExpression:
       language: text/fhirpath
       expression: "%Patient.telecom.where(system='phone').value"
+  - linkId: email
+    type: string
+    text: Email
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.telecom.where(system='email').value"
 meta:
   profile:
     - https://beda.software/beda-emr-questionnaire
