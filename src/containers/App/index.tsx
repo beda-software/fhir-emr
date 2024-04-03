@@ -27,6 +27,7 @@ import { sharedAuthorizedPatient } from 'src/sharedState';
 import { Role, matchCurrentUserRole } from 'src/utils/role';
 
 import { restoreUserSession } from './utils';
+import { AIQuestionnaireResponse } from '../AIQuestionnaireResponse';
 import { HealthcareServiceList } from '../HealthcareServiceList';
 import { InvoiceDetails } from '../InvoiceDetails';
 import { InvoiceList } from '../InvoiceList';
@@ -163,6 +164,10 @@ function AuthenticatedAdminUserApp() {
                 <Route path="/questionnaires/:id/edit" element={<QuestionnaireBuilder />} />
                 <Route path="/questionnaires/:id" element={<div>questionnaires/:id</div>} />
                 <Route path="/healthcare-services" element={<HealthcareServiceList />} />
+                <Route
+                    path="/questionnaire-response-waiting/:questionnareResponseId"
+                    element={<AIQuestionnaireResponse />}
+                />
                 <Route path="*" element={<Navigate to="/encounters" />} />
             </Routes>
         </BaseLayout>
@@ -186,6 +191,10 @@ function AuthenticatedPractitionerUserApp() {
                 <Route path="/questionnaires/builder" element={<QuestionnaireBuilder />} />
                 <Route path="/questionnaires/:id/edit" element={<QuestionnaireBuilder />} />
                 <Route path="/questionnaires/:id" element={<div>questionnaires/:id</div>} />
+                <Route
+                    path="/questionnaire-response-waiting/:questionnareResponseId"
+                    element={<AIQuestionnaireResponse />}
+                />
                 <Route path="*" element={<Navigate to="/encounters" />} />
             </Routes>
         </BaseLayout>

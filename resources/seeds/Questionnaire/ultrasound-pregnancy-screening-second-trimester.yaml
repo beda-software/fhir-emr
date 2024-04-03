@@ -1,0 +1,98 @@
+meta:
+  profile:
+    - https://beda.software/beda-emr-questionnaire
+resourceType: Questionnaire
+id: ultrasound-pregnancy-screening-second-trimester
+title: Second Trimester Ultrasound Pregnancy Screening
+status: draft
+subjectType:
+  - Patient
+  - Encounter
+date: "2023-12-16"
+item:
+  - text: Patient ID
+    type: string
+    hidden: true
+    linkId: "1"
+  - text: Gestational Age
+    type: integer
+    linkId: "4"
+  - item:
+      - text: Fetal Biparietal Diameter (BPD) mm
+        type: decimal
+        linkId: bpd
+      - text: Head Circumference (HC) mm
+        type: decimal
+        linkId: hc
+      - text: Abdominal Circumference (HC) mm
+        type: decimal
+        linkId: ac
+      - text: Femur Length (FL) mm
+        type: decimal
+        linkId: fl
+      - text: Humeral Length (HL) mm
+        type: decimal
+        linkId: hl
+      - text: Estimated Fetal Weight (EFW) g
+        type: integer
+        linkId: efw
+      - text: Fetal Heart Rate (FHR) bpm
+        type: decimal
+        linkId: fhr
+      - text: Placental Position
+        type: choice
+        linkId: pp
+        answerOption:
+          - value:
+              Coding:
+                code: "245486001"
+                system: http://snomed.info/sct
+                display: Anterior
+          - value:
+              Coding:
+                code: "245487005"
+                system: http://snomed.info/sct
+                display: Posterior
+          - value:
+              Coding:
+                code: "27485007"
+                system: http://snomed.info/sct
+                display: Fundal
+          - value:
+              Coding:
+                code: "263379001"
+                system: http://snomed.info/sct
+                display: Lateral
+          - value:
+              Coding:
+                code: "445122007"
+                system: http://snomed.info/sct
+                display: Low-Lying
+          - value:
+              Coding:
+                code: "36813001"
+                system: http://snomed.info/sct
+                display: Placenta Previa
+          - value:
+              Coding:
+                code: "62531004"
+                system: http://snomed.info/sct
+                display: Marginal
+          - value:
+              Coding:
+                code: "79668009"
+                system: http://snomed.info/sct
+                display: Vasa Previa
+    text: Measurements
+    type: group
+    linkId: measurements-group
+  - item:
+      - text: Right lateral ventricle mm
+        type: decimal
+        linkId: rlv
+      - text: Left lateral ventricle mm
+        type: decimal
+        linkId: llv
+    text: Anatomy
+    type: group
+    linkId: anatomy-group
