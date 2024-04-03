@@ -122,8 +122,7 @@ export function PatientDocument(props: PatientDocumentProps) {
                                     draftSaveResponse={draftSaveResponse}
                                     savedMessage={savedMessage}
                                 />
-                                {questionnaireId === 'ultrasound-pregnancy-screening-second-trimester' &&
-                                encounterId ? (
+                                {encounterId ? (
                                     <FillWithAudio
                                         questionnaireId={questionnaireId}
                                         encounterId={encounterId}
