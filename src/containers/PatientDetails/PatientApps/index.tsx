@@ -20,31 +20,67 @@ interface SmartAppProps {
 }
 
 function SmartApp({ app, patient }: SmartAppProps) {
-    const user = sharedAuthorizedUser.getSharedState();
-    const practitioner = sharedAuthorizedPractitioner.getSharedState();
-    return (
-        <Card
-            title={app.smart?.name ?? 'UNKNOWN'}
-            style={{ width: 300 }}
-            extra={
-                <Button
-                    type="primary"
-                    onClick={() =>
-                        launch({
-                            client: app.id!,
-                            user: user!.id!,
-                            patient: patient.id!,
-                            ...(practitioner ? { practitioner: practitioner.id } : {}),
-                        })
+    try {
+        const user = sharedAuthorizedUser.getSharedState();
+        const userRoleName = user && user.role ? user.role[0]?.name : null;
+
+        if (userRoleName === Role.Admin || userRoleName === Role.Patient) {
+            return (
+                <Card
+                    title={app.smart?.name ?? 'UNKNOWN'}
+                    style={{ width: 300 }}
+                    extra={
+                        <Button
+                            type="primary"
+                            onClick={() =>
+                                launch({
+                                    client: app.id!,
+                                    user: user!.id!,
+                                    patient: patient.id!,
+                                    practitioner: '',
+                                })
+                            }
+                        >
+                            Launch
+                        </Button>
                     }
                 >
-                    Launch
-                </Button>
-            }
-        >
-            <Text>{app.smart?.description}</Text>
-        </Card>
-    );
+                    <Text>{app.smart?.description}</Text>
+                </Card>
+            );
+        }
+
+        const practitioner = sharedAuthorizedPractitioner.getSharedState();
+        return (
+            <Card
+                title={app.smart?.name ?? 'UNKNOWN'}
+                style={{ width: 300 }}
+                extra={
+                    <Button
+                        type="primary"
+                        onClick={() =>
+                            launch({
+                                client: app.id!,
+                                user: user!.id!,
+                                patient: patient.id!,
+                                ...(practitioner ? { practitioner: practitioner.id } : {}),
+                            })
+                        }
+                    >
+                        Launch
+                    </Button>
+                }
+            >
+                <Text>{app.smart?.description}</Text>
+            </Card>
+        );
+    } catch (error) {
+        return (
+            <div>
+                <p>An error occurred while loading the smart application.</p>
+            </div>
+        );
+    }
 }
 
 export function PatientApps({ patient }: PatientAppsProps) {
