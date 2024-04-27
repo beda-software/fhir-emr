@@ -21,6 +21,7 @@ import { PatientHeader, PatientHeaderContextProvider } from './PatientHeader';
 import { PatientOrders } from './PatientOrders';
 import { PatientOverview } from './PatientOverviewDynamic';
 import { PatientResources } from './PatientResources';
+import { PatientSchedule } from './PatientSchedule';
 import { PatientWearables } from './PatientWearables';
 import { EncounterDetails } from '../EncounterDetails';
 
@@ -124,6 +125,14 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                                 <Route
                                                     path="/resources"
                                                     element={<PatientResources patient={patient} />}
+                                                />
+                                                <Route
+                                                    path="/schedule"
+                                                    element={<PatientSchedule patient={patient} />}
+                                                />
+                                                <Route
+                                                    path="/schedule/:scheduleId"
+                                                    element={<PatientSchedule patient={patient} />}
                                                 />
                                                 <Route path="/apps" element={<PatientApps patient={patient} />} />
                                                 <Route path="/orders" element={<PatientOrders patient={patient} />} />
