@@ -1,6 +1,6 @@
 import { t, Trans } from '@lingui/macro';
 import { Col, Row } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { renderHumanName } from 'shared/src/utils/fhir';
 
@@ -8,6 +8,7 @@ import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { EncountersTable } from 'src/components/EncountersTable';
 import { EncounterData } from 'src/components/EncountersTable/types';
 import { StatusBadge } from 'src/components/EncounterStatusBadge';
+import { ModalNewEncounter } from 'src/components/ModalNewEncounter';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { Title } from 'src/components/Typography';
@@ -53,10 +54,20 @@ export function EncounterList() {
         },
     });
 
-    const { encounterDataListRD, handleTableChange, pagination } = useEncounterList(
+    const { encounterDataListRD, reloadEncounter, handleTableChange, pagination } = useEncounterList(
         columnsFilterValues as EncounterListFilterValues,
         roleSearchParams,
     );
+
+    const navigate = useNavigate();
+    const onEncounterAdded = (resource: any) => {
+        // TODO: talk about error handling when working with fhir and product error handling practices
+        const patientId = resource.extractedBundle[0].entry[0].resource.subject.id;
+        const encounterId = resource.extractedBundle[0].entry[0].resource.id;
+        const routetoCreatedEncounter = `/patients/${patientId}/encounters/${encounterId}`;
+        reloadEncounter();
+        navigate(routetoCreatedEncounter);
+    };
 
     const columns = [
         {
@@ -127,6 +138,7 @@ export function EncounterList() {
                 />
             </BasePageHeader>
             <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
+                <ModalNewEncounter questionnaireId="encounter-patient-list-create" reloadEncounter={onEncounterAdded} />
                 <EncountersTable
                     columns={columns}
                     remoteData={encounterDataListRD}

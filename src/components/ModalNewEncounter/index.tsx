@@ -11,11 +11,16 @@ import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseF
 import { Role, matchCurrentUserRole } from 'src/utils/role';
 
 export interface ModalNewEncounterProps {
-    patient: Patient;
-    reloadEncounter: () => void;
+    patient?: Patient;
+    reloadEncounter: (resource?: any) => void;
+    questionnaireId?: 'encounter-create' | 'encounter-patient-list-create';
 }
 
-export const ModalNewEncounter = ({ patient, reloadEncounter }: ModalNewEncounterProps) => {
+export const ModalNewEncounter = ({
+    patient,
+    reloadEncounter,
+    questionnaireId = 'encounter-create',
+}: ModalNewEncounterProps) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const title = useMemo(
         () =>
@@ -32,8 +37,8 @@ export const ModalNewEncounter = ({ patient, reloadEncounter }: ModalNewEncounte
         setIsModalVisible(true);
     };
 
-    const handleSuccess = () => {
-        reloadEncounter();
+    const handleSuccess = (resource: any) => {
+        reloadEncounter(resource);
         setIsModalVisible(false);
         notification.success({
             message: 'Encounter successfully created',
@@ -53,12 +58,20 @@ export const ModalNewEncounter = ({ patient, reloadEncounter }: ModalNewEncounte
                 destroyOnClose
                 maskClosable={false}
             >
-                <QuestionnaireResponseForm
-                    questionnaireLoader={questionnaireIdLoader('encounter-create')}
-                    onSuccess={handleSuccess}
-                    launchContextParameters={[{ name: 'Patient', resource: patient }]}
-                    onCancel={() => setIsModalVisible(false)}
-                />
+                {questionnaireId === 'encounter-create' ? (
+                    <QuestionnaireResponseForm
+                        questionnaireLoader={questionnaireIdLoader(questionnaireId)}
+                        onSuccess={handleSuccess}
+                        launchContextParameters={[{ name: 'Patient', resource: patient }]}
+                        onCancel={() => setIsModalVisible(false)}
+                    />
+                ) : (
+                    <QuestionnaireResponseForm
+                        questionnaireLoader={questionnaireIdLoader(questionnaireId)}
+                        onSuccess={handleSuccess}
+                        onCancel={() => setIsModalVisible(false)}
+                    />
+                )}
             </Modal>
         </>
     );
