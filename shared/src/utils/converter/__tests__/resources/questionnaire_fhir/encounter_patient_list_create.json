@@ -1,0 +1,154 @@
+{
+    "meta": {
+        "profile": ["https://beda.software/beda-emr-questionnaire"],
+        "lastUpdated": "2023-04-10T03:43:34.792167Z",
+        "versionId": "694",
+        "extension": [
+            {
+                "url": "ex:createdAt",
+                "valueInstant": "2023-04-05T05:22:35.752466Z"
+            }
+        ]
+    },
+    "name": "encounter-patient-list-create",
+    "item": [
+        {
+            "text": "Patient",
+            "type": "reference",
+            "linkId": "patient-reference",
+            "required": true,
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource",
+                    "valueCode": "Patient"
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "forDisplay",
+                            "valueBoolean": true
+                        },
+                        {
+                            "url": "path",
+                            "valueString": "name.given.first() + ' ' + name.family"
+                        }
+                    ],
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn"
+                },
+                {
+                    "valueExpression": {
+                        "language": "application/x-fhir-query",
+                        "expression": "Patient?_assoc=patient"
+                    },
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression"
+                }
+            ]
+        },
+        {
+            "text": "Practitioner",
+            "type": "reference",
+            "linkId": "practitioner-role",
+            "required": true,
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource",
+                    "valueCode": "PractitionerRole"
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "forDisplay",
+                            "valueBoolean": true
+                        },
+                        {
+                            "url": "path",
+                            "valueString": "practitioner.resource.name.given.first() + ' ' + practitioner.resource.name.family + ' - ' + specialty.first().coding.display"
+                        }
+                    ],
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn"
+                },
+                {
+                    "valueExpression": {
+                        "language": "application/x-fhir-query",
+                        "expression": "PractitionerRole?_assoc=practitioner"
+                    },
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression"
+                }
+            ]
+        },
+        {
+            "text": "Service",
+            "type": "choice",
+            "linkId": "service",
+            "repeats": false,
+            "required": true,
+            "answerOption": [
+                {
+                    "valueCoding": {
+                        "code": "consultation",
+                        "system": "http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type",
+                        "display": "The first appointment"
+                    }
+                },
+                {
+                    "valueCoding": {
+                        "code": "follow-up",
+                        "system": "http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type",
+                        "display": "A follow up visit"
+                    }
+                }
+            ]
+        },
+        {
+            "text": "Date",
+            "type": "date",
+            "linkId": "date"
+        },
+        {
+            "item": [
+                {
+                    "type": "time",
+                    "linkId": "start-time"
+                },
+                {
+                    "type": "time",
+                    "linkId": "end-time"
+                }
+            ],
+            "text": "Time",
+            "type": "group",
+            "linkId": "Time period",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                    "valueCodeableConcept": {
+                        "coding": [
+                            {
+                                "code": "time-range-picker"
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ],
+    "resourceType": "Questionnaire",
+    "title": "Encounter create",
+    "extension": [
+        {
+            "url": "http://beda.software/fhir-extensions/questionnaire-mapper",
+            "valueReference": {
+                "reference": "Mapping/encounter-create-extract"
+            }
+        },
+        {
+            "url": "http://beda.software/fhir-extensions/questionnaire-mapper",
+            "valueReference": {
+                "reference": "Mapping/test-mapper"
+            }
+        }
+    ],
+    "status": "active",
+    "id": "encounter-patient-list-create",
+    "url": "https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/encounter-patient-list-create"
+}
