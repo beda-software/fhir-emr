@@ -1,0 +1,76 @@
+resourceType: Questionnaire
+id: new-appointment-proposed-patient
+name: new-appointment-proposed-patient
+title: New appointment proposed by patient
+status: active
+mapping:
+  - id: new-appointment-proposed-patient-extract
+    resourceType: Mapping
+launchContext:
+  - name:
+      code: patient
+    type:
+      - Patient
+    description: Patient
+  - name:
+      code: appointment
+    type:
+      - Appointment
+    description: Appointment date passing from calendar
+# contained:
+#   - resourceBundle: Bundle
+#     id: PractitionerRoleBundle
+#     type: transaction
+#     entry:
+#       - request:
+#         method: GET
+#         url: PractitionerRole/?role=doctor&_include=practitioner
+# sourceQueries:
+#  - localRef: "Bundle#PractitionerRoleBundle"
+item:
+  - type: group
+    linkId: root-group
+    item:
+      - text: Service
+        type: reference
+        required: true
+        linkId: healthcare-service
+        referenceResource:
+          - HealthcareService
+        answerExpression:
+          language: application/x-fhir-query
+          expression: "HealthcareService"
+        choiceColumn:
+          - forDisplay: true
+            path: "name"
+      - text: Practitioner
+        type: reference
+        required: true
+        linkId: practitioner
+        referenceResource:
+          - PractitionerRole
+        answerExpression:
+          language: application/x-fhir-query
+          expression: "PractitionerRole?role=doctor&_assoc=practitioner"
+        choiceColumn:
+          - forDisplay: true
+            path: "practitioner.resource.name.given + ' ' + practitioner.resource.name.family + ' — ' + specialty.coding.display"
+      - text: Patient
+        type: string
+        hidden: false
+        readOnly: true
+        linkId: patient
+        initialExpression:
+          language: text/fhirpath
+          expression: "%patient.name.first().given.first() + ' ' + %patient.name.first().family.first()"        
+      - text: Start time
+        required: true
+        type: dateTime
+        linkId: start-datetime
+        initialExpression:
+          language: text/fhirpath
+          expression: "%appointment.start"
+meta:
+  profile:
+    - https://beda.software/beda-emr-questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/new-appointment-proposed-patient
