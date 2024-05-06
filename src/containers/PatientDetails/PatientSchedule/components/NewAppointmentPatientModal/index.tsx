@@ -8,7 +8,7 @@ import { formatFHIRDateTime } from 'shared/src/utils/date';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { Modal } from 'src/components/Modal';
-import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { QuestionnaireResponseForm, useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
 
 interface NewAppointmentModalProps {
@@ -32,6 +32,7 @@ export function NewAppointmentPatientModal(props: NewAppointmentModalProps) {
     const { response, onSubmit, readOnly } = useQuestionnaireResponseForm({
         onSuccess: onOk,
         questionnaireResponseSaveService: inMemorySaveService,
+        initialQuestionnaireResponse: { questionnaire: 'new-appointment-proposed-patient' },
         questionnaireLoader: { type: 'id', questionnaireId: 'new-appointment-proposed-patient' },
         launchContextParameters: [
             {
@@ -48,7 +49,7 @@ export function NewAppointmentPatientModal(props: NewAppointmentModalProps) {
                     resourceType: 'Appointment',
                     start: appointmentStartDateTime,
                     end: appointmentEndDateTime,
-                    status: 'proposed',
+                    status: 'pending',
                     participant: [{ status: 'accepted' }],
                 },
             },
@@ -57,6 +58,32 @@ export function NewAppointmentPatientModal(props: NewAppointmentModalProps) {
 
     return (
         <Modal title="New Appointment" open={showModal} footer={null} onCancel={onCancel}>
+            {/* <QuestionnaireResponseForm props={
+                onSuccess: onOk,
+                questionnaireResponseSaveService: inMemorySaveService,
+                initialQuestionnaireResponse: { questionnaire: 'new-appointment-proposed-patient',},
+                questionnaireLoader: { type: 'id', questionnaireId: 'new-appointment-proposed-patient', },
+                launchContextParameters: [
+                    {
+                        name: 'patient',
+                        resource: {
+                            resourceType: 'Patient', //{ resourceType: 'Patient' },
+                            name: patient.name,
+                            id: patient.id,
+                        },
+                    },
+                    {
+                        name: 'appointment',
+                        resource: {
+                            resourceType: 'Appointment',
+                            start: appointmentStartDateTime,
+                            end: appointmentEndDateTime,
+                            status: 'pending',
+                            participant: [{ status: 'accepted' }],
+                        },
+                    },
+                ],
+            }/> */}
             <RenderRemoteData remoteData={response} renderLoading={Spinner}>
                 {(formData) => {
                     return (
@@ -66,14 +93,8 @@ export function NewAppointmentPatientModal(props: NewAppointmentModalProps) {
                                 formData={formData}
                                 onSubmit={onSubmit}
                                 readOnly={readOnly}
+                                saveButtonTitle="Ok"
                             />
-                            {/* <QuestionnaireResponseForm 
-                                questionnaireLoader={questionnaireIdLoader('new-appointment-proposed-patient')}
-
-                                // formData={formData} 
-                                // onSubmit={onSubmit} 
-                                readOnly={readOnly} 
-                            /> */}
                         </>
                     );
                 }}

@@ -17,6 +17,14 @@ launchContext:
     type:
       - Appointment
     description: Appointment date passing from calendar
+  # - name:
+  #     code: healthcare-service
+  #   type:
+  #     - HealthcareService
+  # - name: 
+  #     code: practitioner
+  #   type:
+  #     - PractitionerRole
 # contained:
 #   - resourceBundle: Bundle
 #     id: PractitionerRoleBundle
@@ -55,6 +63,13 @@ item:
         choiceColumn:
           - forDisplay: true
             path: "practitioner.resource.name.given + ' ' + practitioner.resource.name.family + ' — ' + specialty.coding.display"
+      - text: Chosen Practitioner
+        type: string
+        hidden: true
+        linkId: chosen-practitioner
+        initialExpression:
+          language: text/fhirpath
+          expression: "%practitioner"
       - text: Patient
         type: string
         hidden: false
@@ -70,6 +85,14 @@ item:
         initialExpression:
           language: text/fhirpath
           expression: "%appointment.start"
+      - text: End time
+        required: true
+        hidden: true
+        type: dateTime
+        linkId: end-datetime
+        initialExpression:
+          language: text/fhirpath
+          expression: "%appointment.end"
 meta:
   profile:
     - https://beda.software/beda-emr-questionnaire
