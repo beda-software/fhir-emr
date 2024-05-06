@@ -8,8 +8,6 @@ body:
     predefinedEndDateTime: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='end-datetime').answer.valueDateTime").0
     selectedPractitionerRoleReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner').answer.valueReference").0
     selectedHealthcareServiceReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='healthcare-service').answer.valueReference").0
-    # practitionerRoleId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='predefined-practitioner-role-id').answer.valueString").0
-    # healthcareServiceId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='predefined-healthcare-service-id').answer.valueString").0
   $body:
     $let:
       selectedPractitionerRoleReferenceSplit:
