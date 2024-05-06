@@ -1,13 +1,17 @@
+import { PlusOutlined } from '@ant-design/icons';
+import { Trans } from '@lingui/react';
+import { Button, notification } from 'antd';
 import { Patient } from 'fhir/r4b';
 import moment from 'moment';
 
 import { RenderRemoteData } from '@beda.software/fhir-react';
 
-import { inMemorySaveService } from 'shared/src/hooks/questionnaire-response-form-data';
+import { inMemorySaveService, questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 import { formatFHIRDateTime } from 'shared/src/utils/date';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { Modal } from 'src/components/Modal';
+import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm, useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
 
@@ -19,6 +23,7 @@ interface NewAppointmentModalProps {
     showModal: boolean;
     onOk?: () => void;
     onCancel?: () => void;
+    onCreate: () => void;
 }
 
 export function NewAppointmentPatientModal(props: NewAppointmentModalProps) {
@@ -58,12 +63,11 @@ export function NewAppointmentPatientModal(props: NewAppointmentModalProps) {
 
     return (
         <Modal title="New Appointment" open={showModal} footer={null} onCancel={onCancel}>
-            {/* <QuestionnaireResponseForm props={
-                onSuccess: onOk,
-                questionnaireResponseSaveService: inMemorySaveService,
-                initialQuestionnaireResponse: { questionnaire: 'new-appointment-proposed-patient',},
-                questionnaireLoader: { type: 'id', questionnaireId: 'new-appointment-proposed-patient', },
-                launchContextParameters: [
+            <QuestionnaireResponseForm
+                onSuccess={onOk}
+                questionnaireResponseSaveService={inMemorySaveService}
+                questionnaireLoader={questionnaireIdLoader('new-appointment-proposed-patient')}
+                launchContextParameters={[
                     {
                         name: 'patient',
                         resource: {
@@ -78,13 +82,13 @@ export function NewAppointmentPatientModal(props: NewAppointmentModalProps) {
                             resourceType: 'Appointment',
                             start: appointmentStartDateTime,
                             end: appointmentEndDateTime,
-                            status: 'pending',
+                            status: 'proposed',
                             participant: [{ status: 'accepted' }],
                         },
                     },
-                ],
-            }/> */}
-            <RenderRemoteData remoteData={response} renderLoading={Spinner}>
+                ]}
+            />
+            {/* <RenderRemoteData remoteData={response} renderLoading={Spinner}>
                 {(formData) => {
                     return (
                         <>
@@ -98,7 +102,7 @@ export function NewAppointmentPatientModal(props: NewAppointmentModalProps) {
                         </>
                     );
                 }}
-            </RenderRemoteData>
+            </RenderRemoteData> */}
         </Modal>
     );
 }
