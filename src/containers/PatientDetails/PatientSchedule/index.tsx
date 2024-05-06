@@ -12,17 +12,12 @@ import { getAllFHIRResources } from 'aidbox-react/lib/services/fhir';
 import {
     extractBundleResources,
     formatFHIRDateTime,
-    getIncludedResources,
     RenderRemoteData,
     useService,
     WithId,
 } from '@beda.software/fhir-react';
 import { mapSuccess } from '@beda.software/remote-data';
 
-import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
-
-import { DateTimeSlotPicker } from 'src/components/BaseQuestionnaireResponseForm/widgets';
-import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
 import { AppointmentBubble } from 'src/containers/Scheduling/ScheduleCalendar';
 import { useAppointmentEvents } from 'src/containers/Scheduling/ScheduleCalendar/hooks/useAppointmentEvents';
@@ -57,7 +52,6 @@ export function PatientSchedule(props: Props) {
     const periodEnd = formatFHIRDateTime(moment().endOf('day').add(1, 'months'));
 
     const [appointments, appointmentsManager] = useService(async () => {
-        // console.log(getToken());
         return mapSuccess(
             await getAllFHIRResources<Appointment>('Appointment', {
                 date: [`ge${periodStart}`, `lt${periodEnd}`],
@@ -66,7 +60,6 @@ export function PatientSchedule(props: Props) {
             (bundle) => {
                 const resources = extractBundleResources(bundle);
                 const appointments = resources.Appointment;
-                // console.log(resources)
 
                 return appointments.map((appointment) => {
                     return {
@@ -82,47 +75,11 @@ export function PatientSchedule(props: Props) {
         );
     }, [periodStart, periodEnd]);
 
-    // const doctorsResponse = useService(async () => {
-    //     return mapSuccess(
-    //         await getAllFHIRResources<PractitionerRole | Practitioner | HealthcareService>('PractitionerRole', {
-    //             role: [practitionerRoleDoctor],
-    //             _include: ['PractitionerRole:practitioner:Practitioner', 'PractitionerRole:service:HealthcareService'],
-    //         }),
-    //         (bundle) => {
-    //             // console.log(bundle)
-    //             const resources = extractBundleResources(bundle);
-
-    //             // const practitioners = resources.Practitioner;
-    //             // console.log(practitioners)
-    //             // console.log(renderHumanName(practitioners[0].name[0]))
-    //             // console.log(resources.PractitionerRole)
-    //             return {
-    //                 practitioners: resources.Practitioner,
-    //                 practitionerRoles: resources.PractitionerRole,
-    //                 healthcareServices: resources.HealthcareService,
-    //             };
-    //         },
-    //     );
-    // });
-
-    // const appointmentsDoctors = { appointmentsList: appointments, doctorsList: doctorsResponse };
-    // console.log(appointmentsDoctors)
-    const practitionerRolePath = ['practitioner-role', 0, 'value', 'Reference'];
-
-    const appointmentStartDateTime = newAppointmentData?.start
-        ? formatFHIRDateTime(newAppointmentData?.start)
-        : formatFHIRDateTime(new Date());
-    const end = moment(newAppointmentData?.start)
-        .add(45, 'm')
-        .toDate();
-    const appointmentEndDateTime = end ? formatFHIRDateTime(end) : formatFHIRDateTime(new Date());
-
     return (
         <RenderRemoteData remoteData={appointments} renderLoading={Spinner}>
             {(appointmentsList) => {
                 return (
                     <>
-                        <div>{/* {Object.keys(appointmentsData)} */}</div>
                         <SCalendar.Calendar>
                             <FullCalendar
                                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -170,13 +127,10 @@ export function PatientSchedule(props: Props) {
                             {newAppointmentData && (
                                 <NewAppointmentPatientModal
                                     key={`new-appointment`}
-                                    // practitionerRole={PractitionerRole}
                                     patient={patient}
                                     start={newAppointmentData.start}
-                                    // end={newAppointmentData.end}
                                     showModal={true}
                                     onOk={() => {
-                                        // console.log('submit');
                                         closeNewAppointmentModal();
                                         appointmentsManager.reload();
                                         notification.success({
@@ -184,46 +138,6 @@ export function PatientSchedule(props: Props) {
                                         });
                                     }}
                                     onCancel={closeNewAppointmentModal}
-
-                                    // <QuestionnaireResponseForm
-                                    //     questionnaireLoader={questionnaireIdLoader('new-appointment-proposed-patient')}
-                                    //     onSuccess={() => {
-                                    //         notification.success({
-                                    //             message: 'Appointment successfully created',
-                                    //         });
-                                    //         // history.replace('/');
-                                    //     }}
-                                    //     itemControlQuestionItemComponents={{
-                                    //         'date-time-slot': (props) => (
-                                    //             <DateTimeSlotPicker
-                                    //                 {...props}
-                                    //                 practitionerRolePath={practitionerRolePath}
-                                    //             />
-                                    //         ),
-                                    //     }}
-                                    //     initialQuestionnaireResponse={{
-                                    //         questionnaire: 'new-appointment-proposed-patient',
-                                    //     }}
-                                    //     launchContextParameters={[
-                                    //         {
-                                    //             name: 'patient',
-                                    //             resource: {
-                                    //                 resourceType: 'Patient', //{ resourceType: 'Patient' },
-                                    //                 name: patient.name,
-                                    //                 id: patient.id,
-                                    //             },
-                                    //         },
-                                    //         {
-                                    //             name: 'appointment',
-                                    //             resource: {
-                                    //                 resourceType: 'Appointment',
-                                    //                 start: appointmentStartDateTime,
-                                    //                 end: appointmentEndDateTime,
-                                    //                 status: 'pending',
-                                    //                 participant: [{ status: 'accepted' }],
-                                    //             },
-                                    //         },
-                                    //     ]}
                                 />
                             )}
                         </SCalendar.Calendar>

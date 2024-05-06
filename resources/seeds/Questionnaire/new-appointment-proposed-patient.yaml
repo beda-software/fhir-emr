@@ -67,14 +67,6 @@ item:
         initialExpression:
           language: text/fhirpath
           expression: "%appointment.start"
-      - text: End time
-        required: true
-        hidden: true
-        type: dateTime
-        linkId: end-datetime
-        initialExpression:
-          language: text/fhirpath
-          expression: "%appointment.end"
 meta:
   profile:
     - https://beda.software/beda-emr-questionnaire

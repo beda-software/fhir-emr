@@ -5,7 +5,6 @@ body:
     predefinedPatientId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='predefined-patient-id').answer.valueString").0
     predefinedPatientDisplay: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patient').answer.valueString").0
     predefinedStartDateTime: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='start-datetime').answer.valueDateTime").0
-    predefinedEndDateTime: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='end-datetime').answer.valueDateTime").0
     selectedPractitionerRoleReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner').answer.valueReference").0
     selectedHealthcareServiceReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='healthcare-service').answer.valueReference").0
   $body:
@@ -50,4 +49,3 @@ body:
                       status: accepted
                   status: proposed
                   start: $ predefinedStartDateTime
-                  end: $ predefinedEndDateTime
