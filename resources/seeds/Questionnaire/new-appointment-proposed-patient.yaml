@@ -63,13 +63,6 @@ item:
         choiceColumn:
           - forDisplay: true
             path: "practitioner.resource.name.given + ' ' + practitioner.resource.name.family + ' — ' + specialty.coding.display"
-      - text: Chosen Practitioner
-        type: string
-        hidden: true
-        linkId: chosen-practitioner
-        initialExpression:
-          language: text/fhirpath
-          expression: "%practitioner"
       - text: Patient
         type: string
         hidden: false
@@ -77,7 +70,14 @@ item:
         linkId: patient
         initialExpression:
           language: text/fhirpath
-          expression: "%patient.name.first().given.first() + ' ' + %patient.name.first().family.first()"        
+          expression: "%patient.name.first().given.first() + ' ' + %patient.name.first().family.first()"
+      - text: Predefined Patient Id
+        type: string
+        linkId: predefined-patient-id
+        hidden: true
+        initialExpression:
+          language: text/fhirpath
+          expression: "%patient.id"
       - text: Start time
         required: true
         type: dateTime

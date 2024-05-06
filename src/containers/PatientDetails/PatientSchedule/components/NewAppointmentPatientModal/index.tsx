@@ -8,6 +8,7 @@ import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { inMemorySaveService, questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 import { formatFHIRDateTime } from 'shared/src/utils/date';
+import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { Modal } from 'src/components/Modal';
@@ -65,7 +66,7 @@ export function NewAppointmentPatientModal(props: NewAppointmentModalProps) {
         <Modal title="New Appointment" open={showModal} footer={null} onCancel={onCancel}>
             <QuestionnaireResponseForm
                 onSuccess={onOk}
-                questionnaireResponseSaveService={inMemorySaveService}
+                // questionnaireResponseSaveService={inMemorySaveService}
                 questionnaireLoader={questionnaireIdLoader('new-appointment-proposed-patient')}
                 launchContextParameters={[
                     {

@@ -1,0 +1,55 @@
+resourceType: Mapping
+id: new-appointment-proposed-patient-extract
+body:
+  $let:
+    predefinedPatientId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='predefined-patient-id').answer.valueString").0
+    predefinedPatientDisplay: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patient').answer.valueString").0
+    predefinedStartDateTime: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='start-datetime').answer.valueDateTime").0
+    predefinedEndDateTime: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='end-datetime').answer.valueDateTime").0
+    selectedPractitionerRoleReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner').answer.valueReference").0
+    selectedHealthcareServiceReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='healthcare-service').answer.valueReference").0
+    # practitionerRoleId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='predefined-practitioner-role-id').answer.valueString").0
+    # healthcareServiceId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='predefined-healthcare-service-id').answer.valueString").0
+  $body:
+    $let:
+      selectedPractitionerRoleReferenceSplit:
+        $call: splitStr
+        $args:
+          - $ selectedPractitionerRoleReference.reference
+          - "/"
+      selectedHealthcareServiceReferenceSplit:
+        $call: splitStr
+        $args:
+          - $ selectedHealthcareServiceReference.reference
+          - "/"
+    $body:
+      resourceType: Bundle
+      type: transaction
+      entry:
+        - request:
+            url: /Appointment/$book
+            method: POST
+          resource:
+            resourceType: Bundle
+            entry:
+              - resource:
+                  resourceType: Appointment
+                  participant:
+                    - actor:
+                        resourceType: Patient
+                        id: $ predefinedPatientId
+                        display: $ predefinedPatientDisplay
+                      status: accepted
+                    - actor:
+                        resourceType: PractitionerRole
+                        id: $ selectedPractitionerRoleReferenceSplit.1
+                        display: $ selectedPractitionerRoleReference.display
+                      status: accepted
+                    - actor:
+                        resourceType: HealthcareService
+                        id: $ selectedHealthcareServiceReferenceSplit.1
+                        display: $ selectedHealthcareServiceReference.display
+                      status: accepted
+                  status: proposed
+                  start: $ predefinedStartDateTime
+                  end: $ predefinedEndDateTime
