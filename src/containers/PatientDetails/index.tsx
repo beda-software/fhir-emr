@@ -1,4 +1,4 @@
-import { Patient } from 'fhir/r4b';
+import { CarePlan, Patient } from 'fhir/r4b';
 import { useMemo } from 'react';
 import { useParams, Outlet, Route, Routes } from 'react-router-dom';
 
@@ -29,7 +29,7 @@ export interface PatientDetailsEmbeddedPageDefinition extends RouteItem {
 }
 
 export interface PatientDetailsProps {
-    embeddedPages?: (patient: Patient) => PatientDetailsEmbeddedPageDefinition[];
+    embeddedPages?: (patient: Patient, carePlans: CarePlan[]) => PatientDetailsEmbeddedPageDefinition[];
     isDefaultRoutesDisabled?: boolean;
 }
 
@@ -40,13 +40,13 @@ export const PatientDetails = (props: PatientDetailsProps) => {
     const author = selectCurrentUserRoleResource();
     const embeddedPages = useMemo(() => {
         if (isSuccess(patientResponse)) {
-            return props.embeddedPages?.(patientResponse.data);
+            return props.embeddedPages?.(patientResponse.data.patient, patientResponse.data.carePlans);
         }
     }, [patientResponse]);
 
     return (
         <RenderRemoteData remoteData={patientResponse} renderLoading={Spinner}>
-            {(patient) => {
+            {({ patient }) => {
                 return (
                     <PatientReloadProvider reload={manager.softReloadAsync}>
                         <PatientHeaderContextProvider patient={patient}>
