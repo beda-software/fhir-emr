@@ -4,7 +4,7 @@
 
 Clean and powerful frontend for Electronic Medical Records.
 
-Open-source. Customizable. Leverages HL7 [FHIR](https://hl7.org/fhir/R4/) standard as data model.
+Open-source. Customizable. Leverages HL7 [FHIR](https://hl7.org/fhir/R4/) standard as a data model.
 
 __Project Status__: _development_
 
@@ -54,8 +54,8 @@ __Documentation__: https://docs.emr.beda.software/
 
 The app uses [SDC](http://hl7.org/fhir/uv/sdc/2019May/index.html)
 
--   https://github.com/beda-software/sdc-ide
--   https://github.com/beda-software/aidbox-sdc
+-   [https://github.com/beda-software/sdc-ide](https://github.com/beda-software/sdc-ide)
+-   [https://github.com/beda-software/fhir-sdc](https://github.com/beda-software/fhir-sdc)
 
 ## For medical practitioners and organizations
 
@@ -66,9 +66,12 @@ The app uses [SDC](http://hl7.org/fhir/uv/sdc/2019May/index.html)
 -   Any collaboration is welcomed: https://beda.software/
 
 ## License
-
--   The app is based on Aidbox FHIR Server. If you want to run Aidbox in cloud, please refer https://docs.aidbox.app/getting-started/editions-and-pricing
--   You can try any other FHIR server, but some adjustments may need to be done
+The EMR source code is licensed by [MIT License](https://github.com/beda-software/fhir-sdc/blob/master/LICENSE).
+You need to run the Aidbox FHIR Server as a backend that stores medical data.
+You can get a free Aidbox trial license to run the application locally.
+You need by Aidbox license for any production installation or installation that manages PHI data.
+[Here](https://docs.aidbox.app/getting-started/editions-and-pricing) you can find more information about Aidbox licensing 
+You can try any other FHIR server, but some adjustments to the source code will be required.
 
 ## Installation
 
@@ -82,11 +85,11 @@ cp .env.tpl .env
 ### Local setup
 
 #### Video calls local setup
-Before you start you need to setup your own Jitsi Meet video instance. See this [guide from Jitsi](https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-docker/)
+Before you start you need to set up your own Jitsi Meet video instance. See this [guide from Jitsi](https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-docker/)
 
-Also you need to configure JWT authentication on the video server side. See this [guide](https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-docker/#authentication-using-jwt-tokens)
+Also, you need to configure JWT authentication on the video server side. See this [guide](https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-docker/#authentication-using-jwt-tokens)
 
-**Important note**: We use react component to represent video call frame from [jitsi-meet-react-sdk](https://github.com/jitsi/jitsi-meet-react-sdk/tree/main). This component requires HTTPS schema for Jitsi server, so you need to publish your server with this requirement
+**Important note**: We use react component to represent the video call frame from [jitsi-meet-react-sdk](https://github.com/jitsi/jitsi-meet-react-sdk/tree/main). This component requires HTTPS schema for the Jitsi server, so you need to publish your server with this requirement
 
 In the EMR folder add these variables to `.env` file with values you generated on the video server side:
 
@@ -115,8 +118,8 @@ yarn compile
 ```
 
 #### Docker
-You need to setup docker to run FHIR server, SDC and other microservices. https://docker.com/  
-Once you get docker installed in you local machine, you can run Aidbox and other dependencies
+You need to set up docker to run Aidbox, SDC, and other microservices. https://docker.com/  
+Once you get docker installed in your local machine, you can run all project dependencies
 ```sh
 make build-seeds
 make up
@@ -137,7 +140,7 @@ yarn test            # launch tests for all workspaces
 
 ## Update seeds
 
-To see the changes that were added to `resources/seeds` follow next steps
+To see the changes that were added to `resources/seeds` follow the next steps
 
 ```sh
 make seeds
@@ -145,4 +148,7 @@ make seeds
 
 ## Project History
 
-Project for https://github.com/HealthSamurai/xmas-hackathon-2021
+Started as part of [https://github.com/HealthSamurai/xmas-hackathon-2021](https://github.com/HealthSamurai/xmas-hackathon-2021/issues/13) FHIR EMR evolved into something bigger.
+
+-------------
+Made with ❤️ by Beda Software
