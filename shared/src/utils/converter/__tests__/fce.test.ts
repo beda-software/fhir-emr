@@ -14,6 +14,7 @@ import fce_choice_answer_option from './resources/questionnaire_fce/choice_answe
 import fce_consent from './resources/questionnaire_fce/consent.json';
 import fce_enable_when from './resources/questionnaire_fce/enable_when.json';
 import fce_encounter_create from './resources/questionnaire_fce/encounter_create.json';
+import fce_encounter_patient_list_create from './resources/questionnaire_fce/encounter_patient_list_create.json';
 import fce_gad_7 from './resources/questionnaire_fce/gad_7.json';
 import fce_immunization from './resources/questionnaire_fce/immunization.json';
 import fce_medication from './resources/questionnaire_fce/medication.json';
@@ -37,6 +38,7 @@ import fhir_choice_answer_option from './resources/questionnaire_fhir/choice_ans
 import fhir_consent from './resources/questionnaire_fhir/consent.json';
 import fhir_enable_when from './resources/questionnaire_fhir/enable_when.json';
 import fhir_encounter_create from './resources/questionnaire_fhir/encounter_create.json';
+import fhir_encounter_patient_list_create from './resources/questionnaire_fhir/encounter_patient_list_create.json';
 import fhir_gad_7 from './resources/questionnaire_fhir/gad_7.json';
 import fhir_immunization from './resources/questionnaire_fhir/immunization.json';
 import fhir_medication from './resources/questionnaire_fhir/medication.json';
@@ -88,12 +90,12 @@ function sortExtensionsRecursive(object: any) {
     if (typeof object !== 'object' || object === null) {
         return object;
     }
-    for (let [key, property] of Object.entries(object)) {
+    for (const [key, property] of Object.entries(object)) {
         if (Array.isArray(property)) {
             if (key === 'extension') {
                 property.sort((a, b) => (a.url === b.url ? 0 : a.url < b.url ? -1 : 1));
             }
-            for (let nestedProperty of property) {
+            for (const nestedProperty of property) {
                 sortExtensionsRecursive(nestedProperty);
             }
         } else {
@@ -113,6 +115,7 @@ describe('Questionanire and QuestionnaireResponses transformation', () => {
         [fhir_beverages, fce_beverages],
         [fhir_choice_answer_option, fce_choice_answer_option],
         [fhir_encounter_create, fce_encounter_create],
+        [fhir_encounter_patient_list_create, fce_encounter_patient_list_create],
         [fhir_gad_7, fce_gad_7],
         [fhir_immunization, fce_immunization],
         [fhir_medication, fce_medication],
@@ -140,6 +143,7 @@ describe('Questionanire and QuestionnaireResponses transformation', () => {
         [fce_beverages, fhir_beverages],
         [fce_choice_answer_option, fhir_choice_answer_option],
         [fce_encounter_create, fhir_encounter_create],
+        [fce_encounter_patient_list_create, fhir_encounter_patient_list_create],
         [fce_gad_7, fhir_gad_7],
         [fce_immunization, fhir_immunization],
         [fce_medication, fhir_medication],

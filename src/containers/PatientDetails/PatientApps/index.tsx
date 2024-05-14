@@ -1,5 +1,5 @@
 import { Typography, Card, Button } from 'antd';
-import { Patient } from 'fhir/r4b';
+import { Patient, Practitioner } from 'fhir/r4b';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
@@ -21,7 +21,13 @@ interface SmartAppProps {
 
 function SmartApp({ app, patient }: SmartAppProps) {
     const user = sharedAuthorizedUser.getSharedState();
-    const practitioner = sharedAuthorizedPractitioner.getSharedState();
+    // TODO: Conversation point.
+    let practitioner: Practitioner | undefined;
+    try {
+        practitioner = sharedAuthorizedPractitioner.getSharedState();
+    } catch (e) {
+        console.error(e);
+    }
     return (
         <Card
             title={app.smart?.name ?? 'UNKNOWN'}
