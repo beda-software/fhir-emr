@@ -62,18 +62,18 @@ __Documentation__: https://docs.emr.beda.software/
 The EMR source code is licensed by [MIT License](https://github.com/beda-software/fhir-sdc/blob/master/LICENSE).  
 
 ## FHIR Backend
-Beda EMR is a frontend. It is a user interfcae that requre a FHIR server to store medical data.  
-For both developemnt and production environments we are using Aidbox FHIR Server.  
+Beda EMR is a frontend. It is a user interface that requires a FHIR server to store medical data.  
+For both development and production environments, we recommend using Aidbox FHIR Server.  
 It is a primary backend platform for Beda EMR.
 You can get a free Aidbox trial license to run the application locally.  
-You need by Aidbox license for any production installation or installation that manages PHI data.  
+You need to purchase Aidbox license for any production installation or installation that manages PHI data.  
 [Here](https://docs.aidbox.app/getting-started/editions-and-pricing) you can find more information about Aidbox licensing.  
 Obviously, you can try any other FHIR server. All core features just need FHIR API.  
-However you have to adjust some parts of the application that is not covered in the FHIR specification and wher we use Aidbox API.  
+However, you have to adjust some parts of the application that are not covered in the FHIR specification and where we use Aidbox API.  
 
 ## Installation
 
-Please see the installtion section of the documentation: https://docs.emr.beda.software/Welcome/getting-started/#installation
+Please see the installation section of the documentation: https://docs.emr.beda.software/Welcome/getting-started/#installation
 
 ## Project History
 
