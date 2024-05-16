@@ -7,7 +7,7 @@ import { t, Trans } from '@lingui/macro';
 import { notification } from 'antd';
 import { PractitionerRole } from 'fhir/r4b';
 
-import { RenderRemoteData } from '@beda.software/fhir-react';
+import { RenderRemoteData, formatFHIRDate } from '@beda.software/fhir-react';
 
 import { Title } from 'src/components/Typography';
 
@@ -25,7 +25,7 @@ interface Props {
 }
 
 export function ScheduleCalendar({ practitionerRole }: Props) {
-    const { calendarOptions } = useCalendarOptions();
+    const { calendarOptions, setCalendarOptions } = useCalendarOptions();
 
     const { remoteResponses, slotsManager } = useScheduleCalendar(practitionerRole);
 
@@ -85,6 +85,7 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
                                     slotLabelFormat={{
                                         timeStyle: 'short',
                                     }}
+                                    unselectCancel=".ant-modal-content"
                                     {...calendarOptions}
                                 />
                                 {appointmentDetails && (
@@ -123,6 +124,11 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
                                         showModal={true}
                                         onOk={() => {
                                             closeNewAppointmentModal();
+                                            const newAppointmentStartDate = formatFHIRDate(newAppointmentData.start);
+                                            setCalendarOptions({
+                                                ...calendarOptions,
+                                                initialDate: newAppointmentStartDate,
+                                            });
                                             slotsManager.reload();
                                             notification.success({
                                                 message: t`Appointment successfully added`,
