@@ -1,6 +1,6 @@
 import { PractitionerRole } from 'fhir/r4b';
 
-import { RenderRemoteData } from '@beda.software/fhir-react';
+import { RenderRemoteData, formatFHIRDateTime } from '@beda.software/fhir-react';
 
 import { inMemorySaveService } from 'shared/src/hooks/questionnaire-response-form-data';
 
@@ -15,10 +15,13 @@ interface Props {
     onSubmit: () => void;
     onClose: () => void;
     showModal: boolean;
+    start: Date;
 }
 
 export function EditAppointmentModal(props: Props) {
-    const { showModal, onClose, appointmentId, practitionerRole } = props;
+    const { showModal, onClose, appointmentId, practitionerRole, start } = props;
+
+    const appointmentStartDateTime = formatFHIRDateTime(start);
 
     const { response, onSubmit } = useQuestionnaireResponseForm({
         questionnaireLoader: { type: 'id', questionnaireId: 'edit-appointment' },
@@ -31,6 +34,7 @@ export function EditAppointmentModal(props: Props) {
                     id: appointmentId,
                     status: 'booked',
                     participant: [{ status: 'accepted' }],
+                    start: appointmentStartDateTime,
                 },
             },
             {

@@ -37,8 +37,10 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
         appointmentDetails,
         closeAppointmentDetails,
         openEditAppointment,
-        editingAppointmentId,
         closeEditAppointment,
+        editingAppointmentData,
+        editingAppointmentId,
+        editingAppointmentDateStart,
     } = useAppointmentEvents();
 
     return (
@@ -69,6 +71,9 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
                                     eventContent={AppointmentBubble}
                                     eventClick={openAppointmentDetails}
                                     select={openNewAppointmentModal}
+                                    eventDrop={(info) => {
+                                        openEditAppointment(info.event.id, info);
+                                    }}
                                     buttonText={{
                                         today: t`Today`,
                                         week: t`Week`,
@@ -111,7 +116,11 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
                                                 message: t`Appointment successfully rescheduled`,
                                             });
                                         }}
-                                        onClose={closeEditAppointment}
+                                        onClose={() => {
+                                            editingAppointmentData?.revert();
+                                            closeEditAppointment();
+                                        }}
+                                        start={editingAppointmentDateStart || new Date()}
                                     />
                                 )}
                                 {newAppointmentData && (

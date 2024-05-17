@@ -113,7 +113,7 @@ item:
         linkId: start-datetime
         initialExpression:
             language: text/fhirpath
-            expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.start"
+            expression: "%CurrentAppointment.start"
 url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/edit-appointment
 meta:
     profile:

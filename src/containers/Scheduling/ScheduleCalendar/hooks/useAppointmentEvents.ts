@@ -1,4 +1,4 @@
-import { DateSelectArg, EventClickArg } from '@fullcalendar/core';
+import { DateSelectArg, EventClickArg, EventDropArg } from '@fullcalendar/core';
 import { useCallback, useState } from 'react';
 
 export interface NewAppointmentData {
@@ -10,6 +10,8 @@ export function useAppointmentEvents() {
     const [newAppointmentData, setNewAppointmentData] = useState<NewAppointmentData | undefined>();
     const [appointmentDetails, setAppointmentDetails] = useState<EventClickArg['event'] | undefined>();
     const [editingAppointmentId, setEditingAppointmentId] = useState<string | undefined>();
+    const [editingAppointmentDateStart, setEditingAppointmentDateStart] = useState<Date | null>();
+    const [editingAppointmentData, setEditingAppointmentData] = useState<EventDropArg | undefined>();
 
     // function handleEventChange({ event }: EventChangeArg) {
     //     // TODO: show confirm modal and discard event change if rejected
@@ -27,17 +29,26 @@ export function useAppointmentEvents() {
     }, []);
 
     const openAppointmentDetails = useCallback((e: EventClickArg) => {
+        setEditingAppointmentDateStart(e.event.start);
         setAppointmentDetails(e.event);
     }, []);
+
     const closeAppointmentDetails = useCallback(() => {
         setAppointmentDetails(undefined);
     }, []);
 
-    const openEditAppointment = useCallback((id: string) => {
+    const openEditAppointment = useCallback((id: string, data?: EventDropArg) => {
         setEditingAppointmentId(id);
+        if (data) {
+            setEditingAppointmentDateStart(data.event.start);
+            setEditingAppointmentData(data);
+        }
     }, []);
+
     const closeEditAppointment = useCallback(() => {
         setEditingAppointmentId(undefined);
+        setEditingAppointmentData(undefined);
+        setEditingAppointmentDateStart(null);
     }, []);
 
     return {
@@ -52,5 +63,8 @@ export function useAppointmentEvents() {
         openEditAppointment,
         editingAppointmentId,
         closeEditAppointment,
+
+        editingAppointmentData,
+        editingAppointmentDateStart,
     };
 }
