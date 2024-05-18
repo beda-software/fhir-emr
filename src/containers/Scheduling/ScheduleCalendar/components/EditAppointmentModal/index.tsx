@@ -15,13 +15,13 @@ interface Props {
     onSubmit: () => void;
     onClose: () => void;
     showModal: boolean;
-    start: Date;
+    start: Date | undefined | null;
 }
 
 export function EditAppointmentModal(props: Props) {
     const { showModal, onClose, appointmentId, practitionerRole, start } = props;
 
-    const appointmentStartDateTime = formatFHIRDateTime(start);
+    const appointmentStartDateTime = start ? formatFHIRDateTime(start) : formatFHIRDateTime(new Date());
 
     const { response, onSubmit } = useQuestionnaireResponseForm({
         questionnaireLoader: { type: 'id', questionnaireId: 'edit-appointment' },

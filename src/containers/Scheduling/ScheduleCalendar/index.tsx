@@ -120,7 +120,7 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
                                             editingAppointmentData?.revert();
                                             closeEditAppointment();
                                         }}
-                                        start={editingAppointmentDateStart || new Date()}
+                                        start={editingAppointmentDateStart}
                                     />
                                 )}
                                 {newAppointmentData && (

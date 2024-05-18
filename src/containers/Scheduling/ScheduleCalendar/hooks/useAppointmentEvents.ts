@@ -10,7 +10,9 @@ export function useAppointmentEvents() {
     const [newAppointmentData, setNewAppointmentData] = useState<NewAppointmentData | undefined>();
     const [appointmentDetails, setAppointmentDetails] = useState<EventClickArg['event'] | undefined>();
     const [editingAppointmentId, setEditingAppointmentId] = useState<string | undefined>();
-    const [editingAppointmentDateStart, setEditingAppointmentDateStart] = useState<Date | null>();
+    const [editingAppointmentDateStart, setEditingAppointmentDateStart] = useState<
+        EventClickArg['event']['start'] | undefined
+    >();
     const [editingAppointmentData, setEditingAppointmentData] = useState<EventDropArg | undefined>();
 
     // function handleEventChange({ event }: EventChangeArg) {
@@ -48,7 +50,7 @@ export function useAppointmentEvents() {
     const closeEditAppointment = useCallback(() => {
         setEditingAppointmentId(undefined);
         setEditingAppointmentData(undefined);
-        setEditingAppointmentDateStart(null);
+        setEditingAppointmentDateStart(undefined);
     }, []);
 
     return {
