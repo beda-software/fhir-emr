@@ -43,7 +43,7 @@ function usePractitionerOverview(props: Props) {
         },
         {
             title: 'Available services',
-            value: healthcareServices?.map((hs) => hs.type?.[0]?.coding?.[0]?.display).join(', '),
+            value: healthcareServices?.map((hs) => hs.name).join(', '),
         },
     ];
 
