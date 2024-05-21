@@ -17,7 +17,7 @@
   :type zen/map
   :require #{:duration}
   :keys {:duration {:confirms #{hl7-fhir-r4-core.integer/schema}
-                    :fhir/extensionUri "http://beda.software/fhir-extensions/healthcareservice-duration"}}}
+                    :fhir/extensionUri "urn:extensions:healthcare-service-duration"}}}
  ChargeItemDefinitionProfile
   {:zen/tags #{zen/schema zen.fhir/profile-schema}
    :confirms #{hl7-fhir-r4-core.ChargeItemDefinition/schema}
