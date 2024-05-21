@@ -24,6 +24,9 @@ export function getANTDTheme({ dark }: { dark?: boolean }): ThemeConfig {
             Layout: {
                 colorBgHeader: palette.neutral.sidebarBackground,
             },
+            Result: {
+                colorSuccess: palette.secondary,
+            },
         },
     };
 

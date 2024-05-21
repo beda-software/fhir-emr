@@ -69,7 +69,7 @@ export function HealthcareServiceList() {
                             dataIndex: 'type',
                             key: 'type',
                             width: '20%',
-                            render: (_text, resource) => resource.type?.[0]?.text,
+                            render: (_text, resource) => resource.name,
                         },
                         {
                             title: <Trans>Duration (minutes)</Trans>,
