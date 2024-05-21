@@ -5,7 +5,7 @@ import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
 import { Client } from 'shared/src/contrib/aidbox';
 
-import { sharedAuthorizedUser, sharedAuthorizedPractitioner } from 'src/sharedState';
+import { selectCurrentUserRoleResource } from 'src/utils/role.ts';
 
 import { launch, useSmartApps } from './hooks';
 
@@ -21,52 +21,27 @@ interface SmartAppProps {
 
 function SmartApp({ app, patient }: SmartAppProps) {
     try {
-        const user = sharedAuthorizedUser.getSharedState();
-        const userRoleName = user && user.role ? user.role[0]?.name : null;
+        const currentUser = selectCurrentUserRoleResource();
+        const launchApp = () => {
+            const launchParams = {
+                client: app.id!,
+                user: currentUser.id,
+                patient: patient.id!,
+                practitioner: '',
+            };
 
-        if (userRoleName === Role.Admin || userRoleName === Role.Patient) {
-            return (
-                <Card
-                    title={app.smart?.name ?? 'UNKNOWN'}
-                    style={{ width: 300 }}
-                    extra={
-                        <Button
-                            type="primary"
-                            onClick={() =>
-                                launch({
-                                    client: app.id!,
-                                    user: user!.id!,
-                                    patient: patient.id!,
-                                    practitioner: '',
-                                })
-                            }
-                        >
-                            Launch
-                        </Button>
-                    }
-                >
-                    <Text>{app.smart?.description}</Text>
-                </Card>
-            );
-        }
+            if (!['admin', 'patient'].some((role) => role in currentUser)) {
+                launchParams.practitioner = currentUser.id;
+            }
+            launch(launchParams);
+        };
 
-        const practitioner = sharedAuthorizedPractitioner.getSharedState();
         return (
             <Card
                 title={app.smart?.name ?? 'UNKNOWN'}
                 style={{ width: 300 }}
                 extra={
-                    <Button
-                        type="primary"
-                        onClick={() =>
-                            launch({
-                                client: app.id!,
-                                user: user!.id!,
-                                patient: patient.id!,
-                                ...(practitioner ? { practitioner: practitioner.id } : {}),
-                            })
-                        }
-                    >
+                    <Button type="primary" onClick={launchApp}>
                         Launch
                     </Button>
                 }
