@@ -7,7 +7,7 @@ import { Client } from 'shared/src/contrib/aidbox';
 
 import { selectCurrentUserRoleResource } from 'src/utils/role.ts';
 
-import { launch, useSmartApps } from './hooks';
+import { launch, LaunchProps, useSmartApps } from './hooks';
 
 const { Text } = Typography;
 
@@ -19,43 +19,37 @@ interface SmartAppProps {
     app: Client;
 }
 
-function SmartApp({ app, patient }: SmartAppProps) {
-    try {
-        const currentUser = selectCurrentUserRoleResource();
-        const launchApp = () => {
-            const launchParams = {
-                client: app.id!,
-                user: currentUser.id,
-                patient: patient.id!,
-                practitioner: '',
-            };
-
-            if (!['admin', 'patient'].some((role) => role in currentUser)) {
-                launchParams.practitioner = currentUser.id;
-            }
-            launch(launchParams);
+export function useLaunchApp({ app, patient }: SmartAppProps) {
+    const currentUser = selectCurrentUserRoleResource();
+    const launchApp = () => {
+    const launchParams:LaunchProps = {
+        client: app.id!,
+        user: currentUser.id,
+        patient: patient.id!,
+    };
+        if (currentUser.resourceType === 'Practitioner'){
+            launchParams.practitioner = currentUser.id;
+        }
+        launch(launchParams);
         };
+    return launchApp;
+}
 
-        return (
-            <Card
-                title={app.smart?.name ?? 'UNKNOWN'}
-                style={{ width: 300 }}
-                extra={
-                    <Button type="primary" onClick={launchApp}>
+function SmartApp(props: SmartAppProps) {
+    const launchApp = useLaunchApp(props);
+    return (
+        <Card
+            title={props.app.smart?.name ?? 'UNKNOWN'}
+            style={{ width: 300 }}
+            extra={
+                <Button type="primary" onClick={launchApp}>
                         Launch
                     </Button>
-                }
-            >
-                <Text>{app.smart?.description}</Text>
-            </Card>
-        );
-    } catch (error) {
-        return (
-            <div>
-                <p>An error occurred while loading the smart application.</p>
-            </div>
-        );
-    }
+            }
+    >
+        <Text>{props.app.smart?.description}</Text>
+    </Card>
+    );
 }
 
 export function PatientApps({ patient }: PatientAppsProps) {
