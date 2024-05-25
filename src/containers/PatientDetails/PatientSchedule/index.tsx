@@ -41,9 +41,6 @@ export function PatientSchedule(props: Props) {
         openAppointmentDetails,
         appointmentDetails,
         closeAppointmentDetails,
-        openEditAppointment,
-        editingAppointmentId,
-        closeEditAppointment,
     } = useAppointmentEvents();
 
     const { patient } = props;
