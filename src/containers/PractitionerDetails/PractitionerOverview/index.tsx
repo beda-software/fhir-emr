@@ -52,6 +52,7 @@ function usePractitionerOverview(props: Props) {
 
 export function PractitionerOverview(props: Props) {
     const { practitioner, practitionerRole, reload } = props;
+    console.log(practitionerRole);
     const { details } = usePractitionerOverview(props);
 
     return (

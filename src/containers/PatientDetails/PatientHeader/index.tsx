@@ -83,6 +83,7 @@ export function PatientHeader(props: { extraMenuItems?: RouteItem[]; isDefaultRo
                       { label: t`Orders`, path: `/patients/${params.id}/orders` },
                       { label: t`Smart Apps`, path: `/patients/${params.id}/apps` },
                       { label: t`Resources`, path: `/patients/${params.id}/resources` },
+                      { label: t`Schedule`, path: `/patients/${params.id}/schedule` },
                   ]
                 : []
             ).concat(

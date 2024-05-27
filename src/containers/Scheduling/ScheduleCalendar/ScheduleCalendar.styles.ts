@@ -121,6 +121,7 @@ export const S = {
         }
 
         .fc-timegrid-slot-label-cushion {
+            color: ${({ theme }) => theme.neutralPalette.gray_13};
             text-transform: lowercase;
         }
     `,
