@@ -130,10 +130,6 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                                     path="/schedule"
                                                     element={<PatientSchedule patient={patient} />}
                                                 />
-                                                <Route
-                                                    path="/schedule/:scheduleId"
-                                                    element={<PatientSchedule patient={patient} />}
-                                                />
                                                 <Route path="/apps" element={<PatientApps patient={patient} />} />
                                                 <Route path="/orders" element={<PatientOrders patient={patient} />} />
                                             </>
