@@ -1,13 +1,10 @@
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import FullCalendar from '@fullcalendar/react';
-import timeGridPlugin from '@fullcalendar/timegrid';
 import { Trans, t } from '@lingui/macro';
 import { Button, Row, notification } from 'antd';
 
 import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { BasePageHeader, BasePageContent } from 'src/components/BaseLayout';
+import { Calendar } from 'src/components/Calendar';
 import { Title } from 'src/components/Typography';
 
 import { S } from './Calendar.styles';
@@ -22,10 +19,8 @@ import { AppointmentBubble } from '../Scheduling/ScheduleCalendar';
 import { AppointmentDetailsModal } from '../Scheduling/ScheduleCalendar/components/AppointmentDetailsModal';
 import { EditAppointmentModal } from '../Scheduling/ScheduleCalendar/components/EditAppointmentModal';
 import { NewAppointmentData, useAppointmentEvents } from '../Scheduling/ScheduleCalendar/hooks/useAppointmentEvents';
-import { useCalendarOptions } from '../Scheduling/ScheduleCalendar/hooks/useCalendarOptions';
 
 export function OrganizationScheduling() {
-    const { calendarOptions } = useCalendarOptions();
     const {
         openNewAppointmentModal,
         newAppointmentData,
@@ -97,81 +92,52 @@ export function OrganizationScheduling() {
                 <RenderRemoteData remoteData={remoteResponses}>
                     {({ slots, businessHours, allPractitionersAndPractitionerRoles, healthcareServices }) => (
                         <S.Wrapper>
-                            <S.Calendar>
-                                <FullCalendar
-                                    plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-                                    nowIndicator={true}
-                                    headerToolbar={{
-                                        left: 'prev,next today',
-                                        center: 'title',
-                                        right: 'timeGridWeek,timeGridDay',
-                                    }}
-                                    businessHours={businessHours.length ? businessHours.flat() : emptyBusinessHours}
-                                    initialView="timeGridWeek"
-                                    editable={true}
-                                    selectable={isSelectable(selectedHealthcareService, selectedPractitionerRole)}
-                                    selectMirror={true}
-                                    dayMaxEvents={true}
-                                    initialEvents={slots.slotsData}
-                                    eventContent={AppointmentBubble}
-                                    eventClick={openAppointmentDetails}
-                                    select={openNewAppointmentModal}
-                                    buttonText={{
-                                        today: t`Today`,
-                                        week: t`Week`,
-                                        day: t`Day`,
-                                    }}
-                                    dayHeaderFormat={{
-                                        weekday: 'short',
-                                        day: 'numeric',
-                                        month: 'short',
-                                    }}
-                                    stickyHeaderDates={true}
-                                    allDaySlot={false}
-                                    slotLabelFormat={{
-                                        timeStyle: 'short',
-                                    }}
-                                    {...calendarOptions}
+                            <Calendar
+                                businessHours={businessHours.length ? businessHours.flat() : emptyBusinessHours}
+                                selectable={isSelectable(selectedHealthcareService, selectedPractitionerRole)}
+                                initialEvents={slots.slotsData}
+                                eventContent={AppointmentBubble}
+                                eventClick={openAppointmentDetails}
+                                select={openNewAppointmentModal}
+                            />
+                            {appointmentDetails && (
+                                <AppointmentDetailsModal
+                                    key={`appointment-details__${appointmentDetails.id}`}
+                                    appointmentId={appointmentDetails.id}
+                                    status={appointmentDetails.extendedProps.status}
+                                    showModal={true}
+                                    onEdit={(id) => openEditAppointment(id)}
+                                    onClose={closeAppointmentDetails}
                                 />
-                                {appointmentDetails && (
-                                    <AppointmentDetailsModal
-                                        key={`appointment-details__${appointmentDetails.id}`}
-                                        appointmentId={appointmentDetails.id}
-                                        status={appointmentDetails.extendedProps.status}
-                                        showModal={true}
-                                        onEdit={(id) => openEditAppointment(id)}
-                                        onClose={closeAppointmentDetails}
-                                    />
-                                )}
-                                {editingAppointmentId && (
-                                    <EditAppointmentWrapper
-                                        editingAppointmentId={editingAppointmentId}
-                                        closeEditAppointment={closeEditAppointment}
+                            )}
+                            {editingAppointmentId && (
+                                <EditAppointmentWrapper
+                                    editingAppointmentId={editingAppointmentId}
+                                    closeEditAppointment={closeEditAppointment}
+                                    reload={slotsManager.reload}
+                                    onClose={closeEditAppointment}
+                                    appointments={slots.appointments}
+                                    practitionerRoles={allPractitionersAndPractitionerRoles.practitionerRoles}
+                                />
+                            )}
+                            {newAppointmentData &&
+                                isAppointmentCreatingAvailable(
+                                    newAppointmentData,
+                                    selectedHealthcareService,
+                                    selectedPractitionerRole,
+                                ) && (
+                                    <NewAppointmentModalWrapper
+                                        newAppointmentData={newAppointmentData!}
+                                        closeNewAppointment={closeNewAppointmentModal}
                                         reload={slotsManager.reload}
-                                        onClose={closeEditAppointment}
-                                        appointments={slots.appointments}
+                                        onClose={closeNewAppointmentModal}
+                                        selectedPractitionerRoleId={getSelectedValue(selectedPractitionerRole)}
+                                        selectedHealthcareServiceId={getSelectedValue(selectedHealthcareService)}
                                         practitionerRoles={allPractitionersAndPractitionerRoles.practitionerRoles}
+                                        practitioners={allPractitionersAndPractitionerRoles.practitioners}
+                                        healthcareServices={healthcareServices}
                                     />
                                 )}
-                                {newAppointmentData &&
-                                    isAppointmentCreatingAvailable(
-                                        newAppointmentData,
-                                        selectedHealthcareService,
-                                        selectedPractitionerRole,
-                                    ) && (
-                                        <NewAppointmentModalWrapper
-                                            newAppointmentData={newAppointmentData!}
-                                            closeNewAppointment={closeNewAppointmentModal}
-                                            reload={slotsManager.reload}
-                                            onClose={closeNewAppointmentModal}
-                                            selectedPractitionerRoleId={getSelectedValue(selectedPractitionerRole)}
-                                            selectedHealthcareServiceId={getSelectedValue(selectedHealthcareService)}
-                                            practitionerRoles={allPractitionersAndPractitionerRoles.practitionerRoles}
-                                            practitioners={allPractitionersAndPractitionerRoles.practitioners}
-                                            healthcareServices={healthcareServices}
-                                        />
-                                    )}
-                            </S.Calendar>
                         </S.Wrapper>
                     )}
                 </RenderRemoteData>
