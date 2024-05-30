@@ -1,0 +1,15 @@
+auth:
+  authorization_code:
+    redirect_uri: https://beda.caresofa.com
+    refresh_token: true
+    secret_required: false
+    access_token_expiration: 36000
+type: smart-on-fhir-practitioner
+smart:
+  name: Practitioner-specific Tool
+  launch_uri: https://beda.caresofa.com/
+  description: Clinical tool available only for practitioners
+grant_types:
+  - authorization_code
+id: practitioner-specific-tool-id
+resourceType: Client

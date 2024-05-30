@@ -1,17 +1,28 @@
 import { notification } from 'antd';
+import { Organization, Patient, Practitioner } from 'fhir/r4b';
 
 import { useService } from 'aidbox-react/lib/hooks/service';
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { getFHIRResources as getAidboxResources, extractBundleResources } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess, service } from 'aidbox-react/lib/services/service';
 
+import { WithId } from '@beda.software/fhir-react';
+
 import config from 'shared/src/config';
 import { Client } from 'shared/src/contrib/aidbox';
 
-export function useSmartApps() {
+type CurrentUser = WithId<Patient> | WithId<Practitioner> | WithId<Organization>;
+
+export function useSmartApps(currentUser: CurrentUser) {
     const [appsRemoteData] = useService(async () => {
+        let resourceType = 'smart-on-fhir';
+        if (currentUser.resourceType === 'Patient') {
+            resourceType = 'smart-on-fhir-patient';
+        } else if (currentUser.resourceType === 'Practitioner') {
+            resourceType = 'smart-on-fhir-practitioner';
+        }
         return mapSuccess(
-            await getAidboxResources<Client>('Client', { ['.type']: 'smart-on-fhir' }),
+            await getAidboxResources<Client>('Client', { ['.type']: resourceType }),
             extractBundleResources,
         );
     });

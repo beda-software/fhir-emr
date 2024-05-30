@@ -53,7 +53,7 @@ function SmartApp(props: SmartAppProps) {
 }
 
 export function PatientApps({ patient }: PatientAppsProps) {
-    const { appsRemoteData } = useSmartApps();
+    const { appsRemoteData } = useSmartApps(selectCurrentUserRoleResource());
     return (
         <RenderRemoteData remoteData={appsRemoteData}>
             {(data) => {
