@@ -74,6 +74,17 @@ async function populateUserInfoSharedState(user: User) {
                 console.error(patientResponse.error);
             }
         },
+        [Role.Default]: async () => {
+            const patientId = user.id;
+            const patientResponse = await getFHIRResource<Patient>({
+                reference: `Patient/${patientId}`,
+            });
+            if (isSuccess(patientResponse)) {
+                sharedAuthorizedPatient.setSharedState(patientResponse.data);
+            } else {
+                console.error(patientResponse.error);
+            }
+        },
     });
     await fetchUserRoleDetails();
 }
