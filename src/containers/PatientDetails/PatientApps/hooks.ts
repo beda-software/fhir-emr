@@ -1,26 +1,23 @@
 import { notification } from 'antd';
-import { Organization, Patient, Practitioner } from 'fhir/r4b';
 
 import { useService } from 'aidbox-react/lib/hooks/service';
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { getFHIRResources as getAidboxResources, extractBundleResources } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess, service } from 'aidbox-react/lib/services/service';
 
-import { WithId } from '@beda.software/fhir-react';
-
 import config from 'shared/src/config';
 import { Client } from 'shared/src/contrib/aidbox';
 
-type CurrentUser = WithId<Patient> | WithId<Practitioner> | WithId<Organization>;
+import { matchCurrentUserRole, Role } from 'src/utils/role.ts';
 
-export function useSmartApps(currentUser: CurrentUser) {
+export function useSmartApps() {
     const [appsRemoteData] = useService(async () => {
-        let resourceType = 'smart-on-fhir';
-        if (currentUser.resourceType === 'Patient') {
-            resourceType = 'smart-on-fhir-patient';
-        } else if (currentUser.resourceType === 'Practitioner') {
-            resourceType = 'smart-on-fhir-practitioner';
-        }
+        const resourceType = matchCurrentUserRole<string>({
+            [Role.Patient]: () => 'smart-on-fhir-patient',
+            [Role.Admin]: () => 'smart-on-fhir',
+            [Role.Practitioner]: () => 'smart-on-fhir-practitioner',
+            [Role.Receptionist]: () => 'smart-on-fhir-practitioner',
+        });
         return mapSuccess(
             await getAidboxResources<Client>('Client', { ['.type']: resourceType }),
             extractBundleResources,
