@@ -22,6 +22,7 @@ import {
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { saveFHIRResource, updateFHIRResource } from 'src/services/fhir';
 
+import { FormFooterComponentProps } from '../BaseQuestionnaireResponseForm/FormFooter';
 import { Spinner } from '../Spinner';
 
 interface Props extends QuestionnaireResponseFormProps {
@@ -31,6 +32,10 @@ interface Props extends QuestionnaireResponseFormProps {
     itemControlQuestionItemComponents?: ItemControlQuestionItemComponentMapping;
     itemControlGroupItemComponents?: ItemControlGroupItemComponentMapping;
     onCancel?: () => void;
+
+    FormFooterComponent?: React.ElementType<FormFooterComponentProps>;
+    saveButtonTitle?: string;
+    cancelButtonTitle?: string;
 }
 
 export const saveQuestionnaireResponseDraft = async (

@@ -1,6 +1,4 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Trans } from '@lingui/macro';
-import { Button } from 'antd';
 import classNames from 'classnames';
 import { QuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
@@ -32,6 +30,7 @@ import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
 import s from './BaseQuestionnaireResponseForm.module.scss';
 import { ItemControlGroupItemWidgetsContext, ItemControlQuestionItemWidgetsContext } from './context';
 import { groupComponent, groupControlComponents, itemComponents, itemControlComponents } from './controls';
+import { FormFooterComponentProps, FormFooter } from './FormFooter';
 
 export interface BaseQuestionnaireResponseFormProps {
     formData: QuestionnaireResponseFormData;
@@ -42,7 +41,7 @@ export interface BaseQuestionnaireResponseFormProps {
     questionItemComponents?: QuestionItemComponentMapping;
     groupItemComponent?: GroupItemComponent;
     onCancel?: () => void;
-    saveButtonTitle?: string;
+
     autoSave?: boolean;
     draftSaveResponse?: RemoteData<QuestionnaireResponse>;
     setDraftSaveResponse?: (data: RemoteData<QuestionnaireResponse>) => void;
@@ -56,6 +55,10 @@ export interface BaseQuestionnaireResponseFormProps {
         control: GroupItemComponent;
         children: React.ReactElement;
     }>;
+
+    FormFooterComponent?: React.ElementType<FormFooterComponentProps>;
+    saveButtonTitle?: string;
+    cancelButtonTitle?: string;
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
@@ -63,8 +66,6 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         onSubmit,
         formData,
         readOnly,
-        onCancel,
-        saveButtonTitle,
         autoSave,
         draftSaveResponse,
         setDraftSaveResponse,
@@ -238,25 +239,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                                 context={calcInitialContext(formData.context, formValues)}
                             />
                         </div>
-                        {!readOnly && onSubmit && (
-                            <div className={classNames(s.footer, 'form__footer')}>
-                                {onCancel && (
-                                    <Button key="back" onClick={onCancel}>
-                                        <Trans>Cancel</Trans>
-                                    </Button>
-                                )}
-
-                                {isLoading ? (
-                                    <Button type="primary" loading>
-                                        Saving...
-                                    </Button>
-                                ) : (
-                                    <Button type="primary" htmlType="submit">
-                                        <Trans>{saveButtonTitle ?? 'Save'}</Trans>
-                                    </Button>
-                                )}
-                            </div>
-                        )}
+                        <FormFooter {...props} submitting={isLoading} />
                     </>
                 </QuestionnaireResponseFormProvider>
             </form>
