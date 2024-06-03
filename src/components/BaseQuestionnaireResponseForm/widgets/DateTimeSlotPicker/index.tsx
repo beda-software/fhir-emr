@@ -18,9 +18,9 @@ import { mapSuccess, resolveMap } from '@beda.software/remote-data';
 
 import { humanDateTime } from 'shared/src/utils/date';
 
+import { useCalendarOptions } from 'src/components/Calendar/useCalendarOptions';
 import { DatePicker } from 'src/components/DatePicker';
 import { Spinner } from 'src/components/Spinner';
-import { useCalendarOptions } from 'src/containers/Scheduling/ScheduleCalendar/hooks/useCalendarOptions';
 import { getAllFHIRResources, getFHIRResource } from 'src/services/fhir';
 
 import { TimeSlots, getTimeSlots } from './utils';
@@ -58,7 +58,7 @@ function useDateTimeSlots(practitionerRoleRef: Reference) {
     return { response };
 }
 
-function usePractitionerRoleId(practitionerRolePath: Array<string | number>) {
+export function usePractitionerRoleId(practitionerRolePath: Array<string | number>) {
     const [prId, setPRId] = useState<string | undefined>(undefined);
     const { watch } = useFormContext();
 

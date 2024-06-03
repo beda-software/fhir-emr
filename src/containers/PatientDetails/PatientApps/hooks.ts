@@ -18,7 +18,7 @@ export function useSmartApps() {
     return { appsRemoteData };
 }
 
-interface LaunchProps {
+export interface LaunchProps {
     user: string;
     client: string;
     patient: string;
@@ -37,7 +37,7 @@ export async function launch({ user, client, patient, practitioner }: LaunchProp
         method: 'POST',
         data: {
             method: 'aidbox.smart/get-launch-uri',
-            params: { user, iss: encodeURIComponent(`${config.baseURL}/fhir`), client, ctx: { patient, practitioner } },
+            params: { user, iss: encodeURIComponent(`${config.baseURL}/fhir`), client, ctx: { patient, ...(practitioner ? {practitioner} : {}) } },
         },
     });
     if (isSuccess(response)) {
