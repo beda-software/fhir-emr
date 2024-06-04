@@ -14,7 +14,12 @@ import { MenuIcon } from 'src/icons/general/Menu';
 import { AvatarImage } from 'src/images/AvatarImage';
 import { getToken, logout } from 'src/services/auth';
 import { resetInstanceToken as resetFHIRInstanceToken } from 'src/services/fhir';
-import { sharedAuthorizedOrganization, sharedAuthorizedPatient, sharedAuthorizedPractitioner } from 'src/sharedState';
+import {
+    sharedAuthorizedOrganization,
+    sharedAuthorizedPatient,
+    sharedAuthorizedPractitioner,
+    sharedAuthorizedUser,
+} from 'src/sharedState';
 import { Role, matchCurrentUserRole } from 'src/utils/role';
 
 import s from './SidebarBottom.module.scss';
@@ -76,6 +81,7 @@ export function renderMenu(items: MenuItem[]): ItemType[] {
 }
 
 function UserMenu(props: { onItemClick?: () => void }) {
+    const user = sharedAuthorizedUser.getSharedState();
     const { onItemClick } = props;
     const doLogout = useCallback(async () => {
         await logout();
@@ -108,12 +114,14 @@ function UserMenu(props: { onItemClick?: () => void }) {
                     icon: <AvatarImage className={s.avatar} />,
                     label: (
                         <>
-                            {matchCurrentUserRole({
-                                [Role.Admin]: () => <OrganizationName />,
-                                [Role.Patient]: () => <PatientName />,
-                                [Role.Practitioner]: () => <PractitionerName />,
-                                [Role.Receptionist]: () => <PractitionerName />,
-                            })}
+                            {!user?.roles
+                                ? user?.email
+                                : matchCurrentUserRole({
+                                      [Role.Admin]: () => <OrganizationName />,
+                                      [Role.Patient]: () => <PatientName />,
+                                      [Role.Practitioner]: () => <PractitionerName />,
+                                      [Role.Receptionist]: () => <PractitionerName />,
+                                  })}
                         </>
                     ),
                     children: userMenu,
