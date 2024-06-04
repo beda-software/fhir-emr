@@ -82,6 +82,7 @@ export function renderMenu(items: MenuItem[]): ItemType[] {
 
 function UserMenu(props: { onItemClick?: () => void }) {
     const user = sharedAuthorizedUser.getSharedState();
+    const hasRole = (user?.role || []).length > 0;
     const { onItemClick } = props;
     const doLogout = useCallback(async () => {
         await logout();
@@ -114,14 +115,14 @@ function UserMenu(props: { onItemClick?: () => void }) {
                     icon: <AvatarImage className={s.avatar} />,
                     label: (
                         <>
-                            {!user?.roles
-                                ? user?.email
-                                : matchCurrentUserRole({
+                            {hasRole
+                                ? matchCurrentUserRole({
                                       [Role.Admin]: () => <OrganizationName />,
                                       [Role.Patient]: () => <PatientName />,
                                       [Role.Practitioner]: () => <PractitionerName />,
                                       [Role.Receptionist]: () => <PractitionerName />,
-                                  })}
+                                  })
+                                : user?.email}
                         </>
                     ),
                     children: userMenu,
