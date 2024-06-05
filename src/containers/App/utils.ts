@@ -29,6 +29,10 @@ import { Role, selectUserRole } from 'src/utils/role';
 async function populateUserInfoSharedState(user: User) {
     sharedAuthorizedUser.setSharedState(user);
 
+    if (!user.role) {
+        return Promise.resolve();
+    }
+
     const fetchUserRoleDetails = selectUserRole(user, {
         [Role.Admin]: async () => {
             const organizationId = user.role![0]!.links!.organization!.id;
