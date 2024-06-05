@@ -134,8 +134,13 @@ function UserMenu(props: { onItemClick?: () => void }) {
 
 function PatientName() {
     const [patient] = sharedAuthorizedPatient.useSharedState();
+    const name = patient?.name?.[0];
 
-    return <span>{renderHumanName(patient?.name?.[0])}</span>;
+    if (name) {
+        return <span>{renderHumanName(name)}</span>;
+    }
+
+    return <span>{patient?.telecom?.filter(({ system }) => system === 'email')[0]?.value}</span>;
 }
 
 function PractitionerName() {
