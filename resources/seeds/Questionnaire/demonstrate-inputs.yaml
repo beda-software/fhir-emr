@@ -1,6 +1,4 @@
 description: Questionnaire to demonstrate inputs
-subjectType:
-  - Patient
 date: '2024-06-04T09:07:00Z'
 meta:
   profile:
@@ -18,6 +16,11 @@ item:
     type: string
     linkId: string-no-repeats-no-required
     repeats: false
+    required: false
+  - text: string (repeats, !required)
+    type: string
+    linkId: string-no-repeats-no-required
+    repeats: true
     required: false
   - text: Text items
     type: display
@@ -373,6 +376,32 @@ item:
     text: BMI
     type: group
     linkId: bmi-group
+  - item:
+      - text: Systolic
+        type: integer
+        unit:
+          code: mmHg
+          system: http://unitsofmeasure.org
+          display: mmHg
+        linkId: bp-group-systolic
+      - text: Diastolic
+        type: integer
+        unit:
+          code: mmHg
+          system: http://unitsofmeasure.org
+          display: mmHg
+        linkId: bp-group-diastolic
+      - text: Heart rate
+        type: integer
+        linkId: bp-group-heartrate
+        unit:
+          code: bpm
+          system: http://unitsofmeasure.org
+          display: bpm
+    text: Blood Pressure
+    type: group
+    repeats: true
+    linkId: bp-group
   - text: enableWhen items
     type: display
     linkId: display-enableWhen-block
