@@ -4,9 +4,19 @@ import { useEffect, useState } from 'react';
 import { QuestionnaireResponseFormProps } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { BaseQuestionnaireResponseFormProps } from '../BaseQuestionnaireResponseForm';
+import { FormFooterComponentProps } from '../BaseQuestionnaireResponseForm/FormFooter';
+
+export interface QuestionnairesWizardFooterProps extends FormFooterComponentProps {
+    goBack: () => void;
+    canGoBack: boolean;
+    canGoForward: boolean;
+    prevButtonTitle?: React.ReactNode;
+    nextButtonTitle?: React.ReactNode;
+    finishButtonTitle?: React.ReactNode;
+}
 
 export interface QuestionnairesWizardProps
-    extends Omit<BaseQuestionnaireResponseFormProps, 'formData'>,
+    extends Omit<BaseQuestionnaireResponseFormProps, 'formData' | 'FormFooterComponent'>,
         Omit<QuestionnaireResponseFormProps, 'questionnaireLoader'> {
     onSuccess?: (resource: any) => void;
     onFailure?: (error: any) => void;
@@ -15,6 +25,8 @@ export interface QuestionnairesWizardProps
     questionnaireResponses: QuestionnaireResponse[];
     initialQuestionnaireId?: string;
     onQuestionnaireChange?: (q: Questionnaire, index: number) => void;
+
+    FormFooterComponent?: React.ElementType<QuestionnairesWizardFooterProps>;
 }
 
 export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
