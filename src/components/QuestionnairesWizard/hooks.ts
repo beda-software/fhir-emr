@@ -1,7 +1,10 @@
 import { Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import { useEffect, useState } from 'react';
 
-import { QuestionnaireResponseFormProps } from 'shared/src/hooks/questionnaire-response-form-data';
+import {
+    QuestionnaireResponseFormProps,
+    QuestionnaireResponseFormSaveResponse,
+} from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { BaseQuestionnaireResponseFormProps } from '../BaseQuestionnaireResponseForm';
 import { FormFooterComponentProps } from '../BaseQuestionnaireResponseForm/FormFooter';
@@ -18,15 +21,16 @@ export interface QuestionnairesWizardFooterProps extends FormFooterComponentProp
 export interface QuestionnairesWizardProps
     extends Omit<BaseQuestionnaireResponseFormProps, 'formData' | 'FormFooterComponent'>,
         Omit<QuestionnaireResponseFormProps, 'questionnaireLoader'> {
-    onSuccess?: (resource: any) => void;
+    onSuccess?: (response: QuestionnaireResponseFormSaveResponse) => void;
     onFailure?: (error: any) => void;
+    onStepSuccess?: (response: QuestionnaireResponseFormSaveResponse) => void;
+
+    FormFooterComponent?: React.ElementType<QuestionnairesWizardFooterProps>;
 
     questionnaires: Questionnaire[];
     questionnaireResponses: QuestionnaireResponse[];
     initialQuestionnaireId?: string;
     onQuestionnaireChange?: (q: Questionnaire, index: number) => void;
-
-    FormFooterComponent?: React.ElementType<QuestionnairesWizardFooterProps>;
 }
 
 export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {

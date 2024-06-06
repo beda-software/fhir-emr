@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro';
 import { Button } from 'antd';
-import { QuestionnaireResponse } from 'fhir/r4b';
 
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
@@ -9,7 +8,8 @@ import { S } from './QuestionnairesWizard.styles';
 import { QuestionnaireResponseForm } from '../QuestionnaireResponseForm';
 
 export function QuestionnairesWizard(props: QuestionnairesWizardProps) {
-    const { onSuccess, questionnaires, initialQuestionnaireResponse, FormFooterComponent, ...other } = props;
+    const { onSuccess, onStepSuccess, questionnaires, initialQuestionnaireResponse, FormFooterComponent, ...other } =
+        props;
 
     const {
         currentQuestionnaire,
@@ -25,7 +25,7 @@ export function QuestionnairesWizard(props: QuestionnairesWizardProps) {
         <QuestionnaireResponseForm
             key={currentQuestionnaire?.id}
             questionnaireLoader={questionnaireIdLoader(currentQuestionnaire!.id!)}
-            onSuccess={(result: { questionnaireResponse: QuestionnaireResponse }) => {
+            onSuccess={(result) => {
                 setQuestionnaireResponses((qrList) => {
                     const filledQIds = qrList.map((qr) => qr.questionnaire);
                     const questionnaireId = result.questionnaireResponse.questionnaire;
@@ -42,6 +42,8 @@ export function QuestionnairesWizard(props: QuestionnairesWizardProps) {
 
                     return [...qrList, result.questionnaireResponse];
                 });
+
+                onStepSuccess?.(result);
 
                 if (canGoForward) {
                     setCurrentQuestionnaireIndex(currentQuestionnaireIndex + 1);
