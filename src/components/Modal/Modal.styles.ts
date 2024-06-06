@@ -3,6 +3,9 @@ import styled from 'styled-components/macro';
 
 export const S = {
     Modal: styled(Modal)`
+        top: 40px;
+        padding-bottom: 40px;
+
         .ant-modal-content {
             padding: 0;
         }

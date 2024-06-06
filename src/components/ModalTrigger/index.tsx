@@ -7,7 +7,7 @@ import { Modal } from '../Modal';
 interface Props {
     trigger: React.ReactElement<any>;
     children: (props: { closeModal: () => void }) => React.ReactNode | string;
-    title: string;
+    title: React.ReactNode;
     onSubmit?: (values?: any) => Promise<any>;
     onCancel?: () => void;
     modalProps?: ModalProps;
@@ -49,14 +49,7 @@ export function ModalTrigger(props: Props) {
                     setShowModal(true);
                 },
             })}
-            <Modal
-                open={showModal}
-                title={title}
-                onCancel={onCancel}
-                onOk={onSubmit}
-                footer={modalProps?.footer}
-                destroyOnClose
-            >
+            <Modal open={showModal} title={title} onCancel={onCancel} onOk={onSubmit} {...modalProps}>
                 {showModal && children({ closeModal })}
             </Modal>
         </>
