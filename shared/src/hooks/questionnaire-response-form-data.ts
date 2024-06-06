@@ -4,6 +4,8 @@ import {
     Parameters,
     ParametersParameter,
     Questionnaire as FHIRQuestionnaire,
+    Bundle,
+    Resource,
 } from 'fhir/r4b';
 import moment from 'moment';
 import {
@@ -27,9 +29,10 @@ import { toFirstClassExtension, fromFirstClassExtension } from '../utils/convert
 
 export type { QuestionnaireResponseFormData } from 'sdc-qrf';
 
-export type QuestionnaireResponseFormSaveResponse = {
+export type QuestionnaireResponseFormSaveResponse<R extends Resource = any> = {
     questionnaireResponse: FHIRQuestionnaireResponse;
     extracted: boolean;
+    extractedBundle: Bundle<R>[];
 };
 
 export interface QuestionnaireResponseFormProps {

@@ -26,7 +26,7 @@ import { FormFooterComponentProps } from '../BaseQuestionnaireResponseForm/FormF
 import { Spinner } from '../Spinner';
 
 interface Props extends QuestionnaireResponseFormProps {
-    onSuccess?: (resource: any) => void;
+    onSuccess?: (response: QuestionnaireResponseFormSaveResponse) => void;
     onFailure?: (error: any) => void;
     readOnly?: boolean;
     itemControlQuestionItemComponents?: ItemControlQuestionItemComponentMapping;
@@ -73,7 +73,7 @@ export const saveQuestionnaireResponseDraft = async (
 
 export function onFormResponse(props: {
     response: RemoteDataResult<QuestionnaireResponseFormSaveResponse>;
-    onSuccess?: (resource: any) => void;
+    onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
     onFailure?: (error: any) => void;
 }) {
     const { response, onSuccess, onFailure } = props;
