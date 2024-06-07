@@ -21,10 +21,11 @@ interface ChoiceQuestionSelectProps {
     onChange: (...option: any[]) => void;
     options: QuestionnaireItemAnswerOption[];
     repeats?: boolean;
+    placeholder?: string;
 }
 
 export function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
-    const { value, onChange, options, repeats = false } = props;
+    const { value, onChange, options, repeats = false, placeholder } = props;
 
     return (
         <>
@@ -39,6 +40,7 @@ export function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
                 isMulti={repeats}
                 getOptionLabel={(o) => (getDisplay(o.value) as string) || ''}
                 classNamePrefix="react-select"
+                placeholder={placeholder}
             />
         </>
     );
@@ -48,7 +50,7 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
     const { linkId, answerOption, repeats, answerValueSet } = questionItem;
     const fieldName = [...parentPath, linkId];
 
-    const { value, formItem, onChange } = useFieldController(fieldName, questionItem);
+    const { value, formItem, onChange, placeholder } = useFieldController(fieldName, questionItem);
 
     const onSelect = useCallback((option: any) => onChange([].concat(option)), [onChange]);
 
@@ -60,6 +62,7 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
                     value={value}
                     onChange={onSelect}
                     repeats={repeats}
+                    placeholder={placeholder}
                 />
             </Form.Item>
         );
@@ -67,7 +70,13 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
 
     return (
         <Form.Item {...formItem} data-testid="question-choice">
-            <ChoiceQuestionSelect options={answerOption!} value={value} onChange={onSelect} repeats={repeats} />
+            <ChoiceQuestionSelect
+                options={answerOption!}
+                value={value}
+                onChange={onSelect}
+                repeats={repeats}
+                placeholder={placeholder}
+            />
         </Form.Item>
     );
 }
@@ -77,10 +86,11 @@ interface ChoiceQuestionValueSetProps {
     value: QuestionnaireResponseItemAnswer[];
     onChange: (option: any) => void;
     repeats?: boolean;
+    placeholder?: string;
 }
 
 export function ChoiceQuestionValueSet(props: ChoiceQuestionValueSetProps) {
-    const { answerValueSet, value, onChange, repeats = false } = props;
+    const { answerValueSet, value, onChange, repeats = false, placeholder } = props;
     const valueSetId = answerValueSet.split('/').slice(-1);
 
     const loadOptions = useCallback(
@@ -125,6 +135,7 @@ export function ChoiceQuestionValueSet(props: ChoiceQuestionValueSetProps) {
             isOptionSelected={(option) => !!value && value?.findIndex((v) => _.isEqual(v?.value, option.value)) !== -1}
             isMulti={repeats}
             getOptionLabel={(o) => (getDisplay(o.value) as string) || ''}
+            placeholder={placeholder}
         />
     );
 }

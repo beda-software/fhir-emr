@@ -1,8 +1,7 @@
 import { Form, InputNumber, InputNumberProps } from 'antd';
 import { GroupItemProps } from 'sdc-qrf';
 
-import { Coding } from 'shared/src/contrib/aidbox';
-import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
+import { Coding, QuestionnaireItem } from 'shared/src/contrib/aidbox';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { Paragraph } from 'src/components/Typography';
@@ -24,7 +23,7 @@ function BloodPressureItem(props: BloodPressureItemProps) {
 
     const fieldName = getFieldName(parentPath, questionItem);
 
-    const { value, onChange, disabled, formItem } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, formItem, placeholder } = useFieldController(fieldName, questionItem);
 
     return (
         <Form.Item {...formItem}>
@@ -34,6 +33,7 @@ function BloodPressureItem(props: BloodPressureItemProps) {
                 value={value}
                 onChange={onChange}
                 addonAfter={'mmHg'}
+                placeholder={placeholder}
             />
         </Form.Item>
     );

@@ -96,7 +96,7 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
     context,
     overrideGetDisplay,
 }: AnswerReferenceProps<R, IR>) {
-    const { linkId, repeats, required, answerExpression, choiceColumn, text } = questionItem;
+    const { linkId, repeats, required, answerExpression, choiceColumn, text, entryFormat } = questionItem;
     const rootFieldPath = [...parentPath, linkId];
     const fieldPath = [...rootFieldPath, ...(repeats ? [] : ['0'])];
     const rootFieldName = rootFieldPath.join('.');
@@ -172,6 +172,7 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         fieldController,
         text,
         repeats,
+        placeholder: entryFormat,
     };
 }
 
@@ -186,7 +187,7 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
 function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource = any>(
     props: AnswerReferenceProps<R, IR>,
 ) {
-    const { debouncedLoadOptions, fieldController, repeats } = useAnswerReference(props);
+    const { debouncedLoadOptions, fieldController, repeats, placeholder } = useAnswerReference(props);
     const { formItem } = fieldController;
 
     return (
@@ -199,6 +200,7 @@ function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource =
                 getOptionLabel={(option) => getAnswerDisplay(option.value)}
                 getOptionValue={(option) => getAnswerCode(option.value)}
                 isMulti={repeats}
+                placeholder={placeholder}
             />
         </Form.Item>
     );

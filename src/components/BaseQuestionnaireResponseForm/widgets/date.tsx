@@ -12,11 +12,17 @@ import { useFieldController } from '../hooks';
 export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, type } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', type];
-    const { value, onChange, disabled, formItem } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, formItem, placeholder } = useFieldController(fieldName, questionItem);
 
     return (
         <Form.Item {...formItem}>
-            <DateTimePickerWrapper type={type} onChange={onChange} value={value} disabled={disabled} />
+            <DateTimePickerWrapper
+                type={type}
+                onChange={onChange}
+                value={value}
+                disabled={disabled}
+                placeholder={placeholder}
+            />
         </Form.Item>
     );
 }
@@ -26,9 +32,11 @@ interface DateTimePickerWrapperProps {
     value?: string;
     onChange?: (value?: string) => void;
     disabled?: boolean;
+    placeholder?: string;
 }
 
-function DateTimePickerWrapper({ value, onChange, type, disabled }: DateTimePickerWrapperProps) {
+function DateTimePickerWrapper(props: DateTimePickerWrapperProps) {
+    const { value, onChange, type, disabled, placeholder } = props;
     const newValue = useMemo(() => (value !== undefined ? moment(value) : value), [value]);
     const format = type === 'date' ? FHIRDateFormat : 'YYYY-MM-DD HH:mm';
     const showTime = type === 'date' ? false : { format: 'HH:mm' };
@@ -42,6 +50,13 @@ function DateTimePickerWrapper({ value, onChange, type, disabled }: DateTimePick
     );
 
     return (
-        <DatePicker showTime={showTime} onChange={newOnChange} format={format} value={newValue} disabled={disabled} />
+        <DatePicker
+            showTime={showTime}
+            onChange={newOnChange}
+            format={format}
+            value={newValue}
+            disabled={disabled}
+            placeholder={placeholder}
+        />
     );
 }

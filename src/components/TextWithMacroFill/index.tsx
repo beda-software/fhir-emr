@@ -6,8 +6,8 @@ import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 
-import { Text } from '../Typography';
 import s from './TextWithMacroFill.module.scss';
+import { Text } from '../Typography';
 
 interface QuestionFieldProps {
     questionItem: QuestionnaireItem;
@@ -15,10 +15,11 @@ interface QuestionFieldProps {
     value?: string;
     onChange?: (value: string | undefined) => void;
     disabled?: boolean;
+    placeholder?: string;
 }
 
 function QuestionField(props: QuestionFieldProps) {
-    const { value, onChange, disabled } = props;
+    const { value, onChange, disabled, placeholder } = props;
     const { text, macro } = props.questionItem;
 
     const fillText = macro;
@@ -45,6 +46,7 @@ function QuestionField(props: QuestionFieldProps) {
                     value={value}
                     disabled={disabled}
                     onChange={(e) => onChange?.(e.currentTarget.value)}
+                    placeholder={placeholder}
                 />
             </div>
         </>
@@ -55,7 +57,7 @@ export function TextWithMacroFill({ parentPath, questionItem }: QuestionItemProp
     const qrfContext = useQuestionnaireResponseFormContext();
     const { linkId } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
-    const { value, onChange, disabled, formItem } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, formItem, placeholder } = useFieldController(fieldName, questionItem);
 
     return (
         <Form.Item {...formItem} label={undefined}>
@@ -65,6 +67,7 @@ export function TextWithMacroFill({ parentPath, questionItem }: QuestionItemProp
                 qrfContext={qrfContext}
                 questionItem={questionItem}
                 disabled={disabled}
+                placeholder={placeholder}
             />
         </Form.Item>
     );

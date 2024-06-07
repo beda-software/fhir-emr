@@ -13,7 +13,7 @@ const PhoneInput: React.FC<PhoneInputProps> = (PI as any).default || PI;
 export function QuestionPhone({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
-    const { value, onChange, disabled, formItem } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, formItem, placeholder } = useFieldController(fieldName, questionItem);
     const [focused, setFocused] = useState(false);
 
     return (
@@ -31,6 +31,7 @@ export function QuestionPhone({ parentPath, questionItem }: QuestionItemProps) {
                     buttonClass={'react-phone-input__button'}
                     onFocus={() => setFocused(true)}
                     onBlur={() => setFocused(false)}
+                    placeholder={placeholder}
                 />
             </S.Container>
         </Form.Item>

@@ -15,6 +15,7 @@
         white-space: normal;
 
         label {
+            display: flex;
             height: auto;
 
             &:after {

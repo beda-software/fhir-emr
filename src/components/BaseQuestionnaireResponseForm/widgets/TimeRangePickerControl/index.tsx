@@ -19,11 +19,19 @@ export function TimeRangePickerControl(props: GroupItemProps) {
 function TimeRangePickerWidget(props: GroupItemProps) {
     const { questionItem } = props;
 
-    const { onTimeRangeChange, startFormItem, endFormItem } = useTimeRangePickerControl(props);
+    const { onTimeRangeChange, startFormItem, endFormItem, startFromPlaceholder, endFromPlaceholder } =
+        useTimeRangePickerControl(props);
 
     return (
         <Form.Item {...startFormItem} {...endFormItem} label={questionItem.text} hidden={questionItem.hidden}>
-            <RangeTimePicker format="HH:mm" disabled={questionItem.readOnly} onChange={onTimeRangeChange} />
+            <RangeTimePicker
+                format="HH:mm"
+                disabled={questionItem.readOnly}
+                onChange={onTimeRangeChange}
+                placeholder={
+                    startFromPlaceholder && endFromPlaceholder ? [startFromPlaceholder, endFromPlaceholder] : undefined
+                }
+            />
         </Form.Item>
     );
 }

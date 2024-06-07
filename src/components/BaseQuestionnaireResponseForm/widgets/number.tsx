@@ -15,7 +15,7 @@ export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps)
     const { linkId, required } = questionItem;
     const { unit } = questionItem as NumericItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'integer'];
-    const { value, onChange, disabled, formItem } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, formItem, placeholder } = useFieldController(fieldName, questionItem);
 
     return (
         <Form.Item {...formItem}>
@@ -26,6 +26,7 @@ export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps)
                 onChange={onChange}
                 value={value}
                 required={required}
+                placeholder={placeholder}
             />
         </Form.Item>
     );
@@ -35,7 +36,7 @@ export function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps)
     const { linkId } = questionItem;
     const { unit } = questionItem as NumericItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'decimal'];
-    const { value, onChange, disabled, formItem } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, formItem, placeholder } = useFieldController(fieldName, questionItem);
 
     return (
         <Form.Item {...formItem}>
@@ -45,6 +46,7 @@ export function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps)
                 disabled={disabled}
                 onChange={onChange}
                 value={value}
+                placeholder={placeholder}
             />
         </Form.Item>
     );

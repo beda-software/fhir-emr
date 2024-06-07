@@ -14192,7 +14192,10 @@ export interface QuestionnaireItem {
     text?: string;
     /** group | display | boolean | decimal | integer | date | dateTime + */
     type: code;
-    /** NOTE: from extension http://hl7.org/fhir/StructureDefinition/variable */
+    /** NOTE: from extension https://jira.hl7.org/browse/FHIR-22356#subQuestionnaire */
+    /** Additional instructions for the user to guide their input (i.e. a human readable version of a regular expression like “nnn-nnn-nnn”). In most UIs this is the placeholder (or ‘ghost’) text placed directly inside the edit controls and that disappear when the control gets the focus. */
+    entryFormat?: string;
+    /** NOTE: from extension http://hl7.org/fhir/StructureDefinition/entryFormat */
     /** Variable specifying a logic to generate a variable for use in subsequent logic. The name of the variable will be added to FHIRPath's context when processing descendants of the element that contains this extension. */
     variable?: Expression[];
     unit?: Coding;
