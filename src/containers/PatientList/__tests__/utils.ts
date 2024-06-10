@@ -38,8 +38,8 @@ export const PATIENTS_ADDITION_DATA = [
 
 export const initialSetup = async () => {
     const data = await dataSetup();
-    await login({ ...data.user, password: 'password' });
-
+    const token = await login({ ...data.user, password: 'password' });
+    data.token = token.access_token;
     return data;
 };
 
@@ -238,6 +238,7 @@ export function dataSetup() {
             actor: practitioner1.id,
             _include: ['Consent:patient:Patient'],
         };
+        const token = '';
 
         return {
             user,
@@ -246,6 +247,7 @@ export function dataSetup() {
             practitioner: practitioner1,
             consents: [consent1, consent2, consent3, consent4, consent5, consent6],
             patients: [patient1, patient2, patient3],
+            token,
         };
     });
 
