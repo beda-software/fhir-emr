@@ -16,7 +16,6 @@ import {
     axiosInstance,
     resetInstanceToken as resetAidboxInstanceToken,
     setInstanceBaseURL as setAidboxInstanceBaseURL,
-    setInstanceToken as setAidboxInstanceToken,
 } from 'aidbox-react/lib/services/instance';
 import { formatFHIRDateTime } from 'aidbox-react/lib/utils/date';
 import { withRootAccess, LoginService, getToken } from 'aidbox-react/lib/utils/tests';
@@ -25,13 +24,13 @@ import { ensure, getReference } from '@beda.software/fhir-react';
 
 import { User } from 'shared/src/contrib/aidbox';
 
+import { restoreUserSession } from 'src/containers/App/utils.ts';
 import { login as loginService } from 'src/services/auth';
 
 import {
     createFHIRResource,
     saveFHIRResource,
     resetInstanceToken as resetFHIRInstanceToken,
-    setInstanceToken as setFHIRInstanceToken,
 } from './services/fhir';
 
 declare global {
@@ -173,8 +172,7 @@ export async function login(user: User) {
 
     const token = await getToken(user, loginService as LoginService);
 
-    setFHIRInstanceToken(token);
-    setAidboxInstanceToken(token);
+    await restoreUserSession(token.access_token);
 
     return token;
 }
