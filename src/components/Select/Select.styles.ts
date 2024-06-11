@@ -78,7 +78,7 @@ export const S = {
             color: ${({ theme }) => theme.antdTheme?.colorText};
         }
 
-        .react-select__value-container--is-multi {
+        .react-select__value-container--is-multi.react-select__value-container--has-value {
             padding: 1px 4px;
         }
 
