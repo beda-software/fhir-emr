@@ -4,7 +4,7 @@ import { Button, notification } from 'antd';
 
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
-import { selectCurrentUserRoleResource, Role } from 'src/utils/role';
+import { selectCurrentUserRoleResource } from 'src/utils/role';
 
 import { ModalTrigger } from '../ModalTrigger';
 import { QuestionnaireResponseForm } from '../QuestionnaireResponseForm';
