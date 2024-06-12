@@ -1,0 +1,64 @@
+item:
+  - linkId: main-complaint-group
+    type: group
+    item:
+      - linkId: main-complaint
+        text: "Presenting Complaint (PC):"
+        helpText: This is a brief statement outlining the patient's main reason for seeking medical attention.
+        type: string
+  - linkId: history-of-complaint-group
+    text: "History of Presenting Complaint (HPC):"
+    type: group
+    item:
+      - linkId: onset-of-symptoms
+        text: "Onset: When did the symptoms start?"
+        type: string
+      - linkId: duration-of-symptoms
+        text: "Duration: How long have the symptoms been present?"
+        type: string
+      - linkId: character-of-symptoms
+        text: "Character: How would the patient describe the symptoms (e.g., location, quality, severity)?"
+        type: string
+      - linkId: factors-of-symptoms
+        text: "Aggravating/Alleviating Factors: What makes the symptoms better or worse?"
+        type: string
+      - linkId: associated-symptoms
+        text: "Associated Symptoms: Are there any other relevant symptoms?"
+        type: string
+  - linkId: past-medical-and-surgical-history-group
+    type: group
+    item:
+      - linkId: past-medical-and-surgical-history
+        text: "Past Medical & Surgical History (PMHx & SHx):"
+        helpText: List any significant past medical conditions (e.g., hypertension, diabetes) and previous surgeries.
+        type: string
+  - linkId: medications-group
+    type: group
+    item:
+      - linkId: medications
+        text: "Medications (Medications):"
+        helpText: Document all medications the patient is currently taking, including the name, dose, and frequency.
+        type: string
+  - linkId: allergies-group
+    type: group
+    item:
+      - linkId: allergies
+        text: "Allergies (Allergies):"
+        helpText: List any known allergies to medications or other substances.
+        type: string
+  - linkId: social-history-group
+    type: group
+    item:
+      - linkId: social-history
+        text: "Social History (Social Hx):"
+        helpText: This section explores social factors that might impact the patient's health, such as smoking, alcohol consumption, occupation, and living situation.
+        type: string
+meta:
+  profile:
+    - https://beda.software/beda-emr-questionnaire
+name: Anglo-Australian model for Medical Assessment
+title: Anglo-Australian model for Medical Assessment
+status: active
+subjectType:
+  - Patient
+resourceType: Questionnaire

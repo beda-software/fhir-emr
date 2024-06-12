@@ -22,13 +22,16 @@ export interface Option {
     getTableColumns: GetTableColumns<Resource>;
 }
 
-interface ResourceTableProps<R extends Resource> {
+interface ResourceTableHookProps<R extends Resource> {
     resourceType: R['resourceType'];
     params?: SearchParams;
+}
+
+interface ResourceTableProps<R extends Resource> extends ResourceTableHookProps<R> {
     getTableColumns: GetTableColumns<Resource>;
 }
 
-function useResourceTable<R extends Resource>(props: ResourceTableProps<R>) {
+export function useResourceTable<R extends Resource>(props: ResourceTableHookProps<R>) {
     const { resourceType, params = {} } = props;
     const queryParameters = {
         _sort: '-_lastUpdated',

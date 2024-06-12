@@ -16,8 +16,10 @@ export const S = {
         color: ${({ theme }) => theme.neutralPalette.gray_7};
         padding: 13px 12px;
         width: 200px;
+        min-width: 200px;
     `,
     DetailsValue: styled.div`
+        white-space: normal;
         padding: 13px 12px;
         border-left: 1px solid ${({ theme }) => theme.neutralPalette.gray_4};
     `,

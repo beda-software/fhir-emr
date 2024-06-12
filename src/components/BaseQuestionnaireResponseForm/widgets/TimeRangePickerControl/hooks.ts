@@ -15,6 +15,7 @@ export function useTimeRangePickerControl(props: GroupItemProps) {
         onChange: startTimeOnChange,
         value: startTimeFieldValue,
         formItem: startFormItem,
+        placeholder: startFromPlaceholder,
     } = useFieldController(startTimeItemFieldName, startTimeItem);
 
     const endTimeItem = questionItem.item![1]!;
@@ -23,6 +24,7 @@ export function useTimeRangePickerControl(props: GroupItemProps) {
         onChange: endTimeOnChange,
         value: endTimeFieldValue,
         formItem: endFormItem,
+        placeholder: endFromPlaceholder,
     } = useFieldController(endTimeItemFieldName, endTimeItem);
 
     const onTimeRangeChange = useCallback(
@@ -35,5 +37,13 @@ export function useTimeRangePickerControl(props: GroupItemProps) {
         [startTimeOnChange, endTimeOnChange],
     );
 
-    return { onTimeRangeChange, startTimeFieldValue, endTimeFieldValue, startFormItem, endFormItem };
+    return {
+        onTimeRangeChange,
+        startTimeFieldValue,
+        endTimeFieldValue,
+        startFormItem,
+        endFormItem,
+        startFromPlaceholder,
+        endFromPlaceholder,
+    };
 }

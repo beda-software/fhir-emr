@@ -3,6 +3,9 @@ import styled from 'styled-components/macro';
 
 export const S = {
     Modal: styled(Modal)`
+        top: 40px;
+        padding-bottom: 40px;
+
         .ant-modal-content {
             padding: 0;
         }
@@ -46,15 +49,10 @@ export const S = {
             }
         }
 
-        .form__footer,
         .ant-modal-footer {
             padding: 10px 16px;
             margin-top: 0;
             border-top: 1px solid ${({ theme }) => theme.antdTheme?.colorBorderSecondary};
-        }
-
-        .form__footer {
-            margin: 30px -24px -30px;
         }
     `,
 };

@@ -34,7 +34,7 @@ export const S = {
 
         .react-select__placeholder {
             margin: 0;
-            color: ${({ theme }) => theme.antdTheme?.colorTextPlaceholder};
+            color: ${({ theme }) => theme.antdTheme?.colorTextDisabled};
         }
 
         .react-select__input-container {
@@ -51,6 +51,7 @@ export const S = {
             background-color: ${({ theme }) => theme.antdTheme?.colorBgContainer};
             border-radius: 8px;
             padding: 4px;
+            color: ${({ theme }) => theme.antdTheme?.colorTextBase};
         }
 
         .react-select__option {
@@ -77,7 +78,7 @@ export const S = {
             color: ${({ theme }) => theme.antdTheme?.colorText};
         }
 
-        .react-select__value-container--is-multi {
+        .react-select__value-container--is-multi.react-select__value-container--has-value {
             padding: 1px 4px;
         }
 

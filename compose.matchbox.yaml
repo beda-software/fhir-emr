@@ -1,0 +1,7 @@
+services:
+  matchbox:
+    image: eu.gcr.io/fhir-ch/matchbox:v313
+    container_name: matchbox
+    restart: on-failure
+    ports:
+      - "8084:8080"

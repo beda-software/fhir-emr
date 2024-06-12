@@ -20,6 +20,17 @@ up-video:
 	docker compose build
 	docker compose -f compose.yaml -f compose.video.yaml up -d
 
+up-matchbox:
+	docker compose -f compose.yaml -f compose.matchbox.yaml pull --quiet
+	docker compose build
+	docker compose -f compose.yaml -f compose.matchbox.yaml up -d
+
+stop-matchbox:
+	docker compose -f compose.yaml -f compose.matchbox.yaml stop
+
+down-matchbox:
+	docker compose -f compose.yaml -f compose.matchbox.yaml down
+
 kaitenzushi:
 	docker pull bedasoftware/kaitenzushi:latest
 	docker run -d --name fhir-emr-kaitenzushi \

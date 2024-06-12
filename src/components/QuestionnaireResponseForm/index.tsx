@@ -22,15 +22,20 @@ import {
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { saveFHIRResource, updateFHIRResource } from 'src/services/fhir';
 
+import { FormFooterComponentProps } from '../BaseQuestionnaireResponseForm/FormFooter';
 import { Spinner } from '../Spinner';
 
 interface Props extends QuestionnaireResponseFormProps {
-    onSuccess?: (resource: any) => void;
+    onSuccess?: (response: QuestionnaireResponseFormSaveResponse) => void;
     onFailure?: (error: any) => void;
     readOnly?: boolean;
     itemControlQuestionItemComponents?: ItemControlQuestionItemComponentMapping;
     itemControlGroupItemComponents?: ItemControlGroupItemComponentMapping;
     onCancel?: () => void;
+
+    FormFooterComponent?: React.ElementType<FormFooterComponentProps>;
+    saveButtonTitle?: string;
+    cancelButtonTitle?: string;
 }
 
 export const saveQuestionnaireResponseDraft = async (
@@ -68,7 +73,7 @@ export const saveQuestionnaireResponseDraft = async (
 
 export function onFormResponse(props: {
     response: RemoteDataResult<QuestionnaireResponseFormSaveResponse>;
-    onSuccess?: (resource: any) => void;
+    onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
     onFailure?: (error: any) => void;
 }) {
     const { response, onSuccess, onFailure } = props;

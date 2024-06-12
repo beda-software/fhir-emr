@@ -1,0 +1,508 @@
+description: Questionnaire to demonstrate inputs
+date: '2024-06-04T09:07:00Z'
+meta:
+  profile:
+    - https://beda.software/beda-emr-questionnaire
+item:
+  - text: String items
+    type: display
+    linkId: display-string-block
+  - text: string (!repeats, required)
+    type: string
+    linkId: string-no-repeats-required
+    repeats: false
+    required: true
+  - text: string (!repeats, !required)
+    type: string
+    linkId: string-no-repeats-no-required
+    repeats: false
+    required: false
+  - text: string (repeats, !required)
+    type: string
+    linkId: string-no-repeats-no-required
+    repeats: true
+    required: false
+  - text: Text items
+    type: display
+    linkId: display-text-block
+  - text: text (!repeats, required)
+    type: text
+    linkId: text-no-repeats-required
+    repeats: false
+    required: true
+  - text: text (!repeats, !required)
+    type: text
+    linkId: text-no-repeats-no-required
+    repeats: false
+    required: false
+  - text: URL items
+    type: display
+    linkId: display-url-block
+  - text: url (!repeats, required)
+    type: url
+    linkId: url-no-repeats-required
+    repeats: false
+    required: true
+  - text: url (!repeats, !required)
+    type: url
+    linkId: url-no-repeats-no-required
+    repeats: false
+    required: false
+  - text: Integer items
+    type: display
+    linkId: display-integer-block
+  - text: integer (!repeats, required)
+    type: integer
+    linkId: integer-no-repeats-required
+    repeats: false
+    required: true
+  - text: integer (!repeats, !required)
+    type: integer
+    linkId: integer-no-repeats-no-required
+    repeats: false
+    required: false
+  - text: Decimal items
+    type: display
+    linkId: display-decimal-block
+  - text: decimal (!repeats, required)
+    type: decimal
+    linkId: decimal-no-repeats-required
+    repeats: false
+    required: true
+  - text: decimal (!repeats, !required)
+    type: decimal
+    linkId: decimal-no-repeats-no-required
+    repeats: false
+    required: false
+  - text: Quantity items
+    type: display
+    linkId: display-quantity-block
+  - text: quantity (!repeats, required)
+    type: quantity
+    linkId: quantity-no-repeats-required
+    repeats: false
+    required: true
+  - text: quantity (!repeats, !required)
+    type: quantity
+    linkId: quantity-no-repeats-no-required
+    repeats: false
+    required: false
+  - text: Date items
+    type: display
+    linkId: display-date-block
+  - text: date (!repeats, required)
+    type: date
+    linkId: date-no-repeats-required
+    repeats: false
+    required: true
+  - text: date (!repeats, !required)
+    type: date
+    linkId: date-no-repeats-no-required
+    repeats: false
+    required: false
+  - text: Time items
+    type: display
+    linkId: display-time-block
+  - text: time (!repeats, required)
+    type: time
+    linkId: time-no-repeats-required
+    repeats: false
+    required: true
+  - text: time (!repeats, !required)
+    type: time
+    linkId: time-no-repeats-no-required
+    repeats: false
+    required: false
+  - text: DateTime items
+    type: display
+    linkId: display-dateTime-block
+  - text: dateTime (!repeats, required)
+    type: dateTime
+    linkId: dateTime-no-repeats-required
+    repeats: false
+    required: true
+  - text: dateTime (!repeats, !required)
+    type: dateTime
+    linkId: dateTime-no-repeats-no-required
+    repeats: false
+    required: false
+  - text: Boolean items
+    type: display
+    linkId: display-boolean-block
+  - text: boolean (!repeats, required)
+    type: boolean
+    linkId: boolean-no-repeats-required
+    repeats: false
+    required: true
+  - text: boolean (!repeats, !required)
+    type: boolean
+    linkId: boolean-no-repeats-no-required
+    repeats: false
+    required: false
+  - text: Reference items
+    type: display
+    linkId: display-reference-block
+  - text: reference (repeats, required)
+    type: reference
+    linkId: reference-repeats-required
+    repeats: true
+    required: true
+    choiceColumn:
+      - path: >-
+          practitioner.resource.name.given.first() + ' ' +
+          practitioner.resource.name.family + ' - ' +
+          specialty.first().coding.display
+        forDisplay: true
+    answerExpression:
+      language: application/x-fhir-query
+      expression: PractitionerRole?_assoc=practitioner
+    referenceResource:
+      - PractitionerRole
+  - text: reference (repeats, !required)
+    type: reference
+    linkId: reference-repeats-no-required
+    repeats: true
+    required: false
+    choiceColumn:
+      - path: >-
+          practitioner.resource.name.given.first() + ' ' +
+          practitioner.resource.name.family + ' - ' +
+          specialty.first().coding.display
+        forDisplay: true
+    answerExpression:
+      language: application/x-fhir-query
+      expression: PractitionerRole?_assoc=practitioner
+    referenceResource:
+      - PractitionerRole
+  - text: reference (!repeats, required)
+    type: reference
+    linkId: reference-no-repeats-required
+    repeats: false
+    required: true
+    choiceColumn:
+      - path: >-
+          practitioner.resource.name.given.first() + ' ' +
+          practitioner.resource.name.family + ' - ' +
+          specialty.first().coding.display
+        forDisplay: true
+    answerExpression:
+      language: application/x-fhir-query
+      expression: PractitionerRole?_assoc=practitioner
+    referenceResource:
+      - PractitionerRole
+  - text: reference (!repeats, !required)
+    type: reference
+    linkId: reference-no-repeats-no-required
+    repeats: false
+    required: false
+    choiceColumn:
+      - path: >-
+          practitioner.resource.name.given.first() + ' ' +
+          practitioner.resource.name.family + ' - ' +
+          specialty.first().coding.display
+        forDisplay: true
+    answerExpression:
+      language: application/x-fhir-query
+      expression: PractitionerRole?_assoc=practitioner
+    referenceResource:
+      - PractitionerRole
+  - text: Choice items
+    type: display
+    linkId: display-choice-block
+  - text: choice (repeats, required)
+    type: choice
+    linkId: choice-repeats-required
+    repeats: true
+    required: true
+    answerOption:
+      - value:
+          Coding:
+            code: first
+            display: First
+      - value:
+          Coding:
+            code: second
+            display: Second
+  - text: choice (repeats, !required)
+    type: choice
+    linkId: choice-repeats-no-required
+    repeats: true
+    required: false
+    answerOption:
+      - value:
+          Coding:
+            code: first
+            display: First
+      - value:
+          Coding:
+            code: second
+            display: Second
+  - text: choice (!repeats, required)
+    type: choice
+    linkId: choice-no-repeats-required
+    repeats: false
+    required: true
+    answerOption:
+      - value:
+          Coding:
+            code: first
+            display: First
+      - value:
+          Coding:
+            code: second
+            display: Second
+  - text: choice (!repeats, !required)
+    type: choice
+    linkId: choice-no-repeats-no-required
+    repeats: false
+    required: false
+    answerOption:
+      - value:
+          Coding:
+            code: first
+            display: First
+      - value:
+          Coding:
+            code: second
+            display: Second
+  - text: OpenChoice items
+    type: display
+    linkId: display-open-choice-block
+  - text: open-choice (repeats, required)
+    type: open-choice
+    linkId: open-choice-repeats-required
+    repeats: true
+    required: true
+    answerOption:
+      - value:
+          Coding:
+            code: first
+            display: First
+      - value:
+          Coding:
+            code: second
+            display: Second
+  - text: open-choice (repeats, !required)
+    type: open-choice
+    linkId: open-choice-repeats-no-required
+    repeats: true
+    required: false
+    answerOption:
+      - value:
+          Coding:
+            code: first
+            display: First
+      - value:
+          Coding:
+            code: second
+            display: Second
+  - text: open-choice (!repeats, required)
+    type: open-choice
+    linkId: open-choice-no-repeats-required
+    repeats: false
+    required: true
+    answerOption:
+      - value:
+          Coding:
+            code: first
+            display: First
+      - value:
+          Coding:
+            code: second
+            display: Second
+  - text: open-choice (!repeats, !required)
+    type: open-choice
+    linkId: open-choice-no-repeats-no-required
+    repeats: false
+    required: false
+    answerOption:
+      - value:
+          Coding:
+            code: first
+            display: First
+      - value:
+          Coding:
+            code: second
+            display: Second
+  - text: Attachment items
+    type: display
+    linkId: display-attachment-block
+  - text: attachment (!repeats, required)
+    type: attachment
+    linkId: attachment-no-repeats-required
+    repeats: false
+    required: true
+  - text: attachment (!repeats, !required)
+    type: attachment
+    linkId: attachment-no-repeats-no-required
+    repeats: false
+    required: false
+  - text: Group items
+    type: display
+    linkId: display-group-block
+  - item:
+      - text: Height
+        type: decimal
+        unit:
+          code: cm
+          system: http://unitsofmeasure.org
+          display: cm
+        linkId: bmi-group-height
+      - text: Weight
+        type: decimal
+        unit:
+          code: kg
+          system: http://unitsofmeasure.org
+          display: kg
+        linkId: bmi-group-weight
+      - text: Result
+        type: decimal
+        unit:
+          code: kg/m2
+          system: http://unitsofmeasure.org
+          display: kg/m2
+        linkId: bmi-group-result
+        readOnly: true
+        required: true
+        calculatedExpression:
+          language: text/fhirpath
+          expression: >-
+            (%QuestionnaireResponse.item.where(linkId='bmi-group').item.where(linkId='bmi-group-weight').answer.value.decimal
+            /
+            ((%QuestionnaireResponse.item.where(linkId='bmi-group').item.where(linkId='bmi-group-height').answer.value.decimal
+            / 100) *
+            (%QuestionnaireResponse.item.where(linkId='bmi-group').item.where(linkId='bmi-group-height').answer.value.decimal
+            / 100))).round(2)
+    text: BMI
+    type: group
+    linkId: bmi-group
+  - item:
+      - text: Systolic
+        type: integer
+        unit:
+          code: mmHg
+          system: http://unitsofmeasure.org
+          display: mmHg
+        linkId: bp-group-systolic
+      - text: Diastolic
+        type: integer
+        unit:
+          code: mmHg
+          system: http://unitsofmeasure.org
+          display: mmHg
+        linkId: bp-group-diastolic
+      - text: Heart rate
+        type: integer
+        linkId: bp-group-heartrate
+        unit:
+          code: bpm
+          system: http://unitsofmeasure.org
+          display: bpm
+    text: Blood Pressure
+    type: group
+    repeats: true
+    linkId: bp-group
+  - text: enableWhen items
+    type: display
+    linkId: display-enableWhen-block
+  - text: Toggle true and it will show the result
+    type: boolean
+    linkId: enableWhen-boolean-true
+  - text: enableWhen(boolean) is true
+    type: display
+    linkId: enableWhen-boolean-true-result
+    enableWhen:
+      - answer:
+          boolean: true
+        operator: '='
+        question: enableWhen-boolean-true
+  - text: enableWhen(boolean) is false
+    type: display
+    linkId: enableWhen-boolean-false-result
+    enableWhen:
+      - answer:
+          boolean: false
+        operator: '='
+        question: enableWhen-boolean-true
+  - text: Type "hello"
+    type: string
+    linkId: enableWhen-string
+  - text: enableWhen(string) = hello
+    type: display
+    linkId: enableWhen-string-result
+    enableWhen:
+      - answer:
+          string: hello
+        operator: '='
+        question: enableWhen-string
+  - text: enableWhen(string) is exists
+    type: display
+    linkId: enableWhen-string-result-exists
+    enableWhen:
+      - answer:
+          string: hi
+        operator: exists
+        question: enableWhen-string
+  - text: enableWhen(string) != hello
+    type: display
+    linkId: enableWhen-string-result-not-equal
+    enableWhen:
+      - answer:
+          string: hello
+        operator: '!='
+        question: enableWhen-string
+  - text: Type number (compare with 10)
+    type: integer
+    linkId: enableWhen-integer
+  - text: enableWhen(integer) == 10
+    type: display
+    linkId: enableWhen-integer-equal-10
+    enableWhen:
+      - answer:
+          integer: 10
+        operator: '='
+        question: enableWhen-integer
+  - text: enableWhen(integer) != 10
+    type: display
+    linkId: enableWhen-integer-not-equal-10
+    enableWhen:
+      - answer:
+          integer: 10
+        operator: '!='
+        question: enableWhen-integer
+  - text: enableWhen(integer) > 10
+    type: display
+    linkId: enableWhen-integer-greater-10
+    enableWhen:
+      - answer:
+          integer: 10
+        operator: '>'
+        question: enableWhen-integer
+  - text: enableWhen(integer) < 10
+    type: display
+    linkId: enableWhen-integer-less-10
+    enableWhen:
+      - answer:
+          integer: 10
+        operator: <
+        question: enableWhen-integer
+  - text: enableWhen(integer) >= 10
+    type: display
+    linkId: enableWhen-integer-greater-or-equal-10
+    enableWhen:
+      - answer:
+          integer: 10
+        operator: '>='
+        question: enableWhen-integer
+  - text: enableWhen(integer) <= 10
+    type: display
+    linkId: enableWhen-integer-less-or-equal-10
+    enableWhen:
+      - answer:
+          integer: 10
+        operator: <=
+        question: enableWhen-integer
+resourceType: Questionnaire
+title: Inputs demonstration
+status: active
+id: demonstrate-inputs
