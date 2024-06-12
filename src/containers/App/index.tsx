@@ -34,6 +34,7 @@ import { MedicationManagement } from '../MedicationManagement';
 import { NotificationPage } from '../NotificationPage';
 import { OrganizationScheduling } from '../OrganizationScheduling';
 import { Prescriptions } from '../Prescriptions';
+import { SetPassword } from '../SetPassword';
 
 export function App() {
     const [userResponse] = useService(async () => {
@@ -89,22 +90,7 @@ function AnonymousUserApp() {
         <Routes>
             <Route path="/auth" element={<Auth />} />
             <Route path="/signin" element={<SignIn originPathName={originPathRef.current} />} />
-            <Route
-                path="/reset-password"
-                element={
-                    <div>
-                        <Trans>Reset password</Trans>
-                    </div>
-                }
-            />
-            <Route
-                path="/set-password/:code"
-                element={
-                    <div>
-                        <Trans>Set password</Trans>
-                    </div>
-                }
-            />
+            <Route path="/reset-password/:code" element={<SetPassword />} />
             <Route
                 path="/appointment/book"
                 element={
