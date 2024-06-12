@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro';
 import queryString from 'query-string';
 import { useEffect, useRef } from 'react';
 import { Route, BrowserRouter, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
