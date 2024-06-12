@@ -1,55 +1,93 @@
 import { renderHook, waitFor } from '@testing-library/react';
+import { Organization } from 'fhir/r4b';
 
-import { withRootAccess } from '@beda.software/fhir-react';
+import { ensure, withRootAccess } from '@beda.software/fhir-react';
 import { isSuccess } from '@beda.software/remote-data';
 
 import { useSmartApps } from 'src/containers/PatientDetails/PatientApps/hooks.ts';
 import { createUser } from 'src/containers/PatientList/__tests__/utils.ts';
-import { axiosInstance } from 'src/services/fhir.ts';
-import { createPractitioner, ensureSave, login } from 'src/setupTests.ts';
-import { Role } from 'src/utils/role.ts';
+import { axiosInstance, createFHIRResource } from 'src/services/fhir.ts';
+import { createPatient, createPractitioner, ensureSave, login } from 'src/setupTests.ts';
+import { matchCurrentUserRole, Role } from 'src/utils/role.ts';
 
 async function renderSmartAppsHook() {
     const { result } = renderHook(() => useSmartApps());
     return result;
 }
 
+export async function createAdmin(organization: Partial<Organization> = {}) {
+    return ensure(
+        await createFHIRResource<Organization>({
+            resourceType: 'Organization',
+            ...organization,
+        }),
+    );
+}
+
 async function initialSetup(role: Role) {
     const data = await dataSetup(role);
-    const token = await login({ ...data.user, password: 'password' });
-    data.token = token.access_token;
+    await login({ ...data.user, password: 'password' });
     return data;
 }
 
 function dataSetup(role: Role) {
     return withRootAccess(axiosInstance, async () => {
-        const practitioner1 = await createPractitioner();
+        let resource;
+        let resourceType;
+        switch (role) {
+            case Role.Patient:
+                resource = await createPatient();
+                resourceType = 'Patient';
+                break;
+            case Role.Practitioner:
+                resource = await createPractitioner();
+                resourceType = 'Practitioner';
+                break;
+            case Role.Admin:
+                resource = await createAdmin();
+                resourceType = 'Organization';
+                break;
+            case Role.Receptionist:
+                resource = await createPractitioner();
+                resourceType = 'Practitioner';
+                break;
+        }
+
         const user = await createUser({
             password: 'password',
             resourceType: 'User',
             email: role + '@beda.software',
         });
+        const links: any = {};
+        if (role === Role.Patient) {
+            links.patient = {
+                id: resource.id,
+                resourceType: resourceType,
+            };
+        } else if (role === Role.Practitioner || role === Role.Receptionist) {
+            links.practitioner = {
+                id: resource.id,
+                resourceType: resourceType,
+            };
+        } else if (role === Role.Admin) {
+            links.organization = {
+                id: resource.id,
+                resourceType: resourceType,
+            };
+        }
         const roleData = await ensureSave({
             name: role,
             user: {
                 id: user.id!,
                 resourceType: 'User',
             },
-            links: {
-                practitioner: {
-                    id: practitioner1.id,
-                    resourceType: role.charAt(0).toUpperCase() + role.slice(1),
-                },
-            },
+            links: links,
             resourceType: 'Role',
         });
-        const token = '';
 
         return {
             user,
             role: roleData,
-            practitioner: practitioner1,
-            token,
         };
     });
 }
@@ -65,6 +103,13 @@ describe.each(Object.values(Role))('useSmartApps for role %s', (role) => {
             { timeout: 30000 },
         );
 
-        expect(result.current.appsRemoteData.status).toBe('Success');
+        const remoteData = result.current.appsRemoteData.data;
+        const resourceType = matchCurrentUserRole<string>({
+            [Role.Patient]: () => 'smart-on-fhir-patient',
+            [Role.Admin]: () => 'smart-on-fhir',
+            [Role.Practitioner]: () => 'smart-on-fhir-practitioner',
+            [Role.Receptionist]: () => 'smart-on-fhir-practitioner',
+        });
+        expect(resourceType).toBe(remoteData.Client[0].type);
     });
 });
