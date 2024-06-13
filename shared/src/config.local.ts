@@ -16,4 +16,5 @@ export default {
     wearablesDataStreamService: 'http://localhost:8082/api/v1',
 
     metriportIdentifierSystem: 'https://api.sandbox.metriport.com',
+    aiAssistantServiceUrl: null,
 };
