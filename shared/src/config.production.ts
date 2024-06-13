@@ -13,4 +13,5 @@ export default {
     jitsiMeetServer: 'video.emr.beda.software/',
     wearablesDataStreamService: 'https://ingest.emr.beda.software/api/v1',
     metriportIdentifierSystem: 'https://api.sandbox.metriport.com',
+    aiAssistantServiceUrl: 'https://scribe.emr.beda.software'
 };

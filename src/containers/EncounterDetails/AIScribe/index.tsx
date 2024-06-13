@@ -40,7 +40,7 @@ function AudioRecorderButton(props: FillWithAudioProps) {
         formData.append('file', audioFile);
         const response = await service<{text: string}>({
             method: 'POST',
-                baseURL: config.aiAssistantServiceUrl,
+                baseURL: config.aiAssistantServiceUrl ?? undefined,
                 url: '/transcribe',
                 data: formData,
             headers: { Authorization: `Bearer ${getToken()}`, "Content-Type": "multipart" },
@@ -169,7 +169,7 @@ function Extract(props: ExtractProps){
             async (qId) => {
                 return service ({
                     method: 'POST',
-                    baseURL: config.aiAssistantServiceUrl,
+                    baseURL: config.aiAssistantServiceUrl ?? undefined,
                     url: '/extract',
                     data: {
                         ...props,
