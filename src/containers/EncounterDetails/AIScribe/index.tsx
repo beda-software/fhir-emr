@@ -314,7 +314,7 @@ function Extract(props: ExtractProps) {
             renderLoading={() => <Text>Loading...</Text>}
             renderFailure={(error) => <Text>{formatError(error)}</Text>}
         >
-            {() => <br />}
+            {() => <></>}
         </RenderRemoteData>
     );
 }
