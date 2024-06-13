@@ -19,6 +19,8 @@ import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/Pat
 import { getFHIRResource, saveFHIRResource } from 'src/services/fhir';
 
 import { S } from './EncounterDetails.styles';
+import config from 'shared/src/config';
+import { AIScribe } from './AIScribe';
 
 interface Props {
     patient: Patient;
@@ -59,6 +61,8 @@ function useEncounterDetails() {
 export const EncounterDetails = ({ patient }: Props) => {
     const [modalOpened, setModalOpened] = useState(false);
     const { response, completeEncounter, manager } = useEncounterDetails();
+    const [documentListKey,setDocumentListKey] = useState(0);
+    const reload = useCallback(() => setDocumentListKey(k=>k+1),[setDocumentListKey]);
 
     usePatientHeaderLocationTitle({ title: t`Consultation` });
 
@@ -73,6 +77,12 @@ export const EncounterDetails = ({ patient }: Props) => {
 
                     return (
                         <>
+                            {config.aiAssistantServiceUrl && !isEncounterCompleted?
+                             <AIScribe
+                                 patientId={patient.id!}
+                                 encounterId={encounter.id}
+                                 reloadDocuments={reload}/> :
+                             null}
                             <div style={{ display: 'flex', gap: 32 }}>
                                 {!isEncounterCompleted ? (
                                     <Button icon={<PlusOutlined />} type="primary" onClick={() => setModalOpened(true)}>
@@ -99,7 +109,7 @@ export const EncounterDetails = ({ patient }: Props) => {
                                 />
                             </div>
 
-                            <DocumentsList patient={patient} />
+                            <DocumentsList key={documentListKey} patient={patient} />
                         </>
                     );
                 }}
