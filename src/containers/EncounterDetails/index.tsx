@@ -1,37 +1,40 @@
-import { CheckOutlined, PlusOutlined } from '@ant-design/icons';
+import { AudioOutlined, CheckOutlined, PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
-import { Encounter, Patient } from 'fhir/r4b';
+import { Communication, Encounter, Patient } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { RenderRemoteData, formatError, formatFHIRDateTime, useService } from '@beda.software/fhir-react';
-import { isSuccess } from '@beda.software/remote-data';
+import { isLoading, isSuccess } from '@beda.software/remote-data';
 
+import config from 'shared/src/config';
 import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
+import { Text } from 'src/components/Typography';
 import { DocumentsList } from 'src/containers/DocumentsList';
 import { ChooseDocumentToCreateModal } from 'src/containers/DocumentsList/ChooseDocumentToCreateModal';
 import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
-import { getFHIRResource, saveFHIRResource } from 'src/services/fhir';
+import { getFHIRResource, getFHIRResources, saveFHIRResource } from 'src/services/fhir';
 
+import { AIScribe, useAIScribe } from './AIScribe';
 import { S } from './EncounterDetails.styles';
-import config from 'shared/src/config';
-import { AIScribe } from './AIScribe';
 
 interface Props {
     patient: Patient;
 }
 
-function useEncounterDetails() {
+function useEncounterDetails(props: Props) {
+    const { patient } = props;
     const params = useParams<{ encounterId: string }>();
+    const { encounterId } = params;
 
     const [response, manager] = useService(async () =>
         getFHIRResource<Encounter>({
-            reference: `Encounter/${params.encounterId}`,
+            reference: `Encounter/${encounterId}`,
         }),
     );
 
@@ -55,16 +58,32 @@ function useEncounterDetails() {
         }
     }, [manager, response]);
 
-    return { response, completeEncounter, manager };
+    const [communicationResponse] = useService(async () =>
+        getFHIRResources<Communication>('Communication', {
+            encounter: encounterId,
+            patient: patient.id,
+        }),
+    );
+
+    return { response, completeEncounter, manager, communicationResponse };
 }
 
-export const EncounterDetails = ({ patient }: Props) => {
+export const EncounterDetails = (props: Props) => {
+    const { patient } = props;
     const [modalOpened, setModalOpened] = useState(false);
-    const { response, completeEncounter, manager } = useEncounterDetails();
-    const [documentListKey,setDocumentListKey] = useState(0);
-    const reload = useCallback(() => setDocumentListKey(k=>k+1),[setDocumentListKey]);
+    const { response, completeEncounter, manager, communicationResponse } = useEncounterDetails(props);
+    const [documentListKey, setDocumentListKey] = useState(0);
+    const reload = useCallback(() => setDocumentListKey((k) => k + 1), [setDocumentListKey]);
 
     usePatientHeaderLocationTitle({ title: t`Consultation` });
+
+    const [showScriber, setShowScriber] = useState(false);
+    const { recorderControls } = useAIScribe();
+
+    const disableControls =
+        showScriber ||
+        isLoading(communicationResponse) ||
+        (isSuccess(communicationResponse) && (communicationResponse.data.entry || []).length > 0);
 
     return (
         <>
@@ -77,13 +96,7 @@ export const EncounterDetails = ({ patient }: Props) => {
 
                     return (
                         <>
-                            {config.aiAssistantServiceUrl && !isEncounterCompleted?
-                             <AIScribe
-                                 patientId={patient.id!}
-                                 encounterId={encounter.id}
-                                 reloadDocuments={reload}/> :
-                             null}
-                            <div style={{ display: 'flex', gap: 32 }}>
+                            <S.Controls>
                                 {!isEncounterCompleted ? (
                                     <Button icon={<PlusOutlined />} type="primary" onClick={() => setModalOpened(true)}>
                                         <span>
@@ -91,23 +104,65 @@ export const EncounterDetails = ({ patient }: Props) => {
                                         </span>
                                     </Button>
                                 ) : null}
-                                {isEncounterCompleted ? (
-                                    <Button icon={<CheckOutlined />} type="primary" onClick={() => completeEncounter()}>
-                                        <span>
-                                            <Trans>Encounter completed</Trans>
-                                        </span>
-                                    </Button>
-                                ) : (
-                                    <ModalCompleteEncounter onSuccess={manager.reload} encounter={encounter} />
-                                )}
-                                <ChooseDocumentToCreateModal
-                                    open={modalOpened}
-                                    onCancel={() => setModalOpened(false)}
-                                    patient={patient}
-                                    subjectType="Encounter"
-                                    encounter={encounter}
+                                {config.aiAssistantServiceUrl && !isEncounterCompleted ? (
+                                    <>
+                                        <Text>
+                                            <Trans>or</Trans>
+                                        </Text>
+                                        <Button
+                                            icon={<AudioOutlined />}
+                                            type="primary"
+                                            onClick={() => {
+                                                setShowScriber(true);
+                                                recorderControls.startRecording();
+                                            }}
+                                            disabled={disableControls}
+                                        >
+                                            <span>
+                                                <Trans>Start scribe</Trans>
+                                            </span>
+                                        </Button>
+                                    </>
+                                ) : null}
+                                <S.EncounterControls>
+                                    {isEncounterCompleted ? (
+                                        <Button
+                                            icon={<CheckOutlined />}
+                                            type="primary"
+                                            onClick={() => completeEncounter()}
+                                        >
+                                            <span>
+                                                <Trans>Encounter completed</Trans>
+                                            </span>
+                                        </Button>
+                                    ) : (
+                                        <ModalCompleteEncounter
+                                            onSuccess={manager.reload}
+                                            encounter={encounter}
+                                            disabled={disableControls}
+                                        />
+                                    )}
+                                </S.EncounterControls>
+                            </S.Controls>
+
+                            <ChooseDocumentToCreateModal
+                                open={modalOpened}
+                                onCancel={() => setModalOpened(false)}
+                                patient={patient}
+                                subjectType="Encounter"
+                                encounter={encounter}
+                            />
+
+                            {showScriber ||
+                            (isSuccess(communicationResponse) &&
+                                (communicationResponse.data.entry || []).length > 0) ? (
+                                <AIScribe
+                                    patientId={patient.id!}
+                                    encounterId={encounter.id}
+                                    reloadDocuments={reload}
+                                    recorderControls={recorderControls}
                                 />
-                            </div>
+                            ) : null}
 
                             <DocumentsList key={documentListKey} patient={patient} />
                         </>
@@ -118,12 +173,14 @@ export const EncounterDetails = ({ patient }: Props) => {
     );
 };
 
-function ModalCompleteEncounter(props: { encounter: Encounter; onSuccess: () => void }) {
+function ModalCompleteEncounter(props: { encounter: Encounter; onSuccess: () => void; disabled: boolean }) {
+    const { encounter, disabled, onSuccess } = props;
+
     return (
         <ModalTrigger
             title={t`Complete encounter`}
             trigger={
-                <Button icon={<CheckOutlined />} type="primary">
+                <Button icon={<CheckOutlined />} type="primary" disabled={disabled}>
                     <span>
                         <Trans>Complete encounter</Trans>
                     </span>
@@ -136,13 +193,13 @@ function ModalCompleteEncounter(props: { encounter: Encounter; onSuccess: () => 
                     launchContextParameters={[
                         {
                             name: 'CurrentEncounter',
-                            resource: props.encounter,
+                            resource: encounter,
                         },
                     ]}
                     onSuccess={() => {
                         closeModal();
                         notification.success({ message: t`Encounter was successfully completed` });
-                        props.onSuccess();
+                        onSuccess();
                     }}
                     onCancel={closeModal}
                 />

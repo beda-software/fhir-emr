@@ -1,34 +1,56 @@
-import { isSuccess, success, RemoteData, notAsked, loading, isFailure, isLoading, mapSuccess, sequenceArray } from "@beda.software/remote-data";
-import { saveFHIRResource, service, getFHIRResources } from 'src/services/fhir'
-import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
-import config from "shared/src/config";
-import { getToken } from "src/services/auth";
-import { notification } from "antd";
-import { Communication, Questionnaire, Reference } from "fhir/r4b";
-import { selectCurrentUserRoleResource } from "src/utils/role";
-import { useState } from "react";
-import { RenderRemoteData, extractBundleResources, useService } from "@beda.software/fhir-react";
-import { Spinner } from "src/components/Spinner";
-import { ModalTrigger } from "src/components/ModalTrigger";
-import { Select } from "antd";
-import { isNotAsked } from "aidbox-react";
+import { EditFilled, PlusOutlined, SaveFilled } from '@ant-design/icons';
+import { Trans, t } from '@lingui/macro';
+import { isNotAsked } from 'aidbox-react';
+import { Button, notification, Select } from 'antd';
+import { Communication, Questionnaire, Reference } from 'fhir/r4b';
+import { useState } from 'react';
+// eslint-disable-next-line
+import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder';
+
+import { RenderRemoteData, extractBundleResources, formatError, useService } from '@beda.software/fhir-react';
+import {
+    isSuccess,
+    success,
+    RemoteData,
+    notAsked,
+    loading,
+    isFailure,
+    isLoading,
+    mapSuccess,
+    sequenceArray,
+} from '@beda.software/remote-data';
+
+import config from 'shared/src/config';
+
+import { ModalTrigger } from 'src/components/ModalTrigger';
+import { Spinner } from 'src/components/Spinner';
+import { Text } from 'src/components/Typography';
+import { getToken } from 'src/services/auth';
+import { saveFHIRResource, service, getFHIRResources } from 'src/services/fhir';
+import { selectCurrentUserRoleResource } from 'src/utils/role';
+
+import { S } from './AIScribe.styles';
 
 interface FillWithAudioProps {
-    patientId: string
-    encounterId: string
-    senderReference: string
-    reloadDocuments: () => void
+    patientId: string;
+    encounterId: string;
+    senderReference: string;
+    reloadDocuments: () => void;
+    recorderControls: any;
 }
 
 function AudioRecorderButton(props: FillWithAudioProps) {
-    const recorderControls = useAudioRecorder();
-    const [communication, setCommunication] = useState<RemoteData<Communication>>(notAsked)
-    const [communictionLoader, manager] = useService(async () => {
-        const response = await getFHIRResources<Communication>("Communication", {encounter: props.encounterId, patient: props.patientId})
-        if(isSuccess(response)){
+    const { recorderControls } = props;
+    const [communication, setCommunication] = useState<RemoteData<Communication>>(notAsked);
+    const [communicationResponse, manager] = useService(async () => {
+        const response = await getFHIRResources<Communication>('Communication', {
+            encounter: props.encounterId,
+            patient: props.patientId,
+        });
+        if (isSuccess(response)) {
             const communication = response.data.entry?.[0]?.resource;
-            if(communication){
-                setCommunication(success(communication))
+            if (communication) {
+                setCommunication(success(communication));
             }
         }
         return response;
@@ -38,26 +60,23 @@ function AudioRecorderButton(props: FillWithAudioProps) {
         const audioFile = new File([blob], 'voice.webm', { type: blob.type });
         const formData = new FormData();
         formData.append('file', audioFile);
-        const response = await service<{text: string}>({
+        const response = await service<{ text: string }>({
             method: 'POST',
-                baseURL: config.aiAssistantServiceUrl ?? undefined,
-                url: '/transcribe',
-                data: formData,
-            headers: { Authorization: `Bearer ${getToken()}`, "Content-Type": "multipart" },
-            },
-        );
+            baseURL: config.aiAssistantServiceUrl ?? undefined,
+            url: '/transcribe',
+            data: formData,
+            headers: { Authorization: `Bearer ${getToken()}`, 'Content-Type': 'multipart' },
+        });
 
         if (isSuccess(response)) {
-            const communication:Communication = {
+            const communication: Communication = {
                 resourceType: 'Communication',
                 status: 'completed',
-                subject: {reference: `/Patient/${props.patientId}`},
-                encounter: {reference: `/Encounter/${props.encounterId}`},
-                sender: {reference: props.senderReference},
-                payload: [
-                    {contentString: response.data.text}
-                ]
-            }
+                subject: { reference: `/Patient/${props.patientId}` },
+                encounter: { reference: `/Encounter/${props.encounterId}` },
+                sender: { reference: props.senderReference },
+                payload: [{ contentString: response.data.text }],
+            };
             setCommunication(success(communication));
         } else {
             notification.error({ message: JSON.stringify(response.error) });
@@ -65,89 +84,140 @@ function AudioRecorderButton(props: FillWithAudioProps) {
         }
     };
 
-
     return (
-        <div>
+        <S.Container>
             <RenderRemoteData
-                remoteData={isLoading(communictionLoader) ? communictionLoader : communication}
+                remoteData={isLoading(communicationResponse) ? communicationResponse : communication}
                 renderLoading={Spinner}
-                renderNotAsked={()=> <p>
-                    Run medical scribe
-                    <AudioRecorder
-                        showVisualizer
-                        onRecordingComplete={async (blob) => {
-                            await onRecordStop(blob);
-                        }}
-                        audioTrackConstraints={{
-                            noiseSuppression: true,
-                            echoCancellation: true,
-                        }}
-                        recorderControls={recorderControls}
-                    />
-                </p>}
+                renderNotAsked={() => (
+                    <S.Scriber>
+                        <S.Title $danger>
+                            <Trans>Capture in progress</Trans>
+                        </S.Title>
+                        <AudioRecorder
+                            showVisualizer
+                            onRecordingComplete={async (blob) => {
+                                await onRecordStop(blob);
+                            }}
+                            audioTrackConstraints={{
+                                noiseSuppression: true,
+                                echoCancellation: true,
+                            }}
+                            recorderControls={recorderControls}
+                        />
+                    </S.Scriber>
+                )}
             >
-                {(communication) =>
-                    <RecordedNotes communication={communication} reload={manager.reload} reloadDocuments={props.reloadDocuments}/>
-                }
+                {(communication) => (
+                    <RecordedNotes
+                        communication={communication}
+                        reload={manager.reload}
+                        reloadDocuments={props.reloadDocuments}
+                    />
+                )}
             </RenderRemoteData>
-        </div>
+        </S.Container>
     );
 }
 
 interface AIScribeProps {
-    patientId: string
-    encounterId: string
-    reloadDocuments: () => void
+    patientId: string;
+    encounterId: string;
+    reloadDocuments: () => void;
+    recorderControls: any;
 }
 
-export function AIScribe(props: AIScribeProps){
+export function useAIScribe() {
+    const recorderControls = useAudioRecorder();
+
+    return { recorderControls };
+}
+
+export function AIScribe(props: AIScribeProps) {
     const role = selectCurrentUserRoleResource();
     const senderReference = `${role.resourceType}/${role.id}`;
-    return <AudioRecorderButton {...props} senderReference={senderReference} />
+
+    return <AudioRecorderButton {...props} senderReference={senderReference} />;
 }
 
 interface RecordedNotesProps {
     communication: Communication;
-    reload: () => void
-    reloadDocuments: () => void
+    reload: () => void;
+    reloadDocuments: () => void;
 }
 
-function RecordedNotes({ communication, reload, reloadDocuments }: RecordedNotesProps){
-    const originaltext = communication.payload?.[0]?.contentString ?? ""
+function RecordedNotes({ communication, reload, reloadDocuments }: RecordedNotesProps) {
+    const originaltext = communication.payload?.[0]?.contentString ?? '';
     const [text, setText] = useState(originaltext);
-    async function save(){
-        const response  = await saveFHIRResource({...communication,
-                                                  payload: [{contentString: text}]});
-        if(isFailure(response)){
+    const [isEditingMode, setIsEditingMode] = useState(false);
+
+    const [isExtractLoading, setIsExtractLoading] = useState(false);
+
+    async function save() {
+        const response = await saveFHIRResource({ ...communication, payload: [{ contentString: text }] });
+        if (isFailure(response)) {
             notification.error({ message: JSON.stringify(response.error) });
         } else {
-            reload()
+            setIsEditingMode(false);
+            reload();
         }
     }
 
-    return <>
-        <textarea style={{width: 1000, height: 300}} onChange={(e) => setText(e.target.value)}>{text}</textarea>
-        <br/>
-        {typeof communication.id === 'undefined' || text!=originaltext ?
-         <button onClick={save}>save</button> :
-         <Extract
-             text={originaltext}
-             patient={communication.subject!}
-             encounter={communication.encounter!}
-             reloadDocumnents={reloadDocuments}
-         />}
-    </>
+    const sentences = text.split('. ');
+
+    return (
+        <S.Scriber>
+            <S.Title>
+                <Trans>Scribe results</Trans>
+            </S.Title>
+            {typeof communication.id === 'undefined' || isEditingMode ? (
+                <S.Textarea onChange={(e: any) => setText(e.target.value)} value={text} rows={6} />
+            ) : (
+                <S.TextResults>
+                    <Text>{sentences.join('.\n')}</Text>
+                </S.TextResults>
+            )}
+            <S.Controls>
+                {typeof communication.id === 'undefined' || isEditingMode ? (
+                    <Button icon={<SaveFilled />} type="primary" onClick={save}>
+                        <span>
+                            <Trans>Save</Trans>
+                        </span>
+                    </Button>
+                ) : (
+                    <>
+                        <Extract
+                            text={originaltext}
+                            patient={communication.subject!}
+                            encounter={communication.encounter!}
+                            reloadDocumnents={reloadDocuments}
+                            updateExtractLoading={setIsExtractLoading}
+                        />
+                        {!isExtractLoading ? (
+                            <Button icon={<EditFilled />} type="default" onClick={() => setIsEditingMode(true)}>
+                                <span>
+                                    <Trans>Edit</Trans>
+                                </span>
+                            </Button>
+                        ) : null}
+                    </>
+                )}
+            </S.Controls>
+        </S.Scriber>
+    );
 }
 
 interface ExtractProps {
-    reloadDocumnents: () => void
+    reloadDocumnents: () => void;
     encounter: Reference;
     patient: Reference;
     text: string;
+    updateExtractLoading: (v: boolean) => void;
 }
 
-function Extract(props: ExtractProps){
-    const [selectedQuestionnaires, setSelectedQuestionnaires] = useState<Array<string>>([])
+function Extract(props: ExtractProps) {
+    const { updateExtractLoading } = props;
+    const [selectedQuestionnaires, setSelectedQuestionnaires] = useState<Array<string>>([]);
     function handleChange(value: string[]) {
         setSelectedQuestionnaires(value);
     }
@@ -161,63 +231,90 @@ function Extract(props: ExtractProps){
         ),
     );
 
-    const [extractionRD, setExtarction] = useState<RemoteData<unknown>>(notAsked)
+    const [extractionRD, setExtarction] = useState<RemoteData<unknown>>(notAsked);
 
-    async function requestExtract(){
+    async function requestExtract() {
+        updateExtractLoading(true);
         setExtarction(loading);
-        const result = sequenceArray(await Promise.all(selectedQuestionnaires.map(
-            async (qId) => {
-                return service ({
-                    method: 'POST',
-                    baseURL: config.aiAssistantServiceUrl ?? undefined,
-                    url: '/extract',
-                    data: {
-                        ...props,
-                        questionnaire: qId,
-                    },
-                    headers: { Authorization: `Bearer ${getToken()}`, "Content-Type": "multipart" },
-                })
-        })));
-        if(isSuccess(result)){
+        const result = sequenceArray(
+            await Promise.all(
+                selectedQuestionnaires.map(async (qId) => {
+                    return service({
+                        method: 'POST',
+                        baseURL: config.aiAssistantServiceUrl ?? undefined,
+                        url: '/extract',
+                        data: {
+                            ...props,
+                            questionnaire: qId,
+                        },
+                        headers: { Authorization: `Bearer ${getToken()}`, 'Content-Type': 'multipart' },
+                    });
+                }),
+            ),
+        );
+        if (isSuccess(result)) {
+            notification.success({ message: t`Documents have been successfully extracted` });
             props.reloadDocumnents();
         }
         setExtarction(result);
+        updateExtractLoading(false);
     }
 
-
-    if(isNotAsked(extractionRD)){
+    if (isNotAsked(extractionRD)) {
         return (
             <ModalTrigger
                 title="Extract medical documents"
-                trigger={<button>Extract medical documents</button>}>
-                {() => <>
-                    <p>Select questionnires to fullfill</p>
-                <RenderRemoteData
-                    remoteData={questionnairesResponse}
-                >
-                    {(questionnaires) => (
-                        <>
-                            <Select
-                                value={selectedQuestionnaires}
-                                mode="multiple"
-                                style={{width: '100%'}}
-                                onChange={handleChange}
-                            >
-                                {questionnaires.map(q => (
-                                    <Select.Option value={q.id} key={q.id}>
-                                    {q.title ?? q.name ?? q.id}
-                                    </Select.Option>))}
-                            </Select>
-                        {selectedQuestionnaires.length > 0 ? <button onClick={requestExtract}>Extarct</button> : null}
-                        </>
-                    )}
-                </RenderRemoteData>
-                </>
+                trigger={
+                    <Button icon={<PlusOutlined />} type="primary">
+                        <span>
+                            <Trans>Extract documents</Trans>
+                        </span>
+                    </Button>
                 }
+            >
+                {() => (
+                    <>
+                        <p>Select questionnires to fullfill</p>
+                        <RenderRemoteData remoteData={questionnairesResponse}>
+                            {(questionnaires) => (
+                                <>
+                                    <Select
+                                        value={selectedQuestionnaires}
+                                        mode="multiple"
+                                        style={{ width: '100%' }}
+                                        onChange={handleChange}
+                                    >
+                                        {questionnaires.map((q) => (
+                                            <Select.Option value={q.id} key={q.id}>
+                                                {q.title ?? q.name ?? q.id}
+                                            </Select.Option>
+                                        ))}
+                                    </Select>
+                                    <S.ModalFooter>
+                                        <Button
+                                            type="primary"
+                                            onClick={requestExtract}
+                                            disabled={selectedQuestionnaires.length === 0}
+                                        >
+                                            <Trans>Extract</Trans>
+                                        </Button>
+                                    </S.ModalFooter>
+                                </>
+                            )}
+                        </RenderRemoteData>
+                    </>
+                )}
             </ModalTrigger>
         );
     }
+
     return (
-        <RenderRemoteData remoteData={extractionRD}>{()=><br/>}</RenderRemoteData>
+        <RenderRemoteData
+            remoteData={extractionRD}
+            renderLoading={() => <Text>Loading...</Text>}
+            renderFailure={(error) => <Text>{formatError(error)}</Text>}
+        >
+            {() => <br />}
+        </RenderRemoteData>
     );
 }

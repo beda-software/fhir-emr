@@ -18,4 +18,12 @@ export const S = {
             background-color: ${({ theme }) => theme.neutralPalette.gray_4};
         }
     `,
+    Controls: styled.div`
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    `,
+    EncounterControls: styled.div`
+        margin-left: auto;
+    `,
 };
