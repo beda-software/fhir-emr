@@ -22,5 +22,5 @@ name: HOPC (History of Present Illness, Onset, Provocation, Characterization)
 title: HOPC (History of Present Illness, Onset, Provocation, Characterization)
 status: active
 subjectType:
-  - Patient
+  - Encounter
 resourceType: Questionnaire

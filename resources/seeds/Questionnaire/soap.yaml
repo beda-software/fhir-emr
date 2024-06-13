@@ -34,5 +34,5 @@ name: SOAP (Subjective, Objective, Assessment, Plan)
 title: SOAP (Subjective, Objective, Assessment, Plan)
 status: active
 subjectType:
-  - Patient
+  - Encounter
 resourceType: Questionnaire

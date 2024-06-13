@@ -60,5 +60,5 @@ name: Anglo-Australian model for Medical Assessment
 title: Anglo-Australian model for Medical Assessment
 status: active
 subjectType:
-  - Patient
+  - Encounter
 resourceType: Questionnaire
