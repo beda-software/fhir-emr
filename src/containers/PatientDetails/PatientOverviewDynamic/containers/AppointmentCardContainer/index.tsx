@@ -17,11 +17,11 @@ export function AppointmentCardContainer({ patient, widgetInfo }: ContainerProps
         <RenderRemoteData remoteData={response} renderLoading={Spinner}>
             {({ appointments }) => {
                 return (
-                    <div>
+                    <>
                         {appointments.map((appointment, index) => (
                             <AppointmentCard key={index} appointment={appointment} />
                         ))}
-                    </div>
+                    </>
                 );
             }}
         </RenderRemoteData>

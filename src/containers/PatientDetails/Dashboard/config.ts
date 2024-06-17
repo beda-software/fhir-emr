@@ -17,8 +17,20 @@ import { CreatinineDashboardContainer } from 'src/containers/PatientDetails/Pati
 import { GeneralInformationDashboardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer';
 import { StandardCardContainerFabric } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/StandardCardContainerFabric';
 
+import { AppointmentCardContainer } from '../PatientOverviewDynamic/containers/AppointmentCardContainer';
+
 export const patientDashboardConfig: DashboardInstance = {
     top: [
+        {
+            widget: AppointmentCardContainer,
+            query: {
+                resourceType: 'Appointment',
+                search: (patient: Patient) => ({
+                    patient: patient.id,
+                    status: ['arrived,booked'],
+                }),
+            },
+        },
         {
             widget: GeneralInformationDashboardContainer,
         },
