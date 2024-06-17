@@ -1,4 +1,4 @@
-import { Organization, Patient, Practitioner } from 'fhir/r4b';
+import { Organization, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
 
 import * as aidboxReactRemoteData from 'aidbox-react/lib/libs/remoteData';
 import {
@@ -6,7 +6,7 @@ import {
     setInstanceToken as setAidboxInstanceToken,
 } from 'aidbox-react/lib/services/instance';
 
-import { extractErrorCode, formatError } from '@beda.software/fhir-react';
+import { extractBundleResources, extractErrorCode, formatError } from '@beda.software/fhir-react';
 import { isSuccess, success } from '@beda.software/remote-data';
 
 import { User } from 'shared/src/contrib/aidbox';
@@ -14,6 +14,7 @@ import { User } from 'shared/src/contrib/aidbox';
 import { getJitsiAuthToken, getUserInfo } from 'src/services/auth';
 import {
     getFHIRResource,
+    getFHIRResources,
     resetInstanceToken as resetFHIRInstanceToken,
     setInstanceToken as setFHIRInstanceToken,
 } from 'src/services/fhir';
@@ -21,6 +22,7 @@ import {
     sharedAuthorizedOrganization,
     sharedAuthorizedPatient,
     sharedAuthorizedPractitioner,
+    sharedAuthorizedPractitionerRoles,
     sharedAuthorizedUser,
     sharedJitsiAuthToken,
 } from 'src/sharedState';
@@ -50,10 +52,22 @@ async function populateUserInfoSharedState(user: User) {
             const practitionerResponse = await getFHIRResource<Practitioner>({
                 reference: `Practitioner/${practitionerId}`,
             });
+
             if (isSuccess(practitionerResponse)) {
                 sharedAuthorizedPractitioner.setSharedState(practitionerResponse.data);
             } else {
                 console.error(practitionerResponse.error);
+            }
+
+            const practitionerRolesResponse = await getFHIRResources<PractitionerRole>('PractitionerRole', {
+                practitioner: `Practitioner/${practitionerId}`,
+            });
+
+            if (isSuccess(practitionerRolesResponse)) {
+                const practitionerRoles = extractBundleResources(practitionerRolesResponse.data).PractitionerRole;
+                sharedAuthorizedPractitionerRoles.setSharedState(practitionerRoles);
+            } else {
+                console.error(practitionerRolesResponse.error);
             }
         },
         [Role.Receptionist]: async () => {
