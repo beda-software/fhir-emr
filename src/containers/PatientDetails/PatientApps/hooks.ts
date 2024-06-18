@@ -8,10 +8,18 @@ import { mapSuccess, service } from 'aidbox-react/lib/services/service';
 import config from 'shared/src/config';
 import { Client } from 'shared/src/contrib/aidbox';
 
+import { matchCurrentUserRole, Role } from 'src/utils/role.ts';
+
 export function useSmartApps() {
     const [appsRemoteData] = useService(async () => {
+        const clientType = matchCurrentUserRole<string>({
+            [Role.Patient]: () => 'smart-on-fhir-patient',
+            [Role.Admin]: () => 'smart-on-fhir',
+            [Role.Practitioner]: () => 'smart-on-fhir-practitioner',
+            [Role.Receptionist]: () => 'smart-on-fhir-practitioner',
+        });
         return mapSuccess(
-            await getAidboxResources<Client>('Client', { ['.type']: 'smart-on-fhir' }),
+            await getAidboxResources<Client>('Client', { ['.type']: clientType }),
             extractBundleResources,
         );
     });
