@@ -121,10 +121,11 @@ export function prepareConsents(
                 render: (resource: Consent) => {
                     const provisionName = resource.provision?.data?.[0]?.reference.display;
                     const purposeName = resource.provision?.purpose?.[0]?.display;
+                    const category = resource.category[0]?.text || resource.category[0]?.coding?.[0]?.display;
 
                     return (
                         <LinkToEdit
-                            name={provisionName ?? purposeName}
+                            name={provisionName || purposeName || category}
                             resource={resource}
                             provenanceList={provenanceList}
                         />
