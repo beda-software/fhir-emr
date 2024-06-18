@@ -43,7 +43,9 @@ function usePractitionerOverview(props: Props) {
         },
         {
             title: 'Available services',
-            value: healthcareServices?.map((hs) => hs.name).join(', '),
+            value:
+                healthcareServices?.map((hs) => hs.name).join(', ') ||
+                practitionerRole?.healthcareService?.map((hs) => hs.display).join(', '),
         },
     ];
 
