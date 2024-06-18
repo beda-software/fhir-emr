@@ -41,24 +41,15 @@ async function createClient(role: Role) {
 }
 
 async function initialSetup(role: Role) {
-    const data = await dataSetup(role);
-    await login({ ...data.user, password: 'password' });
-    const client = await withRootAccess(axiosInstance, async () => {
-        return await createClient(role);
-    });
-    return { ...data, client };
-}
-
-function dataSetup(role: Role) {
-    return withRootAccess(axiosInstance, async () => {
-        let resource;
-        let resourceType;
+    const { user, role: roleData } = await withRootAccess(axiosInstance, async () => {
+        let resource, resourceType;
         switch (role) {
             case Role.Patient:
                 resource = await createPatient();
                 resourceType = 'Patient';
                 break;
             case Role.Practitioner:
+            case Role.Receptionist:
                 resource = await createPractitioner();
                 resourceType = 'Practitioner';
                 break;
@@ -66,17 +57,14 @@ function dataSetup(role: Role) {
                 resource = await createAdmin();
                 resourceType = 'Organization';
                 break;
-            case Role.Receptionist:
-                resource = await createPractitioner();
-                resourceType = 'Practitioner';
-                break;
         }
 
         const user = await createUser({
             password: 'password',
             resourceType: 'User',
-            email: role + '@beda.software',
+            email: `${role}@beda.software`,
         });
+
         const links: any = {};
         if (role === Role.Patient) {
             links.patient = {
@@ -104,11 +92,16 @@ function dataSetup(role: Role) {
             resourceType: 'Role',
         });
 
-        return {
-            user,
-            role: roleData,
-        };
+        return { user, role: roleData };
     });
+
+    await login({ ...user, password: 'password' });
+
+    const client = await withRootAccess(axiosInstance, async () => {
+        return await createClient(role);
+    });
+
+    return { user, role: roleData, client };
 }
 
 describe.each(Object.values(Role))('useSmartApps for role %s', (role) => {
@@ -122,13 +115,13 @@ describe.each(Object.values(Role))('useSmartApps for role %s', (role) => {
             { timeout: 30000 },
         );
 
-        const remoteData = result.current.appsRemoteData.data;
-        const resourceType = matchCurrentUserRole<string>({
+        const appData = result.current.appsRemoteData.data;
+        const clientType = matchCurrentUserRole<string>({
             [Role.Patient]: () => 'smart-on-fhir-patient',
             [Role.Admin]: () => 'smart-on-fhir',
             [Role.Practitioner]: () => 'smart-on-fhir-practitioner',
             [Role.Receptionist]: () => 'smart-on-fhir-practitioner',
         });
-        expect(resourceType).toBe(remoteData.Client[0].type);
+        expect(clientType).toBe(appData.Client[0].type);
     });
 });
