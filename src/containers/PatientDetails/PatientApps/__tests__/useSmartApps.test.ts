@@ -114,13 +114,21 @@ describe.each(Object.values(Role))('useSmartApps for role %s', (role) => {
             { timeout: 30000 },
         );
 
-        const appData = result.current.appsRemoteData.data;
-        const clientType = matchCurrentUserRole<string>({
-            [Role.Patient]: () => 'smart-on-fhir-patient',
-            [Role.Admin]: () => 'smart-on-fhir',
-            [Role.Practitioner]: () => 'smart-on-fhir-practitioner',
-            [Role.Receptionist]: () => 'smart-on-fhir-practitioner',
-        });
-        expect(clientType).toBe(appData.Client[0].type);
+        if (isSuccess(result.current.appsRemoteData)) {
+            const appData = result.current.appsRemoteData.data;
+            const clientType = matchCurrentUserRole<string>({
+                [Role.Patient]: () => 'smart-on-fhir-patient',
+                [Role.Admin]: () => 'smart-on-fhir',
+                [Role.Practitioner]: () => 'smart-on-fhir-practitioner',
+                [Role.Receptionist]: () => 'smart-on-fhir-practitioner',
+            });
+            const firstClient = appData.Client[0];
+            if (!firstClient) {
+                throw new Error('First client data is not available');
+            }
+            expect(clientType).toBe(firstClient.type);
+        } else {
+            throw new Error('appsRemoteData is not in Success state');
+        }
     });
 });
