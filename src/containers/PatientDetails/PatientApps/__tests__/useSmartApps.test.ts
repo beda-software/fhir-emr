@@ -24,10 +24,29 @@ export async function createAdmin(organization: Partial<Organization> = {}) {
     );
 }
 
+async function createClient(role: Role) {
+    const clientType = matchCurrentUserRole<string>({
+        [Role.Patient]: () => 'smart-on-fhir-patient',
+        [Role.Admin]: () => 'smart-on-fhir',
+        [Role.Practitioner]: () => 'smart-on-fhir-practitioner',
+        [Role.Receptionist]: () => 'smart-on-fhir-practitioner',
+    });
+    return ensureSave({
+        resourceType: 'Client',
+        type: clientType,
+        name: `${role} SmartForms`,
+        description: `${role} Smart Forms App`,
+        grant_types: ['authorization_code']
+    });
+}
+
 async function initialSetup(role: Role) {
     const data = await dataSetup(role);
     await login({ ...data.user, password: 'password' });
-    return data;
+    const client = await withRootAccess(axiosInstance, async () => {
+        return await createClient(role);
+    });
+    return { ...data, client };
 }
 
 function dataSetup(role: Role) {
