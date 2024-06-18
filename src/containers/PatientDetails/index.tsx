@@ -10,6 +10,7 @@ import { RouteItem } from 'src/components/BaseLayout/Sidebar/SidebarTop';
 import { PatientEncounter } from 'src/components/PatientEncounter';
 import { Spinner } from 'src/components/Spinner';
 import { PatientReloadProvider } from 'src/containers/PatientDetails/Dashboard/contexts';
+import { sharedAuthorizedPractitionerRoles } from 'src/sharedState';
 import { matchCurrentUserRole, selectCurrentUserRoleResource, Role } from 'src/utils/role';
 
 import { usePatientResource } from './hooks';
@@ -77,7 +78,14 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                                                     return {};
                                                                 },
                                                                 [Role.Practitioner]: (practitioner) => {
-                                                                    return { participant: practitioner.id };
+                                                                    return {
+                                                                        participant: (
+                                                                            sharedAuthorizedPractitionerRoles.getSharedState() ||
+                                                                            []
+                                                                        )
+                                                                            .map((pr) => `PractitionerRole/${pr.id}`)
+                                                                            .join(','),
+                                                                    };
                                                                 },
                                                                 [Role.Patient]: () => {
                                                                     return {};
