@@ -2754,7 +2754,8 @@ export interface Client {
     secret?: string;
     smart?: ClientSmart;
     trusted?: boolean;
-    type?: 'smart';
+    type?: string;
+    name?: string;
 }
 
 export interface ClientAuth {

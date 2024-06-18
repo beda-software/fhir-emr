@@ -4,6 +4,8 @@ import { Organization } from 'fhir/r4b';
 import { ensure, withRootAccess } from '@beda.software/fhir-react';
 import { isSuccess } from '@beda.software/remote-data';
 
+import { Client, Role as AidboxRole } from 'shared/src/contrib/aidbox'
+
 import { useSmartApps } from 'src/containers/PatientDetails/PatientApps/hooks.ts';
 import { createUser } from 'src/containers/PatientList/__tests__/utils.ts';
 import { axiosInstance, createFHIRResource } from 'src/services/fhir.ts';
@@ -31,7 +33,7 @@ async function createClient(role: Role) {
         [Role.Practitioner]: () => 'smart-on-fhir-practitioner',
         [Role.Receptionist]: () => 'smart-on-fhir-practitioner',
     });
-    return ensureSave({
+    return ensureSave<Client>({
         resourceType: 'Client',
         type: clientType,
         name: `${role} SmartForms`,
@@ -40,68 +42,65 @@ async function createClient(role: Role) {
     });
 }
 
-async function initialSetup(role: Role) {
-    const { user, role: roleData } = await withRootAccess(axiosInstance, async () => {
-        let resource, resourceType;
-        switch (role) {
+async function initialSetup(roleName: Role) {
+    const { user, role } = await withRootAccess(axiosInstance, async () => {
+        let resource;
+        switch (roleName) {
             case Role.Patient:
                 resource = await createPatient();
-                resourceType = 'Patient';
                 break;
             case Role.Practitioner:
             case Role.Receptionist:
                 resource = await createPractitioner();
-                resourceType = 'Practitioner';
                 break;
             case Role.Admin:
                 resource = await createAdmin();
-                resourceType = 'Organization';
                 break;
         }
 
         const user = await createUser({
-            password: 'password',
             resourceType: 'User',
-            email: `${role}@beda.software`,
+            password: 'password',
+            email: `${roleName}@beda.software`,
         });
 
-        const links: any = {};
-        if (role === Role.Patient) {
+        const links: AidboxRole['links'] = {};
+        if (roleName === Role.Patient) {
             links.patient = {
                 id: resource.id,
-                resourceType: resourceType,
+                resourceType: resource.resourceType as 'Patient',
             };
-        } else if (role === Role.Practitioner || role === Role.Receptionist) {
+        } else if (roleName === Role.Practitioner || roleName === Role.Receptionist) {
             links.practitioner = {
                 id: resource.id,
-                resourceType: resourceType,
+                resourceType: resource.resourceType as 'Practitioner',
             };
-        } else if (role === Role.Admin) {
+        } else if (roleName === Role.Admin) {
             links.organization = {
                 id: resource.id,
-                resourceType: resourceType,
+                resourceType: resource.resourceType as 'Organization',
             };
         }
-        const roleData = await ensureSave({
-            name: role,
+        const role = await ensureSave<AidboxRole>({
+            resourceType: 'Role',
+            name: roleName,
             user: {
                 id: user.id!,
                 resourceType: 'User',
             },
-            links: links,
-            resourceType: 'Role',
+            links,
         });
 
-        return { user, role: roleData };
+        return { user, role };
     });
 
     await login({ ...user, password: 'password' });
 
     const client = await withRootAccess(axiosInstance, async () => {
-        return await createClient(role);
+        return await createClient(roleName);
     });
 
-    return { user, role: roleData, client };
+    return { user, role, client };
 }
 
 describe.each(Object.values(Role))('useSmartApps for role %s', (role) => {
