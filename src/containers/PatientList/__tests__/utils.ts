@@ -39,7 +39,6 @@ export const PATIENTS_ADDITION_DATA = [
 export const initialSetup = async () => {
     const data = await dataSetup();
     await login({ ...data.user, password: 'password' });
-
     return data;
 };
 
