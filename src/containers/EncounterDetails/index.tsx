@@ -3,7 +3,7 @@ import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
 import { Communication, Encounter, Patient } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import { RenderRemoteData, formatError, formatFHIRDateTime, useService } from '@beda.software/fhir-react';
 import { isLoading, isSuccess } from '@beda.software/remote-data';
@@ -103,6 +103,15 @@ export const EncounterDetails = (props: Props) => {
                                             <Trans>Create document</Trans>
                                         </span>
                                     </Button>
+                                ) : null}
+                                {!isEncounterCompleted && !config.aiAssistantServiceUrl ? (
+                                    <Link to={`/encounters/${encounter.id}/video`} state={{ encounterData: encounter }}>
+                                        <Button type="primary">
+                                            <span>
+                                                <Trans>Start video call</Trans>
+                                            </span>
+                                        </Button>
+                                    </Link>
                                 ) : null}
                                 {config.aiAssistantServiceUrl && !isEncounterCompleted ? (
                                     <>
