@@ -109,17 +109,15 @@ function PatientDocumentDetailsReadonly(props: {
 }) {
     const location = useLocation();
     const navigate = useNavigate();
-    const { formData, encounter, reload, provenance } = props;
+    const { formData, reload, provenance } = props;
 
     usePatientHeaderLocationTitle({ title: formData.context.questionnaire?.name ?? '' });
-
-    const encounterCompleted = encounter?.status === 'finished';
 
     const patientId = location.pathname.split('/')[2];
     const qrCompleted = formData.context.questionnaireResponse.status === 'completed';
     const qrId = formData.context.questionnaireResponse.id;
 
-    const canBeEdited = (!encounter || !encounterCompleted) && !qrCompleted;
+    const canBeEdited = !qrCompleted;
 
     return (
         <div className={s.container}>
