@@ -120,7 +120,7 @@ export function useQuestionnaireResponseForm(props: Props) {
             },
         });
 
-        delete modifiedFormData.context.questionnaireResponse.meta;
+        /* delete modifiedFormData.context.questionnaireResponse.meta; */
 
         const saveResponse = await handleSave(modifiedFormData);
         onFormResponse({ response: saveResponse, onSuccess, onFailure });
