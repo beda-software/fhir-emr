@@ -21,6 +21,7 @@ import { RemoteDataResult, isFailure, isSuccess, mapSuccess, success } from '@be
 
 import { saveFHIRResource, service } from 'src/services/fhir';
 
+import config from '../config';
 import {
     QuestionnaireResponse as FCEQuestionnaireResponse,
     ParametersParameter as FCEParametersParameter,
@@ -166,6 +167,7 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
         populateRemoteData = success(initialQuestionnaireResponse as FHIRQuestionnaireResponse);
     } else {
         populateRemoteData = await service<FHIRQuestionnaireResponse>({
+            ...(config.sdcBackendUrl ? { baseURL: config.sdcBackendUrl } : {}),
             method: 'POST',
             url: '/Questionnaire/$populate',
             data: params,
@@ -205,6 +207,7 @@ export async function handleFormDataSave(
     const fhirQuestionnaire: FHIRQuestionnaire = fromFirstClassExtension(questionnaire);
 
     const constraintRemoteData = await service({
+        ...(config.sdcBackendUrl ? { baseURL: config.sdcBackendUrl } : {}),
         url: '/QuestionnaireResponse/$constraint-check',
         method: 'POST',
         data: {
@@ -226,6 +229,7 @@ export async function handleFormDataSave(
     }
 
     const extractRemoteData = await service<any>({
+        ...(config.sdcBackendUrl ? { baseURL: config.sdcBackendUrl } : {}),
         method: 'POST',
         url: '/Questionnaire/$extract',
         data: {

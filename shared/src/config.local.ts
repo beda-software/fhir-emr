@@ -7,6 +7,7 @@ export default {
     baseURL: 'http://localhost:8080',
     sdcIdeUrl: 'http://localhost:3001',
     aiQuestionnaireBuilderUrl: 'http://localhost:3002',
+    sdcBackendUrl: null,
 
     webSentryDSN: null,
     mobileSentryDSN: null,
