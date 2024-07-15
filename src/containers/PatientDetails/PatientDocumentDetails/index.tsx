@@ -1,3 +1,4 @@
+import { PrinterOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
 import { Encounter, Organization, Patient, Practitioner, Provenance, QuestionnaireResponse } from 'fhir/r4b';
@@ -129,6 +130,13 @@ function PatientDocumentDetailsReadonly(props: {
                     <div className={s.buttons}>
                         {qrCompleted ? (
                             <>
+                                <Button
+                                    type="primary"
+                                    icon={<PrinterOutlined />}
+                                    onClick={() => navigate(`${location.pathname}/print`)}
+                                >
+                                    {t`Prepare for print`}
+                                </Button>
                                 <ConfirmActionButton
                                     action={() => amendDocument(reload, qrId)}
                                     reload={reload}
