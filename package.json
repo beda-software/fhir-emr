@@ -51,7 +51,7 @@
         "recharts": "^2.12.0",
         "sass": "^1.63.6",
         "sdc-qrf": "^0.3.0",
-        "styled-components": "^6.0.2",
+        "styled-components": "^6.1.11",
         "yup": "^1.2.0"
     },
     "devDependencies": {
@@ -79,7 +79,6 @@
         "@types/react-dom": "^18.0.11",
         "@types/react-router-dom": "^5.3.3",
         "@types/react-select": "^5.0.1",
-        "@types/styled-components": "^5.1.26",
         "@typescript-eslint/eslint-plugin": "^5.59.0",
         "@typescript-eslint/parser": "^5.59.0",
         "@vitejs/plugin-react": "^4.0.0",
