@@ -69,11 +69,11 @@ export function questionnaireToValidationSchema(questionnaire: Questionnaire) {
     const validationSchema: Record<string, yup.AnySchema> = {};
     if (questionnaire.item === undefined) return yup.object(validationSchema) as yup.AnyObjectSchema;
     questionnaire.item.forEach((item) => {
-        let schema;
+        let schema: yup.AnySchema;
         if (item.type === 'string') {
             schema = yup.string();
             if (item.required) schema = schema.required();
-            if (item.maxLength && item.maxLength > 0) schema = schema.max(item.maxLength);
+            if (item.maxLength && item.maxLength > 0) schema = (schema as yup.StringSchema).max(item.maxLength);
             schema = createSchemaArray(yup.object({ string: schema })).required();
         } else if (item.type === 'integer') {
             schema = yup.number();
