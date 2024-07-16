@@ -1,6 +1,6 @@
 import { Decorator } from '@storybook/react';
 import { ReactNode } from 'react';
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 
 import { ThemeProvider } from 'src/theme/ThemeProvider';
 

@@ -1,5 +1,5 @@
 import { Divider } from 'antd';
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 
 export const S = {
     Container: styled.div<{ $collapsed: boolean }>`

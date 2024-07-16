@@ -1,6 +1,5 @@
 import { Input } from 'antd';
-// eslint-disable-next-line import/named
-import styled, { css } from 'styled-components/macro';
+import styled, { css } from 'styled-components';
 
 import { Text } from 'src/components/Typography';
 

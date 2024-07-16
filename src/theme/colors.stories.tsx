@@ -1,8 +1,7 @@
 import { Meta, StoryFn } from '@storybook/react';
 import _ from 'lodash';
 import React from 'react';
-import { DefaultTheme } from 'styled-components';
-import styled from 'styled-components/macro';
+import styled, { DefaultTheme } from 'styled-components';
 
 import { Text, Title } from 'src/components/Typography';
 

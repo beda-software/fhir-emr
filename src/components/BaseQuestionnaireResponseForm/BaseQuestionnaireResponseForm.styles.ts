@@ -1,5 +1,4 @@
-// eslint-disable-next-line import/named
-import styled, { css } from 'styled-components/macro';
+import styled, { css } from 'styled-components';
 
 export const footerStyles = css`
     display: flex;

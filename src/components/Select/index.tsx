@@ -1,7 +1,7 @@
 import ReactSelect, { Props } from 'react-select';
 import ReactAsyncSelect, { AsyncProps } from 'react-select/async';
 
-import { S } from './Select.styles';
+import { S } from './styles';
 
 export function Select<T>(props: Props<T>) {
     return (

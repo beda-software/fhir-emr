@@ -3,7 +3,7 @@ import { t, Trans } from '@lingui/macro';
 import { Input, MenuProps, notification, Dropdown, Space } from 'antd';
 import { Observation, Patient, Provenance } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 
 import { WithId } from '@beda.software/fhir-react';
 

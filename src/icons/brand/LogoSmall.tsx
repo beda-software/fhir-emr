@@ -1,5 +1,4 @@
-// eslint-disable-next-line import/named
-import { useTheme } from 'styled-components/macro';
+import { useTheme } from 'styled-components';
 
 export function LogoSmall(props: React.SVGProps<SVGSVGElement>) {
     const theme = useTheme();
