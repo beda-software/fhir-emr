@@ -108,6 +108,6 @@ export function questionnaireToValidationSchema(questionnaire: Questionnaire) {
     return yup.object(validationSchema).required() as yup.AnyObjectSchema;
 }
 
-function createSchemaArray(value: yup.ObjectSchema<any>) {
+function createSchemaArray(value: yup.AnyObjectSchema) {
     return yup.array().of(yup.object({ value }));
 }
