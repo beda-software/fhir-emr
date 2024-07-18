@@ -133,7 +133,17 @@ function PatientDocumentDetailsReadonly(props: {
                                 {matchCurrentUserRole({
                                     [Role.Admin]: () => <></>,
                                     [Role.Patient]: () => <></>,
-                                    [Role.Practitioner]: () => <></>,
+                                    [Role.Practitioner]: () => {
+                                        return (
+                                            <Button
+                                                type="primary"
+                                                icon={<PrinterOutlined />}
+                                                onClick={() => navigate(`${location.pathname}/print`)}
+                                            >
+                                                {t`Prepare for print`}
+                                            </Button>
+                                        );
+                                    },
                                     [Role.Receptionist]: () => {
                                         return (
                                             <Button
