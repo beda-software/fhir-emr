@@ -156,51 +156,56 @@ function AuthenticatedAdminUserApp() {
 }
 
 function AuthenticatedPractitionerUserApp() {
-    const location = useLocation();
-    const isPreparingForPrint = location.pathname.endsWith('/print');
-
     return (
-        <>
-            {!isPreparingForPrint ? (
-                <BaseLayout>
-                    <Routes>
-                        <Route path="/patients" element={<PatientList />} />
-                        <Route path="/encounters" element={<EncounterList />} />
-                        <Route path="/appointment/book" element={<PublicAppointment />} />
-                        <Route path="/questionnaire" element={<PatientQuestionnaire />} />
-                        <Route path="/patients/:id/*" element={<PatientDetails />} />
-                        <Route path="/documents/:id/edit" element={<div>documents/:id/edit</div>} />
-                        <Route path="/encounters/:encounterId/video" element={<VideoCall />} />
-                        <Route path="/practitioners" element={<PractitionerList />} />
-                        <Route path="/practitioners/:id/*" element={<PractitionerDetails />} />
-                        <Route path="/questionnaires" element={<QuestionnaireList />} />
-                        <Route path="/questionnaires/builder" element={<QuestionnaireBuilder />} />
-                        <Route path="/questionnaires/:id/edit" element={<QuestionnaireBuilder />} />
-                        <Route path="/questionnaires/:id" element={<div>questionnaires/:id</div>} />
-                        <Route path="*" element={<Navigate to="/encounters" />} />
-                    </Routes>
-                </BaseLayout>
-            ) : (
-                <Routes>
-                    <Route path={`/patients/:id/documents/:qrId/print`} element={<DocumentPrint />} />
-                </Routes>
-            )}
-        </>
+        <Routes>
+            <Route path={`/print-patient-document/:id/:qrId`} element={<DocumentPrint />} />
+            <Route
+                path="*"
+                element={
+                    <BaseLayout>
+                        <Routes>
+                            <Route path="/patients" element={<PatientList />} />
+                            <Route path="/encounters" element={<EncounterList />} />
+                            <Route path="/appointment/book" element={<PublicAppointment />} />
+                            <Route path="/questionnaire" element={<PatientQuestionnaire />} />
+                            <Route path="/patients/:id/*" element={<PatientDetails />} />
+                            <Route path="/documents/:id/edit" element={<div>documents/:id/edit</div>} />
+                            <Route path="/encounters/:encounterId/video" element={<VideoCall />} />
+                            <Route path="/practitioners" element={<PractitionerList />} />
+                            <Route path="/practitioners/:id/*" element={<PractitionerDetails />} />
+                            <Route path="/questionnaires" element={<QuestionnaireList />} />
+                            <Route path="/questionnaires/builder" element={<QuestionnaireBuilder />} />
+                            <Route path="/questionnaires/:id/edit" element={<QuestionnaireBuilder />} />
+                            <Route path="/questionnaires/:id" element={<div>questionnaires/:id</div>} />
+                            <Route path="*" element={<Navigate to="/encounters" />} />
+                        </Routes>
+                    </BaseLayout>
+                }
+            />
+        </Routes>
     );
 }
 
 function AuthenticatedReceptionistUserApp() {
     return (
-        <BaseLayout>
-            <Routes>
-                <Route path="/scheduling" element={<OrganizationScheduling />} />
-                <Route path="/invoices" element={<InvoiceList />} />
-                <Route path="/invoices/:id" element={<InvoiceDetails />} />
-                <Route path="/medications" element={<MedicationManagement />} />
-                <Route path="/prescriptions" element={<Prescriptions />} />
-                <Route path="*" element={<Navigate to="/scheduling" />} />
-            </Routes>
-        </BaseLayout>
+        <Routes>
+            <Route path={`/print-patient-document/:id/:qrId`} element={<DocumentPrint />} />
+            <Route
+                path="*"
+                element={
+                    <BaseLayout>
+                        <Routes>
+                            <Route path="/scheduling" element={<OrganizationScheduling />} />
+                            <Route path="/invoices" element={<InvoiceList />} />
+                            <Route path="/invoices/:id" element={<InvoiceDetails />} />
+                            <Route path="/medications" element={<MedicationManagement />} />
+                            <Route path="/prescriptions" element={<Prescriptions />} />
+                            <Route path="*" element={<Navigate to="/scheduling" />} />
+                        </Routes>
+                    </BaseLayout>
+                }
+            />
+        </Routes>
     );
 }
 

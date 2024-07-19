@@ -138,7 +138,7 @@ function PatientDocumentDetailsReadonly(props: {
                                             <Button
                                                 type="primary"
                                                 icon={<PrinterOutlined />}
-                                                onClick={() => navigate(`${location.pathname}/print`)}
+                                                onClick={() => navigate(`/print-patient-document/${patientId}/${qrId}`)}
                                             >
                                                 {t`Prepare for print`}
                                             </Button>
@@ -149,7 +149,7 @@ function PatientDocumentDetailsReadonly(props: {
                                             <Button
                                                 type="primary"
                                                 icon={<PrinterOutlined />}
-                                                onClick={() => navigate(`${location.pathname}/print`)}
+                                                onClick={() => navigate(`/print-patient-document/${patientId}/${qrId}`)}
                                             >
                                                 {t`Prepare for print`}
                                             </Button>
