@@ -21,6 +21,8 @@ export function usePatientDocumentPrint() {
             const questionnaireResponse = evaluate(qrRD.data, 'entry.resource')[0];
             const qRD = await getFHIRResources<Questionnaire>('Questionnaire', {
                 id: questionnaireResponse.questionnaire,
+                // TODO: it is better to use '_include' to get questionnaire, but currently server does not return it
+                // Maybe this thread can help (https://github.com/hapifhir/hapi-fhir/issues/2843)
             });
             if (isSuccess(qRD)) {
                 const questionnaire = evaluate(qRD.data, 'entry.resource')[0];
