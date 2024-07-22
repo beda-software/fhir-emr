@@ -2,6 +2,7 @@ import path from 'path';
 
 import { lingui } from '@lingui/vite-plugin';
 import react from '@vitejs/plugin-react';
+import renameNodeModules from 'rollup-plugin-rename-node-modules';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
@@ -46,7 +47,10 @@ export default defineConfig({
                     react: 'React',
                     'react-dom': 'ReactDOM',
                 },
+                preserveModules: true,
+                preserveModulesRoot: 'src',
             },
+            plugins: [renameNodeModules('ext')],
         },
     },
 });
