@@ -6,6 +6,7 @@ coverage
 htmlcov
 build
 storybook-static
+dist
 
 # Project-specific files
 shared/src/config.ts

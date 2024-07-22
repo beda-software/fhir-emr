@@ -38,7 +38,7 @@
       "ignoreDeprecations": "5.0",
     },
     "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],
-    "exclude": ["node_modules"],
+    "exclude": ["node_modules", "lib"],
     "references": [{ "path": "./tsconfig.node.json" }]
   }
   

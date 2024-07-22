@@ -1,11 +1,11 @@
 {
     "name": "beda-emr",
-    "private": true,
     "version": "0.0.0",
     "type": "module",
     "scripts": {
         "start": "vite",
-        "build": "vite build",
+        "build": "vite build --config vite.config.ts",
+        "build:lib": "vite build --config vite.lib.config.ts",
         "test": "vitest --no-threads",
         "test-storybook": "test-storybook",
         "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
@@ -15,8 +15,7 @@
         "storybook": "storybook dev -p 6006",
         "build-storybook": "storybook build",
         "typecheck": "tsc",
-        "chromatic": "chromatic --only-changed",
-        "prepare": "husky install"
+        "chromatic": "chromatic --only-changed"
     },
     "dependencies": {
         "@ant-design/colors": "^7.0.0",
@@ -106,7 +105,21 @@
         "style-loader": "^3.3.3",
         "typescript": "^5.1.6",
         "vite": "^4.1.5",
+        "vite-plugin-dts": "^4.0.0-beta.1",
         "vite-plugin-turbosnap": "^1.0.2",
         "vitest": "^0.33.0"
+    },
+    "main": "./dist/index.js",
+    "module": "./dist/index.js",
+    "files": [
+        "dist"
+    ],
+    "exports": {
+        ".": {
+            "import": "./dist/index.js"
+        },
+        "./components": {
+            "import": "./dist/components.index.js"
+        }
     }
 }
