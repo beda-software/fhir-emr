@@ -5,18 +5,21 @@ const { Text, Paragraph } = Typography;
 
 export const S = {
     HeaderSpace: styled.div`
+        height: 0;
         @media print {
             height: 40px;
         }
-        height: 0;
     `,
     FooterSpace: styled.div`
+        height: 0;
         @media print {
             height: 40px;
         }
-        height: 0;
     `,
     Container: styled.div`
+        width: 100%;
+        max-width: 767px;
+        margin: 40px auto;
         @page {
             margin: 15mm 15mm 15mm 25mm;
         }
@@ -24,9 +27,6 @@ export const S = {
             max-width: 100%;
             margin: 0 0 0 0;
         }
-        width: 100%;
-        max-width: 767px;
-        margin: 40px auto;
     `,
     Title: styled(Text)`
         font-size: 16px;
