@@ -4,22 +4,22 @@ import styled from 'styled-components';
 const { Text, Paragraph } = Typography;
 
 export const S = {
-    HeaderSpace: styled.div`
+    HeaderSpace: styled.div<{ $headerHeight?: string }>`
         height: 0;
         @media print {
-            height: 40px;
+            height: ${(props) => (props.$headerHeight ? props.$headerHeight : '10px')};
         }
     `,
-    FooterSpace: styled.div`
+    FooterSpace: styled.div<{ $footerHeight?: string }>`
         height: 0;
         @media print {
-            height: 40px;
+            height: ${(props) => (props.$footerHeight ? props.$footerHeight : '10px')};
         }
     `,
-    Container: styled.div`
+    Container: styled.div<{ $pageMargin?: string }>`
         width: 100%;
         max-width: 767px;
-        margin: 40px auto;
+        margin: ${(props) => (props.$pageMargin ? props.$pageMargin : '40px auto')};
         @page {
             margin: 15mm 15mm 15mm 25mm;
         }

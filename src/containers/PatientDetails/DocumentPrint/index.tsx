@@ -39,7 +39,8 @@ export function DocumentPrintAnswers(props: {
     return qrItems;
 }
 
-export function DocumentPrint() {
+export function DocumentPrint(props: { headerHeight?: string; footerHeight?: string; pageMargin?: string }) {
+    const { headerHeight, footerHeight, pageMargin } = props;
     const { response } = usePatientDocumentPrint();
 
     return (
@@ -47,12 +48,12 @@ export function DocumentPrint() {
             <RenderRemoteData remoteData={response} renderLoading={Spinner}>
                 {(bundle) => {
                     return (
-                        <S.Container>
+                        <S.Container $pageMargin={pageMargin}>
                             <table>
                                 <thead>
                                     <tr>
                                         <td>
-                                            <S.HeaderSpace>&nbsp;</S.HeaderSpace>
+                                            <S.HeaderSpace $headerHeight={headerHeight}>&nbsp;</S.HeaderSpace>
                                         </td>
                                     </tr>
                                 </thead>
@@ -67,7 +68,7 @@ export function DocumentPrint() {
                                 <tfoot>
                                     <tr>
                                         <td>
-                                            <S.FooterSpace>&nbsp;</S.FooterSpace>
+                                            <S.FooterSpace $footerHeight={footerHeight}>&nbsp;</S.FooterSpace>
                                         </td>
                                     </tr>
                                 </tfoot>
