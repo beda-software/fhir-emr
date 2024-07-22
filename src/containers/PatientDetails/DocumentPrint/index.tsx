@@ -4,20 +4,22 @@ import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
 import { Spinner } from 'src/components/Spinner';
 
-import { flattenQuestionnaireGroupItems, getQuestionnaireItemValue, usePatientDocumentPrint } from './hooks';
+import { usePatientDocumentPrint } from './hooks';
 import { S } from './styles';
+import { flattenQuestionnaireGroupItems, getQuestionnaireItemValue } from './utils';
 
-function renderQuestionnaireItem(qItem: QuestionnaireItem, qResponse?: QuestionnaireResponse) {
-    const itemValue = qResponse && getQuestionnaireItemValue(qItem, qResponse);
+export function DocumentPrintAnswer(props: { item: QuestionnaireItem; qResponse?: QuestionnaireResponse }) {
+    const { item, qResponse } = props;
+    const itemValue = qResponse && getQuestionnaireItemValue(item, qResponse);
     return (
-        <S.P>
-            {qItem.text}
+        <S.P key={item.linkId}>
+            {item.text}
             {itemValue && ': ' + itemValue}
         </S.P>
     );
 }
 
-function QuestionnaireResponseItemsList(props: {
+export function DocumentPrintAnswers(props: {
     questionnaireResponse: QuestionnaireResponse;
     questionnaire: Questionnaire;
 }) {
@@ -25,19 +27,19 @@ function QuestionnaireResponseItemsList(props: {
     const qrItems = questionnaire.item?.map((item) => {
         switch (item.type) {
             case 'display':
-                return renderQuestionnaireItem(item);
+                return <DocumentPrintAnswer key={item.linkId} item={item} />;
             case 'group':
-                return flattenQuestionnaireGroupItems(item)?.map((rItem) => {
-                    return renderQuestionnaireItem(rItem, questionnaireResponse);
+                return flattenQuestionnaireGroupItems(item)?.map((item) => {
+                    return <DocumentPrintAnswer key={item.linkId} item={item} qResponse={questionnaireResponse} />;
                 });
             default:
-                return renderQuestionnaireItem(item, questionnaireResponse);
+                return <DocumentPrintAnswer key={item.linkId} item={item} qResponse={questionnaireResponse} />;
         }
     });
     return qrItems;
 }
 
-export const DocumentPrint = () => {
+export function DocumentPrint() {
     const { response } = usePatientDocumentPrint();
 
     return (
@@ -58,7 +60,7 @@ export const DocumentPrint = () => {
                                     <tr>
                                         <td>
                                             <S.Title>{bundle.questionnaire.title}</S.Title>
-                                            {QuestionnaireResponseItemsList(bundle)}
+                                            <DocumentPrintAnswers {...bundle} />
                                         </td>
                                     </tr>
                                 </tbody>
@@ -76,4 +78,4 @@ export const DocumentPrint = () => {
             </RenderRemoteData>
         </>
     );
-};
+}
