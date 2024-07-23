@@ -44,7 +44,7 @@ jobs:
               with:
                   node-version: 16
             - name: Prepare config
-              run: cp shared/src/config.production.ts shared/src/config.ts
+              run: cp contrib/emr-config/config.production.js contrib/emr-config/config.js
             - name: Prepare index.html
               run: cp public/index.production.html index.html
             - name: Install deps

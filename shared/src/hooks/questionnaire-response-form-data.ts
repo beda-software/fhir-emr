@@ -16,12 +16,12 @@ import {
     removeDisabledAnswers,
 } from 'sdc-qrf';
 
+import config from '@beda.software/emr-config';
 import { formatFHIRDateTime, getReference, useService } from '@beda.software/fhir-react';
 import { RemoteDataResult, isFailure, isSuccess, mapSuccess, success } from '@beda.software/remote-data';
 
 import { saveFHIRResource, service } from 'src/services/fhir';
 
-import config from '../config';
 import {
     QuestionnaireResponse as FCEQuestionnaireResponse,
     ParametersParameter as FCEParametersParameter,

@@ -1,9 +1,8 @@
 import { Consent, Organization, Patient, Practitioner } from 'fhir/r4b';
 
+import config from '@beda.software/emr-config';
 import { WithId, extractBundleResources, formatError, useService } from '@beda.software/fhir-react';
 import { isFailure, isSuccess, mapSuccess, serviceFetch, success } from '@beda.software/remote-data';
-
-import config from 'shared/src/config';
 
 import { getToken } from 'src/services/auth';
 import { getFHIRResources } from 'src/services/fhir';

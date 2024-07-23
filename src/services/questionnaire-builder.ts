@@ -1,6 +1,6 @@
 import { Questionnaire } from 'fhir/r4b';
 
-import config from 'shared/src/config';
+import config from '@beda.software/emr-config';
 
 import { getToken } from './auth';
 import { service } from './fhir';

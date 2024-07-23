@@ -10,6 +10,7 @@ dist
 
 # Project-specific files
 shared/src/config.ts
+contrib/emr-config/config.js
 sentry.properties
 .env.test.local
 .env

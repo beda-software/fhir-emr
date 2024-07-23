@@ -2,9 +2,9 @@ import path from 'path';
 
 import { lingui } from '@lingui/vite-plugin';
 import react from '@vitejs/plugin-react';
-import renameNodeModules from 'rollup-plugin-rename-node-modules';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
+import { externalizeDeps } from 'vite-plugin-externalize-deps';
 
 export default defineConfig({
     plugins: [
@@ -24,7 +24,8 @@ export default defineConfig({
             },
         }),
         lingui(),
-        dts({ entryRoot: 'src' }),
+        dts(),
+        externalizeDeps(),
     ],
     resolve: {
         alias: [
@@ -35,22 +36,30 @@ export default defineConfig({
     build: {
         copyPublicDir: false,
         lib: {
-            entry: [path.resolve(__dirname, 'src/index.ts'), path.resolve(__dirname, 'src/components.index.ts')],
+            entry: [
+                path.resolve(__dirname, 'src/index.ts'),
+                path.resolve(__dirname, 'src/components/index.ts'),
+                path.resolve(__dirname, 'src/containers/index.ts'),
+                path.resolve(__dirname, 'src/hooks/index.ts'),
+                path.resolve(__dirname, 'src/utils/index.ts'),
+                path.resolve(__dirname, 'src/services/index.ts'),
+                path.resolve(__dirname, 'src/theme/index.ts'),
+            ],
             formats: ['es'],
             fileName: (format, entryName) => `${entryName}.js`,
         },
         rollupOptions: {
-            // Ensure external dependencies are not bundled into your library
-            external: ['react', 'react-dom'],
             output: {
-                globals: {
-                    react: 'React',
-                    'react-dom': 'ReactDOM',
-                },
                 preserveModules: true,
-                preserveModulesRoot: 'src',
+                preserveModulesRoot: '.',
+                entryFileNames: (chunkInfo) => {
+                    if (chunkInfo.name.includes('node_modules')) {
+                        return chunkInfo.name.replace(/node_modules/g, 'ext') + '.js';
+                    }
+
+                    return '[name].js';
+                },
             },
-            plugins: [renameNodeModules('ext')],
         },
     },
 });

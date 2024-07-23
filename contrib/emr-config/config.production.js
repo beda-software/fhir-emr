@@ -1,7 +1,7 @@
-import commonConfig from './config.common';
+const config = {
+    clientId: 'web',
 
-export default {
-    ...commonConfig,
+    wearablesAccessConsentCodingSystem: 'https://fhir.emr.beda.software/CodeSystem/consent-subject',
 
     tier: 'production',
     baseURL: 'https://aidbox.emr.beda.software',
@@ -16,3 +16,5 @@ export default {
     metriportIdentifierSystem: 'https://api.sandbox.metriport.com',
     aiAssistantServiceUrl: 'https://scribe.emr.beda.software',
 };
+
+export { config as default };

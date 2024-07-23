@@ -6,7 +6,7 @@ import { Communication, Questionnaire, Reference } from 'fhir/r4b';
 import { useState } from 'react';
 // eslint-disable-next-line
 import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder';
-
+import config from '@beda.software/emr-config';
 import { RenderRemoteData, extractBundleResources, formatError, useService } from '@beda.software/fhir-react';
 import {
     isSuccess,
@@ -19,8 +19,6 @@ import {
     mapSuccess,
     sequenceArray,
 } from '@beda.software/remote-data';
-
-import config from 'shared/src/config';
 
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { Spinner } from 'src/components/Spinner';

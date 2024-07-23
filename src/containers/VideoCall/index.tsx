@@ -3,7 +3,8 @@ import { Col, Row } from 'antd';
 import { ContactPoint } from 'fhir/r4b';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import config from 'shared/src/config';
+import config from '@beda.software/emr-config';
+
 import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';

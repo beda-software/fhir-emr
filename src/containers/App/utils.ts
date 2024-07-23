@@ -1,13 +1,12 @@
 import { Organization, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
 
-import * as aidboxReactRemoteData from 'aidbox-react/lib/libs/remoteData';
 import {
     resetInstanceToken as resetAidboxInstanceToken,
     setInstanceToken as setAidboxInstanceToken,
 } from 'aidbox-react/lib/services/instance';
 
 import { extractBundleResources, extractErrorCode, formatError } from '@beda.software/fhir-react';
-import { isSuccess, success } from '@beda.software/remote-data';
+import { isFailure, isSuccess, RemoteDataResult, success } from '@beda.software/remote-data';
 
 import { User } from 'shared/src/contrib/aidbox';
 
@@ -96,20 +95,20 @@ async function populateUserInfoSharedState(user: User) {
     await fetchUserRoleDetails();
 }
 
-export async function restoreUserSession(token: string) {
+export async function restoreUserSession(token: string): Promise<RemoteDataResult> {
     setAidboxInstanceToken({ access_token: token, token_type: 'Bearer' });
     setFHIRInstanceToken({ access_token: token, token_type: 'Bearer' });
 
     const userResponse = await getUserInfo();
 
-    if (aidboxReactRemoteData.isSuccess(userResponse)) {
+    if (isSuccess(userResponse)) {
         await populateUserInfoSharedState(userResponse.data);
 
         const jitsiAuthTokenResponse = await getJitsiAuthToken();
-        if (aidboxReactRemoteData.isSuccess(jitsiAuthTokenResponse)) {
+        if (isSuccess(jitsiAuthTokenResponse)) {
             sharedJitsiAuthToken.setSharedState(jitsiAuthTokenResponse.data.jwt);
         }
-        if (aidboxReactRemoteData.isFailure(jitsiAuthTokenResponse)) {
+        if (isFailure(jitsiAuthTokenResponse)) {
             console.warn('Error, while fetching Jitsi auth token: ', formatError(jitsiAuthTokenResponse.error));
         }
     } else {

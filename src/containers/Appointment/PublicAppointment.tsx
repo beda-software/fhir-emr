@@ -37,7 +37,7 @@ export function PublicAppointment() {
         return () => {
             if (isAnonymousUser) {
                 axiosFHIRInstance.defaults.headers.Authorization = null;
-                axiosAidboxInstance.defaults.headers.Authorization = undefined;
+                (axiosAidboxInstance.defaults.headers.Authorization as unknown) = undefined;
             }
         };
     }, [isAnonymousUser]);

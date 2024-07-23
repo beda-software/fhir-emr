@@ -5,10 +5,11 @@ import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { getFHIRResources as getAidboxResources, extractBundleResources } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess, service } from 'aidbox-react/lib/services/service';
 
-import config from 'shared/src/config';
+import config from '@beda.software/emr-config';
+
 import { Client } from 'shared/src/contrib/aidbox';
 
-import { matchCurrentUserRole, Role } from 'src/utils/role.ts';
+import { matchCurrentUserRole, Role } from 'src/utils/role';
 
 export function useSmartApps() {
     const [appsRemoteData] = useService(async () => {
@@ -45,7 +46,12 @@ export async function launch({ user, client, patient, practitioner }: LaunchProp
         method: 'POST',
         data: {
             method: 'aidbox.smart/get-launch-uri',
-            params: { user, iss: encodeURIComponent(`${config.baseURL}/fhir`), client, ctx: { patient, ...(practitioner ? {practitioner} : {}) } },
+            params: {
+                user,
+                iss: encodeURIComponent(`${config.baseURL}/fhir`),
+                client,
+                ctx: { patient, ...(practitioner ? { practitioner } : {}) },
+            },
         },
     });
     if (isSuccess(response)) {
