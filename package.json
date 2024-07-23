@@ -17,7 +17,9 @@
         "build-storybook": "storybook build",
         "typecheck": "tsc",
         "chromatic": "chromatic --only-changed",
-        "prepare": "yarn compile && yarn build:lib"
+        "prepare-config": "cp contrib/emr-config/config.local.js contrib/emr-config/config.js",
+        "remove-config": "rm contrib/emr-config/config.js",
+        "prepare": "yarn prepare-config && yarn compile && yarn build:lib && yarn remove-config"
     },
     "workspaces": [
         "contrib/*"
