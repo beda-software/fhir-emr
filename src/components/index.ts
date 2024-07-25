@@ -23,6 +23,7 @@ export * from './QuestionnaireResponseForm';
 export * from './QuestionnairesWizard';
 export * from './ResourceTable';
 export * from './SearchBar';
+export * from './SearchBar/hooks';
 export * from './Select';
 export * from './Spinner';
 export * from './Table';
