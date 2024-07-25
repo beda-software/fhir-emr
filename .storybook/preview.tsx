@@ -11,7 +11,7 @@ const preview: Preview = {
             },
         },
         layout: 'fullscreen',
-        actions: { argTypesRegex: '^on[A-Z].*' },
+        actions: {},
         controls: {
             matchers: {
                 color: /(background|color)$/i,

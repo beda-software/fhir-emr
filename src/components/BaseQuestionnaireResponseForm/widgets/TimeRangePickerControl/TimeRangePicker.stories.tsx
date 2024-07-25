@@ -24,8 +24,8 @@ export const CorrectItemsCount: Story = {
                 linkId: 'example',
                 required: true,
                 item: [
-                    { type: 'time', linkId: 'start' },
-                    { type: 'time', linkId: 'end' },
+                    { type: 'time', linkId: 'start', entryFormat: 'Start time' },
+                    { type: 'time', linkId: 'end', entryFormat: 'End time' },
                 ],
             }}
             context={[] as ItemContext[]}

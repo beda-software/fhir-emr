@@ -1,6 +1,5 @@
-import { expect } from '@storybook/jest';
 import { Meta, StoryObj } from '@storybook/react';
-import { within, userEvent, findByTestId } from '@storybook/testing-library';
+import { expect, within, userEvent, findByTestId } from '@storybook/test';
 import { ItemContext } from 'sdc-qrf/lib/types';
 
 import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
