@@ -5,10 +5,9 @@ import {
     setInstanceToken as setAidboxInstanceToken,
 } from 'aidbox-react/lib/services/instance';
 
+import { User } from '@beda.software/aidbox-types';
 import { extractBundleResources, extractErrorCode, formatError } from '@beda.software/fhir-react';
 import { isFailure, isSuccess, RemoteDataResult, success } from '@beda.software/remote-data';
-
-import { User } from 'shared/src/contrib/aidbox';
 
 import { getJitsiAuthToken, getUserInfo } from 'src/services/auth';
 import {

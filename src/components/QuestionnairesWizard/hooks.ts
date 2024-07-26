@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import {
     QuestionnaireResponseFormProps,
     QuestionnaireResponseFormSaveResponse,
-} from 'shared/src/hooks/questionnaire-response-form-data';
+} from 'src/hooks/questionnaire-response-form-data';
 
 import { BaseQuestionnaireResponseFormProps } from '../BaseQuestionnaireResponseForm';
 import { FormFooterComponentProps } from '../BaseQuestionnaireResponseForm/FormFooter';

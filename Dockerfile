@@ -1,7 +1,6 @@
 FROM node:lts as builder
 
 RUN mkdir -p /app/src
-RUN mkdir -p /app/shared
 
 WORKDIR /app
 

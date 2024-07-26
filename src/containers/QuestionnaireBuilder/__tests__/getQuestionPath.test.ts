@@ -1,4 +1,4 @@
-import { Questionnaire } from 'shared/src/contrib/aidbox';
+import { Questionnaire } from '@beda.software/aidbox-types';
 
 import { getQuestionPath } from '../utils';
 

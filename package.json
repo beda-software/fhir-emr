@@ -119,20 +119,20 @@
         "vite-plugin-turbosnap": "^1.0.2",
         "vitest": "^0.33.0"
     }, 
-    "main": "./dist/src/index.js",
-    "module": "./dist/src/index.js",
+    "main": "./dist/index.js",
+    "module": "./dist/index.js",
     "files": [
         "dist",
         "src"
     ],
     "exports": {
         ".": null,
-        "./components": "./dist/src/components/index.js",
-        "./containers": "./dist/src/containers/index.js",
-        "./services": "./dist/src/services/index.js",
-        "./hooks": "./dist/src/hooks/index.js",
-        "./utils": "./dist/src/utils/index.js",
-        "./theme": "./dist/src/theme/index.js",
+        "./components": "./dist/components/index.js",
+        "./containers": "./dist/containers/index.js",
+        "./services": "./dist/services/index.js",
+        "./hooks": "./dist/hooks/index.js",
+        "./utils": "./dist/utils/index.js",
+        "./theme": "./dist/theme/index.js",
         "./dist/*": "./dist/*.js",
         "./dist/style.css": "./dist/style.css"
     }

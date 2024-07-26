@@ -21,15 +21,14 @@ import {
     success,
 } from '@beda.software/remote-data';
 
+import { onFormResponse } from 'src/components/QuestionnaireResponseForm';
 import {
     handleFormDataSave,
     loadQuestionnaireResponseFormData,
     questionnaireIdLoader,
     QuestionnaireResponseFormData,
     QuestionnaireResponseFormProps,
-} from 'shared/src/hooks/questionnaire-response-form-data';
-
-import { onFormResponse } from 'src/components/QuestionnaireResponseForm';
+} from 'src/hooks/questionnaire-response-form-data';
 import { getProvenanceByEntity } from 'src/services/provenance';
 
 export interface Props {

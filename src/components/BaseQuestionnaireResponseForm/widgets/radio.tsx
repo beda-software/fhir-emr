@@ -1,8 +1,7 @@
 import { Form, Radio } from 'antd';
+import { Coding } from 'fhir/r4b';
 import { useMemo } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
-
-import { Coding } from 'shared/src/contrib/aidbox';
 
 import { useFieldController } from '../hooks';
 

@@ -5,9 +5,8 @@ import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { getFHIRResources as getAidboxResources, extractBundleResources } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess, service } from 'aidbox-react/lib/services/service';
 
+import { Client } from '@beda.software/aidbox-types';
 import config from '@beda.software/emr-config';
-
-import { Client } from 'shared/src/contrib/aidbox';
 
 import { matchCurrentUserRole, Role } from 'src/utils/role';
 

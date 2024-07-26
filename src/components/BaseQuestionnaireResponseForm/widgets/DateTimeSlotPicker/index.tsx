@@ -16,12 +16,11 @@ import {
 } from '@beda.software/fhir-react';
 import { mapSuccess, resolveMap } from '@beda.software/remote-data';
 
-import { humanDateTime } from 'shared/src/utils/date';
-
 import { useCalendarOptions } from 'src/components/Calendar/useCalendarOptions';
 import { DatePicker } from 'src/components/DatePicker';
 import { Spinner } from 'src/components/Spinner';
 import { getAllFHIRResources, getFHIRResource } from 'src/services/fhir';
+import { humanDateTime } from 'src/utils/date';
 
 import { TimeSlots, getTimeSlots } from './utils';
 import { useFieldController } from '../../hooks';

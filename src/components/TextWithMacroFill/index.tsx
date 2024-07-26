@@ -2,7 +2,7 @@ import { t, Trans } from '@lingui/macro';
 import { Button, Form, Input, notification } from 'antd';
 import { QRFContextData, QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
-import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
+import { QuestionnaireItem } from '@beda.software/aidbox-types';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 

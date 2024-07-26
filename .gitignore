@@ -40,7 +40,8 @@ backend/gunicorn.pid
 # Locale files
 shared/src/locale/**/*.ts
 shared/src/locale/**/*.js
-
+src/locale/**/*.ts
+src/locale/**/*.js
 # Built seeds
 zenproject/seeds.ndjson.gz
 

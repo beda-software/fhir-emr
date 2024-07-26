@@ -8,10 +8,9 @@ import { GroupItemProps, QuestionItemProps } from 'sdc-qrf';
 import { formatError } from '@beda.software/fhir-react';
 import { RemoteData, isFailure, isSuccess, loading, notAsked, success } from '@beda.software/remote-data';
 
-import { fromFirstClassExtension, toFirstClassExtension } from 'shared/src/utils/converter';
-
 import { getFHIRResource, saveFHIRResource } from 'src/services/fhir';
 import { generateQuestionnaire, generateQuestionnaireFromFile } from 'src/services/questionnaire-builder';
+import { fromFirstClassExtension, toFirstClassExtension } from 'src/utils/converter';
 
 import { deleteQuestionnaireItem, getQuestionPath, moveQuestionnaireItem } from './utils';
 

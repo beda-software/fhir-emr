@@ -5,9 +5,9 @@ import _ from 'lodash';
 import {
     QuestionnaireResponse as FCEQuestionnaireResponse,
     QuestionnaireResponseItem,
-} from 'shared/src/contrib/aidbox';
-import { toFirstClassExtension } from 'shared/src/utils/converter';
+} from '@beda.software/aidbox-types';
 
+import { toFirstClassExtension } from 'src/utils/converter';
 import { getDisplay } from 'src/utils/questionnaire';
 import { getExternalQuestionnaireName } from 'src/utils/smart-apps';
 

@@ -1,13 +1,12 @@
 import { Bundle } from 'fhir/r4b';
 
+import { Encounter } from '@beda.software/aidbox-types';
 import { extractBundleResources, WithId } from '@beda.software/fhir-react';
-
-import { Encounter } from 'shared/src/contrib/aidbox';
-import { inMemorySaveService } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { useNavigateToEncounter } from 'src/containers/EncounterDetails/hooks';
 import { StartEncounterProps } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StartEncounter';
+import { inMemorySaveService } from 'src/hooks/questionnaire-response-form-data';
 
 export function useStartEncounter(props: StartEncounterProps) {
     const { appointmentId } = props;

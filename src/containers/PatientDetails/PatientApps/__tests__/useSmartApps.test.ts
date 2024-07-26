@@ -1,10 +1,9 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { Organization } from 'fhir/r4b';
 
+import { Client, Role as AidboxRole } from '@beda.software/aidbox-types';
 import { ensure, withRootAccess } from '@beda.software/fhir-react';
 import { isSuccess } from '@beda.software/remote-data';
-
-import { Client, Role as AidboxRole } from 'shared/src/contrib/aidbox'
 
 import { useSmartApps } from 'src/containers/PatientDetails/PatientApps/hooks.ts';
 import { createUser } from 'src/containers/PatientList/__tests__/utils.ts';
@@ -38,7 +37,7 @@ async function createClient(role: Role) {
         type: clientType,
         name: `${role} SmartForms`,
         description: `${role} Smart Forms App`,
-        grant_types: ['authorization_code']
+        grant_types: ['authorization_code'],
     });
 }
 

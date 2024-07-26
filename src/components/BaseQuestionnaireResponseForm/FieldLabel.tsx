@@ -2,7 +2,7 @@ import { InfoCircleOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd';
 import { useContext } from 'react';
 
-import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
+import { QuestionnaireItem } from '@beda.software/aidbox-types';
 
 import { S } from './BaseQuestionnaireResponseForm.styles';
 import { GroupContext } from './widgets/Group/context';

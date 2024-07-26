@@ -6,8 +6,6 @@ import { Link } from 'react-router-dom';
 
 import { SearchParams } from '@beda.software/fhir-react';
 
-import { renderHumanName } from 'shared/src/utils/fhir';
-
 import { EncountersTable } from 'src/components/EncountersTable';
 import { EncounterData } from 'src/components/EncountersTable/types';
 import { StatusBadge } from 'src/components/EncounterStatusBadge';
@@ -15,6 +13,7 @@ import { ModalNewEncounter } from 'src/components/ModalNewEncounter';
 import { useEncounterList } from 'src/containers/EncounterList/hooks';
 import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
 import { formatPeriodDateTime } from 'src/utils/date';
+import { renderHumanName } from 'src/utils/fhir';
 
 interface Props {
     patient: Patient;

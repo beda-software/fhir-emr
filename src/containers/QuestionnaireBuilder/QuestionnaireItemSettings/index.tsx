@@ -3,7 +3,7 @@ import { Button, Checkbox, Form, Input, Select, Popconfirm } from 'antd';
 import { FormProvider, useForm } from 'react-hook-form';
 import { GroupItemProps, QuestionItemProps } from 'sdc-qrf/lib/types';
 
-import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
+import { QuestionnaireItem } from '@beda.software/aidbox-types';
 
 import { Title } from 'src/components/Typography';
 

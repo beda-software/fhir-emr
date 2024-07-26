@@ -19,7 +19,7 @@
       "baseUrl": ".",
       "paths": {
         "src/*": ["./src/*"],
-        "shared/*": ["./shared/*"]
+        "shared/src/contrib/aidbox": ["contrib/aidbox-types/index.d.ts"]
       },
       "types": ["node", "vitest/globals", "jest", "@testing-library/jest-dom"],
   

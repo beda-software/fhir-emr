@@ -5,10 +5,9 @@ import { MedicationKnowledge } from 'fhir/r4b';
 import { RenderRemoteData } from '@beda.software/fhir-react';
 import { isLoading, isSuccess } from '@beda.software/remote-data';
 
-import { formatHumanDate } from 'shared/src/utils/date';
-
 import { PageContainer } from 'src/components/PageContainer';
 import { SpinIndicator } from 'src/components/Spinner';
+import { formatHumanDate } from 'src/utils/date';
 
 import { MedicationsSearchBar } from './components/MedicationsSearchBar';
 import { useMedicationsSearchBarSelect } from './components/MedicationsSearchBar/hooks';

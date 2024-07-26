@@ -5,10 +5,9 @@ import React from 'react';
 import { extractBundleResources, getIncludedResource, useService } from '@beda.software/fhir-react';
 import { mapSuccess, sequenceMap } from '@beda.software/remote-data';
 
-import { extractAppointmentPatient } from 'shared/src/utils/appointment';
-import { renderHumanName } from 'shared/src/utils/fhir';
-
 import { getAllFHIRResources, getFHIRResources } from 'src/services/fhir';
+import { extractAppointmentPatient } from 'src/utils/appointment';
+import { renderHumanName } from 'src/utils/fhir';
 
 import { days } from '../Scheduling/available-time';
 

@@ -4,10 +4,9 @@ import { Button, notification } from 'antd';
 import { MedicationKnowledge } from 'fhir/r4b';
 import _ from 'lodash';
 
-import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
-
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 
 interface ModalNewMedicationBatchProps {
     medicationKnowledge: MedicationKnowledge;

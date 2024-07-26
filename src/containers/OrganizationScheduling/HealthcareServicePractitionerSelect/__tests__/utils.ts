@@ -1,12 +1,11 @@
 import { Practitioner, PractitionerRole } from 'fhir/r4b';
 
+import { User } from '@beda.software/aidbox-types';
 import { ensure, getReference, withRootAccess } from '@beda.software/fhir-react';
-
-import { User } from 'shared/src/contrib/aidbox';
-import { renderHumanName } from 'shared/src/utils/fhir';
 
 import { axiosInstance, createFHIRResource } from 'src/services/fhir';
 import { createHealthcareService, createPractitioner, ensureSave, login } from 'src/setupTests';
+import { renderHumanName } from 'src/utils/fhir';
 
 import { SelectOption } from '../types';
 

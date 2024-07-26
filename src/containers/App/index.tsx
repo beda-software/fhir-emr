@@ -6,7 +6,7 @@ import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
 import { success } from 'aidbox-react/lib/libs/remoteData';
 
-import { User } from 'shared/src/contrib/aidbox';
+import { User } from '@beda.software/aidbox-types';
 
 import { AnonymousLayout, BaseLayout } from 'src/components/BaseLayout';
 import { Spinner } from 'src/components/Spinner';

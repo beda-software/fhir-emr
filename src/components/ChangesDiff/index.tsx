@@ -1,9 +1,8 @@
 import { t } from '@lingui/macro';
 import classNames from 'classnames';
 
-import { formatHumanDateTime } from 'shared/src/utils/date';
-
 import { Text } from 'src/components/Typography';
+import { formatHumanDateTime } from 'src/utils/date';
 
 import { S } from './ChangesDiff.styles';
 

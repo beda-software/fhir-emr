@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro';
 import { Button } from 'antd';
 
-import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
+import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 
 import { QuestionnairesWizardFooterProps, QuestionnairesWizardProps, useQuestionnairesWizard } from './hooks';
 import { S } from './QuestionnairesWizard.styles';

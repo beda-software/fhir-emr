@@ -6,13 +6,12 @@ import { axiosInstance as axiosAidboxInstance } from 'aidbox-react/lib/services/
 
 import { uuid4 } from '@beda.software/fhir-react';
 
-import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
-
 import { BasePageContent } from 'src/components/BaseLayout';
 import { DateTimeSlotPicker } from 'src/components/BaseQuestionnaireResponseForm/widgets';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
 import { Title } from 'src/components/Typography';
+import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 import { getToken } from 'src/services/auth';
 import { axiosInstance as axiosFHIRInstance } from 'src/services/fhir';
 import { history } from 'src/services/history';

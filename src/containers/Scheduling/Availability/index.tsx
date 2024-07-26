@@ -5,10 +5,8 @@ import { PractitionerRole } from 'fhir/r4b';
 import moment from 'moment';
 import React from 'react';
 
-import { WithId, formatError } from '@beda.software/fhir-react';
+import { WithId, formatError, formatFHIRTime } from '@beda.software/fhir-react';
 import { isSuccess } from '@beda.software/remote-data';
-
-import { formatFHIRTime } from 'shared/src/utils/date';
 
 import { RangeTimePicker } from 'src/components/TimePicker';
 import { Text, Title } from 'src/components/Typography';

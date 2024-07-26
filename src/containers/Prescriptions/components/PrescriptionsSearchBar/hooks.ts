@@ -4,12 +4,11 @@ import { useCallback, useState } from 'react';
 import { extractBundleResources, getReference } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 
-import { renderHumanName } from 'shared/src/utils/fhir';
-
 import { SelectOption } from 'src/containers/OrganizationScheduling/HealthcareServicePractitionerSelect/types';
 import { getSelectedValue } from 'src/containers/OrganizationScheduling/utils';
 import { getFHIRResources } from 'src/services/fhir';
 import { practitionerRoleDoctor } from 'src/utils/constants';
+import { renderHumanName } from 'src/utils/fhir';
 
 export function usePrescriptionsSearchBarSelect() {
     const [selectedPatient, setSelectedPatient] = useState<SelectOption>(null);

@@ -2,14 +2,18 @@ import { Appointment, Patient, PractitionerRole } from 'fhir/r4b';
 import moment from 'moment';
 import React from 'react';
 
-import { extractBundleResources, getIncludedResource, getReference, useService } from '@beda.software/fhir-react';
+import {
+    extractBundleResources,
+    getIncludedResource,
+    getReference,
+    useService,
+    formatFHIRDateTime,
+} from '@beda.software/fhir-react';
 import { mapSuccess, sequenceMap } from '@beda.software/remote-data';
 
-import { extractAppointmentPatient } from 'shared/src/utils/appointment';
-import { formatFHIRDateTime } from 'shared/src/utils/date';
-import { renderHumanName } from 'shared/src/utils/fhir';
-
 import { getAllFHIRResources, getFHIRResource } from 'src/services/fhir';
+import { extractAppointmentPatient } from 'src/utils/appointment';
+import { renderHumanName } from 'src/utils/fhir';
 
 import { days } from '../../available-time';
 

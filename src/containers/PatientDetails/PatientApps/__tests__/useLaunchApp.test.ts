@@ -1,7 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { Patient } from 'fhir/r4b';
 
-import { Client } from 'shared/src/contrib/aidbox';
+import { Client } from '@beda.software/aidbox-types';
 
 import { useLaunchApp } from 'src/containers/PatientDetails/PatientApps';
 import { launch, LaunchProps } from 'src/containers/PatientDetails/PatientApps/hooks.ts';
@@ -22,7 +22,7 @@ describe('useLaunchApp', () => {
 
     const mockApp: Client = {
         resourceType: 'Client',
-        id: 'client_id'
+        id: 'client_id',
     };
 
     test('launches app with regular user', () => {

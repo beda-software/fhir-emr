@@ -5,9 +5,8 @@ import { QuestionItemProps } from 'sdc-qrf';
 
 import { service } from 'aidbox-react/lib/services/service';
 
+import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer, ValueSet } from '@beda.software/aidbox-types';
 import { mapSuccess, isSuccess } from '@beda.software/remote-data';
-
-import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer, ValueSet } from 'shared/src/contrib/aidbox';
 
 import { AsyncSelect, Select } from 'src/components/Select';
 import { getDisplay } from 'src/utils/questionnaire';

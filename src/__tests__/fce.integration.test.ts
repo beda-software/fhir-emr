@@ -6,12 +6,12 @@ import { Questionnaire as FHIRQuestionnaire } from 'fhir/r4b';
 import { getFHIRResource as getFCEResource } from 'aidbox-react/lib/services/fhir';
 import { ensure } from 'aidbox-react/lib/utils/tests';
 
-import { Questionnaire as FCEQuestionnaire } from 'shared/src/contrib/aidbox';
-import { toFirstClassExtension, fromFirstClassExtension } from 'shared/src/utils/converter';
-import { sortExtensionsList } from 'shared/src/utils/converter/__tests__/fce.test';
+import { Questionnaire as FCEQuestionnaire } from '@beda.software/aidbox-types';
 
 import { getFHIRResource } from 'src/services/fhir';
 import { loginAdminUser } from 'src/setupTests';
+import { toFirstClassExtension, fromFirstClassExtension } from 'src/utils/converter';
+import { sortExtensionsList } from 'src/utils/converter/__tests__/fce.test';
 
 describe('Questionanire and QuestionnaireResponses transformation', () => {
     beforeEach(async () => {

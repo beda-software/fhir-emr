@@ -2,10 +2,13 @@ import { differenceInDays, differenceInMonths, differenceInYears, format, parseI
 import { Period } from 'fhir/r4b';
 import _ from 'lodash';
 
-import { parseFHIRDateTime } from '@beda.software/fhir-react';
+import { parseFHIRDate, parseFHIRDateTime } from '@beda.software/fhir-react';
 
-const DATE_TIME_FORMAT = 'dd/MM/yyyy HH:mm';
-const DATE_FORMAT = 'dd/MM/yyyy';
+export const humanDate = 'dd/MM/yyyy';
+export const humanDateYearMonth = 'MMM YYYY';
+export const humanTime = 'HH:mm';
+export const humanDateTime = 'dd/MM/yyyy HH:mm';
+
 const TIME_FORMAT = 'hh:mm';
 
 const formatFHIRDate = (date: string, formatType: string) => {
@@ -17,16 +20,38 @@ const formatFHIRDate = (date: string, formatType: string) => {
     }
 };
 
-export const formatHumanDateTime = (date: string) => {
-    return formatFHIRDate(date, DATE_TIME_FORMAT);
+export const formatHumanDateTime = (date?: string) => {
+    if (!date) {
+        return '';
+    }
+
+    return parseFHIRDateTime(date).format(humanDateTime);
 };
 
 export const formatHumanTime = (date: string) => {
     return formatFHIRDate(date, TIME_FORMAT);
 };
 
-export const formatHumanDate = (date: string) => {
-    return formatFHIRDate(date, DATE_FORMAT);
+export const formatHumanDate = (date?: string) => {
+    if (!date) {
+        return '';
+    }
+
+    // Year only 2000
+    if (date.length === 4) {
+        return date;
+    }
+
+    // Year and month 2000-01
+    if (date.length === 7) {
+        return parseFHIRDate(date + '-01').format(humanDateYearMonth);
+    }
+
+    if (date.length === 10) {
+        return parseFHIRDate(date).format(humanDate);
+    }
+
+    return parseFHIRDateTime(date).format(humanDate);
 };
 
 export function getYears(date: string) {

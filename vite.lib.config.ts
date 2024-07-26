@@ -25,14 +25,11 @@ export default defineConfig({
             },
         }),
         lingui(),
-        dts(),
+        dts({ entryRoot: 'src/' }),
         externalizeDeps(),
     ],
     resolve: {
-        alias: [
-            { find: 'src', replacement: path.resolve(__dirname, './src/') },
-            { find: 'shared', replacement: path.resolve(__dirname, './shared/') },
-        ],
+        alias: [{ find: 'src', replacement: path.resolve(__dirname, './src/') }],
     },
     build: {
         copyPublicDir: false,
@@ -52,7 +49,7 @@ export default defineConfig({
         rollupOptions: {
             output: {
                 preserveModules: true,
-                preserveModulesRoot: '.',
+                preserveModulesRoot: 'src/',
                 entryFileNames: (chunkInfo) => {
                     if (chunkInfo.name.includes('node_modules')) {
                         return chunkInfo.name.replace(/node_modules/g, 'ext') + '.js';
