@@ -126,7 +126,7 @@ interface AIScribeProps {
 }
 
 export function useAIScribe() {
-    const recorderControls = useAudioRecorder();
+    const recorderControls: any = useAudioRecorder();
 
     return { recorderControls };
 }

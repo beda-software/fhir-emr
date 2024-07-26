@@ -25,7 +25,7 @@ export default defineConfig({
             },
         }),
         lingui(),
-        dts({ entryRoot: 'src/' }),
+        dts({ entryRoot: 'src/', exclude: ['node_modules/**', '**/*.stories.ts*'] }),
         externalizeDeps(),
     ],
     resolve: {
