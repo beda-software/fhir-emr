@@ -1,16 +1,14 @@
 import { Form } from 'antd';
 import _, { debounce } from 'lodash';
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 
-import { service } from 'aidbox-react/lib/services/service';
-
-import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer, ValueSet } from '@beda.software/aidbox-types';
-import { mapSuccess, isSuccess } from '@beda.software/remote-data';
+import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer } from '@beda.software/aidbox-types';
 
 import { AsyncSelect, Select } from 'src/components/Select';
 import { getDisplay } from 'src/utils/questionnaire';
 
+import { ExpandProvider } from './context';
 import s from '../../BaseQuestionnaireResponseForm.module.scss';
 import { useFieldController } from '../../hooks';
 
@@ -89,35 +87,13 @@ interface ChoiceQuestionValueSetProps {
 
 export function ChoiceQuestionValueSet(props: ChoiceQuestionValueSetProps) {
     const { answerValueSet, value, onChange, repeats = false, placeholder } = props;
-    const valueSetId = answerValueSet.split('/').slice(-1);
+    const expand = useContext(ExpandProvider);
 
     const loadOptions = useCallback(
         async (searchText: string) => {
-            const response = mapSuccess(
-                await service<ValueSet>({
-                    url: `ValueSet/${valueSetId}/$expand`,
-                    params: {
-                        filter: searchText,
-                        count: 50,
-                    },
-                }),
-                (expandedValueSet) => {
-                    const expansionEntries = Array.isArray(expandedValueSet.expansion?.contains)
-                        ? expandedValueSet.expansion!.contains
-                        : [];
-
-                    return expansionEntries.map(({ code, system, display }) => ({
-                        value: { Coding: { code, system, display } },
-                    }));
-                },
-            );
-
-            if (isSuccess(response)) {
-                return response.data;
-            }
-            return [];
+            return expand(answerValueSet, searchText);
         },
-        [valueSetId],
+        [answerValueSet, expand],
     );
 
     const debouncedLoadOptions = debounce((searchText, callback) => {

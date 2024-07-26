@@ -1,3 +1,4 @@
+import { PrinterOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
 import { Encounter, Organization, Patient, Practitioner, Provenance, QuestionnaireResponse } from 'fhir/r4b';
@@ -20,7 +21,7 @@ import {
 } from 'src/containers/PatientDetails/PatientDocument/usePatientDocument';
 import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
 import { forceDeleteFHIRResource, getFHIRResources, patchFHIRResource } from 'src/services/fhir';
-import { selectCurrentUserRoleResource } from 'src/utils/role';
+import { matchCurrentUserRole, Role, selectCurrentUserRoleResource } from 'src/utils/role';
 import { isExternalQuestionnaire } from 'src/utils/smart-apps';
 
 import { ExternalDocumentView } from './ExternalDocumentView';
@@ -129,6 +130,32 @@ function PatientDocumentDetailsReadonly(props: {
                     <div className={s.buttons}>
                         {qrCompleted ? (
                             <>
+                                {matchCurrentUserRole({
+                                    [Role.Admin]: () => <></>,
+                                    [Role.Patient]: () => <></>,
+                                    [Role.Practitioner]: () => {
+                                        return (
+                                            <Button
+                                                type="primary"
+                                                icon={<PrinterOutlined />}
+                                                onClick={() => navigate(`/print-patient-document/${patientId}/${qrId}`)}
+                                            >
+                                                {t`Prepare for print`}
+                                            </Button>
+                                        );
+                                    },
+                                    [Role.Receptionist]: () => {
+                                        return (
+                                            <Button
+                                                type="primary"
+                                                icon={<PrinterOutlined />}
+                                                onClick={() => navigate(`/print-patient-document/${patientId}/${qrId}`)}
+                                            >
+                                                {t`Prepare for print`}
+                                            </Button>
+                                        );
+                                    },
+                                })}
                                 <ConfirmActionButton
                                     action={() => amendDocument(reload, qrId)}
                                     reload={reload}
