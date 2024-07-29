@@ -4880,9 +4880,10 @@ aggregate-error@^3.0.0:
     clean-stack "^2.0.0"
     indent-string "^4.0.0"
 
-"aidbox-react@https://github.com/beda-software/aidbox-react.git#new-axios":
+aidbox-react@^1.10.0:
   version "1.10.0"
-  resolved "https://github.com/beda-software/aidbox-react.git#46d1047ee366a0ab99c27ec2161ea3297af8e506"
+  resolved "https://registry.yarnpkg.com/aidbox-react/-/aidbox-react-1.10.0.tgz#315c202bbc5c55d6bcac3f45ba79fdc9cec1691d"
+  integrity sha512-u76vaTCh/P1fLnP8r+4R3NRYsnWNzXp3csvATZvp3ct8bKV0kcof5kvCk5Phae7aJUPU1J//iBAnVweKq91b/A==
   dependencies:
     "@beda.software/remote-data" "^1.1.3"
     axios "^1.6.2"
