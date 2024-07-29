@@ -42,7 +42,7 @@ jobs:
             - uses: actions/checkout@v2
             - uses: actions/setup-node@v3
               with:
-                  node-version: 16
+                  node-version: 18
             - name: Prepare config
               run: cp contrib/emr-config/config.production.js contrib/emr-config/config.js
             - name: Prepare index.html

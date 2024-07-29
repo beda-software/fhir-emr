@@ -1,1 +1,10 @@
+#!/bin/sh
+if [ "$HUSKY" = "0" ]; then
+  debug "HUSKY env variable is set to 0, skipping hook"
+  exit 0
+fi
+
+. "$(dirname "$0")/_/husky.sh"
+
+yarn run typecheck
 yarn run lint-staged

@@ -11,5 +11,5 @@ export default create({
     brandTarget: '_self',
 
     colorPrimary: brandColors.primary,
-    colorSecondary: brandColors.secondary,
+    colorSecondary: brandColors.primary,
 });

@@ -34,6 +34,7 @@ export async function generateQuestionnaireFromFile(file: File, questionnaire?: 
         data: formData,
         headers: {
             Authorization: `Bearer ${appToken}`,
+            'Content-Type': 'multipart/form-data',
         },
     });
 }

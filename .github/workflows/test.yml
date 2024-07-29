@@ -9,7 +9,7 @@ jobs:
                 fetch-depth: 0
             - uses: actions/setup-node@v3
               with:
-                  node-version: 16
+                  node-version: 18
             - name: Prepare config
               run: cp contrib/emr-config/config.local.js contrib/emr-config/config.js
             - name: Prepare secrets
@@ -28,7 +28,7 @@ jobs:
               run: |
                 npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
                   "npx http-server storybook-static --port 6006 --silent" \
-                  "npx wait-on tcp:6006 && yarn test-storybook"
+                  "npx wait-on tcp:127.0.0.1:6006 && yarn test-storybook"
             - name: Publish to Chromatic
               uses: chromaui/action@v1
               env:
@@ -46,7 +46,7 @@ jobs:
                 fetch-depth: 0
             - uses: actions/setup-node@v3
               with:
-                  node-version: 16
+                  node-version: 18
             - name: Prepare config
               run: cp contrib/emr-config/config.local.js contrib/emr-config/config.js
             - name: Prepare secrets

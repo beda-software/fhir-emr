@@ -1,5 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { Patient } from 'fhir/r4b';
+// eslint-disable-next-line import/named
+import { Mock } from 'vitest';
 
 import { Client } from '@beda.software/aidbox-types';
 
@@ -30,7 +32,7 @@ describe('useLaunchApp', () => {
             id: 'user_id',
             resourceType: 'User',
         };
-        (selectCurrentUserRoleResource as jest.Mock).mockReturnValue(mockUser);
+        (selectCurrentUserRoleResource as Mock).mockReturnValue(mockUser);
 
         const { result } = renderHook(() => useLaunchApp({ app: mockApp, patient: mockPatient }));
 
@@ -52,7 +54,7 @@ describe('useLaunchApp', () => {
             id: 'practitioner_id',
             resourceType: 'Practitioner',
         };
-        (selectCurrentUserRoleResource as jest.Mock).mockReturnValue(mockPractitioner);
+        (selectCurrentUserRoleResource as Mock).mockReturnValue(mockPractitioner);
 
         const { result } = renderHook(() => useLaunchApp({ app: mockApp, patient: mockPatient }));
 
