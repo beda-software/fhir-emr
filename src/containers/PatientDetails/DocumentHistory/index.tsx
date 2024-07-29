@@ -2,9 +2,8 @@ import { Trans } from '@lingui/macro';
 import { QuestionnaireResponse, Questionnaire } from 'fhir/r4b';
 import { useMemo } from 'react';
 
+import { Provenance } from '@beda.software/aidbox-types';
 import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
-
-import { Provenance } from 'shared/src/contrib/aidbox';
 
 import { ChangesDiff } from 'src/components/ChangesDiff';
 import { Spinner } from 'src/components/Spinner';

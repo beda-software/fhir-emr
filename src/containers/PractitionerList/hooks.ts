@@ -3,12 +3,11 @@ import { Practitioner, PractitionerRole } from 'fhir/r4b';
 import { WithId, extractBundleResources, parseFHIRReference, useService } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess, success } from '@beda.software/remote-data';
 
-import { renderHumanName } from 'shared/src/utils/fhir';
-
 import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 import { usePagerExtended } from 'src/hooks/pager';
 import { getFHIRResources } from 'src/services/fhir';
 import { useDebounce } from 'src/utils/debounce';
+import { renderHumanName } from 'src/utils/fhir';
 
 export interface PractitionerListRowData {
     key: string;

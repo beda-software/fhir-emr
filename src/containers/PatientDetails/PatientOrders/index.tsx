@@ -7,12 +7,11 @@ import styled from 'styled-components';
 
 import { WithId } from '@beda.software/fhir-react';
 
-import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
-import { extractExtension } from 'shared/src/utils/converter';
-
 import { Modal } from 'src/components/Modal';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { ResourceTable, LinkToEdit } from 'src/components/ResourceTable';
+import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
+import { extractExtension } from 'src/utils/converter';
 import { formatHumanDate } from 'src/utils/date';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 

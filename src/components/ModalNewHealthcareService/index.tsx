@@ -2,8 +2,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
 
-import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
-
+import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 
 import { ModalTrigger } from '../ModalTrigger';

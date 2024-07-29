@@ -2,8 +2,6 @@ import { t, Trans } from '@lingui/macro';
 import { Col, Row } from 'antd';
 import { Link } from 'react-router-dom';
 
-import { renderHumanName } from 'shared/src/utils/fhir';
-
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { EncountersTable } from 'src/components/EncountersTable';
 import { EncounterData } from 'src/components/EncountersTable/types';
@@ -12,6 +10,7 @@ import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { Title } from 'src/components/Typography';
 import { formatPeriodDateTime } from 'src/utils/date';
+import { renderHumanName } from 'src/utils/fhir';
 import { matchCurrentUserRole, Role } from 'src/utils/role';
 
 import { useEncounterList } from './hooks';

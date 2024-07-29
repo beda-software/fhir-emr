@@ -3,7 +3,7 @@ import { Patient } from 'fhir/r4b';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
-import { Client } from 'shared/src/contrib/aidbox';
+import { Client } from '@beda.software/aidbox-types';
 
 import { selectCurrentUserRoleResource } from 'src/utils/role.ts';
 
@@ -22,16 +22,16 @@ interface SmartAppProps {
 export function useLaunchApp({ app, patient }: SmartAppProps) {
     const currentUser = selectCurrentUserRoleResource();
     const launchApp = () => {
-    const launchParams:LaunchProps = {
-        client: app.id!,
-        user: currentUser.id,
-        patient: patient.id!,
-    };
-        if (currentUser.resourceType === 'Practitioner'){
+        const launchParams: LaunchProps = {
+            client: app.id!,
+            user: currentUser.id,
+            patient: patient.id!,
+        };
+        if (currentUser.resourceType === 'Practitioner') {
             launchParams.practitioner = currentUser.id;
         }
         launch(launchParams);
-        };
+    };
     return launchApp;
 }
 
@@ -43,12 +43,12 @@ function SmartApp(props: SmartAppProps) {
             style={{ width: 300 }}
             extra={
                 <Button type="primary" onClick={launchApp}>
-                        Launch
-                    </Button>
+                    Launch
+                </Button>
             }
-    >
-        <Text>{props.app.smart?.description}</Text>
-    </Card>
+        >
+            <Text>{props.app.smart?.description}</Text>
+        </Card>
     );
 }
 

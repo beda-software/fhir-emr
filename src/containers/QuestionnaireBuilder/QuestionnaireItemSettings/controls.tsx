@@ -8,6 +8,7 @@ import { useFormContext } from 'react-hook-form';
 
 import { service } from 'aidbox-react/lib/services/service';
 
+import { QuestionnaireItemAnswerOption } from '@beda.software/aidbox-types';
 import {
     WithId,
     extractBundleResources,
@@ -19,15 +20,13 @@ import {
 } from '@beda.software/fhir-react';
 import { isLoading, isSuccess, mapSuccess } from '@beda.software/remote-data';
 
-import { QuestionnaireItemAnswerOption } from 'shared/src/contrib/aidbox';
-import { humanDate, humanTime } from 'shared/src/utils/date';
-
 import { DatePicker } from 'src/components/DatePicker';
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { AsyncSelect } from 'src/components/Select';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 import { getFHIRResources } from 'src/services/fhir';
+import { humanDate, humanTime } from 'src/utils/date';
 
 import { S } from './QuestionnaireItemSettings.styles';
 import { SettingsField, SettingsFieldArray } from './SettingsField';

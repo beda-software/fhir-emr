@@ -1,7 +1,7 @@
 import { Form, InputNumber, InputNumberProps } from 'antd';
 import { GroupItemProps } from 'sdc-qrf';
 
-import { Coding, QuestionnaireItem } from 'shared/src/contrib/aidbox';
+import { Coding, QuestionnaireItem } from '@beda.software/aidbox-types';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { Paragraph } from 'src/components/Typography';

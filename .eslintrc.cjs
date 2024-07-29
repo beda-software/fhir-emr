@@ -30,7 +30,6 @@ module.exports = {
             'eslint-import-resolver-custom-alias': {
                 alias: {
                     src: './src',
-                    shared: './shared',
                 },
                 extensions: ['.js', '.jsx', '.ts', '.tsx'],
             },
@@ -48,7 +47,7 @@ module.exports = {
         'import/no-unresolved': [
             2,
             {
-                ignore: ['fhir/r4b'], // Fixes error: Unable to resolve path to module 'fhir/r4b'.
+                ignore: ['fhir/r4b', '@beda.software/emr-config', '@beda.software/aidbox-types'], // Fixes error: Unable to resolve path to module 'fhir/r4b'.
             },
         ],
         'import/order': [
@@ -66,11 +65,6 @@ module.exports = {
                     {
                         pattern: '@beda.software/**',
                         group: 'external',
-                        position: 'after',
-                    },
-                    {
-                        pattern: 'shared/**',
-                        group: 'internal',
                         position: 'after',
                     },
                     {

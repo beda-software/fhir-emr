@@ -3,7 +3,7 @@ import _, { debounce } from 'lodash';
 import { useCallback, useContext } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 
-import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer } from 'shared/src/contrib/aidbox';
+import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer } from '@beda.software/aidbox-types';
 
 import { AsyncSelect, Select } from 'src/components/Select';
 import { getDisplay } from 'src/utils/questionnaire';

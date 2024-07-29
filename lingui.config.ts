@@ -5,8 +5,8 @@ const config: LinguiConfig = {
     format: 'po',
     catalogs: [
         {
-            path: '<rootDir>/shared/src/locale/{locale}/messages',
-            include: ['<rootDir>'],
+            path: '<rootDir>/src/locale/{locale}/messages',
+            include: ['<rootDir>/src'],
             exclude: ['**/node_modules/**'],
         },
     ],

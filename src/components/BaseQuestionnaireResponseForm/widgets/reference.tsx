@@ -4,14 +4,13 @@ import _ from 'lodash';
 import { ActionMeta, MultiValue, SingleValue } from 'react-select';
 import { parseFhirQueryExpression, QuestionItemProps } from 'sdc-qrf';
 
+import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer, Resource } from '@beda.software/aidbox-types';
 import { ResourcesMap } from '@beda.software/fhir-react';
 import { buildQueryParams, isSuccess } from '@beda.software/remote-data';
 
-import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer, Resource } from 'shared/src/contrib/aidbox';
-import { loadResourceOptions } from 'shared/src/services/questionnaire';
-import { getAnswerCode, getAnswerDisplay } from 'shared/src/utils/questionnaire';
-
 import { AsyncSelect } from 'src/components/Select';
+import { loadResourceOptions } from 'src/services/questionnaire';
+import { getAnswerCode, getAnswerDisplay } from 'src/utils/questionnaire';
 
 import { useFieldController } from '../hooks';
 

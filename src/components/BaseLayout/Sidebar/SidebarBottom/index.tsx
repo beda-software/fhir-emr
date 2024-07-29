@@ -7,19 +7,18 @@ import { useCallback } from 'react';
 
 import { resetInstanceToken as resetAidboxInstanceToken } from 'aidbox-react/lib/services/instance';
 
-import { dynamicActivate, setCurrentLocale, getCurrentLocale, locales } from 'shared/src/services/i18n';
-import { renderHumanName } from 'shared/src/utils/fhir';
-
 import { MenuIcon } from 'src/icons/general/Menu';
 import { AvatarImage } from 'src/images/AvatarImage';
 import { getToken, logout } from 'src/services/auth';
 import { resetInstanceToken as resetFHIRInstanceToken } from 'src/services/fhir';
+import { dynamicActivate, setCurrentLocale, getCurrentLocale, locales } from 'src/services/i18n';
 import {
     sharedAuthorizedOrganization,
     sharedAuthorizedPatient,
     sharedAuthorizedPractitioner,
     sharedAuthorizedUser,
 } from 'src/sharedState';
+import { renderHumanName } from 'src/utils/fhir';
 import { Role, matchCurrentUserRole } from 'src/utils/role';
 
 import s from './SidebarBottom.module.scss';

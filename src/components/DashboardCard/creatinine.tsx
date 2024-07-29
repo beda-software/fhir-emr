@@ -8,8 +8,7 @@ import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine, T
 import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
 import { RemoteData } from '@beda.software/remote-data';
 
-import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
-
+import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 
 import { S } from './DashboardCard.styles';

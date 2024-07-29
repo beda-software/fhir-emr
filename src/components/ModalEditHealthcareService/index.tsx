@@ -1,9 +1,8 @@
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
-import { FhirResource } from 'fhir/r4b';
+import { FhirResource, HealthcareService } from 'fhir/r4b';
 
-import { HealthcareService } from 'shared/src/contrib/aidbox';
-import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
+import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 
 import { ModalTrigger } from '../ModalTrigger';
 import { QuestionnaireResponseForm } from '../QuestionnaireResponseForm';

@@ -6,9 +6,11 @@ coverage
 htmlcov
 build
 storybook-static
+dist
 
 # Project-specific files
 shared/src/config.ts
+contrib/emr-config/config.js
 sentry.properties
 .env.test.local
 .env
@@ -38,7 +40,8 @@ backend/gunicorn.pid
 # Locale files
 shared/src/locale/**/*.ts
 shared/src/locale/**/*.js
-
+src/locale/**/*.ts
+src/locale/**/*.js
 # Built seeds
 zenproject/seeds.ndjson.gz
 

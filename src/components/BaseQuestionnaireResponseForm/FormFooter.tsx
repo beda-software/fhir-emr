@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro';
 import { Button } from 'antd';
 
-import { QuestionnaireResponseFormSaveResponse } from 'shared/src/hooks/questionnaire-response-form-data';
+import { QuestionnaireResponseFormSaveResponse } from 'src/hooks/questionnaire-response-form-data';
 
 import { S } from './BaseQuestionnaireResponseForm.styles';
 

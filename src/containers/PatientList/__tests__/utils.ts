@@ -2,9 +2,8 @@ import { Consent, Period, Reference } from 'fhir/r4b';
 
 import { formatFHIRDate } from 'aidbox-react/lib/utils/date';
 
+import { User } from '@beda.software/aidbox-types';
 import { ensure, getReference, withRootAccess } from '@beda.software/fhir-react';
-
-import { User } from 'shared/src/contrib/aidbox';
 
 import { axiosInstance, createFHIRResource } from 'src/services/fhir';
 import { createConsent, createPatient, createPractitioner, ensureSave, login } from 'src/setupTests';

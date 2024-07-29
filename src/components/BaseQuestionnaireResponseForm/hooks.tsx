@@ -5,7 +5,7 @@ import { useCallback } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
-import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
+import { QuestionnaireItem } from '@beda.software/aidbox-types';
 
 import s from './BaseQuestionnaireResponseForm.module.scss';
 import { FieldLabel } from './FieldLabel';

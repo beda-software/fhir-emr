@@ -1,0 +1,6 @@
+{
+    "name": "@beda.software/aidbox-types",
+    "version": "0.0.0",
+    "type": "module",
+    "types": "index.d.ts"
+}

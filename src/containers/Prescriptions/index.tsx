@@ -4,12 +4,11 @@ import { Medication, MedicationRequest } from 'fhir/r4b';
 
 import { RenderRemoteData } from '@beda.software/fhir-react';
 
-import { extractExtension } from 'shared/src/utils/converter';
-import { formatHumanDate } from 'shared/src/utils/date';
-import { renderHumanName } from 'shared/src/utils/fhir';
-
 import { PageContainer } from 'src/components/PageContainer';
 import { Spinner } from 'src/components/Spinner';
+import { extractExtension } from 'src/utils/converter';
+import { formatHumanDate } from 'src/utils/date';
+import { renderHumanName } from 'src/utils/fhir';
 import { matchCurrentUserRole, Role, selectCurrentUserRoleResource } from 'src/utils/role';
 
 import { PrescriptionsSearchBar } from './components/PrescriptionsSearchBar';

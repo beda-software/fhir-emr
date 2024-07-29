@@ -1,7 +1,6 @@
 import classNames from 'classnames';
+import { Coding } from 'fhir/r4b';
 import { QuestionItemProps } from 'sdc-qrf';
-
-import { Coding } from 'shared/src/contrib/aidbox';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { formatUnit } from 'src/utils/unit';

@@ -2,7 +2,7 @@ version: '3.1'
 services:
   aidbox-ts-generator:
     image: "bedasoftware/aidbox-ts-generator:latest"
-    command: ["-o", "/tmp/aidbox.ts", "-u", "http://devbox:8080", "--user", "$AIDBOX_CLIENT_ID", "--pass", "$AIDBOX_CLIENT_SECRET"]
+    command: ["-o", "/tmp/aidbox.d.ts", "-u", "http://devbox:8080", "--user", "$AIDBOX_CLIENT_ID", "--pass", "$AIDBOX_CLIENT_SECRET"]
     depends_on:
       - backend
     links:
@@ -12,4 +12,4 @@ services:
     env_file:
       - .env
     volumes:
-      - ./shared/src/contrib/aidbox/index.ts:/tmp/aidbox.ts
+      - ./contrib/aidbox-types/index.d.ts:/tmp/aidbox.d.ts

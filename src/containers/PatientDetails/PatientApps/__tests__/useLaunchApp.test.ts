@@ -3,7 +3,7 @@ import { Patient } from 'fhir/r4b';
 // eslint-disable-next-line import/named
 import { Mock } from 'vitest';
 
-import { Client } from 'shared/src/contrib/aidbox';
+import { Client } from '@beda.software/aidbox-types';
 
 import { useLaunchApp } from 'src/containers/PatientDetails/PatientApps';
 import { launch, LaunchProps } from 'src/containers/PatientDetails/PatientApps/hooks.ts';

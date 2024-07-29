@@ -1,11 +1,12 @@
 {
-    "name": "beda-emr",
+    "name": "@beda.software/emr",
     "private": true,
     "version": "0.0.0",
     "type": "module",
     "scripts": {
         "start": "vite",
-        "build": "vite build",
+        "build": "vite build --config vite.config.ts",
+        "build:lib": "vite build --config vite.lib.config.ts",
         "test": "vitest --no-threads",
         "test-storybook": "test-storybook",
         "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
@@ -16,21 +17,33 @@
         "build-storybook": "storybook build",
         "typecheck": "tsc",
         "chromatic": "chromatic --only-changed",
-        "prepare": "husky install"
+        "prepare": "yarn compile && yarn build:lib"
     },
+    "workspaces": [
+        "contrib/*"
+    ],
     "dependencies": {
         "@ant-design/colors": "^7.0.0",
         "@ant-design/icons": "^5.1.4",
+        "@beda.software/emr-config": "*",
         "@beda.software/fhir-react": "^1.8.6",
         "@beda.software/remote-data": "^1.1.3",
+        "@fullcalendar/core": "^6.1.15",
         "@fullcalendar/react": "^6.1.8",
+        "@fullcalendar/daygrid": "^6.1.8",
+        "@fullcalendar/interaction": "^6.1.8",
+        "@fullcalendar/timegrid": "^6.1.8",
         "@hookform/resolvers": "^3.1.1",
         "@jitsi/react-sdk": "^1.3.0",
         "@lingui/react": "^4.3.0",
+        "@lingui/core": "^4.3.0",
         "@sentry/browser": "^7.57.0",
-        "aidbox-react": "^1.7.1",
-        "antd": "^5.6.4",
+        "aidbox-react": "^1.10.0",
+        "antd": "5.6.4",
         "classnames": "^2.3.2",
+        "date-fns": "2.30.0",
+        "fhir": "^4.10.3",
+        "fhirpath": "3.13.0",
         "fullcalendar": "^6.1.8",
         "history": "^5.3.0",
         "jose": "^4.14.4",
@@ -53,6 +66,9 @@
         "sdc-qrf": "^0.3.0",
         "styled-components": "^6.1.11",
         "yup": "^1.2.0"
+    },
+    "peerDependencies": {
+        "rc-picker": "^3.8.2"
     },
     "devDependencies": {
         "@chromatic-com/storybook": "^1",
@@ -106,7 +122,26 @@
         "style-loader": "^3.3.3",
         "typescript": "^5.1.6",
         "vite": "^4.1.5",
+        "@beda.software/vite-plugin-dts": "4.0.0-beta.1",
+        "vite-plugin-externalize-deps": "^0.8.0",
         "vite-plugin-turbosnap": "^1.0.2",
         "vitest": "^0.33.0"
+    }, 
+    "main": "./dist/index.js",
+    "module": "./dist/index.js",
+    "files": [
+        "dist",
+        "src"
+    ],
+    "exports": {
+        ".": null,
+        "./components": "./dist/components/index.js",
+        "./containers": "./dist/containers/index.js",
+        "./services": "./dist/services/index.js",
+        "./hooks": "./dist/hooks/index.js",
+        "./utils": "./dist/utils/index.js",
+        "./theme": "./dist/theme/index.js",
+        "./dist/*": "./dist/*.js",
+        "./dist/style.css": "./dist/style.css"
     }
 }

@@ -5,11 +5,9 @@ import { Communication, Encounter, Patient } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
+import config from '@beda.software/emr-config';
 import { RenderRemoteData, formatError, formatFHIRDateTime, useService } from '@beda.software/fhir-react';
 import { isLoading, isSuccess } from '@beda.software/remote-data';
-
-import config from 'shared/src/config';
-import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
 
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
@@ -18,6 +16,7 @@ import { Text } from 'src/components/Typography';
 import { DocumentsList } from 'src/containers/DocumentsList';
 import { ChooseDocumentToCreateModal } from 'src/containers/DocumentsList/ChooseDocumentToCreateModal';
 import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
+import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 import { getFHIRResource, getFHIRResources, saveFHIRResource } from 'src/services/fhir';
 
 import { AIScribe, useAIScribe } from './AIScribe';

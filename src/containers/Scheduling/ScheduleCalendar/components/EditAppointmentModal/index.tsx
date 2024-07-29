@@ -2,12 +2,11 @@ import { PractitionerRole } from 'fhir/r4b';
 
 import { RenderRemoteData } from '@beda.software/fhir-react';
 
-import { inMemorySaveService } from 'shared/src/hooks/questionnaire-response-form-data';
-
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { Modal } from 'src/components/Modal';
 import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
+import { inMemorySaveService } from 'src/hooks/questionnaire-response-form-data';
 
 interface Props {
     practitionerRole: PractitionerRole;

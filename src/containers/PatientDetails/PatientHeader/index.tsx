@@ -5,12 +5,11 @@ import _ from 'lodash';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
 
-import { renderHumanName } from 'shared/src/utils/fhir';
-
 import { BasePageHeader } from 'src/components/BaseLayout';
 import { RouteItem } from 'src/components/BaseLayout/Sidebar/SidebarTop';
 import Breadcrumbs from 'src/components/Breadcrumbs';
 import { Title } from 'src/components/Typography';
+import { renderHumanName } from 'src/utils/fhir';
 import { matchCurrentUserRole, Role } from 'src/utils/role';
 
 import { BreadCrumb, PatientHeaderContext } from './context';
