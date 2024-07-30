@@ -140,6 +140,7 @@
         "./services": "./dist/services/index.js",
         "./hooks": "./dist/hooks/index.js",
         "./utils": "./dist/utils/index.js",
+        "./sharedState": "./dist/sharedState/index.js",
         "./theme": "./dist/theme/index.js",
         "./dist/*": "./dist/*.js",
         "./dist/style.css": "./dist/style.css"
