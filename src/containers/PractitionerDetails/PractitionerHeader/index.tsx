@@ -7,12 +7,11 @@ import { useParams, useLocation, Link } from 'react-router-dom';
 
 import { WithId } from '@beda.software/fhir-react';
 
-import { renderHumanName } from 'shared/src/utils/fhir';
-
 import { BasePageHeader } from 'src/components/BaseLayout';
 import { RouteItem } from 'src/components/BaseLayout/Sidebar/SidebarTop';
 import Breadcrumbs from 'src/components/Breadcrumbs';
 import { Title } from 'src/components/Typography';
+import { renderHumanName } from 'src/utils/fhir';
 
 import s from './PractitionerHeader.module.scss';
 

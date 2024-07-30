@@ -14,6 +14,8 @@ __Design__: [Figma](https://www.figma.com/file/2bxMDfG3lRPEZpRwDC4gTB/SaaS-EMR-S
 
 __Documentation__: https://docs.emr.beda.software/
 
+__EMR Template__: https://github.com/beda-software/emr-template/
+
 ## Benefits
 
 -   Fully FHIR compatible:

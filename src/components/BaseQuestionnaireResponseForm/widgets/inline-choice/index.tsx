@@ -2,7 +2,7 @@ import { Checkbox, Form, Radio, Space } from 'antd';
 import _ from 'lodash';
 import { QuestionItemProps } from 'sdc-qrf';
 
-import { QuestionnaireItem, QuestionnaireItemAnswerOption } from 'shared/src/contrib/aidbox';
+import { QuestionnaireItem, QuestionnaireItemAnswerOption } from '@beda.software/aidbox-types';
 
 import { getDisplay } from 'src/utils/questionnaire';
 

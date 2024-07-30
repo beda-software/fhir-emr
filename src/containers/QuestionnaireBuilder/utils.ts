@@ -4,7 +4,7 @@ import {
     Questionnaire as FCEQuestionnaire,
     QuestionnaireItem as FCEQuestionnaireItem,
     QuestionnaireItem as FCEQuestionItem,
-} from 'shared/src/contrib/aidbox';
+} from '@beda.software/aidbox-types';
 
 export function getQuestionPath(
     questionnaire: FCEQuestionnaire,

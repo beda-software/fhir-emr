@@ -1,11 +1,10 @@
 import { Col, Row, Statistic } from 'antd';
 
-import { formatHumanDateTime } from 'shared/src/utils/date';
-import { renderHumanName } from 'shared/src/utils/fhir';
-
 import { BasePageHeader } from 'src/components/BaseLayout';
 import { Title } from 'src/components/Typography';
 import { getInvoiceStatusHumanized } from 'src/containers/InvoiceList/tableUtils';
+import { formatHumanDateTime } from 'src/utils/date';
+import { renderHumanName } from 'src/utils/fhir';
 
 import { InvoiceDetailsHeaderProps } from './types';
 

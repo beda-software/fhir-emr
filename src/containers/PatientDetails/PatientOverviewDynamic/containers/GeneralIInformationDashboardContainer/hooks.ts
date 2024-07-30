@@ -5,7 +5,8 @@ import { extractBundleResources, useService } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 
 import { getFHIRResources } from 'src/services/fhir';
-import { formatHumanDate, getPersonAge } from 'src/utils/date';
+import { formatHumanDate } from 'src/utils/date';
+import { getPersonAge } from 'src/utils/relative-date';
 
 const bmiCode = '39156-5';
 

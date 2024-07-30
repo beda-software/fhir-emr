@@ -38,10 +38,7 @@ export default defineConfig(({ command }) => ({
         'process.env': {},
     },
     resolve: {
-        alias: [
-            { find: 'src', replacement: path.resolve(__dirname, './src/') },
-            { find: 'shared', replacement: path.resolve(__dirname, './shared/') },
-        ],
+        alias: [{ find: 'src', replacement: path.resolve(__dirname, './src/') }],
     },
     build: {
         outDir: path.resolve(__dirname, 'build'),

@@ -1,6 +1,5 @@
+import config from '@beda.software/emr-config';
 import { initServices } from '@beda.software/fhir-react';
-
-import config from 'shared/src/config';
 
 export const {
     axiosInstance,

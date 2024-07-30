@@ -7,11 +7,10 @@ import { Link, useLocation } from 'react-router-dom';
 
 import { RenderRemoteData, SearchParams, extractBundleResources, ResourcesMap } from '@beda.software/fhir-react';
 
-import { fromFHIRReference } from 'shared/src/utils/converter';
-
 import { Spinner } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 import { usePagerExtended } from 'src/hooks/pager';
+import { fromFHIRReference } from 'src/utils/converter';
 
 type GetTableColumns<R> = (provenanceList: Provenance[]) => ColumnsType<R>;
 

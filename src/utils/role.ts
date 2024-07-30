@@ -1,8 +1,7 @@
 import { Organization, Patient, Practitioner } from 'fhir/r4b';
 
+import { User } from '@beda.software/aidbox-types';
 import { WithId } from '@beda.software/fhir-react';
-
-import { User } from 'shared/src/contrib/aidbox';
 
 import {
     sharedAuthorizedOrganization,

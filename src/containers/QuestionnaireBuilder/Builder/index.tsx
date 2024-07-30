@@ -8,11 +8,10 @@ import { GroupItemProps, QuestionItemProps } from 'sdc-qrf';
 import { RenderRemoteData } from '@beda.software/fhir-react';
 import { RemoteData, isLoading } from '@beda.software/remote-data';
 
-import { toQuestionnaireResponseFormData } from 'shared/src/hooks/questionnaire-response-form-data';
-
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
 import { Title, Text } from 'src/components/Typography';
+import { toQuestionnaireResponseFormData } from 'src/hooks/questionnaire-response-form-data';
 
 import { BuilderField } from './BuilderField';
 import { BuilderGroup } from './BuilderGroup';

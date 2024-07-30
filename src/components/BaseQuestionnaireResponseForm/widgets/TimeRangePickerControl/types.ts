@@ -1,4 +1,4 @@
-import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
+import { QuestionnaireItem } from '@beda.software/aidbox-types';
 
 export type ValueString = { value: { string: string } };
 

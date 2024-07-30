@@ -1,10 +1,9 @@
 import { Trans, t } from '@lingui/macro';
 import { useParams } from 'react-router-dom';
 
-import { inMemorySaveService, questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
-
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Title } from 'src/components/Typography';
+import { inMemorySaveService, questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 
 import { S } from './SetPassword.styles';
 

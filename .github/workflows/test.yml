@@ -11,7 +11,7 @@ jobs:
               with:
                   node-version: 18
             - name: Prepare config
-              run: cp shared/src/config.local.ts shared/src/config.ts
+              run: cp contrib/emr-config/config.local.js contrib/emr-config/config.js
             - name: Prepare secrets
               run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
             - name: Install deps
@@ -48,7 +48,7 @@ jobs:
               with:
                   node-version: 18
             - name: Prepare config
-              run: cp shared/src/config.local.ts shared/src/config.ts
+              run: cp contrib/emr-config/config.local.js contrib/emr-config/config.js
             - name: Prepare secrets
               run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
             - name: Install deps

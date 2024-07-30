@@ -2,10 +2,9 @@ import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
 
-import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
-
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 
 interface ModalNewMedicationKnowledgeProps {
     onCreate: () => void;

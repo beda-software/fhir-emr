@@ -1,7 +1,6 @@
 import { Form, InputNumber } from 'antd';
+import { Coding } from 'fhir/r4b';
 import { QuestionItemProps } from 'sdc-qrf';
-
-import { Coding } from 'shared/src/contrib/aidbox';
 
 import { useFieldController } from '../hooks';
 

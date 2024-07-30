@@ -1,8 +1,7 @@
 import { Organization, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
 
+import { User } from '@beda.software/aidbox-types';
 import { WithId, createSharedState } from '@beda.software/fhir-react';
-
-import { User } from 'shared/src/contrib/aidbox';
 
 export const sharedAuthorizedUser = createSharedState<User | undefined>(undefined);
 

@@ -5,9 +5,8 @@ import { ColumnsType } from 'antd/lib/table';
 import { Questionnaire } from 'fhir/r4b';
 import { Link } from 'react-router-dom';
 
+import config from '@beda.software/emr-config';
 import { isLoading, isSuccess } from '@beda.software/remote-data';
-
-import config from 'shared/src/config';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { SearchBar } from 'src/components/SearchBar';

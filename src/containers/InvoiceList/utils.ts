@@ -1,6 +1,6 @@
 import { Invoice, Practitioner, PractitionerRole, Patient } from 'fhir/r4b';
 
-import { renderHumanName } from 'shared/src/utils/fhir';
+import { renderHumanName } from 'src/utils/fhir';
 
 export function getInvoicePractitioner(
     invoice: Invoice,

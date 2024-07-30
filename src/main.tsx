@@ -5,14 +5,13 @@ import { createRoot } from 'react-dom/client';
 
 import 'src/services/initialize';
 
-import { dynamicActivate, getCurrentLocale } from 'shared/src/services/i18n';
-
 import 'antd/dist/reset.css';
 import 'src/styles/index.scss';
 
 import { PatientDashboardProvider } from 'src/components/Dashboard/contexts';
 import { App } from 'src/containers/App';
 import { dashboard } from 'src/dashboard.config';
+import { dynamicActivate, getCurrentLocale } from 'src/services/i18n';
 
 import * as serviceWorker from './serviceWorker';
 import { ThemeProvider } from './theme/ThemeProvider';

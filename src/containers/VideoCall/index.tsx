@@ -3,13 +3,13 @@ import { Col, Row } from 'antd';
 import { ContactPoint } from 'fhir/r4b';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import config from 'shared/src/config';
-import { renderHumanName } from 'shared/src/utils/fhir';
+import config from '@beda.software/emr-config';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { EncounterData } from 'src/components/EncountersTable/types';
 import { Title } from 'src/components/Typography';
 import { sharedJitsiAuthToken } from 'src/sharedState';
+import { renderHumanName } from 'src/utils/fhir';
 
 import { S } from './VideoCall.styles';
 

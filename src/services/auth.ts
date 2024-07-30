@@ -4,10 +4,9 @@ import { setInstanceToken as setAidboxInstanceToken } from 'aidbox-react/lib/ser
 import { service } from 'aidbox-react/lib/services/service';
 import { Token } from 'aidbox-react/lib/services/token';
 
-import { isSuccess, serviceFetch } from '@beda.software/remote-data';
-
-import config from 'shared/src/config';
-import { User } from 'shared/src/contrib/aidbox';
+import { User } from '@beda.software/aidbox-types';
+import config from '@beda.software/emr-config';
+import { serviceFetch, isSuccess, RemoteDataResult } from '@beda.software/remote-data';
 
 import { setInstanceToken as setFHIRInstanceToken } from 'src/services/fhir';
 
@@ -100,7 +99,7 @@ export async function getJitsiAuthToken() {
 export async function signinWithIdentityToken(
     user: { firstName: string; lastName: string } | undefined,
     identityToken: string,
-) {
+): Promise<RemoteDataResult> {
     const authTokenResponse = await getAuthToken(identityToken);
     console.log('authTokenResponse', authTokenResponse);
     if (isSuccess(authTokenResponse)) {

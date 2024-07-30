@@ -7,6 +7,8 @@
       "skipLibCheck": true,
       "esModuleInterop": true,
   
+      "declaration": true,
+      "declarationMap": true,
       /* Bundler mode */
       "moduleResolution": "bundler",
       "allowImportingTsExtensions": true,
@@ -17,7 +19,7 @@
       "baseUrl": ".",
       "paths": {
         "src/*": ["./src/*"],
-        "shared/*": ["./shared/*"]
+        "shared/src/contrib/aidbox": ["contrib/aidbox-types/index.d.ts"]
       },
       "types": ["node", "vitest/globals", "jest", "@testing-library/jest-dom"],
   
@@ -38,7 +40,7 @@
       "ignoreDeprecations": "5.0",
     },
     "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],
-    "exclude": ["node_modules"],
+    "exclude": ["node_modules", "lib"],
     "references": [{ "path": "./tsconfig.node.json" }]
   }
   

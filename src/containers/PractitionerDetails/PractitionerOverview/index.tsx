@@ -5,11 +5,10 @@ import { HealthcareService, Practitioner, PractitionerRole } from 'fhir/r4b';
 
 import { WithId } from '@beda.software/fhir-react';
 
-import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
-
 import { DashboardCard } from 'src/components/DashboardCard';
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 
 import s from './PractitionerOverview.module.scss';
 import { S } from './PractitionerOverview.styles';

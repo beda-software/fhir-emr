@@ -6,8 +6,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { isLoading, isSuccess } from '@beda.software/remote-data';
 
-import { questionnaireIdLoader } from 'shared/src/hooks/questionnaire-response-form-data';
-
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
@@ -17,6 +15,7 @@ import { SearchBarColumnType, StringTypeColumnFilterValue } from 'src/components
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 import { Title } from 'src/components/Typography';
+import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 
 import { usePractitionersList } from './hooks';
 

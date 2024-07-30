@@ -20,18 +20,13 @@ import {
 import { formatFHIRDateTime } from 'aidbox-react/lib/utils/date';
 import { withRootAccess, LoginService, getToken } from 'aidbox-react/lib/utils/tests';
 
+import { User } from '@beda.software/aidbox-types';
 import { ensure, getReference } from '@beda.software/fhir-react';
-
-import { User } from 'shared/src/contrib/aidbox';
 
 import { restoreUserSession } from 'src/containers/App/utils.ts';
 import { login as loginService } from 'src/services/auth';
 
-import {
-    createFHIRResource,
-    saveFHIRResource,
-    resetInstanceToken as resetFHIRInstanceToken,
-} from './services/fhir';
+import { createFHIRResource, saveFHIRResource, resetInstanceToken as resetFHIRInstanceToken } from './services/fhir';
 
 declare global {
     // eslint-disable-next-line no-var

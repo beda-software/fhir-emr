@@ -12,14 +12,13 @@ import {
 import { RenderRemoteData, formatError } from '@beda.software/fhir-react';
 import { RemoteDataResult, isFailure, isSuccess } from '@beda.software/remote-data';
 
+import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import {
     QuestionnaireResponseFormData,
     QuestionnaireResponseFormProps,
     QuestionnaireResponseFormSaveResponse,
     useQuestionnaireResponseFormData,
-} from 'shared/src/hooks/questionnaire-response-form-data';
-
-import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
+} from 'src/hooks/questionnaire-response-form-data';
 import { saveFHIRResource, updateFHIRResource } from 'src/services/fhir';
 
 import { FormFooterComponentProps } from '../BaseQuestionnaireResponseForm/FormFooter';
