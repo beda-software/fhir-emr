@@ -3,7 +3,7 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { isLoading, isSuccess } from '@beda.software/remote-data';
 
 import { useSearchBar } from 'src/components/SearchBar/hooks';
-import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
+import { SearchBarColumnType, StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 import { loginAdminUser } from 'src/setupTests';
 
 import { useQuestionnaireList } from '../hooks';
@@ -19,7 +19,7 @@ describe('Questionnaire list filters testing', () => {
                 columns: [
                     {
                         id: 'questionnaire',
-                        type: 'string',
+                        type: SearchBarColumnType.STRING,
                         placeholder: `Search by patient`,
                     },
                 ],

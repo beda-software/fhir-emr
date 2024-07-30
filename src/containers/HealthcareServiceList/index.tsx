@@ -9,7 +9,7 @@ import { ModalEditHealthcareService } from 'src/components/ModalEditHealthcareSe
 import { ModalNewHealthcareService } from 'src/components/ModalNewHealthcareService';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
-import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
+import { SearchBarColumnType, StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Title } from 'src/components/Typography';
 
@@ -20,7 +20,7 @@ export function HealthcareServiceList() {
         columns: [
             {
                 id: 'service',
-                type: 'string',
+                type: SearchBarColumnType.STRING,
                 placeholder: t`Search by name`,
             },
         ],

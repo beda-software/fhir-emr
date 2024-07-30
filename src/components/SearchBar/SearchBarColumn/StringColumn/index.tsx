@@ -1,12 +1,13 @@
 import { Col, Input } from 'antd';
 
-import { useStringColumn } from './hooks';
-import { SearchBarColumnStringTypeProps } from '../types';
+import { SearchBarColumnStringTypeProps } from 'src/components/SearchBar/SearchBarColumn/types';
 
-export function StringColumn<T>(props: SearchBarColumnStringTypeProps) {
+import { useStringColumn } from './hooks';
+
+export function StringColumn(props: SearchBarColumnStringTypeProps) {
     const { columnFilterValue } = props;
 
-    const { onColumnChange } = useStringColumn<T>(props);
+    const { onColumnChange } = useStringColumn(props);
 
     return (
         <Col>

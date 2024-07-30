@@ -10,32 +10,34 @@ import { EncounterData } from 'src/components/EncountersTable/types';
 import { StatusBadge } from 'src/components/EncounterStatusBadge';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
+import { SearchBarColumnType } from 'src/components/SearchBar/types';
 import { Title } from 'src/components/Typography';
 import { formatPeriodDateTime } from 'src/utils/date';
 import { matchCurrentUserRole, Role } from 'src/utils/role';
 
 import { useEncounterList } from './hooks';
-import { EncounterListFilters, EncounterListFilterValues } from './types';
 
 export function EncounterList() {
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
         columns: [
             {
                 id: 'patient',
-                type: 'string',
+                type: SearchBarColumnType.REFERENCE,
                 placeholder: t`Search by patient`,
+                expression: 'Patient',
+                path: "name.given.first() + ' ' + name.family",
             },
             {
                 id: 'practitioner',
-                type: 'string',
+                type: SearchBarColumnType.STRING,
                 placeholder: t`Search by practitioner`,
             },
             {
                 id: 'date',
-                type: 'date',
+                type: SearchBarColumnType.DATE,
                 placeholder: [t`Start date`, t`End date`],
             },
-        ] as EncounterListFilters,
+        ],
     });
 
     const roleSearchParams = matchCurrentUserRole({
@@ -54,7 +56,7 @@ export function EncounterList() {
     });
 
     const { encounterDataListRD, handleTableChange, pagination } = useEncounterList(
-        columnsFilterValues as EncounterListFilterValues,
+        columnsFilterValues,
         roleSearchParams,
     );
 
@@ -126,6 +128,7 @@ export function EncounterList() {
                     onResetFilters={onResetFilters}
                 />
             </BasePageHeader>
+
             <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
                 <EncountersTable
                     columns={columns}

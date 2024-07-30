@@ -5,11 +5,10 @@ import { getReference } from '@beda.software/fhir-react';
 import { isLoading, isSuccess } from '@beda.software/remote-data';
 
 import { useSearchBar } from 'src/components/SearchBar/hooks';
+import { SearchBarColumnType } from 'src/components/SearchBar/types';
+import { useEncounterList } from 'src/containers/EncounterList/hooks';
 import { createEncounter, createPatient, createPractitionerRole, loginAdminUser } from 'src/setupTests';
 import { formatHumanDateTime } from 'src/utils/date';
-
-import { useEncounterList } from '../hooks';
-import { EncounterListFilterValues } from '../types';
 
 const PATIENTS_ADDITION_DATA = [
     {
@@ -82,23 +81,23 @@ describe('Encounter list filters testing', () => {
                 columns: [
                     {
                         id: 'patient',
-                        type: 'string',
+                        type: SearchBarColumnType.STRING,
                         placeholder: `Search by patient`,
                     },
                     {
                         id: 'practitioner',
-                        type: 'string',
+                        type: SearchBarColumnType.STRING,
                         placeholder: `Search by practitioner`,
                     },
                     {
                         id: 'date',
-                        type: 'date',
+                        type: SearchBarColumnType.DATE,
                         placeholder: [`Start date`, `End date`],
                     },
                 ],
             });
 
-            const { encounterDataListRD } = useEncounterList(columnsFilterValues as EncounterListFilterValues);
+            const { encounterDataListRD } = useEncounterList(columnsFilterValues);
 
             return {
                 columnsFilterValues,

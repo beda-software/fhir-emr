@@ -12,7 +12,7 @@ import config from 'shared/src/config';
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
-import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
+import { SearchBarColumnType, StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 import { Title } from 'src/components/Typography';
@@ -63,7 +63,7 @@ export function QuestionnaireList() {
         columns: [
             {
                 id: 'questionnaire',
-                type: 'string',
+                type: SearchBarColumnType.STRING,
                 placeholder: t`Find questionnaire`,
             },
         ],
