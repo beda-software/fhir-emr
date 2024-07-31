@@ -5,6 +5,7 @@ export * from './Calendar';
 export * from './ChangesDiff';
 export * from './ConfirmActionButton';
 export * from './Dashboard';
+export * from './Dashboard/contexts';
 export * from './DashboardCard';
 export * from './DatePicker';
 export * from './Empty';
