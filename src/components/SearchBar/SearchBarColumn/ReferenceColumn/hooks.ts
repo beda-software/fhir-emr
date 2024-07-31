@@ -3,12 +3,11 @@ import _ from 'lodash';
 import { SingleValue, PropsValue } from 'react-select';
 import { ItemContext, parseFhirQueryExpression } from 'sdc-qrf';
 
+import { Resource } from '@beda.software/aidbox-types';
 import { isSuccess } from '@beda.software/remote-data';
 
-import { Resource } from 'shared/src/contrib/aidbox';
-import { LoadResourceOption, loadResourceOptions } from 'shared/src/services/questionnaire';
-
 import { SearchBarColumnReferenceTypeProps } from 'src/components/SearchBar/SearchBarColumn/types';
+import { LoadResourceOption, loadResourceOptions } from 'src/services/questionnaire';
 
 export function useReferenceColumn(props: SearchBarColumnReferenceTypeProps) {
     const { columnFilterValue, onChange } = props;

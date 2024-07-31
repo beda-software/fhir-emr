@@ -1,4 +1,9 @@
+import _ from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
+
+import { Resource } from '@beda.software/aidbox-types';
+
+import { LoadResourceOption } from 'src/services/questionnaire';
 
 import {
     ColumnFilterValue,
@@ -43,18 +48,19 @@ export function useSearchBar(props: SearchBarProps): SearchBarData {
                     throw new Error('Filter value not found');
                 }
 
-                const newFilterValue = newFilterValues[newFilterValueIndex]!;
-
-                if (isStringColumnFilterValue(newFilterValue)) {
-                    newFilterValues[newFilterValueIndex]!.value = value === '' ? undefined : value;
+                if (isStringColumnFilterValue(newFilterValues[newFilterValueIndex]!)) {
+                    newFilterValues[newFilterValueIndex]!.value =
+                        !_.isString(value) || value === '' ? undefined : value;
                 }
 
-                if (isDateColumnFilterValue(newFilterValue)) {
-                    newFilterValues[newFilterValueIndex]!.value = value;
+                if (isDateColumnFilterValue(newFilterValues[newFilterValueIndex]!)) {
+                    newFilterValues[newFilterValueIndex]!.value = _.isArray(value) ? value : undefined;
                 }
 
-                if (isReferenceColumnFilterValue(newFilterValue)) {
-                    newFilterValues[newFilterValueIndex]!.value = value;
+                if (isReferenceColumnFilterValue(newFilterValues[newFilterValueIndex]!)) {
+                    newFilterValues[newFilterValueIndex]!.value = _.isObject(value)
+                        ? (value as LoadResourceOption<Resource>)
+                        : null;
                 }
 
                 return newFilterValues;

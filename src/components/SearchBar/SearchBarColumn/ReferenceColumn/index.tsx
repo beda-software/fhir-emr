@@ -1,9 +1,8 @@
 import { Col } from 'antd';
 
-import { getAnswerCode, getAnswerDisplay } from 'shared/src/utils/questionnaire';
-
 import { SearchBarColumnReferenceTypeProps } from 'src/components/SearchBar/SearchBarColumn/types';
 import { AsyncSelect } from 'src/components/Select';
+import { getAnswerCode, getAnswerDisplay } from 'src/utils/questionnaire';
 
 import { useReferenceColumn } from './hooks';
 

@@ -2,10 +2,9 @@ import { Resource } from 'fhir/r4b';
 
 import { getReference } from 'aidbox-react/lib/services/fhir';
 
+import { AidboxReference } from '@beda.software/aidbox-types';
 import { ResourcesMap, SearchParams, extractBundleResources } from '@beda.software/fhir-react';
 import { mapSuccess, RemoteDataResult } from '@beda.software/remote-data';
-
-import { AidboxReference } from 'shared/src/contrib/aidbox';
 
 import { getFHIRResources } from 'src/services/fhir';
 

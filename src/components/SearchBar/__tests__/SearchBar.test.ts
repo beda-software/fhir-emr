@@ -11,6 +11,13 @@ describe('SearchBar filters testing', () => {
                 columns: [
                     {
                         id: 'patient',
+                        type: SearchBarColumnType.REFERENCE,
+                        placeholder: 'Search by patient',
+                        expression: 'Patient',
+                        path: "name.given.first() + ' ' + name.family",
+                    },
+                    {
+                        id: 'practitioner',
                         type: SearchBarColumnType.STRING,
                         placeholder: 'Find patient',
                     },
@@ -30,7 +37,7 @@ describe('SearchBar filters testing', () => {
             result.current.onChangeColumnFilter([moment('2023-01-01'), moment('2023-01-20')], 'date');
         });
 
-        expect(result.current.columnsFilterValues.length).toEqual(2);
+        expect(result.current.columnsFilterValues.length).toEqual(3);
         expect(result.current.columnsFilterValues[0]!.value).toEqual('test');
         expect(result.current.columnsFilterValues[1]!.value).toEqual([moment('2023-01-01'), moment('2023-01-20')]);
     });

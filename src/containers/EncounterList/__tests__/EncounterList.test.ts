@@ -81,8 +81,10 @@ describe('Encounter list filters testing', () => {
                 columns: [
                     {
                         id: 'patient',
-                        type: SearchBarColumnType.STRING,
-                        placeholder: `Search by patient`,
+                        type: SearchBarColumnType.REFERENCE,
+                        placeholder: 'Search by patient',
+                        expression: 'Patient',
+                        path: "name.given.first() + ' ' + name.family",
                     },
                     {
                         id: 'practitioner',
@@ -114,13 +116,21 @@ describe('Encounter list filters testing', () => {
             { timeout: 30000 },
         );
         if (isSuccess(result.current.encounterDataListRD)) {
-            expect(result.current.encounterDataListRD.data.length).toEqual(2);
-            expect(result.current.encounterDataListRD.data[0]?.id).toEqual(encounterData2.id);
-            expect(result.current.encounterDataListRD.data[1]?.id).toEqual(encounterData1.id);
+            expect(result.current.encounterDataListRD.data.length).toEqual(5); // 2 encounters + 3 seeds encounters
+            expect(result.current.encounterDataListRD.data.find((e) => e.id === encounter1.id)).not.toBeUndefined();
+            expect(result.current.encounterDataListRD.data.find((e) => e.id === encounter2.id)).not.toBeUndefined();
         }
 
         act(() => {
-            result.current.onChangeColumnFilter('john', 'patient');
+            const patientReferenceValue = {
+                value: {
+                    Reference: {
+                        resourceType: 'Patient',
+                        id: patient1.id,
+                    },
+                },
+            };
+            result.current.onChangeColumnFilter(patientReferenceValue, 'patient');
         });
         await waitFor(() => {
             expect(isLoading(result.current.encounterDataListRD)).toBeTruthy();
@@ -147,7 +157,7 @@ describe('Encounter list filters testing', () => {
         }
 
         act(() => {
-            result.current.onChangeColumnFilter('', 'patient');
+            result.current.onChangeColumnFilter(null, 'patient');
         });
         act(() => {
             result.current.onChangeColumnFilter('petr', 'practitioner');
@@ -173,7 +183,7 @@ describe('Encounter list filters testing', () => {
             isSuccess(result.current.encounterDataListRD);
         });
         if (isSuccess(result.current.encounterDataListRD)) {
-            expect(result.current.encounterDataListRD.data.length).toEqual(2);
+            expect(result.current.encounterDataListRD.data.length).toEqual(5);
         }
 
         act(() => {
@@ -187,7 +197,7 @@ describe('Encounter list filters testing', () => {
         });
         if (isSuccess(result.current.encounterDataListRD)) {
             expect(result.current.encounterDataListRD.data.length).toEqual(2);
-            expect(result.current.encounterDataListRD.data[0]?.id).toEqual(encounterData1.id);
+            expect(result.current.encounterDataListRD.data[0]?.id).toEqual(encounterData2.id);
         }
 
         act(() => {
@@ -213,7 +223,7 @@ describe('Encounter list filters testing', () => {
             isSuccess(result.current.encounterDataListRD);
         });
         if (isSuccess(result.current.encounterDataListRD)) {
-            expect(result.current.encounterDataListRD.data.length).toEqual(2);
+            expect(result.current.encounterDataListRD.data.length).toEqual(5);
         }
     });
 });

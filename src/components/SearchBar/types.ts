@@ -1,5 +1,6 @@
-import { Expression, QuestionnaireItemChoiceColumn, Resource } from 'shared/src/contrib/aidbox';
-import { LoadResourceOption } from 'shared/src/services/questionnaire';
+import { Expression, Resource, QuestionnaireItemChoiceColumn } from '@beda.software/aidbox-types';
+
+import { LoadResourceOption } from 'src/services/questionnaire';
 
 export enum SearchBarColumnType {
     STRING = 'string',

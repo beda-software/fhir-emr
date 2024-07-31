@@ -25,11 +25,10 @@ import { ensure, getReference } from '@beda.software/fhir-react';
 
 import { restoreUserSession } from 'src/containers/App/utils.ts';
 import { login as loginService } from 'src/services/auth';
-
-import { createFHIRResource, saveFHIRResource, resetInstanceToken as resetFHIRInstanceToken } from './services/fhir';
+import { createFHIRResource, saveFHIRResource, resetInstanceToken as resetFHIRInstanceToken } from 'src/services/fhir';
 
 declare global {
-    // eslint-disable-next-line no-var
+    // eslint-disable-next-line no-var, @typescript-eslint/no-explicit-any
     var AppleID: any;
 }
 
