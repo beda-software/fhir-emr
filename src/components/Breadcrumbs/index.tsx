@@ -11,7 +11,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
     }[];
 }
 
-const Breadcrumbs = (props: Props) => {
+export function Breadcrumbs(props: Props) {
     const { crumbs } = props;
 
     if (crumbs.length <= 1) {
@@ -29,4 +29,3 @@ const Breadcrumbs = (props: Props) => {
         </div>
     );
 };
-export default Breadcrumbs;

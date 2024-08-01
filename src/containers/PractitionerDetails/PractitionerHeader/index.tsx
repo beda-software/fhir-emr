@@ -9,7 +9,7 @@ import { WithId } from '@beda.software/fhir-react';
 
 import { BasePageHeader } from 'src/components/BaseLayout';
 import { RouteItem } from 'src/components/BaseLayout/Sidebar/SidebarTop';
-import Breadcrumbs from 'src/components/Breadcrumbs';
+import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { Title } from 'src/components/Typography';
 import { renderHumanName } from 'src/utils/fhir';
 
