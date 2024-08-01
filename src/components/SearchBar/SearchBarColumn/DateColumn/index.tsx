@@ -1,9 +1,9 @@
 import { Col } from 'antd';
 
 import { DatePicker } from 'src/components/DatePicker';
-import { SearchBarColumnDateTypeProps } from 'src/components/SearchBar/SearchBarColumn/types';
 
 import { useDateColumn } from './hooks';
+import { SearchBarColumnDateTypeProps } from '../types';
 
 const { RangePicker } = DatePicker;
 

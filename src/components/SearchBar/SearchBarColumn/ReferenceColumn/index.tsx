@@ -1,10 +1,10 @@
 import { Col } from 'antd';
 
-import { SearchBarColumnReferenceTypeProps } from 'src/components/SearchBar/SearchBarColumn/types';
 import { AsyncSelect } from 'src/components/Select';
 import { getAnswerCode, getAnswerDisplay } from 'src/utils/questionnaire';
 
 import { useReferenceColumn } from './hooks';
+import { SearchBarColumnReferenceTypeProps } from '../types';
 
 export function ReferenceColumn(props: SearchBarColumnReferenceTypeProps) {
     const { columnFilterValue } = props;

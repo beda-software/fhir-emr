@@ -1,13 +1,14 @@
 import { act, renderHook } from '@testing-library/react';
 
 import { useSearchBar } from 'src/components/SearchBar/hooks';
-import { useReferenceColumn } from 'src/components/SearchBar/SearchBarColumn/ReferenceColumn/hooks';
 import {
     isReferenceColumnFilterValue,
     ReferenceTypeColumnFilterValue,
     SearchBarColumnType,
     SearchBarReferenceColumn,
 } from 'src/components/SearchBar/types';
+
+import { useReferenceColumn } from '../hooks';
 
 const COLUMN_CASES: SearchBarReferenceColumn[] = [
     {

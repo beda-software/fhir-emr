@@ -1,69 +1,75 @@
 import _ from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 
-import { Resource } from '@beda.software/aidbox-types';
-
-import { LoadResourceOption } from 'src/services/questionnaire';
-
 import {
     ColumnFilterValue,
-    DateTypeColumnFilterValue,
     isDateColumn,
     isReferenceColumn,
     isStringColumn,
     isStringColumnFilterValue,
     isDateColumnFilterValue,
     isReferenceColumnFilterValue,
-    ReferenceTypeColumnFilterValue,
     SearchBarData,
     SearchBarProps,
-    StringTypeColumnFilterValue,
 } from './types';
+import {
+    validateStringColumnFilterValue,
+    validateDateColumnFilterValue,
+    validateReferenceColumnFilterValue,
+} from './validate';
 
 export function useSearchBar(props: SearchBarProps): SearchBarData {
     const { columns } = props;
 
-    const defaultFiltersValues = useMemo(() => {
+    const defaultFiltersValues = useMemo<ColumnFilterValue[]>(() => {
         return columns.map((column) => {
             if (isStringColumn(column)) {
-                return { column } as StringTypeColumnFilterValue;
+                return { column, value: undefined };
             } else if (isDateColumn(column)) {
-                return { column } as DateTypeColumnFilterValue;
+                return { column, value: undefined };
             } else if (isReferenceColumn(column)) {
-                return { column, value: null } as ReferenceTypeColumnFilterValue;
+                return { column, value: null };
             }
 
             throw new Error('Unsupported column type');
         });
     }, [columns]);
+
     const [columnsFilterValues, setColumnsFilterValues] = useState<ColumnFilterValue[]>(defaultFiltersValues);
 
     const onChangeColumnFilter = useCallback(
         (value: ColumnFilterValue['value'], id: string) => {
             setColumnsFilterValues((prevFilterValues) => {
-                const newFilterValues = [...prevFilterValues];
-                const newFilterValueIndex = newFilterValues.findIndex((v) => v.column.id === id);
+                return prevFilterValues.map((filterValue) => {
+                    if (filterValue.column.id !== id) {
+                        return filterValue;
+                    }
 
-                if (newFilterValueIndex === -1) {
-                    throw new Error('Filter value not found');
-                }
+                    const newFilterValue = { ...filterValue };
 
-                if (isStringColumnFilterValue(newFilterValues[newFilterValueIndex]!)) {
-                    newFilterValues[newFilterValueIndex]!.value =
-                        !_.isString(value) || value === '' ? undefined : value;
-                }
+                    if (isStringColumnFilterValue(newFilterValue)) {
+                        if (validateStringColumnFilterValue(value)) {
+                            newFilterValue.value = value;
+                            return newFilterValue;
+                        }
+                    }
 
-                if (isDateColumnFilterValue(newFilterValues[newFilterValueIndex]!)) {
-                    newFilterValues[newFilterValueIndex]!.value = _.isArray(value) ? value : undefined;
-                }
+                    if (isDateColumnFilterValue(newFilterValue)) {
+                        if (validateDateColumnFilterValue(value)) {
+                            newFilterValue.value = value;
+                            return newFilterValue;
+                        }
+                    }
 
-                if (isReferenceColumnFilterValue(newFilterValues[newFilterValueIndex]!)) {
-                    newFilterValues[newFilterValueIndex]!.value = _.isObject(value)
-                        ? (value as LoadResourceOption<Resource>)
-                        : null;
-                }
+                    if (isReferenceColumnFilterValue(newFilterValue)) {
+                        if (validateReferenceColumnFilterValue(value)) {
+                            newFilterValue.value = value;
+                            return newFilterValue;
+                        }
+                    }
 
-                return newFilterValues;
+                    throw new Error('Unsupported column type');
+                });
             });
         },
         [setColumnsFilterValues],

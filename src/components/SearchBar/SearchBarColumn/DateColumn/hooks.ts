@@ -1,10 +1,10 @@
 import moment from 'moment';
 import { useCallback } from 'react';
 
-import { SearchBarColumnDateTypeProps } from 'src/components/SearchBar/SearchBarColumn/types';
 import { DateColumnFilterValue } from 'src/components/SearchBar/types';
 
 import { RangePickerOnChange } from './types';
+import { SearchBarColumnDateTypeProps } from '../types';
 
 export function useDateColumn(props: SearchBarColumnDateTypeProps) {
     const { onChange, columnFilterValue } = props;

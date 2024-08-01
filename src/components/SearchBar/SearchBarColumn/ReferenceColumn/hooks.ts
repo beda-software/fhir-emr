@@ -6,8 +6,9 @@ import { ItemContext, parseFhirQueryExpression } from 'sdc-qrf';
 import { Resource } from '@beda.software/aidbox-types';
 import { isSuccess } from '@beda.software/remote-data';
 
-import { SearchBarColumnReferenceTypeProps } from 'src/components/SearchBar/SearchBarColumn/types';
 import { LoadResourceOption, loadResourceOptions } from 'src/services/questionnaire';
+
+import { SearchBarColumnReferenceTypeProps } from '../types';
 
 export function useReferenceColumn(props: SearchBarColumnReferenceTypeProps) {
     const { columnFilterValue, onChange } = props;

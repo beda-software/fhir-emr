@@ -7,26 +7,33 @@ import {
 import { DateColumn } from './DateColumn';
 import { ReferenceColumn } from './ReferenceColumn';
 import { StringColumn } from './StringColumn';
-import {
-    SearchBarColumnDateTypeProps,
-    SearchBarColumnProps,
-    SearchBarColumnReferenceTypeProps,
-    SearchBarColumnStringTypeProps,
-} from './types';
+import { SearchBarColumnProps } from './types';
 
 export function SearchBarColumn(props: SearchBarColumnProps) {
     const { columnFilterValue } = props;
 
     if (isStringColumnFilterValue(columnFilterValue)) {
-        return <StringColumn {...(props as SearchBarColumnStringTypeProps)} />;
+        const stringProps = {
+            ...props,
+            columnFilterValue,
+        };
+        return <StringColumn {...stringProps} />;
     }
 
     if (isDateColumnFilterValue(columnFilterValue)) {
-        return <DateColumn {...(props as SearchBarColumnDateTypeProps)} />;
+        const dateProps = {
+            ...props,
+            columnFilterValue,
+        };
+        return <DateColumn {...dateProps} />;
     }
 
     if (isReferenceColumnFilterValue(columnFilterValue)) {
-        return <ReferenceColumn {...(props as SearchBarColumnReferenceTypeProps)} />;
+        const referenceProps = {
+            ...props,
+            columnFilterValue,
+        };
+        return <ReferenceColumn {...referenceProps} />;
     }
 
     return null;

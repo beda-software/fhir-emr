@@ -1,6 +1,5 @@
 import {
     ColumnFilterValue,
-    DateColumnFilterValue,
     DateTypeColumnFilterValue,
     ReferenceTypeColumnFilterValue,
     StringTypeColumnFilterValue,
@@ -13,12 +12,12 @@ export type SearchBarColumnProps = {
 
 export interface SearchBarColumnStringTypeProps {
     columnFilterValue: StringTypeColumnFilterValue;
-    onChange: (value: string, key: string) => void;
+    onChange: (value: StringTypeColumnFilterValue['value'], key: string) => void;
 }
 
 export interface SearchBarColumnDateTypeProps {
     columnFilterValue: DateTypeColumnFilterValue;
-    onChange: (value: DateColumnFilterValue, key: string) => void;
+    onChange: (value: DateTypeColumnFilterValue['value'], key: string) => void;
 }
 
 export interface SearchBarColumnReferenceTypeProps {
