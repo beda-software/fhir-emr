@@ -1,13 +1,8 @@
-import {
-    isStringColumnFilterValue,
-    isDateColumnFilterValue,
-    isReferenceColumnFilterValue,
-} from 'src/components/SearchBar/types';
-
 import { DateColumn } from './DateColumn';
 import { ReferenceColumn } from './ReferenceColumn';
 import { StringColumn } from './StringColumn';
 import { SearchBarColumnProps } from './types';
+import { isStringColumnFilterValue, isDateColumnFilterValue, isReferenceColumnFilterValue } from '../types';
 
 export function SearchBarColumn(props: SearchBarColumnProps) {
     const { columnFilterValue } = props;

@@ -3,7 +3,7 @@ import {
     DateTypeColumnFilterValue,
     ReferenceTypeColumnFilterValue,
     StringTypeColumnFilterValue,
-} from 'src/components/SearchBar/types';
+} from '../types';
 
 export type SearchBarColumnProps = {
     columnFilterValue: ColumnFilterValue;

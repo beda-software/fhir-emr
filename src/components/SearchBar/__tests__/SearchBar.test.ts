@@ -1,8 +1,8 @@
 import { act, renderHook } from '@testing-library/react';
 import moment from 'moment';
 
-import { useSearchBar } from 'src/components/SearchBar/hooks';
-import { SearchBarColumnType } from 'src/components/SearchBar/types';
+import { useSearchBar } from '../hooks';
+import { SearchBarColumnType } from '../types';
 
 describe('SearchBar filters testing', () => {
     test('String one filters', async () => {
