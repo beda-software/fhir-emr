@@ -11,7 +11,7 @@ import { MenuIcon } from 'src/icons/general/Menu';
 import { AvatarImage } from 'src/images/AvatarImage';
 import { getToken, logout } from 'src/services/auth';
 import { resetInstanceToken as resetFHIRInstanceToken } from 'src/services/fhir';
-import { dynamicActivate, setCurrentLocale, getCurrentLocale, locales } from 'src/services/i18n';
+import { dynamicActivate, setCurrentLocale, getCurrentLocale, locales, LocaleCode } from 'src/services/i18n';
 import {
     sharedAuthorizedOrganization,
     sharedAuthorizedPatient,
@@ -162,12 +162,12 @@ function LocaleSwitcher(props: { onItemClick?: () => void }) {
         label: <div>{label}</div>,
         key: value,
         onClick: () => {
-            onChangeLocale(value);
+            onChangeLocale(value as LocaleCode);
             onItemClick?.();
         },
     }));
 
-    const onChangeLocale = (key: string) => {
+    const onChangeLocale = (key: LocaleCode) => {
         setCurrentLocale(key);
         dynamicActivate(key);
     };
