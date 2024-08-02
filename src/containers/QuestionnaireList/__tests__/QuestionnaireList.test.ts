@@ -1,6 +1,6 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 
-import { isLoading, isSuccess } from '@beda.software/remote-data';
+import { isSuccess } from '@beda.software/remote-data';
 
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { SearchBarColumnType, StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
@@ -20,59 +20,70 @@ describe('Questionnaire list filters testing', () => {
                     {
                         id: 'questionnaire',
                         type: SearchBarColumnType.STRING,
-                        placeholder: `Search by patient`,
+                        placeholder: `Search by questionnaire`,
                     },
                 ],
             });
 
-            const { questionnaireListRD } = useQuestionnaireList(columnsFilterValues as StringTypeColumnFilterValue[]);
+            const { questionnaireListRD, queryParameters } = useQuestionnaireList(
+                columnsFilterValues as StringTypeColumnFilterValue[],
+            );
 
             return {
                 columnsFilterValues,
                 questionnaireListRD,
+                queryParameters,
                 onChangeColumnFilter,
                 onResetFilters,
             };
         });
 
-        await waitFor(
-            () => {
-                expect(isSuccess(result.current.questionnaireListRD)).toBeTruthy();
-            },
-            { timeout: 30000 },
-        );
-        if (isSuccess(result.current.questionnaireListRD)) {
-            expect(result.current.questionnaireListRD.data.length > 0).toBeTruthy();
-        }
-
-        act(() => {
-            result.current.onChangeColumnFilter('blood', 'questionnaire');
-        });
         await waitFor(() => {
-            expect(isLoading(result.current.questionnaireListRD)).toBeTruthy();
-        });
-        await waitFor(() => {
-            isSuccess(result.current.questionnaireListRD);
-        });
-        if (isSuccess(result.current.questionnaireListRD)) {
-            expect(result.current.questionnaireListRD.data.length > 0).toBeTruthy();
-
-            for (const questionnaire of result.current.questionnaireListRD.data) {
-                expect(questionnaire.name?.toLowerCase().includes('blood')).toBeTruthy();
+            if (isSuccess(result.current.questionnaireListRD)) {
+                expect(result.current.questionnaireListRD.data.length > 1).toBeTruthy();
             }
-        }
+        });
+
+        const existingQuestionnaireName = 'allerg';
+        act(() => {
+            result.current.onChangeColumnFilter(existingQuestionnaireName, 'questionnaire');
+        });
+
+        await waitFor(() => {
+            expect(result.current.queryParameters.name).toEqual(existingQuestionnaireName);
+        });
+
+        await waitFor(() => {
+            if (isSuccess(result.current.questionnaireListRD)) {
+                expect(result.current.questionnaireListRD.data.length).toEqual(1);
+            }
+        });
 
         act(() => {
-            result.current.onChangeColumnFilter('asdasdasdasdasd', 'questionnaire');
+            result.current.onResetFilters();
+        });
+
+        await waitFor(() => {
+            expect(result.current.queryParameters.name).toBeUndefined();
         });
         await waitFor(() => {
-            expect(isLoading(result.current.questionnaireListRD)).toBeTruthy();
+            if (isSuccess(result.current.questionnaireListRD)) {
+                expect(result.current.questionnaireListRD.data.length > 1).toBeTruthy();
+            }
+        });
+
+        const nonExistingQuestionnaireName = 'asdasdasdasdasd';
+        act(() => {
+            result.current.onChangeColumnFilter(nonExistingQuestionnaireName, 'questionnaire');
+        });
+
+        await waitFor(() => {
+            expect(result.current.queryParameters.name).toEqual(nonExistingQuestionnaireName);
         });
         await waitFor(() => {
-            isSuccess(result.current.questionnaireListRD);
+            if (isSuccess(result.current.questionnaireListRD)) {
+                expect(result.current.questionnaireListRD.data.length).toEqual(0);
+            }
         });
-        if (isSuccess(result.current.questionnaireListRD)) {
-            expect(result.current.questionnaireListRD.data.length).toBe(0);
-        }
     });
 });

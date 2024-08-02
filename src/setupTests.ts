@@ -117,12 +117,15 @@ export async function createPractitioner(practitioner: Partial<Practitioner> = {
     );
 }
 
-export async function createEncounter(subject: Reference, participant: Reference, date?: moment.Moment) {
+type ParticipantWithDisplay = Reference & { display?: string };
+export async function createEncounter(subject: Reference, participant: ParticipantWithDisplay, date?: moment.Moment) {
     return ensure(
         await createFHIRResource<Encounter>({
             resourceType: 'Encounter',
             subject,
-            participant: [{ individual: participant }],
+            participant: [
+                { individual: { ...participant, ...(participant.display ? { display: participant.display } : {}) } },
+            ],
             status: 'planned',
             class: {
                 code: 'HH',
