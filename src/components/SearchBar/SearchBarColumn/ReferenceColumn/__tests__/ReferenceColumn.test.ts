@@ -1,4 +1,5 @@
-import { act, renderHook } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
+import { expect, test, describe, vi } from 'vitest';
 
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import {
@@ -7,6 +8,7 @@ import {
     SearchBarColumnType,
     SearchBarReferenceColumn,
 } from 'src/components/SearchBar/types';
+import { loginAdminUser } from 'src/setupTests';
 
 import { useReferenceColumn } from '../hooks';
 
@@ -28,7 +30,11 @@ const COLUMN_CASES: SearchBarReferenceColumn[] = [
 ];
 
 describe('ReferenceColumn component testing', () => {
-    test.each(COLUMN_CASES)('It loads options correctly', async (testColumnCase) => {
+    beforeEach(async () => {
+        await loginAdminUser();
+    });
+
+    test.each(COLUMN_CASES)('It loads options correctly for column %s', async (testColumnCase) => {
         const { result } = renderHook(() => {
             const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
                 columns: [testColumnCase],
@@ -47,16 +53,26 @@ describe('ReferenceColumn component testing', () => {
             };
         });
 
-        expect(result.current.columnsFilterValues.length).toEqual(1);
+        expect(result.current.columnsFilterValues).toHaveLength(1);
         expect(isReferenceColumnFilterValue(result.current.columnsFilterValues[0]!)).toBeTruthy();
 
-        await act(async () => {
-            result.current.debouncedLoadOptions('', (options) => {
-                expect(options.length).toBeGreaterThan(0);
+        const mockCallback = vi.fn();
 
-                for (const option of options) {
-                    expect(option.value.Reference.resourceType).toBeIn(['Patient', 'Practitioner']);
-                }
+        await act(async () => {
+            result.current.debouncedLoadOptions('', mockCallback);
+        });
+
+        await waitFor(() => {
+            expect(mockCallback).toHaveBeenCalled();
+        });
+
+        const options = mockCallback.mock.calls[0][0];
+        await waitFor(() => {
+            expect(options.length).toBeGreaterThan(0);
+        });
+        await waitFor(() => {
+            options.forEach((option: any) => {
+                expect(['Patient', 'Practitioner']).to.include(option.value.Reference.resourceType);
             });
         });
     });
