@@ -4,7 +4,7 @@ import { SearchParams } from '@beda.software/fhir-react';
 import { isFailure, isSuccess } from '@beda.software/remote-data';
 
 import { useSearchBar } from 'src/components/SearchBar/hooks';
-import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
+import { SearchBarColumnType, StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 
 import { initialSetup } from './utils';
 import { usePatientList } from '../hooks';
@@ -16,7 +16,7 @@ async function renderPatientsHooks(searchParams: SearchParams) {
             columns: [
                 {
                     id: 'patient',
-                    type: 'string',
+                    type: SearchBarColumnType.STRING,
                     placeholder: `Search by patient`,
                 },
             ],

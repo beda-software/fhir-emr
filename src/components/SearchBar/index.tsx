@@ -11,9 +11,9 @@ export function SearchBar(props: SearchBarData) {
     return (
         <S.Container>
             <Row gutter={[32, 16]}>
-                {columnsFilterValues.map((columnFilterValue, columnIndex) => (
+                {columnsFilterValues.map((columnFilterValue) => (
                     <SearchBarColumn
-                        key={`search-bar-column-${columnIndex}`}
+                        key={`search-bar-column-${columnFilterValue.column.id}`}
                         columnFilterValue={columnFilterValue}
                         onChange={onChangeColumnFilter}
                     />

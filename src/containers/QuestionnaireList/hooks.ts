@@ -24,5 +24,5 @@ export function useQuestionnaireList(filterValues: StringTypeColumnFilterValue[]
 
     const questionnaireListRD = mapSuccess(resourceResponse, (bundle) => extractBundleResources(bundle).Questionnaire);
 
-    return { pagination, questionnaireListRD, pagerManager, handleTableChange };
+    return { pagination, questionnaireListRD, pagerManager, handleTableChange, queryParameters };
 }

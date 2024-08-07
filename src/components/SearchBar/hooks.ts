@@ -1,30 +1,75 @@
+import _ from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 
-import { ColumnFilterValue, DateColumnFilterValue, SearchBarData, SearchBarProps } from './types';
+import {
+    ColumnFilterValue,
+    isDateColumn,
+    isReferenceColumn,
+    isStringColumn,
+    isStringColumnFilterValue,
+    isDateColumnFilterValue,
+    isReferenceColumnFilterValue,
+    SearchBarData,
+    SearchBarProps,
+} from './types';
+import {
+    validateStringColumnFilterValue,
+    validateDateColumnFilterValue,
+    validateReferenceColumnFilterValue,
+} from './validate';
 
 export function useSearchBar(props: SearchBarProps): SearchBarData {
     const { columns } = props;
 
-    const defaultFiltersValues = useMemo(() => {
-        return columns.map((column) => ({ column }));
+    const defaultFiltersValues = useMemo<ColumnFilterValue[]>(() => {
+        return columns.map((column) => {
+            if (isStringColumn(column)) {
+                return { column, value: undefined };
+            } else if (isDateColumn(column)) {
+                return { column, value: undefined };
+            } else if (isReferenceColumn(column)) {
+                return { column, value: null };
+            }
+
+            throw new Error('Unsupported column type');
+        });
     }, [columns]);
 
     const [columnsFilterValues, setColumnsFilterValues] = useState<ColumnFilterValue[]>(defaultFiltersValues);
 
     const onChangeColumnFilter = useCallback(
-        (value: DateColumnFilterValue | string, id: string) => {
-            setColumnsFilterValues((prevFilterValue) => {
-                const newFilterValue = [...prevFilterValue];
+        (value: ColumnFilterValue['value'], id: string) => {
+            setColumnsFilterValues((prevFilterValues) => {
+                return prevFilterValues.map((filterValue) => {
+                    if (filterValue.column.id !== id) {
+                        return filterValue;
+                    }
 
-                const editedFilterValueIndex = newFilterValue.findIndex((v) => v.column.id === id);
+                    const newFilterValue = { ...filterValue };
 
-                if (value === '') {
-                    newFilterValue[editedFilterValueIndex]!.value = undefined;
-                } else {
-                    newFilterValue[editedFilterValueIndex]!.value = value;
-                }
+                    if (isStringColumnFilterValue(newFilterValue)) {
+                        if (validateStringColumnFilterValue(value)) {
+                            newFilterValue.value = value;
+                            return newFilterValue;
+                        }
+                    }
 
-                return newFilterValue;
+                    if (isDateColumnFilterValue(newFilterValue)) {
+                        if (validateDateColumnFilterValue(value)) {
+                            newFilterValue.value = value;
+                            return newFilterValue;
+                        }
+                    }
+
+                    if (isReferenceColumnFilterValue(newFilterValue)) {
+                        if (validateReferenceColumnFilterValue(value)) {
+                            newFilterValue.value = value;
+                            return newFilterValue;
+                        }
+                    }
+
+                    throw new Error('Unsupported column type');
+                });
             });
         },
         [setColumnsFilterValues],

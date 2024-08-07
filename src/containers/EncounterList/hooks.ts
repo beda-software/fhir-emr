@@ -11,11 +11,16 @@ import {
 import { RemoteData, mapSuccess } from '@beda.software/remote-data';
 
 import { EncounterData } from 'src/components/EncountersTable/types';
+import {
+    ColumnFilterValue,
+    isStringColumnFilterValue,
+    isDateColumnFilterValue,
+    isReferenceColumnFilterValue,
+    SearchBarColumn,
+} from 'src/components/SearchBar/types';
 import { usePagerExtended } from 'src/hooks/pager';
 import { formatHumanDateTime } from 'src/utils/date';
 import { useDebounce } from 'src/utils/debounce';
-
-import { EncounterListFilterValues } from './types';
 
 interface EncountersListData {
     encounterDataListRD: RemoteData<EncounterData[], any>;
@@ -29,18 +34,41 @@ interface EncountersListData {
 }
 
 export function useEncounterList(
-    filterValues: EncounterListFilterValues | undefined,
+    filterValues: ColumnFilterValue[] | undefined,
     searchParams: SearchParams = {},
 ): EncountersListData {
     const debouncedFilterValues = useDebounce(filterValues, 300);
 
-    const patientFilterValue = filterValues?.[0]?.value ?? undefined;
-    const practitionerFilterValue = filterValues?.[1]?.value ?? undefined;
-    const dateFilterValue = filterValues?.[2]?.value ?? undefined;
+    const getFilterValue = (id: SearchBarColumn['id']) => {
+        if (!filterValues) {
+            return undefined;
+        }
 
-    const dateParameter = dateFilterValue
-        ? [`ge${formatFHIRDateTime(dateFilterValue[0])}`, `le${formatFHIRDateTime(dateFilterValue[1])}`]
-        : undefined;
+        const filterValue = filterValues.find((filterValue) => filterValue.column.id === id);
+        if (!filterValue) {
+            throw new Error('Filter value not found');
+        }
+
+        if (isStringColumnFilterValue(filterValue)) {
+            return filterValue.value;
+        }
+
+        if (isDateColumnFilterValue(filterValue)) {
+            return filterValue.value
+                ? [`ge${formatFHIRDateTime(filterValue.value[0])}`, `le${formatFHIRDateTime(filterValue.value[1])}`]
+                : undefined;
+        }
+
+        if (isReferenceColumnFilterValue(filterValue)) {
+            return filterValue.value?.value.Reference.id;
+        }
+
+        throw new Error('Unsupported column type');
+    };
+
+    const patientFilterValue = getFilterValue('patient');
+    const practitionerFilterValue = getFilterValue('practitioner');
+    const dateFilterValue = getFilterValue('date');
 
     const queryParameters = {
         ...searchParams,
@@ -51,14 +79,14 @@ export function useEncounterList(
             'PractitionerRole:practitioner:Practitioner',
         ],
         'participant-display': practitionerFilterValue,
-        'subject:Patient.name': patientFilterValue,
-        date: dateParameter,
+        'subject:Patient.id': patientFilterValue,
+        date: dateFilterValue,
         _sort: '-_date',
     };
 
     const { resourceResponse, pagerManager, handleTableChange, pagination } = usePagerExtended<
         Encounter | PractitionerRole | Practitioner | Patient,
-        EncounterListFilterValues
+        ColumnFilterValue[]
     >('Encounter', queryParameters, debouncedFilterValues);
 
     const encounterData = useMemo(() => {

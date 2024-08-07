@@ -3,7 +3,7 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { isLoading, isSuccess } from '@beda.software/remote-data';
 
 import { useSearchBar } from 'src/components/SearchBar/hooks';
-import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
+import { SearchBarColumnType, StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 import { createPractitionerRole, loginAdminUser } from 'src/setupTests';
 
 import { usePractitionersList } from '../hooks';
@@ -31,7 +31,7 @@ describe('Practitioner list filters testing', () => {
                 columns: [
                     {
                         id: 'practitioner',
-                        type: 'string',
+                        type: SearchBarColumnType.STRING,
                         placeholder: `Search by practitioner`,
                     },
                 ],

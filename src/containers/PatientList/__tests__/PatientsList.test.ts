@@ -3,7 +3,7 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { isLoading, isSuccess } from '@beda.software/remote-data';
 
 import { useSearchBar } from 'src/components/SearchBar/hooks';
-import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
+import { SearchBarColumnType, StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 import { createPatient, loginAdminUser } from 'src/setupTests';
 
 import { usePatientList } from '../hooks';
@@ -44,7 +44,7 @@ describe('Patient list filters testing', () => {
                 columns: [
                     {
                         id: 'patient',
-                        type: 'string',
+                        type: SearchBarColumnType.STRING,
                         placeholder: `Search by patient`,
                     },
                 ],

@@ -11,7 +11,7 @@ import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
-import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
+import { SearchBarColumnType, StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 import { Title } from 'src/components/Typography';
@@ -25,7 +25,7 @@ export function PractitionerList() {
         columns: [
             {
                 id: 'practitioner',
-                type: 'string',
+                type: SearchBarColumnType.STRING,
                 placeholder: t`Search by name`,
             },
         ],
