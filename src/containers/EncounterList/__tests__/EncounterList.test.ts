@@ -54,7 +54,7 @@ async function expectIsLoadingAndIsSuccess(result: RenderHookDataResult) {
 }
 
 describe('Encounter list filters testing', () => {
-    beforeAll(async () => {
+    beforeEach(async () => {
         await loginAdminUser();
     });
 
@@ -196,8 +196,10 @@ describe('Encounter list filters testing', () => {
         act(() => {
             result.current.onChangeColumnFilter(null, 'patient');
         });
+        await expectIsLoadingAndIsSuccess(result);
+
         act(() => {
-            result.current.onChangeColumnFilter('Petrov', 'practitioner');
+            result.current.onChangeColumnFilter('victo', 'practitioner');
         });
 
         await expectIsLoadingAndIsSuccess(result);
