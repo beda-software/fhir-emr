@@ -7,7 +7,11 @@ export type ValueSetOption = {
     value: { Coding: ValueSetExpansionContains };
 };
 
-export async function expandValueSet(answerValueSet: string, searchText: string) {
+export async function expandValueSet(answerValueSet: string | undefined, searchText: string) {
+    if (!answerValueSet) {
+        return [];
+    }
+
     const valueSetId = answerValueSet.split('/').slice(-1);
 
     const response: RemoteDataResult<ValueSetOption[]> = mapSuccess(
@@ -32,5 +36,6 @@ export async function expandValueSet(answerValueSet: string, searchText: string)
     if (isSuccess(response)) {
         return response.data;
     }
+
     return [];
 }

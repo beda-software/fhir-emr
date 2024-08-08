@@ -16,7 +16,7 @@ export function useChoiceColumn(props: SearchBarColumnChoiceTypeProps) {
 
     const loadOptions = useCallback(
         async (searchText: string) => {
-            return expand(valueSet!, searchText);
+            return expand(valueSet, searchText);
         },
         [valueSet, expand],
     );

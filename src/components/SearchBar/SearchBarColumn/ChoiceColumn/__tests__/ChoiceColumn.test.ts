@@ -18,7 +18,7 @@ const VALUE_SET_COLUMN_CASE: SearchBarChoiceColumn = {
     id: 'status_valueset',
     type: SearchBarColumnType.CHOICE,
     placeholder: 'Search by vastatus',
-    valueSet: 'encounter-status',
+    valueSet: 'ValueSet/encounter-status',
 };
 
 const OPTIONS_COLUMN_CASE: SearchBarChoiceColumn = {
