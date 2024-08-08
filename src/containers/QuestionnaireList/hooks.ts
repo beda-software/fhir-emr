@@ -11,7 +11,7 @@ import { useDebounce } from 'src/utils/debounce';
 export function useQuestionnaireList(filterValues: ColumnFilterValue[]) {
     const debouncedFilterValues = useDebounce(filterValues, 300);
 
-    const questionnaireFilterValue = getSearchBarFilterValue(filterValues, 'service');
+    const questionnaireFilterValue = getSearchBarFilterValue(filterValues, 'questionnaire');
 
     const queryParameters = {
         _sort: '-_lastUpdated',
