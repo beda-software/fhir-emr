@@ -4,7 +4,6 @@ import { MultiValue, SingleValue } from 'react-select';
 
 import { ExpandProvider } from 'src/components/BaseQuestionnaireResponseForm/widgets/choice/context';
 import { ValueSetOption } from 'src/components/BaseQuestionnaireResponseForm/widgets/choice/service';
-import { getDisplay } from 'src/utils/questionnaire';
 
 import { ChoiceColumnOption } from './types';
 import { ChoiceTypeColumnFilterValue } from '../../types';
@@ -29,7 +28,7 @@ export function useChoiceColumn(props: SearchBarColumnChoiceTypeProps) {
     const onSelect = useCallback(
         (newValue: MultiValue<ChoiceColumnOption> | SingleValue<ChoiceColumnOption>) => {
             if (!newValue) {
-                return onChange([], id);
+                return onChange(null, id);
             }
 
             if (repeats) {
@@ -43,13 +42,18 @@ export function useChoiceColumn(props: SearchBarColumnChoiceTypeProps) {
         [id, onChange, repeats],
     );
 
-    const getLabel = (option: ValueSetOption) => {
-        return option ? (getDisplay(option.value) as string) : '';
+    const isOptionSelected = (option: ChoiceColumnOption) => {
+        return !!columnFilterValue.value && columnFilterValue.value?.findIndex((v) => _.isEqual(v, option)) !== -1;
+    };
+
+    const getOptionLabel = (option: ValueSetOption) => {
+        return option?.value?.Coding?.display || '';
     };
 
     return {
         onSelect,
-        getLabel,
+        isOptionSelected,
+        getOptionLabel,
         debouncedLoadOptions,
     };
 }

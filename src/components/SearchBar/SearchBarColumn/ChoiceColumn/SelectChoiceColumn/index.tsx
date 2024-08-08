@@ -1,28 +1,23 @@
-import _ from 'lodash';
-
+import { ValueSetOption } from 'src/components/BaseQuestionnaireResponseForm/widgets/choice/service';
 import { Select } from 'src/components/Select';
 
 import { SearchBarColumnChoiceTypeProps } from '../../types';
 import { useChoiceColumn } from '../hooks';
-import { ChoiceColumnOption } from '../types';
 
 export function SelectChoiceColumn(props: SearchBarColumnChoiceTypeProps) {
     const { columnFilterValue } = props;
     const { options, placeholder, repeats } = columnFilterValue.column;
 
-    const { onSelect } = useChoiceColumn(props);
+    const { onSelect, getOptionLabel, isOptionSelected } = useChoiceColumn(props);
 
     return (
-        <Select<ChoiceColumnOption>
+        <Select<ValueSetOption>
             value={columnFilterValue.value}
             options={options}
             onChange={onSelect}
-            isOptionSelected={(option) =>
-                !!columnFilterValue.value &&
-                columnFilterValue.value?.findIndex((v) => _.isEqual(v?.value, option)) !== -1
-            }
+            isOptionSelected={isOptionSelected}
             isMulti={repeats}
-            getOptionLabel={(o) => String(o)}
+            getOptionLabel={getOptionLabel}
             classNamePrefix="react-select"
             placeholder={placeholder}
         />

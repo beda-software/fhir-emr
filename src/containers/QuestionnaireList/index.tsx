@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { t, Trans } from '@lingui/macro';
+import { Trans } from '@lingui/macro';
 import { Button, Col, Empty, Row } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { Questionnaire } from 'fhir/r4b';
@@ -11,12 +11,12 @@ import { isLoading, isSuccess } from '@beda.software/remote-data';
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
-import { SearchBarColumnType, StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 import { Title } from 'src/components/Typography';
 
 import { useQuestionnaireList } from './hooks';
+import { getQuestionnaireListSearchBarColumns } from './searchBarUtils';
 
 const columns: ColumnsType<Questionnaire> = [
     {
@@ -59,18 +59,10 @@ const columns: ColumnsType<Questionnaire> = [
 
 export function QuestionnaireList() {
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
-        columns: [
-            {
-                id: 'questionnaire',
-                type: SearchBarColumnType.STRING,
-                placeholder: t`Find questionnaire`,
-            },
-        ],
+        columns: getQuestionnaireListSearchBarColumns(),
     });
 
-    const { pagination, questionnaireListRD, handleTableChange } = useQuestionnaireList(
-        columnsFilterValues as StringTypeColumnFilterValue[],
-    );
+    const { pagination, questionnaireListRD, handleTableChange } = useQuestionnaireList(columnsFilterValues);
 
     return (
         <>

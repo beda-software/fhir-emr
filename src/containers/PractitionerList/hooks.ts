@@ -3,7 +3,8 @@ import { Practitioner, PractitionerRole } from 'fhir/r4b';
 import { WithId, extractBundleResources, parseFHIRReference, useService } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess, success } from '@beda.software/remote-data';
 
-import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
+import { ColumnFilterValue } from 'src/components/SearchBar/types';
+import { getSearchBarFilterValue } from 'src/components/SearchBar/utils';
 import { usePagerExtended } from 'src/hooks/pager';
 import { getFHIRResources } from 'src/services/fhir';
 import { useDebounce } from 'src/utils/debounce';
@@ -18,19 +19,19 @@ export interface PractitionerListRowData {
     practitionerRolesResource: Array<any>;
 }
 
-export function usePractitionersList(filterValues: StringTypeColumnFilterValue[]) {
+export function usePractitionersList(filterValues: ColumnFilterValue[] | undefined) {
     const debouncedFilterValues = useDebounce(filterValues, 300);
 
-    const practitionerFilterValue = debouncedFilterValues[0];
+    const practitionerFilterValue = getSearchBarFilterValue(filterValues, 'practitioner');
 
     const queryParameters = {
         _sort: '-_lastUpdated',
-        ...(practitionerFilterValue ? { name: practitionerFilterValue.value } : {}),
+        name: practitionerFilterValue,
     };
 
     const { resourceResponse, pagerManager, handleTableChange, pagination } = usePagerExtended<
         WithId<Practitioner>,
-        StringTypeColumnFilterValue[]
+        ColumnFilterValue[]
     >('Practitioner', queryParameters, debouncedFilterValues);
 
     const [practitionerDataListRD] = useService<PractitionerListRowData[]>(async () => {
@@ -43,7 +44,7 @@ export function usePractitionersList(filterValues: StringTypeColumnFilterValue[]
         const filteredResourcesAreFound = !practitionerFilterValue || practitioners.length > 0;
 
         const response = filteredResourcesAreFound
-            ? await getFHIRResources<PractitionerRole | Practitioner>('PractitionerRole', {
+            ? await getFHIRResources<PractitionerRole>('PractitionerRole', {
                   practitioner: practitioners.map((practitioner) => practitioner.id).join(','),
               })
             : success(undefined);

@@ -49,7 +49,15 @@ export function validateReferenceColumnFilterValue(
 export function validateChoiceColumnFilterValue(
     value?: ColumnFilterValue['value'],
 ): value is ChoiceTypeColumnFilterValue['value'] {
-    if (_.isUndefined(value) || _.isNull(value) || (_.isObject(value) && 'value' in value && 'Coding' in value.value)) {
+    if (
+        _.isUndefined(value) ||
+        _.isNull(value) ||
+        (_.isArray(value) &&
+            value.length === 1 &&
+            _.isObject(value[0]) &&
+            'value' in value[0] &&
+            'Coding' in value[0].value)
+    ) {
         return true;
     }
 

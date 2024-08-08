@@ -1,5 +1,6 @@
-import _ from 'lodash';
-import AsyncSelect from 'react-select/async';
+import { Col } from 'antd';
+
+import { AsyncSelect } from 'src/components/Select';
 
 import { SearchBarColumnChoiceTypeProps } from '../../types';
 import { useChoiceColumn } from '../hooks';
@@ -8,21 +9,19 @@ export function ValueSetColumn(props: SearchBarColumnChoiceTypeProps) {
     const { columnFilterValue } = props;
     const { placeholder, repeats } = columnFilterValue.column;
 
-    const { onSelect, getLabel, debouncedLoadOptions } = useChoiceColumn(props);
+    const { onSelect, isOptionSelected, getOptionLabel, debouncedLoadOptions } = useChoiceColumn(props);
 
     return (
-        <AsyncSelect
-            loadOptions={debouncedLoadOptions}
-            defaultOptions
-            value={columnFilterValue.value}
-            isMulti={repeats}
-            onChange={onSelect}
-            isOptionSelected={(option) =>
-                !!columnFilterValue.value &&
-                columnFilterValue.value?.findIndex((v) => _.isEqual(v?.value, option.value)) !== -1
-            }
-            getOptionLabel={getLabel}
-            placeholder={placeholder}
-        />
+        <Col>
+            <AsyncSelect
+                loadOptions={debouncedLoadOptions}
+                value={columnFilterValue.value}
+                isMulti={repeats}
+                onChange={onSelect}
+                isOptionSelected={isOptionSelected}
+                getOptionLabel={getOptionLabel}
+                placeholder={placeholder}
+            />
+        </Col>
     );
 }
