@@ -1,12 +1,12 @@
 import { AudioOutlined, CheckOutlined, PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
-import { Communication, Encounter, Patient } from 'fhir/r4b';
+import { Encounter } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import config from '@beda.software/emr-config';
-import { RenderRemoteData, formatError, formatFHIRDateTime, useService } from '@beda.software/fhir-react';
+import { RenderRemoteData } from '@beda.software/fhir-react';
 import { isLoading, isSuccess } from '@beda.software/remote-data';
 
 import { ModalTrigger } from 'src/components/ModalTrigger';
@@ -17,60 +17,15 @@ import { DocumentsList } from 'src/containers/DocumentsList';
 import { ChooseDocumentToCreateModal } from 'src/containers/DocumentsList/ChooseDocumentToCreateModal';
 import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
-import { getFHIRResource, getFHIRResources, saveFHIRResource } from 'src/services/fhir';
 
 import { AIScribe, useAIScribe } from './AIScribe';
 import { S } from './EncounterDetails.styles';
+import { EncounterDetailsProps, useEncounterDetails } from './hooks';
 
-interface Props {
-    patient: Patient;
-}
-
-function useEncounterDetails(props: Props) {
-    const { patient } = props;
-    const params = useParams<{ encounterId: string }>();
-    const { encounterId } = params;
-
-    const [response, manager] = useService(async () =>
-        getFHIRResource<Encounter>({
-            reference: `Encounter/${encounterId}`,
-        }),
-    );
-
-    const completeEncounter = useCallback(async () => {
-        if (isSuccess(response)) {
-            const encounter = response.data;
-            const saveResponse = await saveFHIRResource<Encounter>({
-                ...encounter,
-                status: 'finished',
-                period: {
-                    start: encounter.period?.start,
-                    end: formatFHIRDateTime(new Date()),
-                },
-            });
-
-            if (isSuccess(saveResponse)) {
-                manager.set(saveResponse.data);
-            } else {
-                notification.error({ message: formatError(saveResponse.error) });
-            }
-        }
-    }, [manager, response]);
-
-    const [communicationResponse] = useService(async () =>
-        getFHIRResources<Communication>('Communication', {
-            encounter: encounterId,
-            patient: patient.id,
-        }),
-    );
-
-    return { response, completeEncounter, manager, communicationResponse };
-}
-
-export const EncounterDetails = (props: Props) => {
+export const EncounterDetails = (props: EncounterDetailsProps) => {
     const { patient } = props;
     const [modalOpened, setModalOpened] = useState(false);
-    const { response, completeEncounter, manager, communicationResponse } = useEncounterDetails(props);
+    const { encounterInfoRD, completeEncounter, manager, communicationResponse } = useEncounterDetails(props);
     const [documentListKey, setDocumentListKey] = useState(0);
     const reload = useCallback(() => setDocumentListKey((k) => k + 1), [setDocumentListKey]);
 
@@ -89,9 +44,13 @@ export const EncounterDetails = (props: Props) => {
             <S.Title level={3}>
                 <Trans>Consultation</Trans>
             </S.Title>
-            <RenderRemoteData remoteData={response} renderLoading={Spinner}>
-                {(encounter) => {
-                    const isEncounterCompleted = encounter.status === 'finished';
+            <RenderRemoteData remoteData={encounterInfoRD} renderLoading={Spinner}>
+                {(encounterData) => {
+                    const encounter = encounterData.encounter;
+                    if (!encounter) {
+                        return <></>;
+                    }
+                    const isEncounterCompleted = encounterData.status === 'finished';
 
                     return (
                         <>
@@ -104,7 +63,10 @@ export const EncounterDetails = (props: Props) => {
                                     </Button>
                                 ) : null}
                                 {!isEncounterCompleted && !config.aiAssistantServiceUrl ? (
-                                    <Link to={`/encounters/${encounter.id}/video`} state={{ encounterData: encounter }}>
+                                    <Link
+                                        to={`/encounters/${encounter.id}/video`}
+                                        state={{ encounterData: encounterData }}
+                                    >
                                         <Button type="primary">
                                             <span>
                                                 <Trans>Start video call</Trans>

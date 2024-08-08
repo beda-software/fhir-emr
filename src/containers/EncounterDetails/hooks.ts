@@ -1,13 +1,24 @@
-import { Encounter, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
-import { useNavigate } from 'react-router-dom';
+import { notification } from 'antd';
+import { Communication, Encounter, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
+import { useCallback } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import { extractBundleResources, useService } from '@beda.software/fhir-react';
-import { mapSuccess } from '@beda.software/remote-data';
+import { extractBundleResources, formatError, formatFHIRDateTime, useService } from '@beda.software/fhir-react';
+import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 
-import { getFHIRResources } from 'src/services/fhir';
+import { getFHIRResources, saveFHIRResource } from 'src/services/fhir';
+import { formatHumanDateTime } from 'src/utils';
 
-export function useEncounterDetails(encounterId: string) {
-    const [encounterInfoRD] = useService(async () => {
+export interface EncounterDetailsProps {
+    patient: Patient;
+}
+
+export function useEncounterDetails(props: EncounterDetailsProps) {
+    const { patient } = props;
+    const params = useParams<{ encounterId: string }>();
+    const { encounterId } = params;
+
+    const [encounterInfoRD, manager] = useService(async () => {
         const response = await getFHIRResources<Encounter | PractitionerRole | Practitioner | Patient>('Encounter', {
             _id: encounterId,
             _include: [
@@ -21,11 +32,51 @@ export function useEncounterDetails(encounterId: string) {
             const encounter = sourceMap.Encounter[0];
             const patient = sourceMap.Patient[0];
             const practitioner = sourceMap.Practitioner[0];
-            const practitionerRole = sourceMap.PractitionerRole[0];
-            return { encounter, practitioner, practitionerRole, patient };
+
+            return {
+                id: encounter?.id,
+                patient,
+                practitioner: practitioner,
+                status: encounter?.status,
+                period: encounter?.period,
+                humanReadableDate: encounter?.period?.start && formatHumanDateTime(encounter?.period?.start),
+                encounter: encounter,
+            };
         });
     });
-    return encounterInfoRD;
+
+    const completeEncounter = useCallback(async () => {
+        if (isSuccess(encounterInfoRD)) {
+            const encounter = encounterInfoRD.data.encounter as Encounter;
+
+            const saveResponse = await saveFHIRResource<Encounter>({
+                ...encounter,
+                status: 'finished',
+                period: {
+                    start: encounter.period?.start,
+                    end: formatFHIRDateTime(new Date()),
+                },
+            });
+
+            if (isSuccess(saveResponse)) {
+                manager.set({
+                    ...encounterInfoRD.data,
+                    encounter: saveResponse.data,
+                });
+            } else {
+                notification.error({ message: formatError(saveResponse.error) });
+            }
+        }
+    }, [manager, encounterInfoRD]);
+
+    const [communicationResponse] = useService(async () =>
+        getFHIRResources<Communication>('Communication', {
+            encounter: encounterId,
+            patient: patient.id,
+        }),
+    );
+
+    return { encounterInfoRD, completeEncounter, manager, communicationResponse };
 }
 
 export function useNavigateToEncounter() {
