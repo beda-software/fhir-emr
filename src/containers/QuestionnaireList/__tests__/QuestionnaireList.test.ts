@@ -1,6 +1,6 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 
-import { isSuccess } from '@beda.software/remote-data';
+import { isLoading, isSuccess } from '@beda.software/remote-data';
 
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
@@ -74,6 +74,9 @@ describe('Questionnaire list filters testing', () => {
 
         await waitFor(() => {
             expect(result.current.queryParameters.name).toEqual(nonExistingQuestionnaireName);
+        });
+        await waitFor(() => {
+            expect(isLoading(result.current.questionnaireListRD)).toBeTruthy();
         });
         await waitFor(() => {
             if (isSuccess(result.current.questionnaireListRD)) {
