@@ -27,8 +27,8 @@ export async function expandValueSet(answerValueSet: string | undefined, searchT
                 ? expandedValueSet.expansion!.contains
                 : [];
 
-            return expansionEntries.map((entry) => ({
-                value: { Coding: entry },
+            return expansionEntries.map(({ code, system, display }) => ({
+                value: { Coding: { code, system, display } },
             }));
         },
     );
