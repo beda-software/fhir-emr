@@ -50,7 +50,7 @@ export const EncounterDetails = (props: EncounterDetailsProps) => {
                     if (!encounter) {
                         return <></>;
                     }
-                    const isEncounterCompleted = encounterData.status === 'finished';
+                    const isEncounterCompleted = encounter.status === 'finished';
 
                     return (
                         <>
@@ -99,7 +99,7 @@ export const EncounterDetails = (props: EncounterDetailsProps) => {
                                         <Button
                                             icon={<CheckOutlined />}
                                             type="primary"
-                                            onClick={() => completeEncounter()}
+                                            onClick={() => completeEncounter(encounter)}
                                         >
                                             <span>
                                                 <Trans>Encounter completed</Trans>

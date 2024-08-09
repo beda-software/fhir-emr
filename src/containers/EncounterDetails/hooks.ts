@@ -15,8 +15,7 @@ export interface EncounterDetailsProps {
 
 export function useEncounterDetails(props: EncounterDetailsProps) {
     const { patient } = props;
-    const params = useParams<{ encounterId: string }>();
-    const { encounterId } = params;
+    const { encounterId } = useParams<{ encounterId: string }>();
 
     const [encounterInfoRD, manager] = useService(async () => {
         const response = await getFHIRResources<Encounter | PractitionerRole | Practitioner | Patient>('Encounter', {
@@ -37,18 +36,14 @@ export function useEncounterDetails(props: EncounterDetailsProps) {
                 id: encounter?.id,
                 patient,
                 practitioner: practitioner,
-                status: encounter?.status,
-                period: encounter?.period,
                 humanReadableDate: encounter?.period?.start && formatHumanDateTime(encounter?.period?.start),
                 encounter: encounter,
             };
         });
     });
 
-    const completeEncounter = useCallback(async () => {
-        if (isSuccess(encounterInfoRD)) {
-            const encounter = encounterInfoRD.data.encounter as Encounter;
-
+    const completeEncounter = useCallback(
+        async (encounter: Encounter) => {
             const saveResponse = await saveFHIRResource<Encounter>({
                 ...encounter,
                 status: 'finished',
@@ -59,15 +54,16 @@ export function useEncounterDetails(props: EncounterDetailsProps) {
             });
 
             if (isSuccess(saveResponse)) {
-                manager.set({
-                    ...encounterInfoRD.data,
+                manager.set((currentData) => ({
+                    ...currentData,
                     encounter: saveResponse.data,
-                });
+                }));
             } else {
                 notification.error({ message: formatError(saveResponse.error) });
             }
-        }
-    }, [manager, encounterInfoRD]);
+        },
+        [manager],
+    );
 
     const [communicationResponse] = useService(async () =>
         getFHIRResources<Communication>('Communication', {
