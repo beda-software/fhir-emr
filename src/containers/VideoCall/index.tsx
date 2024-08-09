@@ -57,7 +57,7 @@ export function VideoCall() {
                             iframeRef.style.height = '500px';
                         }}
                         onReadyToClose={() => {
-                            navigate(`/encounters/`);
+                            navigate(`/patients/${encounter.patient?.id}/encounters/${encounter.id}`);
                         }}
                     />
                 </S.Content>
