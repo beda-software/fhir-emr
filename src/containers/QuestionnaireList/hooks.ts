@@ -3,23 +3,24 @@ import { Questionnaire } from 'fhir/r4b';
 import { extractBundleResources } from '@beda.software/fhir-react';
 import { mapSuccess } from '@beda.software/remote-data';
 
-import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
+import { ColumnFilterValue } from 'src/components/SearchBar/types';
+import { getSearchBarFilterValue } from 'src/components/SearchBar/utils';
 import { usePagerExtended } from 'src/hooks/pager';
 import { useDebounce } from 'src/utils/debounce';
 
-export function useQuestionnaireList(filterValues: StringTypeColumnFilterValue[]) {
+export function useQuestionnaireList(filterValues: ColumnFilterValue[]) {
     const debouncedFilterValues = useDebounce(filterValues, 300);
 
-    const questionnaireFilterValue = debouncedFilterValues[0];
+    const questionnaireFilterValue = getSearchBarFilterValue(filterValues, 'questionnaire');
 
     const queryParameters = {
         _sort: '-_lastUpdated',
-        ...(questionnaireFilterValue ? { name: questionnaireFilterValue.value } : {}),
+        name: questionnaireFilterValue,
     };
 
     const { resourceResponse, pagerManager, handleTableChange, pagination } = usePagerExtended<
         Questionnaire,
-        StringTypeColumnFilterValue[]
+        ColumnFilterValue[]
     >('Questionnaire', queryParameters, debouncedFilterValues);
 
     const questionnaireListRD = mapSuccess(resourceResponse, (bundle) => extractBundleResources(bundle).Questionnaire);

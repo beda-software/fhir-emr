@@ -11,24 +11,19 @@ import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
-import { SearchBarColumnType, StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
+import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 import { Title } from 'src/components/Typography';
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 
 import { usePractitionersList } from './hooks';
+import { getPractitionerListSearchBarColumns } from './searchBarUtils';
 
 export function PractitionerList() {
     const navigate = useNavigate();
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
-        columns: [
-            {
-                id: 'practitioner',
-                type: SearchBarColumnType.STRING,
-                placeholder: t`Search by name`,
-            },
-        ],
+        columns: getPractitionerListSearchBarColumns(),
     });
 
     const { practitionerDataListRD, practitionerListReload, pagination, handleTableChange } = usePractitionersList(

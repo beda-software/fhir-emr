@@ -20,7 +20,7 @@ import {
 import { formatFHIRDateTime } from 'aidbox-react/lib/utils/date';
 import { withRootAccess, LoginService, getToken } from 'aidbox-react/lib/utils/tests';
 
-import { User } from '@beda.software/aidbox-types';
+import { User, ValueSet } from '@beda.software/aidbox-types';
 import { ensure, getReference } from '@beda.software/fhir-react';
 
 import { restoreUserSession } from 'src/containers/App/utils.ts';
@@ -134,6 +134,14 @@ export async function createEncounter(subject: Reference, participant: Participa
             ...(date ? { period: { start: formatFHIRDateTime(date) } } : {}),
         }),
     );
+}
+
+export async function createValueSet(valueSetData: Partial<ValueSet>) {
+    await createFHIRResource<ValueSet>({
+        resourceType: 'ValueSet',
+        status: 'active',
+        ...valueSetData,
+    });
 }
 
 export async function ensureSave<R extends Resource>(resource: R): Promise<R> {

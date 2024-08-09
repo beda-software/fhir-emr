@@ -2,22 +2,12 @@ import { TablePaginationConfig } from 'antd';
 import { Encounter, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
 import { useMemo } from 'react';
 
-import {
-    SearchParams,
-    extractBundleResources,
-    formatFHIRDateTime,
-    parseFHIRReference,
-} from '@beda.software/fhir-react';
+import { SearchParams, extractBundleResources, parseFHIRReference } from '@beda.software/fhir-react';
 import { RemoteData, mapSuccess } from '@beda.software/remote-data';
 
 import { EncounterData } from 'src/components/EncountersTable/types';
-import {
-    ColumnFilterValue,
-    isStringColumnFilterValue,
-    isDateColumnFilterValue,
-    isReferenceColumnFilterValue,
-    SearchBarColumn,
-} from 'src/components/SearchBar/types';
+import { ColumnFilterValue } from 'src/components/SearchBar/types';
+import { getSearchBarFilterValue } from 'src/components/SearchBar/utils';
 import { usePagerExtended } from 'src/hooks/pager';
 import { formatHumanDateTime } from 'src/utils/date';
 import { useDebounce } from 'src/utils/debounce';
@@ -39,36 +29,9 @@ export function useEncounterList(
 ): EncountersListData {
     const debouncedFilterValues = useDebounce(filterValues, 300);
 
-    const getFilterValue = (id: SearchBarColumn['id']) => {
-        if (!filterValues) {
-            return undefined;
-        }
-
-        const filterValue = filterValues.find((filterValue) => filterValue.column.id === id);
-        if (!filterValue) {
-            throw new Error('Filter value not found');
-        }
-
-        if (isStringColumnFilterValue(filterValue)) {
-            return filterValue.value;
-        }
-
-        if (isDateColumnFilterValue(filterValue)) {
-            return filterValue.value
-                ? [`ge${formatFHIRDateTime(filterValue.value[0])}`, `le${formatFHIRDateTime(filterValue.value[1])}`]
-                : undefined;
-        }
-
-        if (isReferenceColumnFilterValue(filterValue)) {
-            return filterValue.value?.value.Reference.id;
-        }
-
-        throw new Error('Unsupported column type');
-    };
-
-    const patientFilterValue = getFilterValue('patient');
-    const practitionerFilterValue = getFilterValue('practitioner');
-    const dateFilterValue = getFilterValue('date');
+    const patientFilterValue = getSearchBarFilterValue(filterValues, 'patient');
+    const practitionerFilterValue = getSearchBarFilterValue(filterValues, 'practitioner');
+    const dateFilterValue = getSearchBarFilterValue(filterValues, 'date');
 
     const queryParameters = {
         ...searchParams,

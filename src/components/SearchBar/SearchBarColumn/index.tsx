@@ -1,8 +1,14 @@
+import { ChoiceColumn } from './ChoiceColumn';
 import { DateColumn } from './DateColumn';
 import { ReferenceColumn } from './ReferenceColumn';
 import { StringColumn } from './StringColumn';
 import { SearchBarColumnProps } from './types';
-import { isStringColumnFilterValue, isDateColumnFilterValue, isReferenceColumnFilterValue } from '../types';
+import {
+    isStringColumnFilterValue,
+    isDateColumnFilterValue,
+    isReferenceColumnFilterValue,
+    isChoiceColumnFilterValue,
+} from '../types';
 
 export function SearchBarColumn(props: SearchBarColumnProps) {
     const { columnFilterValue } = props;
@@ -29,6 +35,14 @@ export function SearchBarColumn(props: SearchBarColumnProps) {
             columnFilterValue,
         };
         return <ReferenceColumn {...referenceProps} />;
+    }
+
+    if (isChoiceColumnFilterValue(columnFilterValue)) {
+        const choiceProps = {
+            ...props,
+            columnFilterValue,
+        };
+        return <ChoiceColumn {...choiceProps} />;
     }
 
     return null;

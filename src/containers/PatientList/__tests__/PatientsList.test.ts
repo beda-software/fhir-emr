@@ -3,10 +3,11 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { isLoading, isSuccess } from '@beda.software/remote-data';
 
 import { useSearchBar } from 'src/components/SearchBar/hooks';
-import { SearchBarColumnType, StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
+import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 import { createPatient, loginAdminUser } from 'src/setupTests';
 
 import { usePatientList } from '../hooks';
+import { getPatientListSearchBarColumns } from '../searchBarUtils';
 
 const PATIENTS_ADDITION_DATA = [
     {
@@ -41,13 +42,7 @@ describe('Patient list filters testing', () => {
 
         const { result } = renderHook(() => {
             const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
-                columns: [
-                    {
-                        id: 'patient',
-                        type: SearchBarColumnType.STRING,
-                        placeholder: `Search by patient`,
-                    },
-                ],
+                columns: getPatientListSearchBarColumns(),
             });
 
             const { patientsResponse } = usePatientList(columnsFilterValues as StringTypeColumnFilterValue[], {});

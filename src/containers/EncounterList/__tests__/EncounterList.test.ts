@@ -7,11 +7,12 @@ import { isLoading, isSuccess, RemoteData } from '@beda.software/remote-data';
 
 import { EncounterData } from 'src/components/EncountersTable/types';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
-import { SearchBarColumnType } from 'src/components/SearchBar/types';
 import { useEncounterList } from 'src/containers/EncounterList/hooks';
 import { createEncounter, createPatient, createPractitionerRole, loginAdminUser } from 'src/setupTests';
 import { renderHumanName } from 'src/utils';
 import { formatHumanDateTime } from 'src/utils/date';
+
+import { getEncounterListSearchBarColumns } from '../searchBarUtils';
 
 const PATIENTS_ADDITION_DATA = [
     {
@@ -107,25 +108,7 @@ describe('Encounter list filters testing', () => {
 
         const { result } = renderHook(() => {
             const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
-                columns: [
-                    {
-                        id: 'patient',
-                        type: SearchBarColumnType.REFERENCE,
-                        placeholder: 'Search by patient',
-                        expression: 'Patient',
-                        path: "name.given.first() + ' ' + name.family",
-                    },
-                    {
-                        id: 'practitioner',
-                        type: SearchBarColumnType.STRING,
-                        placeholder: 'Search by practitioner',
-                    },
-                    {
-                        id: 'date',
-                        type: SearchBarColumnType.DATE,
-                        placeholder: ['Start date', 'End date'],
-                    },
-                ],
+                columns: getEncounterListSearchBarColumns(),
             });
 
             const { encounterDataListRD } = useEncounterList(columnsFilterValues);

@@ -1,4 +1,4 @@
-import { t, Trans } from '@lingui/macro';
+import { Trans } from '@lingui/macro';
 import { Col, Empty, Row, Table } from 'antd';
 
 import { isLoading, isSuccess } from '@beda.software/remote-data';
@@ -9,26 +9,19 @@ import { ModalEditHealthcareService } from 'src/components/ModalEditHealthcareSe
 import { ModalNewHealthcareService } from 'src/components/ModalNewHealthcareService';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
-import { SearchBarColumnType, StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Title } from 'src/components/Typography';
 
 import { useHealthcareServiceList } from './hooks';
+import { getHealthcareServiceListSearchBarColumns } from './searchBarUtils';
 
 export function HealthcareServiceList() {
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
-        columns: [
-            {
-                id: 'service',
-                type: SearchBarColumnType.STRING,
-                placeholder: t`Search by name`,
-            },
-        ],
+        columns: getHealthcareServiceListSearchBarColumns(),
     });
 
-    const { healthcareServiceResponse, pagination, pagerManager, handleTableChange } = useHealthcareServiceList(
-        columnsFilterValues as StringTypeColumnFilterValue[],
-    );
+    const { healthcareServiceResponse, pagination, pagerManager, handleTableChange } =
+        useHealthcareServiceList(columnsFilterValues);
 
     return (
         <>

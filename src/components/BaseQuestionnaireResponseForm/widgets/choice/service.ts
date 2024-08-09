@@ -1,13 +1,20 @@
-import { ValueSet } from 'fhir/r4b';
-
 import { service } from 'aidbox-react/lib/services/service';
 
-import { isSuccess, mapSuccess } from '@beda.software/remote-data';
+import { ValueSet, ValueSetExpansionContains } from '@beda.software/aidbox-types';
+import { isSuccess, mapSuccess, RemoteDataResult } from '@beda.software/remote-data';
 
-export async function expandValueSet(answerValueSet: string, searchText: string) {
+export type ValueSetOption = {
+    value: { Coding: ValueSetExpansionContains };
+};
+
+export async function expandValueSet(answerValueSet: string | undefined, searchText: string) {
+    if (!answerValueSet) {
+        return [];
+    }
+
     const valueSetId = answerValueSet.split('/').slice(-1);
 
-    const response = mapSuccess(
+    const response: RemoteDataResult<ValueSetOption[]> = mapSuccess(
         await service<ValueSet>({
             url: `ValueSet/${valueSetId}/$expand`,
             params: {
@@ -29,5 +36,6 @@ export async function expandValueSet(answerValueSet: string, searchText: string)
     if (isSuccess(response)) {
         return response.data;
     }
+
     return [];
 }
