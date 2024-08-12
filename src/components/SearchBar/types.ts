@@ -33,11 +33,18 @@ export type SearchBarReferenceColumn = {
 export type SearchBarChoiceColumn = {
     id: string;
     type: SearchBarColumnType.CHOICE;
-    valueSet?: ValueSet['id'];
-    options?: ValueSetOption[];
     repeats?: boolean;
     placeholder: string;
-};
+} & (
+    | {
+          options: ValueSetOption[];
+          valueSet?: never;
+      }
+    | {
+          options?: never;
+          valueSet: ValueSet['id'];
+      }
+);
 
 export type SearchBarColumn =
     | SearchBarStringColumn
