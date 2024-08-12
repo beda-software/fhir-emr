@@ -3,20 +3,21 @@ import { Consent, Patient } from 'fhir/r4b';
 import { SearchParams, extractBundleResources } from '@beda.software/fhir-react';
 import { mapSuccess } from '@beda.software/remote-data';
 
-import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
+import { ColumnFilterValue } from 'src/components/SearchBar/types';
+import { getSearchBarFilterValue } from 'src/components/SearchBar/utils';
 import { usePagerExtended } from 'src/hooks/pager';
 import { useDebounce } from 'src/utils/debounce';
 
-export function usePatientList(filterValues: StringTypeColumnFilterValue[], searchParams: SearchParams) {
+export function usePatientList(filterValues: ColumnFilterValue[], searchParams: SearchParams) {
     const debouncedFilterValues = useDebounce(filterValues, 300);
     // The `isSearchConsent` variable will be set to `true` if `_include: [...]` exists in `searchParams`.
     // In the current implementation, the `include` parameter is used exclusively when retrieving Patients via Consent resources.
     // This behavior is designed to adhere to the practitioner-patient access policy.
     const isSearchConsent = Object.keys(searchParams).includes('_include');
-    const patientFilterValue = debouncedFilterValues[0];
+    const patientFilterValue = getSearchBarFilterValue(filterValues, 'patient');
     const searchParamKeyForPatientName = isSearchConsent
-        ? { 'patient:Patient.name': patientFilterValue?.value }
-        : { name: patientFilterValue?.value };
+        ? { 'patient:Patient.name': patientFilterValue }
+        : { name: patientFilterValue };
 
     const defaultQueryParameters = {
         _sort: '-_lastUpdated',
@@ -25,7 +26,7 @@ export function usePatientList(filterValues: StringTypeColumnFilterValue[], sear
 
     const { resourceResponse, pagerManager, handleTableChange, pagination } = usePagerExtended<
         typeof isSearchConsent extends true ? Consent | Patient : Patient,
-        StringTypeColumnFilterValue[]
+        ColumnFilterValue[]
     >(isSearchConsent ? 'Consent' : 'Patient', { ...searchParams, ...defaultQueryParameters }, debouncedFilterValues);
 
     const patientsResponse = mapSuccess(resourceResponse, (bundle) => extractBundleResources(bundle).Patient);

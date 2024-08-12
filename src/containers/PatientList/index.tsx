@@ -11,7 +11,6 @@ import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
-import { SearchBarColumnType, StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 import { Title } from 'src/components/Typography';
@@ -21,19 +20,14 @@ import { renderHumanName } from 'src/utils/fhir';
 import { matchCurrentUserRole, Role } from 'src/utils/role';
 
 import { usePatientList } from './hooks';
+import { getPatientListSearchBarColumns } from './searchBarUtils';
 import { getPatientSearchParamsForPractitioner } from './utils';
 
 export function PatientList() {
     const navigate = useNavigate();
 
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
-        columns: [
-            {
-                id: 'patient',
-                type: SearchBarColumnType.STRING,
-                placeholder: t`Find patient`,
-            },
-        ],
+        columns: getPatientListSearchBarColumns(),
     });
 
     const queryParameters = matchCurrentUserRole({
@@ -52,7 +46,7 @@ export function PatientList() {
     });
 
     const { patientsResponse, pagerManager, pagination, handleTableChange } = usePatientList(
-        columnsFilterValues as StringTypeColumnFilterValue[],
+        columnsFilterValues,
         queryParameters,
     );
 

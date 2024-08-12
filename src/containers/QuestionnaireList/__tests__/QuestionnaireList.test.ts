@@ -1,12 +1,13 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 
-import { isSuccess } from '@beda.software/remote-data';
+import { isLoading, isSuccess } from '@beda.software/remote-data';
 
 import { useSearchBar } from 'src/components/SearchBar/hooks';
-import { SearchBarColumnType, StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
+import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 import { loginAdminUser } from 'src/setupTests';
 
 import { useQuestionnaireList } from '../hooks';
+import { getQuestionnaireListSearchBarColumns } from '../searchBarUtils';
 
 describe('Questionnaire list filters testing', () => {
     beforeAll(async () => {
@@ -16,13 +17,7 @@ describe('Questionnaire list filters testing', () => {
     test('String filters', async () => {
         const { result } = renderHook(() => {
             const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
-                columns: [
-                    {
-                        id: 'questionnaire',
-                        type: SearchBarColumnType.STRING,
-                        placeholder: `Search by questionnaire`,
-                    },
-                ],
+                columns: getQuestionnaireListSearchBarColumns(),
             });
 
             const { questionnaireListRD, queryParameters } = useQuestionnaireList(
@@ -79,6 +74,9 @@ describe('Questionnaire list filters testing', () => {
 
         await waitFor(() => {
             expect(result.current.queryParameters.name).toEqual(nonExistingQuestionnaireName);
+        });
+        await waitFor(() => {
+            expect(isLoading(result.current.questionnaireListRD)).toBeTruthy();
         });
         await waitFor(() => {
             if (isSuccess(result.current.questionnaireListRD)) {

@@ -3,10 +3,11 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { isLoading, isSuccess } from '@beda.software/remote-data';
 
 import { useSearchBar } from 'src/components/SearchBar/hooks';
-import { SearchBarColumnType, StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
+import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
 import { createPractitionerRole, loginAdminUser } from 'src/setupTests';
 
 import { usePractitionersList } from '../hooks';
+import { getPractitionerListSearchBarColumns } from '../searchBarUtils';
 
 const PRACTITIONER_ADDITION_DATA = [
     { name: [{ family: 'Victorov', given: ['Victor', 'Victorovich'] }] },
@@ -28,13 +29,7 @@ describe('Practitioner list filters testing', () => {
 
         const { result } = renderHook(() => {
             const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
-                columns: [
-                    {
-                        id: 'practitioner',
-                        type: SearchBarColumnType.STRING,
-                        placeholder: `Search by practitioner`,
-                    },
-                ],
+                columns: getPractitionerListSearchBarColumns(),
             });
 
             const { practitionerDataListRD } = usePractitionersList(

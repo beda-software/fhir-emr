@@ -11,11 +11,14 @@ import {
     isReferenceColumnFilterValue,
     SearchBarData,
     SearchBarProps,
+    isChoiceColumn,
+    isChoiceColumnFilterValue,
 } from './types';
 import {
     validateStringColumnFilterValue,
     validateDateColumnFilterValue,
     validateReferenceColumnFilterValue,
+    validateChoiceColumnFilterValue,
 } from './validate';
 
 export function useSearchBar(props: SearchBarProps): SearchBarData {
@@ -25,9 +28,17 @@ export function useSearchBar(props: SearchBarProps): SearchBarData {
         return columns.map((column) => {
             if (isStringColumn(column)) {
                 return { column, value: undefined };
-            } else if (isDateColumn(column)) {
+            }
+
+            if (isDateColumn(column)) {
                 return { column, value: undefined };
-            } else if (isReferenceColumn(column)) {
+            }
+
+            if (isReferenceColumn(column)) {
+                return { column, value: null };
+            }
+
+            if (isChoiceColumn(column)) {
                 return { column, value: null };
             }
 
@@ -63,6 +74,13 @@ export function useSearchBar(props: SearchBarProps): SearchBarData {
 
                     if (isReferenceColumnFilterValue(newFilterValue)) {
                         if (validateReferenceColumnFilterValue(value)) {
+                            newFilterValue.value = value;
+                            return newFilterValue;
+                        }
+                    }
+
+                    if (isChoiceColumnFilterValue(newFilterValue)) {
+                        if (validateChoiceColumnFilterValue(value)) {
                             newFilterValue.value = value;
                             return newFilterValue;
                         }

@@ -2,6 +2,7 @@ import _ from 'lodash';
 import moment from 'moment';
 
 import {
+    ChoiceTypeColumnFilterValue,
     ColumnFilterValue,
     DateTypeColumnFilterValue,
     ReferenceTypeColumnFilterValue,
@@ -43,4 +44,22 @@ export function validateReferenceColumnFilterValue(
     }
 
     throw new Error('Invalid reference column filter value');
+}
+
+export function validateChoiceColumnFilterValue(
+    value?: ColumnFilterValue['value'],
+): value is ChoiceTypeColumnFilterValue['value'] {
+    if (
+        _.isUndefined(value) ||
+        _.isNull(value) ||
+        (_.isArray(value) &&
+            value.length === 1 &&
+            _.isObject(value[0]) &&
+            'value' in value[0] &&
+            'Coding' in value[0].value)
+    ) {
+        return true;
+    }
+
+    throw new Error('Invalid choice column filter value');
 }
