@@ -37,16 +37,15 @@ function convertItemProperties(item: FHIRQuestionnaireItem): FCEQuestionnaireIte
 function getUpdatedPropertiesFromItem(item: FHIRQuestionnaireItem) {
     let updatedProperties: FCEQuestionnaireItem = { linkId: item.linkId, type: item.type };
 
-    for (const identifer in ExtensionIdentifier) {
-        const identifierURI = ExtensionIdentifier[identifer];
-        const extension = findExtension(item, identifierURI);
+    Object.values(ExtensionIdentifier).forEach((identifier) => {
+        const extension = findExtension(item, identifier);
         if (extension !== undefined) {
             updatedProperties = {
                 ...updatedProperties,
                 ...convertFromFHIRExtension(extension),
             };
         }
-    }
+    });
 
     updatedProperties.answerOption = item.answerOption?.map(processItemOption);
     updatedProperties.initial = item.initial?.map(processItemOption);

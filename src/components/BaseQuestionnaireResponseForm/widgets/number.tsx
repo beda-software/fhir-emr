@@ -50,3 +50,25 @@ export function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps)
         </Form.Item>
     );
 }
+
+export function QuestionQuantity(props: QuestionItemProps) {
+    const { parentPath, questionItem } = props;
+
+    const { linkId } = questionItem;
+    const { unitOption } = questionItem;
+    const fieldName = [...parentPath, linkId, 0, 'value', 'decimal'];
+    const { value, onChange, disabled, formItem, placeholder } = useFieldController(fieldName, questionItem);
+
+    return (
+        <Form.Item {...formItem}>
+            <InputNumber
+                addonAfter={unitOption?.display}
+                style={inputStyle}
+                disabled={disabled}
+                onChange={onChange}
+                value={value}
+                placeholder={placeholder}
+            />
+        </Form.Item>
+    );
+}

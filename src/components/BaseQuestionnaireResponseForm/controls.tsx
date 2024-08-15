@@ -23,6 +23,7 @@ import {
     Row,
     BloodPressure,
     Gtable,
+    QuestionQuantity,
 } from './widgets';
 import { Display } from './widgets/display';
 import { PasswordInput } from './widgets/PasswordInput';
@@ -41,6 +42,7 @@ export const itemComponents: QuestionItemComponentMapping = {
     boolean: QuestionBoolean,
     display: Display,
     reference: QuestionReference,
+    quantity: QuestionQuantity,
 };
 
 export const groupComponent: GroupItemComponent = Group;
@@ -52,12 +54,15 @@ export const itemControlComponents: ItemControlQuestionItemComponentMapping = {
     'solid-radio-button': QuestionSolidRadio,
     'inline-choice': InlineChoice,
     'text-with-macro': TextWithMacroFill,
+    'radio-button': QuestionSolidRadio,
 };
 
 export const groupControlComponents: ItemControlGroupItemComponentMapping = {
     col: Col,
     row: Row,
     gtable: Gtable,
+    table: Gtable,
+    grid: Gtable,
     'blood-pressure': BloodPressure,
     'time-range-picker': TimeRangePickerControl,
 };
