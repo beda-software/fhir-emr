@@ -53,7 +53,8 @@ export function validateChoiceColumnFilterValue(
         _.isUndefined(value) ||
         _.isNull(value) ||
         (_.isArray(value) &&
-            value.length === 1 &&
+            value.length > 0 &&
+            value.length <= 2 &&
             _.isObject(value[0]) &&
             'value' in value[0] &&
             'Coding' in value[0].value)
