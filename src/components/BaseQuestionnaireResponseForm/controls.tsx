@@ -24,6 +24,7 @@ import {
     BloodPressure,
     Gtable,
     QuestionQuantity,
+    Grid,
 } from './widgets';
 import { Display } from './widgets/display';
 import { PasswordInput } from './widgets/PasswordInput';
@@ -63,7 +64,7 @@ export const groupControlComponents: ItemControlGroupItemComponentMapping = {
     row: Row,
     gtable: Gtable,
     table: Gtable,
-    grid: Gtable,
+    grid: Grid,
     'blood-pressure': BloodPressure,
     'time-range-picker': TimeRangePickerControl,
 };
