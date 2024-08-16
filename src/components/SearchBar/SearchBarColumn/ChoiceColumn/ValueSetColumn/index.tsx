@@ -14,6 +14,7 @@ export function ValueSetColumn(props: SearchBarColumnChoiceTypeProps) {
     return (
         <Col>
             <AsyncSelect
+                defaultOptions
                 loadOptions={debouncedLoadOptions}
                 value={columnFilterValue.value}
                 isMulti={repeats}

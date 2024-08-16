@@ -14,20 +14,17 @@ export function useChoiceColumn(props: SearchBarColumnChoiceTypeProps) {
     const { id, valueSet, repeats } = columnFilterValue.column;
     const expand = useContext(ExpandProvider);
 
-    const loadOptions = useCallback(
-        async (searchText: string) => {
-            return expand(valueSet, searchText);
-        },
-        [valueSet, expand],
-    );
+    const loadOptions = async (searchText: string) => {
+        return expand(valueSet, searchText);
+    };
 
-    const debouncedLoadOptions = _.debounce((searchText, callback) => {
+    const debouncedLoadOptions = _.debounce((searchText: string, callback: (options: ChoiceColumnOption[]) => void) => {
         (async () => callback(await loadOptions(searchText)))();
     }, 500);
 
     const onSelect = useCallback(
         (newValue: MultiValue<ChoiceColumnOption> | SingleValue<ChoiceColumnOption>) => {
-            if (!newValue) {
+            if (!newValue || (_.isArray(newValue) && newValue.length === 0)) {
                 return onChange(null, id);
             }
 
