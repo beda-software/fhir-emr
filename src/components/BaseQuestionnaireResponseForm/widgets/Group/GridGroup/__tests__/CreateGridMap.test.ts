@@ -1,10 +1,12 @@
+import { renderHook } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 
 import { QuestionnaireItem } from '@beda.software/aidbox-types';
 
-import { createGridMap, GridMap } from '../utils';
+import { useGridGoup } from '../hooks';
+import { GridMap } from '../types';
 
-describe('createGridMap', () => {
+describe('useGridGoup', () => {
     it('should return undefined if input item is not a group or does not have text or items', () => {
         const input: QuestionnaireItem = {
             linkId: '1',
@@ -12,8 +14,9 @@ describe('createGridMap', () => {
             text: 'Some Question',
         };
 
-        const result = createGridMap(input);
-        expect(result).toBeUndefined();
+        const { result } = renderHook(() => useGridGoup(input));
+
+        expect(result.current.gridMap).toBeUndefined();
     });
 
     it('should return a correct grid map for a valid input', () => {
@@ -72,8 +75,8 @@ describe('createGridMap', () => {
             ],
         };
 
-        const result = createGridMap(input);
-        expect(result).toEqual(expectedOutput);
+        const { result } = renderHook(() => useGridGoup(input));
+        expect(result.current.gridMap).toEqual(expectedOutput);
     });
 
     it('should handle missing questions in some groups', () => {
@@ -115,8 +118,8 @@ describe('createGridMap', () => {
             ],
         };
 
-        const result = createGridMap(input);
-        expect(result).toEqual(expectedOutput);
+        const { result } = renderHook(() => useGridGoup(input));
+        expect(result.current.gridMap).toEqual(expectedOutput);
     });
 
     it('should return empty groups and columns if there are no questions', () => {
@@ -155,8 +158,8 @@ describe('createGridMap', () => {
             ],
         };
 
-        const result = createGridMap(input);
-        expect(result).toEqual(expectedOutput);
+        const { result } = renderHook(() => useGridGoup(input));
+        expect(result.current.gridMap).toEqual(expectedOutput);
     });
 
     it('should handle nested groups correctly', () => {
@@ -191,7 +194,7 @@ describe('createGridMap', () => {
             ],
         };
 
-        const result = createGridMap(input);
-        expect(result).toEqual(expectedOutput);
+        const { result } = renderHook(() => useGridGoup(input));
+        expect(result.current.gridMap).toEqual(expectedOutput);
     });
 });

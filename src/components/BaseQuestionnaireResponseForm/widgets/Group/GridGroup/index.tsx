@@ -1,16 +1,13 @@
-import { GroupItemProps, QuestionItem } from 'sdc-qrf';
+import { QuestionItem } from 'sdc-qrf';
 
 import { S } from './Grid.styles';
-import { createGridMap } from './utils';
-
-interface GridGroupProps {
-    groupItem: GroupItemProps;
-}
+import { useGridGoup } from './hooks';
+import { GridGroupProps } from './types';
 
 export function GridGroup({ groupItem }: GridGroupProps) {
     const { questionItem } = groupItem;
 
-    const gridMap = createGridMap(questionItem);
+    const { gridMap } = useGridGoup(questionItem);
 
     if (!gridMap) {
         return null;
