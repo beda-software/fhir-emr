@@ -1,15 +1,13 @@
 import { QuestionnaireItem } from '@beda.software/aidbox-types';
 
-interface GroupMap {
-    name: string;
-    linkId: QuestionnaireItem['linkId'];
-    items: (QuestionnaireItem | undefined)[];
-}
-
-interface GridMap {
-    title: string;
+export interface GridMap {
     columns: QuestionnaireItem['text'][];
     groups: GroupMap[];
+}
+
+interface GroupMap {
+    group: QuestionnaireItem;
+    items: (QuestionnaireItem | undefined)[];
 }
 
 export function createGridMap(item: QuestionnaireItem): GridMap | undefined {
@@ -21,7 +19,6 @@ export function createGridMap(item: QuestionnaireItem): GridMap | undefined {
     const groups = mapGroups(item, columns);
 
     return {
-        title: item.text,
         columns: columns,
         groups,
     };
@@ -63,8 +60,7 @@ function mapGroups(item: QuestionnaireItem, columns: string[]): GroupMap[] {
             });
 
             result.push({
-                name: group.text,
-                linkId: group.linkId,
+                group,
                 items: groupItems,
             });
         }

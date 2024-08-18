@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 
 import { QuestionnaireItem } from '@beda.software/aidbox-types';
 
-import { createGridMap } from '../utils';
+import { createGridMap, GridMap } from '../utils';
 
 describe('createGridMap', () => {
     it('should return undefined if input item is not a group or does not have text or items', () => {
@@ -17,71 +17,57 @@ describe('createGridMap', () => {
     });
 
     it('should return a correct grid map for a valid input', () => {
+        const GROUP_1: QuestionnaireItem = {
+            linkId: '1.1',
+            text: 'Group1',
+            type: 'group',
+            item: [
+                { linkId: '1.1.1', text: 'Question1', type: 'choice' },
+                { linkId: '1.1.2', text: 'Question2', type: 'choice' },
+            ],
+        };
+
+        const GROUP_2: QuestionnaireItem = {
+            linkId: '1.2',
+            text: 'Group2',
+            type: 'group',
+            item: [
+                { linkId: '1.2.1', text: 'Question1', type: 'choice' },
+                { linkId: '1.2.2', text: 'Question3', type: 'choice' },
+            ],
+        };
+
+        const GROUP_3: QuestionnaireItem = {
+            linkId: '1.3',
+            text: 'Group3',
+            type: 'group',
+            item: [
+                { linkId: '1.3.1', text: 'Question1', type: 'choice' },
+                { linkId: '1.3.2', text: 'Question4', type: 'choice' },
+            ],
+        };
+
         const input: QuestionnaireItem = {
             linkId: '1',
             type: 'group',
             text: 'Grid',
-            item: [
-                {
-                    linkId: '1.1',
-                    text: 'Group1',
-                    type: 'group',
-                    item: [
-                        { linkId: '1.1.1', text: 'Question1', type: 'choice' },
-                        { linkId: '1.1.2', text: 'Question2', type: 'choice' },
-                    ],
-                },
-                {
-                    linkId: '1.2',
-                    text: 'Group2',
-                    type: 'group',
-                    item: [
-                        { linkId: '1.2.1', text: 'Question1', type: 'choice' },
-                        { linkId: '1.2.2', text: 'Question3', type: 'choice' },
-                    ],
-                },
-                {
-                    linkId: '1.3',
-                    text: 'Group3',
-                    type: 'group',
-                    item: [
-                        { linkId: '1.3.1', text: 'Question1', type: 'choice' },
-                        { linkId: '1.3.2', text: 'Question4', type: 'choice' },
-                    ],
-                },
-            ],
+            item: [GROUP_1, GROUP_2, GROUP_3],
         };
 
-        const expectedOutput = {
-            title: 'Grid',
+        const expectedOutput: GridMap = {
             columns: ['Question1', 'Question2', 'Question3', 'Question4'],
             groups: [
                 {
-                    name: 'Group1',
-                    items: [
-                        { linkId: '1.1.1', text: 'Question1', type: 'choice' },
-                        { linkId: '1.1.2', text: 'Question2', type: 'choice' },
-                        undefined,
-                        undefined,
-                    ],
+                    group: GROUP_1,
+                    items: [GROUP_1.item![0], GROUP_1.item![1], undefined, undefined],
                 },
                 {
-                    name: 'Group2',
-                    items: [
-                        { linkId: '1.2.1', text: 'Question1', type: 'choice' },
-                        undefined,
-                        { linkId: '1.2.2', text: 'Question3', type: 'choice' },
-                        undefined,
-                    ],
+                    group: GROUP_2,
+                    items: [GROUP_2.item![0], undefined, GROUP_2.item![1], undefined],
                 },
                 {
-                    name: 'Group3',
-                    items: [
-                        { linkId: '1.3.1', text: 'Question1', type: 'choice' },
-                        undefined,
-                        undefined,
-                        { linkId: '1.3.2', text: 'Question4', type: 'choice' },
-                    ],
+                    group: GROUP_3,
+                    items: [GROUP_3.item![0], undefined, undefined, GROUP_3.item![1]],
                 },
             ],
         };
@@ -91,44 +77,40 @@ describe('createGridMap', () => {
     });
 
     it('should handle missing questions in some groups', () => {
+        const GROUP_1: QuestionnaireItem = {
+            linkId: '1.1',
+            text: 'Group1',
+            type: 'group',
+            item: [{ linkId: '1.1.1', text: 'Question1', type: 'choice' }],
+        };
+
+        const GROUP_2: QuestionnaireItem = {
+            linkId: '1.2',
+            text: 'Group2',
+            type: 'group',
+            item: [
+                { linkId: '1.2.1', text: 'Question2', type: 'choice' },
+                { linkId: '1.2.2', text: 'Question3', type: 'choice' },
+            ],
+        };
+
         const input: QuestionnaireItem = {
             linkId: '1',
             type: 'group',
             text: 'Grid',
-            item: [
-                {
-                    linkId: '1.1',
-                    text: 'Group1',
-                    type: 'group',
-                    item: [{ linkId: '1.1.1', text: 'Question1', type: 'choice' }],
-                },
-                {
-                    linkId: '1.2',
-                    text: 'Group2',
-                    type: 'group',
-                    item: [
-                        { linkId: '1.2.1', text: 'Question2', type: 'choice' },
-                        { linkId: '1.2.2', text: 'Question3', type: 'choice' },
-                    ],
-                },
-            ],
+            item: [GROUP_1, GROUP_2],
         };
 
-        const expectedOutput = {
-            title: 'Grid',
+        const expectedOutput: GridMap = {
             columns: ['Question1', 'Question2', 'Question3'],
             groups: [
                 {
-                    name: 'Group1',
-                    items: [{ linkId: '1.1.1', text: 'Question1', type: 'choice' }, undefined, undefined],
+                    group: GROUP_1,
+                    items: [GROUP_1.item![0], undefined, undefined],
                 },
                 {
-                    name: 'Group2',
-                    items: [
-                        undefined,
-                        { linkId: '1.2.1', text: 'Question2', type: 'choice' },
-                        { linkId: '1.2.2', text: 'Question3', type: 'choice' },
-                    ],
+                    group: GROUP_2,
+                    items: [undefined, GROUP_2.item![0], GROUP_2.item![1]],
                 },
             ],
         };
@@ -138,36 +120,36 @@ describe('createGridMap', () => {
     });
 
     it('should return empty groups and columns if there are no questions', () => {
+        const GROUP_1: QuestionnaireItem = {
+            linkId: '1.1',
+            text: 'Group1',
+            type: 'group',
+            item: [],
+        };
+
+        const GROUP_2: QuestionnaireItem = {
+            linkId: '1.2',
+            text: 'Group2',
+            type: 'group',
+            item: [],
+        };
+
         const input: QuestionnaireItem = {
             linkId: '1',
             type: 'group',
             text: 'Grid',
-            item: [
-                {
-                    linkId: '1.1',
-                    text: 'Group1',
-                    type: 'group',
-                    item: [],
-                },
-                {
-                    linkId: '1.2',
-                    text: 'Group2',
-                    type: 'group',
-                    item: [],
-                },
-            ],
+            item: [GROUP_1, GROUP_2],
         };
 
-        const expectedOutput = {
-            title: 'Grid',
+        const expectedOutput: GridMap = {
             columns: [],
             groups: [
                 {
-                    name: 'Group1',
+                    group: GROUP_1,
                     items: [],
                 },
                 {
-                    name: 'Group2',
+                    group: GROUP_2,
                     items: [],
                 },
             ],
@@ -178,41 +160,33 @@ describe('createGridMap', () => {
     });
 
     it('should handle nested groups correctly', () => {
+        const NESTED_GROUP: QuestionnaireItem = {
+            linkId: '1.1.1',
+            text: 'NestedGroup',
+            type: 'group',
+            item: [{ linkId: '1.1.1.1', text: 'Question1', type: 'choice' }],
+        };
+
+        const GROUP_1: QuestionnaireItem = {
+            linkId: '1.1',
+            text: 'Group1',
+            type: 'group',
+            item: [NESTED_GROUP],
+        };
+
         const input: QuestionnaireItem = {
             linkId: '1',
             type: 'group',
             text: 'Grid',
-            item: [
-                {
-                    linkId: '1.1',
-                    text: 'Group1',
-                    type: 'group',
-                    item: [
-                        {
-                            linkId: '1.1.1',
-                            text: 'NestedGroup',
-                            type: 'group',
-                            item: [{ linkId: '1.1.1.1', text: 'Question1', type: 'choice' }],
-                        },
-                    ],
-                },
-            ],
+            item: [GROUP_1],
         };
 
-        const expectedOutput = {
-            title: 'Grid',
+        const expectedOutput: GridMap = {
             columns: ['NestedGroup'],
             groups: [
                 {
-                    name: 'Group1',
-                    items: [
-                        {
-                            linkId: '1.1.1',
-                            text: 'NestedGroup',
-                            type: 'group',
-                            item: [{ linkId: '1.1.1.1', text: 'Question1', type: 'choice' }],
-                        },
-                    ],
+                    group: GROUP_1,
+                    items: [NESTED_GROUP],
                 },
             ],
         };

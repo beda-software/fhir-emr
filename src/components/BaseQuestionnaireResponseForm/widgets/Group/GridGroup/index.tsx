@@ -19,7 +19,7 @@ export function GridGroup({ groupItem }: GridGroupProps) {
     return (
         <>
             <S.Header>
-                <S.Column>{gridMap.title}</S.Column>
+                <S.Column>{questionItem.text}</S.Column>
             </S.Header>
 
             <S.GridContainer>
@@ -31,10 +31,10 @@ export function GridGroup({ groupItem }: GridGroupProps) {
                     </S.GridItem>
                 ))}
 
-                {gridMap.groups.map((group) => (
-                    <S.GridItem key={group.name}>
-                        <S.GridRowLabel>{group.name}</S.GridRowLabel>
-                        {group.items.map((item, itemIndex) => {
+                {gridMap.groups.map((groupMap) => (
+                    <S.GridItem key={groupMap.group.linkId}>
+                        <S.GridRowLabel>{groupMap.group.text}</S.GridRowLabel>
+                        {groupMap.items.map((item, itemIndex) => {
                             if (!item) {
                                 return <S.GridItem key={itemIndex} />;
                             }
@@ -43,7 +43,7 @@ export function GridGroup({ groupItem }: GridGroupProps) {
                                 <S.GridItem key={item.id}>
                                     <QuestionItem
                                         questionItem={item}
-                                        parentPath={[group.linkId, item.linkId]}
+                                        parentPath={[groupMap.group.linkId, item.linkId]}
                                         context={groupItem.context[0]!}
                                     />
                                 </S.GridItem>
