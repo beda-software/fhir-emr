@@ -1,13 +1,15 @@
+import React from 'react';
 import { QuestionItem } from 'sdc-qrf';
 
 import { S } from './Grid.styles';
-import { useGridGoup } from './hooks';
+import { useGridGroup } from './hooks';
 import { GridGroupProps } from './types';
+import { RepeatableGroups } from '../RepeatableGroups';
 
 export function GridGroup({ groupItem }: GridGroupProps) {
     const { questionItem } = groupItem;
 
-    const { gridMap } = useGridGoup(questionItem);
+    const { gridMap } = useGridGroup(questionItem);
 
     if (!gridMap) {
         return null;
@@ -16,12 +18,11 @@ export function GridGroup({ groupItem }: GridGroupProps) {
     return (
         <>
             <S.Header>
-                <S.Column>{questionItem.text}</S.Column>
+                <S.GridRowLabel>{questionItem.text}</S.GridRowLabel>
             </S.Header>
 
-            <S.GridContainer>
+            <S.GridContainer columns={gridMap.columns.length + 1}>
                 <S.GridItem></S.GridItem>
-
                 {gridMap.columns.map((column) => (
                     <S.GridItem key={column}>
                         <S.GridRowLabel>{column}</S.GridRowLabel>
@@ -29,24 +30,40 @@ export function GridGroup({ groupItem }: GridGroupProps) {
                 ))}
 
                 {gridMap.groups.map((groupMap) => (
-                    <S.GridItem key={groupMap.group.linkId}>
-                        <S.GridRowLabel>{groupMap.group.text}</S.GridRowLabel>
-                        {groupMap.items.map((item, itemIndex) => {
-                            if (!item) {
-                                return <S.GridItem key={itemIndex} />;
-                            }
+                    <React.Fragment key={groupMap.group.linkId}>
+                        <S.GridItem>
+                            <S.GridRowLabel>{groupMap.group.text}</S.GridRowLabel>
+                        </S.GridItem>
 
-                            return (
-                                <S.GridItem key={item.id}>
-                                    <QuestionItem
-                                        questionItem={item}
-                                        parentPath={[groupMap.group.linkId, item.linkId]}
-                                        context={groupItem.context[0]!}
-                                    />
+                        {groupMap.items.map((item, itemIndex) =>
+                            item ? (
+                                <S.GridItem key={item.linkId}>
+                                    {item.type === 'group' ? (
+                                        <RepeatableGroups
+                                            groupItem={{
+                                                questionItem: item,
+                                                context: groupItem.context,
+                                                parentPath: [
+                                                    groupItem.questionItem.linkId,
+                                                    'items',
+                                                    groupMap.group.linkId,
+                                                    'items',
+                                                ],
+                                            }}
+                                        />
+                                    ) : (
+                                        <QuestionItem
+                                            questionItem={item}
+                                            parentPath={[groupItem.questionItem.linkId, 'items', groupMap.group.linkId]}
+                                            context={groupItem.context[0]!}
+                                        />
+                                    )}
                                 </S.GridItem>
-                            );
-                        })}
-                    </S.GridItem>
+                            ) : (
+                                <S.GridItem key={itemIndex} />
+                            ),
+                        )}
+                    </React.Fragment>
                 ))}
             </S.GridContainer>
         </>

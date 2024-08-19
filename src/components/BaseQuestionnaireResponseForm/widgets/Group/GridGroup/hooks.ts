@@ -4,7 +4,7 @@ import { QuestionnaireItem } from '@beda.software/aidbox-types';
 
 import { GroupMap } from './types';
 
-export function useGridGoup(item: QuestionnaireItem) {
+export function useGridGroup(item: QuestionnaireItem) {
     const gridMap = useMemo(() => {
         if (!item || item.type !== 'group' || !item.text || !item.item) {
             return undefined;
@@ -37,7 +37,12 @@ export function useGridGoup(item: QuestionnaireItem) {
                         return undefined;
                     }
 
-                    return item;
+                    return item.type === 'group'
+                        ? item
+                        : {
+                              ...item,
+                              text: undefined,
+                          };
                 });
 
                 result.push({

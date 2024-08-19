@@ -3,10 +3,18 @@ import { describe, it, expect } from 'vitest';
 
 import { QuestionnaireItem } from '@beda.software/aidbox-types';
 
-import { useGridGoup } from '../hooks';
+import { useGridGroup } from '../hooks';
 import { GridMap } from '../types';
 
-describe('useGridGoup', () => {
+function removeTextFromItems(items: (QuestionnaireItem | undefined)[]) {
+    return items.map((item) => {
+        if (item) {
+            return { ...item, text: undefined };
+        }
+    });
+}
+
+describe('useGridGroup', () => {
     it('should return undefined if input item is not a group or does not have text or items', () => {
         const input: QuestionnaireItem = {
             linkId: '1',
@@ -14,7 +22,7 @@ describe('useGridGoup', () => {
             text: 'Some Question',
         };
 
-        const { result } = renderHook(() => useGridGoup(input));
+        const { result } = renderHook(() => useGridGroup(input));
 
         expect(result.current.gridMap).toBeUndefined();
     });
@@ -62,20 +70,20 @@ describe('useGridGoup', () => {
             groups: [
                 {
                     group: GROUP_1,
-                    items: [GROUP_1.item![0], GROUP_1.item![1], undefined, undefined],
+                    items: removeTextFromItems([GROUP_1.item![0], GROUP_1.item![1], undefined, undefined]),
                 },
                 {
                     group: GROUP_2,
-                    items: [GROUP_2.item![0], undefined, GROUP_2.item![1], undefined],
+                    items: removeTextFromItems([GROUP_2.item![0], undefined, GROUP_2.item![1], undefined]),
                 },
                 {
                     group: GROUP_3,
-                    items: [GROUP_3.item![0], undefined, undefined, GROUP_3.item![1]],
+                    items: removeTextFromItems([GROUP_3.item![0], undefined, undefined, GROUP_3.item![1]]),
                 },
             ],
         };
 
-        const { result } = renderHook(() => useGridGoup(input));
+        const { result } = renderHook(() => useGridGroup(input));
         expect(result.current.gridMap).toEqual(expectedOutput);
     });
 
@@ -109,16 +117,16 @@ describe('useGridGoup', () => {
             groups: [
                 {
                     group: GROUP_1,
-                    items: [GROUP_1.item![0], undefined, undefined],
+                    items: removeTextFromItems([GROUP_1.item![0], undefined, undefined]),
                 },
                 {
                     group: GROUP_2,
-                    items: [undefined, GROUP_2.item![0], GROUP_2.item![1]],
+                    items: removeTextFromItems([undefined, GROUP_2.item![0], GROUP_2.item![1]]),
                 },
             ],
         };
 
-        const { result } = renderHook(() => useGridGoup(input));
+        const { result } = renderHook(() => useGridGroup(input));
         expect(result.current.gridMap).toEqual(expectedOutput);
     });
 
@@ -158,7 +166,7 @@ describe('useGridGoup', () => {
             ],
         };
 
-        const { result } = renderHook(() => useGridGoup(input));
+        const { result } = renderHook(() => useGridGroup(input));
         expect(result.current.gridMap).toEqual(expectedOutput);
     });
 
@@ -194,7 +202,7 @@ describe('useGridGoup', () => {
             ],
         };
 
-        const { result } = renderHook(() => useGridGoup(input));
+        const { result } = renderHook(() => useGridGroup(input));
         expect(result.current.gridMap).toEqual(expectedOutput);
     });
 });

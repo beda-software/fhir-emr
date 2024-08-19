@@ -2,6 +2,10 @@ import styled from 'styled-components';
 
 import { Text } from 'src/components/Typography';
 
+interface GridContainerProps {
+    columns?: number;
+}
+
 export const S = {
     Header: styled.div`
         display: flex;
@@ -15,17 +19,11 @@ export const S = {
 
     Text: styled(Text)``,
 
-    GridContainer: styled.div`
+    GridContainer: styled.div<GridContainerProps>`
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: ${({ columns }) => `repeat(${columns || 'auto-fit'}, minmax(100px, 1fr))`};
         gap: 10px;
         align-items: center;
-    `,
-
-    GridItem: styled.div`
-        display: flex;
-        gap: 16px;
-        padding-right: calc(18px + 16px);
     `,
 
     GridRowLabel: styled.div`
@@ -33,5 +31,10 @@ export const S = {
         align-items: center;
         font-weight: bold;
         padding: 10px 0;
+    `,
+
+    GridItem: styled.div`
+        display: flex;
+        /* padding-right: calc(18px + 16px); */
     `,
 };

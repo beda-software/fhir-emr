@@ -11,7 +11,7 @@ export function FieldLabel({ questionItem }: { questionItem: QuestionnaireItem }
     const { type, text, helpText } = questionItem;
     const { type: groupType } = useContext(GroupContext);
 
-    if (groupType === 'gtable') {
+    if (groupType === 'gtable' || (!text && !helpText)) {
         return null;
     }
 
