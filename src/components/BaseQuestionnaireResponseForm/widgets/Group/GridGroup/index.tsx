@@ -54,7 +54,12 @@ export function GridGroup({ groupItem }: GridGroupProps) {
                                     ) : (
                                         <QuestionItem
                                             questionItem={item}
-                                            parentPath={[groupItem.questionItem.linkId, 'items', groupMap.group.linkId]}
+                                            parentPath={[
+                                                ...groupItem.parentPath,
+                                                groupItem.questionItem.linkId,
+                                                'items',
+                                                groupMap.group.linkId,
+                                            ]}
                                             context={groupItem.context[0]!}
                                         />
                                     )}

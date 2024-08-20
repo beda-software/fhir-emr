@@ -6,7 +6,7 @@ import { GroupMap } from './types';
 
 export function useGridGroup(item: QuestionnaireItem) {
     const gridMap = useMemo(() => {
-        if (!item || item.type !== 'group' || !item.text || !item.item) {
+        if (!item || item.type !== 'group' || !item.item) {
             return undefined;
         }
 
