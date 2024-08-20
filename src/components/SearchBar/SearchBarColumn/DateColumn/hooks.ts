@@ -11,10 +11,13 @@ export function useDateColumn(props: SearchBarColumnDateTypeProps) {
 
     const onColumnChange = useCallback<RangePickerOnChange>(
         (values) => {
+           
             if (values) {
                 const momentValues = values.map((value) => moment(value!.format())) as DateColumnFilterValue;
 
                 onChange(momentValues, columnFilterValue.column.id);
+            }else{
+                onChange(undefined, columnFilterValue.column.id);
             }
         },
         [onChange, columnFilterValue],
