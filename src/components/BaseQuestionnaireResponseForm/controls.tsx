@@ -55,7 +55,7 @@ export const itemControlComponents: ItemControlQuestionItemComponentMapping = {
     'solid-radio-button': QuestionSolidRadio,
     'inline-choice': InlineChoice,
     'text-with-macro': TextWithMacroFill,
-    'radio-button': QuestionSolidRadio,
+    'radio-button': InlineChoice,
     'check-box': InlineChoice,
 };
 

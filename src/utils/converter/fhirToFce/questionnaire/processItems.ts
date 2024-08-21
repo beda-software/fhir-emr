@@ -5,6 +5,7 @@ import {
     QuestionnaireItemAnswerOption as FHIRQuestionnaireItemAnswerOption,
     QuestionnaireItemInitial as FHIRQuestionnaireItemInitial,
 } from 'fhir/r4b';
+import _ from 'lodash';
 
 import {
     QuestionnaireItem as FCEQuestionnaireItem,
@@ -138,7 +139,7 @@ function processItemOption(
             },
         };
     }
-    if (option.valueInteger) {
+    if (_.isNumber(option.valueInteger)) {
         return {
             value: {
                 integer: option.valueInteger,

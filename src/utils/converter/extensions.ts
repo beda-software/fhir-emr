@@ -25,6 +25,7 @@ export enum ExtensionIdentifier {
     BackgroundImage = 'http://aidbox.io/questionnaire-backgroundImage',
     Language = 'http://hl7.org/fhir/StructureDefinition/language',
     ChoiceOrientation = 'http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation',
+    InlineChoiceDirection = 'https://beda.software/fhir-emr-questionnaire/inline-choice-direction',
     ChoiceColumns = 'http://aidbox.io/fhir/StructureDefinition/questionnaire-choiceColumns',
 
     ItemPopulationContext = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemPopulationContext',
@@ -156,6 +157,9 @@ export const extensionTransformers: ExtensionTransformer = {
     },
     [ExtensionIdentifier.ChoiceOrientation]: {
         path: { extension: 'valueCode', questionnaire: 'choiceOrientation' },
+    },
+    [ExtensionIdentifier.InlineChoiceDirection]: {
+        path: { extension: 'valueString', questionnaire: 'choiceOrientation' },
     },
     [ExtensionIdentifier.ChoiceColumns]: {
         path: { extension: 'valueInteger', questionnaire: 'choiceColumns' },

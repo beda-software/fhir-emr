@@ -14222,7 +14222,7 @@ export interface QuestionnaireItem {
     openLabel?: string;
     backgroundImage?: Attachment;
     language?: Coding;
-    choiceOrientation?: code;
+    choiceOrientation?: 'horizontal' | 'vertical';
     choiceColumns?: integer;
     ordinalValue?: decimal;
 }

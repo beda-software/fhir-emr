@@ -2,9 +2,11 @@ import { Meta, StoryObj } from '@storybook/react';
 import { expect, within, userEvent, findByTestId } from '@storybook/test';
 import { ItemContext } from 'sdc-qrf/lib/types';
 
+import { QuestionnaireItem } from '@beda.software/aidbox-types';
+
 import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 
-import { InlineChoice, InlineChoiceQuestionItem } from './index';
+import { InlineChoice } from './index';
 
 const meta: Meta<typeof InlineChoice> = {
     title: 'Questionnaire / questions / inline-choice',
@@ -73,14 +75,14 @@ export const Horizontal: Story = {
             parentPath={[]}
             questionItem={{
                 ...questionItemMultiple,
-                inlineChoiceDirection: 'horizontal',
+                choiceOrientation: 'horizontal',
             }}
             context={{} as ItemContext}
         />
     ),
 };
 
-const questionItemDefault: InlineChoiceQuestionItem = {
+const questionItemDefault: QuestionnaireItem = {
     text: 'Type',
     type: 'choice',
     linkId: 'type',
@@ -123,7 +125,7 @@ const questionItemDefault: InlineChoiceQuestionItem = {
     },
 };
 
-const questionItemMultiple: InlineChoiceQuestionItem = {
+const questionItemMultiple: QuestionnaireItem = {
     text: 'Reaction',
     type: 'choice',
     linkId: 'reaction',

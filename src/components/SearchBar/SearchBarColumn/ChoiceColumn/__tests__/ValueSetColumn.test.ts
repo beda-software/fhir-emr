@@ -77,7 +77,6 @@ describe('ValueSetColumn component testing', () => {
             });
 
             const options = mockCallback.mock.calls[0][0];
-            console.log('options!!!!!!!!', options);
 
             const valuesetEncounterStatusCodes = valuesetEncounterStatusData.compose!.include[0]!.concept!.map(
                 (concept) => concept.code,
