@@ -6,6 +6,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: es\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
 
 #: src/components/ModalChangeActiveHealthcareService/index.tsx:25
 msgid "{buttonTitle}"
@@ -17,15 +23,14 @@ msgstr ""
 
 #: src/components/PatientEncounter/index.tsx:46
 #: src/containers/DocumentsList/index.tsx:68
-#: src/containers/EncounterList/index.tsx:87
-#: src/containers/HealthcareServiceList/index.tsx:92
+#: src/containers/EncounterList/index.tsx:71
+#: src/containers/HealthcareServiceList/index.tsx:85
 #: src/containers/InvoiceList/tableUtils.tsx:150
 #: src/containers/InvoiceList/tableUtils.tsx:157
 #: src/containers/MedicationManagement/index.tsx:67
-#: src/containers/PatientList/index.tsx:117
-#: src/containers/PractitionerList/index.tsx:109
+#: src/containers/PatientList/index.tsx:111
+#: src/containers/PractitionerList/index.tsx:104
 #: src/containers/Prescriptions/index.tsx:151
-#: src/containers/QuestionnaireList/index.tsx:30
 msgid "Actions"
 msgstr ""
 
@@ -70,7 +75,7 @@ msgstr ""
 msgid "Add Medication Batch"
 msgstr ""
 
-#: src/containers/PractitionerList/index.tsx:53
+#: src/containers/PractitionerList/index.tsx:48
 msgid "Add new practitioner"
 msgstr ""
 
@@ -88,12 +93,20 @@ msgstr ""
 msgid "Add patient"
 msgstr ""
 
-#: src/containers/QuestionnaireList/index.tsx:88
+#: src/containers/QuestionnaireList/index.tsx:87
 msgid "Add questionnaire"
 msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:89
 msgid "Adjust Last Option Right"
+msgstr ""
+
+#: src/containers/QuestionnaireList/index.tsx:40
+msgid "AI builder"
+msgstr ""
+
+#: src/containers/QuestionnaireList/index.tsx:57
+msgid "Aidbox Forms Builder"
 msgstr ""
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:34
@@ -150,7 +163,7 @@ msgstr ""
 msgid "Batch Number"
 msgstr ""
 
-#: src/containers/PatientList/index.tsx:100
+#: src/containers/PatientList/index.tsx:94
 msgid "Birth date"
 msgstr ""
 
@@ -203,8 +216,8 @@ msgstr ""
 msgid "Complete"
 msgstr ""
 
-#: src/containers/EncounterDetails/index.tsx:189
-#: src/containers/EncounterDetails/index.tsx:193
+#: src/containers/EncounterDetails/index.tsx:151
+#: src/containers/EncounterDetails/index.tsx:155
 msgid "Complete encounter"
 msgstr ""
 
@@ -233,8 +246,8 @@ msgstr ""
 msgid "Consents"
 msgstr ""
 
-#: src/containers/EncounterDetails/index.tsx:77
-#: src/containers/EncounterDetails/index.tsx:90
+#: src/containers/EncounterDetails/index.tsx:32
+#: src/containers/EncounterDetails/index.tsx:45
 msgid "Consultation"
 msgstr ""
 
@@ -246,7 +259,7 @@ msgstr ""
 msgid "Create"
 msgstr ""
 
-#: src/containers/EncounterDetails/index.tsx:102
+#: src/containers/EncounterDetails/index.tsx:61
 #: src/containers/PatientDetails/PatientDocuments/index.tsx:25
 msgid "Create document"
 msgstr ""
@@ -257,7 +270,7 @@ msgstr ""
 msgid "Create Encounter"
 msgstr ""
 
-#: src/containers/PractitionerList/index.tsx:49
+#: src/containers/PractitionerList/index.tsx:44
 msgid "Create practitioner"
 msgstr ""
 
@@ -270,7 +283,7 @@ msgid "Creation date"
 msgstr ""
 
 #: src/components/PatientEncounter/index.tsx:39
-#: src/containers/EncounterList/index.tsx:80
+#: src/containers/EncounterList/index.tsx:64
 #: src/containers/InvoiceList/tableUtils.tsx:129
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:53
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:91
@@ -353,7 +366,7 @@ msgstr ""
 msgid "Duration (min)"
 msgstr ""
 
-#: src/containers/HealthcareServiceList/index.tsx:75
+#: src/containers/HealthcareServiceList/index.tsx:68
 msgid "Duration (minutes)"
 msgstr ""
 
@@ -361,7 +374,7 @@ msgstr ""
 #: src/containers/EncounterDetails/AIScribe/index.tsx:197
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:199
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/EditPatient/index.tsx:23
-#: src/containers/PatientList/index.tsx:141
+#: src/containers/PatientList/index.tsx:135
 #: src/containers/PractitionerDetails/PractitionerOverview/index.tsx:67
 #: src/containers/Scheduling/ScheduleCalendar/components/AppointmentDetailsModal/index.tsx:87
 msgid "Edit"
@@ -371,12 +384,16 @@ msgstr ""
 msgid "Edit Healthcare Service"
 msgstr ""
 
-#: src/containers/QuestionnaireList/index.tsx:51
-msgid "Edit in SDC IDE"
+#: src/containers/QuestionnaireList/index.tsx:30
+msgid "Edit in"
 msgstr ""
 
+#: src/containers/QuestionnaireList/index.tsx:51
+#~ msgid "Edit in SDC IDE"
+#~ msgstr ""
+
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/EditPatient/index.tsx:20
-#: src/containers/PatientList/index.tsx:138
+#: src/containers/PatientList/index.tsx:132
 msgid "Edit patient"
 msgstr ""
 
@@ -388,18 +405,18 @@ msgstr ""
 msgid "Encounter"
 msgstr ""
 
-#: src/containers/EncounterDetails/index.tsx:143
+#: src/containers/EncounterDetails/index.tsx:105
 msgid "Encounter completed"
 msgstr ""
 
-#: src/containers/EncounterDetails/index.tsx:209
+#: src/containers/EncounterDetails/index.tsx:171
 msgid "Encounter was successfully completed"
 msgstr ""
 
 #: src/components/BaseLayout/Sidebar/SidebarTop/index.tsx:48
 #: src/components/BaseLayout/Sidebar/SidebarTop/index.tsx:54
 #: src/components/PatientEncounter/index.tsx:78
-#: src/containers/EncounterList/index.tsx:119
+#: src/containers/EncounterList/index.tsx:103
 #: src/containers/PatientDetails/PatientHeader/index.tsx:79
 msgid "Encounters"
 msgstr ""
@@ -408,7 +425,7 @@ msgstr ""
 msgid "End"
 msgstr ""
 
-#: src/containers/EncounterList/index.tsx:35
+#: src/containers/EncounterList/searchBarUtils.ts:22
 msgid "End date"
 msgstr ""
 
@@ -436,11 +453,11 @@ msgstr ""
 msgid "Fill"
 msgstr ""
 
-#: src/containers/PatientList/index.tsx:34
+#: src/containers/PatientList/searchBarUtils.ts:10
 msgid "Find patient"
 msgstr ""
 
-#: src/containers/QuestionnaireList/index.tsx:66
+#: src/containers/QuestionnaireList/searchBarUtils.ts:10
 msgid "Find questionnaire"
 msgstr ""
 
@@ -474,7 +491,7 @@ msgstr ""
 msgid "Healthcare service successfully updated"
 msgstr ""
 
-#: src/containers/HealthcareServiceList/index.tsx:39
+#: src/containers/HealthcareServiceList/index.tsx:32
 msgid "Healthcare Services"
 msgstr ""
 
@@ -593,8 +610,8 @@ msgstr ""
 #: src/containers/PatientDetails/PatientResources/utils.tsx:112
 #: src/containers/PatientDetails/PatientResources/utils.tsx:151
 #: src/containers/PatientDetails/PatientResources/utils.tsx:187
-#: src/containers/PatientList/index.tsx:94
-#: src/containers/PractitionerList/index.tsx:96
+#: src/containers/PatientList/index.tsx:88
+#: src/containers/PractitionerList/index.tsx:91
 msgid "Name"
 msgstr ""
 
@@ -603,19 +620,19 @@ msgstr ""
 msgid "msg.QuestionnaireName"
 msgstr ""
 
-#: src/utils/questionnaire.ts:48
+#: src/utils/questionnaire.ts:49
 msgid "No"
 msgstr ""
 
 #: src/components/EncountersTable/index.tsx:30
 #: src/components/ResourceTable/index.tsx:67
-#: src/containers/HealthcareServiceList/index.tsx:61
+#: src/containers/HealthcareServiceList/index.tsx:54
 #: src/containers/InvoiceList/index.tsx:70
 #: src/containers/PatientDetails/PatientWearables/index.tsx:88
-#: src/containers/PatientList/index.tsx:86
-#: src/containers/PractitionerList/index.tsx:89
+#: src/containers/PatientList/index.tsx:80
+#: src/containers/PractitionerList/index.tsx:84
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:500
-#: src/containers/QuestionnaireList/index.tsx:108
+#: src/containers/QuestionnaireList/index.tsx:107
 msgid "No data"
 msgstr ""
 
@@ -633,11 +650,10 @@ msgid "On the next page, please, use one of the following credentials"
 msgstr ""
 
 #: src/containers/DocumentsList/index.tsx:78
-#: src/containers/EncounterList/index.tsx:98
+#: src/containers/EncounterList/index.tsx:82
 #: src/containers/InvoiceList/tableUtils.tsx:82
-#: src/containers/PatientList/index.tsx:133
-#: src/containers/PractitionerList/index.tsx:124
-#: src/containers/QuestionnaireList/index.tsx:40
+#: src/containers/PatientList/index.tsx:127
+#: src/containers/PractitionerList/index.tsx:119
 msgid "Open"
 msgstr ""
 
@@ -652,7 +668,7 @@ msgstr ""
 msgid "Option {index}"
 msgstr ""
 
-#: src/containers/EncounterDetails/index.tsx:118
+#: src/containers/EncounterDetails/index.tsx:80
 msgid "or"
 msgstr ""
 
@@ -675,7 +691,7 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-#: src/containers/EncounterList/index.tsx:62
+#: src/containers/EncounterList/index.tsx:46
 #: src/containers/InvoiceList/tableUtils.tsx:122
 #: src/containers/Prescriptions/index.tsx:76
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:69
@@ -683,7 +699,7 @@ msgid "Patient"
 msgstr ""
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/EditPatient/index.tsx:33
-#: src/containers/PatientList/index.tsx:151
+#: src/containers/PatientList/index.tsx:145
 msgid "Patient saved"
 msgstr ""
 
@@ -694,7 +710,7 @@ msgstr ""
 #: src/components/BaseLayout/Sidebar/SidebarTop/index.tsx:49
 #: src/components/BaseLayout/Sidebar/SidebarTop/index.tsx:55
 #: src/containers/PatientDetails/PatientHeader/index.tsx:26
-#: src/containers/PatientList/index.tsx:65
+#: src/containers/PatientList/index.tsx:59
 msgid "Patients"
 msgstr ""
 
@@ -708,7 +724,7 @@ msgid "Phone widget"
 msgstr ""
 
 #: src/components/PatientEncounter/index.tsx:25
-#: src/containers/EncounterList/index.tsx:68
+#: src/containers/EncounterList/index.tsx:52
 #: src/containers/InvoiceList/tableUtils.tsx:114
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:146
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:265
@@ -716,13 +732,13 @@ msgstr ""
 msgid "Practitioner"
 msgstr ""
 
-#: src/containers/PractitionerList/index.tsx:65
+#: src/containers/PractitionerList/index.tsx:60
 msgid "Practitioner successfully created"
 msgstr ""
 
 #: src/components/BaseLayout/Sidebar/SidebarTop/index.tsx:50
 #: src/containers/PractitionerDetails/PractitionerHeader/index.tsx:37
-#: src/containers/PractitionerList/index.tsx:44
+#: src/containers/PractitionerList/index.tsx:39
 msgid "Practitioners"
 msgstr ""
 
@@ -758,7 +774,7 @@ msgstr ""
 
 #: src/components/BaseLayout/Sidebar/SidebarTop/index.tsx:51
 #: src/components/BaseLayout/Sidebar/SidebarTop/index.tsx:56
-#: src/containers/QuestionnaireList/index.tsx:81
+#: src/containers/QuestionnaireList/index.tsx:80
 msgid "Questionnaires"
 msgstr ""
 
@@ -828,16 +844,20 @@ msgstr ""
 msgid "Scribe results"
 msgstr ""
 
-#: src/containers/HealthcareServiceList/index.tsx:24
-#: src/containers/PractitionerList/index.tsx:29
+#: src/containers/QuestionnaireList/index.tsx:51
+msgid "SDC IDE"
+msgstr ""
+
+#: src/containers/HealthcareServiceList/searchBarUtils.ts:10
+#: src/containers/PractitionerList/searchBarUtils.ts:10
 msgid "Search by name"
 msgstr ""
 
-#: src/containers/EncounterList/index.tsx:25
+#: src/containers/EncounterList/searchBarUtils.ts:10
 msgid "Search by patient"
 msgstr ""
 
-#: src/containers/EncounterList/index.tsx:30
+#: src/containers/EncounterList/searchBarUtils.ts:17
 msgid "Search by practitioner"
 msgstr ""
 
@@ -889,11 +909,11 @@ msgstr ""
 msgid "Solid radio button"
 msgstr ""
 
-#: src/containers/PractitionerList/index.tsx:102
+#: src/containers/PractitionerList/index.tsx:97
 msgid "Specialty"
 msgstr ""
 
-#: src/containers/PatientList/index.tsx:108
+#: src/containers/PatientList/index.tsx:102
 msgid "SSN"
 msgstr ""
 
@@ -901,11 +921,11 @@ msgstr ""
 msgid "Start"
 msgstr ""
 
-#: src/containers/EncounterList/index.tsx:35
+#: src/containers/EncounterList/searchBarUtils.ts:22
 msgid "Start date"
 msgstr ""
 
-#: src/containers/EncounterDetails/index.tsx:130
+#: src/containers/EncounterDetails/index.tsx:92
 msgid "Start scribe"
 msgstr ""
 
@@ -918,14 +938,14 @@ msgstr ""
 msgid "Start value"
 msgstr ""
 
-#: src/containers/EncounterDetails/index.tsx:110
+#: src/containers/EncounterDetails/index.tsx:72
 msgid "Start video call"
 msgstr ""
 
 #: src/components/PatientEncounter/index.tsx:31
 #: src/containers/DocumentsList/index.tsx:62
-#: src/containers/EncounterList/index.tsx:74
-#: src/containers/HealthcareServiceList/index.tsx:85
+#: src/containers/EncounterList/index.tsx:58
+#: src/containers/HealthcareServiceList/index.tsx:78
 #: src/containers/InvoiceList/tableUtils.tsx:136
 #: src/containers/Prescriptions/index.tsx:132
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:77
@@ -1009,7 +1029,7 @@ msgstr ""
 msgid "True"
 msgstr ""
 
-#: src/containers/HealthcareServiceList/index.tsx:68
+#: src/containers/HealthcareServiceList/index.tsx:61
 msgid "Type"
 msgstr ""
 
@@ -1057,7 +1077,7 @@ msgstr ""
 msgid "ValueSet url"
 msgstr ""
 
-#: src/containers/EncounterList/index.tsx:107
+#: src/containers/EncounterList/index.tsx:91
 msgid "Video call"
 msgstr ""
 
@@ -1074,6 +1094,6 @@ msgstr ""
 msgid "Welcome to"
 msgstr ""
 
-#: src/utils/questionnaire.ts:48
+#: src/utils/questionnaire.ts:49
 msgid "Yes"
 msgstr ""
