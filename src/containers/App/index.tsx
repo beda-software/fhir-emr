@@ -26,6 +26,7 @@ import { sharedAuthorizedPatient } from 'src/sharedState';
 import { Role, matchCurrentUserRole } from 'src/utils/role';
 
 import { restoreUserSession } from './utils';
+import { AidboxFormsBuilder } from '../AidboxFromsBuilder';
 import { HealthcareServiceList } from '../HealthcareServiceList';
 import { InvoiceDetails } from '../InvoiceDetails';
 import { InvoiceList } from '../InvoiceList';
@@ -147,6 +148,7 @@ function AuthenticatedAdminUserApp() {
                 <Route path="/questionnaires" element={<QuestionnaireList />} />
                 <Route path="/questionnaires/builder" element={<QuestionnaireBuilder />} />
                 <Route path="/questionnaires/:id/edit" element={<QuestionnaireBuilder />} />
+                <Route path="/questionnaires/:id/aidbox-forms-builder/edit" element={<AidboxFormsBuilder />} />
                 <Route path="/questionnaires/:id" element={<div>questionnaires/:id</div>} />
                 <Route path="/healthcare-services" element={<HealthcareServiceList />} />
                 <Route path="*" element={<Navigate to="/encounters" />} />
