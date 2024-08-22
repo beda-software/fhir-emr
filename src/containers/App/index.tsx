@@ -26,7 +26,7 @@ import { sharedAuthorizedPatient } from 'src/sharedState';
 import { Role, matchCurrentUserRole } from 'src/utils/role';
 
 import { restoreUserSession } from './utils';
-import { AidboxFormsBuilder } from '../AidboxFromsBuilder';
+import { AidboxFormsBuilder } from '../AidboxFormsBuilder';
 import { HealthcareServiceList } from '../HealthcareServiceList';
 import { InvoiceDetails } from '../InvoiceDetails';
 import { InvoiceList } from '../InvoiceList';
