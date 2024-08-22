@@ -27,7 +27,7 @@ const columns: ColumnsType<Questionnaire> = [
     },
 
     {
-        title: <Trans>Actions</Trans>,
+        title: <Trans>Edit in</Trans>,
         width: 500,
         dataIndex: 'actions',
         key: 'actions',
@@ -37,7 +37,7 @@ const columns: ColumnsType<Questionnaire> = [
                     <Col>
                         <Link to={`/questionnaires/${resource.id}/edit`}>
                             <Button type="link">
-                                <Trans>Open</Trans>
+                                <Trans>AI builder</Trans>
                             </Button>
                         </Link>
                     </Col>
@@ -48,8 +48,15 @@ const columns: ColumnsType<Questionnaire> = [
                             rel="noopener noreferrer"
                             style={{ whiteSpace: 'nowrap' }}
                         >
-                            <Trans>Edit in SDC IDE</Trans>
+                            <Trans>SDC IDE</Trans>
                         </a>
+                    </Col>
+                    <Col>
+                        <Link to={`/questionnaires/${resource.id}/aidbox-forms-builder/edit`}>
+                            <Button type="link">
+                                <Trans>Aidbox Forms Builder</Trans>
+                            </Button>
+                        </Link>
                     </Col>
                 </Row>
             );
