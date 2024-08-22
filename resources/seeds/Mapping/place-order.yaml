@@ -1,0 +1,27 @@
+type: FHIRPath
+resourceType: Mapping
+body:
+  type: transaction
+  entry:
+  - request:
+      url: "ServiceRequest"
+      method: POST
+    resource:
+      status: 'active'
+      category:
+        - coding:
+            - code: '108252007'
+              display: 'Laboratory procedure'
+              system: 'http://snomed.info/sct'
+      code:
+        text: "{{ QuestionnaireResponse.repeat(item).where(linkId='test-code').answer.valueString }}"
+      intent: "{{ QuestionnaireResponse.repeat(item).where(linkId='intent').answer.valueCoding.code }}"
+      priority: "{{ QuestionnaireResponse.repeat(item).where(linkId='priority').answer.valueCoding.code }}"
+      encounter:
+        reference: "{{ 'Encounter/' + QuestionnaireResponse.repeat(item).where(linkId='encounter-id').answer.valueString }}"
+      requester:
+        reference: "{{ 'Practitioner/' + QuestionnaireResponse.repeat(item).where(linkId='practitiner-id').answer.valueString }}"
+      subject:
+        reference: "{{ 'Patient/' + QuestionnaireResponse.repeat(item).where(linkId='patient-id').answer.valueString }}"
+      performer:
+      - reference: "{{ QuestionnaireResponse.repeat(item).where(linkId='assigned-organization').answer.valueReference.reference }}"

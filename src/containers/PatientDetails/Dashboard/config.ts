@@ -12,6 +12,7 @@ import {
     prepareImmunizations,
     prepareMedications,
     prepareServiceRequest,
+    prepareAuERequest,
 } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare';
 import { CreatinineDashboardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/CreatinineDashboardContainer';
 import { GeneralInformationDashboardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer';
@@ -33,6 +34,15 @@ export const patientDashboardConfig: DashboardInstance = {
         },
         {
             widget: GeneralInformationDashboardContainer,
+        },
+        {
+            query: {
+                resourceType: 'ServiceRequest',
+                search: (patient: Patient) => ({
+                    subject: patient.id,
+                }),
+            },
+            widget: StandardCardContainerFabric(prepareAuERequest),
         },
         {
             query: {

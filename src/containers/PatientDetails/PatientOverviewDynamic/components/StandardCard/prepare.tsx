@@ -312,3 +312,64 @@ export function prepareServiceRequest(
         ],
     };
 }
+
+export function prepareAuERequest(
+    serviceRequests: ServiceRequest[],
+    _provenanceList: Provenance[],
+    total: number,
+): OverviewCard<ServiceRequest> {
+    return {
+        title: t`Orders`,
+        key: 'service-request',
+        icon: <HeartOutlined />,
+        data: serviceRequests,
+        total,
+        getKey: (r: ServiceRequest) => r.id!,
+        columns: [
+            {
+                title: t`ID`,
+                key: 'id',
+                render: (resource: ServiceRequest) => resource.id!,
+                width: 300,
+            },
+            {
+                title: t`Name`,
+                key: 'name',
+                render: (resource: ServiceRequest) => resource.code?.text ?? resource.code?.coding?.[0]?.display,
+                width: 200,
+            },
+            {
+                title: t`Status`,
+                key: 'status',
+                render: (resource: ServiceRequest) => resource.status,
+                width: 100,
+            },
+            {
+                title: t`External ids`,
+                key: 'externalid',
+                render: (r: ServiceRequest) => {
+                    const identifier = r.identifier?.[0];
+                    if (identifier) {
+                        const { value, system } = identifier;
+                        const srLink = `${system}/${value}`;
+                        const taskLink = `https://sparked.npd.telstrahealth.com/ereq/fhir/Task?focus=${value}`;
+                        return (
+                            <div>
+                                <a href={srLink} target="_blank" rel="noreferrer">
+                                    ServiceRrequest
+                                </a>
+                                <br />
+                                <a href={taskLink} target="_blank" rel="noreferrer">
+                                    Task
+                                </a>
+                            </div>
+                        );
+                    } else {
+                        return '';
+                    }
+                },
+                width: 320,
+            },
+        ],
+    };
+}
