@@ -29,8 +29,8 @@ export function convertFromFHIRExtension(extension: FHIRExtension): Partial<FCEQ
 
 export function convertToFHIRExtension(item: FCEQuestionnaireItem): FHIRExtension[] {
     const extensions: FHIRExtension[] = [];
-    for (const identifer in ExtensionIdentifier) {
-        const transformer = extensionTransformers[ExtensionIdentifier[identifer] as ExtensionIdentifier];
+    Object.values(ExtensionIdentifier).forEach((identifier) => {
+        const transformer = extensionTransformers[identifier];
         if ('transform' in transformer) {
             const extension = transformer.transform.toExtension(item);
             if (extension !== undefined) {
@@ -41,12 +41,12 @@ export function convertToFHIRExtension(item: FCEQuestionnaireItem): FHIRExtensio
             if (extensionValue !== undefined) {
                 const extension: FHIRExtension = {
                     [transformer.path.extension]: extensionValue,
-                    url: ExtensionIdentifier[identifer],
+                    url: identifier,
                 };
                 extensions.push(extension);
             }
         }
-    }
+    });
     return extensions;
 }
 

@@ -7,7 +7,26 @@ export enum ExtensionIdentifier {
     ItemControl = 'http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl',
     SliderStepValue = 'http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue',
     Unit = 'http://hl7.org/fhir/StructureDefinition/questionnaire-unit',
+    UnitOption = 'http://hl7.org/fhir/StructureDefinition/questionnaire-unitOption',
     ReferenceResource = 'http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource',
+    EntryFormat = 'http://hl7.org/fhir/StructureDefinition/entryFormat',
+    ColumnSize = 'http://aidbox.io/questionnaire-itemColumnSize',
+    ItemMedia = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemMedia',
+    Regex = 'http://hl7.org/fhir/StructureDefinition/regex',
+    ObservationExtract = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract',
+    ObservationLinkPeriod = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationLinkPeriod',
+    MinValue = 'http://hl7.org/fhir/StructureDefinition/minValue',
+    MaxValue = 'http://hl7.org/fhir/StructureDefinition/maxValue',
+    MinQuantity = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-minQuantity',
+    MaxQuantity = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-maxQuantity',
+    ShowOrdinalValue = 'http://aidbox.io/questionnaire-showOrdinalValue',
+    PreferredTerminologyServer = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-preferredTerminologyServer',
+    OpenLabel = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-openLabel',
+    BackgroundImage = 'http://aidbox.io/questionnaire-backgroundImage',
+    Language = 'http://hl7.org/fhir/StructureDefinition/language',
+    ChoiceOrientation = 'http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation',
+    InlineChoiceDirection = 'https://beda.software/fhir-emr-questionnaire/inline-choice-direction',
+    ChoiceColumns = 'http://aidbox.io/fhir/StructureDefinition/questionnaire-choiceColumns',
 
     ItemPopulationContext = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemPopulationContext',
     InitialExpression = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression',
@@ -51,8 +70,14 @@ export const extensionTransformers: ExtensionTransformer = {
     [ExtensionIdentifier.SliderStepValue]: {
         path: { extension: 'valueInteger', questionnaire: 'sliderStepValue' },
     },
+    [ExtensionIdentifier.EntryFormat]: {
+        path: { extension: 'valueString', questionnaire: 'entryFormat' },
+    },
     [ExtensionIdentifier.Unit]: {
         path: { extension: 'valueCoding', questionnaire: 'unit' },
+    },
+    [ExtensionIdentifier.UnitOption]: {
+        path: { extension: 'valueCoding', questionnaire: 'unitOption' },
     },
     [ExtensionIdentifier.RowsNumber]: {
         path: { extension: 'valueInteger', questionnaire: 'rowsNumber' },
@@ -75,6 +100,69 @@ export const extensionTransformers: ExtensionTransformer = {
                 }
             },
         },
+    },
+    [ExtensionIdentifier.ColumnSize]: {
+        path: { extension: 'valueInteger', questionnaire: 'columnSize' },
+    },
+    [ExtensionIdentifier.ItemMedia]: {
+        path: { extension: 'valueAttachment', questionnaire: 'itemMedia' },
+    },
+    [ExtensionIdentifier.Regex]: {
+        path: { extension: 'valueString', questionnaire: 'regex' },
+    },
+    [ExtensionIdentifier.ObservationExtract]: {
+        path: { extension: 'valueBoolean', questionnaire: 'observationExtract' },
+    },
+    [ExtensionIdentifier.ObservationLinkPeriod]: {
+        path: { extension: 'valueDuration', questionnaire: 'observationLinkPeriod' },
+    },
+    [ExtensionIdentifier.MinValue]: {
+        transform: {
+            fromExtension: (extension) => ({ minValue: extension }),
+            toExtension: (item) => item.minValue,
+        },
+    },
+    [ExtensionIdentifier.MaxValue]: {
+        transform: {
+            fromExtension: (extension) => ({ maxValue: extension }),
+            toExtension: (item) => item.maxValue,
+        },
+    },
+    [ExtensionIdentifier.MinQuantity]: {
+        transform: {
+            fromExtension: (extension) => ({ minQuantity: extension }),
+            toExtension: (item) => item.minQuantity,
+        },
+    },
+    [ExtensionIdentifier.MaxQuantity]: {
+        transform: {
+            fromExtension: (extension) => ({ maxQuantity: extension }),
+            toExtension: (item) => item.maxQuantity,
+        },
+    },
+    [ExtensionIdentifier.ShowOrdinalValue]: {
+        path: { extension: 'valueBoolean', questionnaire: 'showOrdinalValue' },
+    },
+    [ExtensionIdentifier.PreferredTerminologyServer]: {
+        path: { extension: 'valueUri', questionnaire: 'preferredTerminologyServer' },
+    },
+    [ExtensionIdentifier.OpenLabel]: {
+        path: { extension: 'valueString', questionnaire: 'openLabel' },
+    },
+    [ExtensionIdentifier.BackgroundImage]: {
+        path: { extension: 'valueAttachment', questionnaire: 'backgroundImage' },
+    },
+    [ExtensionIdentifier.Language]: {
+        path: { extension: 'valueCoding', questionnaire: 'language' },
+    },
+    [ExtensionIdentifier.ChoiceOrientation]: {
+        path: { extension: 'valueCode', questionnaire: 'choiceOrientation' },
+    },
+    [ExtensionIdentifier.InlineChoiceDirection]: {
+        path: { extension: 'valueString', questionnaire: 'choiceOrientation' },
+    },
+    [ExtensionIdentifier.ChoiceColumns]: {
+        path: { extension: 'valueInteger', questionnaire: 'choiceColumns' },
     },
 
     [ExtensionIdentifier.ItemPopulationContext]: {

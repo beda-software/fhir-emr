@@ -1,7 +1,7 @@
 import React from 'react';
 
-interface GroupContextProps {
-    type: 'row' | 'col' | 'gtable';
+export interface GroupContextProps {
+    type: 'row' | 'col' | 'gtable' | 'grid';
 }
 
 export const GroupContext = React.createContext<GroupContextProps>({

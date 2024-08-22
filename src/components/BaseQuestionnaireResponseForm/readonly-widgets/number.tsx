@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import { Coding } from 'fhir/r4b';
+import _ from 'lodash';
 import { QuestionItemProps } from 'sdc-qrf';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
@@ -22,7 +23,7 @@ export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps)
     return (
         <S.Question className={classNames(s.question, s.row, 'form__question')}>
             <span className={s.questionText}>{text}</span>
-            <span className={s.answer}>{value ? `${value} ${formatUnit(unit?.display)}` : '-'}</span>
+            <span className={s.answer}>{_.isNumber(value) ? `${value} ${formatUnit(unit?.display)}` : '-'}</span>
         </S.Question>
     );
 }
@@ -41,7 +42,7 @@ export function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps)
     return (
         <S.Question className={classNames(s.question, s.row, 'form__question')}>
             <span className={s.questionText}>{text}</span>
-            <span className={s.answer}>{value ? `${value} ${formatUnit(unit?.display)}` : '-'}</span>
+            <span className={s.answer}>{_.isNumber(value) ? `${value} ${formatUnit(unit?.display)}` : '-'}</span>
         </S.Question>
     );
 }
