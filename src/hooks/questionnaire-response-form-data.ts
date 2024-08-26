@@ -135,13 +135,13 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
         if (questionnaireLoader.type === 'raw-id') {
             return service<FHIRQuestionnaire>({
                 method: 'GET',
-                url: `/Questionnaire/${questionnaireLoader.questionnaireId}`,
+                url: `http://localhost:8081/Questionnaire/${questionnaireLoader.questionnaireId}`,
             });
         }
         if (questionnaireLoader.type === 'id') {
             return service<FHIRQuestionnaire>({
                 method: 'GET',
-                url: `/Questionnaire/${questionnaireLoader.questionnaireId}/$assemble`,
+                url: `http://localhost:8081/Questionnaire/${questionnaireLoader.questionnaireId}/$assemble`,
             });
         }
 
@@ -169,7 +169,7 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
         populateRemoteData = await service<FHIRQuestionnaireResponse>({
             ...(config.sdcBackendUrl ? { baseURL: config.sdcBackendUrl } : {}),
             method: 'POST',
-            url: '/Questionnaire/$populate',
+            url: 'http://localhost:8081/Questionnaire/$populate',
             data: params,
         });
     }
@@ -208,7 +208,7 @@ export async function handleFormDataSave(
 
     const constraintRemoteData = await service({
         ...(config.sdcBackendUrl ? { baseURL: config.sdcBackendUrl } : {}),
-        url: '/QuestionnaireResponse/$constraint-check',
+        url: 'http://localhost:8081/QuestionnaireResponse/$constraint-check',
         method: 'POST',
         data: {
             resourceType: 'Parameters',
