@@ -178,6 +178,10 @@ function AuthenticatedPractitionerUserApp() {
                             <Route path="/questionnaires" element={<QuestionnaireList />} />
                             <Route path="/questionnaires/builder" element={<QuestionnaireBuilder />} />
                             <Route path="/questionnaires/:id/edit" element={<QuestionnaireBuilder />} />
+                            <Route
+                                path="/questionnaires/:id/aidbox-forms-builder/edit"
+                                element={<AidboxFormsBuilder />}
+                            />
                             <Route path="/questionnaires/:id" element={<div>questionnaires/:id</div>} />
                             <Route path="*" element={<Navigate to="/encounters" />} />
                         </Routes>
