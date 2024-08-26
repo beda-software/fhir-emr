@@ -25,7 +25,7 @@ body:
             - text: $ noteContent
               author:
                 Reference:
-                  id: $ practitionerId
+                  id: $ authorId
                   display: $ authorName
                   resourceType: Practitioner
           subject:
