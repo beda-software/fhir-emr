@@ -1,0 +1,33 @@
+id: patient-note-open
+resourceType: Questionnaire
+name: patient-note-open
+title: patient note open
+status: active
+launchContext:
+  - name:
+      code: Note
+    type:
+      - Observation
+item:
+  - type: string
+    linkId: note-title
+    readOnly: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Note.code.coding.first().display"
+    itemControl:
+      coding:
+        - code: markdown-title
+  - type: string
+    linkId: note-content
+    readOnly: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Note.text.`div`"
+    itemControl:
+      coding:
+        - code: markdown-content
+meta:
+  profile:
+    - https://beda.software/beda-emr-questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/patient-note-open
