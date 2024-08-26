@@ -5,7 +5,7 @@ import { Observation } from 'fhir/r4b';
 import { isSuccess, isLoading, RemoteData } from '@beda.software/remote-data';
 
 import { SpinIndicator } from 'src/components/Spinner';
-import { formatHumanDateTime } from 'src/utils/date';
+import { formatHumanDate } from 'src/utils/date';
 
 import { ModalNoteOpen } from '../ModalNoteOpen';
 
@@ -48,7 +48,7 @@ export function NoteList({ noteListRemoteData, pagination, paginationChange, onO
                     render: (_text, resource) => {
                         const createAt = resource.meta?.extension?.find((ext) => ext.url === 'ex:createdAt')
                             ?.valueInstant;
-                        return createAt ? formatHumanDateTime(createAt) : 'N/A';
+                        return createAt ? formatHumanDate(createAt) : 'N/A';
                     },
                 },
                 {
