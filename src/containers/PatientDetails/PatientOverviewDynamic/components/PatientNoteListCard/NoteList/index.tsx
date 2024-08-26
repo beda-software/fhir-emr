@@ -33,13 +33,13 @@ export function NoteList({ noteListRemoteData, pagination, paginationChange, onO
                     title: <Trans>Title</Trans>,
                     dataIndex: 'title',
                     key: 'title',
-                    render: (_text, resource) => resource.code.coding?.[0]?.display ?? 'N/A',
+                    render: (_text, resource) => resource.valueString ?? 'N/A',
                 },
                 {
                     title: <Trans>Created by</Trans>,
                     dataIndex: 'created',
                     key: 'created',
-                    render: (_text, resource) => resource.performer?.[0]?.display ?? 'N/A',
+                    render: (_text, resource) => resource.note?.[0]?.authorReference?.display ?? 'N/A',
                 },
                 {
                     title: <Trans>Created</Trans>,

@@ -21,7 +21,7 @@ import '@mdxeditor/editor/style.css';
 
 interface MarkDownEditorProps {
     markdownString: string;
-    onChange: (markdown: string) => void;
+    onChange?: (markdown: string) => void;
     readOnly?: boolean;
 }
 

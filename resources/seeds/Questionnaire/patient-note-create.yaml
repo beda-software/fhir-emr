@@ -35,18 +35,18 @@ item:
     initialExpression:
       language: text/fhirpath
       expression: "%Patient.id"
-  - text: Performer ID
+  - text: Author ID
     required: true
     type: string
-    linkId: performer-id
+    linkId: author-id
     hidden: true
     initialExpression:
       language: text/fhirpath
       expression: "%Author.id"
-  - text: Performer Name
+  - text: Author Name
     required: true
     type: string
-    linkId: performer-name
+    linkId: author-name
     hidden: true
     initialExpression:
       language: text/fhirpath

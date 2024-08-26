@@ -3,8 +3,8 @@ body:
     noteTitle: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='note-title').answer.valueString").0
     noteContent: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='note-content').answer.valueString").0
     patientId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patient-id').answer.valueString").0
-    performerId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='performer-id').answer.valueString").0
-    performerName: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='performer-name').answer.valueString").0
+    authorId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='author-id').answer.valueString").0
+    authorName: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='author-name').answer.valueString").0
   $body:
     type: transaction
     entry:
@@ -13,23 +13,24 @@ body:
           method: POST
         fullUrl: urn:uuid:observation-id
         resource:
-          category:
-            - coding:
-                - code: note
           status: final
           code:
             coding:
-              - display: $ noteTitle
+              - system: http://snomed.info/sct
+                code: '866145009'
+                display: Patient record note
+          value:
+            string: $ noteTitle
+          note:
+            - text: $ noteContent
+              author:
+                Reference:
+                  id: $ practitionerId
+                  display: $ authorName
+                  resourceType: Practitioner
           subject:
             id: $ patientId
             resourceType: Patient
-          performer:
-            - id: $ practitionerId
-              display: $ performerName
-              resourceType: Practitioner
-          text:
-            div: $ noteContent
-            status: additional
           resourceType: Observation
     resourceType: Bundle
 id: patient-note-create-extract
