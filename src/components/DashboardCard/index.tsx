@@ -4,7 +4,7 @@ import { S } from './DashboardCard.styles';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
     title: string;
-    icon: React.ReactNode;
+    icon?: React.ReactNode;
     extra?: React.ReactNode;
     empty?: boolean;
 }
@@ -34,7 +34,7 @@ export function DashboardCard(props: Props) {
             >
                 <S.Header>
                     <div>
-                        <S.Icon className={classNames({ _empty: empty })}>{icon}</S.Icon>
+                        {icon ? <S.Icon className={classNames({ _empty: empty })}>{icon}</S.Icon> : null}
                         <S.Title>{title}</S.Title>
                     </div>
                     {extra && <div>{extra}</div>}
