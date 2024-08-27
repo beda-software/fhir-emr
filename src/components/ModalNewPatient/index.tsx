@@ -2,7 +2,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
 
-import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
+import { questionnaireIdWOAssembleLoader } from 'src/hooks/questionnaire-response-form-data';
 
 import { ModalTrigger } from '../ModalTrigger';
 import { QuestionnaireResponseForm } from '../QuestionnaireResponseForm';
@@ -24,7 +24,7 @@ export const ModalNewPatient = (props: ModalNewPatientProps) => {
         >
             {({ closeModal }) => (
                 <QuestionnaireResponseForm
-                    questionnaireLoader={questionnaireIdLoader('patient-create')}
+                    questionnaireLoader={questionnaireIdWOAssembleLoader('patient-create')}
                     onSuccess={() => {
                         closeModal();
                         notification.success({ message: t`Patient successfully created` });
