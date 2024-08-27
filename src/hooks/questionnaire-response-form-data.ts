@@ -134,14 +134,16 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
     const fetchQuestionnaire = () => {
         if (questionnaireLoader.type === 'raw-id') {
             return service<FHIRQuestionnaire>({
+                baseURL: config.questionnaireServerUrl,
                 method: 'GET',
-                url: `http://localhost:8081/Questionnaire/${questionnaireLoader.questionnaireId}`,
+                url: `/Questionnaire/${questionnaireLoader.questionnaireId}`,
             });
         }
         if (questionnaireLoader.type === 'id') {
             return service<FHIRQuestionnaire>({
+                ...(config.sdcBackendUrl ? { baseURL: config.sdcBackendUrl } : {}),
                 method: 'GET',
-                url: `http://localhost:8081/Questionnaire/${questionnaireLoader.questionnaireId}/$assemble`,
+                url: `/Questionnaire/${questionnaireLoader.questionnaireId}/$assemble`,
             });
         }
 
@@ -169,7 +171,7 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
         populateRemoteData = await service<FHIRQuestionnaireResponse>({
             ...(config.sdcBackendUrl ? { baseURL: config.sdcBackendUrl } : {}),
             method: 'POST',
-            url: 'http://localhost:8081/Questionnaire/$populate',
+            url: '/Questionnaire/$populate',
             data: params,
         });
     }
@@ -179,6 +181,7 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
         const questionnaireResponse = {
             ...initialQuestionnaireResponse,
             ...populatedQR,
+            questionnaire: questionnaire.url,
         };
 
         return toQuestionnaireResponseFormData(questionnaire, questionnaireResponse, launchContextParameters);
@@ -208,7 +211,7 @@ export async function handleFormDataSave(
 
     const constraintRemoteData = await service({
         ...(config.sdcBackendUrl ? { baseURL: config.sdcBackendUrl } : {}),
-        url: 'http://localhost:8081/QuestionnaireResponse/$constraint-check',
+        url: '/QuestionnaireResponse/$constraint-check',
         method: 'POST',
         data: {
             resourceType: 'Parameters',
