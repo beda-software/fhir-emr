@@ -352,7 +352,7 @@ export function prepareAuERequest(
                     if (identifier) {
                         const { value, system } = identifier;
                         const srLink = `${system}/${value}`;
-                        const taskLink = `https://sparked.npd.telstrahealth.com/ereq/fhir/Task?focus=${value}`;
+                        const taskLink = `https://fhir.hl7.org.au/ereq/fhir/DEFAULT/Task?focus=${value}`;
                         return (
                             <div>
                                 <a href={srLink} target="_blank" rel="noreferrer">
