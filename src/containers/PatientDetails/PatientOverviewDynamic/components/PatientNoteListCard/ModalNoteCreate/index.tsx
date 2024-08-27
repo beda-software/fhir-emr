@@ -37,7 +37,7 @@ export const ModalNoteCreate = (props: ModalNoteCreateProps) => {
                         { name: 'Author', resource: author },
                     ]}
                     itemControlQuestionItemComponents={{
-                        'markdown-content': (props) => <MDEditorControl {...props} />,
+                        'markdown-editor': (props) => <MDEditorControl {...props} />,
                     }}
                     onSuccess={() => {
                         closeModal();
