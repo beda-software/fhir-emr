@@ -1,7 +1,5 @@
 import {
     CodeToggle,
-    // CreateLink,
-    // linkDialogPlugin,
     ListsToggle,
     markdownShortcutPlugin,
     MDXEditor,
@@ -36,12 +34,13 @@ export function MarkDownEditor({ markdownString = '', readOnly = false, onChange
 
     const theme = useTheme();
 
+    // TODO Add a button to add link and make a custom modal to enter the link
+    // https://mdxeditor.dev/editor/api/functions/linkDialogPlugin
     const plugins = [
         headingsPlugin(),
         listsPlugin(),
         quotePlugin(),
         linkPlugin(),
-        // TODO linkDialogPlugin({}),
         markdownShortcutPlugin(),
     ];
 
@@ -57,8 +56,6 @@ export function MarkDownEditor({ markdownString = '', readOnly = false, onChange
                             <CodeToggle />
                             <Separator />
                             <ListsToggle />
-                            {/* <Separator /> */}
-                            {/* TODO <CreateLink /> */}
                         </div>
                     );
                 },
