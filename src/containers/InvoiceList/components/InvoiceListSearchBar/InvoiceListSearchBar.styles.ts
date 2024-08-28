@@ -23,5 +23,6 @@ export const S = {
         display: flex;
         flex-direction: row;
         gap: 32px;
+        flex-wrap: wrap;
     `,
 };
