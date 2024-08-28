@@ -1,0 +1,37 @@
+body:
+  $let:
+    noteTitle: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='note-title').answer.valueString").0
+    noteContent: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='note-content').answer.valueString").0
+    patientId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patient-id').answer.valueString").0
+    authorId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='author-id').answer.valueString").0
+    authorName: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='author-name').answer.valueString").0
+  $body:
+    type: transaction
+    entry:
+      - request:
+          url: /Observation
+          method: POST
+        fullUrl: urn:uuid:observation-id
+        resource:
+          status: final
+          code:
+            coding:
+              - system: http://snomed.info/sct
+                code: '866145009'
+                display: Patient record note
+          value:
+            string: $ noteTitle
+          note:
+            - text: $ noteContent
+              author:
+                Reference:
+                  id: $ authorId
+                  display: $ authorName
+                  resourceType: Practitioner
+          subject:
+            id: $ patientId
+            resourceType: Patient
+          resourceType: Observation
+    resourceType: Bundle
+id: patient-note-create-extract
+resourceType: Mapping
