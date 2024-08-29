@@ -36,109 +36,109 @@ msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:82
 msgid "Active"
-msgstr ""
+msgstr "Activo"
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:223
 msgid "Active Medications"
-msgstr ""
+msgstr "Medicamentos activos"
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:157
 msgid "Activities"
-msgstr ""
+msgstr "Actividades"
 
 #: src/containers/PatientDetails/PatientWearables/index.tsx:22
 msgid "Activity"
-msgstr ""
+msgstr "Actividad"
 
 #: src/components/BaseQuestionnaireResponseForm/widgets/Group/RepeatableGroups/index.tsx:66
 msgid "Add another answer"
-msgstr ""
+msgstr "Añadir otra respuesta"
 
 #: src/containers/Scheduling/Availability/index.tsx:119
 msgid "Add break"
-msgstr ""
+msgstr "Añadir espacio libre"
 
 #: src/components/ModalNewHealthcareService/index.tsx:22
 msgid "Add healthcare service"
-msgstr ""
+msgstr "Añadir servicio clínico"
 
 #: src/components/ModalNewHealthcareService/index.tsx:18
 msgid "Add Healthcare Service"
-msgstr ""
+msgstr "Añadir Servicio Clínico"
 
 #: src/containers/MedicationManagement/ModalNewMedicationKnowledge.tsx:15
 #: src/containers/MedicationManagement/ModalNewMedicationKnowledge.tsx:19
 msgid "Add Medication"
-msgstr ""
+msgstr "Añadir Medicación"
 
 #: src/containers/MedicationManagement/ModalNewMedicationBatch.tsx:19
 msgid "Add Medication Batch"
-msgstr ""
+msgstr "Añadir Lote de Medicacmentos"
 
 #: src/containers/PractitionerList/index.tsx:48
 msgid "Add new practitioner"
-msgstr ""
+msgstr "Añadir nuevo profesional"
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:308
 msgid "Add option"
-msgstr ""
+msgstr "Añadir opción"
 
 #: src/containers/PatientDetails/PatientOrders/index.tsx:158
 #: src/containers/PatientDetails/PatientOrders/index.tsx:166
 msgid "Add Order"
-msgstr ""
+msgstr "Añadir órden"
 
 #: src/components/ModalNewPatient/index.tsx:16
 #: src/components/ModalNewPatient/index.tsx:20
 msgid "Add patient"
-msgstr ""
+msgstr "Añadir paciente"
 
 #: src/containers/QuestionnaireList/index.tsx:87
 msgid "Add questionnaire"
-msgstr ""
+msgstr "Añadir formulario"
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:89
 msgid "Adjust Last Option Right"
-msgstr ""
+msgstr Ajustar la última opción a la derecha""
 
 #: src/containers/QuestionnaireList/index.tsx:40
 msgid "AI builder"
-msgstr ""
+msgstr "Creador IA"
 
 #: src/containers/QuestionnaireList/index.tsx:57
 msgid "Aidbox Forms Builder"
-msgstr ""
+msgstr "Creador de formularios en Aidbox"
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:34
 msgid "Allergies"
-msgstr ""
+msgstr "Alergias"
 
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:168
 msgid "Amend"
-msgstr ""
+msgstr "Corregir"
 
 #: src/containers/InvoiceDetails/index.tsx:97
 #: src/containers/InvoiceList/tableUtils.tsx:143
 msgid "Amount"
-msgstr ""
+msgstr "Cantidad"
 
 #: src/containers/Scheduling/ScheduleCalendar/components/AppointmentDetailsModal/index.tsx:105
 msgid "Appointment"
-msgstr ""
+msgstr "Cita"
 
 #: src/containers/Appointment/PublicAppointment.tsx:48
 msgid "Appointment booking"
-msgstr ""
+msgstr "Agendamiento de cita"
 
 #: src/containers/OrganizationScheduling/index.tsx:223
 #: src/containers/Scheduling/ScheduleCalendar/index.tsx:93
 msgid "Appointment successfully added"
-msgstr ""
+msgstr Cita añadida con éxito""
 
 #: src/containers/OrganizationScheduling/index.tsx:176
 #: src/containers/Scheduling/ScheduleCalendar/index.tsx:76
 msgid "Appointment successfully rescheduled"
-msgstr ""
+msgstr "Cita reagendada con éxito"
 
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:163
 msgid "Are you sure you want to amend the document?"
