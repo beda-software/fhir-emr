@@ -13,13 +13,9 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/ModalChangeActiveHealthcareService/index.tsx:25
-msgid "{buttonTitle}"
-msgstr "{tituloBoton}"
-
-#: src/components/ModalChangeActiveHealthcareService/index.tsx:21
-msgid "{modalTitle}"
-msgstr "{tituloModalidad}"
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/NoteList/index.tsx:55
+msgid "Action"
+msgstr ""
 
 #: src/components/PatientEncounter/index.tsx:46
 #: src/containers/DocumentsList/index.tsx:68
@@ -33,6 +29,14 @@ msgstr "{tituloModalidad}"
 #: src/containers/Prescriptions/index.tsx:151
 msgid "Actions"
 msgstr "Acciones"
+
+#: src/components/ModalChangeActiveHealthcareService/index.tsx:17
+msgid "Activate"
+msgstr ""
+
+#: src/components/ModalChangeActiveHealthcareService/index.tsx:16
+msgid "Activate healthcare service"
+msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:82
 msgid "Active"
@@ -78,6 +82,14 @@ msgstr "Añadir Lote de Medicamento"
 #: src/containers/PractitionerList/index.tsx:48
 msgid "Add new practitioner"
 msgstr "Añadir nuevo profesional"
+
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteCreate/index.tsx:27
+msgid "Add note"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteCreate/index.tsx:23
+msgid "Add Note"
+msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:308
 msgid "Add option"
@@ -203,6 +215,10 @@ msgstr "Ejecución en curso"
 msgid "Clinician successfully updated"
 msgstr "Profesional actualizado exitosamente"
 
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteOpen/index.tsx:32
+msgid "Close"
+msgstr ""
+
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:177
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:514
 msgid "Code"
@@ -275,8 +291,13 @@ msgid "Create practitioner"
 msgstr "Crear un profesional"
 
 #: src/components/ChangesDiff/index.tsx:27
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/NoteList/index.tsx:45
 msgid "Created"
 msgstr "Creado"
+
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/NoteList/index.tsx:39
+msgid "Created by"
+msgstr ""
 
 #: src/containers/DocumentsList/index.tsx:56
 msgid "Creation date"
@@ -314,6 +335,14 @@ msgstr "Fecha registrada"
 #: src/components/Calendar/index.tsx:32
 msgid "Day"
 msgstr "Día"
+
+#: src/components/ModalChangeActiveHealthcareService/index.tsx:17
+msgid "Deactivate"
+msgstr ""
+
+#: src/components/ModalChangeActiveHealthcareService/index.tsx:16
+msgid "Deactivate healthcare service"
+msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:60
 msgid "Default"
@@ -486,7 +515,7 @@ msgstr "Ir al encuentro"
 msgid "Healthcare service successfully created"
 msgstr "Servicio de salud creado con éxito"
 
-#: src/components/ModalChangeActiveHealthcareService/index.tsx:38
+#: src/components/ModalChangeActiveHealthcareService/index.tsx:36
 #: src/components/ModalEditHealthcareService/index.tsx:34
 msgid "Healthcare service successfully updated"
 msgstr "Servicio de salud actualizado con éxito"
@@ -636,9 +665,21 @@ msgstr "No"
 msgid "No data"
 msgstr "Sin datos"
 
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/NoteList/index.tsx:27
+msgid "No notes"
+msgstr ""
+
 #: src/components/TextWithMacroFill/index.tsx:30
 msgid "No prepared text"
 msgstr "Sin texto preparado"
+
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteCreate/index.tsx:44
+msgid "Note successfully created"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/index.tsx:31
+msgid "Notes"
+msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:52
 msgid "Number (default)"
@@ -652,6 +693,7 @@ msgstr "En la siguiente página, por favor, utilice una de las siguientes creden
 #: src/containers/DocumentsList/index.tsx:78
 #: src/containers/EncounterList/index.tsx:82
 #: src/containers/InvoiceList/tableUtils.tsx:82
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteOpen/index.tsx:22
 #: src/containers/PatientList/index.tsx:127
 #: src/containers/PractitionerList/index.tsx:119
 msgid "Open"
@@ -1012,6 +1054,7 @@ msgid "Time"
 msgstr "Hora"
 
 #: src/containers/PatientDetails/PatientOrders/index.tsx:27
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/NoteList/index.tsx:33
 #: src/containers/PatientDetails/PatientResources/utils.tsx:234
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:54
 msgid "Title"

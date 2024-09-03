@@ -17,12 +17,8 @@ msgstr ""
 #~ msgid "{0}"
 #~ msgstr ""
 
-#: src/components/ModalChangeActiveHealthcareService/index.tsx:25
-msgid "{buttonTitle}"
-msgstr ""
-
-#: src/components/ModalChangeActiveHealthcareService/index.tsx:21
-msgid "{modalTitle}"
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/NoteList/index.tsx:55
+msgid "Action"
 msgstr ""
 
 #: src/components/PatientEncounter/index.tsx:46
@@ -37,6 +33,14 @@ msgstr ""
 #: src/containers/Prescriptions/index.tsx:151
 msgid "Actions"
 msgstr "Действия"
+
+#: src/components/ModalChangeActiveHealthcareService/index.tsx:17
+msgid "Activate"
+msgstr ""
+
+#: src/components/ModalChangeActiveHealthcareService/index.tsx:16
+msgid "Activate healthcare service"
+msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:82
 msgid "Active"
@@ -81,6 +85,14 @@ msgstr ""
 
 #: src/containers/PractitionerList/index.tsx:48
 msgid "Add new practitioner"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteCreate/index.tsx:27
+msgid "Add note"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteCreate/index.tsx:23
+msgid "Add Note"
 msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:308
@@ -207,6 +219,10 @@ msgstr ""
 msgid "Clinician successfully updated"
 msgstr ""
 
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteOpen/index.tsx:32
+msgid "Close"
+msgstr ""
+
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:177
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:514
 msgid "Code"
@@ -279,7 +295,12 @@ msgid "Create practitioner"
 msgstr ""
 
 #: src/components/ChangesDiff/index.tsx:27
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/NoteList/index.tsx:45
 msgid "Created"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/NoteList/index.tsx:39
+msgid "Created by"
 msgstr ""
 
 #: src/containers/DocumentsList/index.tsx:56
@@ -317,6 +338,14 @@ msgstr ""
 
 #: src/components/Calendar/index.tsx:32
 msgid "Day"
+msgstr ""
+
+#: src/components/ModalChangeActiveHealthcareService/index.tsx:17
+msgid "Deactivate"
+msgstr ""
+
+#: src/components/ModalChangeActiveHealthcareService/index.tsx:16
+msgid "Deactivate healthcare service"
 msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:60
@@ -494,7 +523,7 @@ msgstr ""
 msgid "Healthcare service successfully created"
 msgstr ""
 
-#: src/components/ModalChangeActiveHealthcareService/index.tsx:38
+#: src/components/ModalChangeActiveHealthcareService/index.tsx:36
 #: src/components/ModalEditHealthcareService/index.tsx:34
 msgid "Healthcare service successfully updated"
 msgstr ""
@@ -648,8 +677,20 @@ msgstr ""
 msgid "No data"
 msgstr "Нет данных"
 
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/NoteList/index.tsx:27
+msgid "No notes"
+msgstr ""
+
 #: src/components/TextWithMacroFill/index.tsx:30
 msgid "No prepared text"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteCreate/index.tsx:44
+msgid "Note successfully created"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/index.tsx:31
+msgid "Notes"
 msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:52
@@ -668,6 +709,7 @@ msgstr ""
 #: src/containers/DocumentsList/index.tsx:78
 #: src/containers/EncounterList/index.tsx:82
 #: src/containers/InvoiceList/tableUtils.tsx:82
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteOpen/index.tsx:22
 #: src/containers/PatientList/index.tsx:127
 #: src/containers/PractitionerList/index.tsx:119
 msgid "Open"
@@ -1032,6 +1074,7 @@ msgid "Time"
 msgstr ""
 
 #: src/containers/PatientDetails/PatientOrders/index.tsx:27
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/NoteList/index.tsx:33
 #: src/containers/PatientDetails/PatientResources/utils.tsx:234
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:54
 msgid "Title"
