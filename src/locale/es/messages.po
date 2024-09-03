@@ -15,7 +15,7 @@ msgstr ""
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/NoteList/index.tsx:55
 msgid "Action"
-msgstr ""
+msgstr "Acción"
 
 #: src/components/PatientEncounter/index.tsx:46
 #: src/containers/DocumentsList/index.tsx:68
@@ -32,11 +32,11 @@ msgstr "Acciones"
 
 #: src/components/ModalChangeActiveHealthcareService/index.tsx:17
 msgid "Activate"
-msgstr ""
+msgstr "Activado"
 
 #: src/components/ModalChangeActiveHealthcareService/index.tsx:16
 msgid "Activate healthcare service"
-msgstr ""
+msgstr "Activar servicio clínico"
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:82
 msgid "Active"
@@ -85,11 +85,11 @@ msgstr "Añadir nuevo profesional"
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteCreate/index.tsx:27
 msgid "Add note"
-msgstr ""
+msgstr "Agregar nota"
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteCreate/index.tsx:23
 msgid "Add Note"
-msgstr ""
+msgstr "Agregar nota"
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:308
 msgid "Add option"
@@ -217,7 +217,7 @@ msgstr "Profesional actualizado exitosamente"
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteOpen/index.tsx:32
 msgid "Close"
-msgstr ""
+msgstr "Cerrar"
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:177
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:514
@@ -297,7 +297,7 @@ msgstr "Creado"
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/NoteList/index.tsx:39
 msgid "Created by"
-msgstr ""
+msgstr "Creado por"
 
 #: src/containers/DocumentsList/index.tsx:56
 msgid "Creation date"
@@ -338,11 +338,11 @@ msgstr "Día"
 
 #: src/components/ModalChangeActiveHealthcareService/index.tsx:17
 msgid "Deactivate"
-msgstr ""
+msgstr "Desactivar"
 
 #: src/components/ModalChangeActiveHealthcareService/index.tsx:16
 msgid "Deactivate healthcare service"
-msgstr ""
+msgstr "Desactivar servicio clínico"
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:60
 msgid "Default"
@@ -667,7 +667,7 @@ msgstr "Sin datos"
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/NoteList/index.tsx:27
 msgid "No notes"
-msgstr ""
+msgstr "Sin notas"
 
 #: src/components/TextWithMacroFill/index.tsx:30
 msgid "No prepared text"
@@ -675,11 +675,11 @@ msgstr "Sin texto preparado"
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteCreate/index.tsx:44
 msgid "Note successfully created"
-msgstr ""
+msgstr "Nota creada exitosamente"
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/index.tsx:31
 msgid "Notes"
-msgstr ""
+msgstr "Notas"
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:52
 msgid "Number (default)"
