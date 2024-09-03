@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { DefaultTheme } from 'styled-components';
 
 export const brandColors: Pick<DefaultTheme, 'primary' | 'secondary'> = {
-    primary: '#3366ff',
+    primary: '#892CE2',
     secondary: '#05BDB1',
 };
 
@@ -98,12 +98,12 @@ export function getPalette({ dark }: { dark?: boolean }): DefaultTheme {
         dark: DefaultTheme['iconColors'];
     } = {
         light: {
-            primary: primaryPalette.bcp_6,
-            secondary: secondaryPalette.bcs_2,
+            primary: '#4E1AEF',
+            secondary: '#D4B3F5',
         },
         dark: {
-            primary: neutralPalette.dark.gray_12,
-            secondary: neutralPalette.dark.gray_6,
+            primary: '#49B5FF',
+            secondary: '#A76EB1',
         },
     };
 
