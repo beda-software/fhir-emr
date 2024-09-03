@@ -240,7 +240,7 @@ msgstr "Completar cita"
 #: src/components/EncounterStatusBadge/index.tsx:17
 #: src/components/EncounterStatusBadge/index.tsx:18
 msgid "completed"
-msgstr "Competado"
+msgstr "Completado"
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:494
 msgid "Concepts:"
