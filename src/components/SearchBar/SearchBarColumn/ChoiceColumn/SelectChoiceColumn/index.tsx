@@ -1,7 +1,7 @@
 import { Col } from 'antd';
 
-import { ValueSetOption } from 'src/components/BaseQuestionnaireResponseForm/widgets/choice/service';
 import { Select } from 'src/components/Select';
+import { ValueSetOption } from 'src/services';
 
 import { SearchBarColumnChoiceTypeProps } from '../../types';
 import { useChoiceColumn } from '../hooks';
