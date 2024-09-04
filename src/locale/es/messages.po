@@ -89,7 +89,7 @@ msgstr "Agregar nota"
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteCreate/index.tsx:23
 msgid "Add Note"
-msgstr "Agregar nota"
+msgstr "Agregar Nota"
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:308
 msgid "Add option"
