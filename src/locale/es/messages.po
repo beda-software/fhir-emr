@@ -284,7 +284,7 @@ msgstr "Crear documento"
 #: src/components/ModalNewEncounter/index.tsx:24
 #: src/components/ModalNewEncounter/index.tsx:25
 msgid "Create Encounter"
-msgstr "Crear una cita"
+msgstr "Crear un encuentro"
 
 #: src/containers/PractitionerList/index.tsx:44
 msgid "Create practitioner"
