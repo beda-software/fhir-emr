@@ -142,6 +142,7 @@
         "./services": "./dist/services/index.js",
         "./hooks": "./dist/hooks/index.js",
         "./utils": "./dist/utils/index.js",
+        "./contexts": "./dist/contexts/index.js",
         "./sharedState": "./dist/sharedState/index.js",
         "./theme": "./dist/theme/index.js",
         "./dist/*": "./dist/*.js",
