@@ -44,6 +44,7 @@ export default defineConfig({
                 path.resolve(__dirname, 'src/contexts/index.ts'),
                 path.resolve(__dirname, 'src/theme/index.ts'),
                 path.resolve(__dirname, 'src/dashboard.config.ts'),
+                path.resolve(__dirname, 'src/setupTests.ts'),
             ],
             formats: ['es'],
             fileName: (format, entryName) => `${entryName}.js`,
