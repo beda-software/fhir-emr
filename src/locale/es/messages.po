@@ -32,7 +32,7 @@ msgstr "Acciones"
 
 #: src/components/ModalChangeActiveHealthcareService/index.tsx:17
 msgid "Activate"
-msgstr "Activar"
+msgstr "Activado"
 
 #: src/components/ModalChangeActiveHealthcareService/index.tsx:16
 msgid "Activate healthcare service"
@@ -89,7 +89,7 @@ msgstr "Agregar nota"
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteCreate/index.tsx:23
 msgid "Add Note"
-msgstr "Agregar Nota"
+msgstr "Agregar nota"
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:308
 msgid "Add option"
