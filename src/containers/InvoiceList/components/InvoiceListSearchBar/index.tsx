@@ -29,13 +29,13 @@ export function InvoiceListSearchBar(props: InvoiceListSearchBarSelectProps) {
                         onChange={onChangePractitionerRole}
                         loadOptions={loadPractitionerRoleOptions}
                         value={selectedPractitionerRole as OptionType}
-                        placeholder="Practitioner"
+                        placeholder="Profesional"
                     />
                     <AsyncDropdown
                         onChange={onChangePatient}
                         loadOptions={loadPatientOptions}
                         value={selectedPatient as OptionType}
-                        placeholder="Patient"
+                        placeholder="Paciente"
                         hidden={matchCurrentUserRole({
                             [Role.Admin]: () => false,
                             [Role.Patient]: () => true,
@@ -47,12 +47,12 @@ export function InvoiceListSearchBar(props: InvoiceListSearchBarSelectProps) {
                         onChange={onChangeStatus}
                         loadOptions={loadStatusOptions}
                         value={selectedStatus as OptionType}
-                        placeholder="Status"
+                        placeholder="Estado"
                     />
                 </S.SelectContainer>
             </Row>
 
-            <Button onClick={reset}>Reset</Button>
+            <Button onClick={reset}>Restablecer</Button>
         </S.Container>
     );
 }
