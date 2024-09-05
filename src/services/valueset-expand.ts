@@ -4,7 +4,7 @@ import { upperFirst } from 'lodash';
 
 import { service } from 'aidbox-react/lib/services/service';
 
-import { isSuccess, mapSuccess, success, failure, RemoteDataResult } from '@beda.software/remote-data';
+import { isSuccess, mapSuccess, success, failure, RemoteDataResult, RemoteData } from '@beda.software/remote-data';
 
 import { getCurrentLocale } from './i18n';
 
@@ -12,7 +12,7 @@ export type ValueSetOption = {
     value: { Coding: ValueSetExpansionContains };
 };
 
-const expandHealthSamuraiValueSet = async (answerValueSet: string, searchText: string) => {
+export async function expandHealthSamuraiValueSet(answerValueSet: string, searchText: string): Promise<RemoteData> {
     const instanceHealthSamurai = axios.create({
         baseURL: 'https://tx.health-samurai.io',
         headers: {
