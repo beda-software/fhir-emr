@@ -751,6 +751,7 @@ msgstr ""
 
 #: src/containers/EncounterList/index.tsx:46
 #: src/containers/InvoiceList/tableUtils.tsx:122
+#: src/containers/Prescriptions/components/PrescriptionsSearchBar/index.tsx:48
 #: src/containers/Prescriptions/index.tsx:76
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:69
 msgid "Patient"
@@ -852,6 +853,7 @@ msgstr ""
 msgid "Request Appointment"
 msgstr ""
 
+#: src/containers/Prescriptions/components/PrescriptionsSearchBar/index.tsx:60
 #: src/containers/Prescriptions/index.tsx:88
 msgid "Requester"
 msgstr ""
@@ -862,6 +864,7 @@ msgstr ""
 
 #: src/components/SearchBar/index.tsx:24
 #: src/containers/OrganizationScheduling/index.tsx:87
+#: src/containers/Prescriptions/components/PrescriptionsSearchBar/index.tsx:71
 msgid "Reset"
 msgstr "Сбросить"
 
@@ -1009,6 +1012,7 @@ msgstr ""
 #: src/containers/EncounterList/index.tsx:58
 #: src/containers/HealthcareServiceList/index.tsx:78
 #: src/containers/InvoiceList/tableUtils.tsx:136
+#: src/containers/Prescriptions/components/PrescriptionsSearchBar/index.tsx:66
 #: src/containers/Prescriptions/index.tsx:132
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:77
 msgid "Status"
