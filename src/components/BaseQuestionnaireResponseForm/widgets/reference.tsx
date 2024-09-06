@@ -160,7 +160,7 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         if (questionItem.itemControl) {
             loadItemControlOptions();
         }
-    }, [questionItem.itemControl, loadOptions]);
+    }, [questionItem.itemControl]);
 
     const onChange = (
         _value: SingleValue<QuestionnaireItemAnswerOption> | MultiValue<QuestionnaireItemAnswerOption>,
