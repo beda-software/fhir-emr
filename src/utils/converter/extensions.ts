@@ -10,6 +10,8 @@ export enum ExtensionIdentifier {
     UnitOption = 'http://hl7.org/fhir/StructureDefinition/questionnaire-unitOption',
     ReferenceResource = 'http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource',
     EntryFormat = 'http://hl7.org/fhir/StructureDefinition/entryFormat',
+    RenderingStyle = 'http://hl7.org/fhir/StructureDefinition/rendering-style',
+    DataType = 'http://hl7.org/fhir/StructureDefinition/_datatype',
     ColumnSize = 'http://aidbox.io/questionnaire-itemColumnSize',
     ItemMedia = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemMedia',
     Regex = 'http://hl7.org/fhir/StructureDefinition/regex',
@@ -72,6 +74,12 @@ export const extensionTransformers: ExtensionTransformer = {
     },
     [ExtensionIdentifier.EntryFormat]: {
         path: { extension: 'valueString', questionnaire: 'entryFormat' },
+    },
+    [ExtensionIdentifier.RenderingStyle]: {
+        path: { extension: 'valueString', questionnaire: 'renderingStyle' },
+    },
+    [ExtensionIdentifier.DataType]: {
+        path: { extension: 'valueString', questionnaire: 'dataType' },
     },
     [ExtensionIdentifier.Unit]: {
         path: { extension: 'valueCoding', questionnaire: 'unit' },
