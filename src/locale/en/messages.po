@@ -615,6 +615,7 @@ msgstr ""
 msgid "Macro text"
 msgstr ""
 
+#: src/containers/MedicationManagement/components/MedicationsSearchBar/index.tsx:30
 #: src/containers/Prescriptions/index.tsx:113
 msgid "Medication"
 msgstr ""
@@ -750,6 +751,7 @@ msgid "Password"
 msgstr ""
 
 #: src/containers/EncounterList/index.tsx:46
+#: src/containers/InvoiceList/components/InvoiceListSearchBar/index.tsx:39
 #: src/containers/InvoiceList/tableUtils.tsx:122
 #: src/containers/Prescriptions/components/PrescriptionsSearchBar/index.tsx:48
 #: src/containers/Prescriptions/index.tsx:76
@@ -784,6 +786,7 @@ msgstr ""
 
 #: src/components/PatientEncounter/index.tsx:25
 #: src/containers/EncounterList/index.tsx:52
+#: src/containers/InvoiceList/components/InvoiceListSearchBar/index.tsx:33
 #: src/containers/InvoiceList/tableUtils.tsx:114
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:146
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:265
@@ -863,6 +866,8 @@ msgid "Required"
 msgstr ""
 
 #: src/components/SearchBar/index.tsx:24
+#: src/containers/InvoiceList/components/InvoiceListSearchBar/index.tsx:56
+#: src/containers/MedicationManagement/components/MedicationsSearchBar/index.tsx:35
 #: src/containers/OrganizationScheduling/index.tsx:87
 #: src/containers/Prescriptions/components/PrescriptionsSearchBar/index.tsx:71
 msgid "Reset"
@@ -1011,6 +1016,7 @@ msgstr ""
 #: src/containers/DocumentsList/index.tsx:62
 #: src/containers/EncounterList/index.tsx:58
 #: src/containers/HealthcareServiceList/index.tsx:78
+#: src/containers/InvoiceList/components/InvoiceListSearchBar/index.tsx:51
 #: src/containers/InvoiceList/tableUtils.tsx:136
 #: src/containers/Prescriptions/components/PrescriptionsSearchBar/index.tsx:66
 #: src/containers/Prescriptions/index.tsx:132
