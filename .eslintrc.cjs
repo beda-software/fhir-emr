@@ -43,11 +43,11 @@ module.exports = {
         'react/react-in-jsx-scope': 'off',
         '@typescript-eslint/no-non-null-assertion': 'off',
         '@typescript-eslint/ban-ts-comment': 'off',
-        "string-to-lingui/t-call-in-function": 2,
+        'string-to-lingui/t-call-in-function': 2,
         'import/no-unresolved': [
             2,
             {
-                ignore: ['fhir/r4b', '@beda.software/emr-config', '@beda.software/aidbox-types'], // Fixes error: Unable to resolve path to module 'fhir/r4b'.
+                ignore: ['fhir/r4b', '@beda.software/emr-config', '@beda.software/aidbox-types', '@mdxeditor/editor'], // Fixes error: Unable to resolve path to module 'fhir/r4b'.
             },
         ],
         'import/order': [

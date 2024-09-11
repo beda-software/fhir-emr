@@ -76,6 +76,7 @@ export function InvoiceList() {
                             dataSource={invoices}
                             columns={getInvoiceTableColumns(practitioners, practitionerRoles, patients, pagerManager)}
                             loading={isLoading(invoiceResponse) && { indicator: SpinIndicator }}
+                            scroll={{ x: 'max-content' }}
                         />
                     )}
                 </RenderRemoteData>

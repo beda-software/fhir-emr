@@ -2,32 +2,28 @@ import _ from 'lodash';
 import { useCallback, useContext } from 'react';
 import { MultiValue, SingleValue } from 'react-select';
 
-import { ExpandProvider } from 'src/components/BaseQuestionnaireResponseForm/widgets/choice/context';
-import { ValueSetOption } from 'src/components/BaseQuestionnaireResponseForm/widgets/choice/service';
-
 import { ChoiceColumnOption } from './types';
 import { ChoiceTypeColumnFilterValue } from '../../types';
 import { SearchBarColumnChoiceTypeProps } from '../types';
+import { ValueSetExpandProvider } from 'src/contexts';
+import { ValueSetOption } from 'src/services';
 
 export function useChoiceColumn(props: SearchBarColumnChoiceTypeProps) {
     const { columnFilterValue, onChange } = props;
     const { id, valueSet, repeats } = columnFilterValue.column;
-    const expand = useContext(ExpandProvider);
+    const expand = useContext(ValueSetExpandProvider);
 
-    const loadOptions = useCallback(
-        async (searchText: string) => {
-            return expand(valueSet, searchText);
-        },
-        [valueSet, expand],
-    );
+    const loadOptions = async (searchText: string) => {
+        return expand(valueSet, searchText);
+    };
 
-    const debouncedLoadOptions = _.debounce((searchText, callback) => {
+    const debouncedLoadOptions = _.debounce((searchText: string, callback: (options: ChoiceColumnOption[]) => void) => {
         (async () => callback(await loadOptions(searchText)))();
     }, 500);
 
     const onSelect = useCallback(
         (newValue: MultiValue<ChoiceColumnOption> | SingleValue<ChoiceColumnOption>) => {
-            if (!newValue) {
+            if (!newValue || (_.isArray(newValue) && newValue.length === 0)) {
                 return onChange(null, id);
             }
 

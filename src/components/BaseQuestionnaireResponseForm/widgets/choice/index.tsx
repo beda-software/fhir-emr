@@ -8,9 +8,9 @@ import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer } from '
 import { AsyncSelect, Select } from 'src/components/Select';
 import { getDisplay } from 'src/utils/questionnaire';
 
-import { ExpandProvider } from './context';
 import s from '../../BaseQuestionnaireResponseForm.module.scss';
 import { useFieldController } from '../../hooks';
+import { ValueSetExpandProvider } from 'src/contexts';
 
 interface ChoiceQuestionSelectProps {
     value?: QuestionnaireResponseItemAnswer[];
@@ -87,7 +87,7 @@ interface ChoiceQuestionValueSetProps {
 
 export function ChoiceQuestionValueSet(props: ChoiceQuestionValueSetProps) {
     const { answerValueSet, value, onChange, repeats = false, placeholder } = props;
-    const expand = useContext(ExpandProvider);
+    const expand = useContext(ValueSetExpandProvider);
 
     const loadOptions = useCallback(
         async (searchText: string) => {

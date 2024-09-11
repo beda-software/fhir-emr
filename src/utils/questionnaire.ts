@@ -1,4 +1,5 @@
 import { t } from '@lingui/macro';
+import _ from 'lodash';
 import * as yup from 'yup';
 
 import {
@@ -36,8 +37,8 @@ export function getDisplay(value?: QuestionnaireResponseItemAnswerValue): string
         return parseFHIRTime(value.time).format('HH:mm');
     }
 
-    if (value.integer) {
-        return value.integer;
+    if (_.isNumber(value.integer)) {
+        return value.integer.toString();
     }
 
     if (value.decimal) {

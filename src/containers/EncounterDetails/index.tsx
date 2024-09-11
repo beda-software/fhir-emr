@@ -23,7 +23,7 @@ import { S } from './EncounterDetails.styles';
 import { EncounterDetailsProps, useEncounterDetails } from './hooks';
 
 export const EncounterDetails = (props: EncounterDetailsProps) => {
-    const { patient } = props;
+    const { patient, hideControls } = props;
     const [modalOpened, setModalOpened] = useState(false);
     const { encounterInfoRD, completeEncounter, manager, communicationResponse } = useEncounterDetails(props);
     const [documentListKey, setDocumentListKey] = useState(0);
@@ -54,67 +54,72 @@ export const EncounterDetails = (props: EncounterDetailsProps) => {
 
                     return (
                         <>
-                            <S.Controls>
-                                {!isEncounterCompleted ? (
-                                    <Button icon={<PlusOutlined />} type="primary" onClick={() => setModalOpened(true)}>
-                                        <span>
-                                            <Trans>Create document</Trans>
-                                        </span>
-                                    </Button>
-                                ) : null}
-                                {!isEncounterCompleted && !config.aiAssistantServiceUrl ? (
-                                    <Link
-                                        to={`/encounters/${encounter.id}/video`}
-                                        state={{ encounterData: encounterData }}
-                                    >
-                                        <Button type="primary">
-                                            <span>
-                                                <Trans>Start video call</Trans>
-                                            </span>
-                                        </Button>
-                                    </Link>
-                                ) : null}
-                                {config.aiAssistantServiceUrl && !isEncounterCompleted ? (
-                                    <>
-                                        <Text>
-                                            <Trans>or</Trans>
-                                        </Text>
+                            {hideControls ? null : (
+                                <S.Controls>
+                                    {!isEncounterCompleted ? (
                                         <Button
-                                            icon={<AudioOutlined />}
+                                            icon={<PlusOutlined />}
                                             type="primary"
-                                            onClick={() => {
-                                                setShowScriber(true);
-                                                recorderControls.startRecording();
-                                            }}
-                                            disabled={disableControls}
+                                            onClick={() => setModalOpened(true)}
                                         >
                                             <span>
-                                                <Trans>Start scribe</Trans>
+                                                <Trans>Create document</Trans>
                                             </span>
                                         </Button>
-                                    </>
-                                ) : null}
-                                <S.EncounterControls>
-                                    {isEncounterCompleted ? (
-                                        <Button
-                                            icon={<CheckOutlined />}
-                                            type="primary"
-                                            onClick={() => completeEncounter(encounter)}
+                                    ) : null}
+                                    {!isEncounterCompleted && !config.aiAssistantServiceUrl ? (
+                                        <Link
+                                            to={`/encounters/${encounter.id}/video`}
+                                            state={{ encounterData: encounterData }}
                                         >
-                                            <span>
-                                                <Trans>Encounter completed</Trans>
-                                            </span>
-                                        </Button>
-                                    ) : (
-                                        <ModalCompleteEncounter
-                                            onSuccess={manager.reload}
-                                            encounter={encounter}
-                                            disabled={disableControls}
-                                        />
-                                    )}
-                                </S.EncounterControls>
-                            </S.Controls>
-
+                                            <Button type="primary">
+                                                <span>
+                                                    <Trans>Start video call</Trans>
+                                                </span>
+                                            </Button>
+                                        </Link>
+                                    ) : null}
+                                    {config.aiAssistantServiceUrl && !isEncounterCompleted ? (
+                                        <>
+                                            <Text>
+                                                <Trans>or</Trans>
+                                            </Text>
+                                            <Button
+                                                icon={<AudioOutlined />}
+                                                type="primary"
+                                                onClick={() => {
+                                                    setShowScriber(true);
+                                                    recorderControls.startRecording();
+                                                }}
+                                                disabled={disableControls}
+                                            >
+                                                <span>
+                                                    <Trans>Start scribe</Trans>
+                                                </span>
+                                            </Button>
+                                        </>
+                                    ) : null}
+                                    <S.EncounterControls>
+                                        {isEncounterCompleted ? (
+                                            <Button
+                                                icon={<CheckOutlined />}
+                                                type="primary"
+                                                onClick={() => completeEncounter(encounter)}
+                                            >
+                                                <span>
+                                                    <Trans>Encounter completed</Trans>
+                                                </span>
+                                            </Button>
+                                        ) : (
+                                            <ModalCompleteEncounter
+                                                onSuccess={manager.reload}
+                                                encounter={encounter}
+                                                disabled={disableControls}
+                                            />
+                                        )}
+                                    </S.EncounterControls>
+                                </S.Controls>
+                            )}
                             <ChooseDocumentToCreateModal
                                 open={modalOpened}
                                 onCancel={() => setModalOpened(false)}

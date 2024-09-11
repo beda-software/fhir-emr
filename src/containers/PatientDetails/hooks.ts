@@ -11,16 +11,18 @@ export interface PatientInformation {
 }
 
 export function usePatientResource(config: { id: string }) {
-    return useService(async () =>
-        mapSuccess(
-            await getFHIRResources<Patient | CarePlan>('Patient', {
-                _id: config.id,
-                _revinclude: ['CarePlan:subject'],
-            }),
-            (bundle): PatientInformation => {
-                const { Patient, CarePlan } = extractBundleResources(bundle);
-                return { patient: Patient[0]!, carePlans: CarePlan };
-            },
-        ),
+    return useService(
+        async () =>
+            mapSuccess(
+                await getFHIRResources<Patient | CarePlan>('Patient', {
+                    _id: config.id,
+                    _revinclude: ['CarePlan:subject'],
+                }),
+                (bundle): PatientInformation => {
+                    const { Patient, CarePlan } = extractBundleResources(bundle);
+                    return { patient: Patient[0]!, carePlans: CarePlan };
+                },
+            ),
+        [config.id],
     );
 }

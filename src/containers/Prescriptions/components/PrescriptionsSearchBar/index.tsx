@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro';
 import { Row, Button } from 'antd';
 
 import { AsyncDropdown } from 'src/containers/OrganizationScheduling/HealthcareServicePractitionerSelect';
@@ -44,7 +45,7 @@ export function PrescriptionsSearchBar(props: PrescriptionsSearchBarSelectProps)
                         onChange={onChangePatient}
                         loadOptions={loadPatientOptions}
                         value={selectedPatient as OptionType}
-                        placeholder="Patient"
+                        placeholder={t`Patient`}
                         hidden={matchCurrentUserRole({
                             [Role.Admin]: () => false,
                             [Role.Patient]: () => true,
@@ -56,18 +57,18 @@ export function PrescriptionsSearchBar(props: PrescriptionsSearchBarSelectProps)
                         onChange={onChangePractitionerRole}
                         loadOptions={loadPractitionerRoleOptions}
                         value={selectedPractitionerRole as OptionType}
-                        placeholder="Requester"
+                        placeholder={t`Requester`}
                     />
                     <AsyncDropdown
                         onChange={onChangeStatus}
                         loadOptions={loadStatusOptions}
                         value={selectedStatus as OptionType}
-                        placeholder="Status"
+                        placeholder={t`Status`}
                     />
                 </S.SelectContainer>
             </Row>
 
-            <Button onClick={reset}>Reset</Button>
+            <Button onClick={reset}>{t`Reset`}</Button>
         </S.Container>
     );
 }

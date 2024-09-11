@@ -170,6 +170,7 @@ function LocaleSwitcher(props: { onItemClick?: () => void }) {
     const onChangeLocale = (key: LocaleCode) => {
         setCurrentLocale(key);
         dynamicActivate(key);
+        location.reload();
     };
 
     return (

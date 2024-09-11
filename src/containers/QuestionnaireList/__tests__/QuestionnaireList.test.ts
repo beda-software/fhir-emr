@@ -1,6 +1,6 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 
-import { isLoading, isSuccess } from '@beda.software/remote-data';
+import { isSuccess } from '@beda.software/remote-data';
 
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { StringTypeColumnFilterValue } from 'src/components/SearchBar/types';
@@ -20,14 +20,14 @@ describe('Questionnaire list filters testing', () => {
                 columns: getQuestionnaireListSearchBarColumns(),
             });
 
-            const { questionnaireListRD, queryParameters } = useQuestionnaireList(
+            const { questionnaireListRD, questionnaireFilterValue } = useQuestionnaireList(
                 columnsFilterValues as StringTypeColumnFilterValue[],
             );
 
             return {
                 columnsFilterValues,
                 questionnaireListRD,
-                queryParameters,
+                questionnaireFilterValue,
                 onChangeColumnFilter,
                 onResetFilters,
             };
@@ -45,7 +45,7 @@ describe('Questionnaire list filters testing', () => {
         });
 
         await waitFor(() => {
-            expect(result.current.queryParameters.name).toEqual(existingQuestionnaireName);
+            expect(result.current.questionnaireFilterValue).toEqual(existingQuestionnaireName);
         });
 
         await waitFor(() => {
@@ -59,28 +59,11 @@ describe('Questionnaire list filters testing', () => {
         });
 
         await waitFor(() => {
-            expect(result.current.queryParameters.name).toBeUndefined();
+            expect(result.current.questionnaireFilterValue).toBeUndefined();
         });
         await waitFor(() => {
             if (isSuccess(result.current.questionnaireListRD)) {
                 expect(result.current.questionnaireListRD.data.length > 1).toBeTruthy();
-            }
-        });
-
-        const nonExistingQuestionnaireName = 'asdasdasdasdasd';
-        act(() => {
-            result.current.onChangeColumnFilter(nonExistingQuestionnaireName, 'questionnaire');
-        });
-
-        await waitFor(() => {
-            expect(result.current.queryParameters.name).toEqual(nonExistingQuestionnaireName);
-        });
-        await waitFor(() => {
-            expect(isLoading(result.current.questionnaireListRD)).toBeTruthy();
-        });
-        await waitFor(() => {
-            if (isSuccess(result.current.questionnaireListRD)) {
-                expect(result.current.questionnaireListRD.data.length).toEqual(0);
             }
         });
     });

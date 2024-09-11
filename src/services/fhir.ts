@@ -10,6 +10,7 @@ export const {
     getFHIRResources,
     getAllFHIRResources,
     saveFHIRResource,
+    saveFHIRResources,
     updateFHIRResource,
     createFHIRResource,
     forceDeleteFHIRResource,

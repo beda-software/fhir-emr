@@ -1,6 +1,6 @@
 import { PropsValue } from 'react-select';
 
-import { ValueSetOption } from 'src/components/BaseQuestionnaireResponseForm/widgets/choice/service';
+import { ValueSetOption } from 'src/services';
 
 import { ChoiceTypeColumnFilterValue } from '../../types';
 

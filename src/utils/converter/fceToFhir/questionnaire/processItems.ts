@@ -5,6 +5,7 @@ import {
     QuestionnaireItemAnswerOption as FHIRQuestionnaireItemAnswerOption,
     QuestionnaireItemInitial as FHIRQuestionnaireItemInitial,
 } from 'fhir/r4b';
+import _ from 'lodash';
 
 import {
     QuestionnaireItem as FCEQuestionnaireItem,
@@ -110,22 +111,26 @@ function processAnswerOption(options: FCEQuestionnaireItemAnswerOption[]): FHIRQ
 
         const fhirOption: FHIRQuestionnaireItemAnswerOption = { ...commonOptions };
 
-        if (value?.Coding) {
+        if (!value) {
+            return fhirOption;
+        }
+
+        if (value.Coding) {
             fhirOption.valueCoding = value.Coding;
         }
-        if (value?.string) {
+        if (value.string) {
             fhirOption.valueString = value.string;
         }
-        if (value?.Reference) {
+        if (value.Reference) {
             fhirOption.valueReference = toFHIRReference(value.Reference);
         }
-        if (value?.date) {
+        if (value.date) {
             fhirOption.valueDate = value.date;
         }
-        if (value?.integer) {
+        if (_.isNumber(value.integer)) {
             fhirOption.valueInteger = value.integer;
         }
-        if (value?.time) {
+        if (value.time) {
             fhirOption.valueTime = value.time;
         }
 

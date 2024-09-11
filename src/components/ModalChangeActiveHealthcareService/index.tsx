@@ -1,4 +1,4 @@
-import { t, Trans } from '@lingui/macro';
+import { t } from '@lingui/macro';
 import { Button, notification } from 'antd';
 import { FhirResource, HealthcareService } from 'fhir/r4b';
 
@@ -13,17 +13,15 @@ interface ModalChangeActiveHealthcareServiceProps {
 }
 export const ModalChangeActiveHealthcareService = (props: ModalChangeActiveHealthcareServiceProps) => {
     const { healthcareService, onSuccess } = props;
-    const modalTitle = healthcareService.active ? 'Deactivate healthcare service' : 'Activate healthcare service';
-    const buttonTitle = healthcareService.active ? 'Deactivate' : 'Activate';
+    const modalTitle = healthcareService.active ? t`Deactivate healthcare service` : t`Activate healthcare service`;
+    const buttonTitle = healthcareService.active ? t`Deactivate` : t`Activate`;
 
     return (
         <ModalTrigger
-            title={t`${modalTitle}`}
+            title={modalTitle}
             trigger={
                 <Button type="link">
-                    <span>
-                        <Trans>{buttonTitle}</Trans>
-                    </span>
+                    <span>{buttonTitle}</span>
                 </Button>
             }
         >
