@@ -10,29 +10,31 @@ import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/Pat
 
 interface Props {
     patient: Patient;
+    hideCreateButton?: boolean;
 }
 
-export const PatientDocuments = ({ patient }: Props) => {
+export const PatientDocuments = ({ patient, hideCreateButton }: Props) => {
     const [modalOpened, setModalOpened] = useState(false);
 
     usePatientHeaderLocationTitle({ title: t`Documents` });
 
     return (
         <>
-            <div>
-                <Button icon={<PlusOutlined />} type="primary" onClick={() => setModalOpened(true)}>
-                    <span>
-                        <Trans>Create document</Trans>
-                    </span>
-                </Button>
-                <ChooseDocumentToCreateModal
-                    open={modalOpened}
-                    onCancel={() => setModalOpened(false)}
-                    patient={patient}
-                    subjectType="Patient"
-                />
-            </div>
-
+            {hideCreateButton ? null : (
+                <div>
+                    <Button icon={<PlusOutlined />} type="primary" onClick={() => setModalOpened(true)}>
+                        <span>
+                            <Trans>Create document</Trans>
+                        </span>
+                    </Button>
+                    <ChooseDocumentToCreateModal
+                        open={modalOpened}
+                        onCancel={() => setModalOpened(false)}
+                        patient={patient}
+                        subjectType="Patient"
+                    />
+                </div>
+            )}
             <DocumentsList patient={patient} />
         </>
     );

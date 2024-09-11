@@ -11,6 +11,7 @@ import { formatHumanDateTime } from 'src/utils';
 
 export interface EncounterDetailsProps {
     patient: Patient;
+    hideControls?: boolean;
 }
 
 export function useEncounterDetails(props: EncounterDetailsProps) {
@@ -20,6 +21,7 @@ export function useEncounterDetails(props: EncounterDetailsProps) {
     const [encounterInfoRD, manager] = useService(async () => {
         const response = await getFHIRResources<Encounter | PractitionerRole | Practitioner | Patient>('Encounter', {
             _id: encounterId,
+            patient: patient.id,
             _include: [
                 'Encounter:subject',
                 'Encounter:participant:PractitionerRole',
