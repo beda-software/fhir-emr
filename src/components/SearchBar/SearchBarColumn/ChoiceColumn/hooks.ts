@@ -2,11 +2,12 @@ import _ from 'lodash';
 import { useCallback, useContext } from 'react';
 import { MultiValue, SingleValue } from 'react-select';
 
+import { ValueSetExpandProvider } from 'src/contexts';
+import { ValueSetOption } from 'src/services';
+
 import { ChoiceColumnOption } from './types';
 import { ChoiceTypeColumnFilterValue } from '../../types';
 import { SearchBarColumnChoiceTypeProps } from '../types';
-import { ValueSetExpandProvider } from 'src/contexts';
-import { ValueSetOption } from 'src/services';
 
 export function useChoiceColumn(props: SearchBarColumnChoiceTypeProps) {
     const { columnFilterValue, onChange } = props;

@@ -13,6 +13,8 @@ import { App } from 'src/containers/App';
 import { dashboard } from 'src/dashboard.config';
 import { dynamicActivate, getCurrentLocale } from 'src/services/i18n';
 
+import { ValueSetExpandProvider } from './contexts';
+import { expandEMRValueSet } from './services';
 import * as serviceWorker from './serviceWorker';
 import { ThemeProvider } from './theme/ThemeProvider';
 
@@ -24,9 +26,11 @@ const AppWithContext = () => {
     return (
         <I18nProvider i18n={i18n}>
             <PatientDashboardProvider dashboard={dashboard}>
-                <ThemeProvider>
-                    <App />
-                </ThemeProvider>
+                <ValueSetExpandProvider.Provider value={expandEMRValueSet}>
+                    <ThemeProvider>
+                        <App />
+                    </ThemeProvider>
+                </ValueSetExpandProvider.Provider>
             </PatientDashboardProvider>
         </I18nProvider>
     );

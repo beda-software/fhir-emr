@@ -43,7 +43,7 @@ export async function expandHealthSamuraiValueSet(answerValueSet: string, search
     } catch (error) {
         return failure(error);
     }
-};
+}
 
 export async function expandFHIRValueSet(answerValueSet: string | undefined, searchText: string) {
     if (!answerValueSet) {
@@ -117,7 +117,7 @@ export async function expandValueSet(props: ExpandValueSetProps) {
 }
 
 export async function expandEMRValueSet(answerValueSet: string | undefined, searchText: string) {
-    const predefinedValueSetsList: string[] = [];
+    const predefinedValueSetsList: string[] = ['medicationknowledge-package-type'];
 
     return expandValueSet({
         answerValueSet,

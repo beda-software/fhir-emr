@@ -6,11 +6,11 @@ import { QuestionItemProps } from 'sdc-qrf';
 import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer } from '@beda.software/aidbox-types';
 
 import { AsyncSelect, Select } from 'src/components/Select';
+import { ValueSetExpandProvider } from 'src/contexts';
 import { getDisplay } from 'src/utils/questionnaire';
 
 import s from '../../BaseQuestionnaireResponseForm.module.scss';
 import { useFieldController } from '../../hooks';
-import { ValueSetExpandProvider } from 'src/contexts';
 
 interface ChoiceQuestionSelectProps {
     value?: QuestionnaireResponseItemAnswer[];
