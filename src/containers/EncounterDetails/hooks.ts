@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro';
 import { notification } from 'antd';
 import { Communication, Encounter, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
 import { useCallback } from 'react';
@@ -9,14 +10,26 @@ import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 import { getFHIRResources, saveFHIRResource } from 'src/services/fhir';
 import { formatHumanDateTime } from 'src/utils';
 
+export interface DocumentType {
+    title: string;
+    context?: string;
+}
+
 export interface EncounterDetailsProps {
     patient: Patient;
     hideControls?: boolean;
+    documentTypes?: Array<DocumentType>;
 }
 
 export function useEncounterDetails(props: EncounterDetailsProps) {
     const { patient } = props;
     const { encounterId } = useParams<{ encounterId: string }>();
+
+    const defaultDocument: DocumentType = {
+        title: t`Create document`,
+    };
+
+    const documentTypes = props.documentTypes ?? [defaultDocument];
 
     const [encounterInfoRD, manager] = useService(async () => {
         const response = await getFHIRResources<Encounter | PractitionerRole | Practitioner | Patient>('Encounter', {
@@ -74,7 +87,7 @@ export function useEncounterDetails(props: EncounterDetailsProps) {
         }),
     );
 
-    return { encounterInfoRD, completeEncounter, manager, communicationResponse };
+    return { encounterInfoRD, completeEncounter, manager, communicationResponse, documentTypes };
 }
 
 export function useNavigateToEncounter() {

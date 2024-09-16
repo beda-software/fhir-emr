@@ -16,23 +16,27 @@ interface Props extends ModalProps {
     patient: Patient;
     subjectType?: string;
     encounter?: WithId<Encounter>;
+    context?: string;
     onCancel: () => void;
 }
 
 export const ChooseDocumentToCreateModal = (props: Props) => {
-    const { subjectType, patient, encounter, onCancel } = props;
+    const { subjectType, patient, encounter, onCancel, context } = props;
     const [questionnaireId, setQuestionnaireId] = useState();
     const location = useLocation();
     const navigate = useNavigate();
     const routeToOpen = `${location.pathname}/new/${questionnaireId}`;
-    const [questionnairesResponse] = useService(async () =>
-        mapSuccess(
-            await getFHIRResources<Questionnaire>('Questionnaire', {
-                'subject-type': subjectType ? [subjectType] : [],
-                _sort: 'title',
-            }),
-            (bundle) => extractBundleResources(bundle).Questionnaire,
-        ),
+    const [questionnairesResponse] = useService(
+        async () =>
+            mapSuccess(
+                await getFHIRResources<Questionnaire>('Questionnaire', {
+                    'subject-type': subjectType ? [subjectType] : [],
+                    _sort: 'title',
+                    ...(context ? { context } : {}),
+                }),
+                (bundle) => extractBundleResources(bundle).Questionnaire,
+            ),
+        [context],
     );
 
     const onCloseModal = useCallback(() => {

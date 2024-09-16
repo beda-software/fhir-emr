@@ -11,12 +11,16 @@ import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/Pat
 interface Props {
     patient: Patient;
     hideCreateButton?: boolean;
+    title?: string;
+    context?: string;
 }
 
-export const PatientDocuments = ({ patient, hideCreateButton }: Props) => {
+export const PatientDocuments = (props: Props) => {
     const [modalOpened, setModalOpened] = useState(false);
+    const { patient, hideCreateButton } = props;
+    const title = props.title ?? t`Documents`;
 
-    usePatientHeaderLocationTitle({ title: t`Documents` });
+    usePatientHeaderLocationTitle({ title });
 
     return (
         <>
@@ -32,10 +36,11 @@ export const PatientDocuments = ({ patient, hideCreateButton }: Props) => {
                         onCancel={() => setModalOpened(false)}
                         patient={patient}
                         subjectType="Patient"
+                        context={props.context}
                     />
                 </div>
             )}
-            <DocumentsList patient={patient} />
+            <DocumentsList patient={patient} context={props.context} />
         </>
     );
 };
