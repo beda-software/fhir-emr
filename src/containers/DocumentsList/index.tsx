@@ -19,6 +19,7 @@ import { usePatientDocuments } from './hooks';
 interface Props {
     patient: Patient;
     encounter?: Encounter;
+    context?: string;
 }
 
 function useColumns(
@@ -86,7 +87,7 @@ function useColumns(
     return { columns };
 }
 
-export const DocumentsList = ({ patient }: Props) => {
+export const DocumentsList = ({ patient, context }: Props) => {
     const params = useParams<{ encounterId: string }>();
     const { response } = usePatientDocuments(
         patient,
@@ -95,6 +96,7 @@ export const DocumentsList = ({ patient }: Props) => {
                   reference: `Encounter/${params.encounterId}`,
               }
             : undefined,
+        context,
     );
     const { columns } = useColumns(response);
 

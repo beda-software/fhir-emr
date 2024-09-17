@@ -22,10 +22,16 @@ import { AIScribe, useAIScribe } from './AIScribe';
 import { S } from './EncounterDetails.styles';
 import { EncounterDetailsProps, useEncounterDetails } from './hooks';
 
+interface OpenModalState {
+    open: boolean;
+    context?: string;
+}
+
 export const EncounterDetails = (props: EncounterDetailsProps) => {
     const { patient, hideControls } = props;
-    const [modalOpened, setModalOpened] = useState(false);
-    const { encounterInfoRD, completeEncounter, manager, communicationResponse } = useEncounterDetails(props);
+    const [modalOpened, setModalOpened] = useState<OpenModalState>({ open: false });
+    const { encounterInfoRD, completeEncounter, manager, communicationResponse, documentTypes } =
+        useEncounterDetails(props);
     const [documentListKey, setDocumentListKey] = useState(0);
     const reload = useCallback(() => setDocumentListKey((k) => k + 1), [setDocumentListKey]);
 
@@ -56,17 +62,18 @@ export const EncounterDetails = (props: EncounterDetailsProps) => {
                         <>
                             {hideControls ? null : (
                                 <S.Controls>
-                                    {!isEncounterCompleted ? (
-                                        <Button
-                                            icon={<PlusOutlined />}
-                                            type="primary"
-                                            onClick={() => setModalOpened(true)}
-                                        >
-                                            <span>
-                                                <Trans>Create document</Trans>
-                                            </span>
-                                        </Button>
-                                    ) : null}
+                                    {!isEncounterCompleted
+                                        ? documentTypes.map(({ title, context }) => (
+                                              <Button
+                                                  key={title}
+                                                  icon={<PlusOutlined />}
+                                                  type="primary"
+                                                  onClick={() => setModalOpened({ open: true, context })}
+                                              >
+                                                  <span>{title}</span>
+                                              </Button>
+                                          ))
+                                        : null}
                                     {!isEncounterCompleted && !config.aiAssistantServiceUrl ? (
                                         <Link
                                             to={`/encounters/${encounter.id}/video`}
@@ -121,11 +128,12 @@ export const EncounterDetails = (props: EncounterDetailsProps) => {
                                 </S.Controls>
                             )}
                             <ChooseDocumentToCreateModal
-                                open={modalOpened}
-                                onCancel={() => setModalOpened(false)}
+                                open={modalOpened.open}
+                                onCancel={() => setModalOpened({ open: false })}
                                 patient={patient}
                                 subjectType="Encounter"
                                 encounter={encounter}
+                                context={modalOpened.context}
                             />
 
                             {showScriber ||
