@@ -1,5 +1,7 @@
 import { Trans } from '@lingui/macro';
 import { Col, Row } from 'antd';
+import moment from 'moment';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
@@ -9,6 +11,7 @@ import { StatusBadge } from 'src/components/EncounterStatusBadge';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { Title } from 'src/components/Typography';
+import { sharedAuthorizedUser } from 'src/sharedState';
 import { formatPeriodDateTime } from 'src/utils/date';
 import { renderHumanName } from 'src/utils/fhir';
 import { matchCurrentUserRole, Role } from 'src/utils/role';
@@ -17,9 +20,16 @@ import { useEncounterList } from './hooks';
 import { getEncounterListSearchBarColumns } from './searchBarUtils';
 
 export function EncounterList() {
+    const user = sharedAuthorizedUser.getSharedState();
+    const userRole = user?.role![0]!.name;
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
         columns: getEncounterListSearchBarColumns(),
     });
+    const currentDate = moment();
+
+    useEffect(() => {
+        onChangeColumnFilter([currentDate, currentDate], 'date');
+    }, []);
 
     const roleSearchParams = matchCurrentUserRole({
         [Role.Admin]: () => {
@@ -107,6 +117,7 @@ export function EncounterList() {
                     columnsFilterValues={columnsFilterValues}
                     onChangeColumnFilter={onChangeColumnFilter}
                     onResetFilters={onResetFilters}
+                    hideFilters={userRole === Role.Practitioner ? ['practitioner'] : []}
                 />
             </BasePageHeader>
 

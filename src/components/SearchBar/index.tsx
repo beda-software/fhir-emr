@@ -6,18 +6,21 @@ import { SearchBarColumn } from './SearchBarColumn';
 import { SearchBarData } from './types';
 
 export function SearchBar(props: SearchBarData) {
-    const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = props;
-
+    const { columnsFilterValues, onChangeColumnFilter, onResetFilters, hideFilters = [] } = props;
     return (
         <S.Container>
             <Row gutter={[32, 16]}>
-                {columnsFilterValues.map((columnFilterValue) => (
-                    <SearchBarColumn
-                        key={`search-bar-column-${columnFilterValue.column.id}`}
-                        columnFilterValue={columnFilterValue}
-                        onChange={onChangeColumnFilter}
-                    />
-                ))}
+                {columnsFilterValues.map((columnFilterValue) => {
+                    if (!hideFilters.includes(columnFilterValue.column.id)) {
+                        return (
+                            <SearchBarColumn
+                                key={`search-bar-column-${columnFilterValue.column.id}`}
+                                columnFilterValue={columnFilterValue}
+                                onChange={onChangeColumnFilter}
+                            />
+                        );
+                    }
+                })}
             </Row>
 
             <Button onClick={onResetFilters}>

@@ -107,4 +107,5 @@ export interface SearchBarData {
     columnsFilterValues: ColumnFilterValue[];
     onChangeColumnFilter: (value: ColumnFilterValue['value'], key: string) => void;
     onResetFilters: () => void;
+    hideFilters?: string[];
 }
