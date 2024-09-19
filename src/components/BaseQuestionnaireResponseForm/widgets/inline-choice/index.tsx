@@ -7,7 +7,6 @@ import { QuestionnaireItem, QuestionnaireItemAnswerOption } from '@beda.software
 import { getDisplay } from 'src/utils/questionnaire';
 
 import { useFieldController } from '../../hooks';
-import { QuestionReference } from '../reference';
 
 interface InlineChoiceProps extends QuestionItemProps {
     questionItem: QuestionnaireItem;
@@ -20,10 +19,6 @@ export function InlineChoice(props: InlineChoiceProps) {
     const fieldName = repeats ? [...parentPath, linkId] : [...parentPath, linkId, 0];
 
     const { value, onChange, onMultiChange, disabled, formItem } = useFieldController(fieldName, questionItem);
-
-    if (questionItem.type === 'reference') {
-        return <QuestionReference {...props} />;
-    }
 
     if (repeats) {
         const arrayValue = (value || []) as QuestionnaireItemAnswerOption[];
