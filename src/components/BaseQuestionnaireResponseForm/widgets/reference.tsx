@@ -1,25 +1,18 @@
-import { Form, Radio, Space } from 'antd';
+import { Form } from 'antd';
 import fhirpath from 'fhirpath';
 import _ from 'lodash';
 import { ActionMeta, MultiValue, SingleValue } from 'react-select';
 import { parseFhirQueryExpression, QuestionItemProps } from 'sdc-qrf';
 
-import {
-    QuestionnaireItemAnswerOption,
-    QuestionnaireResponseItemAnswer,
-    QuestionnaireResponseItemAnswerValue,
-    Resource,
-} from '@beda.software/aidbox-types';
+import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer, Resource } from '@beda.software/aidbox-types';
 import { ResourcesMap } from '@beda.software/fhir-react';
 import { buildQueryParams, isSuccess } from '@beda.software/remote-data';
 
 import { AsyncSelect } from 'src/components/Select';
-import { LoadResourceOption, loadResourceOptions } from 'src/services/questionnaire';
-import { getAnswerCode, getAnswerDisplay, getDisplay } from 'src/utils/questionnaire';
+import { loadResourceOptions } from 'src/services/questionnaire';
+import { getAnswerCode, getAnswerDisplay } from 'src/utils/questionnaire';
 
 import { useFieldController } from '../hooks';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { getDateTypeDisplay } from './utils';
 
 export type AnswerReferenceProps<R extends Resource, IR extends Resource> = QuestionItemProps & {
     overrideGetDisplay?: (resource: R, includedResources: ResourcesMap<R | IR>) => string;
@@ -96,16 +89,13 @@ export function useFieldReference<R extends Resource = any, IR extends Resource 
     };
 }
 
-type EnabledItemControl = 'radio-button';
-
 export function useAnswerReference<R extends Resource = any, IR extends Resource = any>({
     questionItem,
     parentPath,
     context,
     overrideGetDisplay,
 }: AnswerReferenceProps<R, IR>) {
-    const { linkId, repeats, required, answerExpression, choiceColumn, text, entryFormat, renderingStyle, dataType } =
-        questionItem;
+    const { linkId, repeats, required, answerExpression, choiceColumn, text, entryFormat } = questionItem;
     const rootFieldPath = [...parentPath, linkId];
     const fieldPath = [...rootFieldPath, ...(repeats ? [] : ['0'])];
     const rootFieldName = rootFieldPath.join('.');
@@ -113,36 +103,25 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
     const fieldName = fieldPath.join('.');
     const fieldController = useFieldController(fieldPath, questionItem);
 
-    const getValueDisplay = (value: QuestionnaireResponseItemAnswerValue) => {
-        if (!renderingStyle || !dataType) {
-            return getDisplay(value);
-        }
-
-        return getDateTypeDisplay({ dataType, renderingStyle, value: value.Reference?.display });
-    };
+    const getDisplay =
+        overrideGetDisplay ?? ((resource: R) => fhirpath.evaluate(resource, choiceColumn![0]!.path!, context)[0]);
 
     // TODO: add support for fhirpath and application/x-fhir-query
     const [resourceType, searchParams] = parseFhirQueryExpression(answerExpression!.expression!, context);
 
-    const [loadedOptions, setLoadedOptions] = useState<LoadResourceOption<R>[] | null>(null);
+    const loadOptions = async (searchText: string) => {
+        const response = await loadResourceOptions(
+            resourceType as any,
+            { ...(typeof searchParams === 'string' ? {} : searchParams ?? {}), _ilike: searchText },
+            getDisplay,
+        );
 
-    const loadOptions = useCallback(
-        async (searchText: string) => {
-            const response = await loadResourceOptions(
-                resourceType as any,
-                { ...(typeof searchParams === 'string' ? {} : searchParams ?? {}), _ilike: searchText },
-                overrideGetDisplay ??
-                    ((resource: R) => fhirpath.evaluate(resource, choiceColumn![0]!.path!, context)[0]),
-            );
+        if (isSuccess(response)) {
+            return response.data;
+        }
 
-            if (isSuccess(response)) {
-                return response.data;
-            }
-
-            return [];
-        },
-        [resourceType, searchParams, choiceColumn, context, overrideGetDisplay],
-    );
+        return [];
+    };
 
     const debouncedLoadOptions = _.debounce(
         (searchText: string, callback: (options: QuestionnaireItemAnswerOption[]) => void) => {
@@ -150,17 +129,6 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         },
         500,
     );
-
-    useEffect(() => {
-        const loadItemControlOptions = async () => {
-            const options = await loadOptions('');
-            setLoadedOptions(options);
-        };
-
-        if (questionItem.itemControl) {
-            loadItemControlOptions();
-        }
-    }, [questionItem.itemControl]);
 
     const onChange = (
         _value: SingleValue<QuestionnaireItemAnswerOption> | MultiValue<QuestionnaireItemAnswerOption>,
@@ -170,14 +138,6 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
             return;
         }
     };
-
-    const questionItemControl: EnabledItemControl | null = useMemo(() => {
-        if (questionItem.itemControl?.coding?.find((c) => c.code === 'radio-button')) {
-            return 'radio-button';
-        }
-
-        return null;
-    }, [questionItem.itemControl]);
 
     const validate = required
         ? (inputValue: any) => {
@@ -203,9 +163,6 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         rootFieldName,
         fieldName,
         debouncedLoadOptions,
-        loadedOptions,
-        getValueDisplay,
-        questionItemControl,
         onChange,
         validate,
         searchParams,
@@ -229,35 +186,8 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
 function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource = any>(
     props: AnswerReferenceProps<R, IR>,
 ) {
-    const { questionItem } = props;
-    const { repeats, choiceOrientation = 'vertical' } = questionItem;
-
-    const { debouncedLoadOptions, loadedOptions, getValueDisplay, questionItemControl, fieldController, placeholder } =
-        useAnswerReference(props);
-
-    const { formItem, value, onChange, disabled } = fieldController;
-
-    if (questionItemControl === 'radio-button') {
-        return loadedOptions ? (
-            <Form.Item {...formItem}>
-                <Space direction={choiceOrientation}>
-                    {loadedOptions.map((answerOption) => (
-                        <Radio
-                            key={JSON.stringify(answerOption)}
-                            checked={_.isEqual(value?.value, answerOption.value)}
-                            disabled={disabled}
-                            onChange={() => onChange(answerOption)}
-                            data-testid={`inline-choice__${_.kebabCase(
-                                JSON.stringify(getValueDisplay(answerOption.value)),
-                            )}`}
-                        >
-                            {getValueDisplay(answerOption.value)}
-                        </Radio>
-                    ))}
-                </Space>
-            </Form.Item>
-        ) : null;
-    }
+    const { debouncedLoadOptions, fieldController, repeats, placeholder } = useAnswerReference(props);
+    const { formItem } = fieldController;
 
     return (
         <Form.Item {...formItem}>

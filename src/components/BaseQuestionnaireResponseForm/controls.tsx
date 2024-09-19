@@ -30,6 +30,7 @@ import { Display } from './widgets/display';
 import { PasswordInput } from './widgets/PasswordInput';
 import { QuestionReference } from './widgets/reference';
 import { TextWithMacroFill } from '../TextWithMacroFill';
+import { ReferenceRadioButton } from './widgets/ReferenceRadioButton';
 
 export const itemComponents: QuestionItemComponentMapping = {
     text: QuestionText,
@@ -56,6 +57,7 @@ export const itemControlComponents: ItemControlQuestionItemComponentMapping = {
     'inline-choice': InlineChoice,
     'text-with-macro': TextWithMacroFill,
     'radio-button': InlineChoice,
+    'reference-radio-button': ReferenceRadioButton,
     'check-box': InlineChoice,
 };
 
