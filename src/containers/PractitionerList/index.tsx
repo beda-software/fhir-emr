@@ -20,7 +20,45 @@ import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-dat
 import { usePractitionersList } from './hooks';
 import { getPractitionerListSearchBarColumns } from './searchBarUtils';
 
-export function PractitionerList() {
+export interface PractitionerListActionsProps {
+    onSuccess: () => void;
+}
+
+function DefaultPractitionerListActions({ onSuccess }: PractitionerListActionsProps) {
+    return (
+        <ModalTrigger
+            title={t`Create practitioner`}
+            trigger={
+                <Button icon={<PlusOutlined />} type="primary">
+                    <span>
+                        <Trans>Add new practitioner</Trans>
+                    </span>
+                </Button>
+            }
+        >
+            {({ closeModal }) => (
+                <QuestionnaireResponseForm
+                    questionnaireLoader={questionnaireIdLoader('practitioner-create')}
+                    onCancel={closeModal}
+                    onSuccess={() => {
+                        onSuccess();
+                        closeModal();
+                    }}
+                />
+            )}
+        </ModalTrigger>
+    );
+}
+
+interface PractitionerListProps {
+    PractitionerListActions?: typeof DefaultPractitionerListActions;
+}
+
+export function PractitionerList(props: PractitionerListProps) {
+    const PractitionerListActions = props.PractitionerListActions
+        ? props.PractitionerListActions
+        : DefaultPractitionerListActions;
+
     const navigate = useNavigate();
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
         columns: getPractitionerListSearchBarColumns(),
@@ -40,30 +78,14 @@ export function PractitionerList() {
                         </Title>
                     </Col>
                     <Col>
-                        <ModalTrigger
-                            title={t`Create practitioner`}
-                            trigger={
-                                <Button icon={<PlusOutlined />} type="primary">
-                                    <span>
-                                        <Trans>Add new practitioner</Trans>
-                                    </span>
-                                </Button>
-                            }
-                        >
-                            {({ closeModal }) => (
-                                <QuestionnaireResponseForm
-                                    questionnaireLoader={questionnaireIdLoader('practitioner-create')}
-                                    onSuccess={() => {
-                                        practitionerListReload();
-                                        closeModal();
-                                        notification.success({
-                                            message: t`Practitioner successfully created`,
-                                        });
-                                    }}
-                                    onCancel={closeModal}
-                                />
-                            )}
-                        </ModalTrigger>
+                        <PractitionerListActions
+                            onSuccess={() => {
+                                practitionerListReload();
+                                notification.success({
+                                    message: t`Practitioner successfully created`,
+                                });
+                            }}
+                        />
                     </Col>
                 </Row>
 
