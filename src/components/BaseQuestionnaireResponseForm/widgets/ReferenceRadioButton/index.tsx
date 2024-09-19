@@ -3,8 +3,7 @@ import _ from 'lodash';
 
 import { Resource } from '@beda.software/aidbox-types';
 
-import { AnswerReferenceProps } from '../reference';
-import { useReferenceRadioButton } from './hooks';
+import { AnswerReferenceProps, useAnswerReference } from '../reference';
 
 function ReferenceRadioButtonUnsafe<R extends Resource = any, IR extends Resource = any>(
     props: AnswerReferenceProps<R, IR>,
@@ -12,7 +11,7 @@ function ReferenceRadioButtonUnsafe<R extends Resource = any, IR extends Resourc
     const { questionItem } = props;
     const { choiceOrientation = 'vertical' } = questionItem;
 
-    const { loadedOptions, getValueDisplay, fieldController } = useReferenceRadioButton(props);
+    const { loadedOptions, getValueDisplay, fieldController } = useAnswerReference(props);
 
     const { formItem, value, onChange, disabled } = fieldController;
 
