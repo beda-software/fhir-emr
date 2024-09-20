@@ -1,25 +1,20 @@
-import { FhirResource, Schedule, Slot } from 'fhir/r4b';
-import fhirpath from 'fhirpath';
+import { Schedule, Slot } from 'fhir/r4b';
 
 import { ensure, parseFHIRDateTime, withRootAccess } from '@beda.software/fhir-react';
+
+import { evaluate, initFHIRPathEvaluateOptions } from 'src/utils';
 
 import { axiosInstance, createFHIRResource } from './fhir';
 import { loadResourceOptions } from './questionnaire';
 
-// import { UserInvocationTable } from 'fhirpath';
-
-function evaluate<R extends FhirResource>(fhirData: R, path: string) {
-    // https://github.com/beda-software/FHIRPathMappingLanguage/blob/4d2cd61f138de15abd7ba1c93d504951e3881da6/ts/server/src/app.service.ts#L14-L29
-    const userInvocationTable: UserInvocationTable = {
-        formatDate: {
-            fn: (inputs: string[], format: string) => {
-                return inputs.map((i) => parseFHIRDateTime(i).format(format));
-            },
-            arity: { 0: [], 1: ['String'] },
+const formatDateUserInvocationTable: UserInvocationTable = {
+    formatDate: {
+        fn: (inputs: string[], format: string) => {
+            return inputs.map((i) => parseFHIRDateTime(i).format(format));
         },
-    };
-    return fhirpath.evaluate(fhirData, path, undefined, undefined, { userInvocationTable });
-}
+        arity: { 0: [], 1: ['String'] },
+    },
+};
 
 async function setup() {
     return await withRootAccess(axiosInstance, async () => {
@@ -42,6 +37,24 @@ async function setup() {
 }
 
 describe('Custom fhirpath invocation for reference option display', () => {
+    test('Init FHIRPath evaluate options works', async () => {
+        const slot = await setup();
+
+        const expectedAnErrorMessage = 'Expected an error';
+
+        try {
+            evaluate(slot, "Slot.start.formatDate('dddd • D MMM • h:mm A')");
+            throw new Error(expectedAnErrorMessage);
+        } catch (e: any) {
+            expect(e.message).not.toEqual(expectedAnErrorMessage);
+            expect(e.message).toEqual('Not implemented: formatDate');
+        }
+
+        initFHIRPathEvaluateOptions(formatDateUserInvocationTable);
+        const result = evaluate(slot, "Slot.start.formatDate('dddd • D MMM • h:mm A')");
+        expect(result).toEqual(['Friday • 20 Sep • 2:00 AM']);
+    });
+
     test('Load options', async () => {
         const slot = await setup();
 
@@ -53,14 +66,16 @@ describe('Custom fhirpath invocation for reference option display', () => {
                 return 'Unknown';
             }
         };
+
         const options = await withRootAccess(axiosInstance, async () =>
-            ensure(await loadResourceOptions('Slot', {}, getDisplay)),
+            ensure(await loadResourceOptions('Slot', { id: slot.id }, getDisplay)),
         );
+
         expect(options).toEqual([
             {
                 value: {
                     Reference: {
-                        display: 'Friday • 20 Sep • 12:00 AM',
+                        display: 'Friday • 20 Sep • 2:00 AM',
                         id: slot.id,
                         resourceType: 'Slot',
                     },
