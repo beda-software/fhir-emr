@@ -30,7 +30,6 @@ import { Display } from './widgets/display';
 import { PasswordInput } from './widgets/PasswordInput';
 import { QuestionReference } from './widgets/reference';
 import { TextWithMacroFill } from '../TextWithMacroFill';
-import { ReferenceRadioButton } from './widgets/ReferenceRadioButton';
 
 export const itemComponents: QuestionItemComponentMapping = {
     text: QuestionText,
