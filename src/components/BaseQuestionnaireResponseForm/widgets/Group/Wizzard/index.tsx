@@ -24,7 +24,7 @@ export function Wizzard({ groupItem }: Props) {
             {currentItem ?
                 <QuestionItems
                     questionItems={currentItem.item!}
-                    parentPath={[...parentPath, linkId, 'item', currentItem.linkId, 'item']}
+                    parentPath={[...parentPath, linkId, 'items', currentItem.linkId, 'items']}
                     context={context[0]!}
                 /> : null}
 
