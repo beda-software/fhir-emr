@@ -1,6 +1,7 @@
 import { Extension, Questionnaire, QuestionnaireItem } from 'fhir/r4b';
-import fhirpath from 'fhirpath';
 import _ from 'lodash';
+
+import { evaluate } from 'src/utils';
 
 const launchContextUrl = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext';
 
@@ -78,14 +79,12 @@ export function prepareQuestionnaire(q: Questionnaire): Questionnaire {
     const { subjectType, title } = q;
     let { item, extension } = q;
     const name = _.kebabCase(title?.toLowerCase());
-    const existingLaunchContexts = fhirpath.evaluate(
+    const existingLaunchContexts = evaluate(
         q,
         `Questionnaire.extension('${launchContextUrl}').extension('name').valueCoding.code`,
     );
-    const hasPatientIdQuestion =
-        fhirpath.evaluate(q, "Questionnaire.repeat(item).where(linkId='patientId')").length > 0;
-    const hasEncounterIdQuestion =
-        fhirpath.evaluate(q, "Questionnaire.repeat(item).where(linkId='encounterId')").length > 0;
+    const hasPatientIdQuestion = evaluate(q, "Questionnaire.repeat(item).where(linkId='patientId')").length > 0;
+    const hasEncounterIdQuestion = evaluate(q, "Questionnaire.repeat(item).where(linkId='encounterId')").length > 0;
 
     if (subjectType?.includes('Encounter') || subjectType?.includes('Patient')) {
         if (!existingLaunchContexts.includes('Patient')) {

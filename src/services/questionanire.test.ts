@@ -1,5 +1,5 @@
 import { FhirResource, Schedule, Slot } from 'fhir/r4b';
-import * as fhirpath from 'fhirpath';
+import fhirpath from 'fhirpath';
 
 import { ensure, parseFHIRDateTime, withRootAccess } from '@beda.software/fhir-react';
 

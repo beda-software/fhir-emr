@@ -1,4 +1,3 @@
-import fhirpath from 'fhirpath';
 import _ from 'lodash';
 import { SingleValue, PropsValue } from 'react-select';
 import { ItemContext, parseFhirQueryExpression } from 'sdc-qrf';
@@ -7,13 +6,14 @@ import { Resource } from '@beda.software/aidbox-types';
 import { isSuccess } from '@beda.software/remote-data';
 
 import { LoadResourceOption, loadResourceOptions } from 'src/services/questionnaire';
+import { evaluate } from 'src/utils';
 
 import { SearchBarColumnReferenceTypeProps } from '../types';
 
 export function useReferenceColumn(props: SearchBarColumnReferenceTypeProps) {
     const { columnFilterValue, onChange } = props;
 
-    const getDisplay = (resource: Resource) => fhirpath.evaluate(resource, columnFilterValue.column.path!)[0];
+    const getDisplay = (resource: Resource) => evaluate(resource, columnFilterValue.column.path!)[0];
 
     const mockContext: ItemContext = {
         resource: {

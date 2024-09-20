@@ -14225,8 +14225,6 @@ export interface QuestionnaireItem {
     choiceOrientation?: 'horizontal' | 'vertical';
     choiceColumns?: integer;
     ordinalValue?: decimal;
-    renderingStyle?: string;
-    dataType?: 'dateTime';
 }
 
 export interface QuestionnaireItemAnswerOption {

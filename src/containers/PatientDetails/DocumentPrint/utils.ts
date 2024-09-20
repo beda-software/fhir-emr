@@ -1,5 +1,6 @@
 import { QuestionnaireItem, QuestionnaireResponse } from 'fhir/r4b';
-import { evaluate } from 'fhirpath';
+
+import { evaluate } from 'src/utils';
 
 export function findQRItemValue(linkId: string, type = 'String') {
     return `repeat(item).where(linkId='${linkId}').answer.value${type}`;

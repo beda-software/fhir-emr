@@ -1,6 +1,7 @@
 import { QuestionnaireResponse } from 'fhir/r4b';
-import fhirpath from 'fhirpath';
 import fhirpath_r4_model from 'fhirpath/fhir-context/r4';
+
+import { evaluate } from './fhirpath';
 
 function embededFHIRPath(a: string): string | undefined {
     if (a.startsWith('{{') && a.endsWith('}}')) {
@@ -17,7 +18,7 @@ export function resolveTemplate(qr: QuestionnaireResponse, template: object): ob
             if (keyExpr) {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const result: any[] = [];
-                const answers = fhirpath.evaluate(qr, keyExpr, {}, fhirpath_r4_model);
+                const answers = evaluate(qr, keyExpr, {}, fhirpath_r4_model);
                 for (const c of answers) {
                     result.push(resolveTemplate(c, a[key]));
                 }
@@ -28,7 +29,7 @@ export function resolveTemplate(qr: QuestionnaireResponse, template: object): ob
         } else if (typeof a === 'string') {
             const expr = embededFHIRPath(a);
             if (expr) {
-                const result = fhirpath.evaluate(qr, expr, {}, fhirpath_r4_model)[0];
+                const result = evaluate(qr, expr, {}, fhirpath_r4_model)[0];
                 return result;
             } else {
                 return a;

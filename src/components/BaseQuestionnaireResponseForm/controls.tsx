@@ -57,7 +57,6 @@ export const itemControlComponents: ItemControlQuestionItemComponentMapping = {
     'inline-choice': InlineChoice,
     'text-with-macro': TextWithMacroFill,
     'radio-button': InlineChoice,
-    'reference-radio-button': ReferenceRadioButton,
     'check-box': InlineChoice,
 };
 

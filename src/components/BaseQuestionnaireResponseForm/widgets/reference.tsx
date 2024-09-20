@@ -1,25 +1,19 @@
 import { Form } from 'antd';
-import fhirpath from 'fhirpath';
 import _ from 'lodash';
+import { useCallback, useEffect, useState } from 'react';
 import { ActionMeta, MultiValue, SingleValue } from 'react-select';
 import { parseFhirQueryExpression, QuestionItemProps } from 'sdc-qrf';
 
-import {
-    QuestionnaireItemAnswerOption,
-    QuestionnaireResponseItemAnswer,
-    QuestionnaireResponseItemAnswerValue,
-    Resource,
-} from '@beda.software/aidbox-types';
+import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer, Resource } from '@beda.software/aidbox-types';
 import { ResourcesMap } from '@beda.software/fhir-react';
 import { buildQueryParams, isSuccess } from '@beda.software/remote-data';
 
 import { AsyncSelect } from 'src/components/Select';
 import { LoadResourceOption, loadResourceOptions } from 'src/services/questionnaire';
-import { getAnswerCode, getAnswerDisplay, getDisplay } from 'src/utils/questionnaire';
+import { evaluate } from 'src/utils';
+import { getAnswerCode, getAnswerDisplay } from 'src/utils/questionnaire';
 
 import { useFieldController } from '../hooks';
-import { useCallback, useEffect, useState } from 'react';
-import { getDateTypeDisplay } from './utils';
 
 export type AnswerReferenceProps<R extends Resource, IR extends Resource> = QuestionItemProps & {
     overrideGetDisplay?: (resource: R, includedResources: ResourcesMap<R | IR>) => string;
@@ -102,22 +96,13 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
     context,
     overrideGetDisplay,
 }: AnswerReferenceProps<R, IR>) {
-    const { linkId, repeats, required, answerExpression, choiceColumn, text, entryFormat, renderingStyle, dataType } =
-        questionItem;
+    const { linkId, repeats, required, answerExpression, choiceColumn, text, entryFormat } = questionItem;
     const rootFieldPath = [...parentPath, linkId];
     const fieldPath = [...rootFieldPath, ...(repeats ? [] : ['0'])];
     const rootFieldName = rootFieldPath.join('.');
 
     const fieldName = fieldPath.join('.');
     const fieldController = useFieldController(fieldPath, questionItem);
-
-    const getValueDisplay = (value: QuestionnaireResponseItemAnswerValue) => {
-        if (!renderingStyle || !dataType) {
-            return getDisplay(value);
-        }
-
-        return getDateTypeDisplay({ dataType, renderingStyle, value: value.Reference?.display });
-    };
 
     // TODO: add support for fhirpath and application/x-fhir-query
     const [resourceType, searchParams] = parseFhirQueryExpression(answerExpression!.expression!, context);
@@ -129,8 +114,7 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
             const response = await loadResourceOptions(
                 resourceType as any,
                 { ...(typeof searchParams === 'string' ? {} : searchParams ?? {}), _ilike: searchText },
-                overrideGetDisplay ??
-                    ((resource: R) => fhirpath.evaluate(resource, choiceColumn![0]!.path!, context)[0]),
+                overrideGetDisplay ?? ((resource: R) => evaluate(resource, choiceColumn![0]!.path!, context)[0]),
             );
 
             if (isSuccess(response)) {
@@ -194,7 +178,6 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         fieldName,
         debouncedLoadOptions,
         loadedOptions,
-        getValueDisplay,
         onChange,
         validate,
         searchParams,
