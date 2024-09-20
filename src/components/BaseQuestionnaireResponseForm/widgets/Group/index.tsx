@@ -50,7 +50,7 @@ function Flex(props: GroupItemProps & { type?: GroupContextProps['type'] }) {
                 >
                     <QuestionItems
                         questionItems={item}
-                        parentPath={[...parentPath, linkId, 'items']}
+                        parentPath={[...parentPath, linkId, 'item']}
                         context={context[0]!}
                     />
                 </div>
