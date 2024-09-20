@@ -60,7 +60,7 @@ describe('Custom fhirpath invocation for reference option display', () => {
             {
                 value: {
                     Reference: {
-                        display: 'Friday • 20 Sep • 10:00 AM',
+                        display: 'Friday • 20 Sep • 12:00 AM',
                         id: slot.id,
                         resourceType: 'Slot',
                     },
