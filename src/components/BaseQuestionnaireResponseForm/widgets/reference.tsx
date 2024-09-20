@@ -1,6 +1,5 @@
 import { Form } from 'antd';
 import _ from 'lodash';
-import { useCallback } from 'react';
 import { ActionMeta, MultiValue, SingleValue } from 'react-select';
 import { parseFhirQueryExpression, QuestionItemProps } from 'sdc-qrf';
 
@@ -104,25 +103,24 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
     const fieldName = fieldPath.join('.');
     const fieldController = useFieldController(fieldPath, questionItem);
 
+    const getDisplay = overrideGetDisplay ?? ((resource: R) => evaluate(resource, choiceColumn![0]!.path!, context)[0]);
+
     // TODO: add support for fhirpath and application/x-fhir-query
     const [resourceType, searchParams] = parseFhirQueryExpression(answerExpression!.expression!, context);
 
-    const loadOptions = useCallback(
-        async (searchText: string) => {
-            const response = await loadResourceOptions(
-                resourceType as any,
-                { ...(typeof searchParams === 'string' ? {} : searchParams ?? {}), _ilike: searchText },
-                overrideGetDisplay ?? ((resource: R) => evaluate(resource, choiceColumn![0]!.path!, context)[0]),
-            );
+    const loadOptions = async (searchText: string) => {
+        const response = await loadResourceOptions(
+            resourceType as any,
+            { ...(typeof searchParams === 'string' ? {} : searchParams ?? {}), _ilike: searchText },
+            getDisplay,
+        );
 
-            if (isSuccess(response)) {
-                return response.data;
-            }
+        if (isSuccess(response)) {
+            return response.data;
+        }
 
-            return [];
-        },
-        [resourceType, searchParams, choiceColumn, context, overrideGetDisplay],
-    );
+        return [];
+    };
 
     const debouncedLoadOptions = _.debounce(
         (searchText: string, callback: (options: QuestionnaireItemAnswerOption[]) => void) => {
@@ -180,11 +178,7 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
 function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource = any>(
     props: AnswerReferenceProps<R, IR>,
 ) {
-    const { questionItem } = props;
-    const { repeats } = questionItem;
-
-    const { debouncedLoadOptions, fieldController, placeholder } = useAnswerReference(props);
-
+    const { debouncedLoadOptions, fieldController, repeats, placeholder } = useAnswerReference(props);
     const { formItem } = fieldController;
 
     return (
