@@ -1,6 +1,6 @@
 import { Form } from 'antd';
 import _ from 'lodash';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { ActionMeta, MultiValue, SingleValue } from 'react-select';
 import { parseFhirQueryExpression, QuestionItemProps } from 'sdc-qrf';
 
@@ -9,7 +9,7 @@ import { ResourcesMap } from '@beda.software/fhir-react';
 import { buildQueryParams, isSuccess } from '@beda.software/remote-data';
 
 import { AsyncSelect } from 'src/components/Select';
-import { LoadResourceOption, loadResourceOptions } from 'src/services/questionnaire';
+import { loadResourceOptions } from 'src/services/questionnaire';
 import { evaluate } from 'src/utils';
 import { getAnswerCode, getAnswerDisplay } from 'src/utils/questionnaire';
 
@@ -107,8 +107,6 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
     // TODO: add support for fhirpath and application/x-fhir-query
     const [resourceType, searchParams] = parseFhirQueryExpression(answerExpression!.expression!, context);
 
-    const [loadedOptions, setLoadedOptions] = useState<LoadResourceOption<R>[] | null>(null);
-
     const loadOptions = useCallback(
         async (searchText: string) => {
             const response = await loadResourceOptions(
@@ -132,17 +130,6 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         },
         500,
     );
-
-    useEffect(() => {
-        if (questionItem.itemControl) {
-            const loadItemControlOptions = async () => {
-                const options = await loadOptions('');
-                setLoadedOptions(options);
-            };
-
-            loadItemControlOptions();
-        }
-    }, [questionItem.itemControl]);
 
     const onChange = (
         _value: SingleValue<QuestionnaireItemAnswerOption> | MultiValue<QuestionnaireItemAnswerOption>,
@@ -177,9 +164,9 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         rootFieldName,
         fieldName,
         debouncedLoadOptions,
-        loadedOptions,
         onChange,
         validate,
+        loadOptions,
         searchParams,
         resourceType,
         deps,
