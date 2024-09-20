@@ -52,7 +52,7 @@ describe('Custom fhirpath invocation for reference option display', () => {
 
         initFHIRPathEvaluateOptions(formatDateUserInvocationTable);
         const result = evaluate(slot, "Slot.start.formatDate('dddd • D MMM • h:mm A')");
-        expect(result).toEqual(['Friday • 20 Sep • 2:00 AM']);
+        expect(result).toEqual(['Friday • 20 Sep • 12:00 AM']);
     });
 
     test('Load options', async () => {
@@ -75,7 +75,7 @@ describe('Custom fhirpath invocation for reference option display', () => {
             {
                 value: {
                     Reference: {
-                        display: 'Friday • 20 Sep • 2:00 AM',
+                        display: 'Friday • 20 Sep • 12:00 AM',
                         id: slot.id,
                         resourceType: 'Slot',
                     },
