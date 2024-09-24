@@ -1,3 +1,4 @@
+import { notAsked, RemoteData } from 'aidbox-react';
 import { Resource } from 'fhir/r4b';
 import { useEffect, useState } from 'react';
 
@@ -9,7 +10,7 @@ export function useReferenceRadioButton<R extends Resource = any, IR extends Res
     props: AnswerReferenceProps<R, IR>,
 ) {
     const { questionItem } = props;
-    const [loadedOptions, setLoadedOptions] = useState<LoadResourceOption<R>[] | null>(null);
+    const [optionsRD, setOptionsRD] = useState<RemoteData<LoadResourceOption<R>[]>>(notAsked);
 
     const { fieldController, loadOptions } = useAnswerReference(props);
 
@@ -18,7 +19,7 @@ export function useReferenceRadioButton<R extends Resource = any, IR extends Res
             const loadItemControlOptions = async () => {
                 const options = await loadOptions('');
 
-                setLoadedOptions(options);
+                setOptionsRD(options);
             };
 
             loadItemControlOptions();
@@ -26,7 +27,7 @@ export function useReferenceRadioButton<R extends Resource = any, IR extends Res
     }, [loadOptions, questionItem.itemControl]);
 
     return {
-        loadedOptions,
+        optionsRD,
         fieldController,
     };
 }

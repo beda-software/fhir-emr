@@ -115,8 +115,14 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
             getDisplay,
         );
 
-        if (isSuccess(response)) {
-            return response.data;
+        return response;
+    };
+
+    const debouncedLoadOptionsCallback = async (searchText: string) => {
+        const optionsRD = await loadOptions(searchText);
+
+        if (isSuccess(optionsRD)) {
+            return optionsRD.data;
         }
 
         return [];
@@ -124,7 +130,7 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
 
     const debouncedLoadOptions = _.debounce(
         (searchText: string, callback: (options: QuestionnaireItemAnswerOption[]) => void) => {
-            (async () => callback(await loadOptions(searchText)))();
+            (async () => callback(await debouncedLoadOptionsCallback(searchText)))();
         },
         500,
     );
