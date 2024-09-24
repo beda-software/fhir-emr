@@ -18,7 +18,7 @@ import { TimePicker } from 'src/components/TimePicker';
 import { useFieldController } from '../hooks';
 
 export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps) {
-    const { linkId, type } = questionItem;
+    const { linkId, type, regex } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', type];
     const { value, onChange, disabled, formItem, placeholder } = useFieldController(fieldName, questionItem);
 
@@ -30,6 +30,7 @@ export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps
                 value={value}
                 disabled={disabled}
                 placeholder={placeholder}
+                format={regex}
             />
         </Form.Item>
     );
@@ -41,10 +42,11 @@ interface DateTimePickerWrapperProps {
     onChange?: (value?: string) => void;
     disabled?: boolean;
     placeholder?: string;
+    format?: string;
 }
 
 function DateTimePickerWrapper(props: DateTimePickerWrapperProps) {
-    const { value, onChange, type, disabled, placeholder } = props;
+    const { value, onChange, type, disabled, placeholder, format } = props;
 
     const newValue = useMemo(() => {
         if (!value) {
@@ -58,21 +60,21 @@ function DateTimePickerWrapper(props: DateTimePickerWrapperProps) {
         return moment(value);
     }, [value, type]);
 
-    let format: string;
+    let resultFormat: string;
     let showTime: boolean | object;
     let formatFunction: (value: Moment) => string;
 
     if (type === 'date') {
-        format = FHIRDateFormat;
+        resultFormat = format || FHIRDateFormat;
         showTime = false;
         formatFunction = formatFHIRDate;
     } else if (type === 'time') {
-        format = FHIRTimeFormat;
-        showTime = { format: FHIRTimeFormat };
+        resultFormat = format || FHIRTimeFormat;
+        showTime = { format: resultFormat };
         formatFunction = formatFHIRTime;
     } else {
-        format = FHIRDateTimeFormat;
-        showTime = { format: FHIRDateTimeFormat };
+        resultFormat = format || FHIRDateTimeFormat;
+        showTime = { format: resultFormat };
         formatFunction = formatFHIRDateTime;
     }
 
@@ -87,7 +89,7 @@ function DateTimePickerWrapper(props: DateTimePickerWrapperProps) {
         return (
             <TimePicker
                 onChange={newOnChange}
-                format={format}
+                format={resultFormat}
                 value={newValue}
                 disabled={disabled}
                 placeholder={placeholder}
@@ -99,7 +101,7 @@ function DateTimePickerWrapper(props: DateTimePickerWrapperProps) {
         <DatePicker
             showTime={showTime}
             onChange={newOnChange}
-            format={format}
+            format={resultFormat}
             value={newValue}
             disabled={disabled}
             placeholder={placeholder}
