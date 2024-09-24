@@ -35,10 +35,11 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
     collapsed: boolean;
     toggleCollapsed?: () => void;
     onItemClick?: () => void;
+    enableLocaleSwitcher?: boolean;
 }
 
 export function SidebarBottom(props: Props) {
-    const { collapsed, toggleCollapsed, onItemClick, ...other } = props;
+    const { collapsed, toggleCollapsed, onItemClick, enableLocaleSwitcher = true, ...other } = props;
     const appToken = getToken();
     const isAnonymousUser = !appToken;
 
@@ -50,7 +51,7 @@ export function SidebarBottom(props: Props) {
             {...other}
         >
             <S.Divider $hidden={collapsed} />
-            <LocaleSwitcher onItemClick={onItemClick} />
+            {enableLocaleSwitcher && <LocaleSwitcher onItemClick={onItemClick} />}
             {!isAnonymousUser ? (
                 <>
                     <S.Divider $hidden={collapsed} />
