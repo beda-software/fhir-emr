@@ -1,5 +1,6 @@
 import { Form } from 'antd';
 import _ from 'lodash';
+import { useCallback } from 'react';
 import { ActionMeta, MultiValue, SingleValue } from 'react-select';
 import { parseFhirQueryExpression, QuestionItemProps } from 'sdc-qrf';
 
@@ -103,20 +104,29 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
     const fieldName = fieldPath.join('.');
     const fieldController = useFieldController(fieldPath, questionItem);
 
-    const getDisplay = overrideGetDisplay ?? ((resource: R) => evaluate(resource, choiceColumn![0]!.path!, context)[0]);
+    const getDisplay = useCallback(() => {
+        if (overrideGetDisplay) {
+            return overrideGetDisplay;
+        }
+
+        return (resource: R) => evaluate(resource, choiceColumn![0]!.path!, context)[0];
+    }, [choiceColumn, context, overrideGetDisplay]);
 
     // TODO: add support for fhirpath and application/x-fhir-query
     const [resourceType, searchParams] = parseFhirQueryExpression(answerExpression!.expression!, context);
 
-    const loadOptions = async (searchText: string) => {
-        const response = await loadResourceOptions(
-            resourceType as any,
-            { ...(typeof searchParams === 'string' ? {} : searchParams ?? {}), _ilike: searchText },
-            getDisplay,
-        );
+    const loadOptions = useCallback(
+        async (searchText: string) => {
+            const response = await loadResourceOptions(
+                resourceType as any,
+                { ...(typeof searchParams === 'string' ? {} : searchParams ?? {}), _ilike: searchText },
+                getDisplay(),
+            );
 
-        return response;
-    };
+            return response;
+        },
+        [getDisplay, resourceType, searchParams],
+    );
 
     const debouncedLoadOptionsCallback = async (searchText: string) => {
         const optionsRD = await loadOptions(searchText);
