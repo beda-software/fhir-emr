@@ -95,7 +95,7 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
     context,
     overrideGetDisplay,
 }: AnswerReferenceProps<R, IR>) {
-    const { linkId, repeats, required, answerExpression, choiceColumn, text, entryFormat } = questionItem;
+    const { linkId, repeats, required, answerExpression, choiceColumn, text, entryFormat, referenceResource} = questionItem;
     const rootFieldPath = [...parentPath, linkId];
     const fieldPath = [...rootFieldPath, ...(repeats ? [] : ['0'])];
     const rootFieldName = rootFieldPath.join('.');
@@ -113,6 +113,7 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         const response = await loadResourceOptions(
             resourceType as any,
             { ...(typeof searchParams === 'string' ? {} : searchParams ?? {}), _ilike: searchText },
+            referenceResource,
             getDisplay,
         );
 
