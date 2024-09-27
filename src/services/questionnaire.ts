@@ -17,6 +17,7 @@ export type LoadResourceOption<R extends Resource> = {
 export async function loadResourceOptions<R extends Resource, IR extends Resource = any>(
     query: R['resourceType'],
     searchParams: SearchParams,
+    referenceResource: Array<string> | undefined,
     getDisplayFn: (resource: R, includedResources: ResourcesMap<R | IR>) => string,
 ) {
     const result: RemoteDataResult<LoadResourceOption<R>[], any> = mapSuccess(
@@ -24,6 +25,9 @@ export async function loadResourceOptions<R extends Resource, IR extends Resourc
         (bundle) => {
             const resourcesMap = extractBundleResources(bundle);
             let resourceType = query;
+            if(referenceResource && referenceResource.length === 1){
+                resourceType = referenceResource![0]!;
+            }
             if (resourceType.endsWith('/$has')) {
                 resourceType = resourceType?.slice(0, -5);
             }
