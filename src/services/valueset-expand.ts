@@ -26,6 +26,7 @@ export async function expandHealthSamuraiValueSet(answerValueSet: string, search
                 url: answerValueSet,
                 _format: 'json',
                 filter: searchText,
+                count: 50,
                 displayLanguage: getCurrentLocale(),
             },
         });
