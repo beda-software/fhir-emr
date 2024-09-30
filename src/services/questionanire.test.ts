@@ -68,7 +68,7 @@ describe('Custom fhirpath invocation for reference option display', () => {
         };
 
         const options = await withRootAccess(axiosInstance, async () =>
-            ensure(await loadResourceOptions('Slot', { id: slot.id }, getDisplay)),
+            ensure(await loadResourceOptions('Slot', { id: slot.id }, undefined, getDisplay)),
         );
 
         expect(options).toEqual([

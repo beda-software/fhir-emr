@@ -35,6 +35,7 @@ export function useReferenceColumn(props: SearchBarColumnReferenceTypeProps) {
         const response = await loadResourceOptions<Resource>(
             resourceType as Resource['resourceType'],
             { ...(typeof searchParams === 'string' ? {} : searchParams ?? {}), _ilike: searchText },
+            undefined,
             getDisplay,
         );
 
