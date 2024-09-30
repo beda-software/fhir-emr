@@ -1,6 +1,6 @@
 import { Form } from 'antd';
 import _ from 'lodash';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { ActionMeta, MultiValue, SingleValue } from 'react-select';
 import { parseFhirQueryExpression, QuestionItemProps } from 'sdc-qrf';
 
