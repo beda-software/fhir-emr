@@ -20,7 +20,7 @@ export function EncounterList() {
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
         columns: getEncounterListSearchBarColumns(),
     });
-
+   
     const roleSearchParams = matchCurrentUserRole({
         [Role.Admin]: () => {
             return {};
@@ -95,7 +95,7 @@ export function EncounterList() {
             ),
         },
     ];
-
+    
     return (
         <>
             <BasePageHeader style={{ paddingTop: 40, paddingBottom: 92 }}>
