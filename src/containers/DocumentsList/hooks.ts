@@ -1,11 +1,11 @@
 import { t } from '@lingui/macro';
 import { Reference, Patient, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
-import fhirpath from 'fhirpath';
 
 import { extractBundleResources, parseFHIRReference, useService } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 
 import { getFHIRResources } from 'src/services/fhir';
+import { evaluate } from 'src/utils';
 import { getExternalQuestionnaireName } from 'src/utils/smart-apps';
 
 export function usePatientDocuments(patient: Patient, encounter?: Reference, context?: string) {
@@ -14,7 +14,7 @@ export function usePatientDocuments(patient: Patient, encounter?: Reference, con
         if (context) {
             const r = await getFHIRResources<Questionnaire>('Questionnaire', { context, _elements: 'id' });
             if (isSuccess(r)) {
-                questionnaires = fhirpath.evaluate(r.data, 'Bundle.entry.resource.id') ?? [];
+                questionnaires = evaluate(r.data, 'Bundle.entry.resource.id') ?? [];
             }
         }
         const qrResponse = await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {

@@ -1,6 +1,6 @@
 import { Form } from 'antd';
-import fhirpath from 'fhirpath';
 import _ from 'lodash';
+import { useCallback } from 'react';
 import { ActionMeta, MultiValue, SingleValue } from 'react-select';
 import { parseFhirQueryExpression, QuestionItemProps } from 'sdc-qrf';
 
@@ -10,6 +10,7 @@ import { buildQueryParams, isSuccess } from '@beda.software/remote-data';
 
 import { AsyncSelect } from 'src/components/Select';
 import { loadResourceOptions } from 'src/services/questionnaire';
+import { evaluate } from 'src/utils';
 import { getAnswerCode, getAnswerDisplay } from 'src/utils/questionnaire';
 
 import { useFieldController } from '../hooks';
@@ -38,6 +39,7 @@ export function useFieldReference<R extends Resource = any, IR extends Resource 
         const response = await loadResourceOptions(
             resourceType,
             { ...(typeof searchParams === 'string' ? {} : searchParams ?? {}), _ilike: searchText },
+            undefined,
             getDisplay,
         );
 
@@ -95,7 +97,8 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
     context,
     overrideGetDisplay,
 }: AnswerReferenceProps<R, IR>) {
-    const { linkId, repeats, required, answerExpression, choiceColumn, text, entryFormat, referenceResource} = questionItem;
+    const { linkId, repeats, required, answerExpression, choiceColumn, text, entryFormat, referenceResource } =
+        questionItem;
     const rootFieldPath = [...parentPath, linkId];
     const fieldPath = [...rootFieldPath, ...(repeats ? [] : ['0'])];
     const rootFieldName = rootFieldPath.join('.');
@@ -103,22 +106,36 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
     const fieldName = fieldPath.join('.');
     const fieldController = useFieldController(fieldPath, questionItem);
 
-    const getDisplay =
-        overrideGetDisplay ?? ((resource: R) => fhirpath.evaluate(resource, choiceColumn![0]!.path!, context)[0]);
+    const getDisplay = useCallback(() => {
+        if (overrideGetDisplay) {
+            return overrideGetDisplay;
+        }
+
+        return (resource: R) => evaluate(resource, choiceColumn![0]!.path!, context)[0];
+    }, [choiceColumn, context, overrideGetDisplay]);
 
     // TODO: add support for fhirpath and application/x-fhir-query
     const [resourceType, searchParams] = parseFhirQueryExpression(answerExpression!.expression!, context);
 
-    const loadOptions = async (searchText: string) => {
-        const response = await loadResourceOptions(
-            resourceType as any,
-            { ...(typeof searchParams === 'string' ? {} : searchParams ?? {}), _ilike: searchText },
-            referenceResource,
-            getDisplay,
-        );
+    const loadOptions = useCallback(
+        async (searchText: string) => {
+            const response = await loadResourceOptions(
+                resourceType as any,
+                { ...(typeof searchParams === 'string' ? {} : searchParams ?? {}), _ilike: searchText },
+                referenceResource,
+                getDisplay(),
+            );
 
-        if (isSuccess(response)) {
-            return response.data;
+            return response;
+        },
+        [getDisplay, referenceResource, resourceType, searchParams],
+    );
+
+    const debouncedLoadOptionsCallback = async (searchText: string) => {
+        const optionsRD = await loadOptions(searchText);
+
+        if (isSuccess(optionsRD)) {
+            return optionsRD.data;
         }
 
         return [];
@@ -126,7 +143,7 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
 
     const debouncedLoadOptions = _.debounce(
         (searchText: string, callback: (options: QuestionnaireItemAnswerOption[]) => void) => {
-            (async () => callback(await loadOptions(searchText)))();
+            (async () => callback(await debouncedLoadOptionsCallback(searchText)))();
         },
         500,
     );
@@ -166,6 +183,7 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         debouncedLoadOptions,
         onChange,
         validate,
+        loadOptions,
         searchParams,
         resourceType,
         deps,
@@ -175,14 +193,6 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         placeholder: entryFormat,
     };
 }
-
-// function buildRules(props: QuestionnaireItem) {
-//     const { required } = props;
-//     if (required) {
-//         return [{ required: true, message: 'This field is required' }];
-//     }
-//     return [];
-// }
 
 function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource = any>(
     props: AnswerReferenceProps<R, IR>,
