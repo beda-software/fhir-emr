@@ -1,15 +1,15 @@
 import { Form } from 'antd';
 import _ from 'lodash';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { ActionMeta, MultiValue, SingleValue } from 'react-select';
 import { parseFhirQueryExpression, QuestionItemProps } from 'sdc-qrf';
 
 import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer, Resource } from '@beda.software/aidbox-types';
-import { ResourcesMap } from '@beda.software/fhir-react';
+import { RenderRemoteData, ResourcesMap, useService } from '@beda.software/fhir-react';
 import { buildQueryParams, isSuccess } from '@beda.software/remote-data';
 
 import { AsyncSelect } from 'src/components/Select';
-import { loadResourceOptions } from 'src/services/questionnaire';
+import { LoadResourceOption, loadResourceOptions } from 'src/services/questionnaire';
 import { evaluate } from 'src/utils';
 import { getAnswerCode, getAnswerDisplay } from 'src/utils/questionnaire';
 
@@ -115,7 +115,9 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
     }, [choiceColumn, context, overrideGetDisplay]);
 
     // TODO: add support for fhirpath and application/x-fhir-query
-    const [resourceType, searchParams] = parseFhirQueryExpression(answerExpression!.expression!, context);
+    const [resourceType, searchParams] = useMemo(() => {
+        return parseFhirQueryExpression(answerExpression!.expression!, context);
+    }, [answerExpression?.expression!, context]);
 
     const loadOptions = useCallback(
         async (searchText: string) => {
@@ -131,15 +133,18 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         [getDisplay, referenceResource, resourceType, searchParams],
     );
 
-    const debouncedLoadOptionsCallback = async (searchText: string) => {
-        const optionsRD = await loadOptions(searchText);
+    const debouncedLoadOptionsCallback = useCallback(
+        async (searchText: string) => {
+            const optionsRD = await loadOptions(searchText);
 
-        if (isSuccess(optionsRD)) {
-            return optionsRD.data;
-        }
+            if (isSuccess(optionsRD)) {
+                return optionsRD.data;
+            }
 
-        return [];
-    };
+            return [];
+        },
+        [loadOptions],
+    );
 
     const debouncedLoadOptions = _.debounce(
         (searchText: string, callback: (options: QuestionnaireItemAnswerOption[]) => void) => {
@@ -147,6 +152,10 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         },
         500,
     );
+
+    const [optionsRD] = useService<LoadResourceOption<R>[]>(async () => {
+        return await loadOptions('');
+    }, [JSON.stringify(searchParams)]);
 
     const onChange = (
         _value: SingleValue<QuestionnaireItemAnswerOption> | MultiValue<QuestionnaireItemAnswerOption>,
@@ -184,6 +193,7 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         onChange,
         validate,
         loadOptions,
+        optionsRD,
         searchParams,
         resourceType,
         deps,
@@ -197,22 +207,26 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
 function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource = any>(
     props: AnswerReferenceProps<R, IR>,
 ) {
-    const { debouncedLoadOptions, fieldController, repeats, placeholder } = useAnswerReference(props);
+    const { debouncedLoadOptions, fieldController, repeats, placeholder, optionsRD } = useAnswerReference(props);
     const { formItem } = fieldController;
 
     return (
-        <Form.Item {...formItem}>
-            <AsyncSelect
-                onChange={fieldController.onChange}
-                value={repeats ? fieldController.value : [fieldController.value]}
-                loadOptions={debouncedLoadOptions}
-                defaultOptions
-                getOptionLabel={(option) => getAnswerDisplay(option.value)}
-                getOptionValue={(option) => getAnswerCode(option.value)}
-                isMulti={repeats}
-                placeholder={placeholder}
-            />
-        </Form.Item>
+        <RenderRemoteData remoteData={optionsRD}>
+            {(options) => (
+                <Form.Item {...formItem}>
+                    <AsyncSelect
+                        onChange={fieldController.onChange}
+                        value={repeats ? fieldController.value : [fieldController.value]}
+                        loadOptions={debouncedLoadOptions}
+                        defaultOptions={options}
+                        getOptionLabel={(option) => getAnswerDisplay(option.value)}
+                        getOptionValue={(option) => getAnswerCode(option.value)}
+                        isMulti={repeats}
+                        placeholder={placeholder}
+                    />
+                </Form.Item>
+            )}
+        </RenderRemoteData>
     );
 }
 

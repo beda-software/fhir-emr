@@ -8,8 +8,7 @@ import { Spinner } from 'src/components/Spinner';
 import { Text } from 'src/components/Typography';
 import { getDisplay } from 'src/utils';
 
-import { useReferenceRadioButton } from './hooks';
-import { AnswerReferenceProps } from '../reference';
+import { AnswerReferenceProps, useAnswerReference } from '../reference';
 
 function ReferenceRadioButtonUnsafe<R extends Resource = any, IR extends Resource = any>(
     props: AnswerReferenceProps<R, IR>,
@@ -17,7 +16,7 @@ function ReferenceRadioButtonUnsafe<R extends Resource = any, IR extends Resourc
     const { questionItem } = props;
     const { choiceOrientation = 'vertical' } = questionItem;
 
-    const { optionsRD, fieldController } = useReferenceRadioButton(props);
+    const { optionsRD, fieldController } = useAnswerReference(props);
 
     const { formItem, value, onChange, disabled } = fieldController;
 
