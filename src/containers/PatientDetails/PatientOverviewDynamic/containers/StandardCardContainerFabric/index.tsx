@@ -11,19 +11,30 @@ import {
 } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/types';
 import { useStandardCard } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/StandardCardContainerFabric/hooks';
 
+interface StandardCardContainerWrapperProps<T extends Resource> extends ContainerProps {
+    prepareFunction: PrepareFunction<T>;
+}
+
+function StandardCardContainerWrapper<T extends Resource>(props: StandardCardContainerWrapperProps<T>) {
+    const { patient, widgetInfo, prepareFunction } = props;
+
+    const { response } = useStandardCard(patient, widgetInfo.query!, prepareFunction);
+
+    return (
+        <RenderRemoteData remoteData={response} renderLoading={Spinner}>
+            {({ card }) => <StandardCard card={card as OverviewCard<T>} />}
+        </RenderRemoteData>
+    );
+}
+
 export function StandardCardContainerFabric<T extends Resource>(prepareFunction: PrepareFunction<T>) {
-    return function StandardCardContainer({ patient, widgetInfo }: ContainerProps) {
+    return function StandardCardContainer(props: ContainerProps) {
+        const { widgetInfo } = props;
+
         if (!widgetInfo.query) {
             return <div>Error: no query parameter for the widget.</div>;
         }
 
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        const { response } = useStandardCard(patient, widgetInfo.query, prepareFunction);
-
-        return (
-            <RenderRemoteData remoteData={response} renderLoading={Spinner}>
-                {({ card }) => <StandardCard card={card as OverviewCard<T>} />}
-            </RenderRemoteData>
-        );
+        return <StandardCardContainerWrapper<T> {...props} prepareFunction={prepareFunction} />;
     };
 }

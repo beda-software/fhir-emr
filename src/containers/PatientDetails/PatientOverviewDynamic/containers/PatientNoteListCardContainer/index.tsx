@@ -3,14 +3,11 @@ import { PatientNoteListCard } from 'src/containers/PatientDetails/PatientOvervi
 
 import { useNoteListDashboard } from './hooks';
 
-export function PatientNoteListCardContainer({ patient, widgetInfo }: ContainerProps) {
-    if (!widgetInfo.query) {
-        return <div>Error: no query parameter for the widget.</div>;
-    }
+function PatientNoteListCardWrapper(props: ContainerProps) {
+    const { patient, widgetInfo } = props;
 
-    const searchParams = widgetInfo.query.search(patient);
+    const searchParams = widgetInfo.query!.search(patient);
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const { noteListRemoteData, pagination, paginationChange, reloadNoteList } = useNoteListDashboard(searchParams);
 
     return (
@@ -22,4 +19,14 @@ export function PatientNoteListCardContainer({ patient, widgetInfo }: ContainerP
             reloadNoteList={reloadNoteList}
         />
     );
+}
+
+export function PatientNoteListCardContainer(props: ContainerProps) {
+    const { widgetInfo } = props;
+
+    if (!widgetInfo.query) {
+        return <div>Error: no query parameter for the widget.</div>;
+    }
+
+    return <PatientNoteListCardWrapper {...props} />;
 }

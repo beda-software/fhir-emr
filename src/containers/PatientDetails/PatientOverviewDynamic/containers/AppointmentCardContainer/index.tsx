@@ -5,13 +5,10 @@ import { Spinner } from 'src/components/Spinner';
 import { AppointmentCard } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/AppointmentCard';
 import { useAppointmentCard } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/AppointmentCardContainer/hooks';
 
-export function AppointmentCardContainer({ patient, widgetInfo }: ContainerProps) {
-    if (!widgetInfo.query) {
-        return <div>Error: no query parameter for the widget.</div>;
-    }
+function AppointmentCardWrapper(props: ContainerProps) {
+    const { patient, widgetInfo } = props;
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { response } = useAppointmentCard(patient, widgetInfo.query);
+    const { response } = useAppointmentCard(patient, widgetInfo.query!);
 
     return (
         <RenderRemoteData remoteData={response} renderLoading={Spinner}>
@@ -26,4 +23,14 @@ export function AppointmentCardContainer({ patient, widgetInfo }: ContainerProps
             }}
         </RenderRemoteData>
     );
+}
+
+export function AppointmentCardContainer(props: ContainerProps) {
+    const { widgetInfo } = props;
+
+    if (!widgetInfo.query) {
+        return <div>Error: no query parameter for the widget.</div>;
+    }
+
+    return <AppointmentCardWrapper {...props} />;
 }
