@@ -187,7 +187,7 @@ function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource =
     props: AnswerReferenceProps<R, IR>,
 ) {
     const { debouncedLoadOptions, fieldController, repeats, placeholder } = useAnswerReference(props);
-    const { formItem } = fieldController;
+    const { formItem, disabled } = fieldController;
 
     return (
         <Form.Item {...formItem}>
@@ -200,6 +200,7 @@ function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource =
                 getOptionValue={(option) => getAnswerCode(option.value)}
                 isMulti={repeats}
                 placeholder={placeholder}
+                isDisabled={disabled}
             />
         </Form.Item>
     );
