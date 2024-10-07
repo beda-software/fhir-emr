@@ -84,6 +84,20 @@ export function questionnaireToValidationSchema(questionnaire: Questionnaire) {
             schema = yup.date();
             if (item.required) schema = schema.required();
             schema = createSchemaArray(yup.object({ date: schema })).required();
+        } else if (item.type === 'reference') {
+            schema = yup
+                .object({
+                    resourceType: yup.string().required(),
+                    display: yup.string().nullable(),
+                    id: yup.string().required(),
+                })
+                .required();
+
+            if (item.required) {
+                schema = createSchemaArray(yup.object({ Reference: schema })).required();
+            } else {
+                schema = yup.mixed().nullable();
+            }
         } else {
             schema = item.required ? yup.mixed().required() : yup.mixed().nullable();
         }
