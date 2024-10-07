@@ -5,6 +5,7 @@ import { questionnaireToValidationSchema } from 'src/utils';
 type QuestionnaireData = {
     questionnaire: Questionnaire;
     answer: any;
+    success: boolean;
 };
 
 const REFERENCE_QUESTIONAIRES: QuestionnaireData[] = [
@@ -36,6 +37,7 @@ const REFERENCE_QUESTIONAIRES: QuestionnaireData[] = [
                 },
             ],
         },
+        success: true,
     },
     {
         questionnaire: {
@@ -55,14 +57,34 @@ const REFERENCE_QUESTIONAIRES: QuestionnaireData[] = [
         answer: {
             'reference-optional-filed': [undefined],
         },
+        success: true,
+    },
+    {
+        questionnaire: {
+            resourceType: 'Questionnaire',
+            id: 'reference-required',
+            title: 'Reference required',
+            status: 'active',
+            item: [
+                {
+                    linkId: 'reference-required-filed',
+                    type: 'reference',
+                    text: 'Reference required',
+                    required: true,
+                },
+            ],
+        },
+        answer: {
+            'reference-required-filed': [undefined],
+        },
+        success: false,
     },
 ];
 
 describe('Reference', () => {
     test.each(REFERENCE_QUESTIONAIRES)('should return the correct reference', async (questionnaireData) => {
-        const scheme = questionnaireToValidationSchema(questionnaireData.questionnaire);
-
-        const result = await scheme.validate(questionnaireData.answer);
-        expect(result).toEqual(questionnaireData.answer);
+        const validationSchema = questionnaireToValidationSchema(questionnaireData.questionnaire);
+        const isValid = await validationSchema.isValid(questionnaireData.answer);
+        expect(isValid).toBe(questionnaireData.success);
     });
 });
