@@ -71,7 +71,7 @@ export function questionnaireToValidationSchema(questionnaire: Questionnaire) {
     if (questionnaire.item === undefined) return yup.object(validationSchema) as yup.AnyObjectSchema;
     questionnaire.item.forEach((item) => {
         let schema: yup.AnySchema;
-        if (item.type === 'string') {
+        if (item.type === 'string' || item.type === 'text') {
             schema = yup.string();
             if (item.required) schema = schema.required();
             if (item.maxLength && item.maxLength > 0) schema = (schema as yup.StringSchema).max(item.maxLength);
