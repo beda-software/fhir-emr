@@ -85,13 +85,11 @@ export function questionnaireToValidationSchema(questionnaire: Questionnaire) {
             if (item.required) schema = schema.required();
             schema = createSchemaArray(yup.object({ date: schema })).required();
         } else if (item.type === 'reference') {
-            schema = yup
-                .object({
-                    resourceType: yup.string().required(),
-                    display: yup.string().nullable(),
-                    id: yup.string().required(),
-                })
-                .required();
+            schema = yup.object({
+                resourceType: yup.string().required(),
+                display: yup.string().nullable(),
+                id: yup.string().required(),
+            });
 
             if (item.required) {
                 schema = createSchemaArray(yup.object({ Reference: schema })).required();
