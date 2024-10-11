@@ -10,12 +10,14 @@ import { getFHIRResources } from 'src/services/fhir';
 import { evaluate } from 'src/utils';
 
 export function usePatientDocumentPrint() {
-    const params = useParams<{ qrId: string }>();
+    const params = useParams<{ qrId: string, id: string }>();
     const qrId = params.qrId!;
+    const patientId = params.id!;
 
     const [response] = useService(async () => {
         const qrRD = await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
             _id: qrId,
+            subject: patientId,
         });
         if (isSuccess(qrRD)) {
             const questionnaireResponse = evaluate(qrRD.data, 'entry.resource')[0];
