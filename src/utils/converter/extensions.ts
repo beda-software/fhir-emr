@@ -1,6 +1,7 @@
 import { Extension as FHIRExtension } from 'fhir/r4b';
 
 import { QuestionnaireItem as FCEQuestionnaireItem } from '@beda.software/aidbox-types';
+import { getExtensionExpression, getExtensionLanguage } from '../fhirpath/Extension';
 
 export enum ExtensionIdentifier {
     Hidden = 'http://hl7.org/fhir/StructureDefinition/questionnaire-hidden',
@@ -190,10 +191,9 @@ export const extensionTransformers: ExtensionTransformer = {
                         constraint: [
                             {
                                 expression: {
-                                    expression: constraintExtension.find(
-                                        (constraint) => constraint.url === 'expression',
-                                    )!.valueString!,
-                                    language: 'text/fhirpath',
+                                    // NOTE: fhirpath used, because expression has type of 'valueString' instead of 'valueExpression'
+                                    expression: getExtensionExpression(constraintExtension),
+                                    language: getExtensionLanguage(constraintExtension),
                                 },
                                 human: constraintExtension.find((constraint) => constraint.url === 'human')!
                                     .valueString!,

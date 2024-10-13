@@ -94,11 +94,17 @@ export function questionnaireToValidationSchema(questionnaire: Questionnaire) {
             if (item.maxLength && item.maxLength > 0) schema = (schema as yup.StringSchema).max(item.maxLength);
             if (item.constraint) {
                 item.constraint.forEach((constraint) => {
-                    if (constraint.severity === 'error' && constraint.expression.expression) {
-                        schema = (schema as yup.StringSchema).fhirpath(
-                            constraint.expression.expression,
-                            constraint.human,
-                        );
+                    if (
+                        constraint.severity === 'error' &&
+                        constraint.expression.expression &&
+                        constraint.expression.language
+                    ) {
+                        if (constraint.expression.language === 'text/fhirpath') {
+                            schema = (schema as yup.StringSchema).fhirpath(
+                                constraint.expression.expression,
+                                constraint.human,
+                            );
+                        }
                     }
                 });
             }
