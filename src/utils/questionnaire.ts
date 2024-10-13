@@ -11,6 +11,7 @@ import {
 import { parseFHIRTime } from '@beda.software/fhir-react';
 
 import { formatHumanDate, formatHumanDateTime } from './date';
+import { evaluate } from 'fhirpath';
 
 export function getDisplay(value?: QuestionnaireResponseItemAnswerValue): string | number | null {
     if (!value) {
@@ -66,6 +67,22 @@ export function getArrayDisplay(options?: QuestionnaireResponseItemAnswer[]): st
     return options.map((v: QuestionnaireResponseItemAnswer) => getDisplay(v.value)).join(', ');
 }
 
+declare module 'yup' {
+    interface StringSchema {
+        fhirpath(fhirpathExpr: string, errorMsg?: string): StringSchema;
+    }
+}
+
+function fhirpathValidation(value: string, fhirpathExpr: string) {
+    return evaluate(value, fhirpathExpr)[0] === true;
+}
+
+yup.addMethod(yup.StringSchema, 'fhirpath', function (fhirpathExpr: string, errorMsg?: string) {
+    return this.test('run fhirpath function', errorMsg || 'value is not True', function (value) {
+        return value ? fhirpathValidation(value, fhirpathExpr) : false;
+    });
+});
+
 export function questionnaireToValidationSchema(questionnaire: Questionnaire) {
     const validationSchema: Record<string, yup.AnySchema> = {};
     if (questionnaire.item === undefined) return yup.object(validationSchema) as yup.AnyObjectSchema;
@@ -75,6 +92,16 @@ export function questionnaireToValidationSchema(questionnaire: Questionnaire) {
             schema = yup.string();
             if (item.required) schema = schema.required();
             if (item.maxLength && item.maxLength > 0) schema = (schema as yup.StringSchema).max(item.maxLength);
+            if (item.constraint) {
+                item.constraint.forEach((constraint) => {
+                    if (constraint.severity === 'error' && constraint.expression.expression) {
+                        schema = (schema as yup.StringSchema).fhirpath(
+                            constraint.expression.expression,
+                            constraint.human,
+                        );
+                    }
+                });
+            }
             schema = createSchemaArray(yup.object({ string: schema })).required();
         } else if (item.type === 'integer') {
             schema = yup.number();

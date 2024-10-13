@@ -15,7 +15,13 @@ import {
     QuestionnaireItemInitial as FCEQuestionnaireItemInitial,
 } from '@beda.software/aidbox-types';
 
-import { convertFromFHIRExtension, findExtension, fromFHIRReference } from 'src/utils/converter';
+import {
+    convertFromFHIRExtension,
+    convertFromFHIRExtensions,
+    findExtension,
+    findExtensions,
+    fromFHIRReference,
+} from 'src/utils/converter';
 import { ExtensionIdentifier } from 'src/utils/converter/extensions';
 
 export function processItems(fhirQuestionnaire: FHIRQuestionnaire) {
@@ -39,12 +45,25 @@ function getUpdatedPropertiesFromItem(item: FHIRQuestionnaireItem) {
     let updatedProperties: FCEQuestionnaireItem = { linkId: item.linkId, type: item.type };
 
     Object.values(ExtensionIdentifier).forEach((identifier) => {
-        const extension = findExtension(item, identifier);
-        if (extension !== undefined) {
-            updatedProperties = {
-                ...updatedProperties,
-                ...convertFromFHIRExtension(extension),
-            };
+        if (identifier === ExtensionIdentifier.ItemConstraint) {
+            const extensions = findExtensions(item, identifier);
+            if (extensions && extensions.length > 0) {
+                const extensionArray = convertFromFHIRExtensions(extensions);
+
+                updatedProperties = {
+                    ...updatedProperties,
+                    ...extensionArray,
+                };
+            }
+        } else {
+            const extension = findExtension(item, identifier);
+
+            if (extension !== undefined) {
+                updatedProperties = {
+                    ...updatedProperties,
+                    ...convertFromFHIRExtension(extension),
+                };
+            }
         }
     });
 
