@@ -1,0 +1,78 @@
+resourceType: Questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/place-order
+meta:
+    profile:
+        - https://beda.software/beda-emr-questionnaire
+name: e-request
+title: Laboratory procedure eRequest
+status: active
+subjectType:
+    - Encounter
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+  - name:
+      code: Author
+    type:
+      - Practitioner
+  - name:
+      code: Encounter
+    type:
+      - Encounter
+mapping:
+  - id: place-order
+    resourceType: Mapping
+item:
+- linkId: test-code
+  text: Test Codes
+  required: true
+  type: string
+- linkId: intent
+  text: Intent
+  required: true
+  type: choice
+  answerValueSet: request-intent
+- linkId: priority
+  required: true
+  text: Priority
+  type: choice
+  answerValueSet: request-priority
+- linkId: assigned-organization
+  text: Assigned organization
+  type: reference
+  referenceResource:
+    - Organization
+  required: true
+  answerExpression:
+    language: application/x-fhir-query
+    expression: "Organization?type=lab"
+  choiceColumn:
+    - forDisplay: true
+      path: name
+  answerValueSet: request-priority
+- linkId: patient-id
+  type: string
+  text: patientId
+  readOnly: true
+  hidden: true
+  initialExpression:
+    language: text/fhirpath
+    expression: "%Patient.id"
+- linkId: encounter-id
+  type: string
+  text: encounterId
+  readOnly: true
+  hidden: true
+  initialExpression:
+    language: text/fhirpath
+    expression: "%Encounter.id"
+- linkId: practitiner-id
+  type: string
+  text: practitinerId
+  readOnly: true
+  hidden: true
+  initialExpression:
+    language: text/fhirpath
+    expression: "%Author.id"
