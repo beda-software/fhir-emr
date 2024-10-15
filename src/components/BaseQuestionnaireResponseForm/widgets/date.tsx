@@ -4,7 +4,6 @@ import { useCallback, useMemo } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 
 import {
-    FHIRDateFormat,
     FHIRTimeFormat,
     FHIRDateTimeFormat,
     formatFHIRDate,
@@ -16,6 +15,8 @@ import { DatePicker } from 'src/components/DatePicker';
 import { TimePicker } from 'src/components/TimePicker';
 
 import { useFieldController } from '../hooks';
+
+const USDateFormat = 'MM/DD/YYYY';
 
 export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, type } = questionItem;
@@ -63,7 +64,7 @@ function DateTimePickerWrapper(props: DateTimePickerWrapperProps) {
     let formatFunction: (value: Moment) => string;
 
     if (type === 'date') {
-        format = FHIRDateFormat;
+        format = USDateFormat;
         showTime = false;
         formatFunction = formatFHIRDate;
     } else if (type === 'time') {
