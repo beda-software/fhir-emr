@@ -15,10 +15,11 @@ export function QuestionText({ parentPath, questionItem }: QuestionItemProps) {
         return null;
     }
 
+    const renderedText = (text ?? '').replace('<input/>', value || '');
+
     return (
         <S.Question className={classNames(s.question, s.column, 'form__question')}>
-            <span className={s.questionText}>{text}</span>
-            <span>{value || '-'}</span>
+            <span className={s.questionText}>{renderedText}</span>
         </S.Question>
     );
 }
