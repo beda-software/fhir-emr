@@ -11,12 +11,16 @@ import { flattenQuestionnaireGroupItems, getQuestionnaireItemValue } from './uti
 export function DocumentPrintAnswer(props: { item: QuestionnaireItem; qResponse?: QuestionnaireResponse }) {
     const { item, qResponse } = props;
     const itemValue = qResponse && getQuestionnaireItemValue(item, qResponse);
-    return (
-        <S.P key={item.linkId}>
-            {item.text}
-            {itemValue && ': ' + itemValue}
-        </S.P>
-    );
+    const renderedText = item.text?.includes('<input/>')
+    ? item.text.replace('<input/>', itemValue || '') 
+    : item.text;
+
+return (
+    <S.P key={item.linkId}>
+        {renderedText}
+        {itemValue && !item.text?.includes('<input/>') && ': ' + itemValue} 
+    </S.P>
+);
 }
 
 export function DocumentPrintAnswers(props: {
