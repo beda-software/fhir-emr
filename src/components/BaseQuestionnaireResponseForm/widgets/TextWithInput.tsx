@@ -2,18 +2,18 @@ import { Input } from 'antd';
 import React from 'react';
 
 interface TextWithInputProps {
+  value: string;
+  disabled: boolean | undefined;
+  onChange: (value: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur: (value: React.ChangeEvent<HTMLInputElement>) => void;
   text: string;
-  onChangeInput: (value: string) => void;
+  placeholder: string | undefined;
 }
 
-const TextWithInput: React.FC<TextWithInputProps> = ({ text, onChangeInput }) => {
+const TextWithInput: React.FC<TextWithInputProps> = ({ text,  value, disabled, onChange, onBlur, placeholder }) => {
   const parts = text.split('<input/>');
 
   let inputRendered = false;
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onChangeInput(event.target.value);
-  };
 
   return (
     <span>
@@ -23,8 +23,8 @@ const TextWithInput: React.FC<TextWithInputProps> = ({ text, onChangeInput }) =>
           {index < parts.length - 1 && !inputRendered ? (
             <>
               <Input
+                value={value} disabled={disabled} onChange={onChange} onBlur={onBlur} placeholder={placeholder}
                 style={{ width: 200, margin: '0 10px' }}
-                onChange={handleInputChange}
               />
               {inputRendered = true}
             </>

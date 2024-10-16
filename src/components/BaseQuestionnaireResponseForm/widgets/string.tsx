@@ -1,5 +1,4 @@
 import { Form, Input } from 'antd';
-import { useState } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 
 import TextWithInput from './TextWithInput';
@@ -10,21 +9,9 @@ export function QuestionInputString({ parentPath, questionItem }: QuestionItemPr
     const { linkId } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
     const { value, onChange, disabled, formItem, onBlur, placeholder } = useFieldController(fieldName, questionItem);
-
-        const [inputValue, setInputValue] = useState('');
-
-        const handleInputChange = (inputValue: string) => {
-            setInputValue(inputValue);
-        };
-
-        const handleComplete = () => {
-            const fullText = (questionItem.text ?? '').replace('<input/>', inputValue);
-            console.log("fullText:", fullText);
-            onChange(fullText);
-        };
-
+    
     return (
-        <Form.Item {...formItem} onBlur={handleComplete}  label={<TextWithInput  text={questionItem.text ?? ''} onChangeInput={handleInputChange} />}>
+        <Form.Item {...formItem}  label={<TextWithInput value={value} disabled={disabled} onChange={onChange} onBlur={onBlur} placeholder={placeholder}  text={questionItem.text ?? ''} />}>
         </Form.Item>
     );
 }
