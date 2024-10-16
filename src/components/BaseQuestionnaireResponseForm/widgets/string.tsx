@@ -21,7 +21,6 @@ export function QuestionInputString({ parentPath, questionItem }: QuestionItemPr
             const fullText = (questionItem.text ?? '').replace('<input/>', inputValue);
             console.log("fullText:", fullText);
             onChange(fullText);
-
         };
 
     return (
