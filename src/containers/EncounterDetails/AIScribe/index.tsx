@@ -261,7 +261,7 @@ function Extract(props: ExtractProps) {
     if (isNotAsked(extractionRD)) {
         return (
             <ModalTrigger
-                title="Extract medical documents"
+                title={t`Extract medical documents`}
                 trigger={
                     <Button icon={<PlusOutlined />} type="primary">
                         <span>

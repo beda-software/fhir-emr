@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro';
 import queryString from 'query-string';
 import { useEffect, useRef } from 'react';
 import { Route, BrowserRouter, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
@@ -120,8 +121,8 @@ function AnonymousUserApp() {
                 path="/thanks"
                 element={
                     <NotificationPage
-                        title="Thank you!"
-                        text="Thank you for filling out the questionnaire. Now you can close this page."
+                        title={t`Thank you!`}
+                        text={t`Thank you for filling out the questionnaire. Now you can close this page.`}
                     />
                 }
             />

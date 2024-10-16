@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro';
 import { notification } from 'antd';
 import { QuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
@@ -64,7 +65,7 @@ export const saveQuestionnaireResponseDraft = async (
         formData.context.questionnaireResponse.id = response.data.id;
     }
     if (isFailure(response)) {
-        console.error('Error saving a draft: ', response.error);
+        console.error(t`Error saving a draft: `, response.error);
     }
 
     return response;
@@ -79,18 +80,26 @@ export function onFormResponse(props: {
 
     if (isSuccess(response)) {
         if (response.data.extracted) {
-
-            let warnings: string[] = [];
+            const warnings: string[] = [];
             response.data.extractedBundle.forEach((bundle, index) => {
                 bundle.entry?.forEach((entry, jndex) => {
-                    if (entry.resource.resourceType === "OperationOutcome") {
-                            warnings.push(`Error extrating on ${index}, ${jndex}`);
-                        }
-                    });
+                    if (entry.resource.resourceType === 'OperationOutcome') {
+                        warnings.push(`Error extracting on ${index}, ${jndex}`);
+                    }
+                });
             });
             if (warnings.length > 0) {
                 notification.warning({
-                    message: (<div>{warnings.map((w) => <div key={w}><span>{w}</span><br/></div>)}</div>),
+                    message: (
+                        <div>
+                            {warnings.map((w) => (
+                                <div key={w}>
+                                    <span>{w}</span>
+                                    <br />
+                                </div>
+                            ))}
+                        </div>
+                    ),
                 });
             }
 
@@ -98,14 +107,14 @@ export function onFormResponse(props: {
                 onSuccess(response.data);
             } else {
                 notification.success({
-                    message: 'Form successfully saved',
+                    message: t`Form successfully saved`,
                 });
             }
         } else {
             if (onFailure) {
-                onFailure('Error while extracting');
+                onFailure(t`Error while extracting`);
             } else {
-                notification.error({ message: 'Error while extracting' });
+                notification.error({ message: t`Error while extracting` });
             }
         }
     } else {

@@ -68,13 +68,13 @@ const amendDocument = async (reload: () => void, qrId?: string) => {
     if (isSuccess(response)) {
         reload();
         notification.success({
-            message: 'The document successfully amended',
+            message: t`The document successfully amended`,
         });
     }
     if (isFailure(response)) {
         console.error(response.error);
         notification.error({
-            message: 'Error while amending the document',
+            message: t`Error while amending the document`,
         });
     }
 };
@@ -96,7 +96,7 @@ function usePatientDocumentDetails(patientId: string) {
             }),
         );
         if (isSuccess(mappedResponse) && !mappedResponse.data.questionnaireResponse) {
-            return failure(`The document does not exist`);
+            return failure(t`The document does not exist`);
         }
         return mappedResponse;
     });
@@ -147,8 +147,8 @@ function PatientDocumentDetailsReadonly(props: {
                                             reload={reload}
                                             qrId={qrId}
                                             title={t`Are you sure you want to amend the document?`}
-                                            okText="Yes"
-                                            cancelText="No"
+                                            okText={t`Yes`}
+                                            cancelText={t`No`}
                                         >
                                             <Button className={s.button}>
                                                 <Trans>Amend</Trans>
@@ -172,8 +172,8 @@ function PatientDocumentDetailsReadonly(props: {
                                     action={() => deleteDraft(navigate, patientId, qrId)}
                                     qrId={qrId}
                                     title={t`Are you sure you want to delete the document?`}
-                                    okText="Yes"
-                                    cancelText="No"
+                                    okText={t`Yes`}
+                                    cancelText={t`No`}
                                 >
                                     <Button className={s.button} type={'text'} danger>
                                         <Trans>Delete</Trans>

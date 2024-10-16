@@ -20,7 +20,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
     return [
         {
             value: 'active-medications',
-            label: 'Active Medications',
+            label: t`Active Medications`,
             renderTable: (option: Option) => (
                 <ResourceTable<MedicationStatement>
                     key={`resource-table-${option.value}`}
@@ -55,7 +55,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
         },
         {
             value: 'conditions',
-            label: 'Conditions',
+            label: t`Conditions`,
             renderTable: (option: Option) => (
                 <ResourceTable<Condition>
                     key={`resource-table-${option.value}`}
@@ -94,7 +94,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
         },
         {
             value: 'allergies',
-            label: 'Allergies',
+            label: t`Allergies`,
             renderTable: (option: Option) => (
                 <ResourceTable<AllergyIntolerance>
                     key={`resource-table-${option.value}`}
@@ -133,7 +133,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
         },
         {
             value: 'immunization',
-            label: 'Immunization',
+            label: t`Immunization`,
             renderTable: (option: Option) => (
                 <ResourceTable<Immunization>
                     key={`resource-table-${option.value}`}
@@ -168,7 +168,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
         },
         {
             value: 'consents',
-            label: 'Consents',
+            label: t`Consents`,
             renderTable: (option: Option) => (
                 <ResourceTable<Consent>
                     key={`resource-table-${option.value}`}
@@ -215,7 +215,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
         },
         {
             value: 'observations',
-            label: 'Observations',
+            label: t`Observations`,
             renderTable: (option: Option) => (
                 <ResourceTable<Observation>
                     key={`resource-table-${option.value}`}

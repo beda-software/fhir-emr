@@ -35,7 +35,7 @@ export const ModalNewEncounter = ({ patient, reloadEncounter }: ModalNewEncounte
         reloadEncounter();
         setIsModalVisible(false);
         notification.success({
-            message: 'Encounter successfully created',
+            message: t`Encounter successfully created`,
         });
     };
 

@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro';
 import { Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
 
@@ -93,35 +94,35 @@ export function usePrescriptionsSearchBarSelect() {
     const statusOptions = useCallback(async (search: string) => {
         const invoiceStatusOptions = [
             {
-                label: 'Active',
+                label: t`Active`,
                 value: 'active',
             },
             {
-                label: 'Cancelled',
+                label: t`Cancelled`,
                 value: 'cancelled',
             },
             {
-                label: 'Completed',
+                label: t`Completed`,
                 value: 'completed',
             },
             {
-                label: 'On Hold',
+                label: t`On Hold`,
                 value: 'on-hold',
             },
             {
-                label: 'Entered in error',
+                label: t`Entered in error`,
                 value: 'entered-in-error',
             },
             {
-                label: 'Stopped',
+                label: t`Stopped`,
                 value: 'stopped',
             },
             {
-                label: 'Draft',
+                label: t`Draft`,
                 value: 'draft',
             },
             {
-                label: 'Unknown',
+                label: t`Unknown`,
                 value: 'unknown',
             },
         ];

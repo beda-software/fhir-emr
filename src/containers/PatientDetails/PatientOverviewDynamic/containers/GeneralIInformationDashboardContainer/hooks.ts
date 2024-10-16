@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro';
 import { Observation, Patient } from 'fhir/r4b';
 import _ from 'lodash';
 
@@ -27,25 +28,25 @@ export function useGeneralInformationDashboard(patient: Patient) {
 
     const patientDetails = [
         {
-            title: 'Birth date',
+            title: t`Birth date`,
             value: patient.birthDate
                 ? `${formatHumanDate(patient.birthDate)} • ${getPersonAge(patient.birthDate)}`
                 : undefined,
         },
         {
-            title: 'Sex',
+            title: t`Sex`,
             value: _.upperFirst(patient.gender),
         },
         {
-            title: 'BMI',
+            title: t`BMI`,
             value: bmi,
         },
         {
-            title: 'Phone number',
+            title: t`Phone number`,
             value: patient.telecom?.filter(({ system }) => system === 'phone')[0]?.value,
         },
         {
-            title: 'Email',
+            title: t`Email`,
             value: patient.telecom?.filter(({ system }) => system === 'email')[0]?.value,
         },
         {

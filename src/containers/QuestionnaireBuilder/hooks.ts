@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro';
 import { notification } from 'antd';
 import { Questionnaire as FHIRQuestionnaire, QuestionnaireItem as FHIRQuestionnaireItem } from 'fhir/r4b';
 import _ from 'lodash';
@@ -77,7 +78,7 @@ export function useQuestionnaireBuilder() {
         if (isSuccess(saveResponse)) {
             setResponse(saveResponse);
             navigate(`/questionnaires/${saveResponse.data.id}/edit`, { replace: true });
-            notification.success({ message: 'The questionnaire is saved' });
+            notification.success({ message: t`The questionnaire is saved` });
         } else {
             notification.error({ message: formatError(saveResponse.error) });
             setError(formatError(saveResponse.error));

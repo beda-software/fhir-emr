@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro';
 import { Descriptions } from 'antd';
 import { Medication, MedicationKnowledge } from 'fhir/r4b';
 import _ from 'lodash';
@@ -30,22 +31,22 @@ export function MedicationKnowledgeCharacteristics({
     medicationList: Medication[];
 }) {
     const descriptionItemData = [
-        { label: 'Strength', children: <RenderStrength medication={medicationKnowledge} /> },
-        { label: 'Packaging', children: medicationKnowledge.packaging?.type?.coding?.[0]?.display },
-        { label: 'Amount', children: `${medicationKnowledge.amount?.value} ${medicationKnowledge.amount?.unit}` },
-        { label: 'Dose form', children: medicationKnowledge.doseForm?.coding?.[0]?.display },
+        { label: t`Strength`, children: <RenderStrength medication={medicationKnowledge} /> },
+        { label: t`Packaging`, children: medicationKnowledge.packaging?.type?.coding?.[0]?.display },
+        { label: t`Amount`, children: `${medicationKnowledge.amount?.value} ${medicationKnowledge.amount?.unit}` },
+        { label: t`Dose form`, children: medicationKnowledge.doseForm?.coding?.[0]?.display },
         {
-            label: 'Cost',
+            label: t`Cost`,
             children: `${medicationKnowledge.cost?.[0]?.cost.value} ${medicationKnowledge.cost?.[0]?.cost.currency}`,
         },
         {
-            label: 'Available units',
+            label: t`Available units`,
             children: medicationList.length,
         },
     ];
 
     return (
-        <Descriptions title="Characteristics" bordered column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
+        <Descriptions title={t`Characteristics`} bordered column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
             {descriptionItemData.map((descriptionItem) => (
                 <Descriptions.Item label={descriptionItem.label} key={descriptionItem.label}>
                     {descriptionItem.children}

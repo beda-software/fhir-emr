@@ -47,7 +47,7 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
     return (
         <>
             <Modal
-                title="Create document"
+                title={t`Create document`}
                 footer={[
                     <Button key="back" onClick={onCloseModal}>
                         <Trans>Cancel</Trans>

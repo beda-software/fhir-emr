@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro';
 import { Form } from 'antd';
 import _, { debounce } from 'lodash';
 import { useCallback, useContext } from 'react';
@@ -21,7 +22,7 @@ interface ChoiceQuestionSelectProps {
 }
 
 export function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
-    const { value, onChange, options, repeats = false, placeholder } = props;
+    const { value, onChange, options, repeats = false, placeholder = t`Select...` } = props;
 
     return (
         <>
@@ -46,7 +47,7 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
     const { linkId, answerOption, repeats, answerValueSet } = questionItem;
     const fieldName = [...parentPath, linkId];
 
-    const { value, formItem, onChange, placeholder } = useFieldController(fieldName, questionItem);
+    const { value, formItem, onChange, placeholder = t`Select...` } = useFieldController(fieldName, questionItem);
 
     const onSelect = useCallback((option: any) => onChange([].concat(option)), [onChange]);
 

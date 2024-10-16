@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/macro';
+import { t, Trans } from '@lingui/macro';
 import { Typography, Table } from 'antd';
 import { MedicationKnowledge } from 'fhir/r4b';
 
@@ -25,7 +25,7 @@ export function MedicationManagement() {
 
     return (
         <PageContainer
-            title="Medications"
+            title={t`Medications`}
             titleRightContent={<ModalNewMedicationKnowledge onCreate={pagerManager.reload} />}
             headerContent={
                 <MedicationsSearchBar

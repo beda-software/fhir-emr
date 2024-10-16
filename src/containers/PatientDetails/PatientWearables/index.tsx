@@ -89,8 +89,8 @@ export function PatientWearables(props: PatientWearablesProps) {
                             ) : (
                                 <Result
                                     status="info"
-                                    subTitle="Contact the patient to obtain their consent for accessing activity data"
-                                    title="Patient consent is required"
+                                    subTitle={t`Contact the patient to obtain their consent for accessing activity data`}
+                                    title={t`Patient consent is required`}
                                 />
                             ),
                         }}
@@ -107,8 +107,8 @@ export function PatientWearables(props: PatientWearablesProps) {
 
 function RenderError(error: any) {
     const errorTextMapping = {
-        '403': "You currently lack access to the patient's data. To obtain it, you must secure the patient's signed consent authorizing the release of their activity data.",
-        '401': 'To obtain this information, you need to authorize your account in the mobile application and link it with your health data providers.',
+        '403': t`You currently lack access to the patient's data. To obtain it, you must secure the patient's signed consent authorizing the release of their activity data.`,
+        '401': t`To obtain this information, you need to authorize your account in the mobile application and link it with your health data providers.`,
     };
     const errorText = errorTextMapping[error.error?.status] ?? error.error?.message;
 
