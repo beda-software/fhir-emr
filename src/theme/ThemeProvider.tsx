@@ -7,6 +7,7 @@ import { useTheme } from '../utils/theme';
 
 interface Props {
     theme?: 'dark' | 'light';
+    disableDarkMode?: boolean;
     children: ReactNode;
 }
 
@@ -23,10 +24,10 @@ const GlobalStyle = createGlobalStyle<{ $whiteColor?: boolean }>`
 `;
 
 export function ThemeProvider(props: Props) {
-    const { theme: initialTheme, children } = props;
+    const { theme: initialTheme, children, disableDarkMode } = props;
 
     const { theme } = useTheme();
-    const dark = (initialTheme ?? theme) === 'dark';
+    const dark = disableDarkMode ? false : (initialTheme ?? theme) === 'dark';
 
     const antdTheme = getANTDTheme({ dark: dark });
     const appTheme = {
