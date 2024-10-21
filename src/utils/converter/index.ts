@@ -29,7 +29,7 @@ export function convertFromFHIRExtension(extension: FHIRExtension): Partial<FCEQ
 
 export function convertFromFHIRExtensions(extensions: FHIRExtension[]): Partial<FCEQuestionnaireItem> | undefined {
     if (extensions && extensions.length > 0) {
-        const itemExtension = extensions.map((extension) => {
+        const itemExtensions = extensions.map((extension) => {
             const identifier = extension.url;
             const transformer = extensionTransformers[identifier as ExtensionIdentifier];
             if (transformer !== undefined) {
@@ -40,14 +40,23 @@ export function convertFromFHIRExtensions(extensions: FHIRExtension[]): Partial<
                 }
             }
         });
-        const mergedExtension = itemExtension.reduce((acc, extension) => {
+        console.log('itemExtension in convertFromFHIRExtensions', itemExtensions);
+        const mergedItemExtensions = itemExtensions.reduce((acc, extension) => {
             if (extension && extension.constraint) {
-                acc?.constraint?.push(...extension.constraint);
+                if (
+                    !acc?.constraint?.find(
+                        (accConstraint) =>
+                            extension.constraint?.find((constraint) => constraint.key === accConstraint.key),
+                    )
+                ) {
+                    acc?.constraint?.push(...extension.constraint);
+                }
             }
             return acc;
-        }, itemExtension[0]);
+        }, itemExtensions[0]);
+        console.log('mergedExtension in convertFromFHIRExtensions', mergedItemExtensions);
 
-        return mergedExtension;
+        return mergedItemExtensions;
     }
     return undefined;
 }
