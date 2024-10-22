@@ -35,6 +35,7 @@ interface Props extends QuestionnaireResponseFormProps {
     FormFooterComponent?: React.ElementType<FormFooterComponentProps>;
     saveButtonTitle?: string;
     cancelButtonTitle?: string;
+    autoSave?: boolean;
 }
 
 export const saveQuestionnaireResponseDraft = async (
@@ -79,18 +80,26 @@ export function onFormResponse(props: {
 
     if (isSuccess(response)) {
         if (response.data.extracted) {
-
             let warnings: string[] = [];
             response.data.extractedBundle.forEach((bundle, index) => {
                 bundle.entry?.forEach((entry, jndex) => {
-                    if (entry.resource.resourceType === "OperationOutcome") {
-                            warnings.push(`Error extrating on ${index}, ${jndex}`);
-                        }
-                    });
+                    if (entry.resource.resourceType === 'OperationOutcome') {
+                        warnings.push(`Error extrating on ${index}, ${jndex}`);
+                    }
+                });
             });
             if (warnings.length > 0) {
                 notification.warning({
-                    message: (<div>{warnings.map((w) => <div key={w}><span>{w}</span><br/></div>)}</div>),
+                    message: (
+                        <div>
+                            {warnings.map((w) => (
+                                <div key={w}>
+                                    <span>{w}</span>
+                                    <br />
+                                </div>
+                            ))}
+                        </div>
+                    ),
                 });
             }
 
