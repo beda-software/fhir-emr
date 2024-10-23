@@ -1,6 +1,8 @@
 import { Input } from 'antd';
 import React from 'react';
 
+import s from './InputInsideText.module.scss'
+
 interface InputInsideTextProps {
   value: string;
   disabled: boolean | undefined;
@@ -23,8 +25,7 @@ const InputInsideText: React.FC<InputInsideTextProps> = ({ text,  value, disable
           {index < parts.length - 1 && !inputRendered ? (
             <>
               <Input
-                value={value} disabled={disabled} onChange={onChange} onBlur={onBlur} placeholder={placeholder}
-                style={{ width: 200, margin: '0 10px' }}
+                value={value} disabled={disabled} onChange={onChange} onBlur={onBlur} placeholder={placeholder} className={s.input}
               />
               {inputRendered = true}
             </>
