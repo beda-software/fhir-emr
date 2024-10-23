@@ -1,7 +1,7 @@
 import { Input } from 'antd';
 import React from 'react';
 
-interface TextWithInputProps {
+interface InputInsideTextProps {
   value: string;
   disabled: boolean | undefined;
   onChange: (value: React.ChangeEvent<HTMLInputElement>) => void;
@@ -10,7 +10,7 @@ interface TextWithInputProps {
   placeholder: string | undefined;
 }
 
-const TextWithInput: React.FC<TextWithInputProps> = ({ text,  value, disabled, onChange, onBlur, placeholder }) => {
+const InputInsideText: React.FC<InputInsideTextProps> = ({ text,  value, disabled, onChange, onBlur, placeholder }) => {
   const parts = text.split('<input/>');
 
   let inputRendered = false;
@@ -37,4 +37,4 @@ const TextWithInput: React.FC<TextWithInputProps> = ({ text,  value, disabled, o
   );
 };
 
-export default TextWithInput;
+export default InputInsideText;

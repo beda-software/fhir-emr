@@ -1,7 +1,7 @@
 import { Form, Input } from 'antd';
 import { QuestionItemProps } from 'sdc-qrf';
 
-import TextWithInput from './TextWithInput';
+import InputInsideText from './InputInsideText';
 import { useFieldController } from '../hooks';
 
 
@@ -11,7 +11,7 @@ export function QuestionInputString({ parentPath, questionItem }: QuestionItemPr
     const { value, onChange, disabled, formItem, onBlur, placeholder } = useFieldController(fieldName, questionItem);
     
     return (
-        <Form.Item {...formItem}  label={<TextWithInput value={value} disabled={disabled} onChange={onChange} onBlur={onBlur} placeholder={placeholder}  text={questionItem.text ?? ''} />}>
+        <Form.Item {...formItem}  label={<InputInsideText value={value} disabled={disabled} onChange={onChange} onBlur={onBlur} placeholder={placeholder}  text={questionItem.text ?? ''} />}>
         </Form.Item>
     );
 }
