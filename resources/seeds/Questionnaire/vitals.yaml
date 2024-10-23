@@ -29,14 +29,6 @@ item:
     initialExpression:
       language: text/fhirpath
       expression: "%Patient.name.first().given.first() + ' ' + %Patient.name.first().family"
-  - text: >-
-      By signing this form, I voluntarily authorize <input/> to release my
-      radiographic brncer imaging and related health <input/> information taken.
-    type: string
-    linkId: text
-    itemControl:
-      coding:
-        - code: input-inside-text
   - type: decimal
     linkId: height
     text: Height
