@@ -8,6 +8,7 @@ export * from './string';
 export * from './slider';
 export * from './radio';
 export * from './BloodPressure';
+export * from './insideText';
 export * from './boolean';
 export * from './TimeRangePickerControl';
 export * from './DateTimeSlotPicker';
