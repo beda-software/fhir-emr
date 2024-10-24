@@ -15,7 +15,7 @@ export function QuestionText({ parentPath, questionItem }: QuestionItemProps) {
         return null;
     }
 
-    const renderedText = (text ?? '').replace('<input/>', value || '');
+    const renderedText = (text ?? '').replace('<input/>', value || '').replace(/<input\/>/g, '');
 
     return (
         <S.Question className={classNames(s.question, s.column, 'form__question')}>

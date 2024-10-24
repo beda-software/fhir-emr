@@ -12,7 +12,7 @@ export function DocumentPrintAnswer(props: { item: QuestionnaireItem; qResponse?
     const { item, qResponse } = props;
     const itemValue = qResponse && getQuestionnaireItemValue(item, qResponse);
     const renderedText = item.text?.includes('<input/>')
-    ? item.text.replace('<input/>', itemValue || '') 
+    ? item.text.replace('<input/>', itemValue || '').replace(/<input\/>/g, '')
     : item.text;
 
 return (

@@ -12,7 +12,7 @@ interface InputInsideTextProps {
   placeholder: string | undefined;
 }
 
-const InputInsideText: React.FC<InputInsideTextProps> = ({ text,  value, disabled, onChange, onBlur, placeholder }) => {
+const InputInsideText: React.FC<InputInsideTextProps> = ({ text, value, disabled, onChange, onBlur, placeholder }) => {
   const parts = text.split('<input/>');
 
   let inputRendered = false;
@@ -25,13 +25,16 @@ const InputInsideText: React.FC<InputInsideTextProps> = ({ text,  value, disable
           {index < parts.length - 1 && !inputRendered ? (
             <>
               <Input
-                value={value} disabled={disabled} onChange={onChange} onBlur={onBlur} placeholder={placeholder} className={s.input}
+                value={value}
+                disabled={disabled}
+                onChange={onChange}
+                onBlur={onBlur}
+                placeholder={placeholder}
+                className={s.input}
               />
               {inputRendered = true}
             </>
-          ) : (
-            index < parts.length - 1 && '<input/>'
-          )}
+          ) : null}
         </React.Fragment>
       ))}
     </span>
