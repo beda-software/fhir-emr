@@ -8,11 +8,10 @@ import { useFieldController } from '../hooks';
 export function QuestionInputString({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
-    const { value, onChange, disabled, formItem, onBlur, placeholder } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, onBlur, placeholder } = useFieldController(fieldName, questionItem);
     
     return (
-        <Form.Item {...formItem}  label={<InputInsideText value={value} disabled={disabled} onChange={onChange} onBlur={onBlur} placeholder={placeholder}  text={questionItem.text ?? ''} />}>
-        </Form.Item>
+        <InputInsideText value={value} disabled={disabled} onChange={onChange} onBlur={onBlur} placeholder={placeholder}  text={questionItem.text ?? ''} />
     );
 }
 

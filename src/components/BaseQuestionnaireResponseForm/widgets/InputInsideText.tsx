@@ -1,7 +1,9 @@
 import { Input } from 'antd';
 import React from 'react';
 
-import s from './InputInsideText.module.scss'
+import { Text } from 'src/components/Typography';
+
+import { S } from './InputInsideText.styles';
 
 interface InputInsideTextProps {
   value: string;
@@ -21,17 +23,18 @@ const InputInsideText: React.FC<InputInsideTextProps> = ({ text, value, disabled
     <span>
       {parts.map((part, index) => (
         <React.Fragment key={index}>
-          {part}
+          <Text>{part}</Text>
           {index < parts.length - 1 && !inputRendered ? (
             <>
+              <S.Content>
               <Input
                 value={value}
                 disabled={disabled}
                 onChange={onChange}
                 onBlur={onBlur}
                 placeholder={placeholder}
-                className={s.input}
               />
+              </S.Content>
               {inputRendered = true}
             </>
           ) : null}

@@ -24,10 +24,6 @@
         }
     }
 
-    :global .ant-form-item-control:has(.ant-form-item-control-input-content:empty) {
-        display: none;
-    }
-
     :global .ant-form-item-control {
         flex-grow: 0; 
     }
