@@ -17,29 +17,43 @@ interface InputInsideTextProps {
 const InputInsideText: React.FC<InputInsideTextProps> = ({ text, value, disabled, onChange, onBlur, placeholder }) => {
   const parts = text.split('<input/>');
 
-  let inputRendered = false;
+  if (parts.length > 2 || parts.length < 2) {
+    return <Text>error</Text>
+  }
 
   return (
     <span>
-      {parts.map((part, index) => (
-        <React.Fragment key={index}>
-          <Text>{part}</Text>
-          {index < parts.length - 1 && !inputRendered ? (
-            <>
-              <S.Content>
-              <Input
-                value={value}
-                disabled={disabled}
-                onChange={onChange}
-                onBlur={onBlur}
-                placeholder={placeholder}
-              />
-              </S.Content>
-              {inputRendered = true}
-            </>
-          ) : null}
-        </React.Fragment>
-      ))}
+      {/* <Text>{parts[0]} </Text>
+      <S.InputWrapper>
+      <Input
+          value={value}
+          disabled={disabled}
+          onChange={onChange}
+          onBlur={onBlur}
+          placeholder={placeholder}
+        />
+      </S.InputWrapper>
+
+      <Text>{parts[1]} </Text> */}
+      {parts.map((part, index) => {
+        const inputRendered = index === 0;
+        return (
+          <React.Fragment key={index}>
+            <Text>{part}</Text>
+            {inputRendered && (
+              <S.InputWrapper>
+                <Input
+                  value={value}
+                  disabled={disabled}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  placeholder={placeholder}
+                />
+              </S.InputWrapper>
+            )}
+          </React.Fragment>
+        )
+      })}
     </span>
   );
 };

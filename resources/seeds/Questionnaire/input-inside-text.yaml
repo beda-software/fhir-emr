@@ -9,7 +9,7 @@ subjectType:
 item:
   - text: >-
       By signing this form, I voluntarily authorize <input/> to release my
-      radiographic brncer <input/> imaging and related health <input/> information taken.
+      radiographic brncer imaging and related health information taken.
     type: string
     linkId: text
     itemControl:

@@ -20,7 +20,7 @@ import {
     QuestionSolidRadio,
     QuestionString,
     QuestionText,
-    QuestionInputString,
+    QuestionInputInsideText,
     Row,
     BloodPressure,
     Gtable,
@@ -60,7 +60,7 @@ export const itemControlComponents: ItemControlQuestionItemComponentMapping = {
     'radio-button': InlineChoice,
     'reference-radio-button': ReferenceRadioButton,
     'check-box': InlineChoice,
-    'input-inside-text': QuestionInputString,
+    'input-inside-text': QuestionInputInsideText,
 };
 
 export const groupControlComponents: ItemControlGroupItemComponentMapping = {
