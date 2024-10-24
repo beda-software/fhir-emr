@@ -1,6 +1,7 @@
 import { Extension as FHIRExtension } from 'fhir/r4b';
 
 import { QuestionnaireItem as FCEQuestionnaireItem } from '@beda.software/aidbox-types';
+import { getExtensionExpression, getExtensionLanguage } from '../fhirpath/Extension';
 
 export enum ExtensionIdentifier {
     Hidden = 'http://hl7.org/fhir/StructureDefinition/questionnaire-hidden',
@@ -34,6 +35,7 @@ export enum ExtensionIdentifier {
     CalculatedExpression = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression',
     EnableWhenExpression = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-enableWhenExpression',
     AnswerExpression = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression',
+    ItemConstraint = 'http://hl7.org/fhir/StructureDefinition/questionnaire-constraint',
 
     AdjustLastToRight = 'https://beda.software/fhir-emr-questionnaire/adjust-last-to-right',
     SliderStart = 'https://beda.software/fhir-emr-questionnaire/slider-start',
@@ -179,6 +181,39 @@ export const extensionTransformers: ExtensionTransformer = {
     },
     [ExtensionIdentifier.AnswerExpression]: {
         path: { extension: 'valueExpression', questionnaire: 'answerExpression' },
+    },
+    [ExtensionIdentifier.ItemConstraint]: {
+        transform: {
+            fromExtension: (extension) => {
+                const constraintExtension = extension.extension;
+                if (constraintExtension) {
+                    return {
+                        constraint: [
+                            {
+                                expression: {
+                                    // NOTE: fhirpath used, because expression has type of 'valueString' instead of 'valueExpression'
+                                    expression: getExtensionExpression(constraintExtension),
+                                    language: getExtensionLanguage(constraintExtension),
+                                },
+                                human: constraintExtension.find((constraint) => constraint.url === 'human')!
+                                    .valueString!,
+                                key: constraintExtension.find((constraint) => constraint.url === 'key')!.valueId!,
+                                severity: constraintExtension.find((constraint) => constraint.url === 'severity')!
+                                    .valueCode!,
+                            },
+                        ],
+                    };
+                }
+            },
+            toExtension: (item) => {
+                if (item.constraint) {
+                    return {
+                        url: ExtensionIdentifier.ItemConstraint,
+                        constraint: item.constraint,
+                    };
+                }
+            },
+        },
     },
     [ExtensionIdentifier.ChoiceColumn]: {
         transform: {

@@ -27,6 +27,40 @@ export function convertFromFHIRExtension(extension: FHIRExtension): Partial<FCEQ
     }
 }
 
+export function convertFromFHIRExtensions(extensions: FHIRExtension[]): Partial<FCEQuestionnaireItem> | undefined {
+    if (extensions && extensions.length > 0) {
+        const itemExtensions = extensions.map((extension) => {
+            const identifier = extension.url;
+            const transformer = extensionTransformers[identifier as ExtensionIdentifier];
+            if (transformer !== undefined) {
+                if ('transform' in transformer) {
+                    return transformer.transform.fromExtension(extension);
+                } else {
+                    return { [transformer.path.questionnaire]: extension[transformer.path.extension] };
+                }
+            }
+        });
+        console.log('itemExtension in convertFromFHIRExtensions', itemExtensions);
+        const mergedItemExtensions = itemExtensions.reduce((acc, extension) => {
+            if (extension && extension.constraint) {
+                if (
+                    !acc?.constraint?.find(
+                        (accConstraint) =>
+                            extension.constraint?.find((constraint) => constraint.key === accConstraint.key),
+                    )
+                ) {
+                    acc?.constraint?.push(...extension.constraint);
+                }
+            }
+            return acc;
+        }, itemExtensions[0]);
+        console.log('mergedExtension in convertFromFHIRExtensions', mergedItemExtensions);
+
+        return mergedItemExtensions;
+    }
+    return undefined;
+}
+
 export function convertToFHIRExtension(item: FCEQuestionnaireItem): FHIRExtension[] {
     const extensions: FHIRExtension[] = [];
     Object.values(ExtensionIdentifier).forEach((identifier) => {
@@ -56,6 +90,10 @@ export function extractExtension(extension: FCEExtension[] | undefined, url: 'ex
 
 export function findExtension(item: FHIRQuestionnaireItem, url: string) {
     return item.extension?.find((ext) => ext.url === url);
+}
+
+export function findExtensions(item: FHIRQuestionnaireItem, url: string) {
+    return item.extension?.filter((ext) => ext.url === url);
 }
 
 export function fromFHIRReference(r?: FHIRReference): InternalReference | undefined {
