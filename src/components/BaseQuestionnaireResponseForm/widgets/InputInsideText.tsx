@@ -17,15 +17,16 @@ interface InputInsideTextProps {
 const InputInsideText: React.FC<InputInsideTextProps> = ({ text, value, disabled, onChange, onBlur, placeholder }) => {
   const parts = text.split('<input/>');
 
-  if (parts.length > 2 || parts.length < 2) {
-    return <Text>error</Text>
+  if (parts.length !== 2) {
+    return <Text>Error: Invalid input format</Text>
   }
+  const [before, after] = parts;
 
   return (
     <span>
-      {/* <Text>{parts[0]} </Text>
+      <Text>{before}</Text>
       <S.InputWrapper>
-      <Input
+        <Input
           value={value}
           disabled={disabled}
           onChange={onChange}
@@ -33,27 +34,7 @@ const InputInsideText: React.FC<InputInsideTextProps> = ({ text, value, disabled
           placeholder={placeholder}
         />
       </S.InputWrapper>
-
-      <Text>{parts[1]} </Text> */}
-      {parts.map((part, index) => {
-        const inputRendered = index === 0;
-        return (
-          <React.Fragment key={index}>
-            <Text>{part}</Text>
-            {inputRendered && (
-              <S.InputWrapper>
-                <Input
-                  value={value}
-                  disabled={disabled}
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  placeholder={placeholder}
-                />
-              </S.InputWrapper>
-            )}
-          </React.Fragment>
-        )
-      })}
+      <Text>{after}</Text>
     </span>
   );
 };
