@@ -6,7 +6,7 @@ export function renderHumanName(name?: HumanName) {
     }
 
     return (
-        `${name?.prefix?.[0] ?? ''} ${name?.given?.[0] ?? ''} ${name?.family ?? ''} ${
+        `${name?.prefix?.[0] ?? ''} ${name?.given?.[0] ?? ''} ${name?.given?.[1] ?? ''} ${name?.family ?? ''} ${
             name?.suffix?.[0] ?? ''
         } `.trim() ||
         name.text ||
