@@ -12,10 +12,24 @@ import { flattenQuestionnaireGroupItems, getQuestionnaireItemValue } from './uti
 export function DocumentPrintAnswer(props: { item: QuestionnaireItem; qResponse?: QuestionnaireResponse }) {
     const { item, qResponse } = props;
     const itemValue = qResponse && getQuestionnaireItemValue(item, qResponse);
-    const renderedText = renderTextWithInput(item.text, itemValue);
+    return (
+        <S.P key={item.linkId}>
+            {item.text}
+            {itemValue && ': ' + itemValue}
+        </S.P>
+    );
+}
 
+function DocumentPrintTextWithInput(props: { item: QuestionnaireItem; qResponse?: QuestionnaireResponse }) {
+    const { item, qResponse } = props;
+    const itemValue = qResponse && getQuestionnaireItemValue(item, qResponse);
+    const renderedText = renderTextWithInput(item.text, itemValue);
     return <S.P key={item.linkId}>{renderedText}</S.P>;
 }
+
+const renderControls: Record<string, typeof DocumentPrintAnswer> = {
+    'input-inside-text': DocumentPrintTextWithInput,
+};
 
 export function DocumentPrintAnswers(props: {
     questionnaireResponse: QuestionnaireResponse;
@@ -30,8 +44,11 @@ export function DocumentPrintAnswers(props: {
                 return flattenQuestionnaireGroupItems(item)?.map((item) => {
                     return <DocumentPrintAnswer key={item.linkId} item={item} qResponse={questionnaireResponse} />;
                 });
-            default:
-                return <DocumentPrintAnswer key={item.linkId} item={item} qResponse={questionnaireResponse} />;
+            default: {
+                const itemControl = item.extension?.[0]?.valueCodeableConcept?.coding?.[0]?.code ?? '';
+                const Component = renderControls[itemControl] ?? DocumentPrintAnswer;
+                return <Component key={item.linkId} item={item} qResponse={questionnaireResponse} />;
+            }
         }
     });
     return qrItems;
