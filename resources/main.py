@@ -39,6 +39,5 @@ def main():
         f.write(ndjson.dumps(resources).encode())
 
 
-
 if __name__ == "__main__":
     main()
