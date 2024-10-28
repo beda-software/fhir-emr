@@ -16,7 +16,7 @@ import { Col, Group, Row } from './readonly-widgets/group';
 import { QuestionInteger, QuestionDecimal } from './readonly-widgets/number';
 import { QuestionReference } from './readonly-widgets/reference';
 import { AnxietyScore, DepressionScore } from './readonly-widgets/score';
-import { QuestionText } from './readonly-widgets/string';
+import { QuestionText, TextWithInput } from './readonly-widgets/string';
 import { TimeRangePickerControl } from './readonly-widgets/TimeRangePickerControl';
 
 interface Props extends Partial<QRFContextData> {
@@ -70,6 +70,7 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
                         'inline-choice': QuestionChoice,
                         'anxiety-score': AnxietyScore,
                         'depression-score': DepressionScore,
+                        'input-inside-text': TextWithInput,
                         ...itemControlQuestionItemComponents,
                     }}
                 >

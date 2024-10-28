@@ -10,16 +10,11 @@ import { S } from './styles';
 import { flattenQuestionnaireGroupItems, getQuestionnaireItemValue } from './utils';
 
 export function DocumentPrintAnswer(props: { item: QuestionnaireItem; qResponse?: QuestionnaireResponse }) {
-    const { item, qResponse, } = props;
+    const { item, qResponse } = props;
     const itemValue = qResponse && getQuestionnaireItemValue(item, qResponse);
-    const itemControl = item.extension?.[0]?.valueCodeableConcept?.coding;
-    const renderedText = renderTextWithInput(item.text, itemValue, itemControl);
+    const renderedText = renderTextWithInput(item.text, itemValue);
 
-    return (
-        <S.P key={item.linkId}>
-            {renderedText}
-        </S.P>
-    );
+    return <S.P key={item.linkId}>{renderedText}</S.P>;
 }
 
 export function DocumentPrintAnswers(props: {
