@@ -3,18 +3,21 @@ import { Questionnaire, QuestionnaireItem, QuestionnaireResponse } from 'fhir/r4
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
 import { Spinner } from 'src/components/Spinner';
+import { renderTextWithInput } from 'src/utils/renderTextWithInput';
 
 import { usePatientDocumentPrint } from './hooks';
 import { S } from './styles';
 import { flattenQuestionnaireGroupItems, getQuestionnaireItemValue } from './utils';
 
 export function DocumentPrintAnswer(props: { item: QuestionnaireItem; qResponse?: QuestionnaireResponse }) {
-    const { item, qResponse } = props;
+    const { item, qResponse, } = props;
     const itemValue = qResponse && getQuestionnaireItemValue(item, qResponse);
+    const itemControl = item.extension?.[0]?.valueCodeableConcept?.coding;
+    const renderedText = renderTextWithInput(item.text, itemValue, itemControl);
+
     return (
         <S.P key={item.linkId}>
-            {item.text}
-            {itemValue && ': ' + itemValue}
+            {renderedText}
         </S.P>
     );
 }
