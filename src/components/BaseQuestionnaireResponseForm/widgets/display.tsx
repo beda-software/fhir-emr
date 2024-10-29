@@ -7,8 +7,26 @@ export function Display({ questionItem }: QuestionItemProps) {
 
     return (
         <div style={{ width: '100%' }}>
-            {text && <Paragraph style={{ margin: 0, fontWeight: 'bold' }}>{text}</Paragraph>}
+            {text && (
+                <Paragraph style={{ margin: 0, fontWeight: 'bold' }}>
+                    <TextWithLink text={text} />
+                </Paragraph>
+            )}
             {helpText && <Paragraph style={{ margin: 0 }}>{helpText}</Paragraph>}
         </div>
     );
 }
+
+export const TextWithLink = ({ text }: { text?: string }) => {
+    const parts = text?.split(' ');
+    return parts?.map((part, index) => {
+        if (part.startsWith('http://') || part.startsWith('https://')) {
+            return (
+                <a key={index} href={part} target="_blank" rel="noreferrer">
+                    {part}
+                </a>
+            );
+        }
+        return <span key={index}>{part + (index < parts.length - 1 ? ' ' : '')}</span>;
+    });
+};
