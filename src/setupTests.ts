@@ -225,3 +225,40 @@ afterEach(async () => {
 // afterAll(() => {
 //     vi.clearAllTimers();
 // });
+
+Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: vi.fn().mockImplementation((query) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: vi.fn(), // deprecated
+        removeListener: vi.fn(), // deprecated
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+    })),
+});
+
+Object.defineProperty(window, 'localStorage', {
+    value: {
+        getItem: vi.fn(),
+        setItem: vi.fn(),
+        removeItem: vi.fn(),
+        clear: vi.fn(),
+    },
+    writable: true,
+});
+
+const reactRouterDomModule = (await vi.importActual('react-router-dom')) as any;
+vi.mock('react-router-dom', () => ({
+    ...reactRouterDomModule,
+    useNavigate: () => vi.fn(),
+    useLocation: vi.fn().mockReturnValue({
+        pathname: '/testroute',
+        search: '',
+        hash: '',
+        state: null,
+    }),
+    useParams: vi.fn().mockReturnValue({}),
+}));

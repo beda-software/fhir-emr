@@ -24,7 +24,7 @@ export function InlineChoice(props: InlineChoiceProps) {
         const arrayValue = (value || []) as QuestionnaireItemAnswerOption[];
 
         return (
-            <Form.Item {...formItem} data-testid="question-inline-choice">
+            <Form.Item {...formItem} data-testid={linkId}>
                 <Space direction={choiceOrientation}>
                     {answerOptionList?.map((answerOption) => (
                         <Checkbox
@@ -32,6 +32,7 @@ export function InlineChoice(props: InlineChoiceProps) {
                             key={JSON.stringify(answerOption)}
                             disabled={disabled}
                             onChange={() => onMultiChange(answerOption)}
+                            // TODO: use linkId + __ + code instead
                             data-testid={`inline-choice__${_.kebabCase(
                                 JSON.stringify(getDisplay(answerOption.value!)),
                             )}`}
@@ -44,7 +45,7 @@ export function InlineChoice(props: InlineChoiceProps) {
         );
     } else {
         return (
-            <Form.Item {...formItem} data-testid="question-inline-choice">
+            <Form.Item {...formItem} data-testid={linkId}>
                 <Space direction={choiceOrientation}>
                     {answerOptionList?.map((answerOption) => (
                         <Radio
@@ -52,6 +53,7 @@ export function InlineChoice(props: InlineChoiceProps) {
                             checked={_.isEqual(value?.value, answerOption.value)}
                             disabled={disabled}
                             onChange={() => onChange(answerOption)}
+                            // TODO: use linkId + __ + code instead
                             data-testid={`inline-choice__${_.kebabCase(
                                 JSON.stringify(getDisplay(answerOption.value!)),
                             )}`}
