@@ -13,7 +13,7 @@ import { PatientDocument } from 'src/containers/PatientDetails/PatientDocument';
 import { axiosInstance } from 'src/services/fhir';
 import { createPatient, loginAdminUser } from 'src/setupTests';
 
-test('Create new Clinical Trial Test', async () => {
+test('Test allergies patient form filling and extraction', async () => {
     await loginAdminUser();
     const { patient } = await withRootAccess(axiosInstance, async () => {
         const patient = await createPatient({
