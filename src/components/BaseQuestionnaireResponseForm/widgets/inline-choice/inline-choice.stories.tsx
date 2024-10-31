@@ -28,18 +28,18 @@ export const Default: Story = {
 
         // Choose an item in the list
         const checkbox1 = await findByTestId<HTMLInputElement>(questions[0]!, 'inline-choice__medication');
-        expect(checkbox1).not.toBeChecked;
+        expect(checkbox1).not.toBeChecked();
 
-        userEvent.click(checkbox1);
-        expect(checkbox1).toBeChecked;
+        await userEvent.click(checkbox1);
+        expect(checkbox1).toBeChecked();
 
         // Choose another item in the list
         const checkbox2 = await findByTestId<HTMLInputElement>(questions[0]!, 'inline-choice__food');
-        expect(checkbox2).not.toBeChecked;
+        expect(checkbox2).not.toBeChecked();
 
-        userEvent.click(checkbox2);
-        expect(checkbox1).not.toBeChecked;
-        expect(checkbox2).toBeChecked;
+        await userEvent.click(checkbox2);
+        expect(checkbox1).not.toBeChecked();
+        expect(checkbox2).toBeChecked();
     },
 };
 
@@ -54,18 +54,18 @@ export const Multiple: Story = {
 
         // Choose an item in the list
         const checkbox1 = await findByTestId<HTMLInputElement>(questions[0]!, 'inline-choice__headache');
-        expect(checkbox1).not.toBeChecked;
+        expect(checkbox1).not.toBeChecked();
 
-        userEvent.click(checkbox1);
-        expect(checkbox1).toBeChecked;
+        await userEvent.click(checkbox1);
+        expect(checkbox1).toBeChecked();
 
         // Choose another item in the list
         const checkbox2 = await findByTestId<HTMLInputElement>(questions[0]!, 'inline-choice__nausea');
-        expect(checkbox2).not.toBeChecked;
+        expect(checkbox2).not.toBeChecked();
 
-        userEvent.click(checkbox2);
-        expect(checkbox1).toBeChecked;
-        expect(checkbox2).toBeChecked;
+        await userEvent.click(checkbox2);
+        expect(checkbox1).toBeChecked();
+        expect(checkbox2).toBeChecked();
     },
 };
 

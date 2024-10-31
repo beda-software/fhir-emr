@@ -35,12 +35,12 @@ export const Default: Story = {
         const questions: HTMLElement[] = await getQuestion();
         expect(questions.length > 0).toBe(true);
         const checkbox = await findByTestId<HTMLInputElement>(questions[0]!, 'checkbox');
-        expect(checkbox).not.toBeChecked;
+        expect(checkbox).not.toBeChecked();
 
-        userEvent.click(checkbox);
-        expect(checkbox).toBeChecked;
+        await userEvent.click(checkbox);
+        expect(checkbox).toBeChecked();
 
-        userEvent.click(checkbox);
-        expect(checkbox).not.toBeChecked;
+        await userEvent.click(checkbox);
+        expect(checkbox).not.toBeChecked();
     },
 };
