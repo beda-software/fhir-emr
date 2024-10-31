@@ -3,8 +3,11 @@ import _ from 'lodash';
 import * as yup from 'yup';
 
 import {
+    ParametersParameter,
     Questionnaire,
     QuestionnaireItemAnswerOption,
+    QuestionnaireResponse,
+    QuestionnaireResponseItem,
     QuestionnaireResponseItemAnswer,
     QuestionnaireResponseItemAnswerValue,
 } from '@beda.software/aidbox-types';
@@ -155,4 +158,25 @@ export function getAnswerCode(o: QuestionnaireItemAnswerOption['value'] | Questi
     }
 
     return JSON.stringify(o);
+}
+
+export function updateQuestionnaireDynamicText(data: {
+    questionnaire: Questionnaire;
+    questionnaireResponse: QuestionnaireResponse;
+    launchContextParameters: ParametersParameter[];
+}) {
+    const { questionnaire, questionnaireResponse } = data;
+
+    const responseByLinkId: { [linkId: string]: QuestionnaireResponseItem } = {};
+    questionnaireResponse.item?.forEach((responseItem) => {
+        responseByLinkId[responseItem.linkId] = responseItem;
+    });
+
+    questionnaire.item = questionnaire.item?.map((question) => {
+        const responseItem = responseByLinkId[question.linkId];
+
+        return responseItem?.text ? { ...question, text: responseItem.text } : question;
+    });
+
+    return data;
 }
