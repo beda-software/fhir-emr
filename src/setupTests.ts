@@ -250,15 +250,18 @@ Object.defineProperty(window, 'localStorage', {
     writable: true,
 });
 
-const reactRouterDomModule = (await vi.importActual('react-router-dom')) as any;
-vi.mock('react-router-dom', () => ({
-    ...reactRouterDomModule,
-    useNavigate: () => vi.fn(),
-    useLocation: vi.fn().mockReturnValue({
-        pathname: '/testroute',
-        search: '',
-        hash: '',
-        state: null,
-    }),
-    useParams: vi.fn().mockReturnValue({}),
-}));
+vi.mock('react-router-dom', async () => {
+    const mod = (await vi.importActual('react-router-dom')) as any;
+
+    return {
+        ...mod,
+        useNavigate: () => vi.fn(),
+        useLocation: vi.fn().mockReturnValue({
+            pathname: '/testroute',
+            search: '',
+            hash: '',
+            state: null,
+        }),
+        useParams: vi.fn().mockReturnValue({}),
+    };
+});
