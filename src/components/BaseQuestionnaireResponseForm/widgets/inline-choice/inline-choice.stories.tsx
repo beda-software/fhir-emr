@@ -47,7 +47,7 @@ export const Multiple: Story = {
     render: () => <InlineChoice parentPath={[]} questionItem={questionItemMultiple} context={{} as ItemContext} />,
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
-        const getQuestion = () => canvas.findAllByTestId('type');
+        const getQuestion = () => canvas.findAllByTestId('reaction');
 
         const questions: HTMLElement[] = await getQuestion();
         expect(questions.length > 0).toBe(true);
