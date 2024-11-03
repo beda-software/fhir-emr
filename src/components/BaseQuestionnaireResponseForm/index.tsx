@@ -25,7 +25,7 @@ import 'react-phone-input-2/lib/style.css';
 import { RemoteData, isSuccess, loading } from '@beda.software/remote-data';
 
 import { saveQuestionnaireResponseDraft } from 'src/components/QuestionnaireResponseForm';
-import { questionnaireToValidationSchema, updateQuestionnaireDynamicText } from 'src/utils/questionnaire';
+import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
 import s from './BaseQuestionnaireResponseForm.module.scss';
 import { ItemControlGroupItemWidgetsContext, ItemControlQuestionItemWidgetsContext } from './context';
@@ -234,7 +234,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                     <>
                         <div className={classNames(s.content, 'form__content')}>
                             <QuestionItems
-                                questionItems={updateQuestionnaireDynamicText(formData.context).questionnaire.item!}
+                                questionItems={formData.context.questionnaire.item!}
                                 parentPath={[]}
                                 context={calcInitialContext(formData.context, formValues)}
                             />
