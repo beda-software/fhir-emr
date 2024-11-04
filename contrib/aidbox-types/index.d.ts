@@ -14138,6 +14138,9 @@ export interface QuestionnaireItem {
     /** An invariant that must be satisfied before responses to the questionnaire can be considered "complete". */
     constraint?: QuestionnaireItemConstraint[];
     /** ElementDefinition - details for the item */
+    /** NOTE: from extension http://hl7.org/fhir/StructureDefinition/cqf-expression */
+    /** An expression that, when evaluated, provides the value for the element on which it appears. */
+    cqfExpression: Expression;
     definition?: uri;
     /** all | any */
     enableBehavior?: code;
