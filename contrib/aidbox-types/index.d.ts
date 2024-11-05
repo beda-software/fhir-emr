@@ -14210,7 +14210,7 @@ export interface QuestionnaireItem {
     helpText?: string;
     stopLabel?: string;
     rowsNumber?: integer;
-    unitOption?: Coding;
+    unitOption?: Coding[];
     columnSize?: integer;
     itemMedia?: Attachment;
     regex?: string;

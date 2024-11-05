@@ -13,6 +13,7 @@ import {
     QuestionnaireItemEnableWhenAnswer as FCEQuestionnaireItemEnableWhenAnswer,
     QuestionnaireItemAnswerOption as FCEQuestionnaireItemAnswerOption,
     QuestionnaireItemInitial as FCEQuestionnaireItemInitial,
+    Coding as FCECoding,
 } from '@beda.software/aidbox-types';
 
 import { convertFromFHIRExtension, findExtension, fromFHIRReference } from 'src/utils/converter';
@@ -38,7 +39,16 @@ function convertItemProperties(item: FHIRQuestionnaireItem): FCEQuestionnaireIte
 function getUpdatedPropertiesFromItem(item: FHIRQuestionnaireItem) {
     let updatedProperties: FCEQuestionnaireItem = { linkId: item.linkId, type: item.type };
 
-    Object.values(ExtensionIdentifier).forEach((identifier) => {
+    for (const identifier of Object.values(ExtensionIdentifier)) {
+        if (identifier === ExtensionIdentifier.UnitOption) {
+            const unitOptions = item.extension?.filter((ext) => ext.url === ExtensionIdentifier.UnitOption) || [];
+            if (unitOptions.length > 0) {
+                const unitOption = unitOptions.map((ext) => convertFromFHIRExtension(ext)?.unitOption) as FCECoding[];
+                updatedProperties = { ...updatedProperties, unitOption };
+            }
+            continue;
+        }
+    
         const extension = findExtension(item, identifier);
         if (extension !== undefined) {
             updatedProperties = {
@@ -46,7 +56,7 @@ function getUpdatedPropertiesFromItem(item: FHIRQuestionnaireItem) {
                 ...convertFromFHIRExtension(extension),
             };
         }
-    });
+    }
 
     updatedProperties.answerOption = item.answerOption?.map(processItemOption);
     updatedProperties.initial = item.initial?.map(processItemOption);
