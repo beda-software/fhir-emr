@@ -18,7 +18,7 @@ export function Display({ questionItem }: QuestionItemProps) {
 }
 
 export const TextWithLink = ({ text }: { text?: string }) => {
-    const parts = text?.split(' ');
+    const parts = text?.split(/(\s+)/);
     return parts?.map((part, index) => {
         if (part.startsWith('http://') || part.startsWith('https://')) {
             return (
@@ -27,6 +27,6 @@ export const TextWithLink = ({ text }: { text?: string }) => {
                 </a>
             );
         }
-        return <span key={index}>{part + (index < parts.length - 1 ? ' ' : '')}</span>;
+        return <span key={index}>{part}</span>;
     });
 };
