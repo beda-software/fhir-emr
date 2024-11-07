@@ -1,0 +1,22 @@
+id: upload-file-control
+resourceType: Questionnaire
+name: upload-file-control
+title: Upload File Control
+status: active
+subjectType:
+  - Encounter
+  - Patient
+meta:
+  profile:
+    - https://beda.software/beda-emr-questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/upload-file-control
+item:
+  - linkId: upload-section
+    text: Upload File
+    type: group
+    item:
+      - linkId: upload-file-control
+        text: Upload Document
+        itemControl:
+          coding:
+            - code: upload-file-control
