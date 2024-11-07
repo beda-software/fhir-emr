@@ -134,6 +134,7 @@ export const EncounterDetails = (props: EncounterDetailsProps) => {
                                 subjectType="Encounter"
                                 encounter={encounter}
                                 context={modalOpened.context}
+                                openNewTab={props.openNewTab}
                             />
 
                             {showScriber ||
