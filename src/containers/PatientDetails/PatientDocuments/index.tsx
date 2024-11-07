@@ -13,6 +13,7 @@ interface Props {
     hideCreateButton?: boolean;
     title?: string;
     context?: string;
+    openNewTab?: boolean;
 }
 
 export const PatientDocuments = (props: Props) => {
@@ -37,6 +38,7 @@ export const PatientDocuments = (props: Props) => {
                         patient={patient}
                         subjectType="Patient"
                         context={props.context}
+                        openNewTab={props.openNewTab}
                     />
                 </div>
             )}

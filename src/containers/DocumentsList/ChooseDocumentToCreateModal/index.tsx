@@ -18,10 +18,11 @@ interface Props extends ModalProps {
     encounter?: WithId<Encounter>;
     context?: string;
     onCancel: () => void;
+    openNewTab?: boolean;
 }
 
 export const ChooseDocumentToCreateModal = (props: Props) => {
-    const { subjectType, patient, encounter, onCancel, context } = props;
+    const { subjectType, patient, encounter, onCancel, context, openNewTab } = props;
     const [questionnaireId, setQuestionnaireId] = useState();
     const location = useLocation();
     const navigate = useNavigate();
@@ -75,7 +76,7 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
                     <Button
                         key="create"
                         disabled={!questionnaireId}
-                        onClick={() => navigate(routeToOpen)}
+                        onClick={() => (openNewTab ? window.open(routeToOpen, '_blank') : navigate(routeToOpen))}
                         type="primary"
                     >
                         <Trans>Create</Trans>
