@@ -17,6 +17,8 @@ item:
     item:
       - linkId: upload-file-control
         text: Upload Document
+        type: attachment
+        required: true
         itemControl:
           coding:
             - code: upload-file-control
