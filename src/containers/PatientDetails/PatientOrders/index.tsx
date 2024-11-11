@@ -141,6 +141,30 @@ export function PatientOrders({ patient }: Props) {
                 </a>
             ),
         },
+        {
+            key: 'il6',
+            label: (
+                <a onClick={() => setQuestionnaire('il6')}>
+                    <Trans>IL-6</Trans>
+                </a>
+            ),
+        },
+        {
+            key: 'crp',
+            label: (
+                <a onClick={() => setQuestionnaire('crp')}>
+                    <Trans>CRP</Trans>
+                </a>
+            ),
+        },
+        {
+            key: 'pct',
+            label: (
+                <a onClick={() => setQuestionnaire('pct')}>
+                    <Trans>PCT</Trans>
+                </a>
+            ),
+        },
     ];
     const [search, setSearch] = useState('');
     return (
