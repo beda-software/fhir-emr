@@ -1,6 +1,5 @@
-import { Bundle } from 'fhir/r4b';
+import { Bundle, Encounter } from 'fhir/r4b';
 
-import { Encounter } from '@beda.software/aidbox-types';
 import { extractBundleResources, WithId } from '@beda.software/fhir-react';
 
 import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
@@ -28,9 +27,11 @@ export function useStartEncounter(props: StartEncounterProps) {
         ],
         onSuccess: ({ extractedBundle }: { extractedBundle: Bundle<WithId<Encounter>>[] }) => {
             // NOTE: mapper extract resources in FCE format
-            const encounter = extractBundleResources(extractedBundle[0]!).Encounter[0]!;
-            const patientId = encounter.subject!.id;
-            navigateToEncounter(patientId, encounter.id);
+            const encounter: Encounter = extractBundleResources(extractedBundle[0]!).Encounter[0]!;
+            const patientId = encounter.subject?.id
+                ? encounter.subject?.id
+                : encounter.subject?.reference?.split('/')[1];
+            patientId && navigateToEncounter(patientId, encounter.id!);
             if (props.onClose) {
                 props.onClose();
             }
