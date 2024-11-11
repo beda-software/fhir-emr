@@ -13,7 +13,7 @@ import { QuestionChoice } from './readonly-widgets/choice';
 import { QuestionDateTime } from './readonly-widgets/date';
 import { Display } from './readonly-widgets/display';
 import { Col, Group, Row } from './readonly-widgets/group';
-import { QuestionInteger, QuestionDecimal } from './readonly-widgets/number';
+import { QuestionInteger, QuestionDecimal, QuestionQuantity } from './readonly-widgets/number';
 import { QuestionReference } from './readonly-widgets/reference';
 import { AnxietyScore, DepressionScore } from './readonly-widgets/score';
 import { QuestionText, TextWithInput } from './readonly-widgets/string';
@@ -58,6 +58,7 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
                         string: QuestionText,
                         integer: QuestionInteger,
                         decimal: QuestionDecimal,
+                        quantity: QuestionQuantity,
                         choice: QuestionChoice,
                         date: QuestionDateTime,
                         dateTime: QuestionDateTime,
