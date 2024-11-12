@@ -43,7 +43,7 @@ export function getFormDataDiff(initialCurrentData: FormItems, initialPrevData: 
 
         _.toPairs(currentData).forEach(([linkId, data]) => {
             if (isGroup(data)) {
-                const groupDiff = generateDiff(data.items, prevData[linkId]?.items);
+                const groupDiff = generateDiff(data.items, prevData ? prevData[linkId]?.items : undefined);
                 diffAfter = { ...diffAfter, ...groupDiff.diffAfter };
                 diffBefore = { ...diffBefore, ...groupDiff.diffBefore };
 
