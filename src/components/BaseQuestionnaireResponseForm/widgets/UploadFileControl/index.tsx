@@ -54,7 +54,7 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
     const { linkId, text, helpText } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value'];
     const { formItem } = useFieldController(fieldName, questionItem);
-    
+
     const props = {
         name: 'file',
         multiple: true,
@@ -84,9 +84,6 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
                 message.error(`${info.file.name} file upload failed.`);
             }
         },
-        onDrop(e: { dataTransfer: { files: FileList; } }) {
-            console.log('Dropped files', e.dataTransfer.files);
-        },
     };
 
     return (
@@ -100,7 +97,7 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
                 )}
             </span>
         }>
-            <Dragger {...props}>
+            <Dragger {...props} listType="picture">
                 <p className="ant-upload-drag-icon">
                     <InboxOutlined />
                 </p>
