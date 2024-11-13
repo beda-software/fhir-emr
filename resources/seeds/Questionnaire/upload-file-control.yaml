@@ -22,3 +22,4 @@ item:
         itemControl:
           coding:
             - code: upload-file-control
+        helptext: "This is where you can upload a file."
