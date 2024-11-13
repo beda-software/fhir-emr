@@ -20,11 +20,16 @@ export function useFieldController(fieldName: any, questionItem: QuestionnaireIt
         name: fieldName.join('.'),
         ...(repeats ? { defaultValue: [] } : {}),
     });
+
+    const invalidFieldMessage = fieldState?.invalid
+        ? fieldState.error?.message?.replace(/\[(\d+)\]/g, '.$1').replace(field.name, text ?? '')
+        : undefined;
+
     const formItem: FormItemProps = {
         label: <FieldLabel questionItem={questionItem} />,
         hidden: hidden,
         validateStatus: fieldState?.invalid ? 'error' : 'success',
-        help: fieldState?.invalid ? `${text} is required` : undefined,
+        help: invalidFieldMessage,
         required,
         className: classNames(s.field, {
             [s._hidden]: hidden,
