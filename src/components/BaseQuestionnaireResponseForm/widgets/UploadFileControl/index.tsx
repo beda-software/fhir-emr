@@ -1,5 +1,5 @@
-import { InboxOutlined } from '@ant-design/icons';
-import { Form, Upload, message } from 'antd';
+import { InboxOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { Form, Upload, message, Tooltip } from 'antd';
 import { QuestionItemProps } from 'sdc-qrf';
 
 import { isSuccess } from '@beda.software/remote-data';
@@ -51,10 +51,10 @@ async function fetchDownloadUrl(filename: string) {
 }
 
 export function UploadFileControl({ parentPath, questionItem }: UploadFileProps) {
-    const { linkId, text } = questionItem;
+    const { linkId, text, helpText } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value'];
     const { formItem } = useFieldController(fieldName, questionItem);
-
+    
     const props = {
         name: 'file',
         multiple: true,
@@ -90,7 +90,16 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
     };
 
     return (
-        <Form.Item {...formItem} label={text}>
+        <Form.Item {...formItem} label={
+            <span>
+                {text}{' '}
+                {helpText && (
+                    <Tooltip title={helpText}>
+                        <QuestionCircleOutlined />
+                    </Tooltip>
+                )}
+            </span>
+        }>
             <Dragger {...props}>
                 <p className="ant-upload-drag-icon">
                     <InboxOutlined />
