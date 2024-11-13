@@ -1,5 +1,7 @@
 import { InboxOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { Form, Upload, message, Tooltip } from 'antd';
+import type {  UploadFile } from 'antd';
+import { useState } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 
 import { isSuccess } from '@beda.software/remote-data';
@@ -55,9 +57,11 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
     const fieldName = [...parentPath, linkId, 0, 'value'];
     const { formItem } = useFieldController(fieldName, questionItem);
 
+    const [fileList, setFileList] = useState<UploadFile<any>[]>([]);
     const props = {
         name: 'file',
         multiple: true,
+        fileList,
         customRequest: async (options: CustomRequestOptions) => {
             const { file, onSuccess } = options;
             try {
@@ -68,6 +72,11 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
                 onSuccess(null, file);
 
                 const downloadUrl = await fetchDownloadUrl(filename);
+                setFileList((prevList) =>
+                    prevList.map((f) =>
+                        f.uid === file.uid ? { ...f, url: downloadUrl } : f
+                    )
+                );
                 console.log("URL download:", downloadUrl);
 
             } catch (error) {
@@ -78,6 +87,7 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
         },
         onChange(info: { file: { name?: string; status?: string; } }) {
             const { status } = info.file;
+            setFileList(info.fileList);
             if (status === 'done') {
                 message.success(`${info.file.name} file uploaded successfully.`);
             } else if (status === 'error') {
