@@ -16,10 +16,10 @@ item:
     type: group
     item:
       - linkId: upload-file-control
-        text: Upload Document
+        text: Upload File
         type: attachment
         required: true
         itemControl:
           coding:
             - code: upload-file-control
-        helptext: "This is where you can upload a file."
+        helpText: "This is where you can upload a file."
