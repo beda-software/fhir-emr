@@ -32,7 +32,7 @@ msgstr "Acciones"
 
 #: src/components/ModalChangeActiveHealthcareService/index.tsx:17
 msgid "Activate"
-msgstr "Activado"
+msgstr "Activar"
 
 #: src/components/ModalChangeActiveHealthcareService/index.tsx:16
 msgid "Activate healthcare service"
