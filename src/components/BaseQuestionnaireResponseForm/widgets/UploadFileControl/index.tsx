@@ -58,9 +58,11 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
     const { formItem } = useFieldController(fieldName, questionItem);
 
     const [fileList, setFileList] = useState<UploadFile<any>[]>([]);
+
+    const [hasUploadedFile, setHasUploadedFile] = useState(false);
     const props = {
         name: 'file',
-        multiple: true,
+        multiple: false,
         fileList,
         customRequest: async (options: CustomRequestOptions) => {
             const { file, onSuccess } = options;
@@ -74,9 +76,10 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
                 const downloadUrl = await fetchDownloadUrl(filename);
                 setFileList((prevList) =>
                     prevList.map((f) =>
-                        f.uid === file.uid ? { ...f, url: downloadUrl } : f
+                        f.uid === file.uid ? { ...f, thumbUrl: downloadUrl, url: downloadUrl } : f
                     )
                 );
+                setHasUploadedFile(true);
                 console.log("URL download:", downloadUrl);
 
             } catch (error) {
@@ -94,6 +97,9 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
                 message.error(`${info.file.name} file upload failed.`);
             }
         },
+        onRemove: () => {
+            setHasUploadedFile(false); 
+        },
     };
 
     return (
@@ -107,16 +113,19 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
                 )}
             </span>
         }>
-            <Dragger {...props} listType="picture">
-                <p className="ant-upload-drag-icon">
-                    <InboxOutlined />
-                </p>
-                <p className="ant-upload-text">Click or drag file to this area to upload</p>
-                <p className="ant-upload-hint">
-                    Support for a single or bulk upload. Strictly prohibited from uploading company data or other
-                    banned files.
-                </p>
-            </Dragger>
+            {!hasUploadedFile ? (
+                <Dragger {...props} listType="picture">
+                    <p className="ant-upload-drag-icon">
+                        <InboxOutlined />
+                    </p>
+                    <p className="ant-upload-text">Click or drag file to this area to upload</p>
+                    <p className="ant-upload-hint">
+                        Support for a single upload. Strictly prohibited from uploading company data or other banned files.
+                    </p>
+                </Dragger>
+            ) : (
+                <Upload {...props} listType="picture" showUploadList={{ showRemoveIcon: true }} />
+            )}
         </Form.Item>
     );
 }
