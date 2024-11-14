@@ -1,7 +1,7 @@
 id: upload-file-control
 resourceType: Questionnaire
 name: upload-file-control
-title: Upload File Control
+title: Uploading file
 status: active
 subjectType:
   - Encounter
@@ -12,11 +12,10 @@ meta:
 url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/upload-file-control
 item:
   - linkId: upload-section
-    text: Upload File
     type: group
     item:
       - linkId: upload-file-control
-        text: Upload File
+        text: Uploading file
         type: attachment
         required: true
         itemControl:

@@ -11,6 +11,8 @@ import { generateDownloadUrl, generateUploadUrl } from 'src/services/file-upload
 import { useFieldController } from '../../hooks';
 
 const { Dragger } = Upload;
+// TODO: get from Questionnaire
+const repeat = false;
 
 type UploadFileProps = QuestionItemProps;
 
@@ -120,16 +122,18 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
 
     return (
         <Form.Item {...formItem} label={
-            <span>
-                {text}{' '}
-                {helpText && (
-                    <Tooltip title={helpText}>
-                        <QuestionCircleOutlined />
-                    </Tooltip>
-                )}
-            </span>
+            (!hasUploadedFile || repeat) && (
+                <span>
+                    {text}{' '}
+                    {helpText && (
+                        <Tooltip title={helpText}>
+                            <QuestionCircleOutlined />
+                        </Tooltip>
+                    )}
+                </span>
+            )
         }>
-            {!hasUploadedFile ? (
+            {!hasUploadedFile || repeat ? (
                 <Dragger {...props} listType="picture">
                     <p className="ant-upload-drag-icon">
                         <InboxOutlined />
