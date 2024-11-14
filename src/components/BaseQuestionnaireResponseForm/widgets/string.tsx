@@ -9,7 +9,7 @@ export function QuestionString({ parentPath, questionItem }: QuestionItemProps) 
     const { value, onChange, disabled, formItem, onBlur, placeholder } = useFieldController(fieldName, questionItem);
 
     return (
-        <Form.Item {...formItem}>
+        <Form.Item {...formItem} data-testid={linkId}>
             <Input value={value} disabled={disabled} onChange={onChange} onBlur={onBlur} placeholder={placeholder} />
         </Form.Item>
     );
@@ -21,7 +21,7 @@ export function QuestionText({ parentPath, questionItem }: QuestionItemProps) {
     const { value, onChange, disabled, formItem, placeholder } = useFieldController(fieldName, questionItem);
 
     return (
-        <Form.Item {...formItem}>
+        <Form.Item {...formItem} data-testid={linkId}>
             <Input.TextArea
                 value={value}
                 rows={rowsNumber ?? 1}

@@ -18,7 +18,7 @@ export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps)
     const { value, onChange, disabled, formItem, placeholder } = useFieldController(fieldName, questionItem);
 
     return (
-        <Form.Item {...formItem}>
+        <Form.Item {...formItem} data-testid={linkId}>
             <InputNumber
                 addonAfter={unit?.display}
                 style={inputStyle}
@@ -39,7 +39,7 @@ export function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps)
     const { value, onChange, disabled, formItem, placeholder } = useFieldController(fieldName, questionItem);
 
     return (
-        <Form.Item {...formItem}>
+        <Form.Item {...formItem} data-testid={linkId}>
             <InputNumber
                 addonAfter={unit?.display}
                 style={inputStyle}
@@ -85,7 +85,7 @@ export function QuestionQuantity(props: QuestionItemProps) {
     };
 
     return (
-        <Form.Item {...formItem}>
+        <Form.Item {...formItem} data-testid={linkId}>
             <InputNumber
                 addonAfter={
                     unitOption && unitOption.length > 1 ? (
