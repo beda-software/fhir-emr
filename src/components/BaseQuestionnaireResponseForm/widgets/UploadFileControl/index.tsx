@@ -1,6 +1,6 @@
 import { InboxOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { Form, Upload, message, Tooltip } from 'antd';
-import type {  UploadFile } from 'antd';
+import type { UploadFile } from 'antd';
 import { useState } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 
@@ -16,8 +16,37 @@ type UploadFileProps = QuestionItemProps;
 
 interface CustomRequestOptions {
     file: File;
+    onProgress: (event: { percent: number }) => void;
     onError: (error: Error) => void;
     onSuccess: (body: any, file: File) => void;
+}
+
+function uploadFileWithXHR(options: CustomRequestOptions, uploadUrl: string) {
+    const { file, onProgress, onError, onSuccess } = options;
+    const xhr = new XMLHttpRequest();
+    xhr.open('PUT', uploadUrl, true);
+    xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+
+    xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+            const percentComplete = (event.loaded / event.total) * 100;
+            onProgress({ percent: percentComplete });
+        }
+    };
+
+    xhr.onload = () => {
+        if (xhr.status === 200) {
+            onSuccess(null, file);
+        } else {
+            onError(new Error(`File upload failed with status ${xhr.status}.`));
+        }
+    };
+
+    xhr.onerror = () => {
+        onError(new Error('Network error during file upload.'));
+    };
+
+    xhr.send(file);
 }
 
 async function fetchUploadUrl(file: File) {
@@ -30,17 +59,6 @@ async function fetchUploadUrl(file: File) {
     } else {
         throw new Error("file upload failed.");
     }
-}
-
-async function uploadFileToUrl(file: File, uploadUrl: string) {
-    const response = await fetch(uploadUrl, {
-        method: 'PUT',
-        body: file,
-        headers: {
-            'Content-Type': 'application/octet-stream',
-        },
-    });
-    if (!response.ok) throw new Error("file upload failed.");
 }
 
 async function fetchDownloadUrl(filename: string) {
@@ -58,37 +76,35 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
     const { formItem } = useFieldController(fieldName, questionItem);
 
     const [fileList, setFileList] = useState<UploadFile<any>[]>([]);
-
     const [hasUploadedFile, setHasUploadedFile] = useState(false);
+
     const props = {
         name: 'file',
         multiple: false,
         fileList,
         customRequest: async (options: CustomRequestOptions) => {
-            const { file, onSuccess } = options;
+            const { file, onSuccess, onError, onProgress } = options;
             try {
                 const { uploadUrl, filename } = await fetchUploadUrl(file);
 
-                await uploadFileToUrl(file, uploadUrl);
-                message.success(`${file.name} file uploaded successfully.`);
-                onSuccess(null, file);
-
-                const downloadUrl = await fetchDownloadUrl(filename);
-                setFileList((prevList) =>
-                    prevList.map((f) =>
-                        f.uid === file.uid ? { ...f, thumbUrl: downloadUrl, url: downloadUrl } : f
-                    )
+                uploadFileWithXHR(
+                    { file, onProgress, onError, onSuccess: async (body, file) => {
+                        onSuccess(null, file);
+                        const downloadUrl = await fetchDownloadUrl(filename);
+                        setFileList((prevList) =>
+                            prevList.map((f) =>
+                                f.uid === file.uid ? { ...f, thumbUrl: downloadUrl, url: downloadUrl } : f
+                            )
+                        );
+                        setHasUploadedFile(true);
+                    }},
+                    uploadUrl
                 );
-                setHasUploadedFile(true);
-                console.log("URL download:", downloadUrl);
-
             } catch (error) {
                 console.error(error);
-                message.error(`${file.name} file upload failed: `);
-
             }
         },
-        onChange(info: { file: { name?: string; status?: string; } }) {
+        onChange(info: { fileList: UploadFile<any>[]; file: UploadFile<any> }) {
             const { status } = info.file;
             setFileList(info.fileList);
             if (status === 'done') {
@@ -98,7 +114,7 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
             }
         },
         onRemove: () => {
-            setHasUploadedFile(false); 
+            setHasUploadedFile(false);
         },
     };
 
