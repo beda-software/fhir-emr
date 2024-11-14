@@ -53,8 +53,7 @@ test('Test allergies patient form filling and extraction', async () => {
 
         expect(allergyIntoleranceList.length).toBe(1);
 
-        // TODO: Looks like a bug in the extract, category is undefined
-        // expect(allergyIntoleranceList[0]?.category?.[0]).toBe('food');
+        expect(allergyIntoleranceList[0]?.category?.[0]).toBe('food');
         expect(allergyIntoleranceList[0]?.code?.coding?.[0]).toMatchObject({
             code: '102263004',
             display: 'Eggs',
