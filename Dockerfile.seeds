@@ -1,9 +1,0 @@
-FROM python:3.11-slim
-RUN mkdir -p /app/resources
-WORKDIR /app/resources
-RUN pip install pipenv
-
-COPY /resources/Pipfile /resources/Pipfile.lock /resources/main.py ./
-RUN pipenv install
-
-CMD ["pipenv", "run", "python", "./main.py"]
