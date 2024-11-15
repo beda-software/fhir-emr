@@ -1,15 +1,22 @@
 import { ControllerFieldState, ControllerRenderProps, FieldValues } from 'react-hook-form';
-import { getFieldErrorMessage } from 'src/components/BaseQuestionnaireResponseForm/utils';
 import { describe } from 'vitest';
+
+import { getFieldErrorMessage } from 'src/components/BaseQuestionnaireResponseForm/utils';
 
 describe('Field error message should be relevant and human readable', () => {
     test('fieldErrorMessage', () => {
         const field: ControllerRenderProps<FieldValues, any> = {
             name: 'first-name.0.value.string',
             value: 'NotSoLongReallyName',
-            onChange: () => {},
-            onBlur: () => {},
-            ref: () => {},
+            onChange: () => {
+                return void 0;
+            },
+            onBlur: () => {
+                return void 0;
+            },
+            ref: () => {
+                return void 0;
+            },
         };
 
         const fieldState: ControllerFieldState = {
@@ -20,7 +27,6 @@ describe('Field error message should be relevant and human readable', () => {
             invalid: true,
             isTouched: true,
             isDirty: true,
-            isValidating: false,
         };
 
         const fieldName = 'First name';
