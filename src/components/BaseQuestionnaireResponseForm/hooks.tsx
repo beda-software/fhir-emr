@@ -9,6 +9,7 @@ import { QuestionnaireItem } from '@beda.software/aidbox-types';
 
 import s from './BaseQuestionnaireResponseForm.module.scss';
 import { FieldLabel } from './FieldLabel';
+import { getFieldErrorMessage } from 'src/components/BaseQuestionnaireResponseForm/utils';
 
 export function useFieldController(fieldName: any, questionItem: QuestionnaireItem) {
     const qrfContext = useQuestionnaireResponseFormContext();
@@ -21,9 +22,7 @@ export function useFieldController(fieldName: any, questionItem: QuestionnaireIt
         ...(repeats ? { defaultValue: [] } : {}),
     });
 
-    const invalidFieldMessage = fieldState?.invalid
-        ? fieldState.error?.message?.replace(/\[(\d+)\]/g, '.$1').replace(field.name, text ?? '')
-        : undefined;
+    const invalidFieldMessage = getFieldErrorMessage(field, fieldState, text);
 
     const formItem: FormItemProps = {
         label: <FieldLabel questionItem={questionItem} />,
