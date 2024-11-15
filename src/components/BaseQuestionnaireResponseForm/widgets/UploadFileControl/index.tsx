@@ -6,48 +6,13 @@ import { QuestionItemProps } from 'sdc-qrf';
 
 import { isSuccess } from '@beda.software/remote-data';
 
-import { generateDownloadUrl, generateUploadUrl } from 'src/services/file-upload';
+import { generateDownloadUrl, generateUploadUrl, uploadFileWithXHR, CustomRequestOptions  } from 'src/services/file-upload';
 
 import { useFieldController } from '../../hooks';
 
 const { Dragger } = Upload;
 
 type UploadFileProps = QuestionItemProps;
-
-interface CustomRequestOptions {
-    file: File;
-    onProgress: (event: { percent: number }) => void;
-    onError: (error: Error) => void;
-    onSuccess: (body: any, file: File) => void;
-}
-
-function uploadFileWithXHR(options: CustomRequestOptions, uploadUrl: string) {
-    const { file, onProgress, onError, onSuccess } = options;
-    const xhr = new XMLHttpRequest();
-    xhr.open('PUT', uploadUrl, true);
-    xhr.setRequestHeader('Content-Type', 'application/octet-stream');
-
-    xhr.upload.onprogress = (event) => {
-        if (event.lengthComputable) {
-            const percentComplete = (event.loaded / event.total) * 100;
-            onProgress({ percent: percentComplete });
-        }
-    };
-
-    xhr.onload = () => {
-        if (xhr.status === 200) {
-            onSuccess(null, file);
-        } else {
-            onError(new Error(`File upload failed with status ${xhr.status}.`));
-        }
-    };
-
-    xhr.onerror = () => {
-        onError(new Error('Network error during file upload.'));
-    };
-
-    xhr.send(file);
-}
 
 async function fetchUploadUrl(file: File) {
     const response = await generateUploadUrl(file.name);
