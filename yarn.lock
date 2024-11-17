@@ -12094,7 +12094,7 @@ scroll-into-view-if-needed@^3.0.3:
   dependencies:
     compute-scroll-into-view "^3.0.2"
 
-sdc-qrf@^0.3.5:
+sdc-qrf@^0.3.4:
   version "0.3.5"
   resolved "https://registry.yarnpkg.com/sdc-qrf/-/sdc-qrf-0.3.5.tgz#f1c6681aefe86c44d1f1a9cdcc8375257a8e5759"
   integrity sha512-SNmM08NNvVUGsZyOqiH7bc+JqBnDhD5i4+GJYRhJM7oCzw+zGYqdPpCkKKjikj44EZQAFP+ADWVqsTp2BNRFrQ==
