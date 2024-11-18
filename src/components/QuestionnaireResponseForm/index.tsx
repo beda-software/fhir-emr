@@ -112,9 +112,9 @@ export function onFormResponse(props: {
             }
         } else {
             if (onFailure) {
-                onFailure(t`Error while extracting`);
+                onFailure(response.data.extractedError);
             } else {
-                notification.error({ message: t`Error while extracting` });
+                notification.error({ message: formatError(response.data.extractedError) });
             }
         }
     } else {
