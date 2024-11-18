@@ -63,9 +63,7 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
     const customRequest = async (options: CustomUploadRequestOption) => {
         const { file, onSuccess, onError, onProgress } = options;
         try {
-            const { uploadUrl } = await fetchUploadUrl((file as any).name);
-            const url = new URL(uploadUrl);
-            const filename = url.pathname;
+            const { uploadUrl, filename } = await fetchUploadUrl((file as any).name);
 
             uploadFileWithXHR(
                 {
