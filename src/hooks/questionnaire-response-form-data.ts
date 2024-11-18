@@ -15,6 +15,8 @@ import {
     QuestionnaireResponseFormData,
     calcInitialContext,
     removeDisabledAnswers,
+    toFirstClassExtension,
+    fromFirstClassExtension,
 } from 'sdc-qrf';
 
 import {
@@ -26,8 +28,6 @@ import { formatFHIRDateTime, getReference, useService } from '@beda.software/fhi
 import { RemoteDataResult, isFailure, isSuccess, mapSuccess, success } from '@beda.software/remote-data';
 
 import { saveFHIRResource, service } from 'src/services/fhir';
-
-import { toFirstClassExtension, fromFirstClassExtension } from '../utils/converter';
 
 export type { QuestionnaireResponseFormData } from 'sdc-qrf';
 

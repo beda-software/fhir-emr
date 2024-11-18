@@ -22,8 +22,8 @@ import { PatientActivitySummary } from 'src/containers/PatientDetails/PatientAct
 import { LinkToEdit } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/LinkToEdit';
 import { OverviewCard } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/types';
 import medicationIcon from 'src/containers/PatientDetails/PatientOverviewDynamic/images/medication.svg';
-import { extractExtension, fromFHIRReference } from 'src/utils/converter';
 import { formatHumanDate } from 'src/utils/date';
+import { extractExtension, fromFHIRReference } from 'sdc-qrf';
 
 export function prepareAllergies(
     allergies: AllergyIntolerance[],

@@ -8,7 +8,7 @@ import { isSuccess, mapSuccess, resolveMap } from '@beda.software/remote-data';
 import { getFHIRResource } from 'src/services/fhir';
 import { loadResourceHistory } from 'src/services/history';
 import { getProvenanceByEntity } from 'src/services/provenance';
-import { fromFirstClassExtension, toFirstClassExtension } from 'src/utils/converter';
+import { fromFirstClassExtension, toFirstClassExtension } from 'sdc-qrf';
 
 export function useDocumentHistory() {
     const params = useParams<{ qrId: string }>();

@@ -11,9 +11,9 @@ import { Modal } from 'src/components/Modal';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { ResourceTable, LinkToEdit } from 'src/components/ResourceTable';
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
-import { extractExtension } from 'src/utils/converter';
 import { formatHumanDate } from 'src/utils/date';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
+import { extractExtension } from 'sdc-qrf';
 
 const { Search } = Input;
 

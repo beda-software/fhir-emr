@@ -7,11 +7,11 @@ import {
     QuestionnaireResponseItem,
 } from '@beda.software/aidbox-types';
 
-import { toFirstClassExtension } from 'src/utils/converter';
 import { getDisplay } from 'src/utils/questionnaire';
 import { getExternalQuestionnaireName } from 'src/utils/smart-apps';
 
 import { S } from './ExternalDocumentView.styles';
+import { toFirstClassExtension } from 'sdc-qrf';
 
 interface Props {
     questionnaireResponse: FHIRQuestionnaireResponse;
