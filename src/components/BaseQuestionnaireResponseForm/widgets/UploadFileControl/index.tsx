@@ -1,21 +1,23 @@
 import { InboxOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { Form, Upload, message, Tooltip } from 'antd';
 import type { UploadFile } from 'antd';
-import { useState } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 
 import { isSuccess } from '@beda.software/remote-data';
 
-import { generateDownloadUrl, generateUploadUrl, uploadFileWithXHR, CustomRequestOptions  } from 'src/services/file-upload';
+import { generateDownloadUrl, generateUploadUrl, uploadFileWithXHR, CustomUploadRequestOption } from 'src/services/file-upload';
 
 import { useFieldController } from '../../hooks';
+import { Attachment } from 'fhir/r4b';
+import { useRef } from 'react';
+import { RcFile } from 'antd/es/upload';
 
 const { Dragger } = Upload;
 
 type UploadFileProps = QuestionItemProps;
 
-async function fetchUploadUrl(file: File) {
-    const response = await generateUploadUrl(file.name);
+async function fetchUploadUrl(fileName: string) {
+    const response = await generateUploadUrl(fileName);
     if (isSuccess(response) && response.data?.put_presigned_url) {
         return {
             uploadUrl: response.data.put_presigned_url,
@@ -39,32 +41,33 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
     const { linkId, text, helpText, repeats } = questionItem;
     const fieldName = [...parentPath, linkId];
     const { formItem, value, onChange } = useFieldController(fieldName, questionItem);
+    const ref = useRef<Record<string, string>>({})
 
     const hasUploadedFile = value?.length > 0;
-    const [fileList, setFileList] = useState<UploadFile<any>[]>([]);
+    const fileList:Array<UploadFile> = (value ?? []).map((v:{value: {Attachment: Attachment}}) =>{
+        const url = v.value.Attachment.url!;
+        const file: UploadFile = {
+            uid: url,
+            name: url,
+            url: ref.current[url],
+            thumbUrl: ref.current[url],
+        };
+        return file;
+    });
 
-    const props = {
-        name: 'file',
-        multiple: repeats,
-        fileList,
-        customRequest: async (options: CustomRequestOptions) => {
+    const multiple = repeats;
+    const customRequest = async(options: CustomUploadRequestOption) => {
             const { file, onSuccess, onError, onProgress } = options;
             try {
-                const { uploadUrl } = await fetchUploadUrl(file);
-
+                const { uploadUrl } = await fetchUploadUrl((file as RcFile).name);
                 const url = new URL(uploadUrl);
                 const filename = url.pathname;
-                console.log(filename);
 
                 uploadFileWithXHR(
-                    { file, onProgress, onError, onSuccess: async (_body, file) => {
-                        onSuccess(null, file);
+                    { file, onProgress, onError, onSuccess: async (body:any, xhr?: XMLHttpRequest | undefined) => {
+                        onSuccess && onSuccess(body, xhr);
                         const downloadUrl = await fetchDownloadUrl(filename);
-                        setFileList((prevList) =>
-                            prevList.map((f) =>
-                                f.uid === file.uid ? { ...f, thumbUrl: downloadUrl, url: downloadUrl } : f
-                            )
-                        );
+                        ref.current[filename] = downloadUrl;
                         const attachement = { value: { "Attachment": { "url": filename } } };
                         if (repeats) {
                             onChange([...value, attachement])
@@ -77,20 +80,17 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
             } catch (error) {
                 console.error(error);
             }
-        },
-        onChange(info: { fileList: UploadFile<any>[]; file: UploadFile<any> }) {
+        };
+    const onUploaderChange = (info: { fileList: UploadFile<any>[]; file: UploadFile<any> }) => {
             const { status } = info.file;
-            setFileList(info.fileList);
-
             if (status === 'done') {
                 message.success(`${info.file.name} file uploaded successfully.`);
             } else if (status === 'error') {
                 message.error(`${info.file.name} file upload failed.`);
             }
-        },
-        onRemove: () => {
+        };
+    const onRemove = () => {
             onChange([]);
-        },
     };
 
     return (
@@ -105,7 +105,14 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
             </span>
         }>
             {!hasUploadedFile || repeats ? (
-                <Dragger {...props} listType="picture">
+                <Dragger
+                    listType="picture"
+                    multiple={multiple}
+                    customRequest={customRequest}
+                    onChange={onUploaderChange}
+                    fileList={fileList}
+                    onRemove={onRemove}
+                >
                     <p className="ant-upload-drag-icon">
                         <InboxOutlined />
                     </p>
@@ -115,7 +122,7 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
                     </p>
                 </Dragger>
             ) : (
-                <Upload {...props} listType="picture" showUploadList={{ showRemoveIcon: true }} />
+                    <Upload listType="picture" showUploadList={{ showRemoveIcon: true }} fileList={fileList} onRemove={onRemove} />
             )}
         </Form.Item>
     );
