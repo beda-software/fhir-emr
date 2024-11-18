@@ -2,6 +2,7 @@ import { t } from '@lingui/macro';
 import {
     AllergyIntolerance,
     Condition,
+    ServiceRequest,
     Consent,
     Immunization,
     MedicationStatement,
@@ -14,7 +15,7 @@ import { WithId } from '@beda.software/fhir-react';
 
 import { ResourceTable, Option, LinkToEdit } from 'src/components/ResourceTable';
 import { extractExtension } from 'src/utils/converter';
-import { formatHumanDate } from 'src/utils/date';
+import { formatHumanDate, formatHumanDateTime } from 'src/utils/date';
 
 export function getOptions(patient: WithId<Patient>): Option[] {
     return [
@@ -281,6 +282,53 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                         }
 
                         return null;
+                    },
+                },
+            ],
+        },
+        {
+            value: 'serviceRequests',
+            label: t`Service Requests`,
+            renderTable: (option: Option) => (
+                <ResourceTable<ServiceRequest>
+                    key={`resource-table-${option.value}`}
+                    resourceType="ServiceRequest"
+                    params={{
+                        patient: patient.id,
+                        _sort: ['-_lastUpdated'],
+                    }}
+                    getTableColumns={option.getTableColumns}
+                />
+            ),
+            getTableColumns: (provenanceList: Provenance[] = []) => [
+                {
+                    title: t`Title`,
+                    key: 'title',
+                    render: (resource: ServiceRequest) => (
+                        <LinkToEdit
+                            name={resource.code?.coding?.[0]?.display}
+                            resource={resource}
+                            provenanceList={provenanceList}
+                        />
+                    ),
+                    width: 200,
+                },
+                {
+                    title: t`Date created`,
+                    key: 'date',
+                    render: (r: Observation) => {
+                        const createdAt = extractExtension(r.meta?.extension, 'ex:createdAt');
+                        const date = r.issued || createdAt;
+
+                        return date ? formatHumanDateTime(date) : null;
+                    },
+                    width: 200,
+                },
+                {
+                    title: t`Status`,
+                    key: 'name',
+                    render: (resource: ServiceRequest) => {
+                        return resource.status;
                     },
                 },
             ],

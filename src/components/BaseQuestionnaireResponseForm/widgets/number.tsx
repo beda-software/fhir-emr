@@ -18,7 +18,7 @@ export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps)
     const { value, onChange, disabled, formItem, placeholder } = useFieldController(fieldName, questionItem);
 
     return (
-        <Form.Item {...formItem}>
+        <Form.Item {...formItem} data-testid={linkId}>
             <InputNumber
                 addonAfter={unit?.display}
                 style={inputStyle}
@@ -39,7 +39,7 @@ export function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps)
     const { value, onChange, disabled, formItem, placeholder } = useFieldController(fieldName, questionItem);
 
     return (
-        <Form.Item {...formItem}>
+        <Form.Item {...formItem} data-testid={linkId}>
             <InputNumber
                 addonAfter={unit?.display}
                 style={inputStyle}
@@ -54,40 +54,63 @@ export function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps)
 
 export function QuestionQuantity(props: QuestionItemProps) {
     const { parentPath, questionItem } = props;
-
-    const { linkId } = questionItem;
-    const { unitOption } = questionItem;
-    const fieldName = [...parentPath, linkId, 0, 'value', 'decimal'];
+    const { linkId, unitOption, required } = questionItem;
+    const fieldName = [...parentPath, linkId, 0, 'value', 'Quantity'];
     const { value, onChange, disabled, formItem, placeholder } = useFieldController(fieldName, questionItem);
 
-    const [selectedUnit, setSelectedUnit] = useState(unitOption?.[0]?.display);
+    const [numericValue, setNumericValue] = useState<number | undefined>(value);
+    const [selectedUnit, setSelectedUnit] = useState(unitOption?.[0]);
+
+    const onUnitChange = (unitDisplay: string) => {
+        const unit = unitOption?.find((unit) => unit.display === unitDisplay);
+        if (unit) {
+            setSelectedUnit(unit);
+            onChange({
+                value: numericValue,
+                unit: unit.display,
+                system: unit.system,
+                code: unit.code,
+            });
+        }
+    };
+
+    const onValueChange = (value: number | null) => {
+        setNumericValue(value || undefined);
+        onChange({
+            value: value,
+            unit: selectedUnit?.display,
+            system: selectedUnit?.system,
+            code: selectedUnit?.code,
+        });
+    };
 
     return (
-        <Form.Item {...formItem}>
+        <Form.Item {...formItem} data-testid={linkId}>
             <InputNumber
                 addonAfter={
                     unitOption && unitOption.length > 1 ? (
                         <Select
-                            value={selectedUnit}
-                            onChange={setSelectedUnit}
+                            value={selectedUnit?.display}
+                            onChange={onUnitChange}
                             style={{ minWidth: 70 }}
                             disabled={disabled}
                         >
-                            {unitOption.map((option, index) => (
-                                <Select.Option key={index} value={option.display}>
+                            {unitOption.map((option) => (
+                                <Select.Option key={option.code} value={option.display}>
                                     {option.display}
                                 </Select.Option>
                             ))}
                         </Select>
                     ) : (
-                        unitOption?.[0]?.display
+                        selectedUnit?.display
                     )
                 }
                 style={inputStyle}
                 disabled={disabled}
-                onChange={onChange}
-                value={value}
+                onChange={onValueChange}
+                value={numericValue}
                 placeholder={placeholder}
+                required={required}
             />
         </Form.Item>
     );

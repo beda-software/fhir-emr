@@ -1,0 +1,49 @@
+id: labs
+name: labs
+title: Add Laboratory test results
+resourceType: Questionnaire
+status: active
+subjectType:
+  - Encounter
+  - Patient
+mapping:
+  - id: labs
+    resourceType: Mapping
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+item:
+  - text: PatientId
+    type: string
+    linkId: patientId
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.id"
+  - text: PatientName
+    type: string
+    linkId: patientName
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.name.first().given.first() + ' ' + %Patient.name.first().family"
+  - type: decimal
+    linkId: il6
+    text: IL-6
+    unit:
+      code: pg/ml
+      system: http://unitsofmeasure.org
+      display: pg/ml
+  - type: decimal
+    linkId: crp
+    text: CRP
+    unit:
+      code: pg/ml
+      system: http://unitsofmeasure.org
+      display: pg/ml
+meta:
+  profile:
+    - https://beda.software/beda-emr-questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/vitals

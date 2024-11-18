@@ -61,10 +61,7 @@ body:
                       display: $ patientName
                       resourceType: Patient
                   category:
-                      - $switch: $ category
-                        418634005: drug
-                        414285001: food
-                        426232007: environmental
+                      - $ category
                   code:
                       coding:
                           - $ substanceDrug || substanceFood || substanceEnvironmental

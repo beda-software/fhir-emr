@@ -19,6 +19,7 @@ export interface EncounterDetailsProps {
     patient: Patient;
     hideControls?: boolean;
     documentTypes?: Array<DocumentType>;
+    openNewTab?: boolean;
 }
 
 export function useEncounterDetails(props: EncounterDetailsProps) {

@@ -38,6 +38,7 @@ function processAnswer(answer: FHIRQuestionnaireResponseItemAnswer): FCEQuestion
             Reference: fromFHIRReference(value),
         }),
         valueTime: (value: string) => ({ time: value }),
+        valueQuantity: (value: FHIRCoding) => ({ Quantity: value }),
     };
 
     for (const key in valueHandlers) {
