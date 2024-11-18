@@ -6,6 +6,7 @@ import {
     Questionnaire as FHIRQuestionnaire,
     Bundle,
     Resource,
+    OperationOutcome,
 } from 'fhir/r4b';
 import moment from 'moment';
 import {
@@ -34,6 +35,7 @@ export type QuestionnaireResponseFormSaveResponse<R extends Resource = any> = {
     questionnaireResponse: FHIRQuestionnaireResponse;
     extracted: boolean;
     extractedBundle: Bundle<R>[];
+    extractedError: OperationOutcome;
 };
 
 export interface QuestionnaireResponseFormProps {
@@ -248,6 +250,7 @@ export async function handleFormDataSave(
     return success({
         questionnaireResponse: saveQRRemoteData.data,
         extracted: isSuccess(extractRemoteData),
+        extractedError: isFailure(extractRemoteData) ? extractRemoteData.error : undefined,
         extractedBundle: isSuccess(extractRemoteData) ? extractRemoteData.data : undefined,
     });
 }
