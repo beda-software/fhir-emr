@@ -37,23 +37,27 @@ async function fetchDownloadUrl(filename: string) {
 
 export function UploadFileControl({ parentPath, questionItem }: UploadFileProps) {
     const { linkId, text, helpText, repeats } = questionItem;
-    const fieldName = [...parentPath, linkId, 0, 'value'];
-    const { formItem } = useFieldController(fieldName, questionItem);
+    const fieldName = [...parentPath, linkId];
+    const { formItem, value, onChange } = useFieldController(fieldName, questionItem);
 
+    const hasUploadedFile = value?.length > 0;
     const [fileList, setFileList] = useState<UploadFile<any>[]>([]);
-    const [hasUploadedFile, setHasUploadedFile] = useState(false);
 
     const props = {
         name: 'file',
-        multiple: false,
+        multiple: repeats,
         fileList,
         customRequest: async (options: CustomRequestOptions) => {
             const { file, onSuccess, onError, onProgress } = options;
             try {
-                const { uploadUrl, filename } = await fetchUploadUrl(file);
+                const { uploadUrl } = await fetchUploadUrl(file);
+
+                const url = new URL(uploadUrl);
+                const filename = url.pathname;
+                console.log(filename);
 
                 uploadFileWithXHR(
-                    { file, onProgress, onError, onSuccess: async (body, file) => {
+                    { file, onProgress, onError, onSuccess: async (_body, file) => {
                         onSuccess(null, file);
                         const downloadUrl = await fetchDownloadUrl(filename);
                         setFileList((prevList) =>
@@ -61,7 +65,12 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
                                 f.uid === file.uid ? { ...f, thumbUrl: downloadUrl, url: downloadUrl } : f
                             )
                         );
-                        setHasUploadedFile(true);
+                        const attachement = { value: { "Attachment": { "url": filename } } };
+                        if (repeats) {
+                            onChange([...value, attachement])
+                        } else {
+                            onChange([attachement])
+                        }
                     }},
                     uploadUrl
                 );
@@ -72,6 +81,7 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
         onChange(info: { fileList: UploadFile<any>[]; file: UploadFile<any> }) {
             const { status } = info.file;
             setFileList(info.fileList);
+
             if (status === 'done') {
                 message.success(`${info.file.name} file uploaded successfully.`);
             } else if (status === 'error') {
@@ -79,22 +89,20 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
             }
         },
         onRemove: () => {
-            setHasUploadedFile(false);
+            onChange([]);
         },
     };
 
     return (
         <Form.Item {...formItem} label={
-            (!hasUploadedFile || repeats) && (
-                <span>
-                    {text}{' '}
-                    {helpText && (
-                        <Tooltip title={helpText}>
-                            <QuestionCircleOutlined />
-                        </Tooltip>
-                    )}
-                </span>
-            )
+            <span>
+                {text}{' '}
+                {helpText && (
+                    <Tooltip title={helpText}>
+                        <QuestionCircleOutlined />
+                    </Tooltip>
+                )}
+            </span>
         }>
             {!hasUploadedFile || repeats ? (
                 <Dragger {...props} listType="picture">

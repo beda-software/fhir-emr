@@ -34,6 +34,7 @@ function processAnswer(answerItem: FCEQuestionnaireResponseItemAnswer): FHIRQues
         date: 'valueDate',
         dateTime: 'valueDateTime',
         time: 'valueTime',
+        Attachment: 'valueAttachment',
     };
     for (const key in valueMappings) {
         if (key in value) {
