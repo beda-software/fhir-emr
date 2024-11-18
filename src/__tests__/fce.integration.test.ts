@@ -10,8 +10,7 @@ import { Questionnaire as FCEQuestionnaire } from '@beda.software/aidbox-types';
 
 import { getFHIRResource } from 'src/services/fhir';
 import { loginAdminUser } from 'src/setupTests';
-import { toFirstClassExtension, fromFirstClassExtension } from 'src/utils/converter';
-import { sortExtensionsList } from 'src/utils/converter/__tests__/fce.test';
+import { fromFirstClassExtension, sortExtensionsList, toFirstClassExtension } from 'sdc-qrf';
 
 describe('Questionanire and QuestionnaireResponses transformation', () => {
     beforeEach(async () => {

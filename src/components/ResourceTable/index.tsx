@@ -10,7 +10,7 @@ import { RenderRemoteData, SearchParams, extractBundleResources, ResourcesMap } 
 import { Spinner } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 import { usePagerExtended } from 'src/hooks/pager';
-import { fromFHIRReference } from 'src/utils/converter';
+import { fromFHIRReference } from 'sdc-qrf';
 
 type GetTableColumns<R> = (provenanceList: Provenance[]) => ColumnsType<R>;
 

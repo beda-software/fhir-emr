@@ -6,7 +6,6 @@ import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { PageContainer } from 'src/components/PageContainer';
 import { Spinner } from 'src/components/Spinner';
-import { extractExtension } from 'src/utils/converter';
 import { formatHumanDate } from 'src/utils/date';
 import { renderHumanName } from 'src/utils/fhir';
 import { matchCurrentUserRole, Role, selectCurrentUserRoleResource } from 'src/utils/role';
@@ -17,6 +16,7 @@ import { useMedicationRequest } from './hooks';
 import { ModalMedicationRequestCancel } from './ModalMedicationRequestCancel';
 import { ModalMedicationRequestConfirm } from './ModalMedicationRequestConfirm';
 import { getSelectedValue } from '../OrganizationScheduling/utils';
+import { extractExtension } from 'sdc-qrf';
 
 export function Prescriptions() {
     const {

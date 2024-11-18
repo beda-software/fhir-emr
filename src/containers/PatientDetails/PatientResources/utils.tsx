@@ -14,8 +14,8 @@ import {
 import { WithId } from '@beda.software/fhir-react';
 
 import { ResourceTable, Option, LinkToEdit } from 'src/components/ResourceTable';
-import { extractExtension } from 'src/utils/converter';
 import { formatHumanDate, formatHumanDateTime } from 'src/utils/date';
+import { extractExtension } from 'sdc-qrf';
 
 export function getOptions(patient: WithId<Patient>): Option[] {
     return [
