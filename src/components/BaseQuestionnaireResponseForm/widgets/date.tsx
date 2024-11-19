@@ -1,12 +1,10 @@
 import { Form } from 'antd';
 import moment, { type Moment } from 'moment';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 
 import {
-    FHIRDateFormat,
     FHIRTimeFormat,
-    FHIRDateTimeFormat,
     formatFHIRDate,
     formatFHIRDateTime,
     formatFHIRTime,
@@ -16,6 +14,7 @@ import { DatePicker } from 'src/components/DatePicker';
 import { TimePicker } from 'src/components/TimePicker';
 
 import { useFieldController } from '../hooks';
+import { DateTimeFormatContext } from 'src/contexts/date-time-format';
 
 export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, type, regex } = questionItem;
@@ -46,6 +45,7 @@ interface DateTimePickerWrapperProps {
 }
 
 function DateTimePickerWrapper(props: DateTimePickerWrapperProps) {
+    const { humanDate, humanTime, humanDateTime } = useContext(DateTimeFormatContext);
     const { value, onChange, type, disabled, placeholder, format } = props;
 
     const newValue = useMemo(() => {
@@ -65,15 +65,15 @@ function DateTimePickerWrapper(props: DateTimePickerWrapperProps) {
     let formatFunction: (value: Moment) => string;
 
     if (type === 'date') {
-        resultFormat = format || FHIRDateFormat;
+        resultFormat = format || humanDate;
         showTime = false;
         formatFunction = formatFHIRDate;
     } else if (type === 'time') {
-        resultFormat = format || FHIRTimeFormat;
+        resultFormat = format || humanTime;
         showTime = { format: resultFormat };
         formatFunction = formatFHIRTime;
     } else {
-        resultFormat = format || FHIRDateTimeFormat;
+        resultFormat = format || humanDateTime;
         showTime = { format: resultFormat };
         formatFunction = formatFHIRDateTime;
     }
