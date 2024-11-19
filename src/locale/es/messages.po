@@ -876,7 +876,7 @@ msgstr "Orden añadida"
 #: src/containers/PatientDetails/PatientHeader/index.tsx:82
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:294
 msgid "Orders"
-msgstr "Órdenes"
+msgstr "Resultados"
 
 #: src/containers/PatientDetails/PatientHeader/index.tsx:41
 #: src/containers/PatientDetails/PatientHeader/index.tsx:78
