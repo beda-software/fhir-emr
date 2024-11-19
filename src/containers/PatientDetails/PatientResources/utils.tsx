@@ -10,12 +10,12 @@ import {
     Patient,
     Provenance,
 } from 'fhir/r4b';
+import { extractExtension } from 'sdc-qrf';
 
 import { WithId } from '@beda.software/fhir-react';
 
 import { ResourceTable, Option, LinkToEdit } from 'src/components/ResourceTable';
 import { formatHumanDate, formatHumanDateTime } from 'src/utils/date';
-import { extractExtension } from 'sdc-qrf';
 
 export function getOptions(patient: WithId<Patient>): Option[] {
     return [
@@ -295,7 +295,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     resourceType="ServiceRequest"
                     params={{
                         patient: patient.id,
-                        _sort: ['-_lastUpdated']
+                        _sort: ['-_lastUpdated'],
                     }}
                     getTableColumns={option.getTableColumns}
                 />

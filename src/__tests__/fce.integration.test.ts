@@ -2,6 +2,7 @@ import { readdirSync } from 'fs';
 import { parse as parsePath } from 'path';
 
 import { Questionnaire as FHIRQuestionnaire } from 'fhir/r4b';
+import { fromFirstClassExtension, sortExtensionsList, toFirstClassExtension } from 'sdc-qrf';
 
 import { getFHIRResource as getFCEResource } from 'aidbox-react/lib/services/fhir';
 import { ensure } from 'aidbox-react/lib/utils/tests';
@@ -10,7 +11,6 @@ import { Questionnaire as FCEQuestionnaire } from '@beda.software/aidbox-types';
 
 import { getFHIRResource } from 'src/services/fhir';
 import { loginAdminUser } from 'src/setupTests';
-import { fromFirstClassExtension, sortExtensionsList, toFirstClassExtension } from 'sdc-qrf';
 
 describe('Questionanire and QuestionnaireResponses transformation', () => {
     beforeEach(async () => {

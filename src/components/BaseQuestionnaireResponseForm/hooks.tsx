@@ -7,9 +7,10 @@ import { useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
 import { QuestionnaireItem } from '@beda.software/aidbox-types';
 
+import { getFieldErrorMessage } from 'src/components/BaseQuestionnaireResponseForm/utils';
+
 import s from './BaseQuestionnaireResponseForm.module.scss';
 import { FieldLabel } from './FieldLabel';
-import { getFieldErrorMessage } from 'src/components/BaseQuestionnaireResponseForm/utils';
 
 export function useFieldController(fieldName: any, questionItem: QuestionnaireItem) {
     const qrfContext = useQuestionnaireResponseFormContext();

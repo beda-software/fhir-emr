@@ -1,6 +1,7 @@
 import { t } from '@lingui/macro';
 import { QuestionnaireResponse as FHIRQuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
+import { toFirstClassExtension } from 'sdc-qrf';
 
 import {
     QuestionnaireResponse as FCEQuestionnaireResponse,
@@ -11,7 +12,6 @@ import { getDisplay } from 'src/utils/questionnaire';
 import { getExternalQuestionnaireName } from 'src/utils/smart-apps';
 
 import { S } from './ExternalDocumentView.styles';
-import { toFirstClassExtension } from 'sdc-qrf';
 
 interface Props {
     questionnaireResponse: FHIRQuestionnaireResponse;

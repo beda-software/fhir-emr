@@ -31,6 +31,7 @@ import { Display } from './widgets/display';
 import { PasswordInput } from './widgets/PasswordInput';
 import { QuestionReference } from './widgets/reference';
 import { ReferenceRadioButton } from './widgets/ReferenceRadioButton';
+import { UploadFileControl } from './widgets/UploadFileControl';
 import { TextWithMacroFill } from '../TextWithMacroFill';
 
 export const itemComponents: QuestionItemComponentMapping = {
@@ -46,6 +47,7 @@ export const itemComponents: QuestionItemComponentMapping = {
     display: Display,
     reference: QuestionReference,
     quantity: QuestionQuantity,
+    attachment: UploadFileControl,
 };
 
 export const groupComponent: GroupItemComponent = Group;

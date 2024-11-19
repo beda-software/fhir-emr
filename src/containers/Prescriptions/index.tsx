@@ -1,6 +1,7 @@
 import { t, Trans } from '@lingui/macro';
 import { Table } from 'antd';
 import { Medication, MedicationRequest } from 'fhir/r4b';
+import { extractExtension } from 'sdc-qrf';
 
 import { RenderRemoteData } from '@beda.software/fhir-react';
 
@@ -16,7 +17,6 @@ import { useMedicationRequest } from './hooks';
 import { ModalMedicationRequestCancel } from './ModalMedicationRequestCancel';
 import { ModalMedicationRequestConfirm } from './ModalMedicationRequestConfirm';
 import { getSelectedValue } from '../OrganizationScheduling/utils';
-import { extractExtension } from 'sdc-qrf';
 
 export function Prescriptions() {
     const {

@@ -3,6 +3,7 @@ import { t, Trans } from '@lingui/macro';
 import { Input, MenuProps, notification, Dropdown, Space } from 'antd';
 import { Observation, Patient, Provenance } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
+import { extractExtension } from 'sdc-qrf';
 import styled from 'styled-components';
 
 import { WithId } from '@beda.software/fhir-react';
@@ -13,7 +14,6 @@ import { ResourceTable, LinkToEdit } from 'src/components/ResourceTable';
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 import { formatHumanDate } from 'src/utils/date';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
-import { extractExtension } from 'sdc-qrf';
 
 const { Search } = Input;
 
