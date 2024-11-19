@@ -1,8 +1,8 @@
-import { InboxOutlined, QuestionCircleOutlined } from '@ant-design/icons';
-import { Form, Upload, message, Tooltip } from 'antd';
+import { InboxOutlined } from '@ant-design/icons';
+import { Form, Upload, message } from 'antd';
 import type { UploadFile } from 'antd';
 import { Attachment } from 'fhir/r4b';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 
 import { isSuccess } from '@beda.software/remote-data';
@@ -42,13 +42,13 @@ async function fetchDownloadUrl(filename: string) {
 }
 
 export function UploadFileControl({ parentPath, questionItem }: UploadFileProps) {
-    const { linkId, text, helpText, repeats } = questionItem;
+    const { linkId, helpText, repeats } = questionItem;
     const fieldName = [...parentPath, linkId];
     const { formItem, value, onChange } = useFieldController(fieldName, questionItem);
     const ref = useRef<Record<string, string>>({});
+    const uid = useRef<Record<string, string>>({});
 
-    const hasUploadedFile = value?.length > 0;
-    const fileList: Array<UploadFile> = (value ?? []).map((v: { value: { Attachment: Attachment } }) => {
+    const initialFileList: Array<UploadFile> = (value ?? []).map((v: { value: { Attachment: Attachment } }) => {
         const url = v.value.Attachment.url!;
         const file: UploadFile = {
             uid: url,
@@ -58,12 +58,16 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
         };
         return file;
     });
+    const [fileList, setFileList] = useState<Array<UploadFile>>(initialFileList);
+
+    const hasUploadedFile = value?.length > 0;
 
     const multiple = repeats;
     const customRequest = async (options: CustomUploadRequestOption) => {
         const { file, onSuccess, onError, onProgress } = options;
         try {
             const { uploadUrl, filename } = await fetchUploadUrl((file as any).name);
+            uid.current[(file as any).uid] = filename;
 
             uploadFileWithXHR(
                 {
@@ -71,49 +75,41 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
                     onProgress,
                     onError,
                     onSuccess: async (body: any, xhr?: XMLHttpRequest | undefined) => {
-                        onSuccess && onSuccess(body, xhr);
                         const downloadUrl = await fetchDownloadUrl(filename);
                         ref.current[filename] = downloadUrl;
-                        const attachement = { value: { Attachment: { url: filename } } };
-                        if (repeats) {
-                            onChange([...value, attachement]);
-                        } else {
-                            onChange([attachement]);
-                        }
+                        onSuccess && onSuccess(body, xhr);
                     },
                 },
                 uploadUrl,
             );
         } catch (error) {
-            console.error(error);
+            message.error(`${(file as any).name} file upload failed.`);
         }
     };
     const onUploaderChange = (info: { fileList: UploadFile<any>[]; file: UploadFile<any> }) => {
+        setFileList(info.fileList);
         const { status } = info.file;
         if (status === 'done') {
+            const filename = uid.current[info.file.uid];
+            const attachement = { value: { Attachment: { url: filename } } };
+            if (repeats) {
+                onChange([...value, attachement]);
+            } else {
+                onChange([attachement]);
+            }
             message.success(`${info.file.name} file uploaded successfully.`);
         } else if (status === 'error') {
             message.error(`${info.file.name} file upload failed.`);
         }
     };
-    const onRemove = () => {
+    const onRemove = (file: UploadFile) => {
+        console.log(file);
         onChange([]);
+        setFileList([]);
     };
 
     return (
-        <Form.Item
-            {...formItem}
-            label={
-                <span>
-                    {text}{' '}
-                    {helpText && (
-                        <Tooltip title={helpText}>
-                            <QuestionCircleOutlined />
-                        </Tooltip>
-                    )}
-                </span>
-            }
-        >
+        <Form.Item {...formItem}>
             {!hasUploadedFile || repeats ? (
                 <Dragger
                     listType="picture"
@@ -127,10 +123,7 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
                         <InboxOutlined />
                     </p>
                     <p className="ant-upload-text">Click or drag file to this area to upload</p>
-                    <p className="ant-upload-hint">
-                        Support for a single upload. Strictly prohibited from uploading company data or other banned
-                        files.
-                    </p>
+                    <p className="ant-upload-hint">{helpText}</p>
                 </Dragger>
             ) : (
                 <Upload
