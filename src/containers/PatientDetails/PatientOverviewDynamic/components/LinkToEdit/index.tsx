@@ -1,7 +1,6 @@
 import { Resource, Provenance } from 'fhir/r4b';
 import { Link, useLocation } from 'react-router-dom';
-
-import { fromFHIRReference } from 'src/utils/converter';
+import { fromFHIRReference } from 'sdc-qrf';
 
 export function LinkToEdit(props: { name?: string; resource: Resource; provenanceList: Provenance[] }) {
     const { name, resource, provenanceList } = props;

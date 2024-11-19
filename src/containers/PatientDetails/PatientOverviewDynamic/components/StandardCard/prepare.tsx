@@ -15,6 +15,7 @@ import {
 } from 'fhir/r4b';
 import _ from 'lodash';
 import moment from 'moment';
+import { extractExtension, fromFHIRReference } from 'sdc-qrf';
 
 import { WithId, extractBundleResources, formatFHIRDate, parseFHIRDateTime } from '@beda.software/fhir-react';
 
@@ -22,7 +23,6 @@ import { PatientActivitySummary } from 'src/containers/PatientDetails/PatientAct
 import { LinkToEdit } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/LinkToEdit';
 import { OverviewCard } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/types';
 import medicationIcon from 'src/containers/PatientDetails/PatientOverviewDynamic/images/medication.svg';
-import { extractExtension, fromFHIRReference } from 'src/utils/converter';
 import { formatHumanDate } from 'src/utils/date';
 
 export function prepareAllergies(

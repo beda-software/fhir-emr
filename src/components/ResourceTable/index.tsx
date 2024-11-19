@@ -4,13 +4,13 @@ import { ColumnsType } from 'antd/lib/table';
 import { Provenance, Resource } from 'fhir/r4b';
 import { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { fromFHIRReference } from 'sdc-qrf';
 
 import { RenderRemoteData, SearchParams, extractBundleResources, ResourcesMap } from '@beda.software/fhir-react';
 
 import { Spinner } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 import { usePagerExtended } from 'src/hooks/pager';
-import { fromFHIRReference } from 'src/utils/converter';
 
 type GetTableColumns<R> = (provenanceList: Provenance[]) => ColumnsType<R>;
 

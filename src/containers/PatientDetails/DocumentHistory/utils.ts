@@ -1,11 +1,11 @@
 import { Resource, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
+import { toFirstClassExtension } from 'sdc-qrf';
 import { FormGroupItems, FormItems } from 'sdc-qrf/lib/types';
 import { findAnswersForQuestionsRecursive, mapResponseToForm } from 'sdc-qrf/lib/utils';
 
 import { AidboxReference } from '@beda.software/aidbox-types';
 
-import { toFirstClassExtension } from 'src/utils/converter';
 import { getDisplay } from 'src/utils/questionnaire';
 
 export function findResourceInHistory<R extends Resource>(provenanceRef: AidboxReference, history: R[]) {
