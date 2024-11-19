@@ -1,7 +1,9 @@
-import { service } from 'aidbox-react/lib/services/service';
 import type { UploadRequestOption } from 'rc-upload/lib/interface';
 
+import { service } from 'aidbox-react/lib/services/service';
+
 import config from '@beda.software/emr-config';
+import { mapSuccess } from '@beda.software/remote-data';
 
 interface UploadUrlResponse {
     filename: string;
@@ -13,28 +15,34 @@ interface DownloadUrlResponse {
 }
 
 export async function generateUploadUrl(filename: string) {
-    return await service<UploadUrlResponse>({
-        baseURL: config.baseURL,
-        url: '/$generate-upload-url',
-        method: 'POST',
-        data: {
-            filename,
-        },
-    });
+    return mapSuccess(
+        await service<UploadUrlResponse>({
+            baseURL: config.baseURL,
+            url: '/$generate-upload-url',
+            method: 'POST',
+            data: {
+                filename,
+            },
+        }),
+        (data) => ({ filename: data.filename, uploadUrl: data.put_presigned_url }),
+    );
 }
 
 export async function generateDownloadUrl(key: string) {
-    return await service<DownloadUrlResponse>({
-        baseURL: config.baseURL,
-        url: '/$generate-download-url',
-        method: 'POST',
-        data: {
-            key,
-        },
-    });
+    return mapSuccess(
+        await service<DownloadUrlResponse>({
+            baseURL: config.baseURL,
+            url: '/$generate-download-url',
+            method: 'POST',
+            data: {
+                key,
+            },
+        }),
+        ({ get_presigned_url }) => ({ downloadUrl: get_presigned_url }),
+    );
 }
 
-export type CustomUploadRequestOption = Pick<UploadRequestOption, "file" | "onProgress" | "onError" | "onSuccess">;
+export type CustomUploadRequestOption = Pick<UploadRequestOption, 'file' | 'onProgress' | 'onError' | 'onSuccess'>;
 
 export function uploadFileWithXHR(options: CustomUploadRequestOption, uploadUrl: string) {
     const { file, onProgress, onError, onSuccess } = options;

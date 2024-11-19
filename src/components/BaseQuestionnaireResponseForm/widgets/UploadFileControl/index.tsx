@@ -1,5 +1,6 @@
 import { InboxOutlined } from '@ant-design/icons';
-import { Form, Upload, message } from 'antd';
+import { formatError } from 'aidbox-react';
+import { Form, Upload, message, notification } from 'antd';
 import type { UploadFile } from 'antd';
 import { Attachment } from 'fhir/r4b';
 import { useRef, useState } from 'react';
@@ -8,7 +9,7 @@ import { QuestionItemProps } from 'sdc-qrf';
 import { isSuccess } from '@beda.software/remote-data';
 
 import {
-    generateDownloadUrl,
+    /* generateDownloadUrl, */
     generateUploadUrl,
     uploadFileWithXHR,
     CustomUploadRequestOption,
@@ -20,32 +21,11 @@ const { Dragger } = Upload;
 
 type UploadFileProps = QuestionItemProps;
 
-async function fetchUploadUrl(fileName: string) {
-    const response = await generateUploadUrl(fileName);
-    if (isSuccess(response) && response.data?.put_presigned_url) {
-        return {
-            uploadUrl: response.data.put_presigned_url,
-            filename: response.data.filename,
-        };
-    } else {
-        throw new Error('file upload failed.');
-    }
-}
-
-async function fetchDownloadUrl(filename: string) {
-    const response = await generateDownloadUrl(filename);
-    if (isSuccess(response) && response.data?.get_presigned_url) {
-        return response.data.get_presigned_url;
-    } else {
-        throw new Error('url download failed');
-    }
-}
-
 export function UploadFileControl({ parentPath, questionItem }: UploadFileProps) {
     const { linkId, helpText, repeats } = questionItem;
     const fieldName = [...parentPath, linkId];
     const { formItem, value, onChange } = useFieldController(fieldName, questionItem);
-    const ref = useRef<Record<string, string>>({});
+    /* const ref = useRef<Record<string, string>>({}); */
     const uid = useRef<Record<string, string>>({});
 
     const initialFileList: Array<UploadFile> = (value ?? []).map((v: { value: { Attachment: Attachment } }) => {
@@ -53,8 +33,8 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
         const file: UploadFile = {
             uid: url,
             name: url,
-            url: ref.current[url],
-            thumbUrl: ref.current[url],
+            /* url: ref.current[url], */
+            /* thumbUrl: ref.current[url], */
         };
         return file;
     });
@@ -64,26 +44,14 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
 
     const multiple = repeats;
     const customRequest = async (options: CustomUploadRequestOption) => {
-        const { file, onSuccess, onError, onProgress } = options;
-        try {
-            const { uploadUrl, filename } = await fetchUploadUrl((file as any).name);
-            uid.current[(file as any).uid] = filename;
-
-            uploadFileWithXHR(
-                {
-                    file,
-                    onProgress,
-                    onError,
-                    onSuccess: async (body: any, xhr?: XMLHttpRequest | undefined) => {
-                        const downloadUrl = await fetchDownloadUrl(filename);
-                        ref.current[filename] = downloadUrl;
-                        onSuccess && onSuccess(body, xhr);
-                    },
-                },
-                uploadUrl,
-            );
-        } catch (error) {
-            message.error(`${(file as any).name} file upload failed.`);
+        const file: UploadFile = options.file as any;
+        const response = await generateUploadUrl(file.name);
+        if (isSuccess(response)) {
+            const { filename, uploadUrl } = response.data;
+            uid.current[file.uid] = filename;
+            uploadFileWithXHR(options, uploadUrl);
+        } else {
+            notification.error(formatError(response.error));
         }
     };
     const onUploaderChange = (info: { fileList: UploadFile<any>[]; file: UploadFile<any> }) => {
