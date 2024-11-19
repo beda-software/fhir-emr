@@ -1,7 +1,7 @@
 import type { UploadFile } from 'antd';
 import { notification } from 'antd';
 import { Attachment } from 'fhir/r4b';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 
 import { formatError } from '@beda.software/fhir-react';
@@ -61,37 +61,47 @@ export function useUploader({ parentPath, questionItem }: QuestionItemProps) {
 
     const hasUploadedFile = value?.length > 0;
 
-    const customRequest = async (options: CustomUploadRequestOption) => {
-        const file: UploadFile = options.file as any;
-        const response = await generateUploadUrl(file.name);
-        if (isSuccess(response)) {
-            const { filename, uploadUrl } = response.data;
-            uid.current[file.uid] = filename;
-            uploadFileWithXHR(options, uploadUrl);
-        } else {
-            notification.error({ message: formatError(response.error) });
-        }
-    };
-    const onUploaderChange = (info: { fileList: UploadFile<any>[]; file: UploadFile<any> }) => {
-        setFileList(info.fileList);
-        const { status } = info.file;
-        if (status === 'done') {
-            const filename = uid.current[info.file.uid];
-            const attachement = { value: { Attachment: { url: filename } } };
-            if (repeats) {
-                onChange([...value, attachement]);
+    const customRequest = useCallback(
+        async (options: CustomUploadRequestOption) => {
+            const file: UploadFile = options.file as any;
+            const response = await generateUploadUrl(file.name);
+            if (isSuccess(response)) {
+                const { filename, uploadUrl } = response.data;
+                uid.current[file.uid] = filename;
+                uploadFileWithXHR(options, uploadUrl);
             } else {
-                onChange([attachement]);
+                notification.error({ message: formatError(response.error) });
             }
-        } else if (status === 'error') {
-            notification.error({ message: `${info.file.name} file upload failed.` });
-        }
-    };
-    const onRemove = (file: UploadFile) => {
-        const filename = uid.current[file.uid] ?? file.uid;
-        onChange((value ?? []).filter(({ value }: ValueAttachment) => value.Attachment.url !== filename));
-        setFileList((files) => files.filter((f) => f.uid !== file.uid));
-    };
+        },
+        [uid],
+    );
+    const onUploaderChange = useCallback(
+        (info: { fileList: UploadFile<any>[]; file: UploadFile<any> }) => {
+            setFileList(info.fileList);
+            const { status } = info.file;
+            if (status === 'done') {
+                const filename = uid.current[info.file.uid];
+                const attachement = { value: { Attachment: { url: filename } } };
+                if (repeats) {
+                    onChange([...value, attachement]);
+                } else {
+                    onChange([attachement]);
+                }
+            } else if (status === 'error') {
+                notification.error({ message: `${info.file.name} file upload failed.` });
+            }
+        },
+        [setFileList, uid, onChange],
+    );
+
+    const onRemove = useCallback(
+        (file: UploadFile) => {
+            const filename = uid.current[file.uid] ?? file.uid;
+            onChange((value ?? []).filter(({ value }: ValueAttachment) => value.Attachment.url !== filename));
+            setFileList((files) => files.filter((f) => f.uid !== file.uid));
+        },
+        [value, onChange, setFileList],
+    );
 
     const showDragger = !hasUploadedFile || repeats;
 
