@@ -3,13 +3,13 @@ import { formatError } from 'aidbox-react';
 import { Form, Upload, message, notification } from 'antd';
 import type { UploadFile } from 'antd';
 import { Attachment } from 'fhir/r4b';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 
 import { isSuccess } from '@beda.software/remote-data';
 
 import {
-    /* generateDownloadUrl, */
+    generateDownloadUrl,
     generateUploadUrl,
     uploadFileWithXHR,
     CustomUploadRequestOption,
@@ -27,20 +27,45 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
     const { linkId, helpText, repeats } = questionItem;
     const fieldName = [...parentPath, linkId];
     const { formItem, value, onChange } = useFieldController(fieldName, questionItem);
-    /* const ref = useRef<Record<string, string>>({}); */
+    /* const download = useRef<Record<string, string>>({}); */
     const uid = useRef<Record<string, string>>({});
-
     const initialFileList: Array<UploadFile> = (value ?? []).map((v: ValueAttachment) => {
         const url = v.value.Attachment.url!;
         const file: UploadFile = {
             uid: url,
             name: url,
+            percent: 100,
             /* url: ref.current[url], */
             /* thumbUrl: ref.current[url], */
         };
         return file;
     });
     const [fileList, setFileList] = useState<Array<UploadFile>>(initialFileList);
+
+    useEffect(() => {
+        (async () => {
+            const result: Array<UploadFile> = [];
+            for (const f in fileList) {
+                const file = fileList[f]!;
+                if (file.url || file.percent !== 100) {
+                    return file;
+                }
+                const key = uid.current[file.uid] ?? file.uid;
+                const response = await generateDownloadUrl(key);
+                if (isSuccess(response)) {
+                    result.push({
+                        ...file,
+                        url: response.data.downloadUrl,
+                        thumbUrl: response.data.downloadUrl,
+                    });
+                } else {
+                    notification.error(formatError(response.error));
+                    result.push(file);
+                }
+            }
+            setFileList(result);
+        })();
+    }, [JSON.stringify(fileList)]);
 
     const hasUploadedFile = value?.length > 0;
 
