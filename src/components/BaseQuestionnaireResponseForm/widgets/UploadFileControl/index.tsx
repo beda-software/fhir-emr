@@ -21,6 +21,8 @@ const { Dragger } = Upload;
 
 type UploadFileProps = QuestionItemProps;
 
+type ValueAttachment = { value: { Attachment: Attachment } };
+
 export function UploadFileControl({ parentPath, questionItem }: UploadFileProps) {
     const { linkId, helpText, repeats } = questionItem;
     const fieldName = [...parentPath, linkId];
@@ -28,7 +30,7 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
     /* const ref = useRef<Record<string, string>>({}); */
     const uid = useRef<Record<string, string>>({});
 
-    const initialFileList: Array<UploadFile> = (value ?? []).map((v: { value: { Attachment: Attachment } }) => {
+    const initialFileList: Array<UploadFile> = (value ?? []).map((v: ValueAttachment) => {
         const url = v.value.Attachment.url!;
         const file: UploadFile = {
             uid: url,
@@ -71,9 +73,9 @@ export function UploadFileControl({ parentPath, questionItem }: UploadFileProps)
         }
     };
     const onRemove = (file: UploadFile) => {
-        console.log(file);
-        onChange([]);
-        setFileList([]);
+        const filename = uid.current[file.uid] ?? file.uid;
+        onChange((value ?? []).filter(({ value }: ValueAttachment) => value.Attachment.url !== filename));
+        setFileList((files) => files.filter((f) => f.uid !== file.uid));
     };
 
     return (
