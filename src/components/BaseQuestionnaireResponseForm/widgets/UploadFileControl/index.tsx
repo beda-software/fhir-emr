@@ -37,3 +37,12 @@ export function UploadFileControl(props: QuestionItemProps) {
         </Form.Item>
     );
 }
+
+export function UploadFileControlReadOnly(props: QuestionItemProps) {
+    const { formItem, fileList } = useUploader(props);
+    return (
+        <Form.Item {...formItem}>
+            <Upload listType="picture" showUploadList={{ showRemoveIcon: true }} fileList={fileList} />
+        </Form.Item>
+    );
+}

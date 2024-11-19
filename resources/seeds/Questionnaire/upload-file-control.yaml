@@ -18,16 +18,10 @@ item:
         text: Uploading file
         type: attachment
         required: true
-        itemControl:
-          coding:
-            - code: upload-file-control
         helpText: "This is where you can upload a file."
       - linkId: upload-file-control-many
         text: Uploading multiple file
         type: attachment
         required: true
         repeats: true
-        itemControl:
-          coding:
-            - code: upload-file-control
-        helpText: "This is where you can upload multiple file."    
+        helpText: "This is where you can upload multiple files"

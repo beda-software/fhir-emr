@@ -91,7 +91,7 @@ export function useUploader({ parentPath, questionItem }: QuestionItemProps) {
                 notification.error({ message: `${info.file.name} file upload failed.` });
             }
         },
-        [setFileList, uid, onChange],
+        [setFileList, uid, onChange, value],
     );
 
     const onRemove = useCallback(

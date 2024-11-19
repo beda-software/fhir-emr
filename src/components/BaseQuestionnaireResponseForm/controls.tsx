@@ -47,6 +47,7 @@ export const itemComponents: QuestionItemComponentMapping = {
     display: Display,
     reference: QuestionReference,
     quantity: QuestionQuantity,
+    attachment: UploadFileControl,
 };
 
 export const groupComponent: GroupItemComponent = Group;
@@ -62,7 +63,6 @@ export const itemControlComponents: ItemControlQuestionItemComponentMapping = {
     'reference-radio-button': ReferenceRadioButton,
     'check-box': InlineChoice,
     'input-inside-text': QuestionInputInsideText,
-    'upload-file-control': UploadFileControl
 };
 
 export const groupControlComponents: ItemControlGroupItemComponentMapping = {
