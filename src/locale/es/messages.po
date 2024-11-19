@@ -658,7 +658,7 @@ msgstr "Inmunización"
 
 #: src/components/EncounterStatusBadge/index.tsx:16
 msgid "in progress"
-msgstr "en progreso"
+msgstr "En progreso"
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:40
 msgid "Inline choice"
