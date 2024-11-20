@@ -55,12 +55,12 @@ const columns: ColumnsType<EncounterData> = [
                         to={`/patients/${resource.patient?.id}/encounters/${resource.id}`}
                         style={{ marginRight: 10 }}
                     >
-                        Open
+                        <Trans>Open</Trans>
                     </Link>
                 </Col>
                 <Col>
                     <Link to={`/encounters/${resource.id}/video`} state={{ encounterData: resource }}>
-                        Video call
+                        <Trans>Video call</Trans>
                     </Link>
                 </Col>
             </Row>
