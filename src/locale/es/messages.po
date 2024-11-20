@@ -270,7 +270,7 @@ msgstr "Columna (predeterminado)"
 
 #: src/components/QuestionnairesWizard/index.tsx:110
 msgid "Complete"
-msgstr "Completo"
+msgstr "Completado"
 
 #: src/containers/EncounterDetails/index.tsx:164
 #: src/containers/EncounterDetails/index.tsx:168
