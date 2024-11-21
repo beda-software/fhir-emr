@@ -1,6 +1,6 @@
 import { t } from '@lingui/macro';
 import queryString from 'query-string';
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { Route, BrowserRouter, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
@@ -23,7 +23,6 @@ import { QuestionnaireList } from 'src/containers/QuestionnaireList';
 import { SignIn } from 'src/containers/SignIn';
 import { VideoCall } from 'src/containers/VideoCall';
 import { getToken, parseOAuthState, setToken } from 'src/services/auth';
-import { sharedAuthorizedPatient } from 'src/sharedState';
 import { Role, matchCurrentUserRole } from 'src/utils/role';
 
 import { restoreUserSession } from './utils';
@@ -37,8 +36,10 @@ import { OrganizationScheduling } from '../OrganizationScheduling';
 import { DocumentPrint } from '../PatientDetails/DocumentPrint';
 import { Prescriptions } from '../Prescriptions';
 import { SetPassword } from '../SetPassword';
+import { MenuLayout } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
 
 export function App() {
+    const menuLayout = useContext(MenuLayout);
     const [userResponse] = useService(async () => {
         const appToken = getToken();
         return appToken ? restoreUserSession(appToken) : success(null);
@@ -46,11 +47,13 @@ export function App() {
 
     const renderRoutes = (user: User | null) => {
         if (user) {
+            const layout = matchCurrentUserRole(menuLayout);
+            const defaultRoute = layout[0]?.path ?? '/encounters'
             return matchCurrentUserRole({
-                [Role.Admin]: () => <AuthenticatedAdminUserApp />,
-                [Role.Patient]: () => <AuthenticatedPatientUserApp />,
-                [Role.Practitioner]: () => <AuthenticatedPractitionerUserApp />,
-                [Role.Receptionist]: () => <AuthenticatedReceptionistUserApp />,
+                [Role.Admin]: () => <AuthenticatedAdminUserApp defaultRoute={defaultRoute} />,
+                [Role.Patient]: (patient) => <AuthenticatedPatientUserApp defaultRoute={`/patients/${patient!.id}`} />,
+                [Role.Practitioner]: () => <AuthenticatedPractitionerUserApp defaultRoute={defaultRoute} />,
+                [Role.Receptionist]: () => <AuthenticatedReceptionistUserApp defaultRoute={defaultRoute} />,
             });
         }
 
@@ -130,7 +133,11 @@ function AnonymousUserApp() {
     );
 }
 
-function AuthenticatedAdminUserApp() {
+interface RouteProps {
+    defaultRoute: string;
+}
+
+function AuthenticatedAdminUserApp({ defaultRoute }:RouteProps) {
     return (
         <Routes>
             <Route path={`/print-patient-document/:id/:qrId`} element={<DocumentPrint />} />
@@ -160,7 +167,7 @@ function AuthenticatedAdminUserApp() {
                             />
                             <Route path="/questionnaires/:id" element={<div>questionnaires/:id</div>} />
                             <Route path="/healthcare-services" element={<HealthcareServiceList />} />
-                            <Route path="*" element={<Navigate to="/encounters" />} />
+                            <Route path="*" element={<Navigate to={defaultRoute} />} />
                         </Routes>
                     </BaseLayout>
                 }
@@ -169,7 +176,7 @@ function AuthenticatedAdminUserApp() {
     );
 }
 
-function AuthenticatedPractitionerUserApp() {
+function AuthenticatedPractitionerUserApp({ defaultRoute }: RouteProps) {
     return (
         <Routes>
             <Route path={`/print-patient-document/:id/:qrId`} element={<DocumentPrint />} />
@@ -195,7 +202,7 @@ function AuthenticatedPractitionerUserApp() {
                                 element={<AidboxFormsBuilder />}
                             />
                             <Route path="/questionnaires/:id" element={<div>questionnaires/:id</div>} />
-                            <Route path="*" element={<Navigate to="/encounters" />} />
+                            <Route path="*" element={<Navigate to={defaultRoute} />} />
                         </Routes>
                     </BaseLayout>
                 }
@@ -204,7 +211,7 @@ function AuthenticatedPractitionerUserApp() {
     );
 }
 
-function AuthenticatedReceptionistUserApp() {
+function AuthenticatedReceptionistUserApp({ defaultRoute }: RouteProps) {
     return (
         <Routes>
             <Route path={`/print-patient-document/:id/:qrId`} element={<DocumentPrint />} />
@@ -218,7 +225,7 @@ function AuthenticatedReceptionistUserApp() {
                             <Route path="/invoices/:id" element={<InvoiceDetails />} />
                             <Route path="/medications" element={<MedicationManagement />} />
                             <Route path="/prescriptions" element={<Prescriptions />} />
-                            <Route path="*" element={<Navigate to="/scheduling" />} />
+                            <Route path="*" element={<Navigate to={defaultRoute} />} />
                         </Routes>
                     </BaseLayout>
                 }
@@ -227,9 +234,7 @@ function AuthenticatedReceptionistUserApp() {
     );
 }
 
-function AuthenticatedPatientUserApp() {
-    const [patient] = sharedAuthorizedPatient.useSharedState();
-
+function AuthenticatedPatientUserApp({ defaultRoute }: RouteProps) {
     return (
         <Routes>
             <Route path={`/print-patient-document/:id/:qrId`} element={<DocumentPrint />} />
@@ -241,7 +246,7 @@ function AuthenticatedPatientUserApp() {
                             <Route path="/invoices" element={<InvoiceList />} />
                             <Route path="/invoices/:id" element={<InvoiceDetails />} />
                             <Route path={`/patients/:id/*`} element={<PatientDetails />} />
-                            <Route path="*" element={<Navigate to={`/patients/${patient!.id}`} />} />
+                            <Route path="*" element={<Navigate to={defaultRoute} />} />
                         </Routes>
                     </BaseLayout>
                 }
