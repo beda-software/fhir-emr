@@ -392,7 +392,7 @@ msgstr "Fecha registrada"
 
 #: src/containers/PatientDetails/PatientResources/utils.tsx:317
 msgid "Date created"
-msgstr ""
+msgstr "Fecha creada"
 
 #: src/components/Calendar/index.tsx:32
 msgid "Day"
@@ -662,7 +662,7 @@ msgstr "Historial de cambios"
 
 #: src/containers/PatientDetails/PatientOrders/index.tsx:148
 msgid "IL-6"
-msgstr ""
+msgstr "IL-6"
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:189
 #: src/containers/PatientDetails/PatientResources/utils.tsx:137
@@ -742,7 +742,7 @@ msgstr "Máximo"
 
 #: src/containers/InvoiceDetails/components/InvoiceDetailsHeader/index.tsx:17
 msgid "Medical Services Invoice"
-msgstr ""
+msgstr "Recibo de servicios médicos"
 
 #: src/containers/MedicationManagement/components/MedicationsSearchBar/index.tsx:30
 #: src/containers/Prescriptions/index.tsx:113
@@ -1138,7 +1138,7 @@ msgstr "Servicio"
 
 #: src/containers/PatientDetails/PatientResources/utils.tsx:291
 msgid "Service Requests"
-msgstr ""
+msgstr "Solicitud de servicios"
 
 #: src/components/BaseLayout/Sidebar/SidebarTop/index.tsx:47
 msgid "Services"
