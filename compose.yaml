@@ -61,6 +61,14 @@ services:
         volumes:
             - ./zenproject:/app/zenproject
             - ./resources/seeds:/app/resources
+    watch-seeds:
+        image: bedasoftware/fhirsnake:latest
+        command:
+            - watch
+            - --external-fhir-server-url
+            - http://root:secret@devbox:8080
+        volumes:
+            - ./resources/seeds:/app/resources
     scheduling:
         image: bedasoftware/aidbox-scheduling-node-app:develop
         depends_on:
