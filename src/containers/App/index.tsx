@@ -1,6 +1,6 @@
 import { t } from '@lingui/macro';
 import queryString from 'query-string';
-import { useContext, useEffect, useRef } from 'react';
+import { ReactElement, useContext, useEffect, useRef } from 'react';
 import { Route, BrowserRouter, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
@@ -10,6 +10,7 @@ import { success } from 'aidbox-react/lib/libs/remoteData';
 import { User } from '@beda.software/aidbox-types';
 
 import { AnonymousLayout, BaseLayout } from 'src/components/BaseLayout';
+import { MenuLayout } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
 import { Spinner } from 'src/components/Spinner';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { EncounterList } from 'src/containers/EncounterList';
@@ -23,7 +24,7 @@ import { QuestionnaireList } from 'src/containers/QuestionnaireList';
 import { SignIn } from 'src/containers/SignIn';
 import { VideoCall } from 'src/containers/VideoCall';
 import { getToken, parseOAuthState, setToken } from 'src/services/auth';
-import { Role, matchCurrentUserRole } from 'src/utils/role';
+import { selectUserRole } from 'src/utils/role';
 
 import { restoreUserSession } from './utils';
 import { AidboxFormsBuilder } from '../AidboxFormsBuilder';
@@ -36,9 +37,13 @@ import { OrganizationScheduling } from '../OrganizationScheduling';
 import { DocumentPrint } from '../PatientDetails/DocumentPrint';
 import { Prescriptions } from '../Prescriptions';
 import { SetPassword } from '../SetPassword';
-import { MenuLayout } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
 
-export function App() {
+interface AppProps {
+    authenticatedRoutes?: ReactElement;
+    anonymousRoutes?: ReactElement;
+}
+
+export function App({ authenticatedRoutes, anonymousRoutes }: AppProps) {
     const menuLayout = useContext(MenuLayout);
     const [userResponse] = useService(async () => {
         const appToken = getToken();
@@ -47,17 +52,12 @@ export function App() {
 
     const renderRoutes = (user: User | null) => {
         if (user) {
-            const layout = matchCurrentUserRole(menuLayout);
-            const defaultRoute = layout[0]?.path ?? '/encounters'
-            return matchCurrentUserRole({
-                [Role.Admin]: () => <AuthenticatedAdminUserApp defaultRoute={defaultRoute} />,
-                [Role.Patient]: (patient) => <AuthenticatedPatientUserApp defaultRoute={`/patients/${patient!.id}`} />,
-                [Role.Practitioner]: () => <AuthenticatedPractitionerUserApp defaultRoute={defaultRoute} />,
-                [Role.Receptionist]: () => <AuthenticatedReceptionistUserApp defaultRoute={defaultRoute} />,
-            });
+            const layout = selectUserRole(user, menuLayout);
+            const defaultRoute = layout[0]?.path ?? '/encounters';
+            return <AuthenticatedUserApp defaultRoute={defaultRoute} extra={authenticatedRoutes} />;
         }
 
-        return <AnonymousUserApp />;
+        return <AnonymousUserApp extra={anonymousRoutes} />;
     };
 
     return (
@@ -86,13 +86,14 @@ export function Auth() {
     return null;
 }
 
-function AnonymousUserApp() {
+function AnonymousUserApp({ extra }: { extra?: ReactElement }) {
     const location = useLocation();
     const originPathRef = useRef(location.pathname);
     const navigate = useNavigate();
 
     return (
         <Routes>
+            {extra}
             <Route path="/auth" element={<Auth />} />
             <Route path="/signin" element={<SignIn originPathName={originPathRef.current} />} />
             <Route path="/reset-password/:code" element={<SetPassword />} />
@@ -135,25 +136,29 @@ function AnonymousUserApp() {
 
 interface RouteProps {
     defaultRoute: string;
+    extra?: ReactElement;
 }
 
-function AuthenticatedAdminUserApp({ defaultRoute }:RouteProps) {
+function AuthenticatedUserApp({ defaultRoute, extra }: RouteProps) {
     return (
         <Routes>
             <Route path={`/print-patient-document/:id/:qrId`} element={<DocumentPrint />} />
+            <Route path="/appointment/book" element={<PublicAppointment />} />
             <Route
                 path="*"
                 element={
                     <BaseLayout>
                         <Routes>
-                            {/* TODO: in the current implementation admin will get all patients via /patients, but it's wrong */}
-                            <Route path="/patients" element={<PatientList />} />
+                            {extra}
                             <Route path="/encounters" element={<EncounterList />} />
+                            <Route path="/scheduling" element={<OrganizationScheduling />} />
+                            <Route path="/medications" element={<MedicationManagement />} />
+                            <Route path="/prescriptions" element={<Prescriptions />} />
                             <Route path="/invoices" element={<InvoiceList />} />
                             <Route path="/invoices/:id" element={<InvoiceDetails />} />
-                            <Route path="/appointment/book" element={<PublicAppointment />} />
-                            <Route path="/questionnaire" element={<PatientQuestionnaire />} />
+                            <Route path="/patients" element={<PatientList />} />
                             <Route path="/patients/:id/*" element={<PatientDetails />} />
+                            <Route path="/questionnaire" element={<PatientQuestionnaire />} />
                             <Route path="/documents/:id/edit" element={<div>documents/:id/edit</div>} />
                             <Route path="/encounters/:encounterId/video" element={<VideoCall />} />
                             <Route path="/practitioners" element={<PractitionerList />} />
@@ -167,85 +172,6 @@ function AuthenticatedAdminUserApp({ defaultRoute }:RouteProps) {
                             />
                             <Route path="/questionnaires/:id" element={<div>questionnaires/:id</div>} />
                             <Route path="/healthcare-services" element={<HealthcareServiceList />} />
-                            <Route path="*" element={<Navigate to={defaultRoute} />} />
-                        </Routes>
-                    </BaseLayout>
-                }
-            />
-        </Routes>
-    );
-}
-
-function AuthenticatedPractitionerUserApp({ defaultRoute }: RouteProps) {
-    return (
-        <Routes>
-            <Route path={`/print-patient-document/:id/:qrId`} element={<DocumentPrint />} />
-            <Route
-                path="*"
-                element={
-                    <BaseLayout>
-                        <Routes>
-                            <Route path="/patients" element={<PatientList />} />
-                            <Route path="/encounters" element={<EncounterList />} />
-                            <Route path="/appointment/book" element={<PublicAppointment />} />
-                            <Route path="/questionnaire" element={<PatientQuestionnaire />} />
-                            <Route path="/patients/:id/*" element={<PatientDetails />} />
-                            <Route path="/documents/:id/edit" element={<div>documents/:id/edit</div>} />
-                            <Route path="/encounters/:encounterId/video" element={<VideoCall />} />
-                            <Route path="/practitioners" element={<PractitionerList />} />
-                            <Route path="/practitioners/:id/*" element={<PractitionerDetails />} />
-                            <Route path="/questionnaires" element={<QuestionnaireList />} />
-                            <Route path="/questionnaires/builder" element={<QuestionnaireBuilder />} />
-                            <Route path="/questionnaires/:id/edit" element={<QuestionnaireBuilder />} />
-                            <Route
-                                path="/questionnaires/:id/aidbox-forms-builder/edit"
-                                element={<AidboxFormsBuilder />}
-                            />
-                            <Route path="/questionnaires/:id" element={<div>questionnaires/:id</div>} />
-                            <Route path="*" element={<Navigate to={defaultRoute} />} />
-                        </Routes>
-                    </BaseLayout>
-                }
-            />
-        </Routes>
-    );
-}
-
-function AuthenticatedReceptionistUserApp({ defaultRoute }: RouteProps) {
-    return (
-        <Routes>
-            <Route path={`/print-patient-document/:id/:qrId`} element={<DocumentPrint />} />
-            <Route
-                path="*"
-                element={
-                    <BaseLayout>
-                        <Routes>
-                            <Route path="/scheduling" element={<OrganizationScheduling />} />
-                            <Route path="/invoices" element={<InvoiceList />} />
-                            <Route path="/invoices/:id" element={<InvoiceDetails />} />
-                            <Route path="/medications" element={<MedicationManagement />} />
-                            <Route path="/prescriptions" element={<Prescriptions />} />
-                            <Route path="*" element={<Navigate to={defaultRoute} />} />
-                        </Routes>
-                    </BaseLayout>
-                }
-            />
-        </Routes>
-    );
-}
-
-function AuthenticatedPatientUserApp({ defaultRoute }: RouteProps) {
-    return (
-        <Routes>
-            <Route path={`/print-patient-document/:id/:qrId`} element={<DocumentPrint />} />
-            <Route
-                path="*"
-                element={
-                    <BaseLayout>
-                        <Routes>
-                            <Route path="/invoices" element={<InvoiceList />} />
-                            <Route path="/invoices/:id" element={<InvoiceDetails />} />
-                            <Route path={`/patients/:id/*`} element={<PatientDetails />} />
                             <Route path="*" element={<Navigate to={defaultRoute} />} />
                         </Routes>
                     </BaseLayout>
