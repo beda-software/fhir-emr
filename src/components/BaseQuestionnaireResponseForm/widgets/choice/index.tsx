@@ -4,13 +4,17 @@ import _, { debounce } from 'lodash';
 import { useCallback, useContext } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 
-import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer, QuestionnaireResponseItemAnswerValue } from '@beda.software/aidbox-types';
+import {
+    QuestionnaireItemAnswerOption,
+    QuestionnaireResponseItemAnswer,
+    QuestionnaireResponseItemAnswerValue,
+} from '@beda.software/aidbox-types';
 
 import { AsyncSelect, Select } from 'src/components/Select';
 import { ValueSetExpandProvider } from 'src/contexts';
+import { evaluate } from 'src/utils';
 import { getDisplay as getAnswerValueDisplay } from 'src/utils/questionnaire';
 
-import { evaluate } from 'src/utils';
 import s from '../../BaseQuestionnaireResponseForm.module.scss';
 import { useFieldController } from '../../hooks';
 
@@ -24,7 +28,14 @@ interface ChoiceQuestionSelectProps {
 }
 
 export function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
-    const { value, onChange, options, repeats = false, placeholder = t`Select...`, getDisplay = getAnswerValueDisplay } = props;
+    const {
+        value,
+        onChange,
+        options,
+        repeats = false,
+        placeholder = t`Select...`,
+        getDisplay = getAnswerValueDisplay,
+    } = props;
 
     return (
         <>
@@ -53,14 +64,20 @@ export function QuestionChoice({ parentPath, questionItem, context }: QuestionIt
 
     const onSelect = useCallback((option: any) => onChange([].concat(option)), [onChange]);
 
-    const getDisplay = useCallback((value?: QuestionnaireResponseItemAnswerValue) => {
-        const specificValueType = value && (Object.keys(value)[0] as keyof QuestionnaireResponseItemAnswerValue)
-        if (choiceColumn && specificValueType) {
-            return (evaluate(value[specificValueType], choiceColumn![0]!.path!, context)[0] ?? null) as string | number | null;
-        }
+    const getDisplay = useCallback(
+        (value?: QuestionnaireResponseItemAnswerValue) => {
+            const specificValueType = value && (Object.keys(value)[0] as keyof QuestionnaireResponseItemAnswerValue);
+            if (choiceColumn && specificValueType) {
+                return (evaluate(value[specificValueType], choiceColumn![0]!.path!, context)[0] ?? null) as
+                    | string
+                    | number
+                    | null;
+            }
 
-        return getAnswerValueDisplay(value);
-    }, [choiceColumn, context]);
+            return getAnswerValueDisplay(value);
+        },
+        [choiceColumn, context],
+    );
 
     if (answerValueSet) {
         return (
