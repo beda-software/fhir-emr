@@ -4,12 +4,13 @@ import _, { debounce } from 'lodash';
 import { useCallback, useContext } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 
-import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer } from '@beda.software/aidbox-types';
+import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer, QuestionnaireResponseItemAnswerValue } from '@beda.software/aidbox-types';
 
 import { AsyncSelect, Select } from 'src/components/Select';
 import { ValueSetExpandProvider } from 'src/contexts';
-import { getDisplay } from 'src/utils/questionnaire';
+import { getDisplay as getAnswerValueDisplay } from 'src/utils/questionnaire';
 
+import { evaluate } from 'src/utils';
 import s from '../../BaseQuestionnaireResponseForm.module.scss';
 import { useFieldController } from '../../hooks';
 
@@ -19,10 +20,11 @@ interface ChoiceQuestionSelectProps {
     options: QuestionnaireItemAnswerOption[];
     repeats?: boolean;
     placeholder?: string;
+    getDisplay?: (value?: QuestionnaireResponseItemAnswerValue) => string | number | null;
 }
 
 export function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
-    const { value, onChange, options, repeats = false, placeholder = t`Select...` } = props;
+    const { value, onChange, options, repeats = false, placeholder = t`Select...`, getDisplay = getAnswerValueDisplay } = props;
 
     return (
         <>
@@ -43,13 +45,22 @@ export function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
     );
 }
 
-export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) {
-    const { linkId, answerOption, repeats, answerValueSet } = questionItem;
+export function QuestionChoice({ parentPath, questionItem, context }: QuestionItemProps) {
+    const { linkId, answerOption, repeats, answerValueSet, choiceColumn } = questionItem;
     const fieldName = [...parentPath, linkId];
 
     const { value, formItem, onChange, placeholder = t`Select...` } = useFieldController(fieldName, questionItem);
 
     const onSelect = useCallback((option: any) => onChange([].concat(option)), [onChange]);
+
+    const getDisplay = useCallback((value?: QuestionnaireResponseItemAnswerValue) => {
+        const specificValueType = value && (Object.keys(value)[0] as keyof QuestionnaireResponseItemAnswerValue)
+        if (choiceColumn && specificValueType) {
+            return (evaluate(value[specificValueType], choiceColumn![0]!.path!, context)[0] ?? null) as string | number | null;
+        }
+
+        return getAnswerValueDisplay(value);
+    }, [choiceColumn, context]);
 
     if (answerValueSet) {
         return (
@@ -60,6 +71,7 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
                     onChange={onSelect}
                     repeats={repeats}
                     placeholder={placeholder}
+                    getDisplay={getDisplay}
                 />
             </Form.Item>
         );
@@ -73,6 +85,7 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
                 onChange={onSelect}
                 repeats={repeats}
                 placeholder={placeholder}
+                getDisplay={getDisplay}
             />
         </Form.Item>
     );
@@ -84,10 +97,11 @@ interface ChoiceQuestionValueSetProps {
     onChange: (option: any) => void;
     repeats?: boolean;
     placeholder?: string;
+    getDisplay?: (value?: QuestionnaireResponseItemAnswerValue) => string | number | null;
 }
 
 export function ChoiceQuestionValueSet(props: ChoiceQuestionValueSetProps) {
-    const { answerValueSet, value, onChange, repeats = false, placeholder } = props;
+    const { answerValueSet, value, onChange, repeats = false, placeholder, getDisplay = getAnswerValueDisplay } = props;
     const expand = useContext(ValueSetExpandProvider);
 
     const loadOptions = useCallback(
