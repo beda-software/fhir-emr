@@ -53,7 +53,7 @@ services:
             timeout: 30s
             retries: 100
     build-seeds:
-        image: bedasoftware/fhirsnake
+        image: bedasoftware/fhirsnake:latest
         command:
             - export
             - --output
