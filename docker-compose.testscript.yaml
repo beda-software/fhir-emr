@@ -64,12 +64,14 @@ services:
             timeout: 30s
             retries: 100
     build-seeds:
-        build:
-            context: .
-            dockerfile: Dockerfile.seeds
+        image: bedasoftware/fhirsnake
+        command:
+            - export
+            - --output
+            - /app/zenproject/seeds.ndjson.gz
         volumes:
             - ./zenproject:/app/zenproject
-            - ./resources/seeds:/app/resources/seeds
+            - ./resources/seeds:/app/resources
     testscript:
         image: bedasoftware/testscript-eval:latest
         depends_on:
