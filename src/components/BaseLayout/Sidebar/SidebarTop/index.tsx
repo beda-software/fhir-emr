@@ -1,16 +1,15 @@
 import { Menu } from 'antd';
 import classNames from 'classnames';
+import { useContext } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { CompanyName } from 'src/icons/brand/CompanyName';
 import { LogoSmall } from 'src/icons/brand/LogoSmall';
 import { getToken } from 'src/services/auth';
-import {  matchCurrentUserRole } from 'src/utils/role';
 
+import { MenuLayout } from './context';
 import s from './SidebarTop.module.scss';
 import { S } from './SidebarTop.styles';
-import { useContext } from 'react';
-import { MenuLayout } from './context';
 
 export interface RouteItem {
     path: string;
@@ -34,9 +33,7 @@ export function SidebarTop(props: Props) {
     const navigate = useNavigate();
     const layout = useContext(MenuLayout);
 
-    const menuItems: RouteItem[] = !isAnonymousUser
-        ? matchCurrentUserRole(layout)
-        : [];
+    const menuItems: RouteItem[] = !isAnonymousUser ? layout() : [];
 
     const activeMenu = `/${location.pathname.split('/')[1]}`;
     const onMenuItemClick = (path: string) => {
