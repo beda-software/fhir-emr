@@ -19,6 +19,10 @@ export function getSearchBarFilterValue(filterValues: ColumnFilterValue[] | unde
         throw new Error('Filter value not found');
     }
 
+    return getSearchBarColumnFilterValue(filterValue);
+}
+
+export function getSearchBarColumnFilterValue(filterValue: ColumnFilterValue) {
     if (isStringColumnFilterValue(filterValue)) {
         return filterValue.value;
     }
