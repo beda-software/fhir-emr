@@ -5,19 +5,31 @@ import * as yup from 'yup';
 import {
     Questionnaire,
     QuestionnaireItemAnswerOption,
+    QuestionnaireItemChoiceColumn,
     QuestionnaireResponseItemAnswer,
     QuestionnaireResponseItemAnswerValue,
 } from '@beda.software/aidbox-types';
 import { parseFHIRTime } from '@beda.software/fhir-react';
 
 import { formatHumanDate, formatHumanDateTime } from './date';
+import { evaluate } from './fhirpath';
 
-export function getDisplay(value?: QuestionnaireResponseItemAnswerValue): string | number | null {
+export function getDisplay(
+    value?: QuestionnaireResponseItemAnswerValue,
+    choiceColumn?: QuestionnaireItemChoiceColumn[],
+): string | number | null {
     if (!value) {
         return null;
     }
 
     if (value.Coding) {
+        if (choiceColumn && choiceColumn.length) {
+            const expression = choiceColumn[0]!.path;
+            if (expression) {
+                const calculatedValue = evaluate(value.Coding, expression)[0];
+                return calculatedValue ?? '';
+            }
+        }
         return value.Coding.display ?? '';
     }
 
