@@ -1,0 +1,23 @@
+name: subject-id-or-communication-request
+where: |-
+  {{table}}.id IN
+  (
+    SELECT t.id from
+    (
+      SELECT qr.id from questionnaireresponse as qr
+      WHERE resource#>>'{subject,id}' = {{param}}
+      OR
+      resource#>>'{subject,id}' IN
+      (
+        SELECT id from communicationrequest
+        WHERE resource#>>'{subject,id}'={{param}}
+      )
+    ) as t
+  )
+
+format: "?"
+resource:
+  id: QuestionnaireResponse
+  resourceType: Entity
+id: QuestionnaireResponse.subject-id-or-communication-request
+resourceType: Search
