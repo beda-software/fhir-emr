@@ -146,6 +146,7 @@
         "./contexts": "./dist/contexts/index.js",
         "./sharedState": "./dist/sharedState/index.js",
         "./theme": "./dist/theme/index.js",
+        "./icons": "./dist/icons/index.js",
         "./dist/*": "./dist/*.js",
         "./dist/style.css": "./dist/style.css"
     }
