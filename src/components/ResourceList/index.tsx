@@ -24,12 +24,12 @@ import {
     HeaderQuestionnaireAction,
     BatchQuestionnaireAction,
 } from './actions';
-import { useGenericList } from './hooks';
+import { useResourceList } from './hooks';
 import { SearchBarColumn } from '../SearchBar/types';
 
 type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
 
-interface GenericListPageProps<R extends Resource> {
+interface ResourceListProps<R extends Resource> {
     title: string;
     resourceType: R['resourceType'];
     searchParams: SearchParams;
@@ -53,7 +53,7 @@ export function ResourceList<R extends Resource>({
     getBatchActions,
     searchBarColumns,
     tableColumns,
-}: GenericListPageProps<R>) {
+}: ResourceListProps<R>) {
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
         columns: searchBarColumns ?? [],
     });
@@ -66,7 +66,7 @@ export function ResourceList<R extends Resource>({
         selectedRowKeys,
         setSelectedRowKeys,
         selectedResourcesList,
-    } = useGenericList(resourceType, columnsFilterValues, searchParams);
+    } = useResourceList(resourceType, columnsFilterValues, searchParams);
 
     const headerActions = getHeaderActions?.() ?? [];
     const batchActions = getBatchActions?.() ?? [];

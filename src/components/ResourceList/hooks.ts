@@ -9,7 +9,7 @@ import { getSearchBarColumnFilterValue } from 'src/components/SearchBar/utils';
 import { usePagerExtended } from 'src/hooks/pager';
 import { useDebounce } from 'src/utils/debounce';
 
-export function useGenericList<R extends Resource>(
+export function useResourceList<R extends Resource>(
     resourceType: R['resourceType'],
     filterValues: ColumnFilterValue[],
     searchParams: SearchParams,
