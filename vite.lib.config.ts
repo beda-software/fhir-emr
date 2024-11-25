@@ -43,6 +43,7 @@ export default defineConfig({
                 path.resolve(__dirname, 'src/services/index.ts'),
                 path.resolve(__dirname, 'src/contexts/index.ts'),
                 path.resolve(__dirname, 'src/theme/index.ts'),
+                path.resolve(__dirname, 'src/icons/index.ts'),
                 path.resolve(__dirname, 'src/dashboard.config.ts'),
                 path.resolve(__dirname, 'src/setupTests.ts'),
             ],
