@@ -24,6 +24,7 @@ import {
     HeaderQuestionnaireAction,
     BatchQuestionnaireAction,
 } from './actions';
+export { navigationAction, customAction, questionnaireAction } from './actions';
 import { useResourceList } from './hooks';
 import { SearchBarColumn } from '../SearchBar/types';
 
@@ -32,7 +33,7 @@ type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
 interface ResourceListProps<R extends Resource> {
     title: string;
     resourceType: R['resourceType'];
-    searchParams: SearchParams;
+    searchParams?: SearchParams;
     searchBarColumns?: SearchBarColumn[];
     tableColumns: ColumnsType<RecordType<R>>;
     getRecordActions?: (
@@ -66,7 +67,7 @@ export function ResourceList<R extends Resource>({
         selectedRowKeys,
         setSelectedRowKeys,
         selectedResourcesList,
-    } = useResourceList(resourceType, columnsFilterValues, searchParams);
+    } = useResourceList(resourceType, columnsFilterValues, searchParams ?? {});
 
     const headerActions = getHeaderActions?.() ?? [];
     const batchActions = getBatchActions?.() ?? [];
