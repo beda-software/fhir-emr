@@ -48,7 +48,12 @@ export function useResourceListPage<R extends Resource>(
         resourceType: 'Bundle',
         type: 'collection',
         entry: isSuccess(recordResponse)
-            ? recordResponse.data.map(({ resource }) => ({ resource: resource as R }))
+            ? recordResponse.data
+                  .filter(
+                      ({ resource }) =>
+                          resource.resourceType === resourceType && selectedRowKeys.includes(resource.id!),
+                  )
+                  .map(({ resource }) => ({ resource: resource as R }))
             : [],
     };
 
