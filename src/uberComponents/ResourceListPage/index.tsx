@@ -25,14 +25,15 @@ import {
     BatchQuestionnaireAction,
 } from './actions';
 export { navigationAction, customAction, questionnaireAction } from './actions';
-import { useResourceList } from './hooks';
-import { SearchBarColumn } from '../SearchBar/types';
+import { useResourceListPage } from './hooks';
+import { SearchBarColumn } from '../../components/SearchBar/types';
 
 type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
 
-interface ResourceListProps<R extends Resource> {
+interface ResourceListPageProps<R extends Resource> {
     title: string;
     resourceType: R['resourceType'];
+    // primaryResourceQuery?: (bundle: Bundle) => R[];
     searchParams?: SearchParams;
     searchBarColumns?: SearchBarColumn[];
     tableColumns: ColumnsType<RecordType<R>>;
@@ -45,7 +46,7 @@ interface ResourceListProps<R extends Resource> {
     getBatchActions?: () => Array<QuestionnaireActionType>;
 }
 
-export function ResourceList<R extends Resource>({
+export function ResourceListPage<R extends Resource>({
     title,
     resourceType,
     searchParams,
@@ -54,7 +55,7 @@ export function ResourceList<R extends Resource>({
     getBatchActions,
     searchBarColumns,
     tableColumns,
-}: ResourceListProps<R>) {
+}: ResourceListPageProps<R>) {
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
         columns: searchBarColumns ?? [],
     });
@@ -67,7 +68,7 @@ export function ResourceList<R extends Resource>({
         selectedRowKeys,
         setSelectedRowKeys,
         selectedResourcesList,
-    } = useResourceList(resourceType, columnsFilterValues, searchParams ?? {});
+    } = useResourceListPage(resourceType, columnsFilterValues, searchParams ?? {});
 
     const headerActions = getHeaderActions?.() ?? [];
     const batchActions = getBatchActions?.() ?? [];

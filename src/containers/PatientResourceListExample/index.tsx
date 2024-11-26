@@ -1,9 +1,9 @@
 import { t, Trans } from '@lingui/macro';
 import { Patient } from 'fhir/r4b';
 
-import { ResourceList } from 'src/components/ResourceList';
-import { navigationAction, questionnaireAction } from 'src/components/ResourceList/actions';
 import { SearchBarColumnType } from 'src/components/SearchBar/types';
+import { ResourceListPage } from 'src/uberComponents';
+import { navigationAction, questionnaireAction } from 'src/uberComponents/ResourceListPage/actions';
 import { formatHumanDate } from 'src/utils/date';
 import { renderHumanName } from 'src/utils/fhir';
 import { matchCurrentUserRole, Role } from 'src/utils/role';
@@ -30,7 +30,7 @@ export function PatientResourceListExample() {
     });
 
     return (
-        <ResourceList<Patient>
+        <ResourceListPage<Patient>
             title={t`Patients`}
             resourceType="Patient"
             searchParams={searchParams}
@@ -70,6 +70,6 @@ export function PatientResourceListExample() {
             ]}
             getHeaderActions={() => [questionnaireAction('Add patient', 'patient-create')]}
             getBatchActions={() => [questionnaireAction('Delete patients', 'patients-batch-delete')]}
-        ></ResourceList>
+        ></ResourceListPage>
     );
 }

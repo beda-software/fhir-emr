@@ -23,7 +23,7 @@ export * from './PatientEncounter';
 export * from './QuestionnaireResponseForm';
 export * from './QuestionnairesWizard';
 export * from './ResourceTable';
-export * from './ResourceList';
+export * from '../uberComponents/ResourceListPage';
 export * from './SearchBar';
 export * from './SearchBar/hooks';
 export * from './Select';
