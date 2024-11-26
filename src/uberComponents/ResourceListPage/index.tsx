@@ -73,7 +73,7 @@ interface ResourceListPageProps<R extends Resource> {
      * Batch actions that are available when rows are selected
      * (for example, delete multiple organizations)
      *
-     * NOTE: Theoretically getHeaderActions can accept selected resources List
+     * NOTE: Theoretically getHeaderActions can accept selected resources Bundle
      */
     getBatchActions?: () => Array<QuestionnaireActionType>;
 }
@@ -100,7 +100,7 @@ export function ResourceListPage<R extends Resource>({
         handleTableChange,
         selectedRowKeys,
         setSelectedRowKeys,
-        selectedResourcesList,
+        selectedResourcesBundle,
     } = useResourceListPage(resourceType, extractPrimaryResources, columnsFilterValues, searchParams ?? {});
 
     const headerActions = getHeaderActions?.() ?? [];
@@ -131,10 +131,10 @@ export function ResourceListPage<R extends Resource>({
                     <Row justify="start" align="middle" gutter={[8, 16]}>
                         {batchActions.map((action, index) => (
                             <Col key={index}>
-                                <BatchQuestionnaireAction
+                                <BatchQuestionnaireAction<R>
                                     action={action}
                                     reload={pagerManager.reload}
-                                    list={selectedResourcesList}
+                                    bundle={selectedResourcesBundle}
                                     disabled={!selectedRowKeys.length}
                                 />
                             </Col>

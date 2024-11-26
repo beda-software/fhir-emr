@@ -1,6 +1,6 @@
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
-import { List, Resource } from 'fhir/r4b';
+import { Bundle, Resource } from 'fhir/r4b';
 import { useNavigate } from 'react-router-dom';
 
 import { ModalTrigger } from 'src/components/ModalTrigger';
@@ -105,12 +105,12 @@ export function HeaderQuestionnaireAction({ action, reload }: { action: Question
 
 export function BatchQuestionnaireAction<R extends Resource>({
     action,
-    list,
+    bundle,
     reload,
     disabled,
 }: {
     action: QuestionnaireActionType;
-    list: List;
+    bundle: Bundle<R>;
     reload: () => void;
     disabled?: boolean;
 }) {
@@ -128,8 +128,8 @@ export function BatchQuestionnaireAction<R extends Resource>({
                     questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
                     launchContextParameters={[
                         {
-                            name: 'List',
-                            resource: list,
+                            name: 'Bundle',
+                            resource: bundle as Bundle,
                         },
                     ]}
                     onSuccess={() => {

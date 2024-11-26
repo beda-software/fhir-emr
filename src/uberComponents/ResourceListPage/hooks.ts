@@ -1,4 +1,4 @@
-import { Bundle, List, Resource } from 'fhir/r4b';
+import { Bundle, Resource } from 'fhir/r4b';
 import { useMemo, useState } from 'react';
 
 import { SearchParams } from '@beda.software/fhir-react';
@@ -44,11 +44,12 @@ export function useResourceListPage<R extends Resource>(
             bundle: bundle as Bundle,
         })),
     );
-    const selectedResourcesList: List = {
-        resourceType: 'List',
-        status: 'current',
-        mode: 'working',
-        entry: isSuccess(recordResponse) ? recordResponse.data.map(({ resource }) => ({ item: resource })) : [],
+    const selectedResourcesBundle: Bundle<R> = {
+        resourceType: 'Bundle',
+        type: 'collection',
+        entry: isSuccess(recordResponse)
+            ? recordResponse.data.map(({ resource }) => ({ resource: resource as R }))
+            : [],
     };
 
     return {
@@ -58,7 +59,7 @@ export function useResourceListPage<R extends Resource>(
         handleTableChange,
         selectedRowKeys,
         setSelectedRowKeys,
-        selectedResourcesList,
+        selectedResourcesBundle,
     };
 }
 
