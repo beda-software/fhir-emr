@@ -139,6 +139,7 @@
     "exports": {
         ".": null,
         "./components": "./dist/components/index.js",
+        "./uberComponents": "./dist/uberComponents/index.js",
         "./containers": "./dist/containers/index.js",
         "./services": "./dist/services/index.js",
         "./hooks": "./dist/hooks/index.js",
