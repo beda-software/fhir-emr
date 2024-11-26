@@ -29,6 +29,7 @@ export function prepareAllergies(
     allergies: AllergyIntolerance[],
     provenanceList: Provenance[],
     total?: number,
+    to?: string,
 ): OverviewCard<AllergyIntolerance> {
     return {
         title: t`Allergies`,
@@ -46,6 +47,7 @@ export function prepareAllergies(
                         name={resource.code?.coding?.[0]?.display}
                         resource={resource}
                         provenanceList={provenanceList}
+                        to={to}
                     />
                 ),
             },

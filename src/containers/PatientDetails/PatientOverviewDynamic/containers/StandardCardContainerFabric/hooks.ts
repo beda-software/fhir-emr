@@ -14,6 +14,7 @@ export function useStandardCard<T extends Resource>(
     patient: Patient,
     query: Query,
     prepareFunction: PrepareFunction<T>,
+    to?: string,
 ) {
     const [response] = useService(async () => {
         return mapSuccess(
@@ -29,6 +30,7 @@ export function useStandardCard<T extends Resource>(
                     resource as T[],
                     provenance,
                     resource.length,
+                    to,
                 );
                 return { card };
             },
