@@ -24,7 +24,6 @@ import { QuestionnaireList } from 'src/containers/QuestionnaireList';
 import { SignIn } from 'src/containers/SignIn';
 import { VideoCall } from 'src/containers/VideoCall';
 import { getToken, parseOAuthState, setToken } from 'src/services/auth';
-import { selectUserRole } from 'src/utils/role';
 
 import { restoreUserSession } from './utils';
 import { AidboxFormsBuilder } from '../AidboxFormsBuilder';
@@ -52,7 +51,7 @@ export function App({ authenticatedRoutes, anonymousRoutes }: AppProps) {
 
     const renderRoutes = (user: User | null) => {
         if (user) {
-            const layout = selectUserRole(user, menuLayout);
+            const layout = menuLayout();
             const defaultRoute = layout[0]?.path ?? '/encounters';
             return <AuthenticatedUserApp defaultRoute={defaultRoute} extra={authenticatedRoutes} />;
         }
