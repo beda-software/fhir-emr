@@ -31,24 +31,57 @@ import { SearchBarColumn } from '../../components/SearchBar/types';
 type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
 
 interface ResourceListPageProps<R extends Resource> {
-    title: string;
+    /* Page header title (for example, Organizations) */
+    headerTitle: string;
+
+    /* Primary resource type (for example, Organization) */
     resourceType: R['resourceType'];
-    // primaryResourceQuery?: (bundle: Bundle) => R[];
+
+    /**
+     * Custom primary resources extractor, might be used when the same resource type included
+     * e.g. Organizations included via part-of
+     *
+     * Default - extract all resources matching `resourceType`
+     */
+    extractPrimaryResources?: (bundle: Bundle) => R[];
+
+    /* Default search params */
     searchParams?: SearchParams;
+
+    /* Search bar columns that displayed before the table */
     searchBarColumns?: SearchBarColumn[];
+
+    /* Table columns without action column - action column is generated based on `getRecordActions` */
     tableColumns: ColumnsType<RecordType<R>>;
+
+    /**
+     * Record actions list that is displayed in the table per record
+     * (for example, edit organization)
+     */
     getRecordActions?: (
         record: RecordType<R>,
     ) => Array<QuestionnaireActionType | NavigationActionType | CustomActionType>;
-    // Theoretically getHeaderActions can accept all resources Bundle
+
+    /**
+     * Header actions (for example, new organization)
+     *
+     * NOTE: Theoretically getHeaderActions can accept all resources Bundle
+     */
     getHeaderActions?: () => Array<QuestionnaireActionType>;
-    // Theoretically getHeaderActions can accept selected resources List
+
+    /**
+     * Batch actions that are available when rows are selected
+     * (for example, delete multiple organizations)
+     *
+     * NOTE: Theoretically getHeaderActions can accept selected resources List
+     */
     getBatchActions?: () => Array<QuestionnaireActionType>;
 }
 
 export function ResourceListPage<R extends Resource>({
-    title,
+    headerTitle: title,
     resourceType,
+    extractPrimaryResources,
     searchParams,
     getRecordActions,
     getHeaderActions,
@@ -68,7 +101,7 @@ export function ResourceListPage<R extends Resource>({
         selectedRowKeys,
         setSelectedRowKeys,
         selectedResourcesList,
-    } = useResourceListPage(resourceType, columnsFilterValues, searchParams ?? {});
+    } = useResourceListPage(resourceType, extractPrimaryResources, columnsFilterValues, searchParams ?? {});
 
     const headerActions = getHeaderActions?.() ?? [];
     const batchActions = getBatchActions?.() ?? [];

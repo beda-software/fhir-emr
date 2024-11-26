@@ -31,7 +31,7 @@ export function PatientResourceListExample() {
 
     return (
         <ResourceListPage<Patient>
-            title={t`Patients`}
+            headerTitle={t`Patients`}
             resourceType="Patient"
             searchParams={searchParams}
             tableColumns={[

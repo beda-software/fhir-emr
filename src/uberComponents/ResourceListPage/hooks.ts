@@ -1,7 +1,7 @@
 import { Bundle, List, Resource } from 'fhir/r4b';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
-import { SearchParams, extractBundleResources } from '@beda.software/fhir-react';
+import { SearchParams } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 
 import { ColumnFilterValue } from 'src/components/SearchBar/types';
@@ -11,6 +11,7 @@ import { useDebounce } from 'src/utils/debounce';
 
 export function useResourceListPage<R extends Resource>(
     resourceType: R['resourceType'],
+    extractPrimaryResources: ((bundle: Bundle) => R[]) | undefined,
     filterValues: ColumnFilterValue[],
     searchParams: SearchParams,
 ) {
@@ -33,8 +34,12 @@ export function useResourceListPage<R extends Resource>(
         { ...searchParams, ...defaultQueryParameters },
     );
 
+    const extractPrimaryResourcesMemoized = useMemo(() => {
+        return extractPrimaryResources ?? extractPrimaryResourcesFactory(resourceType);
+    }, [resourceType, extractPrimaryResources]);
+
     const recordResponse = mapSuccess(resourceResponse, (bundle) =>
-        extractBundleResources(bundle)[resourceType].map((resource) => ({
+        extractPrimaryResourcesMemoized(bundle as Bundle).map((resource) => ({
             resource: resource as R,
             bundle: bundle as Bundle,
         })),
@@ -54,5 +59,13 @@ export function useResourceListPage<R extends Resource>(
         selectedRowKeys,
         setSelectedRowKeys,
         selectedResourcesList,
+    };
+}
+
+function extractPrimaryResourcesFactory<R extends Resource>(resourceType: R['resourceType']) {
+    return (bundle: Bundle) => {
+        return (bundle.entry ?? [])
+            .filter((entry) => entry.resource?.resourceType === resourceType)
+            .map((entry) => entry.resource as R);
     };
 }
