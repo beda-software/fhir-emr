@@ -11,7 +11,11 @@ import { RepeatableGroupRow, RepeatableGroups } from './RepeatableGroups';
 
 function Flex(props: GroupItemProps & { type?: GroupContextProps['type'] }) {
     const { parentPath, questionItem, context, type = 'col' } = props;
-    const { linkId, item, repeats, text, helpText } = questionItem;
+    const { linkId, item, repeats, text, helpText, hidden } = questionItem;
+
+    if (hidden) {
+        return null;
+    }
 
     const renderRepeatableGroup = () => {
         if (type === 'gtable') {
