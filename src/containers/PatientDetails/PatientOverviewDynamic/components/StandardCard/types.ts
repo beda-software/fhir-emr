@@ -16,5 +16,5 @@ export interface OverviewCard<T extends Resource | Resource[]> {
 }
 
 export type PrepareFunction<T extends Resource> =
-    | ((resources: T[], provenances: Provenance[], total: number) => OverviewCard<T>)
+    | ((resources: T[], provenances: Provenance[], total: number, to?: string) => OverviewCard<T>)
     | ((resources: T[]) => OverviewCard<T[]>);
