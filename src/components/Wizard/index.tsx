@@ -52,7 +52,7 @@ export function Wizard(props: WizardProps) {
     );
 }
 
-interface WizardFooterProps {
+export interface WizardFooterProps {
     goBack?: () => void;
     goForward?: () => void;
     canGoBack?: boolean;

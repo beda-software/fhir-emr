@@ -5,7 +5,7 @@ import { useFormState, useWatch } from 'react-hook-form';
 import { GroupItemProps, QuestionItems } from 'sdc-qrf';
 
 import { Text } from 'src/components/Typography';
-import { Wizard, WizardFooter, WizardItem } from 'src/components/Wizard';
+import { Wizard, WizardItem } from 'src/components/Wizard';
 import { questionnaireItemsToValidationSchema } from 'src/utils';
 
 import { GroupWizardControlContext } from './context';
@@ -71,7 +71,7 @@ export function GroupWizard(props: GroupItemProps) {
                     </S.Group>
                 );
             })}
-            <WizardFooter
+            <S.WizardFooter
                 goBack={() => setCurrentIndex((i) => i - 1)}
                 goForward={() => setCurrentIndex((i) => i + 1)}
                 canGoBack={currentIndex > 0}
@@ -80,7 +80,7 @@ export function GroupWizard(props: GroupItemProps) {
                 {qrFormProps && (
                     <S.FormFooter {..._.omit(qrFormProps, ['saveButtonTitle'])} saveButtonTitle={submitTitle} />
                 )}
-            </WizardFooter>
+            </S.WizardFooter>
         </Wizard>
     );
 }
