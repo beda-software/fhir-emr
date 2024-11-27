@@ -13,11 +13,11 @@ import s from './RepeatableGroups.module.scss';
 interface RepeatableGroupsProps {
     groupItem: GroupItemProps;
     renderGroup?: (props: RepeatableGroupProps) => ReactNode;
-    buildValue?: (value:any) => any;
+    buildValue?: (existingItems:Array<any>, value:any) => any;
 }
 
-function defaultBuildValue() {
-    return {};
+function defaultBuildValue(exisingItems:Array<any>, _value:any) {
+    return [...exisingItems, {}];
 }
 
 export function RepeatableGroups(props: RepeatableGroupsProps) {
@@ -63,7 +63,7 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
                         className={s.addButton}
                         onClick={() => {
                             const existingItems = items || [];
-                            const updatedInput = { items: [...existingItems, buildValue(value)] };
+                            const updatedInput = { items: buildValue(existingItems, value) };
                             onChange(updatedInput);
                         }}
                         size="small"
