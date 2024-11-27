@@ -28,6 +28,7 @@ import {
     Grid,
 } from './widgets';
 import { Display } from './widgets/display';
+import { GroupWizard } from './widgets/GroupWizard';
 import { PasswordInput } from './widgets/PasswordInput';
 import { QuestionReference } from './widgets/reference';
 import { ReferenceRadioButton } from './widgets/ReferenceRadioButton';
@@ -73,4 +74,5 @@ export const groupControlComponents: ItemControlGroupItemComponentMapping = {
     grid: Grid,
     'blood-pressure': BloodPressure,
     'time-range-picker': TimeRangePickerControl,
+    wizard: GroupWizard,
 };
