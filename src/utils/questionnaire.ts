@@ -88,15 +88,15 @@ export function questionnaireItemsToValidationSchema(questionnaireItems: Questio
             schema = yup.string();
             if (item.required) schema = schema.required();
             if (item.maxLength && item.maxLength > 0) schema = (schema as yup.StringSchema).max(item.maxLength);
-            schema = createSchemaArray(yup.object({ string: schema })).required();
+            schema = createSchemaArrayOfValues(yup.object({ string: schema })).required();
         } else if (item.type === 'integer') {
             schema = yup.number();
             if (item.required) schema = schema.required();
-            schema = createSchemaArray(yup.object({ integer: schema })).required();
+            schema = createSchemaArrayOfValues(yup.object({ integer: schema })).required();
         } else if (item.type === 'date') {
             schema = yup.date();
             if (item.required) schema = schema.required();
-            schema = createSchemaArray(yup.object({ date: schema })).required();
+            schema = createSchemaArrayOfValues(yup.object({ date: schema })).required();
         } else if (item.type === 'reference') {
             schema = yup.object({
                 resourceType: yup.string().required(),
@@ -105,7 +105,7 @@ export function questionnaireItemsToValidationSchema(questionnaireItems: Questio
             });
 
             if (item.required) {
-                schema = createSchemaArray(yup.object({ Reference: schema })).required();
+                schema = createSchemaArrayOfValues(yup.object({ Reference: schema })).required();
             } else {
                 schema = yup.mixed().nullable();
             }
@@ -132,9 +132,9 @@ export function questionnaireItemsToValidationSchema(questionnaireItems: Questio
             validationSchema[item.linkId] = schema;
 
             if (item.item) {
-                validationSchema[item.linkId] = createGroupArray(
-                    questionnaireItemsToValidationSchema(item.item),
-                ).required();
+                validationSchema[item.linkId] = yup
+                    .object({ items: questionnaireItemsToValidationSchema(item.item) })
+                    .required();
             }
         }
     });
@@ -146,12 +146,8 @@ export function questionnaireToValidationSchema(questionnaire: Questionnaire) {
     return questionnaireItemsToValidationSchema(questionnaire.item ?? []);
 }
 
-function createSchemaArray(value: yup.AnyObjectSchema) {
+function createSchemaArrayOfValues(value: yup.AnyObjectSchema) {
     return yup.array().of(yup.object({ value }));
-}
-
-function createGroupArray(items: yup.AnyObjectSchema) {
-    return yup.object({ items });
 }
 
 export function getAnswerDisplay(

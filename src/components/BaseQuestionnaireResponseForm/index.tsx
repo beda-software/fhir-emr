@@ -266,5 +266,9 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
 }
 
 function isGroupWizard(q: FCEQuestionnaire) {
-    return q.item?.some((i) => i.itemControl?.coding?.[0]?.code === 'wizard');
+    return q.item?.some((i) => {
+        const itemControlCode = i.itemControl?.coding?.[0]?.code;
+
+        return itemControlCode && ['wizard', 'wizard-with-tooltips'].includes(itemControlCode);
+    });
 }

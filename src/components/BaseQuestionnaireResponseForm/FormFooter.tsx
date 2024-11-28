@@ -22,10 +22,12 @@ export interface Props extends BaseQuestionnaireResponseFormProps {
     debouncedSaveDraft?: DebouncedFunc<(currentFormValues: FormItems) => Promise<void>>;
     className?: string | undefined;
     style?: CSSProperties | undefined;
+    submitDisabled?: boolean;
 }
 
 export function FormFooter(props: Props) {
     const {
+        formData,
         readOnly,
         onCancel,
         FormFooterComponent,
@@ -38,22 +40,29 @@ export function FormFooter(props: Props) {
         setDraftSaveResponse,
         className,
         style,
+        submitDisabled: initialSubmitDisabled,
     } = props;
 
     const formValues = useWatch();
+    const assembledFromQuestionnaireId = formData.context.questionnaire.assembledFrom;
 
     if (readOnly) {
         return null;
     }
 
     const submitLoading = submitting;
-    const submitDisabled = submitting;
+    const submitDisabled = submitting || initialSubmitDisabled;
 
     const draftLoading = draftSaveResponse && isLoading(draftSaveResponse);
     const draftSaved = draftSaveResponse && isSuccess(draftSaveResponse);
-    const draftDisabled = draftSaveResponse && isLoading(draftSaveResponse);
+
+    const isSomeButtonInLoading = submitLoading || draftLoading;
 
     const renderDraftButton = () => {
+        if (!assembledFromQuestionnaireId) {
+            return null;
+        }
+
         if (!setDraftSaveResponse || !debouncedSaveDraft) {
             return null;
         }
@@ -62,7 +71,7 @@ export function FormFooter(props: Props) {
             return (
                 <Button
                     loading={draftLoading}
-                    disabled={draftDisabled || submitLoading}
+                    disabled={isSomeButtonInLoading}
                     onClick={() => debouncedSaveDraft(formValues)}
                 >
                     <Trans>Save as draft</Trans>
@@ -99,7 +108,12 @@ export function FormFooter(props: Props) {
                 <S.Footer className={className} style={style}>
                     {renderDraftButton()}
                     {onCancel && (
-                        <Button type="default" onClick={onCancel} data-testid="cancel-button">
+                        <Button
+                            type="default"
+                            onClick={onCancel}
+                            data-testid="cancel-button"
+                            disabled={isSomeButtonInLoading}
+                        >
                             {cancelButtonTitle ?? <Trans>Cancel</Trans>}
                         </Button>
                     )}
@@ -108,7 +122,7 @@ export function FormFooter(props: Props) {
                         htmlType="submit"
                         data-testid="submit-button"
                         loading={submitLoading}
-                        disabled={submitDisabled || draftLoading}
+                        disabled={submitDisabled || isSomeButtonInLoading}
                     >
                         {saveButtonTitle ?? <Trans>Save</Trans>}
                     </Button>

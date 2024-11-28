@@ -5,9 +5,8 @@ import { Meta, StoryObj } from '@storybook/react';
 import { Questionnaire, QuestionnaireResponse } from '@beda.software/aidbox-types/index';
 import { success } from '@beda.software/remote-data';
 
-import { BaseQuestionnaireResponseForm } from 'src/components';
+import { BaseQuestionnaireResponseForm, Modal } from 'src/components';
 
-import { GroupWizardControlContext } from './context';
 import { GroupWizard } from './index';
 
 i18n.activate('en');
@@ -29,7 +28,7 @@ export const Default: Story = {
             <BaseQuestionnaireResponseForm
                 formData={{
                     context: {
-                        questionnaire,
+                        questionnaire: getQuestionnaire(),
                         launchContextParameters: [],
                         questionnaireResponse,
                     },
@@ -40,359 +39,413 @@ export const Default: Story = {
     ),
 };
 
-export const WithContext: Story = {
+export const WithTooltip: Story = {
     render: () => (
-        <GroupWizardControlContext.Provider
-            value={{
-                wizard: { labelPlacement: 'tooltip' },
-            }}
-        >
-            <I18nProvider i18n={i18n}>
+        <I18nProvider i18n={i18n}>
+            <BaseQuestionnaireResponseForm
+                formData={{
+                    context: {
+                        questionnaire: getQuestionnaire('wizard-with-tooltips'),
+                        launchContextParameters: [],
+                        questionnaireResponse,
+                    },
+                    formValues,
+                }}
+                onCancel={() => console.log('onCancel')}
+                saveButtonTitle={'Save & complete'}
+            />
+        </I18nProvider>
+    ),
+};
+
+export const Autosave: Story = {
+    render: () => (
+        <I18nProvider i18n={i18n}>
+            <BaseQuestionnaireResponseForm
+                formData={{
+                    context: {
+                        questionnaire: getQuestionnaire('wizard-with-tooltips'),
+                        launchContextParameters: [],
+                        questionnaireResponse,
+                    },
+                    formValues,
+                }}
+                onCancel={() => console.log('onCancel')}
+                saveButtonTitle={'Submit'}
+                autoSave
+                draftSaveResponse={success({} as any)}
+                setDraftSaveResponse={() => console.log('setDraftSaveResponse')}
+            />
+        </I18nProvider>
+    ),
+};
+
+export const SaveAsDraft: Story = {
+    render: () => (
+        <I18nProvider i18n={i18n}>
+            <BaseQuestionnaireResponseForm
+                formData={{
+                    context: {
+                        questionnaire: getQuestionnaire('wizard-with-tooltips'),
+                        launchContextParameters: [],
+                        questionnaireResponse,
+                    },
+                    formValues,
+                }}
+                onCancel={() => console.log('onCancel')}
+                saveButtonTitle={'Submit'}
+                autoSave={false}
+                draftSaveResponse={success({} as any)}
+                setDraftSaveResponse={() => console.log('setDraftSaveResponse')}
+            />
+        </I18nProvider>
+    ),
+};
+
+export const inModal: Story = {
+    render: () => (
+        <I18nProvider i18n={i18n}>
+            <Modal open={true} title={'Wizard in modal'} footer={null}>
                 <BaseQuestionnaireResponseForm
                     formData={{
                         context: {
-                            questionnaire,
+                            questionnaire: getQuestionnaire('wizard-with-tooltips'),
                             launchContextParameters: [],
                             questionnaireResponse,
                         },
                         formValues,
                     }}
-                    onCancel={() => console.log('onCancel')}
-                    saveButtonTitle={'Submit'}
-                    autoSave
-                    draftSaveResponse={success({} as any)}
-                    setDraftSaveResponse={() => console.log('setDraftSaveResponse')}
                 />
-            </I18nProvider>
-        </GroupWizardControlContext.Provider>
+            </Modal>
+        </I18nProvider>
     ),
 };
 
-const questionnaire: Questionnaire = {
-    subjectType: ['Patient'],
-    meta: {
-        profile: ['https://beda.software/beda-emr-questionnaire'],
-        lastUpdated: '2024-11-27T11:09:40.517127Z',
-        versionId: '12846',
-        createdAt: '2024-11-17T17:17:53.454248Z',
-    },
-    name: 'Group wizard',
-    item: [
-        {
-            item: [
-                {
-                    item: [
-                        {
-                            text: 'How many days a week do you engage in physical activity?',
-                            type: 'integer',
-                            linkId: '1.1',
-                            required: true,
-                        },
-                        {
-                            text: 'On average, how many minutes do you engage in physical activity each day?',
-                            type: 'integer',
-                            linkId: '1.2',
-                            required: true,
-                        },
-                        {
-                            text: 'What types of physical activities do you participate in? (Select all that apply)',
-                            type: 'choice',
-                            linkId: '1.3',
-                            required: false,
-                            answerOption: [
-                                {
-                                    value: {
-                                        string: 'Walking',
-                                    },
-                                },
-                                {
-                                    value: {
-                                        string: 'Running',
-                                    },
-                                },
-                                {
-                                    value: {
-                                        string: 'Cycling',
-                                    },
-                                },
-                                {
-                                    value: {
-                                        string: 'Swimming',
-                                    },
-                                },
-                                {
-                                    value: {
-                                        string: 'Weightlifting',
-                                    },
-                                },
-                                {
-                                    value: {
-                                        string: 'Other',
-                                    },
-                                },
-                            ],
-                        },
-                    ],
-                    text: 'Physical Activity',
-                    type: 'group',
-                    linkId: '1',
-                },
-                {
-                    item: [
-                        {
-                            text: 'How many servings of fruits and vegetables do you consume daily?',
-                            type: 'integer',
-                            linkId: '2.1',
-                            required: true,
-                        },
-                        {
-                            text: 'How often do you eat fast food?',
-                            type: 'choice',
-                            linkId: '2.2',
-                            required: true,
-                            answerOption: [
-                                {
-                                    value: {
-                                        string: 'Never',
-                                    },
-                                },
-                                {
-                                    value: {
-                                        string: 'Once a week',
-                                    },
-                                },
-                                {
-                                    value: {
-                                        string: 'Several times a week',
-                                    },
-                                },
-                                {
-                                    value: {
-                                        string: 'Daily',
-                                    },
-                                },
-                            ],
-                        },
-                        {
-                            text: 'Do you follow any specific dietary restrictions? (e.g., vegetarian, vegan, gluten-free)',
-                            type: 'string',
-                            linkId: '2.3',
-                            required: false,
-                        },
-                    ],
-                    text: 'Dietary Habits',
-                    type: 'group',
-                    linkId: '2',
-                },
-                {
-                    item: [
-                        {
-                            text: 'On average, how many hours of sleep do you get per night?',
-                            type: 'integer',
-                            linkId: '3.1',
-                            required: true,
-                        },
-                        {
-                            text: 'Do you have trouble falling asleep or staying asleep?',
-                            type: 'choice',
-                            linkId: '3.2',
-                            required: true,
-                            answerOption: [
-                                {
-                                    value: {
-                                        string: 'Yes',
-                                    },
-                                },
-                                {
-                                    value: {
-                                        string: 'No',
-                                    },
-                                },
-                            ],
-                        },
-                        {
-                            text: 'Do you use any sleep aids (e.g., medication, herbal supplements)?',
-                            type: 'choice',
-                            linkId: '3.3',
-                            required: false,
-                            answerOption: [
-                                {
-                                    value: {
-                                        string: 'Yes',
-                                    },
-                                },
-                                {
-                                    value: {
-                                        string: 'No',
-                                    },
-                                },
-                            ],
-                        },
-                    ],
-                    text: 'Sleep Patterns',
-                    type: 'group',
-                    linkId: '3',
-                },
-                {
-                    item: [
-                        {
-                            text: 'Do you smoke tobacco or use nicotine products?',
-                            type: 'choice',
-                            linkId: '4.1',
-                            required: true,
-                            answerOption: [
-                                {
-                                    value: {
-                                        string: 'Yes',
-                                    },
-                                },
-                                {
-                                    value: {
-                                        string: 'No',
-                                    },
-                                },
-                            ],
-                        },
-                        {
-                            text: 'How often do you consume alcoholic beverages?',
-                            type: 'choice',
-                            linkId: '4.2',
-                            required: true,
-                            answerOption: [
-                                {
-                                    value: {
-                                        string: 'Never',
-                                    },
-                                },
-                                {
-                                    value: {
-                                        string: 'Occasionally',
-                                    },
-                                },
-                                {
-                                    value: {
-                                        string: 'Regularly',
-                                    },
-                                },
-                            ],
-                        },
-                        {
-                            text: 'Have you ever used recreational drugs?',
-                            type: 'choice',
-                            linkId: '4.3',
-                            required: false,
-                            answerOption: [
-                                {
-                                    value: {
-                                        string: 'Yes',
-                                    },
-                                },
-                                {
-                                    value: {
-                                        string: 'No',
-                                    },
-                                },
-                            ],
-                        },
-                    ],
-                    text: 'Substance Use',
-                    type: 'group',
-                    linkId: '4',
-                },
-            ],
-            type: 'group',
-            linkId: 'wizard',
-            itemControl: {
-                coding: [
+function getQuestionnaire(itemControlCode: 'wizard' | 'wizard-with-tooltips' = 'wizard'): Questionnaire {
+    return {
+        assembledFrom: 'group-wizard',
+        subjectType: ['Patient'],
+        meta: {
+            profile: ['https://beda.software/beda-emr-questionnaire'],
+        },
+        name: 'Group wizard',
+        item: [
+            {
+                item: [
                     {
-                        code: 'wizard',
+                        item: [
+                            {
+                                text: 'How many days a week do you engage in physical activity?',
+                                type: 'integer',
+                                linkId: 'q11',
+                                required: true,
+                            },
+                            {
+                                text: 'On average, how many minutes do you engage in physical activity each day?',
+                                type: 'integer',
+                                linkId: 'q12',
+                                required: true,
+                            },
+                            {
+                                text: 'What types of physical activities do you participate in? (Select all that apply)',
+                                type: 'choice',
+                                linkId: 'q13',
+                                required: false,
+                                answerOption: [
+                                    {
+                                        value: {
+                                            string: 'Walking',
+                                        },
+                                    },
+                                    {
+                                        value: {
+                                            string: 'Running',
+                                        },
+                                    },
+                                    {
+                                        value: {
+                                            string: 'Cycling',
+                                        },
+                                    },
+                                    {
+                                        value: {
+                                            string: 'Swimming',
+                                        },
+                                    },
+                                    {
+                                        value: {
+                                            string: 'Weightlifting',
+                                        },
+                                    },
+                                    {
+                                        value: {
+                                            string: 'Other',
+                                        },
+                                    },
+                                ],
+                            },
+                        ],
+                        text: 'Physical Activity',
+                        type: 'group',
+                        linkId: 'physical-activity',
+                    },
+                    {
+                        item: [
+                            {
+                                text: 'How many servings of fruits and vegetables do you consume daily?',
+                                type: 'integer',
+                                linkId: 'q21',
+                                required: true,
+                            },
+                            {
+                                text: 'How often do you eat fast food?',
+                                type: 'choice',
+                                linkId: 'q22',
+                                required: true,
+                                answerOption: [
+                                    {
+                                        value: {
+                                            string: 'Never',
+                                        },
+                                    },
+                                    {
+                                        value: {
+                                            string: 'Once a week',
+                                        },
+                                    },
+                                    {
+                                        value: {
+                                            string: 'Several times a week',
+                                        },
+                                    },
+                                    {
+                                        value: {
+                                            string: 'Daily',
+                                        },
+                                    },
+                                ],
+                            },
+                            {
+                                text: 'Do you follow any specific dietary restrictions? (e.g., vegetarian, vegan, gluten-free)',
+                                type: 'string',
+                                linkId: 'q23',
+                                required: false,
+                            },
+                        ],
+                        text: 'Dietary Habits',
+                        type: 'group',
+                        linkId: 'dietary-habits',
+                    },
+                    {
+                        item: [
+                            {
+                                text: 'On average, how many hours of sleep do you get per night?',
+                                type: 'integer',
+                                linkId: 'q31',
+                                required: true,
+                            },
+                            {
+                                text: 'Do you have trouble falling asleep or staying asleep?',
+                                type: 'choice',
+                                linkId: 'q32',
+                                required: true,
+                                answerOption: [
+                                    {
+                                        value: {
+                                            string: 'Yes',
+                                        },
+                                    },
+                                    {
+                                        value: {
+                                            string: 'No',
+                                        },
+                                    },
+                                ],
+                            },
+                            {
+                                text: 'Do you use any sleep aids (e.g., medication, herbal supplements)?',
+                                type: 'choice',
+                                linkId: 'q33',
+                                required: false,
+                                answerOption: [
+                                    {
+                                        value: {
+                                            string: 'Yes',
+                                        },
+                                    },
+                                    {
+                                        value: {
+                                            string: 'No',
+                                        },
+                                    },
+                                ],
+                            },
+                        ],
+                        text: 'Sleep Patterns',
+                        type: 'group',
+                        linkId: 'sleep-patterns',
+                    },
+                    {
+                        item: [
+                            {
+                                text: 'Do you smoke tobacco or use nicotine products?',
+                                type: 'choice',
+                                linkId: 'q41',
+                                required: true,
+                                answerOption: [
+                                    {
+                                        value: {
+                                            string: 'Yes',
+                                        },
+                                    },
+                                    {
+                                        value: {
+                                            string: 'No',
+                                        },
+                                    },
+                                ],
+                            },
+                            {
+                                text: 'How often do you consume alcoholic beverages?',
+                                type: 'choice',
+                                linkId: 'q42',
+                                required: true,
+                                answerOption: [
+                                    {
+                                        value: {
+                                            string: 'Never',
+                                        },
+                                    },
+                                    {
+                                        value: {
+                                            string: 'Occasionally',
+                                        },
+                                    },
+                                    {
+                                        value: {
+                                            string: 'Regularly',
+                                        },
+                                    },
+                                ],
+                            },
+                            {
+                                text: 'Have you ever used recreational drugs?',
+                                type: 'choice',
+                                linkId: 'q43',
+                                required: false,
+                                answerOption: [
+                                    {
+                                        value: {
+                                            string: 'Yes',
+                                        },
+                                    },
+                                    {
+                                        value: {
+                                            string: 'No',
+                                        },
+                                    },
+                                ],
+                            },
+                        ],
+                        text: 'Substance Use',
+                        type: 'group',
+                        linkId: 'substance-use',
                     },
                 ],
+                type: 'group',
+                linkId: 'wizard',
+                itemControl: {
+                    coding: [
+                        {
+                            code: itemControlCode,
+                        },
+                    ],
+                },
             },
-        },
-    ],
-    resourceType: 'Questionnaire',
-    title: 'Group wizard',
-    status: 'active',
-    url: 'https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/group-wizard',
-};
+        ],
+        resourceType: 'Questionnaire',
+        title: 'Group wizard',
+        status: 'active',
+        url: 'https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/group-wizard',
+    };
+}
 
 const questionnaireResponse: QuestionnaireResponse = {
-    status: 'in-progress',
     questionnaire: undefined,
+    status: 'in-progress',
     resourceType: 'QuestionnaireResponse',
     item: [
         {
             linkId: 'wizard',
             item: [
                 {
-                    linkId: '1',
+                    linkId: 'physical-activity',
                     text: 'Physical Activity',
                     item: [
                         {
-                            linkId: '1.1',
+                            linkId: 'q11',
                             text: 'How many days a week do you engage in physical activity?',
                         },
                         {
-                            linkId: '1.2',
+                            linkId: 'q12',
                             text: 'On average, how many minutes do you engage in physical activity each day?',
                         },
                         {
-                            linkId: '1.3',
+                            linkId: 'q13',
                             text: 'What types of physical activities do you participate in? (Select all that apply)',
                         },
                     ],
                 },
                 {
-                    linkId: '2',
+                    linkId: 'dietary-habits',
                     text: 'Dietary Habits',
                     item: [
                         {
-                            linkId: '2.1',
+                            linkId: 'q21',
                             text: 'How many servings of fruits and vegetables do you consume daily?',
                         },
                         {
-                            linkId: '2.2',
+                            linkId: 'q22',
                             text: 'How often do you eat fast food?',
                         },
                         {
-                            linkId: '2.3',
+                            linkId: 'q23',
                             text: 'Do you follow any specific dietary restrictions? (e.g., vegetarian, vegan, gluten-free)',
                         },
                     ],
                 },
                 {
-                    linkId: '3',
+                    linkId: 'sleep-patterns',
                     text: 'Sleep Patterns',
                     item: [
                         {
-                            linkId: '3.1',
+                            linkId: 'q31',
                             text: 'On average, how many hours of sleep do you get per night?',
                         },
                         {
-                            linkId: '3.2',
+                            linkId: 'q32',
                             text: 'Do you have trouble falling asleep or staying asleep?',
                         },
                         {
-                            linkId: '3.3',
+                            linkId: 'q33',
                             text: 'Do you use any sleep aids (e.g., medication, herbal supplements)?',
                         },
                     ],
                 },
                 {
-                    linkId: '4',
+                    linkId: 'substance-use',
                     text: 'Substance Use',
                     item: [
                         {
-                            linkId: '4.1',
+                            linkId: 'q41',
                             text: 'Do you smoke tobacco or use nicotine products?',
                         },
                         {
-                            linkId: '4.2',
+                            linkId: 'q42',
                             text: 'How often do you consume alcoholic beverages?',
                         },
                         {
-                            linkId: '4.3',
+                            linkId: 'q43',
                             text: 'Have you ever used recreational drugs?',
                         },
                     ],
@@ -409,19 +462,19 @@ const questionnaireResponse: QuestionnaireResponse = {
 const formValues = {
     wizard: {
         items: {
-            '1': {
+            'physical-activity': {
                 question: 'Physical Activity',
                 items: {},
             },
-            '2': {
+            'dietary-habits': {
                 question: 'Dietary Habits',
                 items: {},
             },
-            '3': {
+            'sleep-patterns': {
                 question: 'Sleep Patterns',
                 items: {},
             },
-            '4': {
+            'substance-use': {
                 question: 'Substance Use',
                 items: {},
             },

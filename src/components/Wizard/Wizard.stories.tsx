@@ -94,14 +94,38 @@ export const Default: Story = {
     render: WizardStoryDefault,
 };
 
-export const StepTooltip: Story = {
+export const WithTooltip: Story = {
     args: {
         labelPlacement: 'tooltip',
     },
     render: WizardStoryDefault,
 };
 
-export const CustomFooter: Story = {
+export const WithErrors: Story = {
+    args: {
+        items: [
+            {
+                title: 'Title 1',
+                status: 'error',
+            },
+            {
+                title: 'Title 2',
+                status: 'error',
+            },
+            {
+                title: 'Title 3',
+                status: 'error',
+            },
+            {
+                title: 'Title 4',
+                status: 'error',
+            },
+        ],
+    },
+    render: WizardStoryDefault,
+};
+
+export const WithFooter: Story = {
     render: WizardStoryWithFooter,
 };
 

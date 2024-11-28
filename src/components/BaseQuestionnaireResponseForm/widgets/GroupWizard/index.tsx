@@ -1,18 +1,31 @@
-import { Trans } from '@lingui/macro';
 import _ from 'lodash';
 import { useContext, useState } from 'react';
 import { useFormState, useWatch } from 'react-hook-form';
 import { GroupItemProps, QuestionItems } from 'sdc-qrf';
 
 import { Text } from 'src/components/Typography';
-import { Wizard, WizardItem } from 'src/components/Wizard';
+import { Wizard, WizardItem, WizardProps } from 'src/components/Wizard';
 import { questionnaireItemsToValidationSchema } from 'src/utils';
 
-import { GroupWizardControlContext } from './context';
 import { S } from './styles';
 import { BaseQuestionnaireResponseFormPropsContext } from '../../context';
 
-export function GroupWizard(props: GroupItemProps) {
+interface GroupWizardProps extends GroupItemProps {
+    wizard?: Partial<WizardProps>;
+}
+
+export function GroupWizardWithTooltips(props: GroupWizardProps) {
+    return (
+        <GroupWizard
+            {...props}
+            wizard={{
+                labelPlacement: 'tooltip',
+            }}
+        />
+    );
+}
+
+export function GroupWizard(props: GroupWizardProps) {
     const { parentPath, questionItem, context } = props;
 
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -22,6 +35,7 @@ export function GroupWizard(props: GroupItemProps) {
     const { isSubmitted } = useFormState();
 
     const itemsCount = item.length;
+    const isLastStepActive = itemsCount === currentIndex + 1;
     const stepsItems: WizardItem[] = item.map((i) => {
         const groupValues = formValues?.[linkId]?.items?.[i.linkId].items;
         const hasError = questionnaireItemsToValidationSchema(i.item!).isValidSync(groupValues) === false;
@@ -36,11 +50,7 @@ export function GroupWizard(props: GroupItemProps) {
         setCurrentIndex(value);
     };
 
-    const wizardControlProps = useContext(GroupWizardControlContext);
     const qrFormProps = useContext(BaseQuestionnaireResponseFormPropsContext);
-    const submitTitle = wizardControlProps.saveButtonTitle || qrFormProps?.saveButtonTitle || (
-        <Trans>Save & complete</Trans>
-    );
 
     if (parentPath.length !== 0) {
         console.error('The wizard item control must be in root group');
@@ -55,7 +65,7 @@ export function GroupWizard(props: GroupItemProps) {
     }
 
     return (
-        <Wizard items={stepsItems} currentIndex={currentIndex} onChange={onStepChange} {...wizardControlProps.wizard}>
+        <Wizard items={stepsItems} currentIndex={currentIndex} onChange={onStepChange} {...props.wizard}>
             {item.map((groupItem, index) => {
                 if (index !== currentIndex) {
                     return null;
@@ -77,9 +87,7 @@ export function GroupWizard(props: GroupItemProps) {
                 canGoBack={currentIndex > 0}
                 canGoForward={currentIndex + 1 < itemsCount}
             >
-                {qrFormProps && (
-                    <S.FormFooter {..._.omit(qrFormProps, ['saveButtonTitle'])} saveButtonTitle={submitTitle} />
-                )}
+                {qrFormProps && <S.FormFooter {...qrFormProps} submitDisabled={!isLastStepActive} />}
             </S.WizardFooter>
         </Wizard>
     );
