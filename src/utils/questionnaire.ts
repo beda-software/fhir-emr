@@ -4,6 +4,7 @@ import * as yup from 'yup';
 
 import {
     Questionnaire,
+    QuestionnaireItem,
     QuestionnaireItemAnswerOption,
     QuestionnaireItemChoiceColumn,
     QuestionnaireResponseItemAnswer,
@@ -78,24 +79,24 @@ export function getArrayDisplay(options?: QuestionnaireResponseItemAnswer[]): st
     return options.map((v: QuestionnaireResponseItemAnswer) => getDisplay(v.value)).join(', ');
 }
 
-export function questionnaireToValidationSchema(questionnaire: Questionnaire) {
+export function questionnaireItemsToValidationSchema(questionnaireItems: QuestionnaireItem[]) {
     const validationSchema: Record<string, yup.AnySchema> = {};
-    if (questionnaire.item === undefined) return yup.object(validationSchema) as yup.AnyObjectSchema;
-    questionnaire.item.forEach((item) => {
+    if (questionnaireItems.length === 0) return yup.object(validationSchema) as yup.AnyObjectSchema;
+    questionnaireItems.forEach((item) => {
         let schema: yup.AnySchema;
         if (item.type === 'string' || item.type === 'text') {
             schema = yup.string();
             if (item.required) schema = schema.required();
             if (item.maxLength && item.maxLength > 0) schema = (schema as yup.StringSchema).max(item.maxLength);
-            schema = createSchemaArray(yup.object({ string: schema })).required();
+            schema = createSchemaArrayOfValues(yup.object({ string: schema })).required();
         } else if (item.type === 'integer') {
             schema = yup.number();
             if (item.required) schema = schema.required();
-            schema = createSchemaArray(yup.object({ integer: schema })).required();
+            schema = createSchemaArrayOfValues(yup.object({ integer: schema })).required();
         } else if (item.type === 'date') {
             schema = yup.date();
             if (item.required) schema = schema.required();
-            schema = createSchemaArray(yup.object({ date: schema })).required();
+            schema = createSchemaArrayOfValues(yup.object({ date: schema })).required();
         } else if (item.type === 'reference') {
             schema = yup.object({
                 resourceType: yup.string().required(),
@@ -104,7 +105,7 @@ export function questionnaireToValidationSchema(questionnaire: Questionnaire) {
             });
 
             if (item.required) {
-                schema = createSchemaArray(yup.object({ Reference: schema })).required();
+                schema = createSchemaArrayOfValues(yup.object({ Reference: schema })).required();
             } else {
                 schema = yup.mixed().nullable();
             }
@@ -114,12 +115,13 @@ export function questionnaireToValidationSchema(questionnaire: Questionnaire) {
         if (item.enableWhen) {
             item.enableWhen.forEach((itemEnableWhen) => {
                 const { question, operator, answer } = itemEnableWhen;
+                // TODO: handle all other operators
                 if (operator === '=') {
                     validationSchema[item.linkId] = yup.mixed().when(question, {
                         is: (answerOptionArray: QuestionnaireItemAnswerOption[]) =>
                             answerOptionArray &&
                             answerOptionArray.some(
-                                (answerOption) => answerOption.value?.Coding?.code === answer?.Coding?.code,
+                                (answerOption) => answerOption?.value?.Coding?.code === answer?.Coding?.code,
                             ),
                         then: () => schema,
                         otherwise: () => yup.mixed().nullable(),
@@ -128,12 +130,23 @@ export function questionnaireToValidationSchema(questionnaire: Questionnaire) {
             });
         } else {
             validationSchema[item.linkId] = schema;
+
+            if (item.item) {
+                validationSchema[item.linkId] = yup
+                    .object({ items: questionnaireItemsToValidationSchema(item.item) })
+                    .required();
+            }
         }
     });
+
     return yup.object(validationSchema).required() as yup.AnyObjectSchema;
 }
 
-function createSchemaArray(value: yup.AnyObjectSchema) {
+export function questionnaireToValidationSchema(questionnaire: Questionnaire) {
+    return questionnaireItemsToValidationSchema(questionnaire.item ?? []);
+}
+
+function createSchemaArrayOfValues(value: yup.AnyObjectSchema) {
     return yup.array().of(yup.object({ value }));
 }
 
