@@ -1,9 +1,9 @@
-subjectType:
-  - Patient
-meta:
-  profile:
-    - https://beda.software/beda-emr-questionnaire
+
 name: Group wizard
+title: Group wizard
+subjectType:
+    - Encounter
+    - Patient
 item:
   - type: group
     linkId: wizard
@@ -131,8 +131,10 @@ item:
         type: group
         linkId: 'substance-use'
 resourceType: Questionnaire
-title: Group wizard
 status: active
 id: group-wizard
+meta:
+  profile:
+    - https://beda.software/beda-emr-questionnaire
 url: >-
   https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/group-wizard
