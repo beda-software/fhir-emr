@@ -13,6 +13,7 @@ import {
 import { parseFHIRTime } from '@beda.software/fhir-react';
 
 import { formatHumanDate, formatHumanDateTime } from './date';
+import { EnableWhenValueType, isItemEnabled } from './enableWhen';
 import { evaluate } from './fhirpath';
 
 export function getDisplay(
@@ -116,17 +117,16 @@ export function questionnaireItemsToValidationSchema(questionnaireItems: Questio
             item.enableWhen.forEach((itemEnableWhen) => {
                 const { question, operator, answer } = itemEnableWhen;
                 // TODO: handle all other operators
-                if (operator === '=') {
-                    validationSchema[item.linkId] = yup.mixed().when(question, {
-                        is: (answerOptionArray: QuestionnaireItemAnswerOption[]) =>
-                            answerOptionArray &&
-                            answerOptionArray.some(
-                                (answerOption) => answerOption?.value?.Coding?.code === answer?.Coding?.code,
-                            ),
-                        then: () => schema,
-                        otherwise: () => yup.mixed().nullable(),
-                    });
-                }
+                validationSchema[item.linkId] = yup.mixed().when(question, {
+                    is: (answerOptionArray: QuestionnaireItemAnswerOption[]) =>
+                        isItemEnabled({
+                            answerOptionArray,
+                            answer,
+                            operator,
+                        }),
+                    then: () => schema,
+                    otherwise: () => yup.mixed().nullable(),
+                });
             });
         } else {
             validationSchema[item.linkId] = schema;
