@@ -22,13 +22,18 @@ import * as yup from 'yup';
 
 import 'react-phone-input-2/lib/style.css';
 
+import { Questionnaire as FCEQuestionnaire } from '@beda.software/aidbox-types';
 import { RemoteData, isSuccess, loading } from '@beda.software/remote-data';
 
 import { saveQuestionnaireResponseDraft } from 'src/components/QuestionnaireResponseForm';
 import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
 import s from './BaseQuestionnaireResponseForm.module.scss';
-import { ItemControlGroupItemWidgetsContext, ItemControlQuestionItemWidgetsContext } from './context';
+import {
+    BaseQuestionnaireResponseFormPropsContext,
+    ItemControlGroupItemWidgetsContext,
+    ItemControlQuestionItemWidgetsContext,
+} from './context';
 import { groupComponent, groupControlComponents, itemComponents, itemControlComponents } from './controls';
 import { FormFooterComponentProps, FormFooter } from './FormFooter';
 
@@ -57,8 +62,8 @@ export interface BaseQuestionnaireResponseFormProps {
     }>;
 
     FormFooterComponent?: React.ElementType<FormFooterComponentProps>;
-    saveButtonTitle?: string;
-    cancelButtonTitle?: string;
+    saveButtonTitle?: React.ReactNode;
+    cancelButtonTitle?: React.ReactNode;
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
@@ -209,6 +214,8 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         [GroupWrapper],
     );
 
+    const isWizard = isGroupWizard(formData.context.questionnaire);
+
     return (
         <FormProvider {...methods}>
             <form
@@ -221,28 +228,47 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                     setIsLoading(false);
                 })}
                 className={classNames(s.form, 'app-form')}
+                noValidate
             >
-                <QuestionnaireResponseFormProvider
-                    formValues={formValues}
-                    setFormValues={(values, fieldPath, value) => setValue(fieldPath.join('.'), value)}
-                    groupItemComponent={groupItemComponent}
-                    itemControlGroupItemComponents={itemControlGroupItemComponents}
-                    questionItemComponents={questionItemComponents}
-                    itemControlQuestionItemComponents={itemControlQuestionItemComponents}
-                    readOnly={readOnly}
+                <BaseQuestionnaireResponseFormPropsContext.Provider
+                    value={{
+                        ...props,
+                        submitting: isLoading,
+                        debouncedSaveDraft: props.setDraftSaveResponse ? debouncedSaveDraft : undefined,
+                    }}
                 >
-                    <>
-                        <div className={classNames(s.content, 'form__content')}>
-                            <QuestionItems
-                                questionItems={formData.context.questionnaire.item!}
-                                parentPath={[]}
-                                context={calcInitialContext(formData.context, formValues)}
-                            />
-                        </div>
-                        <FormFooter {...props} submitting={isLoading} />
-                    </>
-                </QuestionnaireResponseFormProvider>
+                    <QuestionnaireResponseFormProvider
+                        formValues={formValues}
+                        setFormValues={(values, fieldPath, value) => setValue(fieldPath.join('.'), value)}
+                        groupItemComponent={groupItemComponent}
+                        itemControlGroupItemComponents={itemControlGroupItemComponents}
+                        questionItemComponents={questionItemComponents}
+                        itemControlQuestionItemComponents={itemControlQuestionItemComponents}
+                        readOnly={readOnly}
+                    >
+                        <>
+                            <div className={classNames(s.content, 'form__content')}>
+                                <QuestionItems
+                                    questionItems={formData.context.questionnaire.item!}
+                                    parentPath={[]}
+                                    context={calcInitialContext(formData.context, formValues)}
+                                />
+                            </div>
+                            {!isWizard ? (
+                                <FormFooter {...props} submitting={isLoading} debouncedSaveDraft={debouncedSaveDraft} />
+                            ) : null}
+                        </>
+                    </QuestionnaireResponseFormProvider>
+                </BaseQuestionnaireResponseFormPropsContext.Provider>
             </form>
         </FormProvider>
     );
+}
+
+function isGroupWizard(q: FCEQuestionnaire) {
+    return q.item?.some((i) => {
+        const itemControlCode = i.itemControl?.coding?.[0]?.code;
+
+        return itemControlCode && ['wizard', 'wizard-with-tooltips'].includes(itemControlCode);
+    });
 }
