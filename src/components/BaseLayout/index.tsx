@@ -1,8 +1,5 @@
-import { Layout } from 'antd';
-import classNames from 'classnames';
 import { ReactNode } from 'react';
 
-import s from './BaseLayout.module.scss';
 import { S } from './BaseLayout.styles';
 import { AppFooter } from './Footer';
 import { AppSidebar } from './Sidebar';
@@ -11,49 +8,58 @@ import { AppTabBar } from './TabBar';
 interface Props {
     children: ReactNode;
     style?: React.CSSProperties;
+    className?: string | undefined;
 }
 
-export function BaseLayout({ children, style }: Props) {
+export function BaseLayout({ children, style, className }: Props) {
     return (
-        <S.Container style={style}>
+        <S.Container style={style} className={className}>
             <AppSidebar />
             <AppTabBar />
-            <Layout className={s.content}>
+            <S.Layout>
                 {children}
                 <AppFooter />
-            </Layout>
+            </S.Layout>
         </S.Container>
     );
 }
 
-export function AnonymousLayout({ children, style }: Props) {
+export function AnonymousLayout({ children, style, className }: Props) {
     return (
-        <S.Container style={style}>
+        <S.Container style={style} className={className}>
             <AppSidebar />
-            <Layout className={s.content}>
+            <S.Layout>
                 {children}
                 <AppFooter />
-            </Layout>
+            </S.Layout>
         </S.Container>
     );
 }
 
-export function BasePageHeader(props: React.HTMLAttributes<HTMLDivElement>) {
-    const { className, ...rest } = props;
+export type BasePageHeaderProps = React.HTMLAttributes<HTMLDivElement> & {
+    maxWidth?: number | string;
+};
+
+export function BasePageHeader(props: BasePageHeaderProps) {
+    const { maxWidth, ...rest } = props;
 
     return (
-        <S.PageWrapper>
-            <div className={classNames(s.pageHeader, className)} {...rest} />
-        </S.PageWrapper>
+        <S.PageHeaderContainer>
+            <S.PageHeader {...rest} $maxWidth={maxWidth} />
+        </S.PageHeaderContainer>
     );
 }
 
-export function BasePageContent(props: React.HTMLAttributes<HTMLDivElement>) {
-    const { className, ...rest } = props;
+export type BasePageContentProps = React.HTMLAttributes<HTMLDivElement> & {
+    maxWidth?: number | string;
+};
+
+export function BasePageContent(props: BasePageContentProps) {
+    const { maxWidth, ...rest } = props;
 
     return (
-        <div className={s.pageContentWrapper}>
-            <div className={classNames(s.pageContent, className)} {...rest} />
-        </div>
+        <S.PageContentContainer>
+            <S.PageContent {...rest} $maxWidth={maxWidth} />
+        </S.PageContentContainer>
     );
 }
