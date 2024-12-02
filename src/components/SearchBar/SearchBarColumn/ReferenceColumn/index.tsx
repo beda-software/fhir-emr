@@ -1,5 +1,3 @@
-import { Col } from 'antd';
-
 import { AsyncSelect } from 'src/components/Select';
 import { getAnswerCode, getAnswerDisplay } from 'src/utils/questionnaire';
 
@@ -12,17 +10,15 @@ export function ReferenceColumn(props: SearchBarColumnReferenceTypeProps) {
     const { debouncedLoadOptions, onOptionChange } = useReferenceColumn(props);
 
     return (
-        <Col>
-            <AsyncSelect
-                onChange={onOptionChange}
-                value={columnFilterValue.value}
-                loadOptions={debouncedLoadOptions}
-                defaultOptions
-                getOptionLabel={(option) => getAnswerDisplay(option.value)}
-                getOptionValue={(option) => getAnswerCode(option.value)}
-                isMulti={false}
-                placeholder={columnFilterValue.column.placeholder}
-            />
-        </Col>
+        <AsyncSelect
+            onChange={onOptionChange}
+            value={columnFilterValue.value}
+            loadOptions={debouncedLoadOptions}
+            defaultOptions
+            getOptionLabel={(option) => getAnswerDisplay(option.value)}
+            getOptionValue={(option) => getAnswerCode(option.value)}
+            isMulti={false}
+            placeholder={columnFilterValue.column.placeholder}
+        />
     );
 }

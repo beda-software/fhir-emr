@@ -1,3 +1,5 @@
+import { Coding } from 'fhir/r4b';
+
 import { Expression, Resource, QuestionnaireItemChoiceColumn, ValueSet } from '@beda.software/aidbox-types';
 
 import { ValueSetOption } from 'src/services';
@@ -8,6 +10,7 @@ export enum SearchBarColumnType {
     DATE = 'date',
     REFERENCE = 'reference',
     CHOICE = 'choice',
+    SOLIDCHOICE = 'solidChoice',
 }
 
 export interface SearchBarProps {
@@ -46,11 +49,22 @@ export type SearchBarChoiceColumn = {
       }
 );
 
+export type SearchBarSolidChoiceColumn = {
+    id: string;
+    type: SearchBarColumnType.SOLIDCHOICE;
+    repeats?: boolean;
+    placeholder: string;
+    options: Coding[];
+    valueSet?: never;
+    defaultValue?: Coding;
+};
+
 export type SearchBarColumn =
     | SearchBarStringColumn
     | SearchBarDateColumn
     | SearchBarReferenceColumn
-    | SearchBarChoiceColumn;
+    | SearchBarChoiceColumn
+    | SearchBarSolidChoiceColumn;
 export function isStringColumn(column: SearchBarColumn): column is SearchBarStringColumn {
     return column.type === SearchBarColumnType.STRING;
 }
@@ -62,6 +76,9 @@ export function isReferenceColumn(column: SearchBarColumn): column is SearchBarR
 }
 export function isChoiceColumn(column: SearchBarColumn): column is SearchBarChoiceColumn {
     return column.type === SearchBarColumnType.CHOICE;
+}
+export function isSolidChoiceColumn(column: SearchBarColumn): column is SearchBarSolidChoiceColumn {
+    return column.type === SearchBarColumnType.SOLIDCHOICE;
 }
 
 export type DateColumnFilterValue = [moment.Moment, moment.Moment];
@@ -83,11 +100,17 @@ export interface ChoiceTypeColumnFilterValue {
     value?: ValueSetOption[] | null;
 }
 
+export interface SolidChoiceTypeColumnFilterValue {
+    column: SearchBarSolidChoiceColumn;
+    value?: Coding[] | null;
+}
+
 export type ColumnFilterValue =
     | StringTypeColumnFilterValue
     | DateTypeColumnFilterValue
     | ReferenceTypeColumnFilterValue
-    | ChoiceTypeColumnFilterValue;
+    | ChoiceTypeColumnFilterValue
+    | SolidChoiceTypeColumnFilterValue;
 export function isStringColumnFilterValue(filterValue: ColumnFilterValue): filterValue is StringTypeColumnFilterValue {
     return isStringColumn(filterValue.column);
 }
@@ -101,6 +124,11 @@ export function isReferenceColumnFilterValue(
 }
 export function isChoiceColumnFilterValue(filterValue: ColumnFilterValue): filterValue is ChoiceTypeColumnFilterValue {
     return isChoiceColumn(filterValue.column);
+}
+export function isSolidChoiceColumnFilterValue(
+    filterValue: ColumnFilterValue,
+): filterValue is SolidChoiceTypeColumnFilterValue {
+    return isSolidChoiceColumn(filterValue.column);
 }
 
 export interface SearchBarData {

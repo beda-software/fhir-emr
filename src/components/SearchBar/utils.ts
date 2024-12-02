@@ -5,6 +5,7 @@ import {
     isChoiceColumnFilterValue,
     isDateColumnFilterValue,
     isReferenceColumnFilterValue,
+    isSolidChoiceColumnFilterValue,
     isStringColumnFilterValue,
     SearchBarColumn,
 } from './types';
@@ -39,6 +40,10 @@ export function getSearchBarColumnFilterValue(filterValue: ColumnFilterValue) {
 
     if (isChoiceColumnFilterValue(filterValue)) {
         return filterValue.value?.map((option) => option.value.Coding.code!);
+    }
+
+    if (isSolidChoiceColumnFilterValue(filterValue)) {
+        return filterValue.value?.map((option) => option.code!);
     }
 
     throw new Error('Unsupported column type');

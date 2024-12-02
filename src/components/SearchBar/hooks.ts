@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 
 import {
@@ -13,12 +12,15 @@ import {
     SearchBarProps,
     isChoiceColumn,
     isChoiceColumnFilterValue,
+    isSolidChoiceColumn,
+    isSolidChoiceColumnFilterValue,
 } from './types';
 import {
     validateStringColumnFilterValue,
     validateDateColumnFilterValue,
     validateReferenceColumnFilterValue,
     validateChoiceColumnFilterValue,
+    validateSolidChoiceColumnFilterValue,
 } from './validate';
 
 export function useSearchBar(props: SearchBarProps): SearchBarData {
@@ -39,6 +41,10 @@ export function useSearchBar(props: SearchBarProps): SearchBarData {
             }
 
             if (isChoiceColumn(column)) {
+                return { column, value: null };
+            }
+
+            if (isSolidChoiceColumn(column)) {
                 return { column, value: null };
             }
 
@@ -81,6 +87,13 @@ export function useSearchBar(props: SearchBarProps): SearchBarData {
 
                     if (isChoiceColumnFilterValue(newFilterValue)) {
                         if (validateChoiceColumnFilterValue(value)) {
+                            newFilterValue.value = value;
+                            return newFilterValue;
+                        }
+                    }
+
+                    if (isSolidChoiceColumnFilterValue(newFilterValue)) {
+                        if (validateSolidChoiceColumnFilterValue(value)) {
                             newFilterValue.value = value;
                             return newFilterValue;
                         }

@@ -6,6 +6,7 @@ import {
     ColumnFilterValue,
     DateTypeColumnFilterValue,
     ReferenceTypeColumnFilterValue,
+    SolidChoiceTypeColumnFilterValue,
     StringTypeColumnFilterValue,
 } from './types';
 
@@ -57,6 +58,20 @@ export function validateChoiceColumnFilterValue(
             _.isObject(value[0]) &&
             'value' in value[0] &&
             'Coding' in value[0].value)
+    ) {
+        return true;
+    }
+
+    throw new Error('Invalid choice column filter value');
+}
+
+export function validateSolidChoiceColumnFilterValue(
+    value?: ColumnFilterValue['value'],
+): value is SolidChoiceTypeColumnFilterValue['value'] {
+    if (
+        _.isUndefined(value) ||
+        _.isNull(value) ||
+        (_.isArray(value) && value.length > 0 && _.isObject(value[0]) && 'code' in value[0] && 'display' in value[0])
     ) {
         return true;
     }

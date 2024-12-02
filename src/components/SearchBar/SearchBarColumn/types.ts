@@ -1,5 +1,6 @@
 import {
     ChoiceTypeColumnFilterValue,
+    SolidChoiceTypeColumnFilterValue,
     ColumnFilterValue,
     DateTypeColumnFilterValue,
     ReferenceTypeColumnFilterValue,
@@ -29,4 +30,9 @@ export interface SearchBarColumnReferenceTypeProps {
 export interface SearchBarColumnChoiceTypeProps {
     columnFilterValue: ChoiceTypeColumnFilterValue;
     onChange: (value: ChoiceTypeColumnFilterValue['value'], key: string) => void;
+}
+
+export interface SearchBarColumnSolidChoiceTypeProps {
+    columnFilterValue: SolidChoiceTypeColumnFilterValue;
+    onChange: (value: SolidChoiceTypeColumnFilterValue['value'], key: string) => void;
 }
