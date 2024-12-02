@@ -4,6 +4,7 @@ import { upperFirst } from 'lodash';
 
 import { service } from 'aidbox-react/lib/services/service';
 
+import { SearchParams } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess, success, failure, RemoteDataResult, RemoteData } from '@beda.software/remote-data';
 
 import { getCurrentLocale } from './i18n';
@@ -12,14 +13,18 @@ export type ValueSetOption = {
     value: { Coding: ValueSetExpansionContains };
 };
 
-export async function expandHealthSamuraiValueSet(answerValueSet: string, searchText: string): Promise<RemoteData> {
-    const instanceHealthSamurai = axios.create({
-        baseURL: 'https://tx.health-samurai.io',
-        headers: {
-            Accept: 'application/json;charset=UTF=8',
-        },
-    });
+const instanceHealthSamurai = axios.create({
+    baseURL: 'https://tx.health-samurai.io',
+    headers: {
+        Accept: 'application/json;charset=UTF=8',
+    },
+});
 
+export async function expandHealthSamuraiValueSet(
+    answerValueSet: string,
+    searchText: string,
+    extra?: SearchParams,
+): Promise<RemoteData> {
     try {
         const response = await instanceHealthSamurai.get('/fhir/ValueSet/$expand', {
             params: {
@@ -28,6 +33,7 @@ export async function expandHealthSamuraiValueSet(answerValueSet: string, search
                 filter: searchText,
                 count: 50,
                 displayLanguage: getCurrentLocale(),
+                ...extra,
             },
         });
         return success(
