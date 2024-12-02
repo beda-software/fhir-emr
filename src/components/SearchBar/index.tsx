@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro';
-import { Button, Row } from 'antd';
+import { Button } from 'antd';
 
-import { S } from './SearchBar.styles';
 import { SearchBarColumn } from './SearchBarColumn';
+import { S } from './styles';
 import { SearchBarData } from './types';
 
 export function SearchBar(props: SearchBarData) {
@@ -10,7 +10,7 @@ export function SearchBar(props: SearchBarData) {
 
     return (
         <S.Container>
-            <Row gutter={[32, 16]}>
+            <S.LeftColumn>
                 {columnsFilterValues.map((columnFilterValue) => (
                     <SearchBarColumn
                         key={`search-bar-column-${columnFilterValue.column.id}`}
@@ -18,10 +18,10 @@ export function SearchBar(props: SearchBarData) {
                         onChange={onChangeColumnFilter}
                     />
                 ))}
-            </Row>
+            </S.LeftColumn>
 
             <Button onClick={onResetFilters}>
-                <Trans>Reset</Trans>
+                <Trans>Clear filters</Trans>
             </Button>
         </S.Container>
     );
