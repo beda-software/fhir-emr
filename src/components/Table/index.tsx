@@ -6,7 +6,7 @@ import s from './Table.module.scss';
 export function Table<T extends object>(props: TableProps<T>) {
     return (
         <div className={s.container}>
-            <ANTDTable<T> className={s.table} bordered {...props} />
+            <ANTDTable<T> className={s.table} bordered size="middle" {...props} />
         </div>
     );
 }
