@@ -1,10 +1,11 @@
 import { Trans, t } from '@lingui/macro';
-import { Button, Row, notification } from 'antd';
+import { Button, notification } from 'antd';
 
 import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { PageContainer } from 'src/components/BaseLayout/PageContainer';
 import { Calendar } from 'src/components/Calendar';
+import { S as SearchBarStyles } from 'src/components/SearchBar/styles';
 
 import { S } from './Calendar.styles';
 import { HealthcareServicePractitionerSelect } from './HealthcareServicePractitionerSelect';
@@ -68,8 +69,8 @@ export function OrganizationScheduling() {
             title={<Trans>Scheduling</Trans>}
             header={{
                 children: (
-                    <S.SearchBarContainer>
-                        <Row gutter={[32, 16]}>
+                    <SearchBarStyles.Container>
+                        <SearchBarStyles.LeftColumn>
                             <HealthcareServicePractitionerSelect
                                 selectedHealthcareService={selectedHealthcareService}
                                 selectedPractitionerRole={selectedPractitionerRole}
@@ -82,11 +83,11 @@ export function OrganizationScheduling() {
                                     onChange(selectedOption, 'practitionerRole')
                                 }
                             />
-                        </Row>
+                        </SearchBarStyles.LeftColumn>
                         <Button onClick={resetFilter}>
                             <Trans>Reset</Trans>
                         </Button>
-                    </S.SearchBarContainer>
+                    </SearchBarStyles.Container>
                 ),
             }}
         >
