@@ -1,9 +1,6 @@
 import styled from 'styled-components';
 
-import { BasePageHeader } from 'src/components/BaseLayout';
-
 export const S = {
-    Header: styled(BasePageHeader)``,
     Content: styled.div`
         width: 540px;
         background-color: ${({ theme }) => theme.antdTheme?.colorBgContainer};

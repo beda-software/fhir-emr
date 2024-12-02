@@ -8,7 +8,6 @@ import { RemoteData, isSuccess, notAsked } from '@beda.software/remote-data';
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { AnxietyScore, DepressionScore } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/score';
 import { Spinner } from 'src/components/Spinner';
-import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
 
 import s from './PatientDocument.module.scss';
 import { S } from './PatientDocument.styles';
@@ -39,10 +38,6 @@ export function PatientDocument(props: PatientDocumentProps) {
     const [draftSaveResponse, setDraftSaveResponse] = useState<RemoteData<QuestionnaireResponse>>(notAsked);
 
     const { savedMessage } = useSavedMessage(draftSaveResponse);
-
-    usePatientHeaderLocationTitle({
-        title: isSuccess(response) ? response.data.formData.context.questionnaire?.name ?? '' : '',
-    });
 
     return (
         <div className={s.container}>

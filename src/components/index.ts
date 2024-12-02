@@ -18,7 +18,6 @@ export * from './ModalNewEncounter';
 export * from './ModalNewHealthcareService';
 export * from './ModalNewPatient';
 export * from './ModalTrigger';
-export * from './PageContainer';
 export * from './PatientEncounter';
 export * from './QuestionnaireResponseForm';
 export * from './QuestionnairesWizard';
