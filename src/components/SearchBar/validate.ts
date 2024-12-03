@@ -6,6 +6,7 @@ import {
     ColumnFilterValue,
     DateTypeColumnFilterValue,
     ReferenceTypeColumnFilterValue,
+    SingleDateTypeColumnFilterValue,
     SolidChoiceTypeColumnFilterValue,
     StringTypeColumnFilterValue,
 } from './types';
@@ -31,6 +32,16 @@ export function validateDateColumnFilterValue(
     }
 
     throw new Error('Invalid date column filter value');
+}
+
+export function validateSingleDateColumnFilterValue(
+    value?: ColumnFilterValue['value'],
+): value is SingleDateTypeColumnFilterValue['value'] {
+    if (_.isUndefined(value) || moment.isMoment(value)) {
+        return true;
+    }
+
+    throw new Error('Invalid single date column filter value');
 }
 
 export function validateReferenceColumnFilterValue(
@@ -76,5 +87,5 @@ export function validateSolidChoiceColumnFilterValue(
         return true;
     }
 
-    throw new Error('Invalid choice column filter value');
+    throw new Error('Invalid solid choice column filter value');
 }

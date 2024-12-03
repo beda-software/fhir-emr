@@ -1,10 +1,11 @@
-import { formatFHIRDateTime } from '@beda.software/fhir-react';
+import { formatFHIRDate, formatFHIRDateTime } from '@beda.software/fhir-react';
 
 import {
     ColumnFilterValue,
     isChoiceColumnFilterValue,
     isDateColumnFilterValue,
     isReferenceColumnFilterValue,
+    isSingleDateColumnFilterValue,
     isSolidChoiceColumnFilterValue,
     isStringColumnFilterValue,
     SearchBarColumn,
@@ -32,6 +33,10 @@ export function getSearchBarColumnFilterValue(filterValue: ColumnFilterValue) {
         return filterValue.value
             ? [`ge${formatFHIRDateTime(filterValue.value[0])}`, `le${formatFHIRDateTime(filterValue.value[1])}`]
             : undefined;
+    }
+
+    if (isSingleDateColumnFilterValue(filterValue)) {
+        return filterValue.value ? formatFHIRDate(filterValue.value) : undefined;
     }
 
     if (isReferenceColumnFilterValue(filterValue)) {

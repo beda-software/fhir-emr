@@ -5,6 +5,7 @@ import {
     DateTypeColumnFilterValue,
     ReferenceTypeColumnFilterValue,
     StringTypeColumnFilterValue,
+    SingleDateTypeColumnFilterValue,
 } from '../types';
 
 export type SearchBarColumnProps = {
@@ -20,6 +21,11 @@ export interface SearchBarColumnStringTypeProps {
 export interface SearchBarColumnDateTypeProps {
     columnFilterValue: DateTypeColumnFilterValue;
     onChange: (value: DateTypeColumnFilterValue['value'], key: string) => void;
+}
+
+export interface SearchBarColumnSingleDateTypeProps {
+    columnFilterValue: SingleDateTypeColumnFilterValue;
+    onChange: (value: SingleDateTypeColumnFilterValue['value'], key: string) => void;
 }
 
 export interface SearchBarColumnReferenceTypeProps {

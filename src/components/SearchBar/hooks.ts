@@ -14,6 +14,8 @@ import {
     isChoiceColumnFilterValue,
     isSolidChoiceColumn,
     isSolidChoiceColumnFilterValue,
+    isSingleDateColumn,
+    isSingleDateColumnFilterValue,
 } from './types';
 import {
     validateStringColumnFilterValue,
@@ -21,6 +23,7 @@ import {
     validateReferenceColumnFilterValue,
     validateChoiceColumnFilterValue,
     validateSolidChoiceColumnFilterValue,
+    validateSingleDateColumnFilterValue,
 } from './validate';
 
 export function useSearchBar(props: SearchBarProps): SearchBarData {
@@ -34,6 +37,10 @@ export function useSearchBar(props: SearchBarProps): SearchBarData {
 
             if (isDateColumn(column)) {
                 return { column, value: undefined };
+            }
+
+            if (isSingleDateColumn(column)) {
+                return { column, value: column.defaultValue ?? undefined };
             }
 
             if (isReferenceColumn(column)) {
@@ -73,6 +80,13 @@ export function useSearchBar(props: SearchBarProps): SearchBarData {
 
                     if (isDateColumnFilterValue(newFilterValue)) {
                         if (validateDateColumnFilterValue(value)) {
+                            newFilterValue.value = value;
+                            return newFilterValue;
+                        }
+                    }
+
+                    if (isSingleDateColumnFilterValue(newFilterValue)) {
+                        if (validateSingleDateColumnFilterValue(value)) {
                             newFilterValue.value = value;
                             return newFilterValue;
                         }

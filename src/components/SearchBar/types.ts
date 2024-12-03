@@ -8,6 +8,7 @@ import { LoadResourceOption } from 'src/services/questionnaire';
 export enum SearchBarColumnType {
     STRING = 'string',
     DATE = 'date',
+    SINGLEDATE = 'singleDate',
     REFERENCE = 'reference',
     CHOICE = 'choice',
     SOLIDCHOICE = 'solidChoice',
@@ -25,6 +26,12 @@ export type SearchBarDateColumn = {
     id: string;
     type: SearchBarColumnType.DATE;
     placeholder: [string, string];
+};
+export type SearchBarSingleDateColumn = {
+    id: string;
+    type: SearchBarColumnType.SINGLEDATE;
+    placeholder: string;
+    defaultValue?: moment.Moment;
 };
 export type SearchBarReferenceColumn = {
     id: string;
@@ -63,6 +70,7 @@ export type SearchBarSolidChoiceColumn = {
 export type SearchBarColumn =
     | SearchBarStringColumn
     | SearchBarDateColumn
+    | SearchBarSingleDateColumn
     | SearchBarReferenceColumn
     | SearchBarChoiceColumn
     | SearchBarSolidChoiceColumn;
@@ -71,6 +79,9 @@ export function isStringColumn(column: SearchBarColumn): column is SearchBarStri
 }
 export function isDateColumn(column: SearchBarColumn): column is SearchBarDateColumn {
     return column.type === SearchBarColumnType.DATE;
+}
+export function isSingleDateColumn(column: SearchBarColumn): column is SearchBarSingleDateColumn {
+    return column.type === SearchBarColumnType.SINGLEDATE;
 }
 export function isReferenceColumn(column: SearchBarColumn): column is SearchBarReferenceColumn {
     return column.type === SearchBarColumnType.REFERENCE;
@@ -83,6 +94,7 @@ export function isSolidChoiceColumn(column: SearchBarColumn): column is SearchBa
 }
 
 export type DateColumnFilterValue = [moment.Moment, moment.Moment];
+export type SingleDateColumnFilterValue = moment.Moment;
 
 export interface StringTypeColumnFilterValue {
     column: SearchBarStringColumn;
@@ -91,6 +103,11 @@ export interface StringTypeColumnFilterValue {
 export interface DateTypeColumnFilterValue {
     column: SearchBarDateColumn;
     value?: DateColumnFilterValue;
+}
+
+export interface SingleDateTypeColumnFilterValue {
+    column: SearchBarSingleDateColumn;
+    value?: SingleDateColumnFilterValue;
 }
 export interface ReferenceTypeColumnFilterValue {
     column: SearchBarReferenceColumn;
@@ -109,6 +126,7 @@ export interface SolidChoiceTypeColumnFilterValue {
 export type ColumnFilterValue =
     | StringTypeColumnFilterValue
     | DateTypeColumnFilterValue
+    | SingleDateTypeColumnFilterValue
     | ReferenceTypeColumnFilterValue
     | ChoiceTypeColumnFilterValue
     | SolidChoiceTypeColumnFilterValue;
@@ -117,6 +135,11 @@ export function isStringColumnFilterValue(filterValue: ColumnFilterValue): filte
 }
 export function isDateColumnFilterValue(filterValue: ColumnFilterValue): filterValue is DateTypeColumnFilterValue {
     return isDateColumn(filterValue.column);
+}
+export function isSingleDateColumnFilterValue(
+    filterValue: ColumnFilterValue,
+): filterValue is SingleDateTypeColumnFilterValue {
+    return isSingleDateColumn(filterValue.column);
 }
 export function isReferenceColumnFilterValue(
     filterValue: ColumnFilterValue,
