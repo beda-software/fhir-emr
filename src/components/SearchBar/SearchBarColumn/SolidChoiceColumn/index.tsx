@@ -5,15 +5,17 @@ import { SearchBarColumnSolidChoiceTypeProps } from '../types';
 
 export function SolidChoiceColumn(props: SearchBarColumnSolidChoiceTypeProps) {
     const { columnFilterValue } = props;
-    const { options, defaultValue } = columnFilterValue.column;
+    const { value } = columnFilterValue;
+    const { options } = columnFilterValue.column;
 
     const { onSelect } = useSolidChoiceColumn(props);
 
     return (
-        <Radio.Group defaultValue={defaultValue?.code} optionType="button" onChange={(e) => onSelect(e.target.value)}>
-            {options.map((c) => (
-                <Radio.Button key={c.code} value={c.code}>
-                    {c.display}
+        // NOTE: Radio.Button defaultChecked and checked cannot be applied properly to check Coding value.
+        <Radio.Group value={value?.[0]?.code} onChange={(e) => onSelect(e.target.value)}>
+            {options.map((coding) => (
+                <Radio.Button key={`radio-button-${coding.code}`} value={coding.code}>
+                    {coding.display}
                 </Radio.Button>
             ))}
         </Radio.Group>

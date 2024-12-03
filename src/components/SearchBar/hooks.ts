@@ -45,7 +45,7 @@ export function useSearchBar(props: SearchBarProps): SearchBarData {
             }
 
             if (isSolidChoiceColumn(column)) {
-                return { column, value: null };
+                return { column, value: column.defaultValue ? [column.defaultValue] : null };
             }
 
             throw new Error('Unsupported column type');
