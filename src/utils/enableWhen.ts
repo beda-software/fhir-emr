@@ -90,7 +90,7 @@ interface GetEnableWhenItemSchemaProps extends GetQuestionItemEnableWhenSchemaPr
     currentIndex: number;
     prevConditionResults?: boolean[];
 }
-function getEnableWhenItemsSchema(props: GetEnableWhenItemSchemaProps) {
+function getEnableWhenItemsSchema(props: GetEnableWhenItemSchemaProps): yup.AnySchema {
     const { enableWhenItems, enableBehavior, currentIndex, schema, prevConditionResults } = props;
 
     const { question, operator, answer } = enableWhenItems[currentIndex]!;
