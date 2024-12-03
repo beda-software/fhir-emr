@@ -38,6 +38,7 @@ export type SearchBarChoiceColumn = {
     type: SearchBarColumnType.CHOICE;
     repeats?: boolean;
     placeholder: string;
+    defaultValue?: ValueSetOption;
 } & (
     | {
           options: ValueSetOption[];

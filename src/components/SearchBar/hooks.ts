@@ -41,7 +41,7 @@ export function useSearchBar(props: SearchBarProps): SearchBarData {
             }
 
             if (isChoiceColumn(column)) {
-                return { column, value: null };
+                return { column, value: column.defaultValue ? [column.defaultValue] : null };
             }
 
             if (isSolidChoiceColumn(column)) {
