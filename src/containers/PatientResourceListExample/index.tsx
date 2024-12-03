@@ -1,3 +1,4 @@
+import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Patient } from 'fhir/r4b';
 
@@ -68,8 +69,10 @@ export function PatientResourceListExample() {
                 navigationAction('Open', `/patients/${record.resource.id}`),
                 questionnaireAction('Edit', 'patient-edit'),
             ]}
-            getHeaderActions={() => [questionnaireAction('Add patient', 'patient-create')]}
-            getBatchActions={() => [questionnaireAction('Delete patients', 'patients-batch-delete')]}
+            getHeaderActions={() => [
+                questionnaireAction(<Trans>Add patient</Trans>, 'patient-create', <PlusOutlined />),
+            ]}
+            getBatchActions={() => [questionnaireAction(<Trans>Delete patients</Trans>, 'patients-batch-delete')]}
         ></ResourceListPage>
     );
 }

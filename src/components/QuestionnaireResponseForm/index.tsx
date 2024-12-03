@@ -34,8 +34,8 @@ interface Props extends QuestionnaireResponseFormProps {
     onCancel?: () => void;
 
     FormFooterComponent?: React.ElementType<FormFooterComponentProps>;
-    saveButtonTitle?: string;
-    cancelButtonTitle?: string;
+    saveButtonTitle?: React.ReactNode;
+    cancelButtonTitle?: React.ReactNode;
 }
 
 export const saveQuestionnaireResponseDraft = async (

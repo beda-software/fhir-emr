@@ -1,4 +1,4 @@
-import { t, Trans } from '@lingui/macro';
+import { t } from '@lingui/macro';
 import { Button, notification } from 'antd';
 import { Bundle, Resource } from 'fhir/r4b';
 import { useNavigate } from 'react-router-dom';
@@ -9,34 +9,43 @@ import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-dat
 
 export interface NavigationActionType {
     type: 'navigation';
-    title: string;
+    title: React.ReactNode;
     link: string;
+    icon?: React.ReactNode;
 }
 
 export interface CustomActionType {
     type: 'custom';
     title: React.ReactNode;
+    icon?: React.ReactNode;
 }
 
 export interface QuestionnaireActionType {
     type: 'questionnaire';
-    title: string;
+    title: React.ReactNode;
     questionnaireId: string;
+    icon?: React.ReactNode;
 }
 
-export function navigationAction(title: string, link: string): NavigationActionType {
-    return { type: 'navigation', title, link };
+export function navigationAction(title: React.ReactNode, link: string, icon?: React.ReactNode): NavigationActionType {
+    return { type: 'navigation', title, link, icon };
 }
-export function customAction(title: React.ReactNode): CustomActionType {
+export function customAction(title: React.ReactNode, icon?: React.ReactNode): CustomActionType {
     return {
         type: 'custom',
         title,
+        icon,
     };
 }
-export function questionnaireAction(title: string, questionnaireId: string): QuestionnaireActionType {
+export function questionnaireAction(
+    title: React.ReactNode,
+    questionnaireId: string,
+    icon?: React.ReactNode,
+): QuestionnaireActionType {
     return {
         type: 'questionnaire',
         title,
+        icon,
         questionnaireId,
     };
 }
@@ -83,7 +92,7 @@ export function HeaderQuestionnaireAction({ action, reload }: { action: Question
         <ModalTrigger
             title={action.title}
             trigger={
-                <Button type="primary">
+                <Button type="primary" icon={action.icon}>
                     <span>{action.title}</span>
                 </Button>
             }
@@ -118,7 +127,7 @@ export function BatchQuestionnaireAction<R extends Resource>({
         <ModalTrigger
             title={action.title}
             trigger={
-                <Button type="primary" disabled={disabled}>
+                <Button type="primary" disabled={disabled} icon={action.icon}>
                     <span>{action.title}</span>
                 </Button>
             }
@@ -161,8 +170,9 @@ export function NavigationAction<R extends Resource>({
                     state: { resource },
                 })
             }
+            icon={action.icon}
         >
-            <Trans>{action.title}</Trans>
+            {action.title}
         </Button>
     );
 }
