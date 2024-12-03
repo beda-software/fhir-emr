@@ -11,7 +11,7 @@ import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
-import { Title } from 'src/components/Typography';
+import { Title, Text } from 'src/components/Typography';
 
 import {
     NavigationActionType,
@@ -142,14 +142,19 @@ export function ResourceListPage<R extends Resource>({
                         <Col>
                             {selectedRowKeys.length ? (
                                 <Button type="default" onClick={() => setSelectedRowKeys([])}>
-                                    Reset selection
+                                    <Trans>Reset selection</Trans>
                                 </Button>
                             ) : null}
                         </Col>
                         <Col>
-                            {selectedRowKeys.length
-                                ? plural(selectedRowKeys.length, { one: 'Selected # item', other: 'Selected # items' })
-                                : null}
+                            <Text>
+                                {selectedRowKeys.length
+                                    ? plural(selectedRowKeys.length, {
+                                          one: 'Selected # item',
+                                          other: 'Selected # items',
+                                      })
+                                    : null}
+                            </Text>
                         </Col>
                     </Row>
                 ) : null}
