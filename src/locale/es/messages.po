@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/uberComponents/ResourceListPage/index.tsx:155
+#: src/uberComponents/ResourceListPage/index.tsx:167
 msgid "{0, plural, one {Selected # item} other {Selected # items}}"
 msgstr ""
 
@@ -31,7 +31,7 @@ msgstr "Acción"
 #: src/containers/PatientList/index.tsx:103
 #: src/containers/PractitionerList/index.tsx:121
 #: src/containers/Prescriptions/index.tsx:148
-#: src/uberComponents/ResourceListPage/index.tsx:207
+#: src/uberComponents/ResourceListPage/index.tsx:227
 msgid "Actions"
 msgstr "Acciones"
 
@@ -110,7 +110,7 @@ msgstr "Añadir Orden"
 
 #: src/components/ModalNewPatient/index.tsx:16
 #: src/components/ModalNewPatient/index.tsx:20
-#: src/containers/PatientResourceListExample/index.tsx:73
+#: src/containers/PatientResourceListExample/index.tsx:75
 msgid "Add patient"
 msgstr "Añadir paciente"
 
@@ -207,7 +207,7 @@ msgstr "Número de lote"
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer/hooks.ts:31
 #: src/containers/PatientList/index.tsx:87
-#: src/containers/PatientResourceListExample/index.tsx:46
+#: src/containers/PatientResourceListExample/index.tsx:47
 msgid "Birth date"
 msgstr "Fecha de nacimiento"
 
@@ -424,7 +424,7 @@ msgstr "Predeterminado"
 msgid "Delete"
 msgstr "Eliminar"
 
-#: src/containers/PatientResourceListExample/index.tsx:75
+#: src/containers/PatientResourceListExample/index.tsx:77
 msgid "Delete patients"
 msgstr ""
 
@@ -550,7 +550,7 @@ msgstr "Encuentros"
 msgid "End"
 msgstr "Fin"
 
-#: src/containers/EncounterList/searchBarUtils.ts:45
+#: src/containers/EncounterList/searchBarUtils.ts:22
 msgid "End date"
 msgstr "Fecha de finalización"
 
@@ -602,7 +602,7 @@ msgid "Fill"
 msgstr "Rellenar"
 
 #: src/containers/PatientList/searchBarUtils.ts:10
-#: src/containers/PatientResourceListExample/index.tsx:65
+#: src/containers/PatientResourceListExample/index.tsx:66
 msgid "Find patient"
 msgstr "Buscar paciente"
 
@@ -807,7 +807,7 @@ msgstr "Lunes"
 #: src/containers/PatientDetails/PatientResources/utils.tsx:152
 #: src/containers/PatientDetails/PatientResources/utils.tsx:188
 #: src/containers/PatientList/index.tsx:81
-#: src/containers/PatientResourceListExample/index.tsx:40
+#: src/containers/PatientResourceListExample/index.tsx:41
 #: src/containers/PractitionerList/index.tsx:108
 msgid "Name"
 msgstr "Nombre"
@@ -838,7 +838,7 @@ msgstr "No"
 #: src/containers/PractitionerList/index.tsx:101
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:500
 #: src/containers/QuestionnaireList/index.tsx:102
-#: src/uberComponents/ResourceListPage/index.tsx:179
+#: src/uberComponents/ResourceListPage/index.tsx:191
 msgid "No data"
 msgstr "Sin datos"
 
@@ -951,7 +951,7 @@ msgstr "Paciente creado con éxito"
 #: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:29
 #: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:35
 #: src/containers/PatientList/index.tsx:55
-#: src/containers/PatientResourceListExample/index.tsx:35
+#: src/containers/PatientResourceListExample/index.tsx:36
 msgid "Patients"
 msgstr "Pacientes"
 
@@ -1060,7 +1060,7 @@ msgstr "Requerido"
 msgid "Reset"
 msgstr "Restablecer"
 
-#: src/uberComponents/ResourceListPage/index.tsx:148
+#: src/uberComponents/ResourceListPage/index.tsx:160
 msgid "Reset selection"
 msgstr ""
 
@@ -1134,8 +1134,8 @@ msgid "Search by practitioner"
 msgstr "Buscar por profesional"
 
 #: src/containers/EncounterList/searchBarUtils.ts:22
-msgid "Search by status"
-msgstr ""
+#~ msgid "Search by status"
+#~ msgstr ""
 
 #: src/containers/PatientDetails/PatientOrders/index.tsx:177
 msgid "Search orders"
@@ -1204,7 +1204,7 @@ msgid "Specialty"
 msgstr "Especialidad"
 
 #: src/containers/PatientList/index.tsx:94
-#: src/containers/PatientResourceListExample/index.tsx:53
+#: src/containers/PatientResourceListExample/index.tsx:54
 msgid "SSN"
 msgstr "NSS"
 
@@ -1212,7 +1212,7 @@ msgstr "NSS"
 msgid "Start"
 msgstr "Comenzar"
 
-#: src/containers/EncounterList/searchBarUtils.ts:45
+#: src/containers/EncounterList/searchBarUtils.ts:22
 msgid "Start date"
 msgstr "Fecha de inicio"
 
@@ -1273,13 +1273,22 @@ msgid "Subject Type"
 msgstr "Tipo de sujeto"
 
 #: src/containers/QuestionnaireBuilder/PromptForm.tsx:104
+#: src/uberComponents/ResourceListPage/actions.tsx:94
+#: src/uberComponents/ResourceListPage/actions.tsx:127
+#: src/uberComponents/ResourceListPage/actions.tsx:172
 msgid "Submit"
 msgstr "Enviar"
 
 #: src/uberComponents/ResourceListPage/actions.tsx:78
 #: src/uberComponents/ResourceListPage/actions.tsx:105
 #: src/uberComponents/ResourceListPage/actions.tsx:146
-msgid "Successfully saved"
+#~ msgid "Successfully saved"
+#~ msgstr ""
+
+#: src/uberComponents/ResourceListPage/actions.tsx:88
+#: src/uberComponents/ResourceListPage/actions.tsx:122
+#: src/uberComponents/ResourceListPage/actions.tsx:168
+msgid "Successfully submitted"
 msgstr ""
 
 #: src/containers/Scheduling/Availability/index.tsx:43
