@@ -26,8 +26,12 @@ export interface QuestionnaireActionType {
     icon?: React.ReactNode;
 }
 
-export function navigationAction(title: React.ReactNode, link: string, icon?: React.ReactNode): NavigationActionType {
-    return { type: 'navigation', title, link, icon };
+export function navigationAction(
+    title: React.ReactNode,
+    link: string,
+    options?: { icon?: React.ReactNode },
+): NavigationActionType {
+    return { type: 'navigation', title, link, icon: options?.icon };
 }
 export function customAction(control: React.ReactNode): CustomActionType {
     return {
@@ -38,12 +42,12 @@ export function customAction(control: React.ReactNode): CustomActionType {
 export function questionnaireAction(
     title: React.ReactNode,
     questionnaireId: string,
-    icon?: React.ReactNode,
+    options?: { icon?: React.ReactNode },
 ): QuestionnaireActionType {
     return {
         type: 'questionnaire',
         title,
-        icon,
+        icon: options?.icon,
         questionnaireId,
     };
 }
@@ -63,25 +67,31 @@ export function RecordQuestionnaireAction<R extends Resource>({
     action,
     resource,
     reload,
+    defaultLaunchContext,
 }: {
     action: QuestionnaireActionType;
     resource: R;
     reload: () => void;
+    defaultLaunchContext: ParametersParameter[];
 }) {
     return (
         <ModalTrigger title={action.title} trigger={<Button type="link">{action.title}</Button>}>
             {({ closeModal }) => (
                 <QuestionnaireResponseForm
                     questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
-                    launchContextParameters={[{ name: resource.resourceType, resource: resource as any }]}
+                    launchContextParameters={[
+                        ...defaultLaunchContext,
+                        { name: resource.resourceType, resource: resource as any },
+                    ]}
                     onSuccess={() => {
                         notification.success({
-                            message: t`Successfully saved`,
+                            message: t`Successfully submitted`,
                         });
                         reload();
                         closeModal();
                     }}
                     onCancel={closeModal}
+                    saveButtonTitle={t`Submit`}
                 />
             )}
         </ModalTrigger>
@@ -109,11 +119,12 @@ export function HeaderQuestionnaireAction({ action, reload, defaultLaunchContext
                     questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
                     onSuccess={() => {
                         closeModal();
-                        notification.success({ message: t`Successfully saved` });
+                        notification.success({ message: t`Successfully submitted` });
                         reload();
                     }}
                     launchContextParameters={defaultLaunchContext}
                     onCancel={closeModal}
+                    saveButtonTitle={t`Submit`}
                 />
             )}
         </ModalTrigger>
@@ -125,11 +136,13 @@ export function BatchQuestionnaireAction<R extends Resource>({
     bundle,
     reload,
     disabled,
+    defaultLaunchContext,
 }: {
     action: QuestionnaireActionType;
     bundle: Bundle<R>;
     reload: () => void;
     disabled?: boolean;
+    defaultLaunchContext: ParametersParameter[];
 }) {
     return (
         <ModalTrigger
@@ -144,6 +157,7 @@ export function BatchQuestionnaireAction<R extends Resource>({
                 <QuestionnaireResponseForm
                     questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
                     launchContextParameters={[
+                        ...defaultLaunchContext,
                         {
                             name: 'Bundle',
                             resource: bundle as Bundle,
@@ -151,10 +165,11 @@ export function BatchQuestionnaireAction<R extends Resource>({
                     ]}
                     onSuccess={() => {
                         closeModal();
-                        notification.success({ message: t`Successfully saved` });
+                        notification.success({ message: t`Successfully submitted` });
                         reload();
                     }}
                     onCancel={closeModal}
+                    saveButtonTitle={t`Submit`}
                 />
             )}
         </ModalTrigger>
