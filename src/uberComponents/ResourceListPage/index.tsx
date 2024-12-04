@@ -23,6 +23,7 @@ import {
     RecordQuestionnaireAction,
     HeaderQuestionnaireAction,
     BatchQuestionnaireAction,
+    isCustomAction,
 } from './actions';
 export { navigationAction, customAction, questionnaireAction } from './actions';
 import { useResourceListPage } from './hooks';
@@ -225,8 +226,10 @@ function getRecordActionsColumn<R extends Resource>({
                                 <RecordQuestionnaireAction action={action} reload={reload} resource={record.resource} />
                             ) : isNavigationAction(action) ? (
                                 <NavigationAction action={action} resource={record.resource} />
+                            ) : isCustomAction(action) ? (
+                                action.control
                             ) : (
-                                action.title
+                                <Text>Unsupported action</Text>
                             )}
                         </Col>
                     ))}

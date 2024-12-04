@@ -1,10 +1,11 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
+import { Button } from 'antd';
 import { Patient } from 'fhir/r4b';
 
 import { SearchBarColumnType } from 'src/components/SearchBar/types';
 import { ResourceListPage } from 'src/uberComponents';
-import { navigationAction, questionnaireAction } from 'src/uberComponents/ResourceListPage/actions';
+import { customAction, navigationAction, questionnaireAction } from 'src/uberComponents/ResourceListPage/actions';
 import { formatHumanDate } from 'src/utils/date';
 import { renderHumanName } from 'src/utils/fhir';
 import { matchCurrentUserRole, Role } from 'src/utils/role';
@@ -68,6 +69,7 @@ export function PatientResourceListExample() {
             getRecordActions={(record) => [
                 navigationAction('Open', `/patients/${record.resource.id}`),
                 questionnaireAction('Edit', 'patient-edit'),
+                customAction(<Button type="link">Custom action</Button>),
             ]}
             getHeaderActions={() => [
                 questionnaireAction(<Trans>Add patient</Trans>, 'patient-create', <PlusOutlined />),
