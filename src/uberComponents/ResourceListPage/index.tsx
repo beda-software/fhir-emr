@@ -1,7 +1,7 @@
 import { plural, Trans } from '@lingui/macro';
 import { Empty, Row, Col, Button } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
-import { Bundle, Resource } from 'fhir/r4b';
+import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 
 import { formatError, SearchParams } from '@beda.software/fhir-react';
 import { isFailure, isLoading, isSuccess } from '@beda.software/remote-data';
@@ -76,6 +76,12 @@ interface ResourceListPageProps<R extends Resource> {
      * NOTE: Theoretically getHeaderActions can accept selected resources Bundle
      */
     getBatchActions?: () => Array<QuestionnaireActionType>;
+
+    /**
+     * Default launch context that will be added to al questionnaires
+     * TODO now it is used for header actions only
+     */
+    defaultLaunchContext?: ParametersParameter[];
 }
 
 export function ResourceListPage<R extends Resource>({
@@ -88,6 +94,7 @@ export function ResourceListPage<R extends Resource>({
     getBatchActions,
     searchBarColumns,
     tableColumns,
+    defaultLaunchContext,
 }: ResourceListPageProps<R>) {
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
         columns: searchBarColumns ?? [],
@@ -115,7 +122,11 @@ export function ResourceListPage<R extends Resource>({
                     </Col>
                     {headerActions.map((action, index) => (
                         <Col key={index}>
-                            <HeaderQuestionnaireAction action={action} reload={pagerManager.reload} />
+                            <HeaderQuestionnaireAction
+                                action={action}
+                                reload={pagerManager.reload}
+                                defaultLaunchContext={defaultLaunchContext ?? []}
+                            />
                         </Col>
                     ))}
                 </Row>

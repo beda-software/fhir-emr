@@ -1,6 +1,6 @@
 import { t } from '@lingui/macro';
 import { Button, notification } from 'antd';
-import { Bundle, Resource } from 'fhir/r4b';
+import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 import { useNavigate } from 'react-router-dom';
 
 import { ModalTrigger } from 'src/components/ModalTrigger';
@@ -87,7 +87,13 @@ export function RecordQuestionnaireAction<R extends Resource>({
     );
 }
 
-export function HeaderQuestionnaireAction({ action, reload }: { action: QuestionnaireActionType; reload: () => void }) {
+interface HeaderQuestionnaireActionProps {
+    action: QuestionnaireActionType;
+    reload: () => void;
+    defaultLaunchContext: ParametersParameter[];
+}
+
+export function HeaderQuestionnaireAction({ action, reload, defaultLaunchContext }: HeaderQuestionnaireActionProps) {
     return (
         <ModalTrigger
             title={action.title}
@@ -105,6 +111,7 @@ export function HeaderQuestionnaireAction({ action, reload }: { action: Question
                         notification.success({ message: t`Successfully saved` });
                         reload();
                     }}
+                    launchContextParameters={defaultLaunchContext}
                     onCancel={closeModal}
                 />
             )}
