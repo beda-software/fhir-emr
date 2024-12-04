@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/uberComponents/ResourceListPage/index.tsx:152
+#: src/uberComponents/ResourceListPage/index.tsx:164
 msgid "{0, plural, one {Selected # item} other {Selected # items}}"
 msgstr ""
 
@@ -31,7 +31,7 @@ msgstr ""
 #: src/containers/PatientList/index.tsx:111
 #: src/containers/PractitionerList/index.tsx:126
 #: src/containers/Prescriptions/index.tsx:151
-#: src/uberComponents/ResourceListPage/index.tsx:205
+#: src/uberComponents/ResourceListPage/index.tsx:225
 msgid "Actions"
 msgstr ""
 
@@ -110,7 +110,7 @@ msgstr ""
 
 #: src/components/ModalNewPatient/index.tsx:16
 #: src/components/ModalNewPatient/index.tsx:20
-#: src/containers/PatientResourceListExample/index.tsx:73
+#: src/containers/PatientResourceListExample/index.tsx:75
 msgid "Add patient"
 msgstr ""
 
@@ -208,7 +208,7 @@ msgstr ""
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer/hooks.ts:31
 #: src/containers/PatientList/index.tsx:94
-#: src/containers/PatientResourceListExample/index.tsx:46
+#: src/containers/PatientResourceListExample/index.tsx:47
 msgid "Birth date"
 msgstr ""
 
@@ -422,7 +422,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: src/containers/PatientResourceListExample/index.tsx:75
+#: src/containers/PatientResourceListExample/index.tsx:77
 msgid "Delete patients"
 msgstr ""
 
@@ -606,7 +606,7 @@ msgid "Fill"
 msgstr ""
 
 #: src/containers/PatientList/searchBarUtils.ts:10
-#: src/containers/PatientResourceListExample/index.tsx:65
+#: src/containers/PatientResourceListExample/index.tsx:66
 msgid "Find patient"
 msgstr ""
 
@@ -815,7 +815,7 @@ msgstr ""
 #: src/containers/PatientDetails/PatientResources/utils.tsx:152
 #: src/containers/PatientDetails/PatientResources/utils.tsx:188
 #: src/containers/PatientList/index.tsx:88
-#: src/containers/PatientResourceListExample/index.tsx:40
+#: src/containers/PatientResourceListExample/index.tsx:41
 #: src/containers/PractitionerList/index.tsx:113
 msgid "Name"
 msgstr ""
@@ -846,7 +846,7 @@ msgstr ""
 #: src/containers/PractitionerList/index.tsx:106
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:500
 #: src/containers/QuestionnaireList/index.tsx:107
-#: src/uberComponents/ResourceListPage/index.tsx:176
+#: src/uberComponents/ResourceListPage/index.tsx:188
 msgid "No data"
 msgstr ""
 
@@ -966,7 +966,7 @@ msgstr ""
 #: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:35
 #: src/containers/PatientDetails/PatientHeader/index.tsx:26
 #: src/containers/PatientList/index.tsx:59
-#: src/containers/PatientResourceListExample/index.tsx:35
+#: src/containers/PatientResourceListExample/index.tsx:36
 msgid "Patients"
 msgstr ""
 
@@ -1081,7 +1081,7 @@ msgstr ""
 #~ msgid "Reset password"
 #~ msgstr ""
 
-#: src/uberComponents/ResourceListPage/index.tsx:145
+#: src/uberComponents/ResourceListPage/index.tsx:157
 msgid "Reset selection"
 msgstr ""
 
@@ -1222,7 +1222,7 @@ msgid "Specialty"
 msgstr ""
 
 #: src/containers/PatientList/index.tsx:102
-#: src/containers/PatientResourceListExample/index.tsx:53
+#: src/containers/PatientResourceListExample/index.tsx:54
 msgid "SSN"
 msgstr ""
 
@@ -1291,13 +1291,22 @@ msgid "Subject Type"
 msgstr ""
 
 #: src/containers/QuestionnaireBuilder/PromptForm.tsx:104
+#: src/uberComponents/ResourceListPage/actions.tsx:94
+#: src/uberComponents/ResourceListPage/actions.tsx:127
+#: src/uberComponents/ResourceListPage/actions.tsx:172
 msgid "Submit"
 msgstr ""
 
 #: src/uberComponents/ResourceListPage/actions.tsx:78
 #: src/uberComponents/ResourceListPage/actions.tsx:105
 #: src/uberComponents/ResourceListPage/actions.tsx:146
-msgid "Successfully saved"
+#~ msgid "Successfully saved"
+#~ msgstr ""
+
+#: src/uberComponents/ResourceListPage/actions.tsx:88
+#: src/uberComponents/ResourceListPage/actions.tsx:122
+#: src/uberComponents/ResourceListPage/actions.tsx:168
+msgid "Successfully submitted"
 msgstr ""
 
 #: src/containers/Scheduling/Availability/index.tsx:43
@@ -1329,11 +1338,11 @@ msgstr ""
 msgid "Text with macro"
 msgstr ""
 
-#: src/containers/App/index.tsx:129
+#: src/containers/App/index.tsx:128
 msgid "Thank you for filling out the questionnaire. Now you can close this page."
 msgstr ""
 
-#: src/containers/App/index.tsx:128
+#: src/containers/App/index.tsx:127
 msgid "Thank you!"
 msgstr ""
 
