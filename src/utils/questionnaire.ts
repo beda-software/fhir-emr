@@ -123,7 +123,7 @@ export function questionnaireItemsToValidationSchema(questionnaireItems: Questio
         } else {
             validationSchema[item.linkId] = schema;
 
-            if (item.item) {
+            if (item.item && !item.repeats) {
                 validationSchema[item.linkId] = yup
                     .object({ items: questionnaireItemsToValidationSchema(item.item) })
                     .required();
