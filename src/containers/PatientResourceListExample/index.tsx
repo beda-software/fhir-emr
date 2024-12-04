@@ -72,7 +72,7 @@ export function PatientResourceListExample() {
                 customAction(<Button type="link">Custom action</Button>),
             ]}
             getHeaderActions={() => [
-                questionnaireAction(<Trans>Add patient</Trans>, 'patient-create', <PlusOutlined />),
+                questionnaireAction(<Trans>Add patient</Trans>, 'patient-create', { icon: <PlusOutlined /> }),
             ]}
             getBatchActions={() => [questionnaireAction(<Trans>Delete patients</Trans>, 'patients-batch-delete')]}
         ></ResourceListPage>

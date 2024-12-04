@@ -83,8 +83,7 @@ interface ResourceListPageProps<R extends Resource> {
     getBatchActions?: () => Array<QuestionnaireActionType>;
 
     /**
-     * Default launch context that will be added to al questionnaires
-     * TODO now it is used for header actions only
+     * Default launch context that will be added to all questionnaires
      */
     defaultLaunchContext?: ParametersParameter[];
 }
@@ -108,7 +107,7 @@ export function ResourceListPage<R extends Resource>({
 
     const {
         recordResponse,
-        pagerManager,
+        reload,
         pagination,
         handleTableChange,
         selectedRowKeys,
@@ -127,7 +126,7 @@ export function ResourceListPage<R extends Resource>({
                 <React.Fragment key={index}>
                     <HeaderQuestionnaireAction
                         action={action}
-                        reload={pagerManager.reload}
+                        reload={reload}
                         defaultLaunchContext={defaultLaunchContext ?? []}
                     />
                 </React.Fragment>
@@ -148,9 +147,10 @@ export function ResourceListPage<R extends Resource>({
                         <Col key={index}>
                             <BatchQuestionnaireAction<R>
                                 action={action}
-                                reload={pagerManager.reload}
+                                reload={reload}
                                 bundle={selectedResourcesBundle}
                                 disabled={!selectedRowKeys.length}
+                                defaultLaunchContext={defaultLaunchContext ?? []}
                             />
                         </Col>
                     ))}
@@ -197,7 +197,13 @@ export function ResourceListPage<R extends Resource>({
                 columns={[
                     ...tableColumns,
                     ...(getRecordActions
-                        ? [getRecordActionsColumn({ getRecordActions, reload: pagerManager.reload })]
+                        ? [
+                              getRecordActionsColumn({
+                                  getRecordActions,
+                                  reload,
+                                  defaultLaunchContext: defaultLaunchContext ?? [],
+                              }),
+                          ]
                         : []),
                 ]}
                 loading={isLoading(recordResponse) && { indicator: SpinIndicator }}
@@ -208,11 +214,13 @@ export function ResourceListPage<R extends Resource>({
 
 function getRecordActionsColumn<R extends Resource>({
     getRecordActions,
+    defaultLaunchContext,
     reload,
 }: {
     getRecordActions: (
         record: RecordType<R>,
     ) => Array<QuestionnaireActionType | NavigationActionType | CustomActionType>;
+    defaultLaunchContext?: ParametersParameter[];
     reload: () => void;
 }) {
     return {
@@ -225,7 +233,12 @@ function getRecordActionsColumn<R extends Resource>({
                     {getRecordActions(record).map((action, index) => (
                         <Col key={index}>
                             {isQuestionnaireAction(action) ? (
-                                <RecordQuestionnaireAction action={action} reload={reload} resource={record.resource} />
+                                <RecordQuestionnaireAction
+                                    action={action}
+                                    reload={reload}
+                                    resource={record.resource}
+                                    defaultLaunchContext={defaultLaunchContext ?? []}
+                                />
                             ) : isNavigationAction(action) ? (
                                 <NavigationAction action={action} resource={record.resource} />
                             ) : isCustomAction(action) ? (

@@ -1,5 +1,5 @@
 import { Bundle, Resource } from 'fhir/r4b';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { SearchParams } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess } from '@beda.software/remote-data';
@@ -13,14 +13,13 @@ export function useResourceListPage<R extends Resource>(
     resourceType: R['resourceType'],
     extractPrimaryResources: ((bundle: Bundle) => R[]) | undefined,
     filterValues: ColumnFilterValue[],
-    searchParams: SearchParams,
+    defaultSearchParams: SearchParams,
 ) {
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
     const debouncedFilterValues = useDebounce(filterValues, 300);
 
-    const defaultQueryParameters = {
-        _sort: '-_lastUpdated',
+    const searchBarSearchParams = {
         ...Object.fromEntries(
             debouncedFilterValues.map((filterValue) => [
                 filterValue.column.id,
@@ -28,11 +27,21 @@ export function useResourceListPage<R extends Resource>(
             ]),
         ),
     };
+    const searchParams = { _sort: '-_lastUpdated', ...defaultSearchParams, ...searchBarSearchParams };
 
     const { resourceResponse, pagerManager, handleTableChange, pagination } = usePagerExtended<R, ColumnFilterValue[]>(
         resourceType,
-        { ...searchParams, ...defaultQueryParameters },
+        searchParams,
     );
+
+    useEffect(() => {
+        setSelectedRowKeys([]);
+    }, [JSON.stringify(searchParams)]);
+
+    const reload = () => {
+        setSelectedRowKeys([]);
+        pagerManager.reload();
+    };
 
     const extractPrimaryResourcesMemoized = useMemo(() => {
         return extractPrimaryResources ?? extractPrimaryResourcesFactory(resourceType);
@@ -60,11 +69,11 @@ export function useResourceListPage<R extends Resource>(
     return {
         pagination,
         recordResponse,
-        pagerManager,
         handleTableChange,
         selectedRowKeys,
         setSelectedRowKeys,
         selectedResourcesBundle,
+        reload,
     };
 }
 
