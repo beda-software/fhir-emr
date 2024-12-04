@@ -1,6 +1,6 @@
 import { t } from '@lingui/macro';
 import { Button, notification } from 'antd';
-import { Bundle, Resource } from 'fhir/r4b';
+import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 import { useNavigate } from 'react-router-dom';
 
 import { ModalTrigger } from 'src/components/ModalTrigger';
@@ -16,8 +16,7 @@ export interface NavigationActionType {
 
 export interface CustomActionType {
     type: 'custom';
-    title: React.ReactNode;
-    icon?: React.ReactNode;
+    control: React.ReactNode;
 }
 
 export interface QuestionnaireActionType {
@@ -30,11 +29,10 @@ export interface QuestionnaireActionType {
 export function navigationAction(title: React.ReactNode, link: string, icon?: React.ReactNode): NavigationActionType {
     return { type: 'navigation', title, link, icon };
 }
-export function customAction(title: React.ReactNode, icon?: React.ReactNode): CustomActionType {
+export function customAction(control: React.ReactNode): CustomActionType {
     return {
         type: 'custom',
-        title,
-        icon,
+        control,
     };
 }
 export function questionnaireAction(
@@ -56,6 +54,9 @@ export function isQuestionnaireAction(action: ActionType): action is Questionnai
 }
 export function isNavigationAction(action: ActionType): action is NavigationActionType {
     return action.type === 'navigation';
+}
+export function isCustomAction(action: ActionType): action is CustomActionType {
+    return action.type === 'custom';
 }
 
 export function RecordQuestionnaireAction<R extends Resource>({
@@ -87,7 +88,13 @@ export function RecordQuestionnaireAction<R extends Resource>({
     );
 }
 
-export function HeaderQuestionnaireAction({ action, reload }: { action: QuestionnaireActionType; reload: () => void }) {
+interface HeaderQuestionnaireActionProps {
+    action: QuestionnaireActionType;
+    reload: () => void;
+    defaultLaunchContext: ParametersParameter[];
+}
+
+export function HeaderQuestionnaireAction({ action, reload, defaultLaunchContext }: HeaderQuestionnaireActionProps) {
     return (
         <ModalTrigger
             title={action.title}
@@ -105,6 +112,7 @@ export function HeaderQuestionnaireAction({ action, reload }: { action: Question
                         notification.success({ message: t`Successfully saved` });
                         reload();
                     }}
+                    launchContextParameters={defaultLaunchContext}
                     onCancel={closeModal}
                 />
             )}

@@ -26,6 +26,7 @@ import {
     Gtable,
     QuestionQuantity,
     Grid,
+    MDEditorControl,
 } from './widgets';
 import { Display } from './widgets/display';
 import { GroupWizard, GroupWizardWithTooltips } from './widgets/GroupWizard';
@@ -64,6 +65,7 @@ export const itemControlComponents: ItemControlQuestionItemComponentMapping = {
     'reference-radio-button': ReferenceRadioButton,
     'check-box': InlineChoice,
     'input-inside-text': QuestionInputInsideText,
+    'markdown-editor': MDEditorControl,
 };
 
 export const groupControlComponents: ItemControlGroupItemComponentMapping = {
