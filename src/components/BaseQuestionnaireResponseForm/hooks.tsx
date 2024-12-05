@@ -55,9 +55,13 @@ export function useFieldController(fieldName: any, questionItem: QuestionnaireIt
         [repeats, field],
     );
 
+    // This is a wrapper for react-select that always wrap single value into array
+    const onSelect = useCallback((option: any) => field.onChange([].concat(option)), [field]);
+
     return {
         ...field,
         onMultiChange,
+        onSelect,
         fieldState,
         disabled: readOnly || qrfContext.readOnly,
         formItem,

@@ -52,9 +52,7 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
     const { linkId, answerOption, repeats, answerValueSet, choiceColumn } = questionItem;
     const fieldName = [...parentPath, linkId];
 
-    const { value, formItem, onChange, placeholder = t`Select...` } = useFieldController(fieldName, questionItem);
-
-    const onSelect = useCallback((option: any) => onChange([].concat(option)), [onChange]);
+    const { value, formItem, onSelect, placeholder = t`Select...` } = useFieldController(fieldName, questionItem);
 
     if (answerValueSet) {
         return (
