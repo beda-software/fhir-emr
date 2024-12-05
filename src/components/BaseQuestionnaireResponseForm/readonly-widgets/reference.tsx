@@ -10,20 +10,20 @@ import { AnswerReferenceProps, useAnswerReference } from '../widgets/reference';
 function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource = any>(
     props: AnswerReferenceProps<R, IR>,
 ) {
-    const { fieldController, text, repeats } = useAnswerReference(props);
+    const { fieldController, text, repeats, choiceColumn } = useAnswerReference(props);
 
     if (repeats) {
         return (
             <S.Question className={classNames(s.question, s.row, 'form__question')}>
                 <span className={s.questionText}>{text}</span>
-                <span className={s.answer}>{getArrayDisplay(fieldController.value?.value) || '-'}</span>
+                <span className={s.answer}>{getArrayDisplay(fieldController.value?.value, choiceColumn) || '-'}</span>
             </S.Question>
         );
     } else {
         return (
             <S.Question className={classNames(s.question, s.row, 'form__question')}>
                 <span className={s.questionText}>{text}</span>
-                <span className={s.answer}>{getDisplay(fieldController.value?.value) || '-'}</span>
+                <span className={s.answer}>{getDisplay(fieldController.value?.value, choiceColumn) || '-'}</span>
             </S.Question>
         );
     }
