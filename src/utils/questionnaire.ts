@@ -72,12 +72,12 @@ export function getDisplay(
     return '';
 }
 
-export function getArrayDisplay(options?: QuestionnaireResponseItemAnswer[]): string | null {
+export function getArrayDisplay(options?: QuestionnaireResponseItemAnswer[], choiceColumn?: QuestionnaireItemChoiceColumn[]): string | null {
     if (!options) {
         return null;
     }
 
-    return options.map((v: QuestionnaireResponseItemAnswer) => getDisplay(v.value)).join(', ');
+    return options.map((v: QuestionnaireResponseItemAnswer) => getDisplay(v.value, choiceColumn)).join(', ');
 }
 
 export function questionnaireItemsToValidationSchema(questionnaireItems: QuestionnaireItem[]) {
@@ -98,20 +98,8 @@ export function questionnaireItemsToValidationSchema(questionnaireItems: Questio
             schema = yup.date();
             if (item.required) schema = schema.required();
             schema = createSchemaArrayOfValues(yup.object({ date: schema })).required();
-        } else if (item.type === 'reference') {
-            schema = yup.object({
-                resourceType: yup.string().required(),
-                display: yup.string().nullable(),
-                id: yup.string().required(),
-            });
-
-            if (item.required) {
-                schema = createSchemaArrayOfValues(yup.object({ Reference: schema })).required();
-            } else {
-                schema = yup.mixed().nullable();
-            }
         } else {
-            schema = item.required ? yup.mixed().required() : yup.mixed().nullable();
+            schema = item.required ? yup.array().of(yup.mixed()).min(1).required() : yup.mixed().nullable();
         }
 
         if (item.enableWhen) {
