@@ -71,12 +71,12 @@ export function getDisplay(
     return '';
 }
 
-export function getArrayDisplay(options?: QuestionnaireResponseItemAnswer[]): string | null {
+export function getArrayDisplay(options?: QuestionnaireResponseItemAnswer[], choiceColumn?: QuestionnaireItemChoiceColumn[]): string | null {
     if (!options) {
         return null;
     }
 
-    return options.map((v: QuestionnaireResponseItemAnswer) => getDisplay(v.value)).join(', ');
+    return options.map((v: QuestionnaireResponseItemAnswer) => getDisplay(v.value, choiceColumn)).join(', ');
 }
 
 export function questionnaireItemsToValidationSchema(questionnaireItems: QuestionnaireItem[]) {
