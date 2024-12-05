@@ -47,6 +47,7 @@ describe('Field error message should be relevant and human readable', () => {
                 },
                 invalid: true,
                 isTouched: true,
+                isValidating: true,
                 isDirty: true,
             };
 
