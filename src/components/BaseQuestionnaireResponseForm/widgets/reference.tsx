@@ -174,6 +174,7 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         text,
         repeats,
         placeholder: entryFormat,
+        choiceColumn,
     };
 }
 
