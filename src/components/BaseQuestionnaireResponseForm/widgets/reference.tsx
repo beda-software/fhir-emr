@@ -97,10 +97,9 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
     context,
     overrideGetDisplay,
 }: AnswerReferenceProps<R, IR>) {
-    const { linkId, repeats, required, answerExpression, choiceColumn, text, entryFormat, referenceResource } =
-        questionItem;
+    const { linkId, repeats, answerExpression, choiceColumn, text, entryFormat, referenceResource } = questionItem;
     const rootFieldPath = [...parentPath, linkId];
-    const fieldPath = [...rootFieldPath, ...(repeats ? [] : ['0'])];
+    const fieldPath = [...rootFieldPath];
     const rootFieldName = rootFieldPath.join('.');
 
     const fieldName = fieldPath.join('.');
@@ -115,9 +114,10 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
     }, [choiceColumn, context, overrideGetDisplay]);
 
     // TODO: add support for fhirpath and application/x-fhir-query
+    const expression = answerExpression!.expression!;
     const [resourceType, searchParams] = useMemo(() => {
-        return parseFhirQueryExpression(answerExpression!.expression!, context);
-    }, [answerExpression?.expression!, context]);
+        return parseFhirQueryExpression(expression, context);
+    }, [expression, context]);
 
     const loadOptions = useCallback(
         async (searchText: string) => {
@@ -157,31 +157,6 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         return await loadOptions('');
     }, [JSON.stringify(searchParams)]);
 
-    const onChange = (
-        _value: SingleValue<QuestionnaireItemAnswerOption> | MultiValue<QuestionnaireItemAnswerOption>,
-        action: ActionMeta<QuestionnaireItemAnswerOption>,
-    ) => {
-        if (!repeats || action.action !== 'select-option') {
-            return;
-        }
-    };
-
-    const validate = required
-        ? (inputValue: any) => {
-              if (repeats) {
-                  if (!inputValue || !inputValue.length) {
-                      return 'Choose at least one option';
-                  }
-              } else {
-                  if (!inputValue) {
-                      return 'Required';
-                  }
-              }
-
-              return undefined;
-          }
-        : undefined;
-
     const depsUrl = `${resourceType}?${buildQueryParams(searchParams as any)}`;
 
     const deps = [linkId, depsUrl];
@@ -190,8 +165,6 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         rootFieldName,
         fieldName,
         debouncedLoadOptions,
-        onChange,
-        validate,
         loadOptions,
         optionsRD,
         searchParams,
@@ -208,15 +181,16 @@ function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource =
     props: AnswerReferenceProps<R, IR>,
 ) {
     const { debouncedLoadOptions, fieldController, repeats, placeholder, optionsRD } = useAnswerReference(props);
-    const { formItem } = fieldController;
+
+    const { formItem, onSelect } = fieldController;
 
     return (
         <RenderRemoteData remoteData={optionsRD}>
             {(options) => (
                 <Form.Item {...formItem}>
                     <AsyncSelect
-                        onChange={fieldController.onChange}
-                        value={repeats ? fieldController.value : [fieldController.value]}
+                        onChange={onSelect}
+                        value={fieldController.value}
                         loadOptions={debouncedLoadOptions}
                         defaultOptions={options}
                         getOptionLabel={(option) => getAnswerDisplay(option.value)}
