@@ -31,6 +31,10 @@ import { SearchBarColumn } from '../../components/SearchBar/types';
 
 type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
 
+interface ActionManager {
+    reload: () => void;
+}
+
 interface ResourceListPageProps<R extends Resource> {
     /* Page header title (for example, Organizations) */
     headerTitle: string;
@@ -61,6 +65,7 @@ interface ResourceListPageProps<R extends Resource> {
      */
     getRecordActions?: (
         record: RecordType<R>,
+        manager: ActionManager,
     ) => Array<QuestionnaireActionType | NavigationActionType | CustomActionType>;
 
     /**
@@ -217,6 +222,7 @@ function getRecordActionsColumn<R extends Resource>({
 }: {
     getRecordActions: (
         record: RecordType<R>,
+        manager: ActionManager,
     ) => Array<QuestionnaireActionType | NavigationActionType | CustomActionType>;
     defaultLaunchContext?: ParametersParameter[];
     reload: () => void;
@@ -228,7 +234,7 @@ function getRecordActionsColumn<R extends Resource>({
         render: (_text: any, record: { resource: R; bundle: Bundle }) => {
             return (
                 <Row wrap={false}>
-                    {getRecordActions(record).map((action, index) => (
+                    {getRecordActions(record, { reload }).map((action, index) => (
                         <Col key={index}>
                             {isQuestionnaireAction(action) ? (
                                 <RecordQuestionnaireAction
