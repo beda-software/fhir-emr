@@ -1133,10 +1133,6 @@ msgstr "Buscar por paciente"
 msgid "Search by practitioner"
 msgstr "Buscar por profesional"
 
-#: src/containers/EncounterList/searchBarUtils.ts:22
-#~ msgid "Search by status"
-#~ msgstr ""
-
 #: src/containers/PatientDetails/PatientOrders/index.tsx:177
 msgid "Search orders"
 msgstr "Buscar órdenes"

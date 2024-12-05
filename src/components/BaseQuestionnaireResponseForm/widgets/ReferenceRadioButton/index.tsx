@@ -18,7 +18,7 @@ function ReferenceRadioButtonUnsafe<R extends Resource = any, IR extends Resourc
 
     const { optionsRD, fieldController } = useAnswerReference(props);
 
-    const { formItem, value, onChange, disabled } = fieldController;
+    const { formItem, value, onSelect, disabled } = fieldController;
 
     return (
         <RenderRemoteData
@@ -34,7 +34,7 @@ function ReferenceRadioButtonUnsafe<R extends Resource = any, IR extends Resourc
                                 key={JSON.stringify(answerOption)}
                                 checked={_.isEqual(value?.value, answerOption.value)}
                                 disabled={disabled}
-                                onChange={() => onChange(answerOption)}
+                                onChange={() => onSelect(answerOption)}
                                 data-testid={`inline-choice__${_.kebabCase(
                                     JSON.stringify(getDisplay(answerOption.value)),
                                 )}`}
