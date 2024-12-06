@@ -1,6 +1,9 @@
 import { decodeJwt } from 'jose';
 
-import { setInstanceToken as setAidboxInstanceToken } from 'aidbox-react/lib/services/instance';
+import {
+    setInstanceToken as setAidboxInstanceToken,
+    resetInstanceToken as resetAidboxInstanceToken,
+} from 'aidbox-react/lib/services/instance';
 import { service } from 'aidbox-react/lib/services/service';
 import { Token } from 'aidbox-react/lib/services/token';
 
@@ -8,7 +11,10 @@ import { User } from '@beda.software/aidbox-types';
 import config from '@beda.software/emr-config';
 import { serviceFetch, isSuccess, RemoteDataResult } from '@beda.software/remote-data';
 
-import { setInstanceToken as setFHIRInstanceToken } from 'src/services/fhir';
+import {
+    setInstanceToken as setFHIRInstanceToken,
+    resetInstanceToken as resetFHIRInstanceToken,
+} from 'src/services/fhir';
 
 export interface OAuthState {
     nextUrl?: string;
@@ -78,6 +84,14 @@ export function logout() {
         method: 'DELETE',
         url: '/Session',
     });
+}
+
+export async function doLogout() {
+    await logout();
+    resetAidboxInstanceToken();
+    resetFHIRInstanceToken();
+    localStorage.clear();
+    window.location.href = '/';
 }
 
 export function getUserInfo() {
