@@ -137,13 +137,13 @@ export function ResourceListPage<R extends Resource>({
                 </React.Fragment>
             ))}
             header={{
-                children: (
+                children: columnsFilterValues.length ? (
                     <SearchBar
                         columnsFilterValues={columnsFilterValues}
                         onChangeColumnFilter={onChangeColumnFilter}
                         onResetFilters={onResetFilters}
                     />
-                ),
+                ) : null,
             }}
         >
             {batchActions.length ? (
