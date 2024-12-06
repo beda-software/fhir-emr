@@ -1,3 +1,4 @@
+import { TablePaginationConfig } from 'antd';
 import { Bundle, Resource } from 'fhir/r4b';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -29,10 +30,22 @@ export function useResourceListPage<R extends Resource>(
     };
     const searchParams = { _sort: '-_lastUpdated', ...defaultSearchParams, ...searchBarSearchParams };
 
-    const { resourceResponse, pagerManager, handleTableChange, pagination } = usePagerExtended<R, ColumnFilterValue[]>(
-        resourceType,
-        searchParams,
-    );
+    const {
+        resourceResponse,
+        pagerManager,
+        handleTableChange: pagerHandleTableChange,
+        pagination,
+    } = usePagerExtended<R, ColumnFilterValue[]>(resourceType, searchParams);
+
+    const handleTableChange = async (pagination: TablePaginationConfig) => {
+        // Handle pagination only
+        if (typeof pagination.current !== 'number') {
+            return;
+        }
+
+        pagerHandleTableChange(pagination);
+        setSelectedRowKeys([]);
+    };
 
     useEffect(() => {
         setSelectedRowKeys([]);
