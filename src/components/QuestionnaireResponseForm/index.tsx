@@ -25,7 +25,7 @@ import { saveFHIRResource, updateFHIRResource } from 'src/services/fhir';
 import { FormFooterComponentProps } from '../BaseQuestionnaireResponseForm/FormFooter';
 import { Spinner } from '../Spinner';
 
-interface Props extends QuestionnaireResponseFormProps {
+export interface QRFProps extends QuestionnaireResponseFormProps {
     onSuccess?: (response: QuestionnaireResponseFormSaveResponse) => void;
     onFailure?: (error: any) => void;
     readOnly?: boolean;
@@ -126,7 +126,7 @@ export function onFormResponse(props: {
     }
 }
 
-export function useQuestionnaireResponseForm(props: Props) {
+export function useQuestionnaireResponseForm(props: QRFProps) {
     // TODO find what cause rerender and fix it
     // remove this temporary hack
     const memoizedProps = useMemo(() => props, [JSON.stringify(props)]);
@@ -152,7 +152,7 @@ export function useQuestionnaireResponseForm(props: Props) {
     return { response, onSubmit, readOnly, onCancel };
 }
 
-export function QuestionnaireResponseForm(props: Props) {
+export function QuestionnaireResponseForm(props: QRFProps) {
     const { response, onSubmit, readOnly, onCancel } = useQuestionnaireResponseForm(props);
 
     return (
