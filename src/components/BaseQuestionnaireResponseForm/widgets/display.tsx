@@ -1,15 +1,21 @@
 import { QuestionItemProps } from 'sdc-qrf';
+import Markdown from 'react-markdown';
 
 import { Paragraph } from 'src/components/Typography';
 
 export function Display({ questionItem }: QuestionItemProps) {
-    const { text, helpText } = questionItem;
+    const { text, helpText, itemControl } = questionItem;
+
+    const isMarkdown = itemControl?.coding?.[0]?.code == 'markdown';
 
     return (
         <div style={{ width: '100%' }}>
             {text && (
                 <Paragraph style={{ margin: 0, fontWeight: 'bold' }}>
-                    <TextWithLink text={text} />
+                    {isMarkdown ?
+                        <Markdown>{text}</Markdown> :
+                        <TextWithLink text={text} />
+                }
                 </Paragraph>
             )}
             {helpText && <Paragraph style={{ margin: 0 }}>{helpText}</Paragraph>}

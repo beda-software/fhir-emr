@@ -16,7 +16,7 @@ export function QuestionString({ parentPath, questionItem }: QuestionItemProps) 
 }
 
 export function QuestionText({ parentPath, questionItem }: QuestionItemProps) {
-    const { linkId, rowsNumber } = questionItem;
+    const { linkId, rowsNumber = 3 } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
     const { value, onChange, disabled, formItem, placeholder } = useFieldController(fieldName, questionItem);
 
@@ -24,7 +24,7 @@ export function QuestionText({ parentPath, questionItem }: QuestionItemProps) {
         <Form.Item {...formItem} data-testid={linkId}>
             <Input.TextArea
                 value={value}
-                rows={rowsNumber ?? 1}
+                rows={rowsNumber}
                 disabled={disabled}
                 onChange={onChange}
                 placeholder={placeholder}
