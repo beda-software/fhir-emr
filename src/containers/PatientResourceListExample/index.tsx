@@ -36,7 +36,7 @@ export function PatientResourceListExample() {
             headerTitle={t`Patients`}
             resourceType="Patient"
             searchParams={searchParams}
-            tableColumns={[
+            getTableColumns={() => [
                 {
                     title: <Trans>Name</Trans>,
                     dataIndex: 'name',
@@ -59,9 +59,10 @@ export function PatientResourceListExample() {
                     width: '25%',
                 },
             ]}
-            searchBarColumns={[
+            getFilters={() => [
                 {
                     id: 'name',
+                    searchParam: 'name',
                     type: SearchBarColumnType.STRING,
                     placeholder: t`Find patient`,
                 },

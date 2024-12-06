@@ -31,7 +31,7 @@ import { SearchBarColumn } from '../../components/SearchBar/types';
 
 type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
 
-interface ActionManager {
+interface TableManager {
     reload: () => void;
 }
 
@@ -53,11 +53,11 @@ interface ResourceListPageProps<R extends Resource> {
     /* Default search params */
     searchParams?: SearchParams;
 
-    /* Search bar columns that displayed before the table */
-    searchBarColumns?: SearchBarColumn[];
+    /* Filter that are displayed in the search bar and inside table columns */
+    getFilters?: () => SearchBarColumn[];
 
     /* Table columns without action column - action column is generated based on `getRecordActions` */
-    tableColumns: ColumnsType<RecordType<R>>;
+    getTableColumns: (manager: TableManager) => ColumnsType<RecordType<R>>;
 
     /**
      * Record actions list that is displayed in the table per record
@@ -65,7 +65,7 @@ interface ResourceListPageProps<R extends Resource> {
      */
     getRecordActions?: (
         record: RecordType<R>,
-        manager: ActionManager,
+        manager: TableManager,
     ) => Array<QuestionnaireActionType | NavigationActionType | CustomActionType>;
 
     /**
@@ -97,10 +97,14 @@ export function ResourceListPage<R extends Resource>({
     getRecordActions,
     getHeaderActions,
     getBatchActions,
-    searchBarColumns,
-    tableColumns,
+    getFilters,
+    getTableColumns,
     defaultLaunchContext,
 }: ResourceListPageProps<R>) {
+    const allFilters = getFilters?.() ?? [];
+    // TODO: filter out column filters
+    const searchBarColumns = allFilters;
+
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
         columns: searchBarColumns ?? [],
     });
@@ -199,7 +203,7 @@ export function ResourceListPage<R extends Resource>({
                     rowKey={(p) => p.resource.id!}
                     dataSource={isSuccess(recordResponse) ? recordResponse.data : []}
                     columns={[
-                        ...tableColumns,
+                        ...getTableColumns({ reload }),
                         ...(getRecordActions
                             ? [
                                   getRecordActionsColumn({
@@ -224,7 +228,7 @@ function getRecordActionsColumn<R extends Resource>({
 }: {
     getRecordActions: (
         record: RecordType<R>,
-        manager: ActionManager,
+        manager: TableManager,
     ) => Array<QuestionnaireActionType | NavigationActionType | CustomActionType>;
     defaultLaunchContext?: ParametersParameter[];
     reload: () => void;
