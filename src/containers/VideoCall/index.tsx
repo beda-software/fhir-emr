@@ -1,13 +1,12 @@
 import { JitsiMeeting } from '@jitsi/react-sdk';
-import { Col, Row } from 'antd';
+import { Trans } from '@lingui/macro';
 import { ContactPoint } from 'fhir/r4b';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import config from '@beda.software/emr-config';
 
-import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
+import { PageContainer } from 'src/components/BaseLayout/PageContainer';
 import { EncounterData } from 'src/components/EncountersTable/types';
-import { Title } from 'src/components/Typography';
 import { sharedJitsiAuthToken } from 'src/sharedState';
 import { renderHumanName } from 'src/utils/fhir';
 
@@ -26,42 +25,33 @@ export function VideoCall() {
     const jwtAuthToken = sharedJitsiAuthToken.getSharedState();
 
     return (
-        <>
-            <BasePageHeader style={{ paddingBottom: 0 }}>
-                <Row justify="space-between" align="middle" style={{ marginBottom: 40 }}>
-                    <Col>
-                        <Title style={{ marginBottom: 0 }}>Video call</Title>
-                    </Col>
-                </Row>
-            </BasePageHeader>
-            <BasePageContent>
-                <S.Spinner />
-                <S.Content>
-                    <JitsiMeeting
-                        domain={config.jitsiMeetServer}
-                        roomName={roomName}
-                        jwt={jwtAuthToken}
-                        configOverwrite={{
-                            startWithAudioMuted: true,
-                            startWithVideoMuted: true,
-                            analytics: {
-                                disabled: true,
-                            },
-                            readOnlyName: true,
-                        }}
-                        userInfo={{
-                            displayName: practitionerName.split('-').join(' '),
-                            email: practitionerEmail,
-                        }}
-                        getIFrameRef={(iframeRef) => {
-                            iframeRef.style.height = '500px';
-                        }}
-                        onReadyToClose={() => {
-                            navigate(`/patients/${encounter.patient?.id}/encounters/${encounter.id}`);
-                        }}
-                    />
-                </S.Content>
-            </BasePageContent>
-        </>
+        <PageContainer title={<Trans>Video call</Trans>}>
+            <S.Spinner />
+            <S.Content>
+                <JitsiMeeting
+                    domain={config.jitsiMeetServer}
+                    roomName={roomName}
+                    jwt={jwtAuthToken}
+                    configOverwrite={{
+                        startWithAudioMuted: true,
+                        startWithVideoMuted: true,
+                        analytics: {
+                            disabled: true,
+                        },
+                        readOnlyName: true,
+                    }}
+                    userInfo={{
+                        displayName: practitionerName.split('-').join(' '),
+                        email: practitionerEmail,
+                    }}
+                    getIFrameRef={(iframeRef) => {
+                        iframeRef.style.height = '500px';
+                    }}
+                    onReadyToClose={() => {
+                        navigate(`/patients/${encounter.patient?.id}/encounters/${encounter.id}`);
+                    }}
+                />
+            </S.Content>
+        </PageContainer>
     );
 }

@@ -1,11 +1,11 @@
 import { Trans, t } from '@lingui/macro';
-import { Table } from 'antd';
 import _ from 'lodash';
 import { Outlet, Route, Routes, useParams } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
-import { BasePageContent } from 'src/components/BaseLayout';
+import { Table } from 'src/components';
+import { PageContainer } from 'src/components/BaseLayout/PageContainer';
 import { Spinner } from 'src/components/Spinner';
 import { getFHIRReferenceResourceId } from 'src/utils/reference';
 
@@ -22,23 +22,28 @@ export function InvoiceDetails() {
     return (
         <RenderRemoteData remoteData={invoiceDetailsResponse} renderLoading={Spinner}>
             {({ invoice, patient, practitioner }) => (
-                <>
-                    <InvoiceDetailsHeader invoice={invoice} patient={patient} practitioner={practitioner} />
-                    <BasePageContent>
-                        <Routes>
-                            <Route
-                                path="/"
-                                element={
-                                    <>
-                                        <Outlet />
-                                    </>
-                                }
-                            >
-                                <Route path="/" element={<LineItemsTable invoice={invoice} />} />
-                            </Route>
-                        </Routes>
-                    </BasePageContent>
-                </>
+                <PageContainer
+                    variant="with-tabs"
+                    title={<Trans>Medical Services Invoice</Trans>}
+                    header={{
+                        children: (
+                            <InvoiceDetailsHeader invoice={invoice} patient={patient} practitioner={practitioner} />
+                        ),
+                    }}
+                >
+                    <Routes>
+                        <Route
+                            path="/"
+                            element={
+                                <>
+                                    <Outlet />
+                                </>
+                            }
+                        >
+                            <Route path="/" element={<LineItemsTable invoice={invoice} />} />
+                        </Route>
+                    </Routes>
+                </PageContainer>
             )}
         </RenderRemoteData>
     );

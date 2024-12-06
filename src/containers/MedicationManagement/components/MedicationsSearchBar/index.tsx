@@ -1,13 +1,12 @@
 import { t } from '@lingui/macro';
-import { Row, Button } from 'antd';
+import { Button } from 'antd';
 
+import { S } from 'src/components/SearchBar/styles';
 import { AsyncDropdown } from 'src/containers/OrganizationScheduling/HealthcareServicePractitionerSelect';
 import {
     OptionType,
     SelectOption,
 } from 'src/containers/OrganizationScheduling/HealthcareServicePractitionerSelect/types';
-
-import { S } from './MedicationsSearchBar.styles';
 
 export interface MedicationsSearchBarSelectProps {
     selectedMedication: SelectOption;
@@ -21,16 +20,14 @@ export function MedicationsSearchBar(props: MedicationsSearchBarSelectProps) {
 
     return (
         <S.Container>
-            <Row gutter={[32, 16]}>
-                <S.SelectContainer>
-                    <AsyncDropdown
-                        onChange={onChangeMedication}
-                        loadOptions={loadMedicationOptions}
-                        value={selectedMedication as OptionType}
-                        placeholder={t`Medication`}
-                    />
-                </S.SelectContainer>
-            </Row>
+            <S.LeftColumn>
+                <AsyncDropdown
+                    onChange={onChangeMedication}
+                    loadOptions={loadMedicationOptions}
+                    value={selectedMedication as OptionType}
+                    placeholder={t`Medication`}
+                />
+            </S.LeftColumn>
 
             <Button onClick={reset}>{t`Reset`}</Button>
         </S.Container>

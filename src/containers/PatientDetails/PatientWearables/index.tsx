@@ -8,7 +8,6 @@ import { isFailure, isLoading } from '@beda.software/remote-data';
 
 import { SpinIndicator, Spinner } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
-import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
 
 import { usePatientWearablesData, WearablesDataRecord } from './hooks';
 
@@ -60,8 +59,6 @@ function getColumns(): ColumnsType<WearablesDataRecord> {
 
 export function PatientWearables(props: PatientWearablesProps) {
     const [wearablesData] = usePatientWearablesData(props.patient);
-
-    usePatientHeaderLocationTitle({ title: t`Wearables` });
 
     if (isFailure(wearablesData)) {
         console.log('status', wearablesData.status);
