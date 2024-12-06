@@ -26,7 +26,7 @@ import {
 } from 'src/sharedState';
 import { Role, selectUserRole } from 'src/utils/role';
 
-async function populateUserInfoSharedState(user: User) {
+async function defaultPopulateUserInfoSharedState(user: User) {
     sharedAuthorizedUser.setSharedState(user);
 
     if (!user.role) {
@@ -94,7 +94,10 @@ async function populateUserInfoSharedState(user: User) {
     await fetchUserRoleDetails();
 }
 
-export async function restoreUserSession(token: string): Promise<RemoteDataResult> {
+export async function restoreUserSession(
+    token: string,
+    populateUserInfoSharedState = defaultPopulateUserInfoSharedState,
+): Promise<RemoteDataResult> {
     setAidboxInstanceToken({ access_token: token, token_type: 'Bearer' });
     setFHIRInstanceToken({ access_token: token, token_type: 'Bearer' });
 
