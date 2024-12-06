@@ -136,11 +136,13 @@ export function ResourceListPage<R extends Resource>({
                     ))}
                 </Row>
 
-                <SearchBar
-                    columnsFilterValues={columnsFilterValues}
-                    onChangeColumnFilter={onChangeColumnFilter}
-                    onResetFilters={onResetFilters}
-                />
+                {columnsFilterValues.length ? (
+                    <SearchBar
+                        columnsFilterValues={columnsFilterValues}
+                        onChangeColumnFilter={onChangeColumnFilter}
+                        onResetFilters={onResetFilters}
+                    />
+                ) : null}
             </BasePageHeader>
             <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
                 {batchActions.length ? (
