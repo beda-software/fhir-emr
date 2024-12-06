@@ -23,7 +23,7 @@ export function useResourceListPage<R extends Resource>(
     const searchBarSearchParams = {
         ...Object.fromEntries(
             debouncedFilterValues.map((filterValue) => [
-                filterValue.column.id,
+                filterValue.column.searchParam ?? filterValue.column.id,
                 getSearchBarColumnFilterValue(filterValue),
             ]),
         ),
