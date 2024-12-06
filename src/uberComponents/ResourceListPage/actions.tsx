@@ -4,7 +4,7 @@ import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 import { useNavigate } from 'react-router-dom';
 
 import { ModalTrigger } from 'src/components/ModalTrigger';
-import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { QuestionnaireResponseForm, QRFProps } from 'src/components/QuestionnaireResponseForm';
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 
 export interface NavigationActionType {
@@ -24,6 +24,7 @@ export interface QuestionnaireActionType {
     title: React.ReactNode;
     questionnaireId: string;
     icon?: React.ReactNode;
+    qrfProps?: Partial<QRFProps>;
 }
 
 export function navigationAction(
@@ -42,12 +43,13 @@ export function customAction(control: React.ReactNode): CustomActionType {
 export function questionnaireAction(
     title: React.ReactNode,
     questionnaireId: string,
-    options?: { icon?: React.ReactNode },
+    options?: { icon?: React.ReactNode; qrfProps?: Partial<QRFProps> },
 ): QuestionnaireActionType {
     return {
         type: 'questionnaire',
         title,
         icon: options?.icon,
+        qrfProps: options?.qrfProps,
         questionnaireId,
     };
 }
@@ -92,6 +94,7 @@ export function RecordQuestionnaireAction<R extends Resource>({
                     }}
                     onCancel={closeModal}
                     saveButtonTitle={t`Submit`}
+                    {...(action.qrfProps ?? {})}
                 />
             )}
         </ModalTrigger>
@@ -125,6 +128,7 @@ export function HeaderQuestionnaireAction({ action, reload, defaultLaunchContext
                     launchContextParameters={defaultLaunchContext}
                     onCancel={closeModal}
                     saveButtonTitle={t`Submit`}
+                    {...(action.qrfProps ?? {})}
                 />
             )}
         </ModalTrigger>
@@ -170,6 +174,7 @@ export function BatchQuestionnaireAction<R extends Resource>({
                     }}
                     onCancel={closeModal}
                     saveButtonTitle={t`Submit`}
+                    {...(action.qrfProps ?? {})}
                 />
             )}
         </ModalTrigger>
