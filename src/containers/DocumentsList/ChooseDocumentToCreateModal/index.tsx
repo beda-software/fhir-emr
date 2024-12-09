@@ -34,6 +34,7 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
                     'subject-type': subjectType ? [subjectType] : [],
                     _sort: 'title',
                     ...(context ? { context } : {}),
+                    status: 'active',
                 }),
                 (bundle) => extractBundleResources(bundle).Questionnaire,
             ),
