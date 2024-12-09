@@ -18,7 +18,7 @@ export function usePatientDocuments(patient: Patient, encounter?: Reference, con
             }
         }
         const qrResponse = await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
-            subject: patient.id,
+            'subject-id-or-communication-request': patient.id,
             questionnaire: questionnaires.join(','),
             encounter: encounter ? parseFHIRReference(encounter).id : undefined,
             _sort: '-authored',
