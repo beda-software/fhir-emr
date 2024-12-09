@@ -18,7 +18,8 @@ import { QuestionReference } from './readonly-widgets/reference';
 import { AnxietyScore, DepressionScore } from './readonly-widgets/score';
 import { QuestionText, TextWithInput } from './readonly-widgets/string';
 import { TimeRangePickerControl } from './readonly-widgets/TimeRangePickerControl';
-import { UploadFileControlReadOnly } from './widgets/UploadFileControl';
+import { UploadFile } from './readonly-widgets/UploadFile';
+import { AudioAttachment } from './readonly-widgets/AudioAttachment';
 
 interface Props extends Partial<QRFContextData> {
     formData: QuestionnaireResponseFormData;
@@ -66,7 +67,7 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
                         reference: QuestionReference,
                         display: Display,
                         boolean: QuestionBoolean,
-                        attachment: UploadFileControlReadOnly,
+                        attachment: UploadFile,
                         ...questionItemComponents,
                     }}
                     itemControlQuestionItemComponents={{
@@ -74,6 +75,7 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
                         'anxiety-score': AnxietyScore,
                         'depression-score': DepressionScore,
                         'input-inside-text': TextWithInput,
+                        'audio-recorder-uploader': AudioAttachment,
                         ...itemControlQuestionItemComponents,
                     }}
                 >

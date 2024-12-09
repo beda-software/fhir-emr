@@ -35,6 +35,7 @@ import { QuestionReference } from './widgets/reference';
 import { ReferenceRadioButton } from './widgets/ReferenceRadioButton';
 import { UploadFileControl } from './widgets/UploadFileControl';
 import { TextWithMacroFill } from '../TextWithMacroFill';
+import { AudioRecorderUploader } from './widgets/AudioRecorderUploader';
 
 export const itemComponents: QuestionItemComponentMapping = {
     text: QuestionText,
@@ -66,6 +67,7 @@ export const itemControlComponents: ItemControlQuestionItemComponentMapping = {
     'check-box': InlineChoice,
     'input-inside-text': QuestionInputInsideText,
     'markdown-editor': MDEditorControl,
+    'audio-recorder-uploader': AudioRecorderUploader,
 };
 
 export const groupControlComponents: ItemControlGroupItemComponentMapping = {
