@@ -136,7 +136,7 @@ const ENABLE_WHEN_EQUAL_QUESTIONAIRES: QuestionnaireData[] = [
                 },
                 {
                     linkId: 'q2',
-                    answer: [{ value: { Coding: { code: 'test2', display: 'test2' } } }],
+                    answer: [{ value: { Coding: { code: 'test2', display: 'Different display' } } }],
                 },
                 {
                     linkId: CONTROL_ITEM_LINK_ID,

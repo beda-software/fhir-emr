@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { getChecker } from 'sdc-qrf';
 import type {
     QuestionnaireItemEnableWhenAnswer,
     QuestionnaireItemAnswerOption,
@@ -6,51 +6,14 @@ import type {
 } from 'shared/src/contrib/aidbox';
 import * as yup from 'yup';
 
-type EnableWhenAnswerTypes = 'Coding' | 'string' | 'integer' | 'boolean';
-export type EnableWhenOperator = 'exists' | '=' | '!=' | '>' | '<' | '>=' | '<=';
-export type EnableWhenValueType = string | number | boolean;
-type EnableWhenAnswerTypesMap = Record<EnableWhenAnswerTypes, { path: string }>;
-
-const VALUES_TYPES: (keyof EnableWhenAnswerTypesMap)[] = ['Coding', 'string', 'integer', 'boolean'];
-const VALUES_TYPES_PATH_MAP: EnableWhenAnswerTypesMap = {
-    Coding: { path: 'Coding' },
-    string: { path: 'string' },
-    integer: { path: 'integer' },
-    boolean: { path: 'boolean' },
-};
-
-const ENABLE_WHEN_OPERATORS_MAP: Record<
-    EnableWhenOperator,
-    (a: EnableWhenValueType, b: EnableWhenValueType) => boolean
-> = {
-    exists: (a, b) => !!a === !!b,
-    '=': (a, b) => _.isEqual(a, b),
-    '!=': (a, b) => !_.isEqual(a, b),
-    '>': (a, b) => b > a,
-    '<': (a, b) => b < a,
-    '>=': (a, b) => b >= a,
-    '<=': (a, b) => b <= a,
-};
-
-function isOperatorValid(operator: string): operator is EnableWhenOperator {
-    return Object.keys(ENABLE_WHEN_OPERATORS_MAP).includes(operator);
-}
-
-function getValueBYType(value: (QuestionnaireItemAnswerOption | undefined) | QuestionnaireItemEnableWhenAnswer) {
-    if (!value) {
-        return null;
-    }
-
-    for (const valueTypePathKey of VALUES_TYPES) {
-        const path = VALUES_TYPES_PATH_MAP[valueTypePathKey].path;
-
-        const valueResult = _.get(value, path) as EnableWhenAnswerTypes;
-        if (valueResult) {
-            return valueResult;
+function getAnswerOptionsValues(answerOptionArray: QuestionnaireItemAnswerOption[]): Array<{ value: any }> {
+    return answerOptionArray.reduce<Array<{ value: any }>>((acc, option) => {
+        if (option.value === undefined) {
+            return acc;
         }
-    }
 
-    return null;
+        return [...acc, { value: option.value }];
+    }, []);
 }
 
 interface IsEnableWhenItemSucceedProps {
@@ -61,29 +24,17 @@ interface IsEnableWhenItemSucceedProps {
 function isEnableWhenItemSucceed(props: IsEnableWhenItemSucceedProps): boolean {
     const { answerOptionArray, answer, operator } = props;
 
-    if (!isOperatorValid(operator)) {
-        return false;
-    }
-
     if (!answerOptionArray || answerOptionArray.length === 0 || !answer) {
         return false;
     }
 
-    const value = getValueBYType(answer);
-
-    if (!value) {
+    const answerOptionsWithValues = getAnswerOptionsValues(answerOptionArray);
+    if (answerOptionsWithValues.length === 0) {
         return false;
     }
 
-    return answerOptionArray.some((answerOption) => {
-        const answerOptionValue = getValueBYType(answerOption.value);
-
-        if (answerOptionValue) {
-            return ENABLE_WHEN_OPERATORS_MAP[operator](value, answerOptionValue);
-        }
-
-        return false;
-    });
+    const checker = getChecker(operator);
+    return checker(answerOptionsWithValues, answer);
 }
 
 interface GetEnableWhenItemSchemaProps extends GetQuestionItemEnableWhenSchemaProps {
