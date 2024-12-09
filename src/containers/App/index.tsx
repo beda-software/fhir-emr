@@ -40,13 +40,14 @@ import { SetPassword } from '../SetPassword';
 interface AppProps {
     authenticatedRoutes?: ReactElement;
     anonymousRoutes?: ReactElement;
+    populateUserInfoSharedState?: (user: User) => Promise<void>;
 }
 
-export function App({ authenticatedRoutes, anonymousRoutes }: AppProps) {
+export function App({ authenticatedRoutes, anonymousRoutes, populateUserInfoSharedState }: AppProps) {
     const menuLayout = useContext(MenuLayout);
     const [userResponse] = useService(async () => {
         const appToken = getToken();
-        return appToken ? restoreUserSession(appToken) : success(null);
+        return appToken ? restoreUserSession(appToken, populateUserInfoSharedState) : success(null);
     });
 
     const renderRoutes = (user: User | null) => {

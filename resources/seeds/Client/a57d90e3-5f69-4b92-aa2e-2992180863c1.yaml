@@ -4,7 +4,7 @@ auth:
     refresh_token: true
     secret_required: false
     access_token_expiration: 36000
-type: smart-on-fhir
+type: smart-on-fhir-practitioner
 smart:
   launch_uri: https://www.smartforms.io/launch
   name: SmartForms
