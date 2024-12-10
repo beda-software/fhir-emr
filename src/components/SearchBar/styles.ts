@@ -1,28 +1,26 @@
-import { Layout } from 'antd';
 import styled from 'styled-components';
 
 export const S = {
-    Container: styled(Layout)`
+    Container: styled.div`
         position: relative;
-        padding: 16px;
-        border-radius: 10px;
-        background-color: ${({ theme }) => theme.primaryPalette.bcp_3};
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        gap: 16px 32px;
+        align-items: center;
+        gap: 16px;
         flex-wrap: wrap;
 
         .ant-input-search,
-        .ant-picker {
-            width: 264px;
+        .ant-picker,
+        .react-select__control {
+            width: 270px;
         }
     `,
-    SelectContainer: styled.div`
-        margin-left: 16px;
+    LeftColumn: styled.div`
         display: flex;
         flex-direction: row;
-        gap: 32px;
+        align-items: center;
         flex-wrap: wrap;
+        gap: 10px 8px;
     `,
 };

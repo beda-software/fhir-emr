@@ -7,9 +7,9 @@ import { axiosInstance as axiosAidboxInstance } from 'aidbox-react/lib/services/
 
 import { RenderRemoteData, WithId, useService } from '@beda.software/fhir-react';
 
-import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
+import { PageContainer } from 'src/components/BaseLayout/PageContainer';
 import { Spinner } from 'src/components/Spinner';
-import { Paragraph, Title } from 'src/components/Typography';
+import { Paragraph } from 'src/components/Typography';
 import { getToken } from 'src/services/auth';
 import { axiosInstance as axiosFHIRInstance, getFHIRResource } from 'src/services/fhir';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
@@ -67,17 +67,9 @@ export function PatientQuestionnaire({ onSuccess }: { onSuccess?: () => void }) 
     }, [isAnonymousUser]);
 
     return (
-        <>
-            <BasePageHeader>
-                <Title>
-                    <Trans>Questionnaire</Trans>
-                </Title>
-            </BasePageHeader>
-
-            <BasePageContent style={{ alignItems: 'center' }}>
-                {isLoading ? <Spinner /> : <PatientQuestionnaireForm onSuccess={onSuccess} />}
-            </BasePageContent>
-        </>
+        <PageContainer title={<Trans>Questionnaire</Trans>} content={{ style: { alignItems: 'center' } }}>
+            {isLoading ? <Spinner /> : <PatientQuestionnaireForm onSuccess={onSuccess} />}
+        </PageContainer>
     );
 }
 
