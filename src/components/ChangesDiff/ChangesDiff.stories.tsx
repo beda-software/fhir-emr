@@ -2,7 +2,7 @@ import { Meta, StoryObj } from '@storybook/react';
 
 import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 
-import { ChangesDiff, Props } from './index';
+import { ChangesDiff, ChangesDiffProps } from './index';
 
 const meta: Meta<typeof ChangesDiff> = {
     title: 'components / ChangesDiff',
