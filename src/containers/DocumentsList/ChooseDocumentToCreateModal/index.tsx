@@ -33,8 +33,8 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
                 await getFHIRResources<Questionnaire>('Questionnaire', {
                     'subject-type': subjectType ? [subjectType] : [],
                     _sort: 'title',
-                    ...(context ? { context } : {}),
                     status: 'active',
+                    ...(context ? { context } : {}),
                 }),
                 (bundle) => extractBundleResources(bundle).Questionnaire,
             ),
