@@ -21,7 +21,7 @@ export const Deletions: Story = {
     render: () => <ChangesDiff {...props2} />,
 };
 
-const props1: Props = {
+const props1: ChangesDiffProps = {
     id: '6d2d6fe6-beba-4ce6-9a9f-dd0d4b06d4e5',
     activityCode: 'CREATE',
     recorded: '2023-07-19T14:16:19.825125Z',
@@ -48,7 +48,7 @@ const props1: Props = {
     ],
 };
 
-const props2: Props = {
+const props2: ChangesDiffProps = {
     id: '27613e5f-e8dd-4a9c-8d36-dfd2f1089d5e',
     activityCode: 'UPDATE',
     recorded: '2023-07-19T14:16:19.825125Z',
