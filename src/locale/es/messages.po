@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/uberComponents/ResourceListPage/index.tsx:167
+#: src/uberComponents/ResourceListPage/index.tsx:176
 msgid "{0, plural, one {Selected # item} other {Selected # items}}"
 msgstr ""
 
@@ -31,7 +31,7 @@ msgstr "Acción"
 #: src/containers/PatientList/index.tsx:103
 #: src/containers/PractitionerList/index.tsx:121
 #: src/containers/Prescriptions/index.tsx:148
-#: src/uberComponents/ResourceListPage/index.tsx:227
+#: src/uberComponents/ResourceListPage/index.tsx:237
 msgid "Actions"
 msgstr "Acciones"
 
@@ -110,7 +110,7 @@ msgstr "Añadir Orden"
 
 #: src/components/ModalNewPatient/index.tsx:16
 #: src/components/ModalNewPatient/index.tsx:20
-#: src/containers/PatientResourceListExample/index.tsx:75
+#: src/containers/PatientResourceListExample/index.tsx:76
 msgid "Add patient"
 msgstr "Añadir paciente"
 
@@ -249,6 +249,7 @@ msgstr "Cancelar solicitud de medicamento"
 msgid "Cancelled"
 msgstr "Cancelado"
 
+#: src/components/AudioRecorder/index.tsx:30
 #: src/containers/EncounterDetails/AIScribe/index.tsx:93
 msgid "Capture in progress"
 msgstr "Ejecución en curso"
@@ -259,6 +260,10 @@ msgstr "Características"
 
 #: src/components/SearchBar/index.tsx:24
 msgid "Clear filters"
+msgstr ""
+
+#: src/components/BaseQuestionnaireResponseForm/widgets/UploadFileControl/index.tsx:29
+msgid "Click or drag file to this area to upload"
 msgstr ""
 
 #: src/containers/PractitionerDetails/PractitionerOverview/index.tsx:92
@@ -352,7 +357,7 @@ msgstr "Crear un encuentro"
 msgid "Create practitioner"
 msgstr "Crear un profesional"
 
-#: src/components/ChangesDiff/index.tsx:27
+#: src/components/ChangesDiff/index.tsx:30
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/NoteList/index.tsx:45
 msgid "Created"
 msgstr "Creado"
@@ -424,7 +429,7 @@ msgstr "Predeterminado"
 msgid "Delete"
 msgstr "Eliminar"
 
-#: src/containers/PatientResourceListExample/index.tsx:77
+#: src/containers/PatientResourceListExample/index.tsx:78
 msgid "Delete patients"
 msgstr ""
 
@@ -602,7 +607,7 @@ msgid "Fill"
 msgstr "Rellenar"
 
 #: src/containers/PatientList/searchBarUtils.ts:10
-#: src/containers/PatientResourceListExample/index.tsx:66
+#: src/containers/PatientResourceListExample/index.tsx:67
 msgid "Find patient"
 msgstr "Buscar paciente"
 
@@ -732,6 +737,10 @@ msgstr "Etiqueta"
 msgid "Last name"
 msgstr "Apellido"
 
+#: src/components/AudioRecorder/index.tsx:58
+msgid "Listen to the audio"
+msgstr ""
+
 #: src/containers/SignIn/index.tsx:89
 msgid "Log in"
 msgstr "Iniciar sesión"
@@ -740,7 +749,7 @@ msgstr "Iniciar sesión"
 msgid "Log in as demo patient"
 msgstr "Iniciar sesión como paciente demo"
 
-#: src/components/BaseLayout/Sidebar/SidebarBottom/index.tsx:96
+#: src/components/BaseLayout/Sidebar/SidebarBottom/context.tsx:42
 msgid "Log out"
 msgstr "Cerrar sesión"
 
@@ -825,7 +834,7 @@ msgstr "Nuevo agendamiento"
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:148
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:173
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:137
-#: src/utils/questionnaire.ts:62
+#: src/utils/questionnaire.ts:63
 msgid "No"
 msgstr "No"
 
@@ -838,7 +847,7 @@ msgstr "No"
 #: src/containers/PractitionerList/index.tsx:101
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:500
 #: src/containers/QuestionnaireList/index.tsx:102
-#: src/uberComponents/ResourceListPage/index.tsx:191
+#: src/uberComponents/ResourceListPage/index.tsx:200
 msgid "No data"
 msgstr "Sin datos"
 
@@ -1060,7 +1069,7 @@ msgstr "Requerido"
 msgid "Reset"
 msgstr "Restablecer"
 
-#: src/uberComponents/ResourceListPage/index.tsx:160
+#: src/uberComponents/ResourceListPage/index.tsx:169
 msgid "Reset selection"
 msgstr ""
 
@@ -1212,6 +1221,7 @@ msgstr "Comenzar"
 msgid "Start date"
 msgstr "Fecha de inicio"
 
+#: src/components/BaseQuestionnaireResponseForm/widgets/AudioRecorderUploader/index.tsx:84
 #: src/containers/EncounterDetails/index.tsx:101
 msgid "Start scribe"
 msgstr "Iniciar escritura"
@@ -1269,9 +1279,9 @@ msgid "Subject Type"
 msgstr "Tipo de sujeto"
 
 #: src/containers/QuestionnaireBuilder/PromptForm.tsx:104
-#: src/uberComponents/ResourceListPage/actions.tsx:94
-#: src/uberComponents/ResourceListPage/actions.tsx:127
-#: src/uberComponents/ResourceListPage/actions.tsx:172
+#: src/uberComponents/ResourceListPage/actions.tsx:96
+#: src/uberComponents/ResourceListPage/actions.tsx:130
+#: src/uberComponents/ResourceListPage/actions.tsx:176
 msgid "Submit"
 msgstr "Enviar"
 
@@ -1281,9 +1291,9 @@ msgstr "Enviar"
 #~ msgid "Successfully saved"
 #~ msgstr ""
 
-#: src/uberComponents/ResourceListPage/actions.tsx:88
-#: src/uberComponents/ResourceListPage/actions.tsx:122
-#: src/uberComponents/ResourceListPage/actions.tsx:168
+#: src/uberComponents/ResourceListPage/actions.tsx:90
+#: src/uberComponents/ResourceListPage/actions.tsx:125
+#: src/uberComponents/ResourceListPage/actions.tsx:172
 msgid "Successfully submitted"
 msgstr ""
 
@@ -1316,11 +1326,11 @@ msgstr "Texto (por defecto)"
 msgid "Text with macro"
 msgstr "Texto con macro"
 
-#: src/containers/App/index.tsx:128
+#: src/containers/App/index.tsx:129
 msgid "Thank you for filling out the questionnaire. Now you can close this page."
 msgstr "Gracias por completar el cuestionario. Ahora puedes cerrar esta página."
 
-#: src/containers/App/index.tsx:127
+#: src/containers/App/index.tsx:128
 msgid "Thank you!"
 msgstr "¡Gracias!"
 
@@ -1408,7 +1418,7 @@ msgstr "Desconocido"
 msgid "Upcoming appointment"
 msgstr "Próxima cita"
 
-#: src/components/ChangesDiff/index.tsx:28
+#: src/components/ChangesDiff/index.tsx:31
 msgid "Updated"
 msgstr "Actualizado"
 
@@ -1463,7 +1473,7 @@ msgstr "Bienvenido a"
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:147
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:172
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:136
-#: src/utils/questionnaire.ts:62
+#: src/utils/questionnaire.ts:63
 msgid "Yes"
 msgstr "Sí"
 

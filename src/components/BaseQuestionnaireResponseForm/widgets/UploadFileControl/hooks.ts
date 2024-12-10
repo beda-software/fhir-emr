@@ -1,7 +1,7 @@
 import type { UploadFile } from 'antd';
 import { notification } from 'antd';
 import { Attachment } from 'fhir/r4b';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 
 import { formatError } from '@beda.software/fhir-react';
@@ -22,8 +22,9 @@ export function useUploader({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, repeats } = questionItem;
     const fieldName = [...parentPath, linkId];
     const { formItem, value, onChange } = useFieldController(fieldName, questionItem);
+
     const uid = useRef<Record<string, string>>({});
-    const initialFileList: Array<UploadFile> = (value ?? []).map((v: ValueAttachment) => {
+    const initialFileList: Array<UploadFile> = useMemo(() => (value ?? []).map((v: ValueAttachment) => {
         const url = v.value.Attachment.url!;
         const file: UploadFile = {
             uid: url,
@@ -31,8 +32,12 @@ export function useUploader({ parentPath, questionItem }: QuestionItemProps) {
             percent: 100,
         };
         return file;
-    });
+    }), [value]);
     const [fileList, setFileList] = useState<Array<UploadFile>>(initialFileList);
+
+    useEffect(() => {
+        setFileList(initialFileList);
+    }, [JSON.stringify(initialFileList)]);
 
     useEffect(() => {
         (async () => {
@@ -65,6 +70,7 @@ export function useUploader({ parentPath, questionItem }: QuestionItemProps) {
         async (options: CustomUploadRequestOption) => {
             const file: UploadFile = options.file as any;
             const response = await generateUploadUrl(file.name);
+
             if (isSuccess(response)) {
                 const { filename, uploadUrl } = response.data;
                 uid.current[file.uid] = filename;
@@ -72,6 +78,7 @@ export function useUploader({ parentPath, questionItem }: QuestionItemProps) {
             } else {
                 notification.error({ message: formatError(response.error) });
             }
+            return response;
         },
         [uid],
     );
