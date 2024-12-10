@@ -16,4 +16,8 @@ export const S = {
             border-top: 1px solid ${({ theme }) => theme.neutralPalette.gray_4};
         }
     `,
+    Audio: styled.audio`
+        height: 52px;
+        width: 100%;
+    `,
 };
