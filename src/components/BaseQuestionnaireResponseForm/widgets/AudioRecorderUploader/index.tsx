@@ -1,7 +1,7 @@
 import { AudioOutlined } from '@ant-design/icons';
 import { Trans } from '@lingui/macro';
 import { Form, UploadFile } from 'antd';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 
 import { AudioPlayer as AudioPlayerControl, AudioRecorder as AudioRecorderControl } from 'src/components/AudioRecorder';
@@ -17,8 +17,7 @@ export function AudioRecorderUploader(props: QuestionItemProps) {
     const { questionItem } = props;
     const [showScriber, setShowScriber] = useState(false);
 
-    const { recorderControls } = useAudioRecorder();
-    const { formItem, customRequest, onChange, fileList } = useUploader(props);
+    const { formItem, customRequest, onChange, fileList, onRemove } = useUploader(props);
     const hasFiles = fileList.length > 0;
 
     const onScribeChange = useCallback(
@@ -57,29 +56,18 @@ export function AudioRecorderUploader(props: QuestionItemProps) {
         if (hasFiles) {
             return (
                 <S.Container>
-                    <AudioPlayerControl files={fileList} />
+                    <AudioPlayerControl files={fileList} onRemove={onRemove} />
                 </S.Container>
             );
         }
 
         if (showScriber) {
-            return (
-                <S.Container>
-                    <AudioRecorderControl recorderControls={recorderControls} onChange={onScribeChange} />
-                </S.Container>
-            );
+            return <Scriber onChange={onScribeChange} />;
         }
 
         return (
             <>
-                <S.Button
-                    icon={<AudioOutlined />}
-                    type="primary"
-                    onClick={() => {
-                        setShowScriber(true);
-                        recorderControls.startRecording();
-                    }}
-                >
+                <S.Button icon={<AudioOutlined />} type="primary" onClick={() => setShowScriber(true)}>
                     <span>
                         <Trans>Start scribe</Trans>
                     </span>
@@ -96,4 +84,23 @@ export function AudioRecorderUploader(props: QuestionItemProps) {
     };
 
     return <Form.Item {...formItem}>{renderContent()}</Form.Item>;
+}
+
+interface ScriberProps {
+    onChange: (url: RcFile) => Promise<void>;
+}
+
+function Scriber(props: ScriberProps) {
+    const { onChange } = props;
+    const { recorderControls } = useAudioRecorder();
+
+    useEffect(() => {
+        recorderControls.startRecording();
+    }, []);
+
+    return (
+        <S.Container>
+            <AudioRecorderControl recorderControls={recorderControls} onChange={onChange} />
+        </S.Container>
+    );
 }
