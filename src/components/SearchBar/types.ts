@@ -1,6 +1,12 @@
 import { Coding } from 'fhir/r4b';
 
-import { Expression, Resource, QuestionnaireItemChoiceColumn, ValueSet } from '@beda.software/aidbox-types';
+import {
+    Expression,
+    Resource,
+    QuestionnaireItemChoiceColumn,
+    ValueSet,
+    AidboxReference,
+} from '@beda.software/aidbox-types';
 
 import { ValueSetOption } from 'src/services';
 import { LoadResourceOption } from 'src/services/questionnaire';
@@ -41,6 +47,7 @@ export type SearchBarReferenceColumn = SearchBarColumnBase & {
     expression: Expression['expression'];
     path: QuestionnaireItemChoiceColumn['path'];
     placeholder: string;
+    defaultValue?: AidboxReference;
 };
 export type SearchBarChoiceColumn = SearchBarColumnBase & {
     type: SearchBarColumnType.CHOICE;

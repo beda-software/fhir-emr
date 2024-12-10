@@ -44,7 +44,16 @@ export function useSearchBar(props: SearchBarProps): SearchBarData {
             }
 
             if (isReferenceColumn(column)) {
-                return { column, value: null };
+                return {
+                    column,
+                    value: column.defaultValue
+                        ? {
+                              value: {
+                                  Reference: column.defaultValue,
+                              },
+                          }
+                        : null,
+                };
             }
 
             if (isChoiceColumn(column)) {
