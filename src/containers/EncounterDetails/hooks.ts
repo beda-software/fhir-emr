@@ -20,6 +20,7 @@ export interface EncounterDetailsProps {
     hideControls?: boolean;
     documentTypes?: Array<DocumentType>;
     openNewTab?: boolean;
+    displayShareButton?: boolean;
 }
 
 export function useEncounterDetails(props: EncounterDetailsProps) {

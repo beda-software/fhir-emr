@@ -19,10 +19,11 @@ interface Props extends ModalProps {
     context?: string;
     onCancel: () => void;
     openNewTab?: boolean;
+    displayShareButton?: boolean;
 }
 
 export const ChooseDocumentToCreateModal = (props: Props) => {
-    const { subjectType, patient, encounter, onCancel, context, openNewTab } = props;
+    const { subjectType, patient, encounter, onCancel, context, openNewTab, displayShareButton = true } = props;
     const [questionnaireId, setQuestionnaireId] = useState();
     const location = useLocation();
     const navigate = useNavigate();
@@ -53,26 +54,30 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
                     <Button key="back" onClick={onCloseModal}>
                         <Trans>Cancel</Trans>
                     </Button>,
-                    <Button
-                        key="share-link"
-                        disabled={!questionnaireId}
-                        onClick={() => {
-                            const questionnaireParams = _.compact([
-                                `patient=${patient.id}`,
-                                `questionnaire=${questionnaireId}`,
-                                encounter?.id ? `encounter=${encounter.id}` : null,
-                            ]);
-                            navigator.clipboard.writeText(
-                                `${window.location.origin}/questionnaire?${questionnaireParams.join('&')}`,
-                            );
-                            notification.success({
-                                message: t`The link was copied to clipboard`,
-                            });
-                            onCloseModal();
-                        }}
-                    >
-                        <Trans>Share link</Trans>
-                    </Button>,
+                    ...(displayShareButton
+                        ? [
+                              <Button
+                                  key="share-link"
+                                  disabled={!questionnaireId}
+                                  onClick={() => {
+                                      const questionnaireParams = _.compact([
+                                          `patient=${patient.id}`,
+                                          `questionnaire=${questionnaireId}`,
+                                          encounter?.id ? `encounter=${encounter.id}` : null,
+                                      ]);
+                                      navigator.clipboard.writeText(
+                                          `${window.location.origin}/questionnaire?${questionnaireParams.join('&')}`,
+                                      );
+                                      notification.success({
+                                          message: t`The link was copied to clipboard`,
+                                      });
+                                      onCloseModal();
+                                  }}
+                              >
+                                  <Trans>Share link</Trans>
+                              </Button>,
+                          ]
+                        : []),
                     <Button
                         key="create"
                         disabled={!questionnaireId}

@@ -14,6 +14,7 @@ interface Props {
     title?: string;
     context?: string;
     openNewTab?: boolean;
+    displayShareButton?: boolean;
 }
 
 export const PatientDocuments = (props: Props) => {
@@ -39,6 +40,7 @@ export const PatientDocuments = (props: Props) => {
                         subjectType="Patient"
                         context={props.context}
                         openNewTab={props.openNewTab}
+                        displayShareButton={props.displayShareButton}
                     />
                 </div>
             )}
