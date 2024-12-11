@@ -135,6 +135,7 @@ export const EncounterDetails = (props: EncounterDetailsProps) => {
                                 encounter={encounter}
                                 context={modalOpened.context}
                                 openNewTab={props.openNewTab}
+                                displayShareButton={props.displayShareButton}
                             />
 
                             {showScriber ||
