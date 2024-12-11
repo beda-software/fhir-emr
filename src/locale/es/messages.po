@@ -13,6 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/uberComponents/ResourceListPage/index.tsx:175
+msgid "{0, plural, one {Selected # item} other {Selected # items}}"
+msgstr ""
+
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/NoteList/index.tsx:55
 msgid "Action"
 msgstr "Acción"
@@ -27,6 +31,7 @@ msgstr "Acción"
 #: src/containers/PatientList/index.tsx:111
 #: src/containers/PractitionerList/index.tsx:126
 #: src/containers/Prescriptions/index.tsx:151
+#: src/uberComponents/ResourceListPage/index.tsx:237
 msgid "Actions"
 msgstr "Acciones"
 
@@ -105,6 +110,7 @@ msgstr "Añadir Orden"
 
 #: src/components/ModalNewPatient/index.tsx:16
 #: src/components/ModalNewPatient/index.tsx:20
+#: src/containers/PatientResourceListExample/index.tsx:76
 msgid "Add patient"
 msgstr "Añadir paciente"
 
@@ -202,6 +208,7 @@ msgstr "Número de lote"
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer/hooks.ts:31
 #: src/containers/PatientList/index.tsx:94
+#: src/containers/PatientResourceListExample/index.tsx:47
 msgid "Birth date"
 msgstr "Fecha de nacimiento"
 
@@ -348,7 +355,7 @@ msgstr "Crear un encuentro"
 msgid "Create practitioner"
 msgstr "Crear un profesional"
 
-#: src/components/ChangesDiff/index.tsx:27
+#: src/components/ChangesDiff/index.tsx:30
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/NoteList/index.tsx:45
 msgid "Created"
 msgstr "Creado"
@@ -419,6 +426,10 @@ msgstr "Predeterminado"
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:140
 msgid "Delete"
 msgstr "Eliminar"
+
+#: src/containers/PatientResourceListExample/index.tsx:78
+msgid "Delete patients"
+msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:133
 msgid "Delete Questionnaire Item"
@@ -596,6 +607,7 @@ msgid "Fill"
 msgstr "Rellenar"
 
 #: src/containers/PatientList/searchBarUtils.ts:10
+#: src/containers/PatientResourceListExample/index.tsx:67
 msgid "Find patient"
 msgstr "Buscar paciente"
 
@@ -804,6 +816,7 @@ msgstr "Lunes"
 #: src/containers/PatientDetails/PatientResources/utils.tsx:152
 #: src/containers/PatientDetails/PatientResources/utils.tsx:188
 #: src/containers/PatientList/index.tsx:88
+#: src/containers/PatientResourceListExample/index.tsx:41
 #: src/containers/PractitionerList/index.tsx:113
 msgid "Name"
 msgstr "Nombre"
@@ -834,6 +847,7 @@ msgstr "No"
 #: src/containers/PractitionerList/index.tsx:106
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:500
 #: src/containers/QuestionnaireList/index.tsx:107
+#: src/uberComponents/ResourceListPage/index.tsx:199
 msgid "No data"
 msgstr "Sin datos"
 
@@ -949,6 +963,7 @@ msgstr "Paciente creado con éxito"
 #: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:35
 #: src/containers/PatientDetails/PatientHeader/index.tsx:26
 #: src/containers/PatientList/index.tsx:59
+#: src/containers/PatientResourceListExample/index.tsx:36
 msgid "Patients"
 msgstr "Pacientes"
 
@@ -1058,6 +1073,10 @@ msgstr "Requerido"
 #: src/containers/Prescriptions/components/PrescriptionsSearchBar/index.tsx:71
 msgid "Reset"
 msgstr "Restablecer"
+
+#: src/uberComponents/ResourceListPage/index.tsx:168
+msgid "Reset selection"
+msgstr ""
 
 #: src/containers/PatientDetails/PatientHeader/index.tsx:84
 msgid "Resources"
@@ -1196,6 +1215,7 @@ msgid "Specialty"
 msgstr "Especialidad"
 
 #: src/containers/PatientList/index.tsx:102
+#: src/containers/PatientResourceListExample/index.tsx:54
 msgid "SSN"
 msgstr "NSS"
 
@@ -1265,8 +1285,23 @@ msgid "Subject Type"
 msgstr "Tipo de sujeto"
 
 #: src/containers/QuestionnaireBuilder/PromptForm.tsx:104
+#: src/uberComponents/ResourceListPage/actions.tsx:96
+#: src/uberComponents/ResourceListPage/actions.tsx:130
+#: src/uberComponents/ResourceListPage/actions.tsx:176
 msgid "Submit"
 msgstr "Enviar"
+
+#: src/uberComponents/ResourceListPage/actions.tsx:78
+#: src/uberComponents/ResourceListPage/actions.tsx:105
+#: src/uberComponents/ResourceListPage/actions.tsx:146
+#~ msgid "Successfully saved"
+#~ msgstr ""
+
+#: src/uberComponents/ResourceListPage/actions.tsx:90
+#: src/uberComponents/ResourceListPage/actions.tsx:125
+#: src/uberComponents/ResourceListPage/actions.tsx:172
+msgid "Successfully submitted"
+msgstr ""
 
 #: src/containers/Scheduling/Availability/index.tsx:43
 msgid "Successfully updated"
@@ -1389,7 +1424,7 @@ msgstr "Desconocido"
 msgid "Upcoming appointment"
 msgstr "Próxima cita"
 
-#: src/components/ChangesDiff/index.tsx:28
+#: src/components/ChangesDiff/index.tsx:31
 msgid "Updated"
 msgstr "Actualizado"
 

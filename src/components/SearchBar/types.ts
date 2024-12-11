@@ -13,38 +13,41 @@ export enum SearchBarColumnType {
 export interface SearchBarProps {
     columns: SearchBarColumn[];
 }
-export type SearchBarStringColumn = {
+
+type SearchBarColumnBase = {
     id: string;
+    searchParam?: string;
+};
+
+export type SearchBarStringColumn = SearchBarColumnBase & {
     type: SearchBarColumnType.STRING;
     placeholder: string;
 };
-export type SearchBarDateColumn = {
-    id: string;
+export type SearchBarDateColumn = SearchBarColumnBase & {
     type: SearchBarColumnType.DATE;
     placeholder: [string, string];
 };
-export type SearchBarReferenceColumn = {
+export type SearchBarReferenceColumn = SearchBarColumnBase & {
     id: string;
     type: SearchBarColumnType.REFERENCE;
     expression: Expression['expression'];
     path: QuestionnaireItemChoiceColumn['path'];
     placeholder: string;
 };
-export type SearchBarChoiceColumn = {
-    id: string;
+export type SearchBarChoiceColumn = SearchBarColumnBase & {
     type: SearchBarColumnType.CHOICE;
     repeats?: boolean;
     placeholder: string;
 } & (
-    | {
-          options: ValueSetOption[];
-          valueSet?: never;
-      }
-    | {
-          options?: never;
-          valueSet: ValueSet['id'];
-      }
-);
+        | {
+              options: ValueSetOption[];
+              valueSet?: never;
+          }
+        | {
+              options?: never;
+              valueSet: ValueSet['id'];
+          }
+    );
 
 export type SearchBarColumn =
     | SearchBarStringColumn
