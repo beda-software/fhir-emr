@@ -1,0 +1,15 @@
+auth:
+  authorization_code:
+    redirect_uri: https://main.dlnanw1r5u3dw.amplifyapp.com
+    refresh_token: true
+    secret_required: false
+    access_token_expiration: 36000
+type: smart-on-fhir-practitioner
+smart:
+  name: Calculator SMART App
+  launch_uri: https://main.dlnanw1r5u3dw.amplifyapp.com/launch
+  description: Calculator SMART App
+grant_types:
+  - authorization_code
+id: aus-cvd-risk-i
+resourceType: Client
