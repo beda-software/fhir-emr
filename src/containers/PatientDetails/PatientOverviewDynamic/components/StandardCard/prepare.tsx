@@ -362,11 +362,11 @@ export function prepareAuERequest(
                     if (identifier) {
                         const { value, system } = identifier;
                         const srLink = `${system}/${value}`;
-                        const taskLink = `https://fhir.hl7.org.au/ereq/fhir/DEFAULT/Task?focus=${value}`;
+                        const taskLink = `${system?.replace('ServiceRequest', 'Task')}?focus=ServiceRequest/${value}`;
                         return (
                             <div>
                                 <a href={srLink} target="_blank" rel="noreferrer">
-                                    ServiceRrequest
+                                    ServiceRequest
                                 </a>
                                 <br />
                                 <a href={taskLink} target="_blank" rel="noreferrer">
