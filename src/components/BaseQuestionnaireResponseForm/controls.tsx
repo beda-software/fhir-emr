@@ -28,6 +28,8 @@ import {
     Grid,
     MDEditorControl,
 } from './widgets';
+import { AudioRecorderUploader } from './widgets/AudioRecorderUploader';
+import { Barcode } from './widgets/barcode';
 import { Display } from './widgets/display';
 import { GroupWizard, GroupWizardWithTooltips } from './widgets/GroupWizard';
 import { PasswordInput } from './widgets/PasswordInput';
@@ -35,7 +37,6 @@ import { QuestionReference } from './widgets/reference';
 import { ReferenceRadioButton } from './widgets/ReferenceRadioButton';
 import { UploadFileControl } from './widgets/UploadFileControl';
 import { TextWithMacroFill } from '../TextWithMacroFill';
-import { AudioRecorderUploader } from './widgets/AudioRecorderUploader';
 
 export const itemComponents: QuestionItemComponentMapping = {
     text: QuestionText,
@@ -68,6 +69,7 @@ export const itemControlComponents: ItemControlQuestionItemComponentMapping = {
     'input-inside-text': QuestionInputInsideText,
     'markdown-editor': MDEditorControl,
     'audio-recorder-uploader': AudioRecorderUploader,
+    barcode: Barcode,
 };
 
 export const groupControlComponents: ItemControlGroupItemComponentMapping = {

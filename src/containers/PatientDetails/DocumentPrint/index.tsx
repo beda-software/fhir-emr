@@ -1,4 +1,5 @@
 import { Questionnaire, QuestionnaireItem, QuestionnaireResponse } from 'fhir/r4b';
+import { ReactBarcode } from 'react-jsbarcode';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
@@ -20,6 +21,15 @@ export function DocumentPrintAnswer(props: { item: QuestionnaireItem; qResponse?
     );
 }
 
+export function Barcode(props: { item: QuestionnaireItem; qResponse?: QuestionnaireResponse }) {
+    const { item, qResponse } = props;
+    const itemValue = qResponse && getQuestionnaireItemValue(item, qResponse);
+    if (itemValue) {
+        return <ReactBarcode value={itemValue} />;
+    }
+    return <></>;
+}
+
 function DocumentPrintTextWithInput(props: { item: QuestionnaireItem; qResponse?: QuestionnaireResponse }) {
     const { item, qResponse } = props;
     const itemValue = qResponse && getQuestionnaireItemValue(item, qResponse);
@@ -29,6 +39,7 @@ function DocumentPrintTextWithInput(props: { item: QuestionnaireItem; qResponse?
 
 const renderControls: Record<string, typeof DocumentPrintAnswer> = {
     'input-inside-text': DocumentPrintTextWithInput,
+    barcode: Barcode,
 };
 
 export function DocumentPrintAnswers(props: {
