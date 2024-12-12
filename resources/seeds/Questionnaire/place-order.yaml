@@ -24,6 +24,16 @@ launchContext:
 mapping:
   - id: place-order
     resourceType: Mapping
+sourceQueries:
+  - localRef: "Bundle#SR"
+contained:
+  - resourceType: Bundle
+    id: SR
+    type: batch
+    entry:
+    - request:
+        method: GET
+        url: /ServiceRequest
 item:
 - linkId: test-code
   text: Test Codes
@@ -75,3 +85,13 @@ item:
   initialExpression:
     language: text/fhirpath
     expression: "%Author.id"
+- linkId: barcode
+  text: Barcode
+  readOnly: true
+  type: string
+  itemControl:
+    coding:
+    - code: barcode
+  initialExpression:
+    language: text/fhirpath
+    expression: "'BEDA1212-' &  (%SR.entry.resource.total+1).select('00000'&toString()).toChars().skip(count()-6).join()"
