@@ -5,15 +5,18 @@ export function MedicationsIcon() {
                 fillRule="evenodd"
                 clipRule="evenodd"
                 d="M14 7.5C14 8.00954 14.1524 8.48348 14.4142 8.87869L17.8787 5.4142C17.4835 5.15244 17.0095 5 16.5 5C15.1193 5 14 6.11929 14 7.5ZM16.5 10C15.9905 10 15.5165 9.84756 15.1213 9.5858L18.5858 6.1213C18.8476 6.51652 19 6.99046 19 7.5C19 8.88071 17.8807 10 16.5 10Z"
-                fill="white"
+                fill="var(--theme-sidebar-background)"
             />
             <path
                 fillRule="evenodd"
                 clipRule="evenodd"
                 d="M14 16.5C14 17.0095 14.1524 17.4835 14.4142 17.8787L17.8787 14.4142C17.4835 14.1524 17.0095 14 16.5 14C15.1193 14 14 15.1193 14 16.5ZM16.5 19C15.9905 19 15.5165 18.8476 15.1213 18.5858L18.5858 15.1213C18.8476 15.5165 19 15.9905 19 16.5C19 17.8807 17.8807 19 16.5 19Z"
-                fill="white"
+                fill="var(--theme-sidebar-background)"
             />
-            <path d="M5 12H10V16.5C10 17.8807 8.88071 19 7.5 19C6.11929 19 5 17.8807 5 16.5V12Z" fill="white" />
+            <path
+                d="M5 12H10V16.5C10 17.8807 8.88071 19 7.5 19C6.11929 19 5 17.8807 5 16.5V12Z"
+                fill="var(--theme-sidebar-background)"
+            />
             <path
                 fillRule="evenodd"
                 clipRule="evenodd"

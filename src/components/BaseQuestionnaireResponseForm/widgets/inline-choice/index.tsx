@@ -8,17 +8,13 @@ import { getDisplay } from 'src/utils/questionnaire';
 
 import { useFieldController } from '../../hooks';
 
-export type InlineChoiceQuestionItem = QuestionnaireItem & {
-    inlineChoiceDirection?: 'horizontal' | 'vertical';
-};
-
 interface InlineChoiceProps extends QuestionItemProps {
-    questionItem: InlineChoiceQuestionItem;
+    questionItem: QuestionnaireItem;
 }
 
 export function InlineChoice(props: InlineChoiceProps) {
     const { parentPath, questionItem } = props;
-    const { linkId, answerOption: answerOptionList, repeats, inlineChoiceDirection = 'vertical' } = questionItem;
+    const { linkId, answerOption: answerOptionList, repeats, choiceOrientation = 'vertical' } = questionItem;
 
     const fieldName = repeats ? [...parentPath, linkId] : [...parentPath, linkId, 0];
 
@@ -28,14 +24,15 @@ export function InlineChoice(props: InlineChoiceProps) {
         const arrayValue = (value || []) as QuestionnaireItemAnswerOption[];
 
         return (
-            <Form.Item {...formItem} data-testid="question-inline-choice">
-                <Space direction={inlineChoiceDirection}>
+            <Form.Item {...formItem} data-testid={linkId}>
+                <Space direction={choiceOrientation}>
                     {answerOptionList?.map((answerOption) => (
                         <Checkbox
                             checked={arrayValue.findIndex((v) => _.isEqual(v?.value, answerOption.value)) !== -1}
                             key={JSON.stringify(answerOption)}
                             disabled={disabled}
                             onChange={() => onMultiChange(answerOption)}
+                            // TODO: use linkId + __ + code instead
                             data-testid={`inline-choice__${_.kebabCase(
                                 JSON.stringify(getDisplay(answerOption.value!)),
                             )}`}
@@ -48,14 +45,15 @@ export function InlineChoice(props: InlineChoiceProps) {
         );
     } else {
         return (
-            <Form.Item {...formItem} data-testid="question-inline-choice">
-                <Space direction={inlineChoiceDirection}>
+            <Form.Item {...formItem} data-testid={linkId}>
+                <Space direction={choiceOrientation}>
                     {answerOptionList?.map((answerOption) => (
                         <Radio
                             key={JSON.stringify(answerOption)}
                             checked={_.isEqual(value?.value, answerOption.value)}
                             disabled={disabled}
                             onChange={() => onChange(answerOption)}
+                            // TODO: use linkId + __ + code instead
                             data-testid={`inline-choice__${_.kebabCase(
                                 JSON.stringify(getDisplay(answerOption.value!)),
                             )}`}

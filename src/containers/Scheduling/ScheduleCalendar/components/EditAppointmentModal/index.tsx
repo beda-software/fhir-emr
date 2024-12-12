@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro';
 import { PractitionerRole } from 'fhir/r4b';
 
 import { RenderRemoteData } from '@beda.software/fhir-react';
@@ -42,7 +43,7 @@ export function EditAppointmentModal(props: Props) {
     });
 
     return (
-        <Modal open={showModal} title="Edit Appointment" footer={null} onCancel={onClose}>
+        <Modal open={showModal} title={t`Edit Appointment`} footer={null} onCancel={onClose}>
             <RenderRemoteData remoteData={response} renderLoading={Spinner}>
                 {(formData) => <BaseQuestionnaireResponseForm formData={formData} onSubmit={onSubmit} />}
             </RenderRemoteData>

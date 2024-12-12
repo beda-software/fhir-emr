@@ -30,6 +30,7 @@ export const Default: Story = {
                     { value: { Coding: { code: '3', display: 'Item 3' } } },
                     { value: { Coding: { code: '4', display: 'Item 4' } } },
                 ],
+                entryFormat: 'Select...',
             }}
             context={{} as ItemContext}
         />
@@ -72,6 +73,7 @@ export const Multiple: Story = {
                     { value: { Coding: { code: '3', display: 'Item 3' } } },
                     { value: { Coding: { code: '4', display: 'Item 4' } } },
                 ],
+                entryFormat: 'Select...',
             }}
             context={{} as ItemContext}
         />

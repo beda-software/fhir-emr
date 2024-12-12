@@ -1,40 +1,46 @@
 import { QuestionnaireItem, QuestionnaireResponse } from 'fhir/r4b';
-import { evaluate } from 'fhirpath';
 
-export function findQRItemValue(linkId: string, type = 'String') {
-    return `repeat(item).where(linkId='${linkId}').answer.value${type}`;
-}
+import { compileAsFirst } from 'src/utils';
+
+const qItemIsHidden = compileAsFirst<QuestionnaireItem, boolean>(
+    "extension.where(url='http://hl7.org/fhir/StructureDefinition/questionnaire-hidden').exists() and extension.where(url='http://hl7.org/fhir/StructureDefinition/questionnaire-hidden').valueBoolean=true",
+);
+
+const getQrItemValueByLinkIdAndType = (linkId: string, type: string) =>
+    compileAsFirst<QuestionnaireResponse, string>(`repeat(item).where(linkId='${linkId}').answer.value${type}`);
+
+const questionnaireItemValueTypeMap: Record<QuestionnaireItem['type'], string> = {
+    display: 'String',
+    group: 'String',
+    text: 'String',
+    string: 'String',
+    decimal: 'Decimal',
+    integer: 'Integer',
+    date: 'Date',
+    dateTime: 'DateTime',
+    time: 'Time',
+    choice: 'Coding.display',
+    boolean: 'Boolean',
+    reference: 'Reference.display',
+    'open-choice': '',
+    attachment: '',
+    quantity: '',
+    question: '',
+    url: '',
+};
 
 export function getQuestionnaireItemValue(
     questionnaireItem: QuestionnaireItem,
     questionnaireResponse: QuestionnaireResponse,
 ) {
-    switch (questionnaireItem.type) {
-        case 'display':
-        case 'group':
-            return '';
-        case 'text':
-        case 'string':
-            return evaluate(questionnaireResponse, findQRItemValue(questionnaireItem.linkId, 'String'))[0];
-        case 'decimal':
-            return evaluate(questionnaireResponse, findQRItemValue(questionnaireItem.linkId, 'Decimal'))[0];
-        case 'integer':
-            return evaluate(questionnaireResponse, findQRItemValue(questionnaireItem.linkId, 'Integer'))[0];
-        case 'date':
-            return evaluate(questionnaireResponse, findQRItemValue(questionnaireItem.linkId, 'Date'))[0];
-        case 'dateTime':
-            return evaluate(questionnaireResponse, findQRItemValue(questionnaireItem.linkId, 'DateTime'))[0];
-        case 'time':
-            return evaluate(questionnaireResponse, findQRItemValue(questionnaireItem.linkId, 'Time'))[0];
-        case 'choice':
-            return evaluate(questionnaireResponse, findQRItemValue(questionnaireItem.linkId, 'Coding.display'))[0];
-        case 'boolean':
-            return evaluate(questionnaireResponse, findQRItemValue(questionnaireItem.linkId, 'Boolean'))[0];
-        case 'reference':
-            return evaluate(questionnaireResponse, findQRItemValue(questionnaireItem.linkId, 'Reference.display'))[0];
-        default:
-            return evaluate(questionnaireResponse, findQRItemValue(questionnaireItem.linkId))[0];
+    if (qItemIsHidden(questionnaireItem)) {
+        return undefined;
     }
+
+    return getQrItemValueByLinkIdAndType(
+        questionnaireItem.linkId,
+        questionnaireItemValueTypeMap[questionnaireItem.type],
+    )(questionnaireResponse);
 }
 
 export function flattenQuestionnaireGroupItems(item: QuestionnaireItem): QuestionnaireItem[] {

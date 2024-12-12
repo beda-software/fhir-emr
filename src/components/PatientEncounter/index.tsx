@@ -18,6 +18,7 @@ import { renderHumanName } from 'src/utils/fhir';
 interface Props {
     patient: Patient;
     searchParams?: SearchParams;
+    hideCreateButton?: boolean;
 }
 
 const columns: ColumnsType<EncounterData> = [
@@ -54,12 +55,12 @@ const columns: ColumnsType<EncounterData> = [
                         to={`/patients/${resource.patient?.id}/encounters/${resource.id}`}
                         style={{ marginRight: 10 }}
                     >
-                        Open
+                        <Trans>Open</Trans>
                     </Link>
                 </Col>
                 <Col>
                     <Link to={`/encounters/${resource.id}/video`} state={{ encounterData: resource }}>
-                        Video call
+                        <Trans>Video call</Trans>
                     </Link>
                 </Col>
             </Row>
@@ -67,7 +68,7 @@ const columns: ColumnsType<EncounterData> = [
     },
 ];
 
-export const PatientEncounter = ({ patient, searchParams }: Props) => {
+export const PatientEncounter = ({ patient, searchParams, hideCreateButton }: Props) => {
     const { encounterDataListRD, reloadEncounter, handleTableChange, pagination } = useEncounterList(undefined, {
         ...{
             subject: patient.id,
@@ -79,9 +80,11 @@ export const PatientEncounter = ({ patient, searchParams }: Props) => {
 
     return (
         <>
-            <div>
-                <ModalNewEncounter patient={patient} reloadEncounter={reloadEncounter} />
-            </div>
+            {hideCreateButton ? null : (
+                <div>
+                    <ModalNewEncounter patient={patient} reloadEncounter={reloadEncounter} />
+                </div>
+            )}
             <EncountersTable
                 columns={columns}
                 remoteData={encounterDataListRD}

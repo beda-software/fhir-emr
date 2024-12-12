@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/macro';
+import { t, Trans } from '@lingui/macro';
 import { notification } from 'antd';
 import { useEffect, useState } from 'react';
 
@@ -58,7 +58,7 @@ export function PublicAppointment() {
                             questionnaireLoader={questionnaireIdLoader('public-appointment')}
                             onSuccess={() => {
                                 notification.success({
-                                    message: 'Appointment successfully created',
+                                    message: t`Appointment successfully created`,
                                 });
                                 history.replace('/');
                             }}

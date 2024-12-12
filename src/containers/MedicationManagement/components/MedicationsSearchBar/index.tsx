@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro';
 import { Row, Button } from 'antd';
 
 import { AsyncDropdown } from 'src/containers/OrganizationScheduling/HealthcareServicePractitionerSelect';
@@ -26,12 +27,12 @@ export function MedicationsSearchBar(props: MedicationsSearchBarSelectProps) {
                         onChange={onChangeMedication}
                         loadOptions={loadMedicationOptions}
                         value={selectedMedication as OptionType}
-                        placeholder="Medication"
+                        placeholder={t`Medication`}
                     />
                 </S.SelectContainer>
             </Row>
 
-            <Button onClick={reset}>Reset</Button>
+            <Button onClick={reset}>{t`Reset`}</Button>
         </S.Container>
     );
 }

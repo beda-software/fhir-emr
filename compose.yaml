@@ -1,4 +1,15 @@
 services:
+    file-uploader:
+        image: ghcr.io/beda-software/aidbox-file-uploader:latest
+        depends_on:
+            devbox-healthcheck:
+                condition: service_healthy
+        links:
+            - devbox
+        env_file:
+            - ./env/file-uploader
+            - .env
+        tty: true
     sdc-ide:
         image: bedasoftware/sdc-ide:master
         depends_on:
@@ -53,12 +64,22 @@ services:
             timeout: 30s
             retries: 100
     build-seeds:
-        build:
-            context: .
-            dockerfile: Dockerfile.seeds
+        image: bedasoftware/fhirsnake:latest
+        command:
+            - export
+            - --output
+            - /app/zenproject/seeds.ndjson.gz
         volumes:
-          - ./zenproject:/app/zenproject
-          - ./resources/seeds:/app/resources/seeds
+            - ./zenproject:/app/zenproject
+            - ./resources/seeds:/app/resources
+    watch-seeds:
+        image: bedasoftware/fhirsnake:latest
+        command:
+            - watch
+            - --external-fhir-server-url
+            - http://root:secret@devbox:8080
+        volumes:
+            - ./resources/seeds:/app/resources
     scheduling:
         image: bedasoftware/aidbox-scheduling-node-app:develop
         depends_on:

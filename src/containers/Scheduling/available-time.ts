@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro';
 import { Period, PractitionerRoleAvailableTime } from 'fhir/r4b';
 
 export type ScheduleBreak = Period & { removed?: boolean };
@@ -7,15 +8,19 @@ export type DaySchedules = {
     [day: string]: DaySchedule;
 };
 export const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
-export const daysMapping: { [x: string]: string } = {
-    mon: 'Monday',
-    tue: 'Tuesday',
-    wed: 'Wednesday',
-    thu: 'Thursday',
-    fri: 'Friday',
-    sat: 'Saturday',
-    sun: 'Sunday',
-};
+export function getDaysMapping(day: string): string {
+    const daysMapping: { [x: string]: string } = {
+        mon: t`Monday`,
+        tue: t`Tuesday`,
+        wed: t`Wednesday`,
+        thu: t`Thursday`,
+        fri: t`Friday`,
+        sat: t`Saturday`,
+        sun: t`Sunday`,
+    };
+
+    return daysMapping[day] || t`Unknown`;
+}
 
 export function fromAvailableTime(availableTimes: PractitionerRoleAvailableTime[]): DaySchedules {
     const availableTimesByDay = availableTimes.reduce(
@@ -42,11 +47,9 @@ export function fromAvailableTime(availableTimes: PractitionerRoleAvailableTime[
             return acc;
         }
 
-        const sortedDayAvailableTimes = dayAvailableTime.sort((a, b) =>
-            a.start!.localeCompare(b.start!),
-        );
+        const sortedDayAvailableTimes = dayAvailableTime.sort((a, b) => a.start!.localeCompare(b.start!));
 
-        let breaks: ScheduleBreak[] = [];
+        const breaks: ScheduleBreak[] = [];
         if (sortedDayAvailableTimes.length > 1) {
             for (let i = 0; i < sortedDayAvailableTimes.length - 1; i++) {
                 const periodStart = sortedDayAvailableTimes[i]?.end;
@@ -65,9 +68,7 @@ export function fromAvailableTime(availableTimes: PractitionerRoleAvailableTime[
 
         return {
             ...acc,
-            ...(startPeriod && endPeriod
-                ? { [day]: { start: startPeriod.start, end: endPeriod.end, breaks } }
-                : {}),
+            ...(startPeriod && endPeriod ? { [day]: { start: startPeriod.start, end: endPeriod.end, breaks } } : {}),
         };
     }, {} as DaySchedules);
 }

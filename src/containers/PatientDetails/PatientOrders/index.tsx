@@ -3,6 +3,7 @@ import { t, Trans } from '@lingui/macro';
 import { Input, MenuProps, notification, Dropdown, Space } from 'antd';
 import { Observation, Patient, Provenance } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
+import { extractExtension } from 'sdc-qrf';
 import styled from 'styled-components';
 
 import { WithId } from '@beda.software/fhir-react';
@@ -11,7 +12,6 @@ import { Modal } from 'src/components/Modal';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { ResourceTable, LinkToEdit } from 'src/components/ResourceTable';
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
-import { extractExtension } from 'src/utils/converter';
 import { formatHumanDate } from 'src/utils/date';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 
@@ -138,6 +138,30 @@ export function PatientOrders({ patient }: Props) {
             label: (
                 <a onClick={() => setQuestionnaire('glucose')}>
                     <Trans>Glucose</Trans>
+                </a>
+            ),
+        },
+        {
+            key: 'il6',
+            label: (
+                <a onClick={() => setQuestionnaire('il6')}>
+                    <Trans>IL-6</Trans>
+                </a>
+            ),
+        },
+        {
+            key: 'crp',
+            label: (
+                <a onClick={() => setQuestionnaire('crp')}>
+                    <Trans>CRP</Trans>
+                </a>
+            ),
+        },
+        {
+            key: 'pct',
+            label: (
+                <a onClick={() => setQuestionnaire('pct')}>
+                    <Trans>PCT</Trans>
                 </a>
             ),
         },

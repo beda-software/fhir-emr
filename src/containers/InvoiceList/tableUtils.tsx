@@ -5,7 +5,7 @@ import {
     ClockCircleOutlined,
     ExclamationCircleOutlined,
 } from '@ant-design/icons';
-import { Trans } from '@lingui/macro';
+import { t, Trans } from '@lingui/macro';
 import { Tag, Button } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { Invoice, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
@@ -24,14 +24,14 @@ import { getPractitionerName, getInvoicePractitioner, getPatientName, getInvoice
 
 export function getInvoiceStatusHumanized(invoice?: Invoice) {
     const invoiceStatusMapping = {
-        balanced: 'Balanced',
-        cancelled: 'Cancelled',
-        issued: 'Issued',
-        draft: 'Draft',
-        'entered-in-error': 'Entered in error',
+        balanced: t`Balanced`,
+        cancelled: t`Cancelled`,
+        issued: t`Issued`,
+        draft: t`Draft`,
+        'entered-in-error': t`Entered in error`,
     };
 
-    return invoice ? invoiceStatusMapping[invoice.status] : 'unknown';
+    return invoice ? invoiceStatusMapping[invoice.status] : t`Unknown`;
 }
 
 export function InvoiceStatus({ invoice }: { invoice: Invoice }) {

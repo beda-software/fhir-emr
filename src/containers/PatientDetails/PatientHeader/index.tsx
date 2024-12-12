@@ -38,7 +38,7 @@ export function PatientHeaderContextProvider(props: React.HTMLAttributes<HTMLDiv
             .map(([path, name]) => ({ path, name }))
             .value() as BreadCrumb[];
 
-        return isRoot ? [...result, { name: 'Overview' }] : result;
+        return isRoot ? [...result, { name: t`Overview` }] : result;
     }, [location?.pathname, breadcrumbsMap, rootPath]);
 
     return (

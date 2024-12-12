@@ -1,5 +1,6 @@
 import { Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import { useParams } from 'react-router-dom';
+import { fromFirstClassExtension, toFirstClassExtension } from 'sdc-qrf';
 
 import { Provenance } from '@beda.software/aidbox-types';
 import { WithId, extractBundleResources, useService } from '@beda.software/fhir-react';
@@ -8,7 +9,6 @@ import { isSuccess, mapSuccess, resolveMap } from '@beda.software/remote-data';
 import { getFHIRResource } from 'src/services/fhir';
 import { loadResourceHistory } from 'src/services/history';
 import { getProvenanceByEntity } from 'src/services/provenance';
-import { fromFirstClassExtension, toFirstClassExtension } from 'src/utils/converter';
 
 export function useDocumentHistory() {
     const params = useParams<{ qrId: string }>();

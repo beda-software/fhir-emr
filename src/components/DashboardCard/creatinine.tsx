@@ -1,4 +1,5 @@
 import { InfoOutlined } from '@ant-design/icons';
+import { t } from '@lingui/macro';
 import { isSuccess } from 'aidbox-react';
 import { Observation, Patient } from 'fhir/r4b';
 import moment from 'moment';
@@ -86,8 +87,8 @@ export function CreatinineDashboard({ observationsRemoteData, patient, reload }:
                                             tickFormatter={formatTime}
                                         />
                                         <YAxis />
-                                        {min > 0 ? <ReferenceLine y={min} label="Min" stroke="red" /> : null}
-                                        {max > 0 ? <ReferenceLine y={max} label="Max" stroke="red" /> : null}
+                                        {min > 0 ? <ReferenceLine y={min} label={t`Min`} stroke="red" /> : null}
+                                        {max > 0 ? <ReferenceLine y={max} label={t`Max`} stroke="red" /> : null}
                                         <Tooltip content={<CustomTooltip />} />
                                     </LineChart>
                                 ) : (

@@ -1,8 +1,11 @@
 services:
   build-seeds:
-    build:
-      context: .
-      dockerfile: Dockerfile.seeds
+    image: bedasoftware/fhirsnake
+    command:
+        - export
+        - --output
+        - /app/zenproject/seeds.ndjson.gz
     volumes:
-      - ./zenproject:/app/zenproject
-      - ./resources/seeds:/app/resources/seeds
+        - ./zenproject:/app/zenproject
+        - ./resources/seeds:/app/resources
+

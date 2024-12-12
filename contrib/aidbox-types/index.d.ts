@@ -14207,6 +14207,24 @@ export interface QuestionnaireItem {
     helpText?: string;
     stopLabel?: string;
     rowsNumber?: integer;
+    unitOption?: Coding[];
+    columnSize?: integer;
+    itemMedia?: Attachment;
+    regex?: string;
+    observationExtract?: boolean;
+    observationLinkPeriod?: Duration;
+    minValue?: Extension;
+    maxValue?: Extension;
+    minQuantity?: Extension;
+    maxQuantity?: Extension;
+    showOrdinalValue?: boolean;
+    preferredTerminologyServer?: uri;
+    openLabel?: string;
+    backgroundImage?: Attachment;
+    language?: Coding;
+    choiceOrientation?: 'horizontal' | 'vertical';
+    choiceColumns?: integer;
+    ordinalValue?: decimal;
 }
 
 export interface QuestionnaireItemAnswerOption {

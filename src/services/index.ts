@@ -6,3 +6,4 @@ export * from './initialize.ts';
 export * from './provenance.ts';
 export * from './questionnaire.ts';
 export * from './questionnaire-builder.ts';
+export * from './valueset-expand.ts';

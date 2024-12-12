@@ -10,30 +10,41 @@ import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/Pat
 
 interface Props {
     patient: Patient;
+    hideCreateButton?: boolean;
+    title?: string;
+    context?: string;
+    openNewTab?: boolean;
+    displayShareButton?: boolean;
 }
 
-export const PatientDocuments = ({ patient }: Props) => {
+export const PatientDocuments = (props: Props) => {
     const [modalOpened, setModalOpened] = useState(false);
+    const { patient, hideCreateButton } = props;
+    const title = props.title ?? t`Documents`;
 
-    usePatientHeaderLocationTitle({ title: t`Documents` });
+    usePatientHeaderLocationTitle({ title });
 
     return (
         <>
-            <div>
-                <Button icon={<PlusOutlined />} type="primary" onClick={() => setModalOpened(true)}>
-                    <span>
-                        <Trans>Create document</Trans>
-                    </span>
-                </Button>
-                <ChooseDocumentToCreateModal
-                    open={modalOpened}
-                    onCancel={() => setModalOpened(false)}
-                    patient={patient}
-                    subjectType="Patient"
-                />
-            </div>
-
-            <DocumentsList patient={patient} />
+            {hideCreateButton ? null : (
+                <div>
+                    <Button icon={<PlusOutlined />} type="primary" onClick={() => setModalOpened(true)}>
+                        <span>
+                            <Trans>Create document</Trans>
+                        </span>
+                    </Button>
+                    <ChooseDocumentToCreateModal
+                        open={modalOpened}
+                        onCancel={() => setModalOpened(false)}
+                        patient={patient}
+                        subjectType="Patient"
+                        context={props.context}
+                        openNewTab={props.openNewTab}
+                        displayShareButton={props.displayShareButton}
+                    />
+                </div>
+            )}
+            <DocumentsList patient={patient} context={props.context} />
         </>
     );
 };

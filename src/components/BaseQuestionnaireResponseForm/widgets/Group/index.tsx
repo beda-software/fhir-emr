@@ -3,14 +3,19 @@ import { GroupItemProps, QuestionItems } from 'sdc-qrf';
 
 import { Text } from 'src/components/Typography';
 
-import { GroupContext } from './context';
+import { GroupContext, GroupContextProps } from './context';
+import { GridGroup } from './GridGroup';
 import s from './group.module.scss';
 import { GTable } from './GTable';
 import { RepeatableGroupRow, RepeatableGroups } from './RepeatableGroups';
 
-function Flex(props: GroupItemProps & { type?: 'row' | 'col' | 'gtable' }) {
+function Flex(props: GroupItemProps & { type?: GroupContextProps['type'] }) {
     const { parentPath, questionItem, context, type = 'col' } = props;
-    const { linkId, item, repeats, text, helpText } = questionItem;
+    const { linkId, item, repeats, text, helpText, hidden } = questionItem;
+
+    if (hidden) {
+        return null;
+    }
 
     const renderRepeatableGroup = () => {
         if (type === 'gtable') {
@@ -23,6 +28,10 @@ function Flex(props: GroupItemProps & { type?: 'row' | 'col' | 'gtable' }) {
 
         return <RepeatableGroups groupItem={props} />;
     };
+
+    if (type === 'grid') {
+        return <GridGroup groupItem={props} />;
+    }
 
     if (repeats) {
         return <GroupContext.Provider value={{ type }}>{renderRepeatableGroup()}</GroupContext.Provider>;
@@ -68,4 +77,8 @@ export function Row(props: GroupItemProps) {
 
 export function Gtable(props: GroupItemProps) {
     return <Flex {...props} type="gtable" />;
+}
+
+export function Grid(props: GroupItemProps) {
+    return <Flex {...props} type="grid" />;
 }

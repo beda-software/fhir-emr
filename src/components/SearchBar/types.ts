@@ -1,6 +1,6 @@
 import { Expression, Resource, QuestionnaireItemChoiceColumn, ValueSet } from '@beda.software/aidbox-types';
 
-import { ValueSetOption } from 'src/components/BaseQuestionnaireResponseForm/widgets/choice/service';
+import { ValueSetOption } from 'src/services';
 import { LoadResourceOption } from 'src/services/questionnaire';
 
 export enum SearchBarColumnType {

@@ -1,7 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 import { Button, notification } from 'antd';
-import { Patient } from 'fhir/r4b';
+import { ParametersParameter, Patient } from 'fhir/r4b';
 import { useMemo, useState } from 'react';
 
 import { Modal } from 'src/components/Modal';
@@ -12,9 +12,10 @@ import { Role, matchCurrentUserRole } from 'src/utils/role';
 export interface ModalNewEncounterProps {
     patient: Patient;
     reloadEncounter: () => void;
+    launchContextParameters?: ParametersParameter[];
 }
 
-export const ModalNewEncounter = ({ patient, reloadEncounter }: ModalNewEncounterProps) => {
+export const ModalNewEncounter = ({ patient, launchContextParameters, reloadEncounter }: ModalNewEncounterProps) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const title = useMemo(
         () =>
@@ -35,7 +36,7 @@ export const ModalNewEncounter = ({ patient, reloadEncounter }: ModalNewEncounte
         reloadEncounter();
         setIsModalVisible(false);
         notification.success({
-            message: 'Encounter successfully created',
+            message: t`Encounter successfully created`,
         });
     };
 
@@ -55,7 +56,10 @@ export const ModalNewEncounter = ({ patient, reloadEncounter }: ModalNewEncounte
                 <QuestionnaireResponseForm
                     questionnaireLoader={questionnaireIdLoader('encounter-create')}
                     onSuccess={handleSuccess}
-                    launchContextParameters={[{ name: 'Patient', resource: patient }]}
+                    launchContextParameters={[
+                        { name: 'Patient', resource: patient },
+                        ...(launchContextParameters || []),
+                    ]}
                     onCancel={() => setIsModalVisible(false)}
                 />
             </Modal>

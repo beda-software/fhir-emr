@@ -2,8 +2,8 @@ import _ from 'lodash';
 import { useCallback, useContext } from 'react';
 import { MultiValue, SingleValue } from 'react-select';
 
-import { ExpandProvider } from 'src/components/BaseQuestionnaireResponseForm/widgets/choice/context';
-import { ValueSetOption } from 'src/components/BaseQuestionnaireResponseForm/widgets/choice/service';
+import { ValueSetExpandProvider } from 'src/contexts';
+import { ValueSetOption } from 'src/services';
 
 import { ChoiceColumnOption } from './types';
 import { ChoiceTypeColumnFilterValue } from '../../types';
@@ -12,7 +12,7 @@ import { SearchBarColumnChoiceTypeProps } from '../types';
 export function useChoiceColumn(props: SearchBarColumnChoiceTypeProps) {
     const { columnFilterValue, onChange } = props;
     const { id, valueSet, repeats } = columnFilterValue.column;
-    const expand = useContext(ExpandProvider);
+    const expand = useContext(ValueSetExpandProvider);
 
     const loadOptions = async (searchText: string) => {
         return expand(valueSet, searchText);

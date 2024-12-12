@@ -1,7 +1,6 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { expect, test, describe, vi } from 'vitest';
 
-import { ValueSetOption } from 'src/components/BaseQuestionnaireResponseForm/widgets/choice/service';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import {
     ChoiceTypeColumnFilterValue,
@@ -9,6 +8,7 @@ import {
     SearchBarChoiceColumn,
     SearchBarColumnType,
 } from 'src/components/SearchBar/types';
+import { ValueSetOption } from 'src/services';
 import { createValueSet, loginAdminUser } from 'src/setupTests';
 
 import { valuesetEncounterStatusData } from './valuesetEncounterStatus';
@@ -77,7 +77,6 @@ describe('ValueSetColumn component testing', () => {
             });
 
             const options = mockCallback.mock.calls[0][0];
-            console.log('options!!!!!!!!', options);
 
             const valuesetEncounterStatusCodes = valuesetEncounterStatusData.compose!.include[0]!.concept!.map(
                 (concept) => concept.code,

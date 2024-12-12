@@ -20,3 +20,4 @@ export * from './QuestionnaireList';
 export * from './SetPassword';
 export * from './SignIn';
 export * from './VideoCall';
+export * from './AidboxFormsBuilder';

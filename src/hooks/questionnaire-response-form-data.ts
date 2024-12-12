@@ -6,6 +6,7 @@ import {
     Questionnaire as FHIRQuestionnaire,
     Bundle,
     Resource,
+    OperationOutcome,
 } from 'fhir/r4b';
 import moment from 'moment';
 import {
@@ -14,6 +15,8 @@ import {
     QuestionnaireResponseFormData,
     calcInitialContext,
     removeDisabledAnswers,
+    toFirstClassExtension,
+    fromFirstClassExtension,
 } from 'sdc-qrf';
 
 import {
@@ -26,14 +29,13 @@ import { RemoteDataResult, isFailure, isSuccess, mapSuccess, success } from '@be
 
 import { saveFHIRResource, service } from 'src/services/fhir';
 
-import { toFirstClassExtension, fromFirstClassExtension } from '../utils/converter';
-
 export type { QuestionnaireResponseFormData } from 'sdc-qrf';
 
 export type QuestionnaireResponseFormSaveResponse<R extends Resource = any> = {
     questionnaireResponse: FHIRQuestionnaireResponse;
     extracted: boolean;
     extractedBundle: Bundle<R>[];
+    extractedError: OperationOutcome;
 };
 
 export interface QuestionnaireResponseFormProps {
@@ -248,6 +250,7 @@ export async function handleFormDataSave(
     return success({
         questionnaireResponse: saveQRRemoteData.data,
         extracted: isSuccess(extractRemoteData),
+        extractedError: isFailure(extractRemoteData) ? extractRemoteData.error : undefined,
         extractedBundle: isSuccess(extractRemoteData) ? extractRemoteData.data : undefined,
     });
 }

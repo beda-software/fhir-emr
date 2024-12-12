@@ -1,35 +1,17 @@
-import { GlobalOutlined, LogoutOutlined } from '@ant-design/icons';
-import { t } from '@lingui/macro';
+import { GlobalOutlined } from '@ant-design/icons';
 import { Button, Menu } from 'antd';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
 import classNames from 'classnames';
-import { useCallback } from 'react';
-
-import { resetInstanceToken as resetAidboxInstanceToken } from 'aidbox-react/lib/services/instance';
+import { useContext } from 'react';
 
 import { MenuIcon } from 'src/icons/general/Menu';
-import { AvatarImage } from 'src/images/AvatarImage';
-import { getToken, logout } from 'src/services/auth';
-import { resetInstanceToken as resetFHIRInstanceToken } from 'src/services/fhir';
+import { getToken } from 'src/services/auth';
 import { dynamicActivate, setCurrentLocale, getCurrentLocale, locales, LocaleCode } from 'src/services/i18n';
-import {
-    sharedAuthorizedOrganization,
-    sharedAuthorizedPatient,
-    sharedAuthorizedPractitioner,
-    sharedAuthorizedUser,
-} from 'src/sharedState';
-import { renderHumanName } from 'src/utils/fhir';
-import { Role, matchCurrentUserRole } from 'src/utils/role';
 
+import { BottomMenuLayout } from './context';
 import s from './SidebarBottom.module.scss';
 import { S } from './SidebarBottom.styles';
-
-interface MenuItem {
-    key: string;
-    label: React.ReactNode;
-    icon?: React.ReactNode;
-    children?: ItemType[];
-}
+import { MenuItem } from './types';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
     collapsed: boolean;
@@ -54,7 +36,7 @@ export function SidebarBottom(props: Props) {
             {!isAnonymousUser ? (
                 <>
                     <S.Divider $hidden={collapsed} />
-                    <UserMenu onItemClick={onItemClick} />
+                    <BottomMenu onItemClick={onItemClick} />
                 </>
             ) : null}
             {toggleCollapsed && (
@@ -79,79 +61,15 @@ export function renderMenu(items: MenuItem[]): ItemType[] {
     }));
 }
 
-function UserMenu(props: { onItemClick?: () => void }) {
-    const user = sharedAuthorizedUser.getSharedState();
-    const hasRole = (user?.role || []).length > 0;
+interface BottomMenuProps {
+    onItemClick?: () => void;
+}
+
+function BottomMenu(props: BottomMenuProps) {
+    const bottomMenuLayout = useContext(BottomMenuLayout);
     const { onItemClick } = props;
-    const doLogout = useCallback(async () => {
-        await logout();
-        resetAidboxInstanceToken();
-        resetFHIRInstanceToken();
-        localStorage.clear();
-        window.location.href = '/';
-    }, []);
 
-    const userMenu = [
-        {
-            label: t`Log out`,
-            key: 'logout',
-            onClick: () => {
-                doLogout();
-                onItemClick?.();
-            },
-            icon: <LogoutOutlined />,
-        },
-    ];
-
-    return (
-        <Menu
-            mode="inline"
-            theme="light"
-            className={s.menu}
-            items={renderMenu([
-                {
-                    key: 'user',
-                    icon: <AvatarImage className={s.avatar} />,
-                    label: (
-                        <>
-                            {hasRole
-                                ? matchCurrentUserRole({
-                                      [Role.Admin]: () => <OrganizationName />,
-                                      [Role.Patient]: () => <PatientName />,
-                                      [Role.Practitioner]: () => <PractitionerName />,
-                                      [Role.Receptionist]: () => <PractitionerName />,
-                                  })
-                                : user?.email}
-                        </>
-                    ),
-                    children: userMenu,
-                },
-            ])}
-        />
-    );
-}
-
-function PatientName() {
-    const [patient] = sharedAuthorizedPatient.useSharedState();
-    const name = patient?.name?.[0];
-
-    if (name) {
-        return <span>{renderHumanName(name)}</span>;
-    }
-
-    return <span>{patient?.telecom?.filter(({ system }) => system === 'email')[0]?.value}</span>;
-}
-
-function PractitionerName() {
-    const [practitioner] = sharedAuthorizedPractitioner.useSharedState();
-
-    return <span>{renderHumanName(practitioner?.name?.[0])}</span>;
-}
-
-function OrganizationName() {
-    const [organization] = sharedAuthorizedOrganization.useSharedState();
-
-    return <span>{organization?.name}</span>;
+    return <Menu mode="inline" theme="light" className={s.menu} items={renderMenu(bottomMenuLayout(onItemClick))} />;
 }
 
 function LocaleSwitcher(props: { onItemClick?: () => void }) {
@@ -170,6 +88,7 @@ function LocaleSwitcher(props: { onItemClick?: () => void }) {
     const onChangeLocale = (key: LocaleCode) => {
         setCurrentLocale(key);
         dynamicActivate(key);
+        location.reload();
     };
 
     return (

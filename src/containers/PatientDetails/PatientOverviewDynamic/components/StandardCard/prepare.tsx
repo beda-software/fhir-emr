@@ -15,6 +15,7 @@ import {
 } from 'fhir/r4b';
 import _ from 'lodash';
 import moment from 'moment';
+import { extractExtension, fromFHIRReference } from 'sdc-qrf';
 
 import { WithId, extractBundleResources, formatFHIRDate, parseFHIRDateTime } from '@beda.software/fhir-react';
 
@@ -22,13 +23,13 @@ import { PatientActivitySummary } from 'src/containers/PatientDetails/PatientAct
 import { LinkToEdit } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/LinkToEdit';
 import { OverviewCard } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/types';
 import medicationIcon from 'src/containers/PatientDetails/PatientOverviewDynamic/images/medication.svg';
-import { extractExtension, fromFHIRReference } from 'src/utils/converter';
 import { formatHumanDate } from 'src/utils/date';
 
 export function prepareAllergies(
     allergies: AllergyIntolerance[],
     provenanceList: Provenance[],
     total?: number,
+    to?: string,
 ): OverviewCard<AllergyIntolerance> {
     return {
         title: t`Allergies`,
@@ -46,6 +47,7 @@ export function prepareAllergies(
                         name={resource.code?.coding?.[0]?.display}
                         resource={resource}
                         provenanceList={provenanceList}
+                        to={to}
                     />
                 ),
             },
@@ -67,6 +69,7 @@ export function prepareConditions(
     conditions: Condition[],
     provenanceList: Provenance[],
     total?: number,
+    to?: string,
 ): OverviewCard<Condition> {
     return {
         title: t`Conditions`,
@@ -84,6 +87,7 @@ export function prepareConditions(
                         name={resource.code?.text || resource.code?.coding?.[0]?.display}
                         resource={resource}
                         provenanceList={provenanceList}
+                        to={to}
                     />
                 ),
             },
@@ -105,6 +109,7 @@ export function prepareConsents(
     consents: Consent[],
     provenanceList: Provenance[],
     total?: number,
+    to?: string,
 ): OverviewCard<Consent> {
     return {
         title: t`Consents`,
@@ -127,6 +132,7 @@ export function prepareConsents(
                             name={provisionName || purposeName || category}
                             resource={resource}
                             provenanceList={provenanceList}
+                            to={to}
                         />
                     );
                 },
@@ -184,6 +190,7 @@ export function prepareImmunizations(
     observations: Immunization[],
     provenanceList: Provenance[],
     total?: number,
+    to?: string,
 ): OverviewCard<Immunization> {
     return {
         title: t`Immunization`,
@@ -201,6 +208,7 @@ export function prepareImmunizations(
                         name={resource.vaccineCode.coding?.[0]?.display}
                         resource={resource}
                         provenanceList={provenanceList}
+                        to={to}
                     />
                 ),
             },
@@ -218,6 +226,7 @@ export function prepareMedications(
     observations: MedicationStatement[],
     provenanceList: Provenance[],
     total?: number,
+    to?: string,
 ): OverviewCard<MedicationStatement> {
     return {
         title: t`Active Medications`,
@@ -235,6 +244,7 @@ export function prepareMedications(
                         name={resource.medicationCodeableConcept?.coding?.[0]?.display}
                         resource={resource}
                         provenanceList={provenanceList}
+                        to={to}
                     />
                 ),
             },

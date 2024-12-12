@@ -1,0 +1,348 @@
+id: order-lab-tests
+resourceType: Mapping
+body:
+  $let:
+    answer:
+        $fn: ["linkId", "type"]
+        $name: answer
+        $body: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='"+ linkId + "').answer."+type).0
+  $body:
+    $let:
+      patientId: $ answer('patientId', 'valueString')
+      patientName: $ answer('patientName', 'valueString')
+      encounterId: $ fhirpath("Encounter.id")
+      wbc: $ answer('wbc', 'valueBoolean')
+      neutrophils: $ answer('neutrophils', 'valueBoolean')
+      lymphocytes: $ answer('lymphocytes', 'valueBoolean')
+      platelets: $ answer('platelets', 'valueBoolean')
+
+      sodium: $ answer('sodium', 'valueBoolean')
+      potassium: $ answer('potassium', 'valueBoolean')
+      co2: $ answer('co2', 'valueBoolean')
+      chloride: $ answer('chloride', 'valueBoolean')
+      bun: $ answer('bun', 'valueBoolean')
+      creatinine: $ answer('creatinine', 'valueBoolean')
+      albumin: $ answer('albumin', 'valueBoolean')
+      bilirubin: $ answer('bilirubin', 'valueBoolean')
+
+      crp: $ answer('crp', 'valueBoolean')
+      il6: $ answer('il6', 'valueBoolean')
+      pct: $ answer('pct', 'valueBoolean')
+    $body:
+      type: transaction
+      entry:
+        - $if: $ wbc
+          $then:
+            request:
+              url: $ "/ServiceRequest?encounter" + encounterId + "&code=26464-8"
+              method: POST
+            resource:
+              resourceType: ServiceRequest
+              status: active
+              intent: order
+              code:
+                coding:
+                  - code: 26464-8
+                    system: http://loinc.org
+                    display: WBC
+              subject:
+                id: $ patientId
+                display: $ patientName
+                resourceType: Patient
+              encounter:
+                id: $ encounterId
+                resourceType: Encounter
+        - $if: $ neutrophils
+          $then:
+            request:
+              url: $ "/ServiceRequest?encounter" + encounterId + "&code=26499-4"
+              method: POST
+            resource:
+              resourceType: ServiceRequest
+              status: active
+              intent: order
+              code:
+                coding:
+                  - code: 26499-4
+                    system: http://loinc.org
+                    display: Neutrophils
+              subject:
+                id: $ patientId
+                display: $ patientName
+                resourceType: Patient
+              encounter:
+                id: $ encounterId
+                resourceType: Encounter
+        - $if: $ lymphocytes
+          $then:
+            request:
+              url: $ "/ServiceRequest?encounter" + encounterId + "&code=26474-7"
+              method: POST
+            resource:
+              resourceType: ServiceRequest
+              status: active
+              intent: order
+              code:
+                coding:
+                  - code: 26474-7
+                    system: http://loinc.org
+                    display: Lymphocytes
+              subject:
+                id: $ patientId
+                display: $ patientName
+                resourceType: Patient
+              encounter:
+                id: $ encounterId
+                resourceType: Encounter
+        - $if: $ platelets
+          $then:
+            request:
+              url: $ "/ServiceRequest?encounter" + encounterId + "&code=26515-7"
+              method: POST
+            resource:
+              resourceType: ServiceRequest
+              status: active
+              intent: order
+              code:
+                coding:
+                  - code: 26515-7
+                    system: http://loinc.org
+                    display: Platelets
+              subject:
+                id: $ patientId
+                display: $ patientName
+                resourceType: Patient
+              encounter:
+                id: $ encounterId
+                resourceType: Encounter
+        - $if: $ sodium
+          $then:
+            request:
+              url: $ "/ServiceRequest?encounter" + encounterId + "&code=77139-4"
+              method: POST
+            resource:
+              resourceType: ServiceRequest
+              status: active
+              intent: order
+              code:
+                coding:
+                  - code: 77139-4
+                    system: http://loinc.org
+                    display: Sodium
+              subject:
+                id: $ patientId
+                display: $ patientName
+                resourceType: Patient
+              encounter:
+                id: $ encounterId
+                resourceType: Encounter
+        - $if: $ potassium
+          $then:
+            request:
+              url: $ "/ServiceRequest?encounter" + encounterId + "&code=77142-8"
+              method: POST
+            resource:
+              resourceType: ServiceRequest
+              status: active
+              intent: order
+              code:
+                coding:
+                  - code: 77142-8
+                    system: http://loinc.org
+                    display: Potassium
+              subject:
+                id: $ patientId
+                display: $ patientName
+                resourceType: Patient
+              encounter:
+                id: $ encounterId
+                resourceType: Encounter
+        - $if: $ co2
+          $then:
+            request:
+              url: $ "/ServiceRequest?encounter" + encounterId + "&code=2028-9"
+              method: POST
+            resource:
+              resourceType: ServiceRequest
+              status: active
+              intent: order
+              code:
+                coding:
+                  - code: 2028-9
+                    system: http://loinc.org
+                    display: CO2
+              subject:
+                id: $ patientId
+                display: $ patientName
+                resourceType: Patient
+              encounter:
+                id: $ encounterId
+                resourceType: Encounter
+        - $if: $ chloride
+          $then:
+            request:
+              url: $ "/ServiceRequest?encounter" + encounterId + "&code=77138-6"
+              method: POST
+            resource:
+              resourceType: ServiceRequest
+              status: active
+              intent: order
+              code:
+                coding:
+                  - code: 26464-8
+                    system: http://loinc.org
+                    display: Chloride
+              subject:
+                id: $ patientId
+                display: $ patientName
+                resourceType: Patient
+              encounter:
+                id: $ encounterId
+                resourceType: Encounter
+        - $if: $ bun
+          $then:
+            request:
+              url: $ "/ServiceRequest?encounter" + encounterId + "&code=6299-2"
+              method: POST
+            resource:
+              resourceType: ServiceRequest
+              status: active
+              intent: order
+              code:
+                coding:
+                  - code: 6299-2
+                    system: http://loinc.org
+                    display: BUN
+              subject:
+                id: $ patientId
+                display: $ patientName
+                resourceType: Patient
+              encounter:
+                id: $ encounterId
+                resourceType: Encounter
+        - $if: $ creatinine
+          $then:
+            request:
+              url: $ "/ServiceRequest?encounter" + encounterId + "&code=38483-4"
+              method: POST
+            resource:
+              resourceType: ServiceRequest
+              status: active
+              intent: order
+              code:
+                coding:
+                  - code: 38483-4
+                    system: http://loinc.org
+                    display: Creatinine
+              subject:
+                id: $ patientId
+                display: $ patientName
+                resourceType: Patient
+              encounter:
+                id: $ encounterId
+                resourceType: Encounter
+        - $if: $ albumin
+          $then:
+            request:
+              url: $ "/ServiceRequest?encounter" + encounterId + "&code=1751-7"
+              method: POST
+            resource:
+              resourceType: ServiceRequest
+              status: active
+              intent: order
+              code:
+                coding:
+                  - code: 1751-7
+                    system: http://loinc.org
+                    display: Albumin
+              subject:
+                id: $ patientId
+                display: $ patientName
+                resourceType: Patient
+              encounter:
+                id: $ encounterId
+                resourceType: Encounter
+        - $if: $ bilirubin
+          $then:
+            request:
+              url: $ "/ServiceRequest?encounter" + encounterId + "&code=1975-2"
+              method: POST
+            resource:
+              resourceType: ServiceRequest
+              status: active
+              intent: order
+              code:
+                coding:
+                  - code: 1975-2
+                    system: http://loinc.org
+                    display: Bilirubin
+              subject:
+                id: $ patientId
+                display: $ patientName
+                resourceType: Patient
+              encounter:
+                id: $ encounterId
+                resourceType: Encounter
+        - $if: $ il6
+          $then:
+            request:
+              url: $ "/ServiceRequest?encounter" + encounterId + "&code=LP16474-6"
+              method: POST
+            resource:
+              resourceType: ServiceRequest
+              status: active
+              intent: order
+              code:
+                coding:
+                  - code: LP16474-6
+                    system: http://loinc.org
+                    display: IL-6
+              subject:
+                id: $ patientId
+                display: $ patientName
+                resourceType: Patient
+              encounter:
+                id: $ encounterId
+                resourceType: Encounter
+        - $if: $ crp
+          $then:
+            request:
+              url: $ "/ServiceRequest?encounter" + encounterId + "&code=1988-5"
+              method: POST
+            resource:
+              resourceType: ServiceRequest
+              status: active
+              intent: order
+              code:
+                coding:
+                  - code: 1988-5
+                    system: http://loinc.org
+                    display: CRP
+              subject:
+                id: $ patientId
+                display: $ patientName
+                resourceType: Patient
+              encounter:
+                id: $ encounterId
+                resourceType: Encounter
+        - $if: $ pct
+          $then:
+            request:
+              url: $ "/ServiceRequest?encounter" + encounterId + "&code=33959-8"
+              method: POST
+            resource:
+              resourceType: ServiceRequest
+              status: active
+              intent: order
+              code:
+                coding:
+                  - code: 33959-8
+                    system: http://loinc.org
+                    display: PCT
+              subject:
+                id: $ patientId
+                display: $ patientName
+                resourceType: Patient
+              encounter:
+                id: $ encounterId
+                resourceType: Encounter

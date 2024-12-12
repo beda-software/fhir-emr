@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro';
 import { PractitionerRole } from 'fhir/r4b';
 
 import { RenderRemoteData, formatFHIRDateTime } from '@beda.software/fhir-react';
@@ -45,7 +46,7 @@ export function NewAppointmentModal(props: NewAppointmentModalProps) {
         ],
     });
     return (
-        <Modal title="New Appointment" open={showModal} footer={null} onCancel={onCancel}>
+        <Modal title={t`New Appointment`} open={showModal} footer={null} onCancel={onCancel}>
             <RenderRemoteData remoteData={response} renderLoading={Spinner}>
                 {(formData) => {
                     return (

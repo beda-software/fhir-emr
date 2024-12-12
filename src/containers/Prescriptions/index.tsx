@@ -1,12 +1,12 @@
-import { Trans } from '@lingui/macro';
+import { t, Trans } from '@lingui/macro';
 import { Table } from 'antd';
 import { Medication, MedicationRequest } from 'fhir/r4b';
+import { extractExtension } from 'sdc-qrf';
 
 import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { PageContainer } from 'src/components/PageContainer';
 import { Spinner } from 'src/components/Spinner';
-import { extractExtension } from 'src/utils/converter';
 import { formatHumanDate } from 'src/utils/date';
 import { renderHumanName } from 'src/utils/fhir';
 import { matchCurrentUserRole, Role, selectCurrentUserRoleResource } from 'src/utils/role';
@@ -45,7 +45,7 @@ export function Prescriptions() {
 
     return (
         <PageContainer
-            title="Prescriptions"
+            title={t`Prescriptions`}
             headerContent={
                 <PrescriptionsSearchBar
                     selectedPatient={selectedPatient}
@@ -188,14 +188,14 @@ function findCurrentMedication(medications: Medication[], medicationRequest: Med
 
 function mapPrescriptionStatus(medicationRequest: MedicationRequest): string {
     const statusMap = {
-        active: 'Active',
-        'on-hold': 'On Hold',
-        cancelled: 'Cancelled',
-        completed: 'Completed',
-        'entered-in-error': 'Entered in error',
-        stopped: 'Stopped',
-        draft: 'Draft',
-        unknown: 'Unknown',
+        active: t`Active`,
+        'on-hold': t`On Hold`,
+        cancelled: t`Cancelled`,
+        completed: t`Completed`,
+        'entered-in-error': t`Entered in error`,
+        stopped: t`Stopped`,
+        draft: t`Draft`,
+        unknown: t`Unknown`,
     };
 
     return statusMap[medicationRequest.status];

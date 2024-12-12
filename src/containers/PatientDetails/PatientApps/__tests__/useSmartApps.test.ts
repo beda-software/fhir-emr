@@ -121,7 +121,7 @@ describe.each(Object.values(Role))('useSmartApps for role %s', (role) => {
                 [Role.Practitioner]: () => 'smart-on-fhir-practitioner',
                 [Role.Receptionist]: () => 'smart-on-fhir-practitioner',
             });
-            const firstClient = appData.Client[0];
+            const firstClient = appData[0];
             if (!firstClient) {
                 throw new Error('First client data is not available');
             }

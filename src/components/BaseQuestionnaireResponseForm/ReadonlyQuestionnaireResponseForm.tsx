@@ -13,11 +13,13 @@ import { QuestionChoice } from './readonly-widgets/choice';
 import { QuestionDateTime } from './readonly-widgets/date';
 import { Display } from './readonly-widgets/display';
 import { Col, Group, Row } from './readonly-widgets/group';
-import { QuestionInteger, QuestionDecimal } from './readonly-widgets/number';
+import { QuestionInteger, QuestionDecimal, QuestionQuantity } from './readonly-widgets/number';
 import { QuestionReference } from './readonly-widgets/reference';
 import { AnxietyScore, DepressionScore } from './readonly-widgets/score';
-import { QuestionText } from './readonly-widgets/string';
+import { QuestionText, TextWithInput } from './readonly-widgets/string';
 import { TimeRangePickerControl } from './readonly-widgets/TimeRangePickerControl';
+import { UploadFile } from './readonly-widgets/UploadFile';
+import { AudioAttachment } from './readonly-widgets/AudioAttachment';
 
 interface Props extends Partial<QRFContextData> {
     formData: QuestionnaireResponseFormData;
@@ -58,18 +60,22 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
                         string: QuestionText,
                         integer: QuestionInteger,
                         decimal: QuestionDecimal,
+                        quantity: QuestionQuantity,
                         choice: QuestionChoice,
                         date: QuestionDateTime,
                         dateTime: QuestionDateTime,
                         reference: QuestionReference,
                         display: Display,
                         boolean: QuestionBoolean,
+                        attachment: UploadFile,
                         ...questionItemComponents,
                     }}
                     itemControlQuestionItemComponents={{
                         'inline-choice': QuestionChoice,
                         'anxiety-score': AnxietyScore,
                         'depression-score': DepressionScore,
+                        'input-inside-text': TextWithInput,
+                        'audio-recorder-uploader': AudioAttachment,
                         ...itemControlQuestionItemComponents,
                     }}
                 >

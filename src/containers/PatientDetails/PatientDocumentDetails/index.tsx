@@ -21,7 +21,7 @@ import {
 } from 'src/containers/PatientDetails/PatientDocument/usePatientDocument';
 import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
 import { forceDeleteFHIRResource, getFHIRResources, patchFHIRResource } from 'src/services/fhir';
-import { matchCurrentUserRole, Role, selectCurrentUserRoleResource } from 'src/utils/role';
+import { selectCurrentUserRoleResource } from 'src/utils/role';
 import { isExternalQuestionnaire } from 'src/utils/smart-apps';
 
 import { ExternalDocumentView } from './ExternalDocumentView';
@@ -30,6 +30,7 @@ import { S } from './PatientDocumentDetails.styles';
 
 interface Props {
     patient: WithId<Patient>;
+    hideControls?: boolean;
 }
 
 const deleteDraft = async (navigate: NavigateFunction, patientId?: string, qrId?: string) => {
@@ -67,18 +68,18 @@ const amendDocument = async (reload: () => void, qrId?: string) => {
     if (isSuccess(response)) {
         reload();
         notification.success({
-            message: 'The document successfully amended',
+            message: t`The document successfully amended`,
         });
     }
     if (isFailure(response)) {
         console.error(response.error);
         notification.error({
-            message: 'Error while amending the document',
+            message: t`Error while amending the document`,
         });
     }
 };
 
-function usePatientDocumentDetails() {
+function usePatientDocumentDetails(patientId: string) {
     const params = useParams<{ qrId: string }>();
     const qrId = params.qrId!;
 
@@ -86,6 +87,7 @@ function usePatientDocumentDetails() {
         const mappedResponse = mapSuccess(
             await getFHIRResources<QuestionnaireResponse | Encounter>('QuestionnaireResponse', {
                 id: qrId,
+                subject: patientId,
                 _include: ['QuestionnaireResponse:encounter:Encounter'],
             }),
             (bundle) => ({
@@ -94,7 +96,7 @@ function usePatientDocumentDetails() {
             }),
         );
         if (isSuccess(mappedResponse) && !mappedResponse.data.questionnaireResponse) {
-            return failure(`The document does not exist`);
+            return failure(t`The document does not exist`);
         }
         return mappedResponse;
     });
@@ -107,10 +109,11 @@ function PatientDocumentDetailsReadonly(props: {
     reload: () => void;
     encounter?: Encounter;
     provenance?: WithId<Provenance>;
+    hideControls?: boolean;
 }) {
     const location = useLocation();
     const navigate = useNavigate();
-    const { formData, reload, provenance } = props;
+    const { formData, reload, provenance, hideControls } = props;
 
     usePatientHeaderLocationTitle({ title: formData.context.questionnaire?.name ?? '' });
 
@@ -130,52 +133,37 @@ function PatientDocumentDetailsReadonly(props: {
                     <div className={s.buttons}>
                         {qrCompleted ? (
                             <>
-                                {matchCurrentUserRole({
-                                    [Role.Admin]: () => <></>,
-                                    [Role.Patient]: () => <></>,
-                                    [Role.Practitioner]: () => {
-                                        return (
-                                            <Button
-                                                type="primary"
-                                                icon={<PrinterOutlined />}
-                                                onClick={() => navigate(`/print-patient-document/${patientId}/${qrId}`)}
-                                            >
-                                                {t`Prepare for print`}
-                                            </Button>
-                                        );
-                                    },
-                                    [Role.Receptionist]: () => {
-                                        return (
-                                            <Button
-                                                type="primary"
-                                                icon={<PrinterOutlined />}
-                                                onClick={() => navigate(`/print-patient-document/${patientId}/${qrId}`)}
-                                            >
-                                                {t`Prepare for print`}
-                                            </Button>
-                                        );
-                                    },
-                                })}
-                                <ConfirmActionButton
-                                    action={() => amendDocument(reload, qrId)}
-                                    reload={reload}
-                                    qrId={qrId}
-                                    title={t`Are you sure you want to amend the document?`}
-                                    okText="Yes"
-                                    cancelText="No"
-                                >
-                                    <Button className={s.button}>
-                                        <Trans>Amend</Trans>
-                                    </Button>
-                                </ConfirmActionButton>
                                 <Button
                                     type="primary"
-                                    onClick={() => navigate(`${location.pathname}/history`)}
-                                    className={s.button}
-                                    disabled={!provenance}
+                                    icon={<PrinterOutlined />}
+                                    onClick={() => navigate(`/print-patient-document/${patientId}/${qrId}`)}
                                 >
-                                    <Trans>History</Trans>
+                                    {t`Prepare for print`}
                                 </Button>
+                                {hideControls ? null : (
+                                    <>
+                                        <ConfirmActionButton
+                                            action={() => amendDocument(reload, qrId)}
+                                            reload={reload}
+                                            qrId={qrId}
+                                            title={t`Are you sure you want to amend the document?`}
+                                            okText={t`Yes`}
+                                            cancelText={t`No`}
+                                        >
+                                            <Button className={s.button}>
+                                                <Trans>Amend</Trans>
+                                            </Button>
+                                        </ConfirmActionButton>
+                                        <Button
+                                            type="primary"
+                                            onClick={() => navigate(`${location.pathname}/history`)}
+                                            className={s.button}
+                                            disabled={!provenance}
+                                        >
+                                            <Trans>History</Trans>
+                                        </Button>
+                                    </>
+                                )}
                             </>
                         ) : null}
                         {canBeEdited ? (
@@ -184,8 +172,8 @@ function PatientDocumentDetailsReadonly(props: {
                                     action={() => deleteDraft(navigate, patientId, qrId)}
                                     qrId={qrId}
                                     title={t`Are you sure you want to delete the document?`}
-                                    okText="Yes"
-                                    cancelText="No"
+                                    okText={t`Yes`}
+                                    cancelText={t`No`}
                                 >
                                     <Button className={s.button} type={'text'} danger>
                                         <Trans>Delete</Trans>
@@ -229,8 +217,8 @@ function PatientDocumentDetailsFormData(props: {
 }
 
 export function PatientDocumentDetails(props: Props) {
-    const { patient } = props;
-    const { response, manager } = usePatientDocumentDetails();
+    const { patient, hideControls } = props;
+    const { response, manager } = usePatientDocumentDetails(patient.id);
     const navigate = useNavigate();
     const author = selectCurrentUserRoleResource();
 
@@ -268,6 +256,7 @@ export function PatientDocumentDetails(props: Props) {
                                                     encounter={encounter}
                                                     reload={manager.reload}
                                                     provenance={provenance}
+                                                    hideControls={hideControls}
                                                 />
                                             }
                                         />

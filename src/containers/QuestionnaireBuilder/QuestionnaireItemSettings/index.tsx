@@ -130,11 +130,11 @@ export function QuestionnaireItemSettings(props: Props) {
                         <Trans>Save</Trans>
                     </Button>
                     <Popconfirm
-                        title="Delete Questionnaire Item"
-                        description="Are you sure you want to delete this item?"
+                        title={t`Delete Questionnaire Item`}
+                        description={t`Are you sure you want to delete this item?`}
                         onConfirm={() => onDelete(item)}
-                        okText="Yes"
-                        cancelText="No"
+                        okText={t`Yes`}
+                        cancelText={t`No`}
                     >
                         <Button htmlType="button" danger>
                             <Trans>Delete</Trans>

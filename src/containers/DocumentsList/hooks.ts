@@ -5,12 +5,21 @@ import { extractBundleResources, parseFHIRReference, useService } from '@beda.so
 import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 
 import { getFHIRResources } from 'src/services/fhir';
+import { evaluate } from 'src/utils';
 import { getExternalQuestionnaireName } from 'src/utils/smart-apps';
 
-export function usePatientDocuments(patient: Patient, encounter?: Reference) {
+export function usePatientDocuments(patient: Patient, encounter?: Reference, context?: string) {
     const [response] = useService(async () => {
+        let questionnaires: string[] = [];
+        if (context) {
+            const r = await getFHIRResources<Questionnaire>('Questionnaire', { context, _elements: 'id' });
+            if (isSuccess(r)) {
+                questionnaires = evaluate(r.data, 'Bundle.entry.resource.id') ?? [];
+            }
+        }
         const qrResponse = await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
             subject: patient.id,
+            questionnaire: questionnaires.join(','),
             encounter: encounter ? parseFHIRReference(encounter).id : undefined,
             _sort: '-authored',
         });

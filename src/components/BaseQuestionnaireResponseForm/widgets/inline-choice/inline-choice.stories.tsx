@@ -2,9 +2,11 @@ import { Meta, StoryObj } from '@storybook/react';
 import { expect, within, userEvent, findByTestId } from '@storybook/test';
 import { ItemContext } from 'sdc-qrf/lib/types';
 
+import { QuestionnaireItem } from '@beda.software/aidbox-types';
+
 import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 
-import { InlineChoice, InlineChoiceQuestionItem } from './index';
+import { InlineChoice } from './index';
 
 const meta: Meta<typeof InlineChoice> = {
     title: 'Questionnaire / questions / inline-choice',
@@ -19,25 +21,25 @@ export const Default: Story = {
     render: () => <InlineChoice parentPath={[]} questionItem={questionItemDefault} context={{} as ItemContext} />,
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
-        const getQuestion = () => canvas.findAllByTestId('question-inline-choice');
+        const getQuestion = () => canvas.findAllByTestId('type');
 
         const questions: HTMLElement[] = await getQuestion();
         expect(questions.length > 0).toBe(true);
 
         // Choose an item in the list
         const checkbox1 = await findByTestId<HTMLInputElement>(questions[0]!, 'inline-choice__medication');
-        expect(checkbox1).not.toBeChecked;
+        expect(checkbox1).not.toBeChecked();
 
-        userEvent.click(checkbox1);
-        expect(checkbox1).toBeChecked;
+        await userEvent.click(checkbox1);
+        expect(checkbox1).toBeChecked();
 
         // Choose another item in the list
         const checkbox2 = await findByTestId<HTMLInputElement>(questions[0]!, 'inline-choice__food');
-        expect(checkbox2).not.toBeChecked;
+        expect(checkbox2).not.toBeChecked();
 
-        userEvent.click(checkbox2);
-        expect(checkbox1).not.toBeChecked;
-        expect(checkbox2).toBeChecked;
+        await userEvent.click(checkbox2);
+        expect(checkbox1).not.toBeChecked();
+        expect(checkbox2).toBeChecked();
     },
 };
 
@@ -45,25 +47,25 @@ export const Multiple: Story = {
     render: () => <InlineChoice parentPath={[]} questionItem={questionItemMultiple} context={{} as ItemContext} />,
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
-        const getQuestion = () => canvas.findAllByTestId('question-inline-choice');
+        const getQuestion = () => canvas.findAllByTestId('reaction');
 
         const questions: HTMLElement[] = await getQuestion();
         expect(questions.length > 0).toBe(true);
 
         // Choose an item in the list
         const checkbox1 = await findByTestId<HTMLInputElement>(questions[0]!, 'inline-choice__headache');
-        expect(checkbox1).not.toBeChecked;
+        expect(checkbox1).not.toBeChecked();
 
-        userEvent.click(checkbox1);
-        expect(checkbox1).toBeChecked;
+        await userEvent.click(checkbox1);
+        expect(checkbox1).toBeChecked();
 
         // Choose another item in the list
         const checkbox2 = await findByTestId<HTMLInputElement>(questions[0]!, 'inline-choice__nausea');
-        expect(checkbox2).not.toBeChecked;
+        expect(checkbox2).not.toBeChecked();
 
-        userEvent.click(checkbox2);
-        expect(checkbox1).toBeChecked;
-        expect(checkbox2).toBeChecked;
+        await userEvent.click(checkbox2);
+        expect(checkbox1).toBeChecked();
+        expect(checkbox2).toBeChecked();
     },
 };
 
@@ -73,14 +75,14 @@ export const Horizontal: Story = {
             parentPath={[]}
             questionItem={{
                 ...questionItemMultiple,
-                inlineChoiceDirection: 'horizontal',
+                choiceOrientation: 'horizontal',
             }}
             context={{} as ItemContext}
         />
     ),
 };
 
-const questionItemDefault: InlineChoiceQuestionItem = {
+const questionItemDefault: QuestionnaireItem = {
     text: 'Type',
     type: 'choice',
     linkId: 'type',
@@ -123,7 +125,7 @@ const questionItemDefault: InlineChoiceQuestionItem = {
     },
 };
 
-const questionItemMultiple: InlineChoiceQuestionItem = {
+const questionItemMultiple: QuestionnaireItem = {
     text: 'Reaction',
     type: 'choice',
     linkId: 'reaction',

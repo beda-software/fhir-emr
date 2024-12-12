@@ -1,13 +1,13 @@
 import { t } from '@lingui/macro';
 import { QuestionnaireResponse as FHIRQuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
+import { toFirstClassExtension } from 'sdc-qrf';
 
 import {
     QuestionnaireResponse as FCEQuestionnaireResponse,
     QuestionnaireResponseItem,
 } from '@beda.software/aidbox-types';
 
-import { toFirstClassExtension } from 'src/utils/converter';
 import { getDisplay } from 'src/utils/questionnaire';
 import { getExternalQuestionnaireName } from 'src/utils/smart-apps';
 

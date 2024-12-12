@@ -16,23 +16,29 @@ interface Props extends ModalProps {
     patient: Patient;
     subjectType?: string;
     encounter?: WithId<Encounter>;
+    context?: string;
     onCancel: () => void;
+    openNewTab?: boolean;
+    displayShareButton?: boolean;
 }
 
 export const ChooseDocumentToCreateModal = (props: Props) => {
-    const { subjectType, patient, encounter, onCancel } = props;
+    const { subjectType, patient, encounter, onCancel, context, openNewTab, displayShareButton = true } = props;
     const [questionnaireId, setQuestionnaireId] = useState();
     const location = useLocation();
     const navigate = useNavigate();
     const routeToOpen = `${location.pathname}/new/${questionnaireId}`;
-    const [questionnairesResponse] = useService(async () =>
-        mapSuccess(
-            await getFHIRResources<Questionnaire>('Questionnaire', {
-                'subject-type': subjectType ? [subjectType] : [],
-                _sort: 'title',
-            }),
-            (bundle) => extractBundleResources(bundle).Questionnaire,
-        ),
+    const [questionnairesResponse] = useService(
+        async () =>
+            mapSuccess(
+                await getFHIRResources<Questionnaire>('Questionnaire', {
+                    'subject-type': subjectType ? [subjectType] : [],
+                    _sort: 'title',
+                    ...(context ? { context } : {}),
+                }),
+                (bundle) => extractBundleResources(bundle).Questionnaire,
+            ),
+        [context],
     );
 
     const onCloseModal = useCallback(() => {
@@ -43,35 +49,39 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
     return (
         <>
             <Modal
-                title="Create document"
+                title={t`Create document`}
                 footer={[
                     <Button key="back" onClick={onCloseModal}>
                         <Trans>Cancel</Trans>
                     </Button>,
-                    <Button
-                        key="share-link"
-                        disabled={!questionnaireId}
-                        onClick={() => {
-                            const questionnaireParams = _.compact([
-                                `patient=${patient.id}`,
-                                `questionnaire=${questionnaireId}`,
-                                encounter?.id ? `encounter=${encounter.id}` : null,
-                            ]);
-                            navigator.clipboard.writeText(
-                                `${window.location.origin}/questionnaire?${questionnaireParams.join('&')}`,
-                            );
-                            notification.success({
-                                message: t`The link was copied to clipboard`,
-                            });
-                            onCloseModal();
-                        }}
-                    >
-                        <Trans>Share link</Trans>
-                    </Button>,
+                    ...(displayShareButton
+                        ? [
+                              <Button
+                                  key="share-link"
+                                  disabled={!questionnaireId}
+                                  onClick={() => {
+                                      const questionnaireParams = _.compact([
+                                          `patient=${patient.id}`,
+                                          `questionnaire=${questionnaireId}`,
+                                          encounter?.id ? `encounter=${encounter.id}` : null,
+                                      ]);
+                                      navigator.clipboard.writeText(
+                                          `${window.location.origin}/questionnaire?${questionnaireParams.join('&')}`,
+                                      );
+                                      notification.success({
+                                          message: t`The link was copied to clipboard`,
+                                      });
+                                      onCloseModal();
+                                  }}
+                              >
+                                  <Trans>Share link</Trans>
+                              </Button>,
+                          ]
+                        : []),
                     <Button
                         key="create"
                         disabled={!questionnaireId}
-                        onClick={() => navigate(routeToOpen)}
+                        onClick={() => (openNewTab ? window.open(routeToOpen, '_blank') : navigate(routeToOpen))}
                         type="primary"
                     >
                         <Trans>Create</Trans>

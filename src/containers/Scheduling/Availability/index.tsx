@@ -1,5 +1,5 @@
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
-import { Trans } from '@lingui/macro';
+import { t, Trans } from '@lingui/macro';
 import { Button, Checkbox, Col, notification, Row } from 'antd';
 import { PractitionerRole } from 'fhir/r4b';
 import moment from 'moment';
@@ -15,7 +15,7 @@ import { saveFHIRResource } from 'src/services/fhir';
 import s from './Availability.module.scss';
 import { S } from './Availability.styles';
 import { useAvailability } from './hooks';
-import { DaySchedule, daysMapping, toAvailableTime } from '../available-time';
+import { DaySchedule, getDaysMapping, toAvailableTime } from '../available-time';
 
 interface Props {
     practitionerRole: PractitionerRole;
@@ -40,7 +40,7 @@ export function Availability(props: Props) {
         if (isSuccess(response)) {
             setPractitionerRole(response.data);
             onSave?.(response.data);
-            notification.success({ message: 'Successfully updated' });
+            notification.success({ message: t`Successfully updated` });
         } else {
             notification.error({ message: formatError(response.error) });
         }
@@ -109,7 +109,7 @@ function WeekDaySchedule(props: WeekDayScheduleProps) {
             <Row gutter={16} justify="space-between" align="middle">
                 <Col span={6}>
                     <Checkbox checked={isActive} onChange={() => toggleSchedule(day)} className={s.weekdayCheckbox}>
-                        {daysMapping[day]}
+                        {getDaysMapping(day)}
                     </Checkbox>
                 </Col>
                 {isActive ? (

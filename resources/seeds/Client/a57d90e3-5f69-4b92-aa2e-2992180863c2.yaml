@@ -1,0 +1,15 @@
+auth:
+  authorization_code:
+    redirect_uri: https://portal-xrp.digitalhealth.gov.au/FormsPortal/authorisation
+    refresh_token: true
+    secret_required: false
+    access_token_expiration: 36000
+type: smart-on-fhir-encounter
+smart:
+  name: ADHA CHAP Form
+  launch_uri: https://portal-xrp.digitalhealth.gov.au/FormsPortal/launch
+  description: ADHA CHAP Form
+grant_types:
+  - authorization_code
+id: a57d90e3-5f69-4b92-aa2e-2992180863c2
+resourceType: Client

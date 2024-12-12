@@ -1,22 +1,37 @@
 import { t } from '@lingui/macro';
+import _ from 'lodash';
 import * as yup from 'yup';
 
 import {
     Questionnaire,
+    QuestionnaireItem,
     QuestionnaireItemAnswerOption,
+    QuestionnaireItemChoiceColumn,
     QuestionnaireResponseItemAnswer,
     QuestionnaireResponseItemAnswerValue,
 } from '@beda.software/aidbox-types';
 import { parseFHIRTime } from '@beda.software/fhir-react';
 
 import { formatHumanDate, formatHumanDateTime } from './date';
+import { getQuestionItemEnableWhenSchema } from './enableWhen';
+import { evaluate } from './fhirpath';
 
-export function getDisplay(value?: QuestionnaireResponseItemAnswerValue): string | number | null {
+export function getDisplay(
+    value?: QuestionnaireResponseItemAnswerValue,
+    choiceColumn?: QuestionnaireItemChoiceColumn[],
+): string | number | null {
     if (!value) {
         return null;
     }
 
     if (value.Coding) {
+        if (choiceColumn && choiceColumn.length) {
+            const expression = choiceColumn[0]!.path;
+            if (expression) {
+                const calculatedValue = evaluate(value.Coding, expression)[0];
+                return calculatedValue ?? '';
+            }
+        }
         return value.Coding.display ?? '';
     }
 
@@ -36,8 +51,8 @@ export function getDisplay(value?: QuestionnaireResponseItemAnswerValue): string
         return parseFHIRTime(value.time).format('HH:mm');
     }
 
-    if (value.integer) {
-        return value.integer;
+    if (_.isNumber(value.integer)) {
+        return value.integer.toString();
     }
 
     if (value.decimal) {
@@ -57,58 +72,61 @@ export function getDisplay(value?: QuestionnaireResponseItemAnswerValue): string
     return '';
 }
 
-export function getArrayDisplay(options?: QuestionnaireResponseItemAnswer[]): string | null {
+export function getArrayDisplay(options?: QuestionnaireResponseItemAnswer[], choiceColumn?: QuestionnaireItemChoiceColumn[]): string | null {
     if (!options) {
         return null;
     }
 
-    return options.map((v: QuestionnaireResponseItemAnswer) => getDisplay(v.value)).join(', ');
+    return options.map((v: QuestionnaireResponseItemAnswer) => getDisplay(v.value, choiceColumn)).join(', ');
 }
 
-export function questionnaireToValidationSchema(questionnaire: Questionnaire) {
+export function questionnaireItemsToValidationSchema(questionnaireItems: QuestionnaireItem[]) {
     const validationSchema: Record<string, yup.AnySchema> = {};
-    if (questionnaire.item === undefined) return yup.object(validationSchema) as yup.AnyObjectSchema;
-    questionnaire.item.forEach((item) => {
+    if (questionnaireItems.length === 0) return yup.object(validationSchema) as yup.AnyObjectSchema;
+    questionnaireItems.forEach((item) => {
         let schema: yup.AnySchema;
-        if (item.type === 'string') {
+        if (item.type === 'string' || item.type === 'text') {
             schema = yup.string();
             if (item.required) schema = schema.required();
             if (item.maxLength && item.maxLength > 0) schema = (schema as yup.StringSchema).max(item.maxLength);
-            schema = createSchemaArray(yup.object({ string: schema })).required();
+            schema = createSchemaArrayOfValues(yup.object({ string: schema })).required();
         } else if (item.type === 'integer') {
             schema = yup.number();
             if (item.required) schema = schema.required();
-            schema = createSchemaArray(yup.object({ integer: schema })).required();
+            schema = createSchemaArrayOfValues(yup.object({ integer: schema })).required();
         } else if (item.type === 'date') {
             schema = yup.date();
             if (item.required) schema = schema.required();
-            schema = createSchemaArray(yup.object({ date: schema })).required();
+            schema = createSchemaArrayOfValues(yup.object({ date: schema })).required();
         } else {
-            schema = item.required ? yup.mixed().required() : yup.mixed().nullable();
+            schema = item.required ? yup.array().of(yup.mixed()).min(1).required() : yup.mixed().nullable();
         }
+
         if (item.enableWhen) {
-            item.enableWhen.forEach((itemEnableWhen) => {
-                const { question, operator, answer } = itemEnableWhen;
-                if (operator === '=') {
-                    validationSchema[item.linkId] = yup.mixed().when(question, {
-                        is: (answerOptionArray: QuestionnaireItemAnswerOption[]) =>
-                            answerOptionArray &&
-                            answerOptionArray.some(
-                                (answerOption) => answerOption.value?.Coding?.code === answer?.Coding?.code,
-                            ),
-                        then: () => schema,
-                        otherwise: () => yup.mixed().nullable(),
-                    });
-                }
+            validationSchema[item.linkId] = getQuestionItemEnableWhenSchema({
+                enableWhenItems: item.enableWhen,
+                enableBehavior: item.enableBehavior,
+                schema,
             });
         } else {
             validationSchema[item.linkId] = schema;
+
+            if (item.item && !item.repeats) {
+                validationSchema[item.linkId] = yup
+                    .object({ items: questionnaireItemsToValidationSchema(item.item) })
+                    .required();
+            }
         }
     });
+
     return yup.object(validationSchema).required() as yup.AnyObjectSchema;
 }
 
-function createSchemaArray(value: yup.AnyObjectSchema) {
+export function questionnaireToValidationSchema(questionnaire: Questionnaire) {
+    return questionnaireItemsToValidationSchema(questionnaire.item ?? []);
+}
+
+function createSchemaArrayOfValues(value: yup.AnyObjectSchema) {
     return yup.array().of(yup.object({ value }));
 }
 

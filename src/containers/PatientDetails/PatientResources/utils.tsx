@@ -2,6 +2,7 @@ import { t } from '@lingui/macro';
 import {
     AllergyIntolerance,
     Condition,
+    ServiceRequest,
     Consent,
     Immunization,
     MedicationStatement,
@@ -9,18 +10,18 @@ import {
     Patient,
     Provenance,
 } from 'fhir/r4b';
+import { extractExtension } from 'sdc-qrf';
 
 import { WithId } from '@beda.software/fhir-react';
 
 import { ResourceTable, Option, LinkToEdit } from 'src/components/ResourceTable';
-import { extractExtension } from 'src/utils/converter';
-import { formatHumanDate } from 'src/utils/date';
+import { formatHumanDate, formatHumanDateTime } from 'src/utils/date';
 
 export function getOptions(patient: WithId<Patient>): Option[] {
     return [
         {
             value: 'active-medications',
-            label: 'Active Medications',
+            label: t`Active Medications`,
             renderTable: (option: Option) => (
                 <ResourceTable<MedicationStatement>
                     key={`resource-table-${option.value}`}
@@ -55,7 +56,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
         },
         {
             value: 'conditions',
-            label: 'Conditions',
+            label: t`Conditions`,
             renderTable: (option: Option) => (
                 <ResourceTable<Condition>
                     key={`resource-table-${option.value}`}
@@ -94,7 +95,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
         },
         {
             value: 'allergies',
-            label: 'Allergies',
+            label: t`Allergies`,
             renderTable: (option: Option) => (
                 <ResourceTable<AllergyIntolerance>
                     key={`resource-table-${option.value}`}
@@ -133,7 +134,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
         },
         {
             value: 'immunization',
-            label: 'Immunization',
+            label: t`Immunization`,
             renderTable: (option: Option) => (
                 <ResourceTable<Immunization>
                     key={`resource-table-${option.value}`}
@@ -168,7 +169,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
         },
         {
             value: 'consents',
-            label: 'Consents',
+            label: t`Consents`,
             renderTable: (option: Option) => (
                 <ResourceTable<Consent>
                     key={`resource-table-${option.value}`}
@@ -215,7 +216,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
         },
         {
             value: 'observations',
-            label: 'Observations',
+            label: t`Observations`,
             renderTable: (option: Option) => (
                 <ResourceTable<Observation>
                     key={`resource-table-${option.value}`}
@@ -281,6 +282,53 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                         }
 
                         return null;
+                    },
+                },
+            ],
+        },
+        {
+            value: 'serviceRequests',
+            label: t`Service Requests`,
+            renderTable: (option: Option) => (
+                <ResourceTable<ServiceRequest>
+                    key={`resource-table-${option.value}`}
+                    resourceType="ServiceRequest"
+                    params={{
+                        patient: patient.id,
+                        _sort: ['-_lastUpdated'],
+                    }}
+                    getTableColumns={option.getTableColumns}
+                />
+            ),
+            getTableColumns: (provenanceList: Provenance[] = []) => [
+                {
+                    title: t`Title`,
+                    key: 'title',
+                    render: (resource: ServiceRequest) => (
+                        <LinkToEdit
+                            name={resource.code?.coding?.[0]?.display}
+                            resource={resource}
+                            provenanceList={provenanceList}
+                        />
+                    ),
+                    width: 200,
+                },
+                {
+                    title: t`Date created`,
+                    key: 'date',
+                    render: (r: Observation) => {
+                        const createdAt = extractExtension(r.meta?.extension, 'ex:createdAt');
+                        const date = r.issued || createdAt;
+
+                        return date ? formatHumanDateTime(date) : null;
+                    },
+                    width: 200,
+                },
+                {
+                    title: t`Status`,
+                    key: 'name',
+                    render: (resource: ServiceRequest) => {
+                        return resource.status;
                     },
                 },
             ],

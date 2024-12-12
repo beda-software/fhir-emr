@@ -25,23 +25,23 @@ function usePractitionerOverview(props: Props) {
 
     const details = [
         {
-            title: 'First name',
+            title: t`First name`,
             value: practitioner.name?.[0]?.given?.[0],
         },
         {
-            title: 'Last name',
+            title: t`Last name`,
             value: practitioner.name?.[0]?.family,
         },
         {
-            title: 'Middle name',
+            title: t`Middle name`,
             value: practitioner.name?.[0]?.given?.[1],
         },
         {
-            title: 'Specialty',
+            title: t`Specialty`,
             value: practitionerRole?.specialty?.[0]?.coding?.[0]?.display,
         },
         {
-            title: 'Available services',
+            title: t`Available services`,
             value:
                 healthcareServices?.map((hs) => hs.name).join(', ') ||
                 practitionerRole?.healthcareService?.map((hs) => hs.display).join(', '),
