@@ -33,12 +33,12 @@ item:
   text: Intent
   required: true
   type: choice
-  answerValueSet: request-intent
+  answerValueSet: http://hl7.org/fhir/ValueSet/request-intent
 - linkId: priority
   required: true
   text: Priority
   type: choice
-  answerValueSet: request-priority
+  answerValueSet: http://hl7.org/fhir/ValueSet/request-priority
 - linkId: assigned-organization
   text: Assigned organization
   type: reference
@@ -51,7 +51,6 @@ item:
   choiceColumn:
     - forDisplay: true
       path: name
-  answerValueSet: request-priority
 - linkId: patient-id
   type: string
   text: patientId

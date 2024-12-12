@@ -14,7 +14,8 @@ export type ValueSetOption = {
 };
 
 const instanceHealthSamurai = axios.create({
-    baseURL: 'https://tx.health-samurai.io',
+    // baseURL: 'https://tx.health-samurai.io',
+    baseURL: 'https://tx.dev.hl7.org.au',
     headers: {
         Accept: 'application/json;charset=UTF=8',
     },
@@ -124,7 +125,11 @@ export async function expandValueSet(props: ExpandValueSetProps) {
 }
 
 export async function expandEMRValueSet(answerValueSet: string | undefined, searchText: string) {
-    const predefinedValueSetsList: string[] = ['medicationknowledge-package-type'];
+    const predefinedValueSetsList: string[] = [
+        'medicationknowledge-package-type',
+        'request-priority',
+        'request-intent',
+    ];
 
     return expandValueSet({
         answerValueSet,
