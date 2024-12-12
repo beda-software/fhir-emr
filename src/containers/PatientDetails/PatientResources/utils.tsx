@@ -15,7 +15,10 @@ import { extractExtension } from 'sdc-qrf';
 import { WithId } from '@beda.software/fhir-react';
 
 import { ResourceTable, Option, LinkToEdit } from 'src/components/ResourceTable';
+import { compileAsArray } from 'src/utils';
 import { formatHumanDate, formatHumanDateTime } from 'src/utils/date';
+
+const getInterpretation = compileAsArray<Observation, string>('Observation.interpretation.coding.display');
 
 export function getOptions(patient: WithId<Patient>): Option[] {
     return [
@@ -279,8 +282,9 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                             return (
                                 resource.valueCodeableConcept.text || resource.valueCodeableConcept.coding?.[0]?.display
                             );
+                        } else if (resource.interpretation) {
+                            return getInterpretation(resource).join(', ');
                         }
-
                         return null;
                     },
                 },
