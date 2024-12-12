@@ -262,7 +262,8 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     key: 'value',
                     render: (resource: Observation) => {
                         if (resource.valueQuantity) {
-                            return `${resource.valueQuantity.value} ${resource.valueQuantity.unit}`;
+                            const interpretation = getInterpretation(resource).join(', ');
+                            return `${resource.valueQuantity.value} ${resource.valueQuantity.unit} (${interpretation})`;
                         } else if (resource.component) {
                             return (
                                 <>
