@@ -258,7 +258,8 @@ msgstr "Ejecución en curso"
 msgid "Characteristics"
 msgstr "Características"
 
-#: src/components/SearchBar/index.tsx:24
+#: src/components/SearchBar/index.tsx:30
+#: src/components/SearchBar/SearchBarMobile/index.tsx:51
 msgid "Clear filters"
 msgstr ""
 
@@ -605,6 +606,10 @@ msgstr "Falso"
 #: src/components/TextWithMacroFill/index.tsx:40
 msgid "Fill"
 msgstr "Rellenar"
+
+#: src/components/SearchBar/SearchBarMobile/index.tsx:33
+msgid "Filters"
+msgstr ""
 
 #: src/containers/PatientList/searchBarUtils.ts:10
 #: src/containers/PatientResourceListExample/index.tsx:67
@@ -1191,6 +1196,10 @@ msgstr "Sexo"
 msgid "Share link"
 msgstr "Compartir enlace"
 
+#: src/components/SearchBar/SearchBarMobile/index.tsx:48
+msgid "Show results"
+msgstr ""
+
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:53
 msgid "Slider"
 msgstr "Deslizador"
@@ -1221,7 +1230,7 @@ msgstr "Comenzar"
 msgid "Start date"
 msgstr "Fecha de inicio"
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/AudioRecorderUploader/index.tsx:84
+#: src/components/BaseQuestionnaireResponseForm/widgets/AudioRecorderUploader/index.tsx:72
 #: src/containers/EncounterDetails/index.tsx:101
 msgid "Start scribe"
 msgstr "Iniciar escritura"

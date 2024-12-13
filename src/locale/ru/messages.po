@@ -258,7 +258,8 @@ msgstr ""
 msgid "Characteristics"
 msgstr ""
 
-#: src/components/SearchBar/index.tsx:24
+#: src/components/SearchBar/index.tsx:30
+#: src/components/SearchBar/SearchBarMobile/index.tsx:51
 msgid "Clear filters"
 msgstr ""
 
@@ -608,6 +609,10 @@ msgstr ""
 
 #: src/components/TextWithMacroFill/index.tsx:40
 msgid "Fill"
+msgstr ""
+
+#: src/components/SearchBar/SearchBarMobile/index.tsx:33
+msgid "Filters"
 msgstr ""
 
 #: src/containers/PatientList/searchBarUtils.ts:10
@@ -1211,6 +1216,10 @@ msgstr ""
 msgid "Share link"
 msgstr ""
 
+#: src/components/SearchBar/SearchBarMobile/index.tsx:48
+msgid "Show results"
+msgstr ""
+
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:53
 msgid "Slider"
 msgstr ""
@@ -1241,7 +1250,7 @@ msgstr ""
 msgid "Start date"
 msgstr "Начало периода"
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/AudioRecorderUploader/index.tsx:84
+#: src/components/BaseQuestionnaireResponseForm/widgets/AudioRecorderUploader/index.tsx:72
 #: src/containers/EncounterDetails/index.tsx:101
 msgid "Start scribe"
 msgstr ""
