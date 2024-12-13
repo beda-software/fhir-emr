@@ -337,9 +337,9 @@ export function prepareAuERequest(
         getKey: (r: ServiceRequest) => r.id!,
         columns: [
             {
-                title: t`ID`,
+                title: t`Barcode`,
                 key: 'id',
-                render: (resource: ServiceRequest) => resource.id!,
+                render: (resource: ServiceRequest) => resource.identifier?.[0]?.value ?? resource.id!,
                 width: 300,
             },
             {

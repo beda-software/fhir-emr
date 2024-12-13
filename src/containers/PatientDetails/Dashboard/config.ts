@@ -40,6 +40,7 @@ export const patientDashboardConfig: DashboardInstance = {
                 resourceType: 'ServiceRequest',
                 search: (patient: Patient) => ({
                     subject: patient.id,
+                    _sort: '-_lastUpdated',
                 }),
             },
             widget: StandardCardContainerFabric(prepareAuERequest),

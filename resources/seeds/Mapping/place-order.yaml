@@ -8,6 +8,14 @@ body:
       method: POST
     resource:
       status: 'active'
+      identifier:
+      - type:
+          text: "Placer Group Number"
+          coding:
+          - code: PGN
+            system: http://terminology.hl7.org/CodeSystem/v2-0203
+        system: http://diagnostic-orders-are-us.com.au/ids/pgn
+        value: "{{ QuestionnaireResponse.repeat(item).where(linkId='barcode').answer.valueString }}"
       category:
         - coding:
             - code: '108252007'
