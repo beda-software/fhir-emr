@@ -279,7 +279,10 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                                 <>
                                     {resource.component
                                         .map((c) =>
-                                            [...[c.code.coding?.[0]?.display], ...getComponentValue(c)].join(': '),
+                                            [
+                                                ...[c.code.text ?? c.code.coding?.[0]?.display],
+                                                ...getComponentValue(c),
+                                            ].join(': '),
                                         )
                                         .map((v) => (
                                             <div key={v}>{v}</div>
