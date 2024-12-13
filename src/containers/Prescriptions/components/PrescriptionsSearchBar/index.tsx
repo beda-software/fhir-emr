@@ -37,7 +37,7 @@ export function PrescriptionsSearchBar(props: PrescriptionsSearchBarSelectProps)
     } = props;
 
     return (
-        <S.Container>
+        <S.SearchBar>
             <S.LeftColumn>
                 <AsyncDropdown
                     onChange={onChangePatient}
@@ -66,6 +66,6 @@ export function PrescriptionsSearchBar(props: PrescriptionsSearchBarSelectProps)
             </S.LeftColumn>
 
             <Button onClick={reset}>{t`Reset`}</Button>
-        </S.Container>
+        </S.SearchBar>
     );
 }

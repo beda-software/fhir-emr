@@ -2,6 +2,8 @@ import styled, { css } from 'styled-components';
 
 import { BasePageContent, BasePageHeader } from '..';
 
+const mobileWidth = 768;
+
 export const S = {
     HeaderContainer: styled(BasePageHeader)<{ $variant?: 'default' | 'with-table' | 'with-tabs' }>`
         display: flex;
@@ -23,7 +25,13 @@ export const S = {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 0 40px;
+        flex-wrap: wrap;
+        gap: 16px 40px;
+        position: relative;
+
+        @media screen and (max-width: ${() => `${mobileWidth - 1}px`}) {
+            padding-right: 48px;
+        }
     `,
     HeaderLeftColumn: styled.div`
         display: flex;

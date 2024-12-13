@@ -23,7 +23,7 @@ export function InvoiceListSearchBar(props: InvoiceListSearchBarSelectProps) {
     } = props;
 
     return (
-        <S.Container>
+        <S.SearchBar>
             <S.LeftColumn>
                 <AsyncDropdown
                     onChange={onChangePractitionerRole}
@@ -52,6 +52,6 @@ export function InvoiceListSearchBar(props: InvoiceListSearchBarSelectProps) {
             </S.LeftColumn>
 
             <Button onClick={reset}>{t`Reset`}</Button>
-        </S.Container>
+        </S.SearchBar>
     );
 }

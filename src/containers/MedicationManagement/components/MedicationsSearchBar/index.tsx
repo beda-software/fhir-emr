@@ -19,7 +19,7 @@ export function MedicationsSearchBar(props: MedicationsSearchBarSelectProps) {
     const { onChangeMedication, loadMedicationOptions, selectedMedication, reset } = props;
 
     return (
-        <S.Container>
+        <S.SearchBar>
             <S.LeftColumn>
                 <AsyncDropdown
                     onChange={onChangeMedication}
@@ -30,6 +30,6 @@ export function MedicationsSearchBar(props: MedicationsSearchBarSelectProps) {
             </S.LeftColumn>
 
             <Button onClick={reset}>{t`Reset`}</Button>
-        </S.Container>
+        </S.SearchBar>
     );
 }

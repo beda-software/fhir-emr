@@ -69,7 +69,7 @@ export function OrganizationScheduling() {
             title={<Trans>Scheduling</Trans>}
             header={{
                 children: (
-                    <SearchBarStyles.Container>
+                    <SearchBarStyles.SearchBar>
                         <SearchBarStyles.LeftColumn>
                             <HealthcareServicePractitionerSelect
                                 selectedHealthcareService={selectedHealthcareService}
@@ -87,7 +87,7 @@ export function OrganizationScheduling() {
                         <Button onClick={resetFilter}>
                             <Trans>Reset</Trans>
                         </Button>
-                    </SearchBarStyles.Container>
+                    </SearchBarStyles.SearchBar>
                 ),
             }}
         >
