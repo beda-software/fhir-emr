@@ -9,6 +9,7 @@ import {
     Observation,
     Patient,
     Provenance,
+    ObservationComponent,
 } from 'fhir/r4b';
 import { extractExtension } from 'sdc-qrf';
 
@@ -19,6 +20,13 @@ import { compileAsArray } from 'src/utils';
 import { formatHumanDate, formatHumanDateTime } from 'src/utils/date';
 
 const getInterpretation = compileAsArray<Observation, string>('Observation.interpretation.coding.display');
+
+function getComponentValue(c: ObservationComponent) {
+    if (c.dataAbsentReason) {
+        return [c.dataAbsentReason.text];
+    }
+    return [`${c.valueQuantity?.value} ${c.valueQuantity?.unit}`];
+}
 
 export function getOptions(patient: WithId<Patient>): Option[] {
     return [
@@ -239,7 +247,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     key: 'title',
                     render: (resource: Observation) => (
                         <LinkToEdit
-                            name={resource.code?.coding?.[0]?.display}
+                            name={resource.code?.text ?? resource.code?.coding?.[0]?.display}
                             resource={resource}
                             provenanceList={provenanceList}
                         />
@@ -269,10 +277,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                                 <>
                                     {resource.component
                                         .map((c) =>
-                                            [
-                                                ...[c.code.coding?.[0]?.display],
-                                                ...[`${c.valueQuantity?.value} ${c.valueQuantity?.unit}`],
-                                            ].join(': '),
+                                            [...[c.code.coding?.[0]?.display], ...getComponentValue(c)].join(': '),
                                         )
                                         .map((v) => (
                                             <div key={v}>{v}</div>
