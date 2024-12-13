@@ -12,6 +12,7 @@ import {
     Consent,
     Observation,
     ServiceRequest,
+    Identifier,
 } from 'fhir/r4b';
 import _ from 'lodash';
 import moment from 'moment';
@@ -23,6 +24,7 @@ import { PatientActivitySummary } from 'src/containers/PatientDetails/PatientAct
 import { LinkToEdit } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/LinkToEdit';
 import { OverviewCard } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/types';
 import medicationIcon from 'src/containers/PatientDetails/PatientOverviewDynamic/images/medication.svg';
+import { compileAsFirst } from 'src/utils';
 import { formatHumanDate } from 'src/utils/date';
 
 export function prepareAllergies(
@@ -323,6 +325,13 @@ export function prepareServiceRequest(
     };
 }
 
+const getBarcode = compileAsFirst<ServiceRequest, string>(
+    "ServiceRequest.identifier.where(system='http://diagnostic-orders-are-us.com.au/ids/pgn').value",
+);
+const getSonicId = compileAsFirst<ServiceRequest, Identifier>(
+    "ServiceRequest.identifier.where(system='https://pyroserver.azurewebsites.net/pyro/ServiceRequest')",
+);
+
 export function prepareAuERequest(
     serviceRequests: ServiceRequest[],
     _provenanceList: Provenance[],
@@ -339,7 +348,7 @@ export function prepareAuERequest(
             {
                 title: t`Barcode`,
                 key: 'id',
-                render: (resource: ServiceRequest) => resource.identifier?.[0]?.value ?? resource.id!,
+                render: (resource: ServiceRequest) => getBarcode(resource) ?? resource.id!,
                 width: 300,
             },
             {
@@ -358,7 +367,7 @@ export function prepareAuERequest(
                 title: t`External ids`,
                 key: 'externalid',
                 render: (r: ServiceRequest) => {
-                    const identifier = r.identifier?.[0];
+                    const identifier = getSonicId(r);
                     if (identifier) {
                         const { value, system } = identifier;
                         const srLink = `${system}/${value}`;
