@@ -23,7 +23,7 @@ const getInterpretation = compileAsArray<Observation, string>('Observation.inter
 
 function getComponentValue(c: ObservationComponent) {
     if (c.dataAbsentReason) {
-        return [c.dataAbsentReason.text];
+        return [c.dataAbsentReason.text ?? 'unknown'];
     }
     return [`${c.valueQuantity?.value} ${c.valueQuantity?.unit}`];
 }
