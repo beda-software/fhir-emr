@@ -4,14 +4,22 @@ import { ReactBarcode } from 'react-jsbarcode';
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
 import { Spinner } from 'src/components/Spinner';
+import { compileAsFirst } from 'src/utils';
 import { renderTextWithInput } from 'src/utils/renderTextWithInput';
 
 import { usePatientDocumentPrint } from './hooks';
 import { S } from './styles';
 import { flattenQuestionnaireGroupItems, getQuestionnaireItemValue } from './utils';
 
+const isHidden = compileAsFirst(
+    "extension.where(url='http://hl7.org/fhir/StructureDefinition/questionnaire-hidden').valueBoolean = true",
+);
+
 export function DocumentPrintAnswer(props: { item: QuestionnaireItem; qResponse?: QuestionnaireResponse }) {
     const { item, qResponse } = props;
+    if (isHidden(item)) {
+        return null;
+    }
     const itemValue = qResponse && getQuestionnaireItemValue(item, qResponse);
     return (
         <S.P key={item.linkId}>

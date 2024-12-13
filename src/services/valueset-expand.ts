@@ -129,6 +129,7 @@ export async function expandEMRValueSet(answerValueSet: string | undefined, sear
         'medicationknowledge-package-type',
         'request-priority',
         'request-intent',
+        'spia-requesting-refset-3',
     ];
 
     return expandValueSet({

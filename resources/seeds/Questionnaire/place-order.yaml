@@ -35,10 +35,25 @@ contained:
         method: GET
         url: /ServiceRequest
 item:
-- linkId: test-code
-  text: Test Codes
-  required: true
+- linkId: practiioner-name
   type: string
+  text: Requester
+  readOnly: true
+  initialExpression:
+    language: text/fhirpath
+    expression: "%Author.name.first().given.first() + ' ' + %Author.name.first().family"
+- linkId: patient-name
+  type: string
+  text: Patient
+  readOnly: true
+  initialExpression:
+    language: text/fhirpath
+    expression: "%Patient.name.first().given.first() + ' ' + %Patient.name.first().family"
+- linkId: test-code
+  text: Test
+  required: true
+  type: choice
+  answerValueSet: https://www.rcpa.edu.au/fhir/ValueSet/spia-requesting-refset-3
 - linkId: intent
   text: Intent
   required: true

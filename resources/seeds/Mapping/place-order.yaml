@@ -22,7 +22,9 @@ body:
               display: 'Laboratory procedure'
               system: 'http://snomed.info/sct'
       code:
-        text: "{{ QuestionnaireResponse.repeat(item).where(linkId='test-code').answer.valueString }}"
+        text: "{{ QuestionnaireResponse.repeat(item).where(linkId='test-code').answer.valueCoding.display }}"
+        coding:
+        - "{{ QuestionnaireResponse.repeat(item).where(linkId='test-code').answer.valueCoding }}"
       intent: "{{ QuestionnaireResponse.repeat(item).where(linkId='intent').answer.valueCoding.code }}"
       priority: "{{ QuestionnaireResponse.repeat(item).where(linkId='priority').answer.valueCoding.code }}"
       encounter:
