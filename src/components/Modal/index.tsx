@@ -5,5 +5,5 @@ import { S } from './Modal.styles';
 export interface ModalProps extends ANTDModalProps {}
 
 export function Modal(props: ModalProps) {
-    return <S.Modal {...props} />;
+    return <S.Modal maskClosable={false} {...props} />;
 }

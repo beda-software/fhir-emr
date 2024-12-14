@@ -4,7 +4,7 @@ auth:
     refresh_token: true
     secret_required: false
     access_token_expiration: 36000
-type: smart-on-fhir-practitioner
+type: smart-on-fhir-encounter
 smart:
   name: ADHA CHAP Form
   launch_uri: https://portal-xrp.digitalhealth.gov.au/FormsPortal/launch
