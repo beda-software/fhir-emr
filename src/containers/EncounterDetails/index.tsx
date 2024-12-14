@@ -1,7 +1,7 @@
 import { AudioOutlined, CheckOutlined, PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
-import { Encounter } from 'fhir/r4b';
+import { Encounter, Patient } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -21,10 +21,20 @@ import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-dat
 import { AIScribe, useAIScribe } from './AIScribe';
 import { S } from './EncounterDetails.styles';
 import { EncounterDetailsProps, useEncounterDetails } from './hooks';
+import { PatientApps } from '../PatientDetails/PatientApps';
 
 interface OpenModalState {
     open: boolean;
     context?: string;
+}
+
+interface EncounterAppsProps {
+    patient: Patient;
+    encounter: Encounter;
+}
+
+function EncounterApps({ patient, encounter }: EncounterAppsProps) {
+    return <PatientApps patient={patient} encounter={encounter} />;
 }
 
 export const EncounterDetails = (props: EncounterDetailsProps) => {
@@ -148,7 +158,7 @@ export const EncounterDetails = (props: EncounterDetailsProps) => {
                                     recorderControls={recorderControls}
                                 />
                             ) : null}
-
+                            <EncounterApps patient={patient} encounter={encounter} />
                             <DocumentsList key={documentListKey} patient={patient} />
                         </>
                     );

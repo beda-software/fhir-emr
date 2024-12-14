@@ -1,5 +1,5 @@
 import { Typography, Card, Button } from 'antd';
-import { Patient } from 'fhir/r4b';
+import { Encounter, Patient } from 'fhir/r4b';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
@@ -13,19 +13,22 @@ const { Text } = Typography;
 
 interface PatientAppsProps {
     patient: Patient;
+    encounter?: Encounter;
 }
 interface SmartAppProps {
     patient: Patient;
     app: Client;
+    encounter?: Encounter;
 }
 
-export function useLaunchApp({ app, patient }: SmartAppProps) {
+export function useLaunchApp({ app, patient, encounter }: SmartAppProps) {
     const currentUser = selectCurrentUserRoleResource();
     const launchApp = () => {
         const launchParams: LaunchProps = {
             client: app.id!,
             user: currentUser.id,
             patient: patient.id!,
+            encounter: encounter?.id,
         };
         if (currentUser.resourceType === 'Practitioner') {
             launchParams.practitioner = currentUser.id;
@@ -52,19 +55,19 @@ function SmartApp(props: SmartAppProps) {
     );
 }
 
-export function PatientApps({ patient }: PatientAppsProps) {
-    const { appsRemoteData } = useSmartApps();
+export function PatientApps({ patient, encounter }: PatientAppsProps) {
+    const { appsRemoteData } = useSmartApps(encounter);
     return (
         <RenderRemoteData remoteData={appsRemoteData}>
             {(data) => {
-                const apps = data.Client ?? [];
+                const apps = data ?? [];
                 if (apps.length == 0) {
                     return <Text>There are no registered smart apps</Text>;
                 } else {
                     return (
                         <>
                             {apps.map((app) => (
-                                <SmartApp key={app.id} app={app} patient={patient} />
+                                <SmartApp key={app.id} app={app} patient={patient} encounter={encounter} />
                             ))}
                         </>
                     );

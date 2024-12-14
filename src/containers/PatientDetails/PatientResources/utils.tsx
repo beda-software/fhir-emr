@@ -9,13 +9,24 @@ import {
     Observation,
     Patient,
     Provenance,
+    ObservationComponent,
 } from 'fhir/r4b';
 import { extractExtension } from 'sdc-qrf';
 
 import { WithId } from '@beda.software/fhir-react';
 
 import { ResourceTable, Option, LinkToEdit } from 'src/components/ResourceTable';
+import { compileAsArray } from 'src/utils';
 import { formatHumanDate, formatHumanDateTime } from 'src/utils/date';
+
+const getInterpretation = compileAsArray<Observation, string>('Observation.interpretation.coding.display');
+
+function getComponentValue(c: ObservationComponent) {
+    if (c.dataAbsentReason) {
+        return [c.dataAbsentReason.text ?? 'unknown'];
+    }
+    return [`${c.valueQuantity?.value} ${c.valueQuantity?.unit}`];
+}
 
 export function getOptions(patient: WithId<Patient>): Option[] {
     return [
@@ -236,7 +247,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     key: 'title',
                     render: (resource: Observation) => (
                         <LinkToEdit
-                            name={resource.code?.coding?.[0]?.display}
+                            name={resource.code?.text ?? resource.code?.coding?.[0]?.display}
                             resource={resource}
                             provenanceList={provenanceList}
                         />
@@ -259,15 +270,18 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     key: 'value',
                     render: (resource: Observation) => {
                         if (resource.valueQuantity) {
-                            return `${resource.valueQuantity.value} ${resource.valueQuantity.unit}`;
+                            const interpretation = getInterpretation(resource).join(', ');
+                            return `${resource.valueQuantity.value} ${
+                                resource.valueQuantity.unit ?? ''
+                            } ${interpretation}`;
                         } else if (resource.component) {
                             return (
                                 <>
                                     {resource.component
                                         .map((c) =>
                                             [
-                                                ...[c.code.coding?.[0]?.display],
-                                                ...[`${c.valueQuantity?.value} ${c.valueQuantity?.unit}`],
+                                                ...[c.code.text ?? c.code.coding?.[0]?.display],
+                                                ...getComponentValue(c),
                                             ].join(': '),
                                         )
                                         .map((v) => (
@@ -279,8 +293,9 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                             return (
                                 resource.valueCodeableConcept.text || resource.valueCodeableConcept.coding?.[0]?.display
                             );
+                        } else if (resource.interpretation) {
+                            return getInterpretation(resource).join(', ');
                         }
-
                         return null;
                     },
                 },

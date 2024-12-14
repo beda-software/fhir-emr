@@ -1,8 +1,9 @@
 import { notification } from 'antd';
+import { Encounter } from 'fhir/r4b';
 
 import { useService } from 'aidbox-react/lib/hooks/service';
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import { getFHIRResources as getAidboxResources, extractBundleResources } from 'aidbox-react/lib/services/fhir';
+import { isSuccess, success } from 'aidbox-react/lib/libs/remoteData';
+import { getFHIRResources as getAidboxResources, extractBundleResources, WithId } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess, service } from 'aidbox-react/lib/services/service';
 
 import { Client } from '@beda.software/aidbox-types';
@@ -10,17 +11,25 @@ import config from '@beda.software/emr-config';
 
 import { matchCurrentUserRole, Role } from 'src/utils/role';
 
-export function useSmartApps() {
+export function useSmartApps(encounter?: Encounter) {
     const [appsRemoteData] = useService(async () => {
-        const clientType = matchCurrentUserRole<string>({
+        let clientType = matchCurrentUserRole<string>({
             [Role.Patient]: () => 'smart-on-fhir-patient',
             [Role.Admin]: () => 'smart-on-fhir',
             [Role.Practitioner]: () => 'smart-on-fhir-practitioner',
             [Role.Receptionist]: () => 'smart-on-fhir-practitioner',
         });
+        if (encounter) {
+            if (clientType === 'smart-on-fhir-practitioner') {
+                clientType = 'smart-on-fhir-encounter';
+            } else {
+                const mockResonse: Array<WithId<Client>> = [];
+                return success(mockResonse);
+            }
+        }
         return mapSuccess(
             await getAidboxResources<Client>('Client', { ['.type']: clientType }),
-            extractBundleResources,
+            (b) => extractBundleResources(b).Client,
         );
     });
     return { appsRemoteData };
@@ -31,6 +40,7 @@ export interface LaunchProps {
     client: string;
     patient: string;
     practitioner?: string;
+    encounter?: string;
 }
 
 interface LaunchRPCResult {
@@ -39,7 +49,7 @@ interface LaunchRPCResult {
     };
 }
 
-export async function launch({ user, client, patient, practitioner }: LaunchProps) {
+export async function launch({ user, client, patient, practitioner, encounter }: LaunchProps) {
     const response = await service<LaunchRPCResult>({
         url: '/rpc',
         method: 'POST',
@@ -49,7 +59,11 @@ export async function launch({ user, client, patient, practitioner }: LaunchProp
                 user,
                 iss: encodeURIComponent(`${config.baseURL}/fhir`),
                 client,
-                ctx: { patient, ...(practitioner ? { practitioner } : {}) },
+                ctx: {
+                    patient,
+                    ...(practitioner ? { practitioner } : {}),
+                    ...(encounter ? { encounter } : {}),
+                },
             },
         },
     });
