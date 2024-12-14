@@ -14,6 +14,10 @@ export const S = {
             }
         }
 
+        .react-select__menu {
+            z-index: 10;
+        }
+
         .react-select__control--menu-is-open,
         .react-select__control--is-focused {
             border-color: ${({ theme }) => theme.antdTheme?.colorPrimary};

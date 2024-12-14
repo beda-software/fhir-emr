@@ -27,6 +27,10 @@ export const S = {
             `}
     `,
     MobileFilters: styled.div<{ $showInDrawerOnMobile?: boolean }>`
+        position: absolute;
+        right: 24px;
+        top: 24px;
+
         ${({ $showInDrawerOnMobile }) =>
             $showInDrawerOnMobile &&
             css`

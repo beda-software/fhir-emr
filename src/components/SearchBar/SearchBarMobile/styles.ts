@@ -2,11 +2,7 @@ import { Badge, Button, Drawer } from 'antd';
 import styled from 'styled-components';
 
 export const S = {
-    Container: styled.div`
-        position: absolute;
-        right: 24px;
-        top: 24px;
-    `,
+    Container: styled.div``,
     FiltersButton: styled.div`
         position: relative;
     `,

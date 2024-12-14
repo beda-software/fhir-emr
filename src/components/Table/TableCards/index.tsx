@@ -1,12 +1,12 @@
 import { TableProps } from 'antd/lib/table';
 
 import { S } from './styles';
-import { Pagination, TablePaginationConfig } from 'antd';
+import { Empty, Pagination, TablePaginationConfig } from 'antd';
 import { ColumnTitle, SorterResult, TableCurrentDataSource } from 'antd/lib/table/interface';
 import _ from 'lodash';
 
 export function TableCards<T extends object>(props: TableProps<T>) {
-    const { pagination, onChange, dataSource, columns = [], rowKey } = props;
+    const { pagination, onChange, dataSource = [], columns = [], rowKey } = props;
 
     const renderTitle = (title: ColumnTitle<T>) => {
         if (typeof title === 'function') {
@@ -24,9 +24,13 @@ export function TableCards<T extends object>(props: TableProps<T>) {
         return rowKey as string;
     };
 
+    if (dataSource.length === 0) {
+        return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
+    }
+
     return (
         <S.Container>
-            {dataSource?.map((resource, index) => {
+            {dataSource.map((resource, index) => {
                 const key = getCardKey(resource);
 
                 return (
