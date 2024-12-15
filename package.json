@@ -58,6 +58,7 @@
         "react-dnd-html5-backend": "^16.0.1",
         "react-dom": "^18.2.0",
         "react-hook-form": "^7.53.2",
+        "react-jsbarcode": "1.0.1",
         "react-markdown": "^9.0.1",
         "react-phone-input-2": "^2.15.1",
         "react-router-dom": "^6.14.1",

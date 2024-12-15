@@ -8,6 +8,7 @@ import {
     QuestionnaireResponseFormProvider,
 } from 'sdc-qrf';
 
+import { AudioAttachment } from './readonly-widgets/AudioAttachment';
 import { QuestionBoolean } from './readonly-widgets/boolean';
 import { QuestionChoice } from './readonly-widgets/choice';
 import { QuestionDateTime } from './readonly-widgets/date';
@@ -19,7 +20,7 @@ import { AnxietyScore, DepressionScore } from './readonly-widgets/score';
 import { QuestionText, TextWithInput } from './readonly-widgets/string';
 import { TimeRangePickerControl } from './readonly-widgets/TimeRangePickerControl';
 import { UploadFile } from './readonly-widgets/UploadFile';
-import { AudioAttachment } from './readonly-widgets/AudioAttachment';
+import { Barcode } from './widgets/barcode';
 
 interface Props extends Partial<QRFContextData> {
     formData: QuestionnaireResponseFormData;
@@ -76,6 +77,7 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
                         'depression-score': DepressionScore,
                         'input-inside-text': TextWithInput,
                         'audio-recorder-uploader': AudioAttachment,
+                        barcode: Barcode,
                         ...itemControlQuestionItemComponents,
                     }}
                 >

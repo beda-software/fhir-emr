@@ -12,6 +12,7 @@ import {
     Consent,
     Observation,
     ServiceRequest,
+    Identifier,
 } from 'fhir/r4b';
 import _ from 'lodash';
 import moment from 'moment';
@@ -23,6 +24,7 @@ import { PatientActivitySummary } from 'src/containers/PatientDetails/PatientAct
 import { LinkToEdit } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/LinkToEdit';
 import { OverviewCard } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/types';
 import medicationIcon from 'src/containers/PatientDetails/PatientOverviewDynamic/images/medication.svg';
+import { compileAsFirst } from 'src/utils';
 import { formatHumanDate } from 'src/utils/date';
 
 export function prepareAllergies(
@@ -318,6 +320,74 @@ export function prepareServiceRequest(
                 key: 'intent',
                 render: (r: ServiceRequest) => r.intent,
                 width: 120,
+            },
+        ],
+    };
+}
+
+const getBarcode = compileAsFirst<ServiceRequest, string>(
+    "ServiceRequest.identifier.where(system='http://diagnostic-orders-are-us.com.au/ids/pgn').value",
+);
+const getSonicId = compileAsFirst<ServiceRequest, Identifier>(
+    "ServiceRequest.identifier.where(system='https://pyroserver.azurewebsites.net/pyro/ServiceRequest')",
+);
+
+export function prepareAuERequest(
+    serviceRequests: ServiceRequest[],
+    _provenanceList: Provenance[],
+    total: number,
+): OverviewCard<ServiceRequest> {
+    return {
+        title: t`Orders`,
+        key: 'service-request',
+        icon: <HeartOutlined />,
+        data: serviceRequests,
+        total,
+        getKey: (r: ServiceRequest) => r.id!,
+        columns: [
+            {
+                title: t`Barcode`,
+                key: 'id',
+                render: (resource: ServiceRequest) => getBarcode(resource) ?? resource.id!,
+                width: 300,
+            },
+            {
+                title: t`Name`,
+                key: 'name',
+                render: (resource: ServiceRequest) => resource.code?.text ?? resource.code?.coding?.[0]?.display,
+                width: 200,
+            },
+            {
+                title: t`Status`,
+                key: 'status',
+                render: (resource: ServiceRequest) => resource.status,
+                width: 100,
+            },
+            {
+                title: t`External ids`,
+                key: 'externalid',
+                render: (r: ServiceRequest) => {
+                    const identifier = getSonicId(r);
+                    if (identifier) {
+                        const { value, system } = identifier;
+                        const srLink = `${system}/${value}`;
+                        const taskLink = `${system?.replace('ServiceRequest', 'Task')}?focus=ServiceRequest/${value}`;
+                        return (
+                            <div>
+                                <a href={srLink} target="_blank" rel="noreferrer">
+                                    ServiceRequest
+                                </a>
+                                <br />
+                                <a href={taskLink} target="_blank" rel="noreferrer">
+                                    Task
+                                </a>
+                            </div>
+                        );
+                    } else {
+                        return '';
+                    }
+                },
+                width: 320,
             },
         ],
     };
