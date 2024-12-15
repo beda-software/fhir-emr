@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import moment from 'moment';
 import { useCallback, useMemo, useState } from 'react';
 
 import {
@@ -31,7 +32,7 @@ export function useSearchBar(props: SearchBarProps): SearchBarData {
             }
 
             if (isDateColumn(column)) {
-                return { column, value: undefined };
+                return { column, value: [moment(),moment()]};
             }
 
             if (isReferenceColumn(column)) {
