@@ -83,7 +83,7 @@ export function onFormResponse(props: {
             const warnings: string[] = [];
             response.data.extractedBundle.forEach((bundle, index) => {
                 bundle.entry?.forEach((entry, jndex) => {
-                    if (entry.resource.resourceType === 'OperationOutcome') {
+                    if (entry.resource?.resourceType === 'OperationOutcome') {
                         warnings.push(`Error extracting on ${index}, ${jndex}`);
                     }
                 });
