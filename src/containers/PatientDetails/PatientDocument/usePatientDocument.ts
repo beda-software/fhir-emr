@@ -144,10 +144,14 @@ export function usePatientDocument(props: Props): {
         }
 
         if (isSuccess(provenanceResponse)) {
-            const provenance = provenanceResponse.data[0];
+            const descSortedProvenances = [...provenanceResponse.data].sort((a, b) =>
+                b.recorded.localeCompare(a.recorded),
+            );
+            const lastProvenance = descSortedProvenances[0];
+
             const formInitialParams = prepareFormInitialParams({
                 ...props,
-                provenance,
+                provenance: lastProvenance,
             });
 
             const onSubmit = async (formData: QuestionnaireResponseFormData) =>
@@ -165,7 +169,7 @@ export function usePatientDocument(props: Props): {
                     return {
                         formData,
                         onSubmit,
-                        provenance,
+                        provenance: lastProvenance,
                     };
                 },
             );
