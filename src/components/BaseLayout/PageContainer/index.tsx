@@ -1,5 +1,3 @@
-import { Title } from 'src/components';
-
 import { S } from './styles';
 import { BasePageContentProps, BasePageHeaderProps } from '..';
 
@@ -50,5 +48,5 @@ export function PageContainer(props: PageContainerProps = {}) {
 }
 
 export function PageContainerTitle(props: React.HTMLAttributes<HTMLHeadingElement>) {
-    return <Title level={3} {...props} />;
+    return <S.Title level={3} {...props} />;
 }

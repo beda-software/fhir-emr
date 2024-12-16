@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components';
 
 import { BasePageContent, BasePageHeader } from '..';
+import { Title } from 'src/components/Typography';
 
 const mobileWidth = 768;
 
@@ -32,6 +33,9 @@ export const S = {
         @media screen and (max-width: ${() => `${mobileWidth - 1}px`}) {
             padding-right: 48px;
         }
+    `,
+    Title: styled(Title)`
+        margin-bottom: 0 !important;
     `,
     HeaderLeftColumn: styled.div`
         display: flex;
