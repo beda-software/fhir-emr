@@ -22,7 +22,7 @@ export function populateTableColumnsWithFiltersAndSorts<R extends Resource>(
 
         const updatedColumn: ColumnType<RecordType<R>> = {
             ...column,
-            filtered: !_.isUndefined(filter?.value) && !_.isNull(filter?.value) && filter?.value === '',
+            filtered: !_.isUndefined(filter?.value) && !_.isNull(filter?.value) && filter?.value !== '',
             filterDropdown: filter
                 ? (props: FilterDropdownProps) => <TableFilter {...props} filter={filter} onChange={onChange} />
                 : undefined,
