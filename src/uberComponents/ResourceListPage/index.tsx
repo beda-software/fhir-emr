@@ -28,6 +28,9 @@ import {
 export { navigationAction, customAction, questionnaireAction } from './actions';
 import { useResourceListPage } from './hooks';
 import { SearchBarColumn } from '../../components/SearchBar/types';
+import { populateTableColumnsWithFiltersAndSorts } from 'src/components/Table/utils';
+import { isTableFilter } from 'src/components/SearchBar/utils';
+import { useMemo } from 'react';
 
 type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
 
@@ -102,12 +105,15 @@ export function ResourceListPage<R extends Resource>({
     defaultLaunchContext,
 }: ResourceListPageProps<R>) {
     const allFilters = getFilters?.() ?? [];
-    // TODO: filter out column filters
-    const searchBarColumns = allFilters;
 
-    const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
-        columns: searchBarColumns ?? [],
-    });
+    const { columnsFilterValues, onChangeColumnFilter, onResetFilters } =
+        useSearchBar({
+            columns: allFilters ?? [],
+        });
+    const tableFilterValues = useMemo(
+        () => columnsFilterValues.filter((filter) => isTableFilter(filter)),
+        [JSON.stringify(columnsFilterValues)],
+    );
 
     const {
         recordResponse,
@@ -119,6 +125,13 @@ export function ResourceListPage<R extends Resource>({
         selectedResourcesBundle,
     } = useResourceListPage(resourceType, extractPrimaryResources, columnsFilterValues, searchParams ?? {});
 
+    // TODO: move to hooks
+    const initialTableColumns = getTableColumns({ reload });
+    const tableColumns = populateTableColumnsWithFiltersAndSorts({
+        tableColumns: initialTableColumns,
+        filters: tableFilterValues,
+        onChange: onChangeColumnFilter,
+    });
     const headerActions = getHeaderActions?.() ?? [];
     const batchActions = getBatchActions?.() ?? [];
 
@@ -203,7 +216,7 @@ export function ResourceListPage<R extends Resource>({
                     rowKey={(p) => p.resource.id!}
                     dataSource={isSuccess(recordResponse) ? recordResponse.data : []}
                     columns={[
-                        ...getTableColumns({ reload }),
+                        ...tableColumns,
                         ...(getRecordActions
                             ? [
                                   getRecordActionsColumn({
