@@ -25,8 +25,11 @@ export interface SearchBarProps {
 }
 
 type SearchBarColumnBase = {
+    // if placement is table then id should be matched with table column key
     id: string;
     searchParam?: string;
+    // placement = 'search-bar' by default
+    placement?: Array<'search-bar' | 'table'>;
 };
 
 export type SearchBarStringColumn = SearchBarColumnBase & {

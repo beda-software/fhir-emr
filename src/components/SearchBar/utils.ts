@@ -53,3 +53,15 @@ export function getSearchBarColumnFilterValue(filterValue: ColumnFilterValue) {
 
     throw new Error('Unsupported column type');
 }
+
+export function isSearchBarFilter(filter: ColumnFilterValue) {
+    const { placement = ['search-bar'] } = filter.column;
+
+    return placement.includes('search-bar');
+}
+
+export function isTableFilter(filter: ColumnFilterValue) {
+    const { placement = ['search-bar'] } = filter.column;
+
+    return placement.includes('table');
+}

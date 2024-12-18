@@ -42,6 +42,7 @@ export function PatientResourceListExample() {
                     dataIndex: 'name',
                     key: 'name',
                     render: (_text, { resource }) => renderHumanName(resource.name?.[0]),
+                    width: 250,
                 },
                 {
                     title: <Trans>Birth date</Trans>,
@@ -65,6 +66,7 @@ export function PatientResourceListExample() {
                     searchParam: 'name',
                     type: SearchBarColumnType.STRING,
                     placeholder: t`Find patient`,
+                    placement: ['search-bar'],
                 },
             ]}
             getRecordActions={(record) => [

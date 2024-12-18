@@ -15,7 +15,7 @@ import {
 } from 'fhir/r4b';
 import _ from 'lodash';
 import moment from 'moment';
-import { extractExtension, fromFHIRReference } from 'sdc-qrf';
+import { extractExtension } from 'sdc-qrf';
 
 import { WithId, extractBundleResources, formatFHIRDate, parseFHIRDateTime } from '@beda.software/fhir-react';
 
@@ -266,19 +266,7 @@ export function prepareAppointments(bundle: Bundle<WithId<Appointment | Encounte
 }
 
 export function prepareAppointmentDetails(appointment: Appointment) {
-    const [name, specialty] =
-        appointment.participant
-            .find((p) => fromFHIRReference(p.actor)?.resourceType === 'PractitionerRole')
-            ?.actor?.display?.split(' - ') || [];
     const appointmentDetails = [
-        {
-            title: t`Practitioner`,
-            value: name || '-',
-        },
-        {
-            title: t`Service`,
-            value: specialty || '-',
-        },
         {
             title: t`Date`,
             value: appointment.start ? formatHumanDate(appointment.start) : '-',
@@ -292,7 +280,15 @@ export function prepareAppointmentDetails(appointment: Appointment) {
         },
     ];
 
-    return appointmentDetails;
+    //TODO agree on terminology for Appointment.particioant.type and use it
+    const participants = appointment.participant
+        .filter((p) => p.type?.[0]?.coding?.[0]?.code !== 'patient')
+        .map((participant) => ({
+            title: participant.type?.[0]?.text,
+            value: participant.actor?.display,
+        }));
+
+    return [...appointmentDetails, ...participants];
 }
 
 export function prepareServiceRequest(

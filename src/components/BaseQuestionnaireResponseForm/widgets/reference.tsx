@@ -110,7 +110,13 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
             return overrideGetDisplay;
         }
 
-        return (resource: R) => evaluate(resource, choiceColumn![0]!.path!, context)[0];
+        return (resource: R, includedResources: ResourcesMap<R|IR>) => evaluate(
+            resource, choiceColumn![0]!.path!,
+            {
+                ...context,
+                ...includedResources,
+                resource,
+            })[0];
     }, [choiceColumn, context, overrideGetDisplay]);
 
     // TODO: add support for fhirpath and application/x-fhir-query
