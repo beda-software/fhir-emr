@@ -78,6 +78,12 @@ export function PatientResourceListExample() {
                 questionnaireAction(<Trans>Add patient</Trans>, 'patient-create', { icon: <PlusOutlined /> }),
             ]}
             getBatchActions={() => [questionnaireAction(<Trans>Delete patients</Trans>, 'patients-batch-delete')]}
+            getReportColumns={(bundle) => [
+                {
+                    title: t`Number of Patients`,
+                    value: bundle.total,
+                },
+            ]}
         ></ResourceListPage>
     );
 }

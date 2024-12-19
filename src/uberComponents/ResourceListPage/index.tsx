@@ -5,7 +5,7 @@ import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 import { useMemo } from 'react';
 
 import { formatError, SearchParams } from '@beda.software/fhir-react';
-import { isFailure, isLoading, isSuccess } from '@beda.software/remote-data';
+import { isFailure, isLoading, isSuccess, RemoteData } from '@beda.software/remote-data';
 
 import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
 import { SearchBar } from 'src/components/SearchBar';
@@ -33,6 +33,7 @@ import { useResourceListPage } from './hooks';
 import { SearchBarColumn } from '../../components/SearchBar/types';
 import { S } from './styles';
 import React from 'react';
+import { Report } from 'src/components/Report';
 
 type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
 
@@ -122,6 +123,7 @@ export function ResourceListPage<R extends Resource>({
     getFilters,
     getTableColumns,
     defaultLaunchContext,
+    getReportColumns,
 }: ResourceListPageProps<R>) {
     const allFilters = getFilters?.() ?? [];
 
@@ -213,6 +215,10 @@ export function ResourceListPage<R extends Resource>({
                     </Row>
                 ) : null}
 
+                {getReportColumns ? (
+                    <ResourcesListPageReport recordResponse={recordResponse} getReportColumns={getReportColumns} />
+                ) : null}
+
                 <Table<RecordType<R>>
                     pagination={pagination}
                     onChange={handleTableChange}
@@ -250,6 +256,28 @@ export function ResourceListPage<R extends Resource>({
             </BasePageContent>
         </>
     );
+}
+
+interface ResourcesListPageReportProps<R> {
+    recordResponse: RemoteData<
+        {
+            resource: R;
+            bundle: Bundle;
+        }[],
+        any
+    >;
+    getReportColumns: (bundle: Bundle, reportBundle?: Bundle) => Array<ReportColumn>;
+}
+
+function ResourcesListPageReport<R>(props: ResourcesListPageReportProps<R>) {
+    const { recordResponse, getReportColumns } = props;
+    const emptyBundle: Bundle = { resourceType: 'Bundle', entry: [], type: 'searchset' };
+    const items =
+        isSuccess(recordResponse) && recordResponse.data?.[0]?.bundle
+            ? getReportColumns(recordResponse.data[0].bundle)
+            : getReportColumns(emptyBundle);
+
+    return <Report items={items} />;
 }
 
 function getRecordActionsColumn<R extends Resource>({
