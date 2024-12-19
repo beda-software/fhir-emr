@@ -31,3 +31,4 @@ export * from './Table';
 export * from './TextWithMacroFill';
 export * from './TimePicker';
 export * from './Typography';
+export * from './Report';
