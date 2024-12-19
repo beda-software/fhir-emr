@@ -1,10 +1,12 @@
-import { formatFHIRDateTime } from '@beda.software/fhir-react';
+import { formatFHIRDate, formatFHIRDateTime } from '@beda.software/fhir-react';
 
 import {
     ColumnFilterValue,
     isChoiceColumnFilterValue,
     isDateColumnFilterValue,
     isReferenceColumnFilterValue,
+    isSingleDateColumnFilterValue,
+    isSolidChoiceColumnFilterValue,
     isStringColumnFilterValue,
     SearchBarColumn,
 } from './types';
@@ -33,12 +35,20 @@ export function getSearchBarColumnFilterValue(filterValue: ColumnFilterValue) {
             : undefined;
     }
 
+    if (isSingleDateColumnFilterValue(filterValue)) {
+        return filterValue.value ? formatFHIRDate(filterValue.value) : undefined;
+    }
+
     if (isReferenceColumnFilterValue(filterValue)) {
         return filterValue.value?.value.Reference.id;
     }
 
     if (isChoiceColumnFilterValue(filterValue)) {
         return filterValue.value?.map((option) => option.value.Coding.code!);
+    }
+
+    if (isSolidChoiceColumnFilterValue(filterValue)) {
+        return filterValue.value?.map((option) => option.code!);
     }
 
     throw new Error('Unsupported column type');

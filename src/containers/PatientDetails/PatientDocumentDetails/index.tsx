@@ -19,7 +19,6 @@ import {
     PatientDocumentData,
     usePatientDocument,
 } from 'src/containers/PatientDetails/PatientDocument/usePatientDocument';
-import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
 import { forceDeleteFHIRResource, getFHIRResources, patchFHIRResource } from 'src/services/fhir';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 import { isExternalQuestionnaire } from 'src/utils/smart-apps';
@@ -114,8 +113,6 @@ function PatientDocumentDetailsReadonly(props: {
     const location = useLocation();
     const navigate = useNavigate();
     const { formData, reload, provenance, hideControls } = props;
-
-    usePatientHeaderLocationTitle({ title: formData.context.questionnaire?.name ?? '' });
 
     const patientId = location.pathname.split('/')[2];
     const qrCompleted = formData.context.questionnaireResponse.status === 'completed';

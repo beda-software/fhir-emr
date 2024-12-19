@@ -6,7 +6,4 @@ export const S = {
         flex-direction: row;
         gap: 10px;
     `,
-    SelectWrapper: styled.div`
-        width: 250px;
-    `,
 };
