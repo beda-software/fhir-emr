@@ -1,5 +1,5 @@
-import { plural, Trans } from '@lingui/macro';
-import { Empty, Row, Col, Button } from 'antd';
+import { Trans } from '@lingui/macro';
+import { Empty } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 import React, { useMemo } from 'react';
@@ -25,7 +25,6 @@ import {
     NavigationAction,
     RecordQuestionnaireAction,
     HeaderQuestionnaireAction,
-    BatchQuestionnaireAction,
     isCustomAction,
 } from './actions';
 export { navigationAction, customAction, questionnaireAction } from './actions';
@@ -33,6 +32,7 @@ import { useResourceListPage } from './hooks';
 import { SearchBarColumn } from '../../components/SearchBar/types';
 import { S } from './styles';
 import { Report } from 'src/components/Report';
+import { BatchActions } from './BatchActions';
 
 type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
 
@@ -181,41 +181,19 @@ export function ResourceListPage<R extends Resource>({
                 ) : null,
             }}
         >
-            {batchActions.length ? (
-                <Row justify="start" align="middle" gutter={[8, 16]}>
-                    {batchActions.map((action, index) => (
-                        <Col key={index}>
-                            <BatchQuestionnaireAction<R>
-                                action={action}
-                                reload={reload}
-                                bundle={selectedResourcesBundle}
-                                disabled={!selectedRowKeys.length}
-                                defaultLaunchContext={defaultLaunchContext ?? []}
-                            />
-                        </Col>
-                    ))}
-                    <Col>
-                        {selectedRowKeys.length ? (
-                            <Button type="default" onClick={() => setSelectedRowKeys([])}>
-                                <Trans>Reset selection</Trans>
-                            </Button>
-                        ) : null}
-                    </Col>
-                    <Col>
-                        <Text>
-                            {selectedRowKeys.length
-                                ? plural(selectedRowKeys.length, {
-                                      one: 'Selected # item',
-                                      other: 'Selected # items',
-                                  })
-                                : null}
-                        </Text>
-                    </Col>
-                </Row>
-            ) : null}
-
             {getReportColumns ? (
                 <ResourcesListPageReport recordResponse={recordResponse} getReportColumns={getReportColumns} />
+            ) : null}
+
+            {batchActions.length ? (
+                <BatchActions
+                    batchActions={batchActions}
+                    selectedRowKeys={selectedRowKeys}
+                    setSelectedRowKeys={setSelectedRowKeys}
+                    reload={reload}
+                    selectedResourcesBundle={selectedResourcesBundle}
+                    defaultLaunchContext={defaultLaunchContext}
+                />
             ) : null}
 
             <Table<RecordType<R>>
