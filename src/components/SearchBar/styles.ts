@@ -1,6 +1,5 @@
+import { mobileWidth } from 'src/theme/utils';
 import styled, { css } from 'styled-components';
-
-const mobileWidth = 768;
 
 export const S = {
     SearchBar: styled.div<{ $showInDrawerOnMobile?: boolean }>`

@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/uberComponents/ResourceListPage/index.tsx:176
+#: src/uberComponents/ResourceListPage/BatchActions.tsx:57
 msgid "{0, plural, one {Selected # item} other {Selected # items}}"
 msgstr ""
 
@@ -31,7 +31,7 @@ msgstr ""
 #: src/containers/PatientList/index.tsx:103
 #: src/containers/PractitionerList/index.tsx:121
 #: src/containers/Prescriptions/index.tsx:148
-#: src/uberComponents/ResourceListPage/index.tsx:237
+#: src/uberComponents/ResourceListPage/index.tsx:273
 msgid "Actions"
 msgstr ""
 
@@ -110,7 +110,7 @@ msgstr ""
 
 #: src/components/ModalNewPatient/index.tsx:16
 #: src/components/ModalNewPatient/index.tsx:20
-#: src/containers/PatientResourceListExample/index.tsx:76
+#: src/containers/PatientResourceListExample/index.tsx:78
 msgid "Add patient"
 msgstr ""
 
@@ -207,7 +207,7 @@ msgstr ""
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer/hooks.ts:31
 #: src/containers/PatientList/index.tsx:87
-#: src/containers/PatientResourceListExample/index.tsx:47
+#: src/containers/PatientResourceListExample/index.tsx:48
 msgid "Birth date"
 msgstr ""
 
@@ -258,7 +258,7 @@ msgstr ""
 msgid "Characteristics"
 msgstr ""
 
-#: src/components/SearchBar/index.tsx:30
+#: src/components/SearchBar/index.tsx:36
 #: src/components/SearchBar/SearchBarMobile/index.tsx:51
 msgid "Clear filters"
 msgstr ""
@@ -383,7 +383,7 @@ msgstr ""
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:95
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:142
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:216
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:283
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:271
 #: src/containers/PatientDetails/PatientResources/utils.tsx:96
 #: src/containers/PatientDetails/PatientResources/utils.tsx:135
 #: src/containers/PatientDetails/PatientResources/utils.tsx:174
@@ -430,7 +430,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: src/containers/PatientResourceListExample/index.tsx:78
+#: src/containers/PatientResourceListExample/index.tsx:80
 msgid "Delete patients"
 msgstr ""
 
@@ -620,7 +620,7 @@ msgid "Filters"
 msgstr ""
 
 #: src/containers/PatientList/searchBarUtils.ts:10
-#: src/containers/PatientResourceListExample/index.tsx:67
+#: src/containers/PatientResourceListExample/index.tsx:68
 msgid "Find patient"
 msgstr ""
 
@@ -711,7 +711,7 @@ msgstr ""
 msgid "Inline options?"
 msgstr ""
 
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:317
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:313
 msgid "Intent"
 msgstr ""
 
@@ -826,7 +826,7 @@ msgstr ""
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:123
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:204
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:240
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:312
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:308
 #: src/containers/PatientDetails/PatientResources/utils.tsx:50
 #: src/containers/PatientDetails/PatientResources/utils.tsx:85
 #: src/containers/PatientDetails/PatientResources/utils.tsx:124
@@ -864,7 +864,7 @@ msgstr ""
 #: src/containers/PractitionerList/index.tsx:101
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:500
 #: src/containers/QuestionnaireList/index.tsx:102
-#: src/uberComponents/ResourceListPage/index.tsx:200
+#: src/uberComponents/ResourceListPage/index.tsx:214
 msgid "No data"
 msgstr ""
 
@@ -886,6 +886,10 @@ msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:52
 msgid "Number (default)"
+msgstr ""
+
+#: src/containers/PatientResourceListExample/index.tsx:83
+msgid "Number of Patients"
 msgstr ""
 
 #: src/containers/PatientDetails/PatientResources/utils.tsx:230
@@ -936,7 +940,7 @@ msgid "Order added"
 msgstr ""
 
 #: src/containers/PatientDetails/PatientDetailsTabs/index.tsx:22
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:304
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:300
 msgid "Orders"
 msgstr ""
 
@@ -1008,7 +1012,6 @@ msgstr ""
 #: src/containers/InvoiceList/components/InvoiceListSearchBar/index.tsx:32
 #: src/containers/InvoiceList/tableUtils.tsx:114
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:152
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:275
 #: src/containers/PatientDetails/PatientResources/utils.tsx:221
 msgid "Practitioner"
 msgstr ""
@@ -1094,7 +1097,7 @@ msgstr ""
 #~ msgid "Reset password"
 #~ msgstr ""
 
-#: src/uberComponents/ResourceListPage/index.tsx:169
+#: src/uberComponents/ResourceListPage/BatchActions.tsx:48
 msgid "Reset selection"
 msgstr ""
 
@@ -1187,6 +1190,10 @@ msgstr ""
 msgid "Select (default)"
 msgstr ""
 
+#: src/uberComponents/ResourceListPage/BatchActions.tsx:69
+msgid "Select all"
+msgstr ""
+
 #: src/components/BaseQuestionnaireResponseForm/widgets/choice/index.tsx:30
 #: src/components/BaseQuestionnaireResponseForm/widgets/choice/index.tsx:55
 msgid "Select..."
@@ -1197,8 +1204,8 @@ msgid "Serum creatinin"
 msgstr ""
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:279
-msgid "Service"
-msgstr ""
+#~ msgid "Service"
+#~ msgstr ""
 
 #: src/containers/PatientDetails/PatientResources/utils.tsx:306
 msgid "Service Requests"
@@ -1242,7 +1249,7 @@ msgid "Specialty"
 msgstr ""
 
 #: src/containers/PatientList/index.tsx:94
-#: src/containers/PatientResourceListExample/index.tsx:54
+#: src/containers/PatientResourceListExample/index.tsx:55
 msgid "SSN"
 msgstr ""
 
@@ -1312,9 +1319,9 @@ msgid "Subject Type"
 msgstr ""
 
 #: src/containers/QuestionnaireBuilder/PromptForm.tsx:104
-#: src/uberComponents/ResourceListPage/actions.tsx:96
-#: src/uberComponents/ResourceListPage/actions.tsx:130
-#: src/uberComponents/ResourceListPage/actions.tsx:176
+#: src/uberComponents/ResourceListPage/actions.tsx:97
+#: src/uberComponents/ResourceListPage/actions.tsx:131
+#: src/uberComponents/ResourceListPage/actions.tsx:177
 msgid "Submit"
 msgstr ""
 
@@ -1324,9 +1331,9 @@ msgstr ""
 #~ msgid "Successfully saved"
 #~ msgstr ""
 
-#: src/uberComponents/ResourceListPage/actions.tsx:90
-#: src/uberComponents/ResourceListPage/actions.tsx:125
-#: src/uberComponents/ResourceListPage/actions.tsx:172
+#: src/uberComponents/ResourceListPage/actions.tsx:91
+#: src/uberComponents/ResourceListPage/actions.tsx:126
+#: src/uberComponents/ResourceListPage/actions.tsx:173
 msgid "Successfully submitted"
 msgstr ""
 
@@ -1359,11 +1366,11 @@ msgstr ""
 msgid "Text with macro"
 msgstr ""
 
-#: src/containers/App/index.tsx:129
+#: src/containers/App/index.tsx:130
 msgid "Thank you for filling out the questionnaire. Now you can close this page."
 msgstr ""
 
-#: src/containers/App/index.tsx:128
+#: src/containers/App/index.tsx:129
 msgid "Thank you!"
 msgstr ""
 
@@ -1400,7 +1407,7 @@ msgstr ""
 msgid "Thursday"
 msgstr ""
 
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:287
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:275
 #: src/containers/Scheduling/Availability/index.tsx:129
 msgid "Time"
 msgstr ""

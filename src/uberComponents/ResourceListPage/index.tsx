@@ -189,6 +189,7 @@ export function ResourceListPage<R extends Resource>({
                 <BatchActions
                     batchActions={batchActions}
                     selectedRowKeys={selectedRowKeys}
+                    allKeys={isSuccess(recordResponse) ? recordResponse.data.map((d) => d.resource.id!) : []}
                     setSelectedRowKeys={setSelectedRowKeys}
                     reload={reload}
                     selectedResourcesBundle={selectedResourcesBundle}

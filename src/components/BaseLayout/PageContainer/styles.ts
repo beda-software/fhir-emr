@@ -2,8 +2,7 @@ import styled, { css } from 'styled-components';
 
 import { BasePageContent, BasePageHeader } from '..';
 import { Title } from 'src/components/Typography';
-
-const mobileWidth = 768;
+import { mobileWidth } from 'src/theme/utils';
 
 export const S = {
     HeaderContainer: styled(BasePageHeader)<{ $variant?: 'default' | 'with-table' | 'with-tabs' }>`
