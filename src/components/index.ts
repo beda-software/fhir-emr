@@ -33,3 +33,4 @@ export * from './TimePicker';
 export * from './Typography';
 export * from './BaseLayout/PageContainer';
 export * from './Tabs';
+export * from './Report';

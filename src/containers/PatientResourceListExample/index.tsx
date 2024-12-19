@@ -1,6 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
-import { Button } from 'antd';
 import { Patient } from 'fhir/r4b';
 
 import { SearchBarColumnType } from 'src/components/SearchBar/types';
@@ -11,6 +10,7 @@ import { renderHumanName } from 'src/utils/fhir';
 import { matchCurrentUserRole, Role } from 'src/utils/role';
 
 import { getPatientSearchParamsForPractitioner } from './utils';
+import { S } from './styles';
 
 export function PatientResourceListExample() {
     /*
@@ -72,12 +72,18 @@ export function PatientResourceListExample() {
             getRecordActions={(record) => [
                 navigationAction('Open', `/patients/${record.resource.id}`),
                 questionnaireAction('Edit', 'patient-edit'),
-                customAction(<Button type="link">Custom action</Button>),
+                customAction(<S.LinkButton type="link">Custom action</S.LinkButton>),
             ]}
             getHeaderActions={() => [
                 questionnaireAction(<Trans>Add patient</Trans>, 'patient-create', { icon: <PlusOutlined /> }),
             ]}
             getBatchActions={() => [questionnaireAction(<Trans>Delete patients</Trans>, 'patients-batch-delete')]}
+            getReportColumns={(bundle) => [
+                {
+                    title: t`Number of Patients`,
+                    value: bundle.total,
+                },
+            ]}
         ></ResourceListPage>
     );
 }

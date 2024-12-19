@@ -2,16 +2,18 @@ import { plural, Trans } from '@lingui/macro';
 import { Empty, Row, Col, Button } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import { formatError, SearchParams } from '@beda.software/fhir-react';
-import { isFailure, isLoading, isSuccess } from '@beda.software/remote-data';
+import { isFailure, isLoading, isSuccess, RemoteData } from '@beda.software/remote-data';
 
 import { PageContainer } from 'src/components/BaseLayout/PageContainer';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
+import { isTableFilter } from 'src/components/SearchBar/utils';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
+import { populateTableColumnsWithFiltersAndSorts } from 'src/components/Table/utils';
 import { Text } from 'src/components/Typography';
 
 import {
@@ -29,14 +31,18 @@ import {
 export { navigationAction, customAction, questionnaireAction } from './actions';
 import { useResourceListPage } from './hooks';
 import { SearchBarColumn } from '../../components/SearchBar/types';
-import { populateTableColumnsWithFiltersAndSorts } from 'src/components/Table/utils';
-import { isTableFilter } from 'src/components/SearchBar/utils';
-import { useMemo } from 'react';
+import { S } from './styles';
+import { Report } from 'src/components/Report';
 
 type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
 
 interface TableManager {
     reload: () => void;
+}
+
+interface ReportColumn {
+    title: React.ReactNode;
+    value: React.ReactNode;
 }
 
 interface ResourceListPageProps<R extends Resource> {
@@ -94,6 +100,18 @@ interface ResourceListPageProps<R extends Resource> {
      * Default launch context that will be added to all questionnaires
      */
     defaultLaunchContext?: ParametersParameter[];
+
+    /**
+     * EXPERIMENTAL FEATURE. The interface might be changed
+     * TODO: https://github.com/beda-software/fhir-emr/issues/414
+     */
+    // loadReportBundle?: (searchParams: SearchParams) => Promise<RemoteDataResult<Bundle>>
+
+    /**
+     * EXPERIMENTAL FEATURE. The interface might be changed
+     * TODO: https://github.com/beda-software/fhir-emr/issues/414
+     */
+    getReportColumns?: (bundle: Bundle, reportBundle?: Bundle) => Array<ReportColumn>;
 }
 
 export function ResourceListPage<R extends Resource>({
@@ -108,13 +126,13 @@ export function ResourceListPage<R extends Resource>({
     getFilters,
     getTableColumns,
     defaultLaunchContext,
+    getReportColumns,
 }: ResourceListPageProps<R>) {
     const allFilters = getFilters?.() ?? [];
 
-    const { columnsFilterValues, onChangeColumnFilter, onResetFilters } =
-        useSearchBar({
-            columns: allFilters ?? [],
-        });
+    const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
+        columns: allFilters ?? [],
+    });
     const tableFilterValues = useMemo(
         () => columnsFilterValues.filter((filter) => isTableFilter(filter)),
         [JSON.stringify(columnsFilterValues)],
@@ -196,6 +214,10 @@ export function ResourceListPage<R extends Resource>({
                 </Row>
             ) : null}
 
+            {getReportColumns ? (
+                <ResourcesListPageReport recordResponse={recordResponse} getReportColumns={getReportColumns} />
+            ) : null}
+
             <Table<RecordType<R>>
                 pagination={pagination}
                 onChange={handleTableChange}
@@ -234,6 +256,28 @@ export function ResourceListPage<R extends Resource>({
     );
 }
 
+interface ResourcesListPageReportProps<R> {
+    recordResponse: RemoteData<
+        {
+            resource: R;
+            bundle: Bundle;
+        }[],
+        any
+    >;
+    getReportColumns: (bundle: Bundle, reportBundle?: Bundle) => Array<ReportColumn>;
+}
+
+function ResourcesListPageReport<R>(props: ResourcesListPageReportProps<R>) {
+    const { recordResponse, getReportColumns } = props;
+    const emptyBundle: Bundle = { resourceType: 'Bundle', entry: [], type: 'searchset' };
+    const items =
+        isSuccess(recordResponse) && recordResponse.data?.[0]?.bundle
+            ? getReportColumns(recordResponse.data[0].bundle)
+            : getReportColumns(emptyBundle);
+
+    return <Report items={items} />;
+}
+
 function getRecordActionsColumn<R extends Resource>({
     getRecordActions,
     defaultLaunchContext,
@@ -252,9 +296,9 @@ function getRecordActionsColumn<R extends Resource>({
         key: 'actions',
         render: (_text: any, record: { resource: R; bundle: Bundle }) => {
             return (
-                <Row wrap={false}>
+                <S.Actions>
                     {getRecordActions(record, { reload }).map((action, index) => (
-                        <Col key={index}>
+                        <React.Fragment key={index}>
                             {isQuestionnaireAction(action) ? (
                                 <RecordQuestionnaireAction
                                     action={action}
@@ -269,9 +313,9 @@ function getRecordActionsColumn<R extends Resource>({
                             ) : (
                                 <Text>Unsupported action</Text>
                             )}
-                        </Col>
+                        </React.Fragment>
                     ))}
-                </Row>
+                </S.Actions>
             );
         },
     };
