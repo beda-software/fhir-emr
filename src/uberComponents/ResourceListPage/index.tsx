@@ -31,6 +31,8 @@ import {
 export { navigationAction, customAction, questionnaireAction } from './actions';
 import { useResourceListPage } from './hooks';
 import { SearchBarColumn } from '../../components/SearchBar/types';
+import { S } from './styles';
+import React from 'react';
 
 type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
 
@@ -268,9 +270,9 @@ function getRecordActionsColumn<R extends Resource>({
         key: 'actions',
         render: (_text: any, record: { resource: R; bundle: Bundle }) => {
             return (
-                <Row wrap={false}>
+                <S.Actions>
                     {getRecordActions(record, { reload }).map((action, index) => (
-                        <Col key={index}>
+                        <React.Fragment key={index}>
                             {isQuestionnaireAction(action) ? (
                                 <RecordQuestionnaireAction
                                     action={action}
@@ -285,9 +287,9 @@ function getRecordActionsColumn<R extends Resource>({
                             ) : (
                                 <Text>Unsupported action</Text>
                             )}
-                        </Col>
+                        </React.Fragment>
                     ))}
-                </Row>
+                </S.Actions>
             );
         },
     };

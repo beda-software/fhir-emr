@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm, QRFProps } from 'src/components/QuestionnaireResponseForm';
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
+import { S } from './styles';
 
 export interface NavigationActionType {
     type: 'navigation';
@@ -77,7 +78,7 @@ export function RecordQuestionnaireAction<R extends Resource>({
     defaultLaunchContext: ParametersParameter[];
 }) {
     return (
-        <ModalTrigger title={action.title} trigger={<Button type="link">{action.title}</Button>}>
+        <ModalTrigger title={action.title} trigger={<S.LinkButton type="link">{action.title}</S.LinkButton>}>
             {({ closeModal }) => (
                 <QuestionnaireResponseForm
                     questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
@@ -189,8 +190,9 @@ export function NavigationAction<R extends Resource>({
     resource: R;
 }) {
     const navigate = useNavigate();
+
     return (
-        <Button
+        <S.LinkButton
             type="link"
             style={{ padding: 0 }}
             onClick={() =>
@@ -201,6 +203,6 @@ export function NavigationAction<R extends Resource>({
             icon={action.icon}
         >
             {action.title}
-        </Button>
+        </S.LinkButton>
     );
 }
