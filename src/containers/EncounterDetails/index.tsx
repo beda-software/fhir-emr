@@ -15,7 +15,6 @@ import { Spinner } from 'src/components/Spinner';
 import { Text } from 'src/components/Typography';
 import { DocumentsList } from 'src/containers/DocumentsList';
 import { ChooseDocumentToCreateModal } from 'src/containers/DocumentsList/ChooseDocumentToCreateModal';
-import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 
 import { AIScribe, useAIScribe } from './AIScribe';
@@ -44,8 +43,6 @@ export const EncounterDetails = (props: EncounterDetailsProps) => {
         useEncounterDetails(props);
     const [documentListKey, setDocumentListKey] = useState(0);
     const reload = useCallback(() => setDocumentListKey((k) => k + 1), [setDocumentListKey]);
-
-    usePatientHeaderLocationTitle({ title: t`Consultation` });
 
     const [showScriber, setShowScriber] = useState(false);
     const { recorderControls } = useAIScribe();

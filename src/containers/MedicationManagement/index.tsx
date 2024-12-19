@@ -1,11 +1,12 @@
 import { t, Trans } from '@lingui/macro';
-import { Typography, Table } from 'antd';
+import { Typography } from 'antd';
 import { MedicationKnowledge } from 'fhir/r4b';
 
 import { RenderRemoteData } from '@beda.software/fhir-react';
 import { isLoading, isSuccess } from '@beda.software/remote-data';
 
-import { PageContainer } from 'src/components/PageContainer';
+import { Table } from 'src/components';
+import { PageContainer } from 'src/components/BaseLayout/PageContainer';
 import { SpinIndicator } from 'src/components/Spinner';
 import { formatHumanDate } from 'src/utils/date';
 
@@ -26,59 +27,58 @@ export function MedicationManagement() {
     return (
         <PageContainer
             title={t`Medications`}
-            titleRightContent={<ModalNewMedicationKnowledge onCreate={pagerManager.reload} />}
-            headerContent={
-                <MedicationsSearchBar
-                    selectedMedication={selectedMedication}
-                    loadMedicationOptions={medicationOptions}
-                    onChangeMedication={(selectedOption) => onChange(selectedOption, 'medication')}
-                    reset={resetFilter}
-                />
-            }
-            content={
-                <Table
-                    pagination={pagination}
-                    onChange={handleTableChange}
-                    dataSource={
-                        isSuccess(medicationKnowledgeResponse)
-                            ? medicationKnowledgeResponse.data.map((resourceData) => {
-                                  return { ...{ key: resourceData.id }, ...resourceData };
-                              })
-                            : []
-                    }
-                    expandable={{
-                        expandedRowRender: (record) => <OtherDetails medicationKnowledge={record} />,
-                    }}
-                    columns={[
-                        {
-                            title: <Trans>Name</Trans>,
-                            dataIndex: 'name',
-                            key: 'name',
-                            render: (_text, resource) => resource.code?.coding?.[0]?.display,
-                        },
-                        {
-                            title: <Trans>Cost</Trans>,
-                            dataIndex: 'cost',
-                            key: 'cost',
-                            render: (_text, resource) =>
-                                `${resource.cost?.[0]?.cost.value} ${resource.cost?.[0]?.cost.currency}`,
-                        },
-                        {
-                            title: <Trans>Actions</Trans>,
-                            dataIndex: 'actions',
-                            key: 'actions',
-                            render: (_text, resource) => (
-                                <ModalNewMedicationBatch
-                                    onCreate={pagerManager.reload}
-                                    medicationKnowledge={resource}
-                                />
-                            ),
-                        },
-                    ]}
-                    loading={isLoading(medicationKnowledgeResponse) && { indicator: SpinIndicator }}
-                />
-            }
-        />
+            variant="with-table"
+            headerRightColumn={<ModalNewMedicationKnowledge onCreate={pagerManager.reload} />}
+            header={{
+                children: (
+                    <MedicationsSearchBar
+                        selectedMedication={selectedMedication}
+                        loadMedicationOptions={medicationOptions}
+                        onChangeMedication={(selectedOption) => onChange(selectedOption, 'medication')}
+                        reset={resetFilter}
+                    />
+                ),
+            }}
+        >
+            <Table
+                pagination={pagination}
+                onChange={handleTableChange}
+                dataSource={
+                    isSuccess(medicationKnowledgeResponse)
+                        ? medicationKnowledgeResponse.data.map((resourceData) => {
+                              return { ...{ key: resourceData.id }, ...resourceData };
+                          })
+                        : []
+                }
+                expandable={{
+                    expandedRowRender: (record) => <OtherDetails medicationKnowledge={record} />,
+                }}
+                columns={[
+                    {
+                        title: <Trans>Name</Trans>,
+                        dataIndex: 'name',
+                        key: 'name',
+                        render: (_text, resource) => resource.code?.coding?.[0]?.display,
+                    },
+                    {
+                        title: <Trans>Cost</Trans>,
+                        dataIndex: 'cost',
+                        key: 'cost',
+                        render: (_text, resource) =>
+                            `${resource.cost?.[0]?.cost.value} ${resource.cost?.[0]?.cost.currency}`,
+                    },
+                    {
+                        title: <Trans>Actions</Trans>,
+                        dataIndex: 'actions',
+                        key: 'actions',
+                        render: (_text, resource) => (
+                            <ModalNewMedicationBatch onCreate={pagerManager.reload} medicationKnowledge={resource} />
+                        ),
+                    },
+                ]}
+                loading={isLoading(medicationKnowledgeResponse) && { indicator: SpinIndicator }}
+            />
+        </PageContainer>
     );
 }
 

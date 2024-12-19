@@ -14,6 +14,10 @@ export const S = {
             }
         }
 
+        .react-select__menu {
+            z-index: 10;
+        }
+
         .react-select__control--menu-is-open,
         .react-select__control--is-focused {
             border-color: ${({ theme }) => theme.antdTheme?.colorPrimary};
@@ -32,6 +36,11 @@ export const S = {
             color: ${({ theme }) => theme.antdTheme?.colorTextPlaceholder};
         }
 
+        .react-select__loading-indicator {
+            justify-content: center;
+            align-items: center;
+        }
+
         .react-select__placeholder {
             margin: 0;
             color: ${({ theme }) => theme.antdTheme?.colorTextDisabled};
@@ -40,6 +49,10 @@ export const S = {
         .react-select__input-container {
             margin: 0;
             padding: 0;
+
+            input {
+                color: ${({ theme }) => theme.antdTheme?.colorText} !important;
+            }
         }
 
         .react-select__indicator-separator {
