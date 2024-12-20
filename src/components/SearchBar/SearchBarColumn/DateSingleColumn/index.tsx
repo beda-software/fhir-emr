@@ -14,8 +14,8 @@ export function DateSingleColumn(props: SearchBarColumnSingleDateTypeProps) {
             onChange={onColumnChange}
             value={columnFilterValue.value}
             placeholder={placeholder}
-            clearIcon={false}
             defaultOpen={defaultOpen}
+            allowClear
         />
     );
 }

@@ -10,6 +10,8 @@ export function useDateColumn(props: SearchBarColumnSingleDateTypeProps) {
         (value: moment.Moment | null) => {
             if (value) {
                 onChange(value, columnFilterValue.column.id);
+            } else {
+                onChange(undefined, columnFilterValue.column.id);
             }
         },
         [onChange, columnFilterValue],
