@@ -24,6 +24,7 @@ export function SelectChoiceColumn(props: SearchBarColumnChoiceTypeProps) {
                 classNamePrefix="react-select"
                 placeholder={placeholder}
                 defaultMenuIsOpen={defaultOpen}
+                isClearable
             />
         </Col>
     );

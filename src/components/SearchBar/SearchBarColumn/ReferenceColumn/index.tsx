@@ -23,6 +23,7 @@ export function ReferenceColumn(props: SearchBarColumnReferenceTypeProps) {
                 isMulti={false}
                 placeholder={columnFilterValue.column.placeholder}
                 defaultMenuIsOpen={defaultOpen}
+                isClearable
             />
         </Col>
     );

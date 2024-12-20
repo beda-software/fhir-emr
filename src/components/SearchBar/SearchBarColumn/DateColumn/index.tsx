@@ -19,6 +19,7 @@ export function DateColumn(props: SearchBarColumnDateTypeProps) {
                 value={columnFilterValue.value}
                 onChange={onColumnChange}
                 defaultOpen={defaultOpen}
+                allowClear
             />
         </Col>
     );
