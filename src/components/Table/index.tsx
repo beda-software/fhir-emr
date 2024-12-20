@@ -3,6 +3,7 @@ import { TableProps as ANTDTableProps } from 'antd/lib/table';
 
 import { S } from './styles';
 import { TableCards } from './TableCards';
+import './table.scss';
 
 interface TableProps<T> extends ANTDTableProps<T> {
     showCardsOnMobile?: boolean;

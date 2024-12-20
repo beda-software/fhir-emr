@@ -4,7 +4,7 @@ import { useDateColumn } from './hooks';
 import { SearchBarColumnSingleDateTypeProps } from '../types';
 
 export function DateSingleColumn(props: SearchBarColumnSingleDateTypeProps) {
-    const { columnFilterValue } = props;
+    const { columnFilterValue, defaultOpen } = props;
     const { placeholder } = columnFilterValue.column;
     const { onColumnChange } = useDateColumn(props);
 
@@ -15,6 +15,7 @@ export function DateSingleColumn(props: SearchBarColumnSingleDateTypeProps) {
             value={columnFilterValue.value}
             placeholder={placeholder}
             clearIcon={false}
+            defaultOpen={defaultOpen}
         />
     );
 }

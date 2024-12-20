@@ -1,25 +1,45 @@
-import { ColumnFilterValue } from 'src/components/SearchBar/types';
+import { ColumnFilterValue, isSingleDateColumn, isStringColumn } from 'src/components/SearchBar/types';
 import { SearchBarColumn } from 'src/components/SearchBar/SearchBarColumn';
 import { S } from './styles';
 import { FilterDropdownProps } from 'antd/lib/table/interface';
+import _ from 'lodash';
 
-interface Props extends FilterDropdownProps {
+interface Props {
     filter: ColumnFilterValue;
     onChange: (value: ColumnFilterValue['value'], key: string) => void;
 }
 
-export function TableFilter(props: Props) {
-    const { filter, onChange, close } = props;
+interface TableFilterProps extends FilterDropdownProps, Props {}
+
+export function TableFilter(props: TableFilterProps) {
+    const { filter, onChange: onInitialChange, close, visible } = props;
+
+    const onChange = (value: ColumnFilterValue['value'], key: string) => {
+        if (isStringColumn(filter.column)) {
+            onInitialChange(value, key);
+
+            return;
+        }
+
+        onInitialChange(value, key);
+        close();
+    };
+
+    if (isSingleDateColumn(filter.column)) {
+        return (
+            <S.Container>
+                <S.DatePickerFilter>
+                    <SearchBarColumn columnFilterValue={filter} onChange={onChange} defaultOpen={visible} />
+                </S.DatePickerFilter>
+            </S.Container>
+        );
+    }
 
     return (
-        <S.Filter>
-            <SearchBarColumn
-                columnFilterValue={filter}
-                onChange={(value, key) => {
-                    onChange(value, key);
-                    close();
-                }}
-            />
-        </S.Filter>
+        <S.Container>
+            <S.Filter>
+                <SearchBarColumn columnFilterValue={filter} onChange={onChange} defaultOpen={visible} />
+            </S.Filter>
+        </S.Container>
     );
 }

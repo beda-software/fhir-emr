@@ -6,7 +6,7 @@ import { SearchBarColumnDateTypeProps } from '../types';
 const { RangePicker } = DatePicker;
 
 export function DateColumn(props: SearchBarColumnDateTypeProps) {
-    const { columnFilterValue } = props;
+    const { columnFilterValue, defaultOpen } = props;
 
     const { onColumnChange } = useDateColumn(props);
 
@@ -15,6 +15,7 @@ export function DateColumn(props: SearchBarColumnDateTypeProps) {
             placeholder={columnFilterValue.column.placeholder}
             value={columnFilterValue.value}
             onChange={onColumnChange}
+            defaultOpen={defaultOpen}
         />
     );
 }
