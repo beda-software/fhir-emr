@@ -42,14 +42,21 @@ export function PatientResourceListExample() {
                     dataIndex: 'name',
                     key: 'name',
                     render: (_text, { resource }) => renderHumanName(resource.name?.[0]),
-                    width: 250,
+                    width: 300,
                 },
                 {
                     title: <Trans>Birth date</Trans>,
                     dataIndex: 'birthDate',
                     key: 'birthDate',
                     render: (_text, { resource }) => (resource.birthDate ? formatHumanDate(resource.birthDate) : null),
-                    width: '25%',
+                    width: 150,
+                },
+                {
+                    title: <Trans>Gender</Trans>,
+                    dataIndex: 'gender',
+                    key: 'gender',
+                    render: (_text, { resource }) => resource.gender,
+                    width: 150,
                 },
                 {
                     title: <Trans>SSN</Trans>,
@@ -57,7 +64,7 @@ export function PatientResourceListExample() {
                     key: 'identifier',
                     render: (_text, { resource }) =>
                         resource.identifier?.find(({ system }) => system === 'http://hl7.org/fhir/sid/us-ssn')?.value,
-                    width: '25%',
+                    width: 250,
                 },
             ]}
             getFilters={() => [
@@ -66,7 +73,32 @@ export function PatientResourceListExample() {
                     searchParam: 'name',
                     type: SearchBarColumnType.STRING,
                     placeholder: t`Find patient`,
-                    placement: ['search-bar'],
+                    placement: ['search-bar', 'table'],
+                },
+                {
+                    id: 'gender',
+                    searchParam: 'gender',
+                    type: SearchBarColumnType.CHOICE,
+                    placeholder: t`Choose gender`,
+                    options: [
+                        {
+                            value: {
+                                Coding: {
+                                    code: 'male',
+                                    display: 'Male',
+                                },
+                            },
+                        },
+                        {
+                            value: {
+                                Coding: {
+                                    code: 'female',
+                                    display: 'Female',
+                                },
+                            },
+                        },
+                    ],
+                    placement: ['table'],
                 },
             ]}
             getRecordActions={(record) => [

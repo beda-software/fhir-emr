@@ -7,7 +7,7 @@ import { useReferenceColumn } from './hooks';
 import { SearchBarColumnReferenceTypeProps } from '../types';
 
 export function ReferenceColumn(props: SearchBarColumnReferenceTypeProps) {
-    const { columnFilterValue } = props;
+    const { columnFilterValue, defaultOpen } = props;
 
     const { debouncedLoadOptions, onOptionChange } = useReferenceColumn(props);
 
@@ -22,6 +22,7 @@ export function ReferenceColumn(props: SearchBarColumnReferenceTypeProps) {
                 getOptionValue={(option) => getAnswerCode(option.value)}
                 isMulti={false}
                 placeholder={columnFilterValue.column.placeholder}
+                defaultMenuIsOpen={defaultOpen}
             />
         </Col>
     );
