@@ -20,6 +20,7 @@ export function ValueSetColumn(props: SearchBarColumnChoiceTypeProps) {
             getOptionLabel={getOptionLabel}
             placeholder={placeholder}
             defaultMenuIsOpen={defaultOpen}
+            isClearable
         />
     );
 }

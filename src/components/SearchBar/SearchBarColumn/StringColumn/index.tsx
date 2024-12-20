@@ -13,6 +13,7 @@ export function StringColumn(props: SearchBarColumnStringTypeProps) {
             placeholder={columnFilterValue.column.placeholder}
             value={columnFilterValue.value}
             onChange={onColumnChange}
+            allowClear
         />
     );
 }
