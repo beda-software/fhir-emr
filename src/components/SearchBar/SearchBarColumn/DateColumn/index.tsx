@@ -1,5 +1,3 @@
-import { Col } from 'antd';
-
 import { DatePicker } from 'src/components/DatePicker';
 
 import { useDateColumn } from './hooks';
@@ -13,14 +11,12 @@ export function DateColumn(props: SearchBarColumnDateTypeProps) {
     const { onColumnChange } = useDateColumn(props);
 
     return (
-        <Col>
-            <RangePicker
-                placeholder={columnFilterValue.column.placeholder}
-                value={columnFilterValue.value}
-                onChange={onColumnChange}
-                defaultOpen={defaultOpen}
-                allowClear
-            />
-        </Col>
+        <RangePicker
+            placeholder={columnFilterValue.column.placeholder}
+            value={columnFilterValue.value}
+            onChange={onColumnChange}
+            defaultOpen={defaultOpen}
+            allowClear
+        />
     );
 }

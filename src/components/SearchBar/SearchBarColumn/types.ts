@@ -1,9 +1,11 @@
 import {
     ChoiceTypeColumnFilterValue,
+    SolidChoiceTypeColumnFilterValue,
     ColumnFilterValue,
     DateTypeColumnFilterValue,
     ReferenceTypeColumnFilterValue,
     StringTypeColumnFilterValue,
+    SingleDateTypeColumnFilterValue,
 } from '../types';
 
 export type SearchBarColumnProps = {
@@ -23,6 +25,12 @@ export interface SearchBarColumnDateTypeProps {
     defaultOpen?: boolean;
 }
 
+export interface SearchBarColumnSingleDateTypeProps {
+    columnFilterValue: SingleDateTypeColumnFilterValue;
+    onChange: (value: SingleDateTypeColumnFilterValue['value'], key: string) => void;
+    defaultOpen?: boolean;
+}
+
 export interface SearchBarColumnReferenceTypeProps {
     columnFilterValue: ReferenceTypeColumnFilterValue;
     onChange: (value: ReferenceTypeColumnFilterValue['value'], key: string) => void;
@@ -33,4 +41,9 @@ export interface SearchBarColumnChoiceTypeProps {
     columnFilterValue: ChoiceTypeColumnFilterValue;
     onChange: (value: ChoiceTypeColumnFilterValue['value'], key: string) => void;
     defaultOpen?: boolean;
+}
+
+export interface SearchBarColumnSolidChoiceTypeProps {
+    columnFilterValue: SolidChoiceTypeColumnFilterValue;
+    onChange: (value: SolidChoiceTypeColumnFilterValue['value'], key: string) => void;
 }

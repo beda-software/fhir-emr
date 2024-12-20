@@ -1,5 +1,3 @@
-import { Col } from 'antd';
-
 import { Select } from 'src/components/Select';
 import { ValueSetOption } from 'src/services';
 
@@ -13,19 +11,17 @@ export function SelectChoiceColumn(props: SearchBarColumnChoiceTypeProps) {
     const { onSelect, getOptionLabel, isOptionSelected } = useChoiceColumn(props);
 
     return (
-        <Col>
-            <Select<ValueSetOption>
-                value={columnFilterValue.value}
-                options={options}
-                onChange={onSelect}
-                isOptionSelected={isOptionSelected}
-                isMulti={repeats}
-                getOptionLabel={getOptionLabel}
-                classNamePrefix="react-select"
-                placeholder={placeholder}
-                defaultMenuIsOpen={defaultOpen}
-                isClearable
-            />
-        </Col>
+        <Select<ValueSetOption>
+            value={columnFilterValue.value}
+            options={options}
+            onChange={onSelect}
+            isOptionSelected={isOptionSelected}
+            isMulti={repeats}
+            getOptionLabel={getOptionLabel}
+            classNamePrefix="react-select"
+            placeholder={placeholder}
+            defaultMenuIsOpen={defaultOpen}
+            isClearable
+        />
     );
 }
