@@ -19,6 +19,10 @@ export function getSearchBarFilterValue(filterValues: ColumnFilterValue[] | unde
         throw new Error('Filter value not found');
     }
 
+    return getSearchBarColumnFilterValue(filterValue);
+}
+
+export function getSearchBarColumnFilterValue(filterValue: ColumnFilterValue) {
     if (isStringColumnFilterValue(filterValue)) {
         return filterValue.value;
     }
@@ -38,4 +42,16 @@ export function getSearchBarFilterValue(filterValues: ColumnFilterValue[] | unde
     }
 
     throw new Error('Unsupported column type');
+}
+
+export function isSearchBarFilter(filter: ColumnFilterValue) {
+    const { placement = ['search-bar'] } = filter.column;
+
+    return placement.includes('search-bar');
+}
+
+export function isTableFilter(filter: ColumnFilterValue) {
+    const { placement = ['search-bar'] } = filter.column;
+
+    return placement.includes('table');
 }
