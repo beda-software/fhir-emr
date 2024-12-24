@@ -87,7 +87,7 @@ function usePatientDocumentDetails(patientId: string) {
         const mappedResponse = mapSuccess(
             await getFHIRResources<QuestionnaireResponse | Encounter>('QuestionnaireResponse', {
                 id: qrId,
-                subject: patientId,
+                'subject-id-or-communication-request': patientId,
                 _include: ['QuestionnaireResponse:encounter:Encounter'],
             }),
             (bundle) => ({
