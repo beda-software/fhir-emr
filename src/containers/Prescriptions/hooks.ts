@@ -16,7 +16,7 @@ export function useMedicationRequest(requesterId?: string, subjectId?: string, s
             'MedicationRequest:requester',
             'MedicationRequest:medication:Medication',
         ],
-        _sort: '-_createdAt',
+        _sort: ['-_createdAt', '_id'],
     };
 
     const { resourceResponse, pagerManager, handleTableChange, pagination } = usePagerExtended<
