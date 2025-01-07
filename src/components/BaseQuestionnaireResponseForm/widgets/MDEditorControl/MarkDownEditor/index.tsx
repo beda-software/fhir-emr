@@ -16,6 +16,7 @@ import { useEffect, useRef } from 'react';
 import { useTheme } from 'styled-components';
 
 import '@mdxeditor/editor/style.css';
+import { S } from './styles';
 
 interface MarkDownEditorProps {
     markdownString: string;
@@ -36,13 +37,7 @@ export function MarkDownEditor({ markdownString = '', readOnly = false, onChange
 
     // TODO Add a button to add link and make a custom modal to enter the link
     // https://mdxeditor.dev/editor/api/functions/linkDialogPlugin
-    const plugins = [
-        headingsPlugin(),
-        listsPlugin(),
-        quotePlugin(),
-        linkPlugin(),
-        markdownShortcutPlugin(),
-    ];
+    const plugins = [headingsPlugin(), listsPlugin(), quotePlugin(), linkPlugin(), markdownShortcutPlugin()];
 
     if (!readOnly) {
         plugins.push(
@@ -64,15 +59,17 @@ export function MarkDownEditor({ markdownString = '', readOnly = false, onChange
     }
 
     return (
-        <MDXEditor
-            className={theme.mode === 'dark' ? 'dark-theme' : ''}
-            ref={mdxEditorRef}
-            readOnly={readOnly}
-            markdown={markdownString}
-            onChange={onChange}
-            contentEditableClassName="MarkDownEditorContent"
-            plugins={plugins}
-        />
+        <S.MDXEditorWrapper>
+            <MDXEditor
+                className={theme.mode === 'dark' ? 'dark-theme' : ''}
+                ref={mdxEditorRef}
+                readOnly={readOnly}
+                markdown={markdownString}
+                onChange={onChange}
+                contentEditableClassName="MarkDownEditorContent"
+                plugins={plugins}
+            />
+        </S.MDXEditorWrapper>
     );
 }
 
