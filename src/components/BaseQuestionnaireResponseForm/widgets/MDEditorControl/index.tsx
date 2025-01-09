@@ -5,14 +5,19 @@ import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm
 import { MarkDownEditor } from './MarkDownEditor';
 import { Form } from 'antd';
 
-export function MDEditorControl({ parentPath, questionItem }: QuestionItemProps) {
+export function MDEditorControl({ parentPath, questionItem, context }: QuestionItemProps) {
     const { linkId } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
     const { value, onChange, formItem } = useFieldController(fieldName, questionItem);
 
     return (
         <Form.Item {...formItem}>
-            <MarkDownEditor markdownString={value} onChange={onChange} readOnly={questionItem.readOnly} />
+            <MarkDownEditor
+                markdownString={value}
+                onChange={onChange}
+                readOnly={questionItem.readOnly}
+                context={context}
+            />
         </Form.Item>
     );
 }

@@ -19,15 +19,17 @@ import '@mdxeditor/editor/style.css';
 import { Divider } from 'antd';
 import { MarkDownEditorContext } from './context';
 import { S } from './styles';
+import { ItemContext } from 'sdc-qrf';
 
 interface MarkDownEditorProps {
     markdownString: string;
     onChange?: (markdown: string) => void;
     readOnly?: boolean;
+    context?: ItemContext;
 }
 
 export function MarkDownEditor(props: MarkDownEditorProps) {
-    const { markdownString = '', readOnly = false, onChange } = props;
+    const { markdownString = '', readOnly = false, onChange, context } = props;
     const mdxEditorRef = useRef<MDXEditorMethods>(null);
 
     useEffect(() => {
@@ -43,12 +45,12 @@ export function MarkDownEditor(props: MarkDownEditorProps) {
     // TODO Add a button to add link and make a custom modal to enter the link
     // https://mdxeditor.dev/editor/api/functions/linkDialogPlugin
     const plugins = useMemo(() => {
-        const commonPlugins = pluginsContext.commonPlugins
-            ? pluginsContext.commonPlugins
+        const commonPlugins = pluginsContext.initPlugins
+            ? pluginsContext.initPlugins(context)
             : [headingsPlugin(), listsPlugin(), quotePlugin(), linkPlugin(), markdownShortcutPlugin()];
 
-        const toolbarPlugins = pluginsContext.toolbarPlugins
-            ? pluginsContext.toolbarPlugins
+        const toolbarPlugins = pluginsContext.initToolbarPlugins
+            ? pluginsContext.initToolbarPlugins(context)
             : [
                   <UndoRedo />,
                   <Divider type="vertical" />,
@@ -76,7 +78,7 @@ export function MarkDownEditor(props: MarkDownEditorProps) {
               ];
 
         return plugins;
-    }, [pluginsContext.commonPlugins, pluginsContext.toolbarPlugins, readOnly]);
+    }, [pluginsContext.initPlugins, pluginsContext.initToolbarPlugins, readOnly, context]);
 
     const MDXEditorWrapper = pluginsContext.MarkdownEditorWrapper || S.MDXEditorWrapper;
 
