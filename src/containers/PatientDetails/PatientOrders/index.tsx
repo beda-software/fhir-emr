@@ -214,7 +214,7 @@ export function PatientOrders({ patient }: Props) {
                     patient: patient.id,
                     category: 'laboratory',
                     status: 'final',
-                    _sort: ['-_lastUpdated'],
+                    _sort: ['-_lastUpdated', '_id'],
                     _revinclude: ['Provenance:target'],
                     _ilike: search,
                 }}

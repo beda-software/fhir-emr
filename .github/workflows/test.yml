@@ -19,7 +19,7 @@ jobs:
             - run: yarn extract
             - run: yarn compile
             - name: Install Playwright
-              run: npx playwright install --with-deps
+              run: npx playwright@latest install --with-deps
             - name: Build Storybook
               env:
                 NODE_OPTIONS: "--max_old_space_size=4096"
