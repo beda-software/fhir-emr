@@ -36,14 +36,17 @@ import { OrganizationScheduling } from '../OrganizationScheduling';
 import { DocumentPrint } from '../PatientDetails/DocumentPrint';
 import { Prescriptions } from '../Prescriptions';
 import { SetPassword } from '../SetPassword';
+import { DefaultUserWithNoRoles } from './DefaultUserWithNoRoles';
 
 interface AppProps {
     authenticatedRoutes?: ReactElement;
     anonymousRoutes?: ReactElement;
     populateUserInfoSharedState?: (user: User) => Promise<void>;
+    UserWithNoRolesComponent?: () => ReactElement;
 }
 
-export function App({ authenticatedRoutes, anonymousRoutes, populateUserInfoSharedState }: AppProps) {
+export function App(props: AppProps) {
+    const { authenticatedRoutes, anonymousRoutes, populateUserInfoSharedState, UserWithNoRolesComponent } = props;
     const menuLayout = useContext(MenuLayout);
     const [userResponse] = useService(async () => {
         const appToken = getToken();
@@ -52,6 +55,12 @@ export function App({ authenticatedRoutes, anonymousRoutes, populateUserInfoShar
 
     const renderRoutes = (user: User | null) => {
         if (user) {
+            if ((user.role?.length ?? 0) === 0) {
+                const UserWithNoRoles = UserWithNoRolesComponent ?? DefaultUserWithNoRoles;
+
+                return <UserWithNoRoles />;
+            }
+
             const layout = menuLayout();
             const defaultRoute = layout[0]?.path ?? '/encounters';
             return <AuthenticatedUserApp defaultRoute={defaultRoute} extra={authenticatedRoutes} />;
