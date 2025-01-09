@@ -15,6 +15,8 @@ export function useDateColumn(props: SearchBarColumnDateTypeProps) {
                 const momentValues = values.map((value) => moment(value!.format())) as DateColumnFilterValue;
 
                 onChange(momentValues, columnFilterValue.column.id);
+            } else {
+                onChange(undefined, columnFilterValue.column.id);
             }
         },
         [onChange, columnFilterValue],
