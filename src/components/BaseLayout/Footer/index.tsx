@@ -10,9 +10,9 @@ export function AppFooter(props: Props) {
     return (
         <S.Footer className={`_${type}`}>
             <S.Content>
-                Made with &#10084;&#65039; by{' '}
+            Testing
                 <S.Link href="https://beda.software/emr" target="_blank" rel="noreferrer">
-                    Beda Software
+                    Ferrer Pulmonary
                 </S.Link>
             </S.Content>
         </S.Footer>
