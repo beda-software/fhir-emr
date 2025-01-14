@@ -13,6 +13,11 @@ import s from './RepeatableGroups.module.scss';
 interface RepeatableGroupsProps {
     groupItem: GroupItemProps;
     renderGroup?: (props: RepeatableGroupProps) => ReactNode;
+    buildValue?: (existingItems: Array<any>, value: any) => any;
+}
+
+function defaultBuildValue(exisingItems: Array<any>, _value: any) {
+    return [...exisingItems, {}];
 }
 
 export function RepeatableGroups(props: RepeatableGroupsProps) {
@@ -22,6 +27,7 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
     const fieldName = [...parentPath, linkId];
     const { value, onChange } = useFieldController(fieldName, questionItem);
     const items = value.items && value.items.length ? value.items : required ? [{}] : [];
+    const buildValue = props.buildValue ?? defaultBuildValue;
 
     return (
         <div className={s.group}>
@@ -57,7 +63,7 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
                         className={s.addButton}
                         onClick={() => {
                             const existingItems = items || [];
-                            const updatedInput = { items: [...existingItems, {}] };
+                            const updatedInput = { items: buildValue(existingItems, value) };
                             onChange(updatedInput);
                         }}
                         size="small"
