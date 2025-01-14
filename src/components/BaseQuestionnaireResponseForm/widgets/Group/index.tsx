@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import _ from 'lodash';
-import { useFormContext } from 'react-hook-form';
 import { GroupItemProps, QuestionItems } from 'sdc-qrf';
 
 import { Text } from 'src/components/Typography';
@@ -15,10 +14,6 @@ function Flex(props: GroupItemProps & { type?: GroupContextProps['type'] }) {
     const { parentPath, questionItem, context, type = 'col' } = props;
     const { linkId, item, repeats, text, helpText, hidden } = questionItem;
 
-    const methods = useFormContext();
-    const existingItems = _.get(methods.getValues(), [...parentPath, questionItem.linkId, 'items']);
-    const defaultValue = {};
-
     if (hidden) {
         return null;
     }
@@ -29,16 +24,10 @@ function Flex(props: GroupItemProps & { type?: GroupContextProps['type'] }) {
         }
 
         if (type === 'row') {
-            return (
-                <RepeatableGroups
-                    groupItem={props}
-                    renderGroup={(p) => <RepeatableGroupRow {...p} />}
-                    buildValue={() => [...existingItems, defaultValue]}
-                />
-            );
+            return <RepeatableGroups groupItem={props} renderGroup={(p) => <RepeatableGroupRow {...p} />} />;
         }
 
-        return <RepeatableGroups groupItem={props} buildValue={() => [...existingItems, defaultValue]} />;
+        return <RepeatableGroups groupItem={props} />;
     };
 
     if (type === 'grid') {
