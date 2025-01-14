@@ -17,7 +17,7 @@ function Flex(props: GroupItemProps & { type?: GroupContextProps['type'] }) {
 
     const methods = useFormContext();
     const existingItems = _.get(methods.getValues(), [...parentPath, questionItem.linkId, 'items']);
-    const defaultValue = _.cloneDeep(existingItems[0] || {});
+    const defaultValue = {};
 
     if (hidden) {
         return null;

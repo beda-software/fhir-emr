@@ -28,7 +28,6 @@ import {
     questionnaireIdLoader,
     QuestionnaireResponseFormData,
     QuestionnaireResponseFormProps,
-    QuestionnaireResponseFormSaveResponse,
 } from 'src/hooks/questionnaire-response-form-data';
 import { getProvenanceByEntity } from 'src/services/provenance';
 
@@ -39,13 +38,13 @@ export interface Props {
     questionnaireId: string;
     encounterId?: string;
     launchContextParameters?: ParametersParameter[];
-    onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
+    onSuccess?: () => void;
 }
 
 async function onFormSubmit(
     props: QuestionnaireResponseFormProps & {
         formData: QuestionnaireResponseFormData;
-        onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
+        onSuccess?: () => void;
     },
 ) {
     const { formData, initialQuestionnaireResponse, onSuccess } = props;
