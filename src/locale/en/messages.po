@@ -226,7 +226,7 @@ msgid "Calories"
 msgstr ""
 
 #: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:117
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:55
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:56
 #: src/containers/InvoiceList/components/ModalCancelInvoice/index.tsx:18
 #: src/containers/Prescriptions/ModalMedicationRequestCancel.tsx:22
 #: src/containers/Scheduling/Availability/index.tsx:70
@@ -332,11 +332,11 @@ msgstr ""
 msgid "Cost"
 msgstr ""
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:87
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:88
 msgid "Create"
 msgstr ""
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:52
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:53
 #: src/containers/EncounterDetails/hooks.ts:31
 #: src/containers/PatientDetails/PatientDocuments/index.tsx:33
 msgid "Create document"
@@ -377,7 +377,7 @@ msgstr ""
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:95
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:142
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:216
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:283
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:271
 #: src/containers/PatientDetails/PatientResources/utils.tsx:96
 #: src/containers/PatientDetails/PatientResources/utils.tsx:135
 #: src/containers/PatientDetails/PatientResources/utils.tsx:174
@@ -524,6 +524,7 @@ msgstr ""
 msgid "Edit practitioner data"
 msgstr ""
 
+#: src/containers/App/DefaultUserWithNoRoles.tsx:23
 #: src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer/hooks.ts:49
 msgid "Email"
 msgstr ""
@@ -698,7 +699,7 @@ msgstr ""
 msgid "Inline options?"
 msgstr ""
 
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:317
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:313
 msgid "Intent"
 msgstr ""
 
@@ -813,7 +814,7 @@ msgstr ""
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:123
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:204
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:240
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:312
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:308
 #: src/containers/PatientDetails/PatientResources/utils.tsx:50
 #: src/containers/PatientDetails/PatientResources/utils.tsx:85
 #: src/containers/PatientDetails/PatientResources/utils.tsx:124
@@ -921,7 +922,7 @@ msgid "Order added"
 msgstr ""
 
 #: src/containers/PatientDetails/PatientHeader/index.tsx:82
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:304
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:300
 msgid "Orders"
 msgstr ""
 
@@ -981,6 +982,7 @@ msgstr ""
 msgid "PCT"
 msgstr ""
 
+#: src/containers/App/DefaultUserWithNoRoles.tsx:29
 #: src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer/hooks.ts:45
 msgid "Phone number"
 msgstr ""
@@ -989,13 +991,16 @@ msgstr ""
 msgid "Phone widget"
 msgstr ""
 
+#: src/containers/App/DefaultUserWithNoRoles.tsx:18
+msgid "Please ask administrator to add a role for your user"
+msgstr ""
+
 #: src/components/PatientEncounter/index.tsx:26
 #: src/containers/EncounterList/index.tsx:52
 #: src/containers/InvoiceDetails/components/InvoiceDetailsHeader/index.tsx:23
 #: src/containers/InvoiceList/components/InvoiceListSearchBar/index.tsx:33
 #: src/containers/InvoiceList/tableUtils.tsx:114
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:152
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:275
 #: src/containers/PatientDetails/PatientResources/utils.tsx:221
 msgid "Practitioner"
 msgstr ""
@@ -1179,8 +1184,8 @@ msgid "Serum creatinin"
 msgstr ""
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:279
-msgid "Service"
-msgstr ""
+#~ msgid "Service"
+#~ msgstr ""
 
 #: src/containers/PatientDetails/PatientResources/utils.tsx:306
 msgid "Service Requests"
@@ -1198,7 +1203,7 @@ msgstr ""
 msgid "Sex"
 msgstr ""
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:77
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:78
 msgid "Share link"
 msgstr ""
 
@@ -1321,11 +1326,11 @@ msgstr ""
 msgid "Text with macro"
 msgstr ""
 
-#: src/containers/App/index.tsx:129
+#: src/containers/App/index.tsx:138
 msgid "Thank you for filling out the questionnaire. Now you can close this page."
 msgstr ""
 
-#: src/containers/App/index.tsx:128
+#: src/containers/App/index.tsx:137
 msgid "Thank you!"
 msgstr ""
 
@@ -1337,7 +1342,7 @@ msgstr ""
 msgid "The document successfully amended"
 msgstr ""
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:72
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:73
 msgid "The link was copied to clipboard"
 msgstr ""
 
@@ -1362,7 +1367,7 @@ msgstr ""
 msgid "Thursday"
 msgstr ""
 
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:287
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:275
 #: src/containers/Scheduling/Availability/index.tsx:129
 msgid "Time"
 msgstr ""
@@ -1427,6 +1432,10 @@ msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:487
 msgid "Url:"
+msgstr ""
+
+#: src/containers/App/DefaultUserWithNoRoles.tsx:13
+msgid "User with no roles in the system"
 msgstr ""
 
 #: src/containers/SignIn/index.tsx:49
