@@ -51,7 +51,7 @@ export function QuestionQuantity({ parentPath, questionItem }: QuestionItemProps
     const { linkId, text, hidden } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value'];
     const { value } = useFieldController(fieldName, questionItem);
-    const quantity: Quantity | undefined  = value?.Quantity;
+    const quantity: Quantity | undefined = value?.Quantity;
 
     if (hidden) {
         return null;
@@ -60,7 +60,9 @@ export function QuestionQuantity({ parentPath, questionItem }: QuestionItemProps
     return (
         <S.Question className={classNames(s.question, s.row, 'form__question')}>
             <span className={s.questionText}>{text}</span>
-            <span className={s.answer}>{quantity && _.isNumber(quantity?.value) ? `${quantity.value} ${quantity.unit}` : '-'}</span>
+            <span className={s.answer}>
+                {quantity && _.isNumber(quantity?.value) ? `${quantity.value} ${quantity.unit}` : '-'}
+            </span>
         </S.Question>
     );
 }
