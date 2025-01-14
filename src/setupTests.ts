@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
+import { cleanup } from '@testing-library/react';
 import {
     Consent,
     Encounter,
@@ -220,6 +221,8 @@ afterEach(async () => {
             data: { query: `select drop_before_all(${txId});` },
         });
     });
+    cleanup();
+    vi.clearAllMocks();
 });
 
 // afterAll(() => {
