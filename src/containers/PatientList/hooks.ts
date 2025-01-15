@@ -20,7 +20,7 @@ export function usePatientList(filterValues: ColumnFilterValue[], searchParams: 
         : { name: patientFilterValue };
 
     const defaultQueryParameters = {
-        _sort: ['-_lastUpdated', '_id'],
+        _sort: '-_lastUpdated',
         ...(patientFilterValue ? searchParamKeyForPatientName : {}),
     };
 

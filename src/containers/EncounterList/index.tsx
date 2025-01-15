@@ -2,13 +2,12 @@ import { Trans } from '@lingui/macro';
 import { Col, Row } from 'antd';
 import { Link } from 'react-router-dom';
 
-import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
+import { PageContainer } from 'src/components/BaseLayout/PageContainer';
 import { EncountersTable } from 'src/components/EncountersTable';
 import { EncounterData } from 'src/components/EncountersTable/types';
 import { StatusBadge } from 'src/components/EncounterStatusBadge';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
-import { Title } from 'src/components/Typography';
 import { formatPeriodDateTime } from 'src/utils/date';
 import { renderHumanName } from 'src/utils/fhir';
 import { matchCurrentUserRole, Role } from 'src/utils/role';
@@ -97,27 +96,25 @@ export function EncounterList() {
     ];
 
     return (
-        <>
-            <BasePageHeader style={{ paddingTop: 40, paddingBottom: 92 }}>
-                <Title style={{ marginBottom: 40 }}>
-                    <Trans>Encounters</Trans>
-                </Title>
-
-                <SearchBar
-                    columnsFilterValues={columnsFilterValues}
-                    onChangeColumnFilter={onChangeColumnFilter}
-                    onResetFilters={onResetFilters}
-                />
-            </BasePageHeader>
-
-            <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
-                <EncountersTable
-                    columns={columns}
-                    remoteData={encounterDataListRD}
-                    handleTableChange={handleTableChange}
-                    pagination={pagination}
-                />
-            </BasePageContent>
-        </>
+        <PageContainer
+            variant="with-table"
+            title={<Trans>Encounters</Trans>}
+            header={{
+                children: (
+                    <SearchBar
+                        columnsFilterValues={columnsFilterValues}
+                        onChangeColumnFilter={onChangeColumnFilter}
+                        onResetFilters={onResetFilters}
+                    />
+                ),
+            }}
+        >
+            <EncountersTable
+                columns={columns}
+                remoteData={encounterDataListRD}
+                handleTableChange={handleTableChange}
+                pagination={pagination}
+            />
+        </PageContainer>
     );
 }

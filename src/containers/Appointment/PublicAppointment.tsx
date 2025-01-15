@@ -6,11 +6,10 @@ import { axiosInstance as axiosAidboxInstance } from 'aidbox-react/lib/services/
 
 import { uuid4 } from '@beda.software/fhir-react';
 
-import { BasePageContent } from 'src/components/BaseLayout';
+import { PageContainer } from 'src/components/BaseLayout/PageContainer';
 import { DateTimeSlotPicker } from 'src/components/BaseQuestionnaireResponseForm/widgets';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
-import { Title } from 'src/components/Typography';
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 import { getToken } from 'src/services/auth';
 import { axiosInstance as axiosFHIRInstance } from 'src/services/fhir';
@@ -42,47 +41,39 @@ export function PublicAppointment() {
     }, [isAnonymousUser]);
 
     return (
-        <>
-            <S.Header>
-                <Title>
-                    <Trans>Appointment booking</Trans>
-                </Title>
-            </S.Header>
-
-            <BasePageContent style={{ alignItems: 'center' }}>
-                <S.Content>
-                    {isLoading ? (
-                        <Spinner />
-                    ) : (
-                        <QuestionnaireResponseForm
-                            questionnaireLoader={questionnaireIdLoader('public-appointment')}
-                            onSuccess={() => {
-                                notification.success({
-                                    message: t`Appointment successfully created`,
-                                });
-                                history.replace('/');
-                            }}
-                            itemControlQuestionItemComponents={{
-                                'date-time-slot': (props) => (
-                                    <DateTimeSlotPicker {...props} practitionerRolePath={practitionerRolePath} />
-                                ),
-                            }}
-                            initialQuestionnaireResponse={{
-                                questionnaire: 'public-appointment',
-                            }}
-                            launchContextParameters={[
-                                {
-                                    name: 'Patient',
-                                    resource: {
-                                        resourceType: 'Patient',
-                                        id: uuid4(),
-                                    },
+        <PageContainer title={<Trans>Appointment booking</Trans>} content={{ style: { alignItems: 'center' } }}>
+            <S.Content>
+                {isLoading ? (
+                    <Spinner />
+                ) : (
+                    <QuestionnaireResponseForm
+                        questionnaireLoader={questionnaireIdLoader('public-appointment')}
+                        onSuccess={() => {
+                            notification.success({
+                                message: t`Appointment successfully created`,
+                            });
+                            history.replace('/');
+                        }}
+                        itemControlQuestionItemComponents={{
+                            'date-time-slot': (props) => (
+                                <DateTimeSlotPicker {...props} practitionerRolePath={practitionerRolePath} />
+                            ),
+                        }}
+                        initialQuestionnaireResponse={{
+                            questionnaire: 'public-appointment',
+                        }}
+                        launchContextParameters={[
+                            {
+                                name: 'Patient',
+                                resource: {
+                                    resourceType: 'Patient',
+                                    id: uuid4(),
                                 },
-                            ]}
-                        />
-                    )}
-                </S.Content>
-            </BasePageContent>
-        </>
+                            },
+                        ]}
+                    />
+                )}
+            </S.Content>
+        </PageContainer>
     );
 }

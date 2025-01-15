@@ -33,7 +33,7 @@ interface ResourceTableProps<R extends Resource> extends ResourceTableHookProps<
 export function useResourceTable<R extends Resource>(props: ResourceTableHookProps<R>) {
     const { resourceType, params = {} } = props;
     const queryParameters = {
-        _sort: ['-_lastUpdated', '_id'],
+        _sort: '-_lastUpdated',
         ...params,
     };
 

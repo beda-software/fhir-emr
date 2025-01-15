@@ -1,4 +1,4 @@
-import { Col, Input } from 'antd';
+import { Input } from 'antd';
 
 import { useStringColumn } from './hooks';
 import { SearchBarColumnStringTypeProps } from '../types';
@@ -9,12 +9,11 @@ export function StringColumn(props: SearchBarColumnStringTypeProps) {
     const { onColumnChange } = useStringColumn(props);
 
     return (
-        <Col>
-            <Input.Search
-                placeholder={columnFilterValue.column.placeholder}
-                value={columnFilterValue.value}
-                onChange={onColumnChange}
-            />
-        </Col>
+        <Input.Search
+            placeholder={columnFilterValue.column.placeholder}
+            value={columnFilterValue.value}
+            onChange={onColumnChange}
+            allowClear
+        />
     );
 }

@@ -14,7 +14,7 @@ export function useHealthcareServiceList(filterValues: ColumnFilterValue[]) {
     const healthcareServiceFilterValue = getSearchBarFilterValue(filterValues, 'service');
 
     const queryParameters = {
-        _sort: ['-_lastUpdated', '_id'],
+        _sort: '-_lastUpdated',
         ilike: healthcareServiceFilterValue,
     };
 

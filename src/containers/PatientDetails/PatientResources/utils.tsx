@@ -39,7 +39,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     resourceType="MedicationStatement"
                     params={{
                         patient: patient.id,
-                        _sort: ['-_lastUpdated', '_id'],
+                        _sort: ['-_lastUpdated'],
                         _revinclude: ['Provenance:target'],
                     }}
                     getTableColumns={option.getTableColumns}
@@ -74,7 +74,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     resourceType="Condition"
                     params={{
                         patient: patient.id,
-                        _sort: ['-_recorded-date', '_id'],
+                        _sort: ['-_recorded-date'],
                         _revinclude: ['Provenance:target'],
                     }}
                     getTableColumns={option.getTableColumns}
@@ -113,7 +113,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     resourceType="AllergyIntolerance"
                     params={{
                         patient: patient.id,
-                        _sort: ['-_date', '_id'],
+                        _sort: ['-_date'],
                         _revinclude: ['Provenance:target'],
                     }}
                     getTableColumns={option.getTableColumns}
@@ -152,7 +152,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     resourceType="Immunization"
                     params={{
                         patient: patient.id,
-                        _sort: ['-_date', '_id'],
+                        _sort: ['-_date'],
                         _revinclude: ['Provenance:target'],
                     }}
                     getTableColumns={option.getTableColumns}
@@ -188,7 +188,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     params={{
                         patient: patient.id,
                         status: 'active',
-                        _sort: ['-_lastUpdated', '_id'],
+                        _sort: ['-_lastUpdated'],
                         _revinclude: ['Provenance:target'],
                     }}
                     getTableColumns={option.getTableColumns}
@@ -235,7 +235,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     params={{
                         patient: patient.id,
                         status: 'final',
-                        _sort: ['-_lastUpdated', '_id'],
+                        _sort: ['-_lastUpdated'],
                         _revinclude: ['Provenance:target'],
                     }}
                     getTableColumns={option.getTableColumns}
@@ -310,7 +310,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     resourceType="ServiceRequest"
                     params={{
                         patient: patient.id,
-                        _sort: ['-_lastUpdated', '_id'],
+                        _sort: ['-_lastUpdated'],
                     }}
                     getTableColumns={option.getTableColumns}
                 />

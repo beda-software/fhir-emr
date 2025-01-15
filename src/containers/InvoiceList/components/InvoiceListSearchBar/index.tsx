@@ -1,11 +1,11 @@
 import { t } from '@lingui/macro';
-import { Row, Button } from 'antd';
+import { Button } from 'antd';
 
+import { S } from 'src/components/SearchBar/styles';
 import { AsyncDropdown } from 'src/containers/OrganizationScheduling/HealthcareServicePractitionerSelect';
 import { OptionType } from 'src/containers/OrganizationScheduling/HealthcareServicePractitionerSelect/types';
 import { Role, matchCurrentUserRole } from 'src/utils/role';
 
-import { S } from './InvoiceListSearchBar.styles';
 import { InvoiceListSearchBarSelectProps } from '../../types';
 
 export function InvoiceListSearchBar(props: InvoiceListSearchBarSelectProps) {
@@ -23,37 +23,35 @@ export function InvoiceListSearchBar(props: InvoiceListSearchBarSelectProps) {
     } = props;
 
     return (
-        <S.Container>
-            <Row gutter={[32, 16]}>
-                <S.SelectContainer>
-                    <AsyncDropdown
-                        onChange={onChangePractitionerRole}
-                        loadOptions={loadPractitionerRoleOptions}
-                        value={selectedPractitionerRole as OptionType}
-                        placeholder={t`Practitioner`}
-                    />
-                    <AsyncDropdown
-                        onChange={onChangePatient}
-                        loadOptions={loadPatientOptions}
-                        value={selectedPatient as OptionType}
-                        placeholder={t`Patient`}
-                        hidden={matchCurrentUserRole({
-                            [Role.Admin]: () => false,
-                            [Role.Patient]: () => true,
-                            [Role.Practitioner]: () => false,
-                            [Role.Receptionist]: () => false,
-                        })}
-                    />
-                    <AsyncDropdown
-                        onChange={onChangeStatus}
-                        loadOptions={loadStatusOptions}
-                        value={selectedStatus as OptionType}
-                        placeholder={t`Status`}
-                    />
-                </S.SelectContainer>
-            </Row>
+        <S.SearchBar>
+            <S.LeftColumn>
+                <AsyncDropdown
+                    onChange={onChangePractitionerRole}
+                    loadOptions={loadPractitionerRoleOptions}
+                    value={selectedPractitionerRole as OptionType}
+                    placeholder={t`Practitioner`}
+                />
+                <AsyncDropdown
+                    onChange={onChangePatient}
+                    loadOptions={loadPatientOptions}
+                    value={selectedPatient as OptionType}
+                    placeholder={t`Patient`}
+                    hidden={matchCurrentUserRole({
+                        [Role.Admin]: () => false,
+                        [Role.Patient]: () => true,
+                        [Role.Practitioner]: () => false,
+                        [Role.Receptionist]: () => false,
+                    })}
+                />
+                <AsyncDropdown
+                    onChange={onChangeStatus}
+                    loadOptions={loadStatusOptions}
+                    value={selectedStatus as OptionType}
+                    placeholder={t`Status`}
+                />
+            </S.LeftColumn>
 
             <Button onClick={reset}>{t`Reset`}</Button>
-        </S.Container>
+        </S.SearchBar>
     );
 }

@@ -1,10 +1,12 @@
-import { formatFHIRDateTime } from '@beda.software/fhir-react';
+import { formatFHIRDate, formatFHIRDateTime } from '@beda.software/fhir-react';
 
 import {
     ColumnFilterValue,
     isChoiceColumnFilterValue,
     isDateColumnFilterValue,
     isReferenceColumnFilterValue,
+    isSingleDateColumnFilterValue,
+    isSolidChoiceColumnFilterValue,
     isStringColumnFilterValue,
     SearchBarColumn,
 } from './types';
@@ -19,6 +21,10 @@ export function getSearchBarFilterValue(filterValues: ColumnFilterValue[] | unde
         throw new Error('Filter value not found');
     }
 
+    return getSearchBarColumnFilterValue(filterValue);
+}
+
+export function getSearchBarColumnFilterValue(filterValue: ColumnFilterValue) {
     if (isStringColumnFilterValue(filterValue)) {
         return filterValue.value;
     }
@@ -29,6 +35,10 @@ export function getSearchBarFilterValue(filterValues: ColumnFilterValue[] | unde
             : undefined;
     }
 
+    if (isSingleDateColumnFilterValue(filterValue)) {
+        return filterValue.value ? formatFHIRDate(filterValue.value) : undefined;
+    }
+
     if (isReferenceColumnFilterValue(filterValue)) {
         return filterValue.value?.value.Reference.id;
     }
@@ -37,5 +47,21 @@ export function getSearchBarFilterValue(filterValues: ColumnFilterValue[] | unde
         return filterValue.value?.map((option) => option.value.Coding.code!);
     }
 
+    if (isSolidChoiceColumnFilterValue(filterValue)) {
+        return filterValue.value?.map((option) => option.code!);
+    }
+
     throw new Error('Unsupported column type');
+}
+
+export function isSearchBarFilter(filter: ColumnFilterValue) {
+    const { placement = ['search-bar'] } = filter.column;
+
+    return placement.includes('search-bar');
+}
+
+export function isTableFilter(filter: ColumnFilterValue) {
+    const { placement = ['search-bar'] } = filter.column;
+
+    return placement.includes('table');
 }

@@ -7,7 +7,7 @@ import { usePagerExtended } from 'src/hooks/pager';
 
 export function useInvoicesList(practitionerId?: string, patientId?: string, status?: string) {
     const queryParameters = {
-        _sort: ['-_lastUpdated', '_id'],
+        _sort: '-_lastUpdated',
         status: status,
         subject: patientId,
         participant: practitionerId,

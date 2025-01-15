@@ -14,7 +14,7 @@ export function useQuestionnaireList(filterValues: ColumnFilterValue[]) {
     const questionnaireFilterValue = getSearchBarFilterValue(filterValues, 'questionnaire');
 
     const queryParameters = {
-        _sort: ['-_lastUpdated', '_id'],
+        _sort: '-_lastUpdated',
         name: questionnaireFilterValue,
     };
 

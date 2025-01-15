@@ -44,7 +44,7 @@ export function useEncounterList(
         'participant-display': practitionerFilterValue,
         'subject:Patient.id': patientFilterValue,
         date: dateFilterValue,
-        _sort: ['-_date', '_id'],
+        _sort: '-_date',
     };
 
     const { resourceResponse, pagerManager, handleTableChange, pagination } = usePagerExtended<

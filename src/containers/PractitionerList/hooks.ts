@@ -25,7 +25,7 @@ export function usePractitionersList(filterValues: ColumnFilterValue[] | undefin
     const practitionerFilterValue = getSearchBarFilterValue(filterValues, 'practitioner');
 
     const queryParameters = {
-        _sort: ['-_lastUpdated', '_id'],
+        _sort: '-_lastUpdated',
         name: practitionerFilterValue,
     };
 
