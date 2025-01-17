@@ -11,7 +11,7 @@ import {
 } from '../types';
 
 export function SearchBarColumn(props: SearchBarColumnProps) {
-    const { columnFilterValue } = props;
+    const { columnFilterValue, defaultOpen } = props;
 
     if (isStringColumnFilterValue(columnFilterValue)) {
         const stringProps = {
@@ -26,7 +26,7 @@ export function SearchBarColumn(props: SearchBarColumnProps) {
             ...props,
             columnFilterValue,
         };
-        return <DateColumn {...dateProps} />;
+        return <DateColumn {...dateProps} defaultOpen={defaultOpen} />;
     }
 
     if (isReferenceColumnFilterValue(columnFilterValue)) {
@@ -34,7 +34,7 @@ export function SearchBarColumn(props: SearchBarColumnProps) {
             ...props,
             columnFilterValue,
         };
-        return <ReferenceColumn {...referenceProps} />;
+        return <ReferenceColumn {...referenceProps} defaultOpen={defaultOpen} />;
     }
 
     if (isChoiceColumnFilterValue(columnFilterValue)) {
@@ -42,7 +42,7 @@ export function SearchBarColumn(props: SearchBarColumnProps) {
             ...props,
             columnFilterValue,
         };
-        return <ChoiceColumn {...choiceProps} />;
+        return <ChoiceColumn {...choiceProps} defaultOpen={defaultOpen} />;
     }
 
     return null;
