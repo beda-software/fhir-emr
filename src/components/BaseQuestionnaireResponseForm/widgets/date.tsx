@@ -1,20 +1,15 @@
 import { Form } from 'antd';
 import moment, { type Moment } from 'moment';
-import { useCallback, useContext, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 
-import {
-    FHIRTimeFormat,
-    formatFHIRDate,
-    formatFHIRDateTime,
-    formatFHIRTime,
-} from '@beda.software/fhir-react';
+import { FHIRTimeFormat, formatFHIRDate, formatFHIRDateTime, formatFHIRTime } from '@beda.software/fhir-react';
 
 import { DatePicker } from 'src/components/DatePicker';
 import { TimePicker } from 'src/components/TimePicker';
 
 import { useFieldController } from '../hooks';
-import { DateTimeFormatContext } from 'src/contexts/date-time-format';
+import { humanDate, humanDateTime, humanTime } from 'src/utils/date';
 
 export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, type, regex } = questionItem;
@@ -45,7 +40,6 @@ interface DateTimePickerWrapperProps {
 }
 
 function DateTimePickerWrapper(props: DateTimePickerWrapperProps) {
-    const { humanDate, humanTime, humanDateTime } = useContext(DateTimeFormatContext);
     const { value, onChange, type, disabled, placeholder, format } = props;
 
     const newValue = useMemo(() => {
