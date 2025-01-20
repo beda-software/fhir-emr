@@ -1,5 +1,8 @@
+import { Layout } from 'antd';
+import classNames from 'classnames';
 import { ReactNode } from 'react';
 
+import s from './BaseLayout.module.scss';
 import { S } from './BaseLayout.styles';
 import { AppFooter } from './Footer';
 import { AppSidebar } from './Sidebar';
@@ -8,58 +11,53 @@ import { AppTabBar } from './TabBar';
 interface Props {
     children: ReactNode;
     style?: React.CSSProperties;
-    className?: string | undefined;
 }
 
-export function BaseLayout({ children, style, className }: Props) {
+export function BaseLayout({ children, style }: Props) {
     return (
-        <S.Container style={style} className={className}>
+        <S.Container style={style}>
             <AppSidebar />
             <AppTabBar />
-            <S.Layout>
+            <Layout className={s.content}>
                 {children}
                 <AppFooter />
-            </S.Layout>
+            </Layout>
         </S.Container>
     );
 }
 
-export function AnonymousLayout({ children, style, className }: Props) {
+export function AnonymousLayout({ children, style }: Props) {
     return (
-        <S.Container style={style} className={className}>
+        <S.Container style={style}>
             <AppSidebar />
-            <S.Layout>
+            <Layout className={s.content}>
                 {children}
                 <AppFooter />
-            </S.Layout>
+            </Layout>
         </S.Container>
     );
 }
 
-export type BasePageHeaderProps = React.HTMLAttributes<HTMLDivElement> & {
-    maxWidth?: number | string;
-};
-
-export function BasePageHeader(props: BasePageHeaderProps) {
-    const { maxWidth, ...rest } = props;
+export function BasePageHeader(props: React.HTMLAttributes<HTMLDivElement>) {
+    const { className, ...rest } = props;
+    console.warn('DEPRECATED: Do not use BasePageHeader component. It will be removed in future versions of EMR.');
+    console.warn('Use PageContainer or PageContainerHeader instead.');
 
     return (
-        <S.PageHeaderContainer>
-            <S.PageHeader {...rest} $maxWidth={maxWidth} />
-        </S.PageHeaderContainer>
+        <S.PageWrapper>
+            <div className={classNames(s.pageHeader, className)} {...rest} />
+        </S.PageWrapper>
     );
 }
 
-export type BasePageContentProps = React.HTMLAttributes<HTMLDivElement> & {
-    maxWidth?: number | string;
-};
-
-export function BasePageContent(props: BasePageContentProps) {
-    const { maxWidth, ...rest } = props;
+export function BasePageContent(props: React.HTMLAttributes<HTMLDivElement>) {
+    const { className, ...rest } = props;
+    console.warn('DEPRECATED: Do not use BasePageContent component. It will be removed in future versions of EMR.');
+    console.warn('Use PageContainer or PageContainerContent instead.');
 
     return (
-        <S.PageContentContainer>
-            <S.PageContent {...rest} $maxWidth={maxWidth} />
-        </S.PageContentContainer>
+        <div className={s.pageContentWrapper}>
+            <div className={classNames(s.pageContent, className)} {...rest} />
+        </div>
     );
 }

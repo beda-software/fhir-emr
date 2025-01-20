@@ -1,11 +1,13 @@
 import styled, { css } from 'styled-components';
 
-import { BasePageContent, BasePageHeader } from '..';
 import { Title } from 'src/components/Typography';
 import { mobileWidth } from 'src/theme/utils';
 
+import { PageContainerContent } from './PageContainerContent';
+import { PageContainerHeader } from './PageContainerHeader';
+
 export const S = {
-    HeaderContainer: styled(BasePageHeader)<{ $variant?: 'default' | 'with-table' | 'with-tabs' }>`
+    HeaderContainer: styled(PageContainerHeader)<{ $variant?: 'default' | 'with-table' | 'with-tabs' }>`
         display: flex;
         flex-direction: column;
 
@@ -46,7 +48,7 @@ export const S = {
         align-items: center;
         gap: 0 40px;
     `,
-    ContentContainer: styled(BasePageContent)<{ $variant?: 'default' | 'with-table' | 'with-tabs' }>`
+    ContentContainer: styled(PageContainerContent)<{ $variant?: 'default' | 'with-table' | 'with-tabs' }>`
         ${({ $variant }) =>
             $variant === 'with-table' &&
             css`
