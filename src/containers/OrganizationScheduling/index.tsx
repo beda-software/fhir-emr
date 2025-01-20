@@ -67,29 +67,25 @@ export function OrganizationScheduling() {
     return (
         <PageContainer
             title={<Trans>Scheduling</Trans>}
-            header={{
-                children: (
-                    <SearchBarStyles.SearchBar>
-                        <SearchBarStyles.LeftColumn>
-                            <HealthcareServicePractitionerSelect
-                                selectedHealthcareService={selectedHealthcareService}
-                                selectedPractitionerRole={selectedPractitionerRole}
-                                loadHealthcareServiceOptions={healthcareServiceOptions}
-                                loadPractitionerRoleOptions={practitionerRoleOptions}
-                                onChangeHealthcareService={(selectedOption) =>
-                                    onChange(selectedOption, 'healthcareService')
-                                }
-                                onChangePractitionerRole={(selectedOption) =>
-                                    onChange(selectedOption, 'practitionerRole')
-                                }
-                            />
-                        </SearchBarStyles.LeftColumn>
-                        <Button onClick={resetFilter}>
-                            <Trans>Reset</Trans>
-                        </Button>
-                    </SearchBarStyles.SearchBar>
-                ),
-            }}
+            headerContent={
+                <SearchBarStyles.SearchBar>
+                    <SearchBarStyles.LeftColumn>
+                        <HealthcareServicePractitionerSelect
+                            selectedHealthcareService={selectedHealthcareService}
+                            selectedPractitionerRole={selectedPractitionerRole}
+                            loadHealthcareServiceOptions={healthcareServiceOptions}
+                            loadPractitionerRoleOptions={practitionerRoleOptions}
+                            onChangeHealthcareService={(selectedOption) =>
+                                onChange(selectedOption, 'healthcareService')
+                            }
+                            onChangePractitionerRole={(selectedOption) => onChange(selectedOption, 'practitionerRole')}
+                        />
+                    </SearchBarStyles.LeftColumn>
+                    <Button onClick={resetFilter}>
+                        <Trans>Reset</Trans>
+                    </Button>
+                </SearchBarStyles.SearchBar>
+            }
         >
             <RenderRemoteData remoteData={remoteResponses}>
                 {({ slots, businessHours, allPractitionersAndPractitionerRoles, healthcareServices }) => (

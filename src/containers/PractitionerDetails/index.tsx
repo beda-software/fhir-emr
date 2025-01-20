@@ -42,16 +42,11 @@ export const PractitionerDetails = () => {
             {({ practitioner, practitionerRole, healthcareServices }) => {
                 return (
                     <PageContainer
-                        variant="with-tabs"
+                        layoutVariant="with-tabs"
                         title={renderHumanName(practitioner.name?.[0])}
-                        header={{
-                            children: (
-                                <PractitionerDetailsTabs
-                                    practitioner={practitioner}
-                                    practitionerRole={practitionerRole}
-                                />
-                            ),
-                        }}
+                        headerContent={
+                            <PractitionerDetailsTabs practitioner={practitioner} practitionerRole={practitionerRole} />
+                        }
                     >
                         <Routes>
                             <Route

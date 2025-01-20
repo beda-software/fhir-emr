@@ -41,7 +41,7 @@ export function PublicAppointment() {
     }, [isAnonymousUser]);
 
     return (
-        <PageContainer title={<Trans>Appointment booking</Trans>} content={{ style: { alignItems: 'center' } }}>
+        <PageContainer title={<Trans>Appointment booking</Trans>}>
             <S.Content>
                 {isLoading ? (
                     <Spinner />

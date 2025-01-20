@@ -46,23 +46,21 @@ export function Prescriptions() {
     return (
         <PageContainer
             title={t`Prescriptions`}
-            variant="with-table"
-            header={{
-                children: (
-                    <PrescriptionsSearchBar
-                        selectedPatient={selectedPatient}
-                        selectedPractitionerRole={selectedPractitionerRole}
-                        selectedStatus={selectedStatus}
-                        loadPatientOptions={patientOptions}
-                        loadPractitionerRoleOptions={practitionerRoleOptions}
-                        loadStatusOptions={statusOptions}
-                        onChangePatient={(selectedOption) => onChange(selectedOption, 'patient')}
-                        onChangePractitionerRole={(selectedOption) => onChange(selectedOption, 'practitionerRole')}
-                        onChangeStatus={(selectedOption) => onChange(selectedOption, 'status')}
-                        reset={resetFilter}
-                    />
-                ),
-            }}
+            layoutVariant="with-table"
+            headerContent={
+                <PrescriptionsSearchBar
+                    selectedPatient={selectedPatient}
+                    selectedPractitionerRole={selectedPractitionerRole}
+                    selectedStatus={selectedStatus}
+                    loadPatientOptions={patientOptions}
+                    loadPractitionerRoleOptions={practitionerRoleOptions}
+                    loadStatusOptions={statusOptions}
+                    onChangePatient={(selectedOption) => onChange(selectedOption, 'patient')}
+                    onChangePractitionerRole={(selectedOption) => onChange(selectedOption, 'practitionerRole')}
+                    onChangeStatus={(selectedOption) => onChange(selectedOption, 'status')}
+                    reset={resetFilter}
+                />
+            }
         >
             <RenderRemoteData remoteData={medicationRequestResponse} renderLoading={Spinner}>
                 {({ patients, organizations, practitioners, medications, medicationRequests }) => {

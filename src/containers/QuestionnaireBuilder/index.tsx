@@ -41,7 +41,7 @@ export function QuestionnaireBuilder() {
     return (
         <PageContainer
             title={<Trans>Build your form</Trans>}
-            headerRightColumn={
+            titleRightElement={
                 <RenderRemoteData remoteData={response}>
                     {(questionnaire: Questionnaire) => {
                         return questionnaire.item ? (
@@ -65,9 +65,6 @@ export function QuestionnaireBuilder() {
                     }}
                 </RenderRemoteData>
             }
-            content={{
-                className: s.container,
-            }}
         >
             <S.Content>
                 <div className={s.rightColumn}>

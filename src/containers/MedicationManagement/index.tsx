@@ -27,18 +27,16 @@ export function MedicationManagement() {
     return (
         <PageContainer
             title={t`Medications`}
-            variant="with-table"
-            headerRightColumn={<ModalNewMedicationKnowledge onCreate={pagerManager.reload} />}
-            header={{
-                children: (
-                    <MedicationsSearchBar
-                        selectedMedication={selectedMedication}
-                        loadMedicationOptions={medicationOptions}
-                        onChangeMedication={(selectedOption) => onChange(selectedOption, 'medication')}
-                        reset={resetFilter}
-                    />
-                ),
-            }}
+            layoutVariant="with-table"
+            titleRightElement={<ModalNewMedicationKnowledge onCreate={pagerManager.reload} />}
+            headerContent={
+                <MedicationsSearchBar
+                    selectedMedication={selectedMedication}
+                    loadMedicationOptions={medicationOptions}
+                    onChangeMedication={(selectedOption) => onChange(selectedOption, 'medication')}
+                    reset={resetFilter}
+                />
+            }
         >
             <Table
                 pagination={pagination}

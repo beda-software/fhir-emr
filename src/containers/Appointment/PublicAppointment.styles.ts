@@ -7,5 +7,6 @@ export const S = {
         border: 1px solid ${({ theme }) => theme.antdTheme?.colorBorderSecondary};
         padding: 32px;
         border-radius: 10px;
+        margin: 0 auto;
     `,
 };

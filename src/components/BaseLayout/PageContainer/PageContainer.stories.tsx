@@ -138,24 +138,22 @@ type Story = StoryObj<PageContainerProps>;
 export const Default: Story = {
     args: {
         title: 'Madison Cooper',
-        headerRightColumn: rightColumn1,
+        titleRightElement: rightColumn1,
     },
 };
 
 export const WithTable: Story = {
     args: {
-        variant: 'with-table',
+        layoutVariant: 'with-table',
         children: table,
-        headerRightColumn: rightColumn2,
+        titleRightElement: rightColumn2,
     },
 };
 
 export const WithTabs: Story = {
     args: {
-        variant: 'with-tabs',
-        header: {
-            children: tabs,
-        },
+        layoutVariant: 'with-tabs',
+        headerContent: tabs,
     },
 };
 

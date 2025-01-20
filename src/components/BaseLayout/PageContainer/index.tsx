@@ -1,47 +1,77 @@
 import { S } from './styles';
-import { BasePageContentProps, BasePageHeaderProps } from '..';
 
 export interface PageContainerProps {
-    variant?: 'default' | 'with-table' | 'with-tabs';
-    maxWidth?: number | string;
-    title?: React.ReactNode;
-    headerLeftColumn?: React.ReactNode;
-    headerRightColumn?: React.ReactNode;
-    children?: React.ReactNode;
+    /**
+     * The layout variant for the page.
+     * Options: 'default', 'with-table', 'with-tabs'.
+     */
+    layoutVariant?: 'default' | 'with-table' | 'with-tabs';
 
-    header?: BasePageHeaderProps;
-    content?: BasePageContentProps;
+    /**
+     * Maximum width of the page header and content area.
+     * Accepts a number (in pixels) or a string (e.g., "100%").
+     */
+    maxWidth?: number | string;
+
+    /**
+     * The main title of the page.
+     * Can be a string or any ReactNode for custom rendering.
+     */
+    title?: React.ReactNode;
+
+    /**
+     * Content displayed to the left of the title.
+     * Example: a back button.
+     */
+    titleLeftElement?: React.ReactNode;
+
+    /**
+     * Content displayed to the right of the title row.
+     * Example: an action button or user details.
+     */
+    titleRightElement?: React.ReactNode;
+
+    /**
+     * Additional content displayed below the title in the header.
+     * Example: a search bar or tabs.
+     */
+    headerContent?: React.ReactNode;
+
+    /**
+     * The main content of the page.
+     * Typically includes the primary content to render below the header.
+     */
+    children?: React.ReactNode;
 }
 
 export function PageContainer(props: PageContainerProps = {}) {
     const {
-        variant = 'default',
+        layoutVariant = 'default',
         title,
-        header,
-        content,
+        headerContent,
         children,
         maxWidth,
-        headerLeftColumn,
-        headerRightColumn,
+        titleLeftElement,
+        titleRightElement,
     } = props;
 
     return (
         <>
-            <S.HeaderContainer maxWidth={maxWidth} $variant={variant} {...header}>
+            <S.HeaderContainer maxWidth={maxWidth} $variant={layoutVariant}>
                 <S.Header>
                     <S.HeaderLeftColumn>
-                        {headerLeftColumn ? (
-                            headerLeftColumn
+                        {titleLeftElement ? (
+                            titleLeftElement
                         ) : (
                             <>{title && <PageContainerTitle>{title}</PageContainerTitle>}</>
                         )}
                     </S.HeaderLeftColumn>
-                    {headerRightColumn && <S.HeaderRightColumn>{headerRightColumn}</S.HeaderRightColumn>}
+                    {titleRightElement && <S.HeaderRightColumn>{titleRightElement}</S.HeaderRightColumn>}
                 </S.Header>
-                {header?.children}
+                {headerContent}
             </S.HeaderContainer>
-            <S.ContentContainer $variant={variant} maxWidth={maxWidth} {...content}>
-                {content?.children ?? children}
+            <S.ContentContainer $variant={layoutVariant} maxWidth={maxWidth}>
+                {children}
             </S.ContentContainer>
         </>
     );

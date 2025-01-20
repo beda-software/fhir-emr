@@ -162,7 +162,7 @@ export function ResourceListPage<R extends Resource>({
         <PageContainer
             title={title}
             maxWidth={maxWidth}
-            headerRightColumn={headerActions.map((action, index) => (
+            titleRightElement={headerActions.map((action, index) => (
                 <React.Fragment key={index}>
                     <HeaderQuestionnaireAction
                         action={action}
@@ -171,15 +171,15 @@ export function ResourceListPage<R extends Resource>({
                     />
                 </React.Fragment>
             ))}
-            header={{
-                children: columnsFilterValues.length ? (
+            headerContent={
+                columnsFilterValues.length ? (
                     <SearchBar
                         columnsFilterValues={columnsFilterValues}
                         onChangeColumnFilter={onChangeColumnFilter}
                         onResetFilters={onResetFilters}
                     />
-                ) : null,
-            }}
+                ) : null
+            }
         >
             {getReportColumns ? (
                 <ResourcesListPageReport recordResponse={recordResponse} getReportColumns={getReportColumns} />

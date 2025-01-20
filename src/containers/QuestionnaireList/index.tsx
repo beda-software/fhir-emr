@@ -72,9 +72,9 @@ export function QuestionnaireList() {
 
     return (
         <PageContainer
-            variant="with-table"
+            layoutVariant="with-table"
             title={<Trans>Questionnaires</Trans>}
-            headerRightColumn={
+            titleRightElement={
                 <Link to="/questionnaires/builder">
                     <Button icon={<PlusOutlined />} type="primary">
                         <span>
@@ -83,15 +83,13 @@ export function QuestionnaireList() {
                     </Button>
                 </Link>
             }
-            header={{
-                children: (
-                    <SearchBar
-                        columnsFilterValues={columnsFilterValues}
-                        onChangeColumnFilter={onChangeColumnFilter}
-                        onResetFilters={onResetFilters}
-                    />
-                ),
-            }}
+            headerContent={
+                <SearchBar
+                    columnsFilterValues={columnsFilterValues}
+                    onChangeColumnFilter={onChangeColumnFilter}
+                    onResetFilters={onResetFilters}
+                />
+            }
         >
             <Table<Questionnaire>
                 pagination={pagination}

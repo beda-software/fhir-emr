@@ -37,6 +37,7 @@ export interface PatientDetailsProps {
 
 export const PatientDetails = (props: PatientDetailsProps) => {
     const params = useParams<{ id: string }>();
+    const { isDefaultRoutesDisabled } = props;
 
     const [patientResponse, manager] = usePatientResource({ id: params.id! });
     const author = selectCurrentUserRoleResource();
@@ -53,10 +54,13 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                     <PatientReloadProvider reload={manager.softReloadAsync}>
                         <PageContainer
                             title={renderHumanName(patient.name?.[0])}
-                            variant="with-tabs"
-                            header={{
-                                children: <PatientDetailsTabs />,
-                            }}
+                            layoutVariant="with-tabs"
+                            headerContent={
+                                <PatientDetailsTabs
+                                    extraMenuItems={embeddedPages}
+                                    isDefaultRoutesDisabled={isDefaultRoutesDisabled}
+                                />
+                            }
                         >
                             <Routes>
                                 <Route

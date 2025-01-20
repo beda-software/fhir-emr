@@ -23,13 +23,11 @@ export function InvoiceDetails() {
         <RenderRemoteData remoteData={invoiceDetailsResponse} renderLoading={Spinner}>
             {({ invoice, patient, practitioner }) => (
                 <PageContainer
-                    variant="with-tabs"
+                    layoutVariant="with-tabs"
                     title={<Trans>Medical Services Invoice</Trans>}
-                    header={{
-                        children: (
-                            <InvoiceDetailsHeader invoice={invoice} patient={patient} practitioner={practitioner} />
-                        ),
-                    }}
+                    headerContent={
+                        <InvoiceDetailsHeader invoice={invoice} patient={patient} practitioner={practitioner} />
+                    }
                 >
                     <Routes>
                         <Route

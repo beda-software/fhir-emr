@@ -43,23 +43,21 @@ export function InvoiceList() {
     return (
         <PageContainer
             title={t`Invoices`}
-            variant="with-table"
-            header={{
-                children: (
-                    <InvoiceListSearchBar
-                        selectedPatient={selectedPatient}
-                        selectedPractitionerRole={selectedPractitionerRole}
-                        selectedStatus={selectedStatus}
-                        loadPatientOptions={patientOptions}
-                        loadPractitionerRoleOptions={practitionerRoleOptions}
-                        loadStatusOptions={statusOptions}
-                        onChangePatient={(selectedOption) => onChange(selectedOption, 'patient')}
-                        onChangePractitionerRole={(selectedOption) => onChange(selectedOption, 'practitionerRole')}
-                        onChangeStatus={(selectedOption) => onChange(selectedOption, 'status')}
-                        reset={resetFilter}
-                    />
-                ),
-            }}
+            layoutVariant="with-table"
+            headerContent={
+                <InvoiceListSearchBar
+                    selectedPatient={selectedPatient}
+                    selectedPractitionerRole={selectedPractitionerRole}
+                    selectedStatus={selectedStatus}
+                    loadPatientOptions={patientOptions}
+                    loadPractitionerRoleOptions={practitionerRoleOptions}
+                    loadStatusOptions={statusOptions}
+                    onChangePatient={(selectedOption) => onChange(selectedOption, 'patient')}
+                    onChangePractitionerRole={(selectedOption) => onChange(selectedOption, 'practitionerRole')}
+                    onChangeStatus={(selectedOption) => onChange(selectedOption, 'status')}
+                    reset={resetFilter}
+                />
+            }
         >
             <RenderRemoteData remoteData={invoiceResponse} renderLoading={Spinner}>
                 {({ invoices, practitioners, practitionerRoles, patients }) => (

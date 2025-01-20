@@ -25,18 +25,16 @@ export function HealthcareServiceList() {
 
     return (
         <PageContainer
-            variant="with-table"
+            layoutVariant="with-table"
             title={<Trans>Healthcare Services</Trans>}
-            headerRightColumn={<ModalNewHealthcareService onCreate={pagerManager.reload} />}
-            header={{
-                children: (
-                    <SearchBar
-                        columnsFilterValues={columnsFilterValues}
-                        onChangeColumnFilter={onChangeColumnFilter}
-                        onResetFilters={onResetFilters}
-                    />
-                ),
-            }}
+            titleRightElement={<ModalNewHealthcareService onCreate={pagerManager.reload} />}
+            headerContent={
+                <SearchBar
+                    columnsFilterValues={columnsFilterValues}
+                    onChangeColumnFilter={onChangeColumnFilter}
+                    onResetFilters={onResetFilters}
+                />
+            }
         >
             <Table
                 pagination={pagination}

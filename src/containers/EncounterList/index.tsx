@@ -97,17 +97,15 @@ export function EncounterList() {
 
     return (
         <PageContainer
-            variant="with-table"
+            layoutVariant="with-table"
             title={<Trans>Encounters</Trans>}
-            header={{
-                children: (
-                    <SearchBar
-                        columnsFilterValues={columnsFilterValues}
-                        onChangeColumnFilter={onChangeColumnFilter}
-                        onResetFilters={onResetFilters}
-                    />
-                ),
-            }}
+            headerContent={
+                <SearchBar
+                    columnsFilterValues={columnsFilterValues}
+                    onChangeColumnFilter={onChangeColumnFilter}
+                    onResetFilters={onResetFilters}
+                />
+            }
         >
             <EncountersTable
                 columns={columns}

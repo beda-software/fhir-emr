@@ -69,9 +69,9 @@ export function PractitionerList(props: PractitionerListProps) {
 
     return (
         <PageContainer
-            variant="with-table"
+            layoutVariant="with-table"
             title={<Trans>Practitioners</Trans>}
-            headerRightColumn={
+            titleRightElement={
                 <PractitionerListActions
                     onSuccess={() => {
                         practitionerListReload();
@@ -81,15 +81,13 @@ export function PractitionerList(props: PractitionerListProps) {
                     }}
                 />
             }
-            header={{
-                children: (
-                    <SearchBar
-                        columnsFilterValues={columnsFilterValues}
-                        onChangeColumnFilter={onChangeColumnFilter}
-                        onResetFilters={onResetFilters}
-                    />
-                ),
-            }}
+            headerContent={
+                <SearchBar
+                    columnsFilterValues={columnsFilterValues}
+                    onChangeColumnFilter={onChangeColumnFilter}
+                    onResetFilters={onResetFilters}
+                />
+            }
         >
             <Table
                 pagination={pagination}

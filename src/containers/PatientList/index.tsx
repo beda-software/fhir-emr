@@ -51,18 +51,16 @@ export function PatientList() {
 
     return (
         <PageContainer
-            variant="with-table"
+            layoutVariant="with-table"
             title={<Trans>Patients</Trans>}
-            headerRightColumn={<ModalNewPatient onCreate={pagerManager.reload} />}
-            header={{
-                children: (
-                    <SearchBar
-                        columnsFilterValues={columnsFilterValues}
-                        onChangeColumnFilter={onChangeColumnFilter}
-                        onResetFilters={onResetFilters}
-                    />
-                ),
-            }}
+            titleRightElement={<ModalNewPatient onCreate={pagerManager.reload} />}
+            headerContent={
+                <SearchBar
+                    columnsFilterValues={columnsFilterValues}
+                    onChangeColumnFilter={onChangeColumnFilter}
+                    onResetFilters={onResetFilters}
+                />
+            }
         >
             <Table<Patient>
                 pagination={pagination}
