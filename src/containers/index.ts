@@ -21,3 +21,5 @@ export * from './SetPassword';
 export * from './SignIn';
 export * from './VideoCall';
 export * from './AidboxFormsBuilder';
+export * from './PatientDetails/PatientHeader';
+export * from './PractitionerDetails/PractitionerHeader';

@@ -14,6 +14,7 @@ import { matchCurrentUserRole, Role } from 'src/utils/role';
 
 import { BreadCrumb, PatientHeaderContext } from './context';
 import s from './PatientHeader.module.scss';
+export { usePatientHeaderLocationTitle } from './hooks';
 
 /**
  * @deprecated
