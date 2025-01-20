@@ -8,6 +8,7 @@ import { RemoteData, isSuccess, notAsked } from '@beda.software/remote-data';
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { AnxietyScore, DepressionScore } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/score';
 import { Spinner } from 'src/components/Spinner';
+import { QuestionnaireResponseFormSaveResponse } from 'src/hooks';
 
 import s from './PatientDocument.module.scss';
 import { S } from './PatientDocument.styles';
@@ -21,7 +22,7 @@ export interface PatientDocumentProps {
     launchContextParameters?: ParametersParameter[];
     questionnaireId?: string;
     encounterId?: string;
-    onSuccess?: () => void;
+    onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
 }
 
 export function PatientDocument(props: PatientDocumentProps) {

@@ -17,7 +17,6 @@ import { ValueSetExpandProvider } from './contexts';
 import { expandEMRValueSet } from './services';
 import * as serviceWorker from './serviceWorker';
 import { ThemeProvider } from './theme/ThemeProvider';
-import { DateTimeFormatContext, defaultDateTimeFormats } from './contexts/date-time-format';
 
 const AppWithContext = () => {
     useEffect(() => {
@@ -26,15 +25,13 @@ const AppWithContext = () => {
 
     return (
         <I18nProvider i18n={i18n}>
-            <DateTimeFormatContext.Provider value={defaultDateTimeFormats}>
-                <PatientDashboardProvider dashboard={dashboard}>
-                    <ValueSetExpandProvider.Provider value={expandEMRValueSet}>
-                        <ThemeProvider>
-                            <App />
-                        </ThemeProvider>
-                    </ValueSetExpandProvider.Provider>
-                </PatientDashboardProvider>
-            </DateTimeFormatContext.Provider>
+            <PatientDashboardProvider dashboard={dashboard}>
+                <ValueSetExpandProvider.Provider value={expandEMRValueSet}>
+                    <ThemeProvider>
+                        <App />
+                    </ThemeProvider>
+                </ValueSetExpandProvider.Provider>
+            </PatientDashboardProvider>
         </I18nProvider>
     );
 };

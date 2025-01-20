@@ -2,7 +2,7 @@ import { QuestionnaireItem, QuestionnaireResponse } from 'fhir/r4b';
 
 import { compileAsFirst } from 'src/utils';
 
-const qItemIsHidden = compileAsFirst<QuestionnaireItem, boolean>(
+export const qItemIsHidden = compileAsFirst<QuestionnaireItem, boolean>(
     "extension.where(url='http://hl7.org/fhir/StructureDefinition/questionnaire-hidden').exists() and extension.where(url='http://hl7.org/fhir/StructureDefinition/questionnaire-hidden').valueBoolean=true",
 );
 
@@ -33,10 +33,6 @@ export function getQuestionnaireItemValue(
     questionnaireItem: QuestionnaireItem,
     questionnaireResponse: QuestionnaireResponse,
 ) {
-    if (qItemIsHidden(questionnaireItem)) {
-        return undefined;
-    }
-
     return getQrItemValueByLinkIdAndType(
         questionnaireItem.linkId,
         questionnaireItemValueTypeMap[questionnaireItem.type],

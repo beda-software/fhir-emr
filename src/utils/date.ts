@@ -3,10 +3,32 @@ import _ from 'lodash';
 
 import { parseFHIRDate, parseFHIRDateTime } from '@beda.software/fhir-react';
 
-export const humanDate = 'DD MMM YYYY';
-export const humanDateYearMonth = 'MMM YYYY';
-export const humanTime = 'HH:mm';
-export const humanDateTime = 'DD MMM YYYY HH:mm';
+export let humanDate = 'DD MMM YYYY';
+export let humanDateYearMonth = 'MMM YYYY';
+export let humanTime = 'HH:mm';
+export let humanDateTime = 'DD MMM YYYY HH:mm';
+
+export type DateTimeFormat = {
+    humanDate: string;
+    humanDateYearMonth: string;
+    humanTime: string;
+    humanDateTime: string;
+};
+
+export const setDateTimeFormats = (formats: Partial<DateTimeFormat>) => {
+    if (formats.humanDate) {
+        humanDate = formats.humanDate;
+    }
+    if (formats.humanDateYearMonth) {
+        humanDateYearMonth = formats.humanDateYearMonth;
+    }
+    if (formats.humanTime) {
+        humanTime = formats.humanTime;
+    }
+    if (formats.humanDateTime) {
+        humanDateTime = formats.humanDateTime;
+    }
+};
 
 export const formatHumanDateTime = (date?: string) => {
     if (!date) {
