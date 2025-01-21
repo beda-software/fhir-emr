@@ -32,7 +32,7 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
 
     const value = _.get(getValues(), fieldName);
 
-    const items = value.items && value.items.length ? value.items : required ? [{}] : [];
+    const items = value?.items && value.items.length ? value.items : required ? [{}] : [];
     const buildValue = props.buildValue ?? defaultBuildValue;
 
     return (
