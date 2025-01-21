@@ -82,8 +82,11 @@ export function DetailPage<R extends Resource>({
                     resource = defaultExtractPrimaryResource(bundle, { resourceType });
                 }
                 return (
-                    <PageContainer title={getTitle(resource!)}>
-                        <PageTabs tabs={tabs} basePath={basePath} />
+                    <PageContainer
+                        title={getTitle(resource!)}
+                        layoutVariant="with-tabs"
+                        headerContent={<PageTabs tabs={tabs} basePath={basePath} />}
+                    >
                         <Routes>
                             {tabs.map(({ path, component }) => (
                                 <Route path={'/' + path} element={component(resource!)} key={path} />
