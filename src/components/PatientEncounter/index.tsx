@@ -1,4 +1,4 @@
-import { t, Trans } from '@lingui/macro';
+import { Trans } from '@lingui/macro';
 import { Col, Row } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { Patient } from 'fhir/r4b';
@@ -11,7 +11,6 @@ import { EncounterData } from 'src/components/EncountersTable/types';
 import { StatusBadge } from 'src/components/EncounterStatusBadge';
 import { ModalNewEncounter } from 'src/components/ModalNewEncounter';
 import { useEncounterList } from 'src/containers/EncounterList/hooks';
-import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
 import { formatPeriodDateTime } from 'src/utils/date';
 import { renderHumanName } from 'src/utils/fhir';
 
@@ -75,8 +74,6 @@ export const PatientEncounter = ({ patient, searchParams, hideCreateButton }: Pr
         },
         ...searchParams,
     });
-
-    usePatientHeaderLocationTitle({ title: t`Encounters` });
 
     return (
         <>

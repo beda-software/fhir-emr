@@ -25,6 +25,9 @@ interface Props {
     practitionerRole?: WithId<PractitionerRole>;
 }
 
+/**
+ * @deprecated
+ */
 function usePractitionerHeader(props: Props) {
     const { practitioner } = props;
     const pageTitle = useMemo(() => renderHumanName(practitioner.name?.[0]), [practitioner]);
@@ -59,7 +62,13 @@ function usePractitionerHeader(props: Props) {
     return { pageTitle, breadcrumbs };
 }
 
+/**
+ * @deprecated
+ */
 export function PractitionerHeader(props: Props) {
+    console.warn('DEPRECATED: Do not use PractitionerHeader component. It will be removed in future versions of the EMR.');
+    console.warn('Use PractitionerDetailsTabs instead.');
+
     const { practitionerRole } = props;
     const location = useLocation();
     const params = useParams<{ id: string }>();

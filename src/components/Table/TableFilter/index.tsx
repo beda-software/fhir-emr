@@ -1,4 +1,4 @@
-import { ColumnFilterValue, isStringColumn } from 'src/components/SearchBar/types';
+import { ColumnFilterValue, isSingleDateColumn, isStringColumn } from 'src/components/SearchBar/types';
 import { SearchBarColumn } from 'src/components/SearchBar/SearchBarColumn';
 import { S } from './styles';
 import { FilterDropdownProps } from 'antd/lib/table/interface';
@@ -25,15 +25,15 @@ export function TableFilter(props: TableFilterProps) {
         close();
     };
 
-    // if (isSingleDateColumn(filter.column)) {
-    //     return (
-    //         <S.Container>
-    //             <S.DatePickerFilter>
-    //                 <SearchBarColumn columnFilterValue={filter} onChange={onChange} defaultOpen={visible} />
-    //             </S.DatePickerFilter>
-    //         </S.Container>
-    //     );
-    // }
+    if (isSingleDateColumn(filter.column)) {
+        return (
+            <S.Container>
+                <S.DatePickerFilter>
+                    <SearchBarColumn columnFilterValue={filter} onChange={onChange} defaultOpen={visible} />
+                </S.DatePickerFilter>
+            </S.Container>
+        );
+    }
 
     return (
         <S.Container>

@@ -76,6 +76,13 @@ export function PatientResourceListExample() {
                     placement: ['search-bar', 'table'],
                 },
                 {
+                    id: 'birthDate',
+                    searchParam: 'birthdate',
+                    type: SearchBarColumnType.SINGLEDATE,
+                    placeholder: t`Birth date`,
+                    placement: ['table'],
+                },
+                {
                     id: 'gender',
                     searchParam: 'gender',
                     type: SearchBarColumnType.CHOICE,

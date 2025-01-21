@@ -1,10 +1,11 @@
 import { Trans, t } from '@lingui/macro';
-import { Empty, Table } from 'antd';
+import { Empty } from 'antd';
 
 import { RenderRemoteData } from '@beda.software/fhir-react';
 import { isLoading } from '@beda.software/remote-data';
 
-import { PageContainer } from 'src/components/PageContainer';
+import { Table } from 'src/components';
+import { PageContainer } from 'src/components/BaseLayout/PageContainer';
 import { SpinIndicator, Spinner } from 'src/components/Spinner';
 import { Role, matchCurrentUserRole, selectCurrentUserRoleResource } from 'src/utils/role';
 
@@ -42,6 +43,7 @@ export function InvoiceList() {
     return (
         <PageContainer
             title={t`Invoices`}
+            layoutVariant="with-table"
             headerContent={
                 <InvoiceListSearchBar
                     selectedPatient={selectedPatient}
@@ -56,31 +58,27 @@ export function InvoiceList() {
                     reset={resetFilter}
                 />
             }
-            content={
-                <RenderRemoteData remoteData={invoiceResponse} renderLoading={Spinner}>
-                    {({ invoices, practitioners, practitionerRoles, patients }) => (
-                        <Table
-                            pagination={pagination}
-                            onChange={handleTableChange}
-                            bordered
-                            locale={{
-                                emptyText: (
-                                    <>
-                                        <Empty
-                                            description={<Trans>No data</Trans>}
-                                            image={Empty.PRESENTED_IMAGE_SIMPLE}
-                                        />
-                                    </>
-                                ),
-                            }}
-                            dataSource={invoices}
-                            columns={getInvoiceTableColumns(practitioners, practitionerRoles, patients, pagerManager)}
-                            loading={isLoading(invoiceResponse) && { indicator: SpinIndicator }}
-                            scroll={{ x: 'max-content' }}
-                        />
-                    )}
-                </RenderRemoteData>
-            }
-        />
+        >
+            <RenderRemoteData remoteData={invoiceResponse} renderLoading={Spinner}>
+                {({ invoices, practitioners, practitionerRoles, patients }) => (
+                    <Table
+                        pagination={pagination}
+                        onChange={handleTableChange}
+                        bordered
+                        locale={{
+                            emptyText: (
+                                <>
+                                    <Empty description={<Trans>No data</Trans>} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                                </>
+                            ),
+                        }}
+                        dataSource={invoices}
+                        columns={getInvoiceTableColumns(practitioners, practitionerRoles, patients, pagerManager)}
+                        loading={isLoading(invoiceResponse) && { indicator: SpinIndicator }}
+                        scroll={{ x: 'max-content' }}
+                    />
+                )}
+            </RenderRemoteData>
+        </PageContainer>
     );
 }

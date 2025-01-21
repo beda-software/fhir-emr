@@ -1,5 +1,7 @@
 import { Trans } from '@lingui/macro';
-import { BasePageContent, BasePageHeader, Title, Text } from 'src/components';
+import { Title, Text } from 'src/components';
+import { PageContainerContent } from 'src/components/BaseLayout/PageContainer/PageContainerContent';
+import { PageContainerHeader } from 'src/components/BaseLayout/PageContainer/PageContainerHeader';
 import { sharedAuthorizedUser } from 'src/sharedState';
 
 export function DefaultUserWithNoRoles() {
@@ -8,12 +10,12 @@ export function DefaultUserWithNoRoles() {
 
     return (
         <>
-            <BasePageHeader>
+            <PageContainerHeader>
                 <Title style={{ marginBottom: 0 }}>
                     <Trans>User with no roles in the system</Trans>
                 </Title>
-            </BasePageHeader>
-            <BasePageContent>
+            </PageContainerHeader>
+            <PageContainerContent>
                 <Text>
                     <Trans>Please ask administrator to add a role for your user</Trans>
                 </Text>
@@ -29,7 +31,7 @@ export function DefaultUserWithNoRoles() {
                         <Trans>Phone number</Trans>: {phoneNumber}
                     </Text>
                 )}
-            </BasePageContent>
+            </PageContainerContent>
         </>
     );
 }

@@ -52,17 +52,15 @@ export function AsyncDropdown(props: AsyncDropdownProps) {
     }
 
     return (
-        <S.SelectWrapper>
-            <AsyncSelect
-                value={value}
-                loadOptions={loadOptions}
-                defaultOptions
-                onChange={onChange}
-                cacheOptions={false}
-                maxMenuHeight={90}
-                placeholder={placeholder}
-                isClearable
-            />
-        </S.SelectWrapper>
+        <AsyncSelect
+            value={value}
+            loadOptions={loadOptions}
+            defaultOptions
+            onChange={onChange}
+            cacheOptions={false}
+            maxMenuHeight={90}
+            placeholder={placeholder}
+            isClearable
+        />
     );
 }

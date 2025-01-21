@@ -1,20 +1,20 @@
 import { Trans } from '@lingui/macro';
-import { Empty, Row, Col } from 'antd';
+import { Empty } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 
 import { formatError, SearchParams } from '@beda.software/fhir-react';
 import { isFailure, isLoading, isSuccess, RemoteData } from '@beda.software/remote-data';
 
-import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
+import { PageContainer } from 'src/components/BaseLayout/PageContainer';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { isTableFilter } from 'src/components/SearchBar/utils';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 import { populateTableColumnsWithFiltersAndSorts } from 'src/components/Table/utils';
-import { Title, Text } from 'src/components/Typography';
+import { Text } from 'src/components/Typography';
 
 import {
     NavigationActionType,
@@ -31,7 +31,6 @@ export { navigationAction, customAction, questionnaireAction } from './actions';
 import { useResourceListPage } from './hooks';
 import { SearchBarColumn } from '../../components/SearchBar/types';
 import { S } from './styles';
-import React from 'react';
 import { Report } from 'src/components/Report';
 import { BatchActions } from './BatchActions';
 
@@ -49,6 +48,9 @@ interface ReportColumn {
 interface ResourceListPageProps<R extends Resource> {
     /* Page header title (for example, Organizations) */
     headerTitle: string;
+
+    /* Page content max width */
+    maxWidth?: number | string;
 
     /* Primary resource type (for example, Organization) */
     resourceType: R['resourceType'];
@@ -114,6 +116,7 @@ interface ResourceListPageProps<R extends Resource> {
 
 export function ResourceListPage<R extends Resource>({
     headerTitle: title,
+    maxWidth,
     resourceType,
     extractPrimaryResources,
     searchParams,
@@ -156,83 +159,79 @@ export function ResourceListPage<R extends Resource>({
     const batchActions = getBatchActions?.() ?? [];
 
     return (
-        <>
-            <BasePageHeader style={{ paddingTop: 40, paddingBottom: 92 }}>
-                <Row justify="space-between" align="middle" style={{ marginBottom: 40 }} gutter={[16, 16]}>
-                    <Col>
-                        <Title style={{ marginBottom: 0 }}>{title}</Title>
-                    </Col>
-                    {headerActions.map((action, index) => (
-                        <Col key={index}>
-                            <HeaderQuestionnaireAction
-                                action={action}
-                                reload={reload}
-                                defaultLaunchContext={defaultLaunchContext ?? []}
-                            />
-                        </Col>
-                    ))}
-                </Row>
-
-                {columnsFilterValues.length ? (
+        <PageContainer
+            title={title}
+            maxWidth={maxWidth}
+            titleRightElement={headerActions.map((action, index) => (
+                <React.Fragment key={index}>
+                    <HeaderQuestionnaireAction
+                        action={action}
+                        reload={reload}
+                        defaultLaunchContext={defaultLaunchContext ?? []}
+                    />
+                </React.Fragment>
+            ))}
+            headerContent={
+                columnsFilterValues.length ? (
                     <SearchBar
                         columnsFilterValues={columnsFilterValues}
                         onChangeColumnFilter={onChangeColumnFilter}
                         onResetFilters={onResetFilters}
                     />
-                ) : null}
-            </BasePageHeader>
-            <BasePageContent style={{ marginTop: '-55px', paddingTop: 0 }}>
-                {getReportColumns ? (
-                    <ResourcesListPageReport recordResponse={recordResponse} getReportColumns={getReportColumns} />
-                ) : null}
+                ) : null
+            }
+        >
+            {getReportColumns ? (
+                <ResourcesListPageReport recordResponse={recordResponse} getReportColumns={getReportColumns} />
+            ) : null}
 
-                {batchActions.length ? (
-                    <BatchActions
-                        batchActions={batchActions}
-                        selectedRowKeys={selectedRowKeys}
-                        setSelectedRowKeys={setSelectedRowKeys}
-                        reload={reload}
-                        selectedResourcesBundle={selectedResourcesBundle}
-                        defaultLaunchContext={defaultLaunchContext}
-                    />
-                ) : null}
-
-                <Table<RecordType<R>>
-                    pagination={pagination}
-                    onChange={handleTableChange}
-                    rowSelection={batchActions.length ? { selectedRowKeys, onChange: setSelectedRowKeys } : undefined}
-                    locale={{
-                        emptyText: isFailure(recordResponse) ? (
-                            <>
-                                <Empty
-                                    description={formatError(recordResponse.error)}
-                                    image={Empty.PRESENTED_IMAGE_SIMPLE}
-                                />
-                            </>
-                        ) : (
-                            <>
-                                <Empty description={<Trans>No data</Trans>} image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                            </>
-                        ),
-                    }}
-                    rowKey={(p) => p.resource.id!}
-                    dataSource={isSuccess(recordResponse) ? recordResponse.data : []}
-                    columns={[
-                        ...tableColumns,
-                        ...(getRecordActions
-                            ? [
-                                  getRecordActionsColumn({
-                                      getRecordActions,
-                                      reload: reload,
-                                      defaultLaunchContext: defaultLaunchContext ?? [],
-                                  }),
-                              ]
-                            : []),
-                    ]}
-                    loading={isLoading(recordResponse) && { indicator: SpinIndicator }}
+            {batchActions.length ? (
+                <BatchActions
+                    batchActions={batchActions}
+                    selectedRowKeys={selectedRowKeys}
+                    allKeys={isSuccess(recordResponse) ? recordResponse.data.map((d) => d.resource.id!) : []}
+                    setSelectedRowKeys={setSelectedRowKeys}
+                    reload={reload}
+                    selectedResourcesBundle={selectedResourcesBundle}
+                    defaultLaunchContext={defaultLaunchContext}
                 />
-            </BasePageContent>
-        </>
+            ) : null}
+
+            <Table<RecordType<R>>
+                pagination={pagination}
+                onChange={handleTableChange}
+                rowSelection={batchActions.length ? { selectedRowKeys, onChange: setSelectedRowKeys } : undefined}
+                locale={{
+                    emptyText: isFailure(recordResponse) ? (
+                        <>
+                            <Empty
+                                description={formatError(recordResponse.error)}
+                                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                            />
+                        </>
+                    ) : (
+                        <>
+                            <Empty description={<Trans>No data</Trans>} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                        </>
+                    ),
+                }}
+                rowKey={(p) => p.resource.id!}
+                dataSource={isSuccess(recordResponse) ? recordResponse.data : []}
+                columns={[
+                    ...tableColumns,
+                    ...(getRecordActions
+                        ? [
+                              getRecordActionsColumn({
+                                  getRecordActions,
+                                  reload,
+                                  defaultLaunchContext: defaultLaunchContext ?? [],
+                              }),
+                          ]
+                        : []),
+                ]}
+                loading={isLoading(recordResponse) && { indicator: SpinIndicator }}
+            />
+        </PageContainer>
     );
 }
 

@@ -14,8 +14,14 @@ import { matchCurrentUserRole, Role } from 'src/utils/role';
 
 import { BreadCrumb, PatientHeaderContext } from './context';
 import s from './PatientHeader.module.scss';
+export { usePatientHeaderLocationTitle } from './hooks';
 
+/**
+ * @deprecated
+ */
 export function PatientHeaderContextProvider(props: React.HTMLAttributes<HTMLDivElement> & { patient: Patient }) {
+    console.warn('DEPRECATED: Do not use PatientHeaderContextProvider. It will be removed in future versions of the EMR.');
+
     const { children, patient } = props;
     const [pageTitle] = useState(renderHumanName(patient.name?.[0]));
     const params = useParams<{ id: string }>();
@@ -65,7 +71,13 @@ export function PatientHeaderContextProvider(props: React.HTMLAttributes<HTMLDiv
     );
 }
 
+/**
+ * @deprecated
+ */
 export function PatientHeader(props: { extraMenuItems?: RouteItem[]; isDefaultRoutesDisabled?: boolean }) {
+    console.warn('DEPRECATED: Do not use PatientHeader component. It will be removed in future versions of the EMR.');
+    console.warn('Use PatientDetailsTabs instead.');
+
     const location = useLocation();
     const params = useParams<{ id: string }>();
     const { title, breadcrumbs } = useContext(PatientHeaderContext);
