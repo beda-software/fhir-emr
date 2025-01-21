@@ -94,6 +94,7 @@ export function QuestionQuantity(props: QuestionItemProps) {
                             onChange={onUnitChange}
                             style={{ minWidth: 70 }}
                             disabled={disabled}
+                            popupMatchSelectWidth={false}
                         >
                             {unitOption.map((option) => (
                                 <Select.Option key={option.code} value={option.display}>
