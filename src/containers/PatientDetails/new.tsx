@@ -12,12 +12,12 @@ const tabs: Array<Tab<Patient>> = [
     {
         path: '',
         label: 'Overview',
-        component: (patient: Patient) => <PatientOverview patient={patient} />,
+        component: ({ resource }) => <PatientOverview patient={resource} />,
     },
     {
         path: 'encounter',
         label: 'Encounter',
-        component: (patient: Patient) => <PatientEncounter patient={patient} />,
+        component: ({ resource }) => <PatientEncounter patient={resource} />,
     },
 ];
 
@@ -26,7 +26,7 @@ export function NewPatientDetails() {
         <DetailPage<Patient>
             resourceType="Patient"
             getSearchParams={({ id }) => ({ _id: id })}
-            getTitle={getName}
+            getTitle={({ resource }) => getName(resource)!}
             tabs={tabs}
             basePath="patients2"
         />

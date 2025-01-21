@@ -10,16 +10,21 @@ import { Tabs } from 'src/components/Tabs';
 import { getFHIRResources } from 'src/services';
 import { compileAsFirst } from 'src/utils';
 
+interface DetailContext<R extends Resource> {
+    resource: R;
+    bundle: Bundle<R>;
+}
+
 export interface Tab<R extends Resource> {
     label: string;
     path?: string;
-    component: (resource: R) => JSX.Element;
+    component: (context: DetailContext<R>) => JSX.Element;
 }
 
 interface DetailPageProps<R extends Resource> {
     resourceType: R['resourceType'];
     getSearchParams: (params: Readonly<Params<string>>) => SearchParams;
-    getTitle: (resource: R) => string | undefined;
+    getTitle: (context: DetailContext<R>) => string;
     tabs: Array<Tab<R>>;
     basePath: string;
     extractPrimaryResource?: (bundle: Bundle<R>) => R;
@@ -81,15 +86,19 @@ export function DetailPage<R extends Resource>({
                 } else {
                     resource = defaultExtractPrimaryResource(bundle, { resourceType });
                 }
+                if (typeof resource === 'undefined') {
+                    return <p>NASTY ERROR</p>;
+                }
+                const context: DetailContext<R> = { resource, bundle };
                 return (
                     <PageContainer
-                        title={getTitle(resource!)}
+                        title={getTitle(context)}
                         layoutVariant="with-tabs"
                         headerContent={<PageTabs tabs={tabs} basePath={basePath} />}
                     >
                         <Routes>
                             {tabs.map(({ path, component }) => (
-                                <Route path={'/' + path} element={component(resource!)} key={path} />
+                                <Route path={'/' + path} element={component(context)} key={path} />
                             ))}
                         </Routes>
                     </PageContainer>
