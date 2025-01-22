@@ -75,7 +75,7 @@ function prepareFormInitialParams(
     props: Props & {
         provenance?: WithId<Provenance>;
         author?: WithId<Practitioner | Patient | Organization>;
-        provenanceBundle?: Bundle<Provenance>;
+        provenanceBundle?: Bundle<WithId<Provenance>>;
     },
 ): QuestionnaireResponseFormProps {
     const {
@@ -161,10 +161,10 @@ export function usePatientDocument(props: Props): {
             );
             const lastProvenance = descSortedProvenances[0];
 
-            const provenanceBundle: Bundle<Provenance> = {
+            const provenanceBundle: Bundle<WithId<Provenance>> = {
                 resourceType: 'Bundle',
                 type: 'collection',
-                entry: provenanceResponse.data,
+                entry: provenanceResponse.data.map((provenance) => ({ resource: provenance })),
             };
 
             const formInitialParams = prepareFormInitialParams({
