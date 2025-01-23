@@ -1,4 +1,5 @@
 import {
+    Bundle,
     Encounter,
     Organization,
     ParametersParameter,
@@ -74,6 +75,7 @@ function prepareFormInitialParams(
     props: Props & {
         provenance?: WithId<Provenance>;
         author?: WithId<Practitioner | Patient | Organization>;
+        provenanceBundle?: Bundle<WithId<Provenance>>;
     },
 ): QuestionnaireResponseFormProps {
     const {
@@ -84,6 +86,7 @@ function prepareFormInitialParams(
         provenance,
         author,
         launchContextParameters = [],
+        provenanceBundle,
     } = props;
 
     const params = {
@@ -107,6 +110,14 @@ function prepareFormInitialParams(
                       {
                           name: 'Provenance',
                           resource: provenance,
+                      },
+                  ]
+                : []),
+            ...(provenanceBundle
+                ? [
+                      {
+                          name: 'ProvenanceBundle',
+                          resource: provenanceBundle,
                       },
                   ]
                 : []),
@@ -150,9 +161,16 @@ export function usePatientDocument(props: Props): {
             );
             const lastProvenance = descSortedProvenances[0];
 
+            const provenanceBundle: Bundle<WithId<Provenance>> = {
+                resourceType: 'Bundle',
+                type: 'collection',
+                entry: provenanceResponse.data.map((provenance) => ({ resource: provenance })),
+            };
+
             const formInitialParams = prepareFormInitialParams({
                 ...props,
                 provenance: lastProvenance,
+                provenanceBundle: provenanceBundle,
             });
 
             const onSubmit = async (formData: QuestionnaireResponseFormData) =>
