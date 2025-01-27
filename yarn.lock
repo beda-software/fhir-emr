@@ -5015,10 +5015,10 @@ aggregate-error@^3.0.0:
     clean-stack "^2.0.0"
     indent-string "^4.0.0"
 
-aidbox-forms@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/aidbox-forms/-/aidbox-forms-0.0.5.tgz#8f6e62a75b40903eeceaa45c7339eaa3f5bba4a9"
-  integrity sha512-n96UKOQVff2Y/WPw3+n0S6O4jel3lGRpw7z1aBLn0mQv7EQxq2gDSIorpxNCywW/QZqFBLEyzZ0lZjcGvo4SKA==
+aidbox-forms@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/aidbox-forms/-/aidbox-forms-0.0.6.tgz#8a1a355db6dbfa7fcb80f2346cee047f14b3f350"
+  integrity sha512-cyOzxCo+rn7fSiKnJT0n+GCdPlxjWphZ0uCy2olMUr8AEtmSX//OHDQ+7tTj/3LwwcflnPciSBNCU32HoUB+Pw==
 
 aidbox-react@^1.10.0:
   version "1.10.0"
