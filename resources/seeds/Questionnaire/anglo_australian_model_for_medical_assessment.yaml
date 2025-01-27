@@ -165,6 +165,22 @@ item:
         text: "Plan (Plan):"
         helpText: "Outline the next steps in the patient's care. This might include: treatment options (e.g., medications), follow-up appointments, specialist referrals, patient education."
         type: string
+launchContext:
+    - name:
+        code: Patient
+      type:
+        - Patient
+    - name:
+        code: Author
+      type:
+        - PractitionerRole
+        - Practitioner
+        - Patient
+        - Organization
+    - name:
+        code: ProvenanceBundle
+      type:
+        - Bundle
 meta:
   profile:
     - https://beda.software/beda-emr-questionnaire
@@ -173,4 +189,5 @@ title: Anglo-Australian model for Medical Assessment
 status: active
 subjectType:
   - Encounter
+
 resourceType: Questionnaire
