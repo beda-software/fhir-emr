@@ -8,7 +8,7 @@ import * as yup from 'yup';
 
 function getAnswerOptionsValues(answerOptionArray: QuestionnaireItemAnswerOption[]): Array<{ value: any }> {
     return answerOptionArray.reduce<Array<{ value: any }>>((acc, option) => {
-        if (option.value === undefined) {
+        if (option?.value === undefined) {
             return acc;
         }
 
