@@ -38,6 +38,7 @@ export function useFieldController(fieldName: any, questionItem: QuestionnaireIt
 
     const onMultiChange = useCallback(
         (option: any) => {
+            // NOTE: it's used online in inline-choice
             if (repeats) {
                 const arrayValue = (field.value ?? []) as any[];
                 const valueIndex = arrayValue.findIndex((v) => _.isEqual(v?.value, option.value));
@@ -49,7 +50,7 @@ export function useFieldController(fieldName: any, questionItem: QuestionnaireIt
                     field.onChange(arrayValue);
                 }
             } else {
-                field.onChange(option);
+                field.onChange([option]);
             }
         },
         [repeats, field],
