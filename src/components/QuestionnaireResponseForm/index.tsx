@@ -1,7 +1,7 @@
 import { t } from '@lingui/macro';
 import { notification } from 'antd';
 import { QuestionnaireResponse } from 'fhir/r4b';
-import _ from 'lodash';
+import _, { isArray } from 'lodash';
 import { useMemo } from 'react';
 import {
     FormItems,
@@ -82,13 +82,15 @@ export function onFormResponse(props: {
     if (isSuccess(response)) {
         if (response.data.extracted) {
             const warnings: string[] = [];
-            response.data.extractedBundle.forEach((bundle, index) => {
-                bundle.entry?.forEach((entry, jndex) => {
-                    if (entry.resource?.resourceType === 'OperationOutcome') {
-                        warnings.push(`Error extracting on ${index}, ${jndex}`);
-                    }
+            if (isArray(response.data.extractedBundle)) {
+                response.data.extractedBundle.forEach((bundle, index) => {
+                    bundle.entry?.forEach((entry, jndex) => {
+                        if (entry.resource?.resourceType === 'OperationOutcome') {
+                            warnings.push(`Error extracting on ${index}, ${jndex}`);
+                        }
+                    });
                 });
-            });
+            }
             if (warnings.length > 0) {
                 notification.warning({
                     message: (
