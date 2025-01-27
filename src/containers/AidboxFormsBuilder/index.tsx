@@ -1,7 +1,7 @@
 import { Builder } from 'aidbox-forms';
 import { Questionnaire } from 'fhir/r4b';
 
-// import config from '@beda.software/emr-config/config';
+import config from '@beda.software/emr-config/config';
 import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { Spinner } from 'src/components';
@@ -30,7 +30,7 @@ export function AidboxFormsBuilder() {
                                 onSelect={(item) => {
                                     console.log('Questionnaire Item selected:', item);
                                 }}
-                                // baseUrl={config.baseURL}
+                                baseUrl={config.baseURL}
                             />
                         );
                     }}

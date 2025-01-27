@@ -10,26 +10,6 @@ services:
             - ./env/file-uploader
             - .env
         tty: true
-    sdc-ide:
-        image: bedasoftware/sdc-ide:master
-        depends_on:
-            devbox-healthcheck:
-                condition: service_healthy
-        ports:
-            - '3001:5000'
-        env_file:
-            - ./env/sdc-ide
-    sdc:
-        image: bedasoftware/fhir-sdc:master
-        depends_on:
-            devbox-healthcheck:
-                condition: service_healthy
-        links:
-            - devbox
-            - fhirpath_mapping
-        env_file:
-            - ./env/sdc
-        tty: true
     devbox:
         image: healthsamurai/aidboxone:stable
         depends_on:
@@ -125,12 +105,3 @@ services:
             - METRIPORT_WEBHOOK_AUTH_KEY
             - METRIPORT_API_SECRET
             - JWT_TOKEN_ENCODE_SECRET=${DATASEQUENCE_JWT_SECRET}
-    jute:
-        image: bedasoftware/jute-microservice:latest
-        ports:
-            - '8099:8090'
-    fhirpath_mapping:
-        image: bedasoftware/fhirpath-extract:main
-        ports:
-            - '8091:8090'
-
