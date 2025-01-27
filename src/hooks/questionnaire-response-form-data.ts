@@ -177,6 +177,8 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
             }),
             (data) => data.parameter![0]!.resource! as FHIRQuestionnaireResponse,
         );
+        console.log(populateRemoteData);
+        populateRemoteData = success({ resourceType: 'QuestionnaireResponse', status: 'in-progress' });
     }
 
     return mapSuccess(populateRemoteData, (populatedQR) => {
