@@ -5,7 +5,7 @@ import { ColumnsType } from 'antd/lib/table';
 import { Questionnaire } from 'fhir/r4b';
 import { Link } from 'react-router-dom';
 
-import config from '@beda.software/emr-config';
+/* import config from '@beda.software/emr-config'; */
 import { isLoading, isSuccess } from '@beda.software/remote-data';
 
 import { PageContainer } from 'src/components/BaseLayout/PageContainer';
@@ -34,26 +34,9 @@ const columns: ColumnsType<Questionnaire> = [
             return (
                 <Row wrap={false} align="middle">
                     <Col>
-                        <Link to={`/questionnaires/${resource.id}/edit`}>
-                            <Button type="link">
-                                <Trans>AI builder</Trans>
-                            </Button>
-                        </Link>
-                    </Col>
-                    <Col>
-                        <a
-                            href={`${config.sdcIdeUrl}/${resource.id}?client=sdc-ide`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{ whiteSpace: 'nowrap' }}
-                        >
-                            <Trans>SDC IDE</Trans>
-                        </a>
-                    </Col>
-                    <Col>
                         <Link to={`/questionnaires/${resource.id}/aidbox-forms-builder/edit`}>
                             <Button type="link">
-                                <Trans>Aidbox Forms Builder</Trans>
+                                <Trans>Form Builder</Trans>
                             </Button>
                         </Link>
                     </Col>

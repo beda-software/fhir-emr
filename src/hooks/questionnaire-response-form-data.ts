@@ -80,9 +80,9 @@ export function questionnaireServiceLoader(
     };
 }
 
-export function questionnaireIdLoader(questionnaireId: string): QuestionnaireIdLoader {
+export function questionnaireIdLoader(questionnaireId: string): QuestionnaireIdWOAssembleLoader {
     return {
-        type: 'id',
+        type: 'raw-id',
         questionnaireId,
     };
 }
@@ -168,12 +168,15 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
     if (initialQuestionnaireResponse?.id) {
         populateRemoteData = success(initialQuestionnaireResponse as FHIRQuestionnaireResponse);
     } else {
-        populateRemoteData = await service<FHIRQuestionnaireResponse>({
-            ...(config.sdcBackendUrl ? { baseURL: config.sdcBackendUrl } : {}),
-            method: 'POST',
-            url: '/Questionnaire/$populate',
-            data: params,
-        });
+        populateRemoteData = mapSuccess(
+            await service<Parameters>({
+                ...(config.sdcBackendUrl ? { baseURL: config.sdcBackendUrl } : {}),
+                method: 'POST',
+                url: '/Questionnaire/$populate',
+                data: params,
+            }),
+            (data) => data.parameter![0]!.resource! as FHIRQuestionnaireResponse,
+        );
     }
 
     return mapSuccess(populateRemoteData, (populatedQR) => {
@@ -208,22 +211,22 @@ export async function handleFormDataSave(
         fromFirstClassExtension(finalFCEQuestionnaireResponse);
     const fhirQuestionnaire: FHIRQuestionnaire = fromFirstClassExtension(questionnaire);
 
-    const constraintRemoteData = await service({
-        ...(config.sdcBackendUrl ? { baseURL: config.sdcBackendUrl } : {}),
-        url: '/QuestionnaireResponse/$constraint-check',
-        method: 'POST',
-        data: {
-            resourceType: 'Parameters',
-            parameter: [
-                { name: 'Questionnaire', resource: fhirQuestionnaire },
-                { name: 'QuestionnaireResponse', resource: finalFHIRQuestionnaireResponse },
-                ...(launchContextParameters || []),
-            ],
-        },
-    });
-    if (isFailure(constraintRemoteData)) {
-        return constraintRemoteData;
-    }
+    // const constraintRemoteData = await service({
+    //     ...(config.sdcBackendUrl ? { baseURL: config.sdcBackendUrl } : {}),
+    //     url: '/QuestionnaireResponse/$constraint-check',
+    //     method: 'POST',
+    //     data: {
+    //         resourceType: 'Parameters',
+    //         parameter: [
+    //             { name: 'Questionnaire', resource: fhirQuestionnaire },
+    //             { name: 'QuestionnaireResponse', resource: finalFHIRQuestionnaireResponse },
+    //             ...(launchContextParameters || []),
+    //         ],
+    //     },
+    // });
+    // if (isFailure(constraintRemoteData)) {
+    //     return constraintRemoteData;
+    // }
 
     const saveQRRemoteData = await questionnaireResponseSaveService(finalFHIRQuestionnaireResponse);
     if (isFailure(saveQRRemoteData)) {
@@ -233,12 +236,12 @@ export async function handleFormDataSave(
     const extractRemoteData = await service<any>({
         ...(config.sdcBackendUrl ? { baseURL: config.sdcBackendUrl } : {}),
         method: 'POST',
-        url: '/Questionnaire/$extract',
+        url: '/QuestionnaireResponse/$extract',
         data: {
             resourceType: 'Parameters',
             parameter: [
                 { name: 'questionnaire', resource: fhirQuestionnaire },
-                { name: 'questionnaire_response', resource: saveQRRemoteData.data },
+                { name: 'questionnaire-response', resource: saveQRRemoteData.data },
                 ...(launchContextParameters || []),
             ],
         },
