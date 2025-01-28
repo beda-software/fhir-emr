@@ -12,7 +12,6 @@ import { QuestionnaireResponseFormSaveResponse } from 'src/hooks';
 
 import s from './PatientDocument.module.scss';
 import { S } from './PatientDocument.styles';
-import { PatientDocumentHeader } from './PatientDocumentHeader';
 import { usePatientDocument } from './usePatientDocument';
 
 export interface PatientDocumentProps {
@@ -38,6 +37,7 @@ export function PatientDocument(props: PatientDocumentProps) {
 
     const [draftSaveResponse, setDraftSaveResponse] = useState<RemoteData<QuestionnaireResponse>>(notAsked);
 
+    //@ts-ignore
     const { savedMessage } = useSavedMessage(draftSaveResponse);
 
     return (
@@ -46,13 +46,6 @@ export function PatientDocument(props: PatientDocumentProps) {
                 <RenderRemoteData remoteData={response} renderLoading={Spinner}>
                     {({ formData, onSubmit, provenance }) => (
                         <>
-                            <PatientDocumentHeader
-                                formData={formData}
-                                questionnaireId={questionnaireId}
-                                draftSaveResponse={draftSaveResponse}
-                                savedMessage={savedMessage}
-                            />
-
                             <BaseQuestionnaireResponseForm
                                 formData={formData}
                                 onSubmit={onSubmit}
