@@ -36,6 +36,7 @@ import {
 } from './context';
 import { groupComponent, groupControlComponents, itemComponents, itemControlComponents } from './controls';
 import { FormFooterComponentProps, FormFooter } from './FormFooter';
+import { AidboxForm } from '../AidboxForm';
 
 export interface BaseQuestionnaireResponseFormProps {
     formData: QuestionnaireResponseFormData;
@@ -67,6 +68,10 @@ export interface BaseQuestionnaireResponseFormProps {
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
+    return <AidboxForm questionnaireId={props.formData.context.questionnaire.id!} />;
+}
+
+export function _BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
     const {
         onSubmit,
         formData,

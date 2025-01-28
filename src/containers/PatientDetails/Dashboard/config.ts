@@ -13,7 +13,6 @@ import {
     prepareMedications,
     prepareServiceRequest,
 } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare';
-import { CreatinineDashboardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/CreatinineDashboardContainer';
 import { GeneralInformationDashboardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer';
 import { StandardCardContainerFabric } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/StandardCardContainerFabric';
 
@@ -33,17 +32,6 @@ export const patientDashboardConfig: DashboardInstance = {
         },
         {
             widget: GeneralInformationDashboardContainer,
-        },
-        {
-            query: {
-                resourceType: 'Observation',
-                search: (patient: Patient) => ({
-                    patient: patient.id,
-                    code: 'http://loinc.org|2160-0',
-                    _sort: ['-date'],
-                }),
-            },
-            widget: CreatinineDashboardContainer,
         },
     ],
     left: [

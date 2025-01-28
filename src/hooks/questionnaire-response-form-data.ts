@@ -160,7 +160,8 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
         resourceType: 'Parameters',
         parameter: [
             { name: 'questionnaire', resource: questionnaireRemoteData.data },
-            ...(launchContextParameters || []),
+            // { name: 'subject', resource: launchContextParameters[0]?.resource}
+            // ...(launchContextParameters || []),
         ],
     };
 
@@ -178,7 +179,7 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
             (data) => data.parameter![0]!.resource! as FHIRQuestionnaireResponse,
         );
         console.log(populateRemoteData);
-        populateRemoteData = success({ resourceType: 'QuestionnaireResponse', status: 'in-progress' });
+        // populateRemoteData = success({ resourceType: 'QuestionnaireResponse', status: 'in-progress' });
     }
 
     return mapSuccess(populateRemoteData, (populatedQR) => {

@@ -23,7 +23,7 @@ interface Props extends ModalProps {
 }
 
 export const ChooseDocumentToCreateModal = (props: Props) => {
-    const { subjectType, patient, encounter, onCancel, context, openNewTab, displayShareButton = true } = props;
+    const { patient, encounter, onCancel, context, openNewTab, displayShareButton = true } = props;
     const [questionnaireId, setQuestionnaireId] = useState();
     const location = useLocation();
     const navigate = useNavigate();
@@ -32,7 +32,7 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
         async () =>
             mapSuccess(
                 await getFHIRResources<Questionnaire>('Questionnaire', {
-                    'subject-type': subjectType ? [subjectType] : [],
+                    /* 'subject-type': subjectType ? [subjectType] : [], */
                     _sort: 'title',
                     status: 'active',
                     ...(context ? { context } : {}),
