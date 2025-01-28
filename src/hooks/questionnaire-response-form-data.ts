@@ -11,7 +11,7 @@ import {
 import moment from 'moment';
 import {
     mapFormToResponse,
-    mapResponseToForm,
+    // mapResponseToForm,
     QuestionnaireResponseFormData,
     calcInitialContext,
     removeDisabledAnswers,
@@ -102,14 +102,15 @@ export function toQuestionnaireResponseFormData(
     return {
         context: {
             // TODO: we can't change type inside qrf utils
-            questionnaire: toFirstClassExtension(questionnaire),
+            questionnaire, //: toFirstClassExtension(questionnaire),
             questionnaireResponse: toFirstClassExtension(questionnaireResponse),
             launchContextParameters: launchContextParameters || [],
         },
-        formValues: mapResponseToForm(
-            toFirstClassExtension(questionnaireResponse),
-            toFirstClassExtension(questionnaire),
-        ),
+        formValues: {},
+        // mapResponseToForm(
+        //     toFirstClassExtension(questionnaireResponse),
+        //     toFirstClassExtension(questionnaire),
+        //),
     };
 }
 
