@@ -15,7 +15,7 @@ import {
     QuestionnaireResponseFormData,
     calcInitialContext,
     removeDisabledAnswers,
-    toFirstClassExtension,
+    // toFirstClassExtension,
     fromFirstClassExtension,
 } from 'sdc-qrf';
 
@@ -103,7 +103,8 @@ export function toQuestionnaireResponseFormData(
         context: {
             // TODO: we can't change type inside qrf utils
             questionnaire, //: toFirstClassExtension(questionnaire),
-            questionnaireResponse: toFirstClassExtension(questionnaireResponse),
+            //@ts-ignore
+            questionnaireResponse, //: toFirstClassExtension(questionnaireResponse),
             launchContextParameters: launchContextParameters || [],
         },
         formValues: {},
@@ -157,11 +158,13 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
         return questionnaireRemoteData;
     }
 
+    const patient = launchContextParameters?.find((p) => p.name === 'Patient')?.resource;
+
     const params: Parameters = {
         resourceType: 'Parameters',
         parameter: [
             { name: 'questionnaire', resource: questionnaireRemoteData.data },
-            // { name: 'subject', resource: launchContextParameters[0]?.resource}
+            ...(patient ? [{ name: 'subject', resource: patient }] : []),
             // ...(launchContextParameters || []),
         ],
     };
@@ -179,8 +182,6 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
             }),
             (data) => data.parameter![0]!.resource! as FHIRQuestionnaireResponse,
         );
-        console.log(populateRemoteData);
-        // populateRemoteData = success({ resourceType: 'QuestionnaireResponse', status: 'in-progress' });
     }
 
     return mapSuccess(populateRemoteData, (populatedQR) => {

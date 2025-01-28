@@ -22,7 +22,6 @@ import {
 } from 'src/hooks/questionnaire-response-form-data';
 import { saveFHIRResource, updateFHIRResource } from 'src/services/fhir';
 
-import { AidboxForm } from '../AidboxForm';
 import { FormFooterComponentProps } from '../BaseQuestionnaireResponseForm/FormFooter';
 import { Spinner } from '../Spinner';
 
@@ -157,13 +156,6 @@ export function useQuestionnaireResponseForm(props: QRFProps) {
 }
 
 export function QuestionnaireResponseForm(props: QRFProps) {
-    if (props.questionnaireLoader.type !== 'service') {
-        console.log(props.questionnaireLoader);
-        return <AidboxForm questionnaireId={props.questionnaireLoader.questionnaireId} />;
-    }
-}
-
-export function _QuestionnaireResponseForm(props: QRFProps) {
     const { response, onSubmit, readOnly, onCancel } = useQuestionnaireResponseForm(props);
 
     return (

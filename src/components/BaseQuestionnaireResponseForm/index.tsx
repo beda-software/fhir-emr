@@ -68,7 +68,12 @@ export interface BaseQuestionnaireResponseFormProps {
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
-    return <AidboxForm questionnaireId={props.formData.context.questionnaire.id!} />;
+    return (
+        <AidboxForm
+            questionnaire={props.formData.context.questionnaire as any}
+            questionnaireResponse={props.formData.context.questionnaireResponse as any}
+        />
+    );
 }
 
 export function _BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
