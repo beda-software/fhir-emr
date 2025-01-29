@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/macro';
+import { t, Trans } from '@lingui/macro';
 import { Col, Empty, Row } from 'antd';
 
 import { isLoading, isSuccess } from '@beda.software/remote-data';
@@ -71,7 +71,7 @@ export function HealthcareServiceList() {
                         dataIndex: 'active',
                         key: 'active',
                         width: '20%',
-                        render: (_text, resource) => (resource.active ? 'Active' : 'Inactive'),
+                        render: (_text, resource) => (resource.active ? t`Active` : t`Inactive`),
                     },
                     {
                         title: <Trans>Actions</Trans>,

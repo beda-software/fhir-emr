@@ -1,5 +1,6 @@
 import { Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
+import { t } from '@lingui/macro';
 
 import { extractBundleResources, getReference } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess } from '@beda.software/remote-data';
@@ -93,23 +94,23 @@ export function useInvoiceSearchBarSelect() {
     const statusOptions = useCallback(async (search: string) => {
         const invoiceStatusOptions = [
             {
-                label: 'Balanced',
+                label: t`Balanced`,
                 value: 'balanced',
             },
             {
-                label: 'Cancelled',
+                label: t`Cancelled`,
                 value: 'cancelled',
             },
             {
-                label: 'Issued',
+                label: t`Issued`,
                 value: 'issued',
             },
             {
-                label: 'Draft',
+                label: t`Draft`,
                 value: 'draft',
             },
             {
-                label: 'Entered in error',
+                label: t`Entered in error`,
                 value: 'entered-in-error',
             },
         ];

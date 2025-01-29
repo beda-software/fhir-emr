@@ -1,4 +1,5 @@
 import { differenceInDays, differenceInMonths, differenceInYears, parseISO } from 'date-fns';
+import { t } from '@lingui/macro';
 
 export function getYears(date: string) {
     return differenceInYears(new Date(), parseISO(date));
@@ -14,12 +15,12 @@ export function getDays(date: string) {
 
 export function getPersonAge(date: string) {
     if (getYears(date) > 0) {
-        return `${getYears(date)} y.o.`;
+        return `${getYears(date)} ${t`y.o.`}`;
     }
 
     if (getMonths(date) > 0) {
-        return `${getMonths(date)} m.o.`;
+        return `${getMonths(date)} ${t`m.o.`}`;
     }
 
-    return `${getDays(date)} d.o.`;
+    return `${getDays(date)} ${t`d.o.`}`;
 }
