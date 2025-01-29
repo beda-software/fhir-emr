@@ -25,10 +25,17 @@ export const S = {
                 }
             `}
     `,
-    MobileFilters: styled.div<{ $showInDrawerOnMobile?: boolean }>`
+    MobileFilters: styled.div<{ $level: 1 | 2; $showInDrawerOnMobile?: boolean }>`
         position: absolute;
         right: 24px;
         top: 24px;
+
+        ${({ $level }) =>
+            $level === 2 &&
+            css`
+                right: 0;
+                top: 0;
+            `}
 
         ${({ $showInDrawerOnMobile }) =>
             $showInDrawerOnMobile &&
