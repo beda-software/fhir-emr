@@ -11,7 +11,7 @@ import {
 } from 'sdc-qrf';
 
 import { RenderRemoteData, formatError } from '@beda.software/fhir-react';
-import { RemoteDataResult, isFailure, isSuccess } from '@beda.software/remote-data';
+import { RemoteDataResult, isFailure, isSuccess, success } from '@beda.software/remote-data';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import {
@@ -134,21 +134,16 @@ export function useQuestionnaireResponseForm(props: QRFProps) {
     // remove this temporary hack
     const memoizedProps = useMemo(() => props, [JSON.stringify(props)]);
 
-    const { response, handleSave } = useQuestionnaireResponseFormData(memoizedProps);
-    const { onSuccess, onFailure, readOnly, initialQuestionnaireResponse, onCancel } = memoizedProps;
+    const { response } = useQuestionnaireResponseFormData(memoizedProps);
+    const { onSuccess, onFailure, readOnly, onCancel } = memoizedProps;
 
     const onSubmit = async (formData: QuestionnaireResponseFormData) => {
-        const modifiedFormData = _.merge({}, formData, {
-            context: {
-                questionnaireResponse: {
-                    questionnaire: initialQuestionnaireResponse?.questionnaire,
-                },
-            },
+        const saveResponse: RemoteDataResult<QuestionnaireResponseFormSaveResponse> = success({
+            questionnaireResponse: formData.context.questionnaireResponse as any,
+            extracted: true,
+            extractedBundle: [],
+            extractedError: { resourceType: 'OperationOutcome', issue: [] },
         });
-
-        /* delete modifiedFormData.context.questionnaireResponse.meta; */
-
-        const saveResponse = await handleSave(modifiedFormData);
         onFormResponse({ response: saveResponse, onSuccess, onFailure });
     };
 

@@ -72,6 +72,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         <AidboxForm
             questionnaire={props.formData.context.questionnaire as any}
             questionnaireResponse={props.formData.context.questionnaireResponse as any}
+            onSubmit={props.onSubmit}
         />
     );
 }
