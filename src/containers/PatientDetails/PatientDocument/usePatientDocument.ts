@@ -24,7 +24,6 @@ import {
 
 import { onFormResponse } from 'src/components/QuestionnaireResponseForm';
 import {
-    handleFormDataSave,
     loadQuestionnaireResponseFormData,
     questionnaireIdLoader,
     QuestionnaireResponseFormData,
@@ -49,20 +48,13 @@ async function onFormSubmit(
         onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
     },
 ) {
-    const { formData, initialQuestionnaireResponse, onSuccess } = props;
-    const modifiedFormData = _.merge({}, formData, {
-        context: {
-            questionnaireResponse: {
-                questionnaire: initialQuestionnaireResponse?.questionnaire,
-            },
-        },
-    });
+    const { formData, onSuccess } = props;
 
-    delete modifiedFormData.context.questionnaireResponse.meta;
-
-    const saveResponse = await handleFormDataSave({
-        ...props,
-        formData: modifiedFormData,
+    const saveResponse: RemoteDataResult<QuestionnaireResponseFormSaveResponse> = success({
+        questionnaireResponse: formData.context.questionnaireResponse as any,
+        extracted: true,
+        extractedBundle: [],
+        extractedError: { resourceType: 'OperationOutcome', issue: [] },
     });
 
     onFormResponse({
