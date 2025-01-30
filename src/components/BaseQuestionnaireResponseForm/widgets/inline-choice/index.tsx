@@ -16,13 +16,13 @@ export function InlineChoice(props: InlineChoiceProps) {
     const { parentPath, questionItem } = props;
     const { linkId, answerOption: answerOptionList, repeats, choiceOrientation = 'vertical' } = questionItem;
 
-    const fieldName = repeats ? [...parentPath, linkId] : [...parentPath, linkId, 0];
+    const fieldName = [...parentPath, linkId];
 
     const { value, onChange, onMultiChange, disabled, formItem } = useFieldController(fieldName, questionItem);
 
-    if (repeats) {
-        const arrayValue = (value || []) as QuestionnaireItemAnswerOption[];
+    const arrayValue = (value || []) as QuestionnaireItemAnswerOption[];
 
+    if (repeats) {
         return (
             <Form.Item {...formItem} data-testid={linkId}>
                 <Space direction={choiceOrientation}>
@@ -50,9 +50,9 @@ export function InlineChoice(props: InlineChoiceProps) {
                     {answerOptionList?.map((answerOption) => (
                         <Radio
                             key={JSON.stringify(answerOption)}
-                            checked={_.isEqual(value?.value, answerOption.value)}
+                            checked={arrayValue.findIndex((v) => _.isEqual(v?.value, answerOption.value)) !== -1}
                             disabled={disabled}
-                            onChange={() => onChange(answerOption)}
+                            onChange={() => onChange([answerOption])}
                             // TODO: use linkId + __ + code instead
                             data-testid={`inline-choice__${_.kebabCase(
                                 JSON.stringify(getDisplay(answerOption.value!)),

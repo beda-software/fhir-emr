@@ -1,9 +1,9 @@
-import { TableProps } from 'antd/lib/table';
-
-import { S } from './styles';
 import { Checkbox, Empty, Pagination, TablePaginationConfig } from 'antd';
+import { TableProps } from 'antd/lib/table';
 import { ColumnTitle, SorterResult, TableCurrentDataSource } from 'antd/lib/table/interface';
 import _ from 'lodash';
+
+import { S } from './styles';
 
 export function TableCards<T extends object>(props: TableProps<T>) {
     const { pagination, onChange, dataSource = [], columns = [], rowKey, rowSelection } = props;
@@ -46,7 +46,7 @@ export function TableCards<T extends object>(props: TableProps<T>) {
                                             column?.render
                                                 ? (column?.render(
                                                       // @ts-ignore
-                                                      column.dataIndex ? _.get(resource, column.dataIndex) : null,
+                                                      column.dataIndex ? _.get(resource, column.dataIndex) : resource,
                                                       resource,
                                                       index,
                                                   ) as React.ReactNode)
