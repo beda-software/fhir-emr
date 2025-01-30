@@ -1,7 +1,8 @@
 import { t } from '@lingui/macro';
-import { QuestionnaireResponse as FHIRQuestionnaireResponse } from 'fhir/r4b';
+import { QuestionnaireResponse as FHIRQuestionnaireResponse, Questionnaire } from 'fhir/r4b';
 import _ from 'lodash';
 import { toFirstClassExtension } from 'sdc-qrf';
+import { isSuccess } from '@beda.software/remote-data';
 
 import {
     QuestionnaireResponse as FCEQuestionnaireResponse,
@@ -12,6 +13,8 @@ import { getDisplay } from 'src/utils/questionnaire';
 import { getExternalQuestionnaireName } from 'src/utils/smart-apps';
 
 import { S } from './ExternalDocumentView.styles';
+import { getFHIRResources } from 'src/services';
+import { useService } from '@beda.software/fhir-react';
 
 interface Props {
     questionnaireResponse: FHIRQuestionnaireResponse;
@@ -50,14 +53,16 @@ function getAnswers(qr: FCEQuestionnaireResponse) {
 
 export function ExternalDocumentView(props: Props) {
     const { questionnaireResponse } = props;
+    const [questionnaire] = useService(() => getFHIRResources<Questionnaire>('Questionnaire', { url: questionnaireResponse.questionnaire }));
     const title = getExternalQuestionnaireName(questionnaireResponse) || t`Unknown`;
     const answers = getAnswers(toFirstClassExtension(questionnaireResponse));
+
 
     return (
         <S.Container>
             <S.Content>
                 <S.Header>
-                    <S.Title level={3}>{title}</S.Title>
+                    <S.Title level={3}>{isSuccess(questionnaire) ? (questionnaire.data.entry?.[0]?.resource?.title ?? title) : title}</S.Title>
                 </S.Header>
                 <div>
                     {answers.map((answer) => {

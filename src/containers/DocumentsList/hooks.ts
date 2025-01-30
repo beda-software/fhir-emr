@@ -34,18 +34,19 @@ export function usePatientDocuments(patient: Patient, encounter?: Reference, con
             );
 
             const qResponse = await getFHIRResources<Questionnaire>('Questionnaire', {
-                id: ids.join(','),
+                url: ids.join(','),
             });
 
             return mapSuccess(qResponse, (bundle) => {
                 const questionnaireNames: { [key: string]: string } = {};
                 const questionnaireNameById: { [key: string]: string } = {};
                 extractBundleResources(bundle).Questionnaire.forEach(
-                    (q) => (questionnaireNameById[q.id!] = q.title || q.name || t`Unknown`),
+                    (q) => (questionnaireNameById[q.url!] = q.title || q.name || t`Unknown`),
                 );
 
                 qrResponseExtracted.data.QuestionnaireResponse.forEach((qr) => {
                     const remoteName = questionnaireNameById[qr.questionnaire!];
+                    console.log(remoteName, qr.questionnaire, questionnaireNameById)
                     if (remoteName) {
                         questionnaireNames[qr.id!] = remoteName;
                     } else {
