@@ -1,11 +1,12 @@
 import { t } from '@lingui/macro';
-import { Button, notification } from 'antd';
+import { Button, ModalProps, notification } from 'antd';
 import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 import { useNavigate } from 'react-router-dom';
 
 import { ModalTrigger } from 'src/components/ModalTrigger';
-import { QuestionnaireResponseForm, QRFProps } from 'src/components/QuestionnaireResponseForm';
+import { QRFProps, QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
+
 import { S } from './styles';
 
 export interface NavigationActionType {
@@ -26,6 +27,7 @@ export interface QuestionnaireActionType {
     questionnaireId: string;
     icon?: React.ReactNode;
     qrfProps?: Partial<QRFProps>;
+    modalProps?: Partial<ModalProps>;
 }
 
 export function navigationAction(
@@ -35,33 +37,39 @@ export function navigationAction(
 ): NavigationActionType {
     return { type: 'navigation', title, link, icon: options?.icon };
 }
+
 export function customAction(control: React.ReactNode): CustomActionType {
     return {
         type: 'custom',
         control,
     };
 }
+
 export function questionnaireAction(
     title: React.ReactNode,
     questionnaireId: string,
-    options?: { icon?: React.ReactNode; qrfProps?: Partial<QRFProps> },
+    options?: { icon?: React.ReactNode; qrfProps?: Partial<QRFProps>; modalProps?: ModalProps },
 ): QuestionnaireActionType {
     return {
         type: 'questionnaire',
         title,
         icon: options?.icon,
         qrfProps: options?.qrfProps,
+        modalProps: options?.modalProps,
         questionnaireId,
     };
 }
 
 export type ActionType = QuestionnaireActionType | NavigationActionType | CustomActionType;
+
 export function isQuestionnaireAction(action: ActionType): action is QuestionnaireActionType {
     return action.type === 'questionnaire';
 }
+
 export function isNavigationAction(action: ActionType): action is NavigationActionType {
     return action.type === 'navigation';
 }
+
 export function isCustomAction(action: ActionType): action is CustomActionType {
     return action.type === 'custom';
 }
@@ -78,7 +86,11 @@ export function RecordQuestionnaireAction<R extends Resource>({
     defaultLaunchContext: ParametersParameter[];
 }) {
     return (
-        <ModalTrigger title={action.title} trigger={<S.LinkButton type="link">{action.title}</S.LinkButton>}>
+        <ModalTrigger
+            title={action.title}
+            trigger={<S.LinkButton type="link">{action.title}</S.LinkButton>}
+            modalProps={action.modalProps}
+        >
             {({ closeModal }) => (
                 <QuestionnaireResponseForm
                     questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
@@ -117,6 +129,7 @@ export function HeaderQuestionnaireAction({ action, reload, defaultLaunchContext
                     <span>{action.title}</span>
                 </Button>
             }
+            modalProps={action.modalProps}
         >
             {({ closeModal }) => (
                 <QuestionnaireResponseForm
@@ -157,6 +170,7 @@ export function BatchQuestionnaireAction<R extends Resource>({
                     <span>{action.title}</span>
                 </Button>
             }
+            modalProps={action.modalProps}
         >
             {({ closeModal }) => (
                 <QuestionnaireResponseForm
