@@ -209,6 +209,7 @@ msgstr "Lote"
 msgid "Batch Number"
 msgstr "Número de lote"
 
+#: src/components/BaseQuestionnaireResponseForm/widgets/QuestionDateTime.stories.tsx:37
 #: src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer/hooks.ts:31
 #: src/containers/PatientList/index.tsx:85
 #: src/containers/PatientResourceListExample/index.tsx:48
@@ -227,6 +228,10 @@ msgstr "Pausa"
 #: src/containers/QuestionnaireBuilder/index.tsx:43
 msgid "Build your form"
 msgstr "Construye tu formulario"
+
+#: src/components/BaseLayout/Footer/index.tsx:15
+msgid "by"
+msgstr "por"
 
 #: src/containers/PatientDetails/PatientWearables/index.tsx:46
 msgid "Calories"
@@ -778,6 +783,10 @@ msgstr "Apellido"
 msgid "Listen to the audio"
 msgstr "Escuchar el audio"
 
+#: src/containers/EncounterDetails/AIScribe/index.tsx:312
+msgid "Loading..."
+msgstr "Cargando..."
+
 #: src/containers/SignIn/index.tsx:89
 msgid "Log in"
 msgstr "Iniciar sesión"
@@ -797,6 +806,10 @@ msgstr "meses"
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:101
 msgid "Macro text"
 msgstr "Texto macro"
+
+#: src/components/BaseLayout/Footer/index.tsx:15
+msgid "Made with"
+msgstr "Hecho con"
 
 #: src/components/DashboardCard/creatinine.tsx:91
 msgid "Max"
@@ -1022,7 +1035,7 @@ msgstr "Pago"
 
 #: src/containers/PatientDetails/PatientOrders/index.tsx:164
 msgid "PCT"
-msgstr ""
+msgstr "PCT"
 
 #: src/containers/App/DefaultUserWithNoRoles.tsx:31
 #: src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer/hooks.ts:45
@@ -1220,6 +1233,14 @@ msgstr "Seleccionar (predeterminado)"
 #: src/uberComponents/ResourceListPage/BatchActions.tsx:69
 msgid "Select all"
 msgstr "Seleccionar todos"
+
+#: src/components/BaseQuestionnaireResponseForm/widgets/QuestionDateTime.stories.tsx:23
+msgid "Select date"
+msgstr "Seleccionar fecha"
+
+#: src/components/BaseQuestionnaireResponseForm/widgets/QuestionDateTime.stories.tsx:51
+msgid "Select time"
+msgstr "Selecciona hora"
 
 #: src/components/BaseQuestionnaireResponseForm/widgets/choice/index.tsx:30
 #: src/components/BaseQuestionnaireResponseForm/widgets/choice/index.tsx:55
@@ -1439,6 +1460,10 @@ msgstr "Jueves"
 #: src/containers/Scheduling/Availability/index.tsx:129
 msgid "Time"
 msgstr "Hora"
+
+#: src/components/BaseQuestionnaireResponseForm/widgets/QuestionDateTime.stories.tsx:65
+msgid "Time with no seconds"
+msgstr "Hora sin segundos"
 
 #: src/containers/PatientDetails/PatientOrders/index.tsx:27
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/NoteList/index.tsx:33
