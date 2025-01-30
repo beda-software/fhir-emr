@@ -1,5 +1,5 @@
 import { Bundle, Resource } from 'fhir/r4b';
-import { useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { useParams, Route, Routes, useLocation, Link, useNavigate, Params } from 'react-router-dom';
 
 import { SearchParams, RenderRemoteData, useService, WithId } from '@beda.software/fhir-react';
@@ -28,6 +28,7 @@ interface DetailPageProps<R extends Resource> {
     tabs: Array<Tab<R>>;
     basePath: string;
     extractPrimaryResource?: (bundle: Bundle<R>) => R;
+    extraRoutes?: (context: DetailContext<R>) => ReactElement;
 }
 
 interface PageTabsProps<R extends Resource> {
@@ -71,6 +72,7 @@ export function DetailPage<R extends Resource>({
     tabs,
     basePath,
     extractPrimaryResource,
+    extraRoutes,
 }: DetailPageProps<R>) {
     const params = useParams();
     const [response] = useService(() => getFHIRResources(resourceType, getSearchParams(params)));
@@ -100,6 +102,7 @@ export function DetailPage<R extends Resource>({
                             {tabs.map(({ path, component }) => (
                                 <Route path={'/' + path} element={component(context)} key={path} />
                             ))}
+                            {extraRoutes ? extraRoutes(context) : null}
                         </Routes>
                     </PageContainer>
                 );
