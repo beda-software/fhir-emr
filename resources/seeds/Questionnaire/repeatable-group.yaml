@@ -5,96 +5,16 @@ status: active
 meta:
   profile:
     - https://beda.software/beda-emr-questionnaire
-subjectType:
-    - Encounter
-    - Patient
 item:
-  - type: group
-    linkId: main-group
+  - text: Items
+    type: group
+    linkId: surgeries-group
     item:
-      - type: group
-        text: Main card
-        linkId: main-group-card
-        itemControl:
-          coding:
-            - code: main-card
-        item:
-          - text: Text01
+      - item:
+          - text: Text
             type: string
-            linkId: text01
-          - text: Text02
-            type: string
-            linkId: text02
-      - type: group
-        text: Sub card
-        linkId: sub-group-card
-        itemControl:
-          coding:
-            - code: sub-card
-        item:
-          - text: Text03
-            type: string
-            linkId: text03
-          - text: Text04
-            type: string
-            linkId: text04
-      - type: group
-        linkId: primary-group
-        text: "Example 1: main-card + row + section-with-divider"
-        itemControl:
-          coding:
-            - code: section-with-divider
-        item:
-          - type: group
-            linkId: group11
-            repeats: true
-            text: Main card
-            itemControl:
-              coding:
-                - code: main-card
-            item:
-              - type: group
-                linkId: group12
-                repeats: true
-                text: service
-                itemControl:
-                  coding:
-                    - code: row
-                item:
-                  - text: Text1
-                    type: string
-                    linkId: text11
-                  - text: Text2
-                    type: string
-                    linkId: text12
-      - type: group
-        linkId: secondary-group
-        text: "Example 2: sub-card + section"
-        itemControl:
-          coding:
-            - code: section
-        item:
-          - type: group
-            linkId: group21
-            repeats: true
-            text: Sub card
-            itemControl:
-              coding:
-                - code: sub-card
-            item:
-              - text: Text1
-                type: string
-                linkId: text21
-              - type: group
-                linkId: group22
-                itemControl:
-                  coding:
-                    - code: row
-                item:
-                  - text: Text2
-                    type: string
-                    linkId: text22
-                  - text: Text3
-                    type: string
-                    linkId: text23
+            linkId: repeatable-group-text
+        type: group
+        linkId: repeatable-group
+        repeats: true
 resourceType: Questionnaire
