@@ -103,37 +103,54 @@ export function RecordQuestionnaireAction<R extends Resource>({
 }
 
 interface HeaderQuestionnaireActionProps {
-    action: QuestionnaireActionType;
+    action: QuestionnaireActionType|NavigationActionType;
     reload: () => void;
     defaultLaunchContext: ParametersParameter[];
 }
 
 export function HeaderQuestionnaireAction({ action, reload, defaultLaunchContext }: HeaderQuestionnaireActionProps) {
-    return (
-        <ModalTrigger
-            title={action.title}
-            trigger={
-                <Button type="primary" icon={action.icon}>
-                    <span>{action.title}</span>
-                </Button>
-            }
-        >
-            {({ closeModal }) => (
-                <QuestionnaireResponseForm
-                    questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
-                    onSuccess={() => {
-                        closeModal();
-                        notification.success({ message: t`Successfully submitted` });
-                        reload();
-                    }}
-                    launchContextParameters={defaultLaunchContext}
-                    onCancel={closeModal}
-                    saveButtonTitle={t`Submit`}
-                    {...(action.qrfProps ?? {})}
-                />
-            )}
-        </ModalTrigger>
-    );
+    const navigate = useNavigate();
+
+    if (action.type === 'questionnaire') {
+        return (
+            <ModalTrigger
+                title={action.title}
+                trigger={
+                    <Button type="primary" icon={action.icon}>
+                        <span>{action.title}</span>
+                    </Button>
+                }
+            >
+                {({ closeModal }) => (
+                    <QuestionnaireResponseForm
+                        questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
+                        onSuccess={() => {
+                            closeModal();
+                            notification.success({ message: t`Successfully submitted` });
+                            reload();
+                        }}
+                        launchContextParameters={defaultLaunchContext}
+                        onCancel={closeModal}
+                        saveButtonTitle={t`Submit`}
+                        {...(action.qrfProps ?? {})}
+                    />
+                )}
+            </ModalTrigger>
+        );
+    } else {
+        return (
+            <Button
+                type="primary"
+                style={{ padding: 0 }}
+                onClick={() =>
+                    navigate(action.link)
+                }
+                icon={action.icon}
+            >
+                {action.title}
+            </Button>
+        );
+}
 }
 
 export function BatchQuestionnaireAction<R extends Resource>({

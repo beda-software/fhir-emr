@@ -86,7 +86,7 @@ export interface ResourceListPageProps<R extends Resource> {
      *
      * NOTE: Theoretically getHeaderActions can accept all resources Bundle
      */
-    getHeaderActions?: () => Array<QuestionnaireActionType>;
+    getHeaderActions?: () => Array<QuestionnaireActionType|NavigationActionType>;
 
     /**
      * Batch actions that are available when rows are selected
