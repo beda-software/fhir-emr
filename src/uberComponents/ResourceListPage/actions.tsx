@@ -1,6 +1,7 @@
 import { t } from '@lingui/macro';
 import { Button, ModalProps, notification } from 'antd';
 import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
+import { omit } from 'lodash';
 import { useNavigate } from 'react-router-dom';
 
 import { ModalTrigger } from 'src/components/ModalTrigger';
@@ -176,7 +177,7 @@ export function BatchQuestionnaireAction<R extends Resource>({
                 <QuestionnaireResponseForm
                     questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
                     launchContextParameters={[
-                        ...defaultLaunchContext,
+                        ...(action.qrfProps?.launchContextParameters || defaultLaunchContext),
                         {
                             name: 'Bundle',
                             resource: bundle as Bundle,
@@ -189,7 +190,7 @@ export function BatchQuestionnaireAction<R extends Resource>({
                     }}
                     onCancel={closeModal}
                     saveButtonTitle={t`Submit`}
-                    {...(action.qrfProps ?? {})}
+                    {...(action.qrfProps ? omit(action.qrfProps, 'launchContextParameters') : {})}
                 />
             )}
         </ModalTrigger>
