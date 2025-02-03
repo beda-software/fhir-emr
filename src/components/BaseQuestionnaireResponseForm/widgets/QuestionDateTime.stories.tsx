@@ -1,5 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { ItemContext } from 'sdc-qrf/lib/types';
+import { t } from '@lingui/macro';
 
 import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 
@@ -19,7 +20,7 @@ export const DateTime: Story = {
         <QuestionDateTime
             parentPath={[]}
             questionItem={{
-                text: 'Select date',
+                text: t`Select date`,
                 type: 'dateTime',
                 linkId: 'date',
             }}
@@ -33,7 +34,7 @@ export const Date: Story = {
         <QuestionDateTime
             parentPath={[]}
             questionItem={{
-                text: 'Birth date',
+                text: t`Birth date`,
                 type: 'date',
                 linkId: 'birth-date',
             }}
@@ -47,7 +48,7 @@ export const Time: Story = {
         <QuestionDateTime
             parentPath={[]}
             questionItem={{
-                text: 'Select time',
+                text: t`Select time`,
                 type: 'time',
                 linkId: 'time',
             }}
@@ -61,7 +62,7 @@ export const FormatedTime: Story = {
         <QuestionDateTime
             parentPath={[]}
             questionItem={{
-                text: 'Time with no seconsd',
+                text: t`Time with no seconds`,
                 type: 'time',
                 linkId: 'time',
                 regex: 'HH:mm',
