@@ -19,6 +19,16 @@ export async function getProvenanceByEntity<T>(source: string) {
     return onSuccess<T>(response);
 }
 
+export async function getProvenanceByTargetId<T>(targetId: string) {
+    const response = await service<ProvenanceResponse<T>>({
+        url: `/$query/provenance-by-target-id`,
+        method: 'GET',
+        params: { target: targetId },
+    });
+
+    return onSuccess<T>(response);
+}
+
 export async function getProvenanceByTarget<T>(target: string) {
     const response = await service<ProvenanceResponse<T>>({
         url: `/$query/provenance-by-target`,

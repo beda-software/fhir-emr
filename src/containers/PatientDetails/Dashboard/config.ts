@@ -53,7 +53,6 @@ export const patientDashboardConfig: DashboardInstance = {
                 search: (patient: Patient) => ({
                     patient: patient.id,
                     _sort: ['-_date'],
-                    _revinclude: ['Provenance:target'],
                     _count: 7,
                 }),
             },
@@ -65,7 +64,6 @@ export const patientDashboardConfig: DashboardInstance = {
                 search: (patient: Patient) => ({
                     patient: patient.id,
                     _sort: ['-_recorded-date'],
-                    _revinclude: ['Provenance:target'],
                     _count: 7,
                 }),
             },
@@ -89,7 +87,6 @@ export const patientDashboardConfig: DashboardInstance = {
                 search: (patient: Patient) => ({
                     patient: patient.id,
                     _sort: ['-_lastUpdated'],
-                    _revinclude: ['Provenance:target'],
                     _count: 7,
                 }),
             },
@@ -103,7 +100,6 @@ export const patientDashboardConfig: DashboardInstance = {
                 search: (patient: Patient) => ({
                     patient: patient.id,
                     _sort: ['-_date'],
-                    _revinclude: ['Provenance:target'],
                     _count: 7,
                 }),
             },
@@ -116,7 +112,6 @@ export const patientDashboardConfig: DashboardInstance = {
                     patient: patient.id,
                     status: 'active',
                     _sort: ['-_lastUpdated'],
-                    _revinclude: ['Provenance:target'],
                     _count: 7,
                 }),
             },
