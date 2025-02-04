@@ -7,12 +7,12 @@ const getProvenanceEntityUriByRole = (role: string) =>
     compileAsFirst<Provenance, string>(`Provenance.entity.where(role='${role}').what.uri`);
 
 const getProvenanceEntityReferenceByRole = (role: string) =>
-    compileAsFirst<Provenance, Reference>(`Provenance.entity.where(role='${role}').what.reference`);
+    compileAsFirst<Provenance, Reference>(`Provenance.entity.where(role='${role}').what`);
 
 const getProvenanceEntityUriSource = getProvenanceEntityUriByRole('source');
 const getProvenanceEntityReferenceSource = getProvenanceEntityReferenceByRole('source');
 
-export function getSourceIdFromProvenance(provenance?: Provenance): Resource | undefined {
+export function getSourceFromProvenance(provenance?: Provenance): Resource | undefined {
     if (!provenance) {
         return undefined;
     }
