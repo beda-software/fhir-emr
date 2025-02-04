@@ -1,7 +1,7 @@
+import { Provenance } from 'fhir/r4b';
 import { describe } from 'vitest';
 
 import { getSourceFromProvenance } from '../utils';
-import { Provenance } from 'fhir/r4b';
 
 describe('getSourceFromProvenance', () => {
     test('getSourceFromProvenance for empty Provenance', () => {
@@ -15,7 +15,7 @@ describe('getSourceFromProvenance', () => {
     });
 
     test('getSourceFromProvenance for Provenance with source uri', () => {
-        const provenance: Provenance = {
+        const provenance: Provenance & { entity: { what: { uri: string } }[] } = {
             resourceType: 'Provenance',
             entity: [
                 {
@@ -41,7 +41,7 @@ describe('getSourceFromProvenance', () => {
     });
 
     test('getSourceFromProvenance for Provenance without source uri', () => {
-        const provenance: Provenance = {
+        const provenance: Provenance & { entity: { what: { uri: string } }[] } = {
             resourceType: 'Provenance',
             entity: [
                 {
