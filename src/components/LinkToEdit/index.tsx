@@ -2,7 +2,7 @@ import { Resource, Provenance } from 'fhir/r4b';
 import { Link, useLocation } from 'react-router-dom';
 
 import { useLinkToEdit } from 'src/components/LinkToEdit/hooks';
-import { getResourceTypeAndIdFromProvenance } from 'src/components/LinkToEdit/utils';
+import { getSourceIdFromProvenance } from 'src/components/LinkToEdit/utils';
 
 interface LinkToEditProps {
     name?: string;
@@ -19,7 +19,8 @@ export function LinkToEdit(props: LinkToEditProps) {
     if (provenance) {
         // const pathname = location.pathname.split('/').slice(0, -1).join('/');
         const pathname = location.pathname.split('/').slice(0, 3).join('/');
-        const { id: qrId } = getResourceTypeAndIdFromProvenance(provenance);
+        const resource = getSourceIdFromProvenance(provenance);
+        const qrId = resource?.id;
         return <Link to={to ? `${to}/${qrId}` : `${pathname}/documents/${qrId}`}>{name}</Link>;
     }
     // }
