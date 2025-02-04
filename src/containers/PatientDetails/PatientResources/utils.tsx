@@ -15,7 +15,9 @@ import { extractExtension } from 'sdc-qrf';
 
 import { WithId } from '@beda.software/fhir-react';
 
-import { ResourceTable, Option, LinkToEdit } from 'src/components/ResourceTable';
+import { LinkToEdit } from 'src/components/LinkToEdit';
+import { ResourceTable } from 'src/components/ResourceTable';
+import { Option } from 'src/components/ResourceTable/types';
 import { compileAsArray } from 'src/utils';
 import { formatHumanDate, formatHumanDateTime } from 'src/utils/date';
 
@@ -40,7 +42,6 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     params={{
                         patient: patient.id,
                         _sort: ['-_lastUpdated', '_id'],
-                        _revinclude: ['Provenance:target'],
                     }}
                     getTableColumns={option.getTableColumns}
                 />
@@ -75,7 +76,6 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     params={{
                         patient: patient.id,
                         _sort: ['-_recorded-date', '_id'],
-                        _revinclude: ['Provenance:target'],
                     }}
                     getTableColumns={option.getTableColumns}
                 />
@@ -114,7 +114,6 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     params={{
                         patient: patient.id,
                         _sort: ['-_date', '_id'],
-                        _revinclude: ['Provenance:target'],
                     }}
                     getTableColumns={option.getTableColumns}
                 />
@@ -153,7 +152,6 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     params={{
                         patient: patient.id,
                         _sort: ['-_date', '_id'],
-                        _revinclude: ['Provenance:target'],
                     }}
                     getTableColumns={option.getTableColumns}
                 />
@@ -189,7 +187,6 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                         patient: patient.id,
                         status: 'active',
                         _sort: ['-_lastUpdated', '_id'],
-                        _revinclude: ['Provenance:target'],
                     }}
                     getTableColumns={option.getTableColumns}
                 />
@@ -236,7 +233,6 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                         patient: patient.id,
                         status: 'final',
                         _sort: ['-_lastUpdated', '_id'],
-                        _revinclude: ['Provenance:target'],
                     }}
                     getTableColumns={option.getTableColumns}
                 />

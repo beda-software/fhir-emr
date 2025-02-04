@@ -19,8 +19,8 @@ import { extractExtension } from 'sdc-qrf';
 
 import { WithId, extractBundleResources, formatFHIRDate, parseFHIRDateTime } from '@beda.software/fhir-react';
 
+import { LinkToEdit } from 'src/components/LinkToEdit';
 import { PatientActivitySummary } from 'src/containers/PatientDetails/PatientActivitySummary';
-import { LinkToEdit } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/LinkToEdit';
 import { OverviewCard } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/types';
 import medicationIcon from 'src/containers/PatientDetails/PatientOverviewDynamic/images/medication.svg';
 import { formatHumanDate } from 'src/utils/date';
