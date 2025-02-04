@@ -3,14 +3,14 @@ import { fromFHIRReference } from 'sdc-qrf';
 
 import { compileAsFirst } from 'src/utils';
 
-const getProvenanceEntityUriByRole = (role: string) =>
+export const getProvenanceEntityUriByRole = (role: string) =>
     compileAsFirst<Provenance, string>(`Provenance.entity.where(role='${role}').what.uri`);
 
-const getProvenanceEntityReferenceByRole = (role: string) =>
+export const getProvenanceEntityReferenceByRole = (role: string) =>
     compileAsFirst<Provenance, Reference>(`Provenance.entity.where(role='${role}').what`);
 
-const getProvenanceEntityUriSource = getProvenanceEntityUriByRole('source');
-const getProvenanceEntityReferenceSource = getProvenanceEntityReferenceByRole('source');
+export const getProvenanceEntityUriSource = getProvenanceEntityUriByRole('source');
+export const getProvenanceEntityReferenceSource = getProvenanceEntityReferenceByRole('source');
 
 export function getSourceFromProvenance(provenance?: Provenance): Resource | undefined {
     if (!provenance) {
