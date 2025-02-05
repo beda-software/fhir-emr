@@ -68,9 +68,7 @@ export function PatientQuestionnaire({ onSuccess }: { onSuccess?: () => void }) 
 
     return (
         <PageContainer title={<Trans>Questionnaire</Trans>}>
-            <div style={{ margin: '0 auto' }}>
-                {isLoading ? <Spinner /> : <PatientQuestionnaireForm onSuccess={onSuccess} />}
-            </div>
+            {isLoading ? <Spinner /> : <PatientQuestionnaireForm onSuccess={onSuccess} />}
         </PageContainer>
     );
 }
