@@ -1,5 +1,5 @@
 import { Resource, Provenance } from 'fhir/r4b';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { fromFHIRReference } from 'sdc-qrf';
 
 interface LinkToEditProps {
@@ -10,7 +10,7 @@ interface LinkToEditProps {
 }
 export function LinkToEdit(props: LinkToEditProps) {
     const { name, resource, provenanceList, to } = props;
-    const location = useLocation();
+    /* const location = useLocation(); */
     const provenance = provenanceList.find((provenance) => {
         const targets = provenance.target || [];
 
@@ -25,7 +25,7 @@ export function LinkToEdit(props: LinkToEditProps) {
     const qrId = fromFHIRReference(entity)?.id;
 
     if (qrId) {
-        return <Link to={to ? `${to}/${qrId}` : `${location.pathname}/documents/${qrId}`}>{name}</Link>;
+        return <Link to={to ? `${to}/${qrId}` : `./documents/${qrId}`}>{name}</Link>;
     }
 
     return <>{name}</>;
