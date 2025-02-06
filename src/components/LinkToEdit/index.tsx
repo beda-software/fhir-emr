@@ -40,7 +40,7 @@ export function LinkToEdit(props: LinkToEditProps) {
         );
     }
 
-    const pathname = location.pathname.split('/').slice(0, 2).join('/');
+    const pathname = location.pathname.split('/').slice(0, 3).join('/');
     const entityResource = getSourceFromProvenance(provenance);
     const qrId = entityResource?.id;
     return <Link to={to ? `${to}/${qrId}` : `${pathname}/documents/${qrId}`}>{name}</Link>;
