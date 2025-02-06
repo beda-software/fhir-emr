@@ -101,6 +101,14 @@ export function questionnaireItemsToValidationSchema(questionnaireItems: Questio
             schema = yup.date();
             if (item.required) schema = schema.required();
             schema = createSchemaArrayOfValues(yup.object({ date: schema })).required();
+        } else if (item.item) {
+            schema = yup
+                .object({
+                    items: item.repeats
+                        ? yup.array().of(questionnaireItemsToValidationSchema(item.item))
+                        : questionnaireItemsToValidationSchema(item.item),
+                })
+                .required();
         } else {
             schema = item.required ? yup.array().of(yup.mixed()).min(1).required() : yup.mixed().nullable();
         }
@@ -113,15 +121,6 @@ export function questionnaireItemsToValidationSchema(questionnaireItems: Questio
             });
         } else {
             validationSchema[item.linkId] = schema;
-            if (item.item) {
-                validationSchema[item.linkId] = yup
-                    .object({
-                        items: item.repeats
-                            ? yup.array().of(questionnaireItemsToValidationSchema(item.item))
-                            : questionnaireItemsToValidationSchema(item.item),
-                    })
-                    .required();
-            }
         }
     });
 
