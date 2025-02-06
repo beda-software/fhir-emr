@@ -72,7 +72,10 @@ export function getDisplay(
     return '';
 }
 
-export function getArrayDisplay(options?: QuestionnaireResponseItemAnswer[], choiceColumn?: QuestionnaireItemChoiceColumn[]): string | null {
+export function getArrayDisplay(
+    options?: QuestionnaireResponseItemAnswer[],
+    choiceColumn?: QuestionnaireItemChoiceColumn[],
+): string | null {
     if (!options) {
         return null;
     }
@@ -110,10 +113,13 @@ export function questionnaireItemsToValidationSchema(questionnaireItems: Questio
             });
         } else {
             validationSchema[item.linkId] = schema;
-
-            if (item.item && !item.repeats) {
+            if (item.item) {
                 validationSchema[item.linkId] = yup
-                    .object({ items: questionnaireItemsToValidationSchema(item.item) })
+                    .object({
+                        items: item.repeats
+                            ? yup.array().of(questionnaireItemsToValidationSchema(item.item))
+                            : questionnaireItemsToValidationSchema(item.item),
+                    })
                     .required();
             }
         }
