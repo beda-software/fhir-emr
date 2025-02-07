@@ -4,6 +4,7 @@ import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle } fro
 
 import { getAppTheme, getANTDTheme } from './';
 import { useTheme } from '../utils/theme';
+import { antdLocaleMap, getCurrentLocale } from 'src/services/i18n';
 
 interface Props {
     theme?: 'dark' | 'light';
@@ -36,7 +37,7 @@ export function ThemeProvider(props: Props) {
     };
 
     return (
-        <ANTDConfigProvider theme={antdTheme}>
+        <ANTDConfigProvider theme={antdTheme} locale={antdLocaleMap[getCurrentLocale()]}>
             <StyledComponentsThemeProvider theme={appTheme}>
                 <GlobalStyle />
                 {children}
