@@ -2,9 +2,10 @@ import { ConfigProvider as ANTDConfigProvider } from 'antd';
 import { ReactNode } from 'react';
 import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle } from 'styled-components';
 
+import { antdLocaleMap, getCurrentLocale } from 'src/services/i18n';
+
 import { getAppTheme, getANTDTheme } from './';
 import { useTheme } from '../utils/theme';
-import { antdLocaleMap, getCurrentLocale } from 'src/services/i18n';
 
 interface Props {
     theme?: 'dark' | 'light';
