@@ -45,7 +45,7 @@ interface ReportColumn {
     value: React.ReactNode;
 }
 
-interface ResourceListPageProps<R extends Resource> {
+export interface ResourceListPageProps<R extends Resource> {
     /* Page header title (for example, Organizations) */
     headerTitle: string;
 
@@ -246,7 +246,7 @@ interface ResourcesListPageReportProps<R> {
     getReportColumns: (bundle: Bundle, reportBundle?: Bundle) => Array<ReportColumn>;
 }
 
-function ResourcesListPageReport<R>(props: ResourcesListPageReportProps<R>) {
+export function ResourcesListPageReport<R>(props: ResourcesListPageReportProps<R>) {
     const { recordResponse, getReportColumns } = props;
     const emptyBundle: Bundle = { resourceType: 'Bundle', entry: [], type: 'searchset' };
     const items =
@@ -257,7 +257,7 @@ function ResourcesListPageReport<R>(props: ResourcesListPageReportProps<R>) {
     return <Report items={items} />;
 }
 
-function getRecordActionsColumn<R extends Resource>({
+export function getRecordActionsColumn<R extends Resource>({
     getRecordActions,
     defaultLaunchContext,
     reload,
