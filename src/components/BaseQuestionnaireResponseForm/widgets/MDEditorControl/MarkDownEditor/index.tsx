@@ -67,7 +67,7 @@ export function MarkDownEditor(props: MarkDownEditorProps) {
                   toolbarPlugin({
                       toolbarContents: () => {
                           return (
-                              <div className="MarkDownToolBar" style={{ display: 'flex' }}>
+                              <div className="MarkDownToolBar" style={{ display: 'flex', flexWrap: 'wrap' }}>
                                   {toolbarPlugins.map((Plugin, index) => (
                                       <Fragment key={index}>{Plugin}</Fragment>
                                   ))}
