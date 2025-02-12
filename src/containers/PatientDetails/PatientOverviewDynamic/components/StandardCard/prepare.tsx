@@ -44,7 +44,7 @@ export function prepareAllergies(
                 key: 'name',
                 render: (resource: AllergyIntolerance) => (
                     <LinkToEdit
-                        name={resource.code?.coding?.[0]?.display}
+                        name={resource.code?.coding?.[0]?.display ?? resource.code?.text}
                         resource={resource}
                         provenanceList={provenanceList}
                         to={to}
@@ -205,7 +205,7 @@ export function prepareImmunizations(
                 key: 'name',
                 render: (resource: Immunization) => (
                     <LinkToEdit
-                        name={resource.vaccineCode.coding?.[0]?.display}
+                        name={resource.vaccineCode.coding?.[0]?.display ?? resource.vaccineCode.text}
                         resource={resource}
                         provenanceList={provenanceList}
                         to={to}
@@ -241,7 +241,10 @@ export function prepareMedications(
                 key: 'name',
                 render: (resource: MedicationStatement) => (
                     <LinkToEdit
-                        name={resource.medicationCodeableConcept?.coding?.[0]?.display}
+                        name={
+                            resource.medicationCodeableConcept?.coding?.[0]?.display ??
+                            resource.medicationCodeableConcept?.text
+                        }
                         resource={resource}
                         provenanceList={provenanceList}
                         to={to}
