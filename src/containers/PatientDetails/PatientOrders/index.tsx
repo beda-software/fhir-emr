@@ -8,9 +8,10 @@ import styled from 'styled-components';
 
 import { WithId } from '@beda.software/fhir-react';
 
+import { LinkToEdit } from 'src/components/LinkToEdit';
 import { Modal } from 'src/components/Modal';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
-import { ResourceTable, LinkToEdit } from 'src/components/ResourceTable';
+import { ResourceTable } from 'src/components/ResourceTable';
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 import { formatHumanDate } from 'src/utils/date';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
@@ -215,7 +216,6 @@ export function PatientOrders({ patient }: Props) {
                     category: 'laboratory',
                     status: 'final',
                     _sort: ['-_lastUpdated', '_id'],
-                    _revinclude: ['Provenance:target'],
                     _ilike: search,
                 }}
                 getTableColumns={getTableColumns}
