@@ -1,4 +1,4 @@
-import { Patient, FhirResource, Resource } from 'fhir/r4b';
+import { Patient, FhirResource, Resource, Bundle } from 'fhir/r4b';
 
 import { extractBundleResources, useService } from '@beda.software/fhir-react';
 import { mapSuccess, resolveMap } from '@beda.software/remote-data';
@@ -16,19 +16,18 @@ export function useStandardCard<T extends Resource>(
     prepareFunction: PrepareFunction<T>,
     to?: string,
 ) {
-    const [response] = useService(async () => {
+    const [response, manager] = useService(async () => {
         return mapSuccess(
             await resolveMap({
-                resourceBundle: getFHIRResources<FhirResource>(query.resourceType, query.search(patient)),
+                resourceBundle: getFHIRResources<T>(query.resourceType, query.search(patient)),
             }),
             ({ resourceBundle }) => {
                 const resources = extractBundleResources(resourceBundle);
                 const resource = resources[query.resourceType];
-                const provenance = resources.Provenance;
 
                 const card: OverviewCard<T> | OverviewCard<T[]> = prepareFunction(
                     resource as T[],
-                    provenance,
+                    resourceBundle,
                     resource.length,
                     to,
                 );
@@ -37,5 +36,5 @@ export function useStandardCard<T extends Resource>(
         );
     }, []);
 
-    return { response };
+    return { response, manager };
 }
