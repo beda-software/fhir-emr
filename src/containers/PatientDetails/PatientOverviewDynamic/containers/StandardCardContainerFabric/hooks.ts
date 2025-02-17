@@ -1,4 +1,4 @@
-import { Patient, FhirResource, Resource, Bundle } from 'fhir/r4b';
+import { Patient, Resource } from 'fhir/r4b';
 
 import { extractBundleResources, useService } from '@beda.software/fhir-react';
 import { mapSuccess, resolveMap } from '@beda.software/remote-data';
