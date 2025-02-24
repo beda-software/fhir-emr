@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 
 import { useFieldController } from '../hooks';
+import _ from 'lodash';
 
 const inputStyle = { width: '100%' };
 
@@ -27,6 +28,7 @@ export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps)
                 value={value}
                 required={required}
                 placeholder={placeholder}
+                parser={(displayValue) => _.toInteger(displayValue)}
             />
         </Form.Item>
     );

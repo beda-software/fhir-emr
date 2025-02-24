@@ -94,7 +94,7 @@ export function questionnaireItemsToValidationSchema(questionnaireItems: Questio
             if (item.maxLength && item.maxLength > 0) schema = (schema as yup.StringSchema).max(item.maxLength);
             schema = createSchemaArrayOfValues(yup.object({ string: schema })).required();
         } else if (item.type === 'integer') {
-            schema = yup.number();
+            schema = yup.number().integer();
             if (item.required) schema = schema.required();
             schema = createSchemaArrayOfValues(yup.object({ integer: schema })).required();
         } else if (item.type === 'date') {
