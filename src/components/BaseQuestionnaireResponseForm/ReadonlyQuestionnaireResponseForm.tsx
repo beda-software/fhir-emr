@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
     calcInitialContext,
@@ -8,6 +9,13 @@ import {
     QuestionnaireResponseFormProvider,
 } from 'sdc-qrf';
 
+import {
+    ItemControlGroupItemReadonlyWidgetsContext,
+    ItemControlQuestionItemReadonlyWidgetsContext,
+} from 'src/components/BaseQuestionnaireResponseForm/context';
+import { MarkdownRenderControl } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/MarkdownRender';
+
+import { AudioAttachment } from './readonly-widgets/AudioAttachment';
 import { QuestionBoolean } from './readonly-widgets/boolean';
 import { QuestionChoice } from './readonly-widgets/choice';
 import { QuestionDateTime } from './readonly-widgets/date';
@@ -19,7 +27,6 @@ import { AnxietyScore, DepressionScore } from './readonly-widgets/score';
 import { QuestionText, TextWithInput } from './readonly-widgets/string';
 import { TimeRangePickerControl } from './readonly-widgets/TimeRangePickerControl';
 import { UploadFile } from './readonly-widgets/UploadFile';
-import { AudioAttachment } from './readonly-widgets/AudioAttachment';
 
 interface Props extends Partial<QRFContextData> {
     formData: QuestionnaireResponseFormData;
@@ -40,6 +47,9 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
 
     const formValues = watch();
 
+    const ItemControlQuestionItemReadonlyWidgetsFromContext = useContext(ItemControlQuestionItemReadonlyWidgetsContext);
+    const ItemControlGroupItemReadonlyWidgetsFromContext = useContext(ItemControlGroupItemReadonlyWidgetsContext);
+
     return (
         <FormProvider {...methods}>
             <form>
@@ -54,6 +64,7 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
                         row: Row,
                         'time-range-picker': TimeRangePickerControl,
                         ...itemControlGroupItemComponents,
+                        ...ItemControlGroupItemReadonlyWidgetsFromContext,
                     }}
                     questionItemComponents={{
                         text: QuestionText,
@@ -76,7 +87,9 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
                         'depression-score': DepressionScore,
                         'input-inside-text': TextWithInput,
                         'audio-recorder-uploader': AudioAttachment,
+                        'markdown-editor': MarkdownRenderControl,
                         ...itemControlQuestionItemComponents,
+                        ...ItemControlQuestionItemReadonlyWidgetsFromContext,
                     }}
                 >
                     <>
