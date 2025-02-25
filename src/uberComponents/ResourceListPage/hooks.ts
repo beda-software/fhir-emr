@@ -81,6 +81,7 @@ export function useResourceListPage<R extends Resource>(
 
     return {
         pagination,
+        pagerManager,
         recordResponse,
         handleTableChange,
         selectedRowKeys,
