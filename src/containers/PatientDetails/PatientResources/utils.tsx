@@ -15,7 +15,8 @@ import { extractExtension } from 'sdc-qrf';
 
 import { WithId } from '@beda.software/fhir-react';
 
-import { ResourceTable, Option, LinkToEdit } from 'src/components/ResourceTable';
+import { LinkToEdit } from 'src/components/LinkToEdit';
+import { ResourceTable, Option } from 'src/components/ResourceTable';
 import { compileAsArray } from 'src/utils';
 import { formatHumanDate, formatHumanDateTime } from 'src/utils/date';
 
