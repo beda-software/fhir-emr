@@ -45,7 +45,7 @@ interface ReportColumn {
     value: React.ReactNode;
 }
 
-interface ResourceListPageProps<R extends Resource> {
+export interface ResourceListPageProps<R extends Resource> {
     /* Page header title (for example, Organizations) */
     headerTitle: string;
 
