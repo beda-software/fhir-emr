@@ -13,7 +13,7 @@ export function usePagerExtended<T extends Resource, F = unknown>(
     debouncedFilterValues?: F,
     defaultPageSize?: number,
 ) {
-    const [pageSize, setPageSize] = useState(defaultPageSize ?? 10);
+    const [pageSize, setPageSize] = useState(defaultPageSize ?? searchParams?._count ?? 10);
 
     const [resourceResponse, pagerManager] = usePager<T>({
         resourceType,
