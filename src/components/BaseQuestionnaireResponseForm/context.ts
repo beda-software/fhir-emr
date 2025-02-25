@@ -7,6 +7,9 @@ import { BaseQuestionnaireResponseFormProps } from '.';
 export const ItemControlQuestionItemWidgetsContext = createContext<ItemControlQuestionItemComponentMapping>({});
 export const ItemControlGroupItemWidgetsContext = createContext<ItemControlGroupItemComponentMapping>({});
 
+export const ItemControlQuestionItemReadonlyWidgetsContext = createContext<ItemControlQuestionItemComponentMapping>({});
+export const ItemControlGroupItemReadonlyWidgetsContext = createContext<ItemControlGroupItemComponentMapping>({});
+
 interface BaseQuestionnaireResponseFormPropsContextProps extends BaseQuestionnaireResponseFormProps {
     submitting: boolean;
     debouncedSaveDraft?: DebouncedFunc<(currentFormValues: FormItems) => Promise<void>>;
