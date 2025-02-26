@@ -1,13 +1,14 @@
 import { Trans } from '@lingui/macro';
 import { Empty } from 'antd';
-import { ColumnsType } from 'antd/lib/table';
+import { ColumnsType, TablePaginationConfig } from 'antd/lib/table';
 import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import { formatError, SearchParams } from '@beda.software/fhir-react';
 import { isFailure, isLoading, isSuccess, RemoteData } from '@beda.software/remote-data';
 
 import { PageContainer } from 'src/components/BaseLayout/PageContainer';
+import { Report } from 'src/components/Report';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { isTableFilter } from 'src/components/SearchBar/utils';
@@ -28,11 +29,10 @@ import {
     isCustomAction,
 } from './actions';
 export { navigationAction, customAction, questionnaireAction } from './actions';
-import { useResourceListPage } from './hooks';
-import { SearchBarColumn } from '../../components/SearchBar/types';
-import { S } from './styles';
-import { Report } from 'src/components/Report';
 import { BatchActions } from './BatchActions';
+import { useResourceListPage } from './hooks';
+import { S } from './styles';
+import { SearchBarColumn } from '../../components/SearchBar/types';
 
 type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
 
@@ -138,15 +138,26 @@ export function ResourceListPage<R extends Resource>({
         [JSON.stringify(columnsFilterValues)],
     );
 
-    const {
-        recordResponse,
-        reload,
-        pagination,
-        handleTableChange,
-        selectedRowKeys,
-        setSelectedRowKeys,
-        selectedResourcesBundle,
-    } = useResourceListPage(resourceType, extractPrimaryResources, columnsFilterValues, searchParams ?? {});
+    const { recordResponse, reload, pagination, selectedRowKeys, setSelectedRowKeys, selectedResourcesBundle } =
+        useResourceListPage(resourceType, extractPrimaryResources, columnsFilterValues, searchParams ?? {});
+
+    const handleTableChange = useCallback(
+        (event: TablePaginationConfig) => {
+            if (typeof event.current !== 'number') {
+                return;
+            }
+            if (event.pageSize && event.pageSize !== pagination.pageSize) {
+                pagination.reload();
+                pagination.updatePageSize(event.pageSize);
+            } else {
+                pagination.loadPage(event.current, {
+                    _page: event.current,
+                });
+            }
+            setSelectedRowKeys([]);
+        },
+        [pagination],
+    );
 
     // TODO: move to hooks
     const initialTableColumns = getTableColumns({ reload });
@@ -198,7 +209,7 @@ export function ResourceListPage<R extends Resource>({
             ) : null}
 
             <Table<RecordType<R>>
-                pagination={pagination}
+                pagination={{ total: pagination.total, pageSize: pagination.pageSize }}
                 onChange={handleTableChange}
                 rowSelection={batchActions.length ? { selectedRowKeys, onChange: setSelectedRowKeys } : undefined}
                 locale={{
