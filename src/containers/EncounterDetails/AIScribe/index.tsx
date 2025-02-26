@@ -309,7 +309,7 @@ function Extract(props: ExtractProps) {
     return (
         <RenderRemoteData
             remoteData={extractionRD}
-            renderLoading={() => <Text>Loading...</Text>}
+            renderLoading={() => <Text> ${t`Loading...`}</Text>}
             renderFailure={(error) => <Text>{formatError(error)}</Text>}
         >
             {() => <></>}

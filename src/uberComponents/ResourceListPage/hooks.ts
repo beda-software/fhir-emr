@@ -1,13 +1,12 @@
-import { TablePaginationConfig } from 'antd';
 import { Bundle, Resource } from 'fhir/r4b';
 import { useEffect, useMemo, useState } from 'react';
 
-import { SearchParams } from '@beda.software/fhir-react';
+import { SearchParams, usePager } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 
 import { ColumnFilterValue } from 'src/components/SearchBar/types';
 import { getSearchBarColumnFilterValue } from 'src/components/SearchBar/utils';
-import { usePagerExtended } from 'src/hooks/pager';
+import { service } from 'src/services';
 import { useDebounce } from 'src/utils/debounce';
 
 export function useResourceListPage<R extends Resource>(
@@ -30,22 +29,31 @@ export function useResourceListPage<R extends Resource>(
     };
     const searchParams = { _sort: '-_lastUpdated', ...defaultSearchParams, ...searchBarSearchParams };
 
-    const {
-        resourceResponse,
-        pagerManager,
-        handleTableChange: pagerHandleTableChange,
-        pagination,
-    } = usePagerExtended<R, ColumnFilterValue[]>(resourceType, searchParams);
+    const defaultPageSize = defaultSearchParams._count;
 
-    const handleTableChange = async (pagination: TablePaginationConfig) => {
-        // Handle pagination only
-        if (typeof pagination.current !== 'number') {
-            return;
-        }
+    const [pageSize, setPageSize] = useState(typeof defaultPageSize === 'number' ? defaultPageSize : 10);
 
-        pagerHandleTableChange(pagination);
-        setSelectedRowKeys([]);
-    };
+    const [resourceResponse, pagerManager] = usePager<R>({
+        resourceType,
+        requestService: service,
+        resourcesOnPage: pageSize,
+        initialSearchParams: searchParams,
+    });
+
+    const total = isSuccess(resourceResponse) ? resourceResponse.data.total : 0;
+
+    const pagination = useMemo(
+        () => ({
+            ...pagerManager,
+            updatePageSize: (pageSize: number) => {
+                pagerManager.reload();
+                setPageSize(pageSize);
+            },
+            pageSize,
+            total,
+        }),
+        [pagerManager, pageSize, total, setPageSize],
+    );
 
     useEffect(() => {
         setSelectedRowKeys([]);
@@ -82,7 +90,6 @@ export function useResourceListPage<R extends Resource>(
     return {
         pagination,
         recordResponse,
-        handleTableChange,
         selectedRowKeys,
         setSelectedRowKeys,
         selectedResourcesBundle,

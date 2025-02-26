@@ -43,6 +43,7 @@ msgstr ""
 msgid "Activate healthcare service"
 msgstr ""
 
+#: src/containers/HealthcareServiceList/index.tsx:74
 #: src/containers/Prescriptions/components/PrescriptionsSearchBar/hooks.ts:97
 #: src/containers/Prescriptions/index.tsx:185
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:82
@@ -198,6 +199,7 @@ msgstr ""
 msgid "Available units"
 msgstr ""
 
+#: src/containers/InvoiceList/components/InvoiceListSearchBar/hooks.ts:97
 #: src/containers/InvoiceList/tableUtils.tsx:27
 msgid "Balanced"
 msgstr ""
@@ -211,6 +213,7 @@ msgstr ""
 msgid "Batch Number"
 msgstr ""
 
+#: src/components/BaseQuestionnaireResponseForm/widgets/QuestionDateTime.stories.tsx:37
 #: src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer/hooks.ts:31
 #: src/containers/PatientList/index.tsx:85
 #: src/containers/PatientResourceListExample/index.tsx:48
@@ -228,6 +231,10 @@ msgstr ""
 
 #: src/containers/QuestionnaireBuilder/index.tsx:43
 msgid "Build your form"
+msgstr ""
+
+#: src/components/BaseLayout/Footer/index.tsx:15
+msgid "by"
 msgstr ""
 
 #: src/containers/PatientDetails/PatientWearables/index.tsx:46
@@ -250,6 +257,7 @@ msgstr ""
 msgid "Cancel Medication Request"
 msgstr ""
 
+#: src/containers/InvoiceList/components/InvoiceListSearchBar/hooks.ts:101
 #: src/containers/InvoiceList/tableUtils.tsx:28
 #: src/containers/Prescriptions/components/PrescriptionsSearchBar/hooks.ts:101
 #: src/containers/Prescriptions/index.tsx:187
@@ -386,6 +394,10 @@ msgstr ""
 msgid "CRP"
 msgstr ""
 
+#: src/utils/relative-date.ts:25
+msgid "d.o."
+msgstr ""
+
 #: src/components/PatientEncounter/index.tsx:39
 #: src/containers/EncounterList/index.tsx:63
 #: src/containers/InvoiceDetails/components/InvoiceDetailsHeader/index.tsx:23
@@ -491,6 +503,7 @@ msgstr ""
 msgid "Download audio"
 msgstr ""
 
+#: src/containers/InvoiceList/components/InvoiceListSearchBar/hooks.ts:109
 #: src/containers/InvoiceList/tableUtils.tsx:30
 #: src/containers/Prescriptions/components/PrescriptionsSearchBar/hooks.ts:121
 #: src/containers/Prescriptions/index.tsx:191
@@ -582,6 +595,7 @@ msgstr ""
 msgid "End date"
 msgstr "Конец периода"
 
+#: src/containers/InvoiceList/components/InvoiceListSearchBar/hooks.ts:113
 #: src/containers/InvoiceList/tableUtils.tsx:31
 #: src/containers/Prescriptions/components/PrescriptionsSearchBar/hooks.ts:113
 #: src/containers/Prescriptions/index.tsx:189
@@ -726,6 +740,10 @@ msgstr ""
 msgid "in progress"
 msgstr ""
 
+#: src/containers/HealthcareServiceList/index.tsx:74
+msgid "Inactive"
+msgstr ""
+
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:40
 msgid "Inline choice"
 msgstr ""
@@ -753,6 +771,7 @@ msgstr ""
 msgid "Invoices"
 msgstr ""
 
+#: src/containers/InvoiceList/components/InvoiceListSearchBar/hooks.ts:105
 #: src/containers/InvoiceList/tableUtils.tsx:29
 msgid "Issued"
 msgstr ""
@@ -781,6 +800,10 @@ msgstr ""
 msgid "Listen to the audio"
 msgstr ""
 
+#: src/containers/EncounterDetails/AIScribe/index.tsx:312
+msgid "Loading..."
+msgstr ""
+
 #: src/containers/SignIn/index.tsx:89
 msgid "Log in"
 msgstr ""
@@ -797,8 +820,16 @@ msgstr ""
 msgid "Log out"
 msgstr "Выйти"
 
+#: src/utils/relative-date.ts:22
+msgid "m.o."
+msgstr ""
+
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:101
 msgid "Macro text"
+msgstr ""
+
+#: src/components/BaseLayout/Footer/index.tsx:15
+msgid "Made with"
 msgstr ""
 
 #: src/components/DashboardCard/creatinine.tsx:91
@@ -1236,6 +1267,14 @@ msgstr ""
 msgid "Select all"
 msgstr ""
 
+#: src/components/BaseQuestionnaireResponseForm/widgets/QuestionDateTime.stories.tsx:23
+msgid "Select date"
+msgstr ""
+
+#: src/components/BaseQuestionnaireResponseForm/widgets/QuestionDateTime.stories.tsx:51
+msgid "Select time"
+msgstr ""
+
 #: src/components/BaseQuestionnaireResponseForm/widgets/choice/index.tsx:30
 #: src/components/BaseQuestionnaireResponseForm/widgets/choice/index.tsx:55
 msgid "Select..."
@@ -1455,6 +1494,10 @@ msgstr ""
 msgid "Time"
 msgstr ""
 
+#: src/components/BaseQuestionnaireResponseForm/widgets/QuestionDateTime.stories.tsx:65
+msgid "Time with no seconds"
+msgstr ""
+
 #: src/containers/PatientDetails/PatientOrders/index.tsx:27
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/NoteList/index.tsx:33
 #: src/containers/PatientDetails/PatientResources/utils.tsx:246
@@ -1560,6 +1603,10 @@ msgstr ""
 
 #: src/containers/SignIn/index.tsx:33
 msgid "Welcome to"
+msgstr ""
+
+#: src/utils/relative-date.ts:18
+msgid "y.o."
 msgstr ""
 
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:147

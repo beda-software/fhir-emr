@@ -1,4 +1,4 @@
-import { Invoice } from 'fhir/r4b';
+import { Invoice, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
 
 import { PagerManager } from '@beda.software/fhir-react';
 
@@ -22,7 +22,7 @@ export interface InvoiceListSearchBarSelectProps {
 }
 
 export interface InvoiceActionsProps {
-    manager: PagerManager;
+    manager: PagerManager<Invoice | Patient | Practitioner | PractitionerRole>;
     invoice: Invoice;
     simplified?: boolean;
 }

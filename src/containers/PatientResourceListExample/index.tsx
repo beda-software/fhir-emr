@@ -9,8 +9,8 @@ import { formatHumanDate } from 'src/utils/date';
 import { renderHumanName } from 'src/utils/fhir';
 import { matchCurrentUserRole, Role } from 'src/utils/role';
 
-import { getPatientSearchParamsForPractitioner } from './utils';
 import { S } from './styles';
+import { getPatientSearchParamsForPractitioner } from './utils';
 
 export function PatientResourceListExample() {
     /*
@@ -18,7 +18,7 @@ export function PatientResourceListExample() {
     */
     const searchParams = matchCurrentUserRole({
         [Role.Admin]: () => {
-            return {};
+            return { _count: 33 };
         },
         [Role.Practitioner]: (practitioner) => {
             return getPatientSearchParamsForPractitioner(practitioner.id);

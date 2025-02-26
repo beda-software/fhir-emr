@@ -1,13 +1,14 @@
 import { Trans } from '@lingui/macro';
 import { Empty } from 'antd';
-import { ColumnsType } from 'antd/lib/table';
+import { ColumnsType, TablePaginationConfig } from 'antd/lib/table';
 import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
-import { formatError, SearchParams } from '@beda.software/fhir-react';
+import { formatError } from '@beda.software/fhir-react';
 import { isFailure, isLoading, isSuccess, RemoteData } from '@beda.software/remote-data';
 
 import { PageContainer } from 'src/components/BaseLayout/PageContainer';
+import { Report } from 'src/components/Report';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { isTableFilter } from 'src/components/SearchBar/utils';
@@ -28,91 +29,23 @@ import {
     isCustomAction,
 } from './actions';
 export { navigationAction, customAction, questionnaireAction } from './actions';
-import { useResourceListPage } from './hooks';
-import { SearchBarColumn } from '../../components/SearchBar/types';
-import { S } from './styles';
-import { Report } from 'src/components/Report';
 import { BatchActions } from './BatchActions';
+import { useResourceListPage } from './hooks';
+import { S } from './styles';
+import { ResourceListProps, ReportColumn, TableManager } from './types';
 
 type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
 
-interface TableManager {
-    reload: () => void;
-}
-
-interface ReportColumn {
-    title: React.ReactNode;
-    value: React.ReactNode;
-}
-
-export interface ResourceListPageProps<R extends Resource> {
+type ResourceListPageProps<R extends Resource> = ResourceListProps<R> & {
     /* Page header title (for example, Organizations) */
     headerTitle: string;
 
     /* Page content max width */
     maxWidth?: number | string;
 
-    /* Primary resource type (for example, Organization) */
-    resourceType: R['resourceType'];
-
-    /**
-     * Custom primary resources extractor, might be used when the same resource type included
-     * e.g. Organizations included via part-of
-     *
-     * Default - extract all resources matching `resourceType`
-     */
-    extractPrimaryResources?: (bundle: Bundle) => R[];
-
-    /* Default search params */
-    searchParams?: SearchParams;
-
-    /* Filter that are displayed in the search bar and inside table columns */
-    getFilters?: () => SearchBarColumn[];
-
     /* Table columns without action column - action column is generated based on `getRecordActions` */
     getTableColumns: (manager: TableManager) => ColumnsType<RecordType<R>>;
-
-    /**
-     * Record actions list that is displayed in the table per record
-     * (for example, edit organization)
-     */
-    getRecordActions?: (
-        record: RecordType<R>,
-        manager: TableManager,
-    ) => Array<QuestionnaireActionType | NavigationActionType | CustomActionType>;
-
-    /**
-     * Header actions (for example, new organization)
-     *
-     * NOTE: Theoretically getHeaderActions can accept all resources Bundle
-     */
-    getHeaderActions?: () => Array<QuestionnaireActionType>;
-
-    /**
-     * Batch actions that are available when rows are selected
-     * (for example, delete multiple organizations)
-     *
-     * NOTE: Theoretically getHeaderActions can accept selected resources Bundle
-     */
-    getBatchActions?: () => Array<QuestionnaireActionType>;
-
-    /**
-     * Default launch context that will be added to all questionnaires
-     */
-    defaultLaunchContext?: ParametersParameter[];
-
-    /**
-     * EXPERIMENTAL FEATURE. The interface might be changed
-     * TODO: https://github.com/beda-software/fhir-emr/issues/414
-     */
-    // loadReportBundle?: (searchParams: SearchParams) => Promise<RemoteDataResult<Bundle>>
-
-    /**
-     * EXPERIMENTAL FEATURE. The interface might be changed
-     * TODO: https://github.com/beda-software/fhir-emr/issues/414
-     */
-    getReportColumns?: (bundle: Bundle, reportBundle?: Bundle) => Array<ReportColumn>;
-}
+};
 
 export function ResourceListPage<R extends Resource>({
     headerTitle: title,
@@ -138,15 +71,26 @@ export function ResourceListPage<R extends Resource>({
         [JSON.stringify(columnsFilterValues)],
     );
 
-    const {
-        recordResponse,
-        reload,
-        pagination,
-        handleTableChange,
-        selectedRowKeys,
-        setSelectedRowKeys,
-        selectedResourcesBundle,
-    } = useResourceListPage(resourceType, extractPrimaryResources, columnsFilterValues, searchParams ?? {});
+    const { recordResponse, reload, pagination, selectedRowKeys, setSelectedRowKeys, selectedResourcesBundle } =
+        useResourceListPage(resourceType, extractPrimaryResources, columnsFilterValues, searchParams ?? {});
+
+    const handleTableChange = useCallback(
+        (event: TablePaginationConfig) => {
+            if (typeof event.current !== 'number') {
+                return;
+            }
+            if (event.pageSize && event.pageSize !== pagination.pageSize) {
+                pagination.reload();
+                pagination.updatePageSize(event.pageSize);
+            } else {
+                pagination.loadPage(event.current, {
+                    _page: event.current,
+                });
+            }
+            setSelectedRowKeys([]);
+        },
+        [pagination],
+    );
 
     // TODO: move to hooks
     const initialTableColumns = getTableColumns({ reload });
@@ -198,7 +142,7 @@ export function ResourceListPage<R extends Resource>({
             ) : null}
 
             <Table<RecordType<R>>
-                pagination={pagination}
+                pagination={{ total: pagination.total, pageSize: pagination.pageSize }}
                 onChange={handleTableChange}
                 rowSelection={batchActions.length ? { selectedRowKeys, onChange: setSelectedRowKeys } : undefined}
                 locale={{

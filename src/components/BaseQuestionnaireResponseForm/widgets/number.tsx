@@ -1,5 +1,6 @@
 import { Form, InputNumber, Select } from 'antd';
 import { Coding } from 'fhir/r4b';
+import _ from 'lodash';
 import { useState } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 
@@ -27,6 +28,7 @@ export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps)
                 value={value}
                 required={required}
                 placeholder={placeholder}
+                parser={(displayValue) => _.toInteger(displayValue)}
             />
         </Form.Item>
     );
