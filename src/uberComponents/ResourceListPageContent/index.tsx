@@ -1,11 +1,13 @@
 import { Trans } from '@lingui/macro';
 import { Empty } from 'antd';
+import { ColumnsType, TablePaginationConfig } from 'antd/lib/table';
 import { Bundle, Resource } from 'fhir/r4b';
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import { formatError } from '@beda.software/fhir-react';
 import { isFailure, isLoading, isSuccess } from '@beda.software/remote-data';
 
+import { PageContainerContent } from 'src/components/BaseLayout/PageContainer/PageContainerContent';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { isTableFilter } from 'src/components/SearchBar/utils';
@@ -13,16 +15,18 @@ import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 import { populateTableColumnsWithFiltersAndSorts } from 'src/components/Table/utils';
 
-import { HeaderQuestionnaireAction } from '../ResourceListPage/actions';
-import { useResourceListPage } from '../ResourceListPage/hooks';
-import { BatchActions } from '../ResourceListPage/BatchActions';
-import { getRecordActionsColumn, ResourceListPageProps, ResourcesListPageReport } from '../ResourceListPage';
-import { PageContainerContent } from 'src/components/BaseLayout/PageContainer/PageContainerContent';
 import { S } from './styles';
+import { getRecordActionsColumn, ResourcesListPageReport } from '../ResourceListPage';
+import { HeaderQuestionnaireAction } from '../ResourceListPage/actions';
+import { BatchActions } from '../ResourceListPage/BatchActions';
+import { useResourceListPage } from '../ResourceListPage/hooks';
+import { ResourceListProps, TableManager } from '../ResourceListPage/types';
 
 type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
 
-type ResourceListPageContentProps<R extends Resource> = Omit<ResourceListPageProps<R>, 'headerTitle' | 'maxWidth'> & {};
+type ResourceListPageContentProps<R extends Resource> = Omit<ResourceListProps<R>, 'headerTitle' | 'maxWidth'> & {
+    getTableColumns: (manager: TableManager) => ColumnsType<RecordType<R>>;
+};
 
 export function ResourceListPageContent<R extends Resource>({
     resourceType,
@@ -46,15 +50,26 @@ export function ResourceListPageContent<R extends Resource>({
         [JSON.stringify(columnsFilterValues)],
     );
 
-    const {
-        recordResponse,
-        reload,
-        pagination,
-        handleTableChange,
-        selectedRowKeys,
-        setSelectedRowKeys,
-        selectedResourcesBundle,
-    } = useResourceListPage(resourceType, extractPrimaryResources, columnsFilterValues, searchParams ?? {});
+    const { recordResponse, reload, pagination, selectedRowKeys, setSelectedRowKeys, selectedResourcesBundle } =
+        useResourceListPage(resourceType, extractPrimaryResources, columnsFilterValues, searchParams ?? {});
+
+    const handleTableChange = useCallback(
+        (event: TablePaginationConfig) => {
+            if (typeof event.current !== 'number') {
+                return;
+            }
+            if (event.pageSize && event.pageSize !== pagination.pageSize) {
+                pagination.reload();
+                pagination.updatePageSize(event.pageSize);
+            } else {
+                pagination.loadPage(event.current, {
+                    _page: event.current,
+                });
+            }
+            setSelectedRowKeys([]);
+        },
+        [pagination],
+    );
 
     // TODO: move to hooks
     const initialTableColumns = getTableColumns({ reload });
