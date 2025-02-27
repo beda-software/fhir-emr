@@ -15,7 +15,7 @@ function Flex(props: GroupItemProps & { type?: 'row' | 'col' }) {
 
     if (item) {
         return (
-            <div style={{ margin: '0 0 32px' }}>
+            <div style={{ margin: '0 0 50px' }}>
                 {text && (
                     <Paragraph style={{ fontSize: 18, fontWeight: 'bold', margin: '32px 0 8px' }}>{text}</Paragraph>
                 )}
