@@ -6,7 +6,7 @@ import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 
 import { ColumnFilterValue } from 'src/components/SearchBar/types';
 import { getSearchBarColumnFilterValue } from 'src/components/SearchBar/utils';
-import { service } from 'src/services';
+import { service } from 'src/services/fhir';
 import { useDebounce } from 'src/utils/debounce';
 
 export function useResourceListPage<R extends Resource>(
