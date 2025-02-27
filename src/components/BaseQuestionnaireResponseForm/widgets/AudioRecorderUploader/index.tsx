@@ -13,8 +13,12 @@ import { isSuccess } from '@beda.software/remote-data';
 import { S } from './styles';
 import { UploadFileControl } from '../UploadFileControl';
 
-export function AudioRecorderUploader(props: QuestionItemProps) {
-    const { questionItem } = props;
+interface AudioRecorderUploaderExtraProps{
+    onRecorded?: (file: RcFile) => void;
+}
+
+export function AudioRecorderUploader(props: QuestionItemProps & AudioRecorderUploaderExtraProps) {
+    const { questionItem, onRecorded } = props;
     const [showScriber, setShowScriber] = useState(false);
 
     const { formItem, customRequest, onChange, fileList, onRemove } = useUploader(props);
@@ -22,6 +26,9 @@ export function AudioRecorderUploader(props: QuestionItemProps) {
 
     const onScribeChange = useCallback(
         async (file: RcFile) => {
+            if(onRecorded){
+                onRecorded(file);
+            }
             setShowScriber(false);
 
             const fileClone = new File([file], file.name, {
@@ -49,7 +56,7 @@ export function AudioRecorderUploader(props: QuestionItemProps) {
                 });
             }
         },
-        [fileList],
+        [fileList, onRecorded],
     );
 
     const renderContent = () => {

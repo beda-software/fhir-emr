@@ -10,10 +10,11 @@ import { isSearchBarFilter } from './utils';
 
 interface SearchBarProps extends SearchBarData {
     showInDrawerOnMobile?: boolean;
+    level?: 1 | 2;
 }
 
 export function SearchBar(props: SearchBarProps) {
-    const { columnsFilterValues, onChangeColumnFilter, onResetFilters, showInDrawerOnMobile = true } = props;
+    const { columnsFilterValues, onChangeColumnFilter, onResetFilters, showInDrawerOnMobile = true, level = 1 } = props;
     const searchBarFilterValues = useMemo(
         () => columnsFilterValues.filter((filter) => isSearchBarFilter(filter)),
         [JSON.stringify(columnsFilterValues)],
@@ -38,7 +39,7 @@ export function SearchBar(props: SearchBarProps) {
                     </Button>
                 ) : null}
             </S.SearchBar>
-            <S.MobileFilters $showInDrawerOnMobile={showInDrawerOnMobile}>
+            <S.MobileFilters $showInDrawerOnMobile={showInDrawerOnMobile} $level={level}>
                 <SearchBarMobile {...props} />
             </S.MobileFilters>
         </>

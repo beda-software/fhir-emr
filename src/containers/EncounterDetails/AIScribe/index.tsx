@@ -1,6 +1,5 @@
 import { EditFilled, PlusOutlined, SaveFilled } from '@ant-design/icons';
 import { Trans, t } from '@lingui/macro';
-import { isNotAsked } from 'aidbox-react';
 import { Button, notification, Select } from 'antd';
 import { Communication, Questionnaire, Reference } from 'fhir/r4b';
 import { useState } from 'react';
@@ -10,6 +9,7 @@ import config from '@beda.software/emr-config';
 import { RenderRemoteData, extractBundleResources, formatError, useService } from '@beda.software/fhir-react';
 import {
     isSuccess,
+    isNotAsked,
     success,
     RemoteData,
     notAsked,

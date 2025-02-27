@@ -4,6 +4,7 @@ import {
     Organization,
     ParametersParameter,
     Patient,
+    Person,
     Practitioner,
     Provenance,
     QuestionnaireResponse,
@@ -35,7 +36,7 @@ import { getProvenanceByEntity } from 'src/services/provenance';
 
 export interface Props {
     patient: Patient;
-    author: WithId<Practitioner | Patient | Organization>;
+    author: WithId<Practitioner | Patient | Organization|Person>;
     questionnaireResponse?: WithId<QuestionnaireResponse>;
     questionnaireId: string;
     encounterId?: string;
@@ -74,7 +75,7 @@ async function onFormSubmit(
 function prepareFormInitialParams(
     props: Props & {
         provenance?: WithId<Provenance>;
-        author?: WithId<Practitioner | Patient | Organization>;
+        author?: WithId<Practitioner | Patient | Organization | Person>;
         provenanceBundle?: Bundle<WithId<Provenance>>;
     },
 ): QuestionnaireResponseFormProps {

@@ -1,5 +1,5 @@
-import { differenceInDays, differenceInMonths, differenceInYears, parseISO } from 'date-fns';
 import { t } from '@lingui/macro';
+import { differenceInDays, differenceInMonths, differenceInYears, parseISO } from 'date-fns';
 
 export function getYears(date: string) {
     return differenceInYears(new Date(), parseISO(date));

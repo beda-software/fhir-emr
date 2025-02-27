@@ -1,55 +1,34 @@
 import { Trans } from '@lingui/macro';
 import { Empty } from 'antd';
 import { ColumnsType, TablePaginationConfig } from 'antd/lib/table';
-import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
+import { Bundle, Resource } from 'fhir/r4b';
 import React, { useCallback, useMemo } from 'react';
 
 import { formatError } from '@beda.software/fhir-react';
-import { isFailure, isLoading, isSuccess, RemoteData } from '@beda.software/remote-data';
+import { isFailure, isLoading, isSuccess } from '@beda.software/remote-data';
 
-import { PageContainer } from 'src/components/BaseLayout/PageContainer';
-import { Report } from 'src/components/Report';
+import { PageContainerContent } from 'src/components/BaseLayout/PageContainer/PageContainerContent';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { isTableFilter } from 'src/components/SearchBar/utils';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
 import { populateTableColumnsWithFiltersAndSorts } from 'src/components/Table/utils';
-import { Text } from 'src/components/Typography';
 
-import {
-    NavigationActionType,
-    CustomActionType,
-    QuestionnaireActionType,
-    isNavigationAction,
-    isQuestionnaireAction,
-    NavigationAction,
-    RecordQuestionnaireAction,
-    HeaderQuestionnaireAction,
-    isCustomAction,
-} from './actions';
-export { navigationAction, customAction, questionnaireAction } from './actions';
-import { BatchActions } from './BatchActions';
-import { useResourceListPage } from './hooks';
 import { S } from './styles';
-import { ResourceListProps, ReportColumn, TableManager } from './types';
+import { getRecordActionsColumn, ResourcesListPageReport } from '../ResourceListPage';
+import { HeaderQuestionnaireAction } from '../ResourceListPage/actions';
+import { BatchActions } from '../ResourceListPage/BatchActions';
+import { useResourceListPage } from '../ResourceListPage/hooks';
+import { ResourceListProps, TableManager } from '../ResourceListPage/types';
 
 type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
 
-type ResourceListPageProps<R extends Resource> = ResourceListProps<R> & {
-    /* Page header title (for example, Organizations) */
-    headerTitle: string;
-
-    /* Page content max width */
-    maxWidth?: number | string;
-
-    /* Table columns without action column - action column is generated based on `getRecordActions` */
+type ResourceListPageContentProps<R extends Resource> = Omit<ResourceListProps<R>, 'headerTitle' | 'maxWidth'> & {
     getTableColumns: (manager: TableManager) => ColumnsType<RecordType<R>>;
 };
 
-export function ResourceListPage<R extends Resource>({
-    headerTitle: title,
-    maxWidth,
+export function ResourceListPageContent<R extends Resource>({
     resourceType,
     extractPrimaryResources,
     searchParams,
@@ -60,7 +39,7 @@ export function ResourceListPage<R extends Resource>({
     getTableColumns,
     defaultLaunchContext,
     getReportColumns,
-}: ResourceListPageProps<R>) {
+}: ResourceListPageContentProps<R>) {
     const allFilters = getFilters?.() ?? [];
 
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
@@ -102,29 +81,44 @@ export function ResourceListPage<R extends Resource>({
     const headerActions = getHeaderActions?.() ?? [];
     const batchActions = getBatchActions?.() ?? [];
 
+    const renderHeader = () => {
+        const hasFilters = columnsFilterValues.length > 0;
+
+        if (!hasFilters && headerActions.length === 0) {
+            return null;
+        }
+
+        return (
+            <S.Header>
+                <S.HeaderLeftColumn>
+                    {columnsFilterValues.length ? (
+                        <SearchBar
+                            columnsFilterValues={columnsFilterValues}
+                            onChangeColumnFilter={onChangeColumnFilter}
+                            onResetFilters={onResetFilters}
+                            level={2}
+                        />
+                    ) : null}
+                </S.HeaderLeftColumn>
+                <S.HeaderRightColumn $hasFilters={hasFilters}>
+                    {headerActions.map((action, index) => (
+                        <React.Fragment key={index}>
+                            <HeaderQuestionnaireAction
+                                action={action}
+                                reload={reload}
+                                defaultLaunchContext={defaultLaunchContext ?? []}
+                            />
+                        </React.Fragment>
+                    ))}
+                </S.HeaderRightColumn>
+            </S.Header>
+        );
+    };
+
     return (
-        <PageContainer
-            title={title}
-            maxWidth={maxWidth}
-            titleRightElement={headerActions.map((action, index) => (
-                <React.Fragment key={index}>
-                    <HeaderQuestionnaireAction
-                        action={action}
-                        reload={reload}
-                        defaultLaunchContext={defaultLaunchContext ?? []}
-                    />
-                </React.Fragment>
-            ))}
-            headerContent={
-                columnsFilterValues.length ? (
-                    <SearchBar
-                        columnsFilterValues={columnsFilterValues}
-                        onChangeColumnFilter={onChangeColumnFilter}
-                        onResetFilters={onResetFilters}
-                    />
-                ) : null
-            }
-        >
+        <PageContainerContent level={2}>
+            {renderHeader()}
+
             {getReportColumns ? (
                 <ResourcesListPageReport recordResponse={recordResponse} getReportColumns={getReportColumns} />
             ) : null}
@@ -142,7 +136,7 @@ export function ResourceListPage<R extends Resource>({
             ) : null}
 
             <Table<RecordType<R>>
-                pagination={{ total: pagination.total, pageSize: pagination.pageSize }}
+                pagination={pagination}
                 onChange={handleTableChange}
                 rowSelection={batchActions.length ? { selectedRowKeys, onChange: setSelectedRowKeys } : undefined}
                 locale={{
@@ -175,71 +169,6 @@ export function ResourceListPage<R extends Resource>({
                 ]}
                 loading={isLoading(recordResponse) && { indicator: SpinIndicator }}
             />
-        </PageContainer>
+        </PageContainerContent>
     );
-}
-
-interface ResourcesListPageReportProps<R> {
-    recordResponse: RemoteData<
-        {
-            resource: R;
-            bundle: Bundle;
-        }[],
-        any
-    >;
-    getReportColumns: (bundle: Bundle, reportBundle?: Bundle) => Array<ReportColumn>;
-}
-
-export function ResourcesListPageReport<R>(props: ResourcesListPageReportProps<R>) {
-    const { recordResponse, getReportColumns } = props;
-    const emptyBundle: Bundle = { resourceType: 'Bundle', entry: [], type: 'searchset' };
-    const items =
-        isSuccess(recordResponse) && recordResponse.data?.[0]?.bundle
-            ? getReportColumns(recordResponse.data[0].bundle)
-            : getReportColumns(emptyBundle);
-
-    return <Report items={items} />;
-}
-
-export function getRecordActionsColumn<R extends Resource>({
-    getRecordActions,
-    defaultLaunchContext,
-    reload,
-}: {
-    getRecordActions: (
-        record: RecordType<R>,
-        manager: TableManager,
-    ) => Array<QuestionnaireActionType | NavigationActionType | CustomActionType>;
-    defaultLaunchContext?: ParametersParameter[];
-    reload: () => void;
-}) {
-    return {
-        title: <Trans>Actions</Trans>,
-        dataIndex: 'actions',
-        key: 'actions',
-        render: (_text: any, record: { resource: R; bundle: Bundle }) => {
-            return (
-                <S.Actions>
-                    {getRecordActions(record, { reload }).map((action, index) => (
-                        <React.Fragment key={index}>
-                            {isQuestionnaireAction(action) ? (
-                                <RecordQuestionnaireAction
-                                    action={action}
-                                    reload={reload}
-                                    resource={record.resource}
-                                    defaultLaunchContext={defaultLaunchContext ?? []}
-                                />
-                            ) : isNavigationAction(action) ? (
-                                <NavigationAction action={action} resource={record.resource} />
-                            ) : isCustomAction(action) ? (
-                                action.control
-                            ) : (
-                                <Text>Unsupported action</Text>
-                            )}
-                        </React.Fragment>
-                    ))}
-                </S.Actions>
-            );
-        },
-    };
 }

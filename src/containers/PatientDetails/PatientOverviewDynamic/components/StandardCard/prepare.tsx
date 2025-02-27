@@ -27,16 +27,14 @@ import { formatHumanDate } from 'src/utils/date';
 
 export function prepareAllergies(
     allergies: AllergyIntolerance[],
-    provenanceList: Provenance[],
-    total?: number,
-    to?: string,
+    bundle: Bundle<AllergyIntolerance | Provenance>,
 ): OverviewCard<AllergyIntolerance> {
     return {
         title: t`Allergies`,
         key: 'allergies',
         icon: <ExperimentOutlined />,
         data: allergies,
-        total,
+        total: bundle.total!,
         getKey: (r: AllergyIntolerance) => r.id!,
         columns: [
             {
@@ -46,8 +44,7 @@ export function prepareAllergies(
                     <LinkToEdit
                         name={resource.code?.coding?.[0]?.display ?? resource.code?.text}
                         resource={resource}
-                        provenanceList={provenanceList}
-                        to={to}
+                        provenanceList={extractBundleResources(bundle).Provenance}
                     />
                 ),
             },
@@ -67,16 +64,14 @@ export function prepareAllergies(
 
 export function prepareConditions(
     conditions: Condition[],
-    provenanceList: Provenance[],
-    total?: number,
-    to?: string,
+    bundle: Bundle<Condition | Provenance>,
 ): OverviewCard<Condition> {
     return {
         title: t`Conditions`,
         key: 'conditions',
         icon: <AlertOutlined />,
         data: conditions,
-        total,
+        total: bundle.total!,
         getKey: (r: Condition) => r.id!,
         columns: [
             {
@@ -86,8 +81,7 @@ export function prepareConditions(
                     <LinkToEdit
                         name={resource.code?.text || resource.code?.coding?.[0]?.display}
                         resource={resource}
-                        provenanceList={provenanceList}
-                        to={to}
+                        provenanceList={extractBundleResources(bundle).Provenance}
                     />
                 ),
             },
@@ -105,18 +99,13 @@ export function prepareConditions(
     };
 }
 
-export function prepareConsents(
-    consents: Consent[],
-    provenanceList: Provenance[],
-    total?: number,
-    to?: string,
-): OverviewCard<Consent> {
+export function prepareConsents(consents: Consent[], bundle: Bundle<Consent | Provenance>): OverviewCard<Consent> {
     return {
         title: t`Consents`,
         key: 'consents',
         icon: <TeamOutlined />,
         data: consents,
-        total,
+        total: bundle.total!,
         getKey: (r: Consent) => r.id!,
         columns: [
             {
@@ -131,8 +120,7 @@ export function prepareConsents(
                         <LinkToEdit
                             name={provisionName || purposeName || category}
                             resource={resource}
-                            provenanceList={provenanceList}
-                            to={to}
+                            provenanceList={extractBundleResources(bundle).Provenance}
                         />
                     );
                 },
@@ -188,16 +176,14 @@ export function prepareActivitySummary(activitySummary: Observation[]): Overview
 
 export function prepareImmunizations(
     observations: Immunization[],
-    provenanceList: Provenance[],
-    total?: number,
-    to?: string,
+    bundle: Bundle<Immunization | Provenance>,
 ): OverviewCard<Immunization> {
     return {
         title: t`Immunization`,
         key: 'immunization',
         icon: <HeartOutlined />,
         data: observations,
-        total,
+        total: bundle.total!,
         getKey: (r: Immunization) => r.id!,
         columns: [
             {
@@ -207,8 +193,7 @@ export function prepareImmunizations(
                     <LinkToEdit
                         name={resource.vaccineCode.coding?.[0]?.display ?? resource.vaccineCode.text}
                         resource={resource}
-                        provenanceList={provenanceList}
-                        to={to}
+                        provenanceList={extractBundleResources(bundle).Provenance}
                     />
                 ),
             },
@@ -224,16 +209,14 @@ export function prepareImmunizations(
 
 export function prepareMedications(
     observations: MedicationStatement[],
-    provenanceList: Provenance[],
-    total?: number,
-    to?: string,
+    bundle: Bundle<MedicationStatement | Provenance>,
 ): OverviewCard<MedicationStatement> {
     return {
         title: t`Active Medications`,
         key: 'active-medications',
         icon: <img src={medicationIcon} />,
         data: observations,
-        total,
+        total: bundle.total!,
         getKey: (r: MedicationStatement) => r.id!,
         columns: [
             {
@@ -246,8 +229,7 @@ export function prepareMedications(
                             resource.medicationCodeableConcept?.text
                         }
                         resource={resource}
-                        provenanceList={provenanceList}
-                        to={to}
+                        provenanceList={extractBundleResources(bundle).Provenance}
                     />
                 ),
             },
@@ -296,15 +278,14 @@ export function prepareAppointmentDetails(appointment: Appointment) {
 
 export function prepareServiceRequest(
     serviceRequests: ServiceRequest[],
-    _provenanceList: Provenance[],
-    total: number,
+    bundle: Bundle<ServiceRequest>,
 ): OverviewCard<ServiceRequest> {
     return {
         title: t`Orders`,
         key: 'service-request',
         icon: <HeartOutlined />,
         data: serviceRequests,
-        total,
+        total: bundle.total!,
         getKey: (r: ServiceRequest) => r.id!,
         columns: [
             {

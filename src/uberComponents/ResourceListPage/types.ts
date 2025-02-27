@@ -87,12 +87,13 @@ export interface CustomActionType {
     control: React.ReactNode;
 }
 
-export interface QuestionnaireActionType<QRFProps = unknown> {
+export interface QuestionnaireActionType<QRFProps = unknown, ModalProps = unknown> {
     type: 'questionnaire';
     title: React.ReactNode;
     questionnaireId: string;
     icon?: React.ReactNode;
     qrfProps?: Partial<QRFProps>;
+    modalProps?: Partial<ModalProps>;
 }
 
 export function navigationAction(
@@ -108,16 +109,17 @@ export function customAction(control: React.ReactNode): CustomActionType {
         control,
     };
 }
-export function questionnaireAction<QRFProps = unknown>(
+export function questionnaireAction<QRFProps = unknown, ModalProps = unknown>(
     title: React.ReactNode,
     questionnaireId: string,
-    options?: { icon?: React.ReactNode; qrfProps?: Partial<QRFProps> },
+    options?: { icon?: React.ReactNode; qrfProps?: Partial<QRFProps>; modalProps?: Partial<ModalProps> },
 ): QuestionnaireActionType {
     return {
         type: 'questionnaire',
         title,
         icon: options?.icon,
         qrfProps: options?.qrfProps,
+        modalProps: options?.modalProps,
         questionnaireId,
     };
 }

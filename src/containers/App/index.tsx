@@ -15,6 +15,7 @@ import { Spinner } from 'src/components/Spinner';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { EncounterList } from 'src/containers/EncounterList';
 import { PatientDetails } from 'src/containers/PatientDetails';
+import { NewPatientDetails } from 'src/containers/PatientDetails/new';
 import { PatientList } from 'src/containers/PatientList';
 import { PatientQuestionnaire } from 'src/containers/PatientQuestionnaire';
 import { PractitionerDetails } from 'src/containers/PractitionerDetails';
@@ -25,6 +26,7 @@ import { SignIn } from 'src/containers/SignIn';
 import { VideoCall } from 'src/containers/VideoCall';
 import { getToken, parseOAuthState, setToken } from 'src/services/auth';
 
+import { DefaultUserWithNoRoles } from './DefaultUserWithNoRoles';
 import { restoreUserSession } from './utils';
 import { AidboxFormsBuilder } from '../AidboxFormsBuilder';
 import { HealthcareServiceList } from '../HealthcareServiceList';
@@ -34,10 +36,9 @@ import { MedicationManagement } from '../MedicationManagement';
 import { NotificationPage } from '../NotificationPage';
 import { OrganizationScheduling } from '../OrganizationScheduling';
 import { DocumentPrint } from '../PatientDetails/DocumentPrint';
+import { PatientResourceListExample } from '../PatientResourceListExample';
 import { Prescriptions } from '../Prescriptions';
 import { SetPassword } from '../SetPassword';
-import { PatientResourceListExample } from '../PatientResourceListExample';
-import { DefaultUserWithNoRoles } from './DefaultUserWithNoRoles';
 
 interface AppProps {
     authenticatedRoutes?: ReactElement;
@@ -169,6 +170,7 @@ function AuthenticatedUserApp({ defaultRoute, extra }: RouteProps) {
                             <Route path="/patients" element={<PatientList />} />
                             <Route path="/patients-uber" element={<PatientResourceListExample />} />
                             <Route path="/patients/:id/*" element={<PatientDetails />} />
+                            <Route path="/patients2/:id/*" element={<NewPatientDetails />} />
                             <Route path="/questionnaire" element={<PatientQuestionnaire />} />
                             <Route path="/documents/:id/edit" element={<div>documents/:id/edit</div>} />
                             <Route path="/encounters/:encounterId/video" element={<VideoCall />} />

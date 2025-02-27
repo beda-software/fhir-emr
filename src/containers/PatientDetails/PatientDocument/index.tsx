@@ -1,4 +1,4 @@
-import { Organization, ParametersParameter, Patient, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
+import { Organization, ParametersParameter, Patient, Person, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -17,7 +17,7 @@ import { usePatientDocument } from './usePatientDocument';
 
 export interface PatientDocumentProps {
     patient: Patient;
-    author: WithId<Practitioner | Patient | Organization>;
+    author: WithId<Practitioner | Patient | Organization | Person>;
     questionnaireResponse?: WithId<QuestionnaireResponse>;
     launchContextParameters?: ParametersParameter[];
     questionnaireId?: string;
