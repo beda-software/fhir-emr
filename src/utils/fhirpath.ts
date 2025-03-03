@@ -13,22 +13,21 @@ export function evaluate(
         userInvocationTable?: UserInvocationTable;
     },
 ): any[] {
+    /**
+     * Returns the result of fhirpath.evaluate
+     * In case of error, fails silently returning ['Error']
+     * and showing the error in console
+     */
     const resultUserInvocationTable = {
         ...(options?.userInvocationTable ?? {}),
         ...FHIRPATH_EVALUATE_INVOCATION_TABLE,
     };
 
-    let customOptions;
-    if (Object.keys(resultUserInvocationTable).length) {
-        customOptions = {
+    try {
+        return fhirpath.evaluate(fhirData, path, context, model, {
             ...options,
             userInvocationTable: resultUserInvocationTable,
-        };
-    } else {
-        customOptions = options;
-    }
-    try {
-        return fhirpath.evaluate(fhirData, path, context, model, customOptions);
+        });
     } catch (e) {
         console.error('fhirpath.evaluate path "', path, '"', e);
         return ['Error'];
