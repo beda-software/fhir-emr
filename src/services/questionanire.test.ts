@@ -86,3 +86,12 @@ describe('Custom fhirpath invocation for reference option display', () => {
         ]);
     });
 });
+
+
+describe('Default fhirpath functions work', () => {
+    test('Function toString() works correctly', async () => {
+        initFHIRPathEvaluateOptions(formatDateUserInvocationTable);
+        const result = evaluate({"x": 10}, "x.toString()");
+        expect(result).toEqual(["10"])
+    })
+});
