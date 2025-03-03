@@ -50,29 +50,32 @@ export function DashboardCardTable(props: TableProps) {
 
     return (
         <div>
-            <S.TableHeader>
-                {columns.map((col) => (
-                    <S.TableCell key={`header-${title}-${col.title}`} style={{ width: col.width, minWidth: col.width }}>
-                        {col.title}
-                    </S.TableCell>
-                ))}
-            </S.TableHeader>
-            {data.map((item) => {
-                const key = getKey(item);
-
-                return (
-                    <S.TableRow key={`row-${key}`}>
+            <S.Table>
+                <colgroup>
+                    {columns.map((col, index) => (
+                        <col key={`col-${col.key}-${index}`} style={{ width: col.width }} />
+                    ))}
+                </colgroup>
+                <thead>
+                    <S.TableHeader>
                         {columns.map((col) => (
-                            <S.TableCell
-                                key={`row-${key}-${col.title}`}
-                                style={{ width: col.width, minWidth: col.width }}
-                            >
-                                {col.render(item)}
-                            </S.TableCell>
+                            <S.TableCell key={`header-${title}-${col.title}`}>{col.title}</S.TableCell>
                         ))}
-                    </S.TableRow>
-                );
-            })}
+                    </S.TableHeader>
+                </thead>
+                <tbody>
+                    {data.map((item) => {
+                        const key = getKey(item);
+                        return (
+                            <S.TableRow key={`row-${key}`}>
+                                {columns.map((col) => (
+                                    <S.TableCell key={`row-${key}-${col.title}`}>{col.render(item)}</S.TableCell>
+                                ))}
+                            </S.TableRow>
+                        );
+                    })}
+                </tbody>
+            </S.Table>
         </div>
     );
 }

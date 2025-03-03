@@ -53,25 +53,20 @@ export const S = {
         font-size: 14px;
         line-height: 22px;
     `,
-    TableHeader: styled.div`
-        font-weight: 700;
-        display: flex;
-        justify-content: space-between;
-        align-items: stretch;
+    Table: styled.table`
+        width: 100%;
     `,
-    TableRow: styled.div`
-        display: flex;
-        justify-content: space-between;
-        align-items: stretch;
+    TableHeader: styled.tr`
+        font-weight: 700;
+    `,
+    TableRow: styled.tr`
         border-top: 1px solid ${({ theme }) => theme.antdTheme?.colorBorderSecondary};
 
         &:first-child {
             border-left: 0;
         }
     `,
-    TableCell: styled.div`
-        display: flex;
-        align-items: center;
+    TableCell: styled.td`
         padding: 13px 12px;
         border-left: 1px solid ${({ theme }) => theme.antdTheme?.colorBorderSecondary};
 
