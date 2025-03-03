@@ -7424,10 +7424,10 @@ fhir@^4.10.3:
     randomatic "^3.1.0"
     xml-js "^1.6.8"
 
-fhirpath@3.13.0:
-  version "3.13.0"
-  resolved "https://registry.yarnpkg.com/fhirpath/-/fhirpath-3.13.0.tgz#20d6af28287a5a91cd0589a6415753b138f443d3"
-  integrity sha512-6vGiPbnj/C/zGfrCTMikaiD8qTje2yEvSdo4zSbluyIT+QNV3x8Ib+WfvH7ERoU4RGKNO/INZ4JXkmIO2gGSqw==
+fhirpath@3.17.1:
+  version "3.17.1"
+  resolved "https://registry.yarnpkg.com/fhirpath/-/fhirpath-3.17.1.tgz#b3a27e064c294aa8f4be0c1ccbcafe86a77fb466"
+  integrity sha512-7oiyEOKLrxanY9WBIr3ICbQFAGOmfjzYam8IFfxuX6c/lwdIb1UppxLIC10lVFTMpzJgxjNtqk2YbSxXROmVdQ==
   dependencies:
     "@lhncbc/ucum-lhc" "^5.0.0"
     antlr4 "~4.9.3"

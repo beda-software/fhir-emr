@@ -1,4 +1,4 @@
-import fhirpath from 'fhirpath';
+import fhirpath, { Context, Model, Path, UserInvocationTable } from 'fhirpath';
 
 const FHIRPATH_EVALUATE_INVOCATION_TABLE: UserInvocationTable = {};
 
