@@ -27,6 +27,7 @@ import {
     RecordQuestionnaireAction,
     HeaderQuestionnaireAction,
     isCustomAction,
+    WebExtra,
 } from './actions';
 export { navigationAction, customAction, questionnaireAction } from './actions';
 import { BatchActions } from './BatchActions';
@@ -36,7 +37,7 @@ import { ResourceListProps, ReportColumn, TableManager } from './types';
 
 type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
 
-type ResourceListPageProps<R extends Resource> = ResourceListProps<R> & {
+type ResourceListPageProps<R extends Resource> = ResourceListProps<R, WebExtra> & {
     /* Page header title (for example, Organizations) */
     headerTitle: string;
 

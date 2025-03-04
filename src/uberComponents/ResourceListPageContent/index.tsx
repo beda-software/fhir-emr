@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro';
 import { Empty } from 'antd';
 import { ColumnsType, TablePaginationConfig } from 'antd/lib/table';
-import { Bundle, Resource } from 'fhir/r4b';
+import { Resource } from 'fhir/r4b';
 import React, { useCallback, useMemo } from 'react';
 
 import { formatError } from '@beda.software/fhir-react';
@@ -17,14 +17,12 @@ import { populateTableColumnsWithFiltersAndSorts } from 'src/components/Table/ut
 
 import { S } from './styles';
 import { getRecordActionsColumn, ResourcesListPageReport } from '../ResourceListPage';
-import { HeaderQuestionnaireAction } from '../ResourceListPage/actions';
+import { HeaderQuestionnaireAction, WebExtra } from '../ResourceListPage/actions';
 import { BatchActions } from '../ResourceListPage/BatchActions';
 import { useResourceListPage } from '../ResourceListPage/hooks';
-import { ResourceListProps, TableManager } from '../ResourceListPage/types';
+import { RecordType, ResourceListProps, TableManager } from '../ResourceListPage/types';
 
-type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
-
-type ResourceListPageContentProps<R extends Resource> = Omit<ResourceListProps<R>, 'headerTitle' | 'maxWidth'> & {
+type ResourceListPageContentProps<R extends Resource> = ResourceListProps<R, WebExtra> & {
     getTableColumns: (manager: TableManager) => ColumnsType<RecordType<R>>;
 };
 

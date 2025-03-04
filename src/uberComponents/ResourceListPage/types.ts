@@ -15,7 +15,9 @@ export interface TableManager {
     reload: () => void;
 }
 
-export interface ResourceListProps<R extends Resource> {
+// Extra is a platform specific option
+// For web it could be specific modal property
+export interface ResourceListProps<R extends Resource, Extra = unknown> {
     /* Primary resource type (for example, Organization) */
     resourceType: R['resourceType'];
 
@@ -40,14 +42,14 @@ export interface ResourceListProps<R extends Resource> {
     getRecordActions?: (
         record: RecordType<R>,
         manager: TableManager,
-    ) => Array<QuestionnaireActionType | NavigationActionType | CustomActionType>;
+    ) => Array<QuestionnaireActionType<Extra> | NavigationActionType | CustomActionType>;
 
     /**
      * Header actions (for example, new organization)
      *
      * NOTE: Theoretically getHeaderActions can accept all resources Bundle
      */
-    getHeaderActions?: () => Array<QuestionnaireActionType>;
+    getHeaderActions?: () => Array<QuestionnaireActionType<Extra>>;
 
     /**
      * Batch actions that are available when rows are selected
@@ -55,7 +57,7 @@ export interface ResourceListProps<R extends Resource> {
      *
      * NOTE: Theoretically getHeaderActions can accept selected resources Bundle
      */
-    getBatchActions?: () => Array<QuestionnaireActionType>;
+    getBatchActions?: () => Array<QuestionnaireActionType<Extra>>;
 
     /**
      * Default launch context that will be added to all questionnaires
@@ -87,13 +89,12 @@ export interface CustomActionType {
     control: React.ReactNode;
 }
 
-export interface QuestionnaireActionType<QRFProps = unknown, ModalProps = unknown> {
+export interface QuestionnaireActionType<Extra = unknown> {
     type: 'questionnaire';
     title: React.ReactNode;
     questionnaireId: string;
     icon?: React.ReactNode;
-    qrfProps?: Partial<QRFProps>;
-    modalProps?: Partial<ModalProps>;
+    extra?: Extra;
 }
 
 export function navigationAction(
@@ -109,23 +110,24 @@ export function customAction(control: React.ReactNode): CustomActionType {
         control,
     };
 }
-export function questionnaireAction<QRFProps = unknown, ModalProps = unknown>(
+export function questionnaireAction<Extra = unknown>(
     title: React.ReactNode,
     questionnaireId: string,
-    options?: { icon?: React.ReactNode; qrfProps?: Partial<QRFProps>; modalProps?: Partial<ModalProps> },
-): QuestionnaireActionType {
+    options?: { icon?: React.ReactNode; extra?: Extra },
+): QuestionnaireActionType<Extra> {
     return {
         type: 'questionnaire',
         title,
         icon: options?.icon,
-        qrfProps: options?.qrfProps,
-        modalProps: options?.modalProps,
         questionnaireId,
+        extra: options?.extra,
     };
 }
 
-export type ActionType = QuestionnaireActionType | NavigationActionType | CustomActionType;
-export function isQuestionnaireAction(action: ActionType): action is QuestionnaireActionType {
+export type ActionType<Extra = unknown> = QuestionnaireActionType<Extra> | NavigationActionType | CustomActionType;
+export function isQuestionnaireAction<Extra = unknown>(
+    action: ActionType<Extra>,
+): action is QuestionnaireActionType<Extra> {
     return action.type === 'questionnaire';
 }
 export function isNavigationAction(action: ActionType): action is NavigationActionType {
