@@ -1,4 +1,5 @@
 import { Schedule, Slot } from 'fhir/r4b';
+import { UserInvocationTable } from 'fhirpath';
 
 import { ensure, parseFHIRDateTime, withRootAccess } from '@beda.software/fhir-react';
 
@@ -6,6 +7,12 @@ import { evaluate, initFHIRPathEvaluateOptions } from 'src/utils';
 
 import { axiosInstance, createFHIRResource } from './fhir';
 import { loadResourceOptions } from './questionnaire';
+
+const start = '2024-09-20T00:00:00Z';
+// const startString = 'Friday • 20 Sep • 12:00 AM';
+// string representation should be calculated to aviod issue with different timezones
+// Formating is depends on the timezone where test is running
+const startString = parseFHIRDateTime(start).format('dddd • D MMM • h:mm A');
 
 const formatDateUserInvocationTable: UserInvocationTable = {
     formatDate: {
@@ -29,7 +36,7 @@ async function setup() {
             schedule: {
                 reference: `Schedule/${schedule.id}`,
             },
-            start: '2024-09-20T00:00:00Z',
+            start,
             end: '2024-09-20T00:30:00Z',
         };
         return ensure(await createFHIRResource(slot));
@@ -37,22 +44,21 @@ async function setup() {
 }
 
 describe('Custom fhirpath invocation for reference option display', () => {
+    // Restore once
+    // https://github.com/HL7/fhirpath.js/pull/163
+    // is merged
+    test.skip('Not implemented function', async () => {
+        const slot = await setup();
+        expect(() => {
+            evaluate(slot, "Slot.start.formatDate('dddd • D MMM • h:mm A')");
+        }).toThrow('Not implemented: formatDate');
+    });
     test('Init FHIRPath evaluate options works', async () => {
         const slot = await setup();
 
-        const expectedAnErrorMessage = 'Expected an error';
-
-        try {
-            evaluate(slot, "Slot.start.formatDate('dddd • D MMM • h:mm A')");
-            throw new Error(expectedAnErrorMessage);
-        } catch (e: any) {
-            expect(e.message).not.toEqual(expectedAnErrorMessage);
-            expect(e.message).toEqual('Not implemented: formatDate');
-        }
-
         initFHIRPathEvaluateOptions(formatDateUserInvocationTable);
         const result = evaluate(slot, "Slot.start.formatDate('dddd • D MMM • h:mm A')");
-        expect(result).toEqual(['Friday • 20 Sep • 12:00 AM']);
+        expect(result).toEqual([startString]);
     });
 
     test('Load options', async () => {
@@ -75,7 +81,7 @@ describe('Custom fhirpath invocation for reference option display', () => {
             {
                 value: {
                     Reference: {
-                        display: 'Friday • 20 Sep • 12:00 AM',
+                        display: startString,
                         id: slot.id,
                         resourceType: 'Slot',
                     },
@@ -85,11 +91,10 @@ describe('Custom fhirpath invocation for reference option display', () => {
     });
 });
 
-
 describe('Default fhirpath functions work', () => {
     test('Function toString() works correctly', async () => {
         initFHIRPathEvaluateOptions(formatDateUserInvocationTable);
-        const result = evaluate({"x": 10}, "x.toString()");
-        expect(result).toEqual(["10"])
-    })
+        const result = evaluate({ x: 10 }, 'x.toString()');
+        expect(result).toEqual(['10']);
+    });
 });
