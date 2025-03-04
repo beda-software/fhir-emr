@@ -1,8 +1,8 @@
 import { Bundle, Resource } from 'fhir/r4b';
 import { useEffect, useState } from 'react';
-import { useParams, Route, Routes, useLocation, Link, useNavigate, Params } from 'react-router-dom';
+import { useParams, Route, Routes, useLocation, Link, useNavigate } from 'react-router-dom';
 
-import { SearchParams, RenderRemoteData, useService, WithId } from '@beda.software/fhir-react';
+import { RenderRemoteData, useService, WithId } from '@beda.software/fhir-react';
 
 import { PageContainer } from 'src/components';
 import { RouteItem } from 'src/components/BaseLayout/Sidebar/SidebarTop';
@@ -10,30 +10,9 @@ import { Tabs } from 'src/components/Tabs';
 import { getFHIRResources } from 'src/services';
 import { compileAsFirst } from 'src/utils';
 
-interface DetailContext<R extends Resource> {
-    resource: R;
-    bundle: Bundle<R>;
-}
-
-export interface Tab<R extends Resource> {
-    label: string;
-    path?: string;
-    component: (context: DetailContext<R>) => JSX.Element;
-}
-
-interface DetailPageProps<R extends Resource> {
-    resourceType: R['resourceType'];
-    getSearchParams: (params: Readonly<Params<string>>) => SearchParams;
-    getTitle: (context: DetailContext<R>) => string;
-    tabs: Array<Tab<R>>;
-    basePath: string;
-    extractPrimaryResource?: (bundle: Bundle<R>) => R;
-}
-
-interface PageTabsProps<R extends Resource> {
-    tabs: Array<Tab<R>>;
-    basePath: string;
-}
+import { DetailPageProps, PageTabsProps } from './types';
+import { RecordType } from '../ResourceListPage/types';
+export type { Tab } from './types';
 
 export function PageTabs<R extends Resource>({ tabs, basePath }: PageTabsProps<R>) {
     const location = useLocation();
@@ -89,7 +68,7 @@ export function DetailPage<R extends Resource>({
                 if (typeof resource === 'undefined') {
                     return <p>NASTY ERROR</p>;
                 }
-                const context: DetailContext<R> = { resource, bundle };
+                const context: RecordType<R> = { resource, bundle: bundle as Bundle };
                 return (
                     <PageContainer
                         title={getTitle(context)}
