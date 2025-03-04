@@ -18,21 +18,10 @@ export function evaluate(
         ...FHIRPATH_EVALUATE_INVOCATION_TABLE,
     };
 
-    let customOptions;
-    if (Object.keys(resultUserInvocationTable).length) {
-        customOptions = {
-            ...options,
-            userInvocationTable: resultUserInvocationTable,
-        };
-    } else {
-        customOptions = options;
-    }
-    try {
-        return fhirpath.evaluate(fhirData, path, context, model, customOptions);
-    } catch (e) {
-        console.error('fhirpath.evaluate path "', path, '"', e);
-        return ['Error'];
-    }
+    return fhirpath.evaluate(fhirData, path, context, model, {
+        ...options,
+        userInvocationTable: resultUserInvocationTable,
+    });
 }
 
 export function initFHIRPathEvaluateOptions(userInvocationTable: UserInvocationTable) {
@@ -44,8 +33,7 @@ type NonEmptyArray<T> = [T, ...T[]];
 export function compileAsArray<SRC, DST = unknown, REQ = false>(expression: string) {
     const path = fhirpath.compile(expression);
 
-    return (s: SRC, context?: Context | undefined) =>
-        path(s, context) as REQ extends true ? NonEmptyArray<DST> : Array<DST>;
+    return (s: SRC, context?: Context | undefined) => path(s, context) as REQ extends true ? NonEmptyArray<DST> : Array<DST>;
 }
 
 export function compileAsFirst<SRC, DST = unknown, REQ = false>(expression: string) {
