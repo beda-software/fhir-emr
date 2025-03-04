@@ -1,10 +1,10 @@
 import { Form, InputNumber, Select } from 'antd';
 import { Coding } from 'fhir/r4b';
+import _ from 'lodash';
 import { useState } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 
 import { useFieldController } from '../hooks';
-import _ from 'lodash';
 
 const inputStyle = { width: '100%' };
 

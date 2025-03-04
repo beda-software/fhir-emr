@@ -1,6 +1,6 @@
+import { t } from '@lingui/macro';
 import { Meta, StoryObj } from '@storybook/react';
 import { ItemContext } from 'sdc-qrf/lib/types';
-import { t } from '@lingui/macro';
 
 import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 

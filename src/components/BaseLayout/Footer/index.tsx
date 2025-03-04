@@ -1,5 +1,6 @@
-import { S } from './Footer.styles';
 import { t } from '@lingui/macro';
+
+import { S } from './Footer.styles';
 
 interface Props {
     type?: 'default' | 'light';

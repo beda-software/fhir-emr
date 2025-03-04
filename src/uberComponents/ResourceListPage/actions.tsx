@@ -1,6 +1,7 @@
 import { t } from '@lingui/macro';
-import { Button, notification } from 'antd';
+import { Button, ModalProps, notification } from 'antd';
 import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
+import { omit } from 'lodash';
 import { useNavigate } from 'react-router-dom';
 
 import { ModalTrigger } from 'src/components/ModalTrigger';
@@ -10,9 +11,14 @@ import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-dat
 import { S } from './styles';
 import { QuestionnaireActionType as QAT, questionnaireAction as qa, NavigationActionType } from './types';
 
-export type QuestionnaireActionType = QAT<QRFProps>;
+export interface WebExtra {
+    qrfProps?: Partial<QRFProps>;
+    modalProps?: ModalProps;
+}
 
-export const questionnaireAction = qa<QRFProps>;
+export type QuestionnaireActionType = QAT<WebExtra>;
+
+export const questionnaireAction = qa<WebExtra>;
 
 export type { NavigationActionType, CustomActionType } from './types';
 export { navigationAction, customAction, isCustomAction, isNavigationAction, isQuestionnaireAction } from './types';
@@ -29,7 +35,11 @@ export function RecordQuestionnaireAction<R extends Resource>({
     defaultLaunchContext: ParametersParameter[];
 }) {
     return (
-        <ModalTrigger title={action.title} trigger={<S.LinkButton type="link">{action.title}</S.LinkButton>}>
+        <ModalTrigger
+            title={action.title}
+            trigger={<S.LinkButton type="link">{action.title}</S.LinkButton>}
+            modalProps={action.extra?.modalProps}
+        >
             {({ closeModal }) => (
                 <QuestionnaireResponseForm
                     questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
@@ -46,7 +56,7 @@ export function RecordQuestionnaireAction<R extends Resource>({
                     }}
                     onCancel={closeModal}
                     saveButtonTitle={t`Submit`}
-                    {...(action.qrfProps ?? {})}
+                    {...(action.extra?.qrfProps ?? {})}
                 />
             )}
         </ModalTrigger>
@@ -68,6 +78,7 @@ export function HeaderQuestionnaireAction({ action, reload, defaultLaunchContext
                     <span>{action.title}</span>
                 </Button>
             }
+            modalProps={action.extra?.modalProps}
         >
             {({ closeModal }) => (
                 <QuestionnaireResponseForm
@@ -80,7 +91,7 @@ export function HeaderQuestionnaireAction({ action, reload, defaultLaunchContext
                     launchContextParameters={defaultLaunchContext}
                     onCancel={closeModal}
                     saveButtonTitle={t`Submit`}
-                    {...(action.qrfProps ?? {})}
+                    {...(action.extra?.qrfProps ?? {})}
                 />
             )}
         </ModalTrigger>
@@ -108,12 +119,14 @@ export function BatchQuestionnaireAction<R extends Resource>({
                     <span>{action.title}</span>
                 </Button>
             }
+            modalProps={action.extra?.modalProps}
         >
             {({ closeModal }) => (
                 <QuestionnaireResponseForm
                     questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
                     launchContextParameters={[
                         ...defaultLaunchContext,
+                        ...(action.extra?.qrfProps?.launchContextParameters ?? []),
                         {
                             name: 'Bundle',
                             resource: bundle as Bundle,
@@ -126,7 +139,7 @@ export function BatchQuestionnaireAction<R extends Resource>({
                     }}
                     onCancel={closeModal}
                     saveButtonTitle={t`Submit`}
-                    {...(action.qrfProps ?? {})}
+                    {...(action.extra?.qrfProps ? omit(action.extra?.qrfProps, 'launchContextParameters') : {})}
                 />
             )}
         </ModalTrigger>

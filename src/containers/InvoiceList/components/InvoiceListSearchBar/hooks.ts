@@ -1,6 +1,6 @@
+import { t } from '@lingui/macro';
 import { Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
-import { t } from '@lingui/macro';
 
 import { extractBundleResources, getReference } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess } from '@beda.software/remote-data';

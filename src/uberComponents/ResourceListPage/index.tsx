@@ -27,6 +27,7 @@ import {
     RecordQuestionnaireAction,
     HeaderQuestionnaireAction,
     isCustomAction,
+    WebExtra,
 } from './actions';
 export { navigationAction, customAction, questionnaireAction } from './actions';
 import { BatchActions } from './BatchActions';
@@ -36,12 +37,13 @@ import { ResourceListProps, ReportColumn, TableManager } from './types';
 
 type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
 
-type ResourceListPageProps<R extends Resource> = ResourceListProps<R> & {
+type ResourceListPageProps<R extends Resource> = ResourceListProps<R, WebExtra> & {
     /* Page header title (for example, Organizations) */
     headerTitle: string;
 
     /* Page content max width */
     maxWidth?: number | string;
+
     /* Table columns without action column - action column is generated based on `getRecordActions` */
     getTableColumns: (manager: TableManager) => ColumnsType<RecordType<R>>;
 };
@@ -189,7 +191,7 @@ interface ResourcesListPageReportProps<R> {
     getReportColumns: (bundle: Bundle, reportBundle?: Bundle) => Array<ReportColumn>;
 }
 
-function ResourcesListPageReport<R>(props: ResourcesListPageReportProps<R>) {
+export function ResourcesListPageReport<R>(props: ResourcesListPageReportProps<R>) {
     const { recordResponse, getReportColumns } = props;
     const emptyBundle: Bundle = { resourceType: 'Bundle', entry: [], type: 'searchset' };
     const items =
@@ -200,7 +202,7 @@ function ResourcesListPageReport<R>(props: ResourcesListPageReportProps<R>) {
     return <Report items={items} />;
 }
 
-function getRecordActionsColumn<R extends Resource>({
+export function getRecordActionsColumn<R extends Resource>({
     getRecordActions,
     defaultLaunchContext,
     reload,

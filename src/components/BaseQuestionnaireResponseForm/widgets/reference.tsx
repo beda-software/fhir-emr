@@ -38,7 +38,7 @@ export function useFieldReference<R extends Resource = any, IR extends Resource 
     const loadOptions = async (searchText: string) => {
         const response = await loadResourceOptions(
             resourceType,
-            { ...(typeof searchParams === 'string' ? {} : searchParams ?? {}), _ilike: searchText },
+            { ...(typeof searchParams === 'string' ? {} : (searchParams ?? {})), _ilike: searchText },
             undefined,
             getDisplay,
         );
@@ -110,9 +110,8 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
             return overrideGetDisplay;
         }
 
-        return (resource: R, includedResources: ResourcesMap<R|IR>) => evaluate(
-            resource, choiceColumn![0]!.path!,
-            {
+        return (resource: R, includedResources: ResourcesMap<R | IR>) =>
+            evaluate(resource, choiceColumn![0]!.path!, {
                 ...context,
                 ...includedResources,
                 resource,
@@ -129,7 +128,7 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         async (searchText: string) => {
             const response = await loadResourceOptions(
                 resourceType as any,
-                { ...(typeof searchParams === 'string' ? {} : searchParams ?? {}), _ilike: searchText },
+                { ...(typeof searchParams === 'string' ? {} : (searchParams ?? {})), _ilike: searchText },
                 referenceResource,
                 getDisplay(),
             );
@@ -189,7 +188,7 @@ function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource =
 ) {
     const { debouncedLoadOptions, fieldController, repeats, placeholder, optionsRD } = useAnswerReference(props);
 
-    const { formItem, onSelect } = fieldController;
+    const { formItem, onSelect, disabled } = fieldController;
 
     return (
         <RenderRemoteData remoteData={optionsRD}>
@@ -204,6 +203,7 @@ function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource =
                         getOptionValue={(option) => getAnswerCode(option.value)}
                         isMulti={repeats}
                         placeholder={placeholder}
+                        isDisabled={disabled}
                     />
                 </Form.Item>
             )}
