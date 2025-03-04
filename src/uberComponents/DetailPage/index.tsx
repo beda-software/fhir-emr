@@ -1,5 +1,4 @@
 import { Bundle, Resource } from 'fhir/r4b';
-import { useEffect, useState } from 'react';
 import { useParams, Route, Routes, useLocation, Link, useNavigate } from 'react-router-dom';
 
 import { RenderRemoteData, useService, WithId } from '@beda.software/fhir-react';
@@ -24,11 +23,7 @@ export function PageTabs<R extends Resource>({ tabs, basePath }: PageTabsProps<R
         path: `/${basePath}/${params.id}/${path}`,
     }));
 
-    const [currentPath, setCurrentPath] = useState(location?.pathname);
-
-    useEffect(() => {
-        setCurrentPath(location?.pathname);
-    }, [location]);
+    const currentPath = location?.pathname;
 
     return (
         <Tabs
