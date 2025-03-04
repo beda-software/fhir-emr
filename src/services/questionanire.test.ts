@@ -7,6 +7,12 @@ import { evaluate, initFHIRPathEvaluateOptions } from 'src/utils';
 import { axiosInstance, createFHIRResource } from './fhir';
 import { loadResourceOptions } from './questionnaire';
 
+const start = '2024-09-20T00:00:00Z';
+// const startString = 'Friday • 20 Sep • 12:00 AM';
+// string representation should be calculated to aviod issue with different timezones
+// Formating is depends on the timezone where test is running
+const startString = parseFHIRDateTime(start).format('dddd • D MMM • h:mm A');
+
 const formatDateUserInvocationTable: UserInvocationTable = {
     formatDate: {
         fn: (inputs: string[], format: string) => {
@@ -29,7 +35,7 @@ async function setup() {
             schedule: {
                 reference: `Schedule/${schedule.id}`,
             },
-            start: '2024-09-20T00:00:00Z',
+            start,
             end: '2024-09-20T00:30:00Z',
         };
         return ensure(await createFHIRResource(slot));
@@ -52,7 +58,7 @@ describe('Custom fhirpath invocation for reference option display', () => {
 
         initFHIRPathEvaluateOptions(formatDateUserInvocationTable);
         const result = evaluate(slot, "Slot.start.formatDate('dddd • D MMM • h:mm A')");
-        expect(result).toEqual(['Friday • 20 Sep • 12:00 AM']);
+        expect(result).toEqual([startString]);
     });
 
     test('Load options', async () => {
@@ -75,7 +81,7 @@ describe('Custom fhirpath invocation for reference option display', () => {
             {
                 value: {
                     Reference: {
-                        display: 'Friday • 20 Sep • 12:00 AM',
+                        display: startString,
                         id: slot.id,
                         resourceType: 'Slot',
                     },
