@@ -1,4 +1,5 @@
 import { Schedule, Slot } from 'fhir/r4b';
+import { UserInvocationTable } from 'fhirpath';
 
 import { ensure, parseFHIRDateTime, withRootAccess } from '@beda.software/fhir-react';
 
@@ -43,7 +44,10 @@ async function setup() {
 }
 
 describe('Custom fhirpath invocation for reference option display', () => {
-    test('Not implemented function', async () => {
+    // Restore once
+    // https://github.com/HL7/fhirpath.js/pull/163
+    // is merged
+    test.skip('Not implemented function', async () => {
         const slot = await setup();
         expect(() => {
             evaluate(slot, "Slot.start.formatDate('dddd • D MMM • h:mm A')");
@@ -87,11 +91,10 @@ describe('Custom fhirpath invocation for reference option display', () => {
     });
 });
 
-
 describe('Default fhirpath functions work', () => {
     test('Function toString() works correctly', async () => {
         initFHIRPathEvaluateOptions(formatDateUserInvocationTable);
-        const result = evaluate({"x": 10}, "x.toString()");
-        expect(result).toEqual(["10"])
-    })
+        const result = evaluate({ x: 10 }, 'x.toString()');
+        expect(result).toEqual(['10']);
+    });
 });
