@@ -13,22 +13,27 @@ import { DetailPageProps, PageTabsProps } from './types';
 import { RecordType } from '../ResourceListPage/types';
 export type { Tab } from './types';
 
-export function PageTabs<R extends Resource>({ tabs, basePath }: PageTabsProps<R>) {
+export function PageTabs<R extends Resource>({ tabs }: PageTabsProps<R>) {
     const location = useLocation();
-    const params = useParams<{ id: string }>();
     const navigate = useNavigate();
 
     const menuItems: RouteItem[] = tabs.map(({ label, path }) => ({
         label,
-        path: `/${basePath}/${params.id}/${path}`,
+        path: `${path}`,
     }));
 
-    const currentPath = location?.pathname;
+    const parts = location.pathname?.split('/');
+    let activeKey: string;
+    if (parts.length === 3) {
+        activeKey = '';
+    } else {
+        activeKey = parts[parts.length - 1]!;
+    }
 
     return (
         <Tabs
             boxShadow={false}
-            activeKey={currentPath.split('/').slice(0, 4).join('/')}
+            activeKey={activeKey}
             items={menuItems.map((route) => ({
                 key: route.path,
                 label: <Link to={route.path}>{route.label}</Link>,
@@ -43,7 +48,6 @@ export function DetailPage<R extends Resource>({
     getSearchParams,
     getTitle,
     tabs,
-    basePath,
     extractPrimaryResource,
 }: DetailPageProps<R>) {
     const params = useParams();
@@ -68,7 +72,7 @@ export function DetailPage<R extends Resource>({
                     <PageContainer
                         title={getTitle(context)}
                         layoutVariant="with-tabs"
-                        headerContent={<PageTabs tabs={tabs} basePath={basePath} />}
+                        headerContent={<PageTabs tabs={tabs} />}
                     >
                         <Routes>
                             {tabs.map(({ path, component }) => (

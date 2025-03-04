@@ -15,11 +15,9 @@ export interface DetailPageProps<R extends Resource> {
     getSearchParams: (params: Readonly<Record<string, string | string[] | undefined>>) => SearchParams;
     getTitle: (context: RecordType<R>) => string;
     tabs: Array<Tab<R>>;
-    basePath: string;
     extractPrimaryResource?: (bundle: Bundle<R>) => R;
 }
 
 export interface PageTabsProps<R extends Resource> {
     tabs: Array<Tab<R>>;
-    basePath: string;
 }

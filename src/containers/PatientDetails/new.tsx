@@ -1,14 +1,14 @@
+import { PlusOutlined } from '@ant-design/icons';
+import { t, Trans } from '@lingui/macro';
 import { Encounter, Patient } from 'fhir/r4b';
 
+import { SearchBarColumnType } from 'src/components/SearchBar/types';
+import { navigationAction, questionnaireAction } from 'src/uberComponents';
 import { DetailPage, Tab } from 'src/uberComponents/DetailPage';
+import { ResourceListPageContent } from 'src/uberComponents/ResourceListPageContent';
 import { compileAsFirst, formatPeriodDateTime } from 'src/utils';
 
 import { PatientOverview } from './PatientOverviewDynamic';
-import { ResourceListPageContent } from 'src/uberComponents/ResourceListPageContent';
-import { navigationAction, questionnaireAction } from 'src/uberComponents';
-import { t, Trans } from '@lingui/macro';
-import { SearchBarColumnType } from 'src/components/SearchBar/types';
-import { PlusOutlined } from '@ant-design/icons';
 
 const getName = compileAsFirst<Patient, string>("Patient.name.given.first() + ' ' + Patient.name.family");
 
@@ -109,7 +109,6 @@ export function NewPatientDetails() {
             getSearchParams={({ id }) => ({ _id: id })}
             getTitle={({ resource, bundle }) => getName(resource, { bundle })!}
             tabs={tabs}
-            basePath="patients2"
         />
     );
 }
