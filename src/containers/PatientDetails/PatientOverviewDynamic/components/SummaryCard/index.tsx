@@ -1,5 +1,5 @@
 import { FileOutlined } from '@ant-design/icons';
-import { isLoading, isSuccess, RemoteData } from '@beda.software/remote-data';
+import { isSuccess, RemoteData } from '@beda.software/remote-data';
 import { t } from '@lingui/macro';
 import { Button } from 'antd';
 import { Composition } from 'fhir/r4b';
