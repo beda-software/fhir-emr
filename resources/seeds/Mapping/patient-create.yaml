@@ -1,63 +1,46 @@
 body:
-  $let:
-    ssn: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='ssn').answer.valueString").0
-    gender: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='gender').answer.valueCoding.code").0
-    mobile: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='mobile').answer.valueString").0
-    email: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='email').answer.valueString").0
-    lastName: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='last-name').answer.valueString").0
-    birthDate: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='birth-date').answer.valueDate").0
-    firstName: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='first-name').answer.valueString").0
-    patientId: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patient-id').answer.valueString").0
-    middleName: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='middle-name').answer.valueString").0
-  $body:
-    type: transaction
-    entry:
-      - request:
-          $if: $ patientId
-          $else:
-            url: /Patient
-            method: POST
-          $then:
-            url: $ "/Patient/" + patientId
-            method: PATCH
-        resource:
-          name:
-            - given:
-                - $ firstName
-                - $ middleName
-              family: $ lastName
-          gender: $ gender
-          telecom:
-            - value: $ mobile
-              system: phone
-            - value: $ email
-              system: email
-          birthDate: $ birthDate
-          identifier:
-            $if: $ ssn
-            $then:
-              - value: $ ssn
-                system: http://hl7.org/fhir/sid/us-ssn
-          active: true
-          resourceType: Patient
-    resourceType: Bundle
+  "{% assign %}":
+    - ssn: "{{ %QuestionnaireResponse.answers('ssn') }}"
+    - gender: "{{ %QuestionnaireResponse.answers('gender').coding.code }}"
+    - mobile: "{{ %QuestionnaireResponse.answers('mobile') }}"
+    - email: "{{ %QuestionnaireResponse.answers('email') }}"
+    - lastName: "{{ %QuestionnaireResponse.answers('last-name') }}"
+    - birthDate: "{{ %QuestionnaireResponse.answers('birth-date') }}"
+    - firstName: "{{ %QuestionnaireResponse.answers('first-name') }}"
+    - patientId: "{{ %QuestionnaireResponse.answers('patient-id') }}"
+    - middleName: "{{ %QuestionnaireResponse.answers('middle-name') }}"
+
+  resourceType: Bundle
+  type: transaction
+  entry:
+    - request:
+        "{% if %patientId.exists() %}":
+          url: "/Patient/{{ %patientId }}"
+          method: PATCH
+        "{% else %}":
+          url: /Patient
+          method: POST
+
+      resource:
+        name:
+          - given:
+              - "{{ %firstName }}"
+              - "{{ %middleName }}"
+            family: "{{ %lastName }}"
+        gender: "{{ %gender }}"
+        telecom:
+          - value: "{{ %mobile }}"
+            system: phone
+          - value: "{{ %email }}"
+            system: email
+        birthDate: "{{ %birthDate }}"
+        identifier:
+          "{% if %ssn %}":
+            - value: "{{ %ssn }}"
+              system: http://hl7.org/fhir/sid/us-ssn
+        active: true
+        resourceType: Patient
+
 id: patient-create
+type: FHIRPath
 resourceType: Mapping
