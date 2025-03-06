@@ -1,0 +1,60 @@
+name: Group wizard test
+title: Group wizard test
+resourceType: Questionnaire
+status: active
+id: group-wizard-test
+meta:
+  profile:
+    - https://beda.software/beda-emr-questionnaire
+url: >-
+  https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/group-wizard-test
+item:
+  - type: group
+    linkId: wizard
+    itemControl:
+      coding:
+        - code: wizard
+    item:
+      - linkId: group-1
+        type: group
+        text: Group 1
+        item:
+          - text: Test integer 1
+            type: integer
+            linkId: test-integer-1
+            required: true
+
+      - linkId: group-2
+        text: Group 2
+        type: group
+        item:
+          - text: Test integer 2
+            type: integer
+            linkId: test-integer-2
+            required: false
+
+      - linkId: group-3
+        text: Group 3
+        type: group
+        item:
+          - text: Test integer 3
+            type: integer
+            linkId: test-integer-3
+            required: false
+          - linkId: group-3-1
+            text: Group 3.1
+            type: group
+            item:
+              - text: Test integer 3.1
+                type: integer
+                linkId: test-integer-3-1
+                required: true
+
+      - linkId: group-4
+        text: Group 4
+        type: group
+        item:
+          - text: Test integer 4
+            type: integer
+            linkId: test-integer-4
+            required: false

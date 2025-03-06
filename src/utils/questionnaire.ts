@@ -92,15 +92,15 @@ export function questionnaireItemsToValidationSchema(questionnaireItems: Questio
             schema = yup.string();
             if (item.required) schema = schema.required();
             if (item.maxLength && item.maxLength > 0) schema = (schema as yup.StringSchema).max(item.maxLength);
-            schema = createSchemaArrayOfValues(yup.object({ string: schema })).required();
+            schema = createSchemaArrayOfValues(yup.object({ string: schema }));
         } else if (item.type === 'integer') {
             schema = yup.number().integer();
             if (item.required) schema = schema.required();
-            schema = createSchemaArrayOfValues(yup.object({ integer: schema })).required();
+            schema = createSchemaArrayOfValues(yup.object({ integer: schema }));
         } else if (item.type === 'date') {
             schema = yup.date();
             if (item.required) schema = schema.required();
-            schema = createSchemaArrayOfValues(yup.object({ date: schema })).required();
+            schema = createSchemaArrayOfValues(yup.object({ date: schema }));
         } else if (item.item) {
             schema = yup
                 .object({
@@ -112,6 +112,8 @@ export function questionnaireItemsToValidationSchema(questionnaireItems: Questio
         } else {
             schema = item.required ? yup.array().of(yup.mixed()).min(1).required() : yup.mixed().nullable();
         }
+
+        schema = item.required ? schema.required() : schema;
 
         if (item.enableWhen) {
             validationSchema[item.linkId] = getQuestionItemEnableWhenSchema({

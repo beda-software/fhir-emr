@@ -32,6 +32,7 @@ export function GroupWizard(props: GroupWizardProps) {
     const { item = [], linkId } = questionItem;
 
     const formValues = useWatch();
+
     const { isSubmitted } = useFormState();
 
     const itemsCount = item.length;
@@ -42,6 +43,7 @@ export function GroupWizard(props: GroupWizardProps) {
 
         return {
             title: i.text,
+            linkId: i.linkId,
             status: hasError && isSubmitted ? 'error' : undefined,
         };
     });

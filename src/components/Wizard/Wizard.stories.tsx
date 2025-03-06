@@ -13,15 +13,19 @@ const args: WizardProps = {
     items: [
         {
             title: 'Title 1',
+            linkId: '1',
         },
         {
             title: 'Title 2',
+            linkId: '2',
         },
         {
             title: 'Title 3',
+            linkId: '3',
         },
         {
             title: 'Title 4',
+            linkId: '4',
         },
     ],
 };
@@ -107,18 +111,22 @@ export const WithErrors: Story = {
             {
                 title: 'Title 1',
                 status: 'error',
+                linkId: '1',
             },
             {
                 title: 'Title 2',
                 status: 'error',
+                linkId: '2',
             },
             {
                 title: 'Title 3',
                 status: 'error',
+                linkId: '3',
             },
             {
                 title: 'Title 4',
                 status: 'error',
+                linkId: '4',
             },
         ],
     },
