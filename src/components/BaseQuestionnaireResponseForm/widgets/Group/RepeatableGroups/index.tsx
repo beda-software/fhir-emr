@@ -6,11 +6,14 @@ import React, { ReactNode } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { GroupItemProps } from 'sdc-qrf';
 
+import { uuid4 } from '@beda.software/fhir-react';
+
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 
 import { RepeatableGroupCard } from './RepeatableGroupCard';
 import { RepeatableGroupRow } from './RepeatableGroupRow';
 import { S } from './styles';
+import { RepeatableGroupProps } from './types';
 export { RepeatableGroupCard, RepeatableGroupRow };
 
 interface RepeatableGroupsProps {
@@ -27,7 +30,9 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
     const { groupItem, renderGroup } = props;
     const { parentPath, questionItem } = groupItem;
     const { linkId, required, text } = questionItem;
+
     const fieldName = [...parentPath, linkId];
+
     const { onChange } = useFieldController(fieldName, questionItem);
 
     const { getValues } = useFormContext();
@@ -44,20 +49,22 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
                     return null;
                 }
 
+                const key = uuid4();
+
                 return renderGroup ? (
-                    <React.Fragment key={`${fieldName.join()}-${index}`}>
+                    <React.Fragment key={`${fieldName.join()}-${key}`}>
                         {renderGroup({
                             index,
-                            value,
+                            items,
                             onChange,
                             groupItem,
                         })}
                     </React.Fragment>
                 ) : (
                     <RepeatableGroupCard
-                        key={index}
+                        key={key}
                         index={index}
-                        value={value}
+                        items={items}
                         onChange={onChange}
                         groupItem={groupItem}
                         variant="main-card"
@@ -82,30 +89,4 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
             )}
         </S.Group>
     );
-}
-
-export interface RepeatableGroupProps {
-    index: number;
-    value: any;
-    onChange: (event: any) => void;
-    groupItem: GroupItemProps;
-}
-
-export function useRepeatableGroup(props: RepeatableGroupProps) {
-    const { index, value, onChange, groupItem } = props;
-    const { parentPath, questionItem, context } = groupItem;
-    const { linkId } = questionItem;
-
-    const onRemove = () => {
-        const filteredArray = _.filter(value.items, (_val, valIndex: number) => valIndex !== index);
-        onChange({
-            items: [...filteredArray],
-        });
-    };
-
-    return {
-        onRemove,
-        parentPath: [...parentPath, linkId, 'items', index.toString()],
-        context: context[0]!,
-    };
 }
