@@ -1,12 +1,11 @@
 import { Bundle, Composition, DomainResource, Patient } from 'fhir/r4b';
 import { useState } from 'react';
 
-import config from '@beda.software/emr-config';
-import { extractBundleResources, formatFHIRDateTime, useService } from '@beda.software/fhir-react';
+import { extractBundleResources, useService } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 
-import { getToken } from 'src/services';
-import { getFHIRResources, patchFHIRResource, saveFHIRResource, service } from 'src/services/fhir';
+import { addTextToResource, generatePatientSummary, saveSummaryComposition } from 'src/services/ai-summary.ts';
+import { getFHIRResources, service } from 'src/services/fhir';
 
 export function useSummaryCard(patient: Patient) {
     const [summaryCompositionRD, manager] = useService(async () => {
@@ -67,83 +66,4 @@ export function useSummaryCard(patient: Patient) {
     };
 }
 
-async function addTextToResource(resource: DomainResource) {
-    const resourceSummaryRD = await service<{ resource: DomainResource; summary: string }>({
-        method: 'POST',
-        baseURL: config.aiAssistantServiceUrl ?? undefined,
-        url: '/summarize_resource',
-        data: resource,
-        headers: { Authorization: `Bearer ${getToken()}`, 'Content-Type': 'multipart' },
-    });
-    if (isSuccess(resourceSummaryRD)) {
-        const resourceSummaryText = resourceSummaryRD.data.summary;
-        await patchFHIRResource<DomainResource>({
-            id: resource!.id!,
-            resourceType: resource!.resourceType,
-            text: {
-                status: 'generated',
-                div: resourceSummaryText,
-            },
-        });
-    }
-    return resourceSummaryRD;
-}
 
-async function generatePatientSummary(inputData: string) {
-    return await service<{ summary: string }>({
-        method: 'POST',
-        baseURL: config.aiAssistantServiceUrl ?? undefined,
-        url: '/summarize',
-        data: {
-            purpose: 'Make a brief patient overview',
-            data: inputData,
-            mode: 'overview',
-        },
-        headers: { Authorization: `Bearer ${getToken()}`, 'Content-Type': 'multipart' },
-    });
-}
-
-async function saveSummaryComposition(patient: Patient, summaryText: string) {
-    return await saveFHIRResource({
-        resourceType: 'Composition',
-        author: [
-            {
-                display: 'AI agent',
-                reference: 'Device/ai-agent',
-            },
-        ],
-        date: formatFHIRDateTime(new Date()),
-        section: [
-            {
-                code: {
-                    coding: [
-                        {
-                            code: '60591-5',
-                            system: 'http://loinc.org',
-                            display: 'Patient summary Document',
-                        },
-                    ],
-                },
-                text: {
-                    div: JSON.parse(summaryText).text,
-                    status: 'generated',
-                },
-                title: 'AI Summary',
-            },
-        ],
-        status: 'final',
-        subject: {
-            reference: `Patient/${patient.id}`,
-        },
-        title: 'AI-generated Summary',
-        type: {
-            coding: [
-                {
-                    code: '60591-5',
-                    system: 'http://loinc.org',
-                    display: 'Patient summary Document',
-                },
-            ],
-        },
-    });
-}
