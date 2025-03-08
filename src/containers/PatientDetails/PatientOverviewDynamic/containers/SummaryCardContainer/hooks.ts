@@ -1,17 +1,13 @@
+import { mapSuccess } from 'aidbox-react';
 import { Bundle, Composition, DomainResource, Patient } from 'fhir/r4b';
+import { useState } from 'react';
 
-import { patchFHIRResource } from 'aidbox-react/lib';
 import config from '@beda.software/emr-config';
 import { extractBundleResources, formatFHIRDateTime, useService } from '@beda.software/fhir-react';
-
-import { mapSuccess } from 'aidbox-react';
-
 import { isSuccess } from '@beda.software/remote-data';
 
 import { getToken } from 'src/services';
-
-import { getFHIRResources, saveFHIRResource, service } from 'src/services/fhir';
-import { useState } from 'react';
+import { getFHIRResources, patchFHIRResource, saveFHIRResource, service } from 'src/services/fhir';
 
 export function useSummaryCard(patient: Patient) {
     const [summaryCompositionRD, manager] = useService(async () => {
@@ -29,13 +25,13 @@ export function useSummaryCard(patient: Patient) {
         );
     });
 
-    const [summaryIsUpdating, setSummaryIsUpdating] = useState<boolean>(false)
+    const [summaryIsUpdating, setSummaryIsUpdating] = useState<boolean>(false);
 
     async function generateSummary() {
-        setSummaryIsUpdating(true)
+        setSummaryIsUpdating(true);
         const response = await createNewSummary(patient);
         if (isSuccess(response)) {
-            setSummaryIsUpdating(false)
+            setSummaryIsUpdating(false);
             manager.softReloadAsync();
         }
     }
@@ -68,7 +64,7 @@ export function useSummaryCard(patient: Patient) {
     return {
         summaryCompositionRD,
         generateSummary,
-        summaryIsUpdating
+        summaryIsUpdating,
     };
 }
 
