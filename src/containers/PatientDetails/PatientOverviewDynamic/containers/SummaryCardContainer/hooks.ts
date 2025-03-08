@@ -114,7 +114,7 @@ async function saveSummaryComposition(patient: Patient, summaryText: string) {
         author: [
             {
                 display: 'AI agent',
-                reference: 'Practitioner/ai-agent',
+                reference: 'Device/ai-agent',
             },
         ],
         date: formatFHIRDateTime(new Date()),
