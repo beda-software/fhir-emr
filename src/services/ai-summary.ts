@@ -1,10 +1,53 @@
-import { DomainResource, Patient } from 'fhir/r4b';
+import { Bundle, Composition, DomainResource, Patient } from 'fhir/r4b';
 
 import config from '@beda.software/emr-config';
-import { formatFHIRDateTime } from '@beda.software/fhir-react';
-import { isSuccess } from '@beda.software/remote-data';
+import { extractBundleResources, formatFHIRDateTime } from '@beda.software/fhir-react';
+import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 
-import { patchFHIRResource, saveFHIRResource, service } from 'src/services/fhir.ts';
+import { getFHIRResources, patchFHIRResource, saveFHIRResource, service } from 'src/services/fhir.ts';
+import { LOINC_CODESYSTEM } from 'src/utils';
+
+const PATIENT_SUMMARY_DOC_LOINC_CODE = '60591-5';
+
+export async function createNewPatientSummary(patient: Patient) {
+    const patientEverythingRD = await service<Bundle<DomainResource>>({
+        method: 'GET',
+        url: `Patient/${patient.id}/$everything`,
+    });
+    const resourceSummaries: string[] = [];
+    if (isSuccess(patientEverythingRD)) {
+        patientEverythingRD.data.entry!.map((entry) => {
+            if (entry.resource?.text) {
+                resourceSummaries.push(entry.resource?.text.div);
+            } else {
+                console.log('No narrative', entry.resource);
+                resourceSummaries.push(JSON.stringify(entry.resource));
+                addTextToResource(entry.resource!);
+            }
+        });
+        const patientSummaryTextRD = await generatePatientSummary(resourceSummaries.join(';'));
+        if (isSuccess(patientSummaryTextRD)) {
+            return await saveSummaryComposition(patient, patientSummaryTextRD.data.summary);
+        }
+        return patientSummaryTextRD;
+    }
+    return patientEverythingRD;
+}
+
+export async function getLatestPatientSummary(patient: Patient) {
+    return mapSuccess(
+        await getFHIRResources<Composition>('Composition', {
+            subject: patient.id,
+            type: `${LOINC_CODESYSTEM}|${PATIENT_SUMMARY_DOC_LOINC_CODE}`,
+            _sort: '-createdAt',
+            _count: 1,
+        }),
+        (bundle) => {
+            const resources = extractBundleResources(bundle).Composition;
+            return resources.length ? resources[0] : undefined;
+        },
+    );
+}
 
 export async function addTextToResource(resource: DomainResource) {
     const resourceSummaryRD = await service<{ resource: DomainResource; summary: string }>({
@@ -57,8 +100,8 @@ export async function saveSummaryComposition(patient: Patient, summaryText: stri
                 code: {
                     coding: [
                         {
-                            code: '60591-5',
-                            system: 'http://loinc.org',
+                            code: PATIENT_SUMMARY_DOC_LOINC_CODE,
+                            system: LOINC_CODESYSTEM,
                             display: 'Patient summary Document',
                         },
                     ],
@@ -78,11 +121,15 @@ export async function saveSummaryComposition(patient: Patient, summaryText: stri
         type: {
             coding: [
                 {
-                    code: '60591-5',
-                    system: 'http://loinc.org',
+                    code: PATIENT_SUMMARY_DOC_LOINC_CODE,
+                    system: LOINC_CODESYSTEM,
                     display: 'Patient summary Document',
                 },
             ],
+        },
+        text: {
+            status: 'generated',
+            div: 'AI-generated Summary',
         },
     });
 }
