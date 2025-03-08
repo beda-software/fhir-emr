@@ -1,10 +1,9 @@
-import { mapSuccess } from 'aidbox-react';
 import { Bundle, Composition, DomainResource, Patient } from 'fhir/r4b';
 import { useState } from 'react';
 
 import config from '@beda.software/emr-config';
 import { extractBundleResources, formatFHIRDateTime, useService } from '@beda.software/fhir-react';
-import { isSuccess } from '@beda.software/remote-data';
+import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 
 import { getToken } from 'src/services';
 import { getFHIRResources, patchFHIRResource, saveFHIRResource, service } from 'src/services/fhir';
