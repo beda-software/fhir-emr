@@ -6,3 +6,5 @@
 // resource. PractitionerRoles with this role can be used in selects when we need
 // to provide healthcare service.
 export const practitionerRoleDoctor = 'doctor';
+
+export const LOINC_CODESYSTEM = 'http://loinc.org'
