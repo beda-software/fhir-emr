@@ -49,14 +49,18 @@ export async function getLatestPatientSummary(patient: Patient) {
     );
 }
 
-export async function addTextToResource(resource: DomainResource) {
-    const resourceSummaryRD = await service<{ resource: DomainResource; summary: string }>({
+export async function generateNarrativeForResource(resource: DomainResource) {
+    return await service<{ resource: DomainResource; summary: string }>({
         method: 'POST',
         baseURL: config.aiAssistantServiceUrl ?? undefined,
         url: '/summarize_resource',
         data: resource,
         headers: { 'Content-Type': 'application/json' },
     });
+}
+
+export async function addTextToResource(resource: DomainResource) {
+    const resourceSummaryRD = await generateNarrativeForResource(resource);
     if (isSuccess(resourceSummaryRD)) {
         const resourceSummaryText = resourceSummaryRD.data.summary;
         await patchFHIRResource<DomainResource>({
