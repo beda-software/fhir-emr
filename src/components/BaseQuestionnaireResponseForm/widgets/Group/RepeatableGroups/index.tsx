@@ -2,7 +2,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Trans } from '@lingui/macro';
 import { Button } from 'antd';
 import _ from 'lodash';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useCallback } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { GroupItemProps } from 'sdc-qrf';
 
@@ -32,8 +32,17 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
     const { linkId, required, text } = questionItem;
 
     const fieldName = [...parentPath, linkId];
+    const [key, setKey] = React.useState(uuid4());
 
-    const { onChange } = useFieldController(fieldName, questionItem);
+    const { onChange: onChangeBase } = useFieldController(fieldName, questionItem);
+
+    const onChange = useCallback(
+        (value: any) => {
+            setKey(uuid4());
+            onChangeBase(value);
+        },
+        [onChangeBase],
+    );
 
     const { getValues } = useFormContext();
 
@@ -49,8 +58,6 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
                     return null;
                 }
 
-                const key = uuid4();
-
                 return renderGroup ? (
                     <React.Fragment key={`${fieldName.join()}-${key}`}>
                         {renderGroup({
@@ -62,7 +69,7 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
                     </React.Fragment>
                 ) : (
                     <RepeatableGroupCard
-                        key={key}
+                        key={`${key}-${index}`}
                         index={index}
                         items={items}
                         onChange={onChange}
