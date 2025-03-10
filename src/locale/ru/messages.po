@@ -131,7 +131,7 @@ msgstr ""
 msgid "AI builder"
 msgstr ""
 
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/SummaryCard/index.tsx:22
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/SummaryCard/index.tsx:30
 msgid "AI Summary"
 msgstr ""
 

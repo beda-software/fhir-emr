@@ -4,7 +4,7 @@ import config from '@beda.software/emr-config';
 import { extractBundleResources, formatFHIRDateTime } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 
-import { getFHIRResources, patchFHIRResource, saveFHIRResource, service } from 'src/services/fhir.ts';
+import { getFHIRResources, patchFHIRResource, saveFHIRResource, service } from 'src/services/fhir';
 import { LOINC_CODESYSTEM } from 'src/utils';
 
 const PATIENT_SUMMARY_DOC_LOINC_CODE = '60591-5';
@@ -90,7 +90,7 @@ export async function generatePatientSummary(inputData: string) {
 }
 
 export async function saveSummaryComposition(patient: Patient, summaryText: string) {
-    return await saveFHIRResource({
+    return await saveFHIRResource<Composition>({
         resourceType: 'Composition',
         author: [
             {
