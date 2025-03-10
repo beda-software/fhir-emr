@@ -2,8 +2,9 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import { QuestionItems } from 'sdc-qrf';
 
-import { RepeatableGroupProps, useRepeatableGroup } from '.';
+import { useRepeatableGroup } from './RepeatableGroupCard/hooks';
 import { S } from './styles';
+import { RepeatableGroupProps } from './types';
 
 export function RepeatableGroupRow(props: RepeatableGroupProps) {
     const { groupItem } = props;

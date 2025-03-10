@@ -64,6 +64,7 @@ interface CardProps {
 
 export function GroupMainCard(props: CardProps) {
     const { title = t`Group`, children, readOnly, onRemove: initialOnRemove } = props;
+
     const onRemove = readOnly ? undefined : initialOnRemove;
 
     return (
@@ -72,7 +73,13 @@ export function GroupMainCard(props: CardProps) {
             $variant={'main-card'}
             extra={
                 onRemove ? (
-                    <Button type="default" onClick={onRemove} size="middle" icon={<DeleteOutlined />}>
+                    <Button
+                        type="default"
+                        onClick={onRemove}
+                        size="middle"
+                        icon={<DeleteOutlined />}
+                        data-testid="remove-group-button"
+                    >
                         <span>
                             <Trans>Remove</Trans>
                         </span>
@@ -87,6 +94,7 @@ export function GroupMainCard(props: CardProps) {
 
 export function GroupSubCard(props: CardProps) {
     const { title = t`Group`, children, readOnly, onRemove: initialOnRemove } = props;
+
     const onRemove = readOnly ? undefined : initialOnRemove;
 
     return (
