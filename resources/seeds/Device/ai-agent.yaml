@@ -1,0 +1,5 @@
+resourceType: Device
+id: ai-agent
+deviceName:
+- name: AI Agent
+  type: user-friendly-name

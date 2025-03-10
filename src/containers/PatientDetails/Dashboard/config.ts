@@ -18,6 +18,7 @@ import { GeneralInformationDashboardContainer } from 'src/containers/PatientDeta
 import { StandardCardContainerFabric } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/StandardCardContainerFabric';
 
 import { AppointmentCardContainer } from '../PatientOverviewDynamic/containers/AppointmentCardContainer';
+import { SummaryContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/SummaryCardContainer';
 
 export const patientDashboardConfig: DashboardInstance = {
     top: [
@@ -30,6 +31,9 @@ export const patientDashboardConfig: DashboardInstance = {
                     status: ['arrived,booked'],
                 }),
             },
+        },
+        {
+            widget: SummaryContainer,
         },
         {
             widget: GeneralInformationDashboardContainer,
