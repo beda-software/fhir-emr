@@ -119,7 +119,7 @@ describe('Repeatable group creates correct questionnaire response', async () => 
             expect(removingTextField).not.toBeInTheDocument();
         });
 
-        const textFields2 = textFields.filter((_, index) => index !== DELETING_INDEX);
+        const textFields2 = await screen.findAllByTestId('repeatable-group-text');
         expect(textFields2).toHaveLength(CASE.case.length - 1);
 
         const controlCases = CASE.case.filter((_, index) => index !== DELETING_INDEX);
@@ -130,5 +130,70 @@ describe('Repeatable group creates correct questionnaire response', async () => 
             expect(textFieldInput).toBeEnabled();
             expect(textFieldInput.value).toBe(controlCases[textFieldIndex]!.text);
         }
+    }, 60000);
+
+    test('Test group removes all items and add again', async () => {
+        const { patient, practitioner } = await setup();
+
+        await renderRepeatableGroupForm(patient, practitioner);
+
+        const addAnotherAnswerButton = (await screen.findByText('Add another answer')).parentElement!;
+
+        if (CASE.case.length > 1) {
+            CASE.case.slice(1).forEach(() => {
+                act(() => {
+                    fireEvent.click(addAnotherAnswerButton);
+                });
+            });
+        }
+
+        const textFields = await screen.findAllByTestId('repeatable-group-text');
+        for (const [textFieldIndex, textField] of textFields.entries()) {
+            expect(textField).toBeEnabled();
+
+            const textInput = textField.querySelector('input')!;
+            act(() => {
+                fireEvent.change(textInput, {
+                    target: { value: CASE.case[textFieldIndex]!.text },
+                });
+            });
+            const textInput2 = textField.querySelector('input')!;
+
+            await waitFor(() => {
+                expect(textInput2.value).toBe(CASE.case[textFieldIndex]!.text);
+            });
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        for (const _ of textFields) {
+            const allRemoveButtons = await screen.findAllByTestId('remove-group-button');
+            const removeButton = allRemoveButtons[0]!;
+
+            expect(removeButton).toBeInTheDocument();
+
+            act(() => {
+                fireEvent.click(removeButton);
+            });
+
+            await waitFor(() => {
+                expect(removeButton).not.toBeInTheDocument();
+            });
+        }
+
+        const textFields2 = screen.queryByTestId('repeatable-group-text');
+        expect(textFields2).toBeNull();
+
+        if (CASE.case.length > 1) {
+            CASE.case.forEach(() => {
+                act(() => {
+                    fireEvent.click(addAnotherAnswerButton);
+                });
+            });
+        }
+
+        await waitFor(async () => {
+            const textFields3 = await screen.findAllByTestId('repeatable-group-text');
+            expect(textFields3).toHaveLength(CASE.case.length);
+        });
     }, 60000);
 });
