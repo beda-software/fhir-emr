@@ -2,11 +2,9 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Trans } from '@lingui/macro';
 import { Button } from 'antd';
 import _ from 'lodash';
-import React, { ReactNode, useCallback } from 'react';
+import React, { ReactNode } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { GroupItemProps } from 'sdc-qrf';
-
-import { uuid4 } from '@beda.software/fhir-react';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 
@@ -32,17 +30,8 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
     const { linkId, required, text } = questionItem;
 
     const fieldName = [...parentPath, linkId];
-    const [key, setKey] = React.useState(uuid4());
 
-    const { onChange: onChangeBase } = useFieldController(fieldName, questionItem);
-
-    const onChange = useCallback(
-        (value: any) => {
-            setKey(uuid4());
-            onChangeBase(value);
-        },
-        [onChangeBase],
-    );
+    const { onChange } = useFieldController(fieldName, questionItem);
 
     const { getValues } = useFormContext();
 
@@ -59,7 +48,7 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
                 }
 
                 return renderGroup ? (
-                    <React.Fragment key={`${fieldName.join()}-${key}`}>
+                    <React.Fragment key={`${fieldName.join()}-${items.length}`}>
                         {renderGroup({
                             index,
                             items,
@@ -69,7 +58,7 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
                     </React.Fragment>
                 ) : (
                     <RepeatableGroupCard
-                        key={`${key}-${index}`}
+                        key={`${items.length}-${index}`}
                         index={index}
                         items={items}
                         onChange={onChange}
