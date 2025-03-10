@@ -1,22 +1,30 @@
 import { FileOutlined } from '@ant-design/icons';
-import { isSuccess, RemoteData } from '@beda.software/remote-data';
 import { t } from '@lingui/macro';
-import { Button } from 'antd';
+import { Button, notification } from 'antd';
 import { Composition } from 'fhir/r4b';
-import { S } from 'src/containers/PatientDetails/PatientOverviewDynamic/PatientOverview.styles';
 
-import { DashboardCard } from 'src/components/DashboardCard';
-import { RenderRemoteData } from '@beda.software/fhir-react';
+import { formatError, RenderRemoteData } from '@beda.software/fhir-react';
+import { isFailure, isLoading, isSuccess, RemoteData } from '@beda.software/remote-data';
+
 import { Spinner } from 'src/components';
+import { DashboardCard } from 'src/components/DashboardCard';
+import { S } from 'src/containers/PatientDetails/PatientOverviewDynamic/PatientOverview.styles';
 import { formatHumanDateTime } from 'src/utils';
 
 interface Props {
     summaryCompositionRD: RemoteData<Composition | undefined>;
-    generateSummary: () => void;
-    summaryIsUpdating: boolean;
+    generateSummary: () => Promise<RemoteData<object>>;
+    summaryUpdateState: RemoteData;
 }
 
-export function SummaryCard({ summaryCompositionRD, generateSummary, summaryIsUpdating }: Props) {
+export function SummaryCard({ summaryCompositionRD, generateSummary, summaryUpdateState }: Props) {
+    async function handleSummaryUpdate() {
+        const response = await generateSummary();
+        if (isFailure(response)) {
+            notification.error({ message: formatError(response.error) });
+        }
+    }
+
     return (
         <DashboardCard
             title={t`AI Summary`}
@@ -24,12 +32,12 @@ export function SummaryCard({ summaryCompositionRD, generateSummary, summaryIsUp
                 isSuccess(summaryCompositionRD) && summaryCompositionRD.data ? (
                     <>
                         <span>Generated: {formatHumanDateTime(summaryCompositionRD.data?.date)}</span>
-                        <Button type="primary" onClick={generateSummary} loading={summaryIsUpdating}>
+                        <Button type="primary" onClick={handleSummaryUpdate} loading={isLoading(summaryUpdateState)}>
                             Update
                         </Button>
                     </>
                 ) : (
-                    <Button type="primary" onClick={generateSummary} loading={summaryIsUpdating}>
+                    <Button type="primary" onClick={handleSummaryUpdate} loading={isLoading(summaryUpdateState)}>
                         Generate new summary
                     </Button>
                 )
