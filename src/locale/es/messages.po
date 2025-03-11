@@ -131,7 +131,7 @@ msgstr "Ajustar última opción a la derecha"
 msgid "AI builder"
 msgstr "Creador de IA"
 
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/SummaryCard/index.tsx:22
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/SummaryCard/index.tsx:30
 msgid "AI Summary"
 msgstr ""
 
