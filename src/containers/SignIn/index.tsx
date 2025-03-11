@@ -2,6 +2,8 @@ import { t } from '@lingui/macro';
 import { Button, Segmented, Tooltip } from 'antd';
 import { useState } from 'react';
 
+import config from '@beda.software/emr-config';
+
 import { AppFooter } from 'src/components/BaseLayout/Footer';
 import logo from 'src/images/logo.svg';
 import { getAuthorizeUrl, OAuthState } from 'src/services/auth';
@@ -16,7 +18,11 @@ enum SignInService {
 }
 
 function authorize(state?: OAuthState) {
-    window.location.href = getAuthorizeUrl(state);
+    window.location.href = getAuthorizeUrl({
+        authPath: 'auth/authorize',
+        params: new URLSearchParams({ client_id: config.clientId, response_type: 'token' }),
+        state,
+    });
 }
 
 interface SignInProps {

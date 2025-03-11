@@ -24,6 +24,12 @@ export interface AuthTokenResponse {
     access_token: string;
 }
 
+export interface GetAuthorizeUrlArgs {
+    authPath: string;
+    params: URLSearchParams;
+    state?: OAuthState
+}
+
 export function parseOAuthState(state?: string): OAuthState {
     try {
         return state ? JSON.parse(atob(state)) : {};
@@ -36,10 +42,11 @@ export function formatOAuthState(state: OAuthState) {
     return btoa(JSON.stringify(state));
 }
 
-export function getAuthorizeUrl(state?: OAuthState) {
-    const stateStr = state ? `&state=${formatOAuthState(state)}` : '';
+export function getAuthorizeUrl(args: GetAuthorizeUrlArgs) {
+    const stateStr = args.state ? `&state=${formatOAuthState(args.state)}` : '';
+    const url = new URL(`args.authPath?${args.params}`, config.baseURL)
 
-    return `${config.baseURL}/auth/authorize?client_id=${config.clientId}&response_type=token${stateStr}`;
+    return `${url}${stateStr}`;
 }
 
 export function getToken() {
