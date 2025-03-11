@@ -5,6 +5,7 @@ declare const config: {
 
     tier: string;
     baseURL: string;
+    fhirBaseURL: string;
     sdcIdeUrl: string;
     aiQuestionnaireBuilderUrl: string;
 

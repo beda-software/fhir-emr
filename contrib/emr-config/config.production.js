@@ -5,6 +5,7 @@ const config = {
 
     tier: 'production',
     baseURL: 'https://aidbox.emr.beda.software',
+    fhirBaseURL: 'https://aidbox.emr.beda.software/fhir',
     sdcIdeUrl: 'https://sdc.beda.software',
     aiQuestionnaireBuilderUrl: 'https://builder.emr.beda.software',
 
