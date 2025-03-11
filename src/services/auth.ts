@@ -27,6 +27,7 @@ export interface AuthTokenResponse {
 export interface GetAuthorizeUrlArgs {
     authPath: string;
     params: URLSearchParams;
+    baseUrl?: string
     state?: OAuthState
 }
 
@@ -44,7 +45,7 @@ export function formatOAuthState(state: OAuthState) {
 
 export function getAuthorizeUrl(args: GetAuthorizeUrlArgs) {
     const stateStr = args.state ? `&state=${formatOAuthState(args.state)}` : '';
-    const url = new URL(`args.authPath?${args.params}`, config.baseURL)
+    const url = `${args.baseUrl ?? config.baseURL}/${args.authPath}?${args.params}`
 
     return `${url}${stateStr}`;
 }
