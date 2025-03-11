@@ -7,7 +7,7 @@ import {
 
 import { User } from '@beda.software/aidbox-types';
 import { extractBundleResources, extractErrorCode, formatError } from '@beda.software/fhir-react';
-import { isFailure, isSuccess, RemoteDataResult, success } from '@beda.software/remote-data';
+import { failure, isFailure, isSuccess, RemoteDataResult, success } from '@beda.software/remote-data';
 
 import { getJitsiAuthToken, getUserInfo } from 'src/services/auth';
 import {
@@ -26,11 +26,18 @@ import {
 } from 'src/sharedState';
 import { Role, selectUserRole } from 'src/utils/role';
 
-async function defaultPopulateUserInfoSharedState(user: User) {
+async function defaultPopulateUserInfoSharedState(): Promise<RemoteDataResult<User>> {
+    const userResponse = await getUserInfo();
+
+    if (isFailure(userResponse)) {
+        return userResponse;
+    }
+    const user = userResponse.data;
+
     sharedAuthorizedUser.setSharedState(user);
 
     if (!user.role) {
-        return Promise.resolve();
+        return failure({ error: 'User has no roles' });
     }
 
     const fetchUserRoleDetails = selectUserRole(user, {
@@ -92,6 +99,8 @@ async function defaultPopulateUserInfoSharedState(user: User) {
         },
     });
     await fetchUserRoleDetails();
+
+    return userResponse;
 }
 
 export async function restoreUserSession(
@@ -101,11 +110,9 @@ export async function restoreUserSession(
     setAidboxInstanceToken({ access_token: token, token_type: 'Bearer' });
     setFHIRInstanceToken({ access_token: token, token_type: 'Bearer' });
 
-    const userResponse = await getUserInfo();
+    const response = await populateUserInfoSharedState();
 
-    if (isSuccess(userResponse)) {
-        await populateUserInfoSharedState(userResponse.data);
-
+    if (isSuccess(response)) {
         const jitsiAuthTokenResponse = await getJitsiAuthToken();
         if (isSuccess(jitsiAuthTokenResponse)) {
             sharedJitsiAuthToken.setSharedState(jitsiAuthTokenResponse.data.jwt);
@@ -114,7 +121,7 @@ export async function restoreUserSession(
             console.warn('Error, while fetching Jitsi auth token: ', formatError(jitsiAuthTokenResponse.error));
         }
     } else {
-        if (extractErrorCode(userResponse.error) !== 'network_error') {
+        if (extractErrorCode(response.error) !== 'network_error') {
             resetAidboxInstanceToken();
             resetFHIRInstanceToken();
 
@@ -122,5 +129,5 @@ export async function restoreUserSession(
         }
     }
 
-    return userResponse;
+    return response;
 }
