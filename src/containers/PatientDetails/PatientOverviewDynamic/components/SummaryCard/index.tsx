@@ -4,7 +4,7 @@ import { Button, notification } from 'antd';
 import { Composition } from 'fhir/r4b';
 
 import { formatError, RenderRemoteData } from '@beda.software/fhir-react';
-import { isFailure, isLoading, isSuccess, RemoteData } from '@beda.software/remote-data';
+import { isFailure, isLoading, isSuccess, RemoteDataResult, RemoteData } from '@beda.software/remote-data';
 
 import { Spinner } from 'src/components';
 import { DashboardCard } from 'src/components/DashboardCard';
@@ -13,7 +13,7 @@ import { formatHumanDateTime } from 'src/utils';
 
 interface Props {
     summaryCompositionRD: RemoteData<Composition | undefined>;
-    generateSummary: () => Promise<RemoteData<object>>;
+    generateSummary: () => Promise<RemoteDataResult<unknown>>;
     summaryUpdateState: RemoteData;
 }
 
