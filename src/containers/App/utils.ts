@@ -26,21 +26,8 @@ import {
 } from 'src/sharedState';
 import { Role, selectUserRole } from 'src/utils/role';
 
-async function defaultPopulateUserInfoSharedState(): Promise<RemoteDataResult<User>> {
-    const userResponse = await getUserInfo();
-
-    if (isFailure(userResponse)) {
-        return userResponse;
-    }
-    const user = userResponse.data;
-
-    sharedAuthorizedUser.setSharedState(user);
-
-    if (!user.role) {
-        return failure({ error: 'User has no roles' });
-    }
-
-    const fetchUserRoleDetails = selectUserRole(user, {
+export async function fetchUserRoleDetails(user: User) {
+    const userRoleDetailsInitializer = selectUserRole(user, {
         [Role.Admin]: async () => {
             const organizationId = user.role![0]!.links!.organization!.id;
             const organizationResponse = await getFHIRResource<Organization>({
@@ -98,7 +85,25 @@ async function defaultPopulateUserInfoSharedState(): Promise<RemoteDataResult<Us
             }
         },
     });
-    await fetchUserRoleDetails();
+
+    await userRoleDetailsInitializer();
+}
+
+async function defaultPopulateUserInfoSharedState(): Promise<RemoteDataResult<User>> {
+    const userResponse = await getUserInfo();
+
+    if (isFailure(userResponse)) {
+        return userResponse;
+    }
+    const user = userResponse.data;
+
+    sharedAuthorizedUser.setSharedState(user);
+
+    if (!user.role) {
+        return failure({ error: 'User has no roles' });
+    }
+
+    await fetchUserRoleDetails(user);
 
     return userResponse;
 }
