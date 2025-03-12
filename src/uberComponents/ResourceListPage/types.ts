@@ -17,7 +17,7 @@ export interface TableManager {
 
 // Extra is a platform specific option
 // For web it could be specific modal property
-export interface ResourceListProps<R extends Resource, Extra = unknown> {
+export interface ResourceListProps<R extends Resource, Extra = unknown, Link=string> {
     /* Primary resource type (for example, Organization) */
     resourceType: R['resourceType'];
 
@@ -42,7 +42,7 @@ export interface ResourceListProps<R extends Resource, Extra = unknown> {
     getRecordActions?: (
         record: RecordType<R>,
         manager: TableManager,
-    ) => Array<QuestionnaireActionType<Extra> | NavigationActionType | CustomActionType>;
+    ) => Array<QuestionnaireActionType<Extra> | NavigationActionType<Link> | CustomActionType>;
 
     /**
      * Header actions (for example, new organization)
@@ -77,10 +77,10 @@ export interface ResourceListProps<R extends Resource, Extra = unknown> {
     getReportColumns?: (bundle: Bundle, reportBundle?: Bundle) => Array<ReportColumn>;
 }
 
-export interface NavigationActionType {
+export interface NavigationActionType<Link=string> {
     type: 'navigation';
     title: React.ReactNode;
-    link: string;
+    link: Link;
     icon?: React.ReactNode;
 }
 
@@ -97,11 +97,11 @@ export interface QuestionnaireActionType<Extra = unknown> {
     extra?: Extra;
 }
 
-export function navigationAction(
+export function navigationAction<Link=string>(
     title: React.ReactNode,
-    link: string,
+    link: Link,
     options?: { icon?: React.ReactNode },
-): NavigationActionType {
+): NavigationActionType<Link> {
     return { type: 'navigation', title, link, icon: options?.icon };
 }
 export function customAction(control: React.ReactNode): CustomActionType {
@@ -124,13 +124,13 @@ export function questionnaireAction<Extra = unknown>(
     };
 }
 
-export type ActionType<Extra = unknown> = QuestionnaireActionType<Extra> | NavigationActionType | CustomActionType;
+export type ActionType<Extra = unknown, Link = string> = QuestionnaireActionType<Extra> | NavigationActionType<Link> | CustomActionType;
 export function isQuestionnaireAction<Extra = unknown>(
     action: ActionType<Extra>,
 ): action is QuestionnaireActionType<Extra> {
     return action.type === 'questionnaire';
 }
-export function isNavigationAction(action: ActionType): action is NavigationActionType {
+export function isNavigationAction<Link=string>(action: ActionType<unknown,Link>): action is NavigationActionType<Link> {
     return action.type === 'navigation';
 }
 export function isCustomAction(action: ActionType): action is CustomActionType {
