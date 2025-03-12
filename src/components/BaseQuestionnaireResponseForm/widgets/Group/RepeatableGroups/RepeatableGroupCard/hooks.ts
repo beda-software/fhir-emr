@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import { RepeatableGroupProps } from '../types';
 
 export function useRepeatableGroup(props: RepeatableGroupProps) {
@@ -6,9 +8,7 @@ export function useRepeatableGroup(props: RepeatableGroupProps) {
     const { linkId } = questionItem;
 
     const onRemove = () => {
-        const filteredArray = [...items];
-        filteredArray.splice(index, 1);
-
+        const filteredArray = _.filter(items, (_val, valIndex: number) => valIndex !== index);
         onChange({
             items: [...filteredArray],
         });
