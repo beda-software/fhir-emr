@@ -6,6 +6,7 @@ import {
 } from 'aidbox-react/lib/services/instance';
 
 import { User } from '@beda.software/aidbox-types';
+import config from '@beda.software/emr-config';
 import { extractBundleResources, extractErrorCode, formatError } from '@beda.software/fhir-react';
 import { failure, isFailure, isSuccess, RemoteDataResult, success } from '@beda.software/remote-data';
 
@@ -25,7 +26,6 @@ import {
     sharedJitsiAuthToken,
 } from 'src/sharedState';
 import { Role, selectUserRole } from 'src/utils/role';
-import config from '@beda.software/emr-config';
 
 export async function fetchUserRoleDetails(user: User) {
     const userRoleDetailsInitializer = selectUserRole(user, {
