@@ -52,7 +52,7 @@ export const patientDashboardConfig: DashboardInstance = {
                 resourceType: 'AllergyIntolerance',
                 search: (patient: Patient) => ({
                     patient: patient.id,
-                    _sort: ['-_date'],
+                    _sort: ['-date'],
                     _revinclude: ['Provenance:target'],
                     _count: 7,
                 }),
@@ -102,7 +102,7 @@ export const patientDashboardConfig: DashboardInstance = {
                 resourceType: 'Immunization',
                 search: (patient: Patient) => ({
                     patient: patient.id,
-                    _sort: ['-_date'],
+                    _sort: ['-date'],
                     _revinclude: ['Provenance:target'],
                     _count: 7,
                 }),
