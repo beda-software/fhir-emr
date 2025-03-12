@@ -25,6 +25,7 @@ import {
     sharedJitsiAuthToken,
 } from 'src/sharedState';
 import { Role, selectUserRole } from 'src/utils/role';
+import config from '@beda.software/emr-config';
 
 export async function fetchUserRoleDetails(user: User) {
     const userRoleDetailsInitializer = selectUserRole(user, {
@@ -118,12 +119,14 @@ export async function restoreUserSession(
     const response = await populateUserInfoSharedState();
 
     if (isSuccess(response)) {
-        const jitsiAuthTokenResponse = await getJitsiAuthToken();
-        if (isSuccess(jitsiAuthTokenResponse)) {
-            sharedJitsiAuthToken.setSharedState(jitsiAuthTokenResponse.data.jwt);
-        }
-        if (isFailure(jitsiAuthTokenResponse)) {
-            console.warn('Error, while fetching Jitsi auth token: ', formatError(jitsiAuthTokenResponse.error));
+        if (config.jitsiMeetServer) {
+            const jitsiAuthTokenResponse = await getJitsiAuthToken();
+            if (isSuccess(jitsiAuthTokenResponse)) {
+                sharedJitsiAuthToken.setSharedState(jitsiAuthTokenResponse.data.jwt);
+            }
+            if (isFailure(jitsiAuthTokenResponse)) {
+                console.warn('Error, while fetching Jitsi auth token: ', formatError(jitsiAuthTokenResponse.error));
+            }
         }
     } else {
         if (extractErrorCode(response.error) !== 'network_error') {
