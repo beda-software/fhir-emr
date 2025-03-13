@@ -62,6 +62,34 @@ export function removeToken() {
     window.localStorage.removeItem('token');
 }
 
+export function setRefreshToken(token: string) {
+    window.localStorage.setItem('refresh_token', token);
+}
+
+export function setIdToken(value: string) {
+    window.localStorage.setItem('id_token', value);
+}
+
+export function getIdToken() {
+    return window.localStorage.getItem('id_token');
+}
+
+export function setAuthTokenURLpath(value: string) {
+    window.localStorage.setItem('auth_token_path', value);
+}
+
+export function getAuthTokenURLpath() {
+    return window.localStorage.getItem('auth_token_path');
+}
+
+export function setAuthClientRedirectURL(value: string) {
+    window.localStorage.setItem('auth_client_redirect_url', value);
+}
+
+export function getAuthClientRedirectURL() {
+    return window.localStorage.getItem('auth_client_redirect_url');
+}
+
 interface LoginBody {
     email: string;
     password: string;
