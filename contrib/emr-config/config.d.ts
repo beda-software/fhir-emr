@@ -1,5 +1,7 @@
 declare const config: {
     clientId: string;
+    authTokenPath?: string;
+    authClientRedirectURL?: string;
 
     wearablesAccessConsentCodingSystem: string;
 
