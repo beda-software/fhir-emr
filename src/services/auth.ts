@@ -22,13 +22,15 @@ export interface OAuthState {
 
 export interface AuthTokenResponse {
     access_token: string;
+    refresh_token?: string;
+    id_token?: string;
 }
 
 export interface GetAuthorizeUrlArgs {
     authPath: string;
     params: URLSearchParams;
-    baseUrl?: string
-    state?: OAuthState
+    baseUrl?: string;
+    state?: OAuthState;
 }
 
 export function parseOAuthState(state?: string): OAuthState {
@@ -45,7 +47,7 @@ export function formatOAuthState(state: OAuthState) {
 
 export function getAuthorizeUrl(args: GetAuthorizeUrlArgs) {
     const stateStr = args.state ? `&state=${formatOAuthState(args.state)}` : '';
-    const url = `${args.baseUrl ?? config.baseURL}/${args.authPath}?${args.params}`
+    const url = `${args.baseUrl ?? config.baseURL}/${args.authPath}?${args.params}`;
 
     return `${url}${stateStr}`;
 }
@@ -151,7 +153,7 @@ export async function signinWithIdentityToken(
     identityToken: string,
 ): Promise<RemoteDataResult> {
     const authTokenResponse = await getAuthToken(identityToken);
-    console.log('authTokenResponse', authTokenResponse);
+
     if (isSuccess(authTokenResponse)) {
         const authToken = authTokenResponse.data.access_token;
         setToken(authToken);
@@ -203,4 +205,39 @@ async function getAuthToken(appleToken: string) {
         method: 'GET',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${appleToken}` },
     });
+}
+
+export async function exchangeAuthorizationCodeForToken(code: string) {
+    try {
+        const tokenPath = config.authTokenPath;
+        if (tokenPath === undefined) {
+            throw Error('authTokenPath is not configured in emr-config package');
+        }
+        const redirectURL = config.authClientRedirectURL;
+        if (redirectURL === undefined) {
+            throw Error('authClientRedirectURL is not configured in emr-config package');
+        }
+
+        const tokenEndpoint = `${config.baseURL}/${tokenPath}`;
+        const data = {
+            grant_type: 'authorization_code',
+            code,
+            redirect_uri: redirectURL,
+            client_id: `${config.clientId}`,
+        };
+
+        const response = await fetch(tokenEndpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams(data),
+        });
+
+        const tokenData: AuthTokenResponse = await response.json();
+
+        return tokenData;
+    } catch (error) {
+        console.error('Error:', error);
+    }
 }
