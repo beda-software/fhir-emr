@@ -7,3 +7,4 @@ export * from './provenance.ts';
 export * from './questionnaire.ts';
 export * from './questionnaire-builder.ts';
 export * from './valueset-expand.ts';
+export * from './history.ts';
