@@ -90,7 +90,7 @@ export async function fetchUserRoleDetails(user: User) {
     await userRoleDetailsInitializer();
 }
 
-async function defaultPopulateUserInfoSharedState(): Promise<RemoteDataResult<User>> {
+export async function aidboxPopulateUserInfoSharedState(): Promise<RemoteDataResult<User>> {
     const userResponse = await getUserInfo();
 
     if (isFailure(userResponse)) {
@@ -111,7 +111,7 @@ async function defaultPopulateUserInfoSharedState(): Promise<RemoteDataResult<Us
 
 export async function restoreUserSession(
     token: string,
-    populateUserInfoSharedState = defaultPopulateUserInfoSharedState,
+    populateUserInfoSharedState = aidboxPopulateUserInfoSharedState,
 ): Promise<RemoteDataResult> {
     setAidboxInstanceToken({ access_token: token, token_type: 'Bearer' });
     setFHIRInstanceToken({ access_token: token, token_type: 'Bearer' });
