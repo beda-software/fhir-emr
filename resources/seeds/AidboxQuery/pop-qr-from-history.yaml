@@ -1,0 +1,43 @@
+query: >-
+  WITH latest_history AS (
+    SELECT *
+    FROM questionnaireresponse_history
+    WHERE id = {{params.id}}
+    ORDER BY ts DESC
+    LIMIT 1
+  ),
+  to_delete AS (
+      SELECT qr.id
+      FROM questionnaireresponse qr
+      LEFT JOIN latest_history lh ON qr.id = lh.id
+      WHERE qr.id = {{params.id}} AND lh.id IS NULL
+  ),
+  deleted_history AS (
+      DELETE FROM questionnaireresponse_history
+      WHERE txid IN (SELECT txid FROM latest_history)
+      RETURNING id
+  ),
+  deleted AS (
+      DELETE FROM questionnaireresponse
+      WHERE id IN (SELECT id FROM to_delete)
+      RETURNING id
+  )
+  INSERT INTO questionnaireresponse (id, txid, cts, ts, resource_type, status, resource)
+  SELECT id, txid, cts, ts, resource_type, status, resource
+  FROM latest_history
+  ON CONFLICT (id) DO UPDATE
+  SET txid = EXCLUDED.txid,
+      cts = EXCLUDED.cts,
+      ts = EXCLUDED.ts,
+      resource_type = EXCLUDED.resource_type,
+      status = EXCLUDED.status,
+      resource = EXCLUDED.resource;
+
+params:
+  id:
+    type: string
+    isRequired: true
+type: execute
+
+id: pop-qr-from-history
+resourceType: AidboxQuery
