@@ -5,6 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { RenderRemoteData, useService } from '@beda.software/fhir-react';
 import { failure, FetchError, isSuccess } from '@beda.software/remote-data';
 
+import { Spinner } from 'src/components';
 import {
     setToken,
     parseOAuthState,
@@ -12,7 +13,6 @@ import {
     setRefreshToken,
     exchangeAuthorizationCodeForToken,
 } from 'src/services/auth';
-import { Spinner } from 'src/components';
 
 interface CodeGrantQueryParams {
     code?: string;
