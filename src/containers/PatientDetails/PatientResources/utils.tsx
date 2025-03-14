@@ -114,7 +114,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     resourceType="AllergyIntolerance"
                     params={{
                         patient: patient.id,
-                        _sort: ['-_date', '_id'],
+                        _sort: ['-date', '_id'],
                         _revinclude: ['Provenance:target'],
                     }}
                     getTableColumns={option.getTableColumns}
@@ -153,7 +153,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     resourceType="Immunization"
                     params={{
                         patient: patient.id,
-                        _sort: ['-_date', '_id'],
+                        _sort: ['-date', '_id'],
                         _revinclude: ['Provenance:target'],
                     }}
                     getTableColumns={option.getTableColumns}

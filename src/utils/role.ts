@@ -18,7 +18,7 @@ export enum Role {
 }
 
 export function selectUserRole<T>(user: User, options: { [role in Role]: T }): T {
-    const userRole = user.role![0]!.name;
+    const userRole = user.role![0]!.name as Role;
 
     return options[userRole];
 }
