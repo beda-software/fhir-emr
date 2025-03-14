@@ -1,7 +1,8 @@
 import queryString from 'query-string';
+import React from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { useService } from '@beda.software/fhir-react';
+import { RenderRemoteData, useService } from '@beda.software/fhir-react';
 import { failure, FetchError, isSuccess } from '@beda.software/remote-data';
 
 import {
@@ -11,6 +12,7 @@ import {
     setRefreshToken,
     exchangeAuthorizationCodeForToken,
 } from 'src/services/auth';
+import { Spinner } from 'src/components';
 
 interface CodeGrantQueryParams {
     code?: string;
@@ -20,7 +22,7 @@ interface CodeGrantQueryParams {
 export function CodeGrantAuth() {
     const location = useLocation();
 
-    useService(async () => {
+    const [response] = useService(async () => {
         const queryParamsCodeGrant = queryString.parse(location.search) as CodeGrantQueryParams;
         if (queryParamsCodeGrant.code) {
             const exchangeCodeResponse = await exchangeAuthorizationCodeForToken(queryParamsCodeGrant.code);
@@ -44,5 +46,9 @@ export function CodeGrantAuth() {
         }
     });
 
-    return null;
+    return (
+        <RenderRemoteData remoteData={response} renderLoading={() => <Spinner />}>
+            {() => <React.Fragment />}
+        </RenderRemoteData>
+    );
 }
