@@ -9,7 +9,7 @@ import { Token } from 'aidbox-react/lib/services/token';
 
 import { User } from '@beda.software/aidbox-types';
 import config from '@beda.software/emr-config';
-import { serviceFetch, isSuccess, RemoteDataResult } from '@beda.software/remote-data';
+import { serviceFetch, isSuccess, RemoteDataResult, failure, FetchError } from '@beda.software/remote-data';
 
 import {
     setInstanceToken as setFHIRInstanceToken,
@@ -208,36 +208,28 @@ async function getAuthToken(appleToken: string) {
 }
 
 export async function exchangeAuthorizationCodeForToken(code: string) {
-    try {
-        const tokenPath = config.authTokenPath;
-        if (tokenPath === undefined) {
-            throw Error('authTokenPath is not configured in emr-config package');
-        }
-        const redirectURL = config.authClientRedirectURL;
-        if (redirectURL === undefined) {
-            throw Error('authClientRedirectURL is not configured in emr-config package');
-        }
-
-        const tokenEndpoint = `${config.baseURL}/${tokenPath}`;
-        const data = {
-            grant_type: 'authorization_code',
-            code,
-            redirect_uri: redirectURL,
-            client_id: `${config.clientId}`,
-        };
-
-        const response = await fetch(tokenEndpoint, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams(data),
-        });
-
-        const tokenData: AuthTokenResponse = await response.json();
-
-        return tokenData;
-    } catch (error) {
-        console.error('Error:', error);
+    const tokenPath = config.authTokenPath;
+    if (tokenPath === undefined) {
+        return failure<FetchError>({ message: 'authTokenPath is not configured in emr-config package' });
     }
+    const redirectURL = config.authClientRedirectURL;
+    if (redirectURL === undefined) {
+        return failure<FetchError>({ message: 'authClientRedirectURL is not configured in emr-config package' });
+    }
+
+    const tokenEndpoint = `${config.baseURL}/${tokenPath}`;
+    const data = {
+        grant_type: 'authorization_code',
+        code,
+        redirect_uri: redirectURL,
+        client_id: `${config.clientId}`,
+    };
+
+    return await serviceFetch<AuthTokenResponse>(tokenEndpoint, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams(data),
+    });
 }
