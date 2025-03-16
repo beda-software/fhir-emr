@@ -27,7 +27,6 @@ import config from '@beda.software/emr-config';
 import { formatFHIRDateTime, getReference, useService } from '@beda.software/fhir-react';
 import { RemoteDataResult, isFailure, isSuccess, mapSuccess, success } from '@beda.software/remote-data';
 
-import { popQuestionnaireResponseHistory } from 'src/services';
 import { saveFHIRResource, service } from 'src/services/fhir';
 
 export type { QuestionnaireResponseFormData } from 'sdc-qrf';
@@ -226,7 +225,9 @@ export async function handleFormDataSave(
         return constraintRemoteData;
     }
 
+    const isCreating = !finalFHIRQuestionnaireResponse.id;
     const saveQRRemoteData = await questionnaireResponseSaveService(finalFHIRQuestionnaireResponse);
+
     if (isFailure(saveQRRemoteData)) {
         return saveQRRemoteData;
     }
@@ -247,7 +248,16 @@ export async function handleFormDataSave(
 
     if (isFailure(extractRemoteData)) {
         console.error('Error extracting resources from QuestionnaireResponse', extractRemoteData.error);
-        await popQuestionnaireResponseHistory(saveQRRemoteData.data.id);
+
+        const errorQRData: FHIRQuestionnaireResponse = {
+            ...finalFHIRQuestionnaireResponse,
+            ...(isCreating ? {} : { id: finalFHIRQuestionnaireResponse.id }),
+            status: 'in-progress',
+        };
+        const saveQRRemoteDataError = await questionnaireResponseSaveService(errorQRData);
+        if (isSuccess(saveQRRemoteDataError)) {
+            saveQRRemoteData.data = saveQRRemoteDataError.data;
+        }
     }
 
     // TODO: save extract result info QuestionnaireResponse.extractedResources and store
