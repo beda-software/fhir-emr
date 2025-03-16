@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QRFProps, QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
-import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
+import { inMemorySaveService, questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 
 import { S } from './styles';
 import { QuestionnaireActionType as QAT, questionnaireAction as qa, NavigationActionType } from './types';
@@ -83,6 +83,7 @@ export function HeaderQuestionnaireAction({ action, reload, defaultLaunchContext
             {({ closeModal }) => (
                 <QuestionnaireResponseForm
                     questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
+                    questionnaireResponseSaveService={inMemorySaveService}
                     onSuccess={() => {
                         closeModal();
                         notification.success({ message: t`Successfully submitted` });
