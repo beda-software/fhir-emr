@@ -257,7 +257,8 @@ export async function handleFormDataSave(
         console.error('Error extracting resources from QuestionnaireResponse', extractRemoteData.error);
 
         const errorQRData: FHIRQuestionnaireResponse = {
-            ...saveQRRemoteData.data,
+            id: saveQRRemoteData.data.id,
+            resourceType: 'QuestionnaireResponse',
             status: 'in-progress',
         };
 
