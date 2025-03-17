@@ -111,18 +111,17 @@ export function onFormResponse(props: {
                     message: t`Form successfully saved`,
                 });
             }
-        } else {
-            if (onFailure) {
-                onFailure(response.data.extractedError);
-            } else {
-                notification.error({ message: formatError(response.data.extractedError) });
-            }
         }
     } else {
         if (onFailure) {
             onFailure(response.error);
         } else {
-            notification.error({ message: formatError(response.error) });
+            if (response.error.extractedError) {
+                notification.error({ message: formatError(response.error.extractedError) });
+            }
+            if (onSuccess && response.error.questionnaireResponse) {
+                onSuccess(response.error.questionnaireResponse);
+            }
         }
     }
 }
