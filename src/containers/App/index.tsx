@@ -5,9 +5,9 @@ import { Route, BrowserRouter, Routes, Navigate, useLocation, useNavigate } from
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
-import { success } from 'aidbox-react/lib/libs/remoteData';
 
 import { User } from '@beda.software/aidbox-types';
+import { RemoteDataResult, success } from '@beda.software/remote-data';
 
 import { AnonymousLayout, BaseLayout } from 'src/components/BaseLayout';
 import { MenuLayout } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
@@ -43,7 +43,7 @@ import { SetPassword } from '../SetPassword';
 interface AppProps {
     authenticatedRoutes?: ReactElement;
     anonymousRoutes?: ReactElement;
-    populateUserInfoSharedState?: (user: User) => Promise<void>;
+    populateUserInfoSharedState?: () => Promise<RemoteDataResult<User>>;
     UserWithNoRolesComponent?: () => ReactElement;
 }
 

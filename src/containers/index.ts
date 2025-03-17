@@ -1,4 +1,5 @@
 export * from './App';
+export * from './App/auth';
 export * from './Appointment';
 export * from './DocumentsList';
 export * from './EncounterDetails';

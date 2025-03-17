@@ -1,10 +1,13 @@
 declare const config: {
     clientId: string;
+    authTokenPath?: string;
+    authClientRedirectURL?: string;
 
     wearablesAccessConsentCodingSystem: string;
 
     tier: string;
     baseURL: string;
+    fhirBaseURL?: string;
     sdcIdeUrl: string;
     aiQuestionnaireBuilderUrl: string;
 
