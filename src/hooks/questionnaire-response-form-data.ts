@@ -28,7 +28,7 @@ import config from '@beda.software/emr-config';
 import { formatFHIRDateTime, getReference, useService } from '@beda.software/fhir-react';
 import { RemoteDataResult, failure, isFailure, isSuccess, mapSuccess, success } from '@beda.software/remote-data';
 
-import { saveFHIRResource, service, updateFHIRResource } from 'src/services/fhir';
+import { patchFHIRResource, saveFHIRResource, service } from 'src/services/fhir';
 
 export type { QuestionnaireResponseFormData } from 'sdc-qrf';
 
@@ -261,7 +261,7 @@ export async function handleFormDataSave(
             status: 'in-progress',
         };
 
-        const saveQRRemoteDataError = await updateFHIRResource<QuestionnaireResponse>(errorQRData);
+        const saveQRRemoteDataError = await patchFHIRResource<QuestionnaireResponse>(errorQRData);
         if (isSuccess(saveQRRemoteDataError)) {
             return failure({
                 extractedError: extractRemoteData.error,
