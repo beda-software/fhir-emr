@@ -36,7 +36,7 @@ import { getProvenanceByEntity } from 'src/services/provenance';
 
 export interface Props {
     patient: Patient;
-    author: WithId<Practitioner | Patient | Organization|Person>;
+    author: WithId<Practitioner | Patient | Organization | Person>;
     questionnaireResponse?: WithId<QuestionnaireResponse>;
     questionnaireId: string;
     encounterId?: string;

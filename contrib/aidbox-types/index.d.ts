@@ -14165,6 +14165,7 @@ export interface QuestionnaireItem {
     /** NOTE: from extension http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl */
     /** The type of data entry control or structure that should be used to render the item. */
     itemControl?: CodeableConcept;
+    readOnlyItemControl?: CodeableConcept;
     /** NOTE: from extension http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemPopulationContext */
     /** Specifies a query that identifies the resource (or set of resources for a repeating item) that should be used to populate this Questionnaire or Questionnaire.item on initial population. */
     itemPopulationContext?: Expression;

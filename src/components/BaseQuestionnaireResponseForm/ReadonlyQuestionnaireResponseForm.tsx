@@ -20,7 +20,7 @@ import { QuestionBoolean } from './readonly-widgets/boolean';
 import { QuestionChoice } from './readonly-widgets/choice';
 import { QuestionDateTime } from './readonly-widgets/date';
 import { Display } from './readonly-widgets/display';
-import { Col, Group, Row } from './readonly-widgets/group';
+import { Col, Group, Row } from './readonly-widgets/Group';
 import { QuestionInteger, QuestionDecimal, QuestionQuantity } from './readonly-widgets/number';
 import { QuestionReference } from './readonly-widgets/reference';
 import { AnxietyScore, DepressionScore } from './readonly-widgets/score';
