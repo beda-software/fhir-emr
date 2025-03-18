@@ -88,4 +88,5 @@ export const groupControlComponents: ItemControlGroupItemComponentMapping = {
     'time-range-picker': TimeRangePickerControl,
     wizard: GroupWizard,
     'wizard-with-tooltips': GroupWizardWithTooltips,
+    'wizard-navigation-group': GroupWizard,
 };
