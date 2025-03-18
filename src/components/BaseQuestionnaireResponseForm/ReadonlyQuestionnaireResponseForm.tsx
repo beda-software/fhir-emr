@@ -27,6 +27,7 @@ import { AnxietyScore, DepressionScore } from './readonly-widgets/score';
 import { QuestionText, TextWithInput } from './readonly-widgets/string';
 import { TimeRangePickerControl } from './readonly-widgets/TimeRangePickerControl';
 import { UploadFile } from './readonly-widgets/UploadFile';
+import { NavigationGroup } from './readonly-widgets/Group/NavigationGroup';
 
 interface Props extends Partial<QRFContextData> {
     formData: QuestionnaireResponseFormData;
@@ -63,6 +64,7 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
                         col: Col,
                         row: Row,
                         'time-range-picker': TimeRangePickerControl,
+                        'wizard-navigation-group': NavigationGroup,
                         ...itemControlGroupItemComponents,
                         ...ItemControlGroupItemReadonlyWidgetsFromContext,
                     }}
