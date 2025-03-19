@@ -130,6 +130,7 @@ export async function expandEMRValueSet(answerValueSet: string | undefined, sear
         'request-priority',
         'request-intent',
         'spia-requesting-refset-3',
+        'radiology-referral',
     ];
 
     return expandValueSet({

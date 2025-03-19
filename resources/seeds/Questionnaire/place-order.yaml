@@ -35,7 +35,7 @@ contained:
         method: GET
         url: /ServiceRequest
 item:
-- linkId: practiioner-name
+- linkId: practitioner-name
   type: string
   text: Requester
   readOnly: true
@@ -49,22 +49,21 @@ item:
   initialExpression:
     language: text/fhirpath
     expression: "%Patient.name.first().given.first() + ' ' + %Patient.name.first().family"
-- linkId: test-code
-  text: Test
+- linkId: type
+  text: "Type of the order"
   required: true
   type: choice
-  answerValueSet: https://www.rcpa.edu.au/fhir/ValueSet/spia-requesting-refset-3
-- linkId: intent
-  text: Intent
-  required: true
-  type: choice
-  answerValueSet: http://hl7.org/fhir/ValueSet/request-intent
-- linkId: priority
-  required: true
-  text: Priority
-  type: choice
-  answerValueSet: http://hl7.org/fhir/ValueSet/request-priority
-- linkId: assigned-organization
+  answerOption:
+  - value:
+      string: 'Pathology'
+  - value:
+      string: 'Radiology'
+- linkId: assigned-organization-pathology
+  enableWhen:
+  - operator: '='
+    question: type
+    answer:
+      string: 'Pathology'
   text: Assigned organization
   type: reference
   referenceResource:
@@ -76,6 +75,48 @@ item:
   choiceColumn:
     - forDisplay: true
       path: name
+- linkId: assigned-organization-radiology
+  enableWhen:
+  - operator: '='
+    question: type
+    answer:
+      string: 'Radiology'
+  text: Assigned organization
+  type: reference
+  referenceResource:
+    - Organization
+  required: true
+  answerExpression:
+    language: application/x-fhir-query
+    expression: "Organization?type=image"
+  choiceColumn:
+    - forDisplay: true
+      path: name
+- linkId: test-code-pathology
+  enableWhen:
+  - operator: '='
+    question: type
+    answer:
+      string: 'Pathology'
+  text: Test
+  required: true
+  type: choice
+  answerValueSet: https://www.rcpa.edu.au/fhir/ValueSet/spia-requesting-refset-3
+- linkId: test-code-radiology
+  enableWhen:
+  - operator: '='
+    question: type
+    answer:
+      string: 'Radiology'
+  text: Test
+  required: true
+  type: choice
+  answerValueSet: https://ranzcr.com/fhir/ValueSet/radiology-referral
+- linkId: priority
+  required: true
+  text: Priority
+  type: choice
+  answerValueSet: http://hl7.org/fhir/ValueSet/request-priority
 - linkId: patient-id
   type: string
   text: patientId

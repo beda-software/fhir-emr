@@ -17,15 +17,21 @@ body:
         system: http://diagnostic-orders-are-us.com.au/ids/pgn
         value: "{{ QuestionnaireResponse.repeat(item).where(linkId='barcode').answer.valueString }}"
       category:
-        - coding:
-            - code: '108252007'
-              display: 'Laboratory procedure'
-              system: 'http://snomed.info/sct'
+      - "{% if QuestionnaireResponse.repeat(item).where(linkId='type').answer.valueString = 'Pathology' %}":
+          coding:
+          - code: '108252007'
+            display: 'Laboratory procedure'
+            system: 'http://snomed.info/sct'
+        "{% else %}":
+          coding:
+          - code: '363679005'
+            display: 'Radiology procedure'
+            system: 'http://snomed.info/sct'
       code:
-        text: "{{ QuestionnaireResponse.repeat(item).where(linkId='test-code').answer.valueCoding.display }}"
+        text: "{{ QuestionnaireResponse.repeat(item).select(where(linkId='test-code-pathology')|where(linkId='test-core-radiology')).answer.valueCoding.display }}"
         coding:
-        - "{{ QuestionnaireResponse.repeat(item).where(linkId='test-code').answer.valueCoding }}"
-      intent: "{{ QuestionnaireResponse.repeat(item).where(linkId='intent').answer.valueCoding.code }}"
+        - "{{ QuestionnaireResponse.repeat(item).select(where(linkId='test-code-pathology')|where(linkId='test-core-radiology')).answer.valueCoding }}"
+      intent: "order"
       priority: "{{ QuestionnaireResponse.repeat(item).where(linkId='priority').answer.valueCoding.code }}"
       encounter:
         reference: "{{ 'Encounter/' + QuestionnaireResponse.repeat(item).where(linkId='encounter-id').answer.valueString }}"
@@ -34,4 +40,4 @@ body:
       subject:
         reference: "{{ 'Patient/' + QuestionnaireResponse.repeat(item).where(linkId='patient-id').answer.valueString }}"
       performer:
-      - reference: "{{ QuestionnaireResponse.repeat(item).where(linkId='assigned-organization').answer.valueReference.reference }}"
+      - reference: "{{ QuestionnaireResponse.repeat(item).select(where(linkId='assigned-organization-pathology')|where(linkId='assigned-organization-radiology')).answer.valueReference.reference }}"
