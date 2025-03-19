@@ -1,8 +1,9 @@
 import queryString from 'query-string';
-import { Navigate, useLocation } from 'react-router-dom';
+import React from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { RenderRemoteData, useService } from '@beda.software/fhir-react';
-import { failure, FetchError, isSuccess, success } from '@beda.software/remote-data';
+import { failure, FetchError, isSuccess } from '@beda.software/remote-data';
 
 import { Spinner } from 'src/components';
 import {
@@ -36,7 +37,7 @@ export function CodeGrantAuth() {
                 setToken(access_token);
                 const state = parseOAuthState(queryParamsCodeGrant.state as string | undefined);
 
-                return success(state.nextUrl ?? '/');
+                window.location.href = state.nextUrl ?? '/';
             }
 
             return exchangeCodeResponse;
@@ -47,7 +48,7 @@ export function CodeGrantAuth() {
 
     return (
         <RenderRemoteData remoteData={response} renderLoading={() => <Spinner />}>
-            {(nextUrl) => <Navigate to={nextUrl} replace={true} />}
+            {() => <React.Fragment />}
         </RenderRemoteData>
     );
 }
