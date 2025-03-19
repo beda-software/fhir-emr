@@ -28,9 +28,9 @@ body:
             display: 'Radiology procedure'
             system: 'http://snomed.info/sct'
       code:
-        text: "{{ QuestionnaireResponse.repeat(item).select(where(linkId='test-code-pathology')|where(linkId='test-core-radiology')).answer.valueCoding.display }}"
+        text: "{{ QuestionnaireResponse.repeat(item).select(where(linkId='test-code-pathology')|where(linkId='test-code-radiology')).answer.valueCoding.display }}"
         coding:
-        - "{{ QuestionnaireResponse.repeat(item).select(where(linkId='test-code-pathology')|where(linkId='test-core-radiology')).answer.valueCoding }}"
+        - "{{ QuestionnaireResponse.repeat(item).select(where(linkId='test-code-pathology')|where(linkId='test-code-radiology')).answer.valueCoding }}"
       intent: "order"
       priority: "{{ QuestionnaireResponse.repeat(item).where(linkId='priority').answer.valueCoding.code }}"
       encounter:
