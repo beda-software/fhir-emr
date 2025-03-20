@@ -26,7 +26,7 @@ import {
 } from 'src/sharedState';
 import { Role, selectUserRole } from 'src/utils/role';
 
-async function defaultPopulateUserInfoSharedState(user: User) {
+export async function defaultPopulateUserInfoSharedState(user: User) {
     sharedAuthorizedUser.setSharedState(user);
 
     if (!user.role) {
