@@ -7424,10 +7424,10 @@ fhir@^4.10.3:
     randomatic "^3.1.0"
     xml-js "^1.6.8"
 
-fhirpath@3.17.1:
-  version "3.17.1"
-  resolved "https://registry.yarnpkg.com/fhirpath/-/fhirpath-3.17.1.tgz#b3a27e064c294aa8f4be0c1ccbcafe86a77fb466"
-  integrity sha512-7oiyEOKLrxanY9WBIr3ICbQFAGOmfjzYam8IFfxuX6c/lwdIb1UppxLIC10lVFTMpzJgxjNtqk2YbSxXROmVdQ==
+fhirpath@^3.18.0:
+  version "3.18.0"
+  resolved "https://registry.yarnpkg.com/fhirpath/-/fhirpath-3.18.0.tgz#990d4d02ffe8fc5a74f3d6fbf4fe008904a55009"
+  integrity sha512-iZ876rFWhozQLO/hTgFoEH9t9r1WHJqd4tRH6Gg/FiB6zliyK+bL7xKO5CzgkWBpvvBWe4sqe60tC+8opR0d0Q==
   dependencies:
     "@lhncbc/ucum-lhc" "^5.0.0"
     antlr4 "~4.9.3"
@@ -12094,10 +12094,10 @@ scroll-into-view-if-needed@^3.0.3:
   dependencies:
     compute-scroll-into-view "^3.0.2"
 
-sdc-qrf@^0.3.13:
-  version "0.3.13"
-  resolved "https://registry.yarnpkg.com/sdc-qrf/-/sdc-qrf-0.3.13.tgz#632a452810f5d8967cc12537746da419b54d93db"
-  integrity sha512-tls2j+PtTmf3vR8a/uFBavySgIFmIKdKSqNNjcDZribvwRMVr/CLhQoie41XQTaAzil/+S+bcdKeY48tbRDu8A==
+sdc-qrf@^0.3.15:
+  version "0.3.16"
+  resolved "https://registry.yarnpkg.com/sdc-qrf/-/sdc-qrf-0.3.16.tgz#25a9f3302d97b5c26c53d9dc9b88d648a6398de9"
+  integrity sha512-mni7/Xn/gGvM4wzPHWMyVVUZFliLK6mYX+GH8GJckwNXK3w6JEk8sPkVqLN1fSK4iWz2CCv9kVEniShZMv0/+Q==
   dependencies:
     classnames "^2.3.1"
     fhirpath "^3.5.0"
