@@ -23,13 +23,14 @@ import { forceDeleteFHIRResource, getFHIRResources, patchFHIRResource } from 'sr
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 import { isExternalQuestionnaire } from 'src/utils/smart-apps';
 
+import { PatientDocumentDetailsWrapperContext } from './context';
 import { ExternalDocumentView } from './ExternalDocumentView';
 import s from './PatientDocumentDetails.module.scss';
-import { PatientDocumentDetailsWrapperContext } from './context';
 
 interface Props {
     patient: WithId<Patient>;
     hideControls?: boolean;
+    autoSave?: boolean;
 }
 
 const deleteDraft = async (navigate: NavigateFunction, patientId?: string, qrId?: string) => {
@@ -221,7 +222,7 @@ function PatientDocumentDetailsFormData(props: {
 }
 
 export function PatientDocumentDetails(props: Props) {
-    const { patient, hideControls } = props;
+    const { patient, hideControls, autoSave } = props;
     const { response, manager } = usePatientDocumentDetails(patient.id);
     const navigate = useNavigate();
     const author = selectCurrentUserRoleResource();
@@ -268,6 +269,7 @@ export function PatientDocumentDetails(props: Props) {
                                             path="/edit"
                                             element={
                                                 <PatientDocument
+                                                    autoSave={autoSave}
                                                     patient={patient}
                                                     questionnaireResponse={questionnaireResponse}
                                                     questionnaireId={questionnaireResponse.questionnaire}

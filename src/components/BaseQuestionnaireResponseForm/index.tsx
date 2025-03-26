@@ -25,7 +25,7 @@ import 'react-phone-input-2/lib/style.css';
 import { Questionnaire as FCEQuestionnaire } from '@beda.software/aidbox-types';
 import { RemoteData, isSuccess, loading } from '@beda.software/remote-data';
 
-import { saveQuestionnaireResponseDraft } from 'src/components/QuestionnaireResponseForm';
+import { saveQuestionnaireResponseDraft } from 'src/components/QuestionnaireResponseForm/utils';
 import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
 import s from './BaseQuestionnaireResponseForm.module.scss';
@@ -78,7 +78,8 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         GroupWrapper,
     } = props;
 
-    const questionnaireId = formData.context.questionnaire.assembledFrom;
+    const questionnaireId =
+        formData.context.questionnaire.assembledFrom ?? formData.context.questionnaireResponse.questionnaire;
 
     const schema: yup.AnyObjectSchema = useMemo(
         () => questionnaireToValidationSchema(formData.context.questionnaire),

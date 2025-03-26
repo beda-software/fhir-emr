@@ -3,7 +3,7 @@ import { Patient, Questionnaire } from 'fhir/r4b';
 
 import { ensure } from '@beda.software/fhir-react';
 
-import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm/hooks';
 import { questionnaireIdLoader, QuestionnaireResponseFormData } from 'src/hooks/questionnaire-response-form-data';
 import { getFHIRResource, getFHIRResources } from 'src/services/fhir';
 import { loginAdminUser } from 'src/setupTests';

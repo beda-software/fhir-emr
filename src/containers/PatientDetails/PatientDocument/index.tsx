@@ -23,6 +23,7 @@ export interface PatientDocumentProps {
     questionnaireId?: string;
     encounterId?: string;
     onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
+    autoSave?: boolean;
 }
 
 export function PatientDocument(props: PatientDocumentProps) {
@@ -62,7 +63,7 @@ export function PatientDocument(props: PatientDocumentProps) {
                                 }}
                                 onCancel={() => navigate(-1)}
                                 saveButtonTitle={'Complete'}
-                                autoSave={!provenance}
+                                autoSave={props.autoSave ? props.autoSave : !provenance}
                                 draftSaveResponse={draftSaveResponse}
                                 setDraftSaveResponse={setDraftSaveResponse}
                             />

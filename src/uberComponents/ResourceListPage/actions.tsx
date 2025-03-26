@@ -5,7 +5,8 @@ import { omit } from 'lodash';
 import { useNavigate } from 'react-router-dom';
 
 import { ModalTrigger } from 'src/components/ModalTrigger';
-import { QRFProps, QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { QRFProps } from 'src/components/QuestionnaireResponseForm/types';
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 
 import { S } from './styles';

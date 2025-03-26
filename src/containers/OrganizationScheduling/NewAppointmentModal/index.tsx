@@ -5,7 +5,7 @@ import { RenderRemoteData, formatFHIRDateTime } from '@beda.software/fhir-react'
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { Modal } from 'src/components/Modal';
-import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm/hooks';
 import { Spinner } from 'src/components/Spinner';
 import { inMemorySaveService } from 'src/hooks/questionnaire-response-form-data';
 
