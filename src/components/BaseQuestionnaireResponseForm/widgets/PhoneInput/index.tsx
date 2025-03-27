@@ -24,7 +24,11 @@ export function QuestionPhone({ parentPath, questionItem }: QuestionItemProps) {
                 <PhoneInput
                     country={defaultCountryCode}
                     value={value}
-                    onChange={(phone) => onChange(phone)}
+                    onChange={(phone) => {
+                        if (phone) {
+                            onChange(`+${phone}`);
+                        }
+                    }}
                     disabled={disabled}
                     inputClass={'react-phone-input'}
                     containerClass={classNames({
