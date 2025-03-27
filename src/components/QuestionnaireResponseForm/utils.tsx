@@ -1,43 +1,16 @@
 import { t } from '@lingui/macro';
 import { notification } from 'antd';
 import { QuestionnaireResponse } from 'fhir/r4b';
-import _ from 'lodash';
-import { useMemo } from 'react';
-import {
-    FormItems,
-    ItemControlGroupItemComponentMapping,
-    ItemControlQuestionItemComponentMapping,
-    mapFormToResponse,
-} from 'sdc-qrf';
+import { FormItems, mapFormToResponse } from 'sdc-qrf';
 
-import { RenderRemoteData, formatError } from '@beda.software/fhir-react';
-import { RemoteDataResult, isFailure, isSuccess } from '@beda.software/remote-data';
+import { formatError } from '@beda.software/fhir-react';
+import { isFailure, isSuccess, RemoteDataResult } from '@beda.software/remote-data';
 
-import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import {
     QuestionnaireResponseFormData,
-    QuestionnaireResponseFormProps,
     QuestionnaireResponseFormSaveResponse,
-    useQuestionnaireResponseFormData,
 } from 'src/hooks/questionnaire-response-form-data';
-import { saveFHIRResource, updateFHIRResource } from 'src/services/fhir';
-
-import { FormFooterComponentProps } from '../BaseQuestionnaireResponseForm/FormFooter';
-import { Spinner } from '../Spinner';
-
-export interface QRFProps extends QuestionnaireResponseFormProps {
-    onSuccess?: (response: QuestionnaireResponseFormSaveResponse) => void;
-    onFailure?: (error: any) => void;
-    readOnly?: boolean;
-    itemControlQuestionItemComponents?: ItemControlQuestionItemComponentMapping;
-    itemControlGroupItemComponents?: ItemControlGroupItemComponentMapping;
-    onCancel?: () => void;
-
-    FormFooterComponent?: React.ElementType<FormFooterComponentProps>;
-    saveButtonTitle?: React.ReactNode;
-    cancelButtonTitle?: React.ReactNode;
-    autoSave?: boolean;
-}
+import { patchFHIRResource, saveFHIRResource } from 'src/services/fhir';
 
 export const saveQuestionnaireResponseDraft = async (
     questionnaireId: string,
@@ -60,7 +33,7 @@ export const saveQuestionnaireResponseDraft = async (
 
     const response = isCreating
         ? await saveFHIRResource(questionnaireResponse)
-        : await updateFHIRResource(questionnaireResponse);
+        : await patchFHIRResource<QuestionnaireResponse>(questionnaireResponse);
 
     if (isSuccess(response)) {
         formData.context.questionnaireResponse.id = response.data.id;
@@ -124,48 +97,4 @@ export function onFormResponse(props: {
             }
         }
     }
-}
-
-export function useQuestionnaireResponseForm(props: QRFProps) {
-    // TODO find what cause rerender and fix it
-    // remove this temporary hack
-    const memoizedProps = useMemo(() => props, [JSON.stringify(props)]);
-
-    const { response, handleSave } = useQuestionnaireResponseFormData(memoizedProps);
-    const { onSuccess, onFailure, readOnly, initialQuestionnaireResponse, onCancel } = memoizedProps;
-
-    const onSubmit = async (formData: QuestionnaireResponseFormData) => {
-        const modifiedFormData = _.merge({}, formData, {
-            context: {
-                questionnaireResponse: {
-                    questionnaire: initialQuestionnaireResponse?.questionnaire,
-                },
-            },
-        });
-
-        /* delete modifiedFormData.context.questionnaireResponse.meta; */
-
-        const saveResponse = await handleSave(modifiedFormData);
-        onFormResponse({ response: saveResponse, onSuccess, onFailure });
-    };
-
-    return { response, onSubmit, readOnly, onCancel };
-}
-
-export function QuestionnaireResponseForm(props: QRFProps) {
-    const { response, onSubmit, readOnly, onCancel } = useQuestionnaireResponseForm(props);
-
-    return (
-        <RenderRemoteData remoteData={response} renderLoading={Spinner}>
-            {(formData) => (
-                <BaseQuestionnaireResponseForm
-                    formData={formData}
-                    onSubmit={onSubmit}
-                    readOnly={readOnly}
-                    onCancel={onCancel}
-                    {...props}
-                />
-            )}
-        </RenderRemoteData>
-    );
 }

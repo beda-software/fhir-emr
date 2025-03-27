@@ -21,13 +21,13 @@ import { QuestionChoice } from './readonly-widgets/choice';
 import { QuestionDateTime } from './readonly-widgets/date';
 import { Display } from './readonly-widgets/display';
 import { Col, Group, Row } from './readonly-widgets/Group';
+import { NavigationGroup } from './readonly-widgets/Group/NavigationGroup';
 import { QuestionInteger, QuestionDecimal, QuestionQuantity } from './readonly-widgets/number';
 import { QuestionReference } from './readonly-widgets/reference';
 import { AnxietyScore, DepressionScore } from './readonly-widgets/score';
 import { QuestionText, TextWithInput } from './readonly-widgets/string';
 import { TimeRangePickerControl } from './readonly-widgets/TimeRangePickerControl';
 import { UploadFile } from './readonly-widgets/UploadFile';
-import { NavigationGroup } from './readonly-widgets/Group/NavigationGroup';
 
 interface Props extends Partial<QRFContextData> {
     formData: QuestionnaireResponseFormData;

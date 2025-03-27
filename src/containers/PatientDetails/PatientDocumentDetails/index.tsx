@@ -23,9 +23,9 @@ import { forceDeleteFHIRResource, getFHIRResources, patchFHIRResource } from 'sr
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 import { isExternalQuestionnaire } from 'src/utils/smart-apps';
 
+import { PatientDocumentDetailsWrapperContext } from './context';
 import { ExternalDocumentView } from './ExternalDocumentView';
 import s from './PatientDocumentDetails.module.scss';
-import { PatientDocumentDetailsWrapperContext } from './context';
 
 interface Props {
     patient: WithId<Patient>;
