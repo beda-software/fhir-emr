@@ -30,7 +30,6 @@ import s from './PatientDocumentDetails.module.scss';
 interface Props {
     patient: WithId<Patient>;
     hideControls?: boolean;
-    autoSave?: boolean;
 }
 
 const deleteDraft = async (navigate: NavigateFunction, patientId?: string, qrId?: string) => {
@@ -222,7 +221,7 @@ function PatientDocumentDetailsFormData(props: {
 }
 
 export function PatientDocumentDetails(props: Props) {
-    const { patient, hideControls, autoSave } = props;
+    const { patient, hideControls } = props;
     const { response, manager } = usePatientDocumentDetails(patient.id);
     const navigate = useNavigate();
     const author = selectCurrentUserRoleResource();
@@ -269,7 +268,6 @@ export function PatientDocumentDetails(props: Props) {
                                             path="/edit"
                                             element={
                                                 <PatientDocument
-                                                    autoSave={autoSave}
                                                     patient={patient}
                                                     questionnaireResponse={questionnaireResponse}
                                                     questionnaireId={questionnaireResponse.questionnaire}

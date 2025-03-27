@@ -1,8 +1,7 @@
 import _ from 'lodash';
 import { useMemo } from 'react';
 
-import { QRFProps } from 'src/components/QuestionnaireResponseForm/types';
-import { onFormResponse } from 'src/components/QuestionnaireResponseForm/utils';
+import { onFormResponse, QRFProps } from 'src/components/QuestionnaireResponseForm';
 import {
     QuestionnaireResponseFormData,
     useQuestionnaireResponseFormData,

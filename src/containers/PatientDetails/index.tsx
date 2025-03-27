@@ -33,12 +33,11 @@ export interface PatientDetailsEmbeddedPageDefinition extends RouteItem {
 export interface PatientDetailsProps {
     embeddedPages?: (patient: Patient, carePlans: CarePlan[]) => PatientDetailsEmbeddedPageDefinition[];
     isDefaultRoutesDisabled?: boolean;
-    autoSave?: boolean;
 }
 
 export const PatientDetails = (props: PatientDetailsProps) => {
     const params = useParams<{ id: string }>();
-    const { isDefaultRoutesDisabled, autoSave } = props;
+    const { isDefaultRoutesDisabled } = props;
 
     const [patientResponse, manager] = usePatientResource({ id: params.id! });
     const author = selectCurrentUserRoleResource();
@@ -110,13 +109,7 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                             />
                                             <Route
                                                 path="/encounters/:encounterId/new/:questionnaireId"
-                                                element={
-                                                    <PatientDocument
-                                                        patient={patient}
-                                                        author={author}
-                                                        autoSave={autoSave}
-                                                    />
-                                                }
+                                                element={<PatientDocument patient={patient} author={author} />}
                                             />
                                             <Route
                                                 path="/encounters/:encounterId/:qrId/*"
@@ -125,19 +118,11 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                             <Route path="/documents" element={<PatientDocuments patient={patient} />} />
                                             <Route
                                                 path="/documents/new/:questionnaireId"
-                                                element={
-                                                    <PatientDocument
-                                                        patient={patient}
-                                                        author={author}
-                                                        autoSave={autoSave}
-                                                    />
-                                                }
+                                                element={<PatientDocument patient={patient} author={author} />}
                                             />
                                             <Route
                                                 path="/documents/:qrId/*"
-                                                element={
-                                                    <PatientDocumentDetails patient={patient} autoSave={autoSave} />
-                                                }
+                                                element={<PatientDocumentDetails patient={patient} />}
                                             />
                                             <Route path="/wearables" element={<PatientWearables patient={patient} />} />
                                             <Route

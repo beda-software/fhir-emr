@@ -169,7 +169,7 @@ function AuthenticatedUserApp({ defaultRoute, extra }: RouteProps) {
                             <Route path="/invoices/:id" element={<InvoiceDetails />} />
                             <Route path="/patients" element={<PatientList />} />
                             <Route path="/patients-uber" element={<PatientResourceListExample />} />
-                            <Route path="/patients/:id/*" element={<PatientDetails autoSave={true} />} />
+                            <Route path="/patients/:id/*" element={<PatientDetails />} />
                             <Route path="/patients2/:id/*" element={<NewPatientDetails />} />
                             <Route path="/questionnaire" element={<PatientQuestionnaire />} />
                             <Route path="/documents/:id/edit" element={<div>documents/:id/edit</div>} />

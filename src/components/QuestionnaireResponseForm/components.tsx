@@ -1,8 +1,7 @@
 import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
-import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm/hooks';
-import { QRFProps } from 'src/components/QuestionnaireResponseForm/types';
+import { QRFProps, useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 
 import { Spinner } from '../Spinner';
 

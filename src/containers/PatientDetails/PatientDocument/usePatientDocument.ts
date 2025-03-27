@@ -23,7 +23,7 @@ import {
     success,
 } from '@beda.software/remote-data';
 
-import { onFormResponse } from 'src/components/QuestionnaireResponseForm/utils';
+import { onFormResponse } from 'src/components/QuestionnaireResponseForm';
 import {
     handleFormDataSave,
     loadQuestionnaireResponseFormData,
