@@ -161,6 +161,11 @@ export function getOptions(patient: WithId<Patient>): Option[] {
             ),
             getTableColumns: (provenanceList: Provenance[] = []) => [
                 {
+                    title: t`Status`,
+                    key: 'status',
+                    render: ({ status }: Immunization) => status,
+                },
+                {
                     title: t`Name`,
                     key: 'name',
                     render: (resource: Immunization) => (
