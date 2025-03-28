@@ -6,7 +6,6 @@ import s from './ReadonlyWidgets.module.scss';
 import { S } from './ReadonlyWidgets.styles';
 import { TextWithLink } from '../widgets/display';
 
-
 export function Display({ questionItem }: QuestionItemProps) {
     const { text, hidden, itemControl } = questionItem;
 
@@ -19,10 +18,7 @@ export function Display({ questionItem }: QuestionItemProps) {
     return (
         <S.Question className={classNames(s.question, s.column, 'form__question')}>
             <span className={s.questionText}>
-                {isMarkdown ?
-                    <Markdown>{text}</Markdown> :
-                    <TextWithLink text={text} />
-                }
+                {isMarkdown ? <Markdown>{text}</Markdown> : <TextWithLink text={text} />}
             </span>
         </S.Question>
     );

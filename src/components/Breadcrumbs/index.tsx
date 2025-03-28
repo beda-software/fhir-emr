@@ -28,4 +28,4 @@ export function Breadcrumbs(props: Props) {
             />
         </div>
     );
-};
+}

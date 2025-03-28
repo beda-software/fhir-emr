@@ -15,7 +15,7 @@ export const S = {
                 padding: 0;
             `}
     `,
-    PageContent: styled.div<{ $level: 1 | 2, $maxWidth?: number | string }>`
+    PageContent: styled.div<{ $level: 1 | 2; $maxWidth?: number | string }>`
         flex: 1;
         display: flex;
         flex-direction: column;

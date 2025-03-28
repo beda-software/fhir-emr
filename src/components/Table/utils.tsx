@@ -1,9 +1,11 @@
-import { Bundle, Resource } from 'fhir/r4b';
 import { ColumnsType, ColumnType } from 'antd/lib/table';
-import { ColumnFilterValue } from 'src/components/SearchBar/types';
-import { TableFilter } from './TableFilter';
 import { FilterDropdownProps } from 'antd/lib/table/interface';
+import { Bundle, Resource } from 'fhir/r4b';
 import _ from 'lodash';
+
+import { ColumnFilterValue } from 'src/components/SearchBar/types';
+
+import { TableFilter } from './TableFilter';
 
 export type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
 

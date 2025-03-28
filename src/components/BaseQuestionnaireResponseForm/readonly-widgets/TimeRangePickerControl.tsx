@@ -4,9 +4,9 @@ import { GroupItemProps } from 'sdc-qrf';
 
 import { getDisplay } from 'src/utils/questionnaire';
 
-import { useTimeRangePickerControl } from '../widgets/TimeRangePickerControl/hooks';
 import s from './ReadonlyWidgets.module.scss';
 import { S } from './ReadonlyWidgets.styles';
+import { useTimeRangePickerControl } from '../widgets/TimeRangePickerControl/hooks';
 
 export function TimeRangePickerControl(props: GroupItemProps) {
     const { questionItem } = props;

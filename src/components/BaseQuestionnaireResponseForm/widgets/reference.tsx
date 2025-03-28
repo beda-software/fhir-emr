@@ -38,7 +38,7 @@ export function useFieldReference<R extends Resource = any, IR extends Resource 
     const loadOptions = async (searchText: string) => {
         const response = await loadResourceOptions(
             resourceType,
-            { ...(typeof searchParams === 'string' ? {} : (searchParams ?? {})), _ilike: searchText },
+            { ...(typeof searchParams === 'string' ? {} : searchParams ?? {}), _ilike: searchText },
             undefined,
             getDisplay,
         );
@@ -128,7 +128,7 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         async (searchText: string) => {
             const response = await loadResourceOptions(
                 resourceType as any,
-                { ...(typeof searchParams === 'string' ? {} : (searchParams ?? {})), _ilike: searchText },
+                { ...(typeof searchParams === 'string' ? {} : searchParams ?? {}), _ilike: searchText },
                 referenceResource,
                 getDisplay(),
             );

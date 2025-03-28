@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 import { Text } from 'src/components/Typography';
 
 export const S = {

@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro';
+
 import { Title, Text } from 'src/components';
 import { PageContainerContent } from 'src/components/BaseLayout/PageContainer/PageContainerContent';
 import { PageContainerHeader } from 'src/components/BaseLayout/PageContainer/PageContainerHeader';

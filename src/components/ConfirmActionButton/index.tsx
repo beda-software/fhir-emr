@@ -10,15 +10,7 @@ interface Props {
     cancelText: string;
 }
 
-export const ConfirmActionButton = ({
-    action,
-    reload,
-    qrId,
-    title,
-    children,
-    okText,
-    cancelText,
-}: Props) => {
+export const ConfirmActionButton = ({ action, reload, qrId, title, children, okText, cancelText }: Props) => {
     const handleConfirm = async () => {
         if (qrId) {
             await action(qrId);
