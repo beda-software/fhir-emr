@@ -1,7 +1,7 @@
 import { Trans, t } from '@lingui/macro';
 import { Button, Checkbox, Form, Input, Select, Popconfirm } from 'antd';
 import { FormProvider, useForm } from 'react-hook-form';
-import { GroupItemProps, QuestionItemProps } from 'sdc-qrf/lib/types';
+import { GroupItemProps, QuestionItemProps } from 'sdc-qrf';
 
 import { QuestionnaireItem } from '@beda.software/aidbox-types';
 
