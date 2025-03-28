@@ -1,8 +1,12 @@
 import { Resource, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
-import { toFirstClassExtension } from 'sdc-qrf';
-import { FormGroupItems, FormItems } from 'sdc-qrf/lib/types';
-import { findAnswersForQuestionsRecursive, mapResponseToForm } from 'sdc-qrf/lib/utils';
+import {
+    toFirstClassExtension,
+    FormGroupItems,
+    FormItems,
+    findAnswersForQuestionsRecursive,
+    mapResponseToForm,
+} from 'sdc-qrf';
 
 import { AidboxReference } from '@beda.software/aidbox-types';
 

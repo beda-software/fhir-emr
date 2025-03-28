@@ -3,7 +3,7 @@ import { t, Trans } from '@lingui/macro';
 import { Button } from 'antd';
 import { Questionnaire } from 'fhir/r4b';
 import React, { useState } from 'react';
-import { GroupItemProps, QuestionItemProps } from 'sdc-qrf/lib/types';
+import { GroupItemProps, QuestionItemProps } from 'sdc-qrf';
 
 import { RenderRemoteData } from '@beda.software/fhir-react';
 import { isLoading } from '@beda.software/remote-data';

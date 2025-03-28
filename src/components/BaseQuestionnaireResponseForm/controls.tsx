@@ -3,7 +3,7 @@ import {
     ItemControlGroupItemComponentMapping,
     ItemControlQuestionItemComponentMapping,
     QuestionItemComponentMapping,
-} from 'sdc-qrf/lib/types';
+} from 'sdc-qrf';
 
 import {
     Col,

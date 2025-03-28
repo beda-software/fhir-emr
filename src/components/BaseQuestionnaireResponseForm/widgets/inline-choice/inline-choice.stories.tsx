@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { expect, within, userEvent, findByTestId } from '@storybook/test';
-import { ItemContext } from 'sdc-qrf/lib/types';
+import { ItemContext } from 'sdc-qrf';
 
 import { QuestionnaireItem } from '@beda.software/aidbox-types';
 

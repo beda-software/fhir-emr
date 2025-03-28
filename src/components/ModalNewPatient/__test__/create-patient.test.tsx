@@ -1,10 +1,11 @@
 import { act, renderHook } from '@testing-library/react';
 import { Patient, Questionnaire } from 'fhir/r4b';
+import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
 import { ensure } from '@beda.software/fhir-react';
 
 import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
-import { questionnaireIdLoader, QuestionnaireResponseFormData } from 'src/hooks/questionnaire-response-form-data';
+import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 import { getFHIRResource, getFHIRResources } from 'src/services/fhir';
 import { loginAdminUser } from 'src/setupTests';
 
