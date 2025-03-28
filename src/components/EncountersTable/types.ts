@@ -5,6 +5,6 @@ export interface EncounterData {
     patient: Patient | undefined;
     practitioner: Practitioner | undefined;
     status: Encounter['status'];
-    period?: Period,
+    period?: Period;
     humanReadableDate: string | undefined;
 }

@@ -12,4 +12,4 @@ export * from './theme.ts';
 export * from './unit.ts';
 export * from './relative-date.ts';
 export * from './fhirpath.ts';
-export * from './renderTextWithInput.ts'
+export * from './renderTextWithInput.ts';

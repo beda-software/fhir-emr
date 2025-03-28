@@ -1,6 +1,6 @@
+import { Button } from 'antd';
 import styled from 'styled-components';
 
-import { Button } from 'antd';
 import { mobileWidth } from 'src/theme/utils';
 
 export const S = {

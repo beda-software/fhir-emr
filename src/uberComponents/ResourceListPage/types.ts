@@ -17,7 +17,7 @@ export interface TableManager {
 
 // Extra is a platform specific option
 // For web it could be specific modal property
-export interface ResourceListProps<R extends Resource, Extra = unknown, Link=string> {
+export interface ResourceListProps<R extends Resource, Extra = unknown, Link = string> {
     /* Primary resource type (for example, Organization) */
     resourceType: R['resourceType'];
 
@@ -77,7 +77,7 @@ export interface ResourceListProps<R extends Resource, Extra = unknown, Link=str
     getReportColumns?: (bundle: Bundle, reportBundle?: Bundle) => Array<ReportColumn>;
 }
 
-export interface NavigationActionType<Link=string> {
+export interface NavigationActionType<Link = string> {
     type: 'navigation';
     title: React.ReactNode;
     link: Link;
@@ -97,7 +97,7 @@ export interface QuestionnaireActionType<Extra = unknown> {
     extra?: Extra;
 }
 
-export function navigationAction<Link=string>(
+export function navigationAction<Link = string>(
     title: React.ReactNode,
     link: Link,
     options?: { icon?: React.ReactNode },
@@ -124,13 +124,18 @@ export function questionnaireAction<Extra = unknown>(
     };
 }
 
-export type ActionType<Extra = unknown, Link = string> = QuestionnaireActionType<Extra> | NavigationActionType<Link> | CustomActionType;
+export type ActionType<Extra = unknown, Link = string> =
+    | QuestionnaireActionType<Extra>
+    | NavigationActionType<Link>
+    | CustomActionType;
 export function isQuestionnaireAction<Extra = unknown>(
     action: ActionType<Extra>,
 ): action is QuestionnaireActionType<Extra> {
     return action.type === 'questionnaire';
 }
-export function isNavigationAction<Link=string>(action: ActionType<unknown,Link>): action is NavigationActionType<Link> {
+export function isNavigationAction<Link = string>(
+    action: ActionType<unknown, Link>,
+): action is NavigationActionType<Link> {
     return action.type === 'navigation';
 }
 export function isCustomAction(action: ActionType): action is CustomActionType {

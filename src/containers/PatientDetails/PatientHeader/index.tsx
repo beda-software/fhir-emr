@@ -20,7 +20,9 @@ export { usePatientHeaderLocationTitle } from './hooks';
  * @deprecated
  */
 export function PatientHeaderContextProvider(props: React.HTMLAttributes<HTMLDivElement> & { patient: Patient }) {
-    console.warn('DEPRECATED: Do not use PatientHeaderContextProvider. It will be removed in future versions of the EMR.');
+    console.warn(
+        'DEPRECATED: Do not use PatientHeaderContextProvider. It will be removed in future versions of the EMR.',
+    );
 
     const { children, patient } = props;
     const [pageTitle] = useState(renderHumanName(patient.name?.[0]));

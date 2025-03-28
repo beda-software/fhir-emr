@@ -25,7 +25,7 @@ export async function loadResourceOptions<R extends Resource, IR extends Resourc
         (bundle) => {
             const resourcesMap = extractBundleResources(bundle);
             let resourceType = query;
-            if(referenceResource && referenceResource.length === 1){
+            if (referenceResource && referenceResource.length === 1) {
                 resourceType = referenceResource![0]!;
             }
             if (resourceType.endsWith('/$has')) {

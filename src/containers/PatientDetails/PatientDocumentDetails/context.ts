@@ -1,6 +1,6 @@
 import { createContext } from 'react';
-import { FastOmit, IStyledComponentBase } from 'styled-components/dist/types';
 import styled from 'styled-components';
+import type { FastOmit, IStyledComponentBase } from 'styled-components/dist/types';
 
 type StyledComponent = IStyledComponentBase<
     'web',

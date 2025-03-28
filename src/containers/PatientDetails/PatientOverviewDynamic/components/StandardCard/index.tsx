@@ -11,11 +11,18 @@ export interface StandardCardProps<T extends Resource> {
     patient: Patient;
     reload: () => void;
     to?: string;
-    action?: QuestionnaireActionType,
-    getLaunchContext?: () => Array<ParametersParameter>
+    action?: QuestionnaireActionType;
+    getLaunchContext?: () => Array<ParametersParameter>;
 }
 
-export function StandardCard<T extends Resource>({ patient, card, reload, to, action, getLaunchContext }: StandardCardProps<T>) {
+export function StandardCard<T extends Resource>({
+    patient,
+    card,
+    reload,
+    to,
+    action,
+    getLaunchContext,
+}: StandardCardProps<T>) {
     const location = useLocation();
 
     return (
@@ -26,7 +33,7 @@ export function StandardCard<T extends Resource>({ patient, card, reload, to, ac
             empty={!card.data.length}
             extra={
                 <>
-                    {(card.total && card.total > 7) || (typeof to !== 'undefined') ? (
+                    {(card.total && card.total > 7) || typeof to !== 'undefined' ? (
                         <Link to={to ?? `${location.pathname}/resources/${card.key}`}>
                             <b>
                                 <Trans>See all</Trans>
@@ -34,16 +41,16 @@ export function StandardCard<T extends Resource>({ patient, card, reload, to, ac
                             </b>
                         </Link>
                     ) : null}
-                    {action ? <HeaderQuestionnaireAction
-                                  action={action}
-                                  reload={reload}
-                                  defaultLaunchContext={
-                                  [
-                                      {name: "Patient", resource: patient},
-                                      ...(getLaunchContext ? getLaunchContext() : []),
-                                  ]}
-                              />
-                     : null}
+                    {action ? (
+                        <HeaderQuestionnaireAction
+                            action={action}
+                            reload={reload}
+                            defaultLaunchContext={[
+                                { name: 'Patient', resource: patient },
+                                ...(getLaunchContext ? getLaunchContext() : []),
+                            ]}
+                        />
+                    ) : null}
                 </>
             }
         >

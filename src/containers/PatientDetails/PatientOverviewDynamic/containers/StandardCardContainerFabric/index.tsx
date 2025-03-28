@@ -4,7 +4,10 @@ import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { ContainerProps } from 'src/components/Dashboard/types';
 import { Spinner } from 'src/components/Spinner';
-import { StandardCard, StandardCardProps } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard';
+import {
+    StandardCard,
+    StandardCardProps,
+} from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard';
 import {
     OverviewCard,
     PrepareFunction,
@@ -23,14 +26,16 @@ function StandardCardContainerWrapper<T extends Resource>(props: StandardCardCon
 
     return (
         <RenderRemoteData remoteData={response} renderLoading={Spinner}>
-            {({ card }) => <StandardCard card={card as OverviewCard<T>} patient={patient} reload={manager.reload} {...cardProps}/>}
+            {({ card }) => (
+                <StandardCard card={card as OverviewCard<T>} patient={patient} reload={manager.reload} {...cardProps} />
+            )}
         </RenderRemoteData>
     );
 }
 
 export function StandardCardContainerFabric<T extends Resource>(
     prepareFunction: PrepareFunction<T>,
-    cardProps:Partial<StandardCardProps<T>>={},
+    cardProps: Partial<StandardCardProps<T>> = {},
 ) {
     return function StandardCardContainer(props: ContainerProps) {
         const { widgetInfo } = props;

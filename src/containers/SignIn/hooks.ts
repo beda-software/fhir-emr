@@ -26,10 +26,9 @@ export function useAppleAuthentication() {
     useEffect(() => {
         const onSignInSuccess = (event: any) => {
             const authentication: AppleAuthenticationResponse = event.detail;
-            signinWithIdentityToken(
-                authentication.user?.name,
-                authentication.authorization.id_token,
-            ).then(() => window.location.reload());
+            signinWithIdentityToken(authentication.user?.name, authentication.authorization.id_token).then(() =>
+                window.location.reload(),
+            );
         };
         const onSignInFailure = (event: any) => {
             const error = event.detail?.error;

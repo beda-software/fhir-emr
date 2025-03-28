@@ -1,5 +1,6 @@
-import { mobileWidth } from 'src/theme/utils';
 import styled, { css } from 'styled-components';
+
+import { mobileWidth } from 'src/theme/utils';
 
 export const S = {
     Table: styled.div<{ $showCardsOnMobile?: boolean }>`

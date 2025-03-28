@@ -1,4 +1,4 @@
-import { S } from "./styles";
+import { S } from './styles';
 
 export type PageContainerContentProps = React.HTMLAttributes<HTMLDivElement> & {
     /* Page content max width */

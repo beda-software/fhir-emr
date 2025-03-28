@@ -1,12 +1,11 @@
+import { Layout } from 'antd';
+import { Content } from 'antd/es/layout/layout';
 import _ from 'lodash';
 import { GroupItemProps, QuestionItems } from 'sdc-qrf';
-
-import { Paragraph } from 'src/components/Typography';
-
-import { Layout } from 'antd';
-import { QuestionnaireSidebarNavigation } from 'src/components/QuestionnaireSidebarNavigation';
-import { Content } from 'antd/es/layout/layout';
 import { useTheme } from 'styled-components';
+
+import { QuestionnaireSidebarNavigation } from 'src/components/QuestionnaireSidebarNavigation';
+import { Paragraph } from 'src/components/Typography';
 
 export function GroupSidebarNavigation(props: GroupItemProps) {
     const { parentPath, questionItem, context } = props;

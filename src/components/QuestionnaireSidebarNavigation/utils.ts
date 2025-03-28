@@ -1,4 +1,5 @@
-import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
+import { QuestionnaireItem } from '@beda.software/aidbox-types';
+
 import { AnchorItem } from './types';
 
 export function getAnchorItemData(item: QuestionnaireItem[]): AnchorItem[] {

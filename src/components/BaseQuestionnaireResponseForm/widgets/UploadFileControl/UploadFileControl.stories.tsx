@@ -1,11 +1,11 @@
+import { i18n } from '@lingui/core';
+import { I18nProvider } from '@lingui/react';
 import { Meta, StoryObj } from '@storybook/react';
 import { ItemContext } from 'sdc-qrf/lib/types';
 
 import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 
 import { UploadFileControl } from './index';
-import { I18nProvider } from '@lingui/react';
-import { i18n } from '@lingui/core';
 
 const meta: Meta<typeof UploadFileControl> = {
     title: 'Questionnaire / questions / UploadFileControl',

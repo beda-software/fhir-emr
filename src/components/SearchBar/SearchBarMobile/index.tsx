@@ -1,13 +1,14 @@
+import { CloseOutlined, FilterFilled } from '@ant-design/icons';
 import { Trans } from '@lingui/macro';
 import { Button } from 'antd';
-
-import { SearchBarColumn } from '../SearchBarColumn';
-import { S } from './styles';
-import { SearchBarData } from '../types';
-import { CloseOutlined, FilterFilled } from '@ant-design/icons';
-import { useState } from 'react';
-import { Title } from 'src/components/Typography';
 import _ from 'lodash';
+import { useState } from 'react';
+
+import { Title } from 'src/components/Typography';
+
+import { S } from './styles';
+import { SearchBarColumn } from '../SearchBarColumn';
+import { SearchBarData } from '../types';
 
 export function SearchBarMobile(props: SearchBarData) {
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = props;
@@ -18,7 +19,7 @@ export function SearchBarMobile(props: SearchBarData) {
         <S.Container>
             <S.FiltersButton>
                 <Button type="default" icon={<FilterFilled />} onClick={() => toggleFiltersOpened(true)} />
-                {appliedFiltersCount ? <S.Badge count={appliedFiltersCount} size='small' /> : null}
+                {appliedFiltersCount ? <S.Badge count={appliedFiltersCount} size="small" /> : null}
             </S.FiltersButton>
             <S.Drawer
                 placement="bottom"
