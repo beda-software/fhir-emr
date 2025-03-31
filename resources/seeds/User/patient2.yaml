@@ -1,7 +1,7 @@
 id: patient2
 resourceType: User
 password: >-
-  $s0$f0801$V8ybr7WiuTUD2Sr/WLTljg==$osbjjOda5CWW1Qp0yDqhdROE++uOVqqw0c5n0hOo/H8=
+  $s0$f0801$LMpyfbkv6WHBT5wNMD3EGw==$1tIoc+3Ja1h56jyLX4WAjiOSCUsRFl4scvAwG4ohhc0=
 fhirUser:
   id: "patient2"
   resourceType: "Patient"

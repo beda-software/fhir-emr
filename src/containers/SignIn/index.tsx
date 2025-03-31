@@ -82,7 +82,10 @@ export function SignIn(props: SignInProps) {
                                 <S.CredentialsBlock>
                                     <S.CredentialLabel>{t`Password`}</S.CredentialLabel>
                                     <S.CredentialsList>
-                                        <span>password</span>
+                                        <span>
+                                            Please contact <a href="mailto:hi@beda.software">hi@beda.software</a> to get
+                                            demo password.
+                                        </span>
                                     </S.CredentialsList>
                                 </S.CredentialsBlock>
                             </S.CredentialsWrapper>
@@ -119,7 +122,10 @@ export function SignIn(props: SignInProps) {
                                 <S.CredentialsBlock>
                                     <S.CredentialLabel>{t`Password`}</S.CredentialLabel>
                                     <S.CredentialsList>
-                                        <span>password</span>
+                                        <span>
+                                            Please contact <a href="mailto:hi@beda.software">hi@beda.software</a> to get
+                                            demo password.
+                                        </span>
                                     </S.CredentialsList>
                                 </S.CredentialsBlock>
                             </S.CredentialsWrapper>
@@ -132,7 +138,7 @@ export function SignIn(props: SignInProps) {
                             >
                                 {t`Log in as demo patient`}
                             </Button>
-                            <AppleButton />
+                            {/*<AppleButton />*/}
                         </S.ButtonsWrapper>
                     </>
                 )}
@@ -142,7 +148,7 @@ export function SignIn(props: SignInProps) {
     );
 }
 
-function AppleButton() {
+export function AppleButton() {
     useAppleAuthentication();
 
     return (

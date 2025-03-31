@@ -1,7 +1,7 @@
 id: receptionist
 resourceType: User
 password: >-
-  $s0$f0801$iurVQlhN/Yscrqf6wBH7lQ==$lEFl+TeA6M0G1mOfoIRGJtfUTHF8nuMPfD7A2x1lON8=
+  $s0$f0801$LMpyfbkv6WHBT5wNMD3EGw==$1tIoc+3Ja1h56jyLX4WAjiOSCUsRFl4scvAwG4ohhc0=
 fhirUser:
   id: "receptionist"
   resourceType: "Practitioner"
