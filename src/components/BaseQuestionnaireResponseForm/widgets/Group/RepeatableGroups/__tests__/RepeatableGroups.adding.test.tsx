@@ -2,7 +2,7 @@ import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
 import { screen, render, act, fireEvent, waitFor } from '@testing-library/react';
 import { Patient, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
-import { expect, test, vi } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 
 import { getFHIRResources } from 'aidbox-react/lib/services/fhir';
 import { axiosInstance } from 'aidbox-react/lib/services/instance';
@@ -206,25 +206,31 @@ describe('Repeatable group creates correct questionnaire response', async () => 
 
             await waitFor(() => expect(onSuccess).toHaveBeenCalled());
 
-            await withRootAccess(axiosInstance, async () => {
-                const qrsBundleRD = await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
-                    questionnaire: 'repeatable-group',
-                    _sort: ['-createdAt', '_id'],
-                });
+            await waitFor(async () => {
+                await withRootAccess(axiosInstance, async () => {
+                    const qrsBundleRD = await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
+                        questionnaire: 'repeatable-group',
+                        _sort: ['-createdAt', '_id'],
+                    });
 
-                const qrs = extractBundleResources(ensure(qrsBundleRD)).QuestionnaireResponse;
-                expect(qrs.length).toBeGreaterThan(0);
+                    const qrs = extractBundleResources(ensure(qrsBundleRD)).QuestionnaireResponse;
+                    expect(qrs.length).toBeGreaterThan(0);
 
-                const currentQR = qrs[0];
+                    const currentQR = qrs[0];
 
-                const repeatableGroupTexts = evaluate(
-                    currentQR,
-                    "QuestionnaireResponse.repeat(item).where(linkId='repeatable-group-text')",
-                );
-                expect(repeatableGroupTexts.length).toBe(caseData.case.length);
+                    const repeatableGroupTexts = evaluate(
+                        currentQR,
+                        "QuestionnaireResponse.repeat(item).where(linkId='repeatable-group-text')",
+                    );
+                    expect(repeatableGroupTexts.length).toBe(caseData.case.length);
 
-                repeatableGroupTexts.forEach((text, textIndex) => {
-                    expect(text!.answer[0].value.string).toBe(caseData.case[textIndex]!.text);
+                    repeatableGroupTexts.forEach((text, textIndex) => {
+                        expect(text!.answer[0].value.string).toBe(caseData.case[textIndex]!.text);
+                    });
+
+                    repeatableGroupTexts.forEach((text, textIndex) => {
+                        expect(text!.answer[0].value.string).toBe(caseData.case[textIndex]!.text);
+                    });
                 });
             });
         },
