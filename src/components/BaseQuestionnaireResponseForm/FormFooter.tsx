@@ -1,7 +1,6 @@
 import { CheckOutlined } from '@ant-design/icons';
 import { Trans } from '@lingui/macro';
 import { Button } from 'antd';
-import { DebouncedFunc } from 'lodash';
 import { CSSProperties } from 'react';
 import { useWatch } from 'react-hook-form';
 import { FormItems } from 'sdc-qrf';
@@ -19,7 +18,7 @@ export interface FormFooterComponentProps {
 
 export interface Props extends BaseQuestionnaireResponseFormProps {
     submitting: boolean;
-    debouncedSaveDraft?: DebouncedFunc<(currentFormValues: FormItems) => Promise<void>>;
+    saveDraft?: (currentFormValues: FormItems) => Promise<void>;
     className?: string | undefined;
     style?: CSSProperties | undefined;
     submitDisabled?: boolean;
@@ -34,7 +33,7 @@ export function FormFooter(props: Props) {
         saveButtonTitle,
         cancelButtonTitle,
         submitting,
-        debouncedSaveDraft,
+        saveDraft,
         autoSave,
         draftSaveResponse,
         setDraftSaveResponse,
@@ -63,17 +62,13 @@ export function FormFooter(props: Props) {
             return null;
         }
 
-        if (!setDraftSaveResponse || !debouncedSaveDraft) {
+        if (!setDraftSaveResponse || !saveDraft) {
             return null;
         }
 
         if (!autoSave) {
             return (
-                <Button
-                    loading={draftLoading}
-                    disabled={isSomeButtonInLoading}
-                    onClick={() => debouncedSaveDraft(formValues)}
-                >
+                <Button loading={draftLoading} disabled={isSomeButtonInLoading} onClick={() => saveDraft(formValues)}>
                     <Trans>Save as draft</Trans>
                 </Button>
             );

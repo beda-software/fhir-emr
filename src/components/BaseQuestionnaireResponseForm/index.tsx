@@ -103,6 +103,17 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         _.debounce(async (currentFormValues: FormItems) => {
             if (!autoSave || !questionnaireId) return;
 
+            saveDraft(currentFormValues);
+        }, 1000),
+        [],
+    );
+
+    const saveDraft = useCallback(
+        async (currentFormValues: FormItems) => {
+            if (!questionnaireId) {
+                return;
+            }
+
             if (!_.isEqual(currentFormValues, previousFormValuesRef.current) && setDraftSaveResponse) {
                 setDraftSaveResponse(loading);
                 setDraftSaveResponse(
@@ -110,8 +121,8 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                 );
                 previousFormValuesRef.current = _.cloneDeep(currentFormValues);
             }
-        }, 1000),
-        [],
+        },
+        [setDraftSaveResponse, questionnaireId, formData],
     );
 
     useEffect(() => {
@@ -254,9 +265,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                                     context={calcInitialContext(formData.context, formValues)}
                                 />
                             </div>
-                            {!isWizard ? (
-                                <FormFooter {...props} submitting={isLoading} debouncedSaveDraft={debouncedSaveDraft} />
-                            ) : null}
+                            {!isWizard ? <FormFooter {...props} submitting={isLoading} saveDraft={saveDraft} /> : null}
                         </>
                     </QuestionnaireResponseFormProvider>
                 </BaseQuestionnaireResponseFormPropsContext.Provider>
