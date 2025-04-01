@@ -12,6 +12,7 @@ export function usePagerExtended<T extends Resource, F = unknown>(
     searchParams?: SearchParams,
     debouncedFilterValues?: F,
     defaultPageSize?: number,
+    initialPage?: number,
 ) {
     const [pageSize, setPageSize] = useState(defaultPageSize ?? 10);
 
@@ -20,6 +21,7 @@ export function usePagerExtended<T extends Resource, F = unknown>(
         requestService: service,
         resourcesOnPage: pageSize,
         initialSearchParams: searchParams,
+        initialPage,
     });
 
     const handleTableChange = async (pagination: TablePaginationConfig) => {
