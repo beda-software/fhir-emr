@@ -783,13 +783,6 @@
   optionalDependencies:
     lint-staged "^15.2.0"
 
-"@beda.software/remote-data@^1.1.3":
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/@beda.software/remote-data/-/remote-data-1.1.3.tgz#edd1194a65796fdffcf45235ff0d9463547d8c29"
-  integrity sha512-HlyAELvpRv1xsoXUFeOnpUxSS+jrZ+zRu3bN7yGi2CD+Py5MzIjm3dy+MD41ZvpoFGlF/0IplIb8RXBm/vzHIg==
-  dependencies:
-    axios "^1.6.2"
-
 "@beda.software/remote-data@^1.1.4":
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/@beda.software/remote-data/-/remote-data-1.1.4.tgz#eeafbc4f380868e86a5194f3ef1c16779112195e"
@@ -5026,13 +5019,13 @@ aidbox-forms@^0.0.5:
   resolved "https://registry.yarnpkg.com/aidbox-forms/-/aidbox-forms-0.0.5.tgz#8f6e62a75b40903eeceaa45c7339eaa3f5bba4a9"
   integrity sha512-n96UKOQVff2Y/WPw3+n0S6O4jel3lGRpw7z1aBLn0mQv7EQxq2gDSIorpxNCywW/QZqFBLEyzZ0lZjcGvo4SKA==
 
-aidbox-react@^1.10.0:
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/aidbox-react/-/aidbox-react-1.10.0.tgz#315c202bbc5c55d6bcac3f45ba79fdc9cec1691d"
-  integrity sha512-u76vaTCh/P1fLnP8r+4R3NRYsnWNzXp3csvATZvp3ct8bKV0kcof5kvCk5Phae7aJUPU1J//iBAnVweKq91b/A==
+aidbox-react@^1.10.1:
+  version "1.10.1"
+  resolved "https://registry.yarnpkg.com/aidbox-react/-/aidbox-react-1.10.1.tgz#cc12df9278f95402210f4a9644493ecdfe69c292"
+  integrity sha512-mEZS2uN8btp828LIf9CfM8cPKTHNTSl8O2Q1TgY1qGx0l97FNPkcHiombZIRgkLOYdAXEe2KRu5jFRcGWZk2dg==
   dependencies:
-    "@beda.software/remote-data" "^1.1.3"
-    axios "^1.6.2"
+    "@beda.software/remote-data" "^1.1.4"
+    axios "^1.8.4"
     moment "^2.29.1"
 
 ajv-draft-04@~1.0.0:
@@ -5373,15 +5366,6 @@ axios@^1.6.1:
   integrity sha512-2A8QhOMrbomlDuiLeK9XibIBzuHeRcqqNOHp0Cyp5EoJ1IFDh+XZH3A6BkXtv0K4gFGCI0Y4BM7B1wOEi0Rmgw==
   dependencies:
     follow-redirects "^1.15.6"
-    form-data "^4.0.0"
-    proxy-from-env "^1.1.0"
-
-axios@^1.6.2:
-  version "1.6.5"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.6.5.tgz#2c090da14aeeab3770ad30c3a1461bc970fb0cd8"
-  integrity sha512-Ii012v05KEVuUoFWmMW/UQv9aRIc3ZwkWDcM+h5Il8izZCtRVpDUfwpoFf7eOtajT3QiGR4yDUx7lPqHJULgbg==
-  dependencies:
-    follow-redirects "^1.15.4"
     form-data "^4.0.0"
     proxy-from-env "^1.1.0"
 
@@ -7578,11 +7562,6 @@ flatted@^3.1.0:
   version "3.2.7"
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.2.7.tgz#609f39207cb614b89d0765b477cb2d437fbf9787"
   integrity sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==
-
-follow-redirects@^1.15.4:
-  version "1.15.4"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.4.tgz#cdc7d308bf6493126b17ea2191ea0ccf3e535adf"
-  integrity sha512-Cr4D/5wlrb0z9dgERpUL3LrmPKVDsETIJhaCMeDfuFYcqa5bldGV6wBsAN6X/vxlXQtFBMrXdXxdL8CbDTGniw==
 
 follow-redirects@^1.15.6:
   version "1.15.6"
