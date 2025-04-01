@@ -772,13 +772,12 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@beda.software/fhir-react@^1.8.8":
-  version "1.8.8"
-  resolved "https://registry.yarnpkg.com/@beda.software/fhir-react/-/fhir-react-1.8.8.tgz#7368cd3b52b9c9bc6a1ea895e1dfe02d3732ba0f"
-  integrity sha512-3bOh4yboxMHGbxGzTQ1naL0uXswH3FFh5NTRUUIiC8bcdP17Ji4QkbvSBBtV85O8e/qJ7++fKEBNGOnt7tZ7sQ==
+"@beda.software/fhir-react@^1.8.9":
+  version "1.8.9"
+  resolved "https://registry.yarnpkg.com/@beda.software/fhir-react/-/fhir-react-1.8.9.tgz#1b1bcf90800853ffbdc0ffa07f6b5629e0b333c0"
+  integrity sha512-brrfkUXDWS+JFYDWMaihD5PK9SjS1ILq2ETIl6iB16KJ8Db+YaAmZAXQGh7knZvkkT53lMZK109uojxqZMee7Q==
   dependencies:
-    "@beda.software/remote-data" "^1.1.3"
-    axios "^1.6.2"
+    "@beda.software/remote-data" "^1.1.4"
     lodash "^4.17.21"
     moment "^2.29.1"
   optionalDependencies:
@@ -790,6 +789,13 @@
   integrity sha512-HlyAELvpRv1xsoXUFeOnpUxSS+jrZ+zRu3bN7yGi2CD+Py5MzIjm3dy+MD41ZvpoFGlF/0IplIb8RXBm/vzHIg==
   dependencies:
     axios "^1.6.2"
+
+"@beda.software/remote-data@^1.1.4":
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/@beda.software/remote-data/-/remote-data-1.1.4.tgz#eeafbc4f380868e86a5194f3ef1c16779112195e"
+  integrity sha512-EICOc7TeQOL0wlkEvCePjzLVFTG1IDkIyc+qCTWN3rHr/mplFLaTpjWW/2ND+oJ3AW4qw1+GiYgC/MOlCyL6Cg==
+  dependencies:
+    axios "^1.8.4"
 
 "@beda.software/vite-plugin-dts@4.0.0-beta.1":
   version "4.0.0-beta.1"
@@ -5376,6 +5382,15 @@ axios@^1.6.2:
   integrity sha512-Ii012v05KEVuUoFWmMW/UQv9aRIc3ZwkWDcM+h5Il8izZCtRVpDUfwpoFf7eOtajT3QiGR4yDUx7lPqHJULgbg==
   dependencies:
     follow-redirects "^1.15.4"
+    form-data "^4.0.0"
+    proxy-from-env "^1.1.0"
+
+axios@^1.8.4:
+  version "1.8.4"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.8.4.tgz#78990bb4bc63d2cae072952d374835950a82f447"
+  integrity sha512-eBSYY4Y68NNlHbHBMdeDmKNtDgXWhQsJcGqzO3iLUM0GraQFSS9cVgPX5I9b3lbdFKyYoAEGAZF1DwhTaljNAw==
+  dependencies:
+    follow-redirects "^1.15.6"
     form-data "^4.0.0"
     proxy-from-env "^1.1.0"
 
