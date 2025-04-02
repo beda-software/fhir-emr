@@ -90,6 +90,7 @@ export function questionnaireItemsToValidationSchema(questionnaireItems: Questio
         let schema: yup.AnySchema;
         if (item.type === 'string' || item.type === 'text') {
             schema = yup.string();
+            if (item.itemControl?.coding?.[0]?.code === 'email') schema = (schema as yup.StringSchema).email();
             if (item.required) schema = schema.required();
             if (item.maxLength && item.maxLength > 0) schema = (schema as yup.StringSchema).max(item.maxLength);
             schema = createSchemaArrayOfValues(yup.object({ string: schema }));
