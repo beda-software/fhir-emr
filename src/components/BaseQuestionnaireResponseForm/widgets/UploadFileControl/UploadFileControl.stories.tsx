@@ -1,7 +1,7 @@
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
 import { Meta, StoryObj } from '@storybook/react';
-import { ItemContext } from 'sdc-qrf/lib/types';
+import { ItemContext } from 'sdc-qrf';
 
 import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 

@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { ItemContext } from 'sdc-qrf/lib/types';
+import { ItemContext } from 'sdc-qrf';
 
 import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 

@@ -1,15 +1,12 @@
 import { t } from '@lingui/macro';
 import { notification } from 'antd';
 import { QuestionnaireResponse } from 'fhir/r4b';
-import { FormItems, mapFormToResponse } from 'sdc-qrf';
+import { FormItems, mapFormToResponse, QuestionnaireResponseFormData } from 'sdc-qrf';
 
 import { formatError } from '@beda.software/fhir-react';
 import { isFailure, isSuccess, RemoteDataResult } from '@beda.software/remote-data';
 
-import {
-    QuestionnaireResponseFormData,
-    QuestionnaireResponseFormSaveResponse,
-} from 'src/hooks/questionnaire-response-form-data';
+import { QuestionnaireResponseFormSaveResponse } from 'src/hooks/questionnaire-response-form-data';
 import { patchFHIRResource, saveFHIRResource } from 'src/services/fhir';
 
 export const saveQuestionnaireResponseDraft = async (
