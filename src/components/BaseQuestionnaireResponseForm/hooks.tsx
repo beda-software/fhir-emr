@@ -1,13 +1,16 @@
 import { FormItemProps } from 'antd';
 import classNames from 'classnames';
 import _ from 'lodash';
-import { useCallback } from 'react';
+import { useCallback, useContext, useRef } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
-import { useQuestionnaireResponseFormContext } from 'sdc-qrf';
+import { FormItems, useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
 import { QuestionnaireItem } from '@beda.software/aidbox-types';
+import { loading } from '@beda.software/remote-data';
 
+import { BaseQuestionnaireResponseFormPropsContext } from 'src/components/BaseQuestionnaireResponseForm/context';
 import { getFieldErrorMessage } from 'src/components/BaseQuestionnaireResponseForm/utils';
+import { saveQuestionnaireResponseDraft } from 'src/components/QuestionnaireResponseForm';
 
 import s from './BaseQuestionnaireResponseForm.module.scss';
 import { FieldLabel } from './FieldLabel';
@@ -68,5 +71,51 @@ export function useFieldController(fieldName: any, questionItem: QuestionnaireIt
         formItem,
         placeholder: entryFormat,
         helpText,
+    };
+}
+
+interface SaveDraftProps {
+    debounceTimeout?: number;
+}
+
+export function useSaveDraft(props: SaveDraftProps) {
+    const { debounceTimeout = 1000 } = props;
+
+    const previousFormValuesRef = useRef<FormItems | null>(null);
+
+    const baseQuestionnaireResponseFormProps = useContext(BaseQuestionnaireResponseFormPropsContext);
+
+    const autoSave = baseQuestionnaireResponseFormProps?.autoSave;
+    const setDraftSaveResponse = baseQuestionnaireResponseFormProps?.setDraftSaveResponse;
+    const formData = baseQuestionnaireResponseFormProps?.formData;
+    const questionnaireId = formData?.context.questionnaire.assembledFrom;
+    const submitting = baseQuestionnaireResponseFormProps?.submitting;
+
+    const saveDraft = async (currentFormValues: FormItems) => {
+        if (!questionnaireId || !formData) {
+            return;
+        }
+
+        if (!_.isEqual(currentFormValues, previousFormValuesRef.current) && setDraftSaveResponse) {
+            setDraftSaveResponse(loading);
+            setDraftSaveResponse(await saveQuestionnaireResponseDraft(questionnaireId, formData, currentFormValues));
+            previousFormValuesRef.current = _.cloneDeep(currentFormValues);
+        }
+    };
+
+    const debouncedSaveDraft = _.debounce(async (currentFormValues: FormItems) => {
+        if (!autoSave || !questionnaireId) return;
+
+        saveDraft({ currentFormValues });
+    }, debounceTimeout);
+
+    return {
+        saveDraft,
+        debouncedSaveDraft,
+        autoSave,
+        setDraftSaveResponse,
+        questionnaireId,
+        formData,
+        submitting,
     };
 }

@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import classNames from 'classnames';
 import { QuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
-import React, { ComponentType, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { ComponentType, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
     calcInitialContext,
@@ -23,9 +23,10 @@ import * as yup from 'yup';
 import 'react-phone-input-2/lib/style.css';
 
 import { Questionnaire as FCEQuestionnaire } from '@beda.software/aidbox-types';
-import { RemoteData, isSuccess, loading } from '@beda.software/remote-data';
+import { WithId } from '@beda.software/fhir-react';
+import { RemoteData, isSuccess } from '@beda.software/remote-data';
 
-import { saveQuestionnaireResponseDraft } from 'src/components/QuestionnaireResponseForm';
+import { useSaveDraft } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
 import s from './BaseQuestionnaireResponseForm.module.scss';
@@ -49,7 +50,7 @@ export interface BaseQuestionnaireResponseFormProps {
 
     autoSave?: boolean;
     draftSaveResponse?: RemoteData<QuestionnaireResponse>;
-    setDraftSaveResponse?: (data: RemoteData<QuestionnaireResponse>) => void;
+    setDraftSaveResponse?: (data: RemoteData<WithId<QuestionnaireResponse>>) => void;
     ItemWrapper?: ComponentType<{
         item: QuestionItemProps;
         control: QuestionItemComponent;
@@ -67,16 +68,7 @@ export interface BaseQuestionnaireResponseFormProps {
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
-    const {
-        onSubmit,
-        formData,
-        readOnly,
-        autoSave,
-        draftSaveResponse,
-        setDraftSaveResponse,
-        ItemWrapper,
-        GroupWrapper,
-    } = props;
+    const { onSubmit, formData, readOnly, draftSaveResponse, ItemWrapper, GroupWrapper } = props;
 
     const questionnaireId = formData.context.questionnaire.assembledFrom;
 
@@ -96,38 +88,13 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
 
     const [isLoading, setIsLoading] = useState(false);
 
-    const previousFormValuesRef = useRef<FormItems | null>(null);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const debouncedSaveDraft = useCallback(
-        _.debounce(async (currentFormValues: FormItems) => {
-            if (!autoSave || !questionnaireId) return;
-
-            saveDraft(currentFormValues);
-        }, 1000),
-        [],
-    );
-
-    const saveDraft = useCallback(
-        async (currentFormValues: FormItems) => {
-            if (!questionnaireId) {
-                return;
-            }
-
-            if (!_.isEqual(currentFormValues, previousFormValuesRef.current) && setDraftSaveResponse) {
-                setDraftSaveResponse(loading);
-                setDraftSaveResponse(
-                    await saveQuestionnaireResponseDraft(questionnaireId, formData, currentFormValues),
-                );
-                previousFormValuesRef.current = _.cloneDeep(currentFormValues);
-            }
-        },
-        [setDraftSaveResponse, questionnaireId, formData],
-    );
+    const { saveDraft, debouncedSaveDraft } = useSaveDraft({
+        debounceTimeout: 1000,
+    });
 
     useEffect(() => {
         debouncedSaveDraft(formValues);
-    }, [formValues, debouncedSaveDraft]);
+    }, [debouncedSaveDraft, formValues]);
 
     const wrapControls = useCallback(
         (mapping: { [x: string]: QuestionItemComponent }): { [x: string]: QuestionItemComponent } => {

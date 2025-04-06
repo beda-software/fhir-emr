@@ -1,8 +1,8 @@
-import _ from 'lodash';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useFormState, useWatch } from 'react-hook-form';
 import { GroupItemProps, QuestionItems } from 'sdc-qrf';
 
+import { useSaveDraft } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { Text } from 'src/components/Typography';
 import { Wizard, WizardItem, WizardProps } from 'src/components/Wizard';
 import { questionnaireItemsToValidationSchema } from 'src/utils';
@@ -27,11 +27,20 @@ export function GroupWizardWithTooltips(props: GroupWizardProps) {
 
 export function GroupWizard(props: GroupWizardProps) {
     const { parentPath, questionItem, context } = props;
+    const baseQRFPropsContext = useContext(BaseQuestionnaireResponseFormPropsContext);
 
     const [currentIndex, setCurrentIndex] = useState(0);
     const { item = [], linkId } = questionItem;
 
     const formValues = useWatch();
+
+    const { saveDraft, debouncedSaveDraft } = useSaveDraft({
+        debounceTimeout: 1000,
+    });
+
+    useEffect(() => {
+        debouncedSaveDraft(formValues);
+    }, [debouncedSaveDraft, formValues]);
 
     const { isSubmitted } = useFormState();
 
@@ -51,8 +60,6 @@ export function GroupWizard(props: GroupWizardProps) {
     const onStepChange = (value: number) => {
         setCurrentIndex(value);
     };
-
-    const qrFormProps = useContext(BaseQuestionnaireResponseFormPropsContext);
 
     if (parentPath.length !== 0) {
         console.error('The wizard item control must be in root group');
@@ -89,7 +96,14 @@ export function GroupWizard(props: GroupWizardProps) {
                 canGoBack={currentIndex > 0}
                 canGoForward={currentIndex + 1 < itemsCount}
             >
-                {qrFormProps && <S.FormFooter {...qrFormProps} submitDisabled={!isLastStepActive} />}
+                {baseQRFPropsContext && (
+                    <S.FormFooter
+                        {...baseQRFPropsContext}
+                        submitDisabled={!isLastStepActive}
+                        saveDraft={saveDraft}
+                        {...(baseQRFPropsContext?.formData ? { formData: baseQRFPropsContext.formData } : {})}
+                    />
+                )}
             </S.WizardFooter>
         </Wizard>
     );
