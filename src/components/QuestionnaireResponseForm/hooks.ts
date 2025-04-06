@@ -1,11 +1,9 @@
 import _ from 'lodash';
 import { useMemo } from 'react';
+import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
 import { onFormResponse, QRFProps } from 'src/components/QuestionnaireResponseForm';
-import {
-    QuestionnaireResponseFormData,
-    useQuestionnaireResponseFormData,
-} from 'src/hooks/questionnaire-response-form-data';
+import { useQuestionnaireResponseFormData } from 'src/hooks/questionnaire-response-form-data';
 
 export function useQuestionnaireResponseForm(props: QRFProps) {
     // TODO find what cause rerender and fix it

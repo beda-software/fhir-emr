@@ -30,8 +30,6 @@ import { RemoteDataResult, failure, isFailure, isSuccess, mapSuccess, success } 
 
 import { patchFHIRResource, saveFHIRResource, service } from 'src/services/fhir';
 
-export type { QuestionnaireResponseFormData } from 'sdc-qrf';
-
 export type QuestionnaireResponseFormSaveResponse<R extends Resource = any> = {
     questionnaireResponse: FHIRQuestionnaireResponse;
     extracted: boolean;
