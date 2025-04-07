@@ -35,6 +35,7 @@ interface FillWithAudioProps {
     senderReference: string;
     reloadDocuments: () => void;
     recorderControls: any;
+    isEncounterCompleted: boolean;
 }
 
 function AudioRecorderButton(props: FillWithAudioProps) {
@@ -111,6 +112,7 @@ function AudioRecorderButton(props: FillWithAudioProps) {
                         communication={communication}
                         reload={manager.reload}
                         reloadDocuments={props.reloadDocuments}
+                        hideControls={props.isEncounterCompleted}
                     />
                 )}
             </RenderRemoteData>
@@ -121,6 +123,7 @@ function AudioRecorderButton(props: FillWithAudioProps) {
 interface AIScribeProps {
     patientId: string;
     encounterId: string;
+    isEncounterCompleted: boolean;
     reloadDocuments: () => void;
     recorderControls: any;
 }
@@ -142,9 +145,10 @@ interface RecordedNotesProps {
     communication: Communication;
     reload: () => void;
     reloadDocuments: () => void;
+    hideControls: boolean;
 }
 
-function RecordedNotes({ communication, reload, reloadDocuments }: RecordedNotesProps) {
+function RecordedNotes({ hideControls, communication, reload, reloadDocuments }: RecordedNotesProps) {
     const originaltext = communication.payload?.[0]?.contentString ?? '';
     const [text, setText] = useState(originaltext);
     const [isEditingMode, setIsEditingMode] = useState(false);
@@ -175,32 +179,34 @@ function RecordedNotes({ communication, reload, reloadDocuments }: RecordedNotes
                     <Text>{sentences.join('.\n')}</Text>
                 </S.TextResults>
             )}
-            <S.Controls>
-                {typeof communication.id === 'undefined' || isEditingMode ? (
-                    <Button icon={<SaveFilled />} type="primary" onClick={save}>
-                        <span>
-                            <Trans>Save</Trans>
-                        </span>
-                    </Button>
-                ) : (
-                    <>
-                        <Extract
-                            text={originaltext}
-                            patient={communication.subject!}
-                            encounter={communication.encounter!}
-                            reloadDocumnents={reloadDocuments}
-                            updateExtractLoading={setIsExtractLoading}
-                        />
-                        {!isExtractLoading ? (
-                            <Button icon={<EditFilled />} type="default" onClick={() => setIsEditingMode(true)}>
-                                <span>
-                                    <Trans>Edit</Trans>
-                                </span>
-                            </Button>
-                        ) : null}
-                    </>
-                )}
-            </S.Controls>
+            {hideControls ? null : (
+                <S.Controls>
+                    {typeof communication.id === 'undefined' || isEditingMode ? (
+                        <Button icon={<SaveFilled />} type="primary" onClick={save}>
+                            <span>
+                                <Trans>Save</Trans>
+                            </span>
+                        </Button>
+                    ) : (
+                        <>
+                            <Extract
+                                text={originaltext}
+                                patient={communication.subject!}
+                                encounter={communication.encounter!}
+                                reloadDocumnents={reloadDocuments}
+                                updateExtractLoading={setIsExtractLoading}
+                            />
+                            {!isExtractLoading ? (
+                                <Button icon={<EditFilled />} type="default" onClick={() => setIsEditingMode(true)}>
+                                    <span>
+                                        <Trans>Edit</Trans>
+                                    </span>
+                                </Button>
+                            ) : null}
+                        </>
+                    )}
+                </S.Controls>
+            )}
         </S.Scriber>
     );
 }

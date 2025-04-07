@@ -153,6 +153,7 @@ export const EncounterDetails = (props: EncounterDetailsProps) => {
                                     encounterId={encounter.id}
                                     reloadDocuments={reload}
                                     recorderControls={recorderControls}
+                                    isEncounterCompleted={isEncounterCompleted}
                                 />
                             ) : null}
                             <EncounterApps patient={patient} encounter={encounter} />
