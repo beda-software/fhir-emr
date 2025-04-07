@@ -1,7 +1,8 @@
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
 import { screen, render, act, fireEvent, waitFor } from '@testing-library/react';
-import { Patient, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
+import { RemoteDataResult } from 'aidbox-react';
+import { Bundle, Patient, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
 import { describe, expect, test, vi } from 'vitest';
 
 import { forceDeleteFHIRResource, getAllFHIRResources } from 'aidbox-react/lib/services/fhir';
@@ -10,7 +11,7 @@ import { axiosInstance } from 'aidbox-react/lib/services/instance';
 import { ensure, extractBundleResources, WithId, withRootAccess } from '@beda.software/fhir-react';
 
 import { PatientDocument } from 'src/containers/PatientDetails/PatientDocument';
-import { createPatient, createPractitionerRole, loginAdminUser } from 'src/setupTests';
+import { createPatient, createPractitionerRole, loginAdminUser, waitForAPIProcess } from 'src/setupTests';
 import { ThemeProvider } from 'src/theme';
 import { evaluate } from 'src/utils';
 
@@ -159,6 +160,18 @@ describe('Repeatable group creates correct questionnaire response', async () => 
 
             await waitFor(() => expect(onSuccess).toHaveBeenCalled());
 
+            await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
+                service: () =>
+                    getAllFHIRResources('QuestionnaireResponse', {
+                        questionnaire: 'repeatable-group',
+                        _sort: ['-createdAt', '_id'],
+                    }),
+                resolver: (result) => {
+                    const qrs = extractBundleResources(ensure(result)).QuestionnaireResponse;
+                    return qrs.length === 1;
+                },
+            });
+
             await withRootAccess(axiosInstance, async () => {
                 const qrsBundleRD = await getAllFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
                     questionnaire: 'repeatable-group',
@@ -222,6 +235,18 @@ describe('Repeatable group creates correct questionnaire response', async () => 
             });
 
             await waitFor(() => expect(onSuccess).toHaveBeenCalled());
+
+            await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
+                service: () =>
+                    getAllFHIRResources('QuestionnaireResponse', {
+                        questionnaire: 'repeatable-group',
+                        _sort: ['-createdAt', '_id'],
+                    }),
+                resolver: (result) => {
+                    const qrs = extractBundleResources(ensure(result)).QuestionnaireResponse;
+                    return qrs.length === 1;
+                },
+            });
 
             await withRootAccess(axiosInstance, async () => {
                 const qrsBundleRD = await getAllFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
