@@ -20,7 +20,9 @@ import { ResourceTable, Option } from 'src/components/ResourceTable';
 import { compileAsArray } from 'src/utils';
 import { formatHumanDate, formatHumanDateTime } from 'src/utils/date';
 
-const getInterpretation = compileAsArray<Observation, string>('Observation.interpretation.coding.display');
+const getInterpretation = compileAsArray<Observation, string>(
+    'Observation.interpretation.text | Observation.interpretation.coding.display',
+);
 
 function getComponentValue(c: ObservationComponent) {
     if (c.dataAbsentReason) {
