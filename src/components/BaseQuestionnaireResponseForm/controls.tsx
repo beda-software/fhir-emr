@@ -31,6 +31,7 @@ import {
     SectionWithDivider,
     MainCard,
     SubCard,
+    QuestionEmail,
 } from './widgets';
 import { AudioRecorderUploader } from './widgets/AudioRecorderUploader';
 import { Display } from './widgets/display';
@@ -61,6 +62,7 @@ export const groupComponent: GroupItemComponent = Group;
 
 export const itemControlComponents: ItemControlQuestionItemComponentMapping = {
     phoneWidget: QuestionPhone,
+    email: QuestionEmail,
     passwordWidget: PasswordInput,
     slider: QuestionSlider,
     'solid-radio-button': QuestionSolidRadio,
