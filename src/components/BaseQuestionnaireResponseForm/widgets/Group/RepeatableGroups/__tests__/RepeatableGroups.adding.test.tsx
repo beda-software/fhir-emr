@@ -4,7 +4,7 @@ import { screen, render, act, fireEvent, waitFor } from '@testing-library/react'
 import { Patient, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
 import { describe, expect, test, vi } from 'vitest';
 
-import { getFHIRResources } from 'aidbox-react/lib/services/fhir';
+import { forceDeleteFHIRResource, getAllFHIRResources } from 'aidbox-react/lib/services/fhir';
 import { axiosInstance } from 'aidbox-react/lib/services/instance';
 
 import { ensure, extractBundleResources, WithId, withRootAccess } from '@beda.software/fhir-react';
@@ -107,6 +107,19 @@ describe('Repeatable group creates correct questionnaire response', async () => 
         return onSuccess;
     }
 
+    async function clearRepeatableGroupQRs() {
+        await withRootAccess(axiosInstance, async () => {
+            const qrsBundleRD = await getAllFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
+                questionnaire: 'repeatable-group',
+            });
+
+            const qrs = extractBundleResources(ensure(qrsBundleRD)).QuestionnaireResponse;
+            for (const qr of qrs) {
+                await forceDeleteFHIRResource(qr);
+            }
+        });
+    }
+
     test.each(CASES)(
         'Test group adding first and then filling all fields',
         async (caseData) => {
@@ -145,7 +158,7 @@ describe('Repeatable group creates correct questionnaire response', async () => 
             await waitFor(() => expect(onSuccess).toHaveBeenCalled());
 
             await withRootAccess(axiosInstance, async () => {
-                const qrsBundleRD = await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
+                const qrsBundleRD = await getAllFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
                     questionnaire: 'repeatable-group',
                     _sort: ['-createdAt', '_id'],
                 });
@@ -165,6 +178,8 @@ describe('Repeatable group creates correct questionnaire response', async () => 
                     expect(text!.answer[0].value.string).toBe(caseData.case[textIndex]!.text);
                 });
             });
+
+            await clearRepeatableGroupQRs();
         },
         60000,
     );
@@ -208,7 +223,7 @@ describe('Repeatable group creates correct questionnaire response', async () => 
 
             await waitFor(async () => {
                 await withRootAccess(axiosInstance, async () => {
-                    const qrsBundleRD = await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
+                    const qrsBundleRD = await getAllFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
                         questionnaire: 'repeatable-group',
                         _sort: ['-createdAt', '_id'],
                     });
@@ -233,6 +248,8 @@ describe('Repeatable group creates correct questionnaire response', async () => 
                     });
                 });
             });
+
+            await clearRepeatableGroupQRs();
         },
         60000,
     );
