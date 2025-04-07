@@ -125,6 +125,8 @@ describe('Repeatable group creates correct questionnaire response', async () => 
         async (caseData) => {
             const { patient, practitioner } = await setup();
 
+            await clearRepeatableGroupQRs();
+
             const onSuccess = await renderRepeatableGroupForm(patient, practitioner);
 
             if (caseData.case.length > 1) {
@@ -178,8 +180,6 @@ describe('Repeatable group creates correct questionnaire response', async () => 
                     expect(text!.answer[0].value.string).toBe(caseData.case[textIndex]!.text);
                 });
             });
-
-            await clearRepeatableGroupQRs();
         },
         60000,
     );
@@ -188,6 +188,8 @@ describe('Repeatable group creates correct questionnaire response', async () => 
         'Test filling all fields and adding one by one',
         async (caseData) => {
             const { patient, practitioner } = await setup();
+
+            await clearRepeatableGroupQRs();
 
             const onSuccess = await renderRepeatableGroupForm(patient, practitioner);
 
@@ -221,35 +223,31 @@ describe('Repeatable group creates correct questionnaire response', async () => 
 
             await waitFor(() => expect(onSuccess).toHaveBeenCalled());
 
-            await waitFor(async () => {
-                await withRootAccess(axiosInstance, async () => {
-                    const qrsBundleRD = await getAllFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
-                        questionnaire: 'repeatable-group',
-                        _sort: ['-createdAt', '_id'],
-                    });
+            await withRootAccess(axiosInstance, async () => {
+                const qrsBundleRD = await getAllFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
+                    questionnaire: 'repeatable-group',
+                    _sort: ['-createdAt', '_id'],
+                });
 
-                    const qrs = extractBundleResources(ensure(qrsBundleRD)).QuestionnaireResponse;
-                    expect(qrs.length).toBeGreaterThan(0);
+                const qrs = extractBundleResources(ensure(qrsBundleRD)).QuestionnaireResponse;
+                expect(qrs.length).toBeGreaterThan(0);
 
-                    const currentQR = qrs[0];
+                const currentQR = qrs[0];
 
-                    const repeatableGroupTexts = evaluate(
-                        currentQR,
-                        "QuestionnaireResponse.repeat(item).where(linkId='repeatable-group-text')",
-                    );
-                    expect(repeatableGroupTexts.length).toBe(caseData.case.length);
+                const repeatableGroupTexts = evaluate(
+                    currentQR,
+                    "QuestionnaireResponse.repeat(item).where(linkId='repeatable-group-text')",
+                );
+                expect(repeatableGroupTexts.length).toBe(caseData.case.length);
 
-                    repeatableGroupTexts.forEach((text, textIndex) => {
-                        expect(text!.answer[0].value.string).toBe(caseData.case[textIndex]!.text);
-                    });
+                repeatableGroupTexts.forEach((text, textIndex) => {
+                    expect(text!.answer[0].value.string).toBe(caseData.case[textIndex]!.text);
+                });
 
-                    repeatableGroupTexts.forEach((text, textIndex) => {
-                        expect(text!.answer[0].value.string).toBe(caseData.case[textIndex]!.text);
-                    });
+                repeatableGroupTexts.forEach((text, textIndex) => {
+                    expect(text!.answer[0].value.string).toBe(caseData.case[textIndex]!.text);
                 });
             });
-
-            await clearRepeatableGroupQRs();
         },
         60000,
     );
