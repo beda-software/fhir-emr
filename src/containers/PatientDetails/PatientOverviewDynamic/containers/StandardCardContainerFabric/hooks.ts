@@ -36,5 +36,7 @@ export function useStandardCard<T extends Resource>(
         );
     }, []);
 
-    return { response, manager };
+    const countNumber = Number(query.search(patient)?._count) ?? 7;
+
+    return { response, manager, countNumber };
 }
