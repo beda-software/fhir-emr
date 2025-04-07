@@ -285,6 +285,9 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                         } else if (resource.valueInteger) {
                             const interpretation = getInterpretation(resource).join(', ');
                             return `${resource.valueInteger} ${interpretation}`;
+                        } else if (resource.valueString) {
+                            const interpretation = getInterpretation(resource).join(', ');
+                            return `${resource.valueString} ${interpretation}`;
                         } else if (resource.component) {
                             return (
                                 <>
