@@ -5,7 +5,7 @@ import { RemoteDataResult } from 'aidbox-react';
 import { Bundle, Patient, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
 import { describe, expect, test, vi } from 'vitest';
 
-import { forceDeleteFHIRResource, getAllFHIRResources } from 'aidbox-react/lib/services/fhir';
+import { getAllFHIRResources } from 'aidbox-react/lib/services/fhir';
 import { axiosInstance } from 'aidbox-react/lib/services/instance';
 
 import { ensure, extractBundleResources, WithId, withRootAccess } from '@beda.software/fhir-react';
@@ -109,25 +109,10 @@ describe('Repeatable group creates correct questionnaire response', async () => 
         return onSuccess;
     }
 
-    async function clearRepeatableGroupQRs() {
-        await withRootAccess(axiosInstance, async () => {
-            const qrsBundleRD = await getAllFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
-                questionnaire: 'repeatable-group',
-            });
-
-            const qrs = extractBundleResources(ensure(qrsBundleRD)).QuestionnaireResponse;
-            for (const qr of qrs) {
-                await forceDeleteFHIRResource(qr);
-            }
-        });
-    }
-
     test.each(CASES)(
         'Test group adding first and then filling all fields',
         async (caseData) => {
             const { patient, practitioner } = await setup();
-
-            await clearRepeatableGroupQRs();
 
             const onSuccess = await renderRepeatableGroupForm(patient, practitioner);
 
@@ -202,8 +187,6 @@ describe('Repeatable group creates correct questionnaire response', async () => 
         'Test filling all fields and adding one by one',
         async (caseData) => {
             const { patient, practitioner } = await setup();
-
-            await clearRepeatableGroupQRs();
 
             const onSuccess = await renderRepeatableGroupForm(patient, practitioner);
 
