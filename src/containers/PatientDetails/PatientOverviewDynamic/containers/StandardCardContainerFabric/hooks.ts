@@ -16,10 +16,12 @@ export function useStandardCard<T extends Resource>(
     prepareFunction: PrepareFunction<T>,
     to?: string,
 ) {
+    const countNumber = Number(query.search(patient)?._count) || 7;
+    const searchParams = { ...query.search(patient), ...{ _count: countNumber } };
     const [response, manager] = useService(async () => {
         return mapSuccess(
             await resolveMap({
-                resourceBundle: getFHIRResources<T>(query.resourceType, query.search(patient)),
+                resourceBundle: getFHIRResources<T>(query.resourceType, searchParams),
             }),
             ({ resourceBundle }) => {
                 const resources = extractBundleResources(resourceBundle);
@@ -35,8 +37,6 @@ export function useStandardCard<T extends Resource>(
             },
         );
     }, []);
-
-    const countNumber = Number(query.search(patient)?._count) ?? 7;
 
     return { response, manager, countNumber };
 }
