@@ -44,7 +44,12 @@ function usePatientQuestionnaire() {
     };
 }
 
-export function PatientQuestionnaire({ onSuccess }: { onSuccess?: () => void }) {
+interface PatientQuestionnaireProps {
+    onSuccess?: () => void;
+    autosave?: boolean;
+}
+
+export function PatientQuestionnaire(props: PatientQuestionnaireProps) {
     const appToken = getToken();
     const isAnonymousUser = !appToken;
     const [isLoading, setIsLoading] = useState(!appToken);
@@ -68,12 +73,14 @@ export function PatientQuestionnaire({ onSuccess }: { onSuccess?: () => void }) 
 
     return (
         <PageContainer title={<Trans>Questionnaire</Trans>}>
-            {isLoading ? <Spinner /> : <PatientQuestionnaireForm onSuccess={onSuccess} />}
+            {isLoading ? <Spinner /> : <PatientQuestionnaireForm {...props} />}
         </PageContainer>
     );
 }
 
-function PatientQuestionnaireForm({ onSuccess }: { onSuccess?: () => void }) {
+function PatientQuestionnaireForm(props: PatientQuestionnaireProps) {
+    const { onSuccess, autosave } = props;
+
     const { response, questionnaireId, encounterId } = usePatientQuestionnaire();
     const appToken = getToken();
     const isAnonymousUser = !appToken;
@@ -94,6 +101,7 @@ function PatientQuestionnaireForm({ onSuccess }: { onSuccess?: () => void }) {
                     questionnaireId={questionnaireId!}
                     encounterId={encounterId}
                     onSuccess={onSuccess}
+                    autosave={autosave}
                 />
             )}
         </RenderRemoteData>
