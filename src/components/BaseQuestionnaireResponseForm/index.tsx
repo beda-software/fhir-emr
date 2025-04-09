@@ -98,22 +98,27 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
 
     const previousFormValuesRef = useRef<FormItems | null>(null);
 
-    const saveDraft = async (currentFormValues: FormItems) => {
-        if (!questionnaireId || !formData) {
-            return;
-        }
-        if (!_.isEqual(currentFormValues, previousFormValuesRef.current) && setDraftSaveResponse) {
-            setDraftSaveResponse(loading);
-            setDraftSaveResponse(await saveQuestionnaireResponseDraft(questionnaireId, formData, currentFormValues));
-            previousFormValuesRef.current = _.cloneDeep(currentFormValues);
-        }
-    };
+    const saveDraft = useCallback(
+        async (currentFormValues: FormItems) => {
+            if (!questionnaireId || !formData) {
+                return;
+            }
+            if (!_.isEqual(currentFormValues, previousFormValuesRef.current) && setDraftSaveResponse) {
+                setDraftSaveResponse(loading);
+                setDraftSaveResponse(
+                    await saveQuestionnaireResponseDraft(questionnaireId, formData, currentFormValues),
+                );
+                previousFormValuesRef.current = _.cloneDeep(currentFormValues);
+            }
+        },
+        [formData, questionnaireId, setDraftSaveResponse],
+    );
 
     const debouncedSaveDraft = _.debounce(async (currentFormValues: FormItems) => {
         if (!autoSave || !questionnaireId) return;
 
-        saveDraft({ currentFormValues });
-    }, 5000);
+        saveDraft(currentFormValues);
+    }, 1000);
 
     useEffect(() => {
         debouncedSaveDraft(formValues);
