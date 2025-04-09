@@ -13,6 +13,7 @@ export interface StandardCardProps<T extends Resource> {
     to?: string;
     action?: QuestionnaireActionType;
     getLaunchContext?: () => Array<ParametersParameter>;
+    seeAllThreshold: number;
 }
 
 export function StandardCard<T extends Resource>({
@@ -22,8 +23,10 @@ export function StandardCard<T extends Resource>({
     to,
     action,
     getLaunchContext,
+    seeAllThreshold,
 }: StandardCardProps<T>) {
     const location = useLocation();
+    const showSeeAllButton = (card?.total ?? 0) > seeAllThreshold;
 
     return (
         <DashboardCard
@@ -33,7 +36,7 @@ export function StandardCard<T extends Resource>({
             empty={!card.data.length}
             extra={
                 <>
-                    {(card.total && card.total > 7) || typeof to !== 'undefined' ? (
+                    {showSeeAllButton || typeof to !== 'undefined' ? (
                         <Link to={to ?? `${location.pathname}/resources/${card.key}`}>
                             <b>
                                 <Trans>See all</Trans>
