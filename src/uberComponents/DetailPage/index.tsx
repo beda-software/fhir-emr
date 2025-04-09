@@ -1,4 +1,5 @@
 import { Bundle, Resource } from 'fhir/r4b';
+import React from 'react';
 import { useParams, Route, Routes, useLocation, Link, useNavigate } from 'react-router-dom';
 
 import { RenderRemoteData, useService, WithId } from '@beda.software/fhir-react';
@@ -74,7 +75,10 @@ export function DetailPage<R extends Resource>({
                     >
                         <Routes>
                             {tabs.map(({ path, component }) => (
-                                <Route path={'/' + path} element={component(context)} key={path} />
+                                <React.Fragment key={path}>
+                                    <Route path={'/' + path} element={component(context)} />
+                                    <Route path={'/' + path + '/*'} element={component(context)} />
+                                </React.Fragment>
                             ))}
                         </Routes>
                     </PageContainer>
