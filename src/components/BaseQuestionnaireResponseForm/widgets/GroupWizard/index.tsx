@@ -1,8 +1,7 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useFormState, useWatch } from 'react-hook-form';
 import { GroupItemProps, QuestionItems } from 'sdc-qrf';
 
-import { useSaveDraft } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { Text } from 'src/components/Typography';
 import { Wizard, WizardItem, WizardProps } from 'src/components/Wizard';
 import { questionnaireItemsToValidationSchema } from 'src/utils';
@@ -33,14 +32,6 @@ export function GroupWizard(props: GroupWizardProps) {
     const { item = [], linkId } = questionItem;
 
     const formValues = useWatch();
-
-    const { saveDraft, debouncedSaveDraft } = useSaveDraft({
-        debounceTimeout: 1000,
-    });
-
-    useEffect(() => {
-        debouncedSaveDraft(formValues);
-    }, [debouncedSaveDraft, formValues]);
 
     const { isSubmitted } = useFormState();
 
@@ -96,14 +87,7 @@ export function GroupWizard(props: GroupWizardProps) {
                 canGoBack={currentIndex > 0}
                 canGoForward={currentIndex + 1 < itemsCount}
             >
-                {baseQRFPropsContext && (
-                    <S.FormFooter
-                        {...baseQRFPropsContext}
-                        submitDisabled={!isLastStepActive}
-                        saveDraft={saveDraft}
-                        {...(baseQRFPropsContext?.formData ? { formData: baseQRFPropsContext.formData } : {})}
-                    />
-                )}
+                {baseQRFPropsContext && <S.FormFooter {...baseQRFPropsContext} submitDisabled={!isLastStepActive} />}
             </S.WizardFooter>
         </Wizard>
     );

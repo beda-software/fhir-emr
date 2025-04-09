@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import classNames from 'classnames';
 import { QuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
-import React, { ComponentType, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { ComponentType, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
     calcInitialContext,
@@ -23,10 +23,9 @@ import * as yup from 'yup';
 import 'react-phone-input-2/lib/style.css';
 
 import { Questionnaire as FCEQuestionnaire } from '@beda.software/aidbox-types';
-import { WithId } from '@beda.software/fhir-react';
-import { RemoteData, isSuccess } from '@beda.software/remote-data';
+import { RemoteData, isSuccess, loading } from '@beda.software/remote-data';
 
-import { useSaveDraft } from 'src/components/BaseQuestionnaireResponseForm/hooks';
+import { saveQuestionnaireResponseDraft } from 'src/components/QuestionnaireResponseForm';
 import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
 import s from './BaseQuestionnaireResponseForm.module.scss';
@@ -50,7 +49,7 @@ export interface BaseQuestionnaireResponseFormProps {
 
     autoSave?: boolean;
     draftSaveResponse?: RemoteData<QuestionnaireResponse>;
-    setDraftSaveResponse?: (data: RemoteData<WithId<QuestionnaireResponse>>) => void;
+    setDraftSaveResponse?: (data: RemoteData<QuestionnaireResponse>) => void;
     ItemWrapper?: ComponentType<{
         item: QuestionItemProps;
         control: QuestionItemComponent;
@@ -68,7 +67,16 @@ export interface BaseQuestionnaireResponseFormProps {
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
-    const { onSubmit, formData, readOnly, draftSaveResponse, ItemWrapper, GroupWrapper } = props;
+    const {
+        onSubmit,
+        formData,
+        readOnly,
+        draftSaveResponse,
+        ItemWrapper,
+        GroupWrapper,
+        setDraftSaveResponse,
+        autoSave,
+    } = props;
 
     const questionnaireId = formData.context.questionnaire.assembledFrom;
 
@@ -88,13 +96,28 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
 
     const [isLoading, setIsLoading] = useState(false);
 
-    const { saveDraft, debouncedSaveDraft } = useSaveDraft({
-        debounceTimeout: 1000,
-    });
+    const previousFormValuesRef = useRef<FormItems | null>(null);
+
+    const saveDraft = async (currentFormValues: FormItems) => {
+        if (!questionnaireId || !formData) {
+            return;
+        }
+        if (!_.isEqual(currentFormValues, previousFormValuesRef.current) && setDraftSaveResponse) {
+            setDraftSaveResponse(loading);
+            setDraftSaveResponse(await saveQuestionnaireResponseDraft(questionnaireId, formData, currentFormValues));
+            previousFormValuesRef.current = _.cloneDeep(currentFormValues);
+        }
+    };
+
+    const debouncedSaveDraft = _.debounce(async (currentFormValues: FormItems) => {
+        if (!autoSave || !questionnaireId) return;
+
+        saveDraft({ currentFormValues });
+    }, 5000);
 
     useEffect(() => {
         debouncedSaveDraft(formValues);
-    }, [debouncedSaveDraft, formValues]);
+    }, [formValues]);
 
     const wrapControls = useCallback(
         (mapping: { [x: string]: QuestionItemComponent }): { [x: string]: QuestionItemComponent } => {
@@ -212,6 +235,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                     value={{
                         ...props,
                         submitting: isLoading,
+                        saveDraft: props.setDraftSaveResponse ? saveDraft : undefined,
                         debouncedSaveDraft: props.setDraftSaveResponse ? debouncedSaveDraft : undefined,
                     }}
                 >
@@ -232,7 +256,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                                     context={calcInitialContext(formData.context, formValues)}
                                 />
                             </div>
-                            {!isWizard ? <FormFooter {...props} submitting={isLoading} saveDraft={saveDraft} /> : null}
+                            {!isWizard ? <FormFooter {...props} submitting={isLoading} /> : null}
                         </>
                     </QuestionnaireResponseFormProvider>
                 </BaseQuestionnaireResponseFormPropsContext.Provider>

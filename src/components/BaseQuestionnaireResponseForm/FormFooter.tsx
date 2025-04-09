@@ -1,15 +1,13 @@
 import { CheckOutlined } from '@ant-design/icons';
 import { Trans } from '@lingui/macro';
 import { Button } from 'antd';
-import { QuestionnaireResponse } from 'fhir/r4b';
-import { CSSProperties } from 'react';
+import { CSSProperties, useContext } from 'react';
 import { useWatch } from 'react-hook-form';
 import { FormItems } from 'sdc-qrf';
 
-import { WithId } from '@beda.software/fhir-react';
-import { isLoading, isSuccess, RemoteData } from '@beda.software/remote-data';
+import { isLoading, isSuccess } from '@beda.software/remote-data';
 
-import { useSaveDraft } from 'src/components/BaseQuestionnaireResponseForm/hooks';
+import { BaseQuestionnaireResponseFormPropsContext } from 'src/components/BaseQuestionnaireResponseForm/context';
 
 import { BaseQuestionnaireResponseFormProps } from '.';
 import { S } from './BaseQuestionnaireResponseForm.styles';
@@ -22,7 +20,6 @@ export interface FormFooterComponentProps {
 
 export interface Props extends BaseQuestionnaireResponseFormProps {
     submitting: boolean;
-    saveDraft?: (currentFormValues: FormItems) => Promise<void>;
     className?: string | undefined;
     style?: CSSProperties | undefined;
     submitDisabled?: boolean;
@@ -37,10 +34,8 @@ export function FormFooter(props: Props) {
         saveButtonTitle,
         cancelButtonTitle,
         submitting,
-        saveDraft,
         autoSave,
         draftSaveResponse,
-        setDraftSaveResponse,
         className,
         style,
         submitDisabled: initialSubmitDisabled,
@@ -68,8 +63,6 @@ export function FormFooter(props: Props) {
                 <S.Footer className={className} style={style}>
                     <RenderDraftButton
                         assembledFromQuestionnaireId={assembledFromQuestionnaireId}
-                        setDraftSaveResponse={setDraftSaveResponse}
-                        saveDraft={saveDraft}
                         autoSave={autoSave}
                         draftLoading={draftLoading}
                         draftSaved={draftSaved}
@@ -103,8 +96,6 @@ export function FormFooter(props: Props) {
 
 interface RenderDraftButtonProps {
     assembledFromQuestionnaireId: string | undefined;
-    setDraftSaveResponse?: (data: RemoteData<WithId<QuestionnaireResponse>>) => void;
-    saveDraft?: (currentFormValues: FormItems) => Promise<void>;
     autoSave?: boolean;
     draftLoading?: boolean;
     draftSaved?: boolean;
@@ -115,9 +106,13 @@ interface RenderDraftButtonProps {
 export function RenderDraftButton(props: RenderDraftButtonProps) {
     const { draftLoading, draftSaved, formValues, isSomeButtonInLoading } = props;
 
-    const { saveDraft, autoSave, questionnaireId, setDraftSaveResponse } = useSaveDraft({
-        debounceTimeout: 1000,
-    });
+    const baseQuestionnaireResponseFormProps = useContext(BaseQuestionnaireResponseFormPropsContext);
+
+    const autoSave = baseQuestionnaireResponseFormProps?.autoSave;
+    const setDraftSaveResponse = baseQuestionnaireResponseFormProps?.setDraftSaveResponse;
+    const formData = baseQuestionnaireResponseFormProps?.formData;
+    const questionnaireId = formData?.context.questionnaire.assembledFrom;
+    const saveDraft = baseQuestionnaireResponseFormProps?.saveDraft;
 
     if (!formValues) {
         return null;
