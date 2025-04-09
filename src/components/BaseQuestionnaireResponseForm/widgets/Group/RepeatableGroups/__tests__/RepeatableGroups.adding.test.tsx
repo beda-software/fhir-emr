@@ -4,7 +4,7 @@ import { screen, render, act, fireEvent, waitFor } from '@testing-library/react'
 import { Patient, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
 import { describe, expect, test, vi } from 'vitest';
 
-import { getAllFHIRResources } from 'aidbox-react/lib/services/fhir';
+import { getFHIRResources } from 'aidbox-react/lib/services/fhir';
 import { axiosInstance } from 'aidbox-react/lib/services/instance';
 
 import { ensure, extractBundleResources, WithId, withRootAccess } from '@beda.software/fhir-react';
@@ -146,7 +146,7 @@ describe('Repeatable group creates correct questionnaire response', async () => 
             await waitFor(() => expect(onSuccess).toHaveBeenCalled());
 
             await withRootAccess(axiosInstance, async () => {
-                const qrsBundleRD = await getAllFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
+                const qrsBundleRD = await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
                     questionnaire: 'repeatable-group',
                     _sort: ['-createdAt', '_id'],
                 });
@@ -208,7 +208,7 @@ describe('Repeatable group creates correct questionnaire response', async () => 
             await waitFor(() => expect(onSuccess).toHaveBeenCalled());
 
             await withRootAccess(axiosInstance, async () => {
-                const qrsBundleRD = await getAllFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
+                const qrsBundleRD = await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
                     questionnaire: 'repeatable-group',
                     _sort: ['-createdAt', '_id'],
                 });
