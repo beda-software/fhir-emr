@@ -1,4 +1,3 @@
-import { ColumnsType } from 'antd/lib/table';
 import { Bundle, Resource } from 'fhir/r4b';
 import React from 'react';
 
@@ -9,27 +8,26 @@ import { Calendar } from 'src/components/Calendar';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 
-export { customAction, navigationAction, questionnaireAction } from '../ResourceListPage/actions';
-import { useHealthcareServicePractitionerSelect } from '../../containers/OrganizationScheduling/HealthcareServicePractitionerSelect/hooks';
-import { useOrganizationSchedulingSlots } from '../../containers/OrganizationScheduling/hooks';
-import { getSelectedValue } from '../../containers/OrganizationScheduling/utils';
+import { useCalendarPage } from './hooks';
 import { AppointmentBubble } from '../../containers/Scheduling/ScheduleCalendar';
 import { useAppointmentEvents } from '../../containers/Scheduling/ScheduleCalendar/hooks/useAppointmentEvents';
 import { HeaderQuestionnaireAction, WebExtra } from '../ResourceListPage/actions';
-import { useResourceListPage } from '../ResourceListPage/hooks';
-import { ResourceListProps, TableManager } from '../ResourceListPage/types';
+import { ResourceListProps } from '../ResourceListPage/types';
 
-type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
+export { customAction, navigationAction, questionnaireAction } from '../ResourceListPage/actions';
 
-type ResourceListPageProps<R extends Resource> = ResourceListProps<R, WebExtra> & {
-    /* Page header title (for example, Organizations) */
+type EventConfig = {
+    id: string;
+    title: string;
+    start: string;
+    end: string;
+    status: string;
+    classNames: string[];
+};
+type CalendarPageProps<R extends Resource> = ResourceListProps<R, WebExtra> & {
     headerTitle: string;
-
-    /* Page content max width */
+    eventConfig: (r: Resource, bundle: Bundle) => EventConfig;
     maxWidth?: number | string;
-
-    /* Table columns without action column - action column is generated based on `getRecordActions` */
-    getTableColumns: (manager: TableManager) => ColumnsType<RecordType<R>>;
 };
 
 export function CalendarPage<R extends Resource>({
@@ -41,29 +39,24 @@ export function CalendarPage<R extends Resource>({
     getHeaderActions,
     getFilters,
     defaultLaunchContext,
-}: ResourceListPageProps<R>) {
+    eventConfig,
+}: CalendarPageProps<R>) {
     const allFilters = getFilters?.() ?? [];
 
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
         columns: allFilters ?? [],
     });
 
-    const { reload } = useResourceListPage(
+    const { reload, recordResponse } = useCalendarPage(
         resourceType,
         extractPrimaryResources,
         columnsFilterValues,
         searchParams ?? {},
     );
 
-    // TODO: move to hooks
     const headerActions = getHeaderActions?.() ?? [];
 
     const { openNewAppointmentModal, openAppointmentDetails } = useAppointmentEvents();
-    const { selectedHealthcareService, selectedPractitionerRole } = useHealthcareServicePractitionerSelect();
-    const { remoteResponses } = useOrganizationSchedulingSlots({
-        healthcareServiceId: getSelectedValue(selectedHealthcareService),
-        practitionerRoleId: getSelectedValue(selectedPractitionerRole),
-    });
 
     const emptyBusinessHours = [
         {
@@ -96,16 +89,20 @@ export function CalendarPage<R extends Resource>({
                 ) : null
             }
         >
-            <RenderRemoteData remoteData={remoteResponses}>
-                {({ slots, businessHours }) => (
-                    <Calendar
-                        businessHours={businessHours.length ? businessHours.flat() : emptyBusinessHours}
-                        initialEvents={slots.slotsData}
-                        eventContent={AppointmentBubble}
-                        eventClick={openAppointmentDetails}
-                        select={openNewAppointmentModal}
-                    />
-                )}
+            <RenderRemoteData remoteData={recordResponse}>
+                {(data) => {
+                    const slotsData = data?.map((item) => eventConfig(item?.resource, item?.bundle));
+                    console.log('slotsData', slotsData);
+                    return (
+                        <Calendar
+                            businessHours={emptyBusinessHours}
+                            initialEvents={slotsData}
+                            eventContent={AppointmentBubble}
+                            eventClick={openAppointmentDetails}
+                            select={openNewAppointmentModal}
+                        />
+                    );
+                }}
             </RenderRemoteData>
         </PageContainer>
     );

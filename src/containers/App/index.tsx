@@ -1,4 +1,6 @@
 import { t } from '@lingui/macro';
+import { Resource } from 'fhir/r4b';
+import fhirpath from 'fhirpath';
 import queryString from 'query-string';
 import { ReactElement, useContext, useEffect, useRef } from 'react';
 import { Route, BrowserRouter, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
@@ -167,10 +169,23 @@ function AuthenticatedUserApp({ defaultRoute, extra }: RouteProps) {
                             <Route
                                 path="/scheduling-new"
                                 element={
+                                    /* TODO: This functionality should be discussed */
                                     <CalendarPage
-                                        resourceType="Encounter"
+                                        resourceType="Appointment"
                                         headerTitle="Scheduling new"
-                                        getTableColumns={() => [{}]}
+                                        searchParams={{
+                                            _include: ['Appointment:patient', 'Appointment:actor:PractitionerRole'],
+                                        }}
+                                        eventConfig={(r: Resource) => {
+                                            return {
+                                                id: fhirpath.evaluate(r, 'Appointment.id')[0],
+                                                title: fhirpath.evaluate(r, 'Appointment.id')[0],
+                                                start: fhirpath.evaluate(r, 'Appointment.start')[0],
+                                                end: fhirpath.evaluate(r, 'Appointment.end')[0],
+                                                status: fhirpath.evaluate(r, 'Appointment.status')[0],
+                                                classNames: [`_${fhirpath.evaluate(r, 'Appointment.status')[0]}`],
+                                            };
+                                        }}
                                     />
                                 }
                             />
