@@ -28,6 +28,7 @@ import { getToken, parseOAuthState, setToken } from 'src/services/auth';
 
 import { DefaultUserWithNoRoles } from './DefaultUserWithNoRoles';
 import { restoreUserSession } from './utils';
+import { CalendarPage } from '../../uberComponents/CalendarPage';
 import { AidboxFormsBuilder } from '../AidboxFormsBuilder';
 import { HealthcareServiceList } from '../HealthcareServiceList';
 import { InvoiceDetails } from '../InvoiceDetails';
@@ -163,6 +164,16 @@ function AuthenticatedUserApp({ defaultRoute, extra }: RouteProps) {
                             {extra}
                             <Route path="/encounters" element={<EncounterList />} />
                             <Route path="/scheduling" element={<OrganizationScheduling />} />
+                            <Route
+                                path="/scheduling-new"
+                                element={
+                                    <CalendarPage
+                                        resourceType="Encounter"
+                                        headerTitle="Scheduling new"
+                                        getTableColumns={() => [{}]}
+                                    />
+                                }
+                            />
                             <Route path="/medications" element={<MedicationManagement />} />
                             <Route path="/prescriptions" element={<Prescriptions />} />
                             <Route path="/invoices" element={<InvoiceList />} />
