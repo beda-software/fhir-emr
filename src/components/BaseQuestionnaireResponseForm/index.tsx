@@ -127,7 +127,6 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
 
     useEffect(() => {
         debouncedSaveDraft(formValues);
-        console.log('formValues', formData.formValues);
     }, [debouncedSaveDraft, formData.formValues, formValues]);
 
     const wrapControls = useCallback(
