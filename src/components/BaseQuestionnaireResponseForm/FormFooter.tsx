@@ -5,8 +5,6 @@ import { CSSProperties, useContext } from 'react';
 import { useWatch } from 'react-hook-form';
 import { FormItems } from 'sdc-qrf';
 
-import { isLoading, isSuccess } from '@beda.software/remote-data';
-
 import { BaseQuestionnaireResponseFormPropsContext } from 'src/components/BaseQuestionnaireResponseForm/context';
 
 import { BaseQuestionnaireResponseFormProps } from '.';
@@ -35,7 +33,6 @@ export function FormFooter(props: Props) {
         cancelButtonTitle,
         submitting,
         autoSave,
-        draftSaveResponse,
         className,
         style,
         submitDisabled: initialSubmitDisabled,
@@ -50,10 +47,7 @@ export function FormFooter(props: Props) {
 
     const submitDisabled = submitting || initialSubmitDisabled;
 
-    const draftLoading = draftSaveResponse && isLoading(draftSaveResponse);
-    const draftSaved = draftSaveResponse && isSuccess(draftSaveResponse);
-
-    const isSomeButtonInLoading = submitting || draftLoading;
+    const isSomeButtonInLoading = submitting;
 
     return (
         <>
@@ -64,8 +58,6 @@ export function FormFooter(props: Props) {
                     <RenderDraftButton
                         assembledFromQuestionnaireId={assembledFromQuestionnaireId}
                         autoSave={autoSave}
-                        draftLoading={draftLoading}
-                        draftSaved={draftSaved}
                         formValues={formValues}
                         isSomeButtonInLoading={isSomeButtonInLoading}
                     />
@@ -109,7 +101,6 @@ export function RenderDraftButton(props: RenderDraftButtonProps) {
     const baseQuestionnaireResponseFormProps = useContext(BaseQuestionnaireResponseFormPropsContext);
 
     const autoSave = baseQuestionnaireResponseFormProps?.autoSave;
-    const setDraftSaveResponse = baseQuestionnaireResponseFormProps?.setDraftSaveResponse;
     const formData = baseQuestionnaireResponseFormProps?.formData;
     const questionnaireId = formData?.context.questionnaire.assembledFrom;
     const saveDraft = baseQuestionnaireResponseFormProps?.saveDraft;
@@ -122,7 +113,7 @@ export function RenderDraftButton(props: RenderDraftButtonProps) {
         return null;
     }
 
-    if (!setDraftSaveResponse || !saveDraft) {
+    if (!saveDraft) {
         return null;
     }
 

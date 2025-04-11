@@ -1,14 +1,12 @@
 import { Organization, ParametersParameter, Patient, Person, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
-import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
-import { RemoteData, isSuccess, notAsked } from '@beda.software/remote-data';
 
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { AnxietyScore, DepressionScore } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/score';
 import { Spinner } from 'src/components/Spinner';
-import { QuestionnaireResponseFormSaveResponse } from 'src/hooks';
+import { QuestionnaireResponseDraftServiceType, QuestionnaireResponseFormSaveResponse } from 'src/hooks';
 
 import s from './PatientDocument.module.scss';
 import { S } from './PatientDocument.styles';
@@ -39,22 +37,13 @@ export function PatientDocument(props: PatientDocumentProps) {
     });
     const navigate = useNavigate();
 
-    const [draftSaveResponse, setDraftSaveResponse] = useState<RemoteData<QuestionnaireResponse>>(notAsked);
-
-    const { savedMessage } = useSavedMessage(draftSaveResponse);
-
     return (
         <div className={s.container}>
             <S.Content>
                 <RenderRemoteData remoteData={response} renderLoading={Spinner}>
                     {({ formData, onSubmit, provenance }) => (
                         <>
-                            <PatientDocumentHeader
-                                formData={formData}
-                                questionnaireId={questionnaireId}
-                                draftSaveResponse={draftSaveResponse}
-                                savedMessage={savedMessage}
-                            />
+                            <PatientDocumentHeader formData={formData} questionnaireId={questionnaireId} />
 
                             <BaseQuestionnaireResponseForm
                                 formData={formData}
@@ -66,8 +55,7 @@ export function PatientDocument(props: PatientDocumentProps) {
                                 onCancel={() => navigate(-1)}
                                 saveButtonTitle={'Complete'}
                                 autoSave={autosave !== undefined ? autosave : !provenance}
-                                draftSaveResponse={draftSaveResponse}
-                                setDraftSaveResponse={setDraftSaveResponse}
+                                qrDraftServiceType={QuestionnaireResponseDraftServiceType.local}
                             />
                         </>
                     )}
@@ -75,20 +63,4 @@ export function PatientDocument(props: PatientDocumentProps) {
             </S.Content>
         </div>
     );
-}
-
-function useSavedMessage(draftSaveResponse: RemoteData) {
-    const [savedMessage, setSavedMessage] = useState('');
-
-    useEffect(() => {
-        if (isSuccess(draftSaveResponse)) {
-            setSavedMessage('Saved');
-
-            const timeoutId = setTimeout(() => {
-                setSavedMessage('');
-            }, 2500);
-            return () => clearTimeout(timeoutId);
-        }
-    }, [draftSaveResponse]);
-    return { savedMessage };
 }

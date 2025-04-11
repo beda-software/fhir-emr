@@ -3,7 +3,6 @@ import { I18nProvider } from '@lingui/react';
 import { Meta, StoryObj } from '@storybook/react';
 
 import { Questionnaire, QuestionnaireResponse } from '@beda.software/aidbox-types/index';
-import { success } from '@beda.software/remote-data';
 
 import { BaseQuestionnaireResponseForm, Modal } from 'src/components';
 
@@ -73,8 +72,6 @@ export const Autosave: Story = {
                 onCancel={() => console.log('onCancel')}
                 saveButtonTitle={'Submit'}
                 autoSave
-                draftSaveResponse={success({} as any)}
-                setDraftSaveResponse={() => console.log('setDraftSaveResponse')}
             />
         </I18nProvider>
     ),
@@ -95,8 +92,6 @@ export const SaveAsDraft: Story = {
                 onCancel={() => console.log('onCancel')}
                 saveButtonTitle={'Submit'}
                 autoSave={false}
-                draftSaveResponse={success({} as any)}
-                setDraftSaveResponse={() => console.log('setDraftSaveResponse')}
             />
         </I18nProvider>
     ),

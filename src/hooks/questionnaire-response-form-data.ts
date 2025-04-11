@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro';
 import {
     QuestionnaireResponse as FHIRQuestionnaireResponse,
     Patient,
@@ -28,7 +29,7 @@ import config from '@beda.software/emr-config';
 import { formatFHIRDateTime, getReference, useService } from '@beda.software/fhir-react';
 import { RemoteDataResult, failure, isFailure, isSuccess, mapSuccess, success } from '@beda.software/remote-data';
 
-import { patchFHIRResource, saveFHIRResource, service } from 'src/services/fhir';
+import { forceDeleteFHIRResource, patchFHIRResource, saveFHIRResource, service } from 'src/services/fhir';
 
 export type QuestionnaireResponseFormSaveResponse<R extends Resource = any> = {
     questionnaireResponse: FHIRQuestionnaireResponse;
@@ -46,6 +47,7 @@ export interface QuestionnaireResponseFormProps {
     initialQuestionnaireResponse?: Partial<FHIRQuestionnaireResponse>;
     launchContextParameters?: ParametersParameter[];
     questionnaireResponseSaveService?: QuestionnaireResponseSaveService;
+    questionnaireResponseDraftService?: QuestionnaireResponseDraftSaveService;
 }
 
 interface QuestionnaireServiceLoader {
@@ -69,10 +71,110 @@ type QuestionnaireResponseSaveService = (
     qr: FHIRQuestionnaireResponse,
 ) => Promise<RemoteDataResult<FHIRQuestionnaireResponse>>;
 
+type QuestionnaireResponseDraftSaveService = (
+    qr: FHIRQuestionnaireResponse,
+    id: Resource['id'],
+) => Promise<RemoteDataResult<FHIRQuestionnaireResponse>>;
+
+type QuestionnaireResponseDraftLoadService = (id: Resource['id']) => RemoteDataResult<FHIRQuestionnaireResponse>;
+
+type QuestionnaireResponseDraftDeleteService = (
+    id: Resource['id'],
+) => Promise<RemoteDataResult<FHIRQuestionnaireResponse>>;
+
+export const enum QuestionnaireResponseDraftServiceType {
+    local = 'local',
+    server = 'server',
+}
+
+export type QuestionnaireResponseDraftService = keyof typeof QuestionnaireResponseDraftServiceType;
+
+export const getQuestionnaireResponseDraftServices = (
+    type: QuestionnaireResponseDraftService,
+): {
+    saveService: QuestionnaireResponseDraftSaveService;
+    loadService: QuestionnaireResponseDraftLoadService;
+    deleteService: QuestionnaireResponseDraftDeleteService;
+} => {
+    switch (type) {
+        case QuestionnaireResponseDraftServiceType.local:
+            return {
+                saveService: localStorageDraftSaveService,
+                loadService: localStorageDraftLoadService,
+                deleteService: localStorageDraftDeleteService,
+            };
+        case QuestionnaireResponseDraftServiceType.server:
+            return {
+                saveService: persistDraftSaveService,
+                loadService: persistDraftLoadService,
+                deleteService: persistDraftDeleteService,
+            };
+        default:
+            throw new Error('Unknown questionnaire response draft service type');
+    }
+};
+
 export const inMemorySaveService: QuestionnaireResponseSaveService = (qr: FHIRQuestionnaireResponse) =>
     Promise.resolve(success(qr));
+
 export const persistSaveService: QuestionnaireResponseSaveService = (qr: FHIRQuestionnaireResponse) =>
     saveFHIRResource(qr);
+
+export const persistDraftSaveService: QuestionnaireResponseDraftSaveService = (qr: FHIRQuestionnaireResponse) => {
+    const isCreating = qr.id === undefined;
+
+    const response = isCreating ? saveFHIRResource(qr) : patchFHIRResource<QuestionnaireResponse>(qr);
+
+    return response;
+};
+
+export const localStorageDraftSaveService: QuestionnaireResponseDraftSaveService = (
+    qr: FHIRQuestionnaireResponse,
+    id: Resource['id'],
+) => {
+    if (!id) {
+        return Promise.resolve(failure(t`Resource id is not defined`));
+    }
+
+    localStorage.setItem(id, JSON.stringify(qr));
+    return Promise.resolve(success(qr));
+};
+
+export const persistDraftLoadService: QuestionnaireResponseDraftLoadService = (id: Resource['id']) => {
+    if (!id) {
+        return failure(t`Resource id is not provided`);
+    }
+
+    return success({} as FHIRQuestionnaireResponse);
+};
+
+export const localStorageDraftLoadService: QuestionnaireResponseDraftLoadService = (id: Resource['id']) => {
+    if (!id) {
+        return failure(t`Resource id is not provided`);
+    }
+
+    const localStorageQR = localStorage.getItem(id);
+    if (!localStorageQR) {
+        return failure(t`QuestionnaireResponse not found in local storage`);
+    }
+
+    return success(JSON.parse(localStorageQR));
+};
+
+export const persistDraftDeleteService: QuestionnaireResponseDraftDeleteService = async (id: Resource['id']) => {
+    if (!id) {
+        return Promise.resolve(failure(t`Resource id is not provided`));
+    }
+    return await forceDeleteFHIRResource<FHIRQuestionnaireResponse>({ reference: `QuestionnaireResponse/${id}` });
+};
+
+export const localStorageDraftDeleteService: QuestionnaireResponseDraftDeleteService = (id: Resource['id']) => {
+    if (!id) {
+        return Promise.resolve(failure(t`Resource id is not provided`));
+    }
+    localStorage.removeItem(id);
+    return Promise.resolve(success({} as FHIRQuestionnaireResponse));
+};
 
 export function questionnaireServiceLoader(
     questionnaireService: QuestionnaireServiceLoader['questionnaireService'],

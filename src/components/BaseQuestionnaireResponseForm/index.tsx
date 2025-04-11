@@ -1,6 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { notification } from 'antd';
 import classNames from 'classnames';
-import { QuestionnaireResponse } from 'fhir/r4b';
+import { Resource } from 'fhir/r4b';
 import _ from 'lodash';
 import React, { ComponentType, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -23,9 +24,13 @@ import * as yup from 'yup';
 import 'react-phone-input-2/lib/style.css';
 
 import { Questionnaire as FCEQuestionnaire } from '@beda.software/aidbox-types';
-import { RemoteData, isSuccess, loading } from '@beda.software/remote-data';
 
-import { saveQuestionnaireResponseDraft } from 'src/components/QuestionnaireResponseForm';
+import {
+    deleteQuestionnaireResponseDraft,
+    loadQuestionnaireResponseDraft,
+    saveQuestionnaireResponseDraft,
+} from 'src/components/QuestionnaireResponseForm';
+import { QuestionnaireResponseDraftService } from 'src/hooks';
 import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
 import s from './BaseQuestionnaireResponseForm.module.scss';
@@ -48,8 +53,8 @@ export interface BaseQuestionnaireResponseFormProps {
     onCancel?: () => void;
 
     autoSave?: boolean;
-    draftSaveResponse?: RemoteData<QuestionnaireResponse>;
-    setDraftSaveResponse?: (data: RemoteData<QuestionnaireResponse>) => void;
+    qrDraftServiceType?: QuestionnaireResponseDraftService;
+
     ItemWrapper?: ComponentType<{
         item: QuestionItemProps;
         control: QuestionItemComponent;
@@ -67,18 +72,21 @@ export interface BaseQuestionnaireResponseFormProps {
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
-    const {
-        onSubmit,
-        formData,
-        readOnly,
-        draftSaveResponse,
-        ItemWrapper,
-        GroupWrapper,
-        setDraftSaveResponse,
-        autoSave,
-    } = props;
+    const { onSubmit, formData, readOnly, ItemWrapper, GroupWrapper, autoSave, qrDraftServiceType = 'local' } = props;
 
     const questionnaireId = formData.context.questionnaire.assembledFrom;
+    const questionnaireResponseId = formData.context.questionnaireResponse.id;
+    const isCreating = !formData.context.questionnaireResponse.id;
+    const draftId = isCreating ? questionnaireId : questionnaireResponseId;
+
+    const loadDraft = useCallback(
+        (draftId: Resource['id'], formData: QuestionnaireResponseFormData) => {
+            loadQuestionnaireResponseDraft(draftId, formData, qrDraftServiceType);
+        },
+        [qrDraftServiceType],
+    );
+
+    loadDraft(draftId, formData);
 
     const schema: yup.AnyObjectSchema = useMemo(
         () => questionnaireToValidationSchema(formData.context.questionnaire),
@@ -103,15 +111,19 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
             if (!questionnaireId || !formData) {
                 return;
             }
-            if (!_.isEqual(currentFormValues, previousFormValuesRef.current) && setDraftSaveResponse) {
-                setDraftSaveResponse(loading);
-                setDraftSaveResponse(
-                    await saveQuestionnaireResponseDraft(questionnaireId, formData, currentFormValues),
-                );
+            if (!_.isEqual(currentFormValues, previousFormValuesRef.current)) {
+                await saveQuestionnaireResponseDraft(draftId, formData, currentFormValues, qrDraftServiceType);
+
                 previousFormValuesRef.current = _.cloneDeep(currentFormValues);
+                notification.success({
+                    message: 'Draft saved',
+                    description: 'Your draft has been saved successfully.',
+                    placement: 'topRight',
+                    duration: 1,
+                });
             }
         },
-        [formData, questionnaireId, setDraftSaveResponse],
+        [draftId, formData, qrDraftServiceType, questionnaireId],
     );
 
     const debouncedSaveDraft = _.debounce(async (currentFormValues: FormItems) => {
@@ -122,7 +134,8 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
 
     useEffect(() => {
         debouncedSaveDraft(formValues);
-    }, [formValues]);
+        console.log('formValues', formData.formValues);
+    }, [debouncedSaveDraft, formData.formValues, formValues]);
 
     const wrapControls = useCallback(
         (mapping: { [x: string]: QuestionItemComponent }): { [x: string]: QuestionItemComponent } => {
@@ -227,9 +240,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
             <form
                 onSubmit={handleSubmit(async () => {
                     setIsLoading(true);
-                    if (questionnaireId && draftSaveResponse && isSuccess(draftSaveResponse)) {
-                        formData.context.questionnaireResponse.id = draftSaveResponse.data.id;
-                    }
+                    deleteQuestionnaireResponseDraft(draftId, qrDraftServiceType);
                     await onSubmit?.({ ...formData, formValues });
                     setIsLoading(false);
                 })}
@@ -240,8 +251,8 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                     value={{
                         ...props,
                         submitting: isLoading,
-                        saveDraft: props.setDraftSaveResponse ? saveDraft : undefined,
-                        debouncedSaveDraft: props.setDraftSaveResponse ? debouncedSaveDraft : undefined,
+                        saveDraft,
+                        debouncedSaveDraft,
                     }}
                 >
                     <QuestionnaireResponseFormProvider
