@@ -23,7 +23,6 @@ import * as yup from 'yup';
 import 'react-phone-input-2/lib/style.css';
 
 import { Questionnaire as FCEQuestionnaire } from '@beda.software/aidbox-types';
-import { uuid4 } from '@beda.software/fhir-react';
 
 import {
     deleteQuestionnaireResponseDraft,
@@ -74,12 +73,13 @@ export interface BaseQuestionnaireResponseFormProps {
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
     const { onSubmit, formData, readOnly, ItemWrapper, GroupWrapper, autoSave, qrDraftServiceType = 'local' } = props;
 
-    const isCreating = formData.context.questionnaireResponse.id === undefined;
-    if (isCreating) {
-        formData.context.questionnaireResponse.id = uuid4();
-    }
+    const isCreating = !formData.context.questionnaireResponse.id;
+
     const questionnaireId = formData.context.questionnaire.assembledFrom;
-    const draftId = isCreating ? questionnaireId : formData.context.questionnaireResponse.id;
+
+    const draftId = isCreating
+        ? formData.context.questionnaire.assembledFrom
+        : formData.context.questionnaireResponse.id;
 
     const loadDraft = useCallback(
         (draftId: Resource['id'], formData: QuestionnaireResponseFormData) => {
@@ -122,15 +122,32 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         [draftId, formData, qrDraftServiceType, questionnaireId],
     );
 
-    const debouncedSaveDraft = _.debounce(async (currentFormValues: FormItems) => {
-        if (!autoSave || !questionnaireId) return;
-
-        saveDraft(currentFormValues);
-    }, 1000);
+    const isRunningDebouncedSaveDraftRef = useRef(false);
+    const debouncedSaveDraftRef = useRef<ReturnType<typeof _.debounce> | null>(null);
 
     useEffect(() => {
-        debouncedSaveDraft(formValues);
-    }, [debouncedSaveDraft, formData.formValues, formValues]);
+        debouncedSaveDraftRef.current = _.debounce(async (currentFormValues: FormItems) => {
+            if (!autoSave || !questionnaireId) return;
+
+            if (isRunningDebouncedSaveDraftRef.current) {
+                return;
+            }
+
+            isRunningDebouncedSaveDraftRef.current = true;
+
+            try {
+                await saveDraft(currentFormValues);
+            } finally {
+                isRunningDebouncedSaveDraftRef.current = false;
+            }
+        }, 1000);
+
+        debouncedSaveDraftRef.current?.(formValues);
+
+        return () => {
+            debouncedSaveDraftRef.current?.cancel();
+        };
+    }, [JSON.stringify(formValues)]);
 
     const wrapControls = useCallback(
         (mapping: { [x: string]: QuestionItemComponent }): { [x: string]: QuestionItemComponent } => {
@@ -234,6 +251,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         <FormProvider {...methods}>
             <form
                 onSubmit={handleSubmit(async () => {
+                    debouncedSaveDraftRef.current?.cancel();
                     setIsLoading(true);
                     deleteQuestionnaireResponseDraft(draftId, qrDraftServiceType);
                     await onSubmit?.({ ...formData, formValues });
@@ -247,7 +265,6 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                         ...props,
                         submitting: isLoading,
                         saveDraft,
-                        debouncedSaveDraft,
                     }}
                 >
                     <QuestionnaireResponseFormProvider
