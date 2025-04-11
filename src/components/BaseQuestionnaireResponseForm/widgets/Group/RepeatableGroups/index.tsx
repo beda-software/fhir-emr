@@ -12,6 +12,8 @@ import { RepeatableGroupCard } from './RepeatableGroupCard';
 import { RepeatableGroupRow } from './RepeatableGroupRow';
 import { S } from './styles';
 import { RepeatableGroupProps } from './types';
+import { populateItemsWithKeys } from './utils';
+
 export { RepeatableGroupCard, RepeatableGroupRow };
 
 interface RepeatableGroupsProps {
@@ -37,18 +39,19 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
 
     const value = _.get(getValues(), fieldName);
 
-    const items = value?.items && value.items.length ? value.items : required ? [{}] : [];
+    const items = populateItemsWithKeys(value?.items && value.items.length ? value.items : required ? [{}] : []);
+
     const buildValue = props.buildValue ?? defaultBuildValue;
 
     return (
         <S.Group>
-            {_.map(items, (_elem, index: number) => {
+            {_.map(items, (item, index: number) => {
                 if (!items[index]) {
                     return null;
                 }
 
                 return renderGroup ? (
-                    <React.Fragment key={`${fieldName.join()}-${items.length}`}>
+                    <React.Fragment key={item.key}>
                         {renderGroup({
                             index,
                             items,
@@ -58,7 +61,7 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
                     </React.Fragment>
                 ) : (
                     <RepeatableGroupCard
-                        key={`${items.length}-${index}`}
+                        key={item.key}
                         index={index}
                         items={items}
                         onChange={onChange}
