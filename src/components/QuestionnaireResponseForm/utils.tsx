@@ -4,6 +4,7 @@ import { QuestionnaireResponse, Resource } from 'fhir/r4b';
 import moment from 'moment';
 import {
     FormItems,
+    fromFirstClassExtension,
     mapFormToResponse,
     mapResponseToForm,
     QuestionnaireResponseFormData,
@@ -28,6 +29,7 @@ export const saveQuestionnaireResponseDraft = async (
     const transformedFormValues = mapFormToResponse(currentFormValues, formData.context.questionnaire);
 
     const questionnaireResponse: QuestionnaireResponse = {
+        ...fromFirstClassExtension(formData.context.questionnaireResponse),
         id: formData.context.questionnaireResponse.id,
         encounter: formData.context.questionnaireResponse.encounter,
         item: transformedFormValues.item,

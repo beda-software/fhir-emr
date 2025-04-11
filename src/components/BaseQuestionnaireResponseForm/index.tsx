@@ -71,7 +71,16 @@ export interface BaseQuestionnaireResponseFormProps {
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
-    const { onSubmit, formData, readOnly, ItemWrapper, GroupWrapper, autoSave, qrDraftServiceType = 'local' } = props;
+    const {
+        onSubmit,
+        formData,
+        readOnly,
+        ItemWrapper,
+        GroupWrapper,
+        autoSave,
+        qrDraftServiceType = 'local',
+        onCancel,
+    } = props;
 
     const isCreating = !formData.context.questionnaireResponse.id;
 
@@ -247,14 +256,20 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
 
     const isWizard = isGroupWizard(formData.context.questionnaire);
 
+    const handleOnCancel = useCallback(() => {
+        debouncedSaveDraftRef.current?.cancel();
+        deleteQuestionnaireResponseDraft(draftId, qrDraftServiceType);
+        onCancel?.();
+    }, [draftId, onCancel, qrDraftServiceType]);
+
     return (
         <FormProvider {...methods}>
             <form
                 onSubmit={handleSubmit(async () => {
                     debouncedSaveDraftRef.current?.cancel();
                     setIsLoading(true);
-                    deleteQuestionnaireResponseDraft(draftId, qrDraftServiceType);
                     await onSubmit?.({ ...formData, formValues });
+                    deleteQuestionnaireResponseDraft(draftId, qrDraftServiceType);
                     setIsLoading(false);
                 })}
                 className={classNames(s.form, 'app-form')}
@@ -265,6 +280,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                         ...props,
                         submitting: isLoading,
                         saveDraft,
+                        onCancel: handleOnCancel,
                     }}
                 >
                     <QuestionnaireResponseFormProvider
@@ -284,7 +300,9 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                                     context={calcInitialContext(formData.context, formValues)}
                                 />
                             </div>
-                            {!isWizard ? <FormFooter {...props} submitting={isLoading} /> : null}
+                            {!isWizard ? (
+                                <FormFooter {...props} submitting={isLoading} onCancel={handleOnCancel} />
+                            ) : null}
                         </>
                     </QuestionnaireResponseFormProvider>
                 </BaseQuestionnaireResponseFormPropsContext.Provider>
