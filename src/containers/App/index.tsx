@@ -1,9 +1,8 @@
 import { t } from '@lingui/macro';
-import { Resource } from 'fhir/r4b';
-import fhirpath from 'fhirpath';
+import { Resource, Bundle, Patient } from 'fhir/r4b';
 import queryString from 'query-string';
 import { ReactElement, useContext, useEffect, useRef } from 'react';
-import { Route, BrowserRouter, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
@@ -13,6 +12,7 @@ import { RemoteDataResult, success } from '@beda.software/remote-data';
 
 import { AnonymousLayout, BaseLayout } from 'src/components/BaseLayout';
 import { MenuLayout } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
+import { SearchBarColumnType } from 'src/components/SearchBar/types';
 import { Spinner } from 'src/components/Spinner';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { EncounterList } from 'src/containers/EncounterList';
@@ -27,6 +27,7 @@ import { QuestionnaireList } from 'src/containers/QuestionnaireList';
 import { SignIn } from 'src/containers/SignIn';
 import { VideoCall } from 'src/containers/VideoCall';
 import { getToken, parseOAuthState, setToken } from 'src/services/auth';
+import { compileAsFirst, compileAsArray } from 'src/utils';
 
 import { DefaultUserWithNoRoles } from './DefaultUserWithNoRoles';
 import { restoreUserSession } from './utils';
@@ -176,14 +177,53 @@ function AuthenticatedUserApp({ defaultRoute, extra }: RouteProps) {
                                         searchParams={{
                                             _include: ['Appointment:patient', 'Appointment:actor:PractitionerRole'],
                                         }}
-                                        eventConfig={(r: Resource) => {
+                                        getFilters={() => [
+                                            {
+                                                id: 'patient',
+                                                type: SearchBarColumnType.REFERENCE,
+                                                placeholder: 'Search by patient',
+                                                expression: 'Patient',
+                                                path: "name.given.first() + ' ' + name.family",
+                                            },
+                                            {
+                                                id: 'actor',
+                                                type: SearchBarColumnType.REFERENCE,
+                                                placeholder: 'Search by practitioner',
+                                                expression: 'PractitionerRole',
+                                                path: 'id',
+                                            },
+                                        ]}
+                                        eventConfig={(r: Resource, bundle: Bundle) => {
+                                            const getId = compileAsArray<Resource, string>('Appointment.id');
+                                            const getStart = compileAsArray<Resource, string>('Appointment.start');
+                                            const getEnd = compileAsArray<Resource, string>('Appointment.end');
+                                            const getStatus = compileAsArray<Resource, string>('Appointment.status');
+                                            const getParticipantPatientReference = compileAsArray<Resource, string>(
+                                                "Appointment.participant.actor.where(reference.startsWith('Patient/')).first().reference",
+                                            );
+                                            const patientReference = getParticipantPatientReference(r)[0]!;
+                                            const getPatientExpression = `Bundle.entry.resource.where((resourceType + '/' + id)='${patientReference}').first()`;
+                                            const getPatientResource = compileAsFirst<Bundle, Patient>(
+                                                getPatientExpression,
+                                            );
+                                            const patient = getPatientResource(bundle);
+                                            const getPatientName = compileAsArray<Patient, string>(
+                                                "Patient.name.first().select(family + ', ' + given.join(' '))",
+                                            );
+
+                                            const id = getId(r)[0]!;
+                                            const start = getStart(r)[0]!;
+                                            const end = getEnd(r)[0]!;
+                                            const status = getStatus(r)[0]!;
+                                            const title = getPatientName(patient!)[0]!;
+
                                             return {
-                                                id: fhirpath.evaluate(r, 'Appointment.id')[0],
-                                                title: fhirpath.evaluate(r, 'Appointment.id')[0],
-                                                start: fhirpath.evaluate(r, 'Appointment.start')[0],
-                                                end: fhirpath.evaluate(r, 'Appointment.end')[0],
-                                                status: fhirpath.evaluate(r, 'Appointment.status')[0],
-                                                classNames: [`_${fhirpath.evaluate(r, 'Appointment.status')[0]}`],
+                                                id,
+                                                title: title,
+                                                start,
+                                                end,
+                                                status,
+                                                classNames: [`_${status}`],
                                             };
                                         }}
                                     />

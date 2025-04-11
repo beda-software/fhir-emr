@@ -92,7 +92,6 @@ export function CalendarPage<R extends Resource>({
             <RenderRemoteData remoteData={recordResponse}>
                 {(data) => {
                     const slotsData = data?.map((item) => eventConfig(item?.resource, item?.bundle));
-                    console.log('slotsData', slotsData);
                     return (
                         <Calendar
                             businessHours={emptyBusinessHours}
