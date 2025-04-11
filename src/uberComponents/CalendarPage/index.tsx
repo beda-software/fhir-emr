@@ -27,6 +27,11 @@ type EventConfig = {
 type CalendarPageProps<R extends Resource> = ResourceListProps<R, WebExtra> & {
     headerTitle: string;
     eventConfig: (r: Resource, bundle: Bundle) => EventConfig;
+    businessHours?: {
+        daysOfWeek: number[] | undefined;
+        startTime: string | undefined;
+        endTime: string | undefined;
+    }[];
     maxWidth?: number | string;
 };
 
@@ -40,6 +45,7 @@ export function CalendarPage<R extends Resource>({
     getFilters,
     defaultLaunchContext,
     eventConfig,
+    businessHours,
 }: CalendarPageProps<R>) {
     const allFilters = getFilters?.() ?? [];
 
@@ -94,7 +100,7 @@ export function CalendarPage<R extends Resource>({
                     const slotsData = data?.map((item) => eventConfig(item?.resource, item?.bundle));
                     return (
                         <Calendar
-                            businessHours={emptyBusinessHours}
+                            businessHours={businessHours ? businessHours : emptyBusinessHours}
                             initialEvents={slotsData}
                             eventContent={AppointmentBubble}
                             eventClick={openAppointmentDetails}

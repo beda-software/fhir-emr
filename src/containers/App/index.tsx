@@ -1,5 +1,4 @@
 import { t } from '@lingui/macro';
-import { Resource, Bundle, Patient } from 'fhir/r4b';
 import queryString from 'query-string';
 import { ReactElement, useContext, useEffect, useRef } from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
@@ -12,7 +11,6 @@ import { RemoteDataResult, success } from '@beda.software/remote-data';
 
 import { AnonymousLayout, BaseLayout } from 'src/components/BaseLayout';
 import { MenuLayout } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
-import { SearchBarColumnType } from 'src/components/SearchBar/types';
 import { Spinner } from 'src/components/Spinner';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { EncounterList } from 'src/containers/EncounterList';
@@ -27,16 +25,15 @@ import { QuestionnaireList } from 'src/containers/QuestionnaireList';
 import { SignIn } from 'src/containers/SignIn';
 import { VideoCall } from 'src/containers/VideoCall';
 import { getToken, parseOAuthState, setToken } from 'src/services/auth';
-import { compileAsFirst, compileAsArray } from 'src/utils';
 
 import { DefaultUserWithNoRoles } from './DefaultUserWithNoRoles';
 import { restoreUserSession } from './utils';
-import { CalendarPage } from '../../uberComponents/CalendarPage';
 import { AidboxFormsBuilder } from '../AidboxFormsBuilder';
 import { HealthcareServiceList } from '../HealthcareServiceList';
 import { InvoiceDetails } from '../InvoiceDetails';
 import { InvoiceList } from '../InvoiceList';
 import { MedicationManagement } from '../MedicationManagement';
+import { NewScheduling } from '../NewScheduling';
 import { NotificationPage } from '../NotificationPage';
 import { OrganizationScheduling } from '../OrganizationScheduling';
 import { DocumentPrint } from '../PatientDetails/DocumentPrint';
@@ -167,68 +164,7 @@ function AuthenticatedUserApp({ defaultRoute, extra }: RouteProps) {
                             {extra}
                             <Route path="/encounters" element={<EncounterList />} />
                             <Route path="/scheduling" element={<OrganizationScheduling />} />
-                            <Route
-                                path="/scheduling-new"
-                                element={
-                                    /* TODO: This functionality should be discussed */
-                                    <CalendarPage
-                                        resourceType="Appointment"
-                                        headerTitle="Scheduling new"
-                                        searchParams={{
-                                            _include: ['Appointment:patient', 'Appointment:actor:PractitionerRole'],
-                                        }}
-                                        getFilters={() => [
-                                            {
-                                                id: 'patient',
-                                                type: SearchBarColumnType.REFERENCE,
-                                                placeholder: 'Search by patient',
-                                                expression: 'Patient',
-                                                path: "name.given.first() + ' ' + name.family",
-                                            },
-                                            {
-                                                id: 'actor',
-                                                type: SearchBarColumnType.REFERENCE,
-                                                placeholder: 'Search by practitioner',
-                                                expression: 'PractitionerRole',
-                                                path: 'id',
-                                            },
-                                        ]}
-                                        eventConfig={(r: Resource, bundle: Bundle) => {
-                                            const getId = compileAsArray<Resource, string>('Appointment.id');
-                                            const getStart = compileAsArray<Resource, string>('Appointment.start');
-                                            const getEnd = compileAsArray<Resource, string>('Appointment.end');
-                                            const getStatus = compileAsArray<Resource, string>('Appointment.status');
-                                            const getParticipantPatientReference = compileAsArray<Resource, string>(
-                                                "Appointment.participant.actor.where(reference.startsWith('Patient/')).first().reference",
-                                            );
-                                            const patientReference = getParticipantPatientReference(r)[0]!;
-                                            const getPatientExpression = `Bundle.entry.resource.where((resourceType + '/' + id)='${patientReference}').first()`;
-                                            const getPatientResource = compileAsFirst<Bundle, Patient>(
-                                                getPatientExpression,
-                                            );
-                                            const patient = getPatientResource(bundle);
-                                            const getPatientName = compileAsArray<Patient, string>(
-                                                "Patient.name.first().select(family + ', ' + given.join(' '))",
-                                            );
-
-                                            const id = getId(r)[0]!;
-                                            const start = getStart(r)[0]!;
-                                            const end = getEnd(r)[0]!;
-                                            const status = getStatus(r)[0]!;
-                                            const title = getPatientName(patient!)[0]!;
-
-                                            return {
-                                                id,
-                                                title: title,
-                                                start,
-                                                end,
-                                                status,
-                                                classNames: [`_${status}`],
-                                            };
-                                        }}
-                                    />
-                                }
-                            />
+                            <Route path="/scheduling-new" element={<NewScheduling />} />
                             <Route path="/medications" element={<MedicationManagement />} />
                             <Route path="/prescriptions" element={<Prescriptions />} />
                             <Route path="/invoices" element={<InvoiceList />} />
