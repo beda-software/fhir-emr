@@ -180,7 +180,6 @@ describe('Draft questionnaire response saves correctly', async () => {
                 }),
             resolver: (result) => {
                 const qrs = extractBundleResources(ensure(result)).QuestionnaireResponse;
-                console.log(qrs);
                 return qrs.length === 1;
             },
         });
