@@ -1,5 +1,4 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { notification } from 'antd';
 import classNames from 'classnames';
 import { Resource } from 'fhir/r4b';
 import _ from 'lodash';
@@ -115,12 +114,6 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                 await saveQuestionnaireResponseDraft(draftId, formData, currentFormValues, qrDraftServiceType);
 
                 previousFormValuesRef.current = _.cloneDeep(currentFormValues);
-                notification.success({
-                    message: 'Draft saved',
-                    description: 'Your draft has been saved successfully.',
-                    placement: 'topRight',
-                    duration: 1,
-                });
             }
         },
         [draftId, formData, qrDraftServiceType, questionnaireId],
