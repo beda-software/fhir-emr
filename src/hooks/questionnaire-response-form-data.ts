@@ -123,7 +123,9 @@ export const persistSaveService: QuestionnaireResponseSaveService = (qr: FHIRQue
 export const persistDraftSaveService: QuestionnaireResponseDraftSaveService = (qr: FHIRQuestionnaireResponse) => {
     const isCreating = qr.id === undefined;
 
-    const response = isCreating ? saveFHIRResource(qr) : patchFHIRResource<QuestionnaireResponse>(qr);
+    const response = isCreating
+        ? saveFHIRResource(qr)
+        : patchFHIRResource<QuestionnaireResponse>(qr, { status: 'in-progress' });
 
     return response;
 };
