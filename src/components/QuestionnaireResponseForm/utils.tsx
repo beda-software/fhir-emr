@@ -30,7 +30,7 @@ export const saveQuestionnaireResponseDraft = async (
 
     const response = isCreating
         ? await saveFHIRResource(questionnaireResponse)
-        : await patchFHIRResource<QuestionnaireResponse>(questionnaireResponse);
+        : await patchFHIRResource<QuestionnaireResponse>(questionnaireResponse, { status: 'in-progress' });
 
     if (isSuccess(response)) {
         formData.context.questionnaireResponse.id = response.data.id;
