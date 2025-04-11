@@ -7,4 +7,4 @@
 // to provide healthcare service.
 export const practitionerRoleDoctor = 'doctor';
 
-export const LOINC_CODESYSTEM = 'http://loinc.org'
+export const LOINC_CODESYSTEM = 'http://loinc.org';

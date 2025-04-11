@@ -12,14 +12,15 @@ import {
     toolbarPlugin,
     UndoRedo,
 } from '@mdxeditor/editor';
+import { Divider } from 'antd';
 import { Fragment, useContext, useEffect, useMemo, useRef } from 'react';
+import { ItemContext } from 'sdc-qrf';
 import { useTheme } from 'styled-components';
 
 import '@mdxeditor/editor/style.css';
-import { Divider } from 'antd';
+
 import { MarkDownEditorContext } from './context';
 import { S } from './styles';
-import { ItemContext } from 'sdc-qrf';
 
 interface MarkDownEditorProps {
     markdownString: string;
@@ -41,23 +42,24 @@ export function MarkDownEditor(props: MarkDownEditorProps) {
     const theme = useTheme();
 
     const pluginsContext = useContext(MarkDownEditorContext);
+    const { initPlugins, initToolbarPlugins } = pluginsContext;
 
     // TODO Add a button to add link and make a custom modal to enter the link
     // https://mdxeditor.dev/editor/api/functions/linkDialogPlugin
     const plugins = useMemo(() => {
-        const commonPlugins = pluginsContext.initPlugins
-            ? pluginsContext.initPlugins(context)
+        const commonPlugins = initPlugins
+            ? initPlugins(context)
             : [headingsPlugin(), listsPlugin(), quotePlugin(), linkPlugin(), markdownShortcutPlugin()];
 
-        const toolbarPlugins = pluginsContext.initToolbarPlugins
-            ? pluginsContext.initToolbarPlugins(context)
+        const toolbarPlugins = initToolbarPlugins
+            ? initToolbarPlugins(context)
             : [
-                  <UndoRedo />,
-                  <Divider type="vertical" />,
-                  <BoldItalicUnderlineToggles />,
-                  <CodeToggle />,
-                  <Divider type={'vertical'} />,
-                  <ListsToggle />,
+                  <UndoRedo key="undoRedo" />,
+                  <Divider key="divider" type="vertical" />,
+                  <BoldItalicUnderlineToggles key="boldItalicUnderlineToggles" />,
+                  <CodeToggle key="codeToggle" />,
+                  <Divider key="divider" type={'vertical'} />,
+                  <ListsToggle key="listsToggle" />,
               ];
 
         const plugins = readOnly
@@ -78,7 +80,7 @@ export function MarkDownEditor(props: MarkDownEditorProps) {
               ];
 
         return plugins;
-    }, [pluginsContext.initPlugins, pluginsContext.initToolbarPlugins, readOnly, context]);
+    }, [initPlugins, initToolbarPlugins, readOnly, context]);
 
     const MDXEditorWrapper = pluginsContext.MarkdownEditorWrapper || S.MDXEditorWrapper;
 

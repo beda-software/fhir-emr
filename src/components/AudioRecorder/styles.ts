@@ -1,7 +1,7 @@
+import { Button } from 'antd';
 import styled, { css } from 'styled-components';
 
 import { Text } from 'src/components/Typography';
-import { Button } from 'antd';
 
 export const S = {
     Scriber: styled.div`

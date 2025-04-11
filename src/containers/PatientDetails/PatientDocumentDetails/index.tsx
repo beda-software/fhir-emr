@@ -2,7 +2,7 @@ import { PrinterOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
 import { Encounter, Organization, Patient, Practitioner, Provenance, QuestionnaireResponse } from 'fhir/r4b';
-import { ReactElement } from 'react';
+import { ReactElement, useContext } from 'react';
 import { NavigateFunction, Outlet, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
@@ -23,9 +23,9 @@ import { forceDeleteFHIRResource, getFHIRResources, patchFHIRResource } from 'sr
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 import { isExternalQuestionnaire } from 'src/utils/smart-apps';
 
+import { PatientDocumentDetailsWrapperContext } from './context';
 import { ExternalDocumentView } from './ExternalDocumentView';
 import s from './PatientDocumentDetails.module.scss';
-import { S } from './PatientDocumentDetails.styles';
 
 interface Props {
     patient: WithId<Patient>;
@@ -120,13 +120,16 @@ function PatientDocumentDetailsReadonly(props: {
 
     const canBeEdited = !qrCompleted;
 
+    const { Wrapper, Content } = useContext(PatientDocumentDetailsWrapperContext);
+
     return (
         <div className={s.container}>
-            <S.Content>
+            <Wrapper>
                 <div className={s.header}>
                     <Title level={4} className={s.title}>
                         {formData.context.questionnaire.title || formData.context.questionnaire.name}
                     </Title>
+
                     <div className={s.buttons}>
                         {qrCompleted ? (
                             <>
@@ -163,6 +166,7 @@ function PatientDocumentDetailsReadonly(props: {
                                 )}
                             </>
                         ) : null}
+
                         {canBeEdited ? (
                             <>
                                 <ConfirmActionButton
@@ -187,8 +191,11 @@ function PatientDocumentDetailsReadonly(props: {
                         ) : null}
                     </div>
                 </div>
-                <ReadonlyQuestionnaireResponseForm formData={formData} />
-            </S.Content>
+
+                <Content>
+                    <ReadonlyQuestionnaireResponseForm formData={formData} />
+                </Content>
+            </Wrapper>
         </div>
     );
 }

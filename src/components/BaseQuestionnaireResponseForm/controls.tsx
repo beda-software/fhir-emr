@@ -3,7 +3,7 @@ import {
     ItemControlGroupItemComponentMapping,
     ItemControlQuestionItemComponentMapping,
     QuestionItemComponentMapping,
-} from 'sdc-qrf/lib/types';
+} from 'sdc-qrf';
 
 import {
     Col,
@@ -31,6 +31,7 @@ import {
     SectionWithDivider,
     MainCard,
     SubCard,
+    QuestionEmail,
 } from './widgets';
 import { AudioRecorderUploader } from './widgets/AudioRecorderUploader';
 import { Display } from './widgets/display';
@@ -61,6 +62,7 @@ export const groupComponent: GroupItemComponent = Group;
 
 export const itemControlComponents: ItemControlQuestionItemComponentMapping = {
     phoneWidget: QuestionPhone,
+    email: QuestionEmail,
     passwordWidget: PasswordInput,
     slider: QuestionSlider,
     'solid-radio-button': QuestionSolidRadio,
@@ -88,4 +90,5 @@ export const groupControlComponents: ItemControlGroupItemComponentMapping = {
     'time-range-picker': TimeRangePickerControl,
     wizard: GroupWizard,
     'wizard-with-tooltips': GroupWizardWithTooltips,
+    'wizard-navigation-group': GroupWizard,
 };

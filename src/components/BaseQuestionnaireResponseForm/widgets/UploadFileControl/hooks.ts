@@ -24,15 +24,19 @@ export function useUploader({ parentPath, questionItem }: QuestionItemProps) {
     const { formItem, value, onChange } = useFieldController(fieldName, questionItem);
 
     const uid = useRef<Record<string, string>>({});
-    const initialFileList: Array<UploadFile> = useMemo(() => (value ?? []).map((v: ValueAttachment) => {
-        const url = v.value.Attachment.url!;
-        const file: UploadFile = {
-            uid: url,
-            name: url,
-            percent: 100,
-        };
-        return file;
-    }), [value]);
+    const initialFileList: Array<UploadFile> = useMemo(
+        () =>
+            (value ?? []).map((v: ValueAttachment) => {
+                const url = v.value.Attachment.url!;
+                const file: UploadFile = {
+                    uid: url,
+                    name: url,
+                    percent: 100,
+                };
+                return file;
+            }),
+        [value],
+    );
     const [fileList, setFileList] = useState<Array<UploadFile>>(initialFileList);
 
     useEffect(() => {

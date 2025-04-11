@@ -2,6 +2,8 @@ import { t } from '@lingui/macro';
 import { Button, Segmented, Tooltip } from 'antd';
 import { useState } from 'react';
 
+import config from '@beda.software/emr-config';
+
 import { AppFooter } from 'src/components/BaseLayout/Footer';
 import logo from 'src/images/logo.svg';
 import { getAuthorizeUrl, OAuthState } from 'src/services/auth';
@@ -16,7 +18,11 @@ enum SignInService {
 }
 
 function authorize(state?: OAuthState) {
-    window.location.href = getAuthorizeUrl(state);
+    window.location.href = getAuthorizeUrl({
+        authPath: 'auth/authorize',
+        params: new URLSearchParams({ client_id: config.clientId, response_type: 'token' }),
+        state,
+    });
 }
 
 interface SignInProps {
@@ -76,7 +82,10 @@ export function SignIn(props: SignInProps) {
                                 <S.CredentialsBlock>
                                     <S.CredentialLabel>{t`Password`}</S.CredentialLabel>
                                     <S.CredentialsList>
-                                        <span>password</span>
+                                        <span>
+                                            Please contact <a href="mailto:hi@beda.software">hi@beda.software</a> to get
+                                            demo password.
+                                        </span>
                                     </S.CredentialsList>
                                 </S.CredentialsBlock>
                             </S.CredentialsWrapper>
@@ -113,7 +122,10 @@ export function SignIn(props: SignInProps) {
                                 <S.CredentialsBlock>
                                     <S.CredentialLabel>{t`Password`}</S.CredentialLabel>
                                     <S.CredentialsList>
-                                        <span>password</span>
+                                        <span>
+                                            Please contact <a href="mailto:hi@beda.software">hi@beda.software</a> to get
+                                            demo password.
+                                        </span>
                                     </S.CredentialsList>
                                 </S.CredentialsBlock>
                             </S.CredentialsWrapper>
@@ -126,7 +138,7 @@ export function SignIn(props: SignInProps) {
                             >
                                 {t`Log in as demo patient`}
                             </Button>
-                            <AppleButton />
+                            {/*<AppleButton />*/}
                         </S.ButtonsWrapper>
                     </>
                 )}
@@ -136,7 +148,7 @@ export function SignIn(props: SignInProps) {
     );
 }
 
-function AppleButton() {
+export function AppleButton() {
     useAppleAuthentication();
 
     return (

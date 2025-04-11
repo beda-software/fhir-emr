@@ -23,9 +23,12 @@ export interface PatientDocumentProps {
     questionnaireId?: string;
     encounterId?: string;
     onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
+    autosave?: boolean;
 }
 
 export function PatientDocument(props: PatientDocumentProps) {
+    const { autosave } = props;
+
     const params = useParams<{ questionnaireId: string; encounterId?: string }>();
     const encounterId = props.encounterId || params.encounterId;
     const questionnaireId = props.questionnaireId || params.questionnaireId!;
@@ -62,7 +65,7 @@ export function PatientDocument(props: PatientDocumentProps) {
                                 }}
                                 onCancel={() => navigate(-1)}
                                 saveButtonTitle={'Complete'}
-                                autoSave={!provenance}
+                                autoSave={autosave !== undefined ? autosave : !provenance}
                                 draftSaveResponse={draftSaveResponse}
                                 setDraftSaveResponse={setDraftSaveResponse}
                             />

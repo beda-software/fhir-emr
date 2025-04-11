@@ -1,5 +1,5 @@
-import { QuestionItemProps } from 'sdc-qrf';
 import Markdown from 'react-markdown';
+import { QuestionItemProps } from 'sdc-qrf';
 
 import { Paragraph } from 'src/components/Typography';
 
@@ -12,10 +12,7 @@ export function Display({ questionItem }: QuestionItemProps) {
         <div style={{ width: '100%' }}>
             {text && (
                 <Paragraph style={{ margin: 0, fontWeight: 'bold' }}>
-                    {isMarkdown ?
-                        <Markdown>{text}</Markdown> :
-                        <TextWithLink text={text} />
-                }
+                    {isMarkdown ? <Markdown>{text}</Markdown> : <TextWithLink text={text} />}
                 </Paragraph>
             )}
             {helpText && <Paragraph style={{ margin: 0 }}>{helpText}</Paragraph>}

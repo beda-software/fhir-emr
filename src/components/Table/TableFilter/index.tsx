@@ -1,8 +1,10 @@
-import { ColumnFilterValue, isSingleDateColumn, isStringColumn } from 'src/components/SearchBar/types';
-import { SearchBarColumn } from 'src/components/SearchBar/SearchBarColumn';
-import { S } from './styles';
 import { FilterDropdownProps } from 'antd/lib/table/interface';
 import _ from 'lodash';
+
+import { SearchBarColumn } from 'src/components/SearchBar/SearchBarColumn';
+import { ColumnFilterValue, isSingleDateColumn, isStringColumn } from 'src/components/SearchBar/types';
+
+import { S } from './styles';
 
 interface Props {
     filter: ColumnFilterValue;

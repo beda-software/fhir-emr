@@ -6,8 +6,9 @@ import {
 } from 'aidbox-react/lib/services/instance';
 
 import { User } from '@beda.software/aidbox-types';
+import config from '@beda.software/emr-config';
 import { extractBundleResources, extractErrorCode, formatError } from '@beda.software/fhir-react';
-import { isFailure, isSuccess, RemoteDataResult, success } from '@beda.software/remote-data';
+import { failure, isFailure, isSuccess, RemoteDataResult, success } from '@beda.software/remote-data';
 
 import { getJitsiAuthToken, getUserInfo } from 'src/services/auth';
 import {
@@ -26,14 +27,8 @@ import {
 } from 'src/sharedState';
 import { Role, selectUserRole } from 'src/utils/role';
 
-async function defaultPopulateUserInfoSharedState(user: User) {
-    sharedAuthorizedUser.setSharedState(user);
-
-    if (!user.role) {
-        return Promise.resolve();
-    }
-
-    const fetchUserRoleDetails = selectUserRole(user, {
+export async function fetchUserRoleDetails(user: User) {
+    const userRoleDetailsInitializer = selectUserRole(user, {
         [Role.Admin]: async () => {
             const organizationId = user.role![0]!.links!.organization!.id;
             const organizationResponse = await getFHIRResource<Organization>({
@@ -91,30 +86,50 @@ async function defaultPopulateUserInfoSharedState(user: User) {
             }
         },
     });
-    await fetchUserRoleDetails();
+
+    await userRoleDetailsInitializer();
+}
+
+export async function aidboxPopulateUserInfoSharedState(): Promise<RemoteDataResult<User>> {
+    const userResponse = await getUserInfo();
+
+    if (isFailure(userResponse)) {
+        return userResponse;
+    }
+    const user = userResponse.data;
+
+    sharedAuthorizedUser.setSharedState(user);
+
+    if (!user.role) {
+        return failure({ error: 'User has no roles' });
+    }
+
+    await fetchUserRoleDetails(user);
+
+    return userResponse;
 }
 
 export async function restoreUserSession(
     token: string,
-    populateUserInfoSharedState = defaultPopulateUserInfoSharedState,
+    populateUserInfoSharedState = aidboxPopulateUserInfoSharedState,
 ): Promise<RemoteDataResult> {
     setAidboxInstanceToken({ access_token: token, token_type: 'Bearer' });
     setFHIRInstanceToken({ access_token: token, token_type: 'Bearer' });
 
-    const userResponse = await getUserInfo();
+    const response = await populateUserInfoSharedState();
 
-    if (isSuccess(userResponse)) {
-        await populateUserInfoSharedState(userResponse.data);
-
-        const jitsiAuthTokenResponse = await getJitsiAuthToken();
-        if (isSuccess(jitsiAuthTokenResponse)) {
-            sharedJitsiAuthToken.setSharedState(jitsiAuthTokenResponse.data.jwt);
-        }
-        if (isFailure(jitsiAuthTokenResponse)) {
-            console.warn('Error, while fetching Jitsi auth token: ', formatError(jitsiAuthTokenResponse.error));
+    if (isSuccess(response)) {
+        if (config.jitsiMeetServer) {
+            const jitsiAuthTokenResponse = await getJitsiAuthToken();
+            if (isSuccess(jitsiAuthTokenResponse)) {
+                sharedJitsiAuthToken.setSharedState(jitsiAuthTokenResponse.data.jwt);
+            }
+            if (isFailure(jitsiAuthTokenResponse)) {
+                console.warn('Error, while fetching Jitsi auth token: ', formatError(jitsiAuthTokenResponse.error));
+            }
         }
     } else {
-        if (extractErrorCode(userResponse.error) !== 'network_error') {
+        if (extractErrorCode(response.error) !== 'network_error') {
             resetAidboxInstanceToken();
             resetFHIRInstanceToken();
 
@@ -122,5 +137,5 @@ export async function restoreUserSession(
         }
     }
 
-    return userResponse;
+    return response;
 }

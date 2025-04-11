@@ -9,7 +9,7 @@ import { Token } from 'aidbox-react/lib/services/token';
 
 import { User } from '@beda.software/aidbox-types';
 import config from '@beda.software/emr-config';
-import { serviceFetch, isSuccess, RemoteDataResult } from '@beda.software/remote-data';
+import { serviceFetch, isSuccess, RemoteDataResult, failure, FetchError } from '@beda.software/remote-data';
 
 import {
     setInstanceToken as setFHIRInstanceToken,
@@ -22,6 +22,15 @@ export interface OAuthState {
 
 export interface AuthTokenResponse {
     access_token: string;
+    refresh_token?: string;
+    id_token?: string;
+}
+
+export interface GetAuthorizeUrlArgs {
+    authPath: string;
+    params: URLSearchParams;
+    baseUrl?: string;
+    state?: OAuthState;
 }
 
 export function parseOAuthState(state?: string): OAuthState {
@@ -36,10 +45,11 @@ export function formatOAuthState(state: OAuthState) {
     return btoa(JSON.stringify(state));
 }
 
-export function getAuthorizeUrl(state?: OAuthState) {
-    const stateStr = state ? `&state=${formatOAuthState(state)}` : '';
+export function getAuthorizeUrl(args: GetAuthorizeUrlArgs) {
+    const stateStr = args.state ? `&state=${formatOAuthState(args.state)}` : '';
+    const url = `${args.baseUrl ?? config.baseURL}/${args.authPath}?${args.params}`;
 
-    return `${config.baseURL}/auth/authorize?client_id=${config.clientId}&response_type=token${stateStr}`;
+    return `${url}${stateStr}`;
 }
 
 export function getToken() {
@@ -52,6 +62,34 @@ export function setToken(token: string) {
 
 export function removeToken() {
     window.localStorage.removeItem('token');
+}
+
+export function setRefreshToken(token: string) {
+    window.localStorage.setItem('refresh_token', token);
+}
+
+export function setIdToken(value: string) {
+    window.localStorage.setItem('id_token', value);
+}
+
+export function getIdToken() {
+    return window.localStorage.getItem('id_token');
+}
+
+export function setAuthTokenURLpath(value: string) {
+    window.localStorage.setItem('auth_token_path', value);
+}
+
+export function getAuthTokenURLpath() {
+    return window.localStorage.getItem('auth_token_path');
+}
+
+export function setAuthClientRedirectURL(value: string) {
+    window.localStorage.setItem('auth_client_redirect_url', value);
+}
+
+export function getAuthClientRedirectURL() {
+    return window.localStorage.getItem('auth_client_redirect_url');
 }
 
 interface LoginBody {
@@ -115,7 +153,7 @@ export async function signinWithIdentityToken(
     identityToken: string,
 ): Promise<RemoteDataResult> {
     const authTokenResponse = await getAuthToken(identityToken);
-    console.log('authTokenResponse', authTokenResponse);
+
     if (isSuccess(authTokenResponse)) {
         const authToken = authTokenResponse.data.access_token;
         setToken(authToken);
@@ -166,5 +204,32 @@ async function getAuthToken(appleToken: string) {
     return await serviceFetch<AuthTokenResponse>(`${config.wearablesDataStreamService}/auth/token`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${appleToken}` },
+    });
+}
+
+export async function exchangeAuthorizationCodeForToken(code: string) {
+    const tokenPath = config.authTokenPath;
+    if (tokenPath === undefined) {
+        return failure<FetchError>({ message: 'authTokenPath is not configured in emr-config package' });
+    }
+    const redirectURL = config.authClientRedirectURL;
+    if (redirectURL === undefined) {
+        return failure<FetchError>({ message: 'authClientRedirectURL is not configured in emr-config package' });
+    }
+
+    const tokenEndpoint = `${config.baseURL}/${tokenPath}`;
+    const data = {
+        grant_type: 'authorization_code',
+        code,
+        redirect_uri: redirectURL,
+        client_id: `${config.clientId}`,
+    };
+
+    return await serviceFetch<AuthTokenResponse>(tokenEndpoint, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams(data),
     });
 }

@@ -7,6 +7,7 @@ import {
     Bundle,
     Resource,
     OperationOutcome,
+    QuestionnaireResponse,
 } from 'fhir/r4b';
 import moment from 'moment';
 import {
@@ -25,17 +26,19 @@ import {
 } from '@beda.software/aidbox-types';
 import config from '@beda.software/emr-config';
 import { formatFHIRDateTime, getReference, useService } from '@beda.software/fhir-react';
-import { RemoteDataResult, isFailure, isSuccess, mapSuccess, success } from '@beda.software/remote-data';
+import { RemoteDataResult, failure, isFailure, isSuccess, mapSuccess, success } from '@beda.software/remote-data';
 
-import { saveFHIRResource, service } from 'src/services/fhir';
-
-export type { QuestionnaireResponseFormData } from 'sdc-qrf';
+import { patchFHIRResource, saveFHIRResource, service } from 'src/services/fhir';
 
 export type QuestionnaireResponseFormSaveResponse<R extends Resource = any> = {
     questionnaireResponse: FHIRQuestionnaireResponse;
     extracted: boolean;
     extractedBundle: Bundle<R>[];
-    extractedError: OperationOutcome;
+};
+
+export type QuestionnaireResponseFormSaveResponseFailure<R extends Resource = any> = {
+    questionnaireResponse?: FHIRQuestionnaireResponse;
+    extractedError?: OperationOutcome;
 };
 
 export interface QuestionnaireResponseFormProps {
@@ -191,13 +194,12 @@ export async function handleFormDataSave(
     props: QuestionnaireResponseFormProps & {
         formData: QuestionnaireResponseFormData;
     },
-): Promise<RemoteDataResult<QuestionnaireResponseFormSaveResponse>> {
+): Promise<RemoteDataResult<QuestionnaireResponseFormSaveResponse, QuestionnaireResponseFormSaveResponseFailure>> {
     const { formData, questionnaireResponseSaveService = persistSaveService, launchContextParameters } = props;
     const { formValues, context } = formData;
     const { questionnaireResponse, questionnaire } = context;
     const itemContext = calcInitialContext(formData.context, formValues);
     const enabledQuestionsFormValues = removeDisabledAnswers(questionnaire, formValues, itemContext);
-
     const finalFCEQuestionnaireResponse: FCEQuestionnaireResponse = {
         ...questionnaireResponse,
         ...mapFormToResponse(enabledQuestionsFormValues, questionnaire),
@@ -222,12 +224,17 @@ export async function handleFormDataSave(
         },
     });
     if (isFailure(constraintRemoteData)) {
-        return constraintRemoteData;
+        return failure({
+            extractedError: constraintRemoteData.error,
+        });
     }
 
     const saveQRRemoteData = await questionnaireResponseSaveService(finalFHIRQuestionnaireResponse);
+
     if (isFailure(saveQRRemoteData)) {
-        return saveQRRemoteData;
+        return failure({
+            extractedError: saveQRRemoteData.error,
+        });
     }
 
     const extractRemoteData = await service<any>({
@@ -244,13 +251,35 @@ export async function handleFormDataSave(
         },
     });
 
+    if (isFailure(extractRemoteData)) {
+        console.error('Error extracting resources from QuestionnaireResponse', extractRemoteData.error);
+
+        const errorQRData: FHIRQuestionnaireResponse = {
+            id: saveQRRemoteData.data.id,
+            resourceType: 'QuestionnaireResponse',
+            status: 'in-progress',
+        };
+
+        const saveQRRemoteDataError = await patchFHIRResource<QuestionnaireResponse>(errorQRData);
+        if (isSuccess(saveQRRemoteDataError)) {
+            return failure({
+                extractedError: extractRemoteData.error,
+                questionnaireResponse: saveQRRemoteDataError.data,
+            });
+        }
+
+        return failure({
+            extractedError: extractRemoteData.error,
+            questionnaireResponse: saveQRRemoteData.data,
+        });
+    }
+
     // TODO: save extract result info QuestionnaireResponse.extractedResources and store
     // TODO: extracted flag
 
     return success({
         questionnaireResponse: saveQRRemoteData.data,
         extracted: isSuccess(extractRemoteData),
-        extractedError: isFailure(extractRemoteData) ? extractRemoteData.error : undefined,
         extractedBundle: isSuccess(extractRemoteData) ? extractRemoteData.data : undefined,
     });
 }

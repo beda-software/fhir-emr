@@ -23,11 +23,9 @@ export function PageTabs<R extends Resource>({ tabs }: PageTabsProps<R>) {
     }));
 
     const parts = location.pathname?.split('/');
-    let activeKey: string;
-    if (parts.length === 3) {
+    let activeKey: string = parts[parts.length - 1]!;
+    if (tabs.map((t) => t.path).indexOf(activeKey) === -1) {
         activeKey = '';
-    } else {
-        activeKey = parts[parts.length - 1]!;
     }
 
     return (

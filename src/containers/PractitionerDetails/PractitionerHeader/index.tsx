@@ -66,7 +66,9 @@ function usePractitionerHeader(props: Props) {
  * @deprecated
  */
 export function PractitionerHeader(props: Props) {
-    console.warn('DEPRECATED: Do not use PractitionerHeader component. It will be removed in future versions of the EMR.');
+    console.warn(
+        'DEPRECATED: Do not use PractitionerHeader component. It will be removed in future versions of the EMR.',
+    );
     console.warn('Use PractitionerDetailsTabs instead.');
 
     const { practitionerRole } = props;

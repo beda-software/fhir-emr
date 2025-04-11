@@ -1,10 +1,10 @@
+import { InfoCircleOutlined } from '@ant-design/icons';
 import { Meta, StoryObj } from '@storybook/react';
+import styled from 'styled-components';
 
 import { withColorSchemeDecorator } from 'src/storybook/decorators';
 
 import { Report, ReportLabel, ReportProps } from './index';
-import { InfoCircleOutlined } from '@ant-design/icons';
-import styled from 'styled-components';
 
 const args: ReportProps = {
     items: [

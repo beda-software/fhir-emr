@@ -63,11 +63,11 @@ msgstr ""
 msgid "Activity"
 msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/Group/RepeatableGroups/index.tsx:79
+#: src/components/BaseQuestionnaireResponseForm/widgets/Group/RepeatableGroups/index.tsx:82
 msgid "Add {text}"
 msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/Group/RepeatableGroups/index.tsx:79
+#: src/components/BaseQuestionnaireResponseForm/widgets/Group/RepeatableGroups/index.tsx:82
 msgid "Add another answer"
 msgstr ""
 
@@ -144,7 +144,7 @@ msgstr ""
 msgid "Allergies"
 msgstr ""
 
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:151
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:154
 msgid "Amend"
 msgstr ""
 
@@ -176,11 +176,11 @@ msgstr ""
 msgid "Appointment successfully rescheduled"
 msgstr ""
 
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:146
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:149
 msgid "Are you sure you want to amend the document?"
 msgstr ""
 
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:171
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:175
 msgid "Are you sure you want to delete the document?"
 msgstr ""
 
@@ -348,7 +348,7 @@ msgid "Confirm Medication Request"
 msgstr ""
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:104
-#: src/containers/PatientDetails/PatientResources/utils.tsx:184
+#: src/containers/PatientDetails/PatientResources/utils.tsx:189
 msgid "Consents"
 msgstr ""
 
@@ -421,9 +421,9 @@ msgstr ""
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:256
 #: src/containers/PatientDetails/PatientResources/utils.tsx:97
 #: src/containers/PatientDetails/PatientResources/utils.tsx:136
-#: src/containers/PatientDetails/PatientResources/utils.tsx:175
-#: src/containers/PatientDetails/PatientResources/utils.tsx:212
-#: src/containers/PatientDetails/PatientResources/utils.tsx:259
+#: src/containers/PatientDetails/PatientResources/utils.tsx:180
+#: src/containers/PatientDetails/PatientResources/utils.tsx:217
+#: src/containers/PatientDetails/PatientResources/utils.tsx:264
 #: src/containers/Prescriptions/index.tsx:136
 msgid "Date"
 msgstr ""
@@ -440,7 +440,7 @@ msgstr ""
 msgid "Date collected"
 msgstr ""
 
-#: src/containers/PatientDetails/PatientResources/utils.tsx:333
+#: src/containers/PatientDetails/PatientResources/utils.tsx:338
 msgid "Date created"
 msgstr ""
 
@@ -460,7 +460,7 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:176
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:180
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:140
 msgid "Delete"
 msgstr ""
@@ -537,7 +537,7 @@ msgstr ""
 
 #: src/components/ModalEditHealthcareService/index.tsx:21
 #: src/containers/EncounterDetails/AIScribe/index.tsx:197
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:184
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:188
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/EditPatient/index.tsx:23
 #: src/containers/PatientList/index.tsx:125
 #: src/containers/PractitionerDetails/PractitionerOverview/index.tsx:67
@@ -618,7 +618,7 @@ msgstr ""
 msgid "Error deleting a draft"
 msgstr ""
 
-#: src/components/QuestionnaireResponseForm/index.tsx:69
+#: src/components/QuestionnaireResponseForm/utils.tsx:42
 msgid "Error saving a draft:"
 msgstr ""
 
@@ -680,7 +680,7 @@ msgstr ""
 msgid "First name"
 msgstr ""
 
-#: src/components/QuestionnaireResponseForm/index.tsx:111
+#: src/components/QuestionnaireResponseForm/utils.tsx:84
 msgid "Form successfully saved"
 msgstr ""
 
@@ -714,7 +714,7 @@ msgid "Go to the encounter"
 msgstr ""
 
 #: src/components/BaseQuestionnaireResponseForm/widgets/Group/GroupCard/index.tsx:66
-#: src/components/BaseQuestionnaireResponseForm/widgets/Group/GroupCard/index.tsx:89
+#: src/components/BaseQuestionnaireResponseForm/widgets/Group/GroupCard/index.tsx:96
 msgid "Group"
 msgstr ""
 
@@ -739,7 +739,7 @@ msgstr ""
 msgid "Here will be your questionnaire"
 msgstr ""
 
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:160
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:163
 msgid "History"
 msgstr ""
 
@@ -796,13 +796,14 @@ msgstr ""
 msgid "Issued"
 msgstr ""
 
+#: src/components/BaseQuestionnaireResponseForm/widgets/Group/RepeatableGroups/RepeatableGroupCard/index.tsx:19
 #: src/containers/InvoiceDetails/index.tsx:70
 msgid "Item"
 msgstr ""
 
 #: src/components/BaseQuestionnaireResponseForm/widgets/Group/RepeatableGroups/RepeatableGroupCard.tsx:22
-msgid "Item {0}"
-msgstr ""
+#~ msgid "Item {0}"
+#~ msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:102
 msgid "Item Control"
@@ -824,11 +825,11 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:89
+#: src/containers/SignIn/index.tsx:95
 msgid "Log in"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:127
+#: src/containers/SignIn/index.tsx:133
 msgid "Log in as demo patient"
 msgstr ""
 
@@ -908,8 +909,8 @@ msgstr ""
 #: src/containers/PatientDetails/PatientResources/utils.tsx:51
 #: src/containers/PatientDetails/PatientResources/utils.tsx:86
 #: src/containers/PatientDetails/PatientResources/utils.tsx:125
-#: src/containers/PatientDetails/PatientResources/utils.tsx:164
-#: src/containers/PatientDetails/PatientResources/utils.tsx:200
+#: src/containers/PatientDetails/PatientResources/utils.tsx:169
+#: src/containers/PatientDetails/PatientResources/utils.tsx:205
 #: src/containers/PatientList/index.tsx:79
 #: src/containers/PatientResourceListExample/index.tsx:41
 #: src/containers/PractitionerList/index.tsx:106
@@ -926,8 +927,8 @@ msgstr "Name"
 msgid "New Appointment"
 msgstr ""
 
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:148
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:173
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:151
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:177
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:137
 #: src/utils/questionnaire.ts:63
 msgid "No"
@@ -975,7 +976,7 @@ msgstr ""
 msgid "Number of Patients"
 msgstr ""
 
-#: src/containers/PatientDetails/PatientResources/utils.tsx:231
+#: src/containers/PatientDetails/PatientResources/utils.tsx:236
 msgid "Observations"
 msgstr ""
 
@@ -984,8 +985,8 @@ msgstr ""
 msgid "On Hold"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:46
-#: src/containers/SignIn/index.tsx:95
+#: src/containers/SignIn/index.tsx:52
+#: src/containers/SignIn/index.tsx:101
 msgid "On the next page, please, use one of the following credentials"
 msgstr ""
 
@@ -1041,8 +1042,8 @@ msgstr ""
 msgid "Packaging"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:77
-#: src/containers/SignIn/index.tsx:114
+#: src/containers/SignIn/index.tsx:83
+#: src/containers/SignIn/index.tsx:120
 msgid "Password"
 msgstr ""
 
@@ -1106,7 +1107,7 @@ msgstr ""
 #: src/containers/InvoiceList/components/InvoiceListSearchBar/index.tsx:32
 #: src/containers/InvoiceList/tableUtils.tsx:114
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:140
-#: src/containers/PatientDetails/PatientResources/utils.tsx:222
+#: src/containers/PatientDetails/PatientResources/utils.tsx:227
 msgid "Practitioner"
 msgstr ""
 
@@ -1120,7 +1121,7 @@ msgstr ""
 msgid "Practitioners"
 msgstr ""
 
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:138
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:141
 msgid "Prepare for print"
 msgstr ""
 
@@ -1160,7 +1161,7 @@ msgstr ""
 msgid "Rate"
 msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/Group/GroupCard/index.tsx:77
+#: src/components/BaseQuestionnaireResponseForm/widgets/Group/GroupCard/index.tsx:84
 msgid "Remove"
 msgstr ""
 
@@ -1313,7 +1314,7 @@ msgstr ""
 #~ msgid "Service"
 #~ msgstr ""
 
-#: src/containers/PatientDetails/PatientResources/utils.tsx:307
+#: src/containers/PatientDetails/PatientResources/utils.tsx:312
 msgid "Service Requests"
 msgstr ""
 
@@ -1393,7 +1394,8 @@ msgstr ""
 #: src/containers/InvoiceDetails/components/InvoiceDetailsHeader/index.tsx:26
 #: src/containers/InvoiceList/components/InvoiceListSearchBar/index.tsx:50
 #: src/containers/InvoiceList/tableUtils.tsx:136
-#: src/containers/PatientDetails/PatientResources/utils.tsx:344
+#: src/containers/PatientDetails/PatientResources/utils.tsx:164
+#: src/containers/PatientDetails/PatientResources/utils.tsx:349
 #: src/containers/Prescriptions/components/PrescriptionsSearchBar/index.tsx:64
 #: src/containers/Prescriptions/index.tsx:130
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:77
@@ -1525,8 +1527,8 @@ msgstr ""
 
 #: src/containers/PatientDetails/PatientOrders/index.tsx:28
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/NoteList/index.tsx:33
-#: src/containers/PatientDetails/PatientResources/utils.tsx:247
-#: src/containers/PatientDetails/PatientResources/utils.tsx:321
+#: src/containers/PatientDetails/PatientResources/utils.tsx:252
+#: src/containers/PatientDetails/PatientResources/utils.tsx:326
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:54
 msgid "Title"
 msgstr ""
@@ -1589,13 +1591,13 @@ msgstr ""
 msgid "User with no roles in the system"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:49
-#: src/containers/SignIn/index.tsx:98
+#: src/containers/SignIn/index.tsx:55
+#: src/containers/SignIn/index.tsx:104
 msgid "Username"
 msgstr ""
 
 #: src/containers/PatientDetails/PatientOrders/index.tsx:61
-#: src/containers/PatientDetails/PatientResources/utils.tsx:270
+#: src/containers/PatientDetails/PatientResources/utils.tsx:275
 msgid "Value"
 msgstr ""
 
@@ -1609,7 +1611,7 @@ msgstr ""
 
 #: src/components/PatientEncounter/index.tsx:62
 #: src/containers/EncounterList/index.tsx:90
-#: src/containers/VideoCall/index.tsx:28
+#: src/containers/VideoCall/index.tsx:26
 msgid "Video call"
 msgstr ""
 
@@ -1626,7 +1628,7 @@ msgstr ""
 msgid "Week"
 msgstr ""
 
-#: src/containers/SignIn/index.tsx:33
+#: src/containers/SignIn/index.tsx:39
 msgid "Welcome to"
 msgstr ""
 
@@ -1634,8 +1636,8 @@ msgstr ""
 msgid "y.o."
 msgstr ""
 
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:147
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:172
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:150
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:176
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:136
 #: src/utils/questionnaire.ts:63
 msgid "Yes"

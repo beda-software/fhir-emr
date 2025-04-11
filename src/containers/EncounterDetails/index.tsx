@@ -128,7 +128,7 @@ export const EncounterDetails = (props: EncounterDetailsProps) => {
                                             <ModalCompleteEncounter
                                                 onSuccess={manager.reload}
                                                 encounter={encounter}
-                                                disabled={disableControls}
+                                                disabled={false}
                                             />
                                         )}
                                     </S.EncounterControls>
@@ -153,6 +153,7 @@ export const EncounterDetails = (props: EncounterDetailsProps) => {
                                     encounterId={encounter.id}
                                     reloadDocuments={reload}
                                     recorderControls={recorderControls}
+                                    isEncounterCompleted={isEncounterCompleted}
                                 />
                             ) : null}
                             <EncounterApps patient={patient} encounter={encounter} />

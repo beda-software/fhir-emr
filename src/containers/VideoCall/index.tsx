@@ -20,8 +20,6 @@ export function VideoCall() {
     const practitionerName = renderHumanName(encounter.practitioner?.name?.[0]);
     const practitionerEmail = `${encounter.practitioner?.telecom?.find((t: ContactPoint) => t.system === 'email')
         ?.value}`;
-    const patientName = renderHumanName(encounter.patient?.name?.[0]);
-    const roomName = [...practitionerName.split(' '), ...patientName.split(' ')].join('-').toLowerCase();
     const jwtAuthToken = sharedJitsiAuthToken.getSharedState();
 
     return (
@@ -30,7 +28,7 @@ export function VideoCall() {
             <S.Content>
                 <JitsiMeeting
                     domain={config.jitsiMeetServer}
-                    roomName={roomName}
+                    roomName={encounter.id}
                     jwt={jwtAuthToken}
                     configOverwrite={{
                         startWithAudioMuted: true,

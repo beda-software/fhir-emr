@@ -11,6 +11,7 @@ import {
 } from 'fhir/r4b';
 import _ from 'lodash';
 import { useNavigate } from 'react-router-dom';
+import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
 import { getReference, useService, WithId } from '@beda.software/fhir-react';
 import {
@@ -28,7 +29,6 @@ import {
     handleFormDataSave,
     loadQuestionnaireResponseFormData,
     questionnaireIdLoader,
-    QuestionnaireResponseFormData,
     QuestionnaireResponseFormProps,
     QuestionnaireResponseFormSaveResponse,
 } from 'src/hooks/questionnaire-response-form-data';
@@ -36,7 +36,7 @@ import { getProvenanceByEntity } from 'src/services/provenance';
 
 export interface Props {
     patient: Patient;
-    author: WithId<Practitioner | Patient | Organization|Person>;
+    author: WithId<Practitioner | Patient | Organization | Person>;
     questionnaireResponse?: WithId<QuestionnaireResponse>;
     questionnaireId: string;
     encounterId?: string;

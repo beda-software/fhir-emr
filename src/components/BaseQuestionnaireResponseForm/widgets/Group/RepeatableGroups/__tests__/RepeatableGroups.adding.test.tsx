@@ -2,7 +2,7 @@ import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
 import { screen, render, act, fireEvent, waitFor } from '@testing-library/react';
 import { Patient, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
-import { expect, test, vi } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 
 import { getFHIRResources } from 'aidbox-react/lib/services/fhir';
 import { axiosInstance } from 'aidbox-react/lib/services/instance';
@@ -99,6 +99,7 @@ describe('Repeatable group creates correct questionnaire response', async () => 
                         author={practitioner}
                         questionnaireId="repeatable-group"
                         onSuccess={onSuccess}
+                        autosave={false}
                     />
                 </I18nProvider>
             </ThemeProvider>,
@@ -222,6 +223,10 @@ describe('Repeatable group creates correct questionnaire response', async () => 
                     "QuestionnaireResponse.repeat(item).where(linkId='repeatable-group-text')",
                 );
                 expect(repeatableGroupTexts.length).toBe(caseData.case.length);
+
+                repeatableGroupTexts.forEach((text, textIndex) => {
+                    expect(text!.answer[0].value.string).toBe(caseData.case[textIndex]!.text);
+                });
 
                 repeatableGroupTexts.forEach((text, textIndex) => {
                     expect(text!.answer[0].value.string).toBe(caseData.case[textIndex]!.text);

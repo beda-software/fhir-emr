@@ -1,6 +1,6 @@
 import { Upload } from 'antd';
-import { QuestionItemProps } from 'sdc-qrf';
 import classNames from 'classnames';
+import { QuestionItemProps } from 'sdc-qrf';
 
 import s from './ReadonlyWidgets.module.scss';
 import { S } from './ReadonlyWidgets.styles';

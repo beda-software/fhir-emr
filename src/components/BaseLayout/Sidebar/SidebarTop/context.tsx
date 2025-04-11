@@ -40,6 +40,7 @@ const defaultMenuLayout: MenuLayoutValue = () =>
             { label: t`Invoices`, path: '/invoices', icon: <InvoicesIcon /> },
         ],
         [Role.Receptionist]: () => [
+            { label: t`Patients`, path: '/patients', icon: <PatientsIcon /> },
             { label: t`Scheduling`, path: '/scheduling', icon: <EncountersIcon /> },
             { label: t`Invoices`, path: '/invoices', icon: <InvoicesIcon /> },
             { label: t`Medications`, path: '/medications', icon: <MedicationsIcon /> },

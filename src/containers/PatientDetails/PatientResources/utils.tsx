@@ -20,7 +20,9 @@ import { ResourceTable, Option } from 'src/components/ResourceTable';
 import { compileAsArray } from 'src/utils';
 import { formatHumanDate, formatHumanDateTime } from 'src/utils/date';
 
-const getInterpretation = compileAsArray<Observation, string>('Observation.interpretation.coding.display');
+const getInterpretation = compileAsArray<Observation, string>(
+    'Observation.interpretation.text | Observation.interpretation.coding.display',
+);
 
 function getComponentValue(c: ObservationComponent) {
     if (c.dataAbsentReason) {
@@ -114,7 +116,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     resourceType="AllergyIntolerance"
                     params={{
                         patient: patient.id,
-                        _sort: ['-_date', '_id'],
+                        _sort: ['-date', '_id'],
                         _revinclude: ['Provenance:target'],
                     }}
                     getTableColumns={option.getTableColumns}
@@ -153,13 +155,18 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     resourceType="Immunization"
                     params={{
                         patient: patient.id,
-                        _sort: ['-_date', '_id'],
+                        _sort: ['-date', '_id'],
                         _revinclude: ['Provenance:target'],
                     }}
                     getTableColumns={option.getTableColumns}
                 />
             ),
             getTableColumns: (provenanceList: Provenance[] = []) => [
+                {
+                    title: t`Status`,
+                    key: 'status',
+                    render: ({ status }: Immunization) => status,
+                },
                 {
                     title: t`Name`,
                     key: 'name',
@@ -275,6 +282,12 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                             return `${resource.valueQuantity.value} ${
                                 resource.valueQuantity.unit ?? ''
                             } ${interpretation}`;
+                        } else if (resource.valueInteger) {
+                            const interpretation = getInterpretation(resource).join(', ');
+                            return `${resource.valueInteger} ${interpretation}`;
+                        } else if (resource.valueString) {
+                            const interpretation = getInterpretation(resource).join(', ');
+                            return `${resource.valueString} ${interpretation}`;
                         } else if (resource.component) {
                             return (
                                 <>

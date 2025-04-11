@@ -16,9 +16,9 @@ import {
 import { CreatinineDashboardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/CreatinineDashboardContainer';
 import { GeneralInformationDashboardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer';
 import { StandardCardContainerFabric } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/StandardCardContainerFabric';
+import { SummaryContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/SummaryCardContainer';
 
 import { AppointmentCardContainer } from '../PatientOverviewDynamic/containers/AppointmentCardContainer';
-import { SummaryContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/SummaryCardContainer';
 
 export const patientDashboardConfig: DashboardInstance = {
     top: [
@@ -56,7 +56,7 @@ export const patientDashboardConfig: DashboardInstance = {
                 resourceType: 'AllergyIntolerance',
                 search: (patient: Patient) => ({
                     patient: patient.id,
-                    _sort: ['-_date'],
+                    _sort: ['-date'],
                     _revinclude: ['Provenance:target'],
                     _count: 7,
                 }),
@@ -106,7 +106,8 @@ export const patientDashboardConfig: DashboardInstance = {
                 resourceType: 'Immunization',
                 search: (patient: Patient) => ({
                     patient: patient.id,
-                    _sort: ['-_date'],
+                    status: 'completed',
+                    _sort: ['-date'],
                     _revinclude: ['Provenance:target'],
                     _count: 7,
                 }),
