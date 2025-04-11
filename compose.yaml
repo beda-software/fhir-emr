@@ -20,7 +20,7 @@ services:
         env_file:
             - ./env/sdc-ide
     sdc:
-        image: bedasoftware/fhir-sdc:master
+        image: bedasoftware/fhir-sdc:1.0.0a3
         depends_on:
             devbox-healthcheck:
                 condition: service_healthy

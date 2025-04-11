@@ -90,7 +90,7 @@ function prepareFormInitialParams(
         provenanceBundle,
     } = props;
 
-    const params = {
+    const params: QuestionnaireResponseFormProps = {
         questionnaireLoader: questionnaireIdLoader(questionnaireId),
         launchContextParameters: [
             { name: 'Patient', resource: patient },

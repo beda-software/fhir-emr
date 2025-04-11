@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { useContext, useState } from 'react';
 import { useFormState, useWatch } from 'react-hook-form';
 import { GroupItemProps, QuestionItems } from 'sdc-qrf';
@@ -27,6 +26,7 @@ export function GroupWizardWithTooltips(props: GroupWizardProps) {
 
 export function GroupWizard(props: GroupWizardProps) {
     const { parentPath, questionItem, context } = props;
+    const baseQRFPropsContext = useContext(BaseQuestionnaireResponseFormPropsContext);
 
     const [currentIndex, setCurrentIndex] = useState(0);
     const { item = [], linkId } = questionItem;
@@ -51,8 +51,6 @@ export function GroupWizard(props: GroupWizardProps) {
     const onStepChange = (value: number) => {
         setCurrentIndex(value);
     };
-
-    const qrFormProps = useContext(BaseQuestionnaireResponseFormPropsContext);
 
     if (parentPath.length !== 0) {
         console.error('The wizard item control must be in root group');
@@ -89,7 +87,7 @@ export function GroupWizard(props: GroupWizardProps) {
                 canGoBack={currentIndex > 0}
                 canGoForward={currentIndex + 1 < itemsCount}
             >
-                {qrFormProps && <S.FormFooter {...qrFormProps} submitDisabled={!isLastStepActive} />}
+                {baseQRFPropsContext && <S.FormFooter {...baseQRFPropsContext} submitDisabled={!isLastStepActive} />}
             </S.WizardFooter>
         </Wizard>
     );
