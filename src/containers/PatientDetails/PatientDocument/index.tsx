@@ -6,7 +6,7 @@ import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { AnxietyScore, DepressionScore } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/score';
 import { Spinner } from 'src/components/Spinner';
-import { QuestionnaireResponseFormSaveResponse } from 'src/hooks';
+import { QuestionnaireResponseDraftService, QuestionnaireResponseFormSaveResponse } from 'src/hooks';
 
 import s from './PatientDocument.module.scss';
 import { S } from './PatientDocument.styles';
@@ -22,10 +22,11 @@ export interface PatientDocumentProps {
     encounterId?: string;
     onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
     autosave?: boolean;
+    qrDraftServiceType?: QuestionnaireResponseDraftService;
 }
 
 export function PatientDocument(props: PatientDocumentProps) {
-    const { autosave } = props;
+    const { autosave, qrDraftServiceType = 'local' } = props;
 
     const params = useParams<{ questionnaireId: string; encounterId?: string }>();
     const encounterId = props.encounterId || params.encounterId;
@@ -55,7 +56,7 @@ export function PatientDocument(props: PatientDocumentProps) {
                                 onCancel={() => navigate(-1)}
                                 saveButtonTitle={'Complete'}
                                 autoSave={autosave !== undefined ? autosave : !provenance}
-                                qrDraftServiceType={'local'}
+                                qrDraftServiceType={qrDraftServiceType}
                             />
                         </>
                     )}

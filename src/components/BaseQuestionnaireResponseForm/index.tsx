@@ -23,6 +23,7 @@ import * as yup from 'yup';
 import 'react-phone-input-2/lib/style.css';
 
 import { Questionnaire as FCEQuestionnaire } from '@beda.software/aidbox-types';
+import { uuid4 } from '@beda.software/fhir-react';
 
 import {
     deleteQuestionnaireResponseDraft,
@@ -73,10 +74,12 @@ export interface BaseQuestionnaireResponseFormProps {
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
     const { onSubmit, formData, readOnly, ItemWrapper, GroupWrapper, autoSave, qrDraftServiceType = 'local' } = props;
 
+    const isCreating = formData.context.questionnaireResponse.id === undefined;
+    if (isCreating) {
+        formData.context.questionnaireResponse.id = uuid4();
+    }
     const questionnaireId = formData.context.questionnaire.assembledFrom;
-    const questionnaireResponseId = formData.context.questionnaireResponse.id;
-    const isCreating = !formData.context.questionnaireResponse.id;
-    const draftId = isCreating ? questionnaireId : questionnaireResponseId;
+    const draftId = isCreating ? questionnaireId : formData.context.questionnaireResponse.id;
 
     const loadDraft = useCallback(
         (draftId: Resource['id'], formData: QuestionnaireResponseFormData) => {

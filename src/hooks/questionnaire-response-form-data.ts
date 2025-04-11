@@ -120,8 +120,11 @@ export const inMemorySaveService: QuestionnaireResponseSaveService = (qr: FHIRQu
 export const persistSaveService: QuestionnaireResponseSaveService = (qr: FHIRQuestionnaireResponse) =>
     saveFHIRResource(qr);
 
-export const persistDraftSaveService: QuestionnaireResponseDraftSaveService = (qr: FHIRQuestionnaireResponse) => {
-    const isCreating = qr.id === undefined;
+export const persistDraftSaveService: QuestionnaireResponseDraftSaveService = (
+    qr: FHIRQuestionnaireResponse,
+    id: Resource['id'],
+) => {
+    const isCreating = qr.id !== id;
 
     const response = isCreating
         ? saveFHIRResource(qr)
@@ -147,7 +150,7 @@ export const persistDraftLoadService: QuestionnaireResponseDraftLoadService = (i
         return failure(t`Resource id is not provided`);
     }
 
-    return success({} as FHIRQuestionnaireResponse);
+    return failure({} as FHIRQuestionnaireResponse);
 };
 
 export const localStorageDraftLoadService: QuestionnaireResponseDraftLoadService = (id: Resource['id']) => {
