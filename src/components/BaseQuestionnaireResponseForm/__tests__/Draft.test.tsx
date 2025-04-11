@@ -56,6 +56,7 @@ async function renderForm(
 
     return onSuccess;
 }
+
 describe('Draft questionnaire response saves correctly with server backend', async () => {
     test('Test QuestionnaireResponse autosave', async () => {
         const testFieldValue = 'Test 1';
@@ -192,6 +193,24 @@ describe('Draft questionnaire response saves correctly with server backend', asy
 });
 
 describe('Draft questionnaire response saves correctly with local storage backend', async () => {
+    beforeEach(() => {
+        // Mock localStorage, because it wasn't available in the test environment
+        const store: Record<string, string> = {};
+
+        global.localStorage = {
+            getItem: (key) => store[key] || null,
+            setItem: (key, value) => {
+                store[key] = value;
+            },
+            removeItem: (key) => {
+                delete store[key];
+            },
+            clear: () => {
+                Object.keys(store).forEach((key) => delete store[key]);
+            },
+        } as Storage;
+    });
+
     test('Test QuestionnaireResponse autosave with local storage backend', async () => {
         const testFieldValue = 'Test 1';
 
@@ -209,6 +228,20 @@ describe('Draft questionnaire response saves correctly with local storage backen
             });
         });
 
+        expect(localStorage.getItem('repeatable-group')).toBeNull();
+
+        await new Promise((r) => setTimeout(r, 3000));
+
+        expect(localStorage.getItem('repeatable-group')).toBeDefined();
+        const localStorageQR = JSON.parse(localStorage.getItem('repeatable-group')!);
+        expect(localStorageQR).toBeDefined();
+        expect(localStorageQR.questionnaire).toBe('repeatable-group');
+        expect(localStorageQR.status).toBe('in-progress');
+        expect(localStorageQR.subject).toBeDefined();
+        expect(localStorageQR.subject.id).toBe(patient.id);
+        expect(localStorageQR.item).toBeDefined();
+        expect(localStorageQR.item[0].item[0].item[0].answer[0].value.string).toBe(testFieldValue);
+
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
                 getFHIRResources('QuestionnaireResponse', {
@@ -224,7 +257,7 @@ describe('Draft questionnaire response saves correctly with local storage backen
     }, 60000);
 
     test('Test QuestionnaireResponse is not duplicated by autosave', async () => {
-        const testFieldValue = 'Test 1';
+        const testFieldValue = 'Test 2';
 
         const { patient, practitioner } = await setup();
 
@@ -240,6 +273,8 @@ describe('Draft questionnaire response saves correctly with local storage backen
             });
         });
 
+        expect(localStorage.getItem('repeatable-group')).toBeNull();
+
         const submitButton = await screen.findByTestId('submit-button');
         expect(submitButton).toBeEnabled();
 
@@ -249,7 +284,9 @@ describe('Draft questionnaire response saves correctly with local storage backen
 
         await waitFor(() => expect(onSuccess).toHaveBeenCalled());
 
-        await new Promise((r) => setTimeout(r, 2000));
+        await new Promise((r) => setTimeout(r, 3000));
+
+        expect(localStorage.getItem('repeatable-group')).toBeNull();
 
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
@@ -265,7 +302,8 @@ describe('Draft questionnaire response saves correctly with local storage backen
     }, 60000);
 
     test("Test QuestionnaireResponse autosave doesn't reset completed status", async () => {
-        const testFieldValue = 'Test 1';
+        const testFieldValue = 'Test 3';
+        const testFieldUpdateValue = 'update value';
 
         const { patient, practitioner } = await setup();
 
@@ -280,25 +318,36 @@ describe('Draft questionnaire response saves correctly with local storage backen
                 target: { value: testFieldValue },
             });
         });
+        expect(localStorage.getItem('repeatable-group')).toBeNull();
 
-        await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
-            service: () =>
-                getFHIRResources('QuestionnaireResponse', {
-                    questionnaire: 'repeatable-group',
-                    status: 'in-progress',
-                    _sort: ['-createdAt', '_id'],
-                }),
+        await waitForAPIProcess<string | null>({
+            service: () => Promise.resolve(localStorage.getItem('repeatable-group')),
             resolver: (result) => {
-                const qrs = extractBundleResources(ensure(result)).QuestionnaireResponse;
-                return qrs.length === 0;
+                return result !== null;
             },
         });
 
+        expect(localStorage.getItem('repeatable-group')).toBeDefined();
+        const localStorageQR = JSON.parse(localStorage.getItem('repeatable-group')!);
+        expect(localStorageQR.item[0].item[0].item[0].answer[0].value.string).toBe(testFieldValue);
+
         act(() => {
             fireEvent.change(textInput, {
-                target: { value: 'update value' },
+                target: { value: testFieldUpdateValue },
             });
         });
+
+        await waitForAPIProcess<string | null>({
+            service: () => Promise.resolve(localStorage.getItem('repeatable-group')),
+            resolver: (result) => {
+                const localStorageQR = JSON.parse(result!);
+                const fieldValue = localStorageQR.item[0].item[0].item[0].answer[0].value.string;
+                return fieldValue === testFieldUpdateValue;
+            },
+        });
+
+        const localStorageQRupdate = JSON.parse(localStorage.getItem('repeatable-group')!);
+        expect(localStorageQRupdate.item[0].item[0].item[0].answer[0].value.string).toBe(testFieldUpdateValue);
 
         const submitButton = await screen.findByTestId('submit-button');
         expect(submitButton).toBeEnabled();
@@ -323,5 +372,6 @@ describe('Draft questionnaire response saves correctly with local storage backen
                 return qrs.length === 1;
             },
         });
+        expect(localStorage.getItem('repeatable-group')).toBeNull();
     }, 60000);
 });
