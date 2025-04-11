@@ -4,7 +4,7 @@ import { Button } from 'antd';
 import _ from 'lodash';
 import React, { ReactNode } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { GroupItemProps } from 'sdc-qrf';
+import { GroupItemProps, getItemKey, populateItemKey } from 'sdc-qrf';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 
@@ -12,7 +12,6 @@ import { RepeatableGroupCard } from './RepeatableGroupCard';
 import { RepeatableGroupRow } from './RepeatableGroupRow';
 import { S } from './styles';
 import { RepeatableGroupProps } from './types';
-import { populateItemsWithKeys } from './utils';
 
 export { RepeatableGroupCard, RepeatableGroupRow };
 
@@ -23,7 +22,7 @@ interface RepeatableGroupsProps {
 }
 
 function defaultBuildValue(exisingItems: Array<any>) {
-    return [...exisingItems, {}];
+    return [...exisingItems, populateItemKey({})];
 }
 
 export function RepeatableGroups(props: RepeatableGroupsProps) {
@@ -39,7 +38,7 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
 
     const value = _.get(getValues(), fieldName);
 
-    const items = populateItemsWithKeys(value?.items && value.items.length ? value.items : required ? [{}] : []);
+    const items = value?.items && value.items.length ? value.items : required ? [{}] : [];
 
     const buildValue = props.buildValue ?? defaultBuildValue;
 
@@ -50,8 +49,10 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
                     return null;
                 }
 
+                const key = getItemKey(item) || getItemKey(value);
+
                 return renderGroup ? (
-                    <React.Fragment key={item.key}>
+                    <React.Fragment key={key}>
                         {renderGroup({
                             index,
                             items,
@@ -61,7 +62,7 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
                     </React.Fragment>
                 ) : (
                     <RepeatableGroupCard
-                        key={item.key}
+                        key={key}
                         index={index}
                         items={items}
                         onChange={onChange}
@@ -77,7 +78,7 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
                         type="primary"
                         ghost
                         onClick={() => {
-                            const updatedInput = { items: buildValue(items ?? []) };
+                            const updatedInput = { ...value, items: buildValue(items ?? []) };
                             onChange(updatedInput);
                         }}
                         size="middle"
