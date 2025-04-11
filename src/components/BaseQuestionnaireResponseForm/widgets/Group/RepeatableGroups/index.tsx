@@ -22,13 +22,13 @@ interface RepeatableGroupsProps {
 }
 
 function defaultBuildValue(exisingItems: Array<any>) {
-    return [...exisingItems, populateItemKey({})];
+    return [...exisingItems, {}];
 }
 
 export function RepeatableGroups(props: RepeatableGroupsProps) {
-    const { groupItem, renderGroup } = props;
+    const { groupItem, renderGroup, buildValue = defaultBuildValue } = props;
     const { parentPath, questionItem } = groupItem;
-    const { linkId, required, text } = questionItem;
+    const { linkId, text } = questionItem;
 
     const fieldName = [...parentPath, linkId];
 
@@ -38,9 +38,9 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
 
     const value = _.get(getValues(), fieldName);
 
-    const items = value?.items && value.items.length ? value.items : required ? [{}] : [];
+    const populateValue = (exisingItems: Array<any>) => (buildValue(exisingItems) || []).map(populateItemKey);
 
-    const buildValue = props.buildValue ?? defaultBuildValue;
+    const items = value?.items || [];
 
     return (
         <S.Group>
@@ -49,7 +49,7 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
                     return null;
                 }
 
-                const key = getItemKey(item) || getItemKey(value);
+                const key = getItemKey(item);
 
                 return renderGroup ? (
                     <React.Fragment key={key}>
@@ -78,7 +78,7 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
                         type="primary"
                         ghost
                         onClick={() => {
-                            const updatedInput = { ...value, items: buildValue(items ?? []) };
+                            const updatedInput = { ...value, items: populateValue(items ?? []) };
                             onChange(updatedInput);
                         }}
                         size="middle"
