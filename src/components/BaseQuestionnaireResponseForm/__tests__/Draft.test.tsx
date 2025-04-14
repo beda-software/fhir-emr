@@ -32,7 +32,8 @@ async function setup() {
 async function renderForm(
     patient: Patient,
     practitioner: WithId<Practitioner>,
-    qrDraftServiceType: QuestionnaireResponseDraftService,
+    autoSave: boolean,
+    qrDraftServiceType?: QuestionnaireResponseDraftService,
 ) {
     const onSuccess = vi.fn();
 
@@ -48,7 +49,7 @@ async function renderForm(
                     author={practitioner}
                     questionnaireId="repeatable-group"
                     onSuccess={onSuccess}
-                    autosave={true}
+                    autosave={autoSave}
                     qrDraftServiceType={qrDraftServiceType}
                 />
             </I18nProvider>
@@ -64,7 +65,7 @@ describe('Draft questionnaire response saves correctly with server backend', asy
 
         const { patient, practitioner } = await setup();
 
-        await renderForm(patient, practitioner, 'server');
+        await renderForm(patient, practitioner, true, 'server');
 
         const textField = await screen.findByTestId('repeatable-group-text');
         expect(textField).toBeEnabled();
@@ -113,7 +114,7 @@ describe('Draft questionnaire response saves correctly with server backend', asy
 
         const { patient, practitioner } = await setup();
 
-        const onSuccess = await renderForm(patient, practitioner, 'server');
+        const onSuccess = await renderForm(patient, practitioner, true, 'server');
 
         const textField = await screen.findByTestId('repeatable-group-text');
         expect(textField).toBeEnabled();
@@ -171,7 +172,7 @@ describe('Draft questionnaire response saves correctly with server backend', asy
 
         const { patient, practitioner } = await setup();
 
-        const onSuccess = await renderForm(patient, practitioner, 'server');
+        const onSuccess = await renderForm(patient, practitioner, true, 'server');
 
         const textField = await screen.findByTestId('repeatable-group-text');
         expect(textField).toBeEnabled();
@@ -252,7 +253,7 @@ describe('Draft questionnaire response saves correctly with local storage backen
 
         const { patient, practitioner } = await setup();
 
-        await renderForm(patient, practitioner, 'local');
+        await renderForm(patient, practitioner, true, 'local');
 
         const textField = await screen.findByTestId('repeatable-group-text');
         expect(textField).toBeEnabled();
@@ -297,7 +298,7 @@ describe('Draft questionnaire response saves correctly with local storage backen
 
         const { patient, practitioner } = await setup();
 
-        const onSuccess = await renderForm(patient, practitioner, 'local');
+        const onSuccess = await renderForm(patient, practitioner, true, 'local');
 
         const textField = await screen.findByTestId('repeatable-group-text');
         expect(textField).toBeEnabled();
@@ -343,7 +344,7 @@ describe('Draft questionnaire response saves correctly with local storage backen
 
         const { patient, practitioner } = await setup();
 
-        const onSuccess = await renderForm(patient, practitioner, 'local');
+        const onSuccess = await renderForm(patient, practitioner, true, 'local');
 
         const textField = await screen.findByTestId('repeatable-group-text');
         expect(textField).toBeEnabled();
@@ -409,5 +410,188 @@ describe('Draft questionnaire response saves correctly with local storage backen
             },
         });
         expect(localStorage.getItem('repeatable-group')).toBeNull();
+    }, 60000);
+});
+
+describe('Draft questionnaire response not saved when autoSave is disabled', async () => {
+    test('QuestionnaireResponse draft not created with disabled autosave', async () => {
+        const testFieldValue = 'Test 1';
+
+        const { patient, practitioner } = await setup();
+
+        await renderForm(patient, practitioner, false, 'server');
+
+        const textField = await screen.findByTestId('repeatable-group-text');
+        expect(textField).toBeEnabled();
+
+        const textInput = textField.querySelector('input')!;
+        act(() => {
+            fireEvent.change(textInput, {
+                target: { value: testFieldValue },
+            });
+        });
+
+        await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
+            service: () =>
+                getFHIRResources('QuestionnaireResponse', {
+                    questionnaire: 'repeatable-group',
+                    status: 'in-progress',
+                    _sort: ['-createdAt', '_id'],
+                }),
+            resolver: (result) => {
+                const qrs = extractBundleResources(ensure(result)).QuestionnaireResponse;
+                return qrs.length === 0;
+            },
+        });
+
+        const qrRD = mapSuccess(
+            await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
+                questionnaire: 'repeatable-group',
+                status: 'in-progress',
+                _sort: ['-createdAt', '_id'],
+            }),
+            (result) => extractBundleResources<QuestionnaireResponse>(result).QuestionnaireResponse,
+        );
+
+        if (isSuccess(qrRD)) {
+            const qrs = qrRD.data;
+            expect(qrs).toBeDefined();
+            expect(qrs.length).toBe(0);
+        }
+    }, 60000);
+
+    test('Test QuestionnaireResponse is not duplicated when autosave disabled', async () => {
+        const testFieldValue = 'Test 1';
+
+        const { patient, practitioner } = await setup();
+
+        const onSuccess = await renderForm(patient, practitioner, false, 'server');
+
+        const textField = await screen.findByTestId('repeatable-group-text');
+        expect(textField).toBeEnabled();
+
+        const textInput = textField.querySelector('input')!;
+        act(() => {
+            fireEvent.change(textInput, {
+                target: { value: testFieldValue },
+            });
+        });
+
+        const submitButton = await screen.findByTestId('submit-button');
+        expect(submitButton).toBeEnabled();
+
+        act(() => {
+            fireEvent.click(submitButton);
+        });
+
+        await waitFor(() => expect(onSuccess).toHaveBeenCalled());
+
+        await new Promise((r) => setTimeout(r, 2000));
+
+        await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
+            service: () =>
+                getFHIRResources('QuestionnaireResponse', {
+                    questionnaire: 'repeatable-group',
+                    _sort: ['-createdAt', '_id'],
+                }),
+            resolver: (result) => {
+                const qrs = extractBundleResources(ensure(result)).QuestionnaireResponse;
+                return qrs.length === 1;
+            },
+        });
+
+        const qrRD = mapSuccess(
+            await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
+                questionnaire: 'repeatable-group',
+                _sort: ['-createdAt', '_id'],
+            }),
+            (result) => extractBundleResources<QuestionnaireResponse>(result).QuestionnaireResponse,
+        );
+
+        if (isSuccess(qrRD)) {
+            const qrs = qrRD.data;
+            expect(qrs).toBeDefined();
+            expect(qrs.length).toBe(1);
+            expect(qrs?.[0]?.status).toBe('completed');
+            expect(qrs?.[0]?.subject).toBeDefined();
+            expect(qrs?.[0]?.subject?.id).toBe(patient.id);
+        }
+    }, 60000);
+
+    test("Test QuestionnaireResponse disabled autosave doesn't reset completed status", async () => {
+        const testFieldValue = 'Test 1';
+
+        const { patient, practitioner } = await setup();
+
+        const onSuccess = await renderForm(patient, practitioner, false, 'server');
+
+        const textField = await screen.findByTestId('repeatable-group-text');
+        expect(textField).toBeEnabled();
+
+        const textInput = textField.querySelector('input')!;
+        act(() => {
+            fireEvent.change(textInput, {
+                target: { value: testFieldValue },
+            });
+        });
+
+        await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
+            service: () =>
+                getFHIRResources('QuestionnaireResponse', {
+                    questionnaire: 'repeatable-group',
+                    status: 'in-progress',
+                    _sort: ['-createdAt', '_id'],
+                }),
+            resolver: (result) => {
+                const qrs = extractBundleResources(ensure(result)).QuestionnaireResponse;
+                return qrs.length === 0;
+            },
+        });
+
+        act(() => {
+            fireEvent.change(textInput, {
+                target: { value: 'update value' },
+            });
+        });
+
+        const submitButton = await screen.findByTestId('submit-button');
+        expect(submitButton).toBeEnabled();
+
+        act(() => {
+            fireEvent.click(submitButton);
+        });
+
+        await waitFor(() => expect(onSuccess).toHaveBeenCalled());
+
+        await new Promise((r) => setTimeout(r, 2000));
+
+        await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
+            service: () =>
+                getFHIRResources('QuestionnaireResponse', {
+                    questionnaire: 'repeatable-group',
+                    status: 'completed',
+                    _sort: ['-createdAt', '_id'],
+                }),
+            resolver: (result) => {
+                const qrs = extractBundleResources(ensure(result)).QuestionnaireResponse;
+                return qrs.length === 1;
+            },
+        });
+        const qrRD = mapSuccess(
+            await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
+                questionnaire: 'repeatable-group',
+                _sort: ['-createdAt', '_id'],
+            }),
+            (result) => extractBundleResources<QuestionnaireResponse>(result).QuestionnaireResponse,
+        );
+
+        if (isSuccess(qrRD)) {
+            const qrs = qrRD.data;
+            expect(qrs).toBeDefined();
+            expect(qrs.length).toBe(1);
+            expect(qrs?.[0]?.status).toBe('completed');
+            expect(qrs?.[0]?.subject).toBeDefined();
+            expect(qrs?.[0]?.subject?.id).toBe(patient.id);
+        }
     }, 60000);
 });
