@@ -29,6 +29,18 @@ export function PageTabs<R extends Resource>({ tabs }: PageTabsProps<R>) {
         activeKey = '';
     }
 
+    if (activeKey === '') {
+        for (let part of parts) {
+            for (let item of menuItems) {
+                if (item.path !== '') {
+                    if(part === item.path){
+                        activeKey = part;
+                    }
+                }
+            }
+        }
+    }
+
     return (
         <Tabs
             boxShadow={false}
