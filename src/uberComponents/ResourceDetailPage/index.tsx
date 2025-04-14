@@ -30,10 +30,10 @@ export function PageTabs<R extends Resource>({ tabs }: PageTabsProps<R>) {
     }
 
     if (activeKey === '') {
-        for (let part of parts) {
-            for (let item of menuItems) {
+        for (const part of parts) {
+            for (const item of menuItems) {
                 if (item.path !== '') {
-                    if(part === item.path){
+                    if (part === item.path) {
                         activeKey = part;
                     }
                 }
@@ -54,7 +54,7 @@ export function PageTabs<R extends Resource>({ tabs }: PageTabsProps<R>) {
     );
 }
 
-export function DetailPage<R extends Resource>({
+export function ResourceDetailPage<R extends Resource>({
     resourceType,
     getSearchParams,
     getTitle,
