@@ -267,6 +267,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
             <form
                 onSubmit={handleSubmit(async () => {
                     debouncedSaveDraftRef.current?.cancel();
+                    isRunningDebouncedSaveDraftRef.current = true;
                     setIsLoading(true);
                     await onSubmit?.({ ...formData, formValues });
                     deleteQuestionnaireResponseDraft(draftId, qrDraftServiceType);

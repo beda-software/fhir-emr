@@ -29,7 +29,7 @@ import config from '@beda.software/emr-config';
 import { formatFHIRDateTime, getReference, useService } from '@beda.software/fhir-react';
 import { RemoteDataResult, failure, isFailure, isSuccess, mapSuccess, success } from '@beda.software/remote-data';
 
-import { forceDeleteFHIRResource, patchFHIRResource, saveFHIRResource, service } from 'src/services/fhir';
+import { patchFHIRResource, saveFHIRResource, service } from 'src/services/fhir';
 
 export type QuestionnaireResponseFormSaveResponse<R extends Resource = any> = {
     questionnaireResponse: FHIRQuestionnaireResponse;
@@ -170,7 +170,8 @@ export const persistDraftDeleteService: QuestionnaireResponseDraftDeleteService 
     if (!id) {
         return Promise.resolve(failure(t`Resource id is not provided`));
     }
-    return await forceDeleteFHIRResource<FHIRQuestionnaireResponse>({ reference: `QuestionnaireResponse/${id}` });
+
+    return Promise.resolve(success({} as FHIRQuestionnaireResponse));
 };
 
 export const localStorageDraftDeleteService: QuestionnaireResponseDraftDeleteService = (id: Resource['id']) => {

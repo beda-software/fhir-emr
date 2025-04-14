@@ -30,12 +30,8 @@ export const saveQuestionnaireResponseDraft = async (
 
     const questionnaireResponse: QuestionnaireResponse = {
         ...fromFirstClassExtension(formData.context.questionnaireResponse),
-        id: formData.context.questionnaireResponse.id,
-        encounter: formData.context.questionnaireResponse.encounter,
         item: transformedFormValues.item,
         questionnaire: formData.context.questionnaire.assembledFrom,
-        resourceType: formData.context.questionnaireResponse.resourceType,
-        subject: formData.context.questionnaireResponse.subject,
         status: 'in-progress',
         authored: formatFHIRDateTime(moment()),
     };
