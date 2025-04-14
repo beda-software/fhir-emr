@@ -1,4 +1,5 @@
 import { Bundle, Resource } from 'fhir/r4b';
+import React from 'react';
 import { useParams, Route, Routes, useLocation, Link, useNavigate } from 'react-router-dom';
 
 import { RenderRemoteData, useService, WithId } from '@beda.software/fhir-react';
@@ -26,6 +27,18 @@ export function PageTabs<R extends Resource>({ tabs }: PageTabsProps<R>) {
     let activeKey: string = parts[parts.length - 1]!;
     if (tabs.map((t) => t.path).indexOf(activeKey) === -1) {
         activeKey = '';
+    }
+
+    if (activeKey === '') {
+        for (let part of parts) {
+            for (let item of menuItems) {
+                if (item.path !== '') {
+                    if(part === item.path){
+                        activeKey = part;
+                    }
+                }
+            }
+        }
     }
 
     return (
@@ -74,7 +87,10 @@ export function DetailPage<R extends Resource>({
                     >
                         <Routes>
                             {tabs.map(({ path, component }) => (
-                                <Route path={'/' + path} element={component(context)} key={path} />
+                                <React.Fragment key={path}>
+                                    <Route path={'/' + path} element={component(context)} />
+                                    <Route path={'/' + path + '/*'} element={component(context)} />
+                                </React.Fragment>
                             ))}
                         </Routes>
                     </PageContainer>
