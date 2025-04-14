@@ -1,14 +1,15 @@
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
 import { screen, render, act, fireEvent, waitFor } from '@testing-library/react';
-import { RemoteDataResult } from 'aidbox-react';
+import { isSuccess, RemoteDataResult } from 'aidbox-react';
 import { Bundle, Patient, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
 import { describe, expect, test, vi } from 'vitest';
 
 import { getFHIRResources } from 'aidbox-react/lib/services/fhir';
 import { axiosInstance } from 'aidbox-react/lib/services/instance';
 
-import { ensure, extractBundleResources, WithId, withRootAccess } from '@beda.software/fhir-react';
+import { ensure, extractBundleResources, getReference, WithId, withRootAccess } from '@beda.software/fhir-react';
+import { mapSuccess } from '@beda.software/remote-data';
 
 import { PatientDocument } from 'src/containers/PatientDetails/PatientDocument';
 import { QuestionnaireResponseDraftService } from 'src/hooks';
@@ -87,6 +88,24 @@ describe('Draft questionnaire response saves correctly with server backend', asy
                 return qrs.length === 1;
             },
         });
+
+        const qrRD = mapSuccess(
+            await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
+                questionnaire: 'repeatable-group',
+                status: 'in-progress',
+                _sort: ['-createdAt', '_id'],
+            }),
+            (result) => extractBundleResources<QuestionnaireResponse>(result).QuestionnaireResponse,
+        );
+
+        if (isSuccess(qrRD)) {
+            const qrs = qrRD.data;
+            expect(qrs).toBeDefined();
+            expect(qrs.length).toBe(1);
+            expect(qrs?.[0]?.status).toBe('in-progress');
+            expect(qrs?.[0]?.subject).toBeDefined();
+            expect(qrs?.[0]?.subject?.id).toBe(patient.id);
+        }
     }, 60000);
 
     test('Test QuestionnaireResponse is not duplicated by autosave', async () => {
@@ -128,6 +147,23 @@ describe('Draft questionnaire response saves correctly with server backend', asy
                 return qrs.length === 1;
             },
         });
+
+        const qrRD = mapSuccess(
+            await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
+                questionnaire: 'repeatable-group',
+                _sort: ['-createdAt', '_id'],
+            }),
+            (result) => extractBundleResources<QuestionnaireResponse>(result).QuestionnaireResponse,
+        );
+
+        if (isSuccess(qrRD)) {
+            const qrs = qrRD.data;
+            expect(qrs).toBeDefined();
+            expect(qrs.length).toBe(1);
+            expect(qrs?.[0]?.status).toBe('completed');
+            expect(qrs?.[0]?.subject).toBeDefined();
+            expect(qrs?.[0]?.subject?.id).toBe(patient.id);
+        }
     }, 60000);
 
     test("Test QuestionnaireResponse autosave doesn't reset completed status", async () => {
@@ -238,7 +274,7 @@ describe('Draft questionnaire response saves correctly with local storage backen
         expect(localStorageQR.questionnaire).toBe('repeatable-group');
         expect(localStorageQR.status).toBe('in-progress');
         expect(localStorageQR.subject).toBeDefined();
-        expect(localStorageQR.subject.id).toBe(patient.id);
+        expect(localStorageQR.subject.reference).toBe(getReference(patient).reference);
         expect(localStorageQR.item).toBeDefined();
         expect(localStorageQR.item[0].item[0].item[0].answer[0].value.string).toBe(testFieldValue);
 
