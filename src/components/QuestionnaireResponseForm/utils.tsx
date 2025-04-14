@@ -1,7 +1,9 @@
 import { t } from '@lingui/macro';
+import { formatFHIRDate } from 'aidbox-react';
 import { notification } from 'antd';
 import { QuestionnaireResponse } from 'fhir/r4b';
-import { FormItems, mapFormToResponse, QuestionnaireResponseFormData } from 'sdc-qrf';
+import moment from 'moment';
+import { FormItems, fromFirstClassExtension, mapFormToResponse, QuestionnaireResponseFormData } from 'sdc-qrf';
 
 import { formatError } from '@beda.software/fhir-react';
 import { isFailure, isSuccess, RemoteDataResult } from '@beda.software/remote-data';
@@ -14,27 +16,29 @@ export const saveQuestionnaireResponseDraft = async (
     formData: QuestionnaireResponseFormData,
     currentFormValues: FormItems,
 ) => {
-    const isCreating = formData.context.questionnaireResponse.id === undefined;
+    const isCreating = !formData.context.questionnaireResponse.id;
     const transformedFormValues = mapFormToResponse(currentFormValues, formData.context.questionnaire);
 
     const questionnaireResponse: QuestionnaireResponse = {
+        ...fromFirstClassExtension(formData.context.questionnaireResponse),
         id: formData.context.questionnaireResponse.id,
         encounter: formData.context.questionnaireResponse.encounter,
         item: transformedFormValues.item,
-        questionnaire: isCreating ? questionnaireId : formData.context.questionnaire.assembledFrom,
+        questionnaire: formData.context.questionnaire.assembledFrom,
         resourceType: formData.context.questionnaireResponse.resourceType,
         subject: formData.context.questionnaireResponse.subject,
         status: 'in-progress',
-        authored: new Date().toISOString(),
+        authored: formatFHIRDate(moment()),
     };
 
     const response = isCreating
         ? await saveFHIRResource(questionnaireResponse)
         : await patchFHIRResource<QuestionnaireResponse>(questionnaireResponse, { status: 'in-progress' });
 
-    if (isSuccess(response)) {
+    if (isCreating && isSuccess(response)) {
         formData.context.questionnaireResponse.id = response.data.id;
     }
+
     if (isFailure(response)) {
         console.error(t`Error saving a draft: `, response.error);
     }

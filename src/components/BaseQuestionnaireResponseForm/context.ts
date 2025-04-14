@@ -12,7 +12,7 @@ export const ItemControlGroupItemReadonlyWidgetsContext = createContext<ItemCont
 
 interface BaseQuestionnaireResponseFormPropsContextProps extends BaseQuestionnaireResponseFormProps {
     submitting: boolean;
-    debouncedSaveDraft?: DebouncedFunc<(currentFormValues: FormItems) => Promise<void>>;
+    debouncedSaveDraft?: DebouncedFunc<(currentFormValues: FormItems) => Promise<void>> | null;
 }
 export const BaseQuestionnaireResponseFormPropsContext = createContext<
     BaseQuestionnaireResponseFormPropsContextProps | undefined

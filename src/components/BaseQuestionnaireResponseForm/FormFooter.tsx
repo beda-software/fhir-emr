@@ -19,7 +19,7 @@ export interface FormFooterComponentProps {
 
 export interface Props extends BaseQuestionnaireResponseFormProps {
     submitting: boolean;
-    debouncedSaveDraft?: DebouncedFunc<(currentFormValues: FormItems) => Promise<void>>;
+    debouncedSaveDraft?: DebouncedFunc<(currentFormValues: FormItems) => Promise<void>> | null;
     className?: string | undefined;
     style?: CSSProperties | undefined;
     submitDisabled?: boolean;
