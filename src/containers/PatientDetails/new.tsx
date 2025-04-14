@@ -4,7 +4,7 @@ import { Encounter, Patient } from 'fhir/r4b';
 
 import { SearchBarColumnType } from 'src/components/SearchBar/types';
 import { navigationAction, questionnaireAction } from 'src/uberComponents';
-import { DetailPage, Tab } from 'src/uberComponents/DetailPage';
+import { ResourceDetailPage, Tab } from 'src/uberComponents/ResourceDetailPage';
 import { ResourceListPageContent } from 'src/uberComponents/ResourceListPageContent';
 import { compileAsFirst, formatPeriodDateTime } from 'src/utils';
 
@@ -104,7 +104,7 @@ const tabs: Array<Tab<Patient>> = [
 
 export function NewPatientDetails() {
     return (
-        <DetailPage<Patient>
+        <ResourceDetailPage<Patient>
             resourceType="Patient"
             getSearchParams={({ id }) => ({ _id: id })}
             getTitle={({ resource, bundle }) => getName(resource, { bundle })!}
