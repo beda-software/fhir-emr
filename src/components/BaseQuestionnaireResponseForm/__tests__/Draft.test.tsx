@@ -5,7 +5,6 @@ import { RemoteDataResult } from 'aidbox-react';
 import { Bundle, Patient, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
 import { describe, expect, test, vi } from 'vitest';
 
-import { getFHIRResources } from 'aidbox-react/lib/services/fhir';
 import { axiosInstance } from 'aidbox-react/lib/services/instance';
 
 import { ensure, extractBundleResources, getReference, WithId, withRootAccess } from '@beda.software/fhir-react';
@@ -13,6 +12,7 @@ import { mapSuccess } from '@beda.software/remote-data';
 
 import { PatientDocument } from 'src/containers/PatientDetails/PatientDocument';
 import { QuestionnaireResponseDraftService } from 'src/hooks';
+import { getFHIRResources } from 'src/services';
 import { createPatient, createPractitionerRole, loginAdminUser, waitForAPIProcess } from 'src/setupTests';
 import { ThemeProvider } from 'src/theme';
 
@@ -101,9 +101,10 @@ describe('Draft questionnaire response saves correctly with server backend', asy
             ),
         );
 
+        console.log(qrs);
         expect(qrs.length).toBe(1);
         expect(qrs[0]!.status).toBe('in-progress');
-        expect(qrs[0]!.subject!.id).toBe(patient.id);
+        expect(qrs[0]!.subject!.reference).toBe(getReference(patient).reference);
     }, 60000);
 
     test('Test QuestionnaireResponse is not duplicated by autosave', async () => {
@@ -158,7 +159,7 @@ describe('Draft questionnaire response saves correctly with server backend', asy
 
         expect(qrs.length).toBe(1);
         expect(qrs[0]!.status).toBe('completed');
-        expect(qrs[0]!.subject!.id).toBe(patient.id);
+        expect(qrs[0]!.subject!.reference).toBe(getReference(patient).reference);
     }, 60000);
 
     test("Test QuestionnaireResponse autosave doesn't reset completed status", async () => {
@@ -504,7 +505,7 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
 
         expect(qrs.length).toBe(1);
         expect(qrs[0]!.status).toBe('completed');
-        expect(qrs[0]!.subject!.id).toBe(patient.id);
+        expect(qrs[0]!.subject!.reference).toBe(getReference(patient).reference);
     }, 60000);
 
     test("Test QuestionnaireResponse disabled autosave doesn't reset completed status", async () => {
@@ -578,6 +579,6 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
 
         expect(qrs.length).toBe(1);
         expect(qrs[0]!.status).toBe('completed');
-        expect(qrs[0]!.subject!.id).toBe(patient.id);
+        expect(qrs[0]!.subject!.reference).toBe(getReference(patient).reference);
     }, 60000);
 });
