@@ -109,7 +109,13 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                             />
                                             <Route
                                                 path="/encounters/:encounterId/new/:questionnaireId"
-                                                element={<PatientDocument patient={patient} author={author} />}
+                                                element={
+                                                    <PatientDocument
+                                                        patient={patient}
+                                                        author={author}
+                                                        autosave={true}
+                                                    />
+                                                }
                                             />
                                             <Route
                                                 path="/encounters/:encounterId/:qrId/*"
@@ -118,7 +124,13 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                             <Route path="/documents" element={<PatientDocuments patient={patient} />} />
                                             <Route
                                                 path="/documents/new/:questionnaireId"
-                                                element={<PatientDocument patient={patient} author={author} />}
+                                                element={
+                                                    <PatientDocument
+                                                        patient={patient}
+                                                        author={author}
+                                                        autosave={true}
+                                                    />
+                                                }
                                             />
                                             <Route
                                                 path="/documents/:qrId/*"
