@@ -101,11 +101,9 @@ describe('Draft questionnaire response saves correctly with server backend', asy
             ),
         );
 
-        expect(qrs).toBeDefined();
         expect(qrs.length).toBe(1);
-        expect(qrs?.[0]?.status).toBe('in-progress');
-        expect(qrs?.[0]?.subject).toBeDefined();
-        expect(qrs?.[0]?.subject?.id).toBe(patient.id);
+        expect(qrs[0]!.status).toBe('in-progress');
+        expect(qrs[0]!.subject!.id).toBe(patient.id);
     }, 60000);
 
     test('Test QuestionnaireResponse is not duplicated by autosave', async () => {
@@ -158,11 +156,9 @@ describe('Draft questionnaire response saves correctly with server backend', asy
             ),
         );
 
-        expect(qrs).toBeDefined();
         expect(qrs.length).toBe(1);
-        expect(qrs?.[0]?.status).toBe('completed');
-        expect(qrs?.[0]?.subject).toBeDefined();
-        expect(qrs?.[0]?.subject?.id).toBe(patient.id);
+        expect(qrs[0]!.status).toBe('completed');
+        expect(qrs[0]!.subject!.id).toBe(patient.id);
     }, 60000);
 
     test("Test QuestionnaireResponse autosave doesn't reset completed status", async () => {
@@ -453,7 +449,6 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
             ),
         );
 
-        expect(qrs).toBeDefined();
         expect(qrs.length).toBe(0);
     }, 60000);
 
@@ -507,11 +502,9 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
             ),
         );
 
-        expect(qrs).toBeDefined();
         expect(qrs.length).toBe(1);
-        expect(qrs?.[0]?.status).toBe('completed');
-        expect(qrs?.[0]?.subject).toBeDefined();
-        expect(qrs?.[0]?.subject?.id).toBe(patient.id);
+        expect(qrs[0]!.status).toBe('completed');
+        expect(qrs[0]!.subject!.id).toBe(patient.id);
     }, 60000);
 
     test("Test QuestionnaireResponse disabled autosave doesn't reset completed status", async () => {
@@ -583,10 +576,8 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
             ),
         );
 
-        expect(qrs).toBeDefined();
         expect(qrs.length).toBe(1);
-        expect(qrs?.[0]?.status).toBe('completed');
-        expect(qrs?.[0]?.subject).toBeDefined();
-        expect(qrs?.[0]?.subject?.id).toBe(patient.id);
+        expect(qrs[0]!.status).toBe('completed');
+        expect(qrs[0]!.subject!.id).toBe(patient.id);
     }, 60000);
 });
