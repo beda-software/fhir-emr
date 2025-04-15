@@ -101,7 +101,6 @@ describe('Draft questionnaire response saves correctly with server backend', asy
             ),
         );
 
-        console.log(qrs);
         expect(qrs.length).toBe(1);
         expect(qrs[0]!.status).toBe('in-progress');
         expect(qrs[0]!.subject!.reference).toBe(getReference(patient).reference);
