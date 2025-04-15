@@ -1,7 +1,7 @@
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
 import { screen, render, act, fireEvent, waitFor } from '@testing-library/react';
-import { isSuccess, RemoteDataResult } from 'aidbox-react';
+import { RemoteDataResult } from 'aidbox-react';
 import { Bundle, Patient, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
 import { describe, expect, test, vi } from 'vitest';
 
@@ -90,23 +90,22 @@ describe('Draft questionnaire response saves correctly with server backend', asy
             },
         });
 
-        const qrRD = mapSuccess(
-            await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
-                questionnaire: 'repeatable-group',
-                status: 'in-progress',
-                _sort: ['-createdAt', '_id'],
-            }),
-            (result) => extractBundleResources<QuestionnaireResponse>(result).QuestionnaireResponse,
+        const qrs = ensure(
+            mapSuccess(
+                await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
+                    questionnaire: 'repeatable-group',
+                    status: 'in-progress',
+                    _sort: ['-createdAt', '_id'],
+                }),
+                (result) => extractBundleResources<QuestionnaireResponse>(result).QuestionnaireResponse,
+            ),
         );
 
-        if (isSuccess(qrRD)) {
-            const qrs = qrRD.data;
-            expect(qrs).toBeDefined();
-            expect(qrs.length).toBe(1);
-            expect(qrs?.[0]?.status).toBe('in-progress');
-            expect(qrs?.[0]?.subject).toBeDefined();
-            expect(qrs?.[0]?.subject?.id).toBe(patient.id);
-        }
+        expect(qrs).toBeDefined();
+        expect(qrs.length).toBe(1);
+        expect(qrs?.[0]?.status).toBe('in-progress');
+        expect(qrs?.[0]?.subject).toBeDefined();
+        expect(qrs?.[0]?.subject?.id).toBe(patient.id);
     }, 60000);
 
     test('Test QuestionnaireResponse is not duplicated by autosave', async () => {
@@ -149,22 +148,21 @@ describe('Draft questionnaire response saves correctly with server backend', asy
             },
         });
 
-        const qrRD = mapSuccess(
-            await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
-                questionnaire: 'repeatable-group',
-                _sort: ['-createdAt', '_id'],
-            }),
-            (result) => extractBundleResources<QuestionnaireResponse>(result).QuestionnaireResponse,
+        const qrs = ensure(
+            mapSuccess(
+                await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
+                    questionnaire: 'repeatable-group',
+                    _sort: ['-createdAt', '_id'],
+                }),
+                (result) => extractBundleResources<QuestionnaireResponse>(result).QuestionnaireResponse,
+            ),
         );
 
-        if (isSuccess(qrRD)) {
-            const qrs = qrRD.data;
-            expect(qrs).toBeDefined();
-            expect(qrs.length).toBe(1);
-            expect(qrs?.[0]?.status).toBe('completed');
-            expect(qrs?.[0]?.subject).toBeDefined();
-            expect(qrs?.[0]?.subject?.id).toBe(patient.id);
-        }
+        expect(qrs).toBeDefined();
+        expect(qrs.length).toBe(1);
+        expect(qrs?.[0]?.status).toBe('completed');
+        expect(qrs?.[0]?.subject).toBeDefined();
+        expect(qrs?.[0]?.subject?.id).toBe(patient.id);
     }, 60000);
 
     test("Test QuestionnaireResponse autosave doesn't reset completed status", async () => {
@@ -444,20 +442,19 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
             },
         });
 
-        const qrRD = mapSuccess(
-            await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
-                questionnaire: 'repeatable-group',
-                status: 'in-progress',
-                _sort: ['-createdAt', '_id'],
-            }),
-            (result) => extractBundleResources<QuestionnaireResponse>(result).QuestionnaireResponse,
+        const qrs = ensure(
+            mapSuccess(
+                await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
+                    questionnaire: 'repeatable-group',
+                    status: 'in-progress',
+                    _sort: ['-createdAt', '_id'],
+                }),
+                (result) => extractBundleResources<QuestionnaireResponse>(result).QuestionnaireResponse,
+            ),
         );
 
-        if (isSuccess(qrRD)) {
-            const qrs = qrRD.data;
-            expect(qrs).toBeDefined();
-            expect(qrs.length).toBe(0);
-        }
+        expect(qrs).toBeDefined();
+        expect(qrs.length).toBe(0);
     }, 60000);
 
     test('Test QuestionnaireResponse is not duplicated when autosave disabled', async () => {
@@ -500,22 +497,21 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
             },
         });
 
-        const qrRD = mapSuccess(
-            await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
-                questionnaire: 'repeatable-group',
-                _sort: ['-createdAt', '_id'],
-            }),
-            (result) => extractBundleResources<QuestionnaireResponse>(result).QuestionnaireResponse,
+        const qrs = ensure(
+            mapSuccess(
+                await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
+                    questionnaire: 'repeatable-group',
+                    _sort: ['-createdAt', '_id'],
+                }),
+                (result) => extractBundleResources<QuestionnaireResponse>(result).QuestionnaireResponse,
+            ),
         );
 
-        if (isSuccess(qrRD)) {
-            const qrs = qrRD.data;
-            expect(qrs).toBeDefined();
-            expect(qrs.length).toBe(1);
-            expect(qrs?.[0]?.status).toBe('completed');
-            expect(qrs?.[0]?.subject).toBeDefined();
-            expect(qrs?.[0]?.subject?.id).toBe(patient.id);
-        }
+        expect(qrs).toBeDefined();
+        expect(qrs.length).toBe(1);
+        expect(qrs?.[0]?.status).toBe('completed');
+        expect(qrs?.[0]?.subject).toBeDefined();
+        expect(qrs?.[0]?.subject?.id).toBe(patient.id);
     }, 60000);
 
     test("Test QuestionnaireResponse disabled autosave doesn't reset completed status", async () => {
@@ -577,21 +573,20 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
                 return qrs.length === 1;
             },
         });
-        const qrRD = mapSuccess(
-            await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
-                questionnaire: 'repeatable-group',
-                _sort: ['-createdAt', '_id'],
-            }),
-            (result) => extractBundleResources<QuestionnaireResponse>(result).QuestionnaireResponse,
+        const qrs = ensure(
+            mapSuccess(
+                await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
+                    questionnaire: 'repeatable-group',
+                    _sort: ['-createdAt', '_id'],
+                }),
+                (result) => extractBundleResources<QuestionnaireResponse>(result).QuestionnaireResponse,
+            ),
         );
 
-        if (isSuccess(qrRD)) {
-            const qrs = qrRD.data;
-            expect(qrs).toBeDefined();
-            expect(qrs.length).toBe(1);
-            expect(qrs?.[0]?.status).toBe('completed');
-            expect(qrs?.[0]?.subject).toBeDefined();
-            expect(qrs?.[0]?.subject?.id).toBe(patient.id);
-        }
+        expect(qrs).toBeDefined();
+        expect(qrs.length).toBe(1);
+        expect(qrs?.[0]?.status).toBe('completed');
+        expect(qrs?.[0]?.subject).toBeDefined();
+        expect(qrs?.[0]?.subject?.id).toBe(patient.id);
     }, 60000);
 });
