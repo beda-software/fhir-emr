@@ -3,7 +3,7 @@ import { RenderRemoteData } from '@beda.software/fhir-react';
 import { SearchBarColumnType } from 'src/components/SearchBar/types';
 
 import { useNewScheduling } from './hooks';
-import { getEventConfig } from './utils';
+import { getEventConfig, getBusinessHours } from './utils';
 import { CalendarPage } from '../../uberComponents/CalendarPage';
 
 export function NewScheduling() {
@@ -43,6 +43,7 @@ export function NewScheduling() {
                             },
                         ]}
                         eventConfig={getEventConfig}
+                        businessHours={getBusinessHours}
                     />
                 );
             }}
