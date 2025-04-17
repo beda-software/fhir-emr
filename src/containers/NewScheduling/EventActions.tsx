@@ -1,8 +1,9 @@
 import { extractBundleResources } from '@beda.software/fhir-react';
 
 import { extractGetParamValue } from './utils';
-import { NewEventModalProps } from '../../uberComponents/CalendarPage/types';
+import { NewEventModalProps, EventDetailsProps } from '../../uberComponents/CalendarPage/types';
 import { NewAppointmentModal } from '../OrganizationScheduling/NewAppointmentModal';
+import { AppointmentDetailsModal } from '../Scheduling/ScheduleCalendar/components/AppointmentDetailsModal';
 
 export function newEventModal(props: NewEventModalProps) {
     const { bundle, newEventData, onOk, onClose } = props;
@@ -31,6 +32,23 @@ export function newEventModal(props: NewEventModalProps) {
             onOk={onOk}
             onCancel={onClose}
             showModal={true}
+        />
+    );
+}
+
+export function detailsModal(props: EventDetailsProps) {
+    const { eventDetailsData, openEvent, onClose } = props;
+
+    if (!eventDetailsData) return null;
+
+    return (
+        <AppointmentDetailsModal
+            key={`appointment-details__${eventDetailsData.id}`}
+            appointmentId={eventDetailsData.id}
+            status={eventDetailsData.extendedProps.status}
+            showModal={true}
+            onEdit={openEvent}
+            onClose={onClose}
         />
     );
 }

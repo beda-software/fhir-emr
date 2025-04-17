@@ -1,3 +1,4 @@
+import { EventClickArg } from '@fullcalendar/core';
 import { Bundle, Resource } from 'fhir/r4b';
 import React from 'react';
 
@@ -34,10 +35,17 @@ export interface NewEventModalProps {
     onClose: () => void;
 }
 
+export interface EventDetailsProps {
+    eventDetailsData?: EventClickArg['event'] | undefined;
+    openEvent: (id: string) => void;
+    onClose: () => void;
+}
+
 export type CalendarPageProps<R extends Resource> = ResourceListProps<R, WebExtra> & {
     headerTitle: string;
     eventConfig: (r: Resource, bundle: Bundle) => EventConfig;
     businessHours?: (bundle: Bundle) => BusinessHours;
     maxWidth?: number | string;
     newEventModal?: (props: NewEventModalProps) => React.ReactElement | null;
+    eventDetails?: (props: EventDetailsProps) => React.ReactElement | null;
 };

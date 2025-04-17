@@ -28,6 +28,7 @@ export function CalendarPage<R extends Resource>({
     eventConfig,
     businessHours,
     newEventModal,
+    eventDetails,
 }: CalendarPageProps<R>) {
     const allFilters = getFilters?.() ?? [];
 
@@ -44,8 +45,17 @@ export function CalendarPage<R extends Resource>({
 
     const headerActions = getHeaderActions?.() ?? [];
 
-    const { openNewAppointmentModal, openAppointmentDetails, newAppointmentData, closeNewAppointmentModal } =
-        useAppointmentEvents();
+    const {
+        openEditAppointment,
+        closeAppointmentDetails,
+        appointmentDetails,
+        openNewAppointmentModal,
+        openAppointmentDetails,
+        newAppointmentData,
+        closeNewAppointmentModal,
+    } = useAppointmentEvents();
+
+    console.log('appointmentDetails', appointmentDetails);
 
     const emptyBusinessHours = [
         {
@@ -103,6 +113,12 @@ export function CalendarPage<R extends Resource>({
                                         closeNewAppointmentModal();
                                     },
                                     onClose: closeNewAppointmentModal,
+                                })}
+                            {eventDetails &&
+                                eventDetails({
+                                    eventDetailsData: appointmentDetails,
+                                    openEvent: openEditAppointment,
+                                    onClose: closeAppointmentDetails,
                                 })}
                         </>
                     );
