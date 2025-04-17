@@ -255,7 +255,11 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     key: 'title',
                     render: (resource: Observation) => (
                         <LinkToEdit
-                            name={resource.code?.text ?? resource.code?.coding?.[0]?.display}
+                            name={
+                                resource.code?.text ??
+                                resource.code?.coding?.[0]?.display ??
+                                resource.code?.coding?.[0]?.code
+                            }
                             resource={resource}
                             provenanceList={provenanceList}
                         />
