@@ -143,7 +143,7 @@ export function OrganizationScheduling() {
     );
 }
 
-function EditAppointmentWrapper(props: EditAppointmentWrapperProps) {
+export function EditAppointmentWrapper(props: EditAppointmentWrapperProps) {
     const { editingAppointmentId, closeEditAppointment, reload, onClose, appointments, practitionerRoles } = props;
     const currentAppointment = appointments.find((appointment) => appointment.id === editingAppointmentId);
     const currentAppointmentPractitionerRoleRef = currentAppointment?.participant?.find((participant) => {

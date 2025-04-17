@@ -1,7 +1,8 @@
 import { extractBundleResources } from '@beda.software/fhir-react';
 
 import { extractGetParamValue } from './utils';
-import { NewEventModalProps, EventDetailsProps } from '../../uberComponents/CalendarPage/types';
+import { NewEventModalProps, EventDetailsProps, EventEditProps } from '../../uberComponents/CalendarPage/types';
+import { EditAppointmentWrapper } from '../OrganizationScheduling';
 import { NewAppointmentModal } from '../OrganizationScheduling/NewAppointmentModal';
 import { AppointmentDetailsModal } from '../Scheduling/ScheduleCalendar/components/AppointmentDetailsModal';
 
@@ -49,6 +50,26 @@ export function detailsModal(props: EventDetailsProps) {
             showModal={true}
             onEdit={openEvent}
             onClose={onClose}
+        />
+    );
+}
+
+export function editEventModal(props: EventEditProps) {
+    const { eventIdToEdit, closeEditEvent, reload, onClose, bundle } = props;
+    const resourcesMap = extractBundleResources(bundle);
+    const practitionerRoles = resourcesMap.PractitionerRole;
+    const appointments = resourcesMap.Appointment;
+
+    if (!eventIdToEdit) return null;
+
+    return (
+        <EditAppointmentWrapper
+            editingAppointmentId={eventIdToEdit}
+            closeEditAppointment={closeEditEvent}
+            reload={reload}
+            onClose={onClose}
+            appointments={appointments}
+            practitionerRoles={practitionerRoles}
         />
     );
 }

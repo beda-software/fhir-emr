@@ -41,6 +41,14 @@ export interface EventDetailsProps {
     onClose: () => void;
 }
 
+export interface EventEditProps {
+    eventIdToEdit?: string;
+    closeEditEvent: () => void;
+    reload: () => void;
+    onClose: () => void;
+    bundle: Bundle;
+}
+
 export type CalendarPageProps<R extends Resource> = ResourceListProps<R, WebExtra> & {
     headerTitle: string;
     eventConfig: (r: Resource, bundle: Bundle) => EventConfig;
@@ -48,4 +56,5 @@ export type CalendarPageProps<R extends Resource> = ResourceListProps<R, WebExtr
     maxWidth?: number | string;
     newEventModal?: (props: NewEventModalProps) => React.ReactElement | null;
     eventDetails?: (props: EventDetailsProps) => React.ReactElement | null;
+    eventEditModal?: (props: EventEditProps) => React.ReactElement | null;
 };
