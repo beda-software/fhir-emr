@@ -56,11 +56,10 @@ export function detailsModal(props: EventDetailsProps) {
 
 export function editEventModal(props: EventEditProps) {
     const { eventIdToEdit, closeEditEvent, reload, onClose, bundle } = props;
+    if (!eventIdToEdit || !bundle) return null;
     const resourcesMap = extractBundleResources(bundle);
     const practitionerRoles = resourcesMap.PractitionerRole;
     const appointments = resourcesMap.Appointment;
-
-    if (!eventIdToEdit) return null;
 
     return (
         <EditAppointmentWrapper
