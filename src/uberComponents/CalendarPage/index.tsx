@@ -27,6 +27,7 @@ export function CalendarPage<R extends Resource>({
     defaultLaunchContext,
     eventConfig,
     businessHours,
+    newEventModal,
 }: CalendarPageProps<R>) {
     const allFilters = getFilters?.() ?? [];
 
@@ -43,7 +44,8 @@ export function CalendarPage<R extends Resource>({
 
     const headerActions = getHeaderActions?.() ?? [];
 
-    const { openNewAppointmentModal, openAppointmentDetails } = useAppointmentEvents();
+    const { openNewAppointmentModal, openAppointmentDetails, newAppointmentData, closeNewAppointmentModal } =
+        useAppointmentEvents();
 
     const emptyBusinessHours = [
         {
@@ -84,13 +86,25 @@ export function CalendarPage<R extends Resource>({
                     const bs = businessHoursData?.length ? businessHoursData : emptyBusinessHours;
 
                     return (
-                        <Calendar
-                            businessHours={bs}
-                            initialEvents={slotsData}
-                            eventContent={AppointmentBubble}
-                            eventClick={openAppointmentDetails}
-                            select={openNewAppointmentModal}
-                        />
+                        <>
+                            <Calendar
+                                businessHours={bs}
+                                initialEvents={slotsData}
+                                eventContent={AppointmentBubble}
+                                eventClick={openAppointmentDetails}
+                                select={openNewAppointmentModal}
+                            />
+                            {newEventModal &&
+                                newEventModal({
+                                    bundle: bundle!,
+                                    newEventData: newAppointmentData,
+                                    onOk: () => {
+                                        reload();
+                                        closeNewAppointmentModal();
+                                    },
+                                    onClose: closeNewAppointmentModal,
+                                })}
+                        </>
                     );
                 }}
             </RenderRemoteData>

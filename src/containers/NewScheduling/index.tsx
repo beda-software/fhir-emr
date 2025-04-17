@@ -2,6 +2,7 @@ import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { SearchBarColumnType } from 'src/components/SearchBar/types';
 
+import { newEventModal } from './EventActions';
 import { useNewScheduling } from './hooks';
 import { getEventConfig, getBusinessHours } from './utils';
 import { CalendarPage } from '../../uberComponents/CalendarPage';
@@ -17,16 +18,14 @@ export function NewScheduling() {
                         resourceType="Appointment"
                         headerTitle="Scheduling new"
                         searchParams={{
-                            _include: ['Appointment:patient', 'Appointment:actor:PractitionerRole'],
+                            _include: [
+                                'Appointment:patient',
+                                'Appointment:actor:PractitionerRole',
+                                'PractitionerRole:practitioner',
+                                'PractitionerRole:service',
+                            ],
                         }}
                         getFilters={() => [
-                            {
-                                id: 'patient',
-                                type: SearchBarColumnType.REFERENCE,
-                                placeholder: 'Search by patient',
-                                expression: 'Patient',
-                                path: "name.given.first() + ' ' + name.family",
-                            },
                             {
                                 id: 'practitioner-role',
                                 searchParam: 'actor',
@@ -44,6 +43,7 @@ export function NewScheduling() {
                         ]}
                         eventConfig={getEventConfig}
                         businessHours={getBusinessHours}
+                        newEventModal={newEventModal}
                     />
                 );
             }}

@@ -57,3 +57,18 @@ export function getBusinessHours(bundle: Bundle): BusinessHours {
 
     return result.length ? result.flat() : [];
 }
+
+export const extractGetParamValue = (
+    url: string | undefined,
+    paramName: string,
+): string | Array<string> | undefined => {
+    if (!url) return undefined;
+    const queryString = url.split('?')[1];
+    if (!queryString) return undefined;
+
+    const params = new URLSearchParams(queryString);
+    const values = params.getAll(paramName);
+
+    if (values.length === 0) return undefined;
+    return values.length === 1 ? values[0] : values;
+};
