@@ -127,7 +127,7 @@ export function RenderDraftButton(props: RenderDraftButtonProps) {
 
     if (autoSave && draftLoading) {
         return (
-            <Button type="ghost" disabled loading={draftLoading}>
+            <Button ghost disabled loading={draftLoading}>
                 <Trans>Saving draft</Trans>
             </Button>
         );
@@ -135,7 +135,7 @@ export function RenderDraftButton(props: RenderDraftButtonProps) {
 
     if (autoSave && draftSaved) {
         return (
-            <Button type="ghost" disabled icon={<CheckOutlined />}>
+            <Button ghost disabled icon={<CheckOutlined />}>
                 <span>
                     <Trans>Saved as draft</Trans>
                 </span>

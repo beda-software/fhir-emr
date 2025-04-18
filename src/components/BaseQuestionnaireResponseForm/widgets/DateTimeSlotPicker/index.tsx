@@ -160,7 +160,8 @@ function AvailableDateControl(props: AvailableDatePickerProps & { practitionerRo
                         disabledDate={(date) => !enabledDates.includes(formatFHIRDate(date))}
                         disabledTime={(date) => getDisabledTime(date, timeSlots)}
                         onBlur={(e) => {
-                            const date = e.target.value ? moment(e.target.value, humanDateTime) : null;
+                            const target = e.target as HTMLInputElement;
+                            const date = target.value ? moment(target.value, humanDateTime) : null;
                             onDateChange(date, timeSlots);
                         }}
                     />
