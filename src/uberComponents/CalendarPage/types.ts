@@ -1,4 +1,4 @@
-import { EventClickArg } from '@fullcalendar/core';
+import { EventClickArg, EventContentArg } from '@fullcalendar/core';
 import { Bundle, Resource } from 'fhir/r4b';
 import React from 'react';
 
@@ -52,9 +52,10 @@ export interface EventEditProps {
 export type CalendarPageProps<R extends Resource> = ResourceListProps<R, WebExtra> & {
     headerTitle: string;
     eventConfig: (r: Resource, bundle: Bundle) => EventConfig;
+    eventContent?: (eventContent: EventContentArg) => React.ReactElement | null;
     businessHours?: (bundle: Bundle) => BusinessHours;
     maxWidth?: number | string;
     newEventModal?: (props: NewEventModalProps) => React.ReactElement | null;
-    eventDetails?: (props: EventDetailsProps) => React.ReactElement | null;
+    eventDetailsModal?: (props: EventDetailsProps) => React.ReactElement | null;
     eventEditModal?: (props: EventEditProps) => React.ReactElement | null;
 };

@@ -1,5 +1,6 @@
+import { DateSelectArg, EventClickArg } from '@fullcalendar/core';
 import { Bundle, Resource } from 'fhir/r4b';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 
 import { SearchParams, usePager } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess } from '@beda.software/remote-data';
@@ -8,6 +9,52 @@ import { ColumnFilterValue } from 'src/components/SearchBar/types';
 import { getSearchBarColumnFilterValue } from 'src/components/SearchBar/utils';
 import { service } from 'src/services/fhir';
 import { useDebounce } from 'src/utils/debounce';
+
+import { NewEventData } from './types';
+
+export function useCalendarEvents() {
+    const [newEventData, setNewEventData] = useState<NewEventData | undefined>();
+    const [eventDetails, setEventDetails] = useState<EventClickArg['event'] | undefined>();
+    const [editingEventId, setEditingEventId] = useState<string | undefined>();
+
+    const openNewEventModal = useCallback(({ start, end }: DateSelectArg) => {
+        setNewEventData({
+            start,
+            end,
+        });
+    }, []);
+    const closeNewEventModal = useCallback(() => {
+        setNewEventData(undefined);
+    }, []);
+
+    const openEventDetails = useCallback((e: EventClickArg) => {
+        setEventDetails(e.event);
+    }, []);
+    const closeEventDetails = useCallback(() => {
+        setEventDetails(undefined);
+    }, []);
+
+    const openEditEvent = useCallback((id: string) => {
+        setEditingEventId(id);
+    }, []);
+    const closeEditEvent = useCallback(() => {
+        setEditingEventId(undefined);
+    }, []);
+
+    return {
+        openNewEventModal,
+        newEventData,
+        closeNewEventModal,
+
+        openEventDetails,
+        eventDetails,
+        closeEventDetails,
+
+        openEditEvent,
+        editingEventId,
+        closeEditEvent,
+    };
+}
 
 export function useCalendarPage<R extends Resource>(
     resourceType: R['resourceType'],

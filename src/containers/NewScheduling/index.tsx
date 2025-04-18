@@ -2,7 +2,7 @@ import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { SearchBarColumnType } from 'src/components/SearchBar/types';
 
-import { newEventModal, detailsModal, editEventModal } from './EventActions';
+import { newEventModal, detailsModal, editEventModal, EventContent } from './EventActions';
 import { useNewScheduling } from './hooks';
 import { getEventConfig, getBusinessHours } from './utils';
 import { CalendarPage } from '../../uberComponents/CalendarPage';
@@ -42,9 +42,10 @@ export function NewScheduling() {
                             },
                         ]}
                         eventConfig={getEventConfig}
+                        eventContent={EventContent}
                         businessHours={getBusinessHours}
                         newEventModal={newEventModal}
-                        eventDetails={detailsModal}
+                        eventDetailsModal={detailsModal}
                         eventEditModal={editEventModal}
                     />
                 );

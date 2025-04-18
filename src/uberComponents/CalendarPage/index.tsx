@@ -8,10 +8,8 @@ import { Calendar } from 'src/components/Calendar';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 
-import { useCalendarPage } from './hooks';
+import { useCalendarPage, useCalendarEvents } from './hooks';
 import { CalendarPageProps } from './types';
-import { AppointmentBubble } from '../../containers/Scheduling/ScheduleCalendar';
-import { useAppointmentEvents } from '../../containers/Scheduling/ScheduleCalendar/hooks/useAppointmentEvents';
 import { HeaderQuestionnaireAction } from '../ResourceListPage/actions';
 
 export { customAction, navigationAction, questionnaireAction } from '../ResourceListPage/actions';
@@ -26,15 +24,14 @@ export function CalendarPage<R extends Resource>({
     getFilters,
     defaultLaunchContext,
     eventConfig,
+    eventContent,
     businessHours,
     newEventModal,
-    eventDetails,
+    eventDetailsModal,
     eventEditModal,
 }: CalendarPageProps<R>) {
-    const allFilters = getFilters?.() ?? [];
-
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
-        columns: allFilters ?? [],
+        columns: getFilters?.() ?? [],
     });
 
     const { reload, recordResponse } = useCalendarPage(
@@ -44,19 +41,17 @@ export function CalendarPage<R extends Resource>({
         searchParams ?? {},
     );
 
-    const headerActions = getHeaderActions?.() ?? [];
-
     const {
-        openEditAppointment,
-        closeAppointmentDetails,
-        appointmentDetails,
-        openNewAppointmentModal,
-        openAppointmentDetails,
-        newAppointmentData,
-        closeNewAppointmentModal,
-        closeEditAppointment,
-        editingAppointmentId,
-    } = useAppointmentEvents();
+        openNewEventModal,
+        newEventData,
+        closeNewEventModal,
+        openEventDetails,
+        eventDetails,
+        closeEventDetails,
+        openEditEvent,
+        editingEventId,
+        closeEditEvent,
+    } = useCalendarEvents();
 
     const emptyBusinessHours = [
         {
@@ -70,7 +65,7 @@ export function CalendarPage<R extends Resource>({
         <PageContainer
             title={title}
             maxWidth={maxWidth}
-            titleRightElement={headerActions.map((action, index) => (
+            titleRightElement={(getHeaderActions?.() ?? []).map((action, index) => (
                 <React.Fragment key={index}>
                     <HeaderQuestionnaireAction
                         action={action}
@@ -101,32 +96,32 @@ export function CalendarPage<R extends Resource>({
                             <Calendar
                                 businessHours={bs}
                                 initialEvents={slotsData}
-                                eventContent={AppointmentBubble}
-                                eventClick={openAppointmentDetails}
-                                select={openNewAppointmentModal}
+                                eventContent={eventContent}
+                                eventClick={openEventDetails}
+                                select={openNewEventModal}
                             />
                             {newEventModal &&
                                 newEventModal({
                                     bundle: bundle!,
-                                    newEventData: newAppointmentData,
+                                    newEventData: newEventData,
                                     onOk: () => {
                                         reload();
-                                        closeNewAppointmentModal();
+                                        closeNewEventModal();
                                     },
-                                    onClose: closeNewAppointmentModal,
+                                    onClose: closeNewEventModal,
                                 })}
-                            {eventDetails &&
-                                eventDetails({
-                                    eventDetailsData: appointmentDetails,
-                                    openEvent: openEditAppointment,
-                                    onClose: closeAppointmentDetails,
+                            {eventDetailsModal &&
+                                eventDetailsModal({
+                                    eventDetailsData: eventDetails,
+                                    openEvent: openEditEvent,
+                                    onClose: closeEventDetails,
                                 })}
                             {eventEditModal &&
                                 eventEditModal({
-                                    eventIdToEdit: editingAppointmentId,
-                                    closeEditEvent: closeEditAppointment,
+                                    eventIdToEdit: editingEventId,
+                                    closeEditEvent: closeEditEvent,
                                     reload: reload,
-                                    onClose: closeEditAppointment,
+                                    onClose: closeEditEvent,
                                     bundle: bundle!,
                                 })}
                         </>
