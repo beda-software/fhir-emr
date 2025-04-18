@@ -1,7 +1,7 @@
 import { t } from '@lingui/macro';
 import queryString from 'query-string';
 import { ReactElement, useContext, useEffect, useRef } from 'react';
-import { Route, BrowserRouter, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
@@ -33,6 +33,7 @@ import { HealthcareServiceList } from '../HealthcareServiceList';
 import { InvoiceDetails } from '../InvoiceDetails';
 import { InvoiceList } from '../InvoiceList';
 import { MedicationManagement } from '../MedicationManagement';
+import { NewScheduling } from '../NewScheduling';
 import { NotificationPage } from '../NotificationPage';
 import { OrganizationScheduling } from '../OrganizationScheduling';
 import { DocumentPrint } from '../PatientDetails/DocumentPrint';
@@ -163,6 +164,7 @@ function AuthenticatedUserApp({ defaultRoute, extra }: RouteProps) {
                             {extra}
                             <Route path="/encounters" element={<EncounterList />} />
                             <Route path="/scheduling" element={<OrganizationScheduling />} />
+                            <Route path="/scheduling-new" element={<NewScheduling />} />
                             <Route path="/medications" element={<MedicationManagement />} />
                             <Route path="/prescriptions" element={<Prescriptions />} />
                             <Route path="/invoices" element={<InvoiceList />} />
