@@ -54,6 +54,10 @@ export type CalendarPageProps<R extends Resource> = ResourceListProps<R, WebExtr
     eventConfig: (r: Resource, bundle: Bundle) => EventConfig;
     eventContent?: (eventContent: EventContentArg) => React.ReactElement | null;
     businessHours?: (bundle: Bundle) => BusinessHours;
+    calendarEventDetails: {
+        questionnaireId: string;
+        title: string;
+    };
     maxWidth?: number | string;
     newEventModal?: (props: NewEventModalProps) => React.ReactElement | null;
     eventDetailsModal?: (props: EventDetailsProps) => React.ReactElement | null;

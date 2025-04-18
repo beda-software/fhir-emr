@@ -47,6 +47,10 @@ export function NewScheduling() {
                         newEventModal={newEventModal}
                         eventDetailsModal={detailsModal}
                         eventEditModal={editEventModal}
+                        calendarEventDetails={{
+                            title: 'Edit Appointment',
+                            questionnaireId: 'edit-appointment-new',
+                        }}
                     />
                 );
             }}

@@ -8,10 +8,10 @@ import { Calendar } from 'src/components/Calendar';
 import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 
+import { CalendarEventQuestionnaireAction } from './actions';
 import { useCalendarPage, useCalendarEvents } from './hooks';
 import { CalendarPageProps } from './types';
 import { HeaderQuestionnaireAction } from '../ResourceListPage/actions';
-
 export { customAction, navigationAction, questionnaireAction } from '../ResourceListPage/actions';
 
 export function CalendarPage<R extends Resource>({
@@ -29,6 +29,7 @@ export function CalendarPage<R extends Resource>({
     newEventModal,
     eventDetailsModal,
     eventEditModal,
+    calendarEventDetails,
 }: CalendarPageProps<R>) {
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
         columns: getFilters?.() ?? [],
@@ -47,8 +48,6 @@ export function CalendarPage<R extends Resource>({
         closeNewEventModal,
         openEventDetails,
         eventDetails,
-        closeEventDetails,
-        openEditEvent,
         editingEventId,
         closeEditEvent,
     } = useCalendarEvents();
@@ -90,6 +89,8 @@ export function CalendarPage<R extends Resource>({
                     const bundle = data?.[0]?.bundle as Bundle | undefined;
                     const businessHoursData = bundle ? businessHours?.(bundle) : undefined;
                     const bs = businessHoursData?.length ? businessHoursData : emptyBusinessHours;
+                    console.log('eventDetails', eventDetails?.extendedProps?.fullResource);
+                    const existingResource = eventDetails?.extendedProps?.fullResource;
 
                     return (
                         <>
@@ -99,6 +100,20 @@ export function CalendarPage<R extends Resource>({
                                 eventContent={eventContent}
                                 eventClick={openEventDetails}
                                 select={openNewEventModal}
+                            />
+                            <CalendarEventQuestionnaireAction<Resource>
+                                key="open-details-questionnaire-action"
+                                action={{
+                                    questionnaireId: calendarEventDetails.questionnaireId,
+                                    title: calendarEventDetails.title,
+                                    type: 'questionnaire',
+                                    extra: { modalProps: { open: Boolean(eventDetails) } },
+                                }}
+                                reload={reload}
+                                defaultLaunchContext={[]}
+                                resource={
+                                    existingResource ? (existingResource as Resource) : { resourceType: 'Appointment' }
+                                }
                             />
                             {newEventModal &&
                                 newEventModal({
@@ -110,12 +125,12 @@ export function CalendarPage<R extends Resource>({
                                     },
                                     onClose: closeNewEventModal,
                                 })}
-                            {eventDetailsModal &&
-                                eventDetailsModal({
-                                    eventDetailsData: eventDetails,
-                                    openEvent: openEditEvent,
-                                    onClose: closeEventDetails,
-                                })}
+                            {/* {eventDetailsModal &&
+                            eventDetailsModal({
+                            eventDetailsData: eventDetails,
+                            openEvent: openEditEvent,
+                            onClose: closeEventDetails,
+                            })} */}
                             {eventEditModal &&
                                 eventEditModal({
                                     eventIdToEdit: editingEventId,

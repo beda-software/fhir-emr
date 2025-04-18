@@ -37,6 +37,7 @@ export function getEventConfig(r: Resource, bundle: Bundle) {
         end,
         status,
         classNames: [`_${status}`],
+        fullResource: r,
     };
 }
 
