@@ -9,7 +9,7 @@ import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 
 import { CalendarEventQuestionnaireAction } from './actions';
-import { useCalendarPage, useCalendarEvents } from './hooks';
+import { useCalendarPage } from './hooks';
 import { CalendarPageProps } from './types';
 import { HeaderQuestionnaireAction } from '../ResourceListPage/actions';
 export { customAction, navigationAction, questionnaireAction } from '../ResourceListPage/actions';
@@ -33,15 +33,14 @@ export function CalendarPage<R extends Resource>(props: CalendarPageProps<R>) {
         columns: getFilters?.() ?? [],
     });
 
-    const { reload, recordResponse } = useCalendarPage(
-        resourceType,
-        extractPrimaryResources,
-        columnsFilterValues,
-        searchParams ?? {},
-    );
-
-    const { eventCreate, eventShow, questionnaireActions, emptyBusinessHours } =
-        useCalendarEvents<R>(calendarEventActions);
+    const { reload, recordResponse, eventCreate, eventShow, questionnaireActions, emptyBusinessHours } =
+        useCalendarPage(
+            resourceType,
+            extractPrimaryResources,
+            columnsFilterValues,
+            searchParams ?? {},
+            calendarEventActions,
+        );
 
     return (
         <PageContainer

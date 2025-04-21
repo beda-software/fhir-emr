@@ -12,6 +12,14 @@ import { useDebounce } from 'src/utils/debounce';
 
 import { NewEventData, CalendarPageProps } from './types';
 
+function extractPrimaryResourcesFactory<R extends Resource>(resourceType: R['resourceType']) {
+    return (bundle: Bundle) => {
+        return (bundle.entry ?? [])
+            .filter((entry) => entry.resource?.resourceType === resourceType)
+            .map((entry) => entry.resource as R);
+    };
+}
+
 function useModal<T = undefined>() {
     const [data, setData] = useState<T | undefined>();
 
@@ -104,7 +112,10 @@ export function useCalendarPage<R extends Resource>(
     extractPrimaryResources: ((bundle: Bundle) => R[]) | undefined,
     filterValues: ColumnFilterValue[],
     defaultSearchParams: SearchParams,
+    calendarEventActions: CalendarPageProps<R>['calendarEventActions'],
 ) {
+    const { eventCreate, eventShow, questionnaireActions, emptyBusinessHours } =
+        useCalendarEvents<R>(calendarEventActions);
     const debouncedFilterValues = useDebounce(filterValues, 300);
 
     const searchBarSearchParams = {
@@ -162,13 +173,9 @@ export function useCalendarPage<R extends Resource>(
         pagination,
         recordResponse,
         reload,
-    };
-}
-
-function extractPrimaryResourcesFactory<R extends Resource>(resourceType: R['resourceType']) {
-    return (bundle: Bundle) => {
-        return (bundle.entry ?? [])
-            .filter((entry) => entry.resource?.resourceType === resourceType)
-            .map((entry) => entry.resource as R);
+        eventCreate,
+        eventShow,
+        questionnaireActions,
+        emptyBusinessHours,
     };
 }
