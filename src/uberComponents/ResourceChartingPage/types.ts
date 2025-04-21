@@ -9,7 +9,7 @@ export interface Tab<R extends Resource> {
     label: string;
     path: string;
     component: (context: RecordType<R>) => JSX.Element;
-    splitterContent?: React.ReactNode;
+    chartingContent?: React.ReactNode;
 }
 
 export interface ResourceChartingPageProps<R extends Resource>
@@ -21,7 +21,7 @@ export interface ResourceChartingPageProps<R extends Resource>
     extractPrimaryResource?: (bundle: Bundle<R>) => R;
     headerContent?: React.ReactNode;
     titleRightElement?: React.ReactNode;
-    splitterHeader?: React.ReactNode;
+    chartingHeader?: React.ReactNode;
     children?: React.ReactNode;
 }
 

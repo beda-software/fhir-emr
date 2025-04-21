@@ -63,7 +63,7 @@ export function ResourceChartingPage<R extends Resource>({
     maxWidth,
     children,
     headerContent,
-    splitterHeader,
+    chartingHeader,
 }: ResourceChartingPageProps<R>) {
     const location = useLocation();
     const params = useParams();
@@ -101,8 +101,8 @@ export function ResourceChartingPage<R extends Resource>({
                         headerContent={headerContent ? headerContent : <PageTabs tabs={tabs} />}
                         titleRightElement={titleRightElement}
                         maxWidth={maxWidth}
-                        splitterHeader={splitterHeader}
-                        splitterContent={activeTab?.splitterContent}
+                        chartingHeader={chartingHeader}
+                        chartingContent={activeTab?.chartingContent}
                     >
                         {children ? (
                             children
