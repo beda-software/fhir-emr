@@ -12,70 +12,58 @@ import { useDebounce } from 'src/utils/debounce';
 
 import { NewEventData, CalendarPageProps } from './types';
 
+function useModal<T = undefined>() {
+    const [data, setData] = useState<T | undefined>();
+
+    const open = useCallback((value: T) => setData(value), []);
+    const close = useCallback(() => setData(undefined), []);
+
+    return {
+        data,
+        isOpen: Boolean(data),
+        open,
+        close,
+    };
+}
+
 export function useCalendarEvents<R extends Resource>(
     calendarEventActions: CalendarPageProps<R>['calendarEventActions'],
 ) {
     const { create, show } = calendarEventActions;
+    const newEventModal = useModal<NewEventData>();
+    const eventDetailsModal = useModal<EventClickArg['event']>();
+    const editEventModal = useModal<string>();
 
-    const [newEventData, setNewEventData] = useState<NewEventData | undefined>();
-    const [eventDetails, setEventDetails] = useState<EventClickArg['event'] | undefined>();
-    const [editingEventId, setEditingEventId] = useState<string | undefined>();
-
-    const openNewEventModal = useCallback(({ start, end }: DateSelectArg) => {
-        setNewEventData({
-            start,
-            end,
-        });
-    }, []);
-    const closeNewEventModal = useCallback(() => {
-        setNewEventData(undefined);
-    }, []);
-
-    const openEventDetails = useCallback((e: EventClickArg) => {
-        setEventDetails(e.event);
-    }, []);
-    const closeEventDetails = useCallback(() => {
-        setEventDetails(undefined);
-    }, []);
-
-    const openEditEvent = useCallback((id: string) => {
-        setEditingEventId(id);
-    }, []);
-    const closeEditEvent = useCallback(() => {
-        setEditingEventId(undefined);
-    }, []);
-
-    const isEventDetailsModalOpen = Boolean(eventDetails);
-    const isEventCreateModalOpen = Boolean(newEventData);
-
-    const updatedCalendarEventDetails = {
-        ...show,
-        ...{
+    const updatedCalendarEventDetails = useMemo(
+        () => ({
+            ...show,
             extra: {
                 modalProps: {
                     title: show.title,
-                    open: isEventDetailsModalOpen,
-                    onCancel: closeEventDetails,
+                    open: eventDetailsModal.isOpen,
+                    onCancel: eventDetailsModal.close,
                 },
                 qrfProps: {
                     readOnly: true,
                 },
             },
-        },
-    };
+        }),
+        [show, eventDetailsModal.isOpen, eventDetailsModal.close],
+    );
 
-    const updatedCalendarEventCreate = {
-        ...create,
-        ...{
+    const updatedCalendarEventCreate = useMemo(
+        () => ({
+            ...create,
             extra: {
                 modalProps: {
                     title: create.title,
-                    open: isEventCreateModalOpen,
-                    onCancel: closeNewEventModal,
+                    open: newEventModal.isOpen,
+                    onCancel: newEventModal.close,
                 },
             },
-        },
-    };
+        }),
+        [create, newEventModal.isOpen, newEventModal.close],
+    );
 
     const emptyBusinessHours = [
         {
@@ -87,21 +75,21 @@ export function useCalendarEvents<R extends Resource>(
 
     return {
         eventCreate: {
-            modalOpen: openNewEventModal,
-            modalClose: closeNewEventModal,
-            show: isEventCreateModalOpen,
-            data: newEventData,
+            modalOpen: (args: DateSelectArg) => newEventModal.open({ start: args.start, end: args.end }),
+            modalClose: newEventModal.close,
+            show: newEventModal.isOpen,
+            data: newEventModal.data,
         },
         eventShow: {
-            modalOpen: openEventDetails,
-            modalClose: closeEventDetails,
-            show: isEventDetailsModalOpen,
-            data: eventDetails,
+            modalOpen: (e: EventClickArg) => eventDetailsModal.open(e.event),
+            modalClose: eventDetailsModal.close,
+            show: eventDetailsModal.isOpen,
+            data: eventDetailsModal.data,
         },
         eventEdit: {
-            modalOpen: openEditEvent,
-            modalClose: closeEditEvent,
-            data: editingEventId,
+            modalOpen: (id: string) => editEventModal.open(id),
+            modalClose: editEventModal.close,
+            data: editEventModal.data,
         },
         questionnaireActions: {
             show: updatedCalendarEventDetails,
