@@ -1,8 +1,9 @@
 import { Avatar, Col, List, ListProps, Row } from 'antd';
 import { useTheme } from 'styled-components';
 
-import { S } from './styles';
 import { Link } from 'src/components';
+
+import { S } from './styles';
 
 type ChartingListItem = {
     icon: React.ReactNode;

@@ -1,5 +1,5 @@
-import { NoUndefinedRangeValueType } from 'rc-picker/lib/PickerInput/RangePicker';
 import moment from 'moment';
+import { NoUndefinedRangeValueType } from 'rc-picker/lib/PickerInput/RangePicker';
 import { useCallback } from 'react';
 
 import { DateColumnFilterValue } from 'src/components/SearchBar/types';
@@ -11,7 +11,7 @@ export function useDateColumn(props: SearchBarColumnDateTypeProps) {
     const { onChange, columnFilterValue } = props;
 
     const onColumnChange = useCallback<RangePickerOnChange>(
-        (dates: NoUndefinedRangeValueType<moment.Moment> | null, dateStrings: [string, string]) => {
+        (dates: NoUndefinedRangeValueType<moment.Moment> | null) => {
             if (dates) {
                 const momentValues = dates.map((date) => moment(date!.format())) as DateColumnFilterValue;
 

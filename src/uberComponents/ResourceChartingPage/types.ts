@@ -2,8 +2,9 @@ import { Bundle, Resource } from 'fhir/r4b';
 
 import { SearchParams } from '@beda.software/fhir-react';
 
-import { RecordType } from '../ResourceListPage/types';
 import { PageContainerProps } from 'src/components';
+
+import { RecordType } from '../ResourceListPage/types';
 
 export interface Tab<R extends Resource> {
     label: string;

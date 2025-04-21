@@ -1,12 +1,14 @@
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { Layout } from 'antd';
 import Sider from 'antd/es/layout/Sider';
+import { useState } from 'react';
+import { useTheme } from 'styled-components';
+
 import { PageContainerProps } from 'src/components';
 import { S as LayoutStyle } from 'src/components/BaseLayout/PageContainer/styles';
-import { useTheme } from 'styled-components';
-import { getChartingPanelState, setChartingPanelState } from '../utils';
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { useState } from 'react';
+
 import { S } from './styles';
+import { getChartingPanelState, setChartingPanelState } from '../utils';
 
 interface PageChartingContainerProps extends PageContainerProps {
     chartingHeader?: React.ReactNode;

@@ -9,9 +9,9 @@ import { Tabs } from 'src/components/Tabs';
 import { getFHIRResources } from 'src/services';
 import { compileAsFirst } from 'src/utils';
 
+import { PageChartingContainer } from './PageChartingContainer';
 import { PageTabsProps, ResourceChartingPageProps } from './types';
 import { RecordType } from '../ResourceListPage/types';
-import { PageChartingContainer } from './PageChartingContainer';
 
 export function PageTabs<R extends Resource>({ tabs }: PageTabsProps<R>) {
     const location = useLocation();
