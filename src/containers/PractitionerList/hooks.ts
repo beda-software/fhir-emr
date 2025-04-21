@@ -82,7 +82,7 @@ export function usePractitionersList(filterValues: ColumnFilterValue[] | undefin
 function practitionerRoleToStringArray(practitionerRolesList: PractitionerRole[]): string[] {
     const practitionerSpecialtyList: string[] = [];
     practitionerRolesList.forEach((pR) => {
-        const pRL = pR.specialty?.[0]!.coding?.[0]!.display;
+        const pRL = pR.specialty?.[0]?.coding?.[0]?.display;
         if (pRL !== undefined) {
             practitionerSpecialtyList.push(pRL);
         }

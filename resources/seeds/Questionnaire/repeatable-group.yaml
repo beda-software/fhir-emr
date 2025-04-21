@@ -8,7 +8,7 @@ meta:
 item:
   - text: Items
     type: group
-    linkId: surgeries-group
+    linkId: repeatable-group
     item:
       - item:
           - text: Text

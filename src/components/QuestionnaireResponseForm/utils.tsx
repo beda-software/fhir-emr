@@ -1,45 +1,79 @@
 import { t } from '@lingui/macro';
 import { notification } from 'antd';
-import { QuestionnaireResponse } from 'fhir/r4b';
-import { FormItems, mapFormToResponse, QuestionnaireResponseFormData } from 'sdc-qrf';
+import { QuestionnaireResponse, Resource } from 'fhir/r4b';
+import moment from 'moment';
+import {
+    FormItems,
+    fromFirstClassExtension,
+    mapFormToResponse,
+    mapResponseToForm,
+    QuestionnaireResponseFormData,
+    toFirstClassExtension,
+} from 'sdc-qrf';
 
-import { formatError } from '@beda.software/fhir-react';
-import { isFailure, isSuccess, RemoteDataResult } from '@beda.software/remote-data';
+import { formatError, formatFHIRDateTime } from '@beda.software/fhir-react';
+import { failure, isFailure, isSuccess, RemoteDataResult, success } from '@beda.software/remote-data';
 
-import { QuestionnaireResponseFormSaveResponse } from 'src/hooks/questionnaire-response-form-data';
-import { patchFHIRResource, saveFHIRResource } from 'src/services/fhir';
+import {
+    QuestionnaireResponseFormSaveResponse,
+    getQuestionnaireResponseDraftServices,
+    QuestionnaireResponseDraftService,
+} from 'src/hooks/questionnaire-response-form-data';
 
 export const saveQuestionnaireResponseDraft = async (
-    questionnaireId: string,
+    id: Resource['id'],
     formData: QuestionnaireResponseFormData,
     currentFormValues: FormItems,
+    qrDraftServiceType: QuestionnaireResponseDraftService,
 ) => {
-    const isCreating = formData.context.questionnaireResponse.id === undefined;
     const transformedFormValues = mapFormToResponse(currentFormValues, formData.context.questionnaire);
 
     const questionnaireResponse: QuestionnaireResponse = {
-        id: formData.context.questionnaireResponse.id,
-        encounter: formData.context.questionnaireResponse.encounter,
+        ...fromFirstClassExtension(formData.context.questionnaireResponse),
         item: transformedFormValues.item,
-        questionnaire: isCreating ? questionnaireId : formData.context.questionnaire.assembledFrom,
-        resourceType: formData.context.questionnaireResponse.resourceType,
-        subject: formData.context.questionnaireResponse.subject,
+        questionnaire: formData.context.questionnaire.assembledFrom,
         status: 'in-progress',
-        authored: new Date().toISOString(),
+        authored: formatFHIRDateTime(moment()),
     };
 
-    const response = isCreating
-        ? await saveFHIRResource(questionnaireResponse)
-        : await patchFHIRResource<QuestionnaireResponse>(questionnaireResponse);
+    const response = await getQuestionnaireResponseDraftServices(qrDraftServiceType).saveService(
+        questionnaireResponse,
+        id,
+    );
 
-    if (isSuccess(response)) {
-        formData.context.questionnaireResponse.id = response.data.id;
-    }
     if (isFailure(response)) {
         console.error(t`Error saving a draft: `, response.error);
     }
 
     return response;
+};
+
+export const loadQuestionnaireResponseDraft = (
+    id: Resource['id'],
+    formData: QuestionnaireResponseFormData,
+    qrDraftServiceType: QuestionnaireResponseDraftService,
+): RemoteDataResult<QuestionnaireResponse> => {
+    const draftQR = getQuestionnaireResponseDraftServices(qrDraftServiceType).loadService(id);
+
+    if (!isSuccess(draftQR)) {
+        return draftQR;
+    }
+
+    formData.context.questionnaireResponse = toFirstClassExtension(draftQR.data);
+    formData.formValues = mapResponseToForm(formData.context.questionnaireResponse, formData.context.questionnaire);
+
+    return success(draftQR.data);
+};
+
+export const deleteQuestionnaireResponseDraft = async (
+    id: Resource['id'],
+    qrDraftServiceType: QuestionnaireResponseDraftService,
+) => {
+    if (!id) {
+        return Promise.resolve(failure(t`Resource id not provided`));
+    }
+
+    return await getQuestionnaireResponseDraftServices(qrDraftServiceType).deleteService(id);
 };
 
 export function onFormResponse(props: {
