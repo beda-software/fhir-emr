@@ -10,12 +10,15 @@ import { getSearchBarColumnFilterValue } from 'src/components/SearchBar/utils';
 import { service } from 'src/services/fhir';
 import { useDebounce } from 'src/utils/debounce';
 
-import { NewEventData } from './types';
+import { NewEventData, CalendarPageProps } from './types';
 
-export function useCalendarEvents() {
+export function useCalendarEvents<R extends Resource>(
+    calendarEventActions: CalendarPageProps<R>['calendarEventActions'],
+) {
+    const { create, show } = calendarEventActions;
+
     const [newEventData, setNewEventData] = useState<NewEventData | undefined>();
     const [eventDetails, setEventDetails] = useState<EventClickArg['event'] | undefined>();
-    const [eventDetailsOpen, setEventDetailsOpen] = useState<boolean>(false);
     const [editingEventId, setEditingEventId] = useState<string | undefined>();
 
     const openNewEventModal = useCallback(({ start, end }: DateSelectArg) => {
@@ -29,14 +32,10 @@ export function useCalendarEvents() {
     }, []);
 
     const openEventDetails = useCallback((e: EventClickArg) => {
-        console.log('Open event details');
         setEventDetails(e.event);
-        setEventDetailsOpen(true);
     }, []);
     const closeEventDetails = useCallback(() => {
-        console.log('Close event details');
         setEventDetails(undefined);
-        setEventDetailsOpen(false);
     }, []);
 
     const openEditEvent = useCallback((id: string) => {
@@ -46,19 +45,69 @@ export function useCalendarEvents() {
         setEditingEventId(undefined);
     }, []);
 
+    const isEventDetailsModalOpen = Boolean(eventDetails);
+    const isEventCreateModalOpen = Boolean(newEventData);
+
+    const updatedCalendarEventDetails = {
+        ...show,
+        ...{
+            extra: {
+                modalProps: {
+                    title: show.title,
+                    open: isEventDetailsModalOpen,
+                    onCancel: closeEventDetails,
+                },
+                qrfProps: {
+                    readOnly: true,
+                },
+            },
+        },
+    };
+
+    const updatedCalendarEventCreate = {
+        ...create,
+        ...{
+            extra: {
+                modalProps: {
+                    title: create.title,
+                    open: isEventCreateModalOpen,
+                    onCancel: closeNewEventModal,
+                },
+            },
+        },
+    };
+
+    const emptyBusinessHours = [
+        {
+            daysOfWeek: [1, 2, 3, 4, 5, 6, 7],
+            startTime: '08:00',
+            endTime: '08:00',
+        },
+    ];
+
     return {
-        openNewEventModal,
-        newEventData,
-        closeNewEventModal,
-
-        openEventDetails,
-        eventDetails,
-        closeEventDetails,
-        eventDetailsOpen,
-
-        openEditEvent,
-        editingEventId,
-        closeEditEvent,
+        eventCreate: {
+            modalOpen: openNewEventModal,
+            modalClose: closeNewEventModal,
+            show: isEventCreateModalOpen,
+            data: newEventData,
+        },
+        eventShow: {
+            modalOpen: openEventDetails,
+            modalClose: closeEventDetails,
+            show: isEventDetailsModalOpen,
+            data: eventDetails,
+        },
+        eventEdit: {
+            modalOpen: openEditEvent,
+            modalClose: closeEditEvent,
+            data: editingEventId,
+        },
+        questionnaireActions: {
+            show: updatedCalendarEventDetails,
+            create: updatedCalendarEventCreate,
+        },
+        emptyBusinessHours,
     };
 }
 

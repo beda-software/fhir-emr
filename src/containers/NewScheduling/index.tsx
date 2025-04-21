@@ -55,7 +55,7 @@ export function NewScheduling() {
                             create: {
                                 type: 'questionnaire',
                                 title: 'New appointment',
-                                questionnaireId: 'new-appointment',
+                                questionnaireId: 'new-appointment-prefilled',
                             },
                             edit: {
                                 type: 'questionnaire',

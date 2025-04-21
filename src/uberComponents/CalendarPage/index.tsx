@@ -29,7 +29,6 @@ export function CalendarPage<R extends Resource>(props: CalendarPageProps<R>) {
         businessHours,
         calendarEventActions,
     } = props;
-    const { show } = calendarEventActions;
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
         columns: getFilters?.() ?? [],
     });
@@ -41,18 +40,8 @@ export function CalendarPage<R extends Resource>(props: CalendarPageProps<R>) {
         searchParams ?? {},
     );
 
-    const { openNewEventModal, openEventDetails, eventDetails, eventDetailsOpen, closeEventDetails } =
-        useCalendarEvents();
-
-    console.log('eventDetailsOpen', eventDetailsOpen);
-
-    const emptyBusinessHours = [
-        {
-            daysOfWeek: [1, 2, 3, 4, 5, 6, 7],
-            startTime: '08:00',
-            endTime: '08:00',
-        },
-    ];
+    const { eventCreate, eventShow, questionnaireActions, emptyBusinessHours } =
+        useCalendarEvents<R>(calendarEventActions);
 
     return (
         <PageContainer
@@ -83,23 +72,7 @@ export function CalendarPage<R extends Resource>(props: CalendarPageProps<R>) {
                     const bundle = data?.[0]?.bundle as Bundle | undefined;
                     const businessHoursData = bundle ? businessHours?.(bundle) : undefined;
                     const bs = businessHoursData?.length ? businessHoursData : emptyBusinessHours;
-                    const existingResource = eventDetails?.extendedProps?.fullResource;
-                    console.log('existingResource', existingResource);
-                    const updatedCalendarEventDetails = {
-                        ...show,
-                        ...{
-                            extra: {
-                                modalProps: {
-                                    title: show.title,
-                                    open: eventDetailsOpen,
-                                    onCancel: closeEventDetails,
-                                },
-                                qrfProps: {
-                                    readOnly: true,
-                                },
-                            },
-                        },
-                    };
+                    const existingResource = eventShow.data?.extendedProps?.fullResource;
 
                     return (
                         <>
@@ -107,18 +80,35 @@ export function CalendarPage<R extends Resource>(props: CalendarPageProps<R>) {
                                 businessHours={bs}
                                 initialEvents={slotsData}
                                 eventContent={eventContent}
-                                eventClick={openEventDetails}
-                                select={openNewEventModal}
+                                eventClick={eventShow.modalOpen}
+                                select={eventCreate.modalOpen}
                             />
-                            <CalendarEventQuestionnaireAction<R>
-                                key="show-details-questionnaire-action"
-                                action={updatedCalendarEventDetails}
-                                reload={reload}
-                                defaultLaunchContext={[]}
-                                resource={
-                                    existingResource ? (existingResource as R) : ({ resourceType: 'Appointment' } as R)
-                                }
-                            />
+                            {eventShow.show && (
+                                <CalendarEventQuestionnaireAction<R>
+                                    key="show-details-questionnaire-action"
+                                    action={questionnaireActions.show}
+                                    reload={reload}
+                                    defaultLaunchContext={[]}
+                                    resource={
+                                        existingResource
+                                            ? (existingResource as R)
+                                            : ({ resourceType: 'Appointment' } as R)
+                                    }
+                                />
+                            )}
+                            {eventCreate.show && (
+                                <CalendarEventQuestionnaireAction<R>
+                                    key="create-questionnaire-action"
+                                    action={questionnaireActions.create}
+                                    reload={reload}
+                                    defaultLaunchContext={[]}
+                                    resource={
+                                        existingResource
+                                            ? (existingResource as R)
+                                            : ({ resourceType: 'Appointment' } as R)
+                                    }
+                                />
+                            )}
                         </>
                     );
                 }}
