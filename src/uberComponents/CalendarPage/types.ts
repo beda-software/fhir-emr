@@ -2,7 +2,7 @@ import { EventClickArg, EventContentArg } from '@fullcalendar/core';
 import { Bundle, Resource } from 'fhir/r4b';
 import React from 'react';
 
-import { WebExtra } from '../ResourceListPage/actions';
+import { WebExtra, QuestionnaireActionType } from '../ResourceListPage/actions';
 import { ResourceListProps } from '../ResourceListPage/types';
 
 export type EventConfig = {
@@ -54,12 +54,10 @@ export type CalendarPageProps<R extends Resource> = ResourceListProps<R, WebExtr
     eventConfig: (r: Resource, bundle: Bundle) => EventConfig;
     eventContent?: (eventContent: EventContentArg) => React.ReactElement | null;
     businessHours?: (bundle: Bundle) => BusinessHours;
-    calendarEventDetails: {
-        questionnaireId: string;
-        title: string;
+    calendarEventActions: {
+        show: QuestionnaireActionType;
+        create: QuestionnaireActionType;
+        edit: QuestionnaireActionType;
     };
     maxWidth?: number | string;
-    newEventModal?: (props: NewEventModalProps) => React.ReactElement | null;
-    eventDetailsModal?: (props: EventDetailsProps) => React.ReactElement | null;
-    eventEditModal?: (props: EventEditProps) => React.ReactElement | null;
 };

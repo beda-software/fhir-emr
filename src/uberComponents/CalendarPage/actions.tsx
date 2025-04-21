@@ -18,9 +18,10 @@ export function CalendarEventQuestionnaireAction<R extends Resource>(props: {
 
     const defaultModalProps = { footer: null, destroyOnClose: true };
     const modalProps = { ...defaultModalProps, ...props.action.extra?.modalProps };
+    console.log('modalProps', modalProps);
 
     return (
-        <Modal title={action.title} {...modalProps}>
+        <Modal {...modalProps}>
             <QuestionnaireResponseForm
                 questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
                 launchContextParameters={[

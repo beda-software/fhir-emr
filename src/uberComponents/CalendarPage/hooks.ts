@@ -15,6 +15,7 @@ import { NewEventData } from './types';
 export function useCalendarEvents() {
     const [newEventData, setNewEventData] = useState<NewEventData | undefined>();
     const [eventDetails, setEventDetails] = useState<EventClickArg['event'] | undefined>();
+    const [eventDetailsOpen, setEventDetailsOpen] = useState<boolean>(false);
     const [editingEventId, setEditingEventId] = useState<string | undefined>();
 
     const openNewEventModal = useCallback(({ start, end }: DateSelectArg) => {
@@ -28,10 +29,14 @@ export function useCalendarEvents() {
     }, []);
 
     const openEventDetails = useCallback((e: EventClickArg) => {
+        console.log('Open event details');
         setEventDetails(e.event);
+        setEventDetailsOpen(true);
     }, []);
     const closeEventDetails = useCallback(() => {
+        console.log('Close event details');
         setEventDetails(undefined);
+        setEventDetailsOpen(false);
     }, []);
 
     const openEditEvent = useCallback((id: string) => {
@@ -49,6 +54,7 @@ export function useCalendarEvents() {
         openEventDetails,
         eventDetails,
         closeEventDetails,
+        eventDetailsOpen,
 
         openEditEvent,
         editingEventId,

@@ -1,8 +1,10 @@
+import { Appointment } from 'fhir/r4b';
+
 import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { SearchBarColumnType } from 'src/components/SearchBar/types';
 
-import { newEventModal, detailsModal, editEventModal, EventContent } from './EventActions';
+import { EventContent } from './EventActions';
 import { useNewScheduling } from './hooks';
 import { getEventConfig, getBusinessHours } from './utils';
 import { CalendarPage } from '../../uberComponents/CalendarPage';
@@ -14,7 +16,7 @@ export function NewScheduling() {
         <RenderRemoteData remoteData={remoteResponses}>
             {({ practitionerRoleFilterOptions, healthcareServiceFilterOptions }) => {
                 return (
-                    <CalendarPage
+                    <CalendarPage<Appointment>
                         resourceType="Appointment"
                         headerTitle="Scheduling new"
                         searchParams={{
@@ -44,12 +46,22 @@ export function NewScheduling() {
                         eventConfig={getEventConfig}
                         eventContent={EventContent}
                         businessHours={getBusinessHours}
-                        newEventModal={newEventModal}
-                        eventDetailsModal={detailsModal}
-                        eventEditModal={editEventModal}
-                        calendarEventDetails={{
-                            title: 'Edit Appointment',
-                            questionnaireId: 'edit-appointment-new',
+                        calendarEventActions={{
+                            show: {
+                                type: 'questionnaire',
+                                title: 'Appointment details',
+                                questionnaireId: 'edit-appointment-new',
+                            },
+                            create: {
+                                type: 'questionnaire',
+                                title: 'New appointment',
+                                questionnaireId: 'new-appointment',
+                            },
+                            edit: {
+                                type: 'questionnaire',
+                                title: 'Edit appointment',
+                                questionnaireId: 'edit-appointment-prefilled',
+                            },
                         }}
                     />
                 );

@@ -14,23 +14,22 @@ import { CalendarPageProps } from './types';
 import { HeaderQuestionnaireAction } from '../ResourceListPage/actions';
 export { customAction, navigationAction, questionnaireAction } from '../ResourceListPage/actions';
 
-export function CalendarPage<R extends Resource>({
-    headerTitle: title,
-    maxWidth,
-    resourceType,
-    extractPrimaryResources,
-    searchParams,
-    getHeaderActions,
-    getFilters,
-    defaultLaunchContext,
-    eventConfig,
-    eventContent,
-    businessHours,
-    newEventModal,
-    eventDetailsModal,
-    eventEditModal,
-    calendarEventDetails,
-}: CalendarPageProps<R>) {
+export function CalendarPage<R extends Resource>(props: CalendarPageProps<R>) {
+    const {
+        headerTitle: title,
+        maxWidth,
+        resourceType,
+        extractPrimaryResources,
+        searchParams,
+        getHeaderActions,
+        getFilters,
+        defaultLaunchContext,
+        eventConfig,
+        eventContent,
+        businessHours,
+        calendarEventActions,
+    } = props;
+    const { show } = calendarEventActions;
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
         columns: getFilters?.() ?? [],
     });
@@ -42,15 +41,10 @@ export function CalendarPage<R extends Resource>({
         searchParams ?? {},
     );
 
-    const {
-        openNewEventModal,
-        newEventData,
-        closeNewEventModal,
-        openEventDetails,
-        eventDetails,
-        editingEventId,
-        closeEditEvent,
-    } = useCalendarEvents();
+    const { openNewEventModal, openEventDetails, eventDetails, eventDetailsOpen, closeEventDetails } =
+        useCalendarEvents();
+
+    console.log('eventDetailsOpen', eventDetailsOpen);
 
     const emptyBusinessHours = [
         {
@@ -89,8 +83,23 @@ export function CalendarPage<R extends Resource>({
                     const bundle = data?.[0]?.bundle as Bundle | undefined;
                     const businessHoursData = bundle ? businessHours?.(bundle) : undefined;
                     const bs = businessHoursData?.length ? businessHoursData : emptyBusinessHours;
-                    console.log('eventDetails', eventDetails?.extendedProps?.fullResource);
                     const existingResource = eventDetails?.extendedProps?.fullResource;
+                    console.log('existingResource', existingResource);
+                    const updatedCalendarEventDetails = {
+                        ...show,
+                        ...{
+                            extra: {
+                                modalProps: {
+                                    title: show.title,
+                                    open: eventDetailsOpen,
+                                    onCancel: closeEventDetails,
+                                },
+                                qrfProps: {
+                                    readOnly: true,
+                                },
+                            },
+                        },
+                    };
 
                     return (
                         <>
@@ -101,44 +110,15 @@ export function CalendarPage<R extends Resource>({
                                 eventClick={openEventDetails}
                                 select={openNewEventModal}
                             />
-                            <CalendarEventQuestionnaireAction<Resource>
-                                key="open-details-questionnaire-action"
-                                action={{
-                                    questionnaireId: calendarEventDetails.questionnaireId,
-                                    title: calendarEventDetails.title,
-                                    type: 'questionnaire',
-                                    extra: { modalProps: { open: Boolean(eventDetails) } },
-                                }}
+                            <CalendarEventQuestionnaireAction<R>
+                                key="show-details-questionnaire-action"
+                                action={updatedCalendarEventDetails}
                                 reload={reload}
                                 defaultLaunchContext={[]}
                                 resource={
-                                    existingResource ? (existingResource as Resource) : { resourceType: 'Appointment' }
+                                    existingResource ? (existingResource as R) : ({ resourceType: 'Appointment' } as R)
                                 }
                             />
-                            {newEventModal &&
-                                newEventModal({
-                                    bundle: bundle!,
-                                    newEventData: newEventData,
-                                    onOk: () => {
-                                        reload();
-                                        closeNewEventModal();
-                                    },
-                                    onClose: closeNewEventModal,
-                                })}
-                            {/* {eventDetailsModal &&
-                            eventDetailsModal({
-                            eventDetailsData: eventDetails,
-                            openEvent: openEditEvent,
-                            onClose: closeEventDetails,
-                            })} */}
-                            {eventEditModal &&
-                                eventEditModal({
-                                    eventIdToEdit: editingEventId,
-                                    closeEditEvent: closeEditEvent,
-                                    reload: reload,
-                                    onClose: closeEditEvent,
-                                    bundle: bundle!,
-                                })}
                         </>
                     );
                 }}
