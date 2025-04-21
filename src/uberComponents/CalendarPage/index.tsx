@@ -72,6 +72,11 @@ export function CalendarPage<R extends Resource>(props: CalendarPageProps<R>) {
                     const businessHoursData = bundle ? businessHours?.(bundle) : undefined;
                     const bs = businessHoursData?.length ? businessHoursData : emptyBusinessHours;
                     const existingResource = eventShow.data?.extendedProps?.fullResource;
+                    const defaultEventQuetionnaireActionProps = {
+                        reload: reload,
+                        defaultLaunchContext: [],
+                        resource: existingResource ? (existingResource as R) : ({ resourceType: 'Appointment' } as R),
+                    };
 
                     return (
                         <>
@@ -86,26 +91,14 @@ export function CalendarPage<R extends Resource>(props: CalendarPageProps<R>) {
                                 <CalendarEventQuestionnaireAction<R>
                                     key="show-details-questionnaire-action"
                                     action={questionnaireActions.show}
-                                    reload={reload}
-                                    defaultLaunchContext={[]}
-                                    resource={
-                                        existingResource
-                                            ? (existingResource as R)
-                                            : ({ resourceType: 'Appointment' } as R)
-                                    }
+                                    {...defaultEventQuetionnaireActionProps}
                                 />
                             )}
                             {eventCreate.show && (
                                 <CalendarEventQuestionnaireAction<R>
                                     key="create-questionnaire-action"
                                     action={questionnaireActions.create}
-                                    reload={reload}
-                                    defaultLaunchContext={[]}
-                                    resource={
-                                        existingResource
-                                            ? (existingResource as R)
-                                            : ({ resourceType: 'Appointment' } as R)
-                                    }
+                                    {...defaultEventQuetionnaireActionProps}
                                 />
                             )}
                         </>

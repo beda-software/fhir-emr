@@ -4,7 +4,7 @@ import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { SearchBarColumnType } from 'src/components/SearchBar/types';
 
-import { EventContent } from './EventActions';
+import { EventContent } from './EventContent';
 import { useNewScheduling } from './hooks';
 import { getEventConfig, getBusinessHours } from './utils';
 import { CalendarPage } from '../../uberComponents/CalendarPage';
