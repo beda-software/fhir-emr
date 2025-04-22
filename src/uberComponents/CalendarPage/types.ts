@@ -59,5 +59,4 @@ export type CalendarPageProps<R extends Resource> = ResourceListProps<R, WebExtr
         create: QuestionnaireActionType;
         edit: QuestionnaireActionType;
     };
-    maxWidth?: number | string;
 };

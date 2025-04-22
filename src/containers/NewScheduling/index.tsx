@@ -10,7 +10,7 @@ import { getEventConfig, getBusinessHours } from './utils';
 import { CalendarPage } from '../../uberComponents/CalendarPage';
 
 export function NewScheduling() {
-    const { remoteResponses } = useNewScheduling();
+    const { remoteResponses, calendarQuestionnaireActions } = useNewScheduling();
 
     return (
         <RenderRemoteData remoteData={remoteResponses}>
@@ -46,23 +46,7 @@ export function NewScheduling() {
                         eventConfig={getEventConfig}
                         eventContent={EventContent}
                         businessHours={getBusinessHours}
-                        calendarEventActions={{
-                            show: {
-                                type: 'questionnaire',
-                                title: 'Appointment details',
-                                questionnaireId: 'edit-appointment-new',
-                            },
-                            create: {
-                                type: 'questionnaire',
-                                title: 'New appointment',
-                                questionnaireId: 'new-appointment-prefilled',
-                            },
-                            edit: {
-                                type: 'questionnaire',
-                                title: 'Edit appointment',
-                                questionnaireId: 'edit-appointment-prefilled',
-                            },
-                        }}
+                        calendarEventActions={calendarQuestionnaireActions}
                     />
                 );
             }}

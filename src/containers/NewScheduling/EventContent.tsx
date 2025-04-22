@@ -1,6 +1,7 @@
 import { EventContentArg } from '@fullcalendar/core';
 
 export function EventContent(eventContent: EventContentArg) {
+    console.log('eventContent', eventContent);
     const status = eventContent.event.extendedProps.status;
 
     return (

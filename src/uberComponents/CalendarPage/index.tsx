@@ -17,7 +17,6 @@ export { customAction, navigationAction, questionnaireAction } from '../Resource
 export function CalendarPage<R extends Resource>(props: CalendarPageProps<R>) {
     const {
         headerTitle: title,
-        maxWidth,
         resourceType,
         extractPrimaryResources,
         searchParams,
@@ -45,7 +44,6 @@ export function CalendarPage<R extends Resource>(props: CalendarPageProps<R>) {
     return (
         <PageContainer
             title={title}
-            maxWidth={maxWidth}
             titleRightElement={(getHeaderActions?.() ?? []).map((action, index) => (
                 <React.Fragment key={index}>
                     <HeaderQuestionnaireAction
