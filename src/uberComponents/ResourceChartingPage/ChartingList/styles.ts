@@ -9,7 +9,9 @@ export const S: { [key: string]: React.CSSProperties } = {
         fontWeight: 600,
         marginBottom: '24px',
     },
-    listItem: { padding: '8px 0' },
+    listItem: {
+        padding: '8px 0',
+    },
     listItemLink: {
         fontSize: '14px',
         fontWeight: 600,

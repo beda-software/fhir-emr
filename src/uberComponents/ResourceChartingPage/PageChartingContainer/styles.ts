@@ -1,17 +1,31 @@
+import Sider from 'antd/es/layout/Sider';
 import styled from 'styled-components';
 
 import { mobileWidth } from 'src/theme/utils';
 
 export const S = {
+    Sider: styled(Sider)`
+        height: 100%;
+        background-color: ${({ theme }) => theme.neutralPalette.gray_1};
+        border-right: 1px solid ${({ theme }) => theme.neutral.dividers};
+        z-index: 900;
+    `,
     ChartingPanel: styled.div`
+        position: relative;
+
         @media screen and (max-width: ${() => `${mobileWidth - 1}px`}) {
             display: none;
         }
     `,
+    ChartingPanelTogglerWrapper: styled.div<{ $chartingPanelActive: boolean }>`
+        position: absolute;
+        right: 0;
+    `,
     ChartingPanelToggler: styled.div<{ $chartingPanelActive: boolean }>`
         position: fixed;
         top: 50%;
-        left: ${({ $chartingPanelActive }) => ($chartingPanelActive ? 319 : 79)}px;
+        margin-left: -1px;
+        transform: translateY(-50%);
         width: 18px;
         height: 48px;
         background: ${({ theme }) => theme.neutralPalette.gray_1};

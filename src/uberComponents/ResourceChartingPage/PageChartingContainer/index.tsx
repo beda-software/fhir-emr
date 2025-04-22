@@ -1,8 +1,6 @@
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { Layout } from 'antd';
-import Sider from 'antd/es/layout/Sider';
 import { useState } from 'react';
-import { useTheme } from 'styled-components';
 
 import { PageContainerProps } from 'src/components';
 import { S as LayoutStyle } from 'src/components/BaseLayout/PageContainer/styles';
@@ -28,8 +26,6 @@ export function PageChartingContainer(props: PageChartingContainerProps) {
         chartingHeader,
     } = props;
 
-    const theme = useTheme();
-
     const [chartingPanelActive, setChartingPanelActive] = useState(getChartingPanelState());
 
     const toggleChartingPanel = () => {
@@ -43,23 +39,23 @@ export function PageChartingContainer(props: PageChartingContainerProps) {
         <Layout>
             {chartingContent ? (
                 <S.ChartingPanel>
-                    {chartingPanelActive && (
-                        <Sider
-                            width="240"
-                            style={{
-                                height: '100%',
-                                backgroundColor: theme.neutralPalette.gray_1,
-                                borderRight: `1px solid ${theme.neutral.dividers}`,
-                            }}
-                        >
-                            {chartingHeader ? chartingHeader : null}
-                            {chartingContent}
-                        </Sider>
-                    )}
+                    <S.Sider width={chartingPanelActive ? '240' : '8'}>
+                        {chartingPanelActive && (
+                            <>
+                                {chartingHeader ? chartingHeader : null}
+                                {chartingContent}
+                            </>
+                        )}
+                    </S.Sider>
 
-                    <S.ChartingPanelToggler $chartingPanelActive={chartingPanelActive} onClick={toggleChartingPanel}>
-                        {chartingPanelActive ? <LeftOutlined /> : <RightOutlined />}
-                    </S.ChartingPanelToggler>
+                    <S.ChartingPanelTogglerWrapper $chartingPanelActive={chartingPanelActive}>
+                        <S.ChartingPanelToggler
+                            $chartingPanelActive={chartingPanelActive}
+                            onClick={toggleChartingPanel}
+                        >
+                            {chartingPanelActive ? <LeftOutlined /> : <RightOutlined />}
+                        </S.ChartingPanelToggler>
+                    </S.ChartingPanelTogglerWrapper>
                 </S.ChartingPanel>
             ) : null}
 
