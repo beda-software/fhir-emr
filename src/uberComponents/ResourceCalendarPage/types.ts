@@ -3,7 +3,7 @@ import { Bundle, Resource } from 'fhir/r4b';
 import React from 'react';
 
 import { WebExtra, QuestionnaireActionType } from '../ResourceListPage/actions';
-import { ResourceListProps } from '../ResourceListPage/types';
+import { ResourceListBaseProps } from '../ResourceListPage/types';
 
 export type EventConfig = {
     id: string;
@@ -28,7 +28,7 @@ export interface NewEventData {
     end: Date;
 }
 
-export type ResourceCalendarPageProps<R extends Resource> = ResourceListProps<R, WebExtra> & {
+export type ResourceCalendarPageProps<R extends Resource> = ResourceListBaseProps<R, WebExtra> & {
     headerTitle: string;
     eventConfig: (r: Resource, bundle: Bundle) => EventConfig;
     eventContent?: (eventContent: EventContentArg) => React.ReactElement | null;

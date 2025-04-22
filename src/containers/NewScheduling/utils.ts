@@ -55,6 +55,8 @@ export function getBusinessHours(bundle: Bundle): BusinessHours {
         return availableTime?.filter((aTime) => !_.isUndefined(aTime.daysOfWeek));
     });
 
+    console.log('businessHours', result.length ? result.flat() : []);
+
     return result.length ? result.flat() : [];
 }
 
