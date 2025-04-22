@@ -6,10 +6,10 @@ import { extractBundleResources, useService } from '@beda.software/fhir-react';
 import { mapSuccess, sequenceMap } from '@beda.software/remote-data';
 
 import { getAllFHIRResources } from 'src/services/fhir';
+import { questionnaireAction } from 'src/uberComponents/ResourceListPage/actions';
 import { renderHumanName } from 'src/utils/fhir';
 
 import { CalendarPageProps } from '../../uberComponents/CalendarPage/types';
-import { calendarQuestionnaireActionConstructor } from '../../uberComponents/CalendarPage/utils';
 
 export function useNewScheduling() {
     const [practitionerRoleFilterOptions] = useService(async () => {
@@ -65,18 +65,9 @@ export function useNewScheduling() {
     );
 
     const calendarQuestionnaireActions: CalendarPageProps<Appointment>['calendarEventActions'] = {
-        show: calendarQuestionnaireActionConstructor({
-            title: 'Appointment details',
-            questionnaireId: 'edit-appointment-new',
-        }),
-        create: calendarQuestionnaireActionConstructor({
-            title: 'New appointment',
-            questionnaireId: 'new-appointment-prefilled',
-        }),
-        edit: calendarQuestionnaireActionConstructor({
-            title: 'Edit appointment',
-            questionnaireId: 'edit-appointment-prefilled',
-        }),
+        show: questionnaireAction('Appointment details', 'edit-appointment-new'),
+        create: questionnaireAction('New appointment', 'new-appointment-prefilled'),
+        edit: questionnaireAction('Edit appointment', 'edit-appointment-prefilled'),
     };
 
     return { remoteResponses, calendarQuestionnaireActions };
