@@ -6,10 +6,9 @@ import { extractBundleResources, useService } from '@beda.software/fhir-react';
 import { mapSuccess, sequenceMap } from '@beda.software/remote-data';
 
 import { getAllFHIRResources } from 'src/services/fhir';
+import { ResourceCalendarPageProps } from 'src/uberComponents/ResourceCalendarPage/types';
 import { questionnaireAction } from 'src/uberComponents/ResourceListPage/actions';
 import { renderHumanName } from 'src/utils/fhir';
-
-import { CalendarPageProps } from '../../uberComponents/CalendarPage/types';
 
 export function useNewScheduling() {
     const [practitionerRoleFilterOptions] = useService(async () => {
@@ -64,7 +63,7 @@ export function useNewScheduling() {
         [practitionerRoleFilterOptions, healthcareServiceFilterOptions],
     );
 
-    const calendarQuestionnaireActions: CalendarPageProps<Appointment>['calendarEventActions'] = {
+    const calendarQuestionnaireActions: ResourceCalendarPageProps<Appointment>['calendarEventActions'] = {
         show: questionnaireAction('Appointment details', 'edit-appointment-new'),
         create: questionnaireAction('New appointment', 'new-appointment-prefilled'),
         edit: questionnaireAction('Edit appointment', 'edit-appointment-prefilled'),

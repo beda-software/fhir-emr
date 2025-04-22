@@ -10,7 +10,7 @@ import { getSearchBarColumnFilterValue } from 'src/components/SearchBar/utils';
 import { service } from 'src/services/fhir';
 import { useDebounce } from 'src/utils/debounce';
 
-import { NewEventData, CalendarPageProps } from './types';
+import { NewEventData, ResourceCalendarPageProps } from './types';
 
 function extractPrimaryResourcesFactory<R extends Resource>(resourceType: R['resourceType']) {
     return (bundle: Bundle) => {
@@ -35,7 +35,7 @@ function useModal<T = undefined>() {
 }
 
 export function useCalendarEvents<R extends Resource>(
-    calendarEventActions: CalendarPageProps<R>['calendarEventActions'],
+    calendarEventActions: ResourceCalendarPageProps<R>['calendarEventActions'],
 ) {
     const { create, show } = calendarEventActions;
     const newEventModal = useModal<NewEventData>();
@@ -112,7 +112,7 @@ export function useCalendarPage<R extends Resource>(
     extractPrimaryResources: ((bundle: Bundle) => R[]) | undefined,
     filterValues: ColumnFilterValue[],
     defaultSearchParams: SearchParams,
-    calendarEventActions: CalendarPageProps<R>['calendarEventActions'],
+    calendarEventActions: ResourceCalendarPageProps<R>['calendarEventActions'],
 ) {
     const { eventCreate, eventShow, questionnaireActions, emptyBusinessHours } =
         useCalendarEvents<R>(calendarEventActions);

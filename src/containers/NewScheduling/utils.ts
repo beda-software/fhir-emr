@@ -3,9 +3,8 @@ import _ from 'lodash';
 
 import { extractBundleResources } from '@beda.software/fhir-react';
 
+import { BusinessHours } from 'src/uberComponents/ResourceCalendarPage/types';
 import { compileAsArray, compileAsFirst } from 'src/utils';
-
-import { BusinessHours } from '../../uberComponents/CalendarPage/types';
 
 const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 export function getEventConfig(r: Resource, bundle: Bundle) {

@@ -10,11 +10,11 @@ import { useSearchBar } from 'src/components/SearchBar/hooks';
 
 import { CalendarEventQuestionnaireAction } from './actions';
 import { useCalendarPage } from './hooks';
-import { CalendarPageProps } from './types';
+import { ResourceCalendarPageProps } from './types';
 import { HeaderQuestionnaireAction } from '../ResourceListPage/actions';
 export { customAction, navigationAction, questionnaireAction } from '../ResourceListPage/actions';
 
-export function CalendarPage<R extends Resource>(props: CalendarPageProps<R>) {
+export function ResourceCalendarPage<R extends Resource>(props: ResourceCalendarPageProps<R>) {
     const {
         headerTitle: title,
         resourceType,

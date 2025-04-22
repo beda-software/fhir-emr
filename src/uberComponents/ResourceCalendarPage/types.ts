@@ -1,4 +1,4 @@
-import { EventClickArg, EventContentArg } from '@fullcalendar/core';
+import { EventContentArg } from '@fullcalendar/core';
 import { Bundle, Resource } from 'fhir/r4b';
 import React from 'react';
 
@@ -28,28 +28,7 @@ export interface NewEventData {
     end: Date;
 }
 
-export interface NewEventModalProps {
-    bundle: Bundle;
-    newEventData?: NewEventData;
-    onOk: () => void;
-    onClose: () => void;
-}
-
-export interface EventDetailsProps {
-    eventDetailsData?: EventClickArg['event'] | undefined;
-    openEvent: (id: string) => void;
-    onClose: () => void;
-}
-
-export interface EventEditProps {
-    eventIdToEdit?: string;
-    closeEditEvent: () => void;
-    reload: () => void;
-    onClose: () => void;
-    bundle: Bundle;
-}
-
-export type CalendarPageProps<R extends Resource> = ResourceListProps<R, WebExtra> & {
+export type ResourceCalendarPageProps<R extends Resource> = ResourceListProps<R, WebExtra> & {
     headerTitle: string;
     eventConfig: (r: Resource, bundle: Bundle) => EventConfig;
     eventContent?: (eventContent: EventContentArg) => React.ReactElement | null;

@@ -3,11 +3,11 @@ import { Appointment } from 'fhir/r4b';
 import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { SearchBarColumnType } from 'src/components/SearchBar/types';
+import { ResourceCalendarPage } from 'src/uberComponents/ResourceCalendarPage';
 
 import { EventContent } from './EventContent';
 import { useNewScheduling } from './hooks';
 import { getEventConfig, getBusinessHours } from './utils';
-import { CalendarPage } from '../../uberComponents/CalendarPage';
 
 export function NewScheduling() {
     const { remoteResponses, calendarQuestionnaireActions } = useNewScheduling();
@@ -16,7 +16,7 @@ export function NewScheduling() {
         <RenderRemoteData remoteData={remoteResponses}>
             {({ practitionerRoleFilterOptions, healthcareServiceFilterOptions }) => {
                 return (
-                    <CalendarPage<Appointment>
+                    <ResourceCalendarPage<Appointment>
                         resourceType="Appointment"
                         headerTitle="Scheduling new"
                         searchParams={{
