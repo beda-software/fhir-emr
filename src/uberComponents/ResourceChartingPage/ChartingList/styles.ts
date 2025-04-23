@@ -1,7 +1,7 @@
 export const S: { [key: string]: React.CSSProperties } = {
     container: {
         padding: '24px 16px',
-        width: '100%',
+        width: '240px',
         position: 'fixed',
     },
     title: {
