@@ -11,6 +11,7 @@ import { SearchBar } from 'src/components/SearchBar';
 import { useSearchBar } from 'src/components/SearchBar/hooks';
 
 import { CalendarEventQuestionnaireAction } from './actions';
+import { EventContent } from './EventContent';
 import { useCalendarPage } from './hooks';
 import { ResourceCalendarPageProps } from './types';
 import { HeaderQuestionnaireAction } from '../ResourceListPage/actions';
@@ -33,13 +34,14 @@ export function ResourceCalendarPage<R extends Resource>(props: ResourceCalendar
         columns: getFilters?.() ?? [],
     });
 
-    const { reload, recordResponse, eventCreate, eventShow, eventEdit, questionnaireActions } = useCalendarPage(
-        resourceType,
-        extractPrimaryResources,
-        columnsFilterValues,
-        searchParams ?? {},
-        calendarEventActions,
-    );
+    const { calculateSlots, reload, recordResponse, eventCreate, eventShow, eventEdit, questionnaireActions } =
+        useCalendarPage(
+            resourceType,
+            extractPrimaryResources,
+            columnsFilterValues,
+            searchParams ?? {},
+            calendarEventActions,
+        );
 
     return (
         <PageContainer
@@ -65,7 +67,6 @@ export function ResourceCalendarPage<R extends Resource>(props: ResourceCalendar
         >
             <RenderRemoteData remoteData={recordResponse}>
                 {(data) => {
-                    const slotsData = data?.map((item) => event.dataFn(item?.resource, item?.bundle));
                     const existingResource = eventShow.data?.extendedProps?.fullResource;
                     const defaultEventQuetionnaireActionProps = {
                         reload: reload,
@@ -77,8 +78,8 @@ export function ResourceCalendarPage<R extends Resource>(props: ResourceCalendar
                         <>
                             <Calendar
                                 businessHours={businessHours}
-                                initialEvents={slotsData}
-                                eventContent={event.view}
+                                initialEvents={calculateSlots<R>(data, event)}
+                                eventContent={EventContent}
                                 eventClick={eventShow.modalOpen}
                                 select={eventCreate.modalOpen}
                             />

@@ -5,12 +5,10 @@ import { RenderRemoteData } from '@beda.software/fhir-react';
 import { SearchBarColumnType } from 'src/components/SearchBar/types';
 import { ResourceCalendarPage } from 'src/uberComponents/ResourceCalendarPage';
 
-import { EventContent } from './EventContent';
 import { useNewScheduling } from './hooks';
-import { getEventConfig } from './utils';
 
 export function NewScheduling() {
-    const { remoteResponses, calendarQuestionnaireActions } = useNewScheduling();
+    const { remoteResponses, calendarQuestionnaireActions, eventData } = useNewScheduling();
 
     return (
         <RenderRemoteData remoteData={remoteResponses}>
@@ -43,7 +41,7 @@ export function NewScheduling() {
                                 options: healthcareServiceFilterOptions,
                             },
                         ]}
-                        event={{ dataFn: getEventConfig, view: EventContent }}
+                        event={eventData}
                         calendarEventActions={calendarQuestionnaireActions}
                     />
                 );

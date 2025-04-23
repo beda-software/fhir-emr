@@ -1,18 +1,8 @@
-import { EventContentArg, CalendarOptions } from '@fullcalendar/core';
-import { Bundle, Resource } from 'fhir/r4b';
-import React from 'react';
+import { CalendarOptions } from '@fullcalendar/core';
+import { Resource } from 'fhir/r4b';
 
 import { WebExtra, QuestionnaireActionType } from '../ResourceListPage/actions';
 import { ResourceListBaseProps } from '../ResourceListPage/types';
-
-export type DataFn = {
-    id: string;
-    title: string;
-    start: string;
-    end: string;
-    status: string;
-    classNames: string[];
-};
 
 export interface NewEventData {
     start: Date;
@@ -21,14 +11,15 @@ export interface NewEventData {
 
 export type ResourceCalendarPageProps<R extends Resource> = ResourceListBaseProps<R, WebExtra> & {
     headerTitle: string;
-    businessHours?: CalendarOptions['businessHours'];
     event: {
-        dataFn: (r: Resource, bundle: Bundle) => DataFn;
-        view: (eventContent: EventContentArg) => React.ReactElement;
+        startExpression: string;
+        endExpression: string;
+        titleExpression: string;
     };
     calendarEventActions: {
         show: QuestionnaireActionType;
         create: QuestionnaireActionType;
         edit: QuestionnaireActionType;
     };
+    businessHours?: CalendarOptions['businessHours'];
 };

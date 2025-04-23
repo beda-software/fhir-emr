@@ -1,5 +1,5 @@
 import { DateSelectArg, EventClickArg } from '@fullcalendar/core';
-import { Bundle, Resource } from 'fhir/r4b';
+import { Bundle, Resource, FhirResource } from 'fhir/r4b';
 import { useMemo, useState, useCallback } from 'react';
 
 import { SearchParams, usePager } from '@beda.software/fhir-react';
@@ -8,6 +8,7 @@ import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 import { ColumnFilterValue } from 'src/components/SearchBar/types';
 import { getSearchBarColumnFilterValue } from 'src/components/SearchBar/utils';
 import { service } from 'src/services/fhir';
+import { compileAsFirst } from 'src/utils';
 import { useDebounce } from 'src/utils/debounce';
 
 import { NewEventData, ResourceCalendarPageProps } from './types';
@@ -175,6 +176,30 @@ export function useCalendarPage<R extends Resource>(
         })),
     );
 
+    function calculateSlots<R extends Resource>(
+        data: { resource: R; bundle: Bundle<FhirResource> }[],
+        event: ResourceCalendarPageProps<R>['event'],
+    ) {
+        const { titleExpression, startExpression, endExpression } = event;
+
+        return data.map((dataItem) => {
+            const { resource } = dataItem;
+            const getTitle = compileAsFirst<R, string>(titleExpression);
+            const getStart = compileAsFirst<R, string>(startExpression);
+            const getEnd = compileAsFirst<R, string>(endExpression);
+
+            return {
+                id: resource.id,
+                title: getTitle(resource),
+                start: getStart(resource),
+                end: getEnd(resource),
+                fullResource: resource,
+                eventStart: getStart(resource),
+                eventEnd: getEnd(resource),
+            };
+        });
+    }
+
     return {
         pagination,
         recordResponse,
@@ -183,5 +208,6 @@ export function useCalendarPage<R extends Resource>(
         eventShow,
         eventEdit,
         questionnaireActions,
+        calculateSlots,
     };
 }

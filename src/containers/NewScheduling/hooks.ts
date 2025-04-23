@@ -69,5 +69,11 @@ export function useNewScheduling() {
         edit: questionnaireAction('Edit appointment', 'edit-appointment-prefilled'),
     };
 
-    return { remoteResponses, calendarQuestionnaireActions };
+    const eventData = {
+        startExpression: 'Appointment.start',
+        endExpression: 'Appointment.end',
+        titleExpression: "Appointment.participant.actor.where(reference.startsWith('Patient/')).first().display",
+    };
+
+    return { remoteResponses, calendarQuestionnaireActions, eventData };
 }
