@@ -6,7 +6,7 @@ import { extractBundleResources, useService } from '@beda.software/fhir-react';
 import { mapSuccess, sequenceMap } from '@beda.software/remote-data';
 
 import { getAllFHIRResources } from 'src/services/fhir';
-import { ResourceCalendarPageProps } from 'src/uberComponents/ResourceCalendarPage/types';
+import { ResourceCalendarPageProps, EventColor } from 'src/uberComponents/ResourceCalendarPage/types';
 import { questionnaireAction } from 'src/uberComponents/ResourceListPage/actions';
 import { renderHumanName } from 'src/utils/fhir';
 
@@ -73,6 +73,18 @@ export function useNewScheduling() {
         startExpression: 'Appointment.start',
         endExpression: 'Appointment.end',
         titleExpression: "Appointment.participant.actor.where(reference.startsWith('Patient/')).first().display",
+        eventColorMapping: {
+            targetExpression: 'Appointment.status',
+            colorMapping: {
+                proposed: EventColor.Default,
+                pending: EventColor.ServiceCyan,
+                booked: EventColor.ServiceOrange,
+                arrived: EventColor.ServicePurple,
+                fulfilled: EventColor.ServiceGreen,
+                cancelled: EventColor.ServiceMagenta,
+                waitlist: EventColor.Default,
+            },
+        },
     };
 
     return { remoteResponses, calendarQuestionnaireActions, eventData };

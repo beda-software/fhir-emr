@@ -180,24 +180,32 @@ export function useCalendarPage<R extends Resource>(
         data: { resource: R; bundle: Bundle<FhirResource> }[],
         event: ResourceCalendarPageProps<R>['event'],
     ) {
-        const { titleExpression, startExpression, endExpression } = event;
+        const { titleExpression, startExpression, endExpression, eventColorMapping } = event;
 
-        return data.map((dataItem) => {
-            const { resource } = dataItem;
-            const getTitle = compileAsFirst<R, string>(titleExpression);
-            const getStart = compileAsFirst<R, string>(startExpression);
-            const getEnd = compileAsFirst<R, string>(endExpression);
+        const getTitle = compileAsFirst<R, string>(titleExpression);
+        const getStart = compileAsFirst<R, string>(startExpression);
+        const getEnd = compileAsFirst<R, string>(endExpression);
 
-            return {
-                id: resource.id,
-                title: getTitle(resource),
-                start: getStart(resource),
-                end: getEnd(resource),
-                fullResource: resource,
-                eventStart: getStart(resource),
-                eventEnd: getEnd(resource),
-            };
-        });
+        const getBackgroundColor = (r: R): string | undefined => {
+            if (!eventColorMapping) return undefined;
+
+            const { targetExpression, colorMapping } = eventColorMapping;
+            const getTarget = compileAsFirst<R, string>(targetExpression);
+            const targetValue = getTarget(r);
+
+            return targetValue ? colorMapping[targetValue] : undefined;
+        };
+
+        return data.map(({ resource }) => ({
+            id: resource.id,
+            title: getTitle(resource),
+            start: getStart(resource),
+            end: getEnd(resource),
+            fullResource: resource,
+            eventStart: getStart(resource),
+            eventEnd: getEnd(resource),
+            backgroundColor: getBackgroundColor(resource),
+        }));
     }
 
     return {
