@@ -69,7 +69,10 @@ export function ResourceChartingPage<R extends Resource>({
     const params = useParams();
 
     const activeTabPath = location.pathname.split('/').pop()!;
-    const activeTab = tabs.find((tab) => tab.path.split('/').pop()! === activeTabPath);
+    const activeTab =
+        tabs.find((tab) => tab.path.split('/').pop()! === activeTabPath) ||
+        tabs.find((tab) => tab.path === '/') ||
+        tabs[0];
 
     const [response] = useService(() => getFHIRResources(resourceType, getSearchParams(params)));
 
