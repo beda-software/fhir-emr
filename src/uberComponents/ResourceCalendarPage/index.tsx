@@ -1,4 +1,6 @@
-import { Bundle, Resource } from 'fhir/r4b';
+import { Trans } from '@lingui/macro';
+import { Button } from 'antd';
+import { Resource } from 'fhir/r4b';
 import React from 'react';
 
 import { RenderRemoteData } from '@beda.software/fhir-react';
@@ -23,8 +25,7 @@ export function ResourceCalendarPage<R extends Resource>(props: ResourceCalendar
         getHeaderActions,
         getFilters,
         defaultLaunchContext,
-        eventConfig,
-        eventContent,
+        event,
         businessHours,
         calendarEventActions,
     } = props;
@@ -32,14 +33,13 @@ export function ResourceCalendarPage<R extends Resource>(props: ResourceCalendar
         columns: getFilters?.() ?? [],
     });
 
-    const { reload, recordResponse, eventCreate, eventShow, questionnaireActions, emptyBusinessHours } =
-        useCalendarPage(
-            resourceType,
-            extractPrimaryResources,
-            columnsFilterValues,
-            searchParams ?? {},
-            calendarEventActions,
-        );
+    const { reload, recordResponse, eventCreate, eventShow, eventEdit, questionnaireActions } = useCalendarPage(
+        resourceType,
+        extractPrimaryResources,
+        columnsFilterValues,
+        searchParams ?? {},
+        calendarEventActions,
+    );
 
     return (
         <PageContainer
@@ -65,10 +65,7 @@ export function ResourceCalendarPage<R extends Resource>(props: ResourceCalendar
         >
             <RenderRemoteData remoteData={recordResponse}>
                 {(data) => {
-                    const slotsData = data?.map((item) => eventConfig(item?.resource, item?.bundle));
-                    const bundle = data?.[0]?.bundle as Bundle | undefined;
-                    const businessHoursData = bundle ? businessHours?.(bundle) : undefined;
-                    const bs = businessHoursData?.length ? businessHoursData : emptyBusinessHours;
+                    const slotsData = data?.map((item) => event.dataFn(item?.resource, item?.bundle));
                     const existingResource = eventShow.data?.extendedProps?.fullResource;
                     const defaultEventQuetionnaireActionProps = {
                         reload: reload,
@@ -79,9 +76,9 @@ export function ResourceCalendarPage<R extends Resource>(props: ResourceCalendar
                     return (
                         <>
                             <Calendar
-                                businessHours={bs}
+                                businessHours={businessHours}
                                 initialEvents={slotsData}
-                                eventContent={eventContent}
+                                eventContent={event.view}
                                 eventClick={eventShow.modalOpen}
                                 select={eventCreate.modalOpen}
                             />
@@ -99,6 +96,13 @@ export function ResourceCalendarPage<R extends Resource>(props: ResourceCalendar
                                     {...defaultEventQuetionnaireActionProps}
                                 />
                             )}
+                            {eventEdit.show && (
+                                <CalendarEventQuestionnaireAction<R>
+                                    key="edit-questionnaire-action"
+                                    action={questionnaireActions.edit}
+                                    {...defaultEventQuetionnaireActionProps}
+                                />
+                            )}
                         </>
                     );
                 }}
@@ -106,3 +110,17 @@ export function ResourceCalendarPage<R extends Resource>(props: ResourceCalendar
         </PageContainer>
     );
 }
+
+export const renderFooter = (onEdit: (value: string) => void, onClose: () => void) => {
+    return [
+        <Button
+            key="edit"
+            onClick={() => {
+                onEdit;
+                onClose;
+            }}
+        >
+            <Trans>Edit</Trans>
+        </Button>,
+    ];
+};

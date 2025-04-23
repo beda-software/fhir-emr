@@ -1,12 +1,8 @@
 import { Bundle, Patient, Resource } from 'fhir/r4b';
 import _ from 'lodash';
 
-import { extractBundleResources } from '@beda.software/fhir-react';
-
-import { BusinessHours } from 'src/uberComponents/ResourceCalendarPage/types';
 import { compileAsArray, compileAsFirst } from 'src/utils';
 
-const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 export function getEventConfig(r: Resource, bundle: Bundle) {
     const getId = compileAsArray<Resource, string>('Appointment.id');
     const getStart = compileAsArray<Resource, string>('Appointment.start');
@@ -38,26 +34,6 @@ export function getEventConfig(r: Resource, bundle: Bundle) {
         classNames: [`_${status}`],
         fullResource: r,
     };
-}
-
-export function getBusinessHours(bundle: Bundle): BusinessHours {
-    const resMap = extractBundleResources(bundle);
-    const practitionerRoles = resMap.PractitionerRole;
-    const practitionerRolesWithAvailableTime = practitionerRoles.filter((pr) => !!pr.availableTime);
-
-    const result = practitionerRolesWithAvailableTime.map((practitionerRole) => {
-        const availableTime = practitionerRole.availableTime?.map((item) => ({
-            daysOfWeek: item.daysOfWeek?.map((dow) => days.indexOf(dow) + 1),
-            startTime: item.availableStartTime,
-            endTime: item.availableEndTime,
-        }));
-
-        return availableTime?.filter((aTime) => !_.isUndefined(aTime.daysOfWeek));
-    });
-
-    console.log('businessHours', result.length ? result.flat() : []);
-
-    return result.length ? result.flat() : [];
 }
 
 export const extractGetParamValue = (

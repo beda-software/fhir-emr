@@ -7,7 +7,7 @@ import { ResourceCalendarPage } from 'src/uberComponents/ResourceCalendarPage';
 
 import { EventContent } from './EventContent';
 import { useNewScheduling } from './hooks';
-import { getEventConfig, getBusinessHours } from './utils';
+import { getEventConfig } from './utils';
 
 export function NewScheduling() {
     const { remoteResponses, calendarQuestionnaireActions } = useNewScheduling();
@@ -43,9 +43,7 @@ export function NewScheduling() {
                                 options: healthcareServiceFilterOptions,
                             },
                         ]}
-                        eventConfig={getEventConfig}
-                        eventContent={EventContent}
-                        businessHours={getBusinessHours}
+                        event={{ dataFn: getEventConfig, view: EventContent }}
                         calendarEventActions={calendarQuestionnaireActions}
                     />
                 );

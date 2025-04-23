@@ -37,7 +37,7 @@ function useModal<T = undefined>() {
 export function useCalendarEvents<R extends Resource>(
     calendarEventActions: ResourceCalendarPageProps<R>['calendarEventActions'],
 ) {
-    const { create, show } = calendarEventActions;
+    const { create, show, edit } = calendarEventActions;
     const newEventModal = useModal<NewEventData>();
     const eventDetailsModal = useModal<EventClickArg['event']>();
     const editEventModal = useModal<string>();
@@ -73,13 +73,19 @@ export function useCalendarEvents<R extends Resource>(
         [create, newEventModal.isOpen, newEventModal.close],
     );
 
-    const emptyBusinessHours = [
-        {
-            daysOfWeek: [1, 2, 3, 4, 5, 6, 7],
-            startTime: '08:00',
-            endTime: '08:00',
-        },
-    ];
+    const updatedCalendarEventEdit = useMemo(
+        () => ({
+            ...edit,
+            extra: {
+                modalProps: {
+                    title: edit.title,
+                    open: editEventModal.isOpen,
+                    onCancel: editEventModal.close,
+                },
+            },
+        }),
+        [edit, editEventModal.isOpen, editEventModal.close],
+    );
 
     return {
         eventCreate: {
@@ -97,13 +103,14 @@ export function useCalendarEvents<R extends Resource>(
         eventEdit: {
             modalOpen: (id: string) => editEventModal.open(id),
             modalClose: editEventModal.close,
+            show: editEventModal.isOpen,
             data: editEventModal.data,
         },
         questionnaireActions: {
             show: updatedCalendarEventDetails,
             create: updatedCalendarEventCreate,
+            edit: updatedCalendarEventEdit,
         },
-        emptyBusinessHours,
     };
 }
 
@@ -114,8 +121,7 @@ export function useCalendarPage<R extends Resource>(
     defaultSearchParams: SearchParams,
     calendarEventActions: ResourceCalendarPageProps<R>['calendarEventActions'],
 ) {
-    const { eventCreate, eventShow, questionnaireActions, emptyBusinessHours } =
-        useCalendarEvents<R>(calendarEventActions);
+    const { eventCreate, eventShow, eventEdit, questionnaireActions } = useCalendarEvents<R>(calendarEventActions);
     const debouncedFilterValues = useDebounce(filterValues, 300);
 
     const searchBarSearchParams = {
@@ -175,7 +181,7 @@ export function useCalendarPage<R extends Resource>(
         reload,
         eventCreate,
         eventShow,
+        eventEdit,
         questionnaireActions,
-        emptyBusinessHours,
     };
 }
