@@ -20,18 +20,24 @@ export interface NewEventData {
     end: Date;
 }
 
+type ResourceColorMapping<R extends Resource> = {
+    targetExpression: (r: R) => string | undefined;
+    colorMapping: Record<string, string>;
+};
+
+type TypedFHIRPathExpression<R extends Resource> = (r: R) => string | undefined;
+
+export type EventColorMapping<R extends Resource> = ResourceColorMapping<R> | undefined;
+
 export type ResourceCalendarPageProps<R extends Resource> = ResourceListBaseProps<R, WebExtra> & {
     headerTitle: string;
     event: {
         data: {
-            startExpression: (r: R) => string | undefined;
-            endExpression: (r: R) => string | undefined;
-            titleExpression: (r: R) => string | undefined;
+            startExpression: TypedFHIRPathExpression<R>;
+            endExpression: TypedFHIRPathExpression<R>;
+            titleExpression: TypedFHIRPathExpression<R>;
         };
-        eventColorMapping?: {
-            targetExpression: (r: R) => string | undefined;
-            colorMapping: Record<string, string>;
-        };
+        eventColorMapping?: ResourceColorMapping<R>;
         actions: {
             show: QuestionnaireActionType;
             create: QuestionnaireActionType;
@@ -40,10 +46,7 @@ export type ResourceCalendarPageProps<R extends Resource> = ResourceListBaseProp
     };
     slot?: {
         searchParams: SearchParams;
-        eventColorMapping?: {
-            targetExpression: (r: Slot) => string | undefined;
-            colorMapping: Record<string, string>;
-        };
+        eventColorMapping?: ResourceColorMapping<Slot>;
     };
     businessHours?: CalendarOptions['businessHours'];
 };
