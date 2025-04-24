@@ -1,5 +1,7 @@
 import { CalendarOptions } from '@fullcalendar/core';
-import { Resource } from 'fhir/r4b';
+import { Resource, Slot } from 'fhir/r4b';
+
+import { SearchParams } from '@beda.software/fhir-react';
 
 import { WebExtra, QuestionnaireActionType } from '../ResourceListPage/actions';
 import { ResourceListBaseProps } from '../ResourceListPage/types';
@@ -22,18 +24,25 @@ export type ResourceCalendarPageProps<R extends Resource> = ResourceListBaseProp
     headerTitle: string;
     event: {
         data: {
-            startExpression: string;
-            endExpression: string;
-            titleExpression: string;
+            startExpression: (r: R) => string | undefined;
+            endExpression: (r: R) => string | undefined;
+            titleExpression: (r: R) => string | undefined;
         };
         eventColorMapping?: {
-            targetExpression: string;
+            targetExpression: (r: R) => string | undefined;
             colorMapping: Record<string, string>;
         };
         actions: {
             show: QuestionnaireActionType;
             create: QuestionnaireActionType;
             edit: QuestionnaireActionType;
+        };
+    };
+    slot?: {
+        searchParams: SearchParams;
+        eventColorMapping?: {
+            targetExpression: (r: Slot) => string | undefined;
+            colorMapping: Record<string, string>;
         };
     };
     businessHours?: CalendarOptions['businessHours'];

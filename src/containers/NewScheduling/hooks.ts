@@ -1,4 +1,4 @@
-import { HealthcareService, Practitioner, PractitionerRole, Appointment } from 'fhir/r4b';
+import { HealthcareService, Practitioner, PractitionerRole, Appointment, Slot } from 'fhir/r4b';
 import _ from 'lodash';
 import React from 'react';
 
@@ -8,6 +8,7 @@ import { mapSuccess, sequenceMap } from '@beda.software/remote-data';
 import { getAllFHIRResources } from 'src/services/fhir';
 import { ResourceCalendarPageProps, EventColor } from 'src/uberComponents/ResourceCalendarPage/types';
 import { questionnaireAction } from 'src/uberComponents/ResourceListPage/actions';
+import { compileAsFirst } from 'src/utils';
 import { renderHumanName } from 'src/utils/fhir';
 
 export function useNewScheduling() {
@@ -69,15 +70,17 @@ export function useNewScheduling() {
         edit: questionnaireAction('Edit appointment', 'edit-appointment-prefilled'),
     };
 
-    const eventData = {
+    const eventData: ResourceCalendarPageProps<Appointment>['event'] = {
         actions: calendarQuestionnaireActions,
         data: {
-            startExpression: 'Appointment.start',
-            endExpression: 'Appointment.end',
-            titleExpression: "Appointment.participant.actor.where(reference.startsWith('Patient/')).first().display",
+            startExpression: compileAsFirst<Appointment, string>('Appointment.start'),
+            endExpression: compileAsFirst<Appointment, string>('Appointment.end'),
+            titleExpression: compileAsFirst<Appointment, string>(
+                "Appointment.participant.actor.where(reference.startsWith('Patient/')).first().display",
+            ),
         },
         eventColorMapping: {
-            targetExpression: 'Appointment.status',
+            targetExpression: compileAsFirst<Appointment, string>('Appointment.status'),
             colorMapping: {
                 proposed: EventColor.Default,
                 pending: EventColor.ServiceCyan,
@@ -90,5 +93,19 @@ export function useNewScheduling() {
         },
     };
 
-    return { remoteResponses, eventData };
+    const slotData: ResourceCalendarPageProps<Appointment>['slot'] = {
+        searchParams: {},
+        eventColorMapping: {
+            targetExpression: compileAsFirst<Slot, string>('Slot.status'),
+            colorMapping: {
+                busy: EventColor.Default,
+                free: EventColor.ServiceGreen,
+                'busy-unavailable': EventColor.ServiceCyan,
+                'busy-tentative': EventColor.ServiceOrange,
+                'entered-in-error': EventColor.ServiceMagenta,
+            },
+        },
+    };
+
+    return { remoteResponses, eventData, slotData };
 }

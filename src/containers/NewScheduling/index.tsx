@@ -8,7 +8,7 @@ import { ResourceCalendarPage } from 'src/uberComponents/ResourceCalendarPage';
 import { useNewScheduling } from './hooks';
 
 export function NewScheduling() {
-    const { remoteResponses, eventData } = useNewScheduling();
+    const { remoteResponses, eventData, slotData } = useNewScheduling();
 
     return (
         <RenderRemoteData remoteData={remoteResponses}>
@@ -42,6 +42,7 @@ export function NewScheduling() {
                             },
                         ]}
                         event={eventData}
+                        slot={slotData}
                     />
                 );
             }}

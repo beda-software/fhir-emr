@@ -8,7 +8,6 @@ import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 import { ColumnFilterValue } from 'src/components/SearchBar/types';
 import { getSearchBarColumnFilterValue } from 'src/components/SearchBar/utils';
 import { service } from 'src/services/fhir';
-import { compileAsFirst } from 'src/utils';
 import { useDebounce } from 'src/utils/debounce';
 
 import { NewEventData, ResourceCalendarPageProps } from './types';
@@ -183,28 +182,23 @@ export function useCalendarPage<R extends Resource>(
         const { eventColorMapping } = event;
         const { titleExpression, startExpression, endExpression } = event.data;
 
-        const getTitle = compileAsFirst<R, string>(titleExpression);
-        const getStart = compileAsFirst<R, string>(startExpression);
-        const getEnd = compileAsFirst<R, string>(endExpression);
-
         const getBackgroundColor = (r: R): string | undefined => {
             if (!eventColorMapping) return undefined;
 
             const { targetExpression, colorMapping } = eventColorMapping;
-            const getTarget = compileAsFirst<R, string>(targetExpression);
-            const targetValue = getTarget(r);
+            const targetValue = targetExpression(r);
 
             return targetValue ? colorMapping[targetValue] : undefined;
         };
 
         return data.map(({ resource }) => ({
             id: resource.id,
-            title: getTitle(resource),
-            start: getStart(resource),
-            end: getEnd(resource),
+            title: titleExpression(resource),
+            start: startExpression(resource),
+            end: endExpression(resource),
             fullResource: resource,
-            eventStart: getStart(resource),
-            eventEnd: getEnd(resource),
+            eventStart: startExpression(resource),
+            eventEnd: endExpression(resource),
             backgroundColor: getBackgroundColor(resource),
         }));
     }
