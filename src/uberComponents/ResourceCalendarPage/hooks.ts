@@ -1,9 +1,9 @@
 import { DateSelectArg, EventClickArg } from '@fullcalendar/core';
-import { Bundle, Resource, FhirResource } from 'fhir/r4b';
+import { Bundle, Resource, FhirResource, Slot } from 'fhir/r4b';
 import { useMemo, useState, useCallback } from 'react';
 
-import { SearchParams, usePager } from '@beda.software/fhir-react';
-import { isSuccess, mapSuccess } from '@beda.software/remote-data';
+import { extractBundleResources, SearchParams, usePager } from '@beda.software/fhir-react';
+import { isSuccess, mapSuccess, sequenceMap } from '@beda.software/remote-data';
 
 import { ColumnFilterValue } from 'src/components/SearchBar/types';
 import { getSearchBarColumnFilterValue } from 'src/components/SearchBar/utils';
@@ -11,6 +11,61 @@ import { service } from 'src/services/fhir';
 import { useDebounce } from 'src/utils/debounce';
 
 import { NewEventData, ResourceCalendarPageProps } from './types';
+
+function calculateEvents<R extends Resource>(
+    data: { resource: R; bundle: Bundle<FhirResource> }[],
+    event: ResourceCalendarPageProps<R>['event'],
+) {
+    const { eventColorMapping } = event;
+    const { titleExpression, startExpression, endExpression } = event.data;
+
+    const getBackgroundColor = (r: R): string | undefined => {
+        if (!eventColorMapping) return undefined;
+
+        const { targetExpression, colorMapping } = eventColorMapping;
+        const targetValue = targetExpression(r);
+
+        return targetValue ? colorMapping[targetValue] : undefined;
+    };
+
+    return data.map(({ resource }) => ({
+        id: resource.id,
+        title: titleExpression(resource),
+        start: startExpression(resource),
+        end: endExpression(resource),
+        fullResource: resource,
+        eventStart: startExpression(resource),
+        eventEnd: endExpression(resource),
+        backgroundColor: getBackgroundColor(resource),
+    }));
+}
+
+function calculateSlots<R extends Resource>(
+    data: { resource: Slot; bundle: Bundle<FhirResource> }[],
+    slot: ResourceCalendarPageProps<R>['slot'],
+) {
+    if (!slot) return undefined;
+
+    const { eventColorMapping } = slot;
+
+    const getBackgroundColor = (r: Slot): string | undefined => {
+        if (!eventColorMapping) return undefined;
+
+        const { targetExpression, colorMapping } = eventColorMapping;
+        const targetValue = targetExpression(r);
+
+        return targetValue ? colorMapping[targetValue] : undefined;
+    };
+
+    return data.map(({ resource }) => ({
+        id: resource.id,
+        start: resource.start,
+        end: resource.end,
+        display: 'background',
+        fullResource: resource,
+        backgroundColor: getBackgroundColor(resource),
+    }));
+}
 
 function extractPrimaryResourcesFactory<R extends Resource>(resourceType: R['resourceType']) {
     return (bundle: Bundle) => {
@@ -119,9 +174,10 @@ export function useCalendarPage<R extends Resource>(
     extractPrimaryResources: ((bundle: Bundle) => R[]) | undefined,
     filterValues: ColumnFilterValue[],
     defaultSearchParams: SearchParams,
-    calendarEventActions: ResourceCalendarPageProps<R>['event']['actions'],
+    event: ResourceCalendarPageProps<R>['event'],
+    slot: ResourceCalendarPageProps<R>['slot'],
 ) {
-    const { eventCreate, eventShow, eventEdit, questionnaireActions } = useCalendarEvents<R>(calendarEventActions);
+    const { eventCreate, eventShow, eventEdit, questionnaireActions } = useCalendarEvents<R>(event.actions);
     const debouncedFilterValues = useDebounce(filterValues, 300);
 
     const searchBarSearchParams = {
@@ -145,7 +201,15 @@ export function useCalendarPage<R extends Resource>(
         initialSearchParams: searchParams,
     });
 
+    const [slotResourceResponse, slotPagerManager] = usePager<Slot>({
+        resourceType: 'Slot',
+        requestService: service,
+        resourcesOnPage: pageSize,
+        initialSearchParams: slot?.searchParams,
+    });
+
     const total = isSuccess(resourceResponse) ? resourceResponse.data.total : 0;
+    const slotTotal = isSuccess(slotResourceResponse) ? slotResourceResponse.data.total : 0;
 
     const pagination = useMemo(
         () => ({
@@ -160,8 +224,22 @@ export function useCalendarPage<R extends Resource>(
         [pagerManager, pageSize, total, setPageSize],
     );
 
+    const slotPagination = useMemo(
+        () => ({
+            ...slotPagerManager,
+            updatePageSize: (pageSize: number) => {
+                slotPagerManager.reload();
+                setPageSize(pageSize);
+            },
+            pageSize,
+            slotTotal,
+        }),
+        [slotPagerManager, pageSize, slotTotal, setPageSize],
+    );
+
     const reload = () => {
         pagerManager.reload();
+        slotPagerManager.reload();
     };
 
     const extractPrimaryResourcesMemoized = useMemo(() => {
@@ -169,48 +247,42 @@ export function useCalendarPage<R extends Resource>(
     }, [resourceType, extractPrimaryResources]);
 
     const recordResponse = mapSuccess(resourceResponse, (bundle) =>
-        extractPrimaryResourcesMemoized(bundle as Bundle).map((resource) => ({
-            resource: resource as R,
-            bundle: bundle as Bundle,
-        })),
+        calculateEvents(
+            extractPrimaryResourcesMemoized(bundle as Bundle).map((resource) => ({
+                resource: resource as R,
+                bundle: bundle as Bundle,
+            })),
+            event,
+        ),
     );
 
-    function calculateSlots<R extends Resource>(
-        data: { resource: R; bundle: Bundle<FhirResource> }[],
-        event: ResourceCalendarPageProps<R>['event'],
-    ) {
-        const { eventColorMapping } = event;
-        const { titleExpression, startExpression, endExpression } = event.data;
+    const slotRecordResponse = mapSuccess(slotResourceResponse, (bundle) =>
+        calculateSlots(
+            extractBundleResources(bundle).Slot.map((resource) => ({
+                resource: resource as Slot,
+                bundle: bundle as Bundle,
+            })),
+            slot,
+        ),
+    );
 
-        const getBackgroundColor = (r: R): string | undefined => {
-            if (!eventColorMapping) return undefined;
-
-            const { targetExpression, colorMapping } = eventColorMapping;
-            const targetValue = targetExpression(r);
-
-            return targetValue ? colorMapping[targetValue] : undefined;
-        };
-
-        return data.map(({ resource }) => ({
-            id: resource.id,
-            title: titleExpression(resource),
-            start: startExpression(resource),
-            end: endExpression(resource),
-            fullResource: resource,
-            eventStart: startExpression(resource),
-            eventEnd: endExpression(resource),
-            backgroundColor: getBackgroundColor(resource),
-        }));
-    }
+    const eventResponse = useMemo(
+        () =>
+            sequenceMap({
+                recordResponse: recordResponse,
+                slotRecordResponse: slotRecordResponse,
+            }),
+        [recordResponse, slotRecordResponse],
+    );
 
     return {
+        eventResponse,
         pagination,
-        recordResponse,
+        slotPagination,
         reload,
         eventCreate,
         eventShow,
         eventEdit,
         questionnaireActions,
-        calculateSlots,
     };
 }

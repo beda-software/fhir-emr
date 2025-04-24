@@ -27,14 +27,21 @@ export function ResourceCalendarPage<R extends Resource>(props: ResourceCalendar
         getFilters,
         defaultLaunchContext,
         event,
+        slot,
         businessHours,
     } = props;
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
         columns: getFilters?.() ?? [],
     });
 
-    const { calculateSlots, reload, recordResponse, eventCreate, eventShow, eventEdit, questionnaireActions } =
-        useCalendarPage(resourceType, extractPrimaryResources, columnsFilterValues, searchParams ?? {}, event.actions);
+    const { reload, eventResponse, eventCreate, eventShow, eventEdit, questionnaireActions } = useCalendarPage(
+        resourceType,
+        extractPrimaryResources,
+        columnsFilterValues,
+        searchParams ?? {},
+        event,
+        slot,
+    );
 
     return (
         <PageContainer
@@ -58,8 +65,8 @@ export function ResourceCalendarPage<R extends Resource>(props: ResourceCalendar
                 ) : null
             }
         >
-            <RenderRemoteData remoteData={recordResponse}>
-                {(data) => {
+            <RenderRemoteData remoteData={eventResponse}>
+                {({ recordResponse, slotRecordResponse }) => {
                     const existingResource = eventShow.data?.extendedProps?.fullResource;
                     const defaultEventQuetionnaireActionProps = {
                         reload: reload,
@@ -71,7 +78,7 @@ export function ResourceCalendarPage<R extends Resource>(props: ResourceCalendar
                         <>
                             <Calendar
                                 businessHours={businessHours}
-                                initialEvents={calculateSlots<R>(data, event)}
+                                initialEvents={[...recordResponse, ...(slotRecordResponse ? slotRecordResponse : [])]}
                                 eventContent={EventContent}
                                 eventClick={eventShow.modalOpen}
                                 select={eventCreate.modalOpen}
