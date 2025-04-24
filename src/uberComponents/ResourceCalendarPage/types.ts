@@ -21,18 +21,20 @@ export interface NewEventData {
 export type ResourceCalendarPageProps<R extends Resource> = ResourceListBaseProps<R, WebExtra> & {
     headerTitle: string;
     event: {
-        startExpression: string;
-        endExpression: string;
-        titleExpression: string;
+        data: {
+            startExpression: string;
+            endExpression: string;
+            titleExpression: string;
+        };
         eventColorMapping?: {
             targetExpression: string;
             colorMapping: Record<string, string>;
         };
-    };
-    calendarEventActions: {
-        show: QuestionnaireActionType;
-        create: QuestionnaireActionType;
-        edit: QuestionnaireActionType;
+        actions: {
+            show: QuestionnaireActionType;
+            create: QuestionnaireActionType;
+            edit: QuestionnaireActionType;
+        };
     };
     businessHours?: CalendarOptions['businessHours'];
 };

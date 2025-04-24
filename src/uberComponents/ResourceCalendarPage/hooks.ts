@@ -36,7 +36,7 @@ function useModal<T = undefined>() {
 }
 
 export function useCalendarEvents<R extends Resource>(
-    calendarEventActions: ResourceCalendarPageProps<R>['calendarEventActions'],
+    calendarEventActions: ResourceCalendarPageProps<R>['event']['actions'],
 ) {
     const { create, show, edit } = calendarEventActions;
     const newEventModal = useModal<NewEventData>();
@@ -120,7 +120,7 @@ export function useCalendarPage<R extends Resource>(
     extractPrimaryResources: ((bundle: Bundle) => R[]) | undefined,
     filterValues: ColumnFilterValue[],
     defaultSearchParams: SearchParams,
-    calendarEventActions: ResourceCalendarPageProps<R>['calendarEventActions'],
+    calendarEventActions: ResourceCalendarPageProps<R>['event']['actions'],
 ) {
     const { eventCreate, eventShow, eventEdit, questionnaireActions } = useCalendarEvents<R>(calendarEventActions);
     const debouncedFilterValues = useDebounce(filterValues, 300);
@@ -180,7 +180,8 @@ export function useCalendarPage<R extends Resource>(
         data: { resource: R; bundle: Bundle<FhirResource> }[],
         event: ResourceCalendarPageProps<R>['event'],
     ) {
-        const { titleExpression, startExpression, endExpression, eventColorMapping } = event;
+        const { eventColorMapping } = event;
+        const { titleExpression, startExpression, endExpression } = event.data;
 
         const getTitle = compileAsFirst<R, string>(titleExpression);
         const getStart = compileAsFirst<R, string>(startExpression);

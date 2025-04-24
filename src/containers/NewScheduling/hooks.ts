@@ -63,16 +63,19 @@ export function useNewScheduling() {
         [practitionerRoleFilterOptions, healthcareServiceFilterOptions],
     );
 
-    const calendarQuestionnaireActions: ResourceCalendarPageProps<Appointment>['calendarEventActions'] = {
+    const calendarQuestionnaireActions: ResourceCalendarPageProps<Appointment>['event']['actions'] = {
         show: questionnaireAction('Appointment details', 'edit-appointment-new'),
         create: questionnaireAction('New appointment', 'new-appointment-prefilled'),
         edit: questionnaireAction('Edit appointment', 'edit-appointment-prefilled'),
     };
 
     const eventData = {
-        startExpression: 'Appointment.start',
-        endExpression: 'Appointment.end',
-        titleExpression: "Appointment.participant.actor.where(reference.startsWith('Patient/')).first().display",
+        actions: calendarQuestionnaireActions,
+        data: {
+            startExpression: 'Appointment.start',
+            endExpression: 'Appointment.end',
+            titleExpression: "Appointment.participant.actor.where(reference.startsWith('Patient/')).first().display",
+        },
         eventColorMapping: {
             targetExpression: 'Appointment.status',
             colorMapping: {
@@ -87,5 +90,5 @@ export function useNewScheduling() {
         },
     };
 
-    return { remoteResponses, calendarQuestionnaireActions, eventData };
+    return { remoteResponses, eventData };
 }

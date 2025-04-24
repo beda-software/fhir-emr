@@ -28,20 +28,13 @@ export function ResourceCalendarPage<R extends Resource>(props: ResourceCalendar
         defaultLaunchContext,
         event,
         businessHours,
-        calendarEventActions,
     } = props;
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
         columns: getFilters?.() ?? [],
     });
 
     const { calculateSlots, reload, recordResponse, eventCreate, eventShow, eventEdit, questionnaireActions } =
-        useCalendarPage(
-            resourceType,
-            extractPrimaryResources,
-            columnsFilterValues,
-            searchParams ?? {},
-            calendarEventActions,
-        );
+        useCalendarPage(resourceType, extractPrimaryResources, columnsFilterValues, searchParams ?? {}, event.actions);
 
     return (
         <PageContainer
