@@ -1,17 +1,20 @@
 import { HealthcareService, Practitioner, PractitionerRole, Appointment, Slot } from 'fhir/r4b';
 import _ from 'lodash';
 import React from 'react';
+import { useTheme } from 'styled-components';
 
 import { extractBundleResources, useService } from '@beda.software/fhir-react';
 import { mapSuccess, sequenceMap } from '@beda.software/remote-data';
 
 import { getAllFHIRResources } from 'src/services/fhir';
-import { ResourceCalendarPageProps, EventColor } from 'src/uberComponents/ResourceCalendarPage/types';
+import { ResourceCalendarPageProps } from 'src/uberComponents/ResourceCalendarPage/types';
 import { questionnaireAction } from 'src/uberComponents/ResourceListPage/actions';
 import { compileAsFirst } from 'src/utils';
 import { renderHumanName } from 'src/utils/fhir';
 
 export function useNewScheduling() {
+    const theme = useTheme();
+    const calendarColors = theme.calendar;
     const [practitionerRoleFilterOptions] = useService(async () => {
         const response = await getAllFHIRResources<PractitionerRole | Practitioner>('PractitionerRole', {
             _include: ['PractitionerRole:practitioner:Practitioner'],
@@ -82,13 +85,13 @@ export function useNewScheduling() {
         eventColorMapping: {
             targetExpression: compileAsFirst<Appointment, string>('Appointment.status'),
             colorMapping: {
-                proposed: EventColor.Default,
-                pending: EventColor.ServiceCyan,
-                booked: EventColor.ServiceOrange,
-                arrived: EventColor.ServicePurple,
-                fulfilled: EventColor.ServiceGreen,
-                cancelled: EventColor.ServiceMagenta,
-                waitlist: EventColor.Default,
+                proposed: calendarColors['bg_slot-taken_default'],
+                pending: calendarColors['bg_slot-taken_orange'],
+                booked: calendarColors['bg_slot-taken_cyan'],
+                arrived: calendarColors['bg_slot-taken_magenta'],
+                fulfilled: calendarColors['bg_slot-taken_purple'],
+                cancelled: calendarColors['bg_slot-taken_default'],
+                waitlist: calendarColors['bg_slot-taken_orange'],
             },
         },
     };
@@ -98,11 +101,11 @@ export function useNewScheduling() {
         eventColorMapping: {
             targetExpression: compileAsFirst<Slot, string>('Slot.status'),
             colorMapping: {
-                busy: EventColor.Default,
-                free: EventColor.ServiceGreen,
-                'busy-unavailable': EventColor.ServiceCyan,
-                'busy-tentative': EventColor.ServiceOrange,
-                'entered-in-error': EventColor.ServiceMagenta,
+                busy: calendarColors['bg_slot-taken_cyan'],
+                free: calendarColors['bg_slot-taken_default'],
+                'busy-unavailable': calendarColors['bg_slot-taken_purple'],
+                'busy-tentative': calendarColors['bg_slot-taken_orange'],
+                'entered-in-error': calendarColors['bg_slot-taken_default'],
             },
         },
     };

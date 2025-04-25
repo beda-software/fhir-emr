@@ -6,15 +6,6 @@ import { SearchParams } from '@beda.software/fhir-react';
 import { WebExtra, QuestionnaireActionType } from '../ResourceListPage/actions';
 import { ResourceListBaseProps } from '../ResourceListPage/types';
 
-export enum EventColor {
-    Default = '#3366FF',
-    ServiceCyan = '#13C2C2',
-    ServiceOrange = '#FAAD14',
-    ServiceMagenta = '#EB2F96',
-    ServicePurple = '#722ED1',
-    ServiceGreen = '#73D13D',
-}
-
 export interface NewEventData {
     start: Date;
     end: Date;
