@@ -118,6 +118,18 @@ export function useCalendarPage<R extends Resource>(
         [recordResponse, slotRecordResponse],
     );
 
+    const resourceToShowOrEdit = useMemo(() => {
+        return eventShow.data?.extendedProps?.fullResource || eventEdit.data;
+    }, [eventShow, eventEdit]);
+
+    const defaultEventQuetionnaireActionProps = useMemo(() => {
+        return {
+            reload: reload,
+            defaultLaunchContext: [],
+            resource: resourceToShowOrEdit ? (resourceToShowOrEdit as R) : ({ resourceType: 'Appointment' } as R),
+        };
+    }, [resourceToShowOrEdit]);
+
     return {
         eventResponse,
         pagination,
@@ -127,5 +139,6 @@ export function useCalendarPage<R extends Resource>(
         eventShow,
         eventEdit,
         questionnaireActions,
+        defaultEventQuetionnaireActionProps,
     };
 }

@@ -1,6 +1,7 @@
 import { DateSelectArg, EventClickArg } from '@fullcalendar/core';
+import { Button } from 'antd';
 import { Bundle, Resource, FhirResource, Slot } from 'fhir/r4b';
-import { useMemo, useState, useCallback } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 
 import { NewEventData, ResourceCalendarPageProps, EventColorMapping } from './types';
 
@@ -91,6 +92,20 @@ export function useCalendarEvents<R extends Resource>(
                     title: show.title,
                     open: eventDetailsModal.isOpen,
                     onCancel: eventDetailsModal.close,
+                    footer: [
+                        React.createElement(
+                            Button,
+                            {
+                                key: 'edit',
+                                type: 'primary',
+                                onClick: () => {
+                                    editEventModal.open(eventDetailsModal?.data?.extendedProps?.fullResource);
+                                    eventDetailsModal.close();
+                                },
+                            },
+                            'Edit',
+                        ),
+                    ],
                 },
                 qrfProps: {
                     readOnly: true,

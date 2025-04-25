@@ -1,5 +1,3 @@
-import { Trans } from '@lingui/macro';
-import { Button } from 'antd';
 import { Resource } from 'fhir/r4b';
 import React from 'react';
 
@@ -34,14 +32,15 @@ export function ResourceCalendarPage<R extends Resource>(props: ResourceCalendar
         columns: getFilters?.() ?? [],
     });
 
-    const { reload, eventResponse, eventCreate, eventShow, eventEdit, questionnaireActions } = useCalendarPage(
-        resourceType,
-        extractPrimaryResources,
-        columnsFilterValues,
-        searchParams ?? {},
-        event,
-        slot,
-    );
+    const {
+        reload,
+        eventResponse,
+        eventCreate,
+        eventShow,
+        eventEdit,
+        questionnaireActions,
+        defaultEventQuetionnaireActionProps,
+    } = useCalendarPage(resourceType, extractPrimaryResources, columnsFilterValues, searchParams ?? {}, event, slot);
 
     return (
         <PageContainer
@@ -66,62 +65,39 @@ export function ResourceCalendarPage<R extends Resource>(props: ResourceCalendar
             }
         >
             <RenderRemoteData remoteData={eventResponse}>
-                {({ recordResponse, slotRecordResponse }) => {
-                    const existingResource = eventShow.data?.extendedProps?.fullResource;
-                    const defaultEventQuetionnaireActionProps = {
-                        reload: reload,
-                        defaultLaunchContext: [],
-                        resource: existingResource ? (existingResource as R) : ({ resourceType: 'Appointment' } as R),
-                    };
-
-                    return (
-                        <>
-                            <Calendar
-                                businessHours={businessHours}
-                                initialEvents={[...recordResponse, ...(slotRecordResponse ? slotRecordResponse : [])]}
-                                eventContent={EventContent}
-                                eventClick={eventShow.modalOpen}
-                                select={eventCreate.modalOpen}
+                {({ recordResponse, slotRecordResponse }) => (
+                    <>
+                        <Calendar
+                            businessHours={businessHours}
+                            initialEvents={[...recordResponse, ...(slotRecordResponse ? slotRecordResponse : [])]}
+                            eventContent={EventContent}
+                            eventClick={eventShow.modalOpen}
+                            select={eventCreate.modalOpen}
+                        />
+                        {eventShow.show && (
+                            <CalendarEventQuestionnaireAction<R>
+                                key="show-details-questionnaire-action"
+                                action={questionnaireActions.show}
+                                {...defaultEventQuetionnaireActionProps}
                             />
-                            {eventShow.show && (
-                                <CalendarEventQuestionnaireAction<R>
-                                    key="show-details-questionnaire-action"
-                                    action={questionnaireActions.show}
-                                    {...defaultEventQuetionnaireActionProps}
-                                />
-                            )}
-                            {eventCreate.show && (
-                                <CalendarEventQuestionnaireAction<R>
-                                    key="create-questionnaire-action"
-                                    action={questionnaireActions.create}
-                                    {...defaultEventQuetionnaireActionProps}
-                                />
-                            )}
-                            {eventEdit.show && (
-                                <CalendarEventQuestionnaireAction<R>
-                                    key="edit-questionnaire-action"
-                                    action={questionnaireActions.edit}
-                                    {...defaultEventQuetionnaireActionProps}
-                                />
-                            )}
-                        </>
-                    );
-                }}
+                        )}
+                        {eventCreate.show && (
+                            <CalendarEventQuestionnaireAction<R>
+                                key="create-questionnaire-action"
+                                action={questionnaireActions.create}
+                                {...defaultEventQuetionnaireActionProps}
+                            />
+                        )}
+                        {eventEdit.show && (
+                            <CalendarEventQuestionnaireAction<R>
+                                key="edit-questionnaire-action"
+                                action={questionnaireActions.edit}
+                                {...defaultEventQuetionnaireActionProps}
+                            />
+                        )}
+                    </>
+                )}
             </RenderRemoteData>
         </PageContainer>
     );
 }
-
-export const renderFooter = (onEdit: (value: string) => void, onClose: () => void) => {
-    return [
-        <Button
-            key="edit"
-            onClick={() => {
-                onEdit;
-                onClose;
-            }}
-        >
-            <Trans>Edit</Trans>
-        </Button>,
-    ];
-};

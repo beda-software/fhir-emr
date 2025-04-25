@@ -14,7 +14,6 @@ function eventDateStr(eventStart?: string, eventEnd?: string): string {
 }
 
 export function EventContent(eventContent: EventContentArg) {
-    console.log('eventContent', eventContent.event);
     const eventDate = eventDateStr(
         eventContent.event.extendedProps.eventStart,
         eventContent.event.extendedProps.eventEnd,
