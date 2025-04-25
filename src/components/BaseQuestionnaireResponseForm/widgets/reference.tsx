@@ -193,7 +193,7 @@ function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource =
     return (
         <RenderRemoteData remoteData={optionsRD}>
             {(options) => (
-                <Form.Item {...formItem}>
+                <Form.Item {...formItem} data-testid={props.questionItem.linkId}>
                     <AsyncSelect
                         onChange={onSelect}
                         value={fieldController.value}
