@@ -9,7 +9,7 @@ import { RecordType } from '../ResourceListPage/types';
 export interface Tab<R extends Resource> {
     label: string;
     path: string;
-    component: (context: RecordType<R>) => JSX.Element;
+    component?: (context: RecordType<R>) => JSX.Element;
     chartingContent?: React.ReactNode;
 }
 
@@ -19,6 +19,7 @@ export interface ResourceChartingPageProps<R extends Resource>
     getSearchParams: (params: Readonly<Record<string, string | string[] | undefined>>) => SearchParams;
     getTitle: (context: RecordType<R>) => string;
     tabs: Array<Tab<R>>;
+    getActiveTab: () => Tab<R> | undefined;
     extractPrimaryResource?: (bundle: Bundle<R>) => R;
     headerContent?: React.ReactNode;
     titleRightElement?: React.ReactNode;

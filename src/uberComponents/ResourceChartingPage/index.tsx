@@ -59,20 +59,16 @@ export function ResourceChartingPage<R extends Resource>({
     getTitle,
     tabs,
     extractPrimaryResource,
+    getActiveTab,
     titleRightElement,
     maxWidth,
     children,
     headerContent,
     chartingHeader,
 }: ResourceChartingPageProps<R>) {
-    const location = useLocation();
     const params = useParams();
 
-    const activeTabPath = location.pathname.split('/').pop()!;
-    const activeTab =
-        tabs.find((tab) => tab.path.split('/').pop()! === activeTabPath) ||
-        tabs.find((tab) => tab.path === '/') ||
-        tabs[0];
+    const activeTab = getActiveTab();
 
     const [response] = useService(() => getFHIRResources(resourceType, getSearchParams(params)));
 
@@ -113,8 +109,8 @@ export function ResourceChartingPage<R extends Resource>({
                             <Routes>
                                 {tabs.map(({ path, component }) => (
                                     <React.Fragment key={path}>
-                                        <Route path={'/' + path} element={component(context)} />
-                                        <Route path={'/' + path + '/*'} element={component(context)} />
+                                        <Route path={'/' + path} element={component?.(context)} />
+                                        <Route path={'/' + path + '/*'} element={component?.(context)} />
                                     </React.Fragment>
                                 ))}
                             </Routes>
