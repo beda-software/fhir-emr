@@ -1,5 +1,7 @@
 import { EventContentArg } from '@fullcalendar/core';
 
+import { S } from './styles';
+
 function eventDateStr(eventStart?: string, eventEnd?: string): string {
     const formatTime = (dateStr?: string) => {
         if (!dateStr) return null;
@@ -20,11 +22,11 @@ export function EventContent(eventContent: EventContentArg) {
     );
 
     return (
-        <div style={{ padding: '0 16px', display: 'flex', flexDirection: 'column' }}>
-            <div style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
-                {eventContent.event.title}
-            </div>
-            <div>{eventDate}</div>
-        </div>
+        <S.Container>
+            <S.TextBlock>
+                <S.Title>{eventContent.event.title}</S.Title>
+                <S.Timebox>{eventDate}</S.Timebox>
+            </S.TextBlock>
+        </S.Container>
     );
 }
