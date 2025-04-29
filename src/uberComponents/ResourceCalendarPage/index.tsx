@@ -85,6 +85,7 @@ export function ResourceCalendarPage<R extends Resource>(props: ResourceCalendar
                             <CalendarEventQuestionnaireAction<R>
                                 key="create-questionnaire-action"
                                 action={questionnaireActions.create}
+                                onSuccess={questionnaireActions.create.extra?.modalProps?.onCancel}
                                 {...defaultEventQuetionnaireActionProps}
                             />
                         )}

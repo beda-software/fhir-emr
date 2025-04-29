@@ -13,8 +13,9 @@ export function CalendarEventQuestionnaireAction<R extends Resource>(props: {
     resource: R;
     reload: () => void;
     defaultLaunchContext: ParametersParameter[];
+    onSuccess?: () => void;
 }) {
-    const { action, resource, reload, defaultLaunchContext } = props;
+    const { action, resource, reload, defaultLaunchContext, onSuccess } = props;
 
     const defaultModalProps = { footer: null, destroyOnClose: true };
     const modalProps = { ...defaultModalProps, ...props.action.extra?.modalProps };
@@ -31,6 +32,7 @@ export function CalendarEventQuestionnaireAction<R extends Resource>(props: {
                     notification.success({
                         message: t`Successfully submitted`,
                     });
+                    onSuccess?.();
                     reload();
                 }}
                 saveButtonTitle={t`Submit`}
