@@ -63,13 +63,13 @@ export function ResourceDetailPage<R extends Resource>({
 }: DetailPageProps<R>) {
     const params = useParams();
     const [response] = useService(() => getFHIRResources(resourceType, getSearchParams(params)));
-    const defaultExtractPrimaryResource = compileAsFirst<Bundle<WithId<R>>, R>(
+    const defaultExtractPrimaryResource = compileAsFirst<Bundle<WithId<R>>, WithId<R>>(
         'Bundle.entry.resource.where(resourceType=%resourceType).first()',
     );
     return (
         <RenderRemoteData remoteData={response}>
             {(bundle) => {
-                let resource: R | undefined = undefined;
+                let resource: WithId<R> | undefined = undefined;
                 if (extractPrimaryResource) {
                     resource = extractPrimaryResource(bundle);
                 } else {
@@ -78,7 +78,7 @@ export function ResourceDetailPage<R extends Resource>({
                 if (typeof resource === 'undefined') {
                     return <p>NASTY ERROR</p>;
                 }
-                const context: RecordType<R> = { resource, bundle: bundle as Bundle };
+                const context: RecordType<WithId<R>> = { resource, bundle: bundle as Bundle };
                 return (
                     <PageContainer
                         title={getTitle(context)}
