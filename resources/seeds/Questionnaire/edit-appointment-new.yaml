@@ -64,7 +64,7 @@ item:
         initialExpression:
           language: text/fhirpath
           expression: >-
-            %CurrentAppointmentBundle.entry.resource.entry.resource.where(resourceType='Appointment').first().participant.actor.where(reference.startsWith('PractitionerRole'))
+            %CurrentAppointmentBundle.entry.resource.entry.resource.where(resourceType='Appointment').first().participant.actor.where(reference.startsWith('PractitionerRole')).reference.split('/')[1]
         choiceColumn:
           - forDisplay: true
             path: >-
@@ -111,7 +111,7 @@ item:
         answerExpression:
           language: application/x-fhir-query
           expression: >-
-            HealthcareService?active=true&_has:PractitionerRole:service:id={{QuestionnaireResonse.repeat(item).where(linkId='practitioner-role-id').anwer.value.string}}
+            HealthcareService?active=true&_has:PractitionerRole:service:id={{QuestionnaireResonse.repeat(item).where(linkId='practitioner-role-id').answer.value.string}}
       - linkId: start-datetime
         text: Start datetime
         type: dateTime

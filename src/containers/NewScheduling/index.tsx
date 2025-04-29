@@ -18,6 +18,7 @@ export function NewScheduling() {
                         resourceType="Appointment"
                         headerTitle="Scheduling new"
                         searchParams={{
+                            'status:not': 'cancelled',
                             _include: [
                                 'Appointment:patient',
                                 'Appointment:actor:PractitionerRole',

@@ -69,8 +69,8 @@ export function useNewScheduling() {
 
     const calendarQuestionnaireActions: ResourceCalendarPageProps<Appointment>['event']['actions'] = {
         show: questionnaireAction('Appointment details', 'edit-appointment-new'),
-        create: questionnaireAction('New appointment', 'new-appointment-prefilled'),
-        edit: questionnaireAction('Edit appointment', 'edit-appointment-prefilled'),
+        create: questionnaireAction('New appointment', 'uber-calendar-appointment-new'),
+        edit: questionnaireAction('Edit appointment', 'edit-appointment-new'),
     };
 
     const eventData: ResourceCalendarPageProps<Appointment>['event'] = {
