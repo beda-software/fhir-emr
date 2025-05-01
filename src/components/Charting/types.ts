@@ -3,30 +3,20 @@ import { Bundle, Resource } from 'fhir/r4b';
 import { SearchParams } from '@beda.software/fhir-react';
 
 import { PageContainerProps } from 'src/components';
+import { RecordType } from 'src/uberComponents/ResourceListPage/types';
 
-import { RecordType } from '../ResourceListPage/types';
-
-export interface Tab<R extends Resource> {
-    label: string;
-    path: string;
-    component?: (context: RecordType<R>) => JSX.Element;
+export interface TabExtra {
     chartingContent?: React.ReactNode;
 }
 
-export interface ResourceChartingPageProps<R extends Resource>
-    extends Pick<PageContainerProps, 'maxWidth' | 'layoutVariant'> {
+export interface ChartingProps<R extends Resource> extends Pick<PageContainerProps, 'maxWidth' | 'layoutVariant'> {
     resourceType: R['resourceType'];
     getSearchParams: (params: Readonly<Record<string, string | string[] | undefined>>) => SearchParams;
     getTitle: (context: RecordType<R>) => string;
-    tabs: Array<Tab<R>>;
-    getActiveTab: () => Tab<R> | undefined;
+    chartingContent: React.ReactNode;
     extractPrimaryResource?: (bundle: Bundle<R>) => R;
     headerContent?: React.ReactNode;
     titleRightElement?: React.ReactNode;
     chartingHeader?: React.ReactNode;
     children?: React.ReactNode;
-}
-
-export interface PageTabsProps<R extends Resource> {
-    tabs: Array<Tab<R>>;
 }

@@ -14,7 +14,7 @@ import { DetailPageProps, PageTabsProps } from './types';
 import { RecordType } from '../ResourceListPage/types';
 export type { Tab } from './types';
 
-export function PageTabs<R extends Resource>({ tabs }: PageTabsProps<R>) {
+export function PageTabs<R extends Resource, Extra = unknown>({ tabs }: PageTabsProps<R, Extra>) {
     const location = useLocation();
     const navigate = useNavigate();
 
