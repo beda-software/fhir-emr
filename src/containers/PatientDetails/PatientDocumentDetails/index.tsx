@@ -50,7 +50,7 @@ const deleteDraft = async (navigate: NavigateFunction, patientId?: string, qrId?
         reference: `QuestionnaireResponse/${qrId}`,
     });
     if (isSuccess(response)) {
-        navigate(`/patients/${patientId}/documents`);
+        navigate(-1);
         notification.success({
             message: t`Draft successfully deleted`,
         });
