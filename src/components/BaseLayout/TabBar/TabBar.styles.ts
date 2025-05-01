@@ -58,7 +58,7 @@ export const S = {
             height: 18px;
         }
     `,
-    Drawer: styled(Drawer)`
+    Drawer: styled(Drawer as any)`
         background-color: ${({ theme }) => theme.neutralPalette.gray_1};
 
         .ant-drawer-body {
