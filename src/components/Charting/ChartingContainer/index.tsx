@@ -1,12 +1,11 @@
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { Layout } from 'antd';
-import { useState } from 'react';
 
 import { PageContainerProps } from 'src/components';
 import { S as LayoutStyle } from 'src/components/BaseLayout/PageContainer/styles';
 
+import { usePageChartingContainer } from './hooks';
 import { S } from './styles';
-import { getChartingPanelState, setChartingPanelState } from '../utils';
 
 interface PageChartingContainerProps extends PageContainerProps {
     chartingHeader?: React.ReactNode;
@@ -26,14 +25,7 @@ export function PageChartingContainer(props: PageChartingContainerProps) {
         chartingHeader,
     } = props;
 
-    const [chartingPanelActive, setChartingPanelActive] = useState(getChartingPanelState());
-
-    const toggleChartingPanel = () => {
-        setChartingPanelActive((prev) => {
-            setChartingPanelState(!prev);
-            return !prev;
-        });
-    };
+    const { chartingPanelActive, toggleChartingPanel } = usePageChartingContainer();
 
     return (
         <Layout>

@@ -2,7 +2,7 @@ import { Resource } from 'fhir/r4b';
 
 import { WithId } from '@beda.software/fhir-react';
 
-import { PageChartingContainer } from './PageChartingContainer';
+import { PageChartingContainer } from './ChartingContainer';
 import { ChartingProps } from './types';
 import { RenderBundleResourceContext } from '../RenderBundleResourceContext';
 
