@@ -25,7 +25,7 @@ export const S = {
             background: 0 !important;
         }
     `,
-    Drawer: styled(Drawer)`
+    Drawer: styled(Drawer as any)`
         padding-top: 56px;
         padding-bottom: 129px;
         background-color: ${({ theme }) => theme.neutralPalette.gray_1};

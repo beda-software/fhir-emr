@@ -1,7 +1,15 @@
 import { PrinterOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
-import { Encounter, Organization, Patient, Practitioner, Provenance, QuestionnaireResponse } from 'fhir/r4b';
+import {
+    Encounter,
+    Organization,
+    ParametersParameter,
+    Patient,
+    Practitioner,
+    Provenance,
+    QuestionnaireResponse,
+} from 'fhir/r4b';
 import { ReactElement, useContext } from 'react';
 import { NavigateFunction, Outlet, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
@@ -30,6 +38,7 @@ import s from './PatientDocumentDetails.module.scss';
 interface Props {
     patient: WithId<Patient>;
     hideControls?: boolean;
+    launchContextParameters?: ParametersParameter[];
 }
 
 const deleteDraft = async (navigate: NavigateFunction, patientId?: string, qrId?: string) => {
@@ -41,7 +50,7 @@ const deleteDraft = async (navigate: NavigateFunction, patientId?: string, qrId?
         reference: `QuestionnaireResponse/${qrId}`,
     });
     if (isSuccess(response)) {
-        navigate(`/patients/${patientId}/documents`);
+        navigate(-1);
         notification.success({
             message: t`Draft successfully deleted`,
         });
@@ -221,7 +230,7 @@ function PatientDocumentDetailsFormData(props: {
 }
 
 export function PatientDocumentDetails(props: Props) {
-    const { patient, hideControls } = props;
+    const { patient, hideControls, launchContextParameters } = props;
     const { response, manager } = usePatientDocumentDetails(patient.id);
     const navigate = useNavigate();
     const author = selectCurrentUserRoleResource();
@@ -274,6 +283,7 @@ export function PatientDocumentDetails(props: Props) {
                                                     onSuccess={() => navigate(-2)}
                                                     author={author}
                                                     autosave={true}
+                                                    launchContextParameters={launchContextParameters}
                                                 />
                                             }
                                         />

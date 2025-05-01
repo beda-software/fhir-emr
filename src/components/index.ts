@@ -3,6 +3,8 @@ export * from './BaseQuestionnaireResponseForm';
 export * from './Breadcrumbs';
 export * from './Calendar';
 export * from './ChangesDiff';
+export * from './Charting';
+export * from './Charting/ChartingList';
 export * from './ConfirmActionButton';
 export * from './Dashboard';
 export * from './Dashboard/contexts';

@@ -1,20 +1,16 @@
-import { Bundle, Resource } from 'fhir/r4b';
+import { Resource } from 'fhir/r4b';
 import React from 'react';
-import { useParams, Route, Routes, useLocation, Link, useNavigate } from 'react-router-dom';
-
-import { RenderRemoteData, useService, WithId } from '@beda.software/fhir-react';
+import { Route, Routes, useLocation, Link, useNavigate } from 'react-router-dom';
 
 import { PageContainer } from 'src/components';
 import { RouteItem } from 'src/components/BaseLayout/Sidebar/SidebarTop';
+import { RenderBundleResourceContext } from 'src/components/RenderBundleResourceContext';
 import { Tabs } from 'src/components/Tabs';
-import { getFHIRResources } from 'src/services';
-import { compileAsFirst } from 'src/utils';
 
 import { DetailPageProps, PageTabsProps } from './types';
-import { RecordType } from '../ResourceListPage/types';
 export type { Tab } from './types';
 
-export function PageTabs<R extends Resource>({ tabs }: PageTabsProps<R>) {
+export function PageTabs<R extends Resource, Extra = unknown>({ tabs }: PageTabsProps<R, Extra>) {
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -54,48 +50,27 @@ export function PageTabs<R extends Resource>({ tabs }: PageTabsProps<R>) {
     );
 }
 
-export function ResourceDetailPage<R extends Resource>({
-    resourceType,
-    getSearchParams,
-    getTitle,
-    tabs,
-    extractPrimaryResource,
-}: DetailPageProps<R>) {
-    const params = useParams();
-    const [response] = useService(() => getFHIRResources(resourceType, getSearchParams(params)));
-    const defaultExtractPrimaryResource = compileAsFirst<Bundle<WithId<R>>, R>(
-        'Bundle.entry.resource.where(resourceType=%resourceType).first()',
-    );
+export function ResourceDetailPage<R extends Resource>(props: DetailPageProps<R>) {
+    const { getTitle, tabs } = props;
+
     return (
-        <RenderRemoteData remoteData={response}>
-            {(bundle) => {
-                let resource: R | undefined = undefined;
-                if (extractPrimaryResource) {
-                    resource = extractPrimaryResource(bundle);
-                } else {
-                    resource = defaultExtractPrimaryResource(bundle, { resourceType });
-                }
-                if (typeof resource === 'undefined') {
-                    return <p>NASTY ERROR</p>;
-                }
-                const context: RecordType<R> = { resource, bundle: bundle as Bundle };
-                return (
-                    <PageContainer
-                        title={getTitle(context)}
-                        layoutVariant="with-tabs"
-                        headerContent={<PageTabs tabs={tabs} />}
-                    >
-                        <Routes>
-                            {tabs.map(({ path, component }) => (
-                                <React.Fragment key={path}>
-                                    <Route path={'/' + path} element={component(context)} />
-                                    <Route path={'/' + path + '/*'} element={component(context)} />
-                                </React.Fragment>
-                            ))}
-                        </Routes>
-                    </PageContainer>
-                );
-            }}
-        </RenderRemoteData>
+        <RenderBundleResourceContext<R> {...props}>
+            {(context) => (
+                <PageContainer
+                    title={getTitle(context)}
+                    layoutVariant="with-tabs"
+                    headerContent={<PageTabs tabs={tabs} />}
+                >
+                    <Routes>
+                        {tabs.map(({ path, component }) => (
+                            <React.Fragment key={path}>
+                                <Route path={'/' + path} element={component(context)} />
+                                <Route path={'/' + path + '/*'} element={component(context)} />
+                            </React.Fragment>
+                        ))}
+                    </Routes>
+                </PageContainer>
+            )}
+        </RenderBundleResourceContext>
     );
 }
