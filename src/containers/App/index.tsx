@@ -13,6 +13,7 @@ import { AnonymousLayout, BaseLayout } from 'src/components/BaseLayout';
 import { MenuLayout } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
 import { Spinner } from 'src/components/Spinner';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
+import { PatientDetailsCharting } from 'src/containers/PatientDetailsCharting';
 import { EncounterList } from 'src/containers/EncounterList';
 import { PatientDetails } from 'src/containers/PatientDetails';
 import { NewPatientDetails } from 'src/containers/PatientDetails/new';
@@ -173,6 +174,7 @@ function AuthenticatedUserApp({ defaultRoute, extra }: RouteProps) {
                             <Route path="/patients-uber" element={<PatientResourceListExample />} />
                             <Route path="/patients/:id/*" element={<PatientDetails />} />
                             <Route path="/patients2/:id/*" element={<NewPatientDetails />} />
+                            <Route path="/patients3/:id/*" element={<PatientDetailsCharting />} />
                             <Route path="/questionnaire" element={<PatientQuestionnaire />} />
                             <Route path="/documents/:id/edit" element={<div>documents/:id/edit</div>} />
                             <Route path="/encounters/:encounterId/video" element={<VideoCall />} />

@@ -16,7 +16,7 @@ type ResourceColorMapping<R extends Resource> = {
     colorMapping: Record<string, string>;
 };
 
-type TypedFHIRPathExpression<R extends Resource> = (r: R) => string | undefined;
+export type TypedFHIRPathExpression<R extends Resource> = (r: R) => string | undefined;
 
 export type EventColorMapping<R extends Resource> = ResourceColorMapping<R> | undefined;
 
