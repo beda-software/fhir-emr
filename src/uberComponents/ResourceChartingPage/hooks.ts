@@ -1,33 +1,36 @@
-import { ResourceChartingPageProps } from './types';
-import { Resource } from 'fhir/r4b';
+import { Resource, Bundle } from 'fhir/r4b';
 
-import { WithId } from '@beda.software/fhir-react';
-import { getFHIRResource } from 'src/services/fhir';
-import { useService } from '@beda.software/fhir-react';
+import { WithId, useService, extractBundleResources } from '@beda.software/fhir-react';
 import { mapSuccess } from '@beda.software/remote-data';
 
-export function useResourceChartingPage<R extends WithId<Resource>>(props: ResourceChartingPageProps<R>) {
-    console.log('props', props);
-    const [mainResourceResponse] = useService(async () =>
+import { getFHIRResources } from 'src/services/fhir';
 
-        mapSuccess(
-            await getFHIRResource<R>({
-                reference: `${props.resourceType}/${props.searchParams?._id}`,
-            }),
-            (r) => ({
-                resource: r,
-                title: props.title(r),
+import { ResourceChartingPageProps } from './types';
+import { ResourceContext } from '../types';
+
+export function useResourceChartingPage<R extends WithId<Resource>>(props: ResourceChartingPageProps<R>) {
+    const [mainResourceResponse] = useService(async () =>
+        mapSuccess(await getFHIRResources<R>(props.resourceType, props?.searchParams ?? {}), (bundle) => {
+            const extractedResources = extractBundleResources<R>(bundle);
+            const targetResources = extractedResources[props.resourceType];
+            const targetResource = targetResources?.[0];
+
+            const context: ResourceContext<R> = { resource: targetResource as WithId<R>, bundle: bundle as Bundle };
+
+            return {
+                resource: targetResource,
+                title: props.title(context),
                 attributes: props.attributesToDisplay?.map((item) => {
                     return {
                         icon: item.icon,
-                        data: item.dataGetterFn(r)
-                    }
-                })
-            })
-        ),
+                        data: item.getText(context),
+                    };
+                }),
+            };
+        }),
     );
 
     return {
-        response: mainResourceResponse
-    }
+        response: mainResourceResponse,
+    };
 }

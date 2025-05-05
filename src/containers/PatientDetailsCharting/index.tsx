@@ -1,86 +1,111 @@
+import { CalendarOutlined, UserOutlined, PhoneOutlined, MailOutlined } from '@ant-design/icons';
+import { Patient, HumanName, Resource } from 'fhir/r4b';
 import { useParams } from 'react-router-dom';
-import { Patient, HumanName, AllergyIntolerance, Immunization, Resource } from 'fhir/r4b';
-import { ResourceChartingPage } from 'src/uberComponents/ResourceChartingPage';
-import {
-    CalendarOutlined,
-    UserOutlined,
-    PhoneOutlined,
-    MailOutlined
-} from '@ant-design/icons';
-import { renderHumanName } from 'src/utils/fhir';
+
 import { WithId } from '@beda.software/fhir-react';
-import { questionnaireAction } from 'src/uberComponents/ResourceListPage/actions';
+
+import { ResourceChartingPage } from 'src/uberComponents/ResourceChartingPage';
 import { ResourceChartingPageProps, ChartingItem } from 'src/uberComponents/ResourceChartingPage/types';
 import { executeFHIRPathOrDefault } from 'src/uberComponents/ResourceChartingPage/utils';
+import { questionnaireAction } from 'src/uberComponents/ResourceListPage/actions';
+import { ResourceContext } from 'src/uberComponents/types';
+import { renderHumanName } from 'src/utils/fhir';
 
 export function PatientDetailsCharting() {
     const { id } = useParams<{ id: string }>();
-    const titleGetter = (resource: Patient) => renderHumanName(executeFHIRPathOrDefault<Patient, HumanName>(resource, 'Patient.name', {}))
-    const dobGetter = (resource: Patient) => executeFHIRPathOrDefault<Patient, string>(resource, 'Patient.birthDate', 'Unknown')
-    const genderGetter = (resource: Patient) => executeFHIRPathOrDefault<Patient, string>(resource, 'Patient.gender', 'Unknown')
-    const phoneGetter = (resource: Patient) => executeFHIRPathOrDefault<Patient, string>(resource, "Patient.telecom.where(system='phone').first().value", 'Unknown')
-    const emailGetter = (resource: Patient) => executeFHIRPathOrDefault<Patient, string>(resource, "Patient.telecom.where(system='email').first().value", 'Unknown')
-    const attributesToDisplay = [
-        { icon: <CalendarOutlined />, dataGetterFn: dobGetter },
-        { icon: <UserOutlined />, dataGetterFn: genderGetter },
-        { icon: <PhoneOutlined />, dataGetterFn: phoneGetter },
-        { icon: <MailOutlined />, dataGetterFn: emailGetter }
+    const titleGetter = (ctx: ResourceContext<Patient>) =>
+        renderHumanName(executeFHIRPathOrDefault<Patient, HumanName>(ctx.resource, 'Patient.name', {}));
+    const dobGetter = (ctx: ResourceContext<Patient>) =>
+        executeFHIRPathOrDefault<Patient, string>(ctx.resource, 'Patient.birthDate', 'Unknown');
+    const genderGetter = (ctx: ResourceContext<Patient>) =>
+        executeFHIRPathOrDefault<Patient, string>(ctx.resource, 'Patient.gender', 'Unknown');
+    const phoneGetter = (ctx: ResourceContext<Patient>) =>
+        executeFHIRPathOrDefault<Patient, string>(
+            ctx.resource,
+            "Patient.telecom.where(system='phone').first().value",
+            'Unknown',
+        );
+    const emailGetter = (ctx: ResourceContext<Patient>) =>
+        executeFHIRPathOrDefault<Patient, string>(
+            ctx.resource,
+            "Patient.telecom.where(system='email').first().value",
+            'Unknown',
+        );
+    const attributesToDisplay: ResourceChartingPageProps<WithId<Patient>>['attributesToDisplay'] = [
+        { icon: <CalendarOutlined />, getText: dobGetter },
+        { icon: <UserOutlined />, getText: genderGetter },
+        { icon: <PhoneOutlined />, getText: phoneGetter },
+        { icon: <MailOutlined />, getText: emailGetter },
     ];
-    const basicTabs = [
-        { title: 'Overview', path: '/', content: <div>Hello, Overview!</div> },
-        { title: 'Encounters', path: '/encounters', content: <div>Hello, Encounters!</div> }
+    const tabs = [
+        { label: 'Overview', path: '/', component: () => <div>Hello, Overview!</div> },
+        { label: 'Encounters', path: '/encounters', component: () => <div>Hello, Encounters!</div> },
     ];
     const footerActions: ResourceChartingPageProps<WithId<Patient>>['footerActions'] = [
-        { actionType: 'primary', action: questionnaireAction('Create encounter', '') },
-        { actionType: 'secondary', action: questionnaireAction('Start scribe', '') },
-        { actionType: 'secondary', action: questionnaireAction('Video call', '') },
+        questionnaireAction('Create encounter', ''),
+        questionnaireAction('Start scribe', ''),
+        questionnaireAction('Video call', ''),
     ];
-    const allergyYearGetter = (resource: AllergyIntolerance) => executeFHIRPathOrDefault<AllergyIntolerance, string>(resource, 'AllergyIntolerance.onset.as(DateTime).year()', 'Unknown')
-    const allergyCodeGetter = (resource: AllergyIntolerance) => executeFHIRPathOrDefault<AllergyIntolerance, string>(resource, 'AllergyIntolerance.code.coding.display.first()', 'Unknown')
-    const immunizationYearGetter = (resource: Immunization) => executeFHIRPathOrDefault<Immunization, string>(resource, 'Immunization.occurrence.as(DateTime).year()', 'Unknown')
-    const immunizationCodeGetter = (resource: Immunization) => executeFHIRPathOrDefault<Immunization, string>(resource, 'Immunization.vaccineCode.coding.display.first()', 'Unknown')
-    /* TODO: Fix dataGetterFn */
+    const allergyYearGetter = (ctx: ResourceContext<Resource>) =>
+        executeFHIRPathOrDefault<Resource, string>(
+            ctx.resource,
+            'AllergyIntolerance.onset.as(DateTime).year()',
+            'Unknown',
+        );
+    const allergyCodeGetter = (ctx: ResourceContext<Resource>) =>
+        executeFHIRPathOrDefault<Resource, string>(
+            ctx.resource,
+            'AllergyIntolerance.code.coding.display.first()',
+            'Unknown',
+        );
+    const immunizationYearGetter = (ctx: ResourceContext<Resource>) =>
+        executeFHIRPathOrDefault<Resource, string>(
+            ctx.resource,
+            'Immunization.occurrence.as(DateTime).year()',
+            'Unknown',
+        );
+    const immunizationCodeGetter = (ctx: ResourceContext<Resource>) =>
+        executeFHIRPathOrDefault<Resource, string>(
+            ctx.resource,
+            'Immunization.vaccineCode.coding.display.first()',
+            'Unknown',
+        );
     const chartingItems: ChartingItem[] = [
         {
-            title: "Allergies",
+            title: 'Allergies',
             resourceType: 'AllergyIntolerance',
-            searchParams: { patient: id },
-            action: questionnaireAction('Add', ''),
-            isPinnable: true,
+            actions: [questionnaireAction('Add', '')],
             columns: [
                 {
-                    dataGetterFn: allergyYearGetter as (r: Resource) => string,
+                    getText: allergyYearGetter,
                 },
                 {
-                    dataGetterFn: allergyCodeGetter as (r: Resource) => string,
-                    isLinkable: true
-                }
-            ]
+                    getText: allergyCodeGetter,
+                },
+            ],
         },
         {
-            title: "Immunizations",
+            title: 'Immunizations',
             resourceType: 'Immunization',
-            searchParams: { patient: id },
-            action: questionnaireAction('Add', ''),
+            actions: [questionnaireAction('Add', '')],
             columns: [
                 {
-                    dataGetterFn: immunizationYearGetter as (r: Resource) => string,
+                    getText: immunizationYearGetter,
                 },
                 {
-                    dataGetterFn: immunizationCodeGetter as (r: Resource) => string,
-                    isLinkable: true
-                }
-            ]
-        }
+                    getText: immunizationCodeGetter,
+                },
+            ],
+        },
     ];
 
     return (
         <ResourceChartingPage<WithId<Patient>>
             resourceType="Patient"
-            searchParams={{ "_id": id }}
+            searchParams={{ _id: id }}
             title={titleGetter}
             attributesToDisplay={attributesToDisplay}
-            basicTabs={basicTabs}
+            tabs={tabs}
             chartingItems={chartingItems}
             footerActions={footerActions}
         />

@@ -1,57 +1,46 @@
 import { Resource } from 'fhir/r4b';
-import { ResourceListBaseProps } from '../ResourceListPage/types';
-import { QuestionnaireActionType } from '../ResourceListPage/actions';
-import { TypedFHIRPathExpression } from '../ResourceCalendarPage/types';
-import { SearchParams } from '@beda.software/fhir-react';
 
 import { WithId } from '@beda.software/fhir-react';
 
+import { Tab } from '../ResourceDetailPage/types';
+import { QuestionnaireActionType } from '../ResourceListPage/actions';
+import { ResourceListBaseProps } from '../ResourceListPage/types';
+import { TypedFHIRPathExpression } from '../types';
+
 type ResourceChartingPageSingleAttribute<R extends Resource> = {
     icon: React.ReactNode;
-    dataGetterFn: TypedFHIRPathExpression<R>
+    getText: TypedFHIRPathExpression<R>;
 };
 
 type ResourceChartingPageAttributes<R extends Resource> = Array<ResourceChartingPageSingleAttribute<R>>;
 
 type ChartingItemColumn = {
-    dataGetterFn: (r: Resource) => string;
-    isLinkable?: boolean;
+    getText: TypedFHIRPathExpression<Resource>;
 };
 
 export type ChartingItem = {
     title: string;
-    resourceType: string;
+    resourceType: Resource['resourceType'];
     columns: Array<ChartingItemColumn>;
-    action?: QuestionnaireActionType;
-    searchParams?: SearchParams;
-    isPinnable?: boolean;
-};
-
-type FooterActionItem = {
-    action: QuestionnaireActionType;
-    actionType?: 'primary' | 'secondary';
-};
-
-type Tab = {
-    title: string;
-    path: string;
-    content: React.ReactNode;
+    actions?: Array<QuestionnaireActionType>;
 };
 
 export type ResourceChartingPageProps<R extends WithId<Resource>> = ResourceListBaseProps<R> & {
     title: TypedFHIRPathExpression<R>;
     attributesToDisplay?: ResourceChartingPageAttributes<R>;
     resourceActions?: Array<QuestionnaireActionType>;
-    basicTabs?: Array<Tab>;
+    tabs?: Array<Tab<WithId<R>>>;
     chartingItems?: Array<ChartingItem>;
-    footerActions?: Array<FooterActionItem>;
+    footerActions?: Array<QuestionnaireActionType>;
 };
 
 export type ResourceChartingHeaderProps = {
     title: string;
-    preparedAttributes: {
-        icon: React.ReactNode;
-        data: string | undefined;
-    }[] | undefined;
+    preparedAttributes:
+        | {
+              icon: React.ReactNode;
+              data: string | undefined;
+          }[]
+        | undefined;
     resourceActions?: Array<QuestionnaireActionType>;
-}
+};
