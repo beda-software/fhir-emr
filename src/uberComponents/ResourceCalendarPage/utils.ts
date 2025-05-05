@@ -1,9 +1,10 @@
 import { DateSelectArg, EventClickArg } from '@fullcalendar/core';
 import { Button } from 'antd';
-import { Bundle, Resource, FhirResource, Slot } from 'fhir/r4b';
+import { Bundle, Resource, Slot } from 'fhir/r4b';
 import React, { useMemo, useState, useCallback } from 'react';
 
 import { NewEventData, ResourceCalendarPageProps, EventColorMapping } from './types';
+import { ResourceContext } from '../types';
 
 function getBackgroundColor<R extends Resource>(
     resource: R,
@@ -18,39 +19,39 @@ function getBackgroundColor<R extends Resource>(
 }
 
 export function calculateEvents<R extends Resource>(
-    data: { resource: R; bundle: Bundle<FhirResource> }[],
+    data: ResourceContext<R>[],
     event: ResourceCalendarPageProps<R>['event'],
 ) {
     const { eventColorMapping } = event;
     const { titleExpression, startExpression, endExpression } = event.data;
 
-    return data.map(({ resource }) => ({
-        id: resource.id,
-        title: titleExpression(resource),
-        start: startExpression(resource),
-        end: endExpression(resource),
-        fullResource: resource,
-        eventStart: startExpression(resource),
-        eventEnd: endExpression(resource),
-        backgroundColor: getBackgroundColor<R>(resource, eventColorMapping),
+    return data.map((ctx) => ({
+        id: ctx.resource.id,
+        title: titleExpression(ctx),
+        start: startExpression(ctx),
+        end: endExpression(ctx),
+        fullResource: ctx.resource,
+        eventStart: startExpression(ctx),
+        eventEnd: endExpression(ctx),
+        backgroundColor: getBackgroundColor<R>(ctx.resource, eventColorMapping),
     }));
 }
 
 export function calculateSlots<R extends Resource>(
-    data: { resource: Slot; bundle: Bundle<FhirResource> }[],
+    data: ResourceContext<Slot>[],
     slot: ResourceCalendarPageProps<R>['slot'],
 ) {
     if (!slot) return undefined;
 
     const { eventColorMapping } = slot;
 
-    return data.map(({ resource }) => ({
-        id: resource.id,
-        start: resource.start,
-        end: resource.end,
+    return data.map((ctx) => ({
+        id: ctx.resource.id,
+        start: ctx.resource.start,
+        end: ctx.resource.end,
         display: 'background',
-        fullResource: resource,
-        backgroundColor: getBackgroundColor<Slot>(resource, eventColorMapping),
+        fullResource: ctx.resource,
+        backgroundColor: getBackgroundColor<Slot>(ctx.resource, eventColorMapping),
     }));
 }
 

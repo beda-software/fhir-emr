@@ -2,13 +2,15 @@ import { t } from '@lingui/macro';
 import { notification } from 'antd';
 import { ParametersParameter, Resource } from 'fhir/r4b';
 
+import { WithId } from '@beda.software/fhir-react';
+
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 
 import { Modal } from '../../components/Modal';
 import { QuestionnaireActionType } from '../ResourceListPage/actions';
 
-export function CalendarEventQuestionnaireAction<R extends Resource>(props: {
+export function CalendarEventQuestionnaireAction<R extends WithId<Resource>>(props: {
     action: QuestionnaireActionType;
     resource: R;
     reload: () => void;

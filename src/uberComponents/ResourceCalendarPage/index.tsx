@@ -1,7 +1,7 @@
 import { Resource } from 'fhir/r4b';
 import React from 'react';
 
-import { RenderRemoteData } from '@beda.software/fhir-react';
+import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
 
 import { PageContainer } from 'src/components/BaseLayout/PageContainer';
 import { Calendar } from 'src/components/Calendar';
@@ -15,7 +15,7 @@ import { ResourceCalendarPageProps } from './types';
 import { HeaderQuestionnaireAction } from '../ResourceListPage/actions';
 export { customAction, navigationAction, questionnaireAction } from '../ResourceListPage/actions';
 
-export function ResourceCalendarPage<R extends Resource>(props: ResourceCalendarPageProps<R>) {
+export function ResourceCalendarPage<R extends WithId<Resource>>(props: ResourceCalendarPageProps<R>) {
     const {
         headerTitle: title,
         resourceType,

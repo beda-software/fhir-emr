@@ -73,14 +73,18 @@ export function useNewScheduling() {
         edit: questionnaireAction('Edit appointment', 'edit-appointment-new'),
     };
 
+    const appointmentStartExpression = compileAsFirst<Appointment, string>('Appointment.start');
+    const appointmentEndExpression = compileAsFirst<Appointment, string>('Appointment.end');
+    const appointmentTitleExpression = compileAsFirst<Appointment, string>(
+        "Appointment.participant.actor.where(reference.startsWith('Patient/')).first().display",
+    );
+
     const eventData: ResourceCalendarPageProps<Appointment>['event'] = {
         actions: calendarQuestionnaireActions,
         data: {
-            startExpression: compileAsFirst<Appointment, string>('Appointment.start'),
-            endExpression: compileAsFirst<Appointment, string>('Appointment.end'),
-            titleExpression: compileAsFirst<Appointment, string>(
-                "Appointment.participant.actor.where(reference.startsWith('Patient/')).first().display",
-            ),
+            startExpression: (ctx) => appointmentStartExpression(ctx.resource) ?? 'Undefined',
+            endExpression: (ctx) => appointmentEndExpression(ctx.resource) ?? 'Undefined',
+            titleExpression: (ctx) => appointmentTitleExpression(ctx.resource) ?? 'Undefined',
         },
         eventColorMapping: {
             targetExpression: compileAsFirst<Appointment, string>('Appointment.status'),

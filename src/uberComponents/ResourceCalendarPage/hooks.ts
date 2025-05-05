@@ -1,7 +1,7 @@
 import { Bundle, Resource, Slot } from 'fhir/r4b';
 import { useMemo, useState } from 'react';
 
-import { extractBundleResources, SearchParams, usePager } from '@beda.software/fhir-react';
+import { extractBundleResources, SearchParams, usePager, WithId } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess, sequenceMap } from '@beda.software/remote-data';
 
 import { ColumnFilterValue } from 'src/components/SearchBar/types';
@@ -11,8 +11,9 @@ import { useDebounce } from 'src/utils/debounce';
 
 import { ResourceCalendarPageProps } from './types';
 import { calculateEvents, calculateSlots, useCalendarEvents, extractPrimaryResourcesFactory } from './utils';
+import { ResourceContext } from '../types';
 
-export function useCalendarPage<R extends Resource>(
+export function useCalendarPage<R extends WithId<Resource>>(
     resourceType: R['resourceType'],
     extractPrimaryResources: ((bundle: Bundle) => R[]) | undefined,
     filterValues: ColumnFilterValue[],
@@ -44,7 +45,7 @@ export function useCalendarPage<R extends Resource>(
         initialSearchParams: searchParams,
     });
 
-    const [slotResourceResponse, slotPagerManager] = usePager<Slot>({
+    const [slotResourceResponse, slotPagerManager] = usePager<WithId<Slot>>({
         resourceType: 'Slot',
         requestService: service,
         resourcesOnPage: pageSize,
@@ -89,25 +90,28 @@ export function useCalendarPage<R extends Resource>(
         return extractPrimaryResources ?? extractPrimaryResourcesFactory(resourceType);
     }, [resourceType, extractPrimaryResources]);
 
-    const recordResponse = mapSuccess(resourceResponse, (bundle) =>
-        calculateEvents(
-            extractPrimaryResourcesMemoized(bundle as Bundle).map((resource) => ({
-                resource: resource as R,
-                bundle: bundle as Bundle,
-            })),
-            event,
-        ),
-    );
+    function resourceToCTX<R extends WithId<Resource>>(resource: R, bundle: Bundle<R>): ResourceContext<R> {
+        const resourceData = resource as R;
+        const bundleData = bundle as Bundle;
+        return {
+            resource: resourceData,
+            bundle: bundleData,
+        };
+    }
 
-    const slotRecordResponse = mapSuccess(slotResourceResponse, (bundle) =>
-        calculateSlots(
-            extractBundleResources(bundle).Slot.map((resource) => ({
-                resource: resource as Slot,
-                bundle: bundle as Bundle,
-            })),
-            slot,
-        ),
-    );
+    const recordResponse = mapSuccess(resourceResponse, (bundle) => {
+        const extractedPrimaryResources = extractPrimaryResourcesMemoized(bundle as Bundle);
+        const contexts = extractedPrimaryResources.map((resource) => resourceToCTX<R>(resource, bundle));
+
+        return calculateEvents(contexts, event);
+    });
+
+    const slotRecordResponse = mapSuccess(slotResourceResponse, (bundle) => {
+        const extractedPrimaryResources = extractBundleResources(bundle).Slot;
+        const contexts = extractedPrimaryResources.map((resource) => resourceToCTX<WithId<Slot>>(resource, bundle));
+
+        return calculateSlots(contexts, slot);
+    });
 
     const eventResponse = useMemo(
         () =>

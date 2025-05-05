@@ -1,6 +1,6 @@
 import { Appointment } from 'fhir/r4b';
 
-import { RenderRemoteData } from '@beda.software/fhir-react';
+import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
 
 import { SearchBarColumnType } from 'src/components/SearchBar/types';
 import { ResourceCalendarPage } from 'src/uberComponents/ResourceCalendarPage';
@@ -14,7 +14,7 @@ export function NewScheduling() {
         <RenderRemoteData remoteData={remoteResponses}>
             {({ practitionerRoleFilterOptions, healthcareServiceFilterOptions }) => {
                 return (
-                    <ResourceCalendarPage<Appointment>
+                    <ResourceCalendarPage<WithId<Appointment>>
                         resourceType="Appointment"
                         headerTitle="Scheduling new"
                         searchParams={{
