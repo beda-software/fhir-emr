@@ -12,6 +12,7 @@ export type ResourceWithId = WithId<Resource>;
 type ResourceChartingPageSingleAttribute<R extends Resource> = {
     icon: React.ReactNode;
     getText: TypedFHIRPathExpression<R>;
+    key: string;
 };
 
 type ResourceChartingPageAttributes<R extends Resource> = Array<ResourceChartingPageSingleAttribute<R>>;
@@ -39,6 +40,7 @@ export type ResourceChartingPageProps<R extends ResourceWithId> = ResourceListBa
 export type PreparedAttribute = {
     icon: React.ReactNode;
     data: string;
+    key: string;
 }
 
 export type ResourceChartingHeaderProps<R extends ResourceWithId> = {

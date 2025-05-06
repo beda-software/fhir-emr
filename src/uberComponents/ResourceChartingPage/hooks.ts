@@ -7,6 +7,7 @@ import { getFHIRResources } from 'src/services/fhir';
 
 import { ResourceChartingPageProps } from './types';
 import { ResourceContext } from '../types';
+import { resourceToCTX } from '../utils';
 
 export function useResourceChartingPage<R extends WithId<Resource>>(props: ResourceChartingPageProps<R>) {
     const [mainResourceResponse, manager] = useService(async () =>
@@ -17,6 +18,14 @@ export function useResourceChartingPage<R extends WithId<Resource>>(props: Resou
 
             const context: ResourceContext<R> = { resource: targetResource as WithId<R>, bundle: bundle as Bundle };
 
+            const calculatedChartedItems = props.chartingItems?.map((ci) => {
+                const chartingItemResources = extractedResources[ci.resourceType] as Resource[]
+                const resources = chartingItemResources ?? []
+                const calculatedColumns = ci.columns.map((col) => resources.map((r) => col.getText(resourceToCTX<Resource>(r, bundle))));
+
+                return { title: ci.title, items: calculatedColumns, actions: ci.actions }
+            });
+
             return {
                 resource: targetResource,
                 title: props.title(context),
@@ -24,8 +33,10 @@ export function useResourceChartingPage<R extends WithId<Resource>>(props: Resou
                     return {
                         icon: item.icon,
                         data: item.getText(context),
+                        key: item.key
                     };
                 }),
+                chartedItems: calculatedChartedItems
             };
         }),
     );

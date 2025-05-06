@@ -1,4 +1,4 @@
-import { CalendarOutlined, UserOutlined, PhoneOutlined, MailOutlined } from '@ant-design/icons';
+import { FileTextOutlined, CalendarOutlined, UserOutlined, PhoneOutlined, MailOutlined, PlusOutlined } from '@ant-design/icons';
 import { Patient, HumanName, Resource } from 'fhir/r4b';
 import { useParams } from 'react-router-dom';
 
@@ -25,6 +25,12 @@ export function PatientDetailsCharting() {
             "Patient.telecom.where(system='phone').first().value",
             'Unknown',
         );
+    const ssnGetter = (ctx: ResourceContext<Patient>) =>
+        executeFHIRPathOrDefault<Patient, string>(
+            ctx.resource,
+            "Patient.identifier.where(system='http://hl7.org/fhir/sid/us-ssn').first().value",
+            'Unknown',
+        );
     const emailGetter = (ctx: ResourceContext<Patient>) =>
         executeFHIRPathOrDefault<Patient, string>(
             ctx.resource,
@@ -32,24 +38,23 @@ export function PatientDetailsCharting() {
             'Unknown',
         );
     const attributesToDisplay: ResourceChartingPageProps<WithId<Patient>>['attributesToDisplay'] = [
-        { icon: <CalendarOutlined />, getText: dobGetter },
-        { icon: <UserOutlined />, getText: genderGetter },
-        { icon: <PhoneOutlined />, getText: phoneGetter },
-        { icon: <MailOutlined />, getText: emailGetter },
+        { icon: <CalendarOutlined />, getText: dobGetter, key: 'patient-dob' },
+        { icon: <UserOutlined />, getText: genderGetter, key: 'patient-gender' },
+        { icon: <PhoneOutlined />, getText: phoneGetter, key: 'patient-phone' },
+        { icon: <FileTextOutlined />, getText: ssnGetter, key: 'patient-ssn' },
+        { icon: <MailOutlined />, getText: emailGetter, key: 'patient-email' },
     ];
     const tabs = [
         { label: 'Overview', path: '/', component: () => <div>Hello, Overview!</div> },
         { label: 'Encounters', path: '/encounters', component: () => <div>Hello, Encounters!</div> },
     ];
     const footerActions: ResourceChartingPageProps<WithId<Patient>>['footerActions'] = [
-        questionnaireAction('Create encounter', ''),
-        questionnaireAction('Start scribe', ''),
-        questionnaireAction('Video call', ''),
+        questionnaireAction('Create encounter', '', { icon: <PlusOutlined /> }),
     ];
     const allergyYearGetter = (ctx: ResourceContext<Resource>) =>
         executeFHIRPathOrDefault<Resource, string>(
             ctx.resource,
-            'AllergyIntolerance.onset.as(DateTime).year()',
+            "AllergyIntolerance.onsetDateTime.split('-').first()",
             'Unknown',
         );
     const allergyCodeGetter = (ctx: ResourceContext<Resource>) =>
@@ -61,7 +66,7 @@ export function PatientDetailsCharting() {
     const immunizationYearGetter = (ctx: ResourceContext<Resource>) =>
         executeFHIRPathOrDefault<Resource, string>(
             ctx.resource,
-            'Immunization.occurrence.as(DateTime).year()',
+            "Immunization.occurrenceDateTime.split('-').first()",
             'Unknown',
         );
     const immunizationCodeGetter = (ctx: ResourceContext<Resource>) =>
@@ -74,7 +79,7 @@ export function PatientDetailsCharting() {
         {
             title: 'Allergies',
             resourceType: 'AllergyIntolerance',
-            actions: [questionnaireAction('Add', '')],
+            actions: [questionnaireAction('Add', 'allergies')],
             columns: [
                 {
                     getText: allergyYearGetter,
@@ -87,7 +92,7 @@ export function PatientDetailsCharting() {
         {
             title: 'Immunizations',
             resourceType: 'Immunization',
-            actions: [questionnaireAction('Add', '')],
+            actions: [questionnaireAction('Add', 'immunization')],
             columns: [
                 {
                     getText: immunizationYearGetter,
@@ -106,7 +111,7 @@ export function PatientDetailsCharting() {
     return (
         <ResourceChartingPage<WithId<Patient>>
             resourceType="Patient"
-            searchParams={{ _id: id }}
+            searchParams={{ _id: id, _revinclude: ['Condition:patient', 'AllergyIntolerance:patient', 'Immunization:patient'] }}
             title={titleGetter}
             attributesToDisplay={attributesToDisplay}
             resourceActions={resourceActions}
