@@ -19,7 +19,17 @@ export const S = {
     Container: styled.div<{ $pageMargin?: string }>`
         width: 100%;
         max-width: 767px;
+        flex-grow: 1;
         margin: ${(props) => (props.$pageMargin ? props.$pageMargin : '40px auto')};
+
+        table {
+            width: 100%;
+        }
+
+        aside {
+            display: none;
+        }
+
         @page {
             margin: 15mm 15mm 15mm 25mm;
         }
