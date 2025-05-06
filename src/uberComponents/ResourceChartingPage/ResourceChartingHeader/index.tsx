@@ -1,8 +1,7 @@
-import { ResourceChartingHeaderProps, ResourceWithId } from '../types';
-
 import { Typography, Space, List } from 'antd';
 
 import { ChartingHeaderQuestionnaireAction } from '../../actions';
+import { ResourceChartingHeaderProps, ResourceWithId } from '../types';
 
 export function ResourceChartingHeader<R extends ResourceWithId>(props: ResourceChartingHeaderProps<R>) {
     const { title, preparedAttributes, resourceActions, reload, resource } = props;
@@ -22,16 +21,18 @@ export function ResourceChartingHeader<R extends ResourceWithId>(props: Resource
                     </List.Item>
                 )}
             />
-            {resourceActions !== undefined && <Space style={{ marginLeft: '-15px' }}>
-                {resourceActions.map((resourceAction) => <ChartingHeaderQuestionnaireAction
-                    action={resourceAction}
-                    reload={reload}
-                    defaultLaunchContext={[
-                        { name: resource.resourceType, resource: resource }
-                    ]}
-                    buttonType="link"
-                />)}
-            </Space>}
+            {resourceActions !== undefined && (
+                <Space style={{ marginLeft: '-15px' }}>
+                    {resourceActions.map((resourceAction, index) => (
+                        <ChartingHeaderQuestionnaireAction
+                            key={index}
+                            action={resourceAction}
+                            reload={reload}
+                            defaultLaunchContext={[{ name: resource.resourceType, resource: resource }]}
+                        />
+                    ))}
+                </Space>
+            )}
         </div>
-    )
+    );
 }

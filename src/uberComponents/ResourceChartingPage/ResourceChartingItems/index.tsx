@@ -1,9 +1,11 @@
-import { Collapse, List, Space, Typography, Button } from 'antd';
 import { CaretUpOutlined } from '@ant-design/icons';
-import { zipArrays } from './utils';
-import { ResourceChartingItemsProps } from './types';
-import { ChartingItemQuestionnaireAction } from '../../actions';
+import { Collapse, List, Space, Typography } from 'antd';
+
 import { selectCurrentUserRoleResource } from 'src/utils/role';
+
+import { ResourceChartingItemsProps } from './types';
+import { zipArrays } from './utils';
+import { ChartingItemQuestionnaireAction } from '../../actions';
 
 export function ResourceChartingItems(props: ResourceChartingItemsProps) {
     const author = selectCurrentUserRoleResource();
@@ -15,20 +17,26 @@ export function ResourceChartingItems(props: ResourceChartingItemsProps) {
             key: index,
             extra: item.actions !== undefined && (
                 <Space>
-                    {item?.actions.map((resourceAction) => <div onClick={(e) => {
-                        e.stopPropagation();
-                        console.log('Extra button clicked', item.title);
-                    }}> <ChartingItemQuestionnaireAction
-                            action={resourceAction}
-                            reload={reload}
-                            defaultLaunchContext={[
-                                { name: resource.resourceType, resource: resource },
-                                { name: 'Author', resource: author }
-                            ]}
-                            buttonType="link"
-                        /></div>)
-                    }
-                </Space >
+                    {item?.actions.map((resourceAction, index) => (
+                        <div
+                            key={index}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                            }}
+                        >
+                            {' '}
+                            <ChartingItemQuestionnaireAction
+                                key={index}
+                                action={resourceAction}
+                                reload={reload}
+                                defaultLaunchContext={[
+                                    { name: resource.resourceType, resource: resource },
+                                    { name: 'Author', resource: author },
+                                ]}
+                            />
+                        </div>
+                    ))}
+                </Space>
             ),
             label: <div style={{ fontWeight: 'bold' }}>{item.title}</div>,
             children: (
@@ -38,15 +46,19 @@ export function ResourceChartingItems(props: ResourceChartingItemsProps) {
                         renderItem={(item) => (
                             <List.Item style={{ borderBottom: '0px', padding: '0px' }}>
                                 <Space>
-                                    {item.map((i, index) => <Typography.Text key={index} strong={index === 0}>{i}</Typography.Text>)}
+                                    {item.map((i, index) => (
+                                        <Typography.Text key={index} strong={index === 0}>
+                                            {i}
+                                        </Typography.Text>
+                                    ))}
                                 </Space>
                             </List.Item>
                         )}
                     />
                 </div>
-            )
-        }
-    })
+            ),
+        };
+    });
 
     return (
         <Collapse

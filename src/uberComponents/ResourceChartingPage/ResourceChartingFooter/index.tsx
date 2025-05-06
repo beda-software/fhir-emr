@@ -1,11 +1,12 @@
-import { ResourceChartingPageProps, ResourceWithId } from '../types';
 import { Space } from 'antd';
-import { FooterQuestionnaireAction } from '../../actions';
 import { FhirResource } from 'fhir/r4b';
 
+import { ChartingFooterQuestionnaireAction } from '../../actions';
+import { ResourceChartingPageProps, ResourceWithId } from '../types';
+
 interface ResourceChartingFooterProps<R extends ResourceWithId> {
-    resource: FhirResource,
-    actions: ResourceChartingPageProps<R>['footerActions']
+    resource: FhirResource;
+    actions: ResourceChartingPageProps<R>['footerActions'];
     reload: () => void;
 }
 
@@ -18,13 +19,14 @@ export function ResourceChartingFooter<R extends ResourceWithId>(props: Resource
 
     return (
         <Space direction="vertical" style={{ width: '100%' }}>
-            {actions.map((resourceAction) => <FooterQuestionnaireAction
-                action={resourceAction}
-                reload={reload}
-                defaultLaunchContext={[
-                    { name: resource.resourceType, resource: resource },
-                ]}
-            />)}
+            {actions.map((resourceAction, index) => (
+                <ChartingFooterQuestionnaireAction
+                    key={index}
+                    action={resourceAction}
+                    reload={reload}
+                    defaultLaunchContext={[{ name: resource.resourceType, resource: resource }]}
+                />
+            ))}
         </Space>
     );
 }
