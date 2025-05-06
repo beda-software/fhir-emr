@@ -100,7 +100,7 @@ export function PatientDetailsCharting() {
     ];
 
     const resourceActions = [
-        questionnaireAction('Update', ''),
+        questionnaireAction('Update', 'patient-edit'),
     ]
 
     return (

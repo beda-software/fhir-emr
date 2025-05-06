@@ -9,7 +9,7 @@ import { ResourceChartingPageProps } from './types';
 import { ResourceContext } from '../types';
 
 export function useResourceChartingPage<R extends WithId<Resource>>(props: ResourceChartingPageProps<R>) {
-    const [mainResourceResponse] = useService(async () =>
+    const [mainResourceResponse, manager] = useService(async () =>
         mapSuccess(await getFHIRResources<R>(props.resourceType, props?.searchParams ?? {}), (bundle) => {
             const extractedResources = extractBundleResources<R>(bundle);
             const targetResources = extractedResources[props.resourceType];
@@ -32,5 +32,6 @@ export function useResourceChartingPage<R extends WithId<Resource>>(props: Resou
 
     return {
         response: mainResourceResponse,
+        reload: manager.reload
     };
 }

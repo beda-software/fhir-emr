@@ -1,4 +1,4 @@
-import { Resource } from 'fhir/r4b';
+import { Resource, FhirResource } from 'fhir/r4b';
 
 import { WithId } from '@beda.software/fhir-react';
 
@@ -6,6 +6,8 @@ import { Tab } from '../ResourceDetailPage/types';
 import { QuestionnaireActionType } from '../ResourceListPage/actions';
 import { ResourceListBaseProps } from '../ResourceListPage/types';
 import { TypedFHIRPathExpression } from '../types';
+
+export type ResourceWithId = WithId<Resource>;
 
 type ResourceChartingPageSingleAttribute<R extends Resource> = {
     icon: React.ReactNode;
@@ -25,7 +27,7 @@ export type ChartingItem = {
     actions?: Array<QuestionnaireActionType>;
 };
 
-export type ResourceChartingPageProps<R extends WithId<Resource>> = ResourceListBaseProps<R> & {
+export type ResourceChartingPageProps<R extends ResourceWithId> = ResourceListBaseProps<R> & {
     title: TypedFHIRPathExpression<R>;
     attributesToDisplay?: ResourceChartingPageAttributes<R>;
     resourceActions?: Array<QuestionnaireActionType>;
@@ -34,13 +36,15 @@ export type ResourceChartingPageProps<R extends WithId<Resource>> = ResourceList
     footerActions?: Array<QuestionnaireActionType>;
 };
 
-export type ResourceChartingHeaderProps = {
+export type PreparedAttribute = {
+    icon: React.ReactNode;
+    data: string;
+}
+
+export type ResourceChartingHeaderProps<R extends ResourceWithId> = {
     title: string;
-    preparedAttributes:
-        | {
-              icon: React.ReactNode;
-              data: string | undefined;
-          }[]
-        | undefined;
+    resource: FhirResource;
+    reload: () => void;
+    preparedAttributes?: PreparedAttribute[];
     resourceActions?: Array<QuestionnaireActionType>;
 };
