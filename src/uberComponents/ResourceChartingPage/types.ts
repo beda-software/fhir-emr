@@ -17,14 +17,10 @@ type ResourceChartingPageSingleAttribute<R extends Resource> = {
 
 type ResourceChartingPageAttributes<R extends Resource> = Array<ResourceChartingPageSingleAttribute<R>>;
 
-type ChartingItemColumn = {
-    getText: TypedFHIRPathExpression<Resource>;
-};
-
 export type ChartingItem = {
     title: string;
     resourceType: Resource['resourceType'];
-    columns: Array<ChartingItemColumn>;
+    columns: Array<TypedFHIRPathExpression<Resource>>;
     actions?: Array<QuestionnaireActionType>;
 };
 
@@ -41,7 +37,7 @@ export type PreparedAttribute = {
     icon: React.ReactNode;
     data: string;
     key: string;
-}
+};
 
 export type ResourceChartingHeaderProps<R extends ResourceWithId> = {
     title: string;
