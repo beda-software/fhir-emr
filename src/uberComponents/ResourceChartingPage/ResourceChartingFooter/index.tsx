@@ -17,6 +17,8 @@ export function ResourceChartingFooter<R extends ResourceWithId>(props: Resource
         return null;
     }
 
+    console.log({ name: resource.resourceType, resource: resource });
+
     return (
         <Space direction="vertical" style={{ width: '100%' }}>
             {actions.map((resourceAction, index) => (

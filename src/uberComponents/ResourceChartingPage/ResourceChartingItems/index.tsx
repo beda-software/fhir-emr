@@ -64,7 +64,7 @@ export function ResourceChartingItems(props: ResourceChartingItemsProps) {
         <Collapse
             items={items}
             bordered={false}
-            style={{ backgroundColor: 'transparent' }}
+            style={{ backgroundColor: 'transparent', maxHeight: '500px', overflowY: 'auto' }}
             expandIcon={({ isActive }) => (
                 <CaretUpOutlined
                     rotate={isActive ? 0 : 180}

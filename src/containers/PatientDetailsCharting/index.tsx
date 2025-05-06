@@ -1,5 +1,13 @@
-import { FileTextOutlined, CalendarOutlined, UserOutlined, PhoneOutlined, MailOutlined, PlusOutlined } from '@ant-design/icons';
+import {
+    FileTextOutlined,
+    CalendarOutlined,
+    UserOutlined,
+    PhoneOutlined,
+    MailOutlined,
+    PlusOutlined,
+} from '@ant-design/icons';
 import { Patient, HumanName, Resource } from 'fhir/r4b';
+import moment from 'moment';
 import { useParams } from 'react-router-dom';
 
 import { WithId } from '@beda.software/fhir-react';
@@ -11,14 +19,23 @@ import { questionnaireAction } from 'src/uberComponents/ResourceListPage/actions
 import { ResourceContext } from 'src/uberComponents/types';
 import { renderHumanName } from 'src/utils/fhir';
 
+function capitalizeFirstLetter(str: string): string {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function formatDateToDMY(datetime: string): string {
+    return moment(datetime).format('DD/MM/YYYY');
+}
+
 export function PatientDetailsCharting() {
     const { id } = useParams<{ id: string }>();
     const titleGetter = (ctx: ResourceContext<Patient>) =>
         renderHumanName(executeFHIRPathOrDefault<Patient, HumanName>(ctx.resource, 'Patient.name', {}));
     const dobGetter = (ctx: ResourceContext<Patient>) =>
-        executeFHIRPathOrDefault<Patient, string>(ctx.resource, 'Patient.birthDate', 'Unknown');
+        formatDateToDMY(executeFHIRPathOrDefault<Patient, string>(ctx.resource, 'Patient.birthDate', 'Unknown'));
     const genderGetter = (ctx: ResourceContext<Patient>) =>
-        executeFHIRPathOrDefault<Patient, string>(ctx.resource, 'Patient.gender', 'Unknown');
+        capitalizeFirstLetter(executeFHIRPathOrDefault<Patient, string>(ctx.resource, 'Patient.gender', 'Unknown'));
     const phoneGetter = (ctx: ResourceContext<Patient>) =>
         executeFHIRPathOrDefault<Patient, string>(
             ctx.resource,
@@ -49,12 +66,12 @@ export function PatientDetailsCharting() {
         { label: 'Encounters', path: '/encounters', component: () => <div>Hello, Encounters!</div> },
     ];
     const footerActions: ResourceChartingPageProps<WithId<Patient>>['footerActions'] = [
-        questionnaireAction('Create encounter', '', { icon: <PlusOutlined /> }),
+        questionnaireAction('Create encounter', 'uber-charting-new-appointment', { icon: <PlusOutlined /> }),
     ];
     const allergyYearGetter = (ctx: ResourceContext<Resource>) =>
         executeFHIRPathOrDefault<Resource, string>(
             ctx.resource,
-            "AllergyIntolerance.onsetDateTime.split('-').first()",
+            "AllergyIntolerance.meta.extension.where(url='ex:createdAt').first().valueInstant.split('-').first()",
             'Unknown',
         );
     const allergyCodeGetter = (ctx: ResourceContext<Resource>) =>
@@ -102,16 +119,40 @@ export function PatientDetailsCharting() {
                 },
             ],
         },
+        {
+            title: 'Medications',
+            resourceType: 'MedicationStatement',
+            actions: [questionnaireAction('Add', 'medication')],
+            columns: [
+                {
+                    getText: (ctx: ResourceContext<Resource>) =>
+                        executeFHIRPathOrDefault<Resource, string>(
+                            ctx.resource,
+                            "MedicationStatement.effectivePeriod.start.split('-').first()",
+                            'Unknown',
+                        ),
+                },
+                {
+                    getText: (ctx: ResourceContext<Resource>) =>
+                        executeFHIRPathOrDefault<Resource, string>(
+                            ctx.resource,
+                            'MedicationStatement.medicationCodeableConcept.coding.first().display',
+                            'Unknown',
+                        ),
+                },
+            ],
+        },
     ];
 
-    const resourceActions = [
-        questionnaireAction('Update', 'patient-edit'),
-    ]
+    const resourceActions = [questionnaireAction('Update', 'patient-edit')];
 
     return (
         <ResourceChartingPage<WithId<Patient>>
             resourceType="Patient"
-            searchParams={{ _id: id, _revinclude: ['Condition:patient', 'AllergyIntolerance:patient', 'Immunization:patient'] }}
+            searchParams={{
+                _id: id,
+                _revinclude: ['MedicationStatement:patient', 'AllergyIntolerance:patient', 'Immunization:patient'],
+            }}
             title={titleGetter}
             attributesToDisplay={attributesToDisplay}
             resourceActions={resourceActions}
