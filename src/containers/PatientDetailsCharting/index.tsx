@@ -99,12 +99,17 @@ export function PatientDetailsCharting() {
         },
     ];
 
+    const resourceActions = [
+        questionnaireAction('Update', ''),
+    ]
+
     return (
         <ResourceChartingPage<WithId<Patient>>
             resourceType="Patient"
             searchParams={{ _id: id }}
             title={titleGetter}
             attributesToDisplay={attributesToDisplay}
+            resourceActions={resourceActions}
             tabs={tabs}
             chartingItems={chartingItems}
             footerActions={footerActions}

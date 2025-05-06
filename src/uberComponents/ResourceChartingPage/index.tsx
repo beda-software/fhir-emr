@@ -11,18 +11,21 @@ import { useResourceChartingPage } from './hooks';
 import { RenderRemoteData } from '@beda.software/fhir-react';
 import { List, Typography, Space } from 'antd';
 
+import { HeaderQuestionnaireAction } from '../actions';
+
 
 
 function ResourceChartingHeader(props: ResourceChartingHeaderProps) {
-    const { title, preparedAttributes } = props;
+    const { title, preparedAttributes, resourceActions } = props;
+
     return (
         <div>
-
             <Typography.Title level={3}>{title}</Typography.Title>
             <List
+                style={{ marginTop: '16px' }}
                 dataSource={preparedAttributes}
                 renderItem={(item) => (
-                    <List.Item>
+                    <List.Item style={{ borderBottom: '0px', marginBottom: '8px', padding: '0px' }}>
                         <Space>
                             {item.icon}
                             <Typography.Text>{item.data}</Typography.Text>
@@ -30,6 +33,15 @@ function ResourceChartingHeader(props: ResourceChartingHeaderProps) {
                     </List.Item>
                 )}
             />
+            {resourceActions !== undefined && <Space style={{ marginLeft: '-15px' }}>
+                {resourceActions.map((resourceAction) => <HeaderQuestionnaireAction
+                    action={resourceAction}
+                    reload={() => console.log('TODO')}
+                    defaultLaunchContext={[]}
+                    buttonType="link"
+                />)}
+            </Space>}
+
         </div>
     )
 }
@@ -40,16 +52,18 @@ export function ResourceChartingPage<R extends WithId<Resource>>(props: Resource
     return (
         <RenderRemoteData remoteData={response}>
             {(data) => {
-                console.log('data', data)
                 return (
                     <Charting<R>
                         headerContent={<>HEADER CONTENT</>}
                         resourceType={props.resourceType}
                         chartingContent={
-                            <ResourceChartingHeader
-                                title={data.title!}
-                                preparedAttributes={data.attributes}
-                            />
+                            <div style={{ padding: '24px 16px 24px 16px' }}>
+                                <ResourceChartingHeader
+                                    title={data.title!}
+                                    preparedAttributes={data.attributes}
+                                    resourceActions={props.resourceActions}
+                                />
+                            </div>
                         }
                         getSearchParams={() => (props.searchParams ?? {})}
                         getTitle={() => data.title!}
