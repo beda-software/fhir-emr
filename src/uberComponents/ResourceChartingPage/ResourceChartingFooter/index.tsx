@@ -1,14 +1,8 @@
 import { Space } from 'antd';
-import { FhirResource } from 'fhir/r4b';
 
+import { ResourceChartingFooterProps } from './types';
 import { ChartingFooterQuestionnaireAction } from '../../actions';
-import { ResourceChartingPageProps, ResourceWithId } from '../types';
-
-interface ResourceChartingFooterProps<R extends ResourceWithId> {
-    resource: FhirResource;
-    actions: ResourceChartingPageProps<R>['footerActions'];
-    reload: () => void;
-}
+import { ResourceWithId } from '../types';
 
 export function ResourceChartingFooter<R extends ResourceWithId>(props: ResourceChartingFooterProps<R>) {
     const { actions, reload, resource } = props;
@@ -16,8 +10,6 @@ export function ResourceChartingFooter<R extends ResourceWithId>(props: Resource
     if (actions === undefined) {
         return null;
     }
-
-    console.log({ name: resource.resourceType, resource: resource });
 
     return (
         <Space direction="vertical" style={{ width: '100%' }}>

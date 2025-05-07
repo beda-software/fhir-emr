@@ -1,12 +1,14 @@
-import { ChartingItem } from '../types';
 import { FhirResource } from 'fhir/r4b';
 
+import { ChartingItem } from '../types';
+
 export interface ResourceChartingItemsProps {
-    resource: FhirResource,
-    reload: () => void,
+    resource: FhirResource;
+    reload: () => void;
     data?: {
-        title: string,
+        title: string;
+        itemsCount?: number;
         items?: string[][];
-        actions?: ChartingItem['actions']
-    }[],
+        actions?: ChartingItem['actions'];
+    }[];
 }

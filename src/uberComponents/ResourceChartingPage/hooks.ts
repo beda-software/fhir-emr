@@ -25,7 +25,12 @@ export function useResourceChartingPage<R extends WithId<Resource>>(props: Resou
                     resources.map((r) => col(resourceToCTX<Resource>(r, bundle))),
                 );
 
-                return { title: ci.title, items: calculatedColumns, actions: ci.actions };
+                return {
+                    title: ci.title,
+                    items: calculatedColumns,
+                    actions: ci.actions,
+                    itemsCount: ci.itemsCount,
+                };
             });
 
             return {

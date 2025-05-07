@@ -1,16 +1,16 @@
 import { Typography, Space, List } from 'antd';
 
+import s from './ResourceChartingHeader.module.scss';
 import { ChartingHeaderQuestionnaireAction } from '../../actions';
-import { ResourceChartingHeaderProps, ResourceWithId } from '../types';
+import { ResourceChartingHeaderProps } from '../types';
 
-export function ResourceChartingHeader<R extends ResourceWithId>(props: ResourceChartingHeaderProps<R>) {
+export function ResourceChartingHeader(props: ResourceChartingHeaderProps) {
     const { title, preparedAttributes, resourceActions, reload, resource } = props;
-
     return (
         <div>
             <Typography.Title level={3}>{title}</Typography.Title>
             <List
-                style={{ marginTop: '16px' }}
+                className={s.chartingHeaderList}
                 dataSource={preparedAttributes}
                 renderItem={(item) => (
                     <List.Item style={{ borderBottom: '0px', marginBottom: '8px', padding: '0px' }} key={item.key}>
@@ -22,7 +22,7 @@ export function ResourceChartingHeader<R extends ResourceWithId>(props: Resource
                 )}
             />
             {resourceActions !== undefined && (
-                <Space style={{ marginLeft: '-15px' }}>
+                <Space className={s.chartingHeaderActionsSpace}>
                     {resourceActions.map((resourceAction, index) => (
                         <ChartingHeaderQuestionnaireAction
                             key={index}

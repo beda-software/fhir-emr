@@ -69,6 +69,7 @@ export function PatientDetailsCharting() {
                     title: 'Allergies',
                     resourceType: 'AllergyIntolerance',
                     actions: [questionnaireAction('Add', 'allergies')],
+                    itemsCount: 5,
                     columns: [
                         getterBuilder<Resource>(
                             "AllergyIntolerance.meta.extension.where(url='ex:createdAt').first().valueInstant.split('-').first()",

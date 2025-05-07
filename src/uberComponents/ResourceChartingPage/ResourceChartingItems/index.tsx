@@ -3,6 +3,7 @@ import { Collapse, List, Space, Typography } from 'antd';
 
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 
+import s from './ResourceChartingItems.module.scss';
 import { ResourceChartingItemsProps } from './types';
 import { zipArrays } from './utils';
 import { ChartingItemQuestionnaireAction } from '../../actions';
@@ -13,20 +14,16 @@ export function ResourceChartingItems(props: ResourceChartingItemsProps) {
 
     const items = props.data?.map((item, index) => {
         const itemsData = item.items !== undefined ? zipArrays<string>(item.items) : [];
+        const dataSource = item.itemsCount ? itemsData.slice(0, item.itemsCount) : itemsData;
+
         return {
-            key: index,
+            key: `${item.title}-${index}`,
+            /* collapsible: 'disabled', */
             extra: item.actions !== undefined && (
                 <Space>
-                    {item?.actions.map((resourceAction, index) => (
-                        <div
-                            key={index}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                            }}
-                        >
-                            {' '}
+                    {item?.actions.map((resourceAction, actionIndex) => (
+                        <span key={`action-${actionIndex}`} className={s.actionWrapper}>
                             <ChartingItemQuestionnaireAction
-                                key={index}
                                 action={resourceAction}
                                 reload={reload}
                                 defaultLaunchContext={[
@@ -34,20 +31,20 @@ export function ResourceChartingItems(props: ResourceChartingItemsProps) {
                                     { name: 'Author', resource: author },
                                 ]}
                             />
-                        </div>
+                        </span>
                     ))}
                 </Space>
             ),
-            label: <div style={{ fontWeight: 'bold' }}>{item.title}</div>,
+            label: <div className={s.itemTitle}>{item.title}</div>,
             children: (
-                <div style={{ marginLeft: '-15px' }}>
+                <div className={s.itemContent}>
                     <List
-                        dataSource={itemsData}
+                        dataSource={dataSource}
                         renderItem={(item) => (
                             <List.Item style={{ borderBottom: '0px', padding: '0px' }}>
                                 <Space>
-                                    {item.map((i, index) => (
-                                        <Typography.Text key={index} strong={index === 0}>
+                                    {item.map((i, iIndex) => (
+                                        <Typography.Text key={iIndex} strong={iIndex === 0}>
                                             {i}
                                         </Typography.Text>
                                     ))}
@@ -64,13 +61,8 @@ export function ResourceChartingItems(props: ResourceChartingItemsProps) {
         <Collapse
             items={items}
             bordered={false}
-            style={{ backgroundColor: 'transparent', maxHeight: '500px', overflowY: 'auto' }}
-            expandIcon={({ isActive }) => (
-                <CaretUpOutlined
-                    rotate={isActive ? 0 : 180}
-                    style={{ fontSize: 14, color: '#555', marginLeft: -15, pointerEvents: 'none' }}
-                />
-            )}
+            className={s.collapseWrapper}
+            expandIcon={({ isActive }) => <CaretUpOutlined rotate={isActive ? 0 : 180} className={s.collapseIcon} />}
         />
     );
 }

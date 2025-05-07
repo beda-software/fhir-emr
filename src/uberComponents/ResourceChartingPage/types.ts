@@ -22,6 +22,7 @@ export type ChartingItem = {
     resourceType: Resource['resourceType'];
     columns: Array<TypedFHIRPathExpression<Resource>>;
     actions?: Array<QuestionnaireActionType>;
+    itemsCount?: number;
 };
 
 export type ResourceChartingPageProps<R extends ResourceWithId> = ResourceListBaseProps<R> & {
@@ -39,7 +40,7 @@ export type PreparedAttribute = {
     key: string;
 };
 
-export type ResourceChartingHeaderProps<R extends ResourceWithId> = {
+export type ResourceChartingHeaderProps = {
     title: string;
     resource: FhirResource;
     reload: () => void;
