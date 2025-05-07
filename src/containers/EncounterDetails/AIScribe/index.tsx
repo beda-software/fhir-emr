@@ -45,6 +45,7 @@ function AudioRecorderButton(props: FillWithAudioProps) {
         const response = await getFHIRResources<Communication>('Communication', {
             encounter: props.encounterId,
             patient: props.patientId,
+            category: 'scribe-result',
         });
         if (isSuccess(response)) {
             const communication = response.data.entry?.[0]?.resource;
@@ -73,6 +74,24 @@ function AudioRecorderButton(props: FillWithAudioProps) {
                 status: 'completed',
                 subject: { reference: `/Patient/${props.patientId}` },
                 encounter: { reference: `/Encounter/${props.encounterId}` },
+                topic: {
+                    coding: [
+                        {
+                            code: 'scribe-text',
+                            system: 'http://emr.beda.software/CodeSystem/scribe',
+                        },
+                    ],
+                },
+                category: [
+                    {
+                        coding: [
+                            {
+                                code: 'scribe-result',
+                                system: 'http://emr.beda.software/CodeSystem/communications',
+                            },
+                        ],
+                    },
+                ],
                 sender: { reference: props.senderReference },
                 payload: [{ contentString: response.data.text }],
             };
