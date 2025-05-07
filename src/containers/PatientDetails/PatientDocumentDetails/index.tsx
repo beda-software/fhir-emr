@@ -224,7 +224,7 @@ function PatientDocumentDetailsFormData(props: {
 
     return (
         <RenderRemoteData remoteData={response} renderLoading={Spinner}>
-            {(documentData) => children(documentData)}
+            {(documentData) => children(documentData.document)}
         </RenderRemoteData>
     );
 }
