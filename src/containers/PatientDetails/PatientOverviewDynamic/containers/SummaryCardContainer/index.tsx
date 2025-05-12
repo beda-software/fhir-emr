@@ -7,6 +7,7 @@ export function SummaryContainer({ patient }: ContainerProps) {
 
     return (
         <SummaryCard
+            hideGenerate={patient.id != 'patient1' && patient.id != 'patient2'}
             summaryCompositionRD={summaryCompositionRD}
             generateSummary={generateSummary}
             summaryUpdateState={summaryUpdateState}
