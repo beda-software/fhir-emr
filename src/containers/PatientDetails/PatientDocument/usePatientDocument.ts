@@ -1,5 +1,6 @@
 import {
     Bundle,
+    Communication,
     Encounter,
     Organization,
     ParametersParameter,
@@ -8,6 +9,7 @@ import {
     Practitioner,
     Provenance,
     QuestionnaireResponse,
+    Reference,
 } from 'fhir/r4b';
 import _ from 'lodash';
 import { useNavigate } from 'react-router-dom';
@@ -21,6 +23,7 @@ import {
     RemoteData,
     RemoteDataResult,
     resolveMap,
+    sequenceMap,
     success,
 } from '@beda.software/remote-data';
 
@@ -32,7 +35,9 @@ import {
     QuestionnaireResponseFormProps,
     QuestionnaireResponseFormSaveResponse,
 } from 'src/hooks/questionnaire-response-form-data';
+import { getFHIRResource, getFHIRResources } from 'src/services';
 import { getProvenanceByEntity } from 'src/services/provenance';
+import { compileAsFirst } from 'src/utils';
 
 export interface Props {
     patient: Patient;
@@ -140,8 +145,15 @@ export interface PatientDocumentData {
     provenance?: WithId<Provenance>;
 }
 
+interface Result {
+    document: PatientDocumentData;
+    source?: Communication;
+}
+
+const getSourceRef = compileAsFirst<Bundle, Reference>("Bundle.entry.resource.entity.where(role='source').what");
+
 export function usePatientDocument(props: Props): {
-    response: RemoteData<PatientDocumentData>;
+    response: RemoteData<Result>;
     questionnaireId: string;
 } {
     const { questionnaireResponse, questionnaireId, onSuccess } = props;
@@ -198,5 +210,21 @@ export function usePatientDocument(props: Props): {
         return failure({});
     }, [questionnaireResponse]);
 
-    return { response, questionnaireId };
+    const [sourceResponse] = useService(async () => {
+        const result = await getFHIRResources<Provenance>('Provenance', {
+            target: questionnaireResponse?.id ?? 'undefined',
+        });
+        if (isSuccess(result)) {
+            const sourceRef = getSourceRef(result.data);
+            if (sourceRef) {
+                const sourceResponse = await getFHIRResource<Communication>(sourceRef);
+                if (isSuccess(sourceResponse)) {
+                    return sourceResponse;
+                }
+            }
+        }
+        return success(undefined);
+    });
+
+    return { response: sequenceMap({ source: sourceResponse, document: response }), questionnaireId };
 }

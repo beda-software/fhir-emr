@@ -12,12 +12,13 @@ import { S } from 'src/containers/PatientDetails/PatientOverviewDynamic/PatientO
 import { formatHumanDateTime } from 'src/utils';
 
 interface Props {
+    hideGenerate?: boolean;
     summaryCompositionRD: RemoteData<Composition | undefined>;
     generateSummary: () => Promise<RemoteDataResult<unknown>>;
     summaryUpdateState: RemoteData;
 }
 
-export function SummaryCard({ summaryCompositionRD, generateSummary, summaryUpdateState }: Props) {
+export function SummaryCard({ summaryCompositionRD, generateSummary, summaryUpdateState, hideGenerate }: Props) {
     async function handleSummaryUpdate() {
         const response = await generateSummary();
         if (isFailure(response)) {
@@ -36,7 +37,7 @@ export function SummaryCard({ summaryCompositionRD, generateSummary, summaryUpda
                             Update
                         </Button>
                     </>
-                ) : (
+                ) : hideGenerate ? null : (
                     <Button type="primary" onClick={handleSummaryUpdate} loading={isLoading(summaryUpdateState)}>
                         Generate new summary
                     </Button>

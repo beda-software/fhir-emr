@@ -29,7 +29,7 @@ export function getANTDTheme({ dark }: { dark?: boolean }): ThemeConfig {
                 titleMarginTop: 0,
             },
             Layout: {
-                colorBgHeader: palette.neutral.sidebarBackground,
+                siderBg: palette.neutral.sidebarBackground,
                 colorBgBody: palette.neutralPalette.gray_2,
             },
             Result: {

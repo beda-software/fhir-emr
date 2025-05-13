@@ -86,6 +86,7 @@ export function useEncounterDetails(props: EncounterDetailsProps) {
         getFHIRResources<Communication>('Communication', {
             encounter: encounterId,
             patient: patient.id,
+            category: 'scribe-result',
         }),
     );
 
