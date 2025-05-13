@@ -150,5 +150,8 @@
         "./icons": "./dist/icons/index.js",
         "./dist/*": "./dist/*.js",
         "./dist/style.css": "./dist/style.css"
+    },
+    "resolutions": {
+        "@typescript-eslint/utils": "^5.59.0"
     }
 }
