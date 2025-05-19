@@ -64,6 +64,7 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
                     repeats={repeats}
                     placeholder={placeholder}
                     choiceColumn={choiceColumn}
+                    preferredTerminologyServer={questionItem.preferredTerminologyServer}
                 />
             </Form.Item>
         );
@@ -90,17 +91,26 @@ interface ChoiceQuestionValueSetProps {
     repeats?: boolean;
     placeholder?: string;
     choiceColumn?: QuestionnaireItemChoiceColumn[];
+    preferredTerminologyServer?: string;
 }
 
 export function ChoiceQuestionValueSet(props: ChoiceQuestionValueSetProps) {
-    const { answerValueSet, value, onChange, repeats = false, placeholder, choiceColumn } = props;
+    const {
+        answerValueSet,
+        value,
+        onChange,
+        repeats = false,
+        placeholder,
+        choiceColumn,
+        preferredTerminologyServer,
+    } = props;
     const expand = useContext(ValueSetExpandProvider);
 
     const loadOptions = useCallback(
         async (searchText: string) => {
-            return expand(answerValueSet, searchText);
+            return expand(answerValueSet, searchText, preferredTerminologyServer);
         },
-        [answerValueSet, expand],
+        [answerValueSet, expand, preferredTerminologyServer],
     );
 
     const debouncedLoadOptions = debounce((searchText, callback) => {

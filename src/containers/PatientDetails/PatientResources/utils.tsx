@@ -283,7 +283,11 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     render: (resource: Observation) => {
                         if (resource.valueQuantity) {
                             const interpretation = getInterpretation(resource).join(', ');
-                            return `${resource.valueQuantity.value} ${
+                            let comparator = '';
+                            if (resource.valueQuantity.comparator) {
+                                comparator = `${resource.valueQuantity.comparator} `;
+                            }
+                            return `${comparator}${resource.valueQuantity.value} ${
                                 resource.valueQuantity.unit ?? ''
                             } ${interpretation}`;
                         } else if (resource.valueInteger) {
