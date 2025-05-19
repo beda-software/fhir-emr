@@ -20,6 +20,45 @@ const instanceHealthSamurai = axios.create({
     },
 });
 
+const instanceTx = axios.create({
+    headers: {
+        Accept: 'application/json;charset=UTF=8',
+    },
+});
+
+export async function expandExternalTerminology(
+    preferredTerminologyServer: string,
+    answerValueSet: string,
+    searchText: string,
+): Promise<RemoteData> {
+    try {
+        const vs = answerValueSet.split('|')[0];
+        const response = await instanceTx.get('/ValueSet/$expand', {
+            baseURL: preferredTerminologyServer,
+            params: {
+                url: vs,
+                _format: 'json',
+                filter: searchText,
+                count: 50,
+                displayLanguage: getCurrentLocale(),
+            },
+        });
+        return success(
+            response.data.expansion.contains.map((item: { code: string; system: string; display: string }) => ({
+                value: {
+                    Coding: {
+                        code: item.code,
+                        system: item.system,
+                        display: upperFirst(item.display),
+                    },
+                },
+            })),
+        );
+    } catch (error) {
+        return failure(error);
+    }
+}
+
 export async function expandHealthSamuraiValueSet(
     answerValueSet: string,
     searchText: string,
@@ -123,8 +162,20 @@ export async function expandValueSet(props: ExpandValueSetProps) {
     return response;
 }
 
-export async function expandEMRValueSet(answerValueSet: string | undefined, searchText: string) {
+export async function expandEMRValueSet(
+    answerValueSet: string | undefined,
+    searchText: string,
+    preferredTerminologyServer?: string,
+) {
     const predefinedValueSetsList: string[] = ['medicationknowledge-package-type'];
+
+    if (preferredTerminologyServer && answerValueSet) {
+        const res = await expandExternalTerminology(preferredTerminologyServer, answerValueSet, searchText);
+        if (isSuccess(res)) {
+            return res.data;
+        }
+        return res;
+    }
 
     return expandValueSet({
         answerValueSet,

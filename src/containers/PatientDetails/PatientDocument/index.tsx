@@ -1,8 +1,10 @@
+import { Splitter } from 'antd';
 import { Organization, ParametersParameter, Patient, Person, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
 
+import { Text } from 'src/components';
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { AnxietyScore, DepressionScore } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/score';
 import { Spinner } from 'src/components/Spinner';
@@ -42,24 +44,57 @@ export function PatientDocument(props: PatientDocumentProps) {
         <div className={s.container}>
             <S.Content>
                 <RenderRemoteData remoteData={response} renderLoading={Spinner}>
-                    {({ formData, onSubmit, provenance }) => (
-                        <>
-                            <PatientDocumentHeader formData={formData} questionnaireId={questionnaireId} />
-
-                            <BaseQuestionnaireResponseForm
-                                formData={formData}
-                                onSubmit={onSubmit}
-                                itemControlQuestionItemComponents={{
-                                    'anxiety-score': AnxietyScore,
-                                    'depression-score': DepressionScore,
-                                }}
-                                onCancel={() => navigate(-1)}
-                                saveButtonTitle={'Complete'}
-                                autoSave={autosave !== undefined ? autosave : !provenance}
-                                qrDraftServiceType={qrDraftServiceType}
-                            />
-                        </>
-                    )}
+                    {({ document: { formData, onSubmit, provenance }, source }) => {
+                        if (typeof source === 'undefined') {
+                            return (
+                                <>
+                                    <PatientDocumentHeader formData={formData} questionnaireId={questionnaireId} />
+                                    <BaseQuestionnaireResponseForm
+                                        formData={formData}
+                                        onSubmit={onSubmit}
+                                        itemControlQuestionItemComponents={{
+                                            'anxiety-score': AnxietyScore,
+                                            'depression-score': DepressionScore,
+                                        }}
+                                        onCancel={() => navigate(-1)}
+                                        saveButtonTitle={'Complete'}
+                                        autoSave={autosave !== undefined ? autosave : !provenance}
+                                        qrDraftServiceType={qrDraftServiceType}
+                                    />
+                                </>
+                            );
+                        } else {
+                            return (
+                                <>
+                                    <PatientDocumentHeader formData={formData} questionnaireId={questionnaireId} />
+                                    <Splitter>
+                                        <Splitter.Panel min="10%" defaultSize="30%">
+                                            <Text>
+                                                Scribe result:
+                                                <br />
+                                                <br />
+                                                {source.payload?.[0]?.contentString}
+                                            </Text>
+                                        </Splitter.Panel>
+                                        <Splitter.Panel min="40%" style={{ marginLeft: 25 }}>
+                                            <BaseQuestionnaireResponseForm
+                                                formData={formData}
+                                                onSubmit={onSubmit}
+                                                itemControlQuestionItemComponents={{
+                                                    'anxiety-score': AnxietyScore,
+                                                    'depression-score': DepressionScore,
+                                                }}
+                                                onCancel={() => navigate(-1)}
+                                                saveButtonTitle={'Complete'}
+                                                autoSave={autosave !== undefined ? autosave : !provenance}
+                                                qrDraftServiceType={qrDraftServiceType}
+                                            />
+                                        </Splitter.Panel>
+                                    </Splitter>
+                                </>
+                            );
+                        }
+                    }}
                 </RenderRemoteData>
             </S.Content>
         </div>
