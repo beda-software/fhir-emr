@@ -32,11 +32,11 @@ export function useSearchBar(props: SearchBarProps): SearchBarData {
     const defaultFiltersValues = useMemo<ColumnFilterValue[]>(() => {
         return columns.map((column) => {
             if (isStringColumn(column)) {
-                return { column, value: undefined };
+                return { column, value: column.defaultValue ?? undefined };
             }
 
             if (isDateColumn(column)) {
-                return { column, value: undefined };
+                return { column, value: column.defaultValue ?? undefined };
             }
 
             if (isSingleDateColumn(column)) {

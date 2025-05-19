@@ -35,10 +35,12 @@ type SearchBarColumnBase = {
 export type SearchBarStringColumn = SearchBarColumnBase & {
     type: SearchBarColumnType.STRING;
     placeholder: string;
+    defaultValue?: string;
 };
 export type SearchBarDateColumn = SearchBarColumnBase & {
     type: SearchBarColumnType.DATE;
     placeholder: [string, string];
+    defaultValue?: DateColumnFilterValue;
 };
 export type SearchBarSingleDateColumn = SearchBarColumnBase & {
     type: SearchBarColumnType.SINGLEDATE;
