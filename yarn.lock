@@ -818,10 +818,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@beda.software/fhir-react@^1.8.9":
-  version "1.8.9"
-  resolved "https://registry.yarnpkg.com/@beda.software/fhir-react/-/fhir-react-1.8.9.tgz#1b1bcf90800853ffbdc0ffa07f6b5629e0b333c0"
-  integrity sha512-brrfkUXDWS+JFYDWMaihD5PK9SjS1ILq2ETIl6iB16KJ8Db+YaAmZAXQGh7knZvkkT53lMZK109uojxqZMee7Q==
+"@beda.software/fhir-react@^1.9.1":
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/@beda.software/fhir-react/-/fhir-react-1.9.1.tgz#7bf77b8d402988e284e93c0a8eb3e1ae02b315c4"
+  integrity sha512-z0VI+1IG5TUNmS7bLM4yVv+kCdGSmND46wF3R9UPzNlf7iIiGFVn/uGxVeivjOshC8tkmbd1S3DR6itP3jhXUQ==
   dependencies:
     "@beda.software/remote-data" "^1.1.4"
     lodash "^4.17.21"
@@ -5080,10 +5080,10 @@ aidbox-forms@^0.0.5:
   resolved "https://registry.yarnpkg.com/aidbox-forms/-/aidbox-forms-0.0.5.tgz#8f6e62a75b40903eeceaa45c7339eaa3f5bba4a9"
   integrity sha512-n96UKOQVff2Y/WPw3+n0S6O4jel3lGRpw7z1aBLn0mQv7EQxq2gDSIorpxNCywW/QZqFBLEyzZ0lZjcGvo4SKA==
 
-aidbox-react@^1.10.1:
-  version "1.10.1"
-  resolved "https://registry.yarnpkg.com/aidbox-react/-/aidbox-react-1.10.1.tgz#cc12df9278f95402210f4a9644493ecdfe69c292"
-  integrity sha512-mEZS2uN8btp828LIf9CfM8cPKTHNTSl8O2Q1TgY1qGx0l97FNPkcHiombZIRgkLOYdAXEe2KRu5jFRcGWZk2dg==
+aidbox-react@^1.11.2:
+  version "1.11.2"
+  resolved "https://registry.yarnpkg.com/aidbox-react/-/aidbox-react-1.11.2.tgz#579ec35d67c85b7e8e014fdb99dca11dbd0aff49"
+  integrity sha512-UPQwXCK59zrd3lKyiXZnTVrl5SHJsgkOD20Kbyptp+iXxkwozmrPwAxpmSrIefo03CX/7OaSThTt3FeXKIw6Nw==
   dependencies:
     "@beda.software/remote-data" "^1.1.4"
     axios "^1.8.4"
