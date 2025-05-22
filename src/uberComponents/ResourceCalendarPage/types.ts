@@ -1,8 +1,6 @@
 import { CalendarOptions } from '@fullcalendar/core';
 import { Resource, Slot } from 'fhir/r4b';
 
-import { SearchParams } from '@beda.software/fhir-react';
-
 import { WebExtra, QuestionnaireActionType } from '../ResourceListPage/actions';
 import { ResourceListBaseProps } from '../ResourceListPage/types';
 import { TypedFHIRPathExpression } from '../types';
@@ -36,7 +34,7 @@ export type ResourceCalendarPageProps<R extends Resource> = ResourceListBaseProp
         };
     };
     slot?: {
-        searchParams: SearchParams;
+        operationUrl?: string;
         eventColorMapping?: ResourceColorMapping<Slot>;
     };
     businessHours?: CalendarOptions['businessHours'];

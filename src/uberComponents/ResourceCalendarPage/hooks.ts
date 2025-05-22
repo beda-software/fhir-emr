@@ -1,7 +1,7 @@
 import { Bundle, Resource, Slot } from 'fhir/r4b';
 import { useMemo, useState } from 'react';
 
-import { extractBundleResources, SearchParams, usePager, WithId } from '@beda.software/fhir-react';
+import { extractBundleResources, SearchParams, usePager, WithId, useService } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess, sequenceMap } from '@beda.software/remote-data';
 
 import { ColumnFilterValue } from 'src/components/SearchBar/types';
@@ -24,6 +24,15 @@ export function useCalendarPage<R extends WithId<Resource>>(
     const { eventCreate, eventShow, eventEdit, questionnaireActions } = useCalendarEvents<R>(event.actions);
     const debouncedFilterValues = useDebounce(filterValues, 300);
 
+    const [slotResourceResponse, slotPagerManager] = useService(
+        async () =>
+            service<Bundle<WithId<Slot>>>({
+                method: 'GET',
+                url: slot?.operationUrl ?? '/Slot',
+            }),
+        [],
+    );
+
     const searchBarSearchParams = {
         ...Object.fromEntries(
             debouncedFilterValues.map((filterValue) => [
@@ -43,13 +52,6 @@ export function useCalendarPage<R extends WithId<Resource>>(
         requestService: service,
         resourcesOnPage: pageSize,
         initialSearchParams: searchParams,
-    });
-
-    const [slotResourceResponse, slotPagerManager] = usePager<WithId<Slot>>({
-        resourceType: 'Slot',
-        requestService: service,
-        resourcesOnPage: pageSize,
-        initialSearchParams: slot?.searchParams,
     });
 
     const total = isSuccess(resourceResponse) ? resourceResponse.data.total : 0;

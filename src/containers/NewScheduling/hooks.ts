@@ -101,7 +101,6 @@ export function useNewScheduling() {
     };
 
     const slotData: ResourceCalendarPageProps<Appointment>['slot'] = {
-        searchParams: {},
         eventColorMapping: {
             targetExpression: compileAsFirst<Slot, string>('Slot.status'),
             colorMapping: {
