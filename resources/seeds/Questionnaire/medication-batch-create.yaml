@@ -62,5 +62,5 @@ item:
 
 meta:
   profile:
-    - https://beda.software/beda-emr-questionnaire
+    - https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire
 url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/medication-batch-create

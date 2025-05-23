@@ -4,7 +4,7 @@ title: Repeatable Group Full Example
 status: active
 meta:
   profile:
-    - https://beda.software/beda-emr-questionnaire
+    - https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire
 subjectType:
     - Encounter
     - Patient
