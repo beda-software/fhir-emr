@@ -315,5 +315,5 @@ item:
                     + %QuestionnaireResponse.item.item.answer.children().children().where(code='LA6571-9').count() * 3"
 meta:
     profile:
-        - https://beda.software/beda-emr-questionnaire
+        - https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire
 url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/phq2phq9

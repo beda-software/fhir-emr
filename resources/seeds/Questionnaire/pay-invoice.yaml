@@ -28,4 +28,4 @@ item:
 url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/change-invoice-status
 meta:
     profile:
-        - https://beda.software/beda-emr-questionnaire
+        - https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire

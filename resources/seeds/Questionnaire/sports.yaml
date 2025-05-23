@@ -2,7 +2,7 @@ id: sport-preferences
 resourceType: Questionnaire
 meta:
   profile:
-    - https://beda.software/beda-emr-questionnaire
+    - https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire
 name: sports
 title: Sport Preferences
 status: active

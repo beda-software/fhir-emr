@@ -44,7 +44,7 @@ const q1: Questionnaire = {
         },
     ],
     meta: {
-        profile: ['https://beda.software/beda-emr-questionnaire'],
+        profile: ['https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire'],
     },
     resourceType: 'Questionnaire',
     title: 'Test',
@@ -55,7 +55,7 @@ const q1: Questionnaire = {
 
 const q2: Questionnaire = {
     meta: {
-        profile: ['https://beda.software/beda-emr-questionnaire'],
+        profile: ['https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire'],
     },
     item: [
         {
