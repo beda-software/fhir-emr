@@ -124,7 +124,7 @@ function AvailableDateControl(props: AvailableDatePickerProps & { practitionerRo
     const { questionItem, parentPath, practitionerRole } = props;
     const { linkId } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'dateTime'];
-    const { value, onChange, disabled } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled } = useFieldController<string>(fieldName, questionItem);
     const { response } = useDateTimeSlots(practitionerRole);
 
     const onDateChange = (date: moment.Moment | null, timeSlots: TimeSlots) => {

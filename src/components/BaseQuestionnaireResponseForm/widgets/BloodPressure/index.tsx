@@ -23,7 +23,7 @@ function BloodPressureItem(props: BloodPressureItemProps) {
 
     const fieldName = getFieldName(parentPath, questionItem);
 
-    const { value, onChange, disabled, formItem, placeholder } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, formItem, placeholder } = useFieldController<any>(fieldName, questionItem);
 
     return (
         <Form.Item {...formItem}>

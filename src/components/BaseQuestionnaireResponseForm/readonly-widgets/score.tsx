@@ -21,7 +21,7 @@ function getAnxietyScoreInterpretation(score: number) {
 export function AnxietyScore({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, text, hidden } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'integer'];
-    const { value } = useFieldController(fieldName, questionItem);
+    const { value } = useFieldController<number>(fieldName, questionItem);
 
     if (hidden) {
         return null;
@@ -54,7 +54,7 @@ function getDepressionScoreInterpretation(score: number) {
 export function DepressionScore({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, text, hidden } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'integer'];
-    const { value } = useFieldController(fieldName, questionItem);
+    const { value } = useFieldController<number>(fieldName, questionItem);
 
     if (hidden) {
         return null;

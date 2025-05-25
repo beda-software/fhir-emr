@@ -4,7 +4,7 @@ import { Button } from 'antd';
 import _ from 'lodash';
 import React, { ReactNode } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { GroupItemProps, getItemKey, populateItemKey } from 'sdc-qrf';
+import { FormAnswerItems, GroupItemProps, getItemKey, populateItemKey } from 'sdc-qrf';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 
@@ -32,7 +32,7 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
 
     const fieldName = [...parentPath, linkId];
 
-    const { onChange } = useFieldController(fieldName, questionItem);
+    const { onChange } = useFieldController<FormAnswerItems[]>(fieldName, questionItem);
 
     const { getValues } = useFormContext();
 

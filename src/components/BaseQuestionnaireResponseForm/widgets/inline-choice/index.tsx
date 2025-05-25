@@ -1,6 +1,6 @@
 import { Checkbox, Form, Radio, Space } from 'antd';
 import _ from 'lodash';
-import { QuestionItemProps } from 'sdc-qrf';
+import { FormAnswerItems, QuestionItemProps } from 'sdc-qrf';
 
 import { QuestionnaireItem, QuestionnaireItemAnswerOption } from '@beda.software/aidbox-types';
 
@@ -18,7 +18,10 @@ export function InlineChoice(props: InlineChoiceProps) {
 
     const fieldName = [...parentPath, linkId];
 
-    const { value, onChange, onMultiChange, disabled, formItem } = useFieldController(fieldName, questionItem);
+    const { value, onChange, onMultiChange, disabled, formItem } = useFieldController<FormAnswerItems[]>(
+        fieldName,
+        questionItem,
+    );
 
     const arrayValue = (value || []) as QuestionnaireItemAnswerOption[];
 
@@ -31,7 +34,7 @@ export function InlineChoice(props: InlineChoiceProps) {
                             checked={arrayValue.findIndex((v) => _.isEqual(v?.value, answerOption.value)) !== -1}
                             key={JSON.stringify(answerOption)}
                             disabled={disabled}
-                            onChange={() => onMultiChange(answerOption)}
+                            onChange={() => onMultiChange(answerOption as FormAnswerItems)}
                             // TODO: use linkId + __ + code instead
                             data-testid={`inline-choice__${_.kebabCase(
                                 JSON.stringify(getDisplay(answerOption.value!)),

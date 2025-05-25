@@ -1,5 +1,6 @@
 import { t } from '@lingui/macro';
 import _ from 'lodash';
+import { AnswerValue } from 'sdc-qrf';
 import * as yup from 'yup';
 
 import {
@@ -8,7 +9,6 @@ import {
     QuestionnaireItemAnswerOption,
     QuestionnaireItemChoiceColumn,
     QuestionnaireResponseItemAnswer,
-    QuestionnaireResponseItemAnswerValue,
 } from '@beda.software/aidbox-types';
 import { parseFHIRTime } from '@beda.software/fhir-react';
 
@@ -17,7 +17,7 @@ import { getQuestionItemEnableWhenSchema } from './enableWhen';
 import { evaluate } from './fhirpath';
 
 export function getDisplay(
-    value?: QuestionnaireResponseItemAnswerValue,
+    value?: AnswerValue,
     choiceColumn?: QuestionnaireItemChoiceColumn[],
 ): string | number | null {
     if (!value) {
