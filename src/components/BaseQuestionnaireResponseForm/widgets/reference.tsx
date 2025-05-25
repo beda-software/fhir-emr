@@ -2,7 +2,7 @@ import { Form } from 'antd';
 import _ from 'lodash';
 import { useCallback, useMemo } from 'react';
 import { ActionMeta, MultiValue, SingleValue } from 'react-select';
-import { parseFhirQueryExpression, QuestionItemProps } from 'sdc-qrf';
+import { FormAnswerItems, parseFhirQueryExpression, QuestionItemProps } from 'sdc-qrf';
 
 import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer, Resource } from '@beda.software/aidbox-types';
 import { RenderRemoteData, ResourcesMap, useService } from '@beda.software/fhir-react';
@@ -103,7 +103,7 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
     const rootFieldName = rootFieldPath.join('.');
 
     const fieldName = fieldPath.join('.');
-    const fieldController = useFieldController(fieldPath, questionItem);
+    const fieldController = useFieldController<FormAnswerItems[]>(fieldPath, questionItem);
 
     const getDisplay = useCallback(() => {
         if (overrideGetDisplay) {

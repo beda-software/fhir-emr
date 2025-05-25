@@ -2,7 +2,7 @@ import { t } from '@lingui/macro';
 import { Form } from 'antd';
 import _, { debounce } from 'lodash';
 import { useCallback, useContext } from 'react';
-import { QuestionItemProps } from 'sdc-qrf';
+import { FormAnswerItems, QuestionItemProps } from 'sdc-qrf';
 
 import {
     QuestionnaireItemAnswerOption,
@@ -52,14 +52,19 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
     const { linkId, answerOption, repeats, answerValueSet, choiceColumn } = questionItem;
     const fieldName = [...parentPath, linkId];
 
-    const { value, formItem, onSelect, placeholder = t`Select...` } = useFieldController(fieldName, questionItem);
+    const {
+        value,
+        formItem,
+        onSelect,
+        placeholder = t`Select...`,
+    } = useFieldController<FormAnswerItems[]>(fieldName, questionItem);
 
     if (answerValueSet) {
         return (
             <Form.Item {...formItem} data-testid="question-choice">
                 <ChoiceQuestionValueSet
                     answerValueSet={answerValueSet}
-                    value={value}
+                    value={value ?? []}
                     onChange={onSelect}
                     repeats={repeats}
                     placeholder={placeholder}
@@ -74,7 +79,7 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
         <Form.Item {...formItem} data-testid="question-choice">
             <ChoiceQuestionSelect
                 options={answerOption!}
-                value={value}
+                value={value ?? []}
                 onChange={onSelect}
                 repeats={repeats}
                 placeholder={placeholder}
@@ -86,8 +91,8 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
 
 interface ChoiceQuestionValueSetProps {
     answerValueSet: string;
-    value: QuestionnaireResponseItemAnswer[];
-    onChange: (option: any) => void;
+    value: FormAnswerItems[];
+    onChange: (option: FormAnswerItems[]) => void;
     repeats?: boolean;
     placeholder?: string;
     choiceColumn?: QuestionnaireItemChoiceColumn[];
@@ -122,7 +127,7 @@ export function ChoiceQuestionValueSet(props: ChoiceQuestionValueSetProps) {
             loadOptions={debouncedLoadOptions}
             defaultOptions
             value={value}
-            onChange={(v) => onChange(v)}
+            onChange={(v) => onChange(v as FormAnswerItems[])}
             isOptionSelected={(option) => !!value && value?.findIndex((v) => _.isEqual(v?.value, option.value)) !== -1}
             isMulti={repeats}
             getOptionLabel={(o) => (getDisplay(o.value, choiceColumn) as string) || ''}

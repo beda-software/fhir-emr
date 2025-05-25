@@ -8,12 +8,12 @@ import { MarkDownEditor } from './MarkDownEditor';
 export function MDEditorControl({ parentPath, questionItem, context }: QuestionItemProps) {
     const { linkId } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
-    const { value, onChange, formItem } = useFieldController(fieldName, questionItem);
+    const { value, onChange, formItem } = useFieldController<string>(fieldName, questionItem);
 
     return (
         <Form.Item {...formItem}>
             <MarkDownEditor
-                markdownString={value}
+                markdownString={value ?? ''}
                 onChange={onChange}
                 readOnly={questionItem.readOnly}
                 context={context}

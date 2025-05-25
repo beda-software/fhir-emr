@@ -2,7 +2,7 @@ import type { UploadFile } from 'antd';
 import { notification } from 'antd';
 import { Attachment } from 'fhir/r4b';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { QuestionItemProps } from 'sdc-qrf';
+import { FormAnswerItems, QuestionItemProps } from 'sdc-qrf';
 
 import { formatError } from '@beda.software/fhir-react';
 import { isSuccess } from '@beda.software/remote-data';
@@ -21,7 +21,7 @@ type ValueAttachment = { value: { Attachment: Attachment } };
 export function useUploader({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, repeats } = questionItem;
     const fieldName = [...parentPath, linkId];
-    const { formItem, value, onChange } = useFieldController(fieldName, questionItem);
+    const { formItem, value, onChange } = useFieldController<FormAnswerItems[]>(fieldName, questionItem);
 
     const uid = useRef<Record<string, string>>({});
     const initialFileList: Array<UploadFile> = useMemo(
@@ -68,7 +68,7 @@ export function useUploader({ parentPath, questionItem }: QuestionItemProps) {
         })();
     }, [JSON.stringify(fileList)]);
 
-    const hasUploadedFile = value?.length > 0;
+    const hasUploadedFile = (value ?? [])?.length > 0;
 
     const customRequest = useCallback(
         async (options: CustomUploadRequestOption) => {
@@ -94,7 +94,7 @@ export function useUploader({ parentPath, questionItem }: QuestionItemProps) {
                 const filename = uid.current[info.file.uid];
                 const attachement = { value: { Attachment: { url: filename } } };
                 if (repeats) {
-                    onChange([...value, attachement]);
+                    onChange([...(value ?? []), attachement]);
                 } else {
                     onChange([attachement]);
                 }

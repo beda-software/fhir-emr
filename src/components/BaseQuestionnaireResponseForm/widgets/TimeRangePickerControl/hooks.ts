@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { GroupItemProps } from 'sdc-qrf';
+import { FormAnswerItems, GroupItemProps } from 'sdc-qrf';
 
 import { FHIRTimeFormat } from '@beda.software/fhir-react';
 
@@ -16,7 +16,7 @@ export function useTimeRangePickerControl(props: GroupItemProps) {
         value: startTimeFieldValue,
         formItem: startFormItem,
         placeholder: startFromPlaceholder,
-    } = useFieldController(startTimeItemFieldName, startTimeItem);
+    } = useFieldController<FormAnswerItems>(startTimeItemFieldName, startTimeItem);
 
     const endTimeItem = questionItem.item![1]!;
     const endTimeItemFieldName = [questionItem.linkId, 'items', endTimeItem.linkId, 0];
@@ -25,7 +25,7 @@ export function useTimeRangePickerControl(props: GroupItemProps) {
         value: endTimeFieldValue,
         formItem: endFormItem,
         placeholder: endFromPlaceholder,
-    } = useFieldController(endTimeItemFieldName, endTimeItem);
+    } = useFieldController<FormAnswerItems>(endTimeItemFieldName, endTimeItem);
 
     const onTimeRangeChange = useCallback(
         (rangeValue: RangeValue) => {
