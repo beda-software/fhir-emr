@@ -1,14 +1,9 @@
 import { t } from '@lingui/macro';
 import { Form } from 'antd';
+import { QuestionnaireItemAnswerOption } from 'fhir/r4b';
 import _, { debounce } from 'lodash';
 import { useCallback, useContext } from 'react';
-import { QuestionItemProps } from 'sdc-qrf';
-
-import {
-    QuestionnaireItemAnswerOption,
-    QuestionnaireItemChoiceColumn,
-    QuestionnaireResponseItemAnswer,
-} from '@beda.software/aidbox-types';
+import { FCEQuestionnaireItemChoiceColumn, FormAnswerItems, QuestionItemProps, toAnswerValue } from 'sdc-qrf';
 
 import { AsyncSelect, Select } from 'src/components/Select';
 import { ValueSetExpandProvider } from 'src/contexts';
@@ -18,12 +13,12 @@ import s from '../../BaseQuestionnaireResponseForm.module.scss';
 import { useFieldController } from '../../hooks';
 
 interface ChoiceQuestionSelectProps {
-    value?: QuestionnaireResponseItemAnswer[];
+    value?: FormAnswerItems[];
     onChange: (...option: any[]) => void;
     options: QuestionnaireItemAnswerOption[];
     repeats?: boolean;
     placeholder?: string;
-    choiceColumn?: QuestionnaireItemChoiceColumn[];
+    choiceColumn?: FCEQuestionnaireItemChoiceColumn[];
 }
 
 export function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
@@ -31,9 +26,9 @@ export function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
 
     return (
         <>
-            <Select<QuestionnaireItemAnswerOption>
+            <Select<FormAnswerItems>
                 value={value}
-                options={options}
+                options={options.map((option) => ({ value: toAnswerValue(option, 'value')! }))}
                 className={s.select}
                 onChange={(v) => onChange(v)}
                 isOptionSelected={(option) =>
@@ -52,14 +47,19 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
     const { linkId, answerOption, repeats, answerValueSet, choiceColumn } = questionItem;
     const fieldName = [...parentPath, linkId];
 
-    const { value, formItem, onSelect, placeholder = t`Select...` } = useFieldController(fieldName, questionItem);
+    const {
+        value,
+        formItem,
+        onSelect,
+        placeholder = t`Select...`,
+    } = useFieldController<FormAnswerItems[]>(fieldName, questionItem);
 
     if (answerValueSet) {
         return (
             <Form.Item {...formItem} data-testid="question-choice">
                 <ChoiceQuestionValueSet
                     answerValueSet={answerValueSet}
-                    value={value}
+                    value={value ?? []}
                     onChange={onSelect}
                     repeats={repeats}
                     placeholder={placeholder}
@@ -86,11 +86,11 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
 
 interface ChoiceQuestionValueSetProps {
     answerValueSet: string;
-    value: QuestionnaireResponseItemAnswer[];
+    value: FormAnswerItems[];
     onChange: (option: any) => void;
     repeats?: boolean;
     placeholder?: string;
-    choiceColumn?: QuestionnaireItemChoiceColumn[];
+    choiceColumn?: FCEQuestionnaireItemChoiceColumn[];
     preferredTerminologyServer?: string;
 }
 

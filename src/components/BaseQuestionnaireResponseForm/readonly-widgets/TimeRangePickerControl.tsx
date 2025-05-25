@@ -23,7 +23,7 @@ function TimeRangePickerWidget(props: GroupItemProps) {
     const { text } = questionItem;
 
     const { startTimeFieldValue, endTimeFieldValue } = useTimeRangePickerControl(props);
-    const display = _.compact([getDisplay(startTimeFieldValue.value), getDisplay(endTimeFieldValue.value)]).join('–');
+    const display = _.compact([getDisplay(startTimeFieldValue?.value), getDisplay(endTimeFieldValue?.value)]).join('–');
 
     return (
         <S.Question className={classNames(s.question, s.row, 'form__question')}>

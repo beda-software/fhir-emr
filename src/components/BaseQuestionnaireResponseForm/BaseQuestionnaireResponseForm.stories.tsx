@@ -2,6 +2,7 @@ import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
 import { Meta, StoryObj } from '@storybook/react';
 import { en, ru } from 'make-plural';
+import { fromFirstClassExtension, QuestionnaireResponseFormData } from 'sdc-qrf';
 
 import { BaseQuestionnaireResponseForm, BaseQuestionnaireResponseFormProps } from './index';
 
@@ -30,12 +31,17 @@ const Template = (args: BaseQuestionnaireResponseFormProps) => (
     </I18nProvider>
 );
 
+function fillContext(
+    context: Omit<QuestionnaireResponseFormData['context'], 'questionnaire'>,
+): QuestionnaireResponseFormData['context'] {
+    return { ...context, questionnaire: fromFirstClassExtension(context.fceQuestionnaire) };
+}
 export const SimpleLayout: Story = {
     render: Template,
     args: {
         formData: {
-            context: {
-                questionnaire: {
+            context: fillContext({
+                fceQuestionnaire: {
                     item: [
                         {
                             text: 'patientId',
@@ -70,14 +76,10 @@ export const SimpleLayout: Story = {
                             linkId: 'gender',
                             answerOption: [
                                 {
-                                    value: {
-                                        string: 'male',
-                                    },
+                                    valueString: 'male',
                                 },
                                 {
-                                    value: {
-                                        string: 'female',
-                                    },
+                                    valueString: 'female',
                                 },
                             ],
                         },
@@ -97,14 +99,12 @@ export const SimpleLayout: Story = {
                     status: 'active',
                     mapping: [
                         {
-                            resourceType: 'Mapping',
-                            id: 'patient-create',
+                            reference: 'Mapping/patient-create',
                         },
                     ],
                     resourceType: 'Questionnaire',
                     meta: {
                         lastUpdated: '2021-12-17T17:40:55.641038Z',
-                        createdAt: '2021-12-17T09:49:49.348323Z',
                         versionId: '1048',
                     },
                     assembledFrom: 'patient-create',
@@ -149,7 +149,7 @@ export const SimpleLayout: Story = {
                     ],
                 },
                 launchContextParameters: [],
-            },
+            }),
             formValues: {},
         },
         //@ts-ignore
@@ -161,8 +161,8 @@ export const AdvancedLayout: Story = {
     render: Template,
     args: {
         formData: {
-            context: {
-                questionnaire: {
+            context: fillContext({
+                fceQuestionnaire: {
                     item: [
                         {
                             text: 'patientId',
@@ -211,19 +211,13 @@ export const AdvancedLayout: Story = {
                                     itemControl: { coding: [{ code: 'solid-radio-button' }] },
                                     answerOption: [
                                         {
-                                            value: {
-                                                Coding: { code: 'female', display: 'Female' },
-                                            },
+                                            valueCoding: { code: 'female', display: 'Female' },
                                         },
                                         {
-                                            value: {
-                                                Coding: { code: 'male', display: 'Male' },
-                                            },
+                                            valueCoding: { code: 'male', display: 'Male' },
                                         },
                                         {
-                                            value: {
-                                                Coding: { code: 'other', display: 'Other' },
-                                            },
+                                            valueCoding: { code: 'other', display: 'Other' },
                                         },
                                     ],
                                 },
@@ -253,14 +247,12 @@ export const AdvancedLayout: Story = {
                     status: 'active',
                     mapping: [
                         {
-                            resourceType: 'Mapping',
-                            id: 'patient-create',
+                            reference: 'Mapping/patient-create',
                         },
                     ],
                     resourceType: 'Questionnaire',
                     meta: {
                         lastUpdated: '2021-12-17T17:40:55.641038Z',
-                        createdAt: '2021-12-17T09:49:49.348323Z',
                         versionId: '1048',
                     },
                     assembledFrom: 'patient-create',
@@ -305,7 +297,7 @@ export const AdvancedLayout: Story = {
                     ],
                 },
                 launchContextParameters: [],
-            },
+            }),
             formValues: {},
         },
         //@ts-ignore
@@ -353,14 +345,10 @@ export const AdvancedLayout: Story = {
 //                         linkId: 'gender',
 //                         answerOption: [
 //                             {
-//                                 value: {
-//                                     string: 'male',
-//                                 },
+//                                 valueString: 'male'
 //                             },
 //                             {
-//                                 value: {
-//                                     string: 'female',
-//                                 },
+//                                 valueString: 'female'
 //                             },
 //                         ],
 //                     },

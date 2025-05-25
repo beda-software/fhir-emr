@@ -11,7 +11,7 @@ import {
     Provenance,
     ObservationComponent,
 } from 'fhir/r4b';
-import { extractExtension } from 'sdc-qrf';
+import { extractCreatedAtFromMeta } from 'sdc-qrf';
 
 import { WithId } from '@beda.software/fhir-react';
 
@@ -99,7 +99,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     title: t`Date`,
                     key: 'date',
                     render: (r: Condition) => {
-                        const createdAt = extractExtension(r.meta?.extension, 'ex:createdAt');
+                        const createdAt = extractCreatedAtFromMeta(r.meta);
 
                         return createdAt ? formatHumanDate(r.recordedDate || createdAt) : null;
                     },
@@ -138,7 +138,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     title: t`Date`,
                     key: 'date',
                     render: (r: AllergyIntolerance) => {
-                        const createdAt = extractExtension(r.meta?.extension, 'ex:createdAt');
+                        const createdAt = extractCreatedAtFromMeta(r.meta);
 
                         return createdAt ? formatHumanDate(r.recordedDate || createdAt) : null;
                     },
@@ -219,7 +219,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     title: t`Date`,
                     key: 'date',
                     render: (r: Consent) => {
-                        const createdAt = extractExtension(r.meta?.extension, 'ex:createdAt');
+                        const createdAt = extractCreatedAtFromMeta(r.meta);
 
                         return createdAt ? formatHumanDate(r.dateTime || createdAt) : null;
                     },
@@ -270,7 +270,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     title: t`Date`,
                     key: 'date',
                     render: (r: Observation) => {
-                        const createdAt = extractExtension(r.meta?.extension, 'ex:createdAt');
+                        const createdAt = extractCreatedAtFromMeta(r.meta);
                         const date = r.issued || createdAt;
 
                         return date ? formatHumanDate(date) : null;
@@ -354,7 +354,7 @@ export function getOptions(patient: WithId<Patient>): Option[] {
                     title: t`Date created`,
                     key: 'date',
                     render: (r: Observation) => {
-                        const createdAt = extractExtension(r.meta?.extension, 'ex:createdAt');
+                        const createdAt = extractCreatedAtFromMeta(r.meta);
                         const date = r.issued || createdAt;
 
                         return date ? formatHumanDateTime(date) : null;

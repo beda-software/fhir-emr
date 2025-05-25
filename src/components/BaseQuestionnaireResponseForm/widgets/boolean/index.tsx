@@ -6,7 +6,7 @@ import { useFieldController } from '../../hooks';
 export function QuestionBoolean({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, text } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'boolean'];
-    const { value, onChange, disabled, formItem } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, formItem } = useFieldController<boolean>(fieldName, questionItem);
 
     return (
         <Form.Item {...formItem} valuePropName="checked" data-testid="question-boolean" label={undefined}>

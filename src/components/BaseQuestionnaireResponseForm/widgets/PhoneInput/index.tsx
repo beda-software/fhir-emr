@@ -15,7 +15,7 @@ export function QuestionPhone({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
     const defaultCountryCode = useContext(PhoneInputCountryContext);
-    const { value, onChange, disabled, formItem, placeholder } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, formItem, placeholder } = useFieldController<string>(fieldName, questionItem);
     const [focused, setFocused] = useState(false);
 
     return (

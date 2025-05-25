@@ -1,8 +1,8 @@
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
 import { Meta, StoryObj } from '@storybook/react';
-
-import { Questionnaire, QuestionnaireResponse } from '@beda.software/aidbox-types/index';
+import { QuestionnaireResponse } from 'fhir/r4b';
+import { FCEQuestionnaire, fromFirstClassExtension } from 'sdc-qrf';
 
 import { BaseQuestionnaireResponseForm, Modal } from 'src/components';
 
@@ -27,7 +27,8 @@ export const Default: Story = {
             <BaseQuestionnaireResponseForm
                 formData={{
                     context: {
-                        questionnaire: getQuestionnaire(),
+                        fceQuestionnaire: getQuestionnaire(),
+                        questionnaire: fromFirstClassExtension(getQuestionnaire()),
                         launchContextParameters: [],
                         questionnaireResponse,
                     },
@@ -44,7 +45,8 @@ export const WithTooltip: Story = {
             <BaseQuestionnaireResponseForm
                 formData={{
                     context: {
-                        questionnaire: getQuestionnaire('wizard-with-tooltips'),
+                        fceQuestionnaire: getQuestionnaire('wizard-with-tooltips'),
+                        questionnaire: fromFirstClassExtension(getQuestionnaire('wizard-with-tooltips')),
                         launchContextParameters: [],
                         questionnaireResponse,
                     },
@@ -63,7 +65,8 @@ export const Autosave: Story = {
             <BaseQuestionnaireResponseForm
                 formData={{
                     context: {
-                        questionnaire: getQuestionnaire('wizard-with-tooltips'),
+                        fceQuestionnaire: getQuestionnaire('wizard-with-tooltips'),
+                        questionnaire: fromFirstClassExtension(getQuestionnaire('wizard-with-tooltips')),
                         launchContextParameters: [],
                         questionnaireResponse,
                     },
@@ -83,7 +86,8 @@ export const SaveAsDraft: Story = {
             <BaseQuestionnaireResponseForm
                 formData={{
                     context: {
-                        questionnaire: getQuestionnaire('wizard-with-tooltips'),
+                        fceQuestionnaire: getQuestionnaire('wizard-with-tooltips'),
+                        questionnaire: fromFirstClassExtension(getQuestionnaire('wizard-with-tooltips')),
                         launchContextParameters: [],
                         questionnaireResponse,
                     },
@@ -104,7 +108,8 @@ export const inModal: Story = {
                 <BaseQuestionnaireResponseForm
                     formData={{
                         context: {
-                            questionnaire: getQuestionnaire('wizard-with-tooltips'),
+                            fceQuestionnaire: getQuestionnaire('wizard-with-tooltips'),
+                            questionnaire: fromFirstClassExtension(getQuestionnaire('wizard-with-tooltips')),
                             launchContextParameters: [],
                             questionnaireResponse,
                         },
@@ -116,7 +121,7 @@ export const inModal: Story = {
     ),
 };
 
-function getQuestionnaire(itemControlCode: 'wizard' | 'wizard-with-tooltips' = 'wizard'): Questionnaire {
+function getQuestionnaire(itemControlCode: 'wizard' | 'wizard-with-tooltips' = 'wizard'): FCEQuestionnaire {
     return {
         assembledFrom: 'group-wizard',
         subjectType: ['Patient'],
@@ -148,34 +153,22 @@ function getQuestionnaire(itemControlCode: 'wizard' | 'wizard-with-tooltips' = '
                                 required: false,
                                 answerOption: [
                                     {
-                                        value: {
-                                            string: 'Walking',
-                                        },
+                                        valueString: 'Walking',
                                     },
                                     {
-                                        value: {
-                                            string: 'Running',
-                                        },
+                                        valueString: 'Running',
                                     },
                                     {
-                                        value: {
-                                            string: 'Cycling',
-                                        },
+                                        valueString: 'Cycling',
                                     },
                                     {
-                                        value: {
-                                            string: 'Swimming',
-                                        },
+                                        valueString: 'Swimming',
                                     },
                                     {
-                                        value: {
-                                            string: 'Weightlifting',
-                                        },
+                                        valueString: 'Weightlifting',
                                     },
                                     {
-                                        value: {
-                                            string: 'Other',
-                                        },
+                                        valueString: 'Other',
                                     },
                                 ],
                             },
@@ -199,24 +192,16 @@ function getQuestionnaire(itemControlCode: 'wizard' | 'wizard-with-tooltips' = '
                                 required: true,
                                 answerOption: [
                                     {
-                                        value: {
-                                            string: 'Never',
-                                        },
+                                        valueString: 'Never',
                                     },
                                     {
-                                        value: {
-                                            string: 'Once a week',
-                                        },
+                                        valueString: 'Once a week',
                                     },
                                     {
-                                        value: {
-                                            string: 'Several times a week',
-                                        },
+                                        valueString: 'Several times a week',
                                     },
                                     {
-                                        value: {
-                                            string: 'Daily',
-                                        },
+                                        valueString: 'Daily',
                                     },
                                 ],
                             },
@@ -246,14 +231,10 @@ function getQuestionnaire(itemControlCode: 'wizard' | 'wizard-with-tooltips' = '
                                 required: true,
                                 answerOption: [
                                     {
-                                        value: {
-                                            string: 'Yes',
-                                        },
+                                        valueString: 'Yes',
                                     },
                                     {
-                                        value: {
-                                            string: 'No',
-                                        },
+                                        valueString: 'No',
                                     },
                                 ],
                             },
@@ -264,14 +245,10 @@ function getQuestionnaire(itemControlCode: 'wizard' | 'wizard-with-tooltips' = '
                                 required: false,
                                 answerOption: [
                                     {
-                                        value: {
-                                            string: 'Yes',
-                                        },
+                                        valueString: 'Yes',
                                     },
                                     {
-                                        value: {
-                                            string: 'No',
-                                        },
+                                        valueString: 'No',
                                     },
                                 ],
                             },
@@ -289,14 +266,10 @@ function getQuestionnaire(itemControlCode: 'wizard' | 'wizard-with-tooltips' = '
                                 required: true,
                                 answerOption: [
                                     {
-                                        value: {
-                                            string: 'Yes',
-                                        },
+                                        valueString: 'Yes',
                                     },
                                     {
-                                        value: {
-                                            string: 'No',
-                                        },
+                                        valueString: 'No',
                                     },
                                 ],
                             },
@@ -307,19 +280,13 @@ function getQuestionnaire(itemControlCode: 'wizard' | 'wizard-with-tooltips' = '
                                 required: true,
                                 answerOption: [
                                     {
-                                        value: {
-                                            string: 'Never',
-                                        },
+                                        valueString: 'Never',
                                     },
                                     {
-                                        value: {
-                                            string: 'Occasionally',
-                                        },
+                                        valueString: 'Occasionally',
                                     },
                                     {
-                                        value: {
-                                            string: 'Regularly',
-                                        },
+                                        valueString: 'Regularly',
                                     },
                                 ],
                             },
@@ -330,14 +297,10 @@ function getQuestionnaire(itemControlCode: 'wizard' | 'wizard-with-tooltips' = '
                                 required: false,
                                 answerOption: [
                                     {
-                                        value: {
-                                            string: 'Yes',
-                                        },
+                                        valueString: 'Yes',
                                     },
                                     {
-                                        value: {
-                                            string: 'No',
-                                        },
+                                        valueString: 'No',
                                     },
                                 ],
                             },
@@ -449,8 +412,7 @@ const questionnaireResponse: QuestionnaireResponse = {
         },
     ],
     subject: {
-        id: 'patient1',
-        resourceType: 'Patient',
+        reference: 'Patient/patient1',
     },
 };
 

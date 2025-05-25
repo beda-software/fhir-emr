@@ -367,11 +367,11 @@ item:
         calculatedExpression:
           language: text/fhirpath
           expression: >-
-            (%QuestionnaireResponse.item.where(linkId='bmi-group').item.where(linkId='bmi-group-weight').answer.value.decimal
+            (%QuestionnaireResponse.item.where(linkId='bmi-group').item.where(linkId='bmi-group-weight').answer.valueDecimal
             /
-            ((%QuestionnaireResponse.item.where(linkId='bmi-group').item.where(linkId='bmi-group-height').answer.value.decimal
+            ((%QuestionnaireResponse.item.where(linkId='bmi-group').item.where(linkId='bmi-group-height').answer.valueDecimal
             / 100) *
-            (%QuestionnaireResponse.item.where(linkId='bmi-group').item.where(linkId='bmi-group-height').answer.value.decimal
+            (%QuestionnaireResponse.item.where(linkId='bmi-group').item.where(linkId='bmi-group-height').answer.valueDecimal
             / 100))).round(2)
     text: BMI
     type: group

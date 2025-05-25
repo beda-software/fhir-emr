@@ -10,7 +10,7 @@ import { S } from '../ReadonlyWidgets.styles';
 export function MarkdownRenderControl({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, text } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
-    const { value } = useFieldController(fieldName, questionItem);
+    const { value } = useFieldController<string>(fieldName, questionItem);
 
     return (
         <S.Question className={classNames(s.question, s.column, 'form__question')}>
