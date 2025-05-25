@@ -19,7 +19,7 @@ export function QuestionSlider({ parentPath, questionItem }: QuestionItemProps) 
     const { linkId } = questionItem;
     const { start, stop, startLabel, stopLabel, sliderStepValue, helpText } = questionItem as QuestionSliderExtensions;
     const fieldName = [...parentPath, linkId, 0, 'value', 'integer'];
-    const { value, onChange, disabled, formItem } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, formItem } = useFieldController<number>(fieldName, questionItem);
 
     if (typeof start === 'undefined' || typeof stop === 'undefined') {
         return <Paragraph>Start and stop boundaries is required for slider</Paragraph>;

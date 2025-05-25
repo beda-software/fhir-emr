@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { GroupItemProps, QuestionItems } from 'sdc-qrf';
+import { RepeatableFormGroupItems, GroupItemProps, QuestionItems } from 'sdc-qrf';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 
@@ -7,8 +7,8 @@ export function RepeatableGroups(groupItem: GroupItemProps) {
     const { parentPath, questionItem, context } = groupItem;
     const { linkId, item } = questionItem;
     const fieldName = [...parentPath, linkId];
-    const { value } = useFieldController(fieldName, questionItem);
-    const items = value.items || [];
+    const { value } = useFieldController<RepeatableFormGroupItems>(fieldName, questionItem);
+    const items = value?.items ?? [];
 
     return (
         <div id={`group-${linkId}`}>
