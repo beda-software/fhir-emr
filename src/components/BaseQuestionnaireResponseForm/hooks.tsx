@@ -57,6 +57,7 @@ export function useFieldController<T = unknown>(fieldName: any, questionItem: FC
     );
 
     // This is a wrapper for react-select that always wrap single value into array
+    // @ts-ignore It's hard to define proper type of onSelect
     const onSelect = useCallback((option: any) => field.onChange([].concat(option)), [field]);
 
     return {

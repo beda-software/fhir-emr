@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { Coding, Quantity } from 'fhir/r4b';
+import { Coding } from 'fhir/r4b';
 import _ from 'lodash';
 import { AnswerValue, QuestionItemProps } from 'sdc-qrf';
 
@@ -51,7 +51,7 @@ export function QuestionQuantity({ parentPath, questionItem }: QuestionItemProps
     const { linkId, text, hidden } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value'];
     const { value } = useFieldController<AnswerValue>(fieldName, questionItem);
-    const quantity: Quantity | undefined = value?.Quantity;
+    const quantity = value?.Quantity;
 
     if (hidden) {
         return null;

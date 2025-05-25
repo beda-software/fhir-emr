@@ -10,7 +10,7 @@ import { S } from './ReadonlyWidgets.styles';
 export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, text, repeats, hidden, choiceColumn } = questionItem;
     const fieldName = repeats ? [...parentPath, linkId] : [...parentPath, linkId, 0];
-    const { value } = useFieldController<FormAnswerItems[] | FormAnswerItems[]>(fieldName, questionItem);
+    const { value } = useFieldController<FormAnswerItems | FormAnswerItems[]>(fieldName, questionItem);
 
     if (hidden) {
         return null;

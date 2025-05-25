@@ -74,7 +74,7 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
         <Form.Item {...formItem} data-testid="question-choice">
             <ChoiceQuestionSelect
                 options={answerOption!}
-                value={value}
+                value={value ?? []}
                 onChange={onSelect}
                 repeats={repeats}
                 placeholder={placeholder}
@@ -87,7 +87,7 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
 interface ChoiceQuestionValueSetProps {
     answerValueSet: string;
     value: FormAnswerItems[];
-    onChange: (option: any) => void;
+    onChange: (option: FormAnswerItems[]) => void;
     repeats?: boolean;
     placeholder?: string;
     choiceColumn?: FCEQuestionnaireItemChoiceColumn[];
@@ -122,7 +122,7 @@ export function ChoiceQuestionValueSet(props: ChoiceQuestionValueSetProps) {
             loadOptions={debouncedLoadOptions}
             defaultOptions
             value={value}
-            onChange={(v) => onChange(v)}
+            onChange={(v) => onChange(v as FormAnswerItems[])}
             isOptionSelected={(option) => !!value && value?.findIndex((v) => _.isEqual(v?.value, option.value)) !== -1}
             isMulti={repeats}
             getOptionLabel={(o) => (getDisplay(o.value, choiceColumn) as string) || ''}
