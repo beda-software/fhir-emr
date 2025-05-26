@@ -1,8 +1,8 @@
-import { QuestionnaireItem } from '@beda.software/aidbox-types';
+import { FCEQuestionnaireItem } from 'sdc-qrf';
 
 import { AnchorItem } from './types';
 
-export function getAnchorItemData(item: QuestionnaireItem[]): AnchorItem[] {
+export function getAnchorItemData(item: FCEQuestionnaireItem[]): AnchorItem[] {
     return item.reduce<AnchorItem[]>((acc, item) => {
         if (item.type !== 'group' || !item.text || !item.item?.length) {
             return acc;

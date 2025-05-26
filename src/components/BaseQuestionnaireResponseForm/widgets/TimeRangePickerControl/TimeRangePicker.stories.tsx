@@ -20,7 +20,7 @@ export const CorrectItemsCount: Story = {
             parentPath={[]}
             questionItem={{
                 text: 'Time range picker',
-                type: 'time-range-picker',
+                type: 'group',
                 linkId: 'example',
                 required: true,
                 item: [
@@ -39,7 +39,7 @@ export const NoItems: Story = {
             parentPath={[]}
             questionItem={{
                 text: 'No items',
-                type: 'time-range-picker',
+                type: 'group',
                 linkId: 'example',
                 required: true,
             }}

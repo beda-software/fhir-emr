@@ -10,7 +10,7 @@ import { S } from './ReadonlyWidgets.styles';
 export function QuestionBoolean({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, text, type } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', type];
-    const { value, formItem } = useFieldController(fieldName, questionItem);
+    const { value, formItem } = useFieldController<boolean>(fieldName, questionItem);
 
     if (formItem.hidden) {
         return null;

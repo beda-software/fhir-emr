@@ -10,7 +10,7 @@ import { S } from './ReadonlyWidgets.styles';
 export function QuestionText({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, text, hidden } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
-    const { value } = useFieldController(fieldName, questionItem);
+    const { value } = useFieldController<string>(fieldName, questionItem);
 
     if (hidden) {
         return null;
@@ -27,7 +27,7 @@ export function QuestionText({ parentPath, questionItem }: QuestionItemProps) {
 export function TextWithInput({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, text, hidden } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
-    const { value } = useFieldController(fieldName, questionItem);
+    const { value } = useFieldController<string>(fieldName, questionItem);
 
     if (hidden) {
         return null;

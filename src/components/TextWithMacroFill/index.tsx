@@ -1,8 +1,6 @@
 import { t, Trans } from '@lingui/macro';
 import { Button, Form, Input, notification } from 'antd';
-import { QRFContextData, QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
-
-import { QuestionnaireItem } from '@beda.software/aidbox-types';
+import { FCEQuestionnaireItem, QRFContextData, QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 
@@ -10,7 +8,7 @@ import s from './TextWithMacroFill.module.scss';
 import { Text } from '../Typography';
 
 interface QuestionFieldProps {
-    questionItem: QuestionnaireItem;
+    questionItem: FCEQuestionnaireItem;
     qrfContext: QRFContextData;
     value?: string;
     onChange?: (value: string | undefined) => void;
@@ -57,7 +55,7 @@ export function TextWithMacroFill({ parentPath, questionItem }: QuestionItemProp
     const qrfContext = useQuestionnaireResponseFormContext();
     const { linkId } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
-    const { value, onChange, disabled, formItem, placeholder } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, formItem, placeholder } = useFieldController<string>(fieldName, questionItem);
 
     return (
         <Form.Item {...formItem} label={undefined}>

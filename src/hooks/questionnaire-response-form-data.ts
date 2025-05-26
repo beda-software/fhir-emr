@@ -18,13 +18,8 @@ import {
     calcInitialContext,
     removeDisabledAnswers,
     toFirstClassExtension,
-    fromFirstClassExtension,
 } from 'sdc-qrf';
 
-import {
-    QuestionnaireResponse as FCEQuestionnaireResponse,
-    ParametersParameter as FCEParametersParameter,
-} from '@beda.software/aidbox-types';
 import config from '@beda.software/emr-config';
 import { formatFHIRDateTime, getReference, useService } from '@beda.software/fhir-react';
 import { RemoteDataResult, failure, isFailure, isSuccess, mapSuccess, success } from '@beda.software/remote-data';
@@ -213,14 +208,12 @@ export function toQuestionnaireResponseFormData(
     return {
         context: {
             // TODO: we can't change type inside qrf utils
-            questionnaire: toFirstClassExtension(questionnaire),
-            questionnaireResponse: toFirstClassExtension(questionnaireResponse),
+            fceQuestionnaire: toFirstClassExtension(questionnaire),
+            questionnaire,
+            questionnaireResponse: questionnaireResponse,
             launchContextParameters: launchContextParameters || [],
         },
-        formValues: mapResponseToForm(
-            toFirstClassExtension(questionnaireResponse),
-            toFirstClassExtension(questionnaire),
-        ),
+        formValues: mapResponseToForm(questionnaireResponse, questionnaire),
     };
 }
 
@@ -308,15 +301,13 @@ export async function handleFormDataSave(
     const { questionnaireResponse, questionnaire } = context;
     const itemContext = calcInitialContext(formData.context, formValues);
     const enabledQuestionsFormValues = removeDisabledAnswers(questionnaire, formValues, itemContext);
-    const finalFCEQuestionnaireResponse: FCEQuestionnaireResponse = {
+    const finalFHIRQuestionnaireResponse: FHIRQuestionnaireResponse = {
         ...questionnaireResponse,
         ...mapFormToResponse(enabledQuestionsFormValues, questionnaire),
         status: 'completed',
         authored: formatFHIRDateTime(moment()),
     };
-    const finalFHIRQuestionnaireResponse: FHIRQuestionnaireResponse =
-        fromFirstClassExtension(finalFCEQuestionnaireResponse);
-    const fhirQuestionnaire: FHIRQuestionnaire = fromFirstClassExtension(questionnaire);
+    const fhirQuestionnaire: FHIRQuestionnaire = questionnaire;
 
     const constraintRemoteData = await service({
         ...(config.sdcBackendUrl ? { baseURL: config.sdcBackendUrl } : {}),
@@ -399,11 +390,7 @@ export function useQuestionnaireResponseFormData(props: QuestionnaireResponseFor
         return mapSuccess(r, ({ context, formValues }) => {
             const result: QuestionnaireResponseFormData = {
                 formValues,
-                context: {
-                    launchContextParameters: context.launchContextParameters as unknown as FCEParametersParameter[],
-                    questionnaire: context.questionnaire,
-                    questionnaireResponse: context.questionnaireResponse,
-                },
+                context,
             };
             return result;
         });

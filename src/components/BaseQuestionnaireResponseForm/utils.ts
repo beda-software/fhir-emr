@@ -1,7 +1,7 @@
-import { ControllerFieldState, ControllerRenderProps, FieldValues } from 'react-hook-form';
+import { ControllerFieldState, ControllerRenderProps } from 'react-hook-form';
 
 export function getFieldErrorMessage(
-    field: ControllerRenderProps<FieldValues, any>,
+    field: ControllerRenderProps<any, any>,
     fieldState: ControllerFieldState,
     text?: string,
 ) {
