@@ -1,20 +1,19 @@
 import { Form, InputNumber, InputNumberProps } from 'antd';
-import { GroupItemProps } from 'sdc-qrf';
-
-import { Coding, QuestionnaireItem } from '@beda.software/aidbox-types';
+import { Coding } from 'fhir/r4b';
+import { FCEQuestionnaireItem, GroupItemProps } from 'sdc-qrf';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { Paragraph } from 'src/components/Typography';
 
 import s from './styles.module.scss';
 
-function getFieldName(parentPath: string[], item: QuestionnaireItem) {
+function getFieldName(parentPath: string[], item: FCEQuestionnaireItem) {
     return [...parentPath, item.linkId, 0, 'value', item.type];
 }
 
 interface BloodPressureItemProps extends InputNumberProps {
     parentPath: string[];
-    questionItem: QuestionnaireItem;
+    questionItem: FCEQuestionnaireItem;
     unit?: string;
 }
 

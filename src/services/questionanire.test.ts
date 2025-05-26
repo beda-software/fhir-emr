@@ -79,8 +79,7 @@ describe('Custom fhirpath invocation for reference option display', () => {
                 value: {
                     Reference: {
                         display: startString,
-                        id: slot.id,
-                        resourceType: 'Slot',
+                        reference: `Slot/${slot.id}`,
                     },
                 },
             },

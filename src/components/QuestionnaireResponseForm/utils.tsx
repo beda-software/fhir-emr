@@ -2,14 +2,7 @@ import { t } from '@lingui/macro';
 import { notification } from 'antd';
 import { QuestionnaireResponse, Resource } from 'fhir/r4b';
 import moment from 'moment';
-import {
-    FormItems,
-    fromFirstClassExtension,
-    mapFormToResponse,
-    mapResponseToForm,
-    QuestionnaireResponseFormData,
-    toFirstClassExtension,
-} from 'sdc-qrf';
+import { FormItems, mapFormToResponse, mapResponseToForm, QuestionnaireResponseFormData } from 'sdc-qrf';
 
 import { formatError, formatFHIRDateTime } from '@beda.software/fhir-react';
 import { failure, isFailure, isSuccess, RemoteDataResult, success } from '@beda.software/remote-data';
@@ -29,9 +22,9 @@ export const saveQuestionnaireResponseDraft = async (
     const transformedFormValues = mapFormToResponse(currentFormValues, formData.context.questionnaire);
 
     const questionnaireResponse: QuestionnaireResponse = {
-        ...fromFirstClassExtension(formData.context.questionnaireResponse),
+        ...formData.context.questionnaireResponse,
         item: transformedFormValues.item,
-        questionnaire: formData.context.questionnaire.assembledFrom,
+        questionnaire: formData.context.fceQuestionnaire.assembledFrom,
         status: 'in-progress',
         authored: formatFHIRDateTime(moment()),
     };
@@ -59,7 +52,7 @@ export const loadQuestionnaireResponseDraft = (
         return draftQR;
     }
 
-    formData.context.questionnaireResponse = toFirstClassExtension(draftQR.data);
+    formData.context.questionnaireResponse = draftQR.data;
     formData.formValues = mapResponseToForm(formData.context.questionnaireResponse, formData.context.questionnaire);
 
     return success(draftQR.data);

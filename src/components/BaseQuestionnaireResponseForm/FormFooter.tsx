@@ -39,7 +39,7 @@ export function FormFooter(props: Props) {
     } = props;
 
     const formValues = useWatch();
-    const assembledFromQuestionnaireId = formData.context.questionnaire.assembledFrom;
+    const assembledFromQuestionnaireId = formData.context.fceQuestionnaire.assembledFrom;
 
     if (readOnly) {
         return null;
@@ -102,7 +102,7 @@ export function RenderDraftButton(props: RenderDraftButtonProps) {
 
     const autoSave = baseQuestionnaireResponseFormProps?.autoSave;
     const formData = baseQuestionnaireResponseFormProps?.formData;
-    const questionnaireId = formData?.context.questionnaire.assembledFrom;
+    const questionnaireId = formData?.context.fceQuestionnaire.assembledFrom;
     const saveDraft = baseQuestionnaireResponseFormProps?.saveDraft;
 
     if (!formValues) {

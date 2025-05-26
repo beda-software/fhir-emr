@@ -1,10 +1,5 @@
 import _ from 'lodash';
-
-import {
-    Questionnaire as FCEQuestionnaire,
-    QuestionnaireItem as FCEQuestionnaireItem,
-    QuestionnaireItem as FCEQuestionItem,
-} from '@beda.software/aidbox-types';
+import { FCEQuestionnaire, FCEQuestionnaireItem } from 'sdc-qrf';
 
 export function getQuestionPath(
     questionnaire: FCEQuestionnaire,
@@ -37,7 +32,7 @@ export function getQuestionPath(
 }
 
 interface MoveQuestionnaireItem {
-    questionItem: FCEQuestionItem;
+    questionItem: FCEQuestionnaireItem;
     parentPath: string[];
 }
 
@@ -49,13 +44,13 @@ export function moveQuestionnaireItem(
 ): FCEQuestionnaire {
     const sourcePath = getQuestionPath(questionnaire, sourceItem.questionItem, sourceItem.parentPath);
     const sourceItemsPath = sourcePath.slice(0, -1).join('.');
-    const sourceItems: FCEQuestionItem[] = _.get(questionnaire, sourceItemsPath);
+    const sourceItems: FCEQuestionnaireItem[] = _.get(questionnaire, sourceItemsPath);
 
     const filteredSourceItems = sourceItems.filter((i) => i.linkId !== sourceItem.questionItem.linkId);
     const newQuestionnaire = _.set(questionnaire, sourceItemsPath, filteredSourceItems);
     const newTargetPath = getQuestionPath(newQuestionnaire, targetItem.questionItem, targetItem.parentPath);
     const newTargetItemsPath = newTargetPath.slice(0, -1).join('.');
-    const newTargetItems: FCEQuestionItem[] = _.get(newQuestionnaire, newTargetItemsPath);
+    const newTargetItems: FCEQuestionnaireItem[] = _.get(newQuestionnaire, newTargetItemsPath);
 
     const targetIndex = newTargetItems.findIndex((i) => i.linkId === targetItem.questionItem.linkId);
     let resultTargetItems = [];
@@ -84,7 +79,7 @@ export function deleteQuestionnaireItem(
 ): FCEQuestionnaire {
     const path = getQuestionPath(questionnaire, item.questionItem, item.parentPath);
     const itemsPath = path.slice(0, -1).join('.');
-    const items: FCEQuestionItem[] = _.get(questionnaire, itemsPath);
+    const items: FCEQuestionnaireItem[] = _.get(questionnaire, itemsPath);
 
     const filteredItems = items.filter((i) => i.linkId !== item.questionItem.linkId);
     const newQuestionnaire = _.set(questionnaire, itemsPath, filteredItems);

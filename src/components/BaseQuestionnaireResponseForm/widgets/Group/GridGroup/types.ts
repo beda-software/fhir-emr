@@ -1,17 +1,15 @@
-import { GroupItemProps } from 'sdc-qrf';
-
-import { QuestionnaireItem } from '@beda.software/aidbox-types';
+import { FCEQuestionnaireItem, GroupItemProps } from 'sdc-qrf';
 
 export interface GridGroupProps {
     groupItem: GroupItemProps;
 }
 
 export interface GridMap {
-    columns: QuestionnaireItem['text'][];
+    columns: FCEQuestionnaireItem['text'][];
     groups: GroupMap[];
 }
 
 export interface GroupMap {
-    group: QuestionnaireItem;
-    items: (QuestionnaireItem | undefined)[];
+    group: FCEQuestionnaireItem;
+    items: (FCEQuestionnaireItem | undefined)[];
 }

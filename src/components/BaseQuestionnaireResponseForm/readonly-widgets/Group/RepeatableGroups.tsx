@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { RepeatableFormGroupItems, GroupItemProps, QuestionItems } from 'sdc-qrf';
+import { GroupItemProps, QuestionItems, RepeatableFormGroupItems } from 'sdc-qrf';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 

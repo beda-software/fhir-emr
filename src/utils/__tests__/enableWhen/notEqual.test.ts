@@ -14,13 +14,13 @@ const ENABLE_WHEN_NOT_EQUAL_QUESTIONAIRES: QuestionnaireData[] = [
                 {
                     question: 'q1',
                     operator: '!=',
-                    answer: { integer: 1 },
+                    answerInteger: 1,
                 },
             ],
             qrItem: [
                 {
                     linkId: 'q1',
-                    answer: [{ value: { integer: 1 } }],
+                    answer: [{ valueInteger: 1 }],
                 },
                 {
                     linkId: 'q2',
@@ -36,13 +36,13 @@ const ENABLE_WHEN_NOT_EQUAL_QUESTIONAIRES: QuestionnaireData[] = [
                 {
                     question: 'q1',
                     operator: '!=',
-                    answer: { string: 'test' },
+                    answerString: 'test',
                 },
             ],
             qrItem: [
                 {
                     linkId: 'q1',
-                    answer: [{ value: { string: 'test2' } }],
+                    answer: [{ valueString: 'test2' }],
                 },
                 {
                     linkId: 'q2',
@@ -62,22 +62,22 @@ const ENABLE_WHEN_NOT_EQUAL_QUESTIONAIRES: QuestionnaireData[] = [
                 {
                     question: 'q1',
                     operator: '!=',
-                    answer: { string: 'test1' },
+                    answerString: 'test1',
                 },
                 {
                     question: 'q2',
                     operator: '!=',
-                    answer: { string: 'test2' },
+                    answerString: 'test2',
                 },
             ],
             qrItem: [
                 {
                     linkId: 'q1',
-                    answer: [{ value: { string: 'test1' } }],
+                    answer: [{ valueString: 'test1' }],
                 },
                 {
                     linkId: 'q2',
-                    answer: [{ value: { string: 'test2' } }],
+                    answer: [{ valueString: 'test2' }],
                 },
             ],
         }),
@@ -89,22 +89,22 @@ const ENABLE_WHEN_NOT_EQUAL_QUESTIONAIRES: QuestionnaireData[] = [
                 {
                     question: 'q1',
                     operator: '!=',
-                    answer: { string: 'test1' },
+                    answerString: 'test1',
                 },
                 {
                     question: 'q2',
                     operator: '!=',
-                    answer: { string: 'test2' },
+                    answerString: 'test2',
                 },
             ],
             qrItem: [
                 {
                     linkId: 'q1',
-                    answer: [{ value: { string: 'asd' } }],
+                    answer: [{ valueString: 'asd' }],
                 },
                 {
                     linkId: 'q2',
-                    answer: [{ value: { string: 'test2' } }],
+                    answer: [{ valueString: 'test2' }],
                 },
                 {
                     linkId: CONTROL_ITEM_LINK_ID,
@@ -121,22 +121,22 @@ const ENABLE_WHEN_NOT_EQUAL_QUESTIONAIRES: QuestionnaireData[] = [
                 {
                     question: 'q1',
                     operator: '!=',
-                    answer: { Coding: { code: 'test1', display: 'test1' } },
+                    answerCoding: { code: 'test1', display: 'test1' },
                 },
                 {
                     question: 'q2',
                     operator: '!=',
-                    answer: { Coding: { code: 'test2', display: 'test2' } },
+                    answerCoding: { code: 'test2', display: 'test2' },
                 },
             ],
             qrItem: [
                 {
                     linkId: 'q1',
-                    answer: [{ value: { Coding: { code: 'asd', display: 'asd' } } }],
+                    answer: [{ valueCoding: { code: 'asd', display: 'asd' } }],
                 },
                 {
                     linkId: 'q2',
-                    answer: [{ value: { Coding: { code: 'test2', display: 'test2' } } }],
+                    answer: [{ valueCoding: { code: 'test2', display: 'test2' } }],
                 },
                 {
                     linkId: CONTROL_ITEM_LINK_ID,

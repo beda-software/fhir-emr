@@ -4,12 +4,12 @@ import { screen, render, act, fireEvent, waitFor } from '@testing-library/react'
 import { Patient, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
 import { describe, expect, test, vi } from 'vitest';
 
-import { getFHIRResources } from 'aidbox-react/lib/services/fhir';
 import { axiosInstance } from 'aidbox-react/lib/services/instance';
 
 import { ensure, extractBundleResources, WithId, withRootAccess } from '@beda.software/fhir-react';
 
 import { PatientDocument } from 'src/containers/PatientDetails/PatientDocument';
+import { getFHIRResources } from 'src/services/fhir';
 import { createPatient, createPractitionerRole, loginAdminUser } from 'src/setupTests';
 import { ThemeProvider } from 'src/theme';
 import { evaluate } from 'src/utils';
@@ -163,7 +163,7 @@ describe('Repeatable group creates correct questionnaire response', async () => 
                 expect(repeatableGroupTexts.length).toBe(caseData.case.length);
 
                 repeatableGroupTexts.forEach((text, textIndex) => {
-                    expect(text!.answer[0].value.string).toBe(caseData.case[textIndex]!.text);
+                    expect(text!.answer[0].valueString).toBe(caseData.case[textIndex]!.text);
                 });
             });
         },
@@ -225,11 +225,11 @@ describe('Repeatable group creates correct questionnaire response', async () => 
                 expect(repeatableGroupTexts.length).toBe(caseData.case.length);
 
                 repeatableGroupTexts.forEach((text, textIndex) => {
-                    expect(text!.answer[0].value.string).toBe(caseData.case[textIndex]!.text);
+                    expect(text!.answer[0].valueString).toBe(caseData.case[textIndex]!.text);
                 });
 
                 repeatableGroupTexts.forEach((text, textIndex) => {
-                    expect(text!.answer[0].value.string).toBe(caseData.case[textIndex]!.text);
+                    expect(text!.answer[0].valueString).toBe(caseData.case[textIndex]!.text);
                 });
             });
         },
