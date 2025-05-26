@@ -3,7 +3,7 @@ resourceType: Questionnaire
 url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/medication-request
 meta:
     profile:
-        - https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire
+        - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
 name: medication-request
 title: Medication Prescription
 status: active

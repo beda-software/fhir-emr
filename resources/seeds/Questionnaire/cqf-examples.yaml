@@ -52,6 +52,6 @@ status: active
 id: cqf-examples
 meta:
   profile:
-    - https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
 url: >-
   https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/cqf-examples

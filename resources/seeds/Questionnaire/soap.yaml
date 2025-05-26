@@ -29,7 +29,7 @@ item:
         type: string
 meta:
   profile:
-    - https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
 name: SOAP (Subjective, Objective, Assessment, Plan)
 title: SOAP (Subjective, Objective, Assessment, Plan)
 status: active

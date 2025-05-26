@@ -44,7 +44,7 @@ const q1: FCEQuestionnaire = {
         },
     ],
     meta: {
-        profile: ['https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire'],
+        profile: ['https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire'],
     },
     resourceType: 'Questionnaire',
     title: 'Test',
@@ -55,7 +55,7 @@ const q1: FCEQuestionnaire = {
 
 const q2: FCEQuestionnaire = {
     meta: {
-        profile: ['https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire'],
+        profile: ['https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire'],
     },
     item: [
         {

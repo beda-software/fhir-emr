@@ -145,5 +145,5 @@ item:
       expression: "(%QuestionnaireResponse.item.where(linkId='weight').answer.valueDecimal / ((%QuestionnaireResponse.item.where(linkId='height').answer.valueDecimal / 100) * (%QuestionnaireResponse.item.where(linkId='height').answer.valueDecimal / 100))).round(2)"
 meta:
   profile:
-    - https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
 url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/vitals

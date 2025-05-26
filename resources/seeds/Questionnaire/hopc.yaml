@@ -17,7 +17,7 @@ item:
         type: string
 meta:
   profile:
-    - https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
 name: HOPC (History of Present Illness, Onset, Provocation, Characterization)
 title: HOPC (History of Present Illness, Onset, Provocation, Characterization)
 status: active

@@ -24,7 +24,7 @@ export function useUploader({ parentPath, questionItem }: QuestionItemProps) {
     const initialFileList: Array<UploadFile> = useMemo(
         () =>
             (value ?? []).map((v) => {
-                const url = v.value!.Attachment.url!;
+                const url = v.value!.Attachment!.url!;
                 const file: UploadFile = {
                     uid: url,
                     name: url,
@@ -105,7 +105,7 @@ export function useUploader({ parentPath, questionItem }: QuestionItemProps) {
     const onRemove = useCallback(
         (file: UploadFile) => {
             const filename = uid.current[file.uid] ?? file.uid;
-            onChange((value ?? []).filter(({ value }) => value?.Attachment.url !== filename));
+            onChange((value ?? []).filter(({ value }) => value?.Attachment?.url !== filename));
             setFileList((files) => files.filter((f) => f.uid !== file.uid));
         },
         [value, onChange, setFileList],

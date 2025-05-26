@@ -126,7 +126,7 @@ function getQuestionnaire(itemControlCode: 'wizard' | 'wizard-with-tooltips' = '
         assembledFrom: 'group-wizard',
         subjectType: ['Patient'],
         meta: {
-            profile: ['https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire'],
+            profile: ['https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire'],
         },
         name: 'Group wizard',
         item: [
