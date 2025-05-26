@@ -1,6 +1,5 @@
 import type { UploadFile } from 'antd';
 import { notification } from 'antd';
-import { Attachment } from 'fhir/r4b';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FormAnswerItems, QuestionItemProps } from 'sdc-qrf';
 
@@ -16,8 +15,6 @@ import {
 
 import { useFieldController } from '../../hooks';
 
-type ValueAttachment = { value: { Attachment: Attachment } };
-
 export function useUploader({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, repeats } = questionItem;
     const fieldName = [...parentPath, linkId];
@@ -26,8 +23,8 @@ export function useUploader({ parentPath, questionItem }: QuestionItemProps) {
     const uid = useRef<Record<string, string>>({});
     const initialFileList: Array<UploadFile> = useMemo(
         () =>
-            (value ?? []).map((v: ValueAttachment) => {
-                const url = v.value.Attachment.url!;
+            (value ?? []).map((v) => {
+                const url = v.value!.Attachment!.url!;
                 const file: UploadFile = {
                     uid: url,
                     name: url,
@@ -68,7 +65,7 @@ export function useUploader({ parentPath, questionItem }: QuestionItemProps) {
         })();
     }, [JSON.stringify(fileList)]);
 
-    const hasUploadedFile = (value ?? [])?.length > 0;
+    const hasUploadedFile = (value ?? []).length > 0;
 
     const customRequest = useCallback(
         async (options: CustomUploadRequestOption) => {
@@ -108,7 +105,7 @@ export function useUploader({ parentPath, questionItem }: QuestionItemProps) {
     const onRemove = useCallback(
         (file: UploadFile) => {
             const filename = uid.current[file.uid] ?? file.uid;
-            onChange((value ?? []).filter(({ value }: ValueAttachment) => value.Attachment.url !== filename));
+            onChange((value ?? []).filter(({ value }) => value?.Attachment?.url !== filename));
             setFileList((files) => files.filter((f) => f.uid !== file.uid));
         },
         [value, onChange, setFileList],

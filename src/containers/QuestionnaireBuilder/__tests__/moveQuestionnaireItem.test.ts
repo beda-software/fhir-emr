@@ -120,7 +120,7 @@ const q1: Questionnaire = {
         },
     ],
     meta: {
-        profile: ['https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire'],
+        profile: ['https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire'],
     },
     resourceType: 'Questionnaire',
     title: 'Test',
@@ -148,7 +148,7 @@ const q1Result: Questionnaire = {
         },
     ],
     meta: {
-        profile: ['https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire'],
+        profile: ['https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire'],
     },
     resourceType: 'Questionnaire',
     title: 'Test',
@@ -159,7 +159,7 @@ const q1Result: Questionnaire = {
 
 const q2: Questionnaire = {
     meta: {
-        profile: ['https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire'],
+        profile: ['https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire'],
     },
     item: [
         {
@@ -194,7 +194,7 @@ const q2: Questionnaire = {
 
 const q2Result: Questionnaire = {
     meta: {
-        profile: ['https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire'],
+        profile: ['https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire'],
     },
     item: [
         {
@@ -229,7 +229,7 @@ const q2Result: Questionnaire = {
 
 const q3: Questionnaire = {
     meta: {
-        profile: ['https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire'],
+        profile: ['https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire'],
     },
     item: [
         {
@@ -264,7 +264,7 @@ const q3: Questionnaire = {
 
 const q3Result: Questionnaire = {
     meta: {
-        profile: ['https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire'],
+        profile: ['https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire'],
     },
     item: [
         {
@@ -316,7 +316,7 @@ const q4: Questionnaire = {
         },
     ],
     meta: {
-        profile: ['https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire'],
+        profile: ['https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire'],
     },
     resourceType: 'Questionnaire',
     title: 'Test',
@@ -344,7 +344,7 @@ const q4Result: Questionnaire = {
         },
     ],
     meta: {
-        profile: ['https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire'],
+        profile: ['https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire'],
     },
     resourceType: 'Questionnaire',
     title: 'Test',

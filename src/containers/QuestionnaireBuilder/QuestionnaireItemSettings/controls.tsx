@@ -1,14 +1,13 @@
 import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Trans, t } from '@lingui/macro';
 import { Button, Checkbox, Empty, Form, Input } from 'antd';
-import { Coding, ValueSet } from 'fhir/r4b';
+import { Coding, QuestionnaireItemAnswerOption, ValueSet } from 'fhir/r4b';
 import _ from 'lodash';
 import { useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { service } from 'aidbox-react/lib/services/service';
 
-import { QuestionnaireItemAnswerOption } from '@beda.software/aidbox-types';
 import {
     WithId,
     extractBundleResources,
@@ -155,14 +154,14 @@ function ChoiceFields() {
         () => _.get(formValues, ['answerOption'], []),
         [formValues],
     );
-    const system = useMemo(() => _.get(formValues, ['answerOption', 0, 'value', 'Coding', 'system']), [formValues]);
+    const system = useMemo(() => _.get(formValues, ['answerOption', 0, 'valueCoding', 'system']), [formValues]);
     const [showInlineOptions, setShowInlineOptions] = useState(answerOptions.length > 0);
 
     const renderOption = (index: number) => {
-        if (answerOptions[0]?.value?.Coding) {
+        if (answerOptions[0]?.valueCoding) {
             return (
                 <>
-                    <SettingsField name={`answerOption.${index}.value.Coding.display`}>
+                    <SettingsField name={`answerOption.${index}.valueCoding.display`}>
                         {({ field }) => (
                             <>
                                 <Form.Item label={t`Option ${index + 1}`} required>
@@ -171,7 +170,7 @@ function ChoiceFields() {
                             </>
                         )}
                     </SettingsField>
-                    <SettingsField name={`answerOption.${index}.value.Coding.code`}>
+                    <SettingsField name={`answerOption.${index}.valueCoding.code`}>
                         {({ field }) => (
                             <>
                                 <Form.Item label={t`Code`} required>
@@ -182,16 +181,16 @@ function ChoiceFields() {
                     </SettingsField>
                 </>
             );
-        } else if (answerOptions[0]?.value?.integer) {
-            <SettingsField name={`answerOption.${index}.value.integer`}>
+        } else if (answerOptions[0]?.valueInteger) {
+            <SettingsField name={`answerOption.${index}.valueInteger`}>
                 {({ field }) => (
                     <Form.Item label={t`Option ${index}`} required>
                         <Input value={field.value} onChange={field.onChange} onBlur={field.onBlur} type="number" />
                     </Form.Item>
                 )}
             </SettingsField>;
-        } else if (answerOptions[0]?.value?.date) {
-            <SettingsField name={`answerOption.${index}.value.date`}>
+        } else if (answerOptions[0]?.valueDate) {
+            <SettingsField name={`answerOption.${index}.valueDate`}>
                 {({ field }) => (
                     <Form.Item label={t`Option ${index}`} required>
                         <DatePicker
@@ -209,8 +208,8 @@ function ChoiceFields() {
                     </Form.Item>
                 )}
             </SettingsField>;
-        } else if (answerOptions[0]?.value?.time) {
-            <SettingsField name={`answerOption.${index}.value.time`}>
+        } else if (answerOptions[0]?.valueTime) {
+            <SettingsField name={`answerOption.${index}.valueTime`}>
                 {({ field }) => (
                     <Form.Item label={t`Option ${index}`} required>
                         <DatePicker
@@ -230,7 +229,7 @@ function ChoiceFields() {
         }
 
         return (
-            <SettingsField name={`answerOption.${index}.value.string`}>
+            <SettingsField name={`answerOption.${index}.valueString`}>
                 {({ field }) => (
                     <Form.Item label={t`Option ${index}`} required>
                         <Input value={field.value} onChange={field.onChange} onBlur={field.onBlur} />
@@ -253,7 +252,7 @@ function ChoiceFields() {
             </div>
             {showInlineOptions ? (
                 <>
-                    <SettingsField name={`answerOption.0.value.Coding.system`}>
+                    <SettingsField name={`answerOption.0.valueCoding.system`}>
                         {({ field }) => (
                             <>
                                 <Form.Item label={t`System`}>
@@ -268,8 +267,8 @@ function ChoiceFields() {
                                                     value: {
                                                         Coding: {
                                                             system,
-                                                            code: o.value?.Coding?.code,
-                                                            display: o.value?.Coding?.display,
+                                                            code: o.valueCoding?.code,
+                                                            display: o.valueCoding?.display,
                                                         },
                                                     },
                                                 })),
@@ -323,20 +322,20 @@ function getNewOption(
     answerOption?: QuestionnaireItemAnswerOption,
     system?: string,
 ): QuestionnaireItemAnswerOption | undefined {
-    if (!answerOption?.value) {
+    if (!answerOption) {
         return undefined;
     }
 
-    if (answerOption.value.Coding) {
-        return { value: { Coding: { system: system || '', display: '', code: '' } } };
-    } else if (answerOption.value.string) {
-        return { value: { string: '' } };
-    } else if (answerOption.value.integer) {
-        return { value: { integer: undefined } };
-    } else if (answerOption.value.date) {
-        return { value: { date: undefined } };
-    } else if (answerOption.value.time) {
-        return { value: { time: undefined } };
+    if (answerOption.valueCoding) {
+        return { valueCoding: { system: system || '', display: '', code: '' } };
+    } else if (answerOption.valueString) {
+        return { valueString: '' };
+    } else if (answerOption.valueInteger) {
+        return { valueInteger: undefined };
+    } else if (answerOption.valueDate) {
+        return { valueDate: undefined };
+    } else if (answerOption.valueTime) {
+        return { valueTime: undefined };
     }
 
     // else if (answerOption.value.Reference) {

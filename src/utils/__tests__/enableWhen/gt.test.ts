@@ -14,13 +14,13 @@ const ENABLE_WHEN_GT_QUESTIONAIRES: QuestionnaireData[] = [
                 {
                     question: 'q1',
                     operator: '>',
-                    answer: { integer: 10 },
+                    answerInteger: 10,
                 },
             ],
             qrItem: [
                 {
                     linkId: 'q1',
-                    answer: [{ value: { integer: 11 } }],
+                    answer: [{ valueInteger: 11 }],
                 },
                 {
                     linkId: 'q2',
@@ -40,13 +40,13 @@ const ENABLE_WHEN_GT_QUESTIONAIRES: QuestionnaireData[] = [
                 {
                     question: 'q1',
                     operator: '>',
-                    answer: { integer: 10 },
+                    answerInteger: 10,
                 },
             ],
             qrItem: [
                 {
                     linkId: 'q1',
-                    answer: [{ value: { integer: 10 } }],
+                    answer: [{ valueInteger: 10 }],
                 },
                 {
                     linkId: 'q2',
@@ -62,22 +62,22 @@ const ENABLE_WHEN_GT_QUESTIONAIRES: QuestionnaireData[] = [
                 {
                     question: 'q1',
                     operator: '>',
-                    answer: { integer: 10 },
+                    answerInteger: 10,
                 },
                 {
                     question: 'q2',
                     operator: '>',
-                    answer: { integer: 5 },
+                    answerInteger: 5,
                 },
             ],
             qrItem: [
                 {
                     linkId: 'q1',
-                    answer: [{ value: { integer: 15 } }],
+                    answer: [{ valueInteger: 15 }],
                 },
                 {
                     linkId: 'q2',
-                    answer: [{ value: { integer: 6 } }],
+                    answer: [{ valueInteger: 6 }],
                 },
                 {
                     linkId: CONTROL_ITEM_LINK_ID,
@@ -93,22 +93,22 @@ const ENABLE_WHEN_GT_QUESTIONAIRES: QuestionnaireData[] = [
                 {
                     question: 'q1',
                     operator: '>',
-                    answer: { integer: 10 },
+                    answerInteger: 10,
                 },
                 {
                     question: 'q2',
                     operator: '>',
-                    answer: { integer: 5 },
+                    answerInteger: 5,
                 },
             ],
             qrItem: [
                 {
                     linkId: 'q1',
-                    answer: [{ value: { integer: 11 } }],
+                    answer: [{ valueInteger: 11 }],
                 },
                 {
                     linkId: 'q2',
-                    answer: [{ value: { integer: 5 } }],
+                    answer: [{ valueInteger: 5 }],
                 },
             ],
         }),
@@ -121,22 +121,22 @@ const ENABLE_WHEN_GT_QUESTIONAIRES: QuestionnaireData[] = [
                 {
                     question: 'q1',
                     operator: '>',
-                    answer: { integer: 10 },
+                    answerInteger: 10,
                 },
                 {
                     question: 'q2',
                     operator: '>',
-                    answer: { integer: 5 },
+                    answerInteger: 5,
                 },
             ],
             qrItem: [
                 {
                     linkId: 'q1',
-                    answer: [{ value: { integer: 10 } }],
+                    answer: [{ valueInteger: 10 }],
                 },
                 {
                     linkId: 'q2',
-                    answer: [{ value: { integer: 6 } }],
+                    answer: [{ valueInteger: 6 }],
                 },
                 {
                     linkId: CONTROL_ITEM_LINK_ID,

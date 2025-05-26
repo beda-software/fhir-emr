@@ -21,7 +21,7 @@ describe('Validate all questionnaires', () => {
         );
         expect(questionnaire.meta?.profile?.length).toBeGreaterThanOrEqual(1);
         const bedaQuestionnaireProfile = questionnaire.meta?.profile?.find(
-            (profileUrl) => profileUrl === 'https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire',
+            (profileUrl) => profileUrl === 'https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire',
         );
         expect(bedaQuestionnaireProfile).not.toBeUndefined();
         const outcome = ensure(

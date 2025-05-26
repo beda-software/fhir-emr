@@ -142,8 +142,8 @@ item:
       display: kg/m2
     calculatedExpression:
       language: text/fhirpath
-      expression: "(%QuestionnaireResponse.item.where(linkId='weight').answer.value.decimal / ((%QuestionnaireResponse.item.where(linkId='height').answer.value.decimal / 100) * (%QuestionnaireResponse.item.where(linkId='height').answer.value.decimal / 100))).round(2)"
+      expression: "(%QuestionnaireResponse.item.where(linkId='weight').answer.valueDecimal / ((%QuestionnaireResponse.item.where(linkId='height').answer.valueDecimal / 100) * (%QuestionnaireResponse.item.where(linkId='height').answer.valueDecimal / 100))).round(2)"
 meta:
   profile:
-    - https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
 url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/vitals

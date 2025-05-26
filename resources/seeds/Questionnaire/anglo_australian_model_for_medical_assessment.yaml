@@ -167,7 +167,7 @@ item:
         type: string
 meta:
   profile:
-    - https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
 name: Anglo-Australian model for Medical Assessment
 title: Anglo-Australian model for Medical Assessment
 status: active

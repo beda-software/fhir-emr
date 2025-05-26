@@ -1,10 +1,9 @@
 import { useMemo } from 'react';
-
-import { QuestionnaireItem } from '@beda.software/aidbox-types';
+import { FCEQuestionnaireItem } from 'sdc-qrf';
 
 import { GroupMap } from './types';
 
-export function useGridGroup(item: QuestionnaireItem) {
+export function useGridGroup(item: FCEQuestionnaireItem) {
     const gridMap = useMemo(() => {
         if (!item || item.type !== 'group' || !item.item) {
             return undefined;

@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
 import { Patient, Questionnaire } from 'fhir/r4b';
-import { QuestionnaireResponseFormData } from 'sdc-qrf';
+import { QuestionnaireResponseFormData, toFirstClassExtension } from 'sdc-qrf';
 
 import { ensure } from '@beda.software/fhir-react';
 
@@ -15,7 +15,7 @@ describe('createPatient', () => {
     });
 
     test('should create patient', async () => {
-        const createPatientQR = ensure(
+        const createPatientQ = ensure(
             await getFHIRResource<Questionnaire>({
                 reference: `Questionnaire/patient-create`,
             }),
@@ -26,7 +26,8 @@ describe('createPatient', () => {
 
         const formData: QuestionnaireResponseFormData = {
             context: {
-                questionnaire: createPatientQR,
+                fceQuestionnaire: toFirstClassExtension(createPatientQ),
+                questionnaire: createPatientQ,
                 questionnaireResponse: {
                     resourceType: 'QuestionnaireResponse',
                     questionnaire: undefined,

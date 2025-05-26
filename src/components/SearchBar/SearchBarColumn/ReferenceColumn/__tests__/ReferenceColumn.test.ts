@@ -72,7 +72,7 @@ describe('ReferenceColumn component testing', () => {
         });
         await waitFor(() => {
             options.forEach((option: any) => {
-                expect(['Patient', 'Practitioner']).to.include(option.value.Reference.resourceType);
+                expect(['Patient', 'Practitioner']).to.include(option.value.Reference.reference.split('/')[0]);
             });
         });
     });

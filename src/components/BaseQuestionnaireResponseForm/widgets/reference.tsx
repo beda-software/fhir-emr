@@ -1,10 +1,10 @@
 import { Form } from 'antd';
+import { Resource } from 'fhir/r4b';
 import _ from 'lodash';
 import { useCallback, useMemo } from 'react';
 import { ActionMeta, MultiValue, SingleValue } from 'react-select';
-import { FormAnswerItems, parseFhirQueryExpression, QuestionItemProps } from 'sdc-qrf';
+import { AnswerValue, FormAnswerItems, parseFhirQueryExpression, QuestionItemProps } from 'sdc-qrf';
 
-import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswer, Resource } from '@beda.software/aidbox-types';
 import { RenderRemoteData, ResourcesMap, useService } from '@beda.software/fhir-react';
 import { buildQueryParams, isSuccess } from '@beda.software/remote-data';
 
@@ -17,9 +17,7 @@ import { useFieldController } from '../hooks';
 
 export type AnswerReferenceProps<R extends Resource, IR extends Resource> = QuestionItemProps & {
     overrideGetDisplay?: (resource: R, includedResources: ResourcesMap<R | IR>) => string;
-    overrideGetLabel?: (
-        o: QuestionnaireItemAnswerOption['value'] | QuestionnaireResponseItemAnswer['value'],
-    ) => React.ReactElement | string;
+    overrideGetLabel?: (o: AnswerValue) => React.ReactElement | string;
 };
 
 interface UseFieldReferenceProps<R extends Resource, IR extends Resource> {
@@ -50,16 +48,13 @@ export function useFieldReference<R extends Resource = any, IR extends Resource 
         return [];
     };
 
-    const debouncedLoadOptions = _.debounce(
-        (searchText: string, callback: (options: QuestionnaireItemAnswerOption[]) => void) => {
-            (async () => callback(await loadOptions(searchText)))();
-        },
-        500,
-    );
+    const debouncedLoadOptions = _.debounce((searchText: string, callback: (options: FormAnswerItems[]) => void) => {
+        (async () => callback(await loadOptions(searchText)))();
+    }, 500);
 
     const onChange = (
-        _value: SingleValue<QuestionnaireItemAnswerOption> | MultiValue<QuestionnaireItemAnswerOption>,
-        action: ActionMeta<QuestionnaireItemAnswerOption>,
+        _value: SingleValue<FormAnswerItems> | MultiValue<FormAnswerItems>,
+        action: ActionMeta<FormAnswerItems>,
     ) => {
         if (!repeats || action.action !== 'select-option') {
             return;
@@ -151,14 +146,11 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         [loadOptions],
     );
 
-    const debouncedLoadOptions = _.debounce(
-        (searchText: string, callback: (options: QuestionnaireItemAnswerOption[]) => void) => {
-            (async () => callback(await debouncedLoadOptionsCallback(searchText)))();
-        },
-        500,
-    );
+    const debouncedLoadOptions = _.debounce((searchText: string, callback: (options: FormAnswerItems[]) => void) => {
+        (async () => callback(await debouncedLoadOptionsCallback(searchText)))();
+    }, 500);
 
-    const [optionsRD] = useService<LoadResourceOption<R>[]>(async () => {
+    const [optionsRD] = useService<LoadResourceOption[]>(async () => {
         return await loadOptions('');
     }, [JSON.stringify(searchParams)]);
 
@@ -199,8 +191,8 @@ function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource =
                         value={fieldController.value}
                         loadOptions={debouncedLoadOptions}
                         defaultOptions={options}
-                        getOptionLabel={(option) => getAnswerDisplay(option.value)}
-                        getOptionValue={(option) => getAnswerCode(option.value)}
+                        getOptionLabel={(option) => getAnswerDisplay(option.value!)}
+                        getOptionValue={(option) => getAnswerCode(option.value!)}
                         isMulti={repeats}
                         placeholder={placeholder}
                         isDisabled={disabled}

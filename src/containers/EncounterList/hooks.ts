@@ -42,7 +42,7 @@ export function useEncounterList(
             'PractitionerRole:practitioner:Practitioner',
         ],
         'participant-display': practitionerFilterValue,
-        'subject:Patient.id': patientFilterValue,
+        subject: patientFilterValue,
         date: dateFilterValue,
         _sort: ['-date', '_id'],
     };

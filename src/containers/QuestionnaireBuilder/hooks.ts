@@ -18,7 +18,7 @@ const initialQuestionnaire: FHIRQuestionnaire = {
     resourceType: 'Questionnaire',
     status: 'draft',
     meta: {
-        profile: ['https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire'],
+        profile: ['https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire'],
     },
 };
 
@@ -156,7 +156,7 @@ export function useQuestionnaireBuilder() {
                     resourceType: 'Questionnaire',
                     status: 'draft',
                     meta: {
-                        profile: ['https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire'],
+                        profile: ['https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire'],
                     },
                     item: [item.questionItem],
                 }).item![0]!;

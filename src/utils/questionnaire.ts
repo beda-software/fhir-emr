@@ -1,15 +1,14 @@
 import { t } from '@lingui/macro';
 import _ from 'lodash';
-import { AnswerValue } from 'sdc-qrf';
+import {
+    AnswerValue,
+    FCEQuestionnaire,
+    FCEQuestionnaireItem,
+    FCEQuestionnaireItemChoiceColumn,
+    FormAnswerItems,
+} from 'sdc-qrf';
 import * as yup from 'yup';
 
-import {
-    Questionnaire,
-    QuestionnaireItem,
-    QuestionnaireItemAnswerOption,
-    QuestionnaireItemChoiceColumn,
-    QuestionnaireResponseItemAnswer,
-} from '@beda.software/aidbox-types';
 import { parseFHIRTime } from '@beda.software/fhir-react';
 
 import { formatHumanDate, formatHumanDateTime } from './date';
@@ -18,7 +17,7 @@ import { evaluate } from './fhirpath';
 
 export function getDisplay(
     value?: AnswerValue,
-    choiceColumn?: QuestionnaireItemChoiceColumn[],
+    choiceColumn?: FCEQuestionnaireItemChoiceColumn[],
 ): string | number | null {
     if (!value) {
         return null;
@@ -73,17 +72,17 @@ export function getDisplay(
 }
 
 export function getArrayDisplay(
-    options?: QuestionnaireResponseItemAnswer[],
-    choiceColumn?: QuestionnaireItemChoiceColumn[],
+    options?: FormAnswerItems[],
+    choiceColumn?: FCEQuestionnaireItemChoiceColumn[],
 ): string | null {
     if (!options) {
         return null;
     }
 
-    return options.map((v: QuestionnaireResponseItemAnswer) => getDisplay(v.value, choiceColumn)).join(', ');
+    return options.map((v) => getDisplay(v.value, choiceColumn)).join(', ');
 }
 
-export function questionnaireItemsToValidationSchema(questionnaireItems: QuestionnaireItem[]) {
+export function questionnaireItemsToValidationSchema(questionnaireItems: FCEQuestionnaireItem[]) {
     const validationSchema: Record<string, yup.AnySchema> = {};
     if (questionnaireItems.length === 0) return yup.object(validationSchema) as yup.AnyObjectSchema;
     questionnaireItems.forEach((item) => {
@@ -130,7 +129,7 @@ export function questionnaireItemsToValidationSchema(questionnaireItems: Questio
     return yup.object(validationSchema).required() as yup.AnyObjectSchema;
 }
 
-export function questionnaireToValidationSchema(questionnaire: Questionnaire) {
+export function questionnaireToValidationSchema(questionnaire: FCEQuestionnaire) {
     return questionnaireItemsToValidationSchema(questionnaire.item ?? []);
 }
 
@@ -138,9 +137,7 @@ function createSchemaArrayOfValues(value: yup.AnyObjectSchema) {
     return yup.array().of(yup.object({ value }));
 }
 
-export function getAnswerDisplay(
-    value: QuestionnaireItemAnswerOption['value'] | QuestionnaireResponseItemAnswer['value'],
-) {
+export function getAnswerDisplay(value: AnswerValue) {
     if (value?.Coding) {
         return value.Coding.display!;
     }
@@ -155,7 +152,7 @@ export function getAnswerDisplay(
     return JSON.stringify(value);
 }
 
-export function getAnswerCode(o: QuestionnaireItemAnswerOption['value'] | QuestionnaireResponseItemAnswer['value']) {
+export function getAnswerCode(o: AnswerValue) {
     if (o?.Coding) {
         return o.Coding.code!;
     }
@@ -164,7 +161,7 @@ export function getAnswerCode(o: QuestionnaireItemAnswerOption['value'] | Questi
     }
 
     if (o?.Reference) {
-        return o.Reference.id;
+        return o.Reference.reference!;
     }
 
     return JSON.stringify(o);

@@ -3,23 +3,22 @@ import classNames from 'classnames';
 import _ from 'lodash';
 import { useCallback } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
-import { FormAnswerItems, useQuestionnaireResponseFormContext } from 'sdc-qrf';
-
-import { QuestionnaireItem } from '@beda.software/aidbox-types';
+import { FCEQuestionnaireItem, FormAnswerItems, useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
 import { getFieldErrorMessage } from 'src/components/BaseQuestionnaireResponseForm/utils';
 
 import s from './BaseQuestionnaireResponseForm.module.scss';
 import { FieldLabel } from './FieldLabel';
 
-export function useFieldController<T = unknown>(fieldName: any, questionItem: QuestionnaireItem) {
+export function useFieldController<T = unknown>(fieldName: any, questionItem: FCEQuestionnaireItem) {
     const qrfContext = useQuestionnaireResponseFormContext();
     const { readOnly, hidden, repeats, text, required, entryFormat, helpText } = questionItem;
-    const { control } = useFormContext();
+    // @ts-ignore we can use array as value
+    const { control } = useFormContext<T>();
 
-    // @ts-ignore, T might be array
+    // @ts-ignore we can use array as value
     const { field, fieldState } = useController<T>({
-        control: control,
+        control,
         name: fieldName.join('.'),
         ...(repeats ? { defaultValue: [] } : {}),
     });
@@ -41,14 +40,14 @@ export function useFieldController<T = unknown>(fieldName: any, questionItem: Qu
         (option: FormAnswerItems) => {
             // NOTE: it's used online in inline-choice
             if (repeats) {
-                const arrayValue = (field.value ?? []) as any[];
-                const valueIndex = arrayValue.findIndex((v) => _.isEqual(v?.value, option.value));
+                const formAnswers = (field.value ?? []) as FormAnswerItems[];
+                const valueIndex = formAnswers.findIndex((v) => _.isEqual(v.value, option.value));
 
                 if (valueIndex === -1) {
-                    field.onChange([...arrayValue, option]);
+                    field.onChange([...formAnswers, option]);
                 } else {
-                    arrayValue.splice(valueIndex, 1);
-                    field.onChange(arrayValue);
+                    formAnswers.splice(valueIndex, 1);
+                    field.onChange(formAnswers);
                 }
             } else {
                 field.onChange([option]);

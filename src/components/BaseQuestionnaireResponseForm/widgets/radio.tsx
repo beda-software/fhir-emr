@@ -13,7 +13,7 @@ export function QuestionSolidRadio({ parentPath, questionItem }: QuestionItemPro
     const { linkId, answerOption } = questionItem;
     const { adjustLastToRight } = questionItem as SolidRadioButton;
     const [options, rightOption] = useMemo(() => {
-        const optionsList = (answerOption ?? []).map((o) => o.value!.Coding!);
+        const optionsList = (answerOption ?? []).map((o) => o.valueCoding!);
         if (adjustLastToRight) {
             return [optionsList.slice(0, -1), optionsList[optionsList.length - 1]];
         }
