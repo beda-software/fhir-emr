@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro';
-import { Patient } from 'fhir/r4b';
+import { ParametersParameter, Patient } from 'fhir/r4b';
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -47,6 +47,7 @@ function usePatientQuestionnaire() {
 interface PatientQuestionnaireProps {
     onSuccess?: () => void;
     autosave?: boolean;
+    launchContextParameters?: ParametersParameter[];
 }
 
 export function PatientQuestionnaire(props: PatientQuestionnaireProps) {
@@ -79,7 +80,7 @@ export function PatientQuestionnaire(props: PatientQuestionnaireProps) {
 }
 
 function PatientQuestionnaireForm(props: PatientQuestionnaireProps) {
-    const { onSuccess, autosave } = props;
+    const { onSuccess, autosave, launchContextParameters } = props;
 
     const { response, questionnaireId, encounterId } = usePatientQuestionnaire();
     const appToken = getToken();
@@ -102,6 +103,7 @@ function PatientQuestionnaireForm(props: PatientQuestionnaireProps) {
                     encounterId={encounterId}
                     onSuccess={onSuccess}
                     autosave={autosave}
+                    launchContextParameters={launchContextParameters}
                 />
             )}
         </RenderRemoteData>
