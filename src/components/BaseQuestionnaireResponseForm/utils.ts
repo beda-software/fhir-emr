@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro';
 import { ControllerFieldState, ControllerRenderProps, FieldValues } from 'react-hook-form';
 
 export function getFieldErrorMessage(
@@ -17,5 +18,5 @@ export function getFieldErrorMessage(
 
     const errorMessageWithHumanReadableFieldName = errorMessageWithInternalFieldName.replace(field.name, text ?? '');
 
-    return errorMessageWithHumanReadableFieldName;
+    return t`${errorMessageWithHumanReadableFieldName}`;
 }
