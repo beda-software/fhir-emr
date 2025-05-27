@@ -73,7 +73,7 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
     return (
         <Form.Item {...formItem} data-testid="question-choice">
             <ChoiceQuestionSelect
-                options={answerOption!}
+                options={answerOption ?? []}
                 value={value ?? []}
                 onChange={onSelect}
                 repeats={repeats}
