@@ -3,8 +3,22 @@ import { Button } from 'antd';
 import { Bundle, Resource, Slot } from 'fhir/r4b';
 import React, { useMemo, useState, useCallback } from 'react';
 
-import { NewEventData, ResourceCalendarPageProps, EventColorMapping } from './types';
+import { SearchParams } from '@beda.software/fhir-react';
+
+import { NewEventData, ResourceCalendarPageProps, EventColorMapping, SlotSearchParamsMapping } from './types';
 import { ResourceContext } from '../types';
+
+export function slotSearchParamsMapping(searchParams: SearchParams, mapping?: SlotSearchParamsMapping): SearchParams {
+    if (mapping === undefined) {
+        return {};
+    }
+
+    const result = Object.fromEntries(
+        Object.entries(mapping).map(([mappingKey, actualKey]) => [actualKey, searchParams[mappingKey]]),
+    );
+
+    return result ?? {};
+}
 
 function getBackgroundColor<R extends Resource>(
     resource: R,

@@ -18,6 +18,8 @@ type ResourceColorMapping<R extends Resource> = {
 
 export type EventColorMapping<R extends Resource> = ResourceColorMapping<R> | undefined;
 
+export type SlotSearchParamsMapping = Record<string, string>;
+
 export type ResourceCalendarPageProps<R extends Resource> = ResourceListBaseProps<R, WebExtra> & {
     headerTitle: string;
     event: {
@@ -35,6 +37,7 @@ export type ResourceCalendarPageProps<R extends Resource> = ResourceListBaseProp
     };
     slot?: {
         operationUrl?: string;
+        searchParamsMapping?: SlotSearchParamsMapping;
         eventColorMapping?: ResourceColorMapping<Slot>;
     };
     businessHours?: CalendarOptions['businessHours'];

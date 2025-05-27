@@ -10,7 +10,13 @@ import { service } from 'src/services/fhir';
 import { useDebounce } from 'src/utils/debounce';
 
 import { ResourceCalendarPageProps } from './types';
-import { calculateEvents, calculateSlots, useCalendarEvents, extractPrimaryResourcesFactory } from './utils';
+import {
+    calculateEvents,
+    calculateSlots,
+    useCalendarEvents,
+    extractPrimaryResourcesFactory,
+    slotSearchParamsMapping,
+} from './utils';
 import { ResourceContext } from '../types';
 
 export function useCalendarPage<R extends WithId<Resource>>(
@@ -24,15 +30,6 @@ export function useCalendarPage<R extends WithId<Resource>>(
     const { eventCreate, eventShow, eventEdit, questionnaireActions } = useCalendarEvents<R>(event.actions);
     const debouncedFilterValues = useDebounce(filterValues, 300);
 
-    const [slotResourceResponse, slotPagerManager] = useService(
-        async () =>
-            service<Bundle<WithId<Slot>>>({
-                method: 'GET',
-                url: slot?.operationUrl ?? '/Slot',
-            }),
-        [],
-    );
-
     const searchBarSearchParams = {
         ...Object.fromEntries(
             debouncedFilterValues.map((filterValue) => [
@@ -41,7 +38,19 @@ export function useCalendarPage<R extends WithId<Resource>>(
             ]),
         ),
     };
+
     const searchParams = { _sort: '-_lastUpdated', ...defaultSearchParams, ...searchBarSearchParams };
+    const slotSearchParams = slotSearchParamsMapping(searchBarSearchParams ?? {}, slot?.searchParamsMapping);
+
+    const [slotResourceResponse, slotPagerManager] = useService(
+        async () =>
+            service<Bundle<WithId<Slot>>>({
+                method: 'GET',
+                url: slot?.operationUrl ?? '/Slot',
+                params: slotSearchParams,
+            }),
+        [JSON.stringify(slotSearchParams)],
+    );
 
     const defaultPageSize = defaultSearchParams._count;
 
