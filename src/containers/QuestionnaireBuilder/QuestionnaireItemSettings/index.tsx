@@ -1,9 +1,7 @@
 import { Trans, t } from '@lingui/macro';
 import { Button, Checkbox, Form, Input, Select, Popconfirm } from 'antd';
 import { FormProvider, useForm } from 'react-hook-form';
-import { GroupItemProps, QuestionItemProps } from 'sdc-qrf';
-
-import { QuestionnaireItem } from '@beda.software/aidbox-types';
+import { FCEQuestionnaireItem, GroupItemProps, QuestionItemProps } from 'sdc-qrf';
 
 import { Title } from 'src/components/Typography';
 
@@ -21,7 +19,7 @@ interface Props {
 
 export function QuestionnaireItemSettings(props: Props) {
     const { item, onSave, onDelete } = props;
-    const methods = useForm<QuestionnaireItem>({
+    const methods = useForm<FCEQuestionnaireItem>({
         defaultValues: item.questionItem,
     });
     const { handleSubmit, watch } = methods;
@@ -121,9 +119,11 @@ export function QuestionnaireItemSettings(props: Props) {
                                 </Form.Item>
                             )}
                         </SettingsField>
+                        {/* @ts-ignore */}
                         {itemControlCode ? itemControlSpecificFields[itemControlCode] : null}
                     </>
                 ) : null}
+                {/* @ts-ignore */}
                 {type ? typeSpecificFields[type] : null}
                 <S.Buttons>
                     <Button htmlType="submit" type="primary" ghost>

@@ -40,7 +40,7 @@ export function getSearchBarColumnFilterValue(filterValue: ColumnFilterValue) {
     }
 
     if (isReferenceColumnFilterValue(filterValue)) {
-        return filterValue.value?.value.Reference.id;
+        return filterValue.value?.value.Reference.reference;
     }
 
     if (isChoiceColumnFilterValue(filterValue)) {

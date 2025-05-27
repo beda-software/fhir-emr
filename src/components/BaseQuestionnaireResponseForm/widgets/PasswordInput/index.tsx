@@ -6,7 +6,7 @@ import { useFieldController } from '../../hooks';
 export function PasswordInput({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
-    const { value, onChange, disabled, formItem, onBlur } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, formItem, onBlur } = useFieldController<string>(fieldName, questionItem);
 
     return (
         <Form.Item {...formItem}>

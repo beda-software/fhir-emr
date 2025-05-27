@@ -271,7 +271,7 @@ describe('Draft questionnaire response saves correctly with local storage backen
         expect(localStorageQR.subject).toBeDefined();
         expect(localStorageQR.subject.reference).toBe(getReference(patient).reference);
         expect(localStorageQR.item).toBeDefined();
-        expect(localStorageQR.item[0].item[0].item[0].answer[0].value.string).toBe(testFieldValue);
+        expect(localStorageQR.item[0].item[0].item[0].answer[0].valueString).toBe(testFieldValue);
 
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
@@ -360,7 +360,7 @@ describe('Draft questionnaire response saves correctly with local storage backen
 
         expect(localStorage.getItem('repeatable-group')).toBeDefined();
         const localStorageQR = JSON.parse(localStorage.getItem('repeatable-group')!);
-        expect(localStorageQR.item[0].item[0].item[0].answer[0].value.string).toBe(testFieldValue);
+        expect(localStorageQR.item[0].item[0].item[0].answer[0].valueString).toBe(testFieldValue);
 
         act(() => {
             fireEvent.change(textInput, {
@@ -372,13 +372,13 @@ describe('Draft questionnaire response saves correctly with local storage backen
             service: () => Promise.resolve(localStorage.getItem('repeatable-group')),
             resolver: (result) => {
                 const localStorageQR = JSON.parse(result!);
-                const fieldValue = localStorageQR.item[0].item[0].item[0].answer[0].value.string;
+                const fieldValue = localStorageQR.item[0].item[0].item[0].answer[0].valueString;
                 return fieldValue === testFieldUpdateValue;
             },
         });
 
         const localStorageQRupdate = JSON.parse(localStorage.getItem('repeatable-group')!);
-        expect(localStorageQRupdate.item[0].item[0].item[0].answer[0].value.string).toBe(testFieldUpdateValue);
+        expect(localStorageQRupdate.item[0].item[0].item[0].answer[0].valueString).toBe(testFieldUpdateValue);
 
         const submitButton = await screen.findByTestId('submit-button');
         expect(submitButton).toBeEnabled();

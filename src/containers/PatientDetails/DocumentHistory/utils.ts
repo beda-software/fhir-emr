@@ -1,12 +1,6 @@
 import { Resource, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
-import {
-    toFirstClassExtension,
-    FormGroupItems,
-    FormItems,
-    findAnswersForQuestionsRecursive,
-    mapResponseToForm,
-} from 'sdc-qrf';
+import { FormGroupItems, FormItems, findAnswersForQuestionsRecursive, mapResponseToForm } from 'sdc-qrf';
 
 import { AidboxReference } from '@beda.software/aidbox-types';
 
@@ -92,12 +86,8 @@ export function prepareDataToDisplay(
     currentQR?: QuestionnaireResponse,
     prevQR?: QuestionnaireResponse,
 ) {
-    const currentFormValues = currentQR
-        ? mapResponseToForm(toFirstClassExtension(currentQR), toFirstClassExtension(questionnaire))
-        : undefined;
-    const prevFormValues = prevQR
-        ? mapResponseToForm(toFirstClassExtension(prevQR), toFirstClassExtension(questionnaire))
-        : {};
+    const currentFormValues = currentQR ? mapResponseToForm(currentQR, questionnaire) : undefined;
+    const prevFormValues = prevQR ? mapResponseToForm(prevQR, questionnaire) : {};
 
     if (!currentQR || !currentFormValues || !prevFormValues) {
         return [];

@@ -1,25 +1,21 @@
-import { getChecker } from 'sdc-qrf';
-import type {
-    QuestionnaireItemEnableWhenAnswer,
-    QuestionnaireItemAnswerOption,
-    QuestionnaireItemEnableWhen,
-} from 'shared/src/contrib/aidbox';
+import { QuestionnaireItemAnswerOption, QuestionnaireItemEnableWhen } from 'fhir/r4b';
+import { AnswerValue, getChecker, toAnswerValue } from 'sdc-qrf';
 import * as yup from 'yup';
 
-function getAnswerOptionsValues(answerOptionArray: QuestionnaireItemAnswerOption[]): Array<{ value: any }> {
-    return answerOptionArray.reduce<Array<{ value: any }>>((acc, option) => {
-        if (option?.value === undefined) {
+function getAnswerOptionsValues(answerOptionArray: QuestionnaireItemAnswerOption[]): Array<AnswerValue> {
+    return answerOptionArray.reduce<Array<AnswerValue>>((acc, option) => {
+        if (toAnswerValue(option, 'value') === undefined) {
             return acc;
         }
 
-        return [...acc, { value: option.value }];
+        return [...acc, toAnswerValue(option, 'value')!];
     }, []);
 }
 
 interface IsEnableWhenItemSucceedProps {
     answerOptionArray: QuestionnaireItemAnswerOption[] | undefined;
-    answer: QuestionnaireItemEnableWhenAnswer | undefined;
-    operator: string;
+    answer: AnswerValue | undefined;
+    operator: QuestionnaireItemEnableWhen['operator'];
 }
 function isEnableWhenItemSucceed(props: IsEnableWhenItemSucceedProps): boolean {
     const { answerOptionArray, answer, operator } = props;
@@ -44,7 +40,8 @@ interface GetEnableWhenItemSchemaProps extends GetQuestionItemEnableWhenSchemaPr
 function getEnableWhenItemsSchema(props: GetEnableWhenItemSchemaProps): yup.AnySchema {
     const { enableWhenItems, enableBehavior, currentIndex, schema, prevConditionResults } = props;
 
-    const { question, operator, answer } = enableWhenItems[currentIndex]!;
+    const { question, operator, ...enableWhen } = enableWhenItems[currentIndex]!;
+    const answer = toAnswerValue(enableWhen, 'answer');
 
     const isLastItem = currentIndex === enableWhenItems.length - 1;
 

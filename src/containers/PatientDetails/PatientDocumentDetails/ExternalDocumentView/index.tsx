@@ -1,12 +1,7 @@
 import { t } from '@lingui/macro';
-import { QuestionnaireResponse as FHIRQuestionnaireResponse } from 'fhir/r4b';
+import { QuestionnaireResponse, QuestionnaireResponseItem } from 'fhir/r4b';
 import _ from 'lodash';
-import { toFirstClassExtension } from 'sdc-qrf';
-
-import {
-    QuestionnaireResponse as FCEQuestionnaireResponse,
-    QuestionnaireResponseItem,
-} from '@beda.software/aidbox-types';
+import { toAnswerValue } from 'sdc-qrf';
 
 import { getDisplay } from 'src/utils/questionnaire';
 import { getExternalQuestionnaireName } from 'src/utils/smart-apps';
@@ -14,7 +9,7 @@ import { getExternalQuestionnaireName } from 'src/utils/smart-apps';
 import { S } from './ExternalDocumentView.styles';
 
 interface Props {
-    questionnaireResponse: FHIRQuestionnaireResponse;
+    questionnaireResponse: QuestionnaireResponse;
 }
 
 interface Answer {
@@ -23,7 +18,7 @@ interface Answer {
     answer?: string | number;
 }
 
-function getAnswers(qr: FCEQuestionnaireResponse) {
+function getAnswers(qr: QuestionnaireResponse) {
     const collectAnswers = (qrItem: QuestionnaireResponseItem[]): Answer[] =>
         _.chain(qrItem)
             .map((item) => {
@@ -36,7 +31,7 @@ function getAnswers(qr: FCEQuestionnaireResponse) {
                 if (item.answer) {
                     return {
                         ...answer,
-                        answer: item.answer.map((a) => getDisplay(a.value)).join(', '),
+                        answer: item.answer.map((a) => getDisplay(toAnswerValue(a, 'value'))).join(', '),
                     };
                 }
 
@@ -51,7 +46,7 @@ function getAnswers(qr: FCEQuestionnaireResponse) {
 export function ExternalDocumentView(props: Props) {
     const { questionnaireResponse } = props;
     const title = getExternalQuestionnaireName(questionnaireResponse) || t`Unknown`;
-    const answers = getAnswers(toFirstClassExtension(questionnaireResponse));
+    const answers = getAnswers(questionnaireResponse);
 
     return (
         <S.Container>

@@ -1,10 +1,10 @@
-import { Questionnaire, QuestionnaireResponseItemAnswer } from '@beda.software/aidbox-types';
+import { FCEQuestionnaire, FormAnswerItems } from 'sdc-qrf';
 
 import { questionnaireToValidationSchema } from 'src/utils';
 
 type QuestionnaireData = {
-    questionnaire: Questionnaire;
-    answer: Record<string, QuestionnaireResponseItemAnswer[] | undefined>;
+    questionnaire: FCEQuestionnaire;
+    answer: Record<string, FormAnswerItems[] | undefined>;
     success: boolean;
 };
 
@@ -30,8 +30,7 @@ const QUESTIONNAIRES_TEST_DATA: QuestionnaireData[] = [
                 {
                     value: {
                         Reference: {
-                            resourceType: 'Patient',
-                            id: '1',
+                            reference: 'Patient/1',
                             display: 'Patient 1',
                         },
                     },
@@ -145,8 +144,7 @@ const QUESTIONNAIRES_TEST_DATA: QuestionnaireData[] = [
                 {
                     value: {
                         Reference: {
-                            resourceType: 'Patient',
-                            id: '1',
+                            reference: 'Patient/1',
                             display: 'Patient 1',
                         },
                     },

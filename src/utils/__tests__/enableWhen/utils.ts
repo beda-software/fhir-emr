@@ -4,7 +4,8 @@ import {
     QuestionnaireItemEnableWhen,
     QuestionnaireResponse,
     QuestionnaireResponseItem,
-} from '@beda.software/aidbox-types';
+} from 'fhir/r4b';
+import { toAnswerValue } from 'sdc-qrf';
 
 import { evaluate, questionnaireItemsToValidationSchema } from 'src/utils';
 
@@ -71,7 +72,12 @@ export async function testEnableWhenCases(questionnaireData: QuestionnaireData) 
     const qrValues: QuestionnaireResponseItem[] = evaluate(questionnaireResponse, `item`);
     const values = qrValues.reduce(
         (acc, item) => {
-            acc[item.linkId] = item.answer;
+            if (!item.answer) {
+                return acc;
+            }
+
+            // The validation schema is done for FormItems
+            acc[item.linkId] = toAnswerValue(item.answer, 'value');
             return acc;
         },
         {} as Record<string, any>,
@@ -82,7 +88,7 @@ export async function testEnableWhenCases(questionnaireData: QuestionnaireData) 
     // try {
     //     schema.validateSync(values);
     // } catch (e) {
-    //     console.log('Test schema valiadtion errors:', e);
+    //     console.log('Test schema validation errors:', e);
     // }
 
     expect(schema.isValidSync(values)).toBeTruthy();

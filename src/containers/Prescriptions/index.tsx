@@ -1,6 +1,6 @@
 import { t, Trans } from '@lingui/macro';
 import { Medication, MedicationRequest } from 'fhir/r4b';
-import { extractExtension } from 'sdc-qrf';
+import { extractCreatedAtFromMeta } from 'sdc-qrf';
 
 import { RenderRemoteData } from '@beda.software/fhir-react';
 
@@ -137,7 +137,7 @@ export function Prescriptions() {
                                     dataIndex: 'date',
                                     key: 'date',
                                     render: (_text, resource) => {
-                                        const createdAt = extractExtension(resource.meta?.extension, 'ex:createdAt');
+                                        const createdAt = extractCreatedAtFromMeta(resource.meta);
 
                                         return createdAt ? formatHumanDate(createdAt) : null;
                                     },

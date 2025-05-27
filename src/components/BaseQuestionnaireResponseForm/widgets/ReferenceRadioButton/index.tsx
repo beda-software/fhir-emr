@@ -32,7 +32,7 @@ function ReferenceRadioButtonUnsafe<R extends Resource = any, IR extends Resourc
                         {options.map((answerOption) => (
                             <Radio
                                 key={JSON.stringify(answerOption)}
-                                checked={_.isEqual(value?.value, answerOption.value)}
+                                checked={!!value?.find((v) => _.isEqual(v.value, answerOption.value))}
                                 disabled={disabled}
                                 onChange={() => onSelect(answerOption)}
                                 data-testid={`inline-choice__${_.kebabCase(

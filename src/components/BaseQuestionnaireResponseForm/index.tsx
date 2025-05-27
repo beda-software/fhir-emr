@@ -6,6 +6,7 @@ import React, { ComponentType, useCallback, useContext, useEffect, useMemo, useR
 import { FormProvider, useForm } from 'react-hook-form';
 import {
     calcInitialContext,
+    FCEQuestionnaire,
     FormItems,
     GroupItemComponent,
     GroupItemProps,
@@ -21,8 +22,6 @@ import {
 import * as yup from 'yup';
 
 import 'react-phone-input-2/lib/style.css';
-
-import { Questionnaire as FCEQuestionnaire } from '@beda.software/aidbox-types';
 
 import {
     deleteQuestionnaireResponseDraft,
@@ -84,10 +83,10 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
 
     const isCreating = !formData.context.questionnaireResponse.id;
 
-    const questionnaireId = formData.context.questionnaire.assembledFrom;
+    const questionnaireId = formData.context.fceQuestionnaire.assembledFrom;
 
     const draftId = isCreating
-        ? formData.context.questionnaire.assembledFrom
+        ? formData.context.fceQuestionnaire.assembledFrom
         : formData.context.questionnaireResponse.id;
 
     const loadDraft = useCallback(
@@ -100,8 +99,8 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
     loadDraft(draftId, formData);
 
     const schema: yup.AnyObjectSchema = useMemo(
-        () => questionnaireToValidationSchema(formData.context.questionnaire),
-        [formData.context.questionnaire],
+        () => questionnaireToValidationSchema(formData.context.fceQuestionnaire),
+        [formData.context.fceQuestionnaire],
     );
 
     const methods = useForm<FormItems>({
@@ -254,7 +253,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         [GroupWrapper],
     );
 
-    const isWizard = isGroupWizard(formData.context.questionnaire);
+    const isWizard = isGroupWizard(formData.context.fceQuestionnaire);
 
     const handleOnCancel = useCallback(() => {
         debouncedSaveDraftRef.current?.cancel();
@@ -296,7 +295,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                         <>
                             <div className={classNames(s.content, 'form__content')}>
                                 <QuestionItems
-                                    questionItems={formData.context.questionnaire.item!}
+                                    questionItems={formData.context.fceQuestionnaire.item!}
                                     parentPath={[]}
                                     context={calcInitialContext(formData.context, formValues)}
                                 />
