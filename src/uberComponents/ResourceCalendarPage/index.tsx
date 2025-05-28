@@ -26,7 +26,7 @@ export function ResourceCalendarPage<R extends WithId<Resource>>(props: Resource
         defaultLaunchContext,
         event,
         slot,
-        businessHours,
+        calendarOptions,
     } = props;
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
         columns: getFilters?.() ?? [],
@@ -68,11 +68,11 @@ export function ResourceCalendarPage<R extends WithId<Resource>>(props: Resource
                 {({ recordResponse, slotRecordResponse }) => (
                     <>
                         <Calendar
-                            businessHours={businessHours}
                             initialEvents={[...recordResponse, ...(slotRecordResponse ? slotRecordResponse : [])]}
                             eventContent={EventContent}
                             eventClick={eventShow.modalOpen}
                             select={eventCreate.modalOpen}
+                            {...calendarOptions}
                         />
                         {eventShow.show && (
                             <CalendarEventQuestionnaireAction<R>

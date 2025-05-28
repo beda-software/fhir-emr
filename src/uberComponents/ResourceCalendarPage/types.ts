@@ -40,5 +40,5 @@ export type ResourceCalendarPageProps<R extends Resource> = ResourceListBaseProp
         searchParamsMapping?: SlotSearchParamsMapping;
         eventColorMapping?: ResourceColorMapping<Slot>;
     };
-    businessHours?: CalendarOptions['businessHours'];
+    calendarOptions?: CalendarOptions;
 };
