@@ -1,6 +1,6 @@
 import { Resource, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
-import { FormGroupItems, FormItems, findAnswersForQuestionsRecursive, mapResponseToForm } from 'sdc-qrf';
+import { cleanFormAnswerItems, findAnswersForQuestion, FormGroupItems, FormItems, mapResponseToForm } from 'sdc-qrf';
 
 import { AidboxReference } from '@beda.software/aidbox-types';
 
@@ -21,7 +21,7 @@ export function findResourceInHistory<R extends Resource>(provenanceRef: AidboxR
 }
 
 function isValueEmpty(linkId: string, data: FormItems) {
-    const answers = findAnswersForQuestionsRecursive(linkId, data) || [];
+    const answers = findAnswersForQuestion(linkId, [], data);
 
     return _.every(answers, (a) => !a.value || _.isEmpty(a.value));
 }
@@ -34,6 +34,9 @@ function isGroup(data: FormGroupItems | FormItems) {
     return false;
 }
 
+// TODO: re-write this function from FormItems to QuestionnaireResponse
+// TODO: currently it relies on some internals of sdc-qrf, that might contain invalid values
+// TODO: but actually QuestionnaireResponse contains clean values.
 export function getFormDataDiff(initialCurrentData: FormItems, initialPrevData: FormItems) {
     const generateDiff = (currentData: FormItems | FormGroupItems, prevData: FormItems | FormGroupItems) => {
         let diffBefore: FormItems = {};
@@ -102,8 +105,16 @@ export function prepareDataToDisplay(
             linkId,
             question: item[0]?.question,
             valueBefore:
-                itemBefore && Array.isArray(itemBefore) ? itemBefore.map((v) => getDisplay(v.value)).join(', ') : null,
-            valueAfter: Array.isArray(item) ? item.map((v) => getDisplay(v.value)).join(', ') : null,
+                itemBefore && Array.isArray(itemBefore)
+                    ? cleanFormAnswerItems(itemBefore)
+                          .map((v) => getDisplay(v.value))
+                          .join(', ')
+                    : null,
+            valueAfter: Array.isArray(item)
+                ? cleanFormAnswerItems(item)
+                      .map((v) => getDisplay(v.value))
+                      .join(', ')
+                : null,
         };
     });
 
@@ -118,7 +129,11 @@ export function prepareDataToDisplay(
             return {
                 linkId,
                 question: item[0]?.question,
-                valueBefore: Array.isArray(item) ? item.map((v) => getDisplay(v.value)).join(', ') : null,
+                valueBefore: Array.isArray(item)
+                    ? cleanFormAnswerItems(item)
+                          .map((v) => getDisplay(v.value))
+                          .join(', ')
+                    : null,
                 valueAfter: null,
             };
         }),
