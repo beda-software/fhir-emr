@@ -1,6 +1,8 @@
 import { CalendarOptions } from '@fullcalendar/core';
 import { Resource, Slot } from 'fhir/r4b';
 
+import { SearchParams } from '@beda.software/fhir-react';
+
 import { WebExtra, QuestionnaireActionType } from '../ResourceListPage/actions';
 import { ResourceListBaseProps } from '../ResourceListPage/types';
 import { TypedFHIRPathExpression } from '../types';
@@ -8,6 +10,7 @@ import { TypedFHIRPathExpression } from '../types';
 export interface NewEventData {
     start: Date;
     end: Date;
+    searchParams: SearchParams;
 }
 
 type ResourceColorMapping<R extends Resource> = {

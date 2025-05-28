@@ -93,6 +93,7 @@ export function useModal<T = undefined>() {
 
 export function useCalendarEvents<R extends Resource>(
     calendarEventActions: ResourceCalendarPageProps<R>['event']['actions'],
+    searchParams: SearchParams,
 ) {
     const { create, show, edit } = calendarEventActions;
     const newEventModal = useModal<NewEventData>();
@@ -160,7 +161,8 @@ export function useCalendarEvents<R extends Resource>(
 
     return {
         eventCreate: {
-            modalOpen: (args: DateSelectArg) => newEventModal.open({ start: args.start, end: args.end }),
+            modalOpen: (args: DateSelectArg) =>
+                newEventModal.open({ start: args.start, end: args.end, searchParams: searchParams }),
             modalClose: newEventModal.close,
             show: newEventModal.isOpen,
             data: newEventModal.data,

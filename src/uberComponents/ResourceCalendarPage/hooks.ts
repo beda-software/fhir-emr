@@ -29,7 +29,6 @@ export function useCalendarPage<R extends WithId<Resource>>(
     event: ResourceCalendarPageProps<R>['event'],
     slot: ResourceCalendarPageProps<R>['slot'],
 ) {
-    const { eventCreate, eventShow, eventEdit, questionnaireActions } = useCalendarEvents<R>(event.actions);
     const debouncedFilterValues = useDebounce(filterValues, 300);
 
     const searchBarSearchParams = {
@@ -40,6 +39,11 @@ export function useCalendarPage<R extends WithId<Resource>>(
             ]),
         ),
     };
+
+    const { eventCreate, eventShow, eventEdit, questionnaireActions } = useCalendarEvents<R>(
+        event.actions,
+        searchBarSearchParams,
+    );
 
     const searchParams = { _sort: '-_lastUpdated', ...defaultSearchParams, ...searchBarSearchParams };
     const slotSearchParams = slotSearchParamsMapping(searchBarSearchParams ?? {}, slot?.searchParamsMapping);
@@ -137,11 +141,28 @@ export function useCalendarPage<R extends WithId<Resource>>(
 
     const resourceToShowOrEdit = useMemo(() => {
         if (eventCreate.data) {
-            const startDateTime = formatFHIRDateTime(eventCreate.data.start);
-            return {
+            const searchParams = eventCreate.data.searchParams;
+            const extensions = Object.keys(searchParams).flatMap((spKey) => {
+                const value = searchParams[spKey];
+                if (value === undefined) {
+                    return [];
+                } else {
+                    return [
+                        {
+                            url: `ext:${spKey}`,
+                            valueString: value[0],
+                        },
+                    ];
+                }
+            });
+
+            const appointmentData = {
                 resourceType: 'Appointment',
-                start: startDateTime,
+                start: formatFHIRDateTime(eventCreate.data.start),
+                extension: extensions,
             };
+
+            return appointmentData;
         }
         return eventShow.data?.extendedProps?.fullResource || eventEdit.data;
     }, [eventShow, eventEdit, eventCreate]);
