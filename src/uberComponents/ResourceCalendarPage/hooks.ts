@@ -1,6 +1,8 @@
 import { Bundle, Resource, Slot } from 'fhir/r4b';
 import { useMemo, useState } from 'react';
 
+import { formatFHIRDateTime } from 'aidbox-react/lib/utils/date';
+
 import { extractBundleResources, SearchParams, usePager, WithId, useService } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess, sequenceMap } from '@beda.software/remote-data';
 
@@ -134,8 +136,15 @@ export function useCalendarPage<R extends WithId<Resource>>(
     );
 
     const resourceToShowOrEdit = useMemo(() => {
+        if (eventCreate.data) {
+            const startDateTime = formatFHIRDateTime(eventCreate.data.start);
+            return {
+                resourceType: 'Appointment',
+                start: startDateTime,
+            };
+        }
         return eventShow.data?.extendedProps?.fullResource || eventEdit.data;
-    }, [eventShow, eventEdit]);
+    }, [eventShow, eventEdit, eventCreate]);
 
     const defaultEventQuetionnaireActionProps = useMemo(() => {
         return {

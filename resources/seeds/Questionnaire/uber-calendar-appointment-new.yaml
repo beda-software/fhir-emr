@@ -3,6 +3,12 @@ id: uber-calendar-appointment-new
 name: uber-calendar-appointment-new
 title: New appointment
 status: active
+launchContext:
+  - name:
+      code: Appointment
+    type:
+      - Appointment
+    description: Appointment date passing from calendar
 mapping:
   - id: new-appointment-extract
     resourceType: Mapping
@@ -54,7 +60,7 @@ item:
         linkId: start-datetime
         initialExpression:
           language: text/fhirpath
-          expression: "%appointment.start"
+          expression: "%Appointment.start"
 meta:
   profile:
     - https://beda.software/beda-emr-questionnaire
