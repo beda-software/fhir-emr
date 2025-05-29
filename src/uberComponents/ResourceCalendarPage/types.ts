@@ -37,6 +37,7 @@ export type ResourceCalendarPageProps<R extends Resource> = ResourceListBaseProp
             create: QuestionnaireActionType;
             edit: QuestionnaireActionType;
         };
+        searchParamsMapping?: SlotSearchParamsMapping;
     };
     slot?: {
         operationUrl?: string;

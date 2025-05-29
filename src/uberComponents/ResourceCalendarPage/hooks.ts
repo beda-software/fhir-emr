@@ -45,7 +45,11 @@ export function useCalendarPage<R extends WithId<Resource>>(
         searchBarSearchParams,
     );
 
-    const searchParams = { _sort: '-_lastUpdated', ...defaultSearchParams, ...searchBarSearchParams };
+    const searchParams = {
+        _sort: '-_lastUpdated',
+        ...defaultSearchParams,
+        ...slotSearchParamsMapping(searchBarSearchParams ?? {}, event?.searchParamsMapping),
+    };
     const slotSearchParams = slotSearchParamsMapping(searchBarSearchParams ?? {}, slot?.searchParamsMapping);
 
     const [slotResourceResponse, slotPagerManager] = useService(

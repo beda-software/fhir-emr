@@ -9,15 +9,27 @@ import { NewEventData, ResourceCalendarPageProps, EventColorMapping, SlotSearchP
 import { ResourceContext } from '../types';
 
 export function slotSearchParamsMapping(searchParams: SearchParams, mapping?: SlotSearchParamsMapping): SearchParams {
-    if (mapping === undefined) {
+    if (!mapping) {
         return {};
     }
 
-    const result = Object.fromEntries(
-        Object.entries(mapping).map(([mappingKey, actualKey]) => [actualKey, searchParams[mappingKey]]),
-    );
+    const result: Record<string, string> = {};
 
-    return result ?? {};
+    for (const [mappingKey, actualKey] of Object.entries(mapping)) {
+        const value = searchParams[mappingKey];
+
+        if (value === undefined) continue;
+
+        const newValue = Array.isArray(value) ? value.map((v) => v.toString()).join(',') : value.toString();
+
+        if (result[actualKey] !== undefined) {
+            result[actualKey] += `,${newValue}`;
+        } else {
+            result[actualKey] = newValue;
+        }
+    }
+
+    return result;
 }
 
 function getBackgroundColor<R extends Resource>(
