@@ -77,7 +77,7 @@ export async function testEnableWhenCases(questionnaireData: QuestionnaireData) 
             }
 
             // The validation schema is done for FormItems
-            acc[item.linkId] = toAnswerValue(item.answer, 'value');
+            acc[item.linkId] = item.answer.map((answer) => toAnswerValue(answer, 'value'));
             return acc;
         },
         {} as Record<string, any>,
