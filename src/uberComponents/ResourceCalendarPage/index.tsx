@@ -75,7 +75,7 @@ export function ResourceCalendarPage<R extends WithId<Resource>>(props: Resource
                             eventClick={eventShow.modalOpen}
                             select={eventCreate.modalOpen}
                             datesSet={handleSelectedDates}
-                            initialDate={selectedDates.calendarStart as string}
+                            initialDate={(selectedDates.calendarStart as string).replace('ge', '')}
                             {...calendarOptions}
                         />
                         {eventShow.show && (
