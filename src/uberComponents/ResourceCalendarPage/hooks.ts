@@ -27,7 +27,7 @@ export function useCalendarPage<R extends WithId<Resource>>(
     slot: ResourceCalendarPageProps<R>['slot'],
 ) {
     const [selectedDates, setSelectedDates] = useState<SearchParams>(defaultSelectedDates);
-    const { eventSearchParams, slotSearchParams } = calculateSearchParams(
+    const { eventSearchParams, slotSearchParams, overallSearchParams } = calculateSearchParams(
         useDebounce(filterValues, 300),
         defaultSearchParams,
         selectedDates,
@@ -36,7 +36,7 @@ export function useCalendarPage<R extends WithId<Resource>>(
     );
     const { eventCreate, eventShow, eventEdit, questionnaireActions } = useCalendarEvents<R>(
         event.actions,
-        eventSearchParams,
+        overallSearchParams,
     );
     const [resourceResponse, resourceManager] = useService(
         async () => getMainResources<R>(resourceType, eventSearchParams),

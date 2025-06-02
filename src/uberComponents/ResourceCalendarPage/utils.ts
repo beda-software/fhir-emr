@@ -251,6 +251,7 @@ export function calculateSearchParams(
     return {
         eventSearchParams: searchParamsMapping(overallSearchParams, eventMapping),
         slotSearchParams: searchParamsMapping(overallSearchParams, slotMapping),
+        overallSearchParams,
     };
 }
 
