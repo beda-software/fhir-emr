@@ -3,12 +3,35 @@ import { Button } from 'antd';
 import { Bundle, Resource, Slot } from 'fhir/r4b';
 import React, { useMemo, useState, useCallback } from 'react';
 
-import { SearchParams } from '@beda.software/fhir-react';
+import { formatFHIRDateTime } from 'aidbox-react/lib/utils/date';
 
-import { NewEventData, ResourceCalendarPageProps, EventColorMapping, SlotSearchParamsMapping } from './types';
+import { extractBundleResources, SearchParams, WithId, formatFHIRDate } from '@beda.software/fhir-react';
+import { mapSuccess, sequenceMap, RemoteData } from '@beda.software/remote-data';
+
+import { ColumnFilterValue } from 'src/components/SearchBar/types';
+import { getSearchBarColumnFilterValue } from 'src/components/SearchBar/utils';
+
+import {
+    NewEventData,
+    ResourceCalendarPageProps,
+    EventColorMapping,
+    SearchParamsMappingType,
+    EventCreateType,
+    EventShowType,
+    EventEditType,
+} from './types';
 import { ResourceContext } from '../types';
 
-export function slotSearchParamsMapping(searchParams: SearchParams, mapping?: SlotSearchParamsMapping): SearchParams {
+export function resourceToCTX<R extends WithId<Resource>>(resource: R, bundle: Bundle<R>): ResourceContext<R> {
+    const resourceData = resource as R;
+    const bundleData = bundle as Bundle;
+    return {
+        resource: resourceData,
+        bundle: bundleData,
+    };
+}
+
+export function searchParamsMapping(searchParams: SearchParams, mapping?: SearchParamsMappingType): SearchParams {
     if (!mapping) {
         return {};
     }
@@ -197,4 +220,100 @@ export function useCalendarEvents<R extends Resource>(
             edit: updatedCalendarEventEdit,
         },
     };
+}
+
+export const defaultSelectedDates = {
+    calendarStart: formatFHIRDate(new Date()),
+    calendarEnd: formatFHIRDate(new Date()),
+};
+
+export function calculateSearchParams(
+    filterValues: ColumnFilterValue[],
+    defaultSearchParams: SearchParams,
+    selectedDates: SearchParams,
+    eventMapping: SearchParamsMappingType,
+    slotMapping: SearchParamsMappingType,
+) {
+    const searchBarSearchParams = {
+        ...Object.fromEntries(
+            filterValues.map((filterValue) => [
+                filterValue.column.searchParam ?? filterValue.column.id,
+                getSearchBarColumnFilterValue(filterValue),
+            ]),
+        ),
+    };
+    const overallSearchParams = {
+        ...searchBarSearchParams,
+        ...defaultSearchParams,
+        ...selectedDates,
+    };
+
+    return {
+        eventSearchParams: searchParamsMapping(overallSearchParams, eventMapping),
+        slotSearchParams: searchParamsMapping(overallSearchParams, slotMapping),
+    };
+}
+
+export function prepareResourceToShowOrEdit(
+    eventShow: EventShowType,
+    eventCreate: EventCreateType,
+    eventEdit: EventEditType,
+) {
+    if (eventCreate.data) {
+        const searchParams = eventCreate.data.searchParams;
+        const extensions = Object.keys(searchParams).flatMap((spKey) => {
+            const value = searchParams[spKey];
+            if (value === undefined) {
+                return [];
+            } else {
+                return [
+                    {
+                        url: `ext:${spKey}`,
+                        valueString: value[0],
+                    },
+                ];
+            }
+        });
+
+        const appointmentData = {
+            resourceType: 'Appointment',
+            start: formatFHIRDateTime(eventCreate.data.start),
+            extension: extensions,
+        };
+
+        return appointmentData;
+    }
+
+    return eventShow.data?.extendedProps?.fullResource || eventEdit.data;
+}
+
+export function defaultEventQuestionnaireProps<R extends Resource>(reload: () => void, resourceToShowOrEdit: any) {
+    return {
+        reload: reload,
+        defaultLaunchContext: [],
+        resource: resourceToShowOrEdit ? (resourceToShowOrEdit as R) : ({ resourceType: 'Appointment' } as R),
+    };
+}
+
+export function prepareEvents<R extends WithId<Resource>>(
+    resourceResponse: RemoteData<Bundle<WithId<R>>, any>,
+    slotResourceResponse: RemoteData<Bundle<WithId<Slot>>, any>,
+    extractPrimaryResources: (bundle: Bundle) => R[],
+    event: ResourceCalendarPageProps<R>['event'],
+    slot: ResourceCalendarPageProps<R>['slot'],
+) {
+    return sequenceMap({
+        recordResponse: mapSuccess(resourceResponse, (bundle) => {
+            const extractedPrimaryResources = extractPrimaryResources(bundle as Bundle);
+            const contexts = extractedPrimaryResources.map((resource) => resourceToCTX<R>(resource, bundle));
+
+            return calculateEvents(contexts, event);
+        }),
+        slotRecordResponse: mapSuccess(slotResourceResponse, (bundle) => {
+            const extractedPrimaryResources = extractBundleResources(bundle).Slot;
+            const contexts = extractedPrimaryResources.map((resource) => resourceToCTX<WithId<Slot>>(resource, bundle));
+
+            return calculateSlots(contexts, slot);
+        }),
+    });
 }

@@ -46,9 +46,9 @@ export function NewScheduling() {
                         slot={slotData}
                         calendarOptions={{
                             businessHours: {
-                                daysOfWeek: [0, 1, 2, 3, 4, 5, 6], // Monday - Thursday
-                                startTime: '10:00', // a start time (10am in this example)
-                                endTime: '18:00', // an end time (6pm in this example)
+                                daysOfWeek: [0, 1, 2, 3, 4, 5, 6],
+                                startTime: '10:00',
+                                endTime: '18:00',
                             },
                             slotMinTime: '09:00:00',
                             slotMaxTime: '19:00:00',

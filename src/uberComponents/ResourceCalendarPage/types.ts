@@ -1,4 +1,4 @@
-import { CalendarOptions } from '@fullcalendar/core';
+import { DateSelectArg, EventClickArg, CalendarOptions } from '@fullcalendar/core';
 import { Resource, Slot } from 'fhir/r4b';
 
 import { SearchParams } from '@beda.software/fhir-react';
@@ -21,7 +21,7 @@ type ResourceColorMapping<R extends Resource> = {
 
 export type EventColorMapping<R extends Resource> = ResourceColorMapping<R> | undefined;
 
-export type SlotSearchParamsMapping = Record<string, string>;
+export type SearchParamsMappingType = Record<string, string>;
 
 export type ResourceCalendarPageProps<R extends Resource> = ResourceListBaseProps<R, WebExtra> & {
     headerTitle: string;
@@ -37,12 +37,33 @@ export type ResourceCalendarPageProps<R extends Resource> = ResourceListBaseProp
             create: QuestionnaireActionType;
             edit: QuestionnaireActionType;
         };
-        searchParamsMapping?: SlotSearchParamsMapping;
+        searchParamsMapping?: SearchParamsMappingType;
     };
     slot?: {
         operationUrl?: string;
-        searchParamsMapping?: SlotSearchParamsMapping;
+        searchParamsMapping?: SearchParamsMappingType;
         eventColorMapping?: ResourceColorMapping<Slot>;
     };
     calendarOptions?: CalendarOptions;
+};
+
+export type EventCreateType = {
+    modalOpen: (args: DateSelectArg) => void;
+    modalClose: () => void;
+    show: boolean;
+    data: NewEventData | undefined;
+};
+
+export type EventShowType = {
+    modalOpen: (e: EventClickArg) => void;
+    modalClose: () => void;
+    show: boolean;
+    data: EventClickArg['event'] | undefined;
+};
+
+export type EventEditType = {
+    modalOpen: (id: string) => void;
+    modalClose: () => void;
+    show: boolean;
+    data: string | undefined;
 };

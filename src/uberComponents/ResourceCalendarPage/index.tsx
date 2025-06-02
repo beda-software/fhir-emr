@@ -40,6 +40,8 @@ export function ResourceCalendarPage<R extends WithId<Resource>>(props: Resource
         eventEdit,
         questionnaireActions,
         defaultEventQuetionnaireActionProps,
+        handleSelectedDates,
+        selectedDates,
     } = useCalendarPage(resourceType, extractPrimaryResources, columnsFilterValues, searchParams ?? {}, event, slot);
 
     return (
@@ -72,6 +74,8 @@ export function ResourceCalendarPage<R extends WithId<Resource>>(props: Resource
                             eventContent={EventContent}
                             eventClick={eventShow.modalOpen}
                             select={eventCreate.modalOpen}
+                            datesSet={handleSelectedDates}
+                            initialDate={selectedDates.calendarStart as string}
                             {...calendarOptions}
                         />
                         {eventShow.show && (

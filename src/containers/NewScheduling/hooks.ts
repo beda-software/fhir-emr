@@ -98,6 +98,11 @@ export function useNewScheduling() {
                 waitlist: calendarColors['bg_slot-taken_orange'],
             },
         },
+        searchParamsMapping: {
+            actor: 'actor',
+            'service-type': 'actor',
+            calendarStart: 'date',
+        },
     };
 
     const slotData: ResourceCalendarPageProps<Appointment>['slot'] = {
@@ -110,6 +115,9 @@ export function useNewScheduling() {
                 'busy-tentative': calendarColors['bg_slot-taken_orange'],
                 'entered-in-error': calendarColors['bg_slot-taken_default'],
             },
+        },
+        searchParamsMapping: {
+            calendarStart: 'start',
         },
     };
 
