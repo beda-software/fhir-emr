@@ -47,8 +47,8 @@ export function useCalendarPage<R extends WithId<Resource>>(
         [JSON.stringify(slotSearchParams)],
     );
     const reload = () => {
-        resourceManager.reload();
-        slotPagerManager.reload();
+        resourceManager.softReloadAsync();
+        slotPagerManager.softReloadAsync();
     };
     const extractPrimaryResourcesMemoized = useMemo(
         () => extractPrimaryResources ?? extractPrimaryResourcesFactory(resourceType),
@@ -68,8 +68,8 @@ export function useCalendarPage<R extends WithId<Resource>>(
     );
     const handleSelectedDates = (dateInfo: { startStr: string; endStr: string }) =>
         setSelectedDates({
-            calendarStart: formatFHIRDate(parseFHIRDate(dateInfo.startStr)),
-            calendarEnd: formatFHIRDate(parseFHIRDate(dateInfo.endStr)),
+            calendarStart: `ge${formatFHIRDate(parseFHIRDate(dateInfo.startStr))}`,
+            calendarEnd: `le${formatFHIRDate(parseFHIRDate(dateInfo.endStr))}`,
         });
 
     return {
