@@ -67,7 +67,7 @@ jobs:
         run: make up
       - name: Show logs
         if: ${{ failure() }}
-        run: docker-compose logs
+        run: docker compose logs
       - name: Run tests
         run: yarn test --silent
   TestScript:
