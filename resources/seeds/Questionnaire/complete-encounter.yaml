@@ -134,4 +134,4 @@ item:
 url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/complete-encounter
 meta:
     profile:
-        - https://beda.software/beda-emr-questionnaire
+        - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire

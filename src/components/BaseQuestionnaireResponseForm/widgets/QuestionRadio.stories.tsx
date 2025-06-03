@@ -24,10 +24,10 @@ export const SingleLine: Story = {
                 linkId: 'example',
                 required: true,
                 answerOption: [
-                    { value: { Coding: { code: '1', display: 'Item 1' } } },
-                    { value: { Coding: { code: '2', display: 'Item 2' } } },
-                    { value: { Coding: { code: '3', display: 'Item 3' } } },
-                    { value: { Coding: { code: '4', display: 'Item 4' } } },
+                    { valueCoding: { code: '1', display: 'Item 1' } },
+                    { valueCoding: { code: '2', display: 'Item 2' } },
+                    { valueCoding: { code: '3', display: 'Item 3' } },
+                    { valueCoding: { code: '4', display: 'Item 4' } },
                 ],
             }}
             context={{} as ItemContext}
@@ -46,11 +46,11 @@ export const RightOption: Story = {
                 required: true,
                 adjustLastToRight: true,
                 answerOption: [
-                    { value: { Coding: { code: '1', display: 'Item 1' } } },
-                    { value: { Coding: { code: '2', display: 'Item 2' } } },
-                    { value: { Coding: { code: '3', display: 'Item 3' } } },
-                    { value: { Coding: { code: '4', display: 'Item 4' } } },
-                    { value: { Coding: { code: '0', display: 'None' } } },
+                    { valueCoding: { code: '1', display: 'Item 1' } },
+                    { valueCoding: { code: '2', display: 'Item 2' } },
+                    { valueCoding: { code: '3', display: 'Item 3' } },
+                    { valueCoding: { code: '4', display: 'Item 4' } },
+                    { valueCoding: { code: '0', display: 'None' } },
                 ],
             }}
             context={{} as ItemContext}

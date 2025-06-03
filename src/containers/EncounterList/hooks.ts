@@ -42,7 +42,8 @@ export function useEncounterList(
             'PractitionerRole:practitioner:Practitioner',
         ],
         'participant-display': practitionerFilterValue,
-        'subject:Patient.id': patientFilterValue,
+        // subject from search params should take precedence
+        subject: searchParams.subject ?? patientFilterValue,
         date: dateFilterValue,
         _sort: ['-date', '_id'],
     };

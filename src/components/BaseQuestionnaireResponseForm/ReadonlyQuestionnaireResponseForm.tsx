@@ -70,6 +70,7 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
                     }}
                     questionItemComponents={{
                         text: QuestionText,
+                        time: QuestionDateTime,
                         string: QuestionText,
                         integer: QuestionInteger,
                         decimal: QuestionDecimal,
@@ -96,7 +97,7 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
                 >
                     <>
                         <QuestionItems
-                            questionItems={formData.context.questionnaire.item!}
+                            questionItems={formData.context.fceQuestionnaire.item!}
                             parentPath={[]}
                             context={calcInitialContext(formData.context, formValues)}
                         />

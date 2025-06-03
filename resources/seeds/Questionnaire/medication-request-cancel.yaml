@@ -41,4 +41,4 @@ item:
 url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/medication-request-cancel
 meta:
     profile:
-        - https://beda.software/beda-emr-questionnaire
+        - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire

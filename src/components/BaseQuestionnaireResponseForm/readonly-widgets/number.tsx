@@ -1,7 +1,7 @@
 import classNames from 'classnames';
-import { Coding, Quantity } from 'fhir/r4b';
+import { Coding } from 'fhir/r4b';
 import _ from 'lodash';
-import { QuestionItemProps } from 'sdc-qrf';
+import { AnswerValue, QuestionItemProps } from 'sdc-qrf';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { formatUnit } from 'src/utils/unit';
@@ -12,7 +12,7 @@ import { S } from './ReadonlyWidgets.styles';
 export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, text, hidden } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'integer'];
-    const { value } = useFieldController(fieldName, questionItem);
+    const { value } = useFieldController<number>(fieldName, questionItem);
 
     if (hidden) {
         return null;
@@ -31,7 +31,7 @@ export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps)
 export function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, text, hidden } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'decimal'];
-    const { value } = useFieldController(fieldName, questionItem);
+    const { value } = useFieldController<number>(fieldName, questionItem);
 
     if (hidden) {
         return null;
@@ -50,8 +50,8 @@ export function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps)
 export function QuestionQuantity({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, text, hidden } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value'];
-    const { value } = useFieldController(fieldName, questionItem);
-    const quantity: Quantity | undefined = value?.Quantity;
+    const { value } = useFieldController<AnswerValue>(fieldName, questionItem);
+    const quantity = value?.Quantity;
 
     if (hidden) {
         return null;

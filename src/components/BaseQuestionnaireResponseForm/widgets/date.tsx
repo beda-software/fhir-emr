@@ -14,7 +14,7 @@ import { useFieldController } from '../hooks';
 export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, type, regex } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', type];
-    const { value, onChange, disabled, formItem, placeholder } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, formItem, placeholder } = useFieldController<string>(fieldName, questionItem);
 
     return (
         <Form.Item {...formItem}>

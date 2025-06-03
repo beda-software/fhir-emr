@@ -14,13 +14,13 @@ const ENABLE_WHEN_EXISTS_QUESTIONAIRES: QuestionnaireData[] = [
                 {
                     question: 'q1',
                     operator: 'exists',
-                    answer: { boolean: true },
+                    answerBoolean: true,
                 },
             ],
             qrItem: [
                 {
                     linkId: 'q1',
-                    answer: [{ value: { string: 'test1' } }],
+                    answer: [{ valueString: 'test1' }],
                 },
                 {
                     linkId: 'q2',
@@ -40,13 +40,13 @@ const ENABLE_WHEN_EXISTS_QUESTIONAIRES: QuestionnaireData[] = [
                 {
                     question: 'q1',
                     operator: 'exists',
-                    answer: { boolean: false },
+                    answerBoolean: false,
                 },
             ],
             qrItem: [
                 {
                     linkId: 'q1',
-                    answer: [{ value: { string: 'test2' } }],
+                    answer: [{ valueString: 'test2' }],
                 },
                 {
                     linkId: 'q2',
@@ -62,22 +62,22 @@ const ENABLE_WHEN_EXISTS_QUESTIONAIRES: QuestionnaireData[] = [
                 {
                     question: 'q1',
                     operator: 'exists',
-                    answer: { boolean: true },
+                    answerBoolean: true,
                 },
                 {
                     question: 'q2',
                     operator: 'exists',
-                    answer: { boolean: true },
+                    answerBoolean: true,
                 },
             ],
             qrItem: [
                 {
                     linkId: 'q1',
-                    answer: [{ value: { string: 'test1' } }],
+                    answer: [{ valueString: 'test1' }],
                 },
                 {
                     linkId: 'q2',
-                    answer: [{ value: { string: 'test2' } }],
+                    answer: [{ valueString: 'test2' }],
                 },
                 {
                     linkId: CONTROL_ITEM_LINK_ID,
@@ -93,12 +93,12 @@ const ENABLE_WHEN_EXISTS_QUESTIONAIRES: QuestionnaireData[] = [
                 {
                     question: 'q1',
                     operator: 'exists',
-                    answer: { boolean: true },
+                    answerBoolean: true,
                 },
                 {
                     question: 'q2',
                     operator: 'exists',
-                    answer: { boolean: true },
+                    answerBoolean: true,
                 },
             ],
             qrItem: [
@@ -108,7 +108,7 @@ const ENABLE_WHEN_EXISTS_QUESTIONAIRES: QuestionnaireData[] = [
                 },
                 {
                     linkId: 'q2',
-                    answer: [{ value: { string: 'test2' } }],
+                    answer: [{ valueString: 'test2' }],
                 },
             ],
         }),
@@ -121,22 +121,22 @@ const ENABLE_WHEN_EXISTS_QUESTIONAIRES: QuestionnaireData[] = [
                 {
                     question: 'q1',
                     operator: 'exists',
-                    answer: { boolean: true },
+                    answerBoolean: true,
                 },
                 {
                     question: 'q2',
                     operator: 'exists',
-                    answer: { boolean: false },
+                    answerBoolean: false,
                 },
             ],
             qrItem: [
                 {
                     linkId: 'q1',
-                    answer: [{ value: { Coding: { code: 'asd', display: 'asd' } } }],
+                    answer: [{ valueCoding: { code: 'asd', display: 'asd' } }],
                 },
                 {
                     linkId: 'q2',
-                    answer: [{ value: { Coding: { code: 'test2', display: 'test2' } } }],
+                    answer: [{ valueCoding: { code: 'test2', display: 'test2' } }],
                 },
                 {
                     linkId: CONTROL_ITEM_LINK_ID,

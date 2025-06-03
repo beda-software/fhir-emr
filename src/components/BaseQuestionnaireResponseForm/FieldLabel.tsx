@@ -1,13 +1,12 @@
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd';
 import { useContext } from 'react';
-
-import { QuestionnaireItem } from '@beda.software/aidbox-types';
+import { FCEQuestionnaireItem } from 'sdc-qrf';
 
 import { S } from './BaseQuestionnaireResponseForm.styles';
 import { GroupContext } from './widgets/Group/context';
 
-export function FieldLabel({ questionItem }: { questionItem: QuestionnaireItem }) {
+export function FieldLabel({ questionItem }: { questionItem: FCEQuestionnaireItem }) {
     const { type, text, helpText } = questionItem;
     const { type: groupType } = useContext(GroupContext);
 

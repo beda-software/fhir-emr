@@ -53,5 +53,5 @@ item:
       expression: "%Author.name.first().given.first() + ' ' + %Author.name.first().family"
 meta:
   profile:
-    - https://beda.software/beda-emr-questionnaire
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
 url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/patient-note-create

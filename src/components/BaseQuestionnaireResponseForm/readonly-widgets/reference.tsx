@@ -11,11 +11,12 @@ function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource =
     props: AnswerReferenceProps<R, IR>,
 ) {
     const { fieldController, text, choiceColumn } = useAnswerReference(props);
+    const { value } = fieldController;
 
     return (
         <S.Question className={classNames(s.question, s.row, 'form__question')}>
             <span className={s.questionText}>{text}</span>
-            <span className={s.answer}>{getArrayDisplay(fieldController.value, choiceColumn) || '-'}</span>
+            <span className={s.answer}>{getArrayDisplay(value, choiceColumn) || '-'}</span>
         </S.Question>
     );
 }

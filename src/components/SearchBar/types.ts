@@ -1,12 +1,5 @@
-import { Coding } from 'fhir/r4b';
-
-import {
-    Expression,
-    Resource,
-    QuestionnaireItemChoiceColumn,
-    ValueSet,
-    AidboxReference,
-} from '@beda.software/aidbox-types';
+import { Coding, Expression, Reference, ValueSet } from 'fhir/r4b';
+import { FCEQuestionnaireItemChoiceColumn } from 'sdc-qrf';
 
 import { ValueSetOption } from 'src/services';
 import { LoadResourceOption } from 'src/services/questionnaire';
@@ -35,10 +28,12 @@ type SearchBarColumnBase = {
 export type SearchBarStringColumn = SearchBarColumnBase & {
     type: SearchBarColumnType.STRING;
     placeholder: string;
+    defaultValue?: string;
 };
 export type SearchBarDateColumn = SearchBarColumnBase & {
     type: SearchBarColumnType.DATE;
     placeholder: [string, string];
+    defaultValue?: DateColumnFilterValue;
 };
 export type SearchBarSingleDateColumn = SearchBarColumnBase & {
     type: SearchBarColumnType.SINGLEDATE;
@@ -48,9 +43,9 @@ export type SearchBarSingleDateColumn = SearchBarColumnBase & {
 export type SearchBarReferenceColumn = SearchBarColumnBase & {
     type: SearchBarColumnType.REFERENCE;
     expression: Expression['expression'];
-    path: QuestionnaireItemChoiceColumn['path'];
+    path: FCEQuestionnaireItemChoiceColumn['path'];
     placeholder: string;
-    defaultValue?: AidboxReference;
+    defaultValue?: Reference;
 };
 export type SearchBarChoiceColumn = SearchBarColumnBase & {
     type: SearchBarColumnType.CHOICE;
@@ -121,7 +116,7 @@ export interface SingleDateTypeColumnFilterValue {
 }
 export interface ReferenceTypeColumnFilterValue {
     column: SearchBarReferenceColumn;
-    value?: LoadResourceOption<Resource> | null;
+    value?: LoadResourceOption | null;
 }
 export interface ChoiceTypeColumnFilterValue {
     column: SearchBarChoiceColumn;

@@ -1,40 +1,26 @@
-import { getChecker } from 'sdc-qrf';
-import type {
-    QuestionnaireItemEnableWhenAnswer,
-    QuestionnaireItemAnswerOption,
-    QuestionnaireItemEnableWhen,
-} from 'shared/src/contrib/aidbox';
+import { QuestionnaireItemEnableWhen } from 'fhir/r4b';
+import { AnswerValue, FormAnswerItems, getAnswerValues, getChecker, toAnswerValue } from 'sdc-qrf';
 import * as yup from 'yup';
 
-function getAnswerOptionsValues(answerOptionArray: QuestionnaireItemAnswerOption[]): Array<{ value: any }> {
-    return answerOptionArray.reduce<Array<{ value: any }>>((acc, option) => {
-        if (option?.value === undefined) {
-            return acc;
-        }
-
-        return [...acc, { value: option.value }];
-    }, []);
-}
-
 interface IsEnableWhenItemSucceedProps {
-    answerOptionArray: QuestionnaireItemAnswerOption[] | undefined;
-    answer: QuestionnaireItemEnableWhenAnswer | undefined;
-    operator: string;
+    formAnswers: FormAnswerItems[] | undefined;
+    answer: AnswerValue;
+    operator: QuestionnaireItemEnableWhen['operator'];
 }
 function isEnableWhenItemSucceed(props: IsEnableWhenItemSucceedProps): boolean {
-    const { answerOptionArray, answer, operator } = props;
+    const { formAnswers, answer, operator } = props;
 
-    if (!answerOptionArray || answerOptionArray.length === 0 || !answer) {
+    if (!formAnswers || formAnswers.length === 0) {
         return false;
     }
 
-    const answerOptionsWithValues = getAnswerOptionsValues(answerOptionArray);
-    if (answerOptionsWithValues.length === 0) {
+    const formAnswerValues = getAnswerValues(formAnswers);
+    if (formAnswerValues.length === 0) {
         return false;
     }
 
     const checker = getChecker(operator);
-    return checker(answerOptionsWithValues, answer);
+    return checker(formAnswerValues, answer);
 }
 
 interface GetEnableWhenItemSchemaProps extends GetQuestionItemEnableWhenSchemaProps {
@@ -44,15 +30,16 @@ interface GetEnableWhenItemSchemaProps extends GetQuestionItemEnableWhenSchemaPr
 function getEnableWhenItemsSchema(props: GetEnableWhenItemSchemaProps): yup.AnySchema {
     const { enableWhenItems, enableBehavior, currentIndex, schema, prevConditionResults } = props;
 
-    const { question, operator, answer } = enableWhenItems[currentIndex]!;
+    const { question, operator, ...enableWhen } = enableWhenItems[currentIndex]!;
+    const answer = toAnswerValue(enableWhen, 'answer')!;
 
     const isLastItem = currentIndex === enableWhenItems.length - 1;
 
     const conditionResults = prevConditionResults ? [...prevConditionResults] : [];
     return yup.mixed().when(question, {
-        is: (answerOptionArray: QuestionnaireItemAnswerOption[]) => {
+        is: (formAnswers: FormAnswerItems[]) => {
             const isConditionSatisfied = isEnableWhenItemSucceed({
-                answerOptionArray,
+                formAnswers,
                 answer,
                 operator,
             });
