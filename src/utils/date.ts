@@ -1,7 +1,7 @@
 import { Period } from 'fhir/r4b';
 import _ from 'lodash';
 
-import { parseFHIRDate, parseFHIRDateTime } from '@beda.software/fhir-react';
+import { parseFHIRDate, parseFHIRDateTime, parseFHIRTime } from '@beda.software/fhir-react';
 
 export let humanDate = 'DD MMM YYYY';
 export let humanDateYearMonth = 'MMM YYYY';
@@ -36,6 +36,13 @@ export const formatHumanDateTime = (date?: string) => {
     }
 
     return parseFHIRDateTime(date).format(humanDateTime);
+};
+export const formatHumanTime = (date?: string) => {
+    if (!date) {
+        return '';
+    }
+
+    return parseFHIRTime(date).format(humanTime);
 };
 
 export const formatHumanDate = (date?: string) => {

@@ -70,6 +70,7 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
                     }}
                     questionItemComponents={{
                         text: QuestionText,
+                        time: QuestionDateTime,
                         string: QuestionText,
                         integer: QuestionInteger,
                         decimal: QuestionDecimal,
