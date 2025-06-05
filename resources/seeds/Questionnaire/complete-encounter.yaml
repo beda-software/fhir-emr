@@ -25,7 +25,7 @@ contained:
       entry:
           - request:
                 method: GET
-                url: /Patient?_id={{%CurrentEncounter.subject.id}}
+                url: /Patient?_id={{%CurrentEncounter.subject.reference.split('/')[1]}}
     - resourceType: Bundle
       id: CurrentChargeItemDefinitionBundle
       type: transaction
