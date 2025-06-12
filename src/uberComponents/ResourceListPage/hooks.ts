@@ -10,16 +10,10 @@ import { service } from 'src/services/fhir';
 import { useDebounce } from 'src/utils/debounce';
 import { RecordType } from './types';
 
-function getOrganizationChildrenResources(resource: Organization, bundle: Bundle): Organization[] {
-    return (bundle.entry ?? [])
-        .map((entry) => entry.resource as Organization)
-        .filter((resource) => resource.partOf === `Organization/${resource.id}`);
-}
-
 export function useResourceListPage<R extends Resource>(
     resourceType: R['resourceType'],
     extractPrimaryResources: ((bundle: Bundle) => R[]) | undefined,
-    extractChildrenResources: (resource: R, bundle: Bundle) => R[] | undefined,
+    extractChildrenResources: ((resource: R, bundle: Bundle) => R[]) | undefined,
     filterValues: ColumnFilterValue[],
     defaultSearchParams: SearchParams,
 ) {
@@ -80,15 +74,16 @@ export function useResourceListPage<R extends Resource>(
         return {
             resource,
             bundle,
-            ...(getChildrenResources
+            ...(extractChildrenResources
                 ? {
-                      children: getChildrenResources(resource, bundle).map((subResource) =>
+                      children: extractChildrenResources(resource, bundle).map((subResource) =>
                           makeRecord(subResource, bundle),
                       ),
                   }
                 : {}),
         };
     }
+
     const recordResponse = mapSuccess(resourceResponse, (bundle) =>
         extractPrimaryResourcesMemoized(bundle as Bundle).map((resource) => makeRecord(resource, bundle as Bundle)),
     );

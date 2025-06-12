@@ -29,6 +29,16 @@ export interface ResourceListProps<R extends Resource, Extra = unknown, Link = s
      */
     extractPrimaryResources?: (bundle: Bundle) => R[];
 
+    /**
+     * Optional custom children resources extractor, might be used when a resource of the row
+     * has descendant records and they shuold be represented as a tree 
+     * e.g. Organization resource has another organization as a descendant via partOf
+     * so the parent record has a descendant in the children key
+     *
+     * Default - extract all resources matching `resourceType`
+     */
+    extractChildrenResources?: (resource: R, bundle: Bundle) => R[]
+
     /* Default search params */
     searchParams?: SearchParams;
 
