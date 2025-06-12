@@ -285,7 +285,7 @@ msgstr ""
 msgid "Choose status"
 msgstr ""
 
-#: src/containers/PatientDetails/PatientDocument/index.tsx:72
+#: src/containers/PatientDetails/PatientDocument/index.tsx:86
 msgid "Clear draft"
 msgstr ""
 
@@ -527,20 +527,24 @@ msgstr ""
 msgid "Draft"
 msgstr "Черновик"
 
-#: src/containers/PatientDetails/PatientDocument/index.tsx:57
+#: src/containers/PatientDetails/PatientDocument/index.tsx:69
 msgid "Draft from {0} was successfully loaded"
 msgstr ""
 
 #: src/containers/PatientDetails/PatientDocument/usePatientDocument.ts:191
-msgid "Draft from {draftLastUpdateDate} was successfully loaded"
-msgstr ""
+#~ msgid "Draft from {draftLastUpdateDate} was successfully loaded"
+#~ msgstr ""
 
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:55
 msgid "Draft successfully deleted"
 msgstr ""
 
 #: src/components/QuestionnaireResponseForm/utils.tsx:43
-msgid "Draft successfully saved"
+#~ msgid "Draft successfully saved"
+#~ msgstr ""
+
+#: src/containers/PatientDetails/PatientDocument/index.tsx:51
+msgid "Draft was successfully saved at {0}"
 msgstr ""
 
 #: src/containers/PatientDetails/PatientWearables/index.tsx:27
@@ -634,7 +638,7 @@ msgstr ""
 msgid "Error deleting a draft"
 msgstr ""
 
-#: src/components/QuestionnaireResponseForm/utils.tsx:40
+#: src/components/QuestionnaireResponseForm/utils.tsx:39
 msgid "Error saving a draft:"
 msgstr ""
 
@@ -696,7 +700,7 @@ msgstr ""
 msgid "First name"
 msgstr ""
 
-#: src/components/QuestionnaireResponseForm/utils.tsx:94
+#: src/components/QuestionnaireResponseForm/utils.tsx:92
 msgid "Form successfully saved"
 msgstr ""
 
@@ -1229,7 +1233,7 @@ msgstr ""
 msgid "Resource id is not provided"
 msgstr ""
 
-#: src/components/QuestionnaireResponseForm/utils.tsx:52
+#: src/components/QuestionnaireResponseForm/utils.tsx:50
 msgid "Resource id not provided"
 msgstr ""
 
