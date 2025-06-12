@@ -1,16 +1,18 @@
 import { t } from '@lingui/macro';
-import { notification } from 'antd';
-import { QuestionnaireResponse, Resource } from 'fhir/r4b';
+import { message, notification } from 'antd';
+import { QuestionnaireResponse, Reference, Resource } from 'fhir/r4b';
+import _ from 'lodash';
 import moment from 'moment';
-import { FormItems, mapFormToResponse, mapResponseToForm, QuestionnaireResponseFormData } from 'sdc-qrf';
+import { FormItems, mapFormToResponse, QuestionnaireResponseFormData } from 'sdc-qrf';
 
-import { formatError, formatFHIRDateTime } from '@beda.software/fhir-react';
-import { failure, isFailure, isSuccess, RemoteDataResult, success } from '@beda.software/remote-data';
+import { formatError, formatFHIRDateTime, getReference, isReference } from '@beda.software/fhir-react';
+import { failure, isFailure, isSuccess, RemoteDataResult } from '@beda.software/remote-data';
 
 import {
     QuestionnaireResponseFormSaveResponse,
     getQuestionnaireResponseDraftServices,
     QuestionnaireResponseDraftService,
+    QuestionnaireResponseFormSaveResponseFailure,
 } from 'src/hooks/questionnaire-response-form-data';
 
 export const saveQuestionnaireResponseDraft = async (
@@ -38,24 +40,8 @@ export const saveQuestionnaireResponseDraft = async (
         console.error(t`Error saving a draft: `, response.error);
     }
 
+    message.success(t`Draft successfully saved`);
     return response;
-};
-
-export const loadQuestionnaireResponseDraft = (
-    id: Resource['id'],
-    formData: QuestionnaireResponseFormData,
-    qrDraftServiceType: QuestionnaireResponseDraftService,
-): RemoteDataResult<QuestionnaireResponse> => {
-    const draftQR = getQuestionnaireResponseDraftServices(qrDraftServiceType).loadService(id);
-
-    if (!isSuccess(draftQR)) {
-        return draftQR;
-    }
-
-    formData.context.questionnaireResponse = draftQR.data;
-    formData.formValues = mapResponseToForm(formData.context.questionnaireResponse, formData.context.questionnaire);
-
-    return success(draftQR.data);
 };
 
 export const deleteQuestionnaireResponseDraft = async (
@@ -70,9 +56,9 @@ export const deleteQuestionnaireResponseDraft = async (
 };
 
 export function onFormResponse(props: {
-    response: RemoteDataResult<QuestionnaireResponseFormSaveResponse>;
+    response: RemoteDataResult<QuestionnaireResponseFormSaveResponse, QuestionnaireResponseFormSaveResponseFailure>;
     onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
-    onFailure?: (error: any) => void;
+    onFailure?: (error: QuestionnaireResponseFormSaveResponseFailure) => void;
 }) {
     const { response, onSuccess, onFailure } = props;
 
@@ -116,9 +102,37 @@ export function onFormResponse(props: {
             if (response.error.extractedError) {
                 notification.error({ message: formatError(response.error.extractedError) });
             }
-            if (onSuccess && response.error.questionnaireResponse) {
-                onSuccess(response.error.questionnaireResponse);
-            }
         }
     }
+}
+
+export function convertToReference(resource?: Resource | Reference | string) {
+    if (!resource) {
+        return undefined;
+    }
+
+    if (typeof resource === 'string') {
+        return { reference: resource };
+    }
+
+    if (isReference(resource)) {
+        return resource;
+    }
+
+    return getReference(resource);
+}
+
+export function getQuestionnaireResponseDraftId(props: {
+    subject?: Resource | Reference | string;
+    questionnaireId?: Resource['id'];
+    questionnaireResponseId?: Resource['id'];
+}) {
+    const { subject, questionnaireId, questionnaireResponseId } = props;
+
+    if (!questionnaireResponseId) {
+        const subjectRef = convertToReference(subject);
+        return subjectRef?.reference && questionnaireId ? `${subjectRef?.reference}/${questionnaireId}` : undefined;
+    }
+
+    return questionnaireResponseId;
 }

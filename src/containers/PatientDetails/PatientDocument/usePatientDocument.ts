@@ -1,3 +1,5 @@
+import { t } from '@lingui/macro';
+import { message } from 'antd';
 import {
     Bundle,
     Communication,
@@ -10,34 +12,37 @@ import {
     Provenance,
     QuestionnaireResponse,
     Reference,
+    Resource,
 } from 'fhir/r4b';
 import _ from 'lodash';
 import { useNavigate } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
-import { getReference, useService, WithId } from '@beda.software/fhir-react';
+import { getReference, ServiceManager, useService, WithId } from '@beda.software/fhir-react';
 import {
-    failure,
     isSuccess,
     mapSuccess,
     RemoteData,
+    failure,
     RemoteDataResult,
     resolveMap,
     sequenceMap,
     success,
 } from '@beda.software/remote-data';
 
-import { onFormResponse } from 'src/components/QuestionnaireResponseForm';
+import { getQuestionnaireResponseDraftId, onFormResponse } from 'src/components/QuestionnaireResponseForm';
 import {
     handleFormDataSave,
     loadQuestionnaireResponseFormData,
     questionnaireIdLoader,
+    getQuestionnaireResponseDraftServices,
     QuestionnaireResponseFormProps,
     QuestionnaireResponseFormSaveResponse,
+    QuestionnaireResponseDraftService,
 } from 'src/hooks/questionnaire-response-form-data';
 import { getFHIRResource, getFHIRResources } from 'src/services';
 import { getProvenanceByEntity } from 'src/services/provenance';
-import { compileAsFirst } from 'src/utils';
+import { compileAsFirst, formatHumanDateTime } from 'src/utils';
 
 export interface Props {
     patient: Patient;
@@ -47,6 +52,7 @@ export interface Props {
     encounterId?: string;
     launchContextParameters?: ParametersParameter[];
     onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
+    qrDraftServiceType?: QuestionnaireResponseDraftService;
 }
 
 async function onFormSubmit(
@@ -143,6 +149,8 @@ export interface PatientDocumentData {
     formData: QuestionnaireResponseFormData;
     onSubmit: (formData: QuestionnaireResponseFormData) => Promise<void>;
     provenance?: WithId<Provenance>;
+    draftQR?: QuestionnaireResponse;
+    draftId?: Resource['id'];
 }
 
 interface Result {
@@ -154,18 +162,33 @@ const getSourceRef = compileAsFirst<Bundle, Reference>("Bundle.entry.resource.en
 
 export function usePatientDocument(props: Props): {
     response: RemoteData<Result>;
+    manager: ServiceManager<PatientDocumentData, any>;
     questionnaireId: string;
 } {
-    const { questionnaireResponse, questionnaireId, onSuccess } = props;
+    const { questionnaireResponse, questionnaireId, onSuccess, qrDraftServiceType = 'local' } = props;
     const navigate = useNavigate();
 
-    const [response] = useService(async () => {
+    const [response, manager] = useService<PatientDocumentData>(async () => {
         let provenanceResponse: RemoteDataResult<WithId<Provenance>[]> = success([]);
 
         if (questionnaireResponse && questionnaireResponse.id) {
             const uri = `${questionnaireResponse.resourceType}/${questionnaireResponse.id}`;
 
             provenanceResponse = await getProvenanceByEntity(uri);
+        }
+
+        const questionnaireId = props.questionnaireId;
+
+        const draftId = getQuestionnaireResponseDraftId({
+            subject: `${props.patient.resourceType}/${props.patient.id}`,
+            questionnaireId,
+            questionnaireResponseId: questionnaireResponse?.id,
+        });
+
+        const draftQRRD = getQuestionnaireResponseDraftServices(qrDraftServiceType).loadService(draftId);
+        if (isSuccess(draftQRRD)) {
+            const draftLastUpdateDate = formatHumanDateTime(draftQRRD.data.authored);
+            message.success(t`Draft from ${draftLastUpdateDate} was successfully loaded`);
         }
 
         if (isSuccess(provenanceResponse)) {
@@ -182,6 +205,7 @@ export function usePatientDocument(props: Props): {
 
             const formInitialParams = prepareFormInitialParams({
                 ...props,
+                ...(isSuccess(draftQRRD) ? { questionnaireResponse: draftQRRD.data } : {}),
                 provenance: lastProvenance,
                 provenanceBundle: provenanceBundle,
             });
@@ -202,6 +226,8 @@ export function usePatientDocument(props: Props): {
                         formData,
                         onSubmit,
                         provenance: lastProvenance,
+                        draftQR: isSuccess(draftQRRD) ? draftQRRD.data : undefined,
+                        draftId,
                     };
                 },
             );
@@ -226,5 +252,5 @@ export function usePatientDocument(props: Props): {
         return success(undefined);
     });
 
-    return { response: sequenceMap({ source: sourceResponse, document: response }), questionnaireId };
+    return { response: sequenceMap({ source: sourceResponse, document: response }), manager, questionnaireId };
 }
