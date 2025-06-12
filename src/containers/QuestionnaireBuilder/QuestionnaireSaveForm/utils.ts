@@ -7,6 +7,9 @@ const launchContextUrl = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-que
 
 const patientLaunch: Extension = {
     url: launchContextUrl,
+    "type": [
+        "Patient"
+    ],
     extension: [
         {
             url: 'name',
@@ -14,15 +17,12 @@ const patientLaunch: Extension = {
                 code: 'Patient',
             },
         },
-        {
-            url: 'type',
-            valueCode: 'Patient',
-        },
     ],
-};
+} as any;
 
 const encounterLaunch: Extension = {
     url: launchContextUrl,
+    "type": ["Encounter"],
     extension: [
         {
             url: 'name',
@@ -30,12 +30,8 @@ const encounterLaunch: Extension = {
                 code: 'Encounter',
             },
         },
-        {
-            url: 'type',
-            valueCode: 'Encounter',
-        },
     ],
-};
+} as any;
 
 const patientIdQuestion: QuestionnaireItem = {
     text: 'PatientId',
