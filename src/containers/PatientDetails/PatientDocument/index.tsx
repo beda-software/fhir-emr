@@ -1,14 +1,16 @@
-import { Splitter } from 'antd';
+import { t } from '@lingui/macro';
+import { Alert, Button, Splitter } from 'antd';
 import { Organization, ParametersParameter, Patient, Person, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
 
-import { Text } from 'src/components';
+import { Text, deleteQuestionnaireResponseDraft } from 'src/components';
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { AnxietyScore, DepressionScore } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/score';
 import { Spinner } from 'src/components/Spinner';
 import { QuestionnaireResponseDraftService, QuestionnaireResponseFormSaveResponse } from 'src/hooks';
+import { formatHumanDateTime } from 'src/utils';
 
 import s from './PatientDocument.module.scss';
 import { S } from './PatientDocument.styles';
@@ -33,7 +35,7 @@ export function PatientDocument(props: PatientDocumentProps) {
     const params = useParams<{ questionnaireId: string; encounterId?: string }>();
     const encounterId = props.encounterId || params.encounterId;
     const questionnaireId = props.questionnaireId || params.questionnaireId!;
-    const { response } = usePatientDocument({
+    const { response, manager } = usePatientDocument({
         ...props,
         questionnaireId,
         encounterId,
@@ -44,11 +46,35 @@ export function PatientDocument(props: PatientDocumentProps) {
         <div className={s.container}>
             <S.Content>
                 <RenderRemoteData remoteData={response} renderLoading={Spinner}>
-                    {({ document: { formData, onSubmit, provenance }, source }) => {
+                    {({ document: { formData, onSubmit, provenance, draftQR, draftId }, source }) => {
                         if (typeof source === 'undefined') {
                             return (
                                 <>
                                     <PatientDocumentHeader formData={formData} questionnaireId={questionnaireId} />
+                                    {!draftQR ? null : (
+                                        <Alert
+                                            style={{ marginBottom: '20px' }}
+                                            message={t`Draft from ${formatHumanDateTime(
+                                                draftQR?.authored,
+                                            )} was successfully loaded`}
+                                            type="info"
+                                            showIcon
+                                            action={
+                                                <Button
+                                                    onClick={() => {
+                                                        deleteQuestionnaireResponseDraft(draftId, qrDraftServiceType);
+                                                        manager.reload();
+                                                    }}
+                                                    size="small"
+                                                    danger
+                                                    ghost
+                                                >
+                                                    {t`Clear draft`}
+                                                </Button>
+                                            }
+                                            closable
+                                        />
+                                    )}
                                     <BaseQuestionnaireResponseForm
                                         formData={formData}
                                         onSubmit={onSubmit}
