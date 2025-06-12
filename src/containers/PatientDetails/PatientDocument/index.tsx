@@ -1,9 +1,11 @@
 import { t } from '@lingui/macro';
 import { Alert, Button, Splitter } from 'antd';
 import { Organization, ParametersParameter, Patient, Person, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
+import { RemoteData, isSuccess } from '@beda.software/remote-data';
 
 import { Text, deleteQuestionnaireResponseDraft } from 'src/components';
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
@@ -41,6 +43,14 @@ export function PatientDocument(props: PatientDocumentProps) {
         encounterId,
     });
     const navigate = useNavigate();
+    const [draftInfoMessage, setDraftInfoMessage] = useState<string>();
+
+    function onDraftSaved(draftQRRD: RemoteData<QuestionnaireResponse>) {
+        if (isSuccess(draftQRRD)) {
+            const draftQR = draftQRRD.data;
+            setDraftInfoMessage(t`Draft was successfully saved at ${formatHumanDateTime(draftQR?.authored)}`);
+        }
+    }
 
     return (
         <div className={s.container}>
@@ -51,18 +61,22 @@ export function PatientDocument(props: PatientDocumentProps) {
                             return (
                                 <>
                                     <PatientDocumentHeader formData={formData} questionnaireId={questionnaireId} />
-                                    {!draftQR ? null : (
+                                    {!draftQR && !draftInfoMessage ? null : (
                                         <Alert
                                             style={{ marginBottom: '20px' }}
-                                            message={t`Draft from ${formatHumanDateTime(
-                                                draftQR?.authored,
-                                            )} was successfully loaded`}
+                                            message={
+                                                draftInfoMessage ??
+                                                t`Draft from ${formatHumanDateTime(
+                                                    draftQR?.authored,
+                                                )} was successfully loaded`
+                                            }
                                             type="info"
                                             showIcon
                                             action={
                                                 <Button
                                                     onClick={() => {
                                                         deleteQuestionnaireResponseDraft(draftId, qrDraftServiceType);
+                                                        setDraftInfoMessage(undefined);
                                                         manager.reload();
                                                     }}
                                                     size="small"
@@ -86,6 +100,7 @@ export function PatientDocument(props: PatientDocumentProps) {
                                         saveButtonTitle={'Complete'}
                                         autoSave={autosave !== undefined ? autosave : !provenance}
                                         qrDraftServiceType={qrDraftServiceType}
+                                        onDraftSaved={onDraftSaved}
                                     />
                                 </>
                             );

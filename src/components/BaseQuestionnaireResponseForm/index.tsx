@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import classNames from 'classnames';
+import { QuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
 import React, { ComponentType, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -21,6 +22,8 @@ import {
 import * as yup from 'yup';
 
 import 'react-phone-input-2/lib/style.css';
+
+import { RemoteData } from '@beda.software/remote-data';
 
 import {
     deleteQuestionnaireResponseDraft,
@@ -52,6 +55,7 @@ export interface BaseQuestionnaireResponseFormProps {
 
     autoSave?: boolean;
     qrDraftServiceType?: QuestionnaireResponseDraftService;
+    onDraftSaved?: (draftQRRD: RemoteData<QuestionnaireResponse>) => void;
 
     ItemWrapper?: ComponentType<{
         item: QuestionItemProps;
@@ -78,6 +82,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         GroupWrapper,
         autoSave,
         qrDraftServiceType = 'local',
+        onDraftSaved,
         onCancel,
     } = props;
 
@@ -114,7 +119,13 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                 return;
             }
             if (!_.isEqual(currentFormValues, previousFormValuesRef.current)) {
-                await saveQuestionnaireResponseDraft(draftId, formData, currentFormValues, qrDraftServiceType);
+                const draftQRRD = await saveQuestionnaireResponseDraft(
+                    draftId,
+                    formData,
+                    currentFormValues,
+                    qrDraftServiceType,
+                );
+                onDraftSaved && onDraftSaved(draftQRRD);
 
                 previousFormValuesRef.current = _.cloneDeep(currentFormValues);
             }

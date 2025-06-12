@@ -1,7 +1,6 @@
 import { t } from '@lingui/macro';
-import { message, notification } from 'antd';
+import { notification } from 'antd';
 import { QuestionnaireResponse, Reference, Resource } from 'fhir/r4b';
-import _ from 'lodash';
 import moment from 'moment';
 import { FormItems, mapFormToResponse, QuestionnaireResponseFormData } from 'sdc-qrf';
 
@@ -40,7 +39,6 @@ export const saveQuestionnaireResponseDraft = async (
         console.error(t`Error saving a draft: `, response.error);
     }
 
-    message.success(t`Draft successfully saved`);
     return response;
 };
 
