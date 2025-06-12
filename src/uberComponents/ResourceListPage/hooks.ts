@@ -8,6 +8,7 @@ import { ColumnFilterValue } from 'src/components/SearchBar/types';
 import { getSearchBarColumnFilterValue } from 'src/components/SearchBar/utils';
 import { service } from 'src/services/fhir';
 import { useDebounce } from 'src/utils/debounce';
+
 import { RecordType } from './types';
 
 export function useResourceListPage<R extends Resource>(
