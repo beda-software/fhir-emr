@@ -1,5 +1,5 @@
-import { Bundle, Organization, Resource } from 'fhir/r4b';
-import { useEffect, useMemo, useState } from 'react';
+import { Bundle, Resource } from 'fhir/r4b';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { SearchParams, usePager } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess } from '@beda.software/remote-data';
@@ -70,17 +70,20 @@ export function useResourceListPage<R extends Resource>(
         return extractPrimaryResources ?? extractPrimaryResourcesFactory(resourceType);
     }, [resourceType, extractPrimaryResources]);
 
-    function makeRecord(resource: R, bundle: Bundle): RecordType<R> {
-        const childrenResources = extractChildrenResources
-            ? extractChildrenResources(resource, bundle)?.map((subResource) => makeRecord(subResource, bundle))
-            : [];
+    const makeRecord = useCallback(
+        (resource: R, bundle: Bundle): RecordType<R> => {
+            const childrenResources = extractChildrenResources
+                ? extractChildrenResources(resource, bundle)?.map((subResource) => makeRecord(subResource, bundle))
+                : [];
 
-        return {
-            resource,
-            bundle,
-            ...(childrenResources.length ? { children: childrenResources } : {}),
-        };
-    }
+            return {
+                resource,
+                bundle,
+                ...(childrenResources.length ? { children: childrenResources } : {}),
+            };
+        },
+        [extractChildrenResources],
+    );
 
     const recordResponse = mapSuccess(resourceResponse, (bundle) =>
         extractPrimaryResourcesMemoized(bundle as Bundle).map((resource) => makeRecord(resource, bundle as Bundle)),
