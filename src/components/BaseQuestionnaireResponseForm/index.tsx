@@ -277,7 +277,8 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                 >
                     <QuestionnaireResponseFormProvider
                         formValues={formValues}
-                        setFormValues={(values, fieldPath, value) => setValue(fieldPath.join('.'), value)}
+                        // NOTE: setValue as any is required to speed up performance!
+                        setFormValues={(values, fieldPath, value) => (setValue as any)(fieldPath.join('.'), value)}
                         groupItemComponent={groupItemComponent}
                         itemControlGroupItemComponents={itemControlGroupItemComponents}
                         questionItemComponents={questionItemComponents}
