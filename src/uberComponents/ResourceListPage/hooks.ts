@@ -71,22 +71,21 @@ export function useResourceListPage<R extends Resource>(
     }, [resourceType, extractPrimaryResources]);
 
     function makeRecord(resource: R, bundle: Bundle): RecordType<R> {
+        const childrenResources = extractChildrenResources
+            ? extractChildrenResources(resource, bundle)?.map((subResource) => makeRecord(subResource, bundle))
+            : [];
+
         return {
             resource,
             bundle,
-            ...(extractChildrenResources
-                ? {
-                      children: extractChildrenResources(resource, bundle).map((subResource) =>
-                          makeRecord(subResource, bundle),
-                      ),
-                  }
-                : {}),
+            ...(childrenResources.length ? { children: childrenResources } : {}),
         };
     }
 
     const recordResponse = mapSuccess(resourceResponse, (bundle) =>
         extractPrimaryResourcesMemoized(bundle as Bundle).map((resource) => makeRecord(resource, bundle as Bundle)),
     );
+
     const selectedResourcesBundle: Bundle<R> = {
         resourceType: 'Bundle',
         type: 'collection',
