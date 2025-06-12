@@ -53,6 +53,7 @@ export function ResourceListPage<R extends Resource>({
     maxWidth,
     resourceType,
     extractPrimaryResources,
+    extractChildrenResources,
     searchParams,
     getRecordActions,
     getHeaderActions,
@@ -73,7 +74,7 @@ export function ResourceListPage<R extends Resource>({
     );
 
     const { recordResponse, reload, pagination, selectedRowKeys, setSelectedRowKeys, selectedResourcesBundle } =
-        useResourceListPage(resourceType, extractPrimaryResources, columnsFilterValues, searchParams ?? {});
+        useResourceListPage(resourceType, extractPrimaryResources,extractChildrenResources, columnsFilterValues, searchParams ?? {});
 
     const handleTableChange = useCallback(
         (event: TablePaginationConfig) => {

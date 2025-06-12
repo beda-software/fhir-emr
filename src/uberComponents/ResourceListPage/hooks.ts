@@ -1,4 +1,4 @@
-import { Bundle, Resource } from 'fhir/r4b';
+import { Bundle, Organization, Resource } from 'fhir/r4b';
 import { useEffect, useMemo, useState } from 'react';
 
 import { SearchParams, usePager } from '@beda.software/fhir-react';
@@ -8,10 +8,18 @@ import { ColumnFilterValue } from 'src/components/SearchBar/types';
 import { getSearchBarColumnFilterValue } from 'src/components/SearchBar/utils';
 import { service } from 'src/services/fhir';
 import { useDebounce } from 'src/utils/debounce';
+import { RecordType } from './types';
+
+function getOrganizationChildrenResources(resource: Organization, bundle: Bundle): Organization[] {
+    return (bundle.entry ?? [])
+        .map((entry) => entry.resource as Organization)
+        .filter((resource) => resource.partOf === `Organization/${resource.id}`);
+}
 
 export function useResourceListPage<R extends Resource>(
     resourceType: R['resourceType'],
     extractPrimaryResources: ((bundle: Bundle) => R[]) | undefined,
+    extractChildrenResources: (resource: R, bundle: Bundle) => R[] | undefined,
     filterValues: ColumnFilterValue[],
     defaultSearchParams: SearchParams,
 ) {
@@ -68,11 +76,21 @@ export function useResourceListPage<R extends Resource>(
         return extractPrimaryResources ?? extractPrimaryResourcesFactory(resourceType);
     }, [resourceType, extractPrimaryResources]);
 
+    function makeRecord(resource: R, bundle: Bundle): RecordType<R> {
+        return {
+            resource,
+            bundle,
+            ...(getChildrenResources
+                ? {
+                      children: getChildrenResources(resource, bundle).map((subResource) =>
+                          makeRecord(subResource, bundle),
+                      ),
+                  }
+                : {}),
+        };
+    }
     const recordResponse = mapSuccess(resourceResponse, (bundle) =>
-        extractPrimaryResourcesMemoized(bundle as Bundle).map((resource) => ({
-            resource: resource as R,
-            bundle: bundle as Bundle,
-        })),
+        extractPrimaryResourcesMemoized(bundle as Bundle).map((resource) => makeRecord(resource, bundle as Bundle)),
     );
     const selectedResourcesBundle: Bundle<R> = {
         resourceType: 'Bundle',

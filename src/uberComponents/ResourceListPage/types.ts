@@ -4,7 +4,7 @@ import { SearchParams } from '@beda.software/fhir-react';
 
 import { SearchBarColumn } from '../../components/SearchBar/types';
 
-export type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
+export type RecordType<R extends Resource> = { resource: R; bundle: Bundle;children?: RecordType<R>[] };
 
 export interface ReportColumn {
     title: React.ReactNode;
