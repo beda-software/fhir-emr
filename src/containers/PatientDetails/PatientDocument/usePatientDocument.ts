@@ -1,5 +1,3 @@
-import { t } from '@lingui/macro';
-import { message } from 'antd';
 import {
     Bundle,
     Communication,
@@ -42,7 +40,7 @@ import {
 } from 'src/hooks/questionnaire-response-form-data';
 import { getFHIRResource, getFHIRResources } from 'src/services';
 import { getProvenanceByEntity } from 'src/services/provenance';
-import { compileAsFirst, formatHumanDateTime } from 'src/utils';
+import { compileAsFirst } from 'src/utils';
 
 export interface Props {
     patient: Patient;
@@ -186,10 +184,6 @@ export function usePatientDocument(props: Props): {
         });
 
         const draftQRRD = getQuestionnaireResponseDraftServices(qrDraftServiceType).loadService(draftId);
-        if (isSuccess(draftQRRD)) {
-            const draftLastUpdateDate = formatHumanDateTime(draftQRRD.data.authored);
-            message.success(t`Draft from ${draftLastUpdateDate} was successfully loaded`);
-        }
 
         if (isSuccess(provenanceResponse)) {
             const descSortedProvenances = [...provenanceResponse.data].sort((a, b) =>
