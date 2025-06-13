@@ -29,6 +29,7 @@ type ResourceListPageContentProps<R extends Resource> = ResourceListProps<R, Web
 export function ResourceListPageContent<R extends Resource>({
     resourceType,
     extractPrimaryResources,
+    extractChildrenResources,
     searchParams,
     getRecordActions,
     getHeaderActions,
@@ -49,7 +50,13 @@ export function ResourceListPageContent<R extends Resource>({
     );
 
     const { recordResponse, reload, pagination, selectedRowKeys, setSelectedRowKeys, selectedResourcesBundle } =
-        useResourceListPage(resourceType, extractPrimaryResources, columnsFilterValues, searchParams ?? {});
+        useResourceListPage(
+            resourceType,
+            extractPrimaryResources,
+            extractChildrenResources,
+            columnsFilterValues,
+            searchParams ?? {},
+        );
 
     const handleTableChange = useCallback(
         (event: TablePaginationConfig) => {
