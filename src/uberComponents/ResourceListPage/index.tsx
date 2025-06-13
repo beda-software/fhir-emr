@@ -74,7 +74,13 @@ export function ResourceListPage<R extends Resource>({
     );
 
     const { recordResponse, reload, pagination, selectedRowKeys, setSelectedRowKeys, selectedResourcesBundle } =
-        useResourceListPage(resourceType, extractPrimaryResources,extractChildrenResources, columnsFilterValues, searchParams ?? {});
+        useResourceListPage(
+            resourceType,
+            extractPrimaryResources,
+            extractChildrenResources,
+            columnsFilterValues,
+            searchParams ?? {},
+        );
 
     const handleTableChange = useCallback(
         (event: TablePaginationConfig) => {
