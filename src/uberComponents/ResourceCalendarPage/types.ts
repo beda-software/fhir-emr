@@ -3,6 +3,8 @@ import { Resource, Slot } from 'fhir/r4b';
 
 import { SearchParams } from '@beda.software/fhir-react';
 
+import { ColumnFilterValue } from 'src/components/SearchBar/types';
+
 import { WebExtra, QuestionnaireActionType } from '../ResourceListPage/actions';
 import { ResourceListBaseProps } from '../ResourceListPage/types';
 import { TypedFHIRPathExpression } from '../types';
@@ -45,6 +47,7 @@ export type ResourceCalendarPageProps<R extends Resource> = ResourceListBaseProp
         eventColorMapping?: ResourceColorMapping<Slot>;
     };
     calendarOptions?: CalendarOptions;
+    setSelectedFilterValues?: (val: ColumnFilterValue[] | undefined) => void;
 };
 
 export type EventCreateType = {

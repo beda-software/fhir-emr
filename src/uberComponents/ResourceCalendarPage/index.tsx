@@ -27,6 +27,7 @@ export function ResourceCalendarPage<R extends WithId<Resource>>(props: Resource
         event,
         slot,
         calendarOptions,
+        setSelectedFilterValues,
     } = props;
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
         columns: getFilters?.() ?? [],
@@ -42,7 +43,15 @@ export function ResourceCalendarPage<R extends WithId<Resource>>(props: Resource
         defaultEventQuetionnaireActionProps,
         handleSelectedDates,
         selectedDates,
-    } = useCalendarPage(resourceType, extractPrimaryResources, columnsFilterValues, searchParams ?? {}, event, slot);
+    } = useCalendarPage(
+        resourceType,
+        extractPrimaryResources,
+        columnsFilterValues,
+        searchParams ?? {},
+        event,
+        slot,
+        setSelectedFilterValues,
+    );
 
     return (
         <PageContainer

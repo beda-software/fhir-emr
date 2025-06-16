@@ -25,14 +25,16 @@ export function useCalendarPage<R extends WithId<Resource>>(
     defaultSearchParams: SearchParams,
     event: ResourceCalendarPageProps<R>['event'],
     slot: ResourceCalendarPageProps<R>['slot'],
+    setSelectedFilterValues: ResourceCalendarPageProps<R>['setSelectedFilterValues'],
 ) {
     const [selectedDates, setSelectedDates] = useState<SearchParams>(defaultSelectedDates);
-    const { eventSearchParams, slotSearchParams, overallSearchParams } = calculateSearchParams(
+    const { eventSearchParams, slotSearchParams, overallSearchParams } = calculateSearchParams<R>(
         useDebounce(filterValues, 300),
         defaultSearchParams,
         selectedDates,
         event?.searchParamsMapping ?? {},
         slot?.searchParamsMapping ?? {},
+        setSelectedFilterValues,
     );
     const { eventCreate, eventShow, eventEdit, questionnaireActions } = useCalendarEvents<R>(
         event.actions,

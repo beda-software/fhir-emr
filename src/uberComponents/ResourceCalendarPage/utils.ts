@@ -227,13 +227,16 @@ export const defaultSelectedDates = {
     calendarEnd: formatFHIRDate(new Date()),
 };
 
-export function calculateSearchParams(
+export function calculateSearchParams<R extends WithId<Resource>>(
     filterValues: ColumnFilterValue[],
     defaultSearchParams: SearchParams,
     selectedDates: SearchParams,
     eventMapping: SearchParamsMappingType,
     slotMapping: SearchParamsMappingType,
+    setSelectedFilterValues: ResourceCalendarPageProps<R>['setSelectedFilterValues'],
 ) {
+    setSelectedFilterValues?.(filterValues);
+
     const searchBarSearchParams = {
         ...Object.fromEntries(
             filterValues.map((filterValue) => [
