@@ -1,7 +1,7 @@
 id: glucose-test
 resourceType: Questionnaire
 name: glucose-test
-title: Creatinine test
+title: Glucose test
 status: active
 subjectType:
     - Patient

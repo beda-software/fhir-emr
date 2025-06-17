@@ -11,6 +11,7 @@ import {
     QuestionnaireResponseFormSaveResponse,
     getQuestionnaireResponseDraftServices,
     QuestionnaireResponseDraftService,
+    QuestionnaireResponseFormSaveResponseFailure,
 } from 'src/hooks/questionnaire-response-form-data';
 
 export const saveQuestionnaireResponseDraft = async (
@@ -70,9 +71,9 @@ export const deleteQuestionnaireResponseDraft = async (
 };
 
 export function onFormResponse(props: {
-    response: RemoteDataResult<QuestionnaireResponseFormSaveResponse>;
+    response: RemoteDataResult<QuestionnaireResponseFormSaveResponse, QuestionnaireResponseFormSaveResponseFailure>;
     onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
-    onFailure?: (error: any) => void;
+    onFailure?: (error: QuestionnaireResponseFormSaveResponseFailure) => void;
 }) {
     const { response, onSuccess, onFailure } = props;
 
@@ -115,9 +116,6 @@ export function onFormResponse(props: {
         } else {
             if (response.error.extractedError) {
                 notification.error({ message: formatError(response.error.extractedError) });
-            }
-            if (onSuccess && response.error.questionnaireResponse) {
-                onSuccess(response.error.questionnaireResponse);
             }
         }
     }
