@@ -1,5 +1,6 @@
 import { Resource } from 'fhir/r4b';
 import _ from 'lodash';
+import { useCallback } from 'react';
 import { SingleValue, PropsValue } from 'react-select';
 import { ItemContext, parseFhirQueryExpression } from 'sdc-qrf';
 
@@ -14,8 +15,12 @@ import { SearchBarColumnReferenceTypeProps } from '../types';
 export function useReferenceColumn(props: SearchBarColumnReferenceTypeProps) {
     const { columnFilterValue, onChange } = props;
 
-    const getDisplay = (resource: Resource, includedResources: ResourcesMap<any>) =>
-        evaluate(resource, columnFilterValue.column.path!, includedResources)[0];
+    const getDisplay = useCallback(
+        (resource: Resource, includedResources: ResourcesMap<any>) => {
+            return evaluate(resource, columnFilterValue.column.path!, includedResources)[0];
+        },
+        [columnFilterValue.column.path],
+    );
 
     const mockContext: ItemContext = {
         resource: {
