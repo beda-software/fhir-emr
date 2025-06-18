@@ -41,7 +41,7 @@ export interface ResourceListProps<R extends Resource, Extra = unknown, Link = s
     searchParams?: SearchParams;
 
     /* Filter that are displayed in the search bar and inside table columns */
-    getFilters?: () => SearchBarColumn[];
+    getFilters?: (values: Record<string, any>) => SearchBarColumn[];
 
     /**
      * Record actions list that is displayed in the table per record
