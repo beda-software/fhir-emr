@@ -1,11 +1,10 @@
 import { Resource } from 'fhir/r4b';
 import _ from 'lodash';
-import { useCallback } from 'react';
 import { SingleValue, PropsValue } from 'react-select';
 import { ItemContext, parseFhirQueryExpression } from 'sdc-qrf';
 
 import { ResourcesMap } from '@beda.software/fhir-react';
-import { isSuccess } from '@beda.software/remote-data';
+import { isSuccess, buildQueryParams } from '@beda.software/remote-data';
 
 import { LoadResourceOption, loadResourceOptions } from 'src/services/questionnaire';
 import { evaluate } from 'src/utils';
@@ -15,12 +14,8 @@ import { SearchBarColumnReferenceTypeProps } from '../types';
 export function useReferenceColumn(props: SearchBarColumnReferenceTypeProps) {
     const { columnFilterValue, onChange } = props;
 
-    const getDisplay = useCallback(
-        (resource: Resource, includedResources: ResourcesMap<any>) => {
-            return evaluate(resource, columnFilterValue.column.path!, includedResources)[0];
-        },
-        [columnFilterValue.column.path],
-    );
+    const getDisplay = (resource: Resource, includedResources: ResourcesMap<any>) =>
+        evaluate(resource, columnFilterValue.column.path!, includedResources)[0];
 
     const mockContext: ItemContext = {
         resource: {
@@ -62,8 +57,11 @@ export function useReferenceColumn(props: SearchBarColumnReferenceTypeProps) {
         onChange(singleValue ? singleValue : undefined, columnFilterValue.column.id);
     };
 
+    const depsUrl = `${resourceType}?${buildQueryParams(searchParams as any)}`;
+
     return {
         debouncedLoadOptions,
         onOptionChange,
+        depsUrl,
     };
 }
