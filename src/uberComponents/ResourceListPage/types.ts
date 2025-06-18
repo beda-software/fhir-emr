@@ -4,7 +4,7 @@ import { SearchParams } from '@beda.software/fhir-react';
 
 import { SearchBarColumn } from '../../components/SearchBar/types';
 
-export type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
+export type RecordType<R extends Resource> = { resource: R; bundle: Bundle; children?: RecordType<R>[] };
 
 export interface ReportColumn {
     title: React.ReactNode;
@@ -28,6 +28,14 @@ export interface ResourceListProps<R extends Resource, Extra = unknown, Link = s
      * Default - extract all resources matching `resourceType`
      */
     extractPrimaryResources?: (bundle: Bundle) => R[];
+
+    /**
+     * An optional custom child resource extractor can be used when a row's resource
+     * has descendant records that should be represented as a tree.
+     * For example, Organisation resource has another one as a descendant via the 'partOf' property,
+     * so the descendant will be put to 'children' key of the parent record.
+     */
+    extractChildrenResources?: (resource: R, bundle: Bundle) => R[];
 
     /* Default search params */
     searchParams?: SearchParams;
