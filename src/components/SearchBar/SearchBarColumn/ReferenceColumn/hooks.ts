@@ -4,7 +4,7 @@ import { SingleValue, PropsValue } from 'react-select';
 import { ItemContext, parseFhirQueryExpression } from 'sdc-qrf';
 
 import { ResourcesMap } from '@beda.software/fhir-react';
-import { isSuccess } from '@beda.software/remote-data';
+import { buildQueryParams, isSuccess } from '@beda.software/remote-data';
 
 import { LoadResourceOption, loadResourceOptions } from 'src/services/questionnaire';
 import { evaluate } from 'src/utils';
@@ -57,8 +57,11 @@ export function useReferenceColumn(props: SearchBarColumnReferenceTypeProps) {
         onChange(singleValue ? singleValue : undefined, columnFilterValue.column.id);
     };
 
+    const depsUrl = `${resourceType}?${buildQueryParams(searchParams as any)}`;
+
     return {
         debouncedLoadOptions,
         onOptionChange,
+        depsUrl,
     };
 }

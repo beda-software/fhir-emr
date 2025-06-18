@@ -10,7 +10,6 @@ import { isFailure, isLoading, isSuccess, RemoteData } from '@beda.software/remo
 import { PageContainer } from 'src/components/BaseLayout/PageContainer';
 import { Report } from 'src/components/Report';
 import { SearchBar } from 'src/components/SearchBar';
-import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { isTableFilter } from 'src/components/SearchBar/utils';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
@@ -31,7 +30,7 @@ import {
 } from './actions';
 export { navigationAction, customAction, questionnaireAction } from './actions';
 import { BatchActions } from './BatchActions';
-import { useResourceListPage } from './hooks';
+import { useResourceListPage, useSearchBarForGenericFilters } from './hooks';
 import { S } from './styles';
 import { ResourceListProps, ReportColumn, TableManager } from './types';
 
@@ -63,11 +62,7 @@ export function ResourceListPage<R extends Resource>({
     defaultLaunchContext,
     getReportColumns,
 }: ResourceListPageProps<R>) {
-    const allFilters = getFilters?.() ?? [];
-
-    const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
-        columns: allFilters ?? [],
-    });
+    const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBarForGenericFilters(getFilters);
     const tableFilterValues = useMemo(
         () => columnsFilterValues.filter((filter) => isTableFilter(filter)),
         [JSON.stringify(columnsFilterValues)],
