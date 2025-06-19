@@ -11,7 +11,7 @@ export function ReferenceColumn(props: SearchBarColumnReferenceTypeProps) {
 
     return (
         <AsyncSelect
-            key={`search-bar-column-reference-${depsUrl}`}
+            key={depsUrl}
             onChange={onOptionChange}
             value={columnFilterValue.value}
             loadOptions={debouncedLoadOptions}

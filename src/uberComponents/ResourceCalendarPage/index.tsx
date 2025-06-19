@@ -6,7 +6,7 @@ import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
 import { PageContainer } from 'src/components/BaseLayout/PageContainer';
 import { Calendar } from 'src/components/Calendar';
 import { SearchBar } from 'src/components/SearchBar';
-import { useSearchBar } from 'src/components/SearchBar/hooks';
+import { useSearchBarForGenericFilters } from 'src/uberComponents/ResourceListPage/hooks.ts';
 
 import { CalendarEventQuestionnaireAction } from './actions';
 import { EventContent } from './EventContent';
@@ -29,9 +29,7 @@ export function ResourceCalendarPage<R extends WithId<Resource>>(props: Resource
         calendarOptions,
         setSelectedFilterValues,
     } = props;
-    const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
-        columns: getFilters?.() ?? [],
-    });
+    const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBarForGenericFilters(getFilters);
 
     const {
         reload,

@@ -4,7 +4,7 @@ import { SingleValue, PropsValue } from 'react-select';
 import { ItemContext, parseFhirQueryExpression } from 'sdc-qrf';
 
 import { ResourcesMap } from '@beda.software/fhir-react';
-import { isSuccess, buildQueryParams } from '@beda.software/remote-data';
+import { buildQueryParams, isSuccess } from '@beda.software/remote-data';
 
 import { LoadResourceOption, loadResourceOptions } from 'src/services/questionnaire';
 import { evaluate } from 'src/utils';

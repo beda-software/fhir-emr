@@ -41,7 +41,7 @@ export interface ResourceListBaseProps<R extends Resource, Extra = unknown> {
     searchParams?: SearchParams;
 
     /* Filter that are displayed in the search bar and inside table columns */
-    getFilters?: () => SearchBarColumn[];
+    getFilters?: (values: Record<string, any>) => SearchBarColumn[];
 
     /**
      * Header actions (for example, new organization)
