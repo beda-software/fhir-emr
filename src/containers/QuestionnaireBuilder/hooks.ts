@@ -2,7 +2,7 @@ import { t } from '@lingui/macro';
 import { notification } from 'antd';
 import { Questionnaire as FHIRQuestionnaire, QuestionnaireItem as FHIRQuestionnaireItem } from 'fhir/r4b';
 import _ from 'lodash';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fromFirstClassExtension, GroupItemProps, QuestionItemProps, toFirstClassExtension } from 'sdc-qrf';
 
@@ -12,8 +12,15 @@ import { RemoteData, isFailure, isSuccess, loading, notAsked, success } from '@b
 import { getFHIRResource, saveFHIRResource } from 'src/services/fhir';
 import { generateQuestionnaire, generateQuestionnaireFromFile } from 'src/services/questionnaire-builder';
 
-import { AIFormBuilderInitialQuestionnaireContext } from './context';
 import { deleteQuestionnaireItem, getQuestionPath, moveQuestionnaireItem } from './utils';
+
+const initialQuestionnaire: FHIRQuestionnaire = {
+    resourceType: 'Questionnaire',
+    status: 'draft',
+    meta: {
+        profile: ['https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire'],
+    },
+};
 
 export interface OnItemDrag {
     dropTargetItem: QuestionItemProps | GroupItemProps;
@@ -49,8 +56,6 @@ export function useQuestionnaireBuilder() {
     const [editHistory, setEditHistory] = useState<Record<string, HistoryItem>>({});
     const [selectedPrompt, setSelectedPrompt] = useState<string | undefined>(undefined);
 
-    const initialQuestionnaire = useContext(AIFormBuilderInitialQuestionnaireContext);
-
     useEffect(() => {
         (async () => {
             setResponse(loading);
@@ -64,7 +69,7 @@ export function useQuestionnaireBuilder() {
             }
             setResponse(success(initialQuestionnaire));
         })();
-    }, [initialQuestionnaire, params.id]);
+    }, [params.id]);
 
     const onSaveQuestionnaire = async (resource: FHIRQuestionnaire) => {
         const saveResponse = await saveFHIRResource(cleanUpQuestionnaire(resource));
@@ -137,7 +142,7 @@ export function useQuestionnaireBuilder() {
                 }
             }
         },
-        [initialQuestionnaire, response],
+        [response],
     );
 
     const onItemChange = useCallback(
