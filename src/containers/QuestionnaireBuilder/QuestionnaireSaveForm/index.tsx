@@ -62,7 +62,6 @@ export function QuestionnaireSaveForm(props: QuestionnaireSaveFormProps) {
                         <Form.Item label={t`Subject Type`}>
                             <Select
                                 {...field}
-                                mode="multiple"
                                 allowClear
                                 options={[
                                     { value: 'Encounter', label: t`Encounter` },
