@@ -65,7 +65,7 @@ export interface ResourceListProps<R extends Resource, Extra = unknown, Link = s
      *
      * NOTE: Theoretically getHeaderActions can accept selected resources Bundle
      */
-    getBatchActions?: () => Array<QuestionnaireActionType<Extra>>;
+    getBatchActions?: () => Array<QuestionnaireActionType<Extra> | CustomActionType>;
 
     /**
      * Default launch context that will be added to all questionnaires
