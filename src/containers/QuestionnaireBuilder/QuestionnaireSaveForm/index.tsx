@@ -62,11 +62,20 @@ export function QuestionnaireSaveForm(props: QuestionnaireSaveFormProps) {
                         <Form.Item label={t`Subject Type`}>
                             <Select
                                 {...field}
-                                allowClear
                                 options={[
                                     { value: 'Encounter', label: t`Encounter` },
                                     { value: 'Patient', label: t`Patient` },
                                 ]}
+                                value={field.value?.[0] || undefined}
+                                onChange={(value) => {
+                                    if (value === 'Encounter') {
+                                        field.onChange(['Encounter', 'Patient']);
+                                    } else if (value === 'Patient') {
+                                        field.onChange(['Patient']);
+                                    } else {
+                                        field.onChange([]);
+                                    }
+                                }}
                             />
                         </Form.Item>
                     )}
