@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { SingleValue, PropsValue } from 'react-select';
 import { ItemContext, parseFhirQueryExpression } from 'sdc-qrf';
 
+import { ResourcesMap } from '@beda.software/fhir-react';
 import { isSuccess } from '@beda.software/remote-data';
 
 import { LoadResourceOption, loadResourceOptions } from 'src/services/questionnaire';
@@ -13,7 +14,8 @@ import { SearchBarColumnReferenceTypeProps } from '../types';
 export function useReferenceColumn(props: SearchBarColumnReferenceTypeProps) {
     const { columnFilterValue, onChange } = props;
 
-    const getDisplay = (resource: Resource) => evaluate(resource, columnFilterValue.column.path!)[0];
+    const getDisplay = (resource: Resource, includedResources: ResourcesMap<any>) =>
+        evaluate(resource, columnFilterValue.column.path!, includedResources)[0];
 
     const mockContext: ItemContext = {
         resource: {

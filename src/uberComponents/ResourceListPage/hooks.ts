@@ -1,5 +1,5 @@
 import { Bundle, Resource } from 'fhir/r4b';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { SearchParams, usePager } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess } from '@beda.software/remote-data';
@@ -9,9 +9,12 @@ import { getSearchBarColumnFilterValue } from 'src/components/SearchBar/utils';
 import { service } from 'src/services/fhir';
 import { useDebounce } from 'src/utils/debounce';
 
+import { RecordType } from './types';
+
 export function useResourceListPage<R extends Resource>(
     resourceType: R['resourceType'],
     extractPrimaryResources: ((bundle: Bundle) => R[]) | undefined,
+    extractChildrenResources: ((resource: R, bundle: Bundle) => R[]) | undefined,
     filterValues: ColumnFilterValue[],
     defaultSearchParams: SearchParams,
 ) {
@@ -68,12 +71,25 @@ export function useResourceListPage<R extends Resource>(
         return extractPrimaryResources ?? extractPrimaryResourcesFactory(resourceType);
     }, [resourceType, extractPrimaryResources]);
 
-    const recordResponse = mapSuccess(resourceResponse, (bundle) =>
-        extractPrimaryResourcesMemoized(bundle as Bundle).map((resource) => ({
-            resource: resource as R,
-            bundle: bundle as Bundle,
-        })),
+    const makeRecord = useCallback(
+        (resource: R, bundle: Bundle): RecordType<R> => {
+            const childrenResources = extractChildrenResources
+                ? extractChildrenResources(resource, bundle)?.map((subResource) => makeRecord(subResource, bundle))
+                : [];
+
+            return {
+                resource,
+                bundle,
+                ...(childrenResources.length ? { children: childrenResources } : {}),
+            };
+        },
+        [extractChildrenResources],
     );
+
+    const recordResponse = mapSuccess(resourceResponse, (bundle) =>
+        extractPrimaryResourcesMemoized(bundle as Bundle).map((resource) => makeRecord(resource, bundle as Bundle)),
+    );
+
     const selectedResourcesBundle: Bundle<R> = {
         resourceType: 'Bundle',
         type: 'collection',
