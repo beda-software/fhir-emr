@@ -101,6 +101,20 @@ export function prepareQuestionnaire(q: Questionnaire): Questionnaire {
         if (!hasEncounterIdQuestion) {
             item = [...(item ?? []), encounterIdQuestion];
         }
+    } else {
+        if (item) {
+            item = item.filter((i) => i.linkId !== 'encounterId');
+        }
+        if (extension) {
+            extension = extension.filter(
+                (ext) =>
+                    !(
+                        ext.url === launchContextUrl &&
+                        _.isArray(ext.extension) &&
+                        ext.extension.some((e) => e.url === 'name' && e.valueCoding?.code === 'Encounter')
+                    ),
+            );
+        }
     }
     return { ...q, ...(name ? { name } : {}), ...(item ? { item } : {}), ...(extension ? { extension } : {}) };
 }
