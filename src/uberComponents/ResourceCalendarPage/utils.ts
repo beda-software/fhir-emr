@@ -270,12 +270,15 @@ export function prepareResourceToShowOrEdit(
             if (value === undefined) {
                 return [];
             } else {
-                return [
-                    {
-                        url: `ext:${spKey}`,
-                        valueString: value[0],
-                    },
-                ];
+                if (typeof value === 'string') {
+                    const result = value?.split('/')?.[1];
+                    return [
+                        {
+                            url: `ext:${spKey}`,
+                            valueString: result,
+                        },
+                    ];
+                }
             }
         });
 
