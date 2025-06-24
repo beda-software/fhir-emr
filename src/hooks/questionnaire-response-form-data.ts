@@ -30,9 +30,10 @@ export type QuestionnaireResponseFormSaveResponse<R extends Resource = any> = {
     questionnaireResponse: FHIRQuestionnaireResponse;
     extracted: boolean;
     extractedBundle: Bundle<R>[];
+    extractedError?: OperationOutcome;
 };
 
-export type QuestionnaireResponseFormSaveResponseFailure<R extends Resource = any> = {
+export type QuestionnaireResponseFormSaveResponseFailure = {
     questionnaireResponse?: FHIRQuestionnaireResponse;
     extractedError?: OperationOutcome;
 };
@@ -351,20 +352,21 @@ export async function handleFormDataSave(
     });
 
     if (isFailure(extractRemoteData)) {
-        console.error('Error extracting resources from QuestionnaireResponse', extractRemoteData.error);
+        if (questionnaireResponseSaveService === persistSaveService) {
+            const errorQRData: FHIRQuestionnaireResponse = {
+                id: saveQRRemoteData.data.id,
+                resourceType: 'QuestionnaireResponse',
+                status: 'in-progress',
+            };
 
-        const errorQRData: FHIRQuestionnaireResponse = {
-            id: saveQRRemoteData.data.id,
-            resourceType: 'QuestionnaireResponse',
-            status: 'in-progress',
-        };
+            const saveQRRemoteDataError = await patchFHIRResource<QuestionnaireResponse>(errorQRData);
 
-        const saveQRRemoteDataError = await patchFHIRResource<QuestionnaireResponse>(errorQRData);
-        if (isSuccess(saveQRRemoteDataError)) {
-            return failure({
-                extractedError: extractRemoteData.error,
-                questionnaireResponse: saveQRRemoteDataError.data,
-            });
+            if (isSuccess(saveQRRemoteDataError)) {
+                return failure({
+                    extractedError: extractRemoteData.error,
+                    questionnaireResponse: saveQRRemoteDataError.data,
+                });
+            }
         }
 
         return failure({
@@ -378,8 +380,8 @@ export async function handleFormDataSave(
 
     return success({
         questionnaireResponse: saveQRRemoteData.data,
-        extracted: isSuccess(extractRemoteData),
-        extractedBundle: isSuccess(extractRemoteData) ? extractRemoteData.data : undefined,
+        extracted: true,
+        extractedBundle: extractRemoteData.data,
     });
 }
 
