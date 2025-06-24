@@ -10,7 +10,7 @@ body:
         - "{{ %QuestionnaireResponse.meta.lastUpdated }}"
         "{% else %}":
         - "{{ %QuestionnaireResponse.answers(linkId='dateTime') }}"
-    - allergyIntoleranceId: "{{ %Provenance.target.where(resourceType='AllergyIntolerance').id }}"
+    - allergyIntoleranceId: "{{ %Provenance.target.reference.split('AllergyIntolerance/')[1] }}"
     - author: "{{ %Author }}"
     - status: "{{ %QuestionnaireResponse.answers('status') }}"
     - patientId: "{{ %QuestionnaireResponse.answers('patientId') }}"
