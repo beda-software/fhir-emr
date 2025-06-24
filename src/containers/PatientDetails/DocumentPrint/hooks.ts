@@ -27,14 +27,11 @@ export function usePatientDocumentPrint() {
             },
         );
 
-        if (!isSuccess(questionnaireResponseRD)) {
+        if (!isSuccess(questionnaireResponseRD) || !questionnaireResponseRD.data) {
             return failure('QuestionnaireResponse not found');
         }
 
         const questionnaireResponse = questionnaireResponseRD.data;
-        if (!questionnaireResponse) {
-            return failure('QuestionnaireResponse not found');
-        }
 
         const questionnaireId = questionnaireResponse.questionnaire;
         if (!questionnaireId) {
