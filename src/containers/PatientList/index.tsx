@@ -128,7 +128,7 @@ export function PatientList() {
                                         >
                                             {({ closeModal }) => (
                                                 <QuestionnaireResponseForm
-                                                    questionnaireLoader={questionnaireIdLoader('patient-edit')}
+                                                    questionnaireLoader={questionnaireIdLoader('patient')}
                                                     launchContextParameters={[{ name: 'Patient', resource }]}
                                                     onSuccess={() => {
                                                         notification.success({
