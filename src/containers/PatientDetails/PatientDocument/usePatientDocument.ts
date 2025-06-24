@@ -118,7 +118,7 @@ function prepareFormInitialParams(
                           resource: provenance,
                       },
                   ]
-                : []),
+                : [{ name: 'Provenance', resource: { resouceType: 'Provenance' } as any }]),
             ...(provenanceBundle
                 ? [
                       {
