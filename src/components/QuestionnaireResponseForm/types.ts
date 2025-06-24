@@ -17,4 +17,5 @@ export interface QRFProps extends QuestionnaireResponseFormProps {
     FormFooterComponent?: React.ElementType<FormFooterComponentProps>;
     saveButtonTitle?: React.ReactNode;
     cancelButtonTitle?: React.ReactNode;
+    autoSave?: boolean;
 }

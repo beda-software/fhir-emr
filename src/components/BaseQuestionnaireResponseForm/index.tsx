@@ -80,7 +80,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         readOnly,
         ItemWrapper,
         GroupWrapper,
-        autoSave,
+        autoSave = false,
         qrDraftServiceType = 'local',
         onDraftSaved,
         onCancel,
@@ -151,7 +151,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
             } finally {
                 isRunningDebouncedSaveDraftRef.current = false;
             }
-        }, 1000);
+        }, 500);
 
         debouncedSaveDraftRef.current?.(debouncedFormValues);
 
@@ -282,7 +282,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                     value={{
                         ...props,
                         submitting: isLoading,
-                        saveDraft,
+                        saveDraft: draftId ? saveDraft : undefined,
                         onCancel: handleOnCancel,
                     }}
                 >

@@ -17,7 +17,7 @@ import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
-import { getReference, ServiceManager, useService, WithId } from '@beda.software/fhir-react';
+import { getReference, ServiceManager, useService, uuid4, WithId } from '@beda.software/fhir-react';
 import {
     isSuccess,
     mapSuccess,
