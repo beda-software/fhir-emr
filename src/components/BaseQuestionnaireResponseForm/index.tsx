@@ -151,7 +151,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
             } finally {
                 isRunningDebouncedSaveDraftRef.current = false;
             }
-        }, 1000);
+        }, 500);
 
         debouncedSaveDraftRef.current?.(debouncedFormValues);
 
