@@ -1,7 +1,8 @@
 import { Questionnaire } from 'fhir/r4b';
 import _ from 'lodash';
+import { evaluate } from 'src/utils';
 
-import { prepareQuestionnaire } from '../utils';
+import { launchContextUrl, prepareQuestionnaire } from '../utils';
 
 describe('prepare questionnaire', () => {
     test('Empty', () => {
@@ -60,7 +61,7 @@ describe('prepare questionnaire', () => {
             ],
             extension: [
                 {
-                    url: 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext',
+                    url: launchContextUrl,
                     extension: [
                         {
                             url: 'name',
@@ -73,7 +74,7 @@ describe('prepare questionnaire', () => {
                     ],
                 },
                 {
-                    url: 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext',
+                    url: launchContextUrl,
                     extension: [
                         {
                             url: 'name',
@@ -90,21 +91,17 @@ describe('prepare questionnaire', () => {
         const result = prepareQuestionnaire({ ...q, subjectType: ['Patient'] });
         expect(result.item?.find((i) => i.linkId === 'encounterId')).toBeUndefined();
         expect(
-            (result.extension || []).find(
-                (ext) =>
-                    ext.url === 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext' &&
-                    _.isArray(ext.extension) &&
-                    ext.extension.some((e) => e.url === 'name' && e.valueCoding?.code === 'Encounter'),
-            ),
-        ).toBeUndefined();
+            evaluate(
+                { extension: result.extension },
+                `extension.where(url='${launchContextUrl}').extension.where(url='name').valueCoding.where(code='Encounter')`,
+            ).length,
+        ).toBe(0);
         expect(result.item?.find((i) => i.linkId === 'patientId')).toBeDefined();
         expect(
-            (result.extension || []).find(
-                (ext) =>
-                    ext.url === 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext' &&
-                    _.isArray(ext.extension) &&
-                    ext.extension.some((e) => e.url === 'name' && e.valueCoding?.code === 'Patient'),
-            ),
-        ).toBeDefined();
+            evaluate(
+                { extension: result.extension },
+                `extension.where(url='${launchContextUrl}').extension.where(url='name').valueCoding.where(code='Patient')`,
+            ).length,
+        ).toBeGreaterThan(0);
     });
 });
