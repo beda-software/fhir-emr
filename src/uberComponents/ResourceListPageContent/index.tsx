@@ -23,6 +23,7 @@ import { RecordType, ResourceListProps, TableManager } from '../ResourceListPage
 
 type ResourceListPageContentProps<R extends Resource> = ResourceListProps<R, WebExtra> & {
     getTableColumns: (manager: TableManager) => ColumnsType<RecordType<R>>;
+    expandableRowComponent?: (record: RecordType<R>) => React.ReactNode;
 };
 
 export function ResourceListPageContent<R extends Resource>({
@@ -37,6 +38,7 @@ export function ResourceListPageContent<R extends Resource>({
     getTableColumns,
     defaultLaunchContext,
     getReportColumns,
+    expandableRowComponent,
 }: ResourceListPageContentProps<R>) {
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBarForGenericFilters(getFilters);
     const tableFilterValues = useMemo(
@@ -168,6 +170,13 @@ export function ResourceListPageContent<R extends Resource>({
                         : []),
                 ]}
                 loading={isLoading(recordResponse) && { indicator: SpinIndicator }}
+                expandable={
+                    expandableRowComponent
+                        ? {
+                              expandedRowRender: (record: RecordType<R>) => expandableRowComponent(record),
+                          }
+                        : undefined
+                }
             />
         </PageContainerContent>
     );
