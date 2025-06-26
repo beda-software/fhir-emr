@@ -45,6 +45,8 @@ type ResourceListPageProps<R extends Resource> = ResourceListProps<R, WebExtra> 
 
     /* Table columns without action column - action column is generated based on `getRecordActions` */
     getTableColumns: (manager: TableManager) => ColumnsType<RecordType<R>>;
+
+    expandableRowComponent?: (record: RecordType<R>) => React.ReactNode;
 };
 
 export function ResourceListPage<R extends Resource>({
@@ -61,6 +63,7 @@ export function ResourceListPage<R extends Resource>({
     getTableColumns,
     defaultLaunchContext,
     getReportColumns,
+    expandableRowComponent,
 }: ResourceListPageProps<R>) {
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBarForGenericFilters(getFilters);
     const tableFilterValues = useMemo(
@@ -177,6 +180,13 @@ export function ResourceListPage<R extends Resource>({
                         : []),
                 ]}
                 loading={isLoading(recordResponse) && { indicator: SpinIndicator }}
+                expandable={
+                    expandableRowComponent
+                        ? {
+                              expandedRowRender: (record: RecordType<R>) => expandableRowComponent(record),
+                          }
+                        : undefined
+                }
             />
         </PageContainer>
     );
