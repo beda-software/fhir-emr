@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 import { evaluate } from 'src/utils';
 
-const launchContextUrl = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext';
+export const launchContextUrl = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext';
 
 const patientLaunch: Extension = {
     url: launchContextUrl,
@@ -100,6 +100,15 @@ export function prepareQuestionnaire(q: Questionnaire): Questionnaire {
         }
         if (!hasEncounterIdQuestion) {
             item = [...(item ?? []), encounterIdQuestion];
+        }
+    } else {
+        if (item) {
+            item = item.filter((i) => i.linkId !== encounterIdQuestion.linkId);
+        }
+        if (extension) {
+            extension = extension.filter(
+                (ext) => !evaluate(ext, `extension.where(url='name').valueCoding.where(code='Encounter')`).length,
+            );
         }
     }
     return { ...q, ...(name ? { name } : {}), ...(item ? { item } : {}), ...(extension ? { extension } : {}) };
