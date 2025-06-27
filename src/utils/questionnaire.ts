@@ -105,7 +105,7 @@ export function questionnaireItemsToValidationSchema(questionnaireItems: FCEQues
             schema = yup.date();
             if (item.required) schema = schema.required();
             schema = createSchemaArrayOfValues(yup.object({ date: schema }));
-        } else if (item.item) {
+        } else if (item.type === 'group' && item.item) {
             schema = yup
                 .object({
                     items: item.repeats
