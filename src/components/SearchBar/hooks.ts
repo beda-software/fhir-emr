@@ -26,46 +26,50 @@ import {
     validateSingleDateColumnFilterValue,
 } from './validate';
 
+export const createDefaultFiltersValues = (columns: SearchBarProps['columns']): ColumnFilterValue[] => {
+    return columns.map((column) => {
+        if (isStringColumn(column)) {
+            return { column, value: column.defaultValue ?? undefined };
+        }
+
+        if (isDateColumn(column)) {
+            return { column, value: column.defaultValue ?? undefined };
+        }
+
+        if (isSingleDateColumn(column)) {
+            return { column, value: column.defaultValue ?? undefined };
+        }
+
+        if (isReferenceColumn(column)) {
+            return {
+                column,
+                value: column.defaultValue
+                    ? {
+                          value: {
+                              Reference: column.defaultValue,
+                          },
+                      }
+                    : null,
+            };
+        }
+
+        if (isChoiceColumn(column)) {
+            return { column, value: column.defaultValue ? [column.defaultValue] : null };
+        }
+
+        if (isSolidChoiceColumn(column)) {
+            return { column, value: column.defaultValue ? [column.defaultValue] : null };
+        }
+
+        throw new Error('Unsupported column type');
+    });
+};
+
 export function useSearchBar(props: SearchBarProps): SearchBarData {
     const { columns } = props;
 
     const defaultFiltersValues = useMemo<ColumnFilterValue[]>(() => {
-        return columns.map((column) => {
-            if (isStringColumn(column)) {
-                return { column, value: column.defaultValue ?? undefined };
-            }
-
-            if (isDateColumn(column)) {
-                return { column, value: column.defaultValue ?? undefined };
-            }
-
-            if (isSingleDateColumn(column)) {
-                return { column, value: column.defaultValue ?? undefined };
-            }
-
-            if (isReferenceColumn(column)) {
-                return {
-                    column,
-                    value: column.defaultValue
-                        ? {
-                              value: {
-                                  Reference: column.defaultValue,
-                              },
-                          }
-                        : null,
-                };
-            }
-
-            if (isChoiceColumn(column)) {
-                return { column, value: column.defaultValue ? [column.defaultValue] : null };
-            }
-
-            if (isSolidChoiceColumn(column)) {
-                return { column, value: column.defaultValue ? [column.defaultValue] : null };
-            }
-
-            throw new Error('Unsupported column type');
-        });
+        return createDefaultFiltersValues(columns);
     }, [columns]);
 
     const [columnsFilterValues, setColumnsFilterValues] = useState<ColumnFilterValue[]>(defaultFiltersValues);
