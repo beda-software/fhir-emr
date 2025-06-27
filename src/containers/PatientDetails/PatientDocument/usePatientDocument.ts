@@ -80,6 +80,13 @@ async function onFormSubmit(
     });
 }
 
+function toFhir(provenance: WithId<Provenance>): Provenance {
+    provenance.target.forEach((t) => {
+        t.reference = `${(t as any).resourceType}/${t.id}`;
+    });
+    return provenance;
+}
+
 function prepareFormInitialParams(
     props: Props & {
         provenance?: WithId<Provenance>;
@@ -118,10 +125,10 @@ function prepareFormInitialParams(
                 ? [
                       {
                           name: 'Provenance',
-                          resource: provenance,
+                          resource: toFhir(provenance),
                       },
                   ]
-                : []),
+                : [{ name: 'Provenance', resource: { resouceType: 'Provenance' } as any }]),
             ...(provenanceBundle
                 ? [
                       {
