@@ -8,7 +8,13 @@ import { useFieldController } from '../../hooks';
 
 export function InlineChoice(props: QuestionItemProps) {
     const { parentPath, questionItem } = props;
-    const { linkId, answerOption: answerOptionList, repeats, choiceOrientation = 'vertical' } = questionItem;
+    const {
+        linkId,
+        answerOption: answerOptionList,
+        repeats,
+        choiceOrientation = 'vertical',
+        colsNumber,
+    } = questionItem;
 
     const fieldName = [...parentPath, linkId];
 
@@ -19,10 +25,18 @@ export function InlineChoice(props: QuestionItemProps) {
 
     const formAnswers = value || [];
 
+    const styles: React.CSSProperties = colsNumber
+        ? {
+              width: '100%',
+              display: 'grid',
+              gridTemplateColumns: `repeat(${colsNumber}, 1fr)`,
+          }
+        : {};
+
     if (repeats) {
         return (
             <Form.Item {...formItem} data-testid={linkId}>
-                <Space direction={choiceOrientation}>
+                <Space direction={choiceOrientation} wrap style={styles}>
                     {answerOptionList?.map((answerOption) => {
                         const optionAnswerValue = toAnswerValue(answerOption, 'value')!;
 
@@ -47,7 +61,7 @@ export function InlineChoice(props: QuestionItemProps) {
     } else {
         return (
             <Form.Item {...formItem} data-testid={linkId}>
-                <Space direction={choiceOrientation}>
+                <Space direction={choiceOrientation} wrap style={styles}>
                     {answerOptionList?.map((answerOption) => {
                         const optionAnswerValue = toAnswerValue(answerOption, 'value');
 
