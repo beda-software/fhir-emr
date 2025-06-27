@@ -21,7 +21,7 @@ import {
 } from 'sdc-qrf';
 
 import config from '@beda.software/emr-config';
-import { formatFHIRDateTime, getReference, useService } from '@beda.software/fhir-react';
+import { WithId, formatFHIRDateTime, getReference, useService } from '@beda.software/fhir-react';
 import { RemoteDataResult, failure, isFailure, isSuccess, mapSuccess, success } from '@beda.software/remote-data';
 
 import { patchFHIRResource, saveFHIRResource, service } from 'src/services/fhir';
@@ -72,7 +72,9 @@ type QuestionnaireResponseDraftSaveService = (
     id: Resource['id'],
 ) => Promise<RemoteDataResult<FHIRQuestionnaireResponse>>;
 
-type QuestionnaireResponseDraftLoadService = (id: Resource['id']) => RemoteDataResult<FHIRQuestionnaireResponse>;
+type QuestionnaireResponseDraftLoadService = (
+    id: Resource['id'],
+) => RemoteDataResult<WithId<FHIRQuestionnaireResponse>>;
 
 type QuestionnaireResponseDraftDeleteService = (
     id: Resource['id'],
@@ -270,7 +272,7 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
     };
 
     let populateRemoteData: RemoteDataResult<FHIRQuestionnaireResponse>;
-    if (initialQuestionnaireResponse?.id) {
+    if (initialQuestionnaireResponse?.id || initialQuestionnaireResponse?.status === 'in-progress') {
         populateRemoteData = success(initialQuestionnaireResponse as FHIRQuestionnaireResponse);
     } else {
         populateRemoteData = await service<FHIRQuestionnaireResponse>({
