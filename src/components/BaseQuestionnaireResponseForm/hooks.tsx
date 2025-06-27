@@ -16,7 +16,7 @@ export function useFieldController<T = unknown>(fieldName: any, questionItem: FC
     // @ts-ignore we can use array as value
     const { control } = useFormContext<T>();
 
-    const isGroup = questionItem.type === 'group';
+    const isGroup = !!questionItem.item;
     const defaultValue = isGroup ? { items: [] } : [];
 
     // @ts-ignore we can use array as value
