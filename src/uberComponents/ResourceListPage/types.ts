@@ -63,9 +63,9 @@ export interface ResourceListProps<R extends Resource, Extra = unknown, Link = s
      * Batch actions that are available when rows are selected
      * (for example, delete multiple organizations)
      *
-     * NOTE: Theoretically getHeaderActions can accept selected resources Bundle
+     * Accepts selected resources Bundle
      */
-    getBatchActions?: () => Array<QuestionnaireActionType<Extra>>;
+    getBatchActions?: (selectedResourcesBundle: Bundle<R>) => Array<QuestionnaireActionType<Extra> | CustomActionType>;
 
     /**
      * Default launch context that will be added to all questionnaires
