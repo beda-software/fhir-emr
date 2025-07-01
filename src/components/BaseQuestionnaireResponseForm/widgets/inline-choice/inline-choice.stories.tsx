@@ -80,6 +80,19 @@ export const Horizontal: Story = {
     ),
 };
 
+export const Columns: Story = {
+    render: () => (
+        <InlineChoice
+            parentPath={[]}
+            questionItem={{
+                ...questionItemMultiple,
+                colsNumber: 3,
+            }}
+            context={{} as ItemContext}
+        />
+    ),
+};
+
 const questionItemDefault: FCEQuestionnaireItem = {
     text: 'Type',
     type: 'choice',
