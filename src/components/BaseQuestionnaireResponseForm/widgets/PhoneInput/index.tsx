@@ -4,9 +4,9 @@ import { useContext, useState } from 'react';
 import PI, { PhoneInputProps } from 'react-phone-input-2';
 import { QuestionItemProps } from 'sdc-qrf';
 
+import { PhoneInputCountryContext } from './context';
 import { S } from './PhoneInput.styles';
 import { useFieldController } from '../../hooks';
-import { PhoneInputCountryContext } from './context';
 
 // https://github.com/bl00mber/react-phone-input-2/issues/533#issuecomment-1508211907
 const PhoneInput: React.FC<PhoneInputProps> = (PI as any).default || PI;
@@ -15,7 +15,7 @@ export function QuestionPhone({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
     const defaultCountryCode = useContext(PhoneInputCountryContext);
-    const { value, onChange, disabled, formItem, placeholder } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, formItem, placeholder } = useFieldController<string>(fieldName, questionItem);
     const [focused, setFocused] = useState(false);
 
     return (
@@ -24,7 +24,11 @@ export function QuestionPhone({ parentPath, questionItem }: QuestionItemProps) {
                 <PhoneInput
                     country={defaultCountryCode}
                     value={value}
-                    onChange={(phone) => onChange(phone)}
+                    onChange={(phone) => {
+                        if (phone) {
+                            onChange(`+${phone}`);
+                        }
+                    }}
                     disabled={disabled}
                     inputClass={'react-phone-input'}
                     containerClass={classNames({

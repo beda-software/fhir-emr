@@ -132,8 +132,7 @@ describe('Encounter list filters testing', () => {
                 {
                     value: {
                         Reference: {
-                            resourceType: 'Patient',
-                            id: patient1.id,
+                            reference: `Patient/${patient1.id}`,
                         },
                     },
                 },
@@ -152,8 +151,7 @@ describe('Encounter list filters testing', () => {
                 {
                     value: {
                         Reference: {
-                            resourceType: 'Patient',
-                            id: patient2.id,
+                            reference: `Patient/${patient2.id}`,
                         },
                     },
                 },

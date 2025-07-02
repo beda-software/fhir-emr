@@ -1,8 +1,16 @@
 import { PrinterOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
-import { Encounter, Organization, Patient, Practitioner, Provenance, QuestionnaireResponse } from 'fhir/r4b';
-import { ReactElement } from 'react';
+import {
+    Encounter,
+    Organization,
+    ParametersParameter,
+    Patient,
+    Practitioner,
+    Provenance,
+    QuestionnaireResponse,
+} from 'fhir/r4b';
+import { ReactElement, useContext } from 'react';
 import { NavigateFunction, Outlet, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
@@ -19,18 +27,18 @@ import {
     PatientDocumentData,
     usePatientDocument,
 } from 'src/containers/PatientDetails/PatientDocument/usePatientDocument';
-import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
 import { forceDeleteFHIRResource, getFHIRResources, patchFHIRResource } from 'src/services/fhir';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 import { isExternalQuestionnaire } from 'src/utils/smart-apps';
 
+import { PatientDocumentDetailsWrapperContext } from './context';
 import { ExternalDocumentView } from './ExternalDocumentView';
 import s from './PatientDocumentDetails.module.scss';
-import { S } from './PatientDocumentDetails.styles';
 
 interface Props {
     patient: WithId<Patient>;
     hideControls?: boolean;
+    launchContextParameters?: ParametersParameter[];
 }
 
 const deleteDraft = async (navigate: NavigateFunction, patientId?: string, qrId?: string) => {
@@ -42,7 +50,7 @@ const deleteDraft = async (navigate: NavigateFunction, patientId?: string, qrId?
         reference: `QuestionnaireResponse/${qrId}`,
     });
     if (isSuccess(response)) {
-        navigate(`/patients/${patientId}/documents`);
+        navigate(-1);
         notification.success({
             message: t`Draft successfully deleted`,
         });
@@ -115,21 +123,22 @@ function PatientDocumentDetailsReadonly(props: {
     const navigate = useNavigate();
     const { formData, reload, provenance, hideControls } = props;
 
-    usePatientHeaderLocationTitle({ title: formData.context.questionnaire?.name ?? '' });
-
     const patientId = location.pathname.split('/')[2];
     const qrCompleted = formData.context.questionnaireResponse.status === 'completed';
     const qrId = formData.context.questionnaireResponse.id;
 
     const canBeEdited = !qrCompleted;
 
+    const { Wrapper, Content } = useContext(PatientDocumentDetailsWrapperContext);
+
     return (
         <div className={s.container}>
-            <S.Content>
+            <Wrapper>
                 <div className={s.header}>
                     <Title level={4} className={s.title}>
                         {formData.context.questionnaire.title || formData.context.questionnaire.name}
                     </Title>
+
                     <div className={s.buttons}>
                         {qrCompleted ? (
                             <>
@@ -166,6 +175,7 @@ function PatientDocumentDetailsReadonly(props: {
                                 )}
                             </>
                         ) : null}
+
                         {canBeEdited ? (
                             <>
                                 <ConfirmActionButton
@@ -190,8 +200,11 @@ function PatientDocumentDetailsReadonly(props: {
                         ) : null}
                     </div>
                 </div>
-                <ReadonlyQuestionnaireResponseForm formData={formData} />
-            </S.Content>
+
+                <Content>
+                    <ReadonlyQuestionnaireResponseForm formData={formData} />
+                </Content>
+            </Wrapper>
         </div>
     );
 }
@@ -211,13 +224,13 @@ function PatientDocumentDetailsFormData(props: {
 
     return (
         <RenderRemoteData remoteData={response} renderLoading={Spinner}>
-            {(documentData) => children(documentData)}
+            {(documentData) => children(documentData.document)}
         </RenderRemoteData>
     );
 }
 
 export function PatientDocumentDetails(props: Props) {
-    const { patient, hideControls } = props;
+    const { patient, hideControls, launchContextParameters } = props;
     const { response, manager } = usePatientDocumentDetails(patient.id);
     const navigate = useNavigate();
     const author = selectCurrentUserRoleResource();
@@ -269,6 +282,8 @@ export function PatientDocumentDetails(props: Props) {
                                                     questionnaireId={questionnaireResponse.questionnaire}
                                                     onSuccess={() => navigate(-2)}
                                                     author={author}
+                                                    autosave={true}
+                                                    launchContextParameters={launchContextParameters}
                                                 />
                                             }
                                         />

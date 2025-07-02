@@ -1,9 +1,9 @@
 import { InboxOutlined } from '@ant-design/icons';
+import { Trans } from '@lingui/macro';
 import { Form, Upload } from 'antd';
 import { QuestionItemProps } from 'sdc-qrf';
 
 import { useUploader } from './hooks';
-import { Trans } from '@lingui/macro';
 
 const { Dragger } = Upload;
 

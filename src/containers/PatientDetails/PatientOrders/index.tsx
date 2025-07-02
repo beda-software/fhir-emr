@@ -3,14 +3,15 @@ import { t, Trans } from '@lingui/macro';
 import { Input, MenuProps, notification, Dropdown, Space } from 'antd';
 import { Observation, Patient, Provenance } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
-import { extractExtension } from 'sdc-qrf';
+import { extractCreatedAtFromMeta } from 'sdc-qrf';
 import styled from 'styled-components';
 
 import { WithId } from '@beda.software/fhir-react';
 
+import { LinkToEdit } from 'src/components/LinkToEdit';
 import { Modal } from 'src/components/Modal';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
-import { ResourceTable, LinkToEdit } from 'src/components/ResourceTable';
+import { ResourceTable } from 'src/components/ResourceTable';
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 import { formatHumanDate } from 'src/utils/date';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
@@ -39,7 +40,7 @@ function getTableColumns(provenanceList: Array<Provenance> = []) {
             title: t`Date added`,
             key: 'date-added',
             render: (r: Observation) => {
-                const createdAt = extractExtension(r.meta?.extension, 'ex:createdAt');
+                const createdAt = extractCreatedAtFromMeta(r.meta);
                 const date = r.issued || createdAt;
 
                 return date ? formatHumanDate(date) : null;
@@ -214,7 +215,7 @@ export function PatientOrders({ patient }: Props) {
                     patient: patient.id,
                     category: 'laboratory',
                     status: 'final',
-                    _sort: ['-_lastUpdated'],
+                    _sort: ['-_lastUpdated', '_id'],
                     _revinclude: ['Provenance:target'],
                     _ilike: search,
                 }}

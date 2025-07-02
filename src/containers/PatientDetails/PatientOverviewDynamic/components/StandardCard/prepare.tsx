@@ -16,12 +16,12 @@ import {
 } from 'fhir/r4b';
 import _ from 'lodash';
 import moment from 'moment';
-import { extractExtension, fromFHIRReference } from 'sdc-qrf';
+import { extractCreatedAtFromMeta } from 'sdc-qrf';
 
 import { WithId, extractBundleResources, formatFHIRDate, parseFHIRDateTime } from '@beda.software/fhir-react';
 
+import { LinkToEdit } from 'src/components/LinkToEdit';
 import { PatientActivitySummary } from 'src/containers/PatientDetails/PatientActivitySummary';
-import { LinkToEdit } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/LinkToEdit';
 import { OverviewCard } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/types';
 import medicationIcon from 'src/containers/PatientDetails/PatientOverviewDynamic/images/medication.svg';
 import { compileAsFirst } from 'src/utils';
@@ -29,16 +29,14 @@ import { formatHumanDate } from 'src/utils/date';
 
 export function prepareAllergies(
     allergies: AllergyIntolerance[],
-    provenanceList: Provenance[],
-    total?: number,
-    to?: string,
+    bundle: Bundle<AllergyIntolerance | Provenance>,
 ): OverviewCard<AllergyIntolerance> {
     return {
         title: t`Allergies`,
         key: 'allergies',
         icon: <ExperimentOutlined />,
         data: allergies,
-        total,
+        total: bundle.total!,
         getKey: (r: AllergyIntolerance) => r.id!,
         columns: [
             {
@@ -46,10 +44,9 @@ export function prepareAllergies(
                 key: 'name',
                 render: (resource: AllergyIntolerance) => (
                     <LinkToEdit
-                        name={resource.code?.coding?.[0]?.display}
+                        name={resource.code?.coding?.[0]?.display ?? resource.code?.text}
                         resource={resource}
-                        provenanceList={provenanceList}
-                        to={to}
+                        provenanceList={extractBundleResources(bundle).Provenance}
                     />
                 ),
             },
@@ -57,7 +54,7 @@ export function prepareAllergies(
                 title: t`Date`,
                 key: 'date',
                 render: (r: AllergyIntolerance) => {
-                    const createdAt = extractExtension(r.meta?.extension, 'ex:createdAt');
+                    const createdAt = extractCreatedAtFromMeta(r.meta);
 
                     return createdAt ? formatHumanDate(r.recordedDate || createdAt) : null;
                 },
@@ -69,16 +66,14 @@ export function prepareAllergies(
 
 export function prepareConditions(
     conditions: Condition[],
-    provenanceList: Provenance[],
-    total?: number,
-    to?: string,
+    bundle: Bundle<Condition | Provenance>,
 ): OverviewCard<Condition> {
     return {
         title: t`Conditions`,
         key: 'conditions',
         icon: <AlertOutlined />,
         data: conditions,
-        total,
+        total: bundle.total!,
         getKey: (r: Condition) => r.id!,
         columns: [
             {
@@ -88,8 +83,7 @@ export function prepareConditions(
                     <LinkToEdit
                         name={resource.code?.text || resource.code?.coding?.[0]?.display}
                         resource={resource}
-                        provenanceList={provenanceList}
-                        to={to}
+                        provenanceList={extractBundleResources(bundle).Provenance}
                     />
                 ),
             },
@@ -97,7 +91,7 @@ export function prepareConditions(
                 title: t`Date`,
                 key: 'date',
                 render: (r: Condition) => {
-                    const createdAt = extractExtension(r.meta?.extension, 'ex:createdAt');
+                    const createdAt = extractCreatedAtFromMeta(r.meta);
 
                     return createdAt ? formatHumanDate(r.recordedDate || createdAt) : null;
                 },
@@ -107,18 +101,13 @@ export function prepareConditions(
     };
 }
 
-export function prepareConsents(
-    consents: Consent[],
-    provenanceList: Provenance[],
-    total?: number,
-    to?: string,
-): OverviewCard<Consent> {
+export function prepareConsents(consents: Consent[], bundle: Bundle<Consent | Provenance>): OverviewCard<Consent> {
     return {
         title: t`Consents`,
         key: 'consents',
         icon: <TeamOutlined />,
         data: consents,
-        total,
+        total: bundle.total!,
         getKey: (r: Consent) => r.id!,
         columns: [
             {
@@ -133,8 +122,7 @@ export function prepareConsents(
                         <LinkToEdit
                             name={provisionName || purposeName || category}
                             resource={resource}
-                            provenanceList={provenanceList}
-                            to={to}
+                            provenanceList={extractBundleResources(bundle).Provenance}
                         />
                     );
                 },
@@ -144,7 +132,7 @@ export function prepareConsents(
                 title: t`Date`,
                 key: 'date',
                 render: (r: Consent) => {
-                    const createdAt = extractExtension(r.meta?.extension, 'ex:createdAt');
+                    const createdAt = extractCreatedAtFromMeta(r.meta);
 
                     return createdAt ? formatHumanDate(r.dateTime || createdAt) : null;
                 },
@@ -190,16 +178,14 @@ export function prepareActivitySummary(activitySummary: Observation[]): Overview
 
 export function prepareImmunizations(
     observations: Immunization[],
-    provenanceList: Provenance[],
-    total?: number,
-    to?: string,
+    bundle: Bundle<Immunization | Provenance>,
 ): OverviewCard<Immunization> {
     return {
         title: t`Immunization`,
         key: 'immunization',
         icon: <HeartOutlined />,
         data: observations,
-        total,
+        total: bundle.total!,
         getKey: (r: Immunization) => r.id!,
         columns: [
             {
@@ -207,10 +193,9 @@ export function prepareImmunizations(
                 key: 'name',
                 render: (resource: Immunization) => (
                     <LinkToEdit
-                        name={resource.vaccineCode.coding?.[0]?.display}
+                        name={resource.vaccineCode.coding?.[0]?.display ?? resource.vaccineCode.text}
                         resource={resource}
-                        provenanceList={provenanceList}
-                        to={to}
+                        provenanceList={extractBundleResources(bundle).Provenance}
                     />
                 ),
             },
@@ -226,16 +211,14 @@ export function prepareImmunizations(
 
 export function prepareMedications(
     observations: MedicationStatement[],
-    provenanceList: Provenance[],
-    total?: number,
-    to?: string,
+    bundle: Bundle<MedicationStatement | Provenance>,
 ): OverviewCard<MedicationStatement> {
     return {
         title: t`Active Medications`,
         key: 'active-medications',
         icon: <img src={medicationIcon} />,
         data: observations,
-        total,
+        total: bundle.total!,
         getKey: (r: MedicationStatement) => r.id!,
         columns: [
             {
@@ -243,10 +226,12 @@ export function prepareMedications(
                 key: 'name',
                 render: (resource: MedicationStatement) => (
                     <LinkToEdit
-                        name={resource.medicationCodeableConcept?.coding?.[0]?.display}
+                        name={
+                            resource.medicationCodeableConcept?.coding?.[0]?.display ??
+                            resource.medicationCodeableConcept?.text
+                        }
                         resource={resource}
-                        provenanceList={provenanceList}
-                        to={to}
+                        provenanceList={extractBundleResources(bundle).Provenance}
                     />
                 ),
             },
@@ -268,19 +253,7 @@ export function prepareAppointments(bundle: Bundle<WithId<Appointment | Encounte
 }
 
 export function prepareAppointmentDetails(appointment: Appointment) {
-    const [name, specialty] =
-        appointment.participant
-            .find((p) => fromFHIRReference(p.actor)?.resourceType === 'PractitionerRole')
-            ?.actor?.display?.split(' - ') || [];
     const appointmentDetails = [
-        {
-            title: t`Practitioner`,
-            value: name || '-',
-        },
-        {
-            title: t`Service`,
-            value: specialty || '-',
-        },
         {
             title: t`Date`,
             value: appointment.start ? formatHumanDate(appointment.start) : '-',
@@ -294,20 +267,27 @@ export function prepareAppointmentDetails(appointment: Appointment) {
         },
     ];
 
-    return appointmentDetails;
+    //TODO agree on terminology for Appointment.particioant.type and use it
+    const participants = appointment.participant
+        .filter((p) => p.type?.[0]?.coding?.[0]?.code !== 'patient')
+        .map((participant) => ({
+            title: participant.type?.[0]?.text,
+            value: participant.actor?.display,
+        }));
+
+    return [...appointmentDetails, ...participants];
 }
 
 export function prepareServiceRequest(
     serviceRequests: ServiceRequest[],
-    _provenanceList: Provenance[],
-    total: number,
+    bundle: Bundle<ServiceRequest>,
 ): OverviewCard<ServiceRequest> {
     return {
         title: t`Orders`,
         key: 'service-request',
         icon: <HeartOutlined />,
         data: serviceRequests,
-        total,
+        total: bundle.total!,
         getKey: (r: ServiceRequest) => r.id!,
         columns: [
             {
@@ -334,15 +314,14 @@ const getSonicId = compileAsFirst<ServiceRequest, Identifier>(
 
 export function prepareAuERequest(
     serviceRequests: ServiceRequest[],
-    _provenanceList: Provenance[],
-    total: number,
+    bundle: Bundle<ServiceRequest | Provenance>,
 ): OverviewCard<ServiceRequest> {
     return {
         title: t`Orders`,
         key: 'service-request',
         icon: <HeartOutlined />,
         data: serviceRequests,
-        total,
+        total: bundle.total,
         getKey: (r: ServiceRequest) => r.id!,
         columns: [
             {

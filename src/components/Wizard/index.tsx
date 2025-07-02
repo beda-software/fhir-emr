@@ -1,11 +1,19 @@
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { Button, StepProps, Steps, Tooltip } from 'antd';
-import { CSSProperties, ReactNode } from 'react';
+import { QuestionnaireResponse } from 'fhir/r4b';
+import { CSSProperties, ReactNode, useEffect } from 'react';
+import { useFormContext } from 'react-hook-form';
+import { FormItems } from 'sdc-qrf';
+
+import { WithId } from '@beda.software/fhir-react';
+import { RemoteData } from '@beda.software/remote-data';
 
 import { S } from './styles';
 import { Text } from '../Typography';
 
-export type WizardItem = StepProps;
+export type WizardItem = StepProps & {
+    linkId: string;
+};
 
 export interface WizardProps {
     currentIndex: number;
@@ -15,10 +23,14 @@ export interface WizardProps {
     children?: ReactNode | undefined;
     className?: string | undefined;
     style?: CSSProperties | undefined;
+    autoSave?: boolean;
+    setDraftSaveResponse?: (data: RemoteData<WithId<QuestionnaireResponse>>) => void;
 }
 
 export function Wizard(props: WizardProps) {
     const { currentIndex, onChange, children, labelPlacement = 'vertical', items, className, style } = props;
+
+    const { trigger, formState } = useFormContext();
 
     const stepsItems: StepProps[] = items.map((step, index) => ({
         ...step,
@@ -41,6 +53,12 @@ export function Wizard(props: WizardProps) {
 
     const currentStep = items[currentIndex];
 
+    useEffect(() => {
+        if (formState.isSubmitted) {
+            trigger();
+        }
+    }, [currentIndex, trigger, formState.isSubmitted]);
+
     return (
         <S.Container className={className} style={style} $labelPlacement={labelPlacement}>
             <Steps items={stepsItems} current={currentIndex} onChange={onChange} labelPlacement="vertical" />
@@ -60,6 +78,7 @@ export interface WizardFooterProps {
     children?: ReactNode | undefined;
     className?: string | undefined;
     style?: CSSProperties | undefined;
+    saveDraft?: (currentFormValues: FormItems) => Promise<void>;
 }
 
 export function WizardFooter(props: WizardFooterProps) {
@@ -92,7 +111,7 @@ export function WizardStepNumberIcon(props: WizardStepNumberIconProps) {
 
     const renderIcon = () => {
         return (
-            <S.Icon $active={active} $status={step.status}>
+            <S.Icon $active={active} $status={step.status} data-testid={`wizard-step-icon-${step.linkId}`}>
                 <Text>{stepNumber}</Text>
             </S.Icon>
         );

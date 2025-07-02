@@ -100,7 +100,7 @@ export function getInvoiceTableColumns(
     practitioners: Practitioner[],
     practitionerRoles: PractitionerRole[],
     patients: Patient[],
-    pagerManager: PagerManager,
+    pagerManager: PagerManager<Invoice | Patient | Practitioner | PractitionerRole>,
 ) {
     const excludeColumnKeys = matchCurrentUserRole({
         [Role.Admin]: () => ['patientActions'],

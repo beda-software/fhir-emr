@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import { Text } from 'src/components/Typography';
+
 export const S = {
     Footer: styled.footer`
         position: absolute;
@@ -33,5 +35,10 @@ export const S = {
             color: var(--footer-link-active);
             text-decoration: underline;
         }
+    `,
+    Text: styled(Text)`
+        color: var(--footer-text);
+        font-size: 14px;
+        line-height: 22px;
     `,
 };

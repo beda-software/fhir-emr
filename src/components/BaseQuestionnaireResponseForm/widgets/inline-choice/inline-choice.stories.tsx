@@ -1,8 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { expect, within, userEvent, findByTestId } from '@storybook/test';
-import { ItemContext } from 'sdc-qrf/lib/types';
-
-import { QuestionnaireItem } from '@beda.software/aidbox-types';
+import { FCEQuestionnaireItem, ItemContext } from 'sdc-qrf';
 
 import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 
@@ -82,37 +80,44 @@ export const Horizontal: Story = {
     ),
 };
 
-const questionItemDefault: QuestionnaireItem = {
+export const Columns: Story = {
+    render: () => (
+        <InlineChoice
+            parentPath={[]}
+            questionItem={{
+                ...questionItemMultiple,
+                colsNumber: 3,
+            }}
+            context={{} as ItemContext}
+        />
+    ),
+};
+
+const questionItemDefault: FCEQuestionnaireItem = {
     text: 'Type',
     type: 'choice',
     linkId: 'type',
     required: true,
     answerOption: [
         {
-            value: {
-                Coding: {
-                    code: 'medication',
-                    system: 'http://hl7.org/fhir/allergy-intolerance-category',
-                    display: 'Medication',
-                },
+            valueCoding: {
+                code: 'medication',
+                system: 'http://hl7.org/fhir/allergy-intolerance-category',
+                display: 'Medication',
             },
         },
         {
-            value: {
-                Coding: {
-                    code: 'food',
-                    system: 'http://hl7.org/fhir/allergy-intolerance-category',
-                    display: 'Food',
-                },
+            valueCoding: {
+                code: 'food',
+                system: 'http://hl7.org/fhir/allergy-intolerance-category',
+                display: 'Food',
             },
         },
         {
-            value: {
-                Coding: {
-                    code: 'environment',
-                    system: 'http://hl7.org/fhir/allergy-intolerance-category',
-                    display: 'Environment',
-                },
+            valueCoding: {
+                code: 'environment',
+                system: 'http://hl7.org/fhir/allergy-intolerance-category',
+                display: 'Environment',
             },
         },
     ],
@@ -125,55 +130,45 @@ const questionItemDefault: QuestionnaireItem = {
     },
 };
 
-const questionItemMultiple: QuestionnaireItem = {
+const questionItemMultiple: FCEQuestionnaireItem = {
     text: 'Reaction',
     type: 'choice',
     linkId: 'reaction',
     repeats: true,
     answerOption: [
         {
-            value: {
-                Coding: {
-                    code: '39579001',
-                    system: 'http://snomed.ct',
-                    display: 'Anaphylaxis',
-                },
+            valueCoding: {
+                code: '39579001',
+                system: 'http://snomed.ct',
+                display: 'Anaphylaxis',
             },
         },
         {
-            value: {
-                Coding: {
-                    code: '25064002',
-                    system: 'http://snomed.ct',
-                    display: 'Headache',
-                },
+            valueCoding: {
+                code: '25064002',
+                system: 'http://snomed.ct',
+                display: 'Headache',
             },
         },
         {
-            value: {
-                Coding: {
-                    code: '247472004',
-                    system: 'http://snomed.ct',
-                    display: 'Hives (Wheal)',
-                },
+            valueCoding: {
+                code: '247472004',
+                system: 'http://snomed.ct',
+                display: 'Hives (Wheal)',
             },
         },
         {
-            value: {
-                Coding: {
-                    code: '422587007',
-                    system: 'http://snomed.ct',
-                    display: 'Nausea',
-                },
+            valueCoding: {
+                code: '422587007',
+                system: 'http://snomed.ct',
+                display: 'Nausea',
             },
         },
         {
-            value: {
-                Coding: {
-                    code: '422400008',
-                    system: 'http://snomed.ct',
-                    display: 'Vomiting',
-                },
+            valueCoding: {
+                code: '422400008',
+                system: 'http://snomed.ct',
+                display: 'Vomiting',
             },
         },
     ],

@@ -14,7 +14,7 @@ item:
       cqfExpression:
         language: text/fhirpath
         expression: >-
-          iif(%QuestionnaireResponse.item.where(linkId='input-1').answer.value.boolean
+          iif(%QuestionnaireResponse.item.where(linkId='input-1').answer.valueBoolean
           = true, 'Now the input label changed', null)
     linkId: input-2
   - item:
@@ -26,7 +26,7 @@ item:
           cqfExpression:
             language: text/fhirpath
             expression: >-
-              %QuestionnaireResponse.item.where(linkId='input-1').answer.value.boolean
+              %QuestionnaireResponse.item.where(linkId='input-1').answer.valueBoolean
               = false
       - text: This input is required if the checkbox is checked
         type: string
@@ -36,7 +36,7 @@ item:
           cqfExpression:
             language: text/fhirpath
             expression: >-
-              %QuestionnaireResponse.item.where(linkId='input-1').answer.value.boolean
+              %QuestionnaireResponse.item.where(linkId='input-1').answer.valueBoolean
               = true
     text: This is default group label
     type: group
@@ -44,7 +44,7 @@ item:
       cqfExpression:
         language: text/fhirpath
         expression: >-
-          iif(%QuestionnaireResponse.item.where(linkId='input-1').answer.value.boolean
+          iif(%QuestionnaireResponse.item.where(linkId='input-1').answer.valueBoolean
           = true, 'Now the group label changed', null)
     linkId: input-3
 resourceType: Questionnaire
@@ -52,6 +52,6 @@ status: active
 id: cqf-examples
 meta:
   profile:
-    - https://beda.software/beda-emr-questionnaire
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
 url: >-
   https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/cqf-examples

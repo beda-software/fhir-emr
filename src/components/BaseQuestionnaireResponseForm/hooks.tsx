@@ -3,24 +3,27 @@ import classNames from 'classnames';
 import _ from 'lodash';
 import { useCallback } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
-import { useQuestionnaireResponseFormContext } from 'sdc-qrf';
-
-import { QuestionnaireItem } from '@beda.software/aidbox-types';
+import { FCEQuestionnaireItem, FormAnswerItems, useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
 import { getFieldErrorMessage } from 'src/components/BaseQuestionnaireResponseForm/utils';
 
 import s from './BaseQuestionnaireResponseForm.module.scss';
 import { FieldLabel } from './FieldLabel';
 
-export function useFieldController(fieldName: any, questionItem: QuestionnaireItem) {
+export function useFieldController<T = unknown>(fieldName: any, questionItem: FCEQuestionnaireItem) {
     const qrfContext = useQuestionnaireResponseFormContext();
     const { readOnly, hidden, repeats, text, required, entryFormat, helpText } = questionItem;
-    const { control } = useFormContext();
+    // @ts-ignore we can use array as value
+    const { control } = useFormContext<T>();
 
-    const { field, fieldState } = useController({
-        control: control,
+    const isGroup = questionItem.type === 'group';
+    const defaultValue = isGroup ? { items: [] } : [];
+
+    // @ts-ignore we can use array as value
+    const { field, fieldState } = useController<T>({
+        control,
         name: fieldName.join('.'),
-        ...(repeats ? { defaultValue: [] } : {}),
+        ...(repeats ? { defaultValue } : {}),
     });
 
     const invalidFieldMessage = getFieldErrorMessage(field, fieldState, text);
@@ -37,29 +40,32 @@ export function useFieldController(fieldName: any, questionItem: QuestionnaireIt
     };
 
     const onMultiChange = useCallback(
-        (option: any) => {
+        (option: FormAnswerItems) => {
+            // NOTE: it's used online in inline-choice
             if (repeats) {
-                const arrayValue = (field.value ?? []) as any[];
-                const valueIndex = arrayValue.findIndex((v) => _.isEqual(v?.value, option.value));
+                const formAnswers = (field.value ?? []) as FormAnswerItems[];
+                const valueIndex = formAnswers.findIndex((v) => _.isEqual(v.value, option.value));
 
                 if (valueIndex === -1) {
-                    field.onChange([...arrayValue, option]);
+                    field.onChange([...formAnswers, option]);
                 } else {
-                    arrayValue.splice(valueIndex, 1);
-                    field.onChange(arrayValue);
+                    formAnswers.splice(valueIndex, 1);
+                    field.onChange(formAnswers);
                 }
             } else {
-                field.onChange(option);
+                field.onChange([option]);
             }
         },
         [repeats, field],
     );
 
     // This is a wrapper for react-select that always wrap single value into array
+    // @ts-ignore It's hard to define proper type of onSelect
     const onSelect = useCallback((option: any) => field.onChange([].concat(option)), [field]);
 
     return {
         ...field,
+        value: field.value as T | undefined,
         onMultiChange,
         onSelect,
         fieldState,

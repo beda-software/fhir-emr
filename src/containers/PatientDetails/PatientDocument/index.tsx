@@ -1,14 +1,14 @@
-import { Organization, ParametersParameter, Patient, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
-import { useEffect, useState } from 'react';
+import { Splitter } from 'antd';
+import { Organization, ParametersParameter, Patient, Person, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
-import { RemoteData, isSuccess, notAsked } from '@beda.software/remote-data';
 
+import { Text } from 'src/components';
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { AnxietyScore, DepressionScore } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/score';
 import { Spinner } from 'src/components/Spinner';
-import { usePatientHeaderLocationTitle } from 'src/containers/PatientDetails/PatientHeader/hooks';
+import { QuestionnaireResponseDraftService, QuestionnaireResponseFormSaveResponse } from 'src/hooks';
 
 import s from './PatientDocument.module.scss';
 import { S } from './PatientDocument.styles';
@@ -17,15 +17,19 @@ import { usePatientDocument } from './usePatientDocument';
 
 export interface PatientDocumentProps {
     patient: Patient;
-    author: WithId<Practitioner | Patient | Organization>;
+    author: WithId<Practitioner | Patient | Organization | Person>;
     questionnaireResponse?: WithId<QuestionnaireResponse>;
     launchContextParameters?: ParametersParameter[];
     questionnaireId?: string;
     encounterId?: string;
-    onSuccess?: () => void;
+    onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
+    autosave?: boolean;
+    qrDraftServiceType?: QuestionnaireResponseDraftService;
 }
 
 export function PatientDocument(props: PatientDocumentProps) {
+    const { autosave, qrDraftServiceType = 'local' } = props;
+
     const params = useParams<{ questionnaireId: string; encounterId?: string }>();
     const encounterId = props.encounterId || params.encounterId;
     const questionnaireId = props.questionnaireId || params.questionnaireId!;
@@ -36,60 +40,63 @@ export function PatientDocument(props: PatientDocumentProps) {
     });
     const navigate = useNavigate();
 
-    const [draftSaveResponse, setDraftSaveResponse] = useState<RemoteData<QuestionnaireResponse>>(notAsked);
-
-    const { savedMessage } = useSavedMessage(draftSaveResponse);
-
-    usePatientHeaderLocationTitle({
-        title: isSuccess(response) ? response.data.formData.context.questionnaire?.name ?? '' : '',
-    });
-
     return (
         <div className={s.container}>
             <S.Content>
                 <RenderRemoteData remoteData={response} renderLoading={Spinner}>
-                    {({ formData, onSubmit, provenance }) => (
-                        <>
-                            <PatientDocumentHeader
-                                formData={formData}
-                                questionnaireId={questionnaireId}
-                                draftSaveResponse={draftSaveResponse}
-                                savedMessage={savedMessage}
-                            />
-
-                            <BaseQuestionnaireResponseForm
-                                formData={formData}
-                                onSubmit={onSubmit}
-                                itemControlQuestionItemComponents={{
-                                    'anxiety-score': AnxietyScore,
-                                    'depression-score': DepressionScore,
-                                }}
-                                onCancel={() => navigate(-1)}
-                                saveButtonTitle={'Complete'}
-                                autoSave={!provenance}
-                                draftSaveResponse={draftSaveResponse}
-                                setDraftSaveResponse={setDraftSaveResponse}
-                            />
-                        </>
-                    )}
+                    {({ document: { formData, onSubmit, provenance }, source }) => {
+                        if (typeof source === 'undefined') {
+                            return (
+                                <>
+                                    <PatientDocumentHeader formData={formData} questionnaireId={questionnaireId} />
+                                    <BaseQuestionnaireResponseForm
+                                        formData={formData}
+                                        onSubmit={onSubmit}
+                                        itemControlQuestionItemComponents={{
+                                            'anxiety-score': AnxietyScore,
+                                            'depression-score': DepressionScore,
+                                        }}
+                                        onCancel={() => navigate(-1)}
+                                        saveButtonTitle={'Complete'}
+                                        autoSave={autosave !== undefined ? autosave : !provenance}
+                                        qrDraftServiceType={qrDraftServiceType}
+                                    />
+                                </>
+                            );
+                        } else {
+                            return (
+                                <>
+                                    <PatientDocumentHeader formData={formData} questionnaireId={questionnaireId} />
+                                    <Splitter>
+                                        <Splitter.Panel min="10%" defaultSize="30%">
+                                            <Text>
+                                                Scribe result:
+                                                <br />
+                                                <br />
+                                                {source.payload?.[0]?.contentString}
+                                            </Text>
+                                        </Splitter.Panel>
+                                        <Splitter.Panel min="40%" style={{ marginLeft: 25 }}>
+                                            <BaseQuestionnaireResponseForm
+                                                formData={formData}
+                                                onSubmit={onSubmit}
+                                                itemControlQuestionItemComponents={{
+                                                    'anxiety-score': AnxietyScore,
+                                                    'depression-score': DepressionScore,
+                                                }}
+                                                onCancel={() => navigate(-1)}
+                                                saveButtonTitle={'Complete'}
+                                                autoSave={autosave !== undefined ? autosave : !provenance}
+                                                qrDraftServiceType={qrDraftServiceType}
+                                            />
+                                        </Splitter.Panel>
+                                    </Splitter>
+                                </>
+                            );
+                        }
+                    }}
                 </RenderRemoteData>
             </S.Content>
         </div>
     );
-}
-
-function useSavedMessage(draftSaveResponse: RemoteData) {
-    const [savedMessage, setSavedMessage] = useState('');
-
-    useEffect(() => {
-        if (isSuccess(draftSaveResponse)) {
-            setSavedMessage('Saved');
-
-            const timeoutId = setTimeout(() => {
-                setSavedMessage('');
-            }, 2500);
-            return () => clearTimeout(timeoutId);
-        }
-    }, [draftSaveResponse]);
-    return { savedMessage };
 }

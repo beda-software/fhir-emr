@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro';
-import { Patient } from 'fhir/r4b';
+import { ParametersParameter, Patient } from 'fhir/r4b';
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -7,9 +7,9 @@ import { axiosInstance as axiosAidboxInstance } from 'aidbox-react/lib/services/
 
 import { RenderRemoteData, WithId, useService } from '@beda.software/fhir-react';
 
-import { BasePageContent, BasePageHeader } from 'src/components/BaseLayout';
+import { PageContainer } from 'src/components/BaseLayout/PageContainer';
 import { Spinner } from 'src/components/Spinner';
-import { Paragraph, Title } from 'src/components/Typography';
+import { Paragraph } from 'src/components/Typography';
 import { getToken } from 'src/services/auth';
 import { axiosInstance as axiosFHIRInstance, getFHIRResource } from 'src/services/fhir';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
@@ -44,7 +44,13 @@ function usePatientQuestionnaire() {
     };
 }
 
-export function PatientQuestionnaire({ onSuccess }: { onSuccess?: () => void }) {
+interface PatientQuestionnaireProps {
+    onSuccess?: () => void;
+    autosave?: boolean;
+    launchContextParameters?: ParametersParameter[];
+}
+
+export function PatientQuestionnaire(props: PatientQuestionnaireProps) {
     const appToken = getToken();
     const isAnonymousUser = !appToken;
     const [isLoading, setIsLoading] = useState(!appToken);
@@ -67,21 +73,15 @@ export function PatientQuestionnaire({ onSuccess }: { onSuccess?: () => void }) 
     }, [isAnonymousUser]);
 
     return (
-        <>
-            <BasePageHeader>
-                <Title>
-                    <Trans>Questionnaire</Trans>
-                </Title>
-            </BasePageHeader>
-
-            <BasePageContent style={{ alignItems: 'center' }}>
-                {isLoading ? <Spinner /> : <PatientQuestionnaireForm onSuccess={onSuccess} />}
-            </BasePageContent>
-        </>
+        <PageContainer title={<Trans>Questionnaire</Trans>}>
+            {isLoading ? <Spinner /> : <PatientQuestionnaireForm {...props} />}
+        </PageContainer>
     );
 }
 
-function PatientQuestionnaireForm({ onSuccess }: { onSuccess?: () => void }) {
+function PatientQuestionnaireForm(props: PatientQuestionnaireProps) {
+    const { onSuccess, autosave, launchContextParameters } = props;
+
     const { response, questionnaireId, encounterId } = usePatientQuestionnaire();
     const appToken = getToken();
     const isAnonymousUser = !appToken;
@@ -102,6 +102,8 @@ function PatientQuestionnaireForm({ onSuccess }: { onSuccess?: () => void }) {
                     questionnaireId={questionnaireId!}
                     encounterId={encounterId}
                     onSuccess={onSuccess}
+                    autosave={autosave}
+                    launchContextParameters={launchContextParameters}
                 />
             )}
         </RenderRemoteData>

@@ -1,29 +1,36 @@
 import {
+    BoldItalicUnderlineToggles,
     CodeToggle,
+    headingsPlugin,
+    linkPlugin,
+    listsPlugin,
     ListsToggle,
     markdownShortcutPlugin,
     MDXEditor,
-    headingsPlugin,
-    listsPlugin,
+    MDXEditorMethods,
     quotePlugin,
-    linkPlugin,
     toolbarPlugin,
     UndoRedo,
-    BoldItalicUnderlineToggles,
-    MDXEditorMethods,
 } from '@mdxeditor/editor';
-import { useEffect, useRef } from 'react';
+import { Divider } from 'antd';
+import { Fragment, useContext, useEffect, useMemo, useRef } from 'react';
+import { ItemContext } from 'sdc-qrf';
 import { useTheme } from 'styled-components';
 
 import '@mdxeditor/editor/style.css';
+
+import { MarkDownEditorContext } from './context';
+import { S } from './styles';
 
 interface MarkDownEditorProps {
     markdownString: string;
     onChange?: (markdown: string) => void;
     readOnly?: boolean;
+    context?: ItemContext;
 }
 
-export function MarkDownEditor({ markdownString = '', readOnly = false, onChange }: MarkDownEditorProps) {
+export function MarkDownEditor(props: MarkDownEditorProps) {
+    const { markdownString = '', readOnly = false, onChange, context } = props;
     const mdxEditorRef = useRef<MDXEditorMethods>(null);
 
     useEffect(() => {
@@ -34,48 +41,60 @@ export function MarkDownEditor({ markdownString = '', readOnly = false, onChange
 
     const theme = useTheme();
 
+    const pluginsContext = useContext(MarkDownEditorContext);
+    const { initPlugins, initToolbarPlugins } = pluginsContext;
+
     // TODO Add a button to add link and make a custom modal to enter the link
     // https://mdxeditor.dev/editor/api/functions/linkDialogPlugin
-    const plugins = [
-        headingsPlugin(),
-        listsPlugin(),
-        quotePlugin(),
-        linkPlugin(),
-        markdownShortcutPlugin(),
-    ];
+    const plugins = useMemo(() => {
+        const commonPlugins = initPlugins
+            ? initPlugins(context)
+            : [headingsPlugin(), listsPlugin(), quotePlugin(), linkPlugin(), markdownShortcutPlugin()];
 
-    if (!readOnly) {
-        plugins.push(
-            toolbarPlugin({
-                toolbarContents: () => {
-                    return (
-                        <div className="MarkDownToolBar" style={{ display: 'flex' }}>
-                            <UndoRedo />
-                            <Separator />
-                            <BoldItalicUnderlineToggles />
-                            <CodeToggle />
-                            <Separator />
-                            <ListsToggle />
-                        </div>
-                    );
-                },
-            }),
-        );
-    }
+        const toolbarPlugins = initToolbarPlugins
+            ? initToolbarPlugins(context)
+            : [
+                  <UndoRedo key="undoRedo" />,
+                  <Divider key="divider" type="vertical" />,
+                  <BoldItalicUnderlineToggles key="boldItalicUnderlineToggles" />,
+                  <CodeToggle key="codeToggle" />,
+                  <Divider key="divider" type={'vertical'} />,
+                  <ListsToggle key="listsToggle" />,
+              ];
+
+        const plugins = readOnly
+            ? commonPlugins
+            : [
+                  ...commonPlugins,
+                  toolbarPlugin({
+                      toolbarContents: () => {
+                          return (
+                              <div className="MarkDownToolBar" style={{ display: 'flex' }}>
+                                  {toolbarPlugins.map((Plugin, index) => (
+                                      <Fragment key={index}>{Plugin}</Fragment>
+                                  ))}
+                              </div>
+                          );
+                      },
+                  }),
+              ];
+
+        return plugins;
+    }, [initPlugins, initToolbarPlugins, readOnly, context]);
+
+    const MDXEditorWrapper = pluginsContext.MarkdownEditorWrapper || S.MDXEditorWrapper;
 
     return (
-        <MDXEditor
-            className={theme.mode === 'dark' ? 'dark-theme' : ''}
-            ref={mdxEditorRef}
-            readOnly={readOnly}
-            markdown={markdownString}
-            onChange={onChange}
-            contentEditableClassName="MarkDownEditorContent"
-            plugins={plugins}
-        />
+        <MDXEditorWrapper>
+            <MDXEditor
+                className={theme.mode === 'dark' ? 'dark-theme' : ''}
+                ref={mdxEditorRef}
+                readOnly={readOnly}
+                markdown={markdownString}
+                onChange={onChange}
+                contentEditableClassName="MarkDownEditorContent"
+                plugins={plugins}
+            />
+        </MDXEditorWrapper>
     );
-}
-
-function Separator() {
-    return <div data-orientation="vertical" aria-orientation="vertical" role="separator"></div>;
 }

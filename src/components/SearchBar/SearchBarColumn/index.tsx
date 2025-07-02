@@ -1,6 +1,8 @@
 import { ChoiceColumn } from './ChoiceColumn';
 import { DateColumn } from './DateColumn';
+import { DateSingleColumn } from './DateSingleColumn';
 import { ReferenceColumn } from './ReferenceColumn';
+import { SolidChoiceColumn } from './SolidChoiceColumn';
 import { StringColumn } from './StringColumn';
 import { SearchBarColumnProps } from './types';
 import {
@@ -8,10 +10,12 @@ import {
     isDateColumnFilterValue,
     isReferenceColumnFilterValue,
     isChoiceColumnFilterValue,
+    isSolidChoiceColumnFilterValue,
+    isSingleDateColumnFilterValue,
 } from '../types';
 
 export function SearchBarColumn(props: SearchBarColumnProps) {
-    const { columnFilterValue } = props;
+    const { columnFilterValue, defaultOpen } = props;
 
     if (isStringColumnFilterValue(columnFilterValue)) {
         const stringProps = {
@@ -26,7 +30,15 @@ export function SearchBarColumn(props: SearchBarColumnProps) {
             ...props,
             columnFilterValue,
         };
-        return <DateColumn {...dateProps} />;
+        return <DateColumn {...dateProps} defaultOpen={defaultOpen} />;
+    }
+
+    if (isSingleDateColumnFilterValue(columnFilterValue)) {
+        const dateProps = {
+            ...props,
+            columnFilterValue,
+        };
+        return <DateSingleColumn {...dateProps} defaultOpen={defaultOpen} />;
     }
 
     if (isReferenceColumnFilterValue(columnFilterValue)) {
@@ -34,7 +46,7 @@ export function SearchBarColumn(props: SearchBarColumnProps) {
             ...props,
             columnFilterValue,
         };
-        return <ReferenceColumn {...referenceProps} />;
+        return <ReferenceColumn {...referenceProps} defaultOpen={defaultOpen} />;
     }
 
     if (isChoiceColumnFilterValue(columnFilterValue)) {
@@ -42,7 +54,16 @@ export function SearchBarColumn(props: SearchBarColumnProps) {
             ...props,
             columnFilterValue,
         };
-        return <ChoiceColumn {...choiceProps} />;
+        return <ChoiceColumn {...choiceProps} defaultOpen={defaultOpen} />;
+    }
+
+    if (isSolidChoiceColumnFilterValue(columnFilterValue)) {
+        const choiceProps = {
+            ...props,
+            columnFilterValue,
+        };
+
+        return <SolidChoiceColumn {...choiceProps} />;
     }
 
     return null;

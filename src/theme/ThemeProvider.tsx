@@ -2,6 +2,8 @@ import { ConfigProvider as ANTDConfigProvider } from 'antd';
 import { ReactNode } from 'react';
 import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle } from 'styled-components';
 
+import { antdLocaleMap, getCurrentLocale } from 'src/services/i18n';
+
 import { getAppTheme, getANTDTheme } from './';
 import { useTheme } from '../utils/theme';
 
@@ -36,7 +38,7 @@ export function ThemeProvider(props: Props) {
     };
 
     return (
-        <ANTDConfigProvider theme={antdTheme}>
+        <ANTDConfigProvider theme={antdTheme} locale={antdLocaleMap[getCurrentLocale()]}>
             <StyledComponentsThemeProvider theme={appTheme}>
                 <GlobalStyle />
                 {children}

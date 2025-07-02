@@ -1,8 +1,7 @@
 import type { UploadFile } from 'antd';
 import { notification } from 'antd';
-import { Attachment } from 'fhir/r4b';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { QuestionItemProps } from 'sdc-qrf';
+import { FormAnswerItems, QuestionItemProps } from 'sdc-qrf';
 
 import { formatError } from '@beda.software/fhir-react';
 import { isSuccess } from '@beda.software/remote-data';
@@ -16,23 +15,25 @@ import {
 
 import { useFieldController } from '../../hooks';
 
-type ValueAttachment = { value: { Attachment: Attachment } };
-
 export function useUploader({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, repeats } = questionItem;
     const fieldName = [...parentPath, linkId];
-    const { formItem, value, onChange } = useFieldController(fieldName, questionItem);
+    const { formItem, value, onChange } = useFieldController<FormAnswerItems[]>(fieldName, questionItem);
 
     const uid = useRef<Record<string, string>>({});
-    const initialFileList: Array<UploadFile> = useMemo(() => (value ?? []).map((v: ValueAttachment) => {
-        const url = v.value.Attachment.url!;
-        const file: UploadFile = {
-            uid: url,
-            name: url,
-            percent: 100,
-        };
-        return file;
-    }), [value]);
+    const initialFileList: Array<UploadFile> = useMemo(
+        () =>
+            (value ?? []).map((v) => {
+                const url = v.value!.Attachment!.url!;
+                const file: UploadFile = {
+                    uid: url,
+                    name: url,
+                    percent: 100,
+                };
+                return file;
+            }),
+        [value],
+    );
     const [fileList, setFileList] = useState<Array<UploadFile>>(initialFileList);
 
     useEffect(() => {
@@ -64,7 +65,7 @@ export function useUploader({ parentPath, questionItem }: QuestionItemProps) {
         })();
     }, [JSON.stringify(fileList)]);
 
-    const hasUploadedFile = value?.length > 0;
+    const hasUploadedFile = (value ?? []).length > 0;
 
     const customRequest = useCallback(
         async (options: CustomUploadRequestOption) => {
@@ -90,7 +91,7 @@ export function useUploader({ parentPath, questionItem }: QuestionItemProps) {
                 const filename = uid.current[info.file.uid];
                 const attachement = { value: { Attachment: { url: filename } } };
                 if (repeats) {
-                    onChange([...value, attachement]);
+                    onChange([...(value ?? []), attachement]);
                 } else {
                     onChange([attachement]);
                 }
@@ -104,7 +105,7 @@ export function useUploader({ parentPath, questionItem }: QuestionItemProps) {
     const onRemove = useCallback(
         (file: UploadFile) => {
             const filename = uid.current[file.uid] ?? file.uid;
-            onChange((value ?? []).filter(({ value }: ValueAttachment) => value.Attachment.url !== filename));
+            onChange((value ?? []).filter(({ value }) => value?.Attachment?.url !== filename));
             setFileList((files) => files.filter((f) => f.uid !== file.uid));
         },
         [value, onChange, setFileList],

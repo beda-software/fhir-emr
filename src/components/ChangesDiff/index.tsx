@@ -1,11 +1,11 @@
 import { t } from '@lingui/macro';
 import classNames from 'classnames';
+import { CSSProperties } from 'react';
 
 import { Text } from 'src/components/Typography';
 import { formatHumanDateTime } from 'src/utils/date';
 
 import { S } from './ChangesDiff.styles';
-import { CSSProperties } from 'react';
 
 export interface ChangesDiffChange {
     key: string;

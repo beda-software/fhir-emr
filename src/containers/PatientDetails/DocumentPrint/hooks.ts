@@ -10,7 +10,7 @@ import { getFHIRResources } from 'src/services/fhir';
 import { evaluate } from 'src/utils';
 
 export function usePatientDocumentPrint() {
-    const params = useParams<{ qrId: string, id: string }>();
+    const params = useParams<{ qrId: string; id: string }>();
     const qrId = params.qrId!;
     const patientId = params.id!;
 

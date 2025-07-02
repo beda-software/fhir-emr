@@ -1,8 +1,9 @@
+import { Resource } from 'fhir/r4b';
 import _ from 'lodash';
 import { SingleValue, PropsValue } from 'react-select';
 import { ItemContext, parseFhirQueryExpression } from 'sdc-qrf';
 
-import { Resource } from '@beda.software/aidbox-types';
+import { ResourcesMap } from '@beda.software/fhir-react';
 import { isSuccess } from '@beda.software/remote-data';
 
 import { LoadResourceOption, loadResourceOptions } from 'src/services/questionnaire';
@@ -13,12 +14,13 @@ import { SearchBarColumnReferenceTypeProps } from '../types';
 export function useReferenceColumn(props: SearchBarColumnReferenceTypeProps) {
     const { columnFilterValue, onChange } = props;
 
-    const getDisplay = (resource: Resource) => evaluate(resource, columnFilterValue.column.path!)[0];
+    const getDisplay = (resource: Resource, includedResources: ResourcesMap<any>) =>
+        evaluate(resource, columnFilterValue.column.path!, includedResources)[0];
 
     const mockContext: ItemContext = {
         resource: {
             resourceType: 'QuestionnaireResponse',
-            status: 'draft',
+            status: 'draft' as any,
         },
         questionnaire: {
             resourceType: 'Questionnaire',
@@ -26,7 +28,7 @@ export function useReferenceColumn(props: SearchBarColumnReferenceTypeProps) {
         },
         context: {
             resourceType: 'QuestionnaireResponse',
-            status: 'draft',
+            status: 'draft' as any,
         },
     };
     const [resourceType, searchParams] = parseFhirQueryExpression(columnFilterValue.column.expression!, mockContext);
@@ -46,15 +48,12 @@ export function useReferenceColumn(props: SearchBarColumnReferenceTypeProps) {
         return [];
     };
 
-    const debouncedLoadOptions = _.debounce(
-        (searchText: string, callback: (options: LoadResourceOption<Resource>[]) => void) => {
-            (async () => callback(await loadOptions(searchText)))();
-        },
-        500,
-    );
+    const debouncedLoadOptions = _.debounce((searchText: string, callback: (options: LoadResourceOption[]) => void) => {
+        (async () => callback(await loadOptions(searchText)))();
+    }, 500);
 
-    const onOptionChange = (value: PropsValue<LoadResourceOption<Resource>>) => {
-        const singleValue = value as SingleValue<LoadResourceOption<Resource>>;
+    const onOptionChange = (value: PropsValue<LoadResourceOption>) => {
+        const singleValue = value as SingleValue<LoadResourceOption>;
         onChange(singleValue ? singleValue : undefined, columnFilterValue.column.id);
     };
 

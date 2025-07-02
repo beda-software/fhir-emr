@@ -2,28 +2,16 @@ import { PractitionerRole } from 'fhir/r4b';
 import _ from 'lodash';
 import React, { useCallback, useMemo } from 'react';
 
-import {
-    days,
-    DaySchedule,
-    DaySchedules,
-    fromAvailableTime,
-    ScheduleBreak,
-} from '../available-time';
+import { days, DaySchedule, DaySchedules, fromAvailableTime, ScheduleBreak } from '../available-time';
 
 interface Props {
     practitionerRole: PractitionerRole;
 }
 
 export function useAvailability({ practitionerRole }: Props) {
-    const initialSchedule = useMemo(
-        () => fromAvailableTime(practitionerRole.availableTime || []),
-        [practitionerRole],
-    );
+    const initialSchedule = useMemo(() => fromAvailableTime(practitionerRole.availableTime || []), [practitionerRole]);
     const [schedule, setSchedulesByDay] = React.useState<DaySchedules>(initialSchedule);
-    const scheduleHasChanges = useMemo(
-        () => !_.isEqual(initialSchedule, schedule),
-        [initialSchedule, schedule],
-    );
+    const scheduleHasChanges = useMemo(() => !_.isEqual(initialSchedule, schedule), [initialSchedule, schedule]);
     const setScheduleByDay = (day: string, fn: (schedule: DaySchedule) => DaySchedule) => {
         setSchedulesByDay((schedules) => {
             const schedule = schedules[day];

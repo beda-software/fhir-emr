@@ -1,4 +1,4 @@
-import { Questionnaire } from '@beda.software/aidbox-types';
+import { FCEQuestionnaire } from 'sdc-qrf';
 
 import { getQuestionPath } from '../utils';
 
@@ -30,7 +30,7 @@ describe('getQuestionPath test', () => {
     });
 });
 
-const q1: Questionnaire = {
+const q1: FCEQuestionnaire = {
     item: [
         {
             text: 'Notes1',
@@ -44,7 +44,7 @@ const q1: Questionnaire = {
         },
     ],
     meta: {
-        profile: ['https://beda.software/beda-emr-questionnaire'],
+        profile: ['https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire'],
     },
     resourceType: 'Questionnaire',
     title: 'Test',
@@ -53,9 +53,9 @@ const q1: Questionnaire = {
     url: 'https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/test',
 };
 
-const q2: Questionnaire = {
+const q2: FCEQuestionnaire = {
     meta: {
-        profile: ['https://beda.software/beda-emr-questionnaire'],
+        profile: ['https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire'],
     },
     item: [
         {

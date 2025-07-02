@@ -1,146 +1,92 @@
-import { CloseCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import { Trans } from '@lingui/macro';
 import { Button } from 'antd';
 import _ from 'lodash';
 import React, { ReactNode } from 'react';
-import { GroupItemProps, QuestionItems } from 'sdc-qrf';
+import { useFormContext } from 'react-hook-form';
+import { GroupItemProps, RepeatableFormGroupItems, getItemKey, populateItemKey } from 'sdc-qrf';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
-import { Paragraph } from 'src/components/Typography';
 
-import s from './RepeatableGroups.module.scss';
+import { RepeatableGroupCard } from './RepeatableGroupCard';
+import { RepeatableGroupRow } from './RepeatableGroupRow';
+import { S } from './styles';
+import { RepeatableGroupProps } from './types';
+
+export { RepeatableGroupCard, RepeatableGroupRow };
 
 interface RepeatableGroupsProps {
     groupItem: GroupItemProps;
     renderGroup?: (props: RepeatableGroupProps) => ReactNode;
+    buildValue?: (existingItems: Array<any>) => any;
+}
+
+function defaultBuildValue(exisingItems: Array<any>) {
+    return [...exisingItems, {}];
 }
 
 export function RepeatableGroups(props: RepeatableGroupsProps) {
-    const { groupItem, renderGroup } = props;
+    const { groupItem, renderGroup, buildValue = defaultBuildValue } = props;
     const { parentPath, questionItem } = groupItem;
-    const { linkId, required } = questionItem;
+    const { linkId, text } = questionItem;
+
     const fieldName = [...parentPath, linkId];
-    const { value, onChange } = useFieldController(fieldName, questionItem);
-    const items = value.items && value.items.length ? value.items : required ? [{}] : [];
+
+    const { onChange } = useFieldController<RepeatableFormGroupItems>(fieldName, questionItem);
+
+    const { getValues } = useFormContext();
+
+    const value = _.get(getValues(), fieldName);
+
+    const populateValue = (exisingItems: Array<any>) => (buildValue(exisingItems) || []).map(populateItemKey);
+
+    const items = value?.items || [];
 
     return (
-        <div className={s.group}>
-            {_.map(items, (_elem, index: number) => {
+        <S.Group>
+            {_.map(items, (item, index: number) => {
                 if (!items[index]) {
                     return null;
                 }
 
+                const key = getItemKey(item);
+
                 return renderGroup ? (
-                    <React.Fragment key={`${fieldName.join()}-${index}`}>
+                    <React.Fragment key={key}>
                         {renderGroup({
                             index,
-                            value,
+                            items,
                             onChange,
                             groupItem,
                         })}
                     </React.Fragment>
                 ) : (
-                    <RepeatableGroupDefault
-                        key={index}
+                    <RepeatableGroupCard
+                        key={key}
                         index={index}
-                        value={value}
+                        items={items}
                         onChange={onChange}
                         groupItem={groupItem}
+                        variant="main-card"
                     />
                 );
             })}
             {groupItem.questionItem.readOnly ? null : (
-                <div>
+                <S.Footer>
                     <Button
                         icon={<PlusOutlined />}
-                        type="link"
-                        className={s.addButton}
+                        type="primary"
+                        ghost
                         onClick={() => {
-                            const existingItems = items || [];
-                            const updatedInput = { items: [...existingItems, {}] };
+                            const updatedInput = { ...value, items: populateValue(items ?? []) };
                             onChange(updatedInput);
                         }}
-                        size="small"
+                        size="middle"
                     >
-                        <span>
-                            <Trans>Add another answer</Trans>
-                        </span>
+                        <span>{text ? <Trans>Add {text}</Trans> : <Trans>Add another answer</Trans>}</span>
                     </Button>
-                </div>
+                </S.Footer>
             )}
-        </div>
-    );
-}
-
-interface RepeatableGroupProps {
-    index: number;
-    value: any;
-    onChange: (event: any) => void;
-    groupItem: GroupItemProps;
-}
-
-function useRepeatableGroup(props: RepeatableGroupProps) {
-    const { index, value, onChange, groupItem } = props;
-    const { parentPath, questionItem, context } = groupItem;
-    const { linkId } = questionItem;
-
-    const onRemove = () => {
-        const filteredArray = _.filter(value.items, (_val, valIndex: number) => valIndex !== index);
-        onChange({
-            items: [...filteredArray],
-        });
-    };
-
-    return {
-        onRemove,
-        parentPath: [...parentPath, linkId, 'items', index.toString()],
-        context: context[0]!,
-    };
-}
-
-export function RepeatableGroupDefault(props: RepeatableGroupProps) {
-    const { index, groupItem } = props;
-    const { questionItem } = groupItem;
-    const { item, text } = questionItem;
-    const { onRemove, parentPath, context } = useRepeatableGroup(props);
-
-    return (
-        <>
-            <div className={s.groupHeader}>
-                {text && <Paragraph className={s.groupTitle}>{`${questionItem.text} #${index + 1}`}</Paragraph>}
-                <Button type="link" danger className={s.removeButton} onClick={onRemove} size="small">
-                    <span>
-                        <Trans>Remove</Trans>
-                    </span>
-                </Button>
-            </div>
-            <QuestionItems questionItems={item!} parentPath={parentPath} context={context} />
-        </>
-    );
-}
-
-export function RepeatableGroupRow(props: RepeatableGroupProps) {
-    const { groupItem } = props;
-    const { questionItem } = groupItem;
-    const { item } = questionItem;
-    const { onRemove, parentPath, context } = useRepeatableGroup(props);
-
-    return (
-        <div className={s.row}>
-            <QuestionItems questionItems={item!} parentPath={parentPath} context={context} />
-            <div className={s.rowControls}>
-                {questionItem.readOnly ? (
-                    <span style={{ width: 18 }} />
-                ) : (
-                    <Button
-                        icon={<CloseCircleOutlined />}
-                        type="link"
-                        danger
-                        className={s.removeButton}
-                        onClick={onRemove}
-                    />
-                )}
-            </div>
-        </div>
+        </S.Group>
     );
 }

@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
+import { cleanup } from '@testing-library/react';
 import {
     Consent,
     Encounter,
@@ -190,6 +191,28 @@ export const loginUser = async (user: User) => {
     await login({ ...user, password: USER_PASSWORD });
 };
 
+interface WaitForAPIProcessProps<R> {
+    service: () => Promise<R>;
+    resolver: (result: R) => boolean;
+    retries?: number;
+    timeout?: number;
+}
+export async function waitForAPIProcess<R>(props: WaitForAPIProcessProps<R>) {
+    const { service, resolver, retries = 5, timeout = 1000 } = props;
+
+    for (let i = 0; i < retries; i++) {
+        await new Promise((resolve) => setTimeout(resolve, timeout));
+
+        const result = await service();
+
+        if (resolver(result)) {
+            return true;
+        }
+    }
+
+    throw new Error('API process did not complete');
+}
+
 beforeAll(async () => {
     // vi.useFakeTimers();
     setAidboxInstanceBaseURL('http://localhost:8080');
@@ -220,6 +243,8 @@ afterEach(async () => {
             data: { query: `select drop_before_all(${txId});` },
         });
     });
+    cleanup();
+    vi.clearAllMocks();
 });
 
 // afterAll(() => {

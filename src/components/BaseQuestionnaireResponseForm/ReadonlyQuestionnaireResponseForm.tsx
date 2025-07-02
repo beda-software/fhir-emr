@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
     calcInitialContext,
@@ -8,12 +9,19 @@ import {
     QuestionnaireResponseFormProvider,
 } from 'sdc-qrf';
 
+import {
+    ItemControlGroupItemReadonlyWidgetsContext,
+    ItemControlQuestionItemReadonlyWidgetsContext,
+} from 'src/components/BaseQuestionnaireResponseForm/context';
+import { MarkdownRenderControl } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/MarkdownRender';
+
 import { AudioAttachment } from './readonly-widgets/AudioAttachment';
 import { QuestionBoolean } from './readonly-widgets/boolean';
 import { QuestionChoice } from './readonly-widgets/choice';
 import { QuestionDateTime } from './readonly-widgets/date';
 import { Display } from './readonly-widgets/display';
-import { Col, Group, Row } from './readonly-widgets/group';
+import { Col, Group, Row } from './readonly-widgets/Group';
+import { NavigationGroup } from './readonly-widgets/Group/NavigationGroup';
 import { QuestionInteger, QuestionDecimal, QuestionQuantity } from './readonly-widgets/number';
 import { QuestionReference } from './readonly-widgets/reference';
 import { AnxietyScore, DepressionScore } from './readonly-widgets/score';
@@ -41,6 +49,9 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
 
     const formValues = watch();
 
+    const ItemControlQuestionItemReadonlyWidgetsFromContext = useContext(ItemControlQuestionItemReadonlyWidgetsContext);
+    const ItemControlGroupItemReadonlyWidgetsFromContext = useContext(ItemControlGroupItemReadonlyWidgetsContext);
+
     return (
         <FormProvider {...methods}>
             <form>
@@ -54,10 +65,13 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
                         col: Col,
                         row: Row,
                         'time-range-picker': TimeRangePickerControl,
+                        'wizard-navigation-group': NavigationGroup,
                         ...itemControlGroupItemComponents,
+                        ...ItemControlGroupItemReadonlyWidgetsFromContext,
                     }}
                     questionItemComponents={{
                         text: QuestionText,
+                        time: QuestionDateTime,
                         string: QuestionText,
                         integer: QuestionInteger,
                         decimal: QuestionDecimal,
@@ -78,12 +92,14 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
                         'input-inside-text': TextWithInput,
                         'audio-recorder-uploader': AudioAttachment,
                         barcode: Barcode,
+                        'markdown-editor': MarkdownRenderControl,
                         ...itemControlQuestionItemComponents,
+                        ...ItemControlQuestionItemReadonlyWidgetsFromContext,
                     }}
                 >
                     <>
                         <QuestionItems
-                            questionItems={formData.context.questionnaire.item!}
+                            questionItems={formData.context.fceQuestionnaire.item!}
                             parentPath={[]}
                             context={calcInitialContext(formData.context, formValues)}
                         />

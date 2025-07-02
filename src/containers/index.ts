@@ -1,4 +1,5 @@
 export * from './App';
+export * from './App/auth';
 export * from './Appointment';
 export * from './DocumentsList';
 export * from './EncounterDetails';
@@ -21,3 +22,5 @@ export * from './SetPassword';
 export * from './SignIn';
 export * from './VideoCall';
 export * from './AidboxFormsBuilder';
+export * from './PatientDetails/PatientHeader';
+export * from './PractitionerDetails/PractitionerHeader';

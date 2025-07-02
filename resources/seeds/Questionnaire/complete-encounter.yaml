@@ -25,7 +25,7 @@ contained:
       entry:
           - request:
                 method: GET
-                url: /Patient?_id={{%CurrentEncounter.subject.id}}
+                url: /Patient?_id={{%CurrentEncounter.subject.reference.split('/')[1]}}
     - resourceType: Bundle
       id: CurrentChargeItemDefinitionBundle
       type: transaction
@@ -134,4 +134,4 @@ item:
 url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/complete-encounter
 meta:
     profile:
-        - https://beda.software/beda-emr-questionnaire
+        - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire

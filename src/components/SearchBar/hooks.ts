@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 
 import {
@@ -13,12 +12,18 @@ import {
     SearchBarProps,
     isChoiceColumn,
     isChoiceColumnFilterValue,
+    isSolidChoiceColumn,
+    isSolidChoiceColumnFilterValue,
+    isSingleDateColumn,
+    isSingleDateColumnFilterValue,
 } from './types';
 import {
     validateStringColumnFilterValue,
     validateDateColumnFilterValue,
     validateReferenceColumnFilterValue,
     validateChoiceColumnFilterValue,
+    validateSolidChoiceColumnFilterValue,
+    validateSingleDateColumnFilterValue,
 } from './validate';
 
 export function useSearchBar(props: SearchBarProps): SearchBarData {
@@ -27,19 +32,36 @@ export function useSearchBar(props: SearchBarProps): SearchBarData {
     const defaultFiltersValues = useMemo<ColumnFilterValue[]>(() => {
         return columns.map((column) => {
             if (isStringColumn(column)) {
-                return { column, value: undefined };
+                return { column, value: column.defaultValue ?? undefined };
             }
 
             if (isDateColumn(column)) {
-                return { column, value: undefined };
+                return { column, value: column.defaultValue ?? undefined };
+            }
+
+            if (isSingleDateColumn(column)) {
+                return { column, value: column.defaultValue ?? undefined };
             }
 
             if (isReferenceColumn(column)) {
-                return { column, value: null };
+                return {
+                    column,
+                    value: column.defaultValue
+                        ? {
+                              value: {
+                                  Reference: column.defaultValue,
+                              },
+                          }
+                        : null,
+                };
             }
 
             if (isChoiceColumn(column)) {
-                return { column, value: null };
+                return { column, value: column.defaultValue ? [column.defaultValue] : null };
+            }
+
+            if (isSolidChoiceColumn(column)) {
+                return { column, value: column.defaultValue ? [column.defaultValue] : null };
             }
 
             throw new Error('Unsupported column type');
@@ -72,6 +94,13 @@ export function useSearchBar(props: SearchBarProps): SearchBarData {
                         }
                     }
 
+                    if (isSingleDateColumnFilterValue(newFilterValue)) {
+                        if (validateSingleDateColumnFilterValue(value)) {
+                            newFilterValue.value = value;
+                            return newFilterValue;
+                        }
+                    }
+
                     if (isReferenceColumnFilterValue(newFilterValue)) {
                         if (validateReferenceColumnFilterValue(value)) {
                             newFilterValue.value = value;
@@ -81,6 +110,13 @@ export function useSearchBar(props: SearchBarProps): SearchBarData {
 
                     if (isChoiceColumnFilterValue(newFilterValue)) {
                         if (validateChoiceColumnFilterValue(value)) {
+                            newFilterValue.value = value;
+                            return newFilterValue;
+                        }
+                    }
+
+                    if (isSolidChoiceColumnFilterValue(newFilterValue)) {
+                        if (validateSolidChoiceColumnFilterValue(value)) {
                             newFilterValue.value = value;
                             return newFilterValue;
                         }

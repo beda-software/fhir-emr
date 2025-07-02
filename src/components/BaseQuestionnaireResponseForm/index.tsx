@@ -1,11 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import classNames from 'classnames';
-import { QuestionnaireResponse } from 'fhir/r4b';
+import { Resource } from 'fhir/r4b';
 import _ from 'lodash';
 import React, { ComponentType, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
     calcInitialContext,
+    FCEQuestionnaire,
     FormItems,
     GroupItemComponent,
     GroupItemProps,
@@ -22,10 +23,12 @@ import * as yup from 'yup';
 
 import 'react-phone-input-2/lib/style.css';
 
-import { Questionnaire as FCEQuestionnaire } from '@beda.software/aidbox-types';
-import { RemoteData, isSuccess, loading } from '@beda.software/remote-data';
-
-import { saveQuestionnaireResponseDraft } from 'src/components/QuestionnaireResponseForm';
+import {
+    deleteQuestionnaireResponseDraft,
+    loadQuestionnaireResponseDraft,
+    saveQuestionnaireResponseDraft,
+} from 'src/components/QuestionnaireResponseForm';
+import { QuestionnaireResponseDraftService } from 'src/hooks';
 import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
 import s from './BaseQuestionnaireResponseForm.module.scss';
@@ -48,8 +51,8 @@ export interface BaseQuestionnaireResponseFormProps {
     onCancel?: () => void;
 
     autoSave?: boolean;
-    draftSaveResponse?: RemoteData<QuestionnaireResponse>;
-    setDraftSaveResponse?: (data: RemoteData<QuestionnaireResponse>) => void;
+    qrDraftServiceType?: QuestionnaireResponseDraftService;
+
     ItemWrapper?: ComponentType<{
         item: QuestionItemProps;
         control: QuestionItemComponent;
@@ -71,18 +74,33 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         onSubmit,
         formData,
         readOnly,
-        autoSave,
-        draftSaveResponse,
-        setDraftSaveResponse,
         ItemWrapper,
         GroupWrapper,
+        autoSave,
+        qrDraftServiceType = 'local',
+        onCancel,
     } = props;
 
-    const questionnaireId = formData.context.questionnaire.assembledFrom;
+    const isCreating = !formData.context.questionnaireResponse.id;
+
+    const questionnaireId = formData.context.fceQuestionnaire.assembledFrom;
+
+    const draftId = isCreating
+        ? formData.context.fceQuestionnaire.assembledFrom
+        : formData.context.questionnaireResponse.id;
+
+    const loadDraft = useCallback(
+        (draftId: Resource['id'], formData: QuestionnaireResponseFormData) => {
+            loadQuestionnaireResponseDraft(draftId, formData, qrDraftServiceType);
+        },
+        [qrDraftServiceType],
+    );
+
+    loadDraft(draftId, formData);
 
     const schema: yup.AnyObjectSchema = useMemo(
-        () => questionnaireToValidationSchema(formData.context.questionnaire),
-        [formData.context.questionnaire],
+        () => questionnaireToValidationSchema(formData.context.fceQuestionnaire),
+        [formData.context.fceQuestionnaire],
     );
 
     const methods = useForm<FormItems>({
@@ -98,25 +116,46 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
 
     const previousFormValuesRef = useRef<FormItems | null>(null);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const debouncedSaveDraft = useCallback(
-        _.debounce(async (currentFormValues: FormItems) => {
-            if (!autoSave || !questionnaireId) return;
+    const saveDraft = useCallback(
+        async (currentFormValues: FormItems) => {
+            if (!questionnaireId || !formData) {
+                return;
+            }
+            if (!_.isEqual(currentFormValues, previousFormValuesRef.current)) {
+                await saveQuestionnaireResponseDraft(draftId, formData, currentFormValues, qrDraftServiceType);
 
-            if (!_.isEqual(currentFormValues, previousFormValuesRef.current) && setDraftSaveResponse) {
-                setDraftSaveResponse(loading);
-                setDraftSaveResponse(
-                    await saveQuestionnaireResponseDraft(questionnaireId, formData, currentFormValues),
-                );
                 previousFormValuesRef.current = _.cloneDeep(currentFormValues);
             }
-        }, 1000),
-        [],
+        },
+        [draftId, formData, qrDraftServiceType, questionnaireId],
     );
 
+    const isRunningDebouncedSaveDraftRef = useRef(false);
+    const debouncedSaveDraftRef = useRef<ReturnType<typeof _.debounce> | null>(null);
+
     useEffect(() => {
-        debouncedSaveDraft(formValues);
-    }, [formValues, debouncedSaveDraft]);
+        debouncedSaveDraftRef.current = _.debounce(async (currentFormValues: FormItems) => {
+            if (!autoSave || !questionnaireId) return;
+
+            if (isRunningDebouncedSaveDraftRef.current) {
+                return;
+            }
+
+            isRunningDebouncedSaveDraftRef.current = true;
+
+            try {
+                await saveDraft(currentFormValues);
+            } finally {
+                isRunningDebouncedSaveDraftRef.current = false;
+            }
+        }, 1000);
+
+        debouncedSaveDraftRef.current?.(formValues);
+
+        return () => {
+            debouncedSaveDraftRef.current?.cancel();
+        };
+    }, [JSON.stringify(formValues)]);
 
     const wrapControls = useCallback(
         (mapping: { [x: string]: QuestionItemComponent }): { [x: string]: QuestionItemComponent } => {
@@ -214,17 +253,23 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         [GroupWrapper],
     );
 
-    const isWizard = isGroupWizard(formData.context.questionnaire);
+    const isWizard = isGroupWizard(formData.context.fceQuestionnaire);
+
+    const handleOnCancel = useCallback(() => {
+        debouncedSaveDraftRef.current?.cancel();
+        deleteQuestionnaireResponseDraft(draftId, qrDraftServiceType);
+        onCancel?.();
+    }, [draftId, onCancel, qrDraftServiceType]);
 
     return (
         <FormProvider {...methods}>
             <form
                 onSubmit={handleSubmit(async () => {
+                    debouncedSaveDraftRef.current?.cancel();
+                    isRunningDebouncedSaveDraftRef.current = true;
                     setIsLoading(true);
-                    if (questionnaireId && draftSaveResponse && isSuccess(draftSaveResponse)) {
-                        formData.context.questionnaireResponse.id = draftSaveResponse.data.id;
-                    }
                     await onSubmit?.({ ...formData, formValues });
+                    deleteQuestionnaireResponseDraft(draftId, qrDraftServiceType);
                     setIsLoading(false);
                 })}
                 className={classNames(s.form, 'app-form')}
@@ -234,12 +279,14 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                     value={{
                         ...props,
                         submitting: isLoading,
-                        debouncedSaveDraft: props.setDraftSaveResponse ? debouncedSaveDraft : undefined,
+                        saveDraft,
+                        onCancel: handleOnCancel,
                     }}
                 >
                     <QuestionnaireResponseFormProvider
                         formValues={formValues}
-                        setFormValues={(values, fieldPath, value) => setValue(fieldPath.join('.'), value)}
+                        // NOTE: setValue as any is required to speed up performance!
+                        setFormValues={(values, fieldPath, value) => (setValue as any)(fieldPath.join('.'), value)}
                         groupItemComponent={groupItemComponent}
                         itemControlGroupItemComponents={itemControlGroupItemComponents}
                         questionItemComponents={questionItemComponents}
@@ -249,13 +296,13 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                         <>
                             <div className={classNames(s.content, 'form__content')}>
                                 <QuestionItems
-                                    questionItems={formData.context.questionnaire.item!}
+                                    questionItems={formData.context.fceQuestionnaire.item!}
                                     parentPath={[]}
                                     context={calcInitialContext(formData.context, formValues)}
                                 />
                             </div>
                             {!isWizard ? (
-                                <FormFooter {...props} submitting={isLoading} debouncedSaveDraft={debouncedSaveDraft} />
+                                <FormFooter {...props} submitting={isLoading} onCancel={handleOnCancel} />
                             ) : null}
                         </>
                     </QuestionnaireResponseFormProvider>
@@ -269,6 +316,8 @@ function isGroupWizard(q: FCEQuestionnaire) {
     return q.item?.some((i) => {
         const itemControlCode = i.itemControl?.coding?.[0]?.code;
 
-        return itemControlCode && ['wizard', 'wizard-with-tooltips'].includes(itemControlCode);
+        return (
+            itemControlCode && ['wizard', 'wizard-with-tooltips', 'wizard-navigation-group'].includes(itemControlCode)
+        );
     });
 }

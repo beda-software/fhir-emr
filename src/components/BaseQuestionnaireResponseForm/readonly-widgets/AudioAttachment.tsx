@@ -1,11 +1,11 @@
-import { Upload } from 'antd';
-import { QuestionItemProps } from 'sdc-qrf';
 import classNames from 'classnames';
+import { QuestionItemProps } from 'sdc-qrf';
+
+import { AudioPlayerRecord } from 'src/components/AudioRecorder';
 
 import s from './ReadonlyWidgets.module.scss';
 import { S } from './ReadonlyWidgets.styles';
 import { useUploader } from '../widgets/UploadFileControl/hooks';
-import React from 'react';
 
 export function AudioAttachment(props: QuestionItemProps) {
     const { questionItem } = props;
@@ -20,12 +20,7 @@ export function AudioAttachment(props: QuestionItemProps) {
         <S.Question className={classNames(s.question, s.column, 'form__question')}>
             <span className={s.questionText}>{text}</span>
             {fileList.length ? (
-                fileList.map((file) => (
-                    <React.Fragment key={file.url}>
-                        <S.Audio controls src={file.url} />
-                        <Upload listType="text" showUploadList={{ showRemoveIcon: false }} fileList={fileList} />
-                    </React.Fragment>
-                ))
+                fileList.map((file) => <AudioPlayerRecord key={file.name} file={file} />)
             ) : (
                 <span>-</span>
             )}

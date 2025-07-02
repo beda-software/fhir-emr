@@ -42,6 +42,7 @@ export function useDocumentHistory() {
                     }),
                 }),
                 (bundle) => {
+                    // TODO: toFCE only for hidden? Better to re-write
                     const questionnaire = toFirstClassExtension(bundle.questionnaire);
                     return {
                         ...provenanceResponse.data,

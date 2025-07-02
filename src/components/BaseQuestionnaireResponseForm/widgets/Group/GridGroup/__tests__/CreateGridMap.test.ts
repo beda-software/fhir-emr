@@ -1,12 +1,11 @@
 import { renderHook } from '@testing-library/react';
+import { FCEQuestionnaireItem } from 'sdc-qrf';
 import { describe, it, expect } from 'vitest';
-
-import { QuestionnaireItem } from '@beda.software/aidbox-types';
 
 import { useGridGroup } from '../hooks';
 import { GridMap } from '../types';
 
-function removeTextFromItems(items: (QuestionnaireItem | undefined)[]) {
+function removeTextFromItems(items: (FCEQuestionnaireItem | undefined)[]) {
     return items.map((item) => {
         if (item) {
             return { ...item, text: undefined };
@@ -16,7 +15,7 @@ function removeTextFromItems(items: (QuestionnaireItem | undefined)[]) {
 
 describe('useGridGroup', () => {
     it('should return undefined if input item is not a group or does not have text or items', () => {
-        const input: QuestionnaireItem = {
+        const input: FCEQuestionnaireItem = {
             linkId: '1',
             type: 'choice',
             text: 'Some Question',
@@ -28,7 +27,7 @@ describe('useGridGroup', () => {
     });
 
     it('should return a correct grid map for a valid input', () => {
-        const GROUP_1: QuestionnaireItem = {
+        const GROUP_1: FCEQuestionnaireItem = {
             linkId: '1.1',
             text: 'Group1',
             type: 'group',
@@ -38,7 +37,7 @@ describe('useGridGroup', () => {
             ],
         };
 
-        const GROUP_2: QuestionnaireItem = {
+        const GROUP_2: FCEQuestionnaireItem = {
             linkId: '1.2',
             text: 'Group2',
             type: 'group',
@@ -48,7 +47,7 @@ describe('useGridGroup', () => {
             ],
         };
 
-        const GROUP_3: QuestionnaireItem = {
+        const GROUP_3: FCEQuestionnaireItem = {
             linkId: '1.3',
             text: 'Group3',
             type: 'group',
@@ -58,7 +57,7 @@ describe('useGridGroup', () => {
             ],
         };
 
-        const input: QuestionnaireItem = {
+        const input: FCEQuestionnaireItem = {
             linkId: '1',
             type: 'group',
             text: 'Grid',
@@ -88,14 +87,14 @@ describe('useGridGroup', () => {
     });
 
     it('should handle missing questions in some groups', () => {
-        const GROUP_1: QuestionnaireItem = {
+        const GROUP_1: FCEQuestionnaireItem = {
             linkId: '1.1',
             text: 'Group1',
             type: 'group',
             item: [{ linkId: '1.1.1', text: 'Question1', type: 'choice' }],
         };
 
-        const GROUP_2: QuestionnaireItem = {
+        const GROUP_2: FCEQuestionnaireItem = {
             linkId: '1.2',
             text: 'Group2',
             type: 'group',
@@ -105,7 +104,7 @@ describe('useGridGroup', () => {
             ],
         };
 
-        const input: QuestionnaireItem = {
+        const input: FCEQuestionnaireItem = {
             linkId: '1',
             type: 'group',
             text: 'Grid',
@@ -131,21 +130,21 @@ describe('useGridGroup', () => {
     });
 
     it('should return empty groups and columns if there are no questions', () => {
-        const GROUP_1: QuestionnaireItem = {
+        const GROUP_1: FCEQuestionnaireItem = {
             linkId: '1.1',
             text: 'Group1',
             type: 'group',
             item: [],
         };
 
-        const GROUP_2: QuestionnaireItem = {
+        const GROUP_2: FCEQuestionnaireItem = {
             linkId: '1.2',
             text: 'Group2',
             type: 'group',
             item: [],
         };
 
-        const input: QuestionnaireItem = {
+        const input: FCEQuestionnaireItem = {
             linkId: '1',
             type: 'group',
             text: 'Grid',
@@ -171,21 +170,21 @@ describe('useGridGroup', () => {
     });
 
     it('should handle nested groups correctly', () => {
-        const NESTED_GROUP: QuestionnaireItem = {
+        const NESTED_GROUP: FCEQuestionnaireItem = {
             linkId: '1.1.1',
             text: 'NestedGroup',
             type: 'group',
             item: [{ linkId: '1.1.1.1', text: 'Question1', type: 'choice' }],
         };
 
-        const GROUP_1: QuestionnaireItem = {
+        const GROUP_1: FCEQuestionnaireItem = {
             linkId: '1.1',
             text: 'Group1',
             type: 'group',
             item: [NESTED_GROUP],
         };
 
-        const input: QuestionnaireItem = {
+        const input: FCEQuestionnaireItem = {
             linkId: '1',
             type: 'group',
             text: 'Grid',

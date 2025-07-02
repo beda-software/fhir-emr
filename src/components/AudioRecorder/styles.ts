@@ -1,3 +1,4 @@
+import { Button } from 'antd';
 import styled, { css } from 'styled-components';
 
 import { Text } from 'src/components/Typography';
@@ -46,5 +47,14 @@ export const S = {
     Audio: styled.audio`
         height: 52px;
         width: 100%;
+    `,
+    File: styled.div`
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 7px;
+    `,
+    Button: styled(Button)`
+        padding: 0;
     `,
 };

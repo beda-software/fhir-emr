@@ -1,20 +1,25 @@
 import { AudioOutlined } from '@ant-design/icons';
 import { Trans } from '@lingui/macro';
 import { Form, UploadFile } from 'antd';
+import { RcFile } from 'antd/lib/upload/interface';
 import { useCallback, useEffect, useState } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
+
+import { isSuccess } from '@beda.software/remote-data';
 
 import { AudioPlayer as AudioPlayerControl, AudioRecorder as AudioRecorderControl } from 'src/components/AudioRecorder';
 import { useAudioRecorder } from 'src/components/AudioRecorder/hooks';
 
-import { useUploader } from '../UploadFileControl/hooks';
-import { RcFile } from 'antd/lib/upload/interface';
-import { isSuccess } from '@beda.software/remote-data';
 import { S } from './styles';
 import { UploadFileControl } from '../UploadFileControl';
+import { useUploader } from '../UploadFileControl/hooks';
 
-export function AudioRecorderUploader(props: QuestionItemProps) {
-    const { questionItem } = props;
+interface AudioRecorderUploaderExtraProps {
+    onRecorded?: (file: RcFile) => void;
+}
+
+export function AudioRecorderUploader(props: QuestionItemProps & AudioRecorderUploaderExtraProps) {
+    const { questionItem, onRecorded } = props;
     const [showScriber, setShowScriber] = useState(false);
 
     const { formItem, customRequest, onChange, fileList, onRemove } = useUploader(props);
@@ -22,6 +27,9 @@ export function AudioRecorderUploader(props: QuestionItemProps) {
 
     const onScribeChange = useCallback(
         async (file: RcFile) => {
+            if (onRecorded) {
+                onRecorded(file);
+            }
             setShowScriber(false);
 
             const fileClone = new File([file], file.name, {
@@ -49,7 +57,7 @@ export function AudioRecorderUploader(props: QuestionItemProps) {
                 });
             }
         },
-        [fileList],
+        [fileList, onRecorded],
     );
 
     const renderContent = () => {
