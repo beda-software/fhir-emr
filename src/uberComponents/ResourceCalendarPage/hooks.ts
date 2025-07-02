@@ -49,7 +49,7 @@ export function useCalendarPage<R extends WithId<Resource>>(
         [JSON.stringify(slotSearchParams)],
     );
     const reload = () => {
-        resourceManager.softReloadAsync();
+        resourceManager.reload();
         slotPagerManager.softReloadAsync();
     };
     const extractPrimaryResourcesMemoized = useMemo(
