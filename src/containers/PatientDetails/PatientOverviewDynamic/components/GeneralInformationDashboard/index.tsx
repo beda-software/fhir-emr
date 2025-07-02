@@ -5,6 +5,7 @@ import { Patient } from 'fhir/r4b';
 import { DashboardCard } from 'src/components/DashboardCard';
 import { EditPatient } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/EditPatient';
 import { S } from 'src/containers/PatientDetails/PatientOverviewDynamic/PatientOverview.styles';
+import { selectCurrentUserRoleResource } from 'src/utils';
 
 interface Props {
     patientDetails: {
@@ -15,10 +16,11 @@ interface Props {
 }
 
 export function GeneralInformationDashboard({ patientDetails, patient }: Props) {
+    const role = selectCurrentUserRoleResource();
     return (
         <DashboardCard
             title={t`General Information`}
-            extra={<EditPatient patient={patient} />}
+            extra={role.resourceType !== 'Patient' ? <EditPatient patient={patient} /> : null}
             icon={<ContactsOutlined />}
         >
             <S.DetailsRow>
