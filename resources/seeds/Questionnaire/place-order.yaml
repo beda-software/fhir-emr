@@ -2,7 +2,7 @@ resourceType: Questionnaire
 url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/place-order
 meta:
     profile:
-        - https://beda.software/beda-emr-questionnaire
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
 name: e-request
 title: Laboratory procedure eRequest
 status: active
