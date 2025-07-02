@@ -9,7 +9,6 @@ import { isFailure, isLoading, isSuccess } from '@beda.software/remote-data';
 
 import { PageContainerContent } from 'src/components/BaseLayout/PageContainer/PageContainerContent';
 import { SearchBar } from 'src/components/SearchBar';
-import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { isTableFilter } from 'src/components/SearchBar/utils';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
@@ -19,11 +18,12 @@ import { S } from './styles';
 import { getRecordActionsColumn, ResourcesListPageReport } from '../ResourceListPage';
 import { HeaderQuestionnaireAction, WebExtra } from '../ResourceListPage/actions';
 import { BatchActions } from '../ResourceListPage/BatchActions';
-import { useResourceListPage } from '../ResourceListPage/hooks';
+import { useResourceListPage, useSearchBarForGenericFilters } from '../ResourceListPage/hooks';
 import { RecordType, ResourceListProps, TableManager } from '../ResourceListPage/types';
 
 type ResourceListPageContentProps<R extends Resource> = ResourceListProps<R, WebExtra> & {
     getTableColumns: (manager: TableManager) => ColumnsType<RecordType<R>>;
+    expandableRowComponent?: (record: RecordType<R>) => React.ReactNode;
 };
 
 export function ResourceListPageContent<R extends Resource>({
@@ -38,12 +38,9 @@ export function ResourceListPageContent<R extends Resource>({
     getTableColumns,
     defaultLaunchContext,
     getReportColumns,
+    expandableRowComponent,
 }: ResourceListPageContentProps<R>) {
-    const allFilters = getFilters?.() ?? [];
-
-    const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
-        columns: allFilters ?? [],
-    });
+    const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBarForGenericFilters(getFilters);
     const tableFilterValues = useMemo(
         () => columnsFilterValues.filter((filter) => isTableFilter(filter)),
         [JSON.stringify(columnsFilterValues)],
@@ -173,6 +170,13 @@ export function ResourceListPageContent<R extends Resource>({
                         : []),
                 ]}
                 loading={isLoading(recordResponse) && { indicator: SpinIndicator }}
+                expandable={
+                    expandableRowComponent
+                        ? {
+                              expandedRowRender: (record: RecordType<R>) => expandableRowComponent(record),
+                          }
+                        : undefined
+                }
             />
         </PageContainerContent>
     );

@@ -17,7 +17,7 @@ export interface TableManager {
 
 // Extra is a platform specific option
 // For web it could be specific modal property
-export interface ResourceListProps<R extends Resource, Extra = unknown, Link = string> {
+export interface ResourceListBaseProps<R extends Resource, Extra = unknown> {
     /* Primary resource type (for example, Organization) */
     resourceType: R['resourceType'];
 
@@ -41,16 +41,7 @@ export interface ResourceListProps<R extends Resource, Extra = unknown, Link = s
     searchParams?: SearchParams;
 
     /* Filter that are displayed in the search bar and inside table columns */
-    getFilters?: () => SearchBarColumn[];
-
-    /**
-     * Record actions list that is displayed in the table per record
-     * (for example, edit organization)
-     */
-    getRecordActions?: (
-        record: RecordType<R>,
-        manager: TableManager,
-    ) => Array<QuestionnaireActionType<Extra> | NavigationActionType<Link> | CustomActionType>;
+    getFilters?: (values: Record<string, any>) => SearchBarColumn[];
 
     /**
      * Header actions (for example, new organization)
@@ -58,14 +49,6 @@ export interface ResourceListProps<R extends Resource, Extra = unknown, Link = s
      * NOTE: Theoretically getHeaderActions can accept all resources Bundle
      */
     getHeaderActions?: () => Array<QuestionnaireActionType<Extra>>;
-
-    /**
-     * Batch actions that are available when rows are selected
-     * (for example, delete multiple organizations)
-     *
-     * NOTE: Theoretically getHeaderActions can accept selected resources Bundle
-     */
-    getBatchActions?: () => Array<QuestionnaireActionType<Extra>>;
 
     /**
      * Default launch context that will be added to all questionnaires
@@ -83,6 +66,28 @@ export interface ResourceListProps<R extends Resource, Extra = unknown, Link = s
      * TODO: https://github.com/beda-software/fhir-emr/issues/414
      */
     getReportColumns?: (bundle: Bundle, reportBundle?: Bundle) => Array<ReportColumn>;
+}
+
+// Extra is a platform specific option
+// For web it could be specific modal property
+export interface ResourceListProps<R extends Resource, Extra = unknown, Link = string>
+    extends ResourceListBaseProps<R, Extra> {
+    /**
+     * Record actions list that is displayed in the table per record
+     * (for example, edit organization)
+     */
+    getRecordActions?: (
+        record: RecordType<R>,
+        manager: TableManager,
+    ) => Array<QuestionnaireActionType<Extra> | NavigationActionType<Link> | CustomActionType>;
+
+    /**
+     * Batch actions that are available when rows are selected
+     * (for example, delete multiple organizations)
+     *
+     * NOTE: Theoretically getHeaderActions can accept selected resources Bundle
+     */
+    getBatchActions?: () => Array<QuestionnaireActionType<Extra>>;
 }
 
 export interface NavigationActionType<Link = string> {
