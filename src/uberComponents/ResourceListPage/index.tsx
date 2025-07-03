@@ -108,7 +108,7 @@ export function ResourceListPage<R extends Resource>({
         onChange: onChangeColumnFilter,
     });
     const headerActions = getHeaderActions?.() ?? [];
-    const batchActions = getBatchActions?.() ?? [];
+    const batchActions = getBatchActions?.(selectedResourcesBundle) ?? [];
 
     return (
         <PageContainer
