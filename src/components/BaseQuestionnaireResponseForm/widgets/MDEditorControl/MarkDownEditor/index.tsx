@@ -2,7 +2,6 @@ import {
     BoldItalicUnderlineToggles,
     CodeToggle,
     headingsPlugin,
-    InsertTable,
     linkPlugin,
     listsPlugin,
     ListsToggle,
@@ -10,7 +9,6 @@ import {
     MDXEditor,
     MDXEditorMethods,
     quotePlugin,
-    tablePlugin,
     toolbarPlugin,
     UndoRedo,
 } from '@mdxeditor/editor';
@@ -51,14 +49,7 @@ export function MarkDownEditor(props: MarkDownEditorProps) {
     const plugins = useMemo(() => {
         const commonPlugins = initPlugins
             ? initPlugins(context)
-            : [
-                  headingsPlugin(),
-                  listsPlugin(),
-                  quotePlugin(),
-                  linkPlugin(),
-                  markdownShortcutPlugin(),
-                  tablePlugin(InsertTable),
-              ];
+            : [headingsPlugin(), listsPlugin(), quotePlugin(), linkPlugin(), markdownShortcutPlugin()];
 
         const toolbarPlugins = initToolbarPlugins
             ? initToolbarPlugins(context)
