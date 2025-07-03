@@ -1,0 +1,35 @@
+type: FHIRPath
+resourceType: Mapping
+body:
+  type: transaction
+  entry:
+  - request:
+      url: "Appointment"
+      method: POST
+    fullUrl: urn:uuid:appointment-id
+    resource:
+      status: 'proposed'
+      serviceType:
+        - text: "{{ QuestionnaireResponse.repeat(item).where(linkId='specialistType').answer.valueString }}"
+      comment: "{{ QuestionnaireResponse.repeat(item).where(linkId='reasonForReferral').answer.valueString }}"
+      participant:
+      - type:
+        - text: patient
+        status: needs-action
+        actor:
+          reference: "{{ 'Patient/' + QuestionnaireResponse.repeat(item).where(linkId='patient-id').answer.valueString }}"
+  - request:
+      url: "CommunicationRequest"
+      method: POST
+    resource:
+      status: active
+      basedOn:
+      - uri: urn:uuid:appointment-id
+      payload:
+      - contentReference:
+          reference: Questionnaire/chap
+          display: CHAP
+      requester:
+        reference: "{{ 'Practitioner/' + QuestionnaireResponse.repeat(item).where(linkId='practitiner-id').answer.valueString }}"
+      recipient:
+      - reference: "{{ 'Patient/' + QuestionnaireResponse.repeat(item).where(linkId='patient-id').answer.valueString }}"

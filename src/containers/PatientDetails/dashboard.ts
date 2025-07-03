@@ -12,6 +12,7 @@ import {
     prepareImmunizations,
     prepareMedications,
     prepareAuERequest,
+    prepareReferral,
 } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare';
 import { GeneralInformationDashboardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer';
 import { StandardCardContainerFabric } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/StandardCardContainerFabric';
@@ -30,6 +31,19 @@ export const patientDashboardConfig: DashboardInstance = {
                 }),
             },
             widget: StandardCardContainerFabric(prepareAuERequest),
+        },
+        {
+            query: {
+                resourceType: 'Appointment',
+                search: (patient: Patient) => ({
+                    status: 'proposed',
+                    _sort: '-_lastUpdated',
+                    patient: patient.id,
+                    _include: 'Appointment:patient',
+                    _revinclude: ['CommunicationRequest:based-on', 'QuestionnaireResponse:subject'],
+                }),
+            },
+            widget: StandardCardContainerFabric(prepareReferral),
         },
     ],
     left: [

@@ -12,10 +12,13 @@ import {
     Consent,
     Observation,
     ServiceRequest,
-    Identifier,
+    Reference,
+    Patient,
+    QuestionnaireResponse,
 } from 'fhir/r4b';
 import _ from 'lodash';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
 import { extractCreatedAtFromMeta } from 'sdc-qrf';
 
 import { WithId, extractBundleResources, formatFHIRDate, parseFHIRDateTime } from '@beda.software/fhir-react';
@@ -24,7 +27,8 @@ import { LinkToEdit } from 'src/components/LinkToEdit';
 import { PatientActivitySummary } from 'src/containers/PatientDetails/PatientActivitySummary';
 import { OverviewCard } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/types';
 import medicationIcon from 'src/containers/PatientDetails/PatientOverviewDynamic/images/medication.svg';
-import { compileAsFirst } from 'src/utils';
+import { QuestionanireModal } from 'src/uberComponents/QuestionnaireModal';
+import { compileAsFirst, compileAsArray, selectCurrentUserRoleResource } from 'src/utils';
 import { formatHumanDate } from 'src/utils/date';
 
 export function prepareAllergies(
@@ -308,9 +312,9 @@ export function prepareServiceRequest(
 const getBarcode = compileAsFirst<ServiceRequest, string>(
     "ServiceRequest.identifier.where(system='http://diagnostic-orders-are-us.com.au/ids/pgn').value",
 );
-const getSonicId = compileAsFirst<ServiceRequest, Identifier>(
-    "ServiceRequest.identifier.where(system='https://pyroserver.azurewebsites.net/pyro/ServiceRequest')",
-);
+/* const getSonicId = compileAsFirst<ServiceRequest, Identifier>(
+ *     "ServiceRequest.identifier.where(system='https://pyroserver.azurewebsites.net/pyro/ServiceRequest')",
+ * ); */
 
 export function prepareAuERequest(
     serviceRequests: ServiceRequest[],
@@ -333,40 +337,86 @@ export function prepareAuERequest(
             {
                 title: t`Name`,
                 key: 'name',
-                render: (resource: ServiceRequest) => resource.code?.text ?? resource.code?.coding?.[0]?.display,
+                render: (resource: ServiceRequest) =>
+                    resource.code?.text ?? resource.code?.coding?.[0]?.display ?? 'N/A',
                 width: 200,
             },
             {
                 title: t`Status`,
                 key: 'status',
-                render: (resource: ServiceRequest) => resource.status,
+                render: (resource: ServiceRequest) => resource.status ?? 'N/A',
                 width: 100,
             },
+        ],
+    };
+}
+
+const getServiceType = compileAsFirst<Appointment, string>('Appointment.serviceType.text');
+const getCR = compileAsArray<Bundle, Reference>(
+    "Bundle.entry.resource.where(resourceType='CommunicationRequest').where(basedOn.reference = 'Appointment/'+%appointment.id).payload.contentReference",
+);
+
+const getPatient = compileAsFirst<Bundle, Patient>(`
+    Bundle.entry.resource.where(resourceType='Patient').where(
+        id = %appointment.participant.actor.reference.split('Patient/')[1])
+`);
+
+const getQR = compileAsFirst<Bundle, QuestionnaireResponse>(`
+    Bundle.entry.resource.where(resourceType='QuestionnaireResponse').where(
+        subject.reference = ('Appointment/' + %appointment.id))
+`);
+
+export function prepareReferral(
+    appointmnets: Appointment[],
+    bundle: Bundle<Appointment | Provenance>,
+): OverviewCard<Appointment> {
+    return {
+        title: `Referrals`,
+        key: 'referrals',
+        icon: <HeartOutlined />,
+        data: appointmnets,
+        total: bundle.total,
+        getKey: (r: Appointment) => r.id!,
+        columns: [
             {
-                title: t`External ids`,
-                key: 'externalid',
-                render: (r: ServiceRequest) => {
-                    const identifier = getSonicId(r);
-                    if (identifier) {
-                        const { value, system } = identifier;
-                        const srLink = `${system}/${value}`;
-                        const taskLink = `${system?.replace('ServiceRequest', 'Task')}?focus=ServiceRequest/${value}`;
-                        return (
-                            <div>
-                                <a href={srLink} target="_blank" rel="noreferrer">
-                                    ServiceRequest
-                                </a>
-                                <br />
-                                <a href={taskLink} target="_blank" rel="noreferrer">
-                                    Task
-                                </a>
-                            </div>
-                        );
+                title: `Type of Specialist`,
+                key: 'st',
+                render: (resource: Appointment) => getServiceType(resource) ?? 'N/A',
+            },
+            {
+                title: `Comment`,
+                key: 'commnet',
+                render: (resource: Appointment) => resource.comment ?? '',
+            },
+            {
+                title: `Supporting information`,
+                key: 'support',
+                render: (appointment: Appointment) => {
+                    const role = selectCurrentUserRoleResource();
+                    const context = { appointment };
+                    const patient = getPatient(bundle, context)!;
+                    const qr = getQR(bundle, context);
+                    if (typeof qr !== 'undefined') {
+                        if (role.resourceType === 'Patient') {
+                            return 'Thank you for your answers';
+                        } else {
+                            return <Link to={`./documents/${qr.id}`}>View patient answers</Link>;
+                        }
                     } else {
-                        return '';
+                        if (role.resourceType === 'Patient') {
+                            return getCR(bundle, context).map((ref) => (
+                                <QuestionanireModal
+                                    key={ref.reference!}
+                                    questionnaire={ref}
+                                    subject={{ reference: `Appointment/${appointment.id}` }}
+                                    launchContextParameters={[{ name: 'Patient', resource: patient }]}
+                                />
+                            ));
+                        } else {
+                            return "Waiting for patient's answers";
+                        }
                     }
                 },
-                width: 320,
             },
         ],
     };
