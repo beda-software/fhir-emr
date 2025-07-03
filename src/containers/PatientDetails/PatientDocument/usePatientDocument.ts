@@ -12,10 +12,11 @@ import {
     Reference,
 } from 'fhir/r4b';
 import _ from 'lodash';
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
-import { getReference, useService, WithId } from '@beda.software/fhir-react';
+import { getReference, useService, uuid4, WithId } from '@beda.software/fhir-react';
 import {
     failure,
     isSuccess,
@@ -53,12 +54,14 @@ async function onFormSubmit(
     props: QuestionnaireResponseFormProps & {
         formData: QuestionnaireResponseFormData;
         onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
+        qrId: string;
     },
 ) {
     const { formData, initialQuestionnaireResponse, onSuccess } = props;
     const modifiedFormData = _.merge({}, formData, {
         context: {
             questionnaireResponse: {
+                id: props.qrId,
                 questionnaire: initialQuestionnaireResponse?.questionnaire,
             },
         },
@@ -158,6 +161,9 @@ export function usePatientDocument(props: Props): {
 } {
     const { questionnaireResponse, questionnaireId, onSuccess } = props;
     const navigate = useNavigate();
+    const qrId = useMemo(() => {
+        return questionnaireResponse?.id || uuid4();
+    }, [questionnaireResponse?.id]);
 
     const [response] = useService(async () => {
         let provenanceResponse: RemoteDataResult<WithId<Provenance>[]> = success([]);
@@ -191,6 +197,7 @@ export function usePatientDocument(props: Props): {
                     ...formInitialParams,
                     formData,
                     onSuccess: onSuccess ? onSuccess : () => navigate(-1),
+                    qrId,
                 });
 
             return mapSuccess(

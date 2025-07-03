@@ -97,11 +97,15 @@ export function questionnaireItemsToValidationSchema(questionnaireItems: FCEQues
             schema = yup.number().integer();
             if (item.required) schema = schema.required();
             schema = createSchemaArrayOfValues(yup.object({ integer: schema }));
+        } else if (item.type === 'decimal') {
+            schema = yup.number();
+            if (item.required) schema = schema.required();
+            schema = createSchemaArrayOfValues(yup.object({ decimal: schema }));
         } else if (item.type === 'date') {
             schema = yup.date();
             if (item.required) schema = schema.required();
             schema = createSchemaArrayOfValues(yup.object({ date: schema }));
-        } else if (item.item) {
+        } else if (item.type === 'group' && item.item) {
             schema = yup
                 .object({
                     items: item.repeats
