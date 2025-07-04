@@ -2,7 +2,7 @@ import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 
 import { SearchParams } from '@beda.software/fhir-react';
 
-import { SearchBarColumn } from '../../components/SearchBar/types';
+import { SearchBarColumn, SorterColumn } from '../../components/SearchBar/types';
 
 export type RecordType<R extends Resource> = { resource: R; bundle: Bundle; children?: RecordType<R>[] };
 
@@ -42,6 +42,7 @@ export interface ResourceListProps<R extends Resource, Extra = unknown, Link = s
 
     /* Filter that are displayed in the search bar and inside table columns */
     getFilters?: () => SearchBarColumn[];
+    getSorters?: () => SorterColumn[];
 
     /**
      * Record actions list that is displayed in the table per record
