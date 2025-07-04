@@ -1,4 +1,5 @@
 import { t } from '@lingui/macro';
+import { QuestionnaireItem } from 'fhir/r4b';
 import _ from 'lodash';
 import {
     AnswerValue,
@@ -82,39 +83,74 @@ export function getArrayDisplay(
     return options.map((v) => getDisplay(v.value, choiceColumn)).join(', ');
 }
 
-export function questionnaireItemsToValidationSchema(questionnaireItems: FCEQuestionnaireItem[]) {
+export interface CustomYupTestsMap {
+    [linkId: string]: CustomYupTests;
+}
+
+export interface CustomYupTests {
+    yupTests: yup.TestConfig<any>[];
+    questionnaireItemType: QuestionnaireItem['type'];
+}
+
+function applyCustomTestToItem(
+    questionnaireItem: FCEQuestionnaireItem,
+    schema: yup.AnySchema,
+    customTest?: CustomYupTests,
+): yup.AnySchema {
+    if (!customTest || customTest.questionnaireItemType !== questionnaireItem.type) {
+        return schema;
+    }
+
+    customTest.yupTests.forEach((test) => {
+        schema = schema.test(test);
+    });
+    return schema;
+}
+
+export function questionnaireItemsToValidationSchema(
+    questionnaireItems: FCEQuestionnaireItem[],
+    customTests?: CustomYupTestsMap,
+) {
     const validationSchema: Record<string, yup.AnySchema> = {};
     if (questionnaireItems.length === 0) return yup.object(validationSchema) as yup.AnyObjectSchema;
     questionnaireItems.forEach((item) => {
         let schema: yup.AnySchema;
+        const customTest = customTests?.[item.linkId];
+
         if (item.type === 'string' || item.type === 'text') {
             schema = yup.string();
             if (item.itemControl?.coding?.[0]?.code === 'email') schema = (schema as yup.StringSchema).email();
             if (item.required) schema = schema.required();
             if (item.maxLength && item.maxLength > 0) schema = (schema as yup.StringSchema).max(item.maxLength);
+            schema = applyCustomTestToItem(item, schema, customTest);
             schema = createSchemaArrayOfValues(yup.object({ string: schema }));
         } else if (item.type === 'integer') {
             schema = yup.number().integer();
             if (item.required) schema = schema.required();
+            schema = applyCustomTestToItem(item, schema, customTest);
             schema = createSchemaArrayOfValues(yup.object({ integer: schema }));
         } else if (item.type === 'decimal') {
             schema = yup.number();
             if (item.required) schema = schema.required();
+            schema = applyCustomTestToItem(item, schema, customTest);
             schema = createSchemaArrayOfValues(yup.object({ decimal: schema }));
         } else if (item.type === 'date') {
             schema = yup.date();
             if (item.required) schema = schema.required();
+            schema = applyCustomTestToItem(item, schema, customTest);
             schema = createSchemaArrayOfValues(yup.object({ date: schema }));
         } else if (item.type === 'group' && item.item) {
             schema = yup
                 .object({
                     items: item.repeats
-                        ? yup.array().of(questionnaireItemsToValidationSchema(item.item))
-                        : questionnaireItemsToValidationSchema(item.item),
+                        ? yup.array().of(questionnaireItemsToValidationSchema(item.item, customTests))
+                        : questionnaireItemsToValidationSchema(item.item, customTests),
                 })
                 .required();
+            schema = applyCustomTestToItem(item, schema, customTest);
         } else {
             schema = item.required ? yup.array().of(yup.mixed()).min(1).required() : yup.mixed().nullable();
+            schema = applyCustomTestToItem(item, schema, customTest);
         }
 
         schema = item.required ? schema.required() : schema;
@@ -133,8 +169,8 @@ export function questionnaireItemsToValidationSchema(questionnaireItems: FCEQues
     return yup.object(validationSchema).required() as yup.AnyObjectSchema;
 }
 
-export function questionnaireToValidationSchema(questionnaire: FCEQuestionnaire) {
-    return questionnaireItemsToValidationSchema(questionnaire.item ?? []);
+export function questionnaireToValidationSchema(questionnaire: FCEQuestionnaire, customTests?: CustomYupTestsMap) {
+    return questionnaireItemsToValidationSchema(questionnaire.item ?? [], customTests);
 }
 
 function createSchemaArrayOfValues(value: yup.AnyObjectSchema) {
