@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro';
 import { Empty } from 'antd';
 import { ColumnsType, TablePaginationConfig } from 'antd/lib/table';
+import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import { Resource } from 'fhir/r4b';
 import React, { useCallback, useMemo } from 'react';
 
@@ -19,7 +20,7 @@ import { S } from './styles';
 import { getRecordActionsColumn, ResourcesListPageReport } from '../ResourceListPage';
 import { HeaderQuestionnaireAction, WebExtra } from '../ResourceListPage/actions';
 import { BatchActions } from '../ResourceListPage/BatchActions';
-import { useResourceListPage } from '../ResourceListPage/hooks';
+import { useResourceListPage, useTableSorter } from '../ResourceListPage/hooks';
 import { RecordType, ResourceListProps, TableManager } from '../ResourceListPage/types';
 
 type ResourceListPageContentProps<R extends Resource> = ResourceListProps<R, WebExtra> & {
@@ -30,16 +31,18 @@ export function ResourceListPageContent<R extends Resource>({
     resourceType,
     extractPrimaryResources,
     extractChildrenResources,
-    searchParams,
+    searchParams: defaultSearchParams,
     getRecordActions,
     getHeaderActions,
     getBatchActions,
     getFilters,
+    getSorters,
     getTableColumns,
     defaultLaunchContext,
     getReportColumns,
 }: ResourceListPageContentProps<R>) {
     const allFilters = getFilters?.() ?? [];
+    const allSorters = getSorters?.() ?? [];
 
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
         columns: allFilters ?? [],
@@ -48,27 +51,32 @@ export function ResourceListPageContent<R extends Resource>({
         () => columnsFilterValues.filter((filter) => isTableFilter(filter)),
         [JSON.stringify(columnsFilterValues)],
     );
+    const { sortSearchParam, setCurrentSorter, currentSorter } = useTableSorter(allSorters, defaultSearchParams);
 
     const { recordResponse, reload, pagination, selectedRowKeys, setSelectedRowKeys, selectedResourcesBundle } =
-        useResourceListPage(
-            resourceType,
-            extractPrimaryResources,
-            extractChildrenResources,
-            columnsFilterValues,
-            searchParams ?? {},
-        );
+        useResourceListPage(resourceType, extractPrimaryResources, extractChildrenResources, columnsFilterValues, {
+            ...defaultSearchParams,
+            _sort: sortSearchParam,
+        });
 
     const handleTableChange = useCallback(
-        (event: TablePaginationConfig) => {
-            if (typeof event.current !== 'number') {
+        (
+            paginationConfig: TablePaginationConfig,
+            _filters: Record<string, FilterValue | null>,
+            sorter: SorterResult<RecordType<R>> | SorterResult<RecordType<R>>[],
+        ) => {
+            if (!Array.isArray(sorter)) {
+                setCurrentSorter(sorter as any as SorterResult);
+            }
+            if (typeof paginationConfig.current !== 'number') {
                 return;
             }
-            if (event.pageSize && event.pageSize !== pagination.pageSize) {
+            if (paginationConfig.pageSize && paginationConfig.pageSize !== pagination.pageSize) {
                 pagination.reload();
-                pagination.updatePageSize(event.pageSize);
+                pagination.updatePageSize(paginationConfig.pageSize);
             } else {
-                pagination.loadPage(event.current, {
-                    _page: event.current,
+                pagination.loadPage(paginationConfig.current, {
+                    _page: paginationConfig.current,
                 });
             }
             setSelectedRowKeys([]);
@@ -81,6 +89,8 @@ export function ResourceListPageContent<R extends Resource>({
     const tableColumns = populateTableColumnsWithFiltersAndSorts({
         tableColumns: initialTableColumns,
         filters: tableFilterValues,
+        sorters: allSorters,
+        currentSorter,
         onChange: onChangeColumnFilter,
     });
     const headerActions = getHeaderActions?.() ?? [];
