@@ -37,6 +37,7 @@ export function SetPassword() {
                             },
                         ],
                     }}
+                    autoSave={false}
                 />
             </S.Form>
         </S.Container>
