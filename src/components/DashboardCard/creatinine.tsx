@@ -108,6 +108,7 @@ export function CreatinineDashboard({ observationsRemoteData, patient, reload }:
                                 { name: 'Author', resource: author },
                             ]}
                             onSuccess={reload}
+                            autoSave={false}
                         />
                     </div>
                 </S.Content>
