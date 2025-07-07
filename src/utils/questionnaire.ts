@@ -1,5 +1,4 @@
 import { t } from '@lingui/macro';
-import { QuestionnaireItem } from 'fhir/r4b';
 import _ from 'lodash';
 import {
     AnswerValue,
@@ -84,24 +83,35 @@ export function getArrayDisplay(
 }
 
 export interface CustomYupTestsMap {
-    [linkId: string]: CustomYupTests;
+    [itemControlCode: string]: yup.TestConfig<any>[];
 }
 
-export interface CustomYupTests {
-    yupTests: yup.TestConfig<any>[];
-    questionnaireItemType: QuestionnaireItem['type'];
-}
-
-function applyCustomTestToItem(
+function applyCustomYupTestsToItem(
     questionnaireItem: FCEQuestionnaireItem,
     schema: yup.AnySchema,
-    customTest?: CustomYupTests,
+    customYupTests?: CustomYupTestsMap,
 ): yup.AnySchema {
-    if (!customTest || customTest.questionnaireItemType !== questionnaireItem.type) {
+    if (!customYupTests) {
         return schema;
     }
 
-    customTest.yupTests.forEach((test) => {
+    const applicableYupTests = questionnaireItem.itemControl?.coding?.reduce<yup.TestConfig<any>[]>(
+        (acc, itemControlCoding) => {
+            if (!itemControlCoding.code) {
+                return acc;
+            }
+
+            const customYupTest = customYupTests[itemControlCoding.code];
+            if (!customYupTest) {
+                return acc;
+            }
+
+            return [...acc, ...customYupTest];
+        },
+        [],
+    );
+
+    applicableYupTests?.forEach((test) => {
         schema = schema.test(test);
     });
     return schema;
@@ -109,48 +119,47 @@ function applyCustomTestToItem(
 
 export function questionnaireItemsToValidationSchema(
     questionnaireItems: FCEQuestionnaireItem[],
-    customTests?: CustomYupTestsMap,
+    customYupTests?: CustomYupTestsMap,
 ) {
     const validationSchema: Record<string, yup.AnySchema> = {};
     if (questionnaireItems.length === 0) return yup.object(validationSchema) as yup.AnyObjectSchema;
     questionnaireItems.forEach((item) => {
         let schema: yup.AnySchema;
-        const customTest = customTests?.[item.linkId];
 
         if (item.type === 'string' || item.type === 'text') {
             schema = yup.string();
             if (item.itemControl?.coding?.[0]?.code === 'email') schema = (schema as yup.StringSchema).email();
             if (item.required) schema = schema.required();
             if (item.maxLength && item.maxLength > 0) schema = (schema as yup.StringSchema).max(item.maxLength);
-            schema = applyCustomTestToItem(item, schema, customTest);
+            schema = applyCustomYupTestsToItem(item, schema, customYupTests);
             schema = createSchemaArrayOfValues(yup.object({ string: schema }));
         } else if (item.type === 'integer') {
             schema = yup.number().integer();
             if (item.required) schema = schema.required();
-            schema = applyCustomTestToItem(item, schema, customTest);
+            schema = applyCustomYupTestsToItem(item, schema, customYupTests);
             schema = createSchemaArrayOfValues(yup.object({ integer: schema }));
         } else if (item.type === 'decimal') {
             schema = yup.number();
             if (item.required) schema = schema.required();
-            schema = applyCustomTestToItem(item, schema, customTest);
+            schema = applyCustomYupTestsToItem(item, schema, customYupTests);
             schema = createSchemaArrayOfValues(yup.object({ decimal: schema }));
         } else if (item.type === 'date') {
             schema = yup.date();
             if (item.required) schema = schema.required();
-            schema = applyCustomTestToItem(item, schema, customTest);
+            schema = applyCustomYupTestsToItem(item, schema, customYupTests);
             schema = createSchemaArrayOfValues(yup.object({ date: schema }));
         } else if (item.type === 'group' && item.item) {
             schema = yup
                 .object({
                     items: item.repeats
-                        ? yup.array().of(questionnaireItemsToValidationSchema(item.item, customTests))
-                        : questionnaireItemsToValidationSchema(item.item, customTests),
+                        ? yup.array().of(questionnaireItemsToValidationSchema(item.item, customYupTests))
+                        : questionnaireItemsToValidationSchema(item.item, customYupTests),
                 })
                 .required();
-            schema = applyCustomTestToItem(item, schema, customTest);
+            schema = applyCustomYupTestsToItem(item, schema, customYupTests);
         } else {
             schema = item.required ? yup.array().of(yup.mixed()).min(1).required() : yup.mixed().nullable();
-            schema = applyCustomTestToItem(item, schema, customTest);
+            schema = applyCustomYupTestsToItem(item, schema, customYupTests);
         }
 
         schema = item.required ? schema.required() : schema;
@@ -169,8 +178,8 @@ export function questionnaireItemsToValidationSchema(
     return yup.object(validationSchema).required() as yup.AnyObjectSchema;
 }
 
-export function questionnaireToValidationSchema(questionnaire: FCEQuestionnaire, customTests?: CustomYupTestsMap) {
-    return questionnaireItemsToValidationSchema(questionnaire.item ?? [], customTests);
+export function questionnaireToValidationSchema(questionnaire: FCEQuestionnaire, customYupTests?: CustomYupTestsMap) {
+    return questionnaireItemsToValidationSchema(questionnaire.item ?? [], customYupTests);
 }
 
 function createSchemaArrayOfValues(value: yup.AnyObjectSchema) {
