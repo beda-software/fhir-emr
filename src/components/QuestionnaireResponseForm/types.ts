@@ -5,6 +5,7 @@ import {
     QuestionnaireResponseFormProps,
     QuestionnaireResponseFormSaveResponse,
 } from 'src/hooks/questionnaire-response-form-data';
+import { CustomYupTestsMap } from 'src/utils/questionnaire';
 
 export interface QRFProps extends QuestionnaireResponseFormProps {
     onSuccess?: (response: QuestionnaireResponseFormSaveResponse) => void;
@@ -17,4 +18,5 @@ export interface QRFProps extends QuestionnaireResponseFormProps {
     FormFooterComponent?: React.ElementType<FormFooterComponentProps>;
     saveButtonTitle?: React.ReactNode;
     cancelButtonTitle?: React.ReactNode;
+    customYupTests?: CustomYupTestsMap;
 }

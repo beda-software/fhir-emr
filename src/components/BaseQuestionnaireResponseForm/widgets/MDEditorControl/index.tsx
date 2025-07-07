@@ -1,11 +1,11 @@
-import { useContext } from 'react';
 import { Form } from 'antd';
+import { useContext } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
+import { MarkdownProcessorContext } from 'src/contexts/markdown-editor-context';
 
 import { MarkDownEditor } from './MarkDownEditor';
-import { MarkdownProcessorContext } from 'src/contexts/markdown-editor-context';
 
 export function MDEditorControl({ parentPath, questionItem, context }: QuestionItemProps) {
     const { linkId } = questionItem;
