@@ -95,23 +95,14 @@ function applyCustomYupTestsToItem(
         return schema;
     }
 
-    const applicableYupTests = questionnaireItem.itemControl?.coding?.reduce<yup.TestConfig<any>[]>(
-        (acc, itemControlCoding) => {
-            if (!itemControlCoding.code) {
-                return acc;
-            }
+    const itemControlCode = questionnaireItem.itemControl?.coding?.[0]?.code;
+    if (!itemControlCode) {
+        return schema;
+    }
 
-            const customYupTest = customYupTests[itemControlCoding.code];
-            if (!customYupTest) {
-                return acc;
-            }
+    const applicableYupTests = customYupTests[itemControlCode] ?? [];
 
-            return [...acc, ...customYupTest];
-        },
-        [],
-    );
-
-    applicableYupTests?.forEach((test) => {
+    applicableYupTests.forEach((test) => {
         schema = schema.test(test);
     });
     return schema;

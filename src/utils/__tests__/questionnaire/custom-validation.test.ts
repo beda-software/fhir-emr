@@ -21,7 +21,7 @@ const customYupTestsMap: CustomYupTestsMap = {
             },
         },
     ],
-    hasLowerAndUpper: [
+    hasLowerUpper: [
         {
             name: 'lower-character-set',
             message: () => t`Has at least one lower case letter`,
@@ -41,7 +41,25 @@ const customYupTestsMap: CustomYupTestsMap = {
             },
         },
     ],
-    hasNumber: [
+    hasLowerUpperNumber: [
+        {
+            name: 'lower-character-set',
+            message: () => t`Has at least one lower case letter`,
+            test: (value) => {
+                if (!value) return false;
+                const hasLowercase = /[a-z]/.test(value);
+                return hasLowercase;
+            },
+        },
+        {
+            name: 'upper-character-set',
+            message: () => t`Has at least one uppercase letter`,
+            test: (value) => {
+                if (!value) return false;
+                const hasUppercase = /[A-Z]/.test(value);
+                return hasUppercase;
+            },
+        },
         {
             name: 'number-character-set',
             message: () => t`Has at least one number`,
@@ -123,7 +141,7 @@ const QUESTIONNAIRES_TEST_DATA: QuestionnaireData[] = [
                     type: 'string',
                     text: 'Has both lower and upper',
                     itemControl: {
-                        coding: [{ code: 'hasLowerAndUpper' }],
+                        coding: [{ code: 'hasLowerUpper' }],
                     },
                 },
             ],
@@ -151,7 +169,7 @@ const QUESTIONNAIRES_TEST_DATA: QuestionnaireData[] = [
                     type: 'string',
                     text: 'Has both lower and upper',
                     itemControl: {
-                        coding: [{ code: 'hasLowerAndUpper' }],
+                        coding: [{ code: 'hasLowerUpper' }],
                     },
                 },
             ],
@@ -179,7 +197,7 @@ const QUESTIONNAIRES_TEST_DATA: QuestionnaireData[] = [
                     type: 'string',
                     text: 'Has both lower and upper',
                     itemControl: {
-                        coding: [{ code: 'hasLowerAndUpper' }],
+                        coding: [{ code: 'hasLowerUpper' }],
                     },
                 },
             ],
@@ -207,7 +225,7 @@ const QUESTIONNAIRES_TEST_DATA: QuestionnaireData[] = [
                     type: 'string',
                     text: 'Has lower',
                     itemControl: {
-                        coding: [{ code: 'hasLower' }, { code: 'hasNumber' }],
+                        coding: [{ code: 'hasLowerUpperNumber' }],
                     },
                 },
             ],
@@ -235,7 +253,7 @@ const QUESTIONNAIRES_TEST_DATA: QuestionnaireData[] = [
                     type: 'string',
                     text: 'Has lower',
                     itemControl: {
-                        coding: [{ code: 'hasLower' }, { code: 'hasNumber' }],
+                        coding: [{ code: 'hasLowerUpperNumber' }],
                     },
                 },
             ],
@@ -244,7 +262,35 @@ const QUESTIONNAIRES_TEST_DATA: QuestionnaireData[] = [
             custom: [
                 {
                     value: {
-                        string: 'lower123',
+                        string: 'lowerUPPER',
+                    },
+                },
+            ],
+        },
+        success: false,
+    },
+    {
+        questionnaire: {
+            resourceType: 'Questionnaire',
+            id: 'custom-control',
+            title: 'Item with custom item control',
+            status: 'active',
+            item: [
+                {
+                    linkId: 'custom',
+                    type: 'string',
+                    text: 'Has lower',
+                    itemControl: {
+                        coding: [{ code: 'hasLowerUpperNumber' }],
+                    },
+                },
+            ],
+        },
+        answer: {
+            custom: [
+                {
+                    value: {
+                        string: 'lowerUPPER123',
                     },
                 },
             ],
