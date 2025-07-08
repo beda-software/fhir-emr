@@ -4,10 +4,15 @@ import { useParams } from 'react-router-dom';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Title } from 'src/components/Typography';
 import { inMemorySaveService, questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
+import { CustomYupTestsMap } from 'src/utils';
 
 import { S } from './SetPassword.styles';
 
-export function SetPassword() {
+interface SetPasswordProps {
+    customYupTests?: CustomYupTestsMap;
+}
+
+export function SetPassword(props: SetPasswordProps) {
     const { code } = useParams<{ code: string }>();
 
     return (
@@ -17,6 +22,7 @@ export function SetPassword() {
                     <Trans>Set password</Trans>
                 </Title>
                 <QuestionnaireResponseForm
+                    customYupTests={props.customYupTests}
                     questionnaireLoader={questionnaireIdLoader('set-password')}
                     questionnaireResponseSaveService={inMemorySaveService}
                     onSuccess={() => {

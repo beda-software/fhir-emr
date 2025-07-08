@@ -32,7 +32,7 @@ import {
 } from 'src/components/QuestionnaireResponseForm';
 import { QuestionnaireResponseDraftService } from 'src/hooks';
 import { useDebounce } from 'src/utils';
-import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
+import { CustomYupTestsMap, questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
 import s from './BaseQuestionnaireResponseForm.module.scss';
 import {
@@ -71,6 +71,8 @@ export interface BaseQuestionnaireResponseFormProps {
     FormFooterComponent?: React.ElementType<FormFooterComponentProps>;
     saveButtonTitle?: React.ReactNode;
     cancelButtonTitle?: React.ReactNode;
+
+    customYupTests?: CustomYupTestsMap;
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
@@ -84,6 +86,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         qrDraftServiceType = 'local',
         onDraftSaved,
         onCancel,
+        customYupTests,
     } = props;
 
     const questionnaireId = formData.context.fceQuestionnaire.assembledFrom;
@@ -95,8 +98,8 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
     });
 
     const schema: yup.AnyObjectSchema = useMemo(
-        () => questionnaireToValidationSchema(formData.context.fceQuestionnaire),
-        [formData.context.fceQuestionnaire],
+        () => questionnaireToValidationSchema(formData.context.fceQuestionnaire, customYupTests),
+        [formData.context.fceQuestionnaire, customYupTests],
     );
 
     const methods = useForm<FormItems>({
