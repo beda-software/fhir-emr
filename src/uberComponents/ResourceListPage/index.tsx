@@ -136,13 +136,13 @@ export function ResourceListPage<R extends Resource>({
                                 defaultLaunchContext={defaultLaunchContext ?? []}
                             />
                         </React.Fragment>
-                    )
-                } else if(isNavigationAction(action)){
+                    );
+                } else if (isNavigationAction(action)) {
                     return (
                         <React.Fragment key={index}>
                             <HeaderNavigationAction action={action} />
                         </React.Fragment>
-                    )
+                    );
                 }
             })}
             headerContent={

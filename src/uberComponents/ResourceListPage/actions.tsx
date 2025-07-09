@@ -180,15 +180,10 @@ export function NavigationAction<R extends Resource>({
     );
 }
 
-
-export function HeaderNavigationAction<R extends Resource>({
-    action,
-}: {
-    action: NavigationActionType;
-    }) {
+export function HeaderNavigationAction<R extends Resource>({ action }: { action: NavigationActionType }) {
     const navigate = useNavigate();
     return (
-        <Button type="primary" icon={action.icon} onClick={() => navigate(action.link)} >
+        <Button type="primary" icon={action.icon} onClick={() => navigate(action.link)}>
             <span>{action.title}</span>
         </Button>
     );

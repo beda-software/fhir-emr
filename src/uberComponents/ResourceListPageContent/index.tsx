@@ -21,7 +21,13 @@ import { getRecordActionsColumn, ResourcesListPageReport } from '../ResourceList
 import { HeaderNavigationAction, HeaderQuestionnaireAction, WebExtra } from '../ResourceListPage/actions';
 import { BatchActions } from '../ResourceListPage/BatchActions';
 import { useResourceListPage, useTableSorter } from '../ResourceListPage/hooks';
-import { isNavigationAction, isQuestionnaireAction, RecordType, ResourceListProps, TableManager } from '../ResourceListPage/types';
+import {
+    isNavigationAction,
+    isQuestionnaireAction,
+    RecordType,
+    ResourceListProps,
+    TableManager,
+} from '../ResourceListPage/types';
 
 type ResourceListPageContentProps<R extends Resource> = ResourceListProps<R, WebExtra> & {
     getTableColumns: (manager: TableManager) => ColumnsType<RecordType<R>>;
@@ -126,13 +132,13 @@ export function ResourceListPageContent<R extends Resource>({
                                         defaultLaunchContext={defaultLaunchContext ?? []}
                                     />
                                 </React.Fragment>
-                            )
+                            );
                         } else if (isNavigationAction(action)) {
                             return (
                                 <React.Fragment key={index}>
                                     <HeaderNavigationAction action={action} />
                                 </React.Fragment>
-                            )
+                            );
                         }
                     })}
                 </S.HeaderRightColumn>
