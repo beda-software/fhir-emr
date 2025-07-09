@@ -18,10 +18,10 @@ import { populateTableColumnsWithFiltersAndSorts } from 'src/components/Table/ut
 
 import { S } from './styles';
 import { getRecordActionsColumn, ResourcesListPageReport } from '../ResourceListPage';
-import { HeaderQuestionnaireAction, WebExtra } from '../ResourceListPage/actions';
+import { HeaderNavigationAction, HeaderQuestionnaireAction, WebExtra } from '../ResourceListPage/actions';
 import { BatchActions } from '../ResourceListPage/BatchActions';
 import { useResourceListPage, useTableSorter } from '../ResourceListPage/hooks';
-import { RecordType, ResourceListProps, TableManager } from '../ResourceListPage/types';
+import { isNavigationAction, isQuestionnaireAction, RecordType, ResourceListProps, TableManager } from '../ResourceListPage/types';
 
 type ResourceListPageContentProps<R extends Resource> = ResourceListProps<R, WebExtra> & {
     getTableColumns: (manager: TableManager) => ColumnsType<RecordType<R>>;
@@ -116,15 +116,25 @@ export function ResourceListPageContent<R extends Resource>({
                     ) : null}
                 </S.HeaderLeftColumn>
                 <S.HeaderRightColumn $hasFilters={hasFilters}>
-                    {headerActions.map((action, index) => (
-                        <React.Fragment key={index}>
-                            <HeaderQuestionnaireAction
-                                action={action}
-                                reload={reload}
-                                defaultLaunchContext={defaultLaunchContext ?? []}
-                            />
-                        </React.Fragment>
-                    ))}
+                    {headerActions.map((action, index) => {
+                        if (isQuestionnaireAction(action)) {
+                            return (
+                                <React.Fragment key={index}>
+                                    <HeaderQuestionnaireAction
+                                        action={action}
+                                        reload={reload}
+                                        defaultLaunchContext={defaultLaunchContext ?? []}
+                                    />
+                                </React.Fragment>
+                            )
+                        } else if (isNavigationAction(action)) {
+                            return (
+                                <React.Fragment key={index}>
+                                    <HeaderNavigationAction action={action} />
+                                </React.Fragment>
+                            )
+                        }
+                    })}
                 </S.HeaderRightColumn>
             </S.Header>
         );

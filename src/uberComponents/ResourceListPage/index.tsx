@@ -26,6 +26,7 @@ import {
     isQuestionnaireAction,
     NavigationAction,
     RecordQuestionnaireAction,
+    HeaderNavigationAction,
     HeaderQuestionnaireAction,
     isCustomAction,
     WebExtra,
@@ -125,15 +126,25 @@ export function ResourceListPage<R extends Resource>({
         <PageContainer
             title={title}
             maxWidth={maxWidth}
-            titleRightElement={headerActions.map((action, index) => (
-                <React.Fragment key={index}>
-                    <HeaderQuestionnaireAction
-                        action={action}
-                        reload={reload}
-                        defaultLaunchContext={defaultLaunchContext ?? []}
-                    />
-                </React.Fragment>
-            ))}
+            titleRightElement={headerActions.map((action, index) => {
+                if (isQuestionnaireAction(action)) {
+                    return (
+                        <React.Fragment key={index}>
+                            <HeaderQuestionnaireAction
+                                action={action}
+                                reload={reload}
+                                defaultLaunchContext={defaultLaunchContext ?? []}
+                            />
+                        </React.Fragment>
+                    )
+                } else if(isNavigationAction(action)){
+                    return (
+                        <React.Fragment key={index}>
+                            <HeaderNavigationAction action={action} />
+                        </React.Fragment>
+                    )
+                }
+            })}
             headerContent={
                 columnsFilterValues.length ? (
                     <SearchBar
