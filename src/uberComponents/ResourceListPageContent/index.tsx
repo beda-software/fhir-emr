@@ -28,6 +28,8 @@ import {
     ResourceListProps,
     TableManager,
 } from '../ResourceListPage/types';
+import { useResourceListPage, useSearchBarForGenericFilters } from '../ResourceListPage/hooks';
+import { RecordType, ResourceListProps, TableManager } from '../ResourceListPage/types';
 
 type ResourceListPageContentProps<R extends Resource> = ResourceListProps<R, WebExtra> & {
     getTableColumns: (manager: TableManager) => ColumnsType<RecordType<R>>;

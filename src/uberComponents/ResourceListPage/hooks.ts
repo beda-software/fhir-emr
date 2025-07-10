@@ -1,4 +1,3 @@
-import { SorterResult } from 'antd/lib/table/interface';
 import { Bundle, Resource } from 'fhir/r4b';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -11,7 +10,7 @@ import { getSearchBarColumnFilterValue } from 'src/components/SearchBar/utils';
 import { service } from 'src/services/fhir';
 import { useDebounce } from 'src/utils/debounce';
 
-import { RecordType } from './types';
+import { RecordType, ResourceListProps } from './types';
 
 export function useResourceListPage<R extends Resource>(
     resourceType: R['resourceType'],
@@ -166,4 +165,23 @@ export function useTableSorter(sorters: SorterColumn[], defaultSearchParams?: Se
     }, [currentSorter, sorters, defaultSearchParams]);
 
     return { sortSearchParam, setCurrentSorter, currentSorter };
+}
+
+export function useSearchBarForGenericFilters(getFilters?: ResourceListProps<Resource>['getFilters']) {
+    const defaultValues = Object.fromEntries(getFilters?.({}).map((column) => [column.id, column.defaultValue]) ?? []);
+    const [values, setValues] = useState(defaultValues);
+    const onResetFilters = useCallback(() => {
+        setValues(defaultValues);
+    }, [defaultValues]);
+
+    const columnDefinitions = getFilters?.(values) ?? [];
+    // TODO: add validation
+    const onChangeColumnFilter = (value: any, id: string) => setValues((prev) => ({ ...prev, [id]: value as any }));
+
+    const columnsFilterValues = columnDefinitions.map((column) => ({
+        column: column as any,
+        value: values[column.id] as any,
+    }));
+
+    return { columnsFilterValues, onChangeColumnFilter, onResetFilters };
 }
