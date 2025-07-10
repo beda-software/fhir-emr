@@ -1,3 +1,4 @@
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Trans } from '@lingui/macro';
 import { Empty } from 'antd';
 import { ColumnsType, TablePaginationConfig } from 'antd/lib/table';
@@ -43,6 +44,9 @@ type ResourceListPageProps<R extends Resource> = ResourceListProps<R, WebExtra> 
     /* Page header title (for example, Organizations) */
     headerTitle: string;
 
+    /* Should the back button be displayed? */
+    backButtonVisible?: boolean;
+
     /* Page content max width */
     maxWidth?: number | string;
 
@@ -52,6 +56,7 @@ type ResourceListPageProps<R extends Resource> = ResourceListProps<R, WebExtra> 
 
 export function ResourceListPage<R extends Resource>({
     headerTitle: title,
+    backButtonVisible,
     maxWidth,
     resourceType,
     extractPrimaryResources,
@@ -79,7 +84,7 @@ export function ResourceListPage<R extends Resource>({
 
     const { sortSearchParam, setCurrentSorter, currentSorter } = useTableSorter(allSorters, defaultSearchParams);
 
-    const { recordResponse, reload, pagination, selectedRowKeys, setSelectedRowKeys, selectedResourcesBundle } =
+    const { recordResponse, reload, pagination, selectedRowKeys, setSelectedRowKeys, selectedResourcesBundle, goBack } =
         useResourceListPage(resourceType, extractPrimaryResources, extractChildrenResources, columnsFilterValues, {
             ...defaultSearchParams,
             _sort: sortSearchParam,
@@ -126,6 +131,7 @@ export function ResourceListPage<R extends Resource>({
         <PageContainer
             title={title}
             maxWidth={maxWidth}
+            titleLeftElement={backButtonVisible ? <ArrowLeftOutlined onClick={goBack} /> : null}
             titleRightElement={headerActions.map((action, index) => {
                 if (isQuestionnaireAction(action)) {
                     return (
