@@ -1,6 +1,8 @@
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Trans } from '@lingui/macro';
 import { Empty } from 'antd';
 import { ColumnsType, TablePaginationConfig } from 'antd/lib/table';
+import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 import React, { useCallback, useMemo } from 'react';
 
@@ -10,6 +12,7 @@ import { isFailure, isLoading, isSuccess, RemoteData } from '@beda.software/remo
 import { PageContainer } from 'src/components/BaseLayout/PageContainer';
 import { Report } from 'src/components/Report';
 import { SearchBar } from 'src/components/SearchBar';
+import { useSearchBar } from 'src/components/SearchBar/hooks';
 import { isTableFilter } from 'src/components/SearchBar/utils';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
@@ -24,13 +27,14 @@ import {
     isQuestionnaireAction,
     NavigationAction,
     RecordQuestionnaireAction,
+    HeaderNavigationAction,
     HeaderQuestionnaireAction,
     isCustomAction,
     WebExtra,
 } from './actions';
 export { navigationAction, customAction, questionnaireAction } from './actions';
 import { BatchActions } from './BatchActions';
-import { useResourceListPage, useSearchBarForGenericFilters } from './hooks';
+import { useResourceListPage, useTableSorter } from './hooks';
 import { S } from './styles';
 import { ResourceListProps, ReportColumn, TableManager } from './types';
 
@@ -40,57 +44,70 @@ type ResourceListPageProps<R extends Resource> = ResourceListProps<R, WebExtra> 
     /* Page header title (for example, Organizations) */
     headerTitle: string;
 
+    /* Should the back button be displayed? */
+    backButtonVisible?: boolean;
+
     /* Page content max width */
     maxWidth?: number | string;
 
     /* Table columns without action column - action column is generated based on `getRecordActions` */
     getTableColumns: (manager: TableManager) => ColumnsType<RecordType<R>>;
-
-    expandableRowComponent?: (record: RecordType<R>) => React.ReactNode;
 };
 
 export function ResourceListPage<R extends Resource>({
     headerTitle: title,
+    backButtonVisible,
     maxWidth,
     resourceType,
     extractPrimaryResources,
     extractChildrenResources,
-    searchParams,
+    searchParams: defaultSearchParams,
     getRecordActions,
     getHeaderActions,
     getBatchActions,
     getFilters,
+    getSorters,
     getTableColumns,
     defaultLaunchContext,
     getReportColumns,
-    expandableRowComponent,
 }: ResourceListPageProps<R>) {
-    const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBarForGenericFilters(getFilters);
+    const allFilters = getFilters?.() ?? [];
+    const allSorters = useMemo(() => getSorters?.() ?? [], [getSorters]);
+
+    const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
+        columns: allFilters ?? [],
+    });
     const tableFilterValues = useMemo(
         () => columnsFilterValues.filter((filter) => isTableFilter(filter)),
         [JSON.stringify(columnsFilterValues)],
     );
 
-    const { recordResponse, reload, pagination, selectedRowKeys, setSelectedRowKeys, selectedResourcesBundle } =
-        useResourceListPage(
-            resourceType,
-            extractPrimaryResources,
-            extractChildrenResources,
-            columnsFilterValues,
-            searchParams ?? {},
-        );
+    const { sortSearchParam, setCurrentSorter, currentSorter } = useTableSorter(allSorters, defaultSearchParams);
+
+    const { recordResponse, reload, pagination, selectedRowKeys, setSelectedRowKeys, selectedResourcesBundle, goBack } =
+        useResourceListPage(resourceType, extractPrimaryResources, extractChildrenResources, columnsFilterValues, {
+            ...defaultSearchParams,
+            _sort: sortSearchParam,
+        });
 
     const handleTableChange = useCallback(
-        (event: TablePaginationConfig) => {
-            if (typeof event.current !== 'number') {
+        (
+            paginationConfig: TablePaginationConfig,
+            _filters: Record<string, FilterValue | null>,
+            sorter: SorterResult<RecordType<R>> | SorterResult<RecordType<R>>[],
+        ) => {
+            if (!Array.isArray(sorter)) {
+                setCurrentSorter(sorter as any as SorterResult);
+            }
+            if (typeof paginationConfig.current !== 'number') {
                 return;
             }
-            if (event.pageSize && event.pageSize !== pagination.pageSize) {
+            if (paginationConfig.pageSize && paginationConfig.pageSize !== pagination.pageSize) {
                 pagination.reload();
-                pagination.updatePageSize(event.pageSize);
+                pagination.updatePageSize(paginationConfig.pageSize);
             } else {
-                pagination.loadPage(event.current, {
-                    _page: event.current,
+                pagination.loadPage(paginationConfig.current, {
+                    _page: paginationConfig.current,
                 });
             }
             setSelectedRowKeys([]);
@@ -103,24 +120,37 @@ export function ResourceListPage<R extends Resource>({
     const tableColumns = populateTableColumnsWithFiltersAndSorts({
         tableColumns: initialTableColumns,
         filters: tableFilterValues,
+        sorters: allSorters,
+        currentSorter,
         onChange: onChangeColumnFilter,
     });
     const headerActions = getHeaderActions?.() ?? [];
-    const batchActions = getBatchActions?.() ?? [];
+    const batchActions = getBatchActions?.(selectedResourcesBundle) ?? [];
 
     return (
         <PageContainer
             title={title}
             maxWidth={maxWidth}
-            titleRightElement={headerActions.map((action, index) => (
-                <React.Fragment key={index}>
-                    <HeaderQuestionnaireAction
-                        action={action}
-                        reload={reload}
-                        defaultLaunchContext={defaultLaunchContext ?? []}
-                    />
-                </React.Fragment>
-            ))}
+            titleLeftElement={backButtonVisible ? <ArrowLeftOutlined onClick={goBack} /> : null}
+            titleRightElement={headerActions.map((action, index) => {
+                if (isQuestionnaireAction(action)) {
+                    return (
+                        <React.Fragment key={index}>
+                            <HeaderQuestionnaireAction
+                                action={action}
+                                reload={reload}
+                                defaultLaunchContext={defaultLaunchContext ?? []}
+                            />
+                        </React.Fragment>
+                    );
+                } else if (isNavigationAction(action)) {
+                    return (
+                        <React.Fragment key={index}>
+                            <HeaderNavigationAction action={action} />
+                        </React.Fragment>
+                    );
+                }
+            })}
             headerContent={
                 columnsFilterValues.length ? (
                     <SearchBar
@@ -180,13 +210,6 @@ export function ResourceListPage<R extends Resource>({
                         : []),
                 ]}
                 loading={isLoading(recordResponse) && { indicator: SpinIndicator }}
-                expandable={
-                    expandableRowComponent
-                        ? {
-                              expandedRowRender: (record: RecordType<R>) => expandableRowComponent(record),
-                          }
-                        : undefined
-                }
             />
         </PageContainer>
     );

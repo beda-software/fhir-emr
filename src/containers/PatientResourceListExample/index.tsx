@@ -108,6 +108,13 @@ export function PatientResourceListExample() {
                     placement: ['table'],
                 },
             ]}
+            getSorters={() => [
+                {
+                    id: 'name',
+                    searchParam: 'name',
+                    label: 'Name',
+                },
+            ]}
             getRecordActions={(record) => [
                 navigationAction('Open', `/patients/${record.resource.id}`),
                 questionnaireAction('Edit', 'patient-edit'),

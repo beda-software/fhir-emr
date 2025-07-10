@@ -16,11 +16,14 @@ export function useFieldController<T = unknown>(fieldName: any, questionItem: FC
     // @ts-ignore we can use array as value
     const { control } = useFormContext<T>();
 
+    const isGroup = questionItem.type === 'group';
+    const defaultValue = isGroup ? { items: [] } : [];
+
     // @ts-ignore we can use array as value
     const { field, fieldState } = useController<T>({
         control,
         name: fieldName.join('.'),
-        ...(repeats ? { defaultValue: [] } : {}),
+        ...(repeats ? { defaultValue } : {}),
     });
 
     const invalidFieldMessage = getFieldErrorMessage(field, fieldState, text);

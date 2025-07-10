@@ -4,12 +4,12 @@ import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 
 import { Text } from 'src/components/Typography';
 
-import { QuestionnaireActionType, BatchQuestionnaireAction } from './actions';
+import { QuestionnaireActionType, BatchQuestionnaireAction, CustomActionType } from './actions';
 import { S } from './styles';
 export { navigationAction, customAction, questionnaireAction } from './actions';
 
 interface BatchActionsProps<R extends Resource> {
-    batchActions: QuestionnaireActionType[];
+    batchActions: Array<QuestionnaireActionType | CustomActionType>;
     selectedRowKeys: React.Key[];
     allKeys: React.Key[];
     setSelectedRowKeys: (keys: React.Key[]) => void;
