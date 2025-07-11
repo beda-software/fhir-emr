@@ -1,6 +1,8 @@
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Trans } from '@lingui/macro';
 import { Empty } from 'antd';
 import { ColumnsType, TablePaginationConfig } from 'antd/lib/table';
+import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 import React, { useCallback, useMemo } from 'react';
 
@@ -25,13 +27,14 @@ import {
     isQuestionnaireAction,
     NavigationAction,
     RecordQuestionnaireAction,
+    HeaderNavigationAction,
     HeaderQuestionnaireAction,
     isCustomAction,
     WebExtra,
 } from './actions';
 export { navigationAction, customAction, questionnaireAction } from './actions';
 import { BatchActions } from './BatchActions';
-import { useResourceListPage } from './hooks';
+import { useResourceListPage, useTableSorter } from './hooks';
 import { S } from './styles';
 import { ResourceListProps, ReportColumn, TableManager } from './types';
 
@@ -40,6 +43,9 @@ type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
 type ResourceListPageProps<R extends Resource> = ResourceListProps<R, WebExtra> & {
     /* Page header title (for example, Organizations) */
     headerTitle: string;
+
+    /* Should the back button be displayed? */
+    backButtonVisible?: boolean;
 
     /* Page content max width */
     maxWidth?: number | string;
@@ -50,20 +56,23 @@ type ResourceListPageProps<R extends Resource> = ResourceListProps<R, WebExtra> 
 
 export function ResourceListPage<R extends Resource>({
     headerTitle: title,
+    backButtonVisible,
     maxWidth,
     resourceType,
     extractPrimaryResources,
     extractChildrenResources,
-    searchParams,
+    searchParams: defaultSearchParams,
     getRecordActions,
     getHeaderActions,
     getBatchActions,
     getFilters,
+    getSorters,
     getTableColumns,
     defaultLaunchContext,
     getReportColumns,
 }: ResourceListPageProps<R>) {
     const allFilters = getFilters?.() ?? [];
+    const allSorters = useMemo(() => getSorters?.() ?? [], [getSorters]);
 
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
         columns: allFilters ?? [],
@@ -73,26 +82,32 @@ export function ResourceListPage<R extends Resource>({
         [JSON.stringify(columnsFilterValues)],
     );
 
-    const { recordResponse, reload, pagination, selectedRowKeys, setSelectedRowKeys, selectedResourcesBundle } =
-        useResourceListPage(
-            resourceType,
-            extractPrimaryResources,
-            extractChildrenResources,
-            columnsFilterValues,
-            searchParams ?? {},
-        );
+    const { sortSearchParam, setCurrentSorter, currentSorter } = useTableSorter(allSorters, defaultSearchParams);
+
+    const { recordResponse, reload, pagination, selectedRowKeys, setSelectedRowKeys, selectedResourcesBundle, goBack } =
+        useResourceListPage(resourceType, extractPrimaryResources, extractChildrenResources, columnsFilterValues, {
+            ...defaultSearchParams,
+            _sort: sortSearchParam,
+        });
 
     const handleTableChange = useCallback(
-        (event: TablePaginationConfig) => {
-            if (typeof event.current !== 'number') {
+        (
+            paginationConfig: TablePaginationConfig,
+            _filters: Record<string, FilterValue | null>,
+            sorter: SorterResult<RecordType<R>> | SorterResult<RecordType<R>>[],
+        ) => {
+            if (!Array.isArray(sorter)) {
+                setCurrentSorter(sorter as any as SorterResult);
+            }
+            if (typeof paginationConfig.current !== 'number') {
                 return;
             }
-            if (event.pageSize && event.pageSize !== pagination.pageSize) {
+            if (paginationConfig.pageSize && paginationConfig.pageSize !== pagination.pageSize) {
                 pagination.reload();
-                pagination.updatePageSize(event.pageSize);
+                pagination.updatePageSize(paginationConfig.pageSize);
             } else {
-                pagination.loadPage(event.current, {
-                    _page: event.current,
+                pagination.loadPage(paginationConfig.current, {
+                    _page: paginationConfig.current,
                 });
             }
             setSelectedRowKeys([]);
@@ -105,6 +120,8 @@ export function ResourceListPage<R extends Resource>({
     const tableColumns = populateTableColumnsWithFiltersAndSorts({
         tableColumns: initialTableColumns,
         filters: tableFilterValues,
+        sorters: allSorters,
+        currentSorter,
         onChange: onChangeColumnFilter,
     });
     const headerActions = getHeaderActions?.() ?? [];
@@ -114,15 +131,26 @@ export function ResourceListPage<R extends Resource>({
         <PageContainer
             title={title}
             maxWidth={maxWidth}
-            titleRightElement={headerActions.map((action, index) => (
-                <React.Fragment key={index}>
-                    <HeaderQuestionnaireAction
-                        action={action}
-                        reload={reload}
-                        defaultLaunchContext={defaultLaunchContext ?? []}
-                    />
-                </React.Fragment>
-            ))}
+            titleLeftElement={backButtonVisible ? <ArrowLeftOutlined onClick={goBack} /> : null}
+            titleRightElement={headerActions.map((action, index) => {
+                if (isQuestionnaireAction(action)) {
+                    return (
+                        <React.Fragment key={index}>
+                            <HeaderQuestionnaireAction
+                                action={action}
+                                reload={reload}
+                                defaultLaunchContext={defaultLaunchContext ?? []}
+                            />
+                        </React.Fragment>
+                    );
+                } else if (isNavigationAction(action)) {
+                    return (
+                        <React.Fragment key={index}>
+                            <HeaderNavigationAction action={action} />
+                        </React.Fragment>
+                    );
+                }
+            })}
             headerContent={
                 columnsFilterValues.length ? (
                     <SearchBar

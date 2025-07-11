@@ -60,11 +60,8 @@ export function PageContainer(props: PageContainerProps = {}) {
             <S.HeaderContainer maxWidth={maxWidth} $variant={layoutVariant}>
                 <S.Header>
                     <S.HeaderLeftColumn>
-                        {titleLeftElement ? (
-                            titleLeftElement
-                        ) : (
-                            <>{title && <PageContainerTitle>{title}</PageContainerTitle>}</>
-                        )}
+                        {titleLeftElement ? titleLeftElement : null}
+                        {title ? <PageContainerTitle>{title}</PageContainerTitle> : null}
                     </S.HeaderLeftColumn>
                     {titleRightElement && <S.HeaderRightColumn>{titleRightElement}</S.HeaderRightColumn>}
                 </S.Header>

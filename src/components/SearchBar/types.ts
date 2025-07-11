@@ -165,3 +165,10 @@ export interface SearchBarData {
     onChangeColumnFilter: (value: ColumnFilterValue['value'], key: string) => void;
     onResetFilters: () => void;
 }
+
+export interface SorterColumn {
+    id: string;
+    searchParam: string;
+    label: string;
+    // NOTE: add placement? prtoperty similar to SearchBarColumn
+}
