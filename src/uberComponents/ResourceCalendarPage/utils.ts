@@ -271,7 +271,7 @@ export function prepareResourceToShowOrEdit(
                 return [];
             } else {
                 if (typeof value === 'string') {
-                    const result = value?.split('/')?.[1];
+                    const result = value?.split('/')?.[1] || value
                     return [
                         {
                             url: `ext:${spKey}`,
