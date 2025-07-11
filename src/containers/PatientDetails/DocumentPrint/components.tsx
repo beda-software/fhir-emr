@@ -64,13 +64,19 @@ export function DocumentPrintAnswers(props: {
     return qrItems;
 }
 
-export function DocumentPrint(props: { headerHeight?: string; footerHeight?: string; pageMargin?: string }) {
+interface DocumentPrintProps {
+    headerHeight?: string;
+    footerHeight?: string;
+    pageMargin?: string;
+}
+
+export function DocumentPrint(props: DocumentPrintProps) {
     const { headerHeight, footerHeight, pageMargin } = props;
-    const { response } = usePatientDocumentPrint();
+    const questionnaireDataRD = usePatientDocumentPrint();
 
     return (
         <>
-            <RenderRemoteData remoteData={response} renderLoading={Spinner}>
+            <RenderRemoteData remoteData={questionnaireDataRD} renderLoading={Spinner}>
                 {(bundle) => {
                     return (
                         <S.Container $pageMargin={pageMargin}>
