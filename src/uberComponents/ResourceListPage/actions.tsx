@@ -179,3 +179,12 @@ export function NavigationAction<R extends Resource>({
         </S.LinkButton>
     );
 }
+
+export function HeaderNavigationAction<R extends Resource>({ action }: { action: NavigationActionType }) {
+    const navigate = useNavigate();
+    return (
+        <Button type="primary" icon={action.icon} onClick={() => navigate(action.link)}>
+            <span>{action.title}</span>
+        </Button>
+    );
+}

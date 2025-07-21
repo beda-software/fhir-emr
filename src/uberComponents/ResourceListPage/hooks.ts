@@ -1,6 +1,7 @@
 import { SorterResult } from 'antd/lib/table/interface';
 import { Bundle, Resource } from 'fhir/r4b';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { SearchParams, usePager } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess } from '@beda.software/remote-data';
@@ -22,6 +23,11 @@ export function useResourceListPage<R extends Resource>(
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
     const debouncedFilterValues = useDebounce(filterValues, 300);
+
+    const navigate = useNavigate();
+    const goBack = useCallback(() => {
+        navigate(-1);
+    }, [navigate]);
 
     const searchBarSearchParams = {
         ...Object.fromEntries(
@@ -115,6 +121,7 @@ export function useResourceListPage<R extends Resource>(
         setSelectedRowKeys,
         selectedResourcesBundle,
         reload,
+        goBack,
     };
 }
 
