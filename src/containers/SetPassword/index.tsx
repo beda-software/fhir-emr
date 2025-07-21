@@ -43,7 +43,6 @@ export function SetPassword(props: SetPasswordProps) {
                             },
                         ],
                     }}
-                    autoSave={false}
                 />
             </S.Form>
         </S.Container>

@@ -24,7 +24,7 @@ import config from '@beda.software/emr-config';
 import { WithId, formatFHIRDateTime, getReference, useService } from '@beda.software/fhir-react';
 import { RemoteDataResult, failure, isFailure, isSuccess, mapSuccess, success } from '@beda.software/remote-data';
 
-import { patchFHIRResource, saveFHIRResource, service } from 'src/services/fhir';
+import { createFHIRResource, getFHIRResource, patchFHIRResource, saveFHIRResource, service } from 'src/services/fhir';
 
 export type QuestionnaireResponseFormSaveResponse<R extends Resource = any> = {
     questionnaireResponse: FHIRQuestionnaireResponse;
@@ -74,7 +74,7 @@ type QuestionnaireResponseDraftSaveService = (
 
 type QuestionnaireResponseDraftLoadService = (
     id: Resource['id'],
-) => RemoteDataResult<WithId<FHIRQuestionnaireResponse>>;
+) => Promise<RemoteDataResult<WithId<FHIRQuestionnaireResponse>>>;
 
 type QuestionnaireResponseDraftDeleteService = (
     id: Resource['id'],
@@ -115,18 +115,18 @@ export const getQuestionnaireResponseDraftServices = (
 export const inMemorySaveService: QuestionnaireResponseSaveService = (qr: FHIRQuestionnaireResponse) =>
     Promise.resolve(success(qr));
 
-export const persistSaveService: QuestionnaireResponseSaveService = (qr: FHIRQuestionnaireResponse) =>
-    saveFHIRResource(qr);
+export const persistSaveService: QuestionnaireResponseSaveService = async (qr: FHIRQuestionnaireResponse) =>
+    await saveFHIRResource(qr);
 
-export const persistDraftSaveService: QuestionnaireResponseDraftSaveService = (
+export const persistDraftSaveService: QuestionnaireResponseDraftSaveService = async (
     qr: FHIRQuestionnaireResponse,
     id: Resource['id'],
 ) => {
-    const isCreating = qr.id !== id;
+    const qrRD = await getFHIRResource<QuestionnaireResponse>({ reference: `QuestionnaireResponse/${id}` });
 
-    const response = isCreating
-        ? saveFHIRResource(qr)
-        : patchFHIRResource<QuestionnaireResponse>(qr, { status: 'in-progress' });
+    const response = isSuccess(qrRD)
+        ? patchFHIRResource<QuestionnaireResponse>(qr, { status: 'in-progress' })
+        : createFHIRResource<QuestionnaireResponse>(qr);
 
     return response;
 };
@@ -145,23 +145,25 @@ export const localStorageDraftSaveService: QuestionnaireResponseDraftSaveService
 
 export const persistDraftLoadService: QuestionnaireResponseDraftLoadService = (id: Resource['id']) => {
     if (!id) {
-        return failure(t`Resource id is not provided`);
+        return Promise.resolve(failure(t`Resource id is not provided`));
     }
 
-    return failure({} as FHIRQuestionnaireResponse);
+    return getFHIRResource<FHIRQuestionnaireResponse>({
+        reference: `QuestionnaireResponse/${id}`,
+    });
 };
 
 export const localStorageDraftLoadService: QuestionnaireResponseDraftLoadService = (id: Resource['id']) => {
     if (!id) {
-        return failure(t`Resource id is not provided`);
+        return Promise.resolve(failure(t`Resource id is not provided`));
     }
 
     const localStorageQR = localStorage.getItem(id);
     if (!localStorageQR) {
-        return failure(t`QuestionnaireResponse not found in local storage`);
+        return Promise.resolve(failure(t`QuestionnaireResponse not found in local storage`));
     }
 
-    return success(JSON.parse(localStorageQR));
+    return Promise.resolve(success(JSON.parse(localStorageQR)));
 };
 
 export const persistDraftDeleteService: QuestionnaireResponseDraftDeleteService = async (id: Resource['id']) => {

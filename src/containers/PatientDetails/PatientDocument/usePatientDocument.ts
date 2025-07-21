@@ -10,14 +10,12 @@ import {
     Provenance,
     QuestionnaireResponse,
     Reference,
-    Resource,
 } from 'fhir/r4b';
 import _ from 'lodash';
-import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
-import { getReference, ServiceManager, useService, uuid4, WithId } from '@beda.software/fhir-react';
+import { getReference, ServiceManager, useService, WithId } from '@beda.software/fhir-react';
 import {
     isSuccess,
     mapSuccess,
@@ -29,15 +27,13 @@ import {
     success,
 } from '@beda.software/remote-data';
 
-import { getQuestionnaireResponseDraftId, onFormResponse } from 'src/components/QuestionnaireResponseForm';
+import { onFormResponse } from 'src/components/QuestionnaireResponseForm';
 import {
     handleFormDataSave,
     loadQuestionnaireResponseFormData,
     questionnaireIdLoader,
-    getQuestionnaireResponseDraftServices,
     QuestionnaireResponseFormProps,
     QuestionnaireResponseFormSaveResponse,
-    QuestionnaireResponseDraftService,
 } from 'src/hooks/questionnaire-response-form-data';
 import { getFHIRResource, getFHIRResources } from 'src/services';
 import { getProvenanceByEntity } from 'src/services/provenance';
@@ -51,21 +47,18 @@ export interface Props {
     encounterId?: string;
     launchContextParameters?: ParametersParameter[];
     onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
-    qrDraftServiceType?: QuestionnaireResponseDraftService;
 }
 
 async function onFormSubmit(
     props: QuestionnaireResponseFormProps & {
         formData: QuestionnaireResponseFormData;
         onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
-        qrId: string;
     },
 ) {
     const { formData, initialQuestionnaireResponse, onSuccess } = props;
     const modifiedFormData = _.merge({}, formData, {
         context: {
             questionnaireResponse: {
-                id: props.qrId,
                 questionnaire: initialQuestionnaireResponse?.questionnaire,
             },
         },
@@ -102,6 +95,14 @@ function prepareFormInitialParams(
         provenanceBundle,
     } = props;
 
+    const initialQuestionnaireResponse = _.merge(
+        {
+            subject: getReference(patient),
+            encounter: encounterId ? getReference({ resourceType: 'Encounter', id: encounterId }) : undefined,
+            questionnaire: questionnaireId,
+        },
+        questionnaireResponse,
+    );
     const params: QuestionnaireResponseFormProps = {
         questionnaireLoader: questionnaireIdLoader(questionnaireId),
         launchContextParameters: [
@@ -136,11 +137,7 @@ function prepareFormInitialParams(
                 : []),
             ...launchContextParameters,
         ],
-        initialQuestionnaireResponse: questionnaireResponse || {
-            subject: getReference(patient),
-            encounter: encounterId ? getReference({ resourceType: 'Encounter', id: encounterId }) : undefined,
-            questionnaire: questionnaireId,
-        },
+        initialQuestionnaireResponse,
     };
 
     return params;
@@ -150,8 +147,6 @@ export interface PatientDocumentData {
     formData: QuestionnaireResponseFormData;
     onSubmit: (formData: QuestionnaireResponseFormData) => Promise<void>;
     provenance?: WithId<Provenance>;
-    draftQR?: QuestionnaireResponse;
-    draftId?: Resource['id'];
 }
 
 interface Result {
@@ -166,11 +161,9 @@ export function usePatientDocument(props: Props): {
     manager: ServiceManager<PatientDocumentData, any>;
     questionnaireId: string;
 } {
-    const { questionnaireResponse, questionnaireId, onSuccess, qrDraftServiceType = 'local' } = props;
+    const { questionnaireResponse, questionnaireId, onSuccess } = props;
+
     const navigate = useNavigate();
-    const qrId = useMemo(() => {
-        return questionnaireResponse?.id || uuid4();
-    }, [questionnaireResponse?.id]);
 
     const [response, manager] = useService<PatientDocumentData>(async () => {
         let provenanceResponse: RemoteDataResult<WithId<Provenance>[]> = success([]);
@@ -180,16 +173,6 @@ export function usePatientDocument(props: Props): {
 
             provenanceResponse = await getProvenanceByEntity(uri);
         }
-
-        const questionnaireId = props.questionnaireId;
-
-        const draftId = getQuestionnaireResponseDraftId({
-            subject: `${props.patient.resourceType}/${props.patient.id}`,
-            questionnaireId,
-            questionnaireResponseId: questionnaireResponse?.id,
-        });
-
-        const draftQRRD = getQuestionnaireResponseDraftServices(qrDraftServiceType).loadService(draftId);
 
         if (isSuccess(provenanceResponse)) {
             const descSortedProvenances = [...provenanceResponse.data].sort((a, b) =>
@@ -205,7 +188,6 @@ export function usePatientDocument(props: Props): {
 
             const formInitialParams = prepareFormInitialParams({
                 ...props,
-                ...(isSuccess(draftQRRD) ? { questionnaireResponse: draftQRRD.data } : {}),
                 provenance: lastProvenance,
                 provenanceBundle: provenanceBundle,
             });
@@ -215,7 +197,6 @@ export function usePatientDocument(props: Props): {
                     ...formInitialParams,
                     formData,
                     onSuccess: onSuccess ? onSuccess : () => navigate(-1),
-                    qrId,
                 });
 
             return mapSuccess(
@@ -227,8 +208,6 @@ export function usePatientDocument(props: Props): {
                         formData,
                         onSubmit,
                         provenance: lastProvenance,
-                        draftQR: isSuccess(draftQRRD) ? draftQRRD.data : undefined,
-                        draftId,
                     };
                 },
             );

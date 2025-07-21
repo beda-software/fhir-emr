@@ -2,7 +2,7 @@ import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
 import { screen, render, act, fireEvent, waitFor } from '@testing-library/react';
 import { RemoteDataResult } from 'aidbox-react';
-import { Bundle, Patient, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
+import { Bundle, Patient, Practitioner, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import { describe, expect, test, vi } from 'vitest';
 
 import { axiosInstance } from 'aidbox-react/lib/services/instance';
@@ -12,9 +12,29 @@ import { mapSuccess } from '@beda.software/remote-data';
 
 import { PatientDocument } from 'src/containers/PatientDetails/PatientDocument';
 import { QuestionnaireResponseDraftService } from 'src/hooks';
-import { getFHIRResources } from 'src/services';
+import { createFHIRResource, getFHIRResources } from 'src/services';
 import { createPatient, createPractitionerRole, loginAdminUser, waitForAPIProcess } from 'src/setupTests';
 import { ThemeProvider } from 'src/theme';
+
+const questionnaireId = 'test-draft-flow-q';
+const questionnaireLinkId = 'test-draft-flow-q-text';
+const questionnaireDefinition: WithId<Questionnaire> = {
+    resourceType: 'Questionnaire',
+    status: 'active',
+    id: questionnaireId,
+    name: questionnaireId,
+    title: questionnaireId,
+    meta: {
+        profile: ['https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire'],
+    },
+    item: [
+        {
+            text: 'Text',
+            type: 'string',
+            linkId: questionnaireLinkId,
+        },
+    ],
+};
 
 async function setup() {
     await loginAdminUser();
@@ -25,7 +45,9 @@ async function setup() {
 
         const { practitioner, practitionerRole } = await createPractitionerRole({});
 
-        return { patient, practitioner, practitionerRole };
+        const questionnaire = ensure(await createFHIRResource<WithId<Questionnaire>>(questionnaireDefinition));
+
+        return { patient, practitioner, practitionerRole, questionnaire };
     });
 }
 
@@ -47,9 +69,9 @@ async function renderForm(
                 <PatientDocument
                     patient={patient}
                     author={practitioner}
-                    questionnaireId="repeatable-group"
+                    questionnaireId={questionnaireId}
                     onSuccess={onSuccess}
-                    autosave={autoSave}
+                    autoSave={autoSave}
                     qrDraftServiceType={qrDraftServiceType}
                 />
             </I18nProvider>
@@ -67,7 +89,7 @@ describe('Draft questionnaire response saves correctly with server backend', asy
 
         await renderForm(patient, practitioner, true, 'server');
 
-        const textField = await screen.findByTestId('repeatable-group-text');
+        const textField = await screen.findByTestId(questionnaireLinkId);
         expect(textField).toBeEnabled();
 
         const textInput = textField.querySelector('input')!;
@@ -77,10 +99,12 @@ describe('Draft questionnaire response saves correctly with server backend', asy
             });
         });
 
+        await new Promise((r) => setTimeout(r, 2000));
+
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
                 getFHIRResources('QuestionnaireResponse', {
-                    questionnaire: 'repeatable-group',
+                    questionnaire: questionnaireId,
                     status: 'in-progress',
                     _sort: ['-createdAt', '_id'],
                 }),
@@ -93,7 +117,7 @@ describe('Draft questionnaire response saves correctly with server backend', asy
         const qrs = ensure(
             mapSuccess(
                 await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
-                    questionnaire: 'repeatable-group',
+                    questionnaire: questionnaireId,
                     status: 'in-progress',
                     _sort: ['-createdAt', '_id'],
                 }),
@@ -113,7 +137,7 @@ describe('Draft questionnaire response saves correctly with server backend', asy
 
         const onSuccess = await renderForm(patient, practitioner, true, 'server');
 
-        const textField = await screen.findByTestId('repeatable-group-text');
+        const textField = await screen.findByTestId(questionnaireLinkId);
         expect(textField).toBeEnabled();
 
         const textInput = textField.querySelector('input')!;
@@ -137,7 +161,7 @@ describe('Draft questionnaire response saves correctly with server backend', asy
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
                 getFHIRResources('QuestionnaireResponse', {
-                    questionnaire: 'repeatable-group',
+                    questionnaire: questionnaireId,
                     _sort: ['-createdAt', '_id'],
                 }),
             resolver: (result) => {
@@ -149,7 +173,7 @@ describe('Draft questionnaire response saves correctly with server backend', asy
         const qrs = ensure(
             mapSuccess(
                 await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
-                    questionnaire: 'repeatable-group',
+                    questionnaire: questionnaireId,
                     _sort: ['-createdAt', '_id'],
                 }),
                 (result) => extractBundleResources<QuestionnaireResponse>(result).QuestionnaireResponse,
@@ -168,7 +192,7 @@ describe('Draft questionnaire response saves correctly with server backend', asy
 
         const onSuccess = await renderForm(patient, practitioner, true, 'server');
 
-        const textField = await screen.findByTestId('repeatable-group-text');
+        const textField = await screen.findByTestId(questionnaireLinkId);
         expect(textField).toBeEnabled();
 
         const textInput = textField.querySelector('input')!;
@@ -181,7 +205,7 @@ describe('Draft questionnaire response saves correctly with server backend', asy
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
                 getFHIRResources('QuestionnaireResponse', {
-                    questionnaire: 'repeatable-group',
+                    questionnaire: questionnaireId,
                     status: 'in-progress',
                     _sort: ['-createdAt', '_id'],
                 }),
@@ -211,7 +235,7 @@ describe('Draft questionnaire response saves correctly with server backend', asy
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
                 getFHIRResources('QuestionnaireResponse', {
-                    questionnaire: 'repeatable-group',
+                    questionnaire: questionnaireId,
                     status: 'completed',
                     _sort: ['-createdAt', '_id'],
                 }),
@@ -247,11 +271,11 @@ describe('Draft questionnaire response saves correctly with local storage backen
 
         const { patient, practitioner } = await setup();
 
-        const draftId = `Patient/${patient.id}/repeatable-group`;
+        const draftId = `Patient/${patient.id}/${questionnaireId}`;
 
         await renderForm(patient, practitioner, true, 'local');
 
-        const textField = await screen.findByTestId('repeatable-group-text');
+        const textField = await screen.findByTestId(questionnaireLinkId);
         expect(textField).toBeEnabled();
 
         const textInput = textField.querySelector('input')!;
@@ -261,24 +285,22 @@ describe('Draft questionnaire response saves correctly with local storage backen
             });
         });
 
-        expect(localStorage.getItem(draftId)).toBeNull();
-
         await new Promise((r) => setTimeout(r, 3000));
 
         expect(localStorage.getItem(draftId)).toBeDefined();
         const localStorageQR = JSON.parse(localStorage.getItem(draftId)!);
         expect(localStorageQR).toBeDefined();
-        expect(localStorageQR.questionnaire).toBe('repeatable-group');
+        expect(localStorageQR.questionnaire).toBe(questionnaireId);
         expect(localStorageQR.status).toBe('in-progress');
         expect(localStorageQR.subject).toBeDefined();
         expect(localStorageQR.subject.reference).toBe(getReference(patient).reference);
         expect(localStorageQR.item).toBeDefined();
-        expect(localStorageQR.item[0].item[0].item[0].answer[0].valueString).toBe(testFieldValue);
+        expect(localStorageQR.item[0].answer[0].valueString).toBe(testFieldValue);
 
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
                 getFHIRResources('QuestionnaireResponse', {
-                    questionnaire: 'repeatable-group',
+                    questionnaire: questionnaireId,
                     status: 'in-progress',
                     _sort: ['-createdAt', '_id'],
                 }),
@@ -294,11 +316,11 @@ describe('Draft questionnaire response saves correctly with local storage backen
 
         const { patient, practitioner } = await setup();
 
-        const draftId = `Patient/${patient.id}/repeatable-group`;
+        const draftId = `Patient/${patient.id}/${questionnaireId}`;
 
         const onSuccess = await renderForm(patient, practitioner, true, 'local');
 
-        const textField = await screen.findByTestId('repeatable-group-text');
+        const textField = await screen.findByTestId(questionnaireLinkId);
         expect(textField).toBeEnabled();
 
         const textInput = textField.querySelector('input')!;
@@ -307,8 +329,6 @@ describe('Draft questionnaire response saves correctly with local storage backen
                 target: { value: testFieldValue },
             });
         });
-
-        expect(localStorage.getItem(draftId)).toBeNull();
 
         const submitButton = await screen.findByTestId('submit-button');
         expect(submitButton).toBeEnabled();
@@ -326,7 +346,7 @@ describe('Draft questionnaire response saves correctly with local storage backen
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
                 getFHIRResources('QuestionnaireResponse', {
-                    questionnaire: 'repeatable-group',
+                    questionnaire: questionnaireId,
                     _sort: ['-createdAt', '_id'],
                 }),
             resolver: (result) => {
@@ -342,11 +362,11 @@ describe('Draft questionnaire response saves correctly with local storage backen
 
         const { patient, practitioner } = await setup();
 
-        const draftId = `Patient/${patient.id}/repeatable-group`;
+        const draftId = `Patient/${patient.id}/${questionnaireId}`;
 
         const onSuccess = await renderForm(patient, practitioner, true, 'local');
 
-        const textField = await screen.findByTestId('repeatable-group-text');
+        const textField = await screen.findByTestId(questionnaireLinkId);
         expect(textField).toBeEnabled();
 
         const textInput = textField.querySelector('input')!;
@@ -355,7 +375,6 @@ describe('Draft questionnaire response saves correctly with local storage backen
                 target: { value: testFieldValue },
             });
         });
-        expect(localStorage.getItem(draftId)).toBeNull();
 
         await waitForAPIProcess<string | null>({
             service: () => Promise.resolve(localStorage.getItem(draftId)),
@@ -366,7 +385,7 @@ describe('Draft questionnaire response saves correctly with local storage backen
 
         expect(localStorage.getItem(draftId)).toBeDefined();
         const localStorageQR = JSON.parse(localStorage.getItem(draftId)!);
-        expect(localStorageQR.item[0].item[0].item[0].answer[0].valueString).toBe(testFieldValue);
+        expect(localStorageQR.item[0].answer[0].valueString).toBe(testFieldValue);
 
         act(() => {
             fireEvent.change(textInput, {
@@ -378,13 +397,13 @@ describe('Draft questionnaire response saves correctly with local storage backen
             service: () => Promise.resolve(localStorage.getItem(draftId)),
             resolver: (result) => {
                 const localStorageQR = JSON.parse(result!);
-                const fieldValue = localStorageQR.item[0].item[0].item[0].answer[0].valueString;
+                const fieldValue = localStorageQR.item[0].answer[0].valueString;
                 return fieldValue === testFieldUpdateValue;
             },
         });
 
         const localStorageQRupdate = JSON.parse(localStorage.getItem(draftId)!);
-        expect(localStorageQRupdate.item[0].item[0].item[0].answer[0].valueString).toBe(testFieldUpdateValue);
+        expect(localStorageQRupdate.item[0].answer[0].valueString).toBe(testFieldUpdateValue);
 
         const submitButton = await screen.findByTestId('submit-button');
         expect(submitButton).toBeEnabled();
@@ -400,7 +419,7 @@ describe('Draft questionnaire response saves correctly with local storage backen
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
                 getFHIRResources('QuestionnaireResponse', {
-                    questionnaire: 'repeatable-group',
+                    questionnaire: questionnaireId,
                     status: 'completed',
                     _sort: ['-createdAt', '_id'],
                 }),
@@ -421,7 +440,7 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
 
         await renderForm(patient, practitioner, false, 'server');
 
-        const textField = await screen.findByTestId('repeatable-group-text');
+        const textField = await screen.findByTestId(questionnaireLinkId);
         expect(textField).toBeEnabled();
 
         const textInput = textField.querySelector('input')!;
@@ -434,7 +453,7 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
                 getFHIRResources('QuestionnaireResponse', {
-                    questionnaire: 'repeatable-group',
+                    questionnaire: questionnaireId,
                     status: 'in-progress',
                     _sort: ['-createdAt', '_id'],
                 }),
@@ -447,7 +466,7 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
         const qrs = ensure(
             mapSuccess(
                 await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
-                    questionnaire: 'repeatable-group',
+                    questionnaire: questionnaireId,
                     status: 'in-progress',
                     _sort: ['-createdAt', '_id'],
                 }),
@@ -465,7 +484,7 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
 
         const onSuccess = await renderForm(patient, practitioner, false, 'server');
 
-        const textField = await screen.findByTestId('repeatable-group-text');
+        const textField = await screen.findByTestId(questionnaireLinkId);
         expect(textField).toBeEnabled();
 
         const textInput = textField.querySelector('input')!;
@@ -488,8 +507,8 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
 
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
-                getFHIRResources('QuestionnaireResponse', {
-                    questionnaire: 'repeatable-group',
+                getFHIRResources<WithId<QuestionnaireResponse>>('QuestionnaireResponse', {
+                    questionnaire: questionnaireId,
                     _sort: ['-createdAt', '_id'],
                 }),
             resolver: (result) => {
@@ -501,7 +520,7 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
         const qrs = ensure(
             mapSuccess(
                 await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
-                    questionnaire: 'repeatable-group',
+                    questionnaire: questionnaireId,
                     _sort: ['-createdAt', '_id'],
                 }),
                 (result) => extractBundleResources<QuestionnaireResponse>(result).QuestionnaireResponse,
@@ -520,7 +539,7 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
 
         const onSuccess = await renderForm(patient, practitioner, false, 'server');
 
-        const textField = await screen.findByTestId('repeatable-group-text');
+        const textField = await screen.findByTestId(questionnaireLinkId);
         expect(textField).toBeEnabled();
 
         const textInput = textField.querySelector('input')!;
@@ -533,7 +552,7 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
                 getFHIRResources('QuestionnaireResponse', {
-                    questionnaire: 'repeatable-group',
+                    questionnaire: questionnaireId,
                     status: 'in-progress',
                     _sort: ['-createdAt', '_id'],
                 }),
@@ -563,7 +582,7 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
                 getFHIRResources('QuestionnaireResponse', {
-                    questionnaire: 'repeatable-group',
+                    questionnaire: questionnaireId,
                     status: 'completed',
                     _sort: ['-createdAt', '_id'],
                 }),
@@ -575,7 +594,7 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
         const qrs = ensure(
             mapSuccess(
                 await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
-                    questionnaire: 'repeatable-group',
+                    questionnaire: questionnaireId,
                     _sort: ['-createdAt', '_id'],
                 }),
                 (result) => extractBundleResources<QuestionnaireResponse>(result).QuestionnaireResponse,

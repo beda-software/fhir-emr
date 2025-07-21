@@ -1,9 +1,11 @@
 import { Reference } from 'fhir/r4b';
 import { describe, expect, test } from 'vitest';
 
+import {
+    generateReferenceFromResourceReferenceString,
+    getQuestionnaireResponseDraftId,
+} from 'src/hooks/useQuestionnaireResponseDraft';
 import { createPatient, loginAdminUser } from 'src/setupTests';
-
-import { convertToReference, getQuestionnaireResponseDraftId } from '../utils';
 
 describe('convertToReference', () => {
     beforeEach(async () => {
@@ -11,7 +13,7 @@ describe('convertToReference', () => {
     });
 
     test('convertToReference should return undefined when given undefined', () => {
-        expect(convertToReference()).toBeUndefined();
+        expect(generateReferenceFromResourceReferenceString()).toBeUndefined();
     });
 
     test('convertToReference should return string as Reference', () => {
@@ -19,7 +21,7 @@ describe('convertToReference', () => {
         const draftIdRef: Reference = {
             reference: draftId,
         };
-        expect(convertToReference(draftId)).toEqual(draftIdRef);
+        expect(generateReferenceFromResourceReferenceString(draftId)).toEqual(draftIdRef);
     });
 
     test('convertToReference should return Reference when given Reference', () => {
@@ -27,7 +29,7 @@ describe('convertToReference', () => {
         const draftIdRef: Reference = {
             reference: draftId,
         };
-        expect(convertToReference(draftIdRef)).toEqual(draftIdRef);
+        expect(generateReferenceFromResourceReferenceString(draftIdRef)).toEqual(draftIdRef);
     });
 
     test('convertToReference should return Reference when given Resource', async () => {
@@ -38,7 +40,7 @@ describe('convertToReference', () => {
         const draftIdRef: Reference = {
             reference: `Patient/${patient.id}`,
         };
-        expect(convertToReference(patient)).toEqual(draftIdRef);
+        expect(generateReferenceFromResourceReferenceString(patient)).toEqual(draftIdRef);
     });
 });
 
@@ -48,13 +50,15 @@ describe('getQuestionnaireResponseDraftId', () => {
     });
 
     test('getQuestionnaireResponseDraftId should return undefined when nothing provided', async () => {
-        expect(getQuestionnaireResponseDraftId({})).toBeUndefined();
+        expect(getQuestionnaireResponseDraftId({ qrDraftServiceType: 'local' })).toBeUndefined();
     });
 
     test('getQuestionnaireResponseDraftId should return questionnaireResponseId when it is defined and provided', async () => {
         const questionnaireResponseId = 'some-qr-uuid';
 
-        expect(getQuestionnaireResponseDraftId({ questionnaireResponseId })).toEqual(questionnaireResponseId);
+        expect(getQuestionnaireResponseDraftId({ qrDraftServiceType: 'local', questionnaireResponseId })).toEqual(
+            questionnaireResponseId,
+        );
     });
 
     test('getQuestionnaireResponseDraftId should return questionnaireResponseId when it is defined and provided even with other fields', async () => {
@@ -65,9 +69,14 @@ describe('getQuestionnaireResponseDraftId', () => {
         const questionnaireId = 'some-questionnaire-id';
         const questionnaireResponseId = 'some-qr-uuid';
 
-        expect(getQuestionnaireResponseDraftId({ subject: patient, questionnaireId, questionnaireResponseId })).toEqual(
-            questionnaireResponseId,
-        );
+        expect(
+            getQuestionnaireResponseDraftId({
+                qrDraftServiceType: 'local',
+                subject: patient,
+                questionnaireId,
+                questionnaireResponseId,
+            }),
+        ).toEqual(questionnaireResponseId);
     });
 
     test('getQuestionnaireResponseDraftId should return patientReference/questionnaireId when it is defined and questionnaireResponseId is undefined', async () => {
@@ -79,13 +88,15 @@ describe('getQuestionnaireResponseDraftId', () => {
 
         const draftId = `Patient/${patient.id}/${questionnaireId}`;
 
-        expect(getQuestionnaireResponseDraftId({ subject: patient, questionnaireId })).toEqual(draftId);
+        expect(
+            getQuestionnaireResponseDraftId({ qrDraftServiceType: 'local', subject: patient, questionnaireId }),
+        ).toEqual(draftId);
     });
 
     test('getQuestionnaireResponseDraftId should return undefined when questionnaireResponseId is undefined and subject is undefined', async () => {
         const questionnaireId = 'some-questionnaire-id';
 
-        expect(getQuestionnaireResponseDraftId({ questionnaireId })).toBeUndefined();
+        expect(getQuestionnaireResponseDraftId({ qrDraftServiceType: 'local', questionnaireId })).toBeUndefined();
     });
 
     test('getQuestionnaireResponseDraftId should return undefined when questionnaireResponseId is undefined and questionnaireId is undefined', async () => {
@@ -93,6 +104,6 @@ describe('getQuestionnaireResponseDraftId', () => {
             name: [{ given: ['John'], family: 'Smith' }],
         });
 
-        expect(getQuestionnaireResponseDraftId({ subject: patient })).toBeUndefined();
+        expect(getQuestionnaireResponseDraftId({ qrDraftServiceType: 'local', subject: patient })).toBeUndefined();
     });
 });

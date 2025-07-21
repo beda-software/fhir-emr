@@ -1,18 +1,18 @@
 import { t } from '@lingui/macro';
-import { Alert, Button, Splitter } from 'antd';
+import { Button, Splitter } from 'antd';
 import { Organization, ParametersParameter, Patient, Person, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
-import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { FormItems, QuestionnaireResponseFormData } from 'sdc-qrf';
 
 import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
-import { RemoteData, isSuccess } from '@beda.software/remote-data';
 
-import { Text, deleteQuestionnaireResponseDraft } from 'src/components';
+import { Text } from 'src/components';
+import { AlertMessage } from 'src/components/AlertMessage';
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { AnxietyScore, DepressionScore } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/score';
 import { Spinner } from 'src/components/Spinner';
 import { QuestionnaireResponseDraftService, QuestionnaireResponseFormSaveResponse } from 'src/hooks';
-import { formatHumanDateTime } from 'src/utils';
+import { useQuestionnaireResponseDraft } from 'src/hooks/useQuestionnaireResponseDraft';
 
 import s from './PatientDocument.module.scss';
 import { S } from './PatientDocument.styles';
@@ -26,81 +26,109 @@ export interface PatientDocumentProps {
     launchContextParameters?: ParametersParameter[];
     questionnaireId?: string;
     encounterId?: string;
+    onSubmit?: (formData: QuestionnaireResponseFormData) => Promise<any>;
     onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
-    autosave?: boolean;
+    onCancel?: () => void;
+    onChange?: (formData: QuestionnaireResponseFormData, currentFormValues: FormItems) => void;
+    autoSave?: boolean;
     qrDraftServiceType?: QuestionnaireResponseDraftService;
+    alertComponent?: React.ReactNode | (() => React.ReactNode);
 }
 
 export function PatientDocument(props: PatientDocumentProps) {
-    const { autosave, qrDraftServiceType = 'local' } = props;
+    const { autoSave = false, qrDraftServiceType = 'local', onCancel, onSubmit } = props;
+
+    const params = useParams<{ questionnaireId: string; encounterId?: string }>();
+
+    const { draftQuestionnaireResponseRD, draftInfoMessage, onChange, deleteDraft, submitDraft } =
+        useQuestionnaireResponseDraft({
+            subject: `${props.patient.resourceType}/${props.patient.id}`,
+            questionnaireId: props.questionnaireId ?? params.questionnaireId!,
+            questionnaireResponseId: props.questionnaireResponse?.id,
+            qrDraftServiceType,
+            autoSave,
+            questionnaireResponse: props.questionnaireResponse,
+        });
+
+    return (
+        <RenderRemoteData remoteData={draftQuestionnaireResponseRD} renderLoading={Spinner}>
+            {(draftQuestionnaireResponse) => (
+                <PatientDocumentContent
+                    questionnaireResponse={draftQuestionnaireResponse}
+                    {...props}
+                    onSuccess={async (resource: QuestionnaireResponseFormSaveResponse) => {
+                        await submitDraft();
+                        props.onSuccess && props.onSuccess(resource);
+                    }}
+                    onCancel={async () => {
+                        await deleteDraft();
+                        onCancel?.();
+                    }}
+                    onChange={onChange}
+                    onSubmit={async (formData) => {
+                        await submitDraft();
+                        return await onSubmit?.(formData);
+                    }}
+                    alertComponent={
+                        <AlertMessage
+                            actionComponent={
+                                <Button
+                                    onClick={async () => {
+                                        await deleteDraft();
+                                    }}
+                                >
+                                    {t`Clear draft`}
+                                </Button>
+                            }
+                            message={draftInfoMessage}
+                        />
+                    }
+                />
+            )}
+        </RenderRemoteData>
+    );
+}
+
+function PatientDocumentContent(props: PatientDocumentProps) {
+    const { onCancel, onChange, onSubmit: onSubmitProp, alertComponent } = props;
 
     const params = useParams<{ questionnaireId: string; encounterId?: string }>();
     const encounterId = props.encounterId || params.encounterId;
     const questionnaireId = props.questionnaireId || params.questionnaireId!;
-    const { response, manager } = usePatientDocument({
+
+    const { response } = usePatientDocument({
         ...props,
         questionnaireId,
         encounterId,
     });
     const navigate = useNavigate();
-    const [draftInfoMessage, setDraftInfoMessage] = useState<string>();
-
-    function onDraftSaved(draftQRRD: RemoteData<QuestionnaireResponse>) {
-        if (isSuccess(draftQRRD)) {
-            const draftQR = draftQRRD.data;
-            setDraftInfoMessage(t`Draft was successfully saved at ${formatHumanDateTime(draftQR?.authored)}`);
-        }
-    }
 
     return (
         <div className={s.container}>
             <S.Content>
                 <RenderRemoteData remoteData={response} renderLoading={Spinner}>
-                    {({ document: { formData, onSubmit, provenance, draftQR, draftId }, source }) => {
+                    {({ document: { formData, onSubmit }, source }) => {
                         if (typeof source === 'undefined') {
                             return (
                                 <>
                                     <PatientDocumentHeader formData={formData} questionnaireId={questionnaireId} />
-                                    {!draftQR && !draftInfoMessage ? null : (
-                                        <Alert
-                                            style={{ marginBottom: '20px' }}
-                                            message={
-                                                draftInfoMessage ??
-                                                t`Draft from ${formatHumanDateTime(
-                                                    draftQR?.authored,
-                                                )} was successfully loaded`
-                                            }
-                                            type="info"
-                                            showIcon
-                                            action={
-                                                <Button
-                                                    onClick={() => {
-                                                        deleteQuestionnaireResponseDraft(draftId, qrDraftServiceType);
-                                                        setDraftInfoMessage(undefined);
-                                                        manager.reload();
-                                                    }}
-                                                    size="small"
-                                                    danger
-                                                    ghost
-                                                >
-                                                    {t`Clear draft`}
-                                                </Button>
-                                            }
-                                            closable
-                                        />
-                                    )}
+                                    {alertComponent}
                                     <BaseQuestionnaireResponseForm
                                         formData={formData}
-                                        onSubmit={onSubmit}
+                                        onSubmit={async (formData) => {
+                                            await onSubmitProp?.(formData);
+                                            await onSubmit(formData);
+                                        }}
                                         itemControlQuestionItemComponents={{
                                             'anxiety-score': AnxietyScore,
                                             'depression-score': DepressionScore,
                                         }}
-                                        onCancel={() => navigate(-1)}
+                                        onCancel={() => {
+                                            onCancel?.();
+                                            navigate(-1);
+                                        }}
                                         saveButtonTitle={'Complete'}
-                                        autoSave={autosave !== undefined ? autosave : !provenance}
-                                        qrDraftServiceType={qrDraftServiceType}
-                                        onDraftSaved={onDraftSaved}
+                                        onChange={onChange}
                                     />
                                 </>
                             );
@@ -127,8 +155,7 @@ export function PatientDocument(props: PatientDocumentProps) {
                                                 }}
                                                 onCancel={() => navigate(-1)}
                                                 saveButtonTitle={'Complete'}
-                                                autoSave={autosave !== undefined ? autosave : !provenance}
-                                                qrDraftServiceType={qrDraftServiceType}
+                                                onChange={onChange}
                                             />
                                         </Splitter.Panel>
                                     </Splitter>

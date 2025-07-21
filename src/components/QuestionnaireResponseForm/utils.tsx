@@ -1,57 +1,13 @@
 import { t } from '@lingui/macro';
 import { notification } from 'antd';
-import { QuestionnaireResponse, Reference, Resource } from 'fhir/r4b';
-import moment from 'moment';
-import { FormItems, mapFormToResponse, QuestionnaireResponseFormData } from 'sdc-qrf';
 
-import { formatError, formatFHIRDateTime, getReference, isReference } from '@beda.software/fhir-react';
-import { failure, isFailure, isSuccess, RemoteDataResult } from '@beda.software/remote-data';
+import { formatError } from '@beda.software/fhir-react';
+import { isSuccess, RemoteDataResult } from '@beda.software/remote-data';
 
 import {
     QuestionnaireResponseFormSaveResponse,
-    getQuestionnaireResponseDraftServices,
-    QuestionnaireResponseDraftService,
     QuestionnaireResponseFormSaveResponseFailure,
 } from 'src/hooks/questionnaire-response-form-data';
-
-export const saveQuestionnaireResponseDraft = async (
-    id: Resource['id'],
-    formData: QuestionnaireResponseFormData,
-    currentFormValues: FormItems,
-    qrDraftServiceType: QuestionnaireResponseDraftService,
-) => {
-    const transformedFormValues = mapFormToResponse(currentFormValues, formData.context.questionnaire);
-
-    const questionnaireResponse: QuestionnaireResponse = {
-        ...formData.context.questionnaireResponse,
-        item: transformedFormValues.item,
-        questionnaire: formData.context.fceQuestionnaire.assembledFrom,
-        status: 'in-progress',
-        authored: formatFHIRDateTime(moment()),
-    };
-
-    const response = await getQuestionnaireResponseDraftServices(qrDraftServiceType).saveService(
-        questionnaireResponse,
-        id,
-    );
-
-    if (isFailure(response)) {
-        console.error(t`Error saving a draft: `, response.error);
-    }
-
-    return response;
-};
-
-export const deleteQuestionnaireResponseDraft = async (
-    id: Resource['id'],
-    qrDraftServiceType: QuestionnaireResponseDraftService,
-) => {
-    if (!id) {
-        return Promise.resolve(failure(t`Resource id not provided`));
-    }
-
-    return await getQuestionnaireResponseDraftServices(qrDraftServiceType).deleteService(id);
-};
 
 export function onFormResponse(props: {
     response: RemoteDataResult<QuestionnaireResponseFormSaveResponse, QuestionnaireResponseFormSaveResponseFailure>;
@@ -102,35 +58,4 @@ export function onFormResponse(props: {
             }
         }
     }
-}
-
-export function convertToReference(resource?: Resource | Reference | string) {
-    if (!resource) {
-        return undefined;
-    }
-
-    if (typeof resource === 'string') {
-        return { reference: resource };
-    }
-
-    if (isReference(resource)) {
-        return resource;
-    }
-
-    return getReference(resource);
-}
-
-export function getQuestionnaireResponseDraftId(props: {
-    subject?: Resource | Reference | string;
-    questionnaireId?: Resource['id'];
-    questionnaireResponseId?: Resource['id'];
-}) {
-    const { subject, questionnaireId, questionnaireResponseId } = props;
-
-    if (!questionnaireResponseId) {
-        const subjectRef = convertToReference(subject);
-        return subjectRef?.reference && questionnaireId ? `${subjectRef?.reference}/${questionnaireId}` : undefined;
-    }
-
-    return questionnaireResponseId;
 }
