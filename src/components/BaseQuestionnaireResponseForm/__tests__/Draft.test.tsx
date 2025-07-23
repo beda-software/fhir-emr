@@ -247,6 +247,8 @@ describe('Draft questionnaire response saves correctly with local storage backen
 
         const { patient, practitioner } = await setup();
 
+        const draftId = `Patient/${patient.id}/repeatable-group`;
+
         await renderForm(patient, practitioner, true, 'local');
 
         const textField = await screen.findByTestId('repeatable-group-text');
@@ -259,12 +261,12 @@ describe('Draft questionnaire response saves correctly with local storage backen
             });
         });
 
-        expect(localStorage.getItem('repeatable-group')).toBeNull();
+        expect(localStorage.getItem(draftId)).toBeNull();
 
         await new Promise((r) => setTimeout(r, 3000));
 
-        expect(localStorage.getItem('repeatable-group')).toBeDefined();
-        const localStorageQR = JSON.parse(localStorage.getItem('repeatable-group')!);
+        expect(localStorage.getItem(draftId)).toBeDefined();
+        const localStorageQR = JSON.parse(localStorage.getItem(draftId)!);
         expect(localStorageQR).toBeDefined();
         expect(localStorageQR.questionnaire).toBe('repeatable-group');
         expect(localStorageQR.status).toBe('in-progress');
@@ -292,6 +294,8 @@ describe('Draft questionnaire response saves correctly with local storage backen
 
         const { patient, practitioner } = await setup();
 
+        const draftId = `Patient/${patient.id}/repeatable-group`;
+
         const onSuccess = await renderForm(patient, practitioner, true, 'local');
 
         const textField = await screen.findByTestId('repeatable-group-text');
@@ -304,7 +308,7 @@ describe('Draft questionnaire response saves correctly with local storage backen
             });
         });
 
-        expect(localStorage.getItem('repeatable-group')).toBeNull();
+        expect(localStorage.getItem(draftId)).toBeNull();
 
         const submitButton = await screen.findByTestId('submit-button');
         expect(submitButton).toBeEnabled();
@@ -317,7 +321,7 @@ describe('Draft questionnaire response saves correctly with local storage backen
 
         await new Promise((r) => setTimeout(r, 3000));
 
-        expect(localStorage.getItem('repeatable-group')).toBeNull();
+        expect(localStorage.getItem(draftId)).toBeNull();
 
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
@@ -338,6 +342,8 @@ describe('Draft questionnaire response saves correctly with local storage backen
 
         const { patient, practitioner } = await setup();
 
+        const draftId = `Patient/${patient.id}/repeatable-group`;
+
         const onSuccess = await renderForm(patient, practitioner, true, 'local');
 
         const textField = await screen.findByTestId('repeatable-group-text');
@@ -349,17 +355,17 @@ describe('Draft questionnaire response saves correctly with local storage backen
                 target: { value: testFieldValue },
             });
         });
-        expect(localStorage.getItem('repeatable-group')).toBeNull();
+        expect(localStorage.getItem(draftId)).toBeNull();
 
         await waitForAPIProcess<string | null>({
-            service: () => Promise.resolve(localStorage.getItem('repeatable-group')),
+            service: () => Promise.resolve(localStorage.getItem(draftId)),
             resolver: (result) => {
                 return result !== null;
             },
         });
 
-        expect(localStorage.getItem('repeatable-group')).toBeDefined();
-        const localStorageQR = JSON.parse(localStorage.getItem('repeatable-group')!);
+        expect(localStorage.getItem(draftId)).toBeDefined();
+        const localStorageQR = JSON.parse(localStorage.getItem(draftId)!);
         expect(localStorageQR.item[0].item[0].item[0].answer[0].valueString).toBe(testFieldValue);
 
         act(() => {
@@ -369,7 +375,7 @@ describe('Draft questionnaire response saves correctly with local storage backen
         });
 
         await waitForAPIProcess<string | null>({
-            service: () => Promise.resolve(localStorage.getItem('repeatable-group')),
+            service: () => Promise.resolve(localStorage.getItem(draftId)),
             resolver: (result) => {
                 const localStorageQR = JSON.parse(result!);
                 const fieldValue = localStorageQR.item[0].item[0].item[0].answer[0].valueString;
@@ -377,7 +383,7 @@ describe('Draft questionnaire response saves correctly with local storage backen
             },
         });
 
-        const localStorageQRupdate = JSON.parse(localStorage.getItem('repeatable-group')!);
+        const localStorageQRupdate = JSON.parse(localStorage.getItem(draftId)!);
         expect(localStorageQRupdate.item[0].item[0].item[0].answer[0].valueString).toBe(testFieldUpdateValue);
 
         const submitButton = await screen.findByTestId('submit-button');
@@ -403,7 +409,7 @@ describe('Draft questionnaire response saves correctly with local storage backen
                 return qrs.length === 1;
             },
         });
-        expect(localStorage.getItem('repeatable-group')).toBeNull();
+        expect(localStorage.getItem(draftId)).toBeNull();
     }, 60000);
 });
 
