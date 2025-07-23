@@ -92,6 +92,7 @@ export function MarkDownEditor(props: MarkDownEditorProps) {
                 readOnly={readOnly}
                 markdown={markdownString}
                 onChange={onChange}
+                suppressHtmlProcessing={true}
                 contentEditableClassName="MarkDownEditorContent"
                 plugins={plugins}
             />
