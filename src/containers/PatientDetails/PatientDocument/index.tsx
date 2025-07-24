@@ -94,6 +94,14 @@ export function PatientDocument(props: PatientDocumentProps) {
 function PatientDocumentContent(props: PatientDocumentProps) {
     const { onCancel, onQRFUpdate, onSubmit: onSubmitProp, alertComponent } = props;
 
+    // additional itemControlQuestionItemComponents should be memoized
+    const itemControlQuestionItemComponents = useMemo(() => {
+        return {
+            'anxiety-score': AnxietyScore,
+            'depression-score': DepressionScore,
+        };
+    }, []);
+
     const params = useParams<{ questionnaireId: string; encounterId?: string }>();
     const encounterId = props.encounterId || params.encounterId;
     const questionnaireId = props.questionnaireId || params.questionnaireId!;
@@ -121,10 +129,7 @@ function PatientDocumentContent(props: PatientDocumentProps) {
                                             await onSubmitProp?.(formData);
                                             await onSubmit(formData);
                                         }}
-                                        itemControlQuestionItemComponents={{
-                                            'anxiety-score': AnxietyScore,
-                                            'depression-score': DepressionScore,
-                                        }}
+                                        itemControlQuestionItemComponents={itemControlQuestionItemComponents}
                                         onCancel={() => {
                                             onCancel?.();
                                             navigate(-1);
