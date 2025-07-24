@@ -134,6 +134,18 @@ export function questionnaireItemsToValidationSchema(
             if (item.required) schema = schema.required();
             schema = applyCustomYupTestsToItem(item, schema, customYupTests);
             schema = createSchemaArrayOfValues(yup.object({ decimal: schema }));
+        } else if (item.type === 'quantity') {
+            const quantitySchema = yup.object({
+                value: yup.number().required(),
+                comparator: yup.string().oneOf(['<', '<=', '>=', '>']).nullable(),
+                unit: yup.string().nullable(),
+                system: yup.string().nullable(),
+                code: yup.string().nullable(),
+            });
+
+            if (item.required) quantitySchema.required();
+            schema = applyCustomYupTestsToItem(item, quantitySchema, customYupTests);
+            schema = createSchemaArrayOfValues(yup.object({ Quantity: schema }));
         } else if (item.type === 'date') {
             schema = yup.date();
             if (item.required) schema = schema.required();
