@@ -1,8 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import classNames from 'classnames';
+import { QuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
 import React, { ComponentType, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm, useFormState } from 'react-hook-form';
 import {
     calcInitialContext,
     FCEQuestionnaire,
@@ -43,7 +44,7 @@ export interface BaseQuestionnaireResponseFormProps {
     groupItemComponent?: GroupItemComponent;
     onCancel?: () => void;
 
-    onChange?: (formData: QuestionnaireResponseFormData, currentFormValues: FormItems) => void;
+    onQRFUpdate?: (questionnaireResponse: QuestionnaireResponse) => void;
 
     ItemWrapper?: ComponentType<{
         item: QuestionItemProps;
@@ -64,7 +65,7 @@ export interface BaseQuestionnaireResponseFormProps {
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
-    const { onSubmit, formData, readOnly, ItemWrapper, GroupWrapper, onCancel, customYupTests, onChange } = props;
+    const { onSubmit, formData, readOnly, ItemWrapper, GroupWrapper, onCancel, customYupTests, onQRFUpdate } = props;
 
     const schema: yup.AnyObjectSchema = useMemo(
         () => questionnaireToValidationSchema(formData.context.fceQuestionnaire, customYupTests),
@@ -80,11 +81,19 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
 
     const formValues = watch();
 
+    const { isDirty } = useFormState({
+        control: methods.control,
+    });
+
+    const rootContext = calcInitialContext(formData.context, formValues);
     const isSubmittingRef = useRef(false);
 
     useEffect(() => {
-        onChange?.(formData, formValues);
-    }, [formData, formValues, onChange]);
+        // We use isDirty to trigger the onQRFUpdate callback only when user starts changing the form
+        if (isDirty) {
+            onQRFUpdate?.(rootContext.resource);
+        }
+    }, [formData, formValues, rootContext.resource, onQRFUpdate, isDirty]);
 
     const wrapControls = useCallback(
         (mapping: { [x: string]: QuestionItemComponent }): { [x: string]: QuestionItemComponent } => {
@@ -145,6 +154,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
             }),
         [wrapControls, props.questionItemComponents],
     );
+
     const itemControlQuestionItemComponents = useMemo(
         () =>
             wrapControls({
@@ -217,7 +227,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                                 <QuestionItems
                                     questionItems={formData.context.fceQuestionnaire.item!}
                                     parentPath={[]}
-                                    context={calcInitialContext(formData.context, formValues)}
+                                    context={rootContext}
                                 />
                             </div>
                             {!isWizard ? (

@@ -1,8 +1,9 @@
 import { t } from '@lingui/macro';
 import { Button, Splitter } from 'antd';
 import { Organization, ParametersParameter, Patient, Person, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
+import React, { useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FormItems, QuestionnaireResponseFormData } from 'sdc-qrf';
+import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
 import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
 
@@ -29,7 +30,7 @@ export interface PatientDocumentProps {
     onSubmit?: (formData: QuestionnaireResponseFormData) => Promise<any>;
     onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
     onCancel?: () => void;
-    onChange?: (formData: QuestionnaireResponseFormData, currentFormValues: FormItems) => void;
+    onQRFUpdate?: (questionnaireResponse: QuestionnaireResponse) => void;
     autoSave?: boolean;
     qrDraftServiceType?: QuestionnaireResponseDraftService;
     alertComponent?: React.ReactNode | (() => React.ReactNode);
@@ -40,7 +41,7 @@ export function PatientDocument(props: PatientDocumentProps) {
 
     const params = useParams<{ questionnaireId: string; encounterId?: string }>();
 
-    const { draftQuestionnaireResponseRD, draftInfoMessage, onChange, deleteDraft, submitDraft } =
+    const { draftQuestionnaireResponseRD, draftInfoMessage, onQRFUpdate, deleteDraft, submitDraft } =
         useQuestionnaireResponseDraft({
             subject: `${props.patient.resourceType}/${props.patient.id}`,
             questionnaireId: props.questionnaireId ?? params.questionnaireId!,
@@ -54,8 +55,9 @@ export function PatientDocument(props: PatientDocumentProps) {
         <RenderRemoteData remoteData={draftQuestionnaireResponseRD} renderLoading={Spinner}>
             {(draftQuestionnaireResponse) => (
                 <PatientDocumentContent
-                    questionnaireResponse={draftQuestionnaireResponse}
                     {...props}
+                    key="patient-document-content"
+                    questionnaireResponse={draftQuestionnaireResponse}
                     onSuccess={async (resource: QuestionnaireResponseFormSaveResponse) => {
                         await submitDraft();
                         props.onSuccess && props.onSuccess(resource);
@@ -64,7 +66,7 @@ export function PatientDocument(props: PatientDocumentProps) {
                         await deleteDraft();
                         onCancel?.();
                     }}
-                    onChange={onChange}
+                    onQRFUpdate={onQRFUpdate}
                     onSubmit={async (formData) => {
                         await submitDraft();
                         return await onSubmit?.(formData);
@@ -90,7 +92,7 @@ export function PatientDocument(props: PatientDocumentProps) {
 }
 
 function PatientDocumentContent(props: PatientDocumentProps) {
-    const { onCancel, onChange, onSubmit: onSubmitProp, alertComponent } = props;
+    const { onCancel, onQRFUpdate, onSubmit: onSubmitProp, alertComponent } = props;
 
     const params = useParams<{ questionnaireId: string; encounterId?: string }>();
     const encounterId = props.encounterId || params.encounterId;
@@ -128,7 +130,7 @@ function PatientDocumentContent(props: PatientDocumentProps) {
                                             navigate(-1);
                                         }}
                                         saveButtonTitle={'Complete'}
-                                        onChange={onChange}
+                                        onQRFUpdate={onQRFUpdate}
                                     />
                                 </>
                             );
@@ -155,7 +157,7 @@ function PatientDocumentContent(props: PatientDocumentProps) {
                                                 }}
                                                 onCancel={() => navigate(-1)}
                                                 saveButtonTitle={'Complete'}
-                                                onChange={onChange}
+                                                onQRFUpdate={onQRFUpdate}
                                             />
                                         </Splitter.Panel>
                                     </Splitter>

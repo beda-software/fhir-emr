@@ -269,9 +269,10 @@ describe('Draft questionnaire response saves correctly with local storage backen
     test('Test QuestionnaireResponse autosave with local storage backend', async () => {
         const testFieldValue = 'Test 1';
 
-        const { patient, practitioner } = await setup();
+        const { patient, practitioner, questionnaire } = await setup();
 
-        const draftId = `Patient/${patient.id}/${questionnaireId}`;
+        const questionnaireURI = `Questionnaire/${questionnaire.id}/_history/${questionnaire.meta?.versionId}`;
+        const draftKey = `Patient/${patient.id}|${questionnaireURI}`;
 
         await renderForm(patient, practitioner, true, 'local');
 
@@ -287,10 +288,10 @@ describe('Draft questionnaire response saves correctly with local storage backen
 
         await new Promise((r) => setTimeout(r, 3000));
 
-        expect(localStorage.getItem(draftId)).toBeDefined();
-        const localStorageQR = JSON.parse(localStorage.getItem(draftId)!);
+        expect(localStorage.getItem(draftKey)).toBeDefined();
+        const localStorageQR = JSON.parse(localStorage.getItem(draftKey)!);
         expect(localStorageQR).toBeDefined();
-        expect(localStorageQR.questionnaire).toBe(questionnaireId);
+        expect(localStorageQR.questionnaire).toBe(questionnaireURI);
         expect(localStorageQR.status).toBe('in-progress');
         expect(localStorageQR.subject).toBeDefined();
         expect(localStorageQR.subject.reference).toBe(getReference(patient).reference);
@@ -314,9 +315,10 @@ describe('Draft questionnaire response saves correctly with local storage backen
     test('Test QuestionnaireResponse is not duplicated by autosave', async () => {
         const testFieldValue = 'Test 2';
 
-        const { patient, practitioner } = await setup();
+        const { patient, practitioner, questionnaire } = await setup();
 
-        const draftId = `Patient/${patient.id}/${questionnaireId}`;
+        const questionnaireURI = `Questionnaire/${questionnaire.id}/_history/${questionnaire.meta?.versionId}`;
+        const draftKey = `Patient/${patient.id}|${questionnaireURI}`;
 
         const onSuccess = await renderForm(patient, practitioner, true, 'local');
 
@@ -341,7 +343,7 @@ describe('Draft questionnaire response saves correctly with local storage backen
 
         await new Promise((r) => setTimeout(r, 3000));
 
-        expect(localStorage.getItem(draftId)).toBeNull();
+        expect(localStorage.getItem(draftKey)).toBeNull();
 
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
@@ -360,9 +362,10 @@ describe('Draft questionnaire response saves correctly with local storage backen
         const testFieldValue = 'Test 3';
         const testFieldUpdateValue = 'update value';
 
-        const { patient, practitioner } = await setup();
+        const { patient, practitioner, questionnaire } = await setup();
 
-        const draftId = `Patient/${patient.id}/${questionnaireId}`;
+        const questionnaireURI = `Questionnaire/${questionnaire.id}/_history/${questionnaire.meta?.versionId}`;
+        const draftKey = `Patient/${patient.id}|${questionnaireURI}`;
 
         const onSuccess = await renderForm(patient, practitioner, true, 'local');
 
@@ -377,14 +380,14 @@ describe('Draft questionnaire response saves correctly with local storage backen
         });
 
         await waitForAPIProcess<string | null>({
-            service: () => Promise.resolve(localStorage.getItem(draftId)),
+            service: () => Promise.resolve(localStorage.getItem(draftKey)),
             resolver: (result) => {
                 return result !== null;
             },
         });
 
-        expect(localStorage.getItem(draftId)).toBeDefined();
-        const localStorageQR = JSON.parse(localStorage.getItem(draftId)!);
+        expect(localStorage.getItem(draftKey)).toBeDefined();
+        const localStorageQR = JSON.parse(localStorage.getItem(draftKey)!);
         expect(localStorageQR.item[0].answer[0].valueString).toBe(testFieldValue);
 
         act(() => {
@@ -394,7 +397,7 @@ describe('Draft questionnaire response saves correctly with local storage backen
         });
 
         await waitForAPIProcess<string | null>({
-            service: () => Promise.resolve(localStorage.getItem(draftId)),
+            service: () => Promise.resolve(localStorage.getItem(draftKey)),
             resolver: (result) => {
                 const localStorageQR = JSON.parse(result!);
                 const fieldValue = localStorageQR.item[0].answer[0].valueString;
@@ -402,7 +405,7 @@ describe('Draft questionnaire response saves correctly with local storage backen
             },
         });
 
-        const localStorageQRupdate = JSON.parse(localStorage.getItem(draftId)!);
+        const localStorageQRupdate = JSON.parse(localStorage.getItem(draftKey)!);
         expect(localStorageQRupdate.item[0].answer[0].valueString).toBe(testFieldUpdateValue);
 
         const submitButton = await screen.findByTestId('submit-button');
@@ -428,7 +431,7 @@ describe('Draft questionnaire response saves correctly with local storage backen
                 return qrs.length === 1;
             },
         });
-        expect(localStorage.getItem(draftId)).toBeNull();
+        expect(localStorage.getItem(draftKey)).toBeNull();
     }, 60000);
 });
 

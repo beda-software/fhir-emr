@@ -10,6 +10,7 @@ import {
     OperationOutcome,
     QuestionnaireResponse,
 } from 'fhir/r4b';
+import _ from 'lodash';
 import moment from 'moment';
 import {
     mapFormToResponse,
@@ -125,8 +126,8 @@ export const persistDraftSaveService: QuestionnaireResponseDraftSaveService = as
     const qrRD = await getFHIRResource<QuestionnaireResponse>({ reference: `QuestionnaireResponse/${id}` });
 
     const response = isSuccess(qrRD)
-        ? patchFHIRResource<QuestionnaireResponse>(qr, { status: 'in-progress' })
-        : createFHIRResource<QuestionnaireResponse>(qr);
+        ? await patchFHIRResource<QuestionnaireResponse>(qr, { id: qr.id, status: 'in-progress' })
+        : await createFHIRResource<QuestionnaireResponse>(qr);
 
     return response;
 };
@@ -174,11 +175,40 @@ export const persistDraftDeleteService: QuestionnaireResponseDraftDeleteService 
     return Promise.resolve(success({} as FHIRQuestionnaireResponse));
 };
 
+function findLocalItems(query?: string) {
+    if (!query) {
+        return [];
+    }
+
+    const results = [];
+    for (const localItem in localStorage) {
+        if (Object.prototype.hasOwnProperty.call(localStorage, localItem)) {
+            if (localItem.match(query ?? '') || (!query && typeof localItem === 'string')) {
+                const value = JSON.parse(localStorage.getItem(localItem) ?? '{}');
+                results.push({ key: localItem, val: value });
+            }
+        }
+    }
+    return results;
+}
+
 export const localStorageDraftDeleteService: QuestionnaireResponseDraftDeleteService = (id: Resource['id']) => {
     if (!id) {
         return Promise.resolve(failure(t`Resource id is not provided`));
     }
+    const WHITELISTED_PREFIXES = ['QuestionnaireResponse', 'Patient'];
+
     localStorage.removeItem(id);
+
+    const idQuery = id?.split('|')[1]?.split('/').slice(0, -1).join('/');
+    const localItems = findLocalItems(idQuery);
+
+    localItems
+        .filter((item) => WHITELISTED_PREFIXES.some((prefix) => item.key.startsWith(prefix)))
+        .forEach((item) => {
+            localStorage.removeItem(item.key);
+        });
+
     return Promise.resolve(success({} as FHIRQuestionnaireResponse));
 };
 
@@ -287,10 +317,9 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
 
     return mapSuccess(populateRemoteData, (populatedQR) => {
         const questionnaire = questionnaireRemoteData.data;
-        const questionnaireResponse = {
-            ...initialQuestionnaireResponse,
-            ...populatedQR,
-        };
+        const questionnaireResponse = _.mergeWith(initialQuestionnaireResponse, populatedQR, (o, s) =>
+            _.isNull(o) ? s : o,
+        );
 
         return toQuestionnaireResponseFormData(questionnaire, questionnaireResponse, launchContextParameters);
     });
