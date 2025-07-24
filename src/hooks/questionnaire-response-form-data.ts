@@ -317,9 +317,10 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
 
     return mapSuccess(populateRemoteData, (populatedQR) => {
         const questionnaire = questionnaireRemoteData.data;
-        const questionnaireResponse = _.mergeWith(initialQuestionnaireResponse, populatedQR, (o, s) =>
-            _.isNull(o) ? s : o,
-        );
+        const questionnaireResponse = {
+            ...initialQuestionnaireResponse,
+            ...populatedQR,
+        };
 
         return toQuestionnaireResponseFormData(questionnaire, questionnaireResponse, launchContextParameters);
     });
