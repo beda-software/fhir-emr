@@ -42,7 +42,7 @@ interface QuestionnaireResponseDraftResponse {
     deleteDraft: () => Promise<void>;
     draftQuestionnaireResponseRD: RemoteData<WithId<QuestionnaireResponse> | undefined>;
     draftInfoMessage?: string;
-    onQRFUpdate: (questionnaireResponse: QuestionnaireResponse) => Promise<void>;
+    onUpdateDraft: (questionnaireResponse: QuestionnaireResponse) => Promise<void>;
 }
 
 export const useQuestionnaireResponseDraft = (
@@ -154,7 +154,7 @@ export const useQuestionnaireResponseDraft = (
         };
     }, []);
 
-    const onQRFUpdate = useCallback(async (questionnaireResponse: QuestionnaireResponse) => {
+    const onUpdateDraft = useCallback(async (questionnaireResponse: QuestionnaireResponse) => {
         if (!isRunningDebouncedSaveDraftRef.current) {
             debouncedSaveDraftRef.current?.(questionnaireResponse);
         }
@@ -194,7 +194,7 @@ export const useQuestionnaireResponseDraft = (
         deleteDraft,
         draftQuestionnaireResponseRD,
         draftInfoMessage,
-        onQRFUpdate,
+        onUpdateDraft,
     };
 };
 

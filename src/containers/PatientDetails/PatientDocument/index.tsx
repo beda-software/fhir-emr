@@ -42,14 +42,15 @@ export function PatientDocument(props: PatientDocumentProps) {
 
     const params = useParams<{ questionnaireId: string; encounterId?: string }>();
 
-    const { draftQuestionnaireResponseRD, draftInfoMessage, onQRFUpdate, deleteDraft } = useQuestionnaireResponseDraft({
-        subject: `${props.patient.resourceType}/${props.patient.id}`,
-        questionnaireId: props.questionnaireId ?? params.questionnaireId!,
-        questionnaireResponseId: props.questionnaireResponse?.id,
-        qrDraftServiceType,
-        autoSave,
-        questionnaireResponse: props.questionnaireResponse,
-    });
+    const { draftQuestionnaireResponseRD, draftInfoMessage, onUpdateDraft, deleteDraft } =
+        useQuestionnaireResponseDraft({
+            subject: `${props.patient.resourceType}/${props.patient.id}`,
+            questionnaireId: props.questionnaireId ?? params.questionnaireId!,
+            questionnaireResponseId: props.questionnaireResponse?.id,
+            qrDraftServiceType,
+            autoSave,
+            questionnaireResponse: props.questionnaireResponse,
+        });
 
     return (
         <RenderRemoteData remoteData={draftQuestionnaireResponseRD} renderLoading={Spinner}>
@@ -63,7 +64,7 @@ export function PatientDocument(props: PatientDocumentProps) {
                         props.onSuccess && props.onSuccess(resource);
                     }}
                     onCancel={deleteDraft}
-                    onQRFUpdate={onQRFUpdate}
+                    onQRFUpdate={onUpdateDraft}
                     alertComponent={
                         <AlertMessage
                             actionComponent={
