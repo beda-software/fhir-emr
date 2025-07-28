@@ -29,7 +29,7 @@ import {
     saveQuestionnaireResponseDraft,
 } from 'src/components/QuestionnaireResponseForm';
 import { QuestionnaireResponseDraftService } from 'src/hooks';
-import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
+import { CustomYupTestsMap, questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
 import s from './BaseQuestionnaireResponseForm.module.scss';
 import {
@@ -67,6 +67,8 @@ export interface BaseQuestionnaireResponseFormProps {
     FormFooterComponent?: React.ElementType<FormFooterComponentProps>;
     saveButtonTitle?: React.ReactNode;
     cancelButtonTitle?: React.ReactNode;
+
+    customYupTests?: CustomYupTestsMap;
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
@@ -79,6 +81,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         autoSave,
         qrDraftServiceType = 'local',
         onCancel,
+        customYupTests,
     } = props;
 
     const isCreating = !formData.context.questionnaireResponse.id;
@@ -99,8 +102,8 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
     loadDraft(draftId, formData);
 
     const schema: yup.AnyObjectSchema = useMemo(
-        () => questionnaireToValidationSchema(formData.context.fceQuestionnaire),
-        [formData.context.fceQuestionnaire],
+        () => questionnaireToValidationSchema(formData.context.fceQuestionnaire, customYupTests),
+        [formData.context.fceQuestionnaire, customYupTests],
     );
 
     const methods = useForm<FormItems>({
@@ -285,7 +288,8 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                 >
                     <QuestionnaireResponseFormProvider
                         formValues={formValues}
-                        setFormValues={(values, fieldPath, value) => setValue(fieldPath.join('.'), value)}
+                        // NOTE: setValue as any is required to speed up performance!
+                        setFormValues={(values, fieldPath, value) => (setValue as any)(fieldPath.join('.'), value)}
                         groupItemComponent={groupItemComponent}
                         itemControlGroupItemComponents={itemControlGroupItemComponents}
                         questionItemComponents={questionItemComponents}

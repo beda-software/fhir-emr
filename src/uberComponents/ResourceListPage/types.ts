@@ -2,9 +2,9 @@ import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 
 import { SearchParams } from '@beda.software/fhir-react';
 
-import { SearchBarColumn } from '../../components/SearchBar/types';
+import { SearchBarColumn, SorterColumn } from '../../components/SearchBar/types';
 
-export type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
+export type RecordType<R extends Resource> = { resource: R; bundle: Bundle; children?: RecordType<R>[] };
 
 export interface ReportColumn {
     title: React.ReactNode;
@@ -29,11 +29,20 @@ export interface ResourceListProps<R extends Resource, Extra = unknown, Link = s
      */
     extractPrimaryResources?: (bundle: Bundle) => R[];
 
+    /**
+     * An optional custom child resource extractor can be used when a row's resource
+     * has descendant records that should be represented as a tree.
+     * For example, Organisation resource has another one as a descendant via the 'partOf' property,
+     * so the descendant will be put to 'children' key of the parent record.
+     */
+    extractChildrenResources?: (resource: R, bundle: Bundle) => R[];
+
     /* Default search params */
     searchParams?: SearchParams;
 
     /* Filter that are displayed in the search bar and inside table columns */
     getFilters?: () => SearchBarColumn[];
+    getSorters?: () => SorterColumn[];
 
     /**
      * Record actions list that is displayed in the table per record
@@ -49,15 +58,15 @@ export interface ResourceListProps<R extends Resource, Extra = unknown, Link = s
      *
      * NOTE: Theoretically getHeaderActions can accept all resources Bundle
      */
-    getHeaderActions?: () => Array<QuestionnaireActionType<Extra>>;
+    getHeaderActions?: () => Array<QuestionnaireActionType<Extra> | NavigationActionType<Link>>;
 
     /**
      * Batch actions that are available when rows are selected
      * (for example, delete multiple organizations)
      *
-     * NOTE: Theoretically getHeaderActions can accept selected resources Bundle
+     * Accepts selected resources Bundle
      */
-    getBatchActions?: () => Array<QuestionnaireActionType<Extra>>;
+    getBatchActions?: (selectedResourcesBundle: Bundle<R>) => Array<QuestionnaireActionType<Extra> | CustomActionType>;
 
     /**
      * Default launch context that will be added to all questionnaires

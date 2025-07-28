@@ -54,7 +54,7 @@ body:
                     - $ specialtyItem.valueCoding
               practitioner:
                 uri: urn:uuid:practitioner-id
-              resourceType: practitionerRole
+              resourceType: PractitionerRole
               healthcareService:
                 $map: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='services').answer.valueReference")
                 $as: serviceRef
