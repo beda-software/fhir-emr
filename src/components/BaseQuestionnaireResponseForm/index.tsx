@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import classNames from 'classnames';
 import { QuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
-import React, { ComponentType, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
+import React, { ComponentType, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm, useFormState } from 'react-hook-form';
 import {
     calcInitialContext,
@@ -86,7 +86,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
     });
 
     const rootContext = calcInitialContext(formData.context, formValues);
-    const isSubmittingRef = useRef(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         // We use isDirty to trigger the onQRFUpdate callback only when user starts changing the form
@@ -198,9 +198,9 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         <FormProvider {...methods}>
             <form
                 onSubmit={handleSubmit(async () => {
-                    isSubmittingRef.current = true;
+                    setIsSubmitting(true);
                     await onSubmit?.({ ...formData, formValues });
-                    isSubmittingRef.current = false;
+                    setIsSubmitting(false);
                 })}
                 className={classNames(s.form, 'app-form')}
                 noValidate
@@ -208,7 +208,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                 <BaseQuestionnaireResponseFormPropsContext.Provider
                     value={{
                         ...props,
-                        submitting: isSubmittingRef.current,
+                        submitting: isSubmitting,
                         onCancel: onCancel,
                     }}
                 >
@@ -230,9 +230,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                                     context={rootContext}
                                 />
                             </div>
-                            {!isWizard ? (
-                                <FormFooter {...props} submitting={isSubmittingRef.current} onCancel={onCancel} />
-                            ) : null}
+                            {!isWizard ? <FormFooter {...props} submitting={isSubmitting} onCancel={onCancel} /> : null}
                         </>
                     </QuestionnaireResponseFormProvider>
                 </BaseQuestionnaireResponseFormPropsContext.Provider>
