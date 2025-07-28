@@ -43,7 +43,6 @@ interface QuestionnaireResponseDraftResponse {
     draftQuestionnaireResponseRD: RemoteData<WithId<QuestionnaireResponse> | undefined>;
     draftInfoMessage?: string;
     onQRFUpdate: (questionnaireResponse: QuestionnaireResponse) => Promise<void>;
-    submitDraft: () => Promise<void>;
 }
 
 export const useQuestionnaireResponseDraft = (
@@ -190,20 +189,12 @@ export const useQuestionnaireResponseDraft = (
         isRunningDebouncedSaveDraftRef.current = false;
     }, [manager, qrDraftServiceType]);
 
-    const submitDraft = useCallback(async () => {
-        await deleteDraft();
-        isRunningDebouncedSaveDraftRef.current = true;
-        debouncedSaveDraftRef.current?.cancel();
-        debouncedSaveDraftRef.current = null;
-    }, [deleteDraft]);
-
     return {
         saveDraft,
         deleteDraft,
         draftQuestionnaireResponseRD,
         draftInfoMessage,
         onQRFUpdate,
-        submitDraft,
     };
 };
 

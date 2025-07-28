@@ -3,7 +3,6 @@ import { Button, Splitter } from 'antd';
 import { Organization, ParametersParameter, Patient, Person, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
 import React, { useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
 import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
 
@@ -27,29 +26,30 @@ export interface PatientDocumentProps {
     launchContextParameters?: ParametersParameter[];
     questionnaireId?: string;
     encounterId?: string;
-    onSubmit?: (formData: QuestionnaireResponseFormData) => Promise<any>;
     onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
-    onCancel?: () => void;
-    onQRFUpdate?: (questionnaireResponse: QuestionnaireResponse) => void;
     autoSave?: boolean;
     qrDraftServiceType?: QuestionnaireResponseDraftService;
+}
+
+interface PatientDocumentContentProps extends PatientDocumentProps {
+    onCancel?: () => void;
+    onQRFUpdate?: (questionnaireResponse: QuestionnaireResponse) => void;
     alertComponent?: React.ReactNode | (() => React.ReactNode);
 }
 
 export function PatientDocument(props: PatientDocumentProps) {
-    const { autoSave = false, qrDraftServiceType = 'local', onCancel, onSubmit } = props;
+    const { autoSave = false, qrDraftServiceType = 'local' } = props;
 
     const params = useParams<{ questionnaireId: string; encounterId?: string }>();
 
-    const { draftQuestionnaireResponseRD, draftInfoMessage, onQRFUpdate, deleteDraft, submitDraft } =
-        useQuestionnaireResponseDraft({
-            subject: `${props.patient.resourceType}/${props.patient.id}`,
-            questionnaireId: props.questionnaireId ?? params.questionnaireId!,
-            questionnaireResponseId: props.questionnaireResponse?.id,
-            qrDraftServiceType,
-            autoSave,
-            questionnaireResponse: props.questionnaireResponse,
-        });
+    const { draftQuestionnaireResponseRD, draftInfoMessage, onQRFUpdate, deleteDraft } = useQuestionnaireResponseDraft({
+        subject: `${props.patient.resourceType}/${props.patient.id}`,
+        questionnaireId: props.questionnaireId ?? params.questionnaireId!,
+        questionnaireResponseId: props.questionnaireResponse?.id,
+        qrDraftServiceType,
+        autoSave,
+        questionnaireResponse: props.questionnaireResponse,
+    });
 
     return (
         <RenderRemoteData remoteData={draftQuestionnaireResponseRD} renderLoading={Spinner}>
@@ -59,18 +59,11 @@ export function PatientDocument(props: PatientDocumentProps) {
                     key="patient-document-content"
                     questionnaireResponse={draftQuestionnaireResponse}
                     onSuccess={async (resource: QuestionnaireResponseFormSaveResponse) => {
-                        await submitDraft();
+                        await deleteDraft();
                         props.onSuccess && props.onSuccess(resource);
                     }}
-                    onCancel={async () => {
-                        await deleteDraft();
-                        onCancel?.();
-                    }}
+                    onCancel={deleteDraft}
                     onQRFUpdate={onQRFUpdate}
-                    onSubmit={async (formData) => {
-                        await submitDraft();
-                        return await onSubmit?.(formData);
-                    }}
                     alertComponent={
                         <AlertMessage
                             actionComponent={
@@ -91,8 +84,8 @@ export function PatientDocument(props: PatientDocumentProps) {
     );
 }
 
-function PatientDocumentContent(props: PatientDocumentProps) {
-    const { onCancel, onQRFUpdate, onSubmit: onSubmitProp, alertComponent } = props;
+function PatientDocumentContent(props: PatientDocumentContentProps) {
+    const { onCancel, onQRFUpdate, alertComponent } = props;
 
     // additional itemControlQuestionItemComponents should be memoized
     const itemControlQuestionItemComponents = useMemo(() => {
@@ -125,16 +118,13 @@ function PatientDocumentContent(props: PatientDocumentProps) {
                                     {alertComponent}
                                     <BaseQuestionnaireResponseForm
                                         formData={formData}
-                                        onSubmit={async (formData) => {
-                                            await onSubmitProp?.(formData);
-                                            await onSubmit(formData);
-                                        }}
+                                        onSubmit={onSubmit}
                                         itemControlQuestionItemComponents={itemControlQuestionItemComponents}
                                         onCancel={() => {
                                             onCancel?.();
                                             navigate(-1);
                                         }}
-                                        saveButtonTitle={'Complete'}
+                                        saveButtonTitle={t`Complete`}
                                         onQRFUpdate={onQRFUpdate}
                                     />
                                 </>
@@ -156,12 +146,12 @@ function PatientDocumentContent(props: PatientDocumentProps) {
                                             <BaseQuestionnaireResponseForm
                                                 formData={formData}
                                                 onSubmit={onSubmit}
-                                                itemControlQuestionItemComponents={{
-                                                    'anxiety-score': AnxietyScore,
-                                                    'depression-score': DepressionScore,
+                                                itemControlQuestionItemComponents={itemControlQuestionItemComponents}
+                                                onCancel={() => {
+                                                    onCancel?.();
+                                                    navigate(-1);
                                                 }}
-                                                onCancel={() => navigate(-1)}
-                                                saveButtonTitle={'Complete'}
+                                                saveButtonTitle={t`Complete`}
                                                 onQRFUpdate={onQRFUpdate}
                                             />
                                         </Splitter.Panel>
