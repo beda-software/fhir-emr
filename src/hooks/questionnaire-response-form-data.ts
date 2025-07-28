@@ -304,7 +304,7 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
     };
 
     let populateRemoteData: RemoteDataResult<FHIRQuestionnaireResponse>;
-    if (initialQuestionnaireResponse?.id || initialQuestionnaireResponse?.status === 'in-progress') {
+    if (initialQuestionnaireResponse?.id) {
         populateRemoteData = success(initialQuestionnaireResponse as FHIRQuestionnaireResponse);
     } else {
         populateRemoteData = await service<FHIRQuestionnaireResponse>({
