@@ -10,7 +10,7 @@ import {
     OperationOutcome,
     QuestionnaireResponse,
 } from 'fhir/r4b';
-import _ from 'lodash';
+import { omit } from 'lodash';
 import moment from 'moment';
 import {
     mapFormToResponse,
@@ -19,13 +19,15 @@ import {
     calcInitialContext,
     removeDisabledAnswers,
     toFirstClassExtension,
+    FCEQuestionnaire,
 } from 'sdc-qrf';
 
 import config from '@beda.software/emr-config';
-import { WithId, formatFHIRDateTime, getReference, useService } from '@beda.software/fhir-react';
+import { WithId, formatFHIRDateTime, getReference, useService, uuid4 } from '@beda.software/fhir-react';
 import { RemoteDataResult, failure, isFailure, isSuccess, mapSuccess, success } from '@beda.software/remote-data';
 
-import { createFHIRResource, getFHIRResource, patchFHIRResource, saveFHIRResource, service } from 'src/services/fhir';
+import { extractDraftUnversionedKey } from 'src/hooks';
+import { getFHIRResource, patchFHIRResource, saveFHIRResource, service, updateFHIRResource } from 'src/services/fhir';
 
 export type QuestionnaireResponseFormSaveResponse<R extends Resource = any> = {
     questionnaireResponse: FHIRQuestionnaireResponse;
@@ -70,15 +72,15 @@ type QuestionnaireResponseSaveService = (
 
 type QuestionnaireResponseDraftSaveService = (
     qr: FHIRQuestionnaireResponse,
-    id: Resource['id'],
+    key: string | undefined,
 ) => Promise<RemoteDataResult<FHIRQuestionnaireResponse>>;
 
 type QuestionnaireResponseDraftLoadService = (
-    id: Resource['id'],
+    key: string | undefined,
 ) => Promise<RemoteDataResult<WithId<FHIRQuestionnaireResponse>>>;
 
 type QuestionnaireResponseDraftDeleteService = (
-    id: Resource['id'],
+    key: string | undefined,
 ) => Promise<RemoteDataResult<FHIRQuestionnaireResponse>>;
 
 export const enum QuestionnaireResponseDraftServiceType {
@@ -88,13 +90,11 @@ export const enum QuestionnaireResponseDraftServiceType {
 
 export type QuestionnaireResponseDraftService = keyof typeof QuestionnaireResponseDraftServiceType;
 
-export const getQuestionnaireResponseDraftServices = (
-    type: QuestionnaireResponseDraftService,
-): {
+export function getQuestionnaireResponseDraftServices(type: QuestionnaireResponseDraftService): {
     saveService: QuestionnaireResponseDraftSaveService;
     loadService: QuestionnaireResponseDraftLoadService;
     deleteService: QuestionnaireResponseDraftDeleteService;
-} => {
+} {
     switch (type) {
         case QuestionnaireResponseDraftServiceType.local:
             return {
@@ -111,7 +111,7 @@ export const getQuestionnaireResponseDraftServices = (
         default:
             throw new Error('Unknown questionnaire response draft service type');
     }
-};
+}
 
 export const inMemorySaveService: QuestionnaireResponseSaveService = (qr: FHIRQuestionnaireResponse) =>
     Promise.resolve(success(qr));
@@ -119,47 +119,42 @@ export const inMemorySaveService: QuestionnaireResponseSaveService = (qr: FHIRQu
 export const persistSaveService: QuestionnaireResponseSaveService = async (qr: FHIRQuestionnaireResponse) =>
     await saveFHIRResource(qr);
 
-export const persistDraftSaveService: QuestionnaireResponseDraftSaveService = async (
-    qr: FHIRQuestionnaireResponse,
-    id: Resource['id'],
-) => {
-    const qrRD = await getFHIRResource<QuestionnaireResponse>({ reference: `QuestionnaireResponse/${id}` });
-
-    const response = isSuccess(qrRD)
-        ? await patchFHIRResource<QuestionnaireResponse>(qr, { id: qr.id, status: 'in-progress' })
-        : await createFHIRResource<QuestionnaireResponse>(qr);
-
-    return response;
+export const persistDraftSaveService: QuestionnaireResponseDraftSaveService = async (qr: FHIRQuestionnaireResponse) => {
+    // NOTE: We remove version from draft to avoid conflict with server version
+    return await updateFHIRResource<QuestionnaireResponse>(omit(qr, 'meta.versionId'), {
+        id: qr.id,
+        status: 'in-progress',
+    });
 };
 
 export const localStorageDraftSaveService: QuestionnaireResponseDraftSaveService = (
     qr: FHIRQuestionnaireResponse,
-    id: Resource['id'],
+    key: string | undefined,
 ) => {
-    if (!id) {
-        return Promise.resolve(failure(t`Resource id is not defined`));
+    if (!key) {
+        return Promise.resolve(failure(t`Draft key not provided`));
     }
 
-    localStorage.setItem(id, JSON.stringify(qr));
+    localStorage.setItem(key, JSON.stringify(qr));
     return Promise.resolve(success(qr));
 };
 
-export const persistDraftLoadService: QuestionnaireResponseDraftLoadService = (id: Resource['id']) => {
-    if (!id) {
-        return Promise.resolve(failure(t`Resource id is not provided`));
+export const persistDraftLoadService: QuestionnaireResponseDraftLoadService = async (key: string | undefined) => {
+    if (!key) {
+        return Promise.resolve(failure(t`Draft key not provided`));
     }
 
-    return getFHIRResource<FHIRQuestionnaireResponse>({
-        reference: `QuestionnaireResponse/${id}`,
+    return await getFHIRResource<FHIRQuestionnaireResponse>({
+        reference: `QuestionnaireResponse/${key}`,
     });
 };
 
-export const localStorageDraftLoadService: QuestionnaireResponseDraftLoadService = (id: Resource['id']) => {
-    if (!id) {
-        return Promise.resolve(failure(t`Resource id is not provided`));
+export const localStorageDraftLoadService: QuestionnaireResponseDraftLoadService = (key: string | undefined) => {
+    if (!key) {
+        return Promise.resolve(failure(t`Draft key not provided`));
     }
 
-    const localStorageQR = localStorage.getItem(id);
+    const localStorageQR = localStorage.getItem(key);
     if (!localStorageQR) {
         return Promise.resolve(failure(t`QuestionnaireResponse not found in local storage`));
     }
@@ -167,23 +162,15 @@ export const localStorageDraftLoadService: QuestionnaireResponseDraftLoadService
     return Promise.resolve(success(JSON.parse(localStorageQR)));
 };
 
-export const persistDraftDeleteService: QuestionnaireResponseDraftDeleteService = async (id: Resource['id']) => {
-    if (!id) {
-        return Promise.resolve(failure(t`Resource id is not provided`));
-    }
-
+export const persistDraftDeleteService: QuestionnaireResponseDraftDeleteService = async () => {
     return Promise.resolve(success({} as FHIRQuestionnaireResponse));
 };
 
-function findLocalItems(query?: string) {
-    if (!query) {
-        return [];
-    }
-
+function findLocalItems(query: string) {
     const results = [];
     for (const localItem in localStorage) {
         if (Object.prototype.hasOwnProperty.call(localStorage, localItem)) {
-            if (localItem.match(query ?? '') || (!query && typeof localItem === 'string')) {
+            if (localItem.match(query)) {
                 const value = JSON.parse(localStorage.getItem(localItem) ?? '{}');
                 results.push({ key: localItem, val: value });
             }
@@ -192,22 +179,19 @@ function findLocalItems(query?: string) {
     return results;
 }
 
-export const localStorageDraftDeleteService: QuestionnaireResponseDraftDeleteService = (id: Resource['id']) => {
-    if (!id) {
-        return Promise.resolve(failure(t`Resource id is not provided`));
+export const localStorageDraftDeleteService: QuestionnaireResponseDraftDeleteService = (key: string | undefined) => {
+    if (!key) {
+        return Promise.resolve(failure(t`Draft key not provided`));
     }
-    const WHITELISTED_PREFIXES = ['QuestionnaireResponse', 'Patient'];
 
-    localStorage.removeItem(id);
+    localStorage.removeItem(key);
 
-    const idQuery = id?.split('|')[1]?.split('/').slice(0, -1).join('/');
-    const localItems = findLocalItems(idQuery);
+    const keyQuery = extractDraftUnversionedKey(key);
+    const localItems = findLocalItems(keyQuery);
 
-    localItems
-        .filter((item) => WHITELISTED_PREFIXES.some((prefix) => item.key.startsWith(prefix)))
-        .forEach((item) => {
-            localStorage.removeItem(item.key);
-        });
+    localItems.forEach((item) => {
+        localStorage.removeItem(item.key);
+    });
 
     return Promise.resolve(success({} as FHIRQuestionnaireResponse));
 };
@@ -237,13 +221,14 @@ export function questionnaireIdWOAssembleLoader(questionnaireId: string): Questi
 
 export function toQuestionnaireResponseFormData(
     questionnaire: FHIRQuestionnaire,
+    fceQuestionnaire: FCEQuestionnaire,
     questionnaireResponse: FHIRQuestionnaireResponse,
     launchContextParameters: ParametersParameter[] = [],
 ): QuestionnaireResponseFormData {
     return {
         context: {
             // TODO: we can't change type inside qrf utils
-            fceQuestionnaire: toFirstClassExtension(questionnaire),
+            fceQuestionnaire,
             questionnaire,
             questionnaireResponse: questionnaireResponse,
             launchContextParameters: launchContextParameters || [],
@@ -295,6 +280,10 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
         return questionnaireRemoteData;
     }
 
+    const fceQuestionnaire = toFirstClassExtension(questionnaireRemoteData.data);
+
+    const questionnaireId = fceQuestionnaire.id ?? fceQuestionnaire.assembledFrom;
+
     const params: Parameters = {
         resourceType: 'Parameters',
         parameter: [
@@ -307,12 +296,15 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
     if (initialQuestionnaireResponse?.id) {
         populateRemoteData = success(initialQuestionnaireResponse as FHIRQuestionnaireResponse);
     } else {
-        populateRemoteData = await service<FHIRQuestionnaireResponse>({
-            ...(config.sdcBackendUrl ? { baseURL: config.sdcBackendUrl } : {}),
-            method: 'POST',
-            url: '/Questionnaire/$populate',
-            data: params,
-        });
+        populateRemoteData = mapSuccess(
+            await service<FHIRQuestionnaireResponse>({
+                ...(config.sdcBackendUrl ? { baseURL: config.sdcBackendUrl } : {}),
+                method: 'POST',
+                url: '/Questionnaire/$populate',
+                data: params,
+            }),
+            (qr) => ({ ...qr, id: qr.id ?? uuid4(), questionnaire: questionnaireId }),
+        );
     }
 
     return mapSuccess(populateRemoteData, (populatedQR) => {
@@ -322,7 +314,12 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
             ...populatedQR,
         };
 
-        return toQuestionnaireResponseFormData(questionnaire, questionnaireResponse, launchContextParameters);
+        return toQuestionnaireResponseFormData(
+            questionnaire,
+            fceQuestionnaire,
+            questionnaireResponse,
+            launchContextParameters,
+        );
     });
 }
 
