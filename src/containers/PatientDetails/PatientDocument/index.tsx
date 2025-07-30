@@ -1,6 +1,6 @@
-import { ClearOutlined, SaveOutlined } from '@ant-design/icons';
+import { DeleteOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
-import { Button, Space, Splitter, Switch, Tooltip } from 'antd';
+import { Button, Space, Splitter, Tooltip } from 'antd';
 import { Organization, ParametersParameter, Patient, Person, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
 import React, { useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -48,8 +48,6 @@ export function PatientDocument(props: PatientDocumentProps) {
         draftInfoMessage,
         updateDraft: onUpdateDraft,
         deleteDraft,
-        autoSaveEnabled,
-        setAutoSaveEnabled,
     } = useQuestionnaireResponseDraft({
         subject: `${props.patient.resourceType}/${props.patient.id}`,
         questionnaireId: props.questionnaireId ?? params.questionnaireId!,
@@ -59,7 +57,7 @@ export function PatientDocument(props: PatientDocumentProps) {
     });
 
     return (
-        <RenderRemoteData remoteData={response} renderLoading={() => <div>Hello</div>}>
+        <RenderRemoteData remoteData={response} renderLoading={Spinner}>
             {(draftQuestionnaireResponse) => (
                 <PatientDocumentContent
                     {...props}
@@ -75,23 +73,14 @@ export function PatientDocument(props: PatientDocumentProps) {
                         <AlertMessage
                             actionComponent={
                                 <Space>
-                                    <Tooltip title={t`Enable or disable auto saving to ${qrDraftServiceType} storage`}>
-                                        <Switch
-                                            checked={autoSaveEnabled}
-                                            checkedChildren={<SaveOutlined />}
-                                            unCheckedChildren={<SaveOutlined />}
-                                            onChange={(checked) => {
-                                                setAutoSaveEnabled(checked);
-                                            }}
-                                        />
-                                    </Tooltip>
                                     {qrDraftServiceType === 'local' && (
-                                        <Tooltip title={t`Clear draft from local storage`}>
+                                        <Tooltip title={t`Clear draft from local storage and reset form`}>
                                             <Button
                                                 onClick={async () => {
                                                     await deleteDraft();
                                                 }}
-                                                icon={<ClearOutlined />}
+                                                danger
+                                                icon={<DeleteOutlined />}
                                             />
                                         </Tooltip>
                                     )}

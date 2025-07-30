@@ -36,16 +36,12 @@ interface QuestionnaireResponseDraftResponse {
     response: RemoteData<WithId<QuestionnaireResponse> | undefined>;
     draftInfoMessage?: string;
     updateDraft: (questionnaireResponse: QuestionnaireResponse) => Promise<void>;
-    autoSaveEnabled: boolean;
-    setAutoSaveEnabled: (autoSaveEnabled: boolean) => void;
 }
 
 export const useQuestionnaireResponseDraft = (
     props: QuestionnaireResponseDraftProps,
 ): QuestionnaireResponseDraftResponse => {
     const { autoSave = false, qrDraftServiceType = 'local', subject, questionnaireId, questionnaireResponse } = props;
-
-    const [autoSaveEnabled, setAutoSaveEnabled] = useState(autoSave);
 
     const [draftInfoMessage, setDraftInfoMessage] = useState<string | undefined>();
     const draftKeyRef = useRef<string | undefined>();
@@ -90,8 +86,8 @@ export const useQuestionnaireResponseDraft = (
 
     const saveDraft = useCallback(
         async (questionnaireResponse: QuestionnaireResponse): Promise<RemoteDataResult<QuestionnaireResponse>> => {
-            if (!autoSaveEnabled || !questionnaireResponse) {
-                const reason = !autoSaveEnabled
+            if (!autoSave || !questionnaireResponse) {
+                const reason = !autoSave
                     ? t`Auto save is disabled`
                     : !questionnaireResponse
                     ? t`Questionnaire response is required`
@@ -107,7 +103,7 @@ export const useQuestionnaireResponseDraft = (
 
             return draftQRRD;
         },
-        [autoSaveEnabled, qrDraftServiceType],
+        [autoSave, qrDraftServiceType],
     );
 
     const isRunningDebouncedSaveDraftRef = useRef(false);
@@ -137,7 +133,7 @@ export const useQuestionnaireResponseDraft = (
         return () => {
             debouncedSaveDraftRef.current?.cancel();
         };
-    }, [autoSaveEnabled, qrDraftServiceType, saveDraft]);
+    }, [autoSave, qrDraftServiceType, saveDraft]);
 
     const updateDraft = useCallback(async (questionnaireResponse: QuestionnaireResponse) => {
         if (!isRunningDebouncedSaveDraftRef.current) {
@@ -164,8 +160,6 @@ export const useQuestionnaireResponseDraft = (
         response,
         draftInfoMessage,
         updateDraft,
-        autoSaveEnabled,
-        setAutoSaveEnabled,
     };
 };
 

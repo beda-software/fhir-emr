@@ -12,7 +12,6 @@ export function AlertMessage(props: { message?: string; actionComponent?: React.
                     type="info"
                     showIcon
                     action={actionComponent}
-                    closable
                     banner
                 />
             )}
