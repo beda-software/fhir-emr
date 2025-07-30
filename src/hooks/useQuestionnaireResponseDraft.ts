@@ -86,13 +86,8 @@ export const useQuestionnaireResponseDraft = (
 
     const saveDraft = useCallback(
         async (questionnaireResponse: QuestionnaireResponse): Promise<RemoteDataResult<QuestionnaireResponse>> => {
-            if (!autoSave || !questionnaireResponse) {
-                const reason = !autoSave
-                    ? t`Auto save is disabled`
-                    : !questionnaireResponse
-                    ? t`Questionnaire response is required`
-                    : t`Form data is required`;
-                return failure(reason);
+            if (!questionnaireResponse) {
+                return failure(t`Questionnaire response is required`);
             }
 
             const draftQRRD = await saveQuestionnaireResponseDraft({
@@ -103,7 +98,7 @@ export const useQuestionnaireResponseDraft = (
 
             return draftQRRD;
         },
-        [autoSave, qrDraftServiceType],
+        [qrDraftServiceType],
     );
 
     const isRunningDebouncedSaveDraftRef = useRef(false);
@@ -112,6 +107,10 @@ export const useQuestionnaireResponseDraft = (
     useEffect(() => {
         debouncedSaveDraftRef.current = _.debounce(async (questionnaireResponse: QuestionnaireResponse) => {
             if (isRunningDebouncedSaveDraftRef.current) {
+                return;
+            }
+
+            if (!autoSave) {
                 return;
             }
 

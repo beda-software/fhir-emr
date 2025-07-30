@@ -69,11 +69,6 @@ export function PatientDocument(props: PatientDocumentProps) {
                         }
                         props.onSuccess && props.onSuccess(resource);
                     }}
-                    onCancel={async () => {
-                        if (qrDraftServiceType === 'local') {
-                            await deleteDraft();
-                        }
-                    }}
                     onQRFUpdate={onUpdateDraft}
                     alertComponent={
                         <AlertMessage
@@ -150,6 +145,7 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
                             return (
                                 <>
                                     <PatientDocumentHeader formData={formData} questionnaireId={questionnaireId} />
+                                    {alertComponent}
                                     <Splitter>
                                         <Splitter.Panel min="10%" defaultSize="30%">
                                             <Text>
