@@ -74,7 +74,6 @@ export const Autosave: Story = {
                 }}
                 onCancel={() => console.log('onCancel')}
                 saveButtonTitle={'Submit'}
-                autoSave
             />
         </I18nProvider>
     ),
@@ -95,7 +94,6 @@ export const SaveAsDraft: Story = {
                 }}
                 onCancel={() => console.log('onCancel')}
                 saveButtonTitle={'Submit'}
-                autoSave={false}
             />
         </I18nProvider>
     ),

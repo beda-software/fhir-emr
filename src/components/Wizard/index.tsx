@@ -1,12 +1,8 @@
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { Button, StepProps, Steps, Tooltip } from 'antd';
-import { QuestionnaireResponse } from 'fhir/r4b';
 import { CSSProperties, ReactNode, useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { FormItems } from 'sdc-qrf';
-
-import { WithId } from '@beda.software/fhir-react';
-import { RemoteData } from '@beda.software/remote-data';
 
 import { S } from './styles';
 import { Text } from '../Typography';
@@ -23,8 +19,6 @@ export interface WizardProps {
     children?: ReactNode | undefined;
     className?: string | undefined;
     style?: CSSProperties | undefined;
-    autoSave?: boolean;
-    setDraftSaveResponse?: (data: RemoteData<WithId<QuestionnaireResponse>>) => void;
 }
 
 export function Wizard(props: WizardProps) {

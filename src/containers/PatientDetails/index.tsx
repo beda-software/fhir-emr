@@ -1,6 +1,6 @@
 import { CarePlan, Patient } from 'fhir/r4b';
 import { useMemo } from 'react';
-import { useParams, Outlet, Route, Routes } from 'react-router-dom';
+import { useParams, Outlet, Route, Routes, useNavigate } from 'react-router-dom';
 
 import { RenderRemoteData } from '@beda.software/fhir-react';
 import { isSuccess } from '@beda.software/remote-data';
@@ -38,6 +38,7 @@ export interface PatientDetailsProps {
 export const PatientDetails = (props: PatientDetailsProps) => {
     const params = useParams<{ id: string }>();
     const { isDefaultRoutesDisabled } = props;
+    const navigate = useNavigate();
 
     const [patientResponse, manager] = usePatientResource({ id: params.id! });
     const author = selectCurrentUserRoleResource();
@@ -113,7 +114,10 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                                     <PatientDocument
                                                         patient={patient}
                                                         author={author}
-                                                        autosave={true}
+                                                        autoSave={true}
+                                                        onSuccess={() => {
+                                                            navigate(-1);
+                                                        }}
                                                     />
                                                 }
                                             />
@@ -128,7 +132,10 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                                     <PatientDocument
                                                         patient={patient}
                                                         author={author}
-                                                        autosave={true}
+                                                        autoSave={true}
+                                                        onSuccess={() => {
+                                                            navigate(-1);
+                                                        }}
                                                     />
                                                 }
                                             />
