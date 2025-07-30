@@ -25,6 +25,10 @@ launchContext:
         - Practitioner
         - Patient
         - Organization
+    - name:
+          code: Provenance
+      type:
+        - Provenance
 item:
     - text: DateTime
       type: dateTime

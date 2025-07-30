@@ -9,7 +9,7 @@ launchContext:
     type:
       - Patient
 mapping:
-  - id: patient-edit
+  - id: patient
     resourceType: Mapping
 item:
   - linkId: patient-id
@@ -86,4 +86,4 @@ item:
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/patient-edit
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/patient

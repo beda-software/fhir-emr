@@ -24,7 +24,8 @@ export const ModalNewPatient = (props: ModalNewPatientProps) => {
         >
             {({ closeModal }) => (
                 <QuestionnaireResponseForm
-                    questionnaireLoader={questionnaireIdLoader('patient-create')}
+                    questionnaireLoader={questionnaireIdLoader('patient')}
+                    launchContextParameters={[{ name: 'Patient', resource: { resourceType: 'Patient' } }]}
                     onSuccess={() => {
                         closeModal();
                         notification.success({ message: t`Patient successfully created` });
