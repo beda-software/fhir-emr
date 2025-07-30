@@ -64,10 +64,16 @@ export function PatientDocument(props: PatientDocumentProps) {
                     key="patient-document-content"
                     questionnaireResponse={draftQuestionnaireResponse}
                     onSuccess={async (resource: QuestionnaireResponseFormSaveResponse) => {
-                        await deleteDraft();
+                        if (qrDraftServiceType === 'local') {
+                            await deleteDraft();
+                        }
                         props.onSuccess && props.onSuccess(resource);
                     }}
-                    onCancel={deleteDraft}
+                    onCancel={async () => {
+                        if (qrDraftServiceType === 'local') {
+                            await deleteDraft();
+                        }
+                    }}
                     onQRFUpdate={onUpdateDraft}
                     alertComponent={
                         <AlertMessage
