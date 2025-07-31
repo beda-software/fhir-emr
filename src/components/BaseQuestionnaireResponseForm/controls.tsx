@@ -51,6 +51,7 @@ export const itemComponents: QuestionItemComponentMapping = {
     dateTime: QuestionDateTime,
     time: QuestionDateTime,
     choice: QuestionChoice,
+    'open-choice': QuestionChoice,
     boolean: QuestionBoolean,
     display: Display,
     reference: QuestionReference,

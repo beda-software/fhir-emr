@@ -3,7 +3,7 @@ import { Alert } from 'antd';
 import { useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { GroupItemProps, QuestionItemProps } from 'sdc-qrf';
+import { GroupItemProps, QuestionItemProps, toFirstClassExtension } from 'sdc-qrf';
 
 import { RenderRemoteData } from '@beda.software/fhir-react';
 import { RemoteData, isLoading } from '@beda.software/remote-data';
@@ -68,10 +68,14 @@ export function Builder(props: Props) {
                 )}
             >
                 {(questionnaire) => {
-                    const formData = toQuestionnaireResponseFormData(questionnaire, {
-                        resourceType: 'QuestionnaireResponse',
-                        status: 'completed',
-                    });
+                    const formData = toQuestionnaireResponseFormData(
+                        questionnaire,
+                        toFirstClassExtension(questionnaire),
+                        {
+                            resourceType: 'QuestionnaireResponse',
+                            status: 'completed',
+                        },
+                    );
                     const title = formData.context.questionnaire.title || formData.context.questionnaire.name;
 
                     if (questionnaire.item) {

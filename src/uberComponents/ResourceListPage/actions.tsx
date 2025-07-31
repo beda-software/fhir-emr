@@ -9,7 +9,12 @@ import { QRFProps, QuestionnaireResponseForm } from 'src/components/Questionnair
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 
 import { S } from './styles';
-import { QuestionnaireActionType as QAT, questionnaireAction as qa, NavigationActionType } from './types';
+import {
+    QuestionnaireActionType as QAT,
+    questionnaireAction as qa,
+    NavigationActionType,
+    CustomActionType,
+} from './types';
 
 export interface WebExtra {
     qrfProps?: Partial<QRFProps>;
@@ -105,45 +110,49 @@ export function BatchQuestionnaireAction<R extends Resource>({
     disabled,
     defaultLaunchContext,
 }: {
-    action: QuestionnaireActionType;
+    action: QuestionnaireActionType | CustomActionType;
     bundle: Bundle<R>;
     reload: () => void;
     disabled?: boolean;
     defaultLaunchContext: ParametersParameter[];
 }) {
-    return (
-        <ModalTrigger
-            title={action.title}
-            trigger={
-                <Button type="primary" disabled={disabled} icon={action.icon}>
-                    <span>{action.title}</span>
-                </Button>
-            }
-            modalProps={action.extra?.modalProps}
-        >
-            {({ closeModal }) => (
-                <QuestionnaireResponseForm
-                    questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
-                    launchContextParameters={[
-                        ...defaultLaunchContext,
-                        ...(action.extra?.qrfProps?.launchContextParameters ?? []),
-                        {
-                            name: 'Bundle',
-                            resource: bundle as Bundle,
-                        },
-                    ]}
-                    onSuccess={() => {
-                        closeModal();
-                        notification.success({ message: t`Successfully submitted` });
-                        reload();
-                    }}
-                    onCancel={closeModal}
-                    saveButtonTitle={t`Submit`}
-                    {...(action.extra?.qrfProps ? omit(action.extra?.qrfProps, 'launchContextParameters') : {})}
-                />
-            )}
-        </ModalTrigger>
-    );
+    if (action.type === 'questionnaire') {
+        return (
+            <ModalTrigger
+                title={action.title}
+                trigger={
+                    <Button type="primary" disabled={disabled} icon={action.icon}>
+                        <span>{action.title}</span>
+                    </Button>
+                }
+                modalProps={action.extra?.modalProps}
+            >
+                {({ closeModal }) => (
+                    <QuestionnaireResponseForm
+                        questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
+                        launchContextParameters={[
+                            ...defaultLaunchContext,
+                            ...(action.extra?.qrfProps?.launchContextParameters ?? []),
+                            {
+                                name: 'Bundle',
+                                resource: bundle as Bundle,
+                            },
+                        ]}
+                        onSuccess={() => {
+                            closeModal();
+                            notification.success({ message: t`Successfully submitted` });
+                            reload();
+                        }}
+                        onCancel={closeModal}
+                        saveButtonTitle={t`Submit`}
+                        {...(action.extra?.qrfProps ? omit(action.extra?.qrfProps, 'launchContextParameters') : {})}
+                    />
+                )}
+            </ModalTrigger>
+        );
+    }
+
+    return action.control;
 }
 
 export function NavigationAction<R extends Resource>({
@@ -168,5 +177,14 @@ export function NavigationAction<R extends Resource>({
         >
             {action.title}
         </S.LinkButton>
+    );
+}
+
+export function HeaderNavigationAction<R extends Resource>({ action }: { action: NavigationActionType }) {
+    const navigate = useNavigate();
+    return (
+        <Button type="primary" icon={action.icon} onClick={() => navigate(action.link)}>
+            <span>{action.title}</span>
+        </Button>
     );
 }

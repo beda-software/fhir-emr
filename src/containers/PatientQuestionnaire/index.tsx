@@ -102,7 +102,7 @@ function PatientQuestionnaireForm(props: PatientQuestionnaireProps) {
                     questionnaireId={questionnaireId!}
                     encounterId={encounterId}
                     onSuccess={onSuccess}
-                    autosave={autosave}
+                    autoSave={autosave}
                     launchContextParameters={launchContextParameters}
                 />
             )}

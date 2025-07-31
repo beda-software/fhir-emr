@@ -2,7 +2,7 @@ import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 
 import { SearchParams } from '@beda.software/fhir-react';
 
-import { SearchBarColumn } from '../../components/SearchBar/types';
+import { SearchBarColumn, SorterColumn } from '../../components/SearchBar/types';
 
 export type RecordType<R extends Resource> = { resource: R; bundle: Bundle; children?: RecordType<R>[] };
 
@@ -42,13 +42,31 @@ export interface ResourceListBaseProps<R extends Resource, Extra = unknown> {
 
     /* Filter that are displayed in the search bar and inside table columns */
     getFilters?: (values: Record<string, any>) => SearchBarColumn[];
+    getSorters?: () => SorterColumn[];
+
+    /**
+     * Record actions list that is displayed in the table per record
+     * (for example, edit organization)
+     */
+    getRecordActions?: (
+        record: RecordType<R>,
+        manager: TableManager,
+    ) => Array<QuestionnaireActionType<Extra> | NavigationActionType<Link> | CustomActionType>;
 
     /**
      * Header actions (for example, new organization)
      *
      * NOTE: Theoretically getHeaderActions can accept all resources Bundle
      */
-    getHeaderActions?: () => Array<QuestionnaireActionType<Extra>>;
+    getHeaderActions?: () => Array<QuestionnaireActionType<Extra> | NavigationActionType<Link>>;
+
+    /**
+     * Batch actions that are available when rows are selected
+     * (for example, delete multiple organizations)
+     *
+     * Accepts selected resources Bundle
+     */
+    getBatchActions?: (selectedResourcesBundle: Bundle<R>) => Array<QuestionnaireActionType<Extra> | CustomActionType>;
 
     /**
      * Default launch context that will be added to all questionnaires
@@ -87,7 +105,7 @@ export interface ResourceListProps<R extends Resource, Extra = unknown, Link = s
      *
      * NOTE: Theoretically getHeaderActions can accept selected resources Bundle
      */
-    getBatchActions?: () => Array<QuestionnaireActionType<Extra>>;
+    getBatchActions?: (bundle?: Bundle<R>) => Array<QuestionnaireActionType<Extra>>;
 }
 
 export interface NavigationActionType<Link = string> {

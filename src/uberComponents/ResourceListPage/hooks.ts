@@ -1,10 +1,12 @@
+import { SorterResult } from 'antd/lib/table/interface';
 import { Bundle, Resource } from 'fhir/r4b';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { SearchParams, usePager } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 
-import { ColumnFilterValue } from 'src/components/SearchBar/types';
+import { ColumnFilterValue, SorterColumn } from 'src/components/SearchBar/types';
 import { getSearchBarColumnFilterValue } from 'src/components/SearchBar/utils';
 import { service } from 'src/services/fhir';
 import { useDebounce } from 'src/utils/debounce';
@@ -22,6 +24,11 @@ export function useResourceListPage<R extends Resource>(
 
     const debouncedFilterValues = useDebounce(filterValues, 300);
 
+    const navigate = useNavigate();
+    const goBack = useCallback(() => {
+        navigate(-1);
+    }, [navigate]);
+
     const searchBarSearchParams = {
         ...Object.fromEntries(
             debouncedFilterValues.map((filterValue) => [
@@ -30,7 +37,11 @@ export function useResourceListPage<R extends Resource>(
             ]),
         ),
     };
-    const searchParams = { _sort: '-_lastUpdated', ...defaultSearchParams, ...searchBarSearchParams };
+    const searchParams = {
+        ...defaultSearchParams,
+        ...searchBarSearchParams,
+        _sort: defaultSearchParams._sort ? `${defaultSearchParams._sort},-_lastUpdated` : '-_lastUpdated',
+    };
 
     const defaultPageSize = defaultSearchParams._count;
 
@@ -110,6 +121,7 @@ export function useResourceListPage<R extends Resource>(
         setSelectedRowKeys,
         selectedResourcesBundle,
         reload,
+        goBack,
     };
 }
 
@@ -138,4 +150,39 @@ export function useSearchBarForGenericFilters(getFilters?: ResourceListProps<Res
     }));
 
     return { columnsFilterValues, onChangeColumnFilter, onResetFilters };
+}
+
+export function useTableSorter(sorters: SorterColumn[], defaultSearchParams?: SearchParams) {
+    const removeLeadingMinus = (s: string) => {
+        if (s.startsWith('-')) {
+            return s.substring(1);
+        }
+        return s;
+    };
+    const makeDefaultSorter = (sortSearchParam?: string): SorterResult => {
+        if (!sortSearchParam) {
+            return {};
+        }
+        const currentSorterColumnKey = sorters.find(
+            (sorterColumn) => sorterColumn.searchParam === removeLeadingMinus(sortSearchParam.split(',')[0]!),
+        )?.id;
+        if (currentSorterColumnKey) {
+            return { columnKey: currentSorterColumnKey, order: sortSearchParam.startsWith('-') ? 'descend' : 'ascend' };
+        }
+        return {};
+    };
+    const [currentSorter, setCurrentSorter] = useState<SorterResult>(() =>
+        makeDefaultSorter(defaultSearchParams?._sort as string | undefined),
+    );
+    const sortSearchParam = useMemo(() => {
+        const currentSorterSearchParam = sorters.find((sorterColumn) => sorterColumn.id === currentSorter.columnKey)
+            ?.searchParam;
+        if (currentSorterSearchParam) {
+            return currentSorter.order === 'descend' ? `-${currentSorterSearchParam}` : currentSorterSearchParam;
+        }
+
+        return defaultSearchParams?._sort;
+    }, [currentSorter, sorters, defaultSearchParams]);
+
+    return { sortSearchParam, setCurrentSorter, currentSorter };
 }
