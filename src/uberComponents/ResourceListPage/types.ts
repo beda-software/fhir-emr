@@ -17,7 +17,7 @@ export interface TableManager {
 
 // Extra is a platform specific option
 // For web it could be specific modal property
-export interface ResourceListBaseProps<R extends Resource, Extra = unknown> {
+export interface ResourceListBaseProps<R extends Resource, Extra = unknown, Link = string> {
     /* Primary resource type (for example, Organization) */
     resourceType: R['resourceType'];
 
@@ -89,7 +89,7 @@ export interface ResourceListBaseProps<R extends Resource, Extra = unknown> {
 // Extra is a platform specific option
 // For web it could be specific modal property
 export interface ResourceListProps<R extends Resource, Extra = unknown, Link = string>
-    extends ResourceListBaseProps<R, Extra> {
+    extends ResourceListBaseProps<R, Extra, Link> {
     /**
      * Record actions list that is displayed in the table per record
      * (for example, edit organization)
