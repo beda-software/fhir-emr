@@ -168,6 +168,13 @@ export function questionnaireItemsToValidationSchema(
             }
             schema = applyCustomYupTestsToItem(item, schema, customYupTests);
             schema = createSchemaArrayOfValues(yup.object({ date: schema }));
+        } else if (item.type === 'dateTime') {
+            schema = yup.date();
+            if (item.required) {
+                schema = schema.required();
+            }
+            schema = applyCustomYupTestsToItem(item, schema, customYupTests);
+            schema = createSchemaArrayOfValues(yup.object({ dateTime: schema }));
         } else if (item.type === 'time') {
             schema = yup.string().test(t`time`, t`Must be a valid time (HH:mm:ss)`, (value) => {
                 if (!value) {
