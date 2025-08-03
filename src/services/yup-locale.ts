@@ -1,5 +1,5 @@
-import * as yup from 'yup';
 import { t } from '@lingui/macro';
+import * as yup from 'yup';
 
 const mixed: Required<yup.LocaleObject['mixed']> = {
     default: ({ path }) => t`${path} is invalid`,
