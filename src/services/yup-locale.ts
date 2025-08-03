@@ -56,6 +56,7 @@ const boolean: Required<yup.LocaleObject['boolean']> = {
 };
 const object: Required<yup.LocaleObject['object']> = {
     noUnknown: ({ path, unknown }) => t`${path} field has unspecified keys: ${unknown}`,
+    exact: ({ path, properties }) => t`${path} object contains unknown properties: ${properties}`,
 };
 const array: Required<yup.LocaleObject['array']> = {
     min: ({ path, min }) => t`${path} field must have at least ${min} items`,
