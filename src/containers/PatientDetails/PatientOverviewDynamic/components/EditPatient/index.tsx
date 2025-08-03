@@ -26,7 +26,7 @@ export function EditPatient({ patient }: Props) {
         >
             {({ closeModal }) => (
                 <QuestionnaireResponseForm
-                    questionnaireLoader={questionnaireIdLoader('patient-edit')}
+                    questionnaireLoader={questionnaireIdLoader('patient')}
                     launchContextParameters={[{ name: 'Patient', resource: patient }]}
                     onSuccess={() => {
                         notification.success({
