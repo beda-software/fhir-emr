@@ -95,7 +95,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         if (isDirty) {
             onQRFUpdate?.(rootContext.resource);
         }
-    }, [formData, formValues, rootContext.resource, onQRFUpdate, isDirty]);
+    }, [rootContext.resource, onQRFUpdate, isDirty]);
 
     const wrapControls = useCallback(
         (mapping: { [x: string]: QuestionItemComponent }): { [x: string]: QuestionItemComponent } => {
