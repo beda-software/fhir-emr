@@ -33,6 +33,7 @@ import {
 } from './context';
 import { groupComponent, groupControlComponents, itemComponents, itemControlComponents } from './controls';
 import { FormFooterComponentProps, FormFooter } from './FormFooter';
+import { FormHeaderComponentProps, FormHeader } from './FormHeader';
 
 export interface BaseQuestionnaireResponseFormProps {
     formData: QuestionnaireResponseFormData;
@@ -58,6 +59,7 @@ export interface BaseQuestionnaireResponseFormProps {
     }>;
 
     FormFooterComponent?: React.ElementType<FormFooterComponentProps>;
+    FormHeaderComponent?: React.ElementType<FormHeaderComponentProps>;
     saveButtonTitle?: React.ReactNode;
     cancelButtonTitle?: React.ReactNode;
 
@@ -223,6 +225,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                         readOnly={readOnly}
                     >
                         <>
+                            <FormHeader {...props} submitting={isSubmitting} onCancel={onCancel} formData={formData} />
                             <div className={classNames(s.content, 'form__content')}>
                                 <QuestionItems
                                     questionItems={formData.context.fceQuestionnaire.item!}
