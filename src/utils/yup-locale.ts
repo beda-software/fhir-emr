@@ -8,18 +8,23 @@ const mixed: Required<yup.LocaleObject['mixed']> = {
     notNull: ({ path }) => t`${path} cannot be null`,
     oneOf: ({ path, values }) => t`${path} must be one of the following values: ${values}`,
     notOneOf: ({ path, values }) => t`${path} must not be one of the following values: ${values}`,
-    notType: (params) => {
-        const castMsg =
-            params.originalValue != null && params.originalValue !== params.value
-                ? t` (cast from the value \`${yup.printValue(params.originalValue, true)}\`).`
-                : '.';
-        return params.type !== 'mixed'
-            ? t`${params.path} must be a \`${params.type}\` type, ` +
-                  t`but the final value was: \`${yup.printValue(params.value, true)}\`` +
-                  castMsg
-            : t`${params.path} must match the configured type. ` +
-                  t`The validated value was: \`${yup.printValue(params.value, true)}\`` +
-                  castMsg;
+    notType: ({ type, originalValue, value, path }) => {
+        if (type !== 'mixed') {
+            if (originalValue != null && originalValue !== value) {
+                return t`${path} must be a \`${type}\` type, but the final value was: \`${yup.printValue(
+                    value,
+                    true,
+                )}\`  (cast from the value \`${yup.printValue(originalValue, true)}\`).`;
+            }
+            return t`${path} must be a \`${type}\` type, but the final value was: \`${yup.printValue(value, true)}\` .`;
+        }
+        if (originalValue != null && originalValue !== value) {
+            return t`${path} must match the configured type. The validated value was: \`${yup.printValue(
+                value,
+                true,
+            )}\`  (cast from the value \`${yup.printValue(originalValue, true)}\`).`;
+        }
+        return t`${path} must match the configured type. The validated value was: \`${yup.printValue(value, true)}\` .`;
     },
 };
 const string: Required<yup.LocaleObject['string']> = {
