@@ -82,7 +82,7 @@ const tuple: Required<yup.LocaleObject['tuple']> = {
 };
 
 // https://github.com/jquense/yup/blob/cdb4bffb8912d2b47fa0dbe988ee2c8af9736609/src/locale.ts
-const locale: yup.LocaleObject = Object.assign(Object.create(null), {
+export const yupLocale: yup.LocaleObject = Object.assign(Object.create(null), {
     mixed,
     string,
     number,
@@ -92,7 +92,3 @@ const locale: yup.LocaleObject = Object.assign(Object.create(null), {
     boolean,
     tuple,
 });
-
-export function setupYupLocale() {
-    yup.setLocale(locale);
-}

@@ -3,7 +3,6 @@ import * as Sentry from '@sentry/browser';
 import { setInstanceBaseURL as setAidboxInstanceBaseURL } from 'aidbox-react/lib/services/instance';
 
 import config from '@beda.software/emr-config';
-import { setupYupLocale } from './yup-locale';
 
 if (config.webSentryDSN) {
     Sentry.init({
@@ -15,4 +14,3 @@ if (config.webSentryDSN) {
 }
 
 setAidboxInstanceBaseURL(config.baseURL);
-setupYupLocale();
