@@ -1,11 +1,6 @@
-import { CheckOutlined } from '@ant-design/icons';
 import { Trans } from '@lingui/macro';
 import { Button } from 'antd';
-import { CSSProperties, useContext } from 'react';
-import { useWatch } from 'react-hook-form';
-import { FormItems } from 'sdc-qrf';
-
-import { BaseQuestionnaireResponseFormPropsContext } from 'src/components/BaseQuestionnaireResponseForm/context';
+import { CSSProperties } from 'react';
 
 import { BaseQuestionnaireResponseFormProps } from '.';
 import { S } from './BaseQuestionnaireResponseForm.styles';
@@ -25,21 +20,16 @@ export interface Props extends BaseQuestionnaireResponseFormProps {
 
 export function FormFooter(props: Props) {
     const {
-        formData,
         readOnly,
         onCancel,
         FormFooterComponent,
         saveButtonTitle,
         cancelButtonTitle,
         submitting,
-        autoSave,
         className,
         style,
         submitDisabled: initialSubmitDisabled,
     } = props;
-
-    const formValues = useWatch();
-    const assembledFromQuestionnaireId = formData.context.fceQuestionnaire.assembledFrom;
 
     if (readOnly) {
         return null;
@@ -55,12 +45,6 @@ export function FormFooter(props: Props) {
                 <FormFooterComponent submitting={submitting} submitDisabled={submitDisabled} onCancel={onCancel} />
             ) : (
                 <S.Footer className={className} style={style}>
-                    <RenderDraftButton
-                        assembledFromQuestionnaireId={assembledFromQuestionnaireId}
-                        autoSave={autoSave}
-                        formValues={formValues}
-                        isSomeButtonInLoading={isSomeButtonInLoading}
-                    />
                     {onCancel && (
                         <Button
                             type="default"
@@ -84,64 +68,4 @@ export function FormFooter(props: Props) {
             )}
         </>
     );
-}
-
-interface RenderDraftButtonProps {
-    assembledFromQuestionnaireId: string | undefined;
-    autoSave?: boolean;
-    draftLoading?: boolean;
-    draftSaved?: boolean;
-    formValues?: FormItems;
-    isSomeButtonInLoading?: boolean;
-}
-
-export function RenderDraftButton(props: RenderDraftButtonProps) {
-    const { draftLoading, draftSaved, formValues, isSomeButtonInLoading } = props;
-
-    const baseQuestionnaireResponseFormProps = useContext(BaseQuestionnaireResponseFormPropsContext);
-
-    const autoSave = baseQuestionnaireResponseFormProps?.autoSave;
-    const formData = baseQuestionnaireResponseFormProps?.formData;
-    const questionnaireId = formData?.context.fceQuestionnaire.assembledFrom;
-    const saveDraft = baseQuestionnaireResponseFormProps?.saveDraft;
-
-    if (!formValues) {
-        return null;
-    }
-
-    if (!questionnaireId) {
-        return null;
-    }
-
-    if (!saveDraft) {
-        return null;
-    }
-
-    if (!autoSave) {
-        return (
-            <Button loading={draftLoading} disabled={isSomeButtonInLoading} onClick={() => saveDraft(formValues)}>
-                <Trans>Save as draft</Trans>
-            </Button>
-        );
-    }
-
-    if (autoSave && draftLoading) {
-        return (
-            <Button ghost disabled loading={draftLoading}>
-                <Trans>Saving draft</Trans>
-            </Button>
-        );
-    }
-
-    if (autoSave && draftSaved) {
-        return (
-            <Button ghost disabled icon={<CheckOutlined />}>
-                <span>
-                    <Trans>Saved as draft</Trans>
-                </span>
-            </Button>
-        );
-    }
-
-    return null;
 }

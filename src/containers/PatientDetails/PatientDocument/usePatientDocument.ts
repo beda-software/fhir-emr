@@ -12,16 +12,15 @@ import {
     Reference,
 } from 'fhir/r4b';
 import _ from 'lodash';
-import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
-import { getReference, useService, uuid4, WithId } from '@beda.software/fhir-react';
+import { getReference, ServiceManager, useService, WithId } from '@beda.software/fhir-react';
 import {
-    failure,
     isSuccess,
     mapSuccess,
     RemoteData,
+    failure,
     RemoteDataResult,
     resolveMap,
     sequenceMap,
@@ -54,14 +53,12 @@ async function onFormSubmit(
     props: QuestionnaireResponseFormProps & {
         formData: QuestionnaireResponseFormData;
         onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
-        qrId: string;
     },
 ) {
     const { formData, initialQuestionnaireResponse, onSuccess } = props;
     const modifiedFormData = _.merge({}, formData, {
         context: {
             questionnaireResponse: {
-                id: props.qrId,
                 questionnaire: initialQuestionnaireResponse?.questionnaire,
             },
         },
@@ -98,6 +95,14 @@ function prepareFormInitialParams(
         provenanceBundle,
     } = props;
 
+    const initialQuestionnaireResponse = _.merge(
+        {
+            subject: getReference(patient),
+            encounter: encounterId ? getReference({ resourceType: 'Encounter', id: encounterId }) : undefined,
+            questionnaire: questionnaireId,
+        },
+        questionnaireResponse,
+    );
     const params: QuestionnaireResponseFormProps = {
         questionnaireLoader: questionnaireIdLoader(questionnaireId),
         launchContextParameters: [
@@ -132,11 +137,7 @@ function prepareFormInitialParams(
                 : []),
             ...launchContextParameters,
         ],
-        initialQuestionnaireResponse: questionnaireResponse || {
-            subject: getReference(patient),
-            encounter: encounterId ? getReference({ resourceType: 'Encounter', id: encounterId }) : undefined,
-            questionnaire: questionnaireId,
-        },
+        initialQuestionnaireResponse,
     };
 
     return params;
@@ -157,15 +158,14 @@ const getSourceRef = compileAsFirst<Bundle, Reference>("Bundle.entry.resource.en
 
 export function usePatientDocument(props: Props): {
     response: RemoteData<Result>;
+    manager: ServiceManager<PatientDocumentData, any>;
     questionnaireId: string;
 } {
     const { questionnaireResponse, questionnaireId, onSuccess } = props;
-    const navigate = useNavigate();
-    const qrId = useMemo(() => {
-        return questionnaireResponse?.id || uuid4();
-    }, [questionnaireResponse?.id]);
 
-    const [response] = useService(async () => {
+    const navigate = useNavigate();
+
+    const [response, manager] = useService<PatientDocumentData>(async () => {
         let provenanceResponse: RemoteDataResult<WithId<Provenance>[]> = success([]);
 
         if (questionnaireResponse && questionnaireResponse.id) {
@@ -197,7 +197,6 @@ export function usePatientDocument(props: Props): {
                     ...formInitialParams,
                     formData,
                     onSuccess: onSuccess ? onSuccess : () => navigate(-1),
-                    qrId,
                 });
 
             return mapSuccess(
@@ -233,5 +232,5 @@ export function usePatientDocument(props: Props): {
         return success(undefined);
     });
 
-    return { response: sequenceMap({ source: sourceResponse, document: response }), questionnaireId };
+    return { response: sequenceMap({ source: sourceResponse, document: response }), manager, questionnaireId };
 }

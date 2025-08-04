@@ -282,7 +282,7 @@ export function PatientDocumentDetails(props: Props) {
                                                     questionnaireId={questionnaireResponse.questionnaire}
                                                     onSuccess={() => navigate(-2)}
                                                     author={author}
-                                                    autosave={true}
+                                                    autoSave={true}
                                                     launchContextParameters={launchContextParameters}
                                                 />
                                             }

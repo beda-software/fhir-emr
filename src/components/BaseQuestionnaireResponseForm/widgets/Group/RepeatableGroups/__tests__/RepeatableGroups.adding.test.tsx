@@ -99,7 +99,7 @@ describe('Repeatable group creates correct questionnaire response', async () => 
                         author={practitioner}
                         questionnaireId="repeatable-group"
                         onSuccess={onSuccess}
-                        autosave={false}
+                        autoSave={false}
                     />
                 </I18nProvider>
             </ThemeProvider>,
