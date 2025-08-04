@@ -54,11 +54,11 @@ msgid "{path} is invalid"
 msgstr ""
 
 #: src/utils/yup-locale.ts:14
-msgid "{path} must be a `{type}` type, but the final value was: `{0}`  (cast from the value `{1}`)."
+msgid "{path} must be a `{type}` type, but the final value was: `{0}` (cast from the value `{1}`)."
 msgstr ""
 
 #: src/utils/yup-locale.ts:19
-msgid "{path} must be a `{type}` type, but the final value was: `{0}` ."
+msgid "{path} must be a `{type}` type, but the final value was: `{0}`."
 msgstr ""
 
 #: src/utils/yup-locale.ts:43
@@ -150,11 +150,11 @@ msgid "{path} must have {length} items"
 msgstr ""
 
 #: src/utils/yup-locale.ts:22
-msgid "{path} must match the configured type. The validated value was: `{0}`  (cast from the value `{1}`)."
+msgid "{path} must match the configured type. The validated value was: `{0}` (cast from the value `{1}`)."
 msgstr ""
 
 #: src/utils/yup-locale.ts:27
-msgid "{path} must match the configured type. The validated value was: `{0}` ."
+msgid "{path} must match the configured type. The validated value was: `{0}`."
 msgstr ""
 
 #: src/utils/yup-locale.ts:34

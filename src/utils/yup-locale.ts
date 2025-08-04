@@ -14,17 +14,17 @@ const mixed: Required<yup.LocaleObject['mixed']> = {
                 return t`${path} must be a \`${type}\` type, but the final value was: \`${yup.printValue(
                     value,
                     true,
-                )}\`  (cast from the value \`${yup.printValue(originalValue, true)}\`).`;
+                )}\` (cast from the value \`${yup.printValue(originalValue, true)}\`).`;
             }
-            return t`${path} must be a \`${type}\` type, but the final value was: \`${yup.printValue(value, true)}\` .`;
+            return t`${path} must be a \`${type}\` type, but the final value was: \`${yup.printValue(value, true)}\`.`;
         }
         if (originalValue != null && originalValue !== value) {
             return t`${path} must match the configured type. The validated value was: \`${yup.printValue(
                 value,
                 true,
-            )}\`  (cast from the value \`${yup.printValue(originalValue, true)}\`).`;
+            )}\` (cast from the value \`${yup.printValue(originalValue, true)}\`).`;
         }
-        return t`${path} must match the configured type. The validated value was: \`${yup.printValue(value, true)}\` .`;
+        return t`${path} must match the configured type. The validated value was: \`${yup.printValue(value, true)}\`.`;
     },
 };
 const string: Required<yup.LocaleObject['string']> = {
