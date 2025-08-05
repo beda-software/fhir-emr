@@ -4,13 +4,13 @@ import { BaseQuestionnaireResponseFormProps } from '.';
 import { S } from './BaseQuestionnaireResponseForm.styles';
 
 export interface FormHeaderComponentProps {
-    submitting: boolean;
+    submitting?: boolean;
     submitDisabled?: boolean;
     onCancel?: () => void;
 }
 
 export interface Props extends BaseQuestionnaireResponseFormProps {
-    submitting: boolean;
+    submitting?: boolean;
     className?: string | undefined;
     style?: CSSProperties | undefined;
     submitDisabled?: boolean;
