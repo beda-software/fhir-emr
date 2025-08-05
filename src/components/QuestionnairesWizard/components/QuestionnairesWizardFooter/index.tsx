@@ -13,14 +13,11 @@ export interface QuestionnairesWizardFooterProps extends FormFooterComponentProp
     prevButtonTitle?: React.ReactNode;
     nextButtonTitle?: React.ReactNode;
     finishButtonTitle?: React.ReactNode;
+    currentQuestionnaireIndex?: number;
+    handleStepChange?: (nextStep: number, currentFormValid: boolean) => void;
 }
 
-export function QuestionnairesWizardFooter(
-    props: QuestionnairesWizardFooterProps & {
-        currentQuestionnaireIndex: number;
-        handleStepChange: (nextStep: number, currentFormValid: boolean) => void;
-    },
-) {
+export function QuestionnairesWizardFooter(props: QuestionnairesWizardFooterProps) {
     const {
         submitting,
         submitDisabled,
@@ -43,7 +40,9 @@ export function QuestionnairesWizardFooter(
                         <div
                             onClick={async () => {
                                 const result = await trigger();
-                                handleStepChange(currentQuestionnaireIndex - 1, result);
+                                if (handleStepChange && currentQuestionnaireIndex !== undefined) {
+                                    handleStepChange(currentQuestionnaireIndex - 1, result);
+                                }
                             }}
                         >
                             {prevButtonTitle || t`Go Back`}
@@ -56,7 +55,9 @@ export function QuestionnairesWizardFooter(
                     <div
                         onClick={async () => {
                             const result = await trigger();
-                            handleStepChange(currentQuestionnaireIndex + 1, result);
+                            if (handleStepChange && currentQuestionnaireIndex !== undefined) {
+                                handleStepChange(currentQuestionnaireIndex + 1, result);
+                            }
                         }}
                     >
                         {canGoForward ? nextButtonTitle || t`Go Forward` : finishButtonTitle || t`Complete`}
