@@ -1,24 +1,23 @@
-import { Space, StepProps, Steps } from 'antd';
+import { StepProps, Steps } from 'antd';
 import { useFormContext } from 'react-hook-form';
 
 import { FormHeaderComponentProps } from 'src/components/BaseQuestionnaireResponseForm/FormHeader';
 
-export interface QuestionnairesWizardHeaderProps extends FormHeaderComponentProps {
-    title: string;
-    index: number;
-    total: number;
+import { S } from './styles';
+
+export interface QuestionnairesWizardHeaderStepsProps extends FormHeaderComponentProps {
     currentQuestionnaireIndex: number;
     mappedItems: StepProps[];
     handleStepChange: (nextStep: number, currentFormValid: boolean) => void;
 }
 
-export function QuestionnairesWizardHeader(props: QuestionnairesWizardHeaderProps) {
+export function QuestionnairesWizardHeaderSteps(props: QuestionnairesWizardHeaderStepsProps) {
     const { currentQuestionnaireIndex, mappedItems, handleStepChange } = props;
 
     const { trigger } = useFormContext();
 
     return (
-        <Space direction="vertical" style={{ width: '100%' }}>
+        <div style={{ width: '100%' }}>
             <Steps
                 key={'wizard-steps'}
                 current={currentQuestionnaireIndex}
@@ -29,6 +28,22 @@ export function QuestionnairesWizardHeader(props: QuestionnairesWizardHeaderProp
                     handleStepChange(current, result);
                 }}
             />
-        </Space>
+        </div>
+    );
+}
+
+export interface QuestionnairesWizardHeaderProps extends FormHeaderComponentProps {
+    title: string;
+    index: number;
+    total: number;
+}
+
+export function QuestionnairesWizardHeader(props: QuestionnairesWizardHeaderProps) {
+    const { title, index, total } = props;
+
+    return (
+        <S.Header>
+            <S.Count>{`${index + 1}/${total}`}</S.Count> {title}
+        </S.Header>
     );
 }

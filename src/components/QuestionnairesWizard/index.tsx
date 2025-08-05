@@ -4,9 +4,12 @@ import { S as WizardS } from 'src/components/Wizard/styles';
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 
 import { QuestionnairesWizardFooter } from './components/QuestionnairesWizardFooter';
-import { QuestionnairesWizardHeader } from './components/QuestionnairesWizardHeader';
+import { QuestionnairesWizardHeaderSteps } from './components/QuestionnairesWizardHeader';
 import { QuestionnairesWizardProps, useQuestionnairesWizard } from './hooks';
 import { QuestionnaireResponseForm } from '../QuestionnaireResponseForm';
+
+export { QuestionnairesWizardHeaderSteps, QuestionnairesWizardHeader } from './components/QuestionnairesWizardHeader';
+export { QuestionnairesWizardFooter } from './components/QuestionnairesWizardFooter';
 
 export function QuestionnairesWizard(props: QuestionnairesWizardProps) {
     const { onSuccess, onStepSuccess, questionnaires, initialQuestionnaireResponse, FormFooterComponent, ...other } =
@@ -75,11 +78,8 @@ export function QuestionnairesWizard(props: QuestionnairesWizardProps) {
                         ...passedProps,
                     };
                     return (
-                        <QuestionnairesWizardHeader
+                        <QuestionnairesWizardHeaderSteps
                             {...headerProps}
-                            title={currentQuestionnaire?.title ?? ''}
-                            index={currentQuestionnaireIndex}
-                            total={questionnaires.length}
                             currentQuestionnaireIndex={currentQuestionnaireIndex}
                             mappedItems={mappedItems}
                             handleStepChange={handleStepChange}
