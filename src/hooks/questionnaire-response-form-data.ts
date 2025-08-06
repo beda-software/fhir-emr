@@ -170,7 +170,7 @@ function findLocalItems(query: string) {
     const results = [];
     for (const localItem in localStorage) {
         if (Object.prototype.hasOwnProperty.call(localStorage, localItem)) {
-            if (localItem.match(query)) {
+            if (extractDraftUnversionedKey(localItem) === query) {
                 const value = JSON.parse(localStorage.getItem(localItem) ?? '{}');
                 results.push({ key: localItem, val: value });
             }
