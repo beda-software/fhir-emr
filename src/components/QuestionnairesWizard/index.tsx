@@ -45,10 +45,14 @@ export function QuestionnairesWizard(props: QuestionnairesWizardProps) {
                 <QuestionnairesWizardHeaderSteps {...headerProps} />
             )}
             <QuestionnaireResponseFormDraft
+                key={currentQuestionnaire?.id}
                 subject={props.patient!}
                 questionnaireId={currentQuestionnaire!.id!}
-                questionnaireResponse={currentQuestionnaireResponse as WithId<QuestionnaireResponse>}
-                key={currentQuestionnaire?.id}
+                questionnaireResponse={
+                    currentQuestionnaireResponse && currentQuestionnaireResponse.id
+                        ? (currentQuestionnaireResponse as WithId<QuestionnaireResponse>)
+                        : undefined
+                }
                 questionnaireLoader={questionnaireIdLoader(currentQuestionnaire!.id!)}
                 onSuccess={(result) => {
                     setStepStatus(currentQuestionnaireIndex, 'finish');
