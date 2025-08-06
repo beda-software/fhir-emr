@@ -1,9 +1,12 @@
 import { Button, StepProps, StepsProps } from 'antd';
-import { Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Patient, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { QuestionnairesWizardFooterProps } from 'src/components/QuestionnairesWizard/components/QuestionnairesWizardFooter';
-import { QuestionnairesWizardHeaderProps } from 'src/components/QuestionnairesWizard/components/QuestionnairesWizardHeader';
+import {
+    QuestionnairesWizardHeaderProps,
+    QuestionnairesWizardHeaderStepsProps,
+} from 'src/components/QuestionnairesWizard/components/QuestionnairesWizardHeader';
 import {
     QuestionnaireResponseFormProps,
     QuestionnaireResponseFormSaveResponse,
@@ -25,6 +28,7 @@ export interface QuestionnairesWizardProps
     questionnaireResponses: QuestionnaireResponse[];
     initialQuestionnaireId?: string;
     onQuestionnaireChange?: (q: Questionnaire, index: number) => void;
+    patient?: Patient;
 }
 
 export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
@@ -50,12 +54,6 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
     const [currentQuestionnaireIndex, setCurrentQuestionnaireIndex] = useState(
         initialQuestionnaireId ? questionnaires.findIndex((q) => q.id === initialQuestionnaireId) : 0,
     );
-
-    const overrideNextQuestionnaireIndex = useRef<number | null>(null);
-
-    const setOverrideNextQuestionnaireIndex = useCallback((index: number | null) => {
-        overrideNextQuestionnaireIndex.current = index;
-    }, []);
 
     const currentQuestionnaire = questionnaires[currentQuestionnaireIndex];
     const currentQuestionnaireResponse = questionnaireResponses.find(
@@ -109,7 +107,7 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
         });
     }, []);
 
-    const otherQuestionnaireResponsesValid = useCallback(
+    const checkOtherQuestionnaireResponsesValid = useCallback(
         (exceptQuestionnaireIndex: number) => {
             const allStepsValid = stepsStatuses
                 .filter((_, index) => index !== exceptQuestionnaireIndex)
@@ -118,27 +116,40 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
             if (allStepsValid) {
                 return true;
             }
+
             const invalidSteps = stepsStatuses
                 .filter((_, index) => index !== exceptQuestionnaireIndex)
-                .filter((status) => status !== 'finish');
-            invalidSteps.forEach((status) => {
-                setStepStatus(stepsStatuses.indexOf(status), 'error');
+                .filter((status) => status !== 'finish')
+                .map((status, index) => {
+                    return {
+                        status,
+                        index,
+                    };
+                });
+
+            setStepsStatuses((prev) => {
+                const newStepsStatuses = [...prev];
+                invalidSteps.forEach((step) => {
+                    newStepsStatuses[step.index] = 'error';
+                });
+                return newStepsStatuses;
             });
             return false;
         },
-        [setStepStatus, stepsStatuses],
+        [stepsStatuses],
     );
 
-    const handleStepChange = useCallback(
-        (nextStep: number, currentFormValid: boolean) => {
-            if (currentFormValid) {
-                setOverrideNextQuestionnaireIndex(nextStep);
-            } else {
-                setStepStatus(currentQuestionnaireIndex, 'error');
-            }
-        },
-        [currentQuestionnaireIndex, setOverrideNextQuestionnaireIndex, setStepStatus],
-    );
+    const headerProps = useMemo<QuestionnairesWizardHeaderStepsProps & QuestionnairesWizardHeaderProps>(() => {
+        return {
+            title: questionnaires[currentQuestionnaireIndex]?.title ?? '',
+            index: currentQuestionnaireIndex,
+            total: questionnaires.length,
+            mappedItems,
+            handleStepChange: (nextStep: number) => {
+                setCurrentQuestionnaireIndex(nextStep);
+            },
+        };
+    }, [currentQuestionnaireIndex, mappedItems, questionnaires]);
 
     useEffect(() => {
         onQuestionnaireChange?.(questionnaires[currentQuestionnaireIndex]!, currentQuestionnaireIndex);
@@ -154,13 +165,8 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
         setQuestionnaireResponses,
         canGoBack,
         canGoForward,
-        stepsStatuses,
-        setStepsStatuses,
-        otherQuestionnaireResponsesValid,
-        overrideNextQuestionnaireIndex,
-        setOverrideNextQuestionnaireIndex,
-        mappedItems,
+        checkOtherQuestionnaireResponsesValid,
         setStepStatus,
-        handleStepChange,
+        headerProps,
     };
 }

@@ -1,19 +1,28 @@
+import { QuestionnaireResponse } from 'fhir/r4b';
+
+import { WithId } from '@beda.software/fhir-react';
+
 import { FormFooterComponentProps } from 'src/components/BaseQuestionnaireResponseForm/FormFooter';
-import { FormHeaderComponentProps } from 'src/components/BaseQuestionnaireResponseForm/FormHeader';
+import { QuestionnaireResponseFormDraft } from 'src/components/QuestionnaireResponseFormDraft';
 import { S as WizardS } from 'src/components/Wizard/styles';
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 
 import { QuestionnairesWizardFooter } from './components/QuestionnairesWizardFooter';
 import { QuestionnairesWizardHeaderSteps } from './components/QuestionnairesWizardHeader';
 import { QuestionnairesWizardProps, useQuestionnairesWizard } from './hooks';
-import { QuestionnaireResponseForm } from '../QuestionnaireResponseForm';
 
 export { QuestionnairesWizardHeaderSteps, QuestionnairesWizardHeader } from './components/QuestionnairesWizardHeader';
 export { QuestionnairesWizardFooter } from './components/QuestionnairesWizardFooter';
 
 export function QuestionnairesWizard(props: QuestionnairesWizardProps) {
-    const { onSuccess, onStepSuccess, questionnaires, initialQuestionnaireResponse, FormFooterComponent, ...other } =
-        props;
+    const {
+        onSuccess,
+        onStepSuccess,
+        initialQuestionnaireResponse,
+        FormFooterComponent,
+        FormHeaderComponent,
+        ...other
+    } = props;
 
     const {
         currentQuestionnaire,
@@ -23,17 +32,22 @@ export function QuestionnairesWizard(props: QuestionnairesWizardProps) {
         setQuestionnaireResponses,
         canGoBack,
         canGoForward,
-        otherQuestionnaireResponsesValid,
-        overrideNextQuestionnaireIndex,
-        setOverrideNextQuestionnaireIndex,
-        mappedItems,
+        checkOtherQuestionnaireResponsesValid,
         setStepStatus,
-        handleStepChange,
+        headerProps,
     } = useQuestionnairesWizard(props);
 
     return (
         <WizardS.Container $labelPlacement="vertical">
-            <QuestionnaireResponseForm
+            {FormHeaderComponent ? (
+                <FormHeaderComponent {...headerProps} />
+            ) : (
+                <QuestionnairesWizardHeaderSteps {...headerProps} />
+            )}
+            <QuestionnaireResponseFormDraft
+                subject={props.patient!}
+                questionnaireId={currentQuestionnaire!.id!}
+                questionnaireResponse={currentQuestionnaireResponse as WithId<QuestionnaireResponse>}
                 key={currentQuestionnaire?.id}
                 questionnaireLoader={questionnaireIdLoader(currentQuestionnaire!.id!)}
                 onSuccess={(result) => {
@@ -57,12 +71,9 @@ export function QuestionnairesWizard(props: QuestionnairesWizardProps) {
 
                     onStepSuccess?.(result);
 
-                    if (overrideNextQuestionnaireIndex.current !== null) {
-                        setCurrentQuestionnaireIndex(overrideNextQuestionnaireIndex.current);
-                        overrideNextQuestionnaireIndex.current = null;
-                    } else if (canGoForward) {
+                    if (canGoForward) {
                         setCurrentQuestionnaireIndex(currentQuestionnaireIndex + 1);
-                    } else if (otherQuestionnaireResponsesValid(currentQuestionnaireIndex)) {
+                    } else if (checkOtherQuestionnaireResponsesValid(currentQuestionnaireIndex)) {
                         onSuccess?.(result);
                     }
                 }}
@@ -73,36 +84,14 @@ export function QuestionnairesWizard(props: QuestionnairesWizardProps) {
                         questionnaire: currentQuestionnaire?.id,
                     }
                 }
-                FormHeaderComponent={(passedProps: FormHeaderComponentProps) => {
-                    const headerProps = {
-                        ...passedProps,
-                    };
-                    return (
-                        <QuestionnairesWizardHeaderSteps
-                            {...headerProps}
-                            currentQuestionnaireIndex={currentQuestionnaireIndex}
-                            mappedItems={mappedItems}
-                            handleStepChange={handleStepChange}
-                        />
-                    );
-                }}
                 FormFooterComponent={(passedProps: FormFooterComponentProps) => {
                     const footerProps = {
                         ...passedProps,
                         goBack: () => {
-                            if (canGoBack) {
-                                setCurrentQuestionnaireIndex(currentQuestionnaireIndex - 1);
-                                setOverrideNextQuestionnaireIndex(null);
-                            }
+                            setCurrentQuestionnaireIndex(currentQuestionnaireIndex - 1);
                         },
                         canGoBack,
                         canGoForward,
-                        prevButtonTitle: canGoBack ? questionnaires[currentQuestionnaireIndex - 1]?.title : undefined,
-                        nextButtonTitle: canGoForward
-                            ? questionnaires[currentQuestionnaireIndex + 1]?.title
-                            : undefined,
-                        currentQuestionnaireIndex,
-                        handleStepChange,
                     };
 
                     if (FormFooterComponent) {

@@ -141,7 +141,7 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                                 }
                                             />
                                             <Route
-                                                path="/documents/new-wizard/:questionnairesIds"
+                                                path="/documents/new-by-questionnaires/:questionnairesIds"
                                                 element={
                                                     <PatientDocumentWizard
                                                         patient={patient}

@@ -39,6 +39,7 @@ export function PatientDocumentWizard(props: PatientDocumentProps) {
                     <QuestionnairesWizard
                         {...props}
                         key="patient-document-content"
+                        patient={patient}
                         questionnaires={questionnaires}
                         questionnaireResponses={[]}
                         initialQuestionnaireResponse={{

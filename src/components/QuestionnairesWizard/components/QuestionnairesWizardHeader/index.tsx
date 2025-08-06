@@ -1,38 +1,30 @@
 import { StepProps, Steps } from 'antd';
-import { useFormContext } from 'react-hook-form';
-
-import { FormHeaderComponentProps } from 'src/components/BaseQuestionnaireResponseForm/FormHeader';
 
 import { S } from './styles';
 
-export interface QuestionnairesWizardHeaderStepsProps extends FormHeaderComponentProps {
-    currentQuestionnaireIndex: number;
+export interface QuestionnairesWizardHeaderStepsProps {
+    index: number;
     mappedItems: StepProps[];
-    handleStepChange: (nextStep: number, currentFormValid: boolean) => void;
+    handleStepChange: (nextStep: number) => void;
 }
 
 export function QuestionnairesWizardHeaderSteps(props: QuestionnairesWizardHeaderStepsProps) {
-    const { currentQuestionnaireIndex, mappedItems, handleStepChange } = props;
-
-    const { trigger } = useFormContext();
+    const { index, mappedItems, handleStepChange } = props;
 
     return (
         <div style={{ width: '100%' }}>
             <Steps
                 key={'wizard-steps'}
-                current={currentQuestionnaireIndex}
+                current={index}
                 items={mappedItems}
                 labelPlacement="vertical"
-                onChange={async (current) => {
-                    const result = await trigger();
-                    handleStepChange(current, result);
-                }}
+                onChange={handleStepChange}
             />
         </div>
     );
 }
 
-export interface QuestionnairesWizardHeaderProps extends FormHeaderComponentProps {
+export interface QuestionnairesWizardHeaderProps {
     title: string;
     index: number;
     total: number;
