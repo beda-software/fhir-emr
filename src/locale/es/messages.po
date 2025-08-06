@@ -289,6 +289,7 @@ msgstr "Elija estado"
 #~ msgid "Clear draft"
 #~ msgstr "Borrador claro"
 
+#: src/components/QuestionnaireResponseFormDraft/index.tsx:33
 #: src/containers/PatientDetails/PatientDocument/index.tsx:78
 msgid "Clear draft from local storage and reset form"
 msgstr "Borrar borrador del almacenamiento local y restablecer formulario"
@@ -319,7 +320,7 @@ msgstr "Código"
 msgid "Col (default)"
 msgstr "Columna (predeterminado)"
 
-#: src/components/QuestionnairesWizard/index.tsx:110
+#: src/components/QuestionnairesWizard/components/QuestionnairesWizardFooter/index.tsx:40
 #: src/containers/PatientDetails/PatientDocument/index.tsx:139
 #: src/containers/PatientDetails/PatientDocument/index.tsx:167
 msgid "Complete"
@@ -738,13 +739,13 @@ msgstr "Información General"
 msgid "Glucose"
 msgstr "Glucosa"
 
-#: src/components/QuestionnairesWizard/index.tsx:102
+#: src/components/QuestionnairesWizard/components/QuestionnairesWizardFooter/index.tsx:34
 msgid "Go Back"
 msgstr "Volver"
 
 #: src/components/QuestionnairesWizard/index.tsx:109
-msgid "Go Forward"
-msgstr "Avanzar"
+#~ msgid "Go Forward"
+#~ msgstr "Avanzar"
 
 #: src/containers/Scheduling/ScheduleCalendar/components/AppointmentDetailsModal/index.tsx:74
 msgid "Go to the encounter"
@@ -1497,6 +1498,10 @@ msgstr "Tipo de sujeto"
 #: src/uberComponents/ResourceListPage/actions.tsx:147
 msgid "Submit"
 msgstr "Enviar"
+
+#: src/components/QuestionnairesWizard/components/QuestionnairesWizardFooter/index.tsx:40
+msgid "Submit and Go Forward"
+msgstr "Presentar y seguir adelante"
 
 #: src/uberComponents/ResourceListPage/actions.tsx:78
 #: src/uberComponents/ResourceListPage/actions.tsx:105
