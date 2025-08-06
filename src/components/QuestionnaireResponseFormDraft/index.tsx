@@ -44,7 +44,10 @@ export function QuestionnaireResponseFormDraft(props: QuestionnaireResponseFormD
                     />
                     <QuestionnaireResponseForm
                         {...props}
-                        initialQuestionnaireResponse={draftQuestionnaireResponse}
+                        initialQuestionnaireResponse={{
+                            ...props.initialQuestionnaireResponse,
+                            ...draftQuestionnaireResponse,
+                        }}
                         onSuccess={async (resource: QuestionnaireResponseFormSaveResponse) => {
                             await deleteDraft();
                             props.onSuccess && props.onSuccess(resource);

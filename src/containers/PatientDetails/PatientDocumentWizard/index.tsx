@@ -44,15 +44,6 @@ export function PatientDocumentWizard(props: PatientDocumentProps) {
                         questionnaireResponses={[]}
                         initialQuestionnaireResponse={{
                             subject: getReference(patient),
-                            extension: [
-                                {
-                                    url: 'http://beda.software/extension/questionnaire-response/reason',
-                                    valueReference: getReference({
-                                        resourceType: 'Task',
-                                        id: '123',
-                                    }),
-                                },
-                            ],
                         }}
                         initialQuestionnaireId={questionnaires[0]?.id}
                         launchContextParameters={[
