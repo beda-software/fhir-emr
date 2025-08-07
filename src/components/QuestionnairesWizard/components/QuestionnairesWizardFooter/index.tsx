@@ -1,15 +1,16 @@
 import { t } from '@lingui/macro';
-import { Button } from 'antd';
+import { useContext } from 'react';
 
-import { FormFooterComponentProps } from 'src/components/BaseQuestionnaireResponseForm/FormFooter';
+import { BaseQuestionnaireResponseFormPropsContext } from 'src/components/BaseQuestionnaireResponseForm/context';
+import { FormFooter, FormFooterComponentProps } from 'src/components/BaseQuestionnaireResponseForm/FormFooter';
 
 import { S } from './styles';
 
 export interface QuestionnairesWizardFooterProps extends FormFooterComponentProps {
     goBack: () => void;
+    goForward: () => void;
     canGoBack: boolean;
     canGoForward: boolean;
-    prevButtonTitle?: React.ReactNode;
     nextButtonTitle?: React.ReactNode;
     finishButtonTitle?: React.ReactNode;
 }
@@ -17,28 +18,34 @@ export interface QuestionnairesWizardFooterProps extends FormFooterComponentProp
 export function QuestionnairesWizardFooter(props: QuestionnairesWizardFooterProps) {
     const {
         goBack,
+        goForward,
         submitting,
         submitDisabled,
         canGoBack,
         canGoForward,
-        prevButtonTitle,
         nextButtonTitle,
         finishButtonTitle,
+        onCancel,
     } = props;
+
+    const baseQRFPropsContext = useContext(BaseQuestionnaireResponseFormPropsContext);
 
     return (
         <>
-            <S.Footer>
-                {canGoBack ? (
-                    <Button type="default" disabled={submitDisabled} onClick={goBack}>
-                        {prevButtonTitle || t`Go Back`}
-                    </Button>
-                ) : (
-                    <div />
+            <S.Footer goBack={goBack} goForward={goForward} canGoBack={canGoBack} canGoForward={canGoForward}>
+                {baseQRFPropsContext && baseQRFPropsContext.formData && (
+                    <FormFooter
+                        submitting={submitting}
+                        submitDisabled={submitDisabled}
+                        onCancel={onCancel}
+                        formData={baseQRFPropsContext.formData}
+                        saveButtonTitle={
+                            canGoForward
+                                ? nextButtonTitle || t`Submit and Go Forward`
+                                : finishButtonTitle || t`Complete`
+                        }
+                    />
                 )}
-                <Button type="primary" htmlType="submit" loading={submitting} disabled={submitDisabled}>
-                    {canGoForward ? nextButtonTitle || t`Submit and Go Forward` : finishButtonTitle || t`Complete`}
-                </Button>
             </S.Footer>
         </>
     );

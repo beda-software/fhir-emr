@@ -17,7 +17,7 @@ msgstr ""
 msgid "{0, plural, one {Selected # item} other {Selected # items}}"
 msgstr ""
 
-#: src/components/QuestionnairesWizard/hooks.tsx:129
+#: src/components/QuestionnairesWizard/hooks.tsx:94
 msgid "{0} was not submitted"
 msgstr ""
 
@@ -324,7 +324,7 @@ msgstr ""
 msgid "Col (default)"
 msgstr ""
 
-#: src/components/QuestionnairesWizard/components/QuestionnairesWizardFooter/index.tsx:40
+#: src/components/QuestionnairesWizard/components/QuestionnairesWizardFooter/index.tsx:45
 #: src/containers/PatientDetails/PatientDocument/index.tsx:139
 #: src/containers/PatientDetails/PatientDocument/index.tsx:167
 msgid "Complete"
@@ -748,8 +748,8 @@ msgid "Glucose"
 msgstr ""
 
 #: src/components/QuestionnairesWizard/components/QuestionnairesWizardFooter/index.tsx:34
-msgid "Go Back"
-msgstr ""
+#~ msgid "Go Back"
+#~ msgstr ""
 
 #: src/components/QuestionnairesWizard/index.tsx:109
 #~ msgid "Go Forward"
@@ -1523,7 +1523,7 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: src/components/QuestionnairesWizard/components/QuestionnairesWizardFooter/index.tsx:40
+#: src/components/QuestionnairesWizard/components/QuestionnairesWizardFooter/index.tsx:44
 msgid "Submit and Go Forward"
 msgstr ""
 

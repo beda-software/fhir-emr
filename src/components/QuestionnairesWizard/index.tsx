@@ -4,25 +4,16 @@ import { WithId } from '@beda.software/fhir-react';
 
 import { FormFooterComponentProps } from 'src/components/BaseQuestionnaireResponseForm/FormFooter';
 import { QuestionnaireResponseFormDraft } from 'src/components/QuestionnaireResponseFormDraft';
-import { S as WizardS } from 'src/components/Wizard/styles';
+import { Wizard } from 'src/components/Wizard';
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 
 import { QuestionnairesWizardFooter } from './components/QuestionnairesWizardFooter';
-import { QuestionnairesWizardHeaderSteps } from './components/QuestionnairesWizardHeader';
 import { QuestionnairesWizardProps, useQuestionnairesWizard } from './hooks';
 
-export { QuestionnairesWizardHeaderSteps, QuestionnairesWizardHeader } from './components/QuestionnairesWizardHeader';
 export { QuestionnairesWizardFooter } from './components/QuestionnairesWizardFooter';
 
 export function QuestionnairesWizard(props: QuestionnairesWizardProps) {
-    const {
-        onSuccess,
-        onStepSuccess,
-        initialQuestionnaireResponse,
-        FormFooterComponent,
-        FormHeaderComponent,
-        ...other
-    } = props;
+    const { onSuccess, onStepSuccess, initialQuestionnaireResponse, FormFooterComponent, ...other } = props;
 
     const {
         currentQuestionnaire,
@@ -34,16 +25,17 @@ export function QuestionnairesWizard(props: QuestionnairesWizardProps) {
         canGoForward,
         checkOtherQuestionnaireResponsesValid,
         setStepStatus,
-        headerProps,
+        stepsItems,
+        handleCancel,
     } = useQuestionnairesWizard(props);
 
     return (
-        <WizardS.Container $labelPlacement="vertical">
-            {FormHeaderComponent ? (
-                <FormHeaderComponent {...headerProps} />
-            ) : (
-                <QuestionnairesWizardHeaderSteps {...headerProps} />
-            )}
+        <Wizard
+            currentIndex={currentQuestionnaireIndex}
+            items={stepsItems}
+            onChange={setCurrentQuestionnaireIndex}
+            {...props.wizard}
+        >
             <QuestionnaireResponseFormDraft
                 key={currentQuestionnaire?.id}
                 subject={props.patient!}
@@ -94,8 +86,12 @@ export function QuestionnairesWizard(props: QuestionnairesWizardProps) {
                         goBack: () => {
                             setCurrentQuestionnaireIndex(currentQuestionnaireIndex - 1);
                         },
+                        goForward: () => {
+                            setCurrentQuestionnaireIndex(currentQuestionnaireIndex + 1);
+                        },
                         canGoBack,
                         canGoForward,
+                        onCancel: handleCancel,
                     };
 
                     if (FormFooterComponent) {
@@ -107,6 +103,6 @@ export function QuestionnairesWizard(props: QuestionnairesWizardProps) {
                 launchContextParameters={props.launchContextParameters}
                 {...other}
             />
-        </WizardS.Container>
+        </Wizard>
     );
 }
