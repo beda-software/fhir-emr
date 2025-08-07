@@ -1,4 +1,4 @@
-import { Button, StepProps, StepsProps } from 'antd';
+import { Button, notification, StepProps, StepsProps } from 'antd';
 import { Patient, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -109,14 +109,6 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
 
     const checkOtherQuestionnaireResponsesValid = useCallback(
         (exceptQuestionnaireIndex: number) => {
-            const allStepsValid = stepsStatuses
-                .filter((_, index) => index !== exceptQuestionnaireIndex)
-                .every((status) => status === 'finish');
-
-            if (allStepsValid) {
-                return true;
-            }
-
             const invalidSteps = stepsStatuses
                 .filter((_, index) => index !== exceptQuestionnaireIndex)
                 .filter((status) => status !== 'finish')
@@ -127,6 +119,16 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
                     };
                 });
 
+            if (invalidSteps.length === 0) {
+                return true;
+            }
+
+            invalidSteps.forEach((step) => {
+                notification.error({
+                    message: `${questionnaires[step.index]?.title} was not submitted`,
+                });
+            });
+
             setStepsStatuses((prev) => {
                 const newStepsStatuses = [...prev];
                 invalidSteps.forEach((step) => {
@@ -134,9 +136,10 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
                 });
                 return newStepsStatuses;
             });
+
             return false;
         },
-        [stepsStatuses],
+        [questionnaires, stepsStatuses],
     );
 
     const headerProps = useMemo<QuestionnairesWizardHeaderStepsProps & QuestionnairesWizardHeaderProps>(() => {
