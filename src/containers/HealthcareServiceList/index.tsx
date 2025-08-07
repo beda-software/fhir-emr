@@ -63,25 +63,10 @@ export function HealthcareServiceList() {
 
     const getRecordActions = (record: RecordType<HealthcareService>, manager: TableManager) => {
         return [
-            questionnaireAction(<Trans>Edit</Trans>, 'healthcare-service-edit', {
-                extra: {
-                    qrfProps: {
-                        launchContextParameters: [{ name: 'HealthcareService', resource: record.resource }],
-                        onSuccess: manager.reload,
-                    },
-                },
-            }),
+            questionnaireAction(<Trans>Edit</Trans>, 'healthcare-service-edit'),
             questionnaireAction(
                 getActive(record.resource) ? t`Deactivate` : t`Activate`,
                 'healthcare-service-change-activity',
-                {
-                    extra: {
-                        qrfProps: {
-                            launchContextParameters: [{ name: 'HealthcareService', resource: record.resource }],
-                            onSuccess: manager.reload,
-                        },
-                    },
-                },
             ),
         ];
     };
