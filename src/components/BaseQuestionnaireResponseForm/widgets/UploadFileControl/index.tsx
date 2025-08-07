@@ -8,7 +8,8 @@ import { useUploader } from './hooks';
 const { Dragger } = Upload;
 
 export function UploadFileControl(props: QuestionItemProps) {
-    const { showDragger, formItem, customRequest, onChange, onRemove, fileList } = useUploader(props);
+    const { showDragger, formItem, customRequest, onChange, onRemove, fileList, acceptedFileExtensions } =
+        useUploader(props);
     const { helpText, repeats } = props.questionItem;
 
     return (
@@ -21,6 +22,7 @@ export function UploadFileControl(props: QuestionItemProps) {
                     onChange={onChange}
                     fileList={fileList}
                     onRemove={onRemove}
+                    accept={acceptedFileExtensions}
                 >
                     <p className="ant-upload-drag-icon">
                         <InboxOutlined />
