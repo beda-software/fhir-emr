@@ -1,7 +1,7 @@
 import { t } from '@lingui/macro';
 import { Col, Row, Statistic } from 'antd';
 
-import { getInvoiceStatusHumanized } from 'src/containers/InvoiceList/tableUtils';
+import { getInvoiceStatusHumanized } from 'src/containers/InvoiceList/components/InvoiceStatus';
 import { formatHumanDateTime } from 'src/utils/date';
 import { renderHumanName } from 'src/utils/fhir';
 

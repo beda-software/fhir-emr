@@ -10,7 +10,8 @@ import { RecordType, TableManager } from 'src/uberComponents/ResourceListPage/ty
 import { formatHumanDateTime } from 'src/utils';
 import { matchCurrentUserRole, Role, selectCurrentUserRoleResource } from 'src/utils/role';
 
-import { InvoiceStatus, InvoiceAmount } from './tableUtils';
+import { InvoiceAmount } from './components/InvoiceAmount';
+import { InvoiceStatus } from './components/InvoiceStatus';
 import { getPractitionerName, getInvoicePractitioner, getPatientName, getInvoicePatient } from './utils';
 
 export function InvoiceList() {
