@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro';
 import { Button, notification, StepProps, StepsProps } from 'antd';
 import { Patient, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -125,7 +126,7 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
 
             invalidSteps.forEach((step) => {
                 notification.error({
-                    message: `${questionnaires[step.index]?.title} was not submitted`,
+                    message: t`${questionnaires[step.index]?.title} was not submitted`,
                 });
             });
 
