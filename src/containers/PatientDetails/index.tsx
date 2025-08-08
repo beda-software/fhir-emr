@@ -10,6 +10,7 @@ import { RouteItem } from 'src/components/BaseLayout/Sidebar/SidebarTop';
 import { PatientEncounter } from 'src/components/PatientEncounter';
 import { Spinner } from 'src/components/Spinner';
 import { PatientReloadProvider } from 'src/containers/PatientDetails/Dashboard/contexts';
+import { PatientDocumentWizard } from 'src/containers/PatientDetails/PatientDocumentWizard';
 import { sharedAuthorizedPractitionerRoles } from 'src/sharedState';
 import { renderHumanName } from 'src/utils';
 import { matchCurrentUserRole, selectCurrentUserRoleResource, Role } from 'src/utils/role';
@@ -130,6 +131,19 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                                 path="/documents/new/:questionnaireId"
                                                 element={
                                                     <PatientDocument
+                                                        patient={patient}
+                                                        author={author}
+                                                        autoSave={true}
+                                                        onSuccess={() => {
+                                                            navigate(-1);
+                                                        }}
+                                                    />
+                                                }
+                                            />
+                                            <Route
+                                                path="/documents/new-by-questionnaires/:questionnairesIds"
+                                                element={
+                                                    <PatientDocumentWizard
                                                         patient={patient}
                                                         author={author}
                                                         autoSave={true}

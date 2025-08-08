@@ -35,6 +35,9 @@ export const S = {
         padding: 0 8px;
         text-align: center;
     `,
+    Header: styled.div`
+        margin-bottom: 24px;
+    `,
     Footer: styled.div`
         ${footerStyles}
     `,

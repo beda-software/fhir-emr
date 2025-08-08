@@ -24,7 +24,8 @@ export interface WizardProps {
 export function Wizard(props: WizardProps) {
     const { currentIndex, onChange, children, labelPlacement = 'vertical', items, className, style } = props;
 
-    const { trigger, formState } = useFormContext();
+    // NOTE: added default values to allow using Wizard outside of FormContext
+    const { trigger, formState } = useFormContext() ?? { trigger: undefined, formState: { isSubmitted: false } };
 
     const stepsItems: StepProps[] = items.map((step, index) => ({
         ...step,
@@ -49,7 +50,7 @@ export function Wizard(props: WizardProps) {
 
     useEffect(() => {
         if (formState.isSubmitted) {
-            trigger();
+            trigger?.();
         }
     }, [currentIndex, trigger, formState.isSubmitted]);
 
