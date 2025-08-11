@@ -5,6 +5,7 @@ import { MedicationKnowledge } from 'fhir/r4b';
 
 import { SearchBarColumn, SearchBarColumnType } from 'src/components/SearchBar/types';
 import { ResourceListPage, questionnaireAction } from 'src/uberComponents/ResourceListPage';
+import { navigationAction } from 'src/uberComponents/ResourceListPage/actions';
 import type { RecordType, TableManager } from 'src/uberComponents/ResourceListPage/types';
 import { compileAsFirst } from 'src/utils';
 
@@ -46,6 +47,7 @@ export function MedicationManagement() {
     ];
 
     const getRecordActions = (record: RecordType<MedicationKnowledge>, _manager: TableManager) => [
+        navigationAction(<Trans>Open</Trans>, `/medications/${record.resource.id}`),
         questionnaireAction(<Trans>Batch</Trans>, 'medication-batch-create', {
             extra: {
                 qrfProps: {
