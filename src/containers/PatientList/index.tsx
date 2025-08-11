@@ -2,6 +2,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { ColumnsType } from 'antd/lib/table';
 import { Bundle, Consent, Patient } from 'fhir/r4b';
+import type { Resource } from 'fhir/r4b';
 
 import { extractBundleResources, parseFHIRReference, SearchParams } from '@beda.software/fhir-react';
 
@@ -14,32 +15,38 @@ import { matchCurrentUserRole, Role } from 'src/utils/role';
 
 import { getPatientSearchParamsForPractitioner } from './utils';
 
-function PatientListConsent(props: { searchParams: SearchParams }) {
-    const getFilters = (): SearchBarColumn[] => [
-        {
-            id: 'name',
-            searchParam: 'patient:Patient.name',
-            type: SearchBarColumnType.STRING,
-            placeholder: t`Find patient`,
-            placement: ['search-bar', 'table'],
-        },
-    ];
+// Shared helpers to remove duplication
+const makeFilters = (searchParam: string): SearchBarColumn[] => [
+    {
+        id: 'name',
+        searchParam,
+        type: SearchBarColumnType.STRING,
+        placeholder: t`Find patient`,
+        placement: ['search-bar', 'table'],
+    },
+];
 
-    const getPatientFromConsent = (consent: Consent, bundle: Bundle): Patient | undefined => {
-        const patients = (extractBundleResources(bundle).Patient ?? []) as Patient[];
-        const patientRef = consent.patient;
-        if (!patientRef) return undefined;
-        const patientId = parseFHIRReference(patientRef).id;
-        return patients.find((p) => p.id === patientId);
-    };
+const getHeaderActions = () => [
+    questionnaireAction(<Trans>Add patient</Trans>, 'patient-create', { icon: <PlusOutlined /> }),
+];
 
-    const getTableColumns = (_manager: TableManager): ColumnsType<RecordType<Consent>> => [
+function getPatientFromConsent(consent: Consent, bundle: Bundle): Patient | undefined {
+    const patients = (extractBundleResources(bundle).Patient ?? []) as Patient[];
+    const patientRef = consent.patient;
+    if (!patientRef) return undefined;
+    const patientId = parseFHIRReference(patientRef).id;
+    return patients.find((p) => p.id === patientId);
+}
+
+function buildColumns<R extends Resource>(
+    resolvePatient: (record: RecordType<R>) => Patient | undefined,
+): ColumnsType<RecordType<R>> {
+    return [
         {
             title: <Trans>Name</Trans>,
             dataIndex: 'name',
             key: 'name',
-            render: (_text, record) =>
-                renderHumanName(getPatientFromConsent(record.resource, record.bundle)?.name?.[0]),
+            render: (_text, record) => renderHumanName(resolvePatient(record)?.name?.[0]),
             width: 300,
         },
         {
@@ -47,7 +54,7 @@ function PatientListConsent(props: { searchParams: SearchParams }) {
             dataIndex: 'birthDate',
             key: 'birthDate',
             render: (_text, record) => {
-                const patient = getPatientFromConsent(record.resource, record.bundle);
+                const patient = resolvePatient(record);
                 return patient?.birthDate ? formatHumanDate(patient.birthDate) : null;
             },
             width: 150,
@@ -56,13 +63,18 @@ function PatientListConsent(props: { searchParams: SearchParams }) {
             title: <Trans>SSN</Trans>,
             dataIndex: 'identifier',
             key: 'identifier',
-            render: (_text, record) => {
-                const patient = getPatientFromConsent(record.resource, record.bundle);
-                return patient?.identifier?.find(({ system }) => system === 'http://hl7.org/fhir/sid/us-ssn')?.value;
-            },
+            render: (_text, record) =>
+                resolvePatient(record)?.identifier?.find(({ system }) => system === 'http://hl7.org/fhir/sid/us-ssn')
+                    ?.value,
             width: 250,
         },
     ];
+}
+
+function PatientListConsent(props: { searchParams: SearchParams }) {
+    const getFilters = (): SearchBarColumn[] => makeFilters('patient:Patient.name');
+    const getTableColumns = (_manager: TableManager): ColumnsType<RecordType<Consent>> =>
+        buildColumns<Consent>((record) => getPatientFromConsent(record.resource, record.bundle));
 
     const getRecordActions = (record: RecordType<Consent>, _manager: TableManager) => {
         const patient = getPatientFromConsent(record.resource, record.bundle);
@@ -71,10 +83,6 @@ function PatientListConsent(props: { searchParams: SearchParams }) {
             questionnaireAction(<Trans>Edit</Trans>, 'patient-edit'),
         ];
     };
-
-    const getHeaderActions = () => [
-        questionnaireAction(<Trans>Add patient</Trans>, 'patient-create', { icon: <PlusOutlined /> }),
-    ];
 
     return (
         <ResourceListPage<Consent>
@@ -94,48 +102,13 @@ function PatientListConsent(props: { searchParams: SearchParams }) {
 }
 
 function PatientListDefault(props: { searchParams: SearchParams }) {
-    const getFilters = (): SearchBarColumn[] => [
-        {
-            id: 'name',
-            searchParam: 'name',
-            type: SearchBarColumnType.STRING,
-            placeholder: t`Find patient`,
-            placement: ['search-bar', 'table'],
-        },
-    ];
-
-    const getTableColumns = (_manager: TableManager): ColumnsType<RecordType<Patient>> => [
-        {
-            title: <Trans>Name</Trans>,
-            dataIndex: 'name',
-            key: 'name',
-            render: (_text, record) => renderHumanName(record.resource.name?.[0]),
-            width: 300,
-        },
-        {
-            title: <Trans>Birth date</Trans>,
-            dataIndex: 'birthDate',
-            key: 'birthDate',
-            render: (_text, record) => (record.resource.birthDate ? formatHumanDate(record.resource.birthDate) : null),
-            width: 150,
-        },
-        {
-            title: <Trans>SSN</Trans>,
-            dataIndex: 'identifier',
-            key: 'identifier',
-            render: (_text, record) =>
-                record.resource.identifier?.find(({ system }) => system === 'http://hl7.org/fhir/sid/us-ssn')?.value,
-            width: 250,
-        },
-    ];
+    const getFilters = (): SearchBarColumn[] => makeFilters('name');
+    const getTableColumns = (_manager: TableManager): ColumnsType<RecordType<Patient>> =>
+        buildColumns<Patient>((record) => record.resource);
 
     const getRecordActions = (record: RecordType<Patient>, _manager: TableManager) => [
         navigationAction(<Trans>Open</Trans>, `/patients/${record.resource.id}`),
         questionnaireAction(<Trans>Edit</Trans>, 'patient-edit'),
-    ];
-
-    const getHeaderActions = () => [
-        questionnaireAction(<Trans>Add patient</Trans>, 'patient-create', { icon: <PlusOutlined /> }),
     ];
 
     return (
