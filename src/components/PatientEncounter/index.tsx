@@ -1,13 +1,14 @@
 import { t, Trans } from '@lingui/macro';
 import { ColumnsType } from 'antd/lib/table';
-import { Encounter, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
+import { Bundle, Encounter, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
 
-import { SearchParams, extractBundleResources, parseFHIRReference } from '@beda.software/fhir-react';
+import { SearchParams } from '@beda.software/fhir-react';
 
 import { StatusBadge } from 'src/components/EncounterStatusBadge';
 import { navigationAction, questionnaireAction } from 'src/uberComponents/ResourceListPage';
 import { RecordType, TableManager } from 'src/uberComponents/ResourceListPage/types';
 import { ResourceListPageContent } from 'src/uberComponents/ResourceListPageContent';
+import { compileAsFirst } from 'src/utils';
 import { formatPeriodDateTime } from 'src/utils/date';
 import { renderHumanName } from 'src/utils/fhir';
 import { matchCurrentUserRole, Role } from 'src/utils/role';
@@ -18,67 +19,48 @@ interface Props {
     hideCreateButton?: boolean;
 }
 
-function getEncounterPractitioner(
-    encounter: Encounter,
-    practitionerRoleList: PractitionerRole[],
-    practitionerList: Practitioner[],
-): Practitioner | undefined {
-    const individualReference = encounter.participant?.[0]?.individual;
-    if (!individualReference) {
-        return undefined;
-    }
-    const individualReferenceResourceType = parseFHIRReference(individualReference).resourceType;
+// FHIRPath helpers
+const getEncounterSubjectId = compileAsFirst<Encounter, string>("Encounter.subject.reference.split('/').last()");
+const getEncounterParticipantType = compileAsFirst<Encounter, string>(
+    "Encounter.participant.first().individual.reference.split('/').first()",
+);
+const getEncounterParticipantId = compileAsFirst<Encounter, string>(
+    "Encounter.participant.first().individual.reference.split('/').last()",
+);
 
-    if (individualReferenceResourceType === 'PractitionerRole') {
-        const practitionerRole = practitionerRoleList.find(
-            (practitionerRole) =>
-                encounter.participant?.[0]?.individual &&
-                practitionerRole.id === parseFHIRReference(encounter.participant?.[0]?.individual).id,
-        );
+const findPatientInBundleById = compileAsFirst<Bundle, Patient>(
+    "Bundle.entry.resource.where(resourceType='Patient' and id=%id).first()",
+);
+const findPractitionerInBundleById = compileAsFirst<Bundle, Practitioner>(
+    "Bundle.entry.resource.where(resourceType='Practitioner' and id=%id).first()",
+);
+const findPractitionerRoleInBundleById = compileAsFirst<Bundle, PractitionerRole>(
+    "Bundle.entry.resource.where(resourceType='PractitionerRole' and id=%id).first()",
+);
+const getPractitionerIdFromRole = compileAsFirst<PractitionerRole, string>(
+    "PractitionerRole.practitioner.reference.split('/').last()",
+);
 
-        return practitionerList.find(
-            (practitioner) =>
-                practitionerRole?.practitioner &&
-                practitioner.id === parseFHIRReference(practitionerRole?.practitioner).id,
-        );
-    }
-
-    if (individualReferenceResourceType === 'Practitioner') {
-        return practitionerList.find((practitioner) => {
-            const reference = encounter.participant?.[0]?.individual;
-            if (!reference) {
-                return false;
-            }
-
-            return practitioner.id === parseFHIRReference(reference).id;
-        });
-    }
-
-    return undefined;
+function findEncounterPatient(encounter: Encounter, bundle: Bundle): Patient | undefined {
+    const id = getEncounterSubjectId(encounter);
+    if (!id) return undefined;
+    return findPatientInBundleById(bundle, { id });
 }
 
-function extractEncounterData(encounter: Encounter, bundle: any) {
-    const sourceMap = extractBundleResources(bundle);
-    const {
-        Patient: patients = [],
-        Practitioner: practitioners = [],
-        PractitionerRole: practitionerRoles = [],
-    } = sourceMap;
+function findEncounterPractitioner(encounter: Encounter, bundle: Bundle): Practitioner | undefined {
+    const type = getEncounterParticipantType(encounter);
+    const id = getEncounterParticipantId(encounter);
+    if (!type || !id) return undefined;
 
-    const patient = patients.find((p) => encounter.subject && p.id === parseFHIRReference(encounter.subject).id) as
-        | Patient
-        | undefined;
-
-    const practitioner = getEncounterPractitioner(
-        encounter,
-        practitionerRoles as PractitionerRole[],
-        practitioners as Practitioner[],
-    );
-
-    return {
-        patient,
-        practitioner,
-    };
+    if (type === 'Practitioner') {
+        return findPractitionerInBundleById(bundle, { id });
+    }
+    if (type === 'PractitionerRole') {
+        const role = findPractitionerRoleInBundleById(bundle, { id });
+        const practitionerId = role ? getPractitionerIdFromRole(role) : undefined;
+        return practitionerId ? findPractitionerInBundleById(bundle, { id: practitionerId }) : undefined;
+    }
+    return undefined;
 }
 
 export const PatientEncounter = ({ patient, searchParams, hideCreateButton }: Props) => {
@@ -88,7 +70,7 @@ export const PatientEncounter = ({ patient, searchParams, hideCreateButton }: Pr
             dataIndex: 'practitioner',
             key: 'practitioner',
             render: (_text: any, record: RecordType<Encounter>) => {
-                const { practitioner } = extractEncounterData(record.resource, record.bundle);
+                const practitioner = findEncounterPractitioner(record.resource, record.bundle as Bundle);
                 return renderHumanName(practitioner?.name?.[0]);
             },
         },
@@ -110,7 +92,7 @@ export const PatientEncounter = ({ patient, searchParams, hideCreateButton }: Pr
     ];
 
     const getRecordActions = (record: RecordType<Encounter>, _manager: TableManager) => {
-        const { patient: patientFromBundle } = extractEncounterData(record.resource, record.bundle);
+        const patientFromBundle = findEncounterPatient(record.resource, record.bundle as Bundle);
 
         return [
             navigationAction(
