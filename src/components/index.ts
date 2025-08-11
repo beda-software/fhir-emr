@@ -12,7 +12,6 @@ export * from './DashboardCard';
 export * from './DatePicker';
 export * from './Empty';
 export * from './EncounterStatusBadge';
-export * from './EncountersTable';
 export * from './LinkToEdit';
 export * from './Modal';
 export * from './ModalChangeActiveHealthcareService';
