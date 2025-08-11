@@ -1,8 +1,6 @@
 import { t } from '@lingui/macro';
 import { Bundle, Medication, MedicationKnowledge, ParametersParameter } from 'fhir/r4b';
 
-import { extractBundleResources } from '@beda.software/fhir-react';
-
 import { Text } from 'src/components/Typography';
 import { ResourceDetailPage, Tab } from 'src/uberComponents/ResourceDetailPage';
 import { questionnaireAction } from 'src/uberComponents/ResourceListPage';
@@ -41,9 +39,6 @@ function MedicationKnowledgeOverview({ resource }: { resource: MedicationKnowled
     const code = getMedicationCode(resource);
 
     const getReportColumns = (bundle: Bundle): Array<ReportColumn> => {
-        const { Medication: medications = [] } = extractBundleResources(bundle);
-        const availableUnits = medications.length;
-
         const calculateIngridients = () => {
             const lines = getIngridientsLines(resource) ?? [];
             if (!lines.length) return '';
@@ -69,14 +64,14 @@ function MedicationKnowledgeOverview({ resource }: { resource: MedicationKnowled
                 title: t`Cost`,
                 value: `${getCostValue(resource) ?? ''} ${getCostCurrency(resource) ?? ''}`.trim(),
             },
-            { title: t`Available units`, value: availableUnits },
+            { title: t`Available`, value: bundle.total },
         ];
     };
 
     return (
         <ResourceListPageContent<Medication>
             resourceType="Medication"
-            searchParams={{ code }}
+            searchParams={{ code, status: 'active' }}
             getHeaderActions={() => [questionnaireAction(t`Add batch`, 'medication-batch-create')]}
             defaultLaunchContext={[{ name: 'CurrentMedicationKnowledge', resource } as ParametersParameter]}
             getTableColumns={() => [
