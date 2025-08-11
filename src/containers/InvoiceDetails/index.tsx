@@ -1,6 +1,6 @@
 import { t } from '@lingui/macro';
 import { ColumnsType } from 'antd/lib/table';
-import { InvoiceLineItem, Bundle, Invoice } from 'fhir/r4b';
+import { InvoiceLineItem, Bundle, Invoice, ChargeItemDefinition } from 'fhir/r4b';
 import { useParams } from 'react-router-dom';
 
 import { extractBundleResources } from '@beda.software/fhir-react';
@@ -16,6 +16,16 @@ import { formatMoney } from '../InvoiceList/utils';
 
 const getLineItems = compileAsArray<Bundle, InvoiceLineItem>('Bundle.entry.resource.lineItem');
 const getTotalAmount = compileAsFirst<Invoice, number>('Invoice.lineItem.priceComponent.amount.value.sum()');
+
+// FHIRPath helpers for table columns
+const getLineItemName = compileAsFirst<InvoiceLineItem, string>(
+    '(chargeItemCodeableConcept.coding.display | chargeItemReference.display).first()',
+);
+const getLineItemRate = compileAsFirst<InvoiceLineItem, number>(
+    "priceComponent.where(type = 'base').amount.value.sum()",
+);
+const getLineItemTax = compileAsFirst<InvoiceLineItem, number>("priceComponent.where(type = 'tax').amount.value.sum()");
+const getLineItemAmount = compileAsFirst<InvoiceLineItem, number>('priceComponent.amount.value.sum()');
 
 function getReportColumns(bundle: Bundle): ReportColumn[] {
     const resources = extractBundleResources(bundle);
@@ -37,11 +47,46 @@ function getReportColumns(bundle: Bundle): ReportColumn[] {
 
 interface Record {
     resource: InvoiceLineItem;
-    bundle: Bundle;
+    bundle: Bundle<ChargeItemDefinition>;
 }
 
 function getTableColumns(): ColumnsType<Record> {
-    return [];
+    return [
+        {
+            title: t`Name`,
+            dataIndex: 'name',
+            key: 'name',
+            render: (_text, record) => getLineItemName(record.resource) ?? '-',
+        },
+        {
+            title: t`Quantity`,
+            dataIndex: 'quantity',
+            key: 'quantity',
+            width: '10%',
+            render: (_text, record) => 1,
+        },
+        {
+            title: t`Rate`,
+            dataIndex: 'rate',
+            key: 'rate',
+            width: '15%',
+            render: (_text, record) => formatMoney(getLineItemRate(record.resource) ?? 0),
+        },
+        {
+            title: t`Tax`,
+            dataIndex: 'tax',
+            key: 'tax',
+            width: '15%',
+            render: (_text, record) => formatMoney(getLineItemTax(record.resource) ?? 0),
+        },
+        {
+            title: t`Amount`,
+            dataIndex: 'amount',
+            key: 'amount',
+            width: '15%',
+            render: (_text, record) => formatMoney(getLineItemAmount(record.resource) ?? 0),
+        },
+    ];
 }
 
 export function InvoiceDetails() {
