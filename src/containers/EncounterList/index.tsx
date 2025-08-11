@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/macro';
+import { t, Trans } from '@lingui/macro';
 import { ColumnsType } from 'antd/lib/table';
 import { Encounter, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
 
@@ -6,14 +6,12 @@ import { extractBundleResources, parseFHIRReference } from '@beda.software/fhir-
 
 import { StatusBadge } from 'src/components/EncounterStatusBadge';
 import { ResourceListPage, navigationAction } from 'src/uberComponents/ResourceListPage';
-import { TableManager } from 'src/uberComponents/ResourceListPage/types';
+import { RecordType, TableManager } from 'src/uberComponents/ResourceListPage/types';
 import { formatPeriodDateTime } from 'src/utils/date';
 import { renderHumanName } from 'src/utils/fhir';
 import { matchCurrentUserRole, Role } from 'src/utils/role';
 
 import { getEncounterListSearchBarColumns } from './searchBarUtils';
-
-type RecordType = { resource: Encounter; bundle: any };
 
 function getEncounterPractitioner(
     encounter: Encounter,
@@ -94,12 +92,12 @@ export function EncounterList() {
         },
     });
 
-    const getTableColumns = (_manager: TableManager): ColumnsType<RecordType> => [
+    const getTableColumns = (_manager: TableManager): ColumnsType<RecordType<Encounter>> => [
         {
             title: <Trans>Patient</Trans>,
             dataIndex: 'patient',
             key: 'patient',
-            render: (_text: any, record: RecordType) => {
+            render: (_text: any, record: RecordType<Encounter>) => {
                 const { patient } = extractEncounterData(record.resource, record.bundle);
                 return renderHumanName(patient?.name?.[0]);
             },
@@ -108,7 +106,7 @@ export function EncounterList() {
             title: <Trans>Practitioner</Trans>,
             dataIndex: 'practitioner',
             key: 'practitioner',
-            render: (_text: any, record: RecordType) => {
+            render: (_text: any, record: RecordType<Encounter>) => {
                 const { practitioner } = extractEncounterData(record.resource, record.bundle);
                 return renderHumanName(practitioner?.name?.[0]);
             },
@@ -117,18 +115,18 @@ export function EncounterList() {
             title: <Trans>Status</Trans>,
             dataIndex: 'status',
             key: 'status',
-            render: (_text: any, record: RecordType) => <StatusBadge status={record.resource.status} />,
+            render: (_text: any, record: RecordType<Encounter>) => <StatusBadge status={record.resource.status} />,
         },
         {
             title: <Trans>Date</Trans>,
             dataIndex: 'date',
             key: 'date',
             width: 220,
-            render: (_text: any, record: RecordType) => formatPeriodDateTime(record.resource.period),
+            render: (_text: any, record: RecordType<Encounter>) => formatPeriodDateTime(record.resource.period),
         },
     ];
 
-    const getRecordActions = (record: RecordType) => [
+    const getRecordActions = (record: RecordType<Encounter>, _manager: TableManager) => [
         navigationAction(
             <Trans>Open</Trans>,
             `/patients/${extractEncounterData(record.resource, record.bundle).patient?.id}/encounters/${
@@ -150,7 +148,7 @@ export function EncounterList() {
 
     return (
         <ResourceListPage
-            headerTitle="Encounters"
+            headerTitle={t`Encounters`}
             resourceType="Encounter"
             searchParams={{
                 ...roleSearchParams,
@@ -161,6 +159,7 @@ export function EncounterList() {
                     'PractitionerRole:practitioner:Practitioner',
                 ],
                 _sort: '-date,_id',
+                _count: 10,
             }}
             getTableColumns={getTableColumns}
             getRecordActions={getRecordActions}
