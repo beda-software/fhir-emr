@@ -1,14 +1,15 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { ColumnsType } from 'antd/lib/table';
-import { Bundle, Consent, Patient } from 'fhir/r4b';
+import { Bundle, Consent, HumanName, Patient } from 'fhir/r4b';
 import type { Resource } from 'fhir/r4b';
 
-import { extractBundleResources, parseFHIRReference, SearchParams } from '@beda.software/fhir-react';
+import { parseFHIRReference, SearchParams } from '@beda.software/fhir-react';
 
 import { SearchBarColumn, SearchBarColumnType } from 'src/components/SearchBar/types';
 import { ResourceListPage, navigationAction, questionnaireAction } from 'src/uberComponents/ResourceListPage';
 import { RecordType, TableManager } from 'src/uberComponents/ResourceListPage/types';
+import { compileAsFirst } from 'src/utils';
 import { formatHumanDate } from 'src/utils/date';
 import { renderHumanName } from 'src/utils/fhir';
 import { matchCurrentUserRole, Role } from 'src/utils/role';
@@ -30,12 +31,21 @@ const getHeaderActions = () => [
     questionnaireAction(<Trans>Add patient</Trans>, 'patient-create', { icon: <PlusOutlined /> }),
 ];
 
+const getPatientName = compileAsFirst<Patient, HumanName>('Patient.name.first()');
+const getBirthDate = compileAsFirst<Patient, string>('Patient.birthDate');
+const getSSN = compileAsFirst<Patient, string>(
+    "Patient.identifier.where(system='http://hl7.org/fhir/sid/us-ssn').value.first()",
+);
+
+const findPatientInBundleById = compileAsFirst<Bundle, Patient>(
+    "Bundle.entry.resource.where(resourceType='Patient' and id=%patientId).first()",
+);
+
 function getPatientFromConsent(consent: Consent, bundle: Bundle): Patient | undefined {
-    const patients = (extractBundleResources(bundle).Patient ?? []) as Patient[];
     const patientRef = consent.patient;
     if (!patientRef) return undefined;
     const patientId = parseFHIRReference(patientRef).id;
-    return patients.find((p) => p.id === patientId);
+    return findPatientInBundleById(bundle, { patientId });
 }
 
 function buildColumns<R extends Resource>(
@@ -46,7 +56,11 @@ function buildColumns<R extends Resource>(
             title: <Trans>Name</Trans>,
             dataIndex: 'name',
             key: 'name',
-            render: (_text, record) => renderHumanName(resolvePatient(record)?.name?.[0]),
+            render: (_text, record) => {
+                const patient = resolvePatient(record);
+                const name = patient ? getPatientName(patient) : undefined;
+                return renderHumanName(name);
+            },
             width: 300,
         },
         {
@@ -55,7 +69,8 @@ function buildColumns<R extends Resource>(
             key: 'birthDate',
             render: (_text, record) => {
                 const patient = resolvePatient(record);
-                return patient?.birthDate ? formatHumanDate(patient.birthDate) : null;
+                const birthDate = patient ? getBirthDate(patient) : undefined;
+                return birthDate ? formatHumanDate(birthDate) : null;
             },
             width: 150,
         },
@@ -63,9 +78,10 @@ function buildColumns<R extends Resource>(
             title: <Trans>SSN</Trans>,
             dataIndex: 'identifier',
             key: 'identifier',
-            render: (_text, record) =>
-                resolvePatient(record)?.identifier?.find(({ system }) => system === 'http://hl7.org/fhir/sid/us-ssn')
-                    ?.value,
+            render: (_text, record) => {
+                const patient = resolvePatient(record);
+                return patient ? getSSN(patient) : undefined;
+            },
             width: 250,
         },
     ];
