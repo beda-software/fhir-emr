@@ -1,3 +1,4 @@
+import { QuestionnaireResponse } from 'fhir/r4b';
 import { ItemControlGroupItemComponentMapping, ItemControlQuestionItemComponentMapping } from 'sdc-qrf';
 
 import { FormFooterComponentProps } from 'src/components/BaseQuestionnaireResponseForm/FormFooter';
@@ -14,6 +15,7 @@ export interface QRFProps extends QuestionnaireResponseFormProps {
     itemControlQuestionItemComponents?: ItemControlQuestionItemComponentMapping;
     itemControlGroupItemComponents?: ItemControlGroupItemComponentMapping;
     onCancel?: () => void;
+    onQRFUpdate?: (questionnaireResponse: QuestionnaireResponse) => void;
 
     FormFooterComponent?: React.ElementType<FormFooterComponentProps>;
     saveButtonTitle?: React.ReactNode;
