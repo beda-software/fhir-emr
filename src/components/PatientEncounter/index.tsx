@@ -43,14 +43,18 @@ const getPractitionerIdFromRole = compileAsFirst<PractitionerRole, string>(
 
 function findEncounterPatient(encounter: Encounter, bundle: Bundle): Patient | undefined {
     const id = getEncounterSubjectId(encounter);
-    if (!id) return undefined;
+    if (!id) {
+        return undefined;
+    }
     return findPatientInBundleById(bundle, { id });
 }
 
 function findEncounterPractitioner(encounter: Encounter, bundle: Bundle): Practitioner | undefined {
     const type = getEncounterParticipantType(encounter);
     const id = getEncounterParticipantId(encounter);
-    if (!type || !id) return undefined;
+    if (!type || !id) {
+        return undefined;
+    }
 
     if (type === 'Practitioner') {
         return findPractitionerInBundleById(bundle, { id });
@@ -104,7 +108,9 @@ export const PatientEncounter = ({ patient, searchParams, hideCreateButton }: Pr
     };
 
     const getHeaderActions = () => {
-        if (hideCreateButton) return [];
+        if (hideCreateButton) {
+            return [];
+        }
         const title = matchCurrentUserRole({
             [Role.Admin]: () => t`Create Encounter`,
             [Role.Patient]: () => t`Request Appointment`,

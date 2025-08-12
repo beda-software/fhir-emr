@@ -41,7 +41,9 @@ function MedicationKnowledgeOverview({ resource }: { resource: MedicationKnowled
     const getReportColumns = (bundle: Bundle): Array<ReportColumn> => {
         const calculateIngridients = () => {
             const lines = getIngridientsLines(resource) ?? [];
-            if (!lines.length) return '';
+            if (!lines.length) {
+                return '';
+            }
             return (
                 <div>
                     {lines.map((line) => (

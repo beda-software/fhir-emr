@@ -198,7 +198,9 @@ const findMedicationInBundleById = compileAsFirst<Bundle, Medication>(
 function findMedication(medicationRequest: MedicationRequest, bundle: Bundle): Medication | undefined {
     const id = getMedicationRequestMedicationId(medicationRequest);
     console.log('medication id ', id);
-    if (!id) return undefined;
+    if (!id) {
+        return undefined;
+    }
     return findMedicationInBundleById(bundle, { id });
 }
 
@@ -210,7 +212,9 @@ const findPatientInBundleById = compileAsFirst<Bundle, Patient>(
 );
 function findPatient(medicationRequest: MedicationRequest, bundle: Bundle): Patient | undefined {
     const id = getMedicationRequestPatientId(medicationRequest);
-    if (!id) return undefined;
+    if (!id) {
+        return undefined;
+    }
     return findPatientInBundleById(bundle, { id });
 }
 
@@ -229,7 +233,9 @@ const findPractitionerFirstName = compileAsFirst<Bundle, HumanName>(
 function getRequesterDisplay(medicationRequest: MedicationRequest, bundle: Bundle): string | undefined {
     const id = getRequesterId(medicationRequest);
     const type = getRequesterType(medicationRequest);
-    if (!id || !type) return medicationRequest.id;
+    if (!id || !type) {
+        return medicationRequest.id;
+    }
 
     if (type === 'Organization') {
         return findOrganizationNameById(bundle, { id }) ?? medicationRequest.id;
