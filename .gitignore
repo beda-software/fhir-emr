@@ -53,3 +53,6 @@ zenproject/seeds.ndjson.gz
 
 zenproject/zen-packages
 resources/tests/generated/
+tsconfig.node.tsbuildinfo
+vite.config.js
+vite.config.d.ts
