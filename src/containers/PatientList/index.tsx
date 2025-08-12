@@ -43,7 +43,9 @@ const findPatientInBundleById = compileAsFirst<Bundle, Patient>(
 
 function getPatientFromConsent(consent: Consent, bundle: Bundle): Patient | undefined {
     const patientRef = consent.patient;
-    if (!patientRef) return undefined;
+    if (!patientRef) {
+        return undefined;
+    }
     const patientId = parseFHIRReference(patientRef).id;
     return findPatientInBundleById(bundle, { patientId });
 }
