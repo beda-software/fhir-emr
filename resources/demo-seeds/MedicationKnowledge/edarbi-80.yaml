@@ -8,10 +8,6 @@ doseForm:
     - code: "385055001"
       system: http://hl7.org/fhir/ValueSet/medication-form-codes
       display: Tablet
-meta:
-  lastUpdated: "2023-12-03T09:10:37.694245Z"
-  createdAt: "2023-12-03T09:10:37.694245Z"
-  versionId: "77"
 packaging:
   type:
     coding:
