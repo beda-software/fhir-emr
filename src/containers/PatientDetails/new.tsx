@@ -2,12 +2,15 @@ import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Encounter, Patient } from 'fhir/r4b';
 
+import { PatientDashboardProvider } from 'src/components';
+import { Dashboard } from 'src/components/Dashboard/types';
 import { SearchBarColumnType } from 'src/components/SearchBar/types';
 import { navigationAction, questionnaireAction } from 'src/uberComponents';
 import { ResourceDetailPage, Tab } from 'src/uberComponents/ResourceDetailPage';
 import { ResourceListPageContent } from 'src/uberComponents/ResourceListPageContent';
 import { compileAsFirst, formatPeriodDateTime } from 'src/utils';
 
+import { patientDashboardConfig } from './dashboard';
 import { PatientOverview } from './PatientOverviewDynamic';
 
 const getName = compileAsFirst<Patient, string>("Patient.name.given.first() + ' ' + Patient.name.family");
@@ -89,11 +92,19 @@ function PatientEncounter({ patient }: { patient: Patient }) {
     );
 }
 
+export const dashboard: Dashboard = {
+    default: patientDashboardConfig,
+};
+
 const tabs: Array<Tab<Patient>> = [
     {
         path: '',
         label: 'Overview',
-        component: ({ resource }) => <PatientOverview patient={resource} />,
+        component: ({ resource }) => (
+            <PatientDashboardProvider dashboard={dashboard}>
+                <PatientOverview patient={resource} />
+            </PatientDashboardProvider>
+        ),
     },
     {
         path: 'encounter',
