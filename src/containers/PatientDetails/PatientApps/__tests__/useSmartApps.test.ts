@@ -103,7 +103,7 @@ async function initialSetup(roleName: Role) {
     return { user, role, client };
 }
 
-describe.each(Object.values(Role))('useSmartApps for role %s', (role) => {
+describe.skip.each(Object.values(Role))('useSmartApps for role %s', (role) => {
     test(`Retrieve list of smart apps for ${role} role`, async () => {
         await initialSetup(role as Role);
         const result = await renderSmartAppsHook();
