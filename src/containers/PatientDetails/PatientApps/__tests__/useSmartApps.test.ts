@@ -21,6 +21,7 @@ export async function createAdmin(organization: Partial<Organization> = {}) {
     return ensure(
         await createFHIRResource<Organization>({
             resourceType: 'Organization',
+            name: 'Test Organization',
             ...organization,
         }),
     );
@@ -103,7 +104,7 @@ async function initialSetup(roleName: Role) {
     return { user, role, client };
 }
 
-describe.skip.each(Object.values(Role))('useSmartApps for role %s', (role) => {
+describe.each(Object.values(Role))('useSmartApps for role %s', (role) => {
     test(`Retrieve list of smart apps for ${role} role`, async () => {
         await initialSetup(role as Role);
         const result = await renderSmartAppsHook();
