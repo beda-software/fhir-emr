@@ -1,84 +1,100 @@
 name: fhir-emr-testscript
 services:
-    sdc-ide:
-        image: bedasoftware/sdc-ide:master
-        depends_on:
-            devbox-healthcheck:
-                condition: service_healthy
-        ports:
-            - '3001:5000'
-    sdc:
-        image: bedasoftware/fhir-sdc:master
-        depends_on:
-            devbox-healthcheck:
-                condition: service_healthy
-        links:
-            - devbox
-        env_file:
-            - ./env/sdc
-        # Colored logs
-        tty: true
-    sdc-healthcheck:
-        image: curlimages/curl
-        entrypoint: /bin/sleep 10000
-        links:
-            - sdc
-        depends_on:
-            - sdc
-        healthcheck:
-            test: curl --fail http://sdc:8081/live || exit 1
-            interval: 1s
-            timeout: 20s
-            retries: 100
-    devbox:
-        image: healthsamurai/aidboxone:stable
-        depends_on:
-            - devbox-db_test
-            - build-seeds
-        links:
-            - 'devbox-db_test:database'
-        ports:
-            - '8080:8080'
-        env_file:
-            - ./env/aidbox
-            - .env
-        volumes:
-            - ./config:/var/config:cached
-            - ./zenproject:/zenproject
-    devbox-db_test:
-        image: 'healthsamurai/aidboxdb:13.2'
-        environment:
-            POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: postgres
-            POSTGRES_DB: devbox
-    devbox-healthcheck:
-        image: curlimages/curl
-        entrypoint: /bin/sleep 10000
-        links:
-            - devbox
-        depends_on:
-            - devbox
-        healthcheck:
-            test: curl --fail http://devbox:8080/health || exit 1
-            interval: 5s
-            timeout: 30s
-            retries: 100
-    build-seeds:
-        image: bedasoftware/fhirsnake
-        command:
-            - export
-            - --output
-            - /app/zenproject/seeds.ndjson.gz
-        volumes:
-            - ./zenproject:/app/zenproject
-            - ./resources/seeds:/app/resources
-    testscript:
-        image: bedasoftware/testscript-eval:latest
-        depends_on:
-            sdc-healthcheck:
-                condition: service_healthy
-        volumes:
-            - ./resources:/app
-        env_file:
-            - ./env/testscript
-        command: pytest
+  sdc-ide:
+    image: bedasoftware/sdc-ide:master
+    depends_on:
+      devbox-healthcheck:
+        condition: service_healthy
+    ports:
+      - "3001:5000"
+  sdc:
+    image: bedasoftware/fhir-sdc:1.0.0a13
+    depends_on:
+      devbox-healthcheck:
+        condition: service_healthy
+    links:
+      - devbox
+    env_file:
+      - ./env/sdc
+    # Colored logs
+    tty: true
+  sdc-healthcheck:
+    image: curlimages/curl
+    entrypoint: /bin/sleep 10000
+    links:
+      - sdc
+    depends_on:
+      - sdc
+    healthcheck:
+      test: curl --fail http://sdc:8081/live || exit 1
+      interval: 1s
+      timeout: 20s
+      retries: 100
+  devbox:
+    image: healthsamurai/aidboxone:stable
+    depends_on:
+      - devbox-db_test
+      - build-seeds-init
+    links:
+      - "devbox-db_test:database"
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./env/aidbox
+      - .env
+    volumes:
+      - ./config:/var/config:cached
+      - ./resources/init-bundles:/resources/init-bundles
+  devbox-db_test:
+    image: "healthsamurai/aidboxdb:13.2"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: devbox
+  devbox-healthcheck:
+    image: curlimages/curl
+    entrypoint: /bin/sleep 10000
+    links:
+      - devbox
+    depends_on:
+      - devbox
+    healthcheck:
+      test: curl --fail http://devbox:8080/health || exit 1
+      interval: 5s
+      timeout: 30s
+      retries: 100
+  build-seeds-init:
+    image: bedasoftware/fhirsnake:latest
+    command:
+      - export
+      - --output
+      - /app/init-bundles/initBundle.json
+      - --external-questionnaire-fce-fhir-converter-url
+      - http://questionnaire-fce-fhir-converter:3000/to-fhir
+    env_file:
+      - ./env/build-seeds
+    depends_on:
+      questionnaire-fce-fhir-converter:
+        condition: service_healthy
+    volumes:
+      - ./resources/init-seeds:/app/resources
+      - ./resources/init-bundles:/app/init-bundles
+
+  testscript:
+    image: bedasoftware/testscript-eval:latest
+    depends_on:
+      sdc-healthcheck:
+        condition: service_healthy
+    volumes:
+      - ./resources:/app
+    env_file:
+      - ./env/testscript
+    command: pytest
+
+  questionnaire-fce-fhir-converter:
+    image: bedasoftware/questionnaire-fce-fhir-converter:latest
+    healthcheck:
+      test: curl --fail http://localhost:3000/health || exit 1
+      interval: 5s
+      timeout: 30s
+      retries: 50
