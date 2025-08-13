@@ -1,0 +1,58 @@
+body:
+  type: transaction
+  entry:
+    $args:
+      - - fullUrl: $ "urn:uuid:practitioner-id"
+          request:
+            url: /Practitioner
+            method: POST
+          resource:
+            name:
+              - given:
+                  - >-
+                    $
+                    fhirpath("QuestionnaireResponse.repeat(item).where(linkId='first-name').answer.valueString").0
+                  - >-
+                    $
+                    fhirpath("QuestionnaireResponse.repeat(item).where(linkId='middle-name').answer.valueString").0
+                family: >-
+                  $
+                  fhirpath("QuestionnaireResponse.repeat(item).where(linkId='last-name').answer.valueString").0
+            resourceType: Practitioner
+      - $as: specialtyItem
+        $map: >-
+          $
+          fhirpath("QuestionnaireResponse.repeat(item).where(linkId='specialty').answer")
+        $body:
+          request:
+            url: /PractitionerRole
+            method: POST
+          resource:
+            code:
+              - coding:
+                  - code: doctor
+                    system: http://terminology.hl7.org/CodeSystem/practitioner-role
+                    display: Doctor
+            specialty:
+              - coding:
+                  - $ specialtyItem.valueCoding
+            practitioner:
+              uri: $ "urn:uuid:practitioner-id"
+            resourceType: PractitionerRole
+            healthcareService:
+              $map: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='services').answer.valueReference")
+              $as: serviceRef
+              $body:
+                $let:
+                  selectedHealthcareServiceReferenceSplit:
+                    $call: splitStr
+                    $args:
+                      - $ serviceRef.reference
+                      - "/"
+                $body:
+                  resourceType: $ selectedHealthcareServiceReferenceSplit.0
+                  id: $ selectedHealthcareServiceReferenceSplit.1
+                  display: $ serviceRef.display
+    $call: concat
+id: practitioner-create
+resourceType: Mapping

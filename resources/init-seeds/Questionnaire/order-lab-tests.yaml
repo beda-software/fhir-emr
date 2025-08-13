@@ -1,0 +1,91 @@
+id: oreder-lab-tests
+name: orderLabTests
+title: Order laboratory tests
+resourceType: Questionnaire
+status: active
+subjectType:
+  - Encounter
+  - Patient
+mapping:
+  - reference: urn:uuid:Mapping:order-lab-tests
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+item:
+  - text: PatientId
+    type: string
+    linkId: patientId
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.id"
+  - text: PatientName
+    type: string
+    linkId: patientName
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.name.first().given.first() + ' ' + %Patient.name.first().family"
+  - type: group
+    linkId: cbc
+    text: Complete blood count (CBC)
+    item:
+      - type: boolean
+        linkId: wbc
+        text: White blood cells (WBC)
+      - type: boolean
+        linkId: neutrophils
+        text: Neutrophils
+      - type: boolean
+        linkId: lymphocytes
+        text: Lymphocytes
+      - type: boolean
+        linkId: platelets
+        text: Platelets
+  - type: group
+    linkId: cmp
+    text: Comprehensive metabolic panel (CMP)
+    item:
+      - type: boolean
+        linkId: sodium
+        text: Sodium
+      - type: boolean
+        linkId: potassium
+        text: Potassium
+      - type: boolean
+        linkId: co2
+        text: CO2
+      - type: boolean
+        linkId: chloride
+        text: Chloride
+      - type: boolean
+        linkId: bun
+        text: Blood urea nitrogen (BUN)
+      - type: boolean
+        linkId: creatinine
+        text: Creatinine
+      - type: boolean
+        linkId: albumin
+        text: Albumin
+      - type: boolean
+        linkId: bilirubin
+        text: Bilirubin
+  - type: group
+    linkId: biomarkers
+    text: Biomarkers
+    item:
+      - type: boolean
+        linkId: crp
+        text: C-reactive protein (CRP)
+      - type: boolean
+        linkId: il6
+        text: Interleukin-6 (IL-6)
+      - type: boolean
+        linkId: pct
+        text: Procalcitonin (PCT)
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/vitals
