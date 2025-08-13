@@ -14,7 +14,7 @@ import { axiosInstance } from 'src/services/fhir';
 import { createPatient, loginAdminUser } from 'src/setupTests';
 import { ThemeProvider } from 'src/theme';
 
-describe.skip('Test allergies patient form filling and extraction', () => {
+describe('Test allergies patient form filling and extraction', () => {
     test('Test allergies patient form filling and extraction', async () => {
         await loginAdminUser();
         const { patient } = await withRootAccess(axiosInstance, async () => {
