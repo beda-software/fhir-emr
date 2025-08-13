@@ -19,18 +19,18 @@ const VALUE_SET_COLUMN_CASES: SearchBarChoiceColumn[] = [
         id: 'status_valueset1',
         type: SearchBarColumnType.CHOICE,
         placeholder: 'Search by vastatus',
-        valueSet: 'ValueSet/encounter-status',
+        valueSet: 'http://hl7.org/fhir/ValueSet/encounter-status',
     },
     {
         id: 'status_valueset2',
         type: SearchBarColumnType.CHOICE,
         placeholder: 'Search by vastatus',
         repeats: true,
-        valueSet: 'ValueSet/encounter-status',
+        valueSet: 'http://hl7.org/fhir/ValueSet/encounter-status',
     },
 ];
 
-describe.skip('ValueSetColumn component testing', () => {
+describe('ValueSetColumn component testing', () => {
     beforeAll(async () => {
         await loginAdminUser();
         await createValueSet(valuesetEncounterStatusData);
