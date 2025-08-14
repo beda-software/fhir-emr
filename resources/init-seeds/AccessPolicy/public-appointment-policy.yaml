@@ -1,0 +1,6 @@
+id: public-appointment-policy
+resourceType: AccessPolicy
+engine: allow
+link:
+  - resourceType: Client
+    id: anonymous

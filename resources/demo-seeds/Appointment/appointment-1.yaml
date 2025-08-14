@@ -1,0 +1,24 @@
+end: "2023-12-05T07:45:00Z"
+start: "2023-12-05T07:00:00Z"
+status: checked-in
+participant:
+  - actor:
+      reference: urn:uuid:Patient:patient1
+      display: First Patient
+    status: accepted
+  - actor:
+      reference: urn:uuid:PractitionerRole:practitioner1
+      display: Basic-1 Practitioner - Endocrinology
+    status: accepted
+  - actor:
+      reference: urn:uuid:HealthcareService:consultation
+      display: The first appointment
+    status: accepted
+serviceType:
+  - text: The first appointment
+    coding:
+      - code: consultation
+        system: http://beda.software/custom-healthcare-service-list
+        display: The first appointment
+id: appointment-1
+resourceType: Appointment

@@ -1,0 +1,8 @@
+name: admin
+user:
+  reference: urn:uuid:User:admin
+links:
+  organization:
+    reference: urn:uuid:Organization:beda-emr
+id: admin
+resourceType: Role

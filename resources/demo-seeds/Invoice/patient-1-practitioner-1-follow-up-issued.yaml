@@ -1,0 +1,22 @@
+date: "2023-10-12T12:43:27+00:00"
+status: issued
+subject:
+  reference: urn:uuid:Patient:patient1
+  display: First Patient
+lineItem:
+  - chargeItem:
+      Reference:
+        reference: urn:uuid:ChargeItem:patient-1-follow-up-2
+    priceComponent:
+      - type: base
+        amount:
+          value: 25
+      - type: tax
+        amount:
+          value: 2
+participant:
+  - actor:
+      reference: urn:uuid:PractitionerRole:practitioner1
+      display: Basic-1 Practitioner - Endocrinology
+id: patient1-practitioner-1-follow-up-issued
+resourceType: Invoice

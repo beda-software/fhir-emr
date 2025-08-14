@@ -1,0 +1,8 @@
+name: receptionist
+user:
+  reference: urn:uuid:User:receptionist
+links:
+  practitioner:
+    reference: urn:uuid:Practitioner:receptionist
+id: receptionist
+resourceType: Role

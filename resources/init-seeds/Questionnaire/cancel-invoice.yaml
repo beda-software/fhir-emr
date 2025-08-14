@@ -1,0 +1,30 @@
+resourceType: Questionnaire
+id: cancel-invoice
+status: active
+title: Change invoice status
+mapping:
+  - reference: urn:uuid:Mapping:cancel-invoice-extract
+launchContext:
+  - name:
+      code: Invoice
+    type:
+      - Invoice
+    description: The invoice to change status
+item:
+  - type: group
+    linkId: root-group
+    item:
+      - text: Current Invoice ID
+        type: string
+        linkId: current-invoice-id
+        hidden: true
+        initialExpression:
+          language: text/fhirpath
+          expression: "%Invoice.id"
+      - text: Are you sure to cancel this invoice?
+        linkId: are-you-sure
+        type: display
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/change-invoice-status
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire

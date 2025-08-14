@@ -1,0 +1,19 @@
+appointment:
+  - reference: urn:uuid:Appointment:appointment-2
+participant:
+  - individual:
+      reference: urn:uuid:PractitionerRole:practitioner1
+      display: Basic-1 Practitioner - Endocrinology
+resourceType: Encounter
+status: finished
+id: encounter-2
+class:
+  code: consultation
+  system: http://beda.software/custom-healthcare-service-list
+  display: The first appointment
+period:
+  end: "2023-12-04T09:27:38+00:00"
+  start: "2023-12-03T07:00:00Z"
+subject:
+  reference: urn:uuid:Patient:patient1
+  display: First Patient

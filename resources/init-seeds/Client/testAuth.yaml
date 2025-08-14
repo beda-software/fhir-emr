@@ -1,0 +1,5 @@
+id: testAuth
+resourceType: Client
+grant_types:
+  - password
+secret: "123456"

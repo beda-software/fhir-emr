@@ -1,0 +1,11 @@
+id: Encounter.participant-display
+resourceType: SearchParameter
+base:
+  - Encounter
+expression: "Encounter.participant.individual.display"
+status: active
+url: https://rce.uoh.cl/FHIR/SearchParameter/Encounter.participant-display
+name: "participant-display"
+type: "token"
+description: "Search for Encounter resources by their participant display."
+code: "participant-display"

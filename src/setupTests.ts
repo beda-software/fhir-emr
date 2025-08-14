@@ -22,11 +22,17 @@ import { formatFHIRDateTime } from 'aidbox-react/lib/utils/date';
 import { withRootAccess, LoginService, getToken } from 'aidbox-react/lib/utils/tests';
 
 import { User, ValueSet } from '@beda.software/aidbox-types';
+import config from '@beda.software/emr-config';
 import { ensure, getReference } from '@beda.software/fhir-react';
 
 import { restoreUserSession } from 'src/containers/App/utils.ts';
 import { login as loginService } from 'src/services/auth';
-import { createFHIRResource, saveFHIRResource, resetInstanceToken as resetFHIRInstanceToken } from 'src/services/fhir';
+import {
+    createFHIRResource,
+    saveFHIRResource,
+    resetInstanceToken as resetFHIRInstanceToken,
+    service,
+} from 'src/services/fhir';
 
 declare global {
     // eslint-disable-next-line no-var, @typescript-eslint/no-explicit-any
@@ -138,10 +144,15 @@ export async function createEncounter(subject: Reference, participant: Participa
 }
 
 export async function createValueSet(valueSetData: Partial<ValueSet>) {
-    await createFHIRResource<ValueSet>({
-        resourceType: 'ValueSet',
-        status: 'active',
-        ...valueSetData,
+    return await service<ValueSet>({
+        baseURL: config.baseURL,
+        url: 'ValueSet',
+        method: 'PUT',
+        data: {
+            resourceType: 'ValueSet',
+            status: 'active',
+            ...valueSetData,
+        },
     });
 }
 

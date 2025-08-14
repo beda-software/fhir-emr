@@ -1,0 +1,20 @@
+id: repeatable-group
+name: Repeatable Group
+title: Repeatable Group
+status: active
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+item:
+  - text: Items
+    type: group
+    linkId: repeatable-group
+    item:
+      - item:
+          - text: Text
+            type: string
+            linkId: repeatable-group-text
+        type: group
+        linkId: repeatable-group-inner
+        repeats: true
+resourceType: Questionnaire

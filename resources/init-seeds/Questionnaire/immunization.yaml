@@ -1,0 +1,101 @@
+id: immunization
+resourceType: Questionnaire
+name: immunization
+title: Immunization
+status: active
+subjectType:
+  - Encounter
+  - Patient
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+  - name:
+      code: Author
+    type:
+      - PractitionerRole
+      - Practitioner
+      - Patient
+      - Organization
+mapping:
+  - reference: urn:uuid:Mapping:immunization-extract
+item:
+  - text: DateTime
+    type: dateTime
+    linkId: dateTime
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "now()"
+  - text: EncounterId
+    type: string
+    linkId: encounterId
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Encounter.id"
+  - text: PatientId
+    type: string
+    linkId: patientId
+    hidden: true
+    required: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.id"
+  - text: PatientName
+    type: string
+    linkId: patientName
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.name.first().given.first() + ' ' + %Patient.name.first().family"
+  - linkId: vaccine-code
+    text: Vaccine
+    required: true
+    type: choice
+    answerOption:
+      - valueCoding:
+          system: "http://hl7.org/fhir/sid/cvx"
+          code: "143"
+          display: "Adenovirus types 4 and 7"
+      - valueCoding:
+          system: "http://hl7.org/fhir/sid/cvx"
+          code: "24"
+          display: "anthrax"
+      - valueCoding:
+          system: "http://hl7.org/fhir/sid/cvx"
+          code: "173"
+          display: "cholera, BivWC"
+      - valueCoding:
+          system: "http://hl7.org/fhir/sid/cvx"
+          code: "56"
+          display: "dengue fever"
+      - valueCoding:
+          system: "http://hl7.org/fhir/sid/cvx"
+          code: "12"
+          display: "diphtheria antitoxin"
+      - valueCoding:
+          system: "http://hl7.org/fhir/sid/cvx"
+          code: "52"
+          display: "Hep A, adult"
+      - valueCoding:
+          system: "http://hl7.org/fhir/sid/cvx"
+          code: "58"
+          display: "Hep C"
+      - valueCoding:
+          system: "http://hl7.org/fhir/sid/cvx"
+          code: "60"
+          display: "herpes simplex 2"
+      - valueCoding:
+          system: "http://hl7.org/fhir/sid/cvx"
+          code: "61"
+          display: "HIV"
+  - linkId: date-of-injection
+    type: date
+    text: Date of injection
+
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/immunization

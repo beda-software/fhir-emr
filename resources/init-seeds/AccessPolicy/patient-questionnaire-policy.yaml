@@ -1,0 +1,6 @@
+id: patient-questionnaire-policy
+resourceType: AccessPolicy
+engine: allow
+link:
+  - resourceType: Client
+    id: patient-questionnaire

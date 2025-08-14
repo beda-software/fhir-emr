@@ -1,0 +1,5 @@
+id: patient-questionnaire
+resourceType: Client
+grant_types:
+  - basic
+secret: "secret"

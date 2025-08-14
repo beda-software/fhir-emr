@@ -1,0 +1,21 @@
+id: practitioner-role-create
+resourceType: Questionnaire
+name: practitioner-role-create
+title: Create practitioner role
+status: active
+mapping:
+  - reference: urn:uuid:Mapping:practitioner-role-create
+item:
+  - linkId: organization
+    type: string
+    text: Organization
+  - linkId: practitioner
+    type: string
+    text: Practitioner
+  - linkId: specialty
+    type: string
+    text: Speciality
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/practitioner-role-create

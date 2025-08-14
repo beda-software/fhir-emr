@@ -1,0 +1,27 @@
+id: federated-identity-signin
+resourceType: AccessPolicy
+engine: json-schema
+schema:
+  required:
+    - jwt
+  properties:
+    jwt:
+      required:
+        - iss
+        - aud
+        - sub
+      properties:
+        iss:
+          const: https://ingest.emr.beda.software
+        aud:
+          type: array
+          maxItems: 2
+          minItems: 1
+          items:
+            enum:
+              - software.beda.emr
+              - software.beda.fhirmhealth.fhirmhealth
+            type: string
+        sub:
+          type: string
+          minLength: 1

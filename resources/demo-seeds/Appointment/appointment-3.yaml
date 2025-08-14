@@ -1,0 +1,24 @@
+end: "2023-12-07T07:30:00Z"
+start: "2023-12-07T07:00:00Z"
+status: checked-in
+participant:
+  - actor:
+      reference: urn:uuid:Patient:patient2
+      display: Second Patient
+    status: accepted
+  - actor:
+      reference: urn:uuid:PractitionerRole:practitioner2
+      display: Basic-2 Practitioner - Endocrinology
+    status: accepted
+  - actor:
+      reference: urn:uuid:HealthcareService:follow-up
+      display: A follow up visit
+    status: accepted
+serviceType:
+  - text: A follow up visit
+    coding:
+      - code: follow-up
+        system: http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type
+        display: A follow up visit
+id: appointment-3
+resourceType: Appointment

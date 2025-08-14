@@ -1,0 +1,198 @@
+resourceType: Mapping
+id: seeds
+scopeSchema:
+  type: object
+  required: ["organizationName"]
+  properties:
+    type: string
+body:
+  resourceType: Bundle
+  type: transaction
+  entry:
+    - request:
+        url: /Organization
+        method: POST
+      resource:
+        resourceType: Organization
+        name: $ organizationName
+      fullUrl: $ "urn:uuid:organization-id"
+    - request:
+        url: /Practitioner
+        method: POST
+      resource:
+        resourceType: Practitioner
+        name:
+          - family: Лисов
+            given: [Михаил, Васильевич]
+      fullUrl: $ "urn:uuid:practioner-id-1"
+    - request:
+        url: /PractitionerRole
+        method: POST
+      resource:
+        resourceType: PractitionerRole
+        organization:
+          uri: $ "urn:uuid:organization-id"
+        practitioner:
+          uri: $ "urn:uuid:practioner-id-1"
+        specialty:
+          - coding:
+              - code: "394579002"
+                display: Кардиолог
+                system: http://hl7.org/fhir/ValueSet/c80-practice-codes
+    - request:
+        url: /Practitioner
+        method: POST
+      resource:
+        resourceType: Practitioner
+        name:
+          - family: Морозов
+            given: [Дмитрий, Андреевич]
+      fullUrl: $ "urn:uuid:practioner-id-2"
+    - request:
+        url: /PractitionerRole
+        method: POST
+      resource:
+        resourceType: PractitionerRole
+        organization:
+          uri: $ "urn:uuid:organization-id"
+        practitioner:
+          uri: $ "urn:uuid:practioner-id-2"
+        specialty:
+          - coding:
+              - code: "408466002"
+                display: Сердечно-сосудистый хирург
+                system: http://hl7.org/fhir/ValueSet/c80-practice-codes
+    - request:
+        url: /Patient
+        method: POST
+      resource:
+        resourceType: Patient
+        gender: female
+        name:
+          - family: Румянцева
+            given: [Василиса, Андреевна]
+        birthDate: "1970-06-07"
+        managingOrganization:
+          uri: $ "urn:uuid:organization-id"
+        telecom:
+          - system: phone
+            use: mobile
+            value: "+79787787671"
+        identifier:
+          - system: "1.2.643.100.3"
+            value: "254-636-254 26"
+      fullUrl: $ "urn:uuid:patient-id-1"
+    - request:
+        url: /Encounter
+        method: POST
+      resource:
+        resourceType: Encounter
+        status: planned
+        subject:
+          uri: $ "urn:uuid:patient-id-1"
+        class:
+          code: AMB
+        serviceProvider:
+          uri: $ "urn:uuid:organization-id"
+        participant:
+          - individual:
+              uri: $ "urn:uuid:practitioner-id-1"
+        period:
+          start: "2021-12-17T08:00:00Z"
+        serviceType:
+          coding:
+            - code: cardiology-consultation-primary
+              display: Консультация кардиолога первичная
+              system: urn:service-type
+      fullUrl: $ "urn:uuid:encounter-id-11"
+    - request:
+        url: /Encounter
+        method: POST
+      resource:
+        resourceType: Encounter
+        status: finished
+        subject:
+          uri: $ "urn:uuid:patient-id-1"
+        serviceProvider:
+          uri: $ "urn:uuid:organization-id"
+        participant:
+          - individual:
+              uri: $ "urn:uuid:practitioner-id-1"
+        class:
+          code: AMB
+        period:
+          start: "2021-12-17T14:00:00Z"
+          end: "2021-12-17T14:30:00Z"
+        serviceType:
+          coding:
+            - code: cardiology-consultation-primary
+              display: Консультация кардиолога первичная
+              system: urn:service-type
+      fullUrl: $ "urn:uuid:encounter-id-12"
+    - request:
+        url: /Patient
+        method: POST
+      resource:
+        resourceType: Patient
+        gender: male
+        name:
+          - family: Петров
+            given: [Иван, Николаевич]
+        birthDate: "1976-04-12"
+        managingOrganization:
+          uri: $ "urn:uuid:organization-id"
+        telecom:
+          - system: phone
+            use: mobile
+            value: "+79997787671"
+        identifier:
+          - system: "1.2.643.100.3"
+            value: "455-636-254 01"
+      fullUrl: $ "urn:uuid:patient-id-2"
+    - request:
+        url: /Encounter
+        method: POST
+      resource:
+        resourceType: Encounter
+        status: planned
+        subject:
+          uri: $ "urn:uuid:patient-id-2"
+        serviceProvider:
+          uri: $ "urn:uuid:organization-id"
+        class:
+          code: AMB
+        participant:
+          - individual:
+              uri: $ "urn:uuid:practitioner-id-2"
+        period:
+          start: "2021-12-17T08:00:00Z"
+        serviceType:
+          coding:
+            - code: cardiology-consultation-primary
+              display: Консультация кардиолога первичная
+              system: urn:service-type
+      fullUrl: $ "urn:uuid:encounter-id-21"
+    - request:
+        url: /Encounter
+        method: POST
+      resource:
+        resourceType: Encounter
+        status: finished
+        subject:
+          uri: $ "urn:uuid:patient-id-2"
+        serviceProvider:
+          uri: $ "urn:uuid:organization-id"
+        participant:
+          - individual:
+              uri: $ "urn:uuid:practitioner-id-2"
+        class:
+          code: AMB
+        period:
+          start: "2021-12-17T14:00:00Z"
+          end: "2021-12-17T14:30:00Z"
+        serviceType:
+          coding:
+            - code: cardiology-consultation-primary
+              display: Консультация кардиолога первичная
+              system: urn:service-type
+      fullUrl: $ "urn:uuid:encounter-id-22"

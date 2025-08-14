@@ -1,0 +1,22 @@
+date: "2023-10-12T12:43:43+00:00"
+status: issued
+subject:
+  reference: urn:uuid:Patient:patient2
+  display: Second Patient
+lineItem:
+  - chargeItem:
+      Reference:
+        reference: urn:uuid:ChargeItem:patient-2-follow-up-2
+    priceComponent:
+      - type: base
+        amount:
+          value: 25
+      - type: tax
+        amount:
+          value: 2
+participant:
+  - actor:
+      reference: urn:uuid:PractitionerRole:practitioner2
+      display: Basic-2 Practitioner - Endocrinology
+id: patient2-practitioner-2-follow-up-issued
+resourceType: Invoice

@@ -1,0 +1,8 @@
+APP_ID=fhir-converters-app
+APP_SECRET=secret
+APP_URL=http://fhir-converters-app:3000
+APP_PORT=3000
+
+AIDBOX_CLIENT_ID=root
+AIDBOX_CLIENT_SECRET=secret
+AIDBOX_URL=http://devbox:8080

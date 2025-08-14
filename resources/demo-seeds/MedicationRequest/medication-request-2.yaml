@@ -1,0 +1,14 @@
+intent: plan
+status: cancelled
+subject:
+  reference: urn:uuid:Patient:patient1
+  display: First Patient
+requester:
+  reference: urn:uuid:Practitioner:practitioner1
+  display: Basic-1 Practitioner
+medication:
+  Reference:
+    reference: urn:uuid:Medication:medication-2
+    display: Edarbi 80mg 25 tablets
+id: medication-request-2
+resourceType: MedicationRequest
