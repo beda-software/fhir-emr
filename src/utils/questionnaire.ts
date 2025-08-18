@@ -114,25 +114,37 @@ export function questionnaireItemsToValidationSchema(
     customYupTests?: CustomYupTestsMap,
 ) {
     const validationSchema: Record<string, yup.AnySchema> = {};
-    if (questionnaireItems.length === 0) return yup.object(validationSchema) as yup.AnyObjectSchema;
+    if (questionnaireItems.length === 0) {
+        return yup.object(validationSchema) as yup.AnyObjectSchema;
+    }
     questionnaireItems.forEach((item) => {
         let schema: yup.AnySchema;
 
         if (item.type === 'string' || item.type === 'text') {
             schema = yup.string();
-            if (item.itemControl?.coding?.[0]?.code === 'email') schema = (schema as yup.StringSchema).email();
-            if (item.required) schema = schema.required();
-            if (item.maxLength && item.maxLength > 0) schema = (schema as yup.StringSchema).max(item.maxLength);
+            if (item.itemControl?.coding?.[0]?.code === 'email') {
+                schema = (schema as yup.StringSchema).email();
+            }
+            if (item.required) {
+                schema = schema.required();
+            }
+            if (item.maxLength && item.maxLength > 0) {
+                schema = (schema as yup.StringSchema).max(item.maxLength);
+            }
             schema = applyCustomYupTestsToItem(item, schema, customYupTests);
             schema = createSchemaArrayOfValues(yup.object({ string: schema }));
         } else if (item.type === 'integer') {
             schema = yup.number().integer();
-            if (item.required) schema = schema.required();
+            if (item.required) {
+                schema = schema.required();
+            }
             schema = applyCustomYupTestsToItem(item, schema, customYupTests);
             schema = createSchemaArrayOfValues(yup.object({ integer: schema }));
         } else if (item.type === 'decimal') {
             schema = yup.number();
-            if (item.required) schema = schema.required();
+            if (item.required) {
+                schema = schema.required();
+            }
             schema = applyCustomYupTestsToItem(item, schema, customYupTests);
             schema = createSchemaArrayOfValues(yup.object({ decimal: schema }));
         } else if (item.type === 'quantity') {
@@ -144,12 +156,16 @@ export function questionnaireItemsToValidationSchema(
                 code: yup.string().nullable(),
             });
 
-            if (item.required) quantitySchema.required();
+            if (item.required) {
+                quantitySchema.required();
+            }
             schema = applyCustomYupTestsToItem(item, quantitySchema, customYupTests);
             schema = createSchemaArrayOfValues(yup.object({ Quantity: schema }));
         } else if (item.type === 'date') {
             schema = yup.date();
-            if (item.required) schema = schema.required();
+            if (item.required) {
+                schema = schema.required();
+            }
             schema = applyCustomYupTestsToItem(item, schema, customYupTests);
             schema = createSchemaArrayOfValues(yup.object({ date: schema }));
         } else if (item.type === 'group' && item.item) {

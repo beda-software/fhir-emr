@@ -25,7 +25,9 @@ export function usePagerExtended<T extends Resource, F = unknown>(
     });
 
     const handleTableChange = async (pagination: TablePaginationConfig) => {
-        if (typeof pagination.current !== 'number') return;
+        if (typeof pagination.current !== 'number') {
+            return;
+        }
 
         if (pagination.pageSize && pagination.pageSize !== pageSize) {
             pagerManager.reload();

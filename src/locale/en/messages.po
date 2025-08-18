@@ -175,6 +175,9 @@ msgstr ""
 
 #: src/utils/yup-locale.ts:81
 msgid "{path} tuple value has too many items, expected a length of {typeLen} but got {0} for value: `{1}`"
+
+#: src/components/QuestionnairesWizard/hooks.tsx:94
+msgid "{0} was not submitted"
 msgstr ""
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/NoteList/index.tsx:55
@@ -449,6 +452,7 @@ msgstr ""
 #~ msgid "Clear draft"
 #~ msgstr ""
 
+#: src/components/QuestionnaireResponseFormDraft/index.tsx:33
 #: src/containers/PatientDetails/PatientDocument/index.tsx:78
 msgid "Clear draft from local storage and reset form"
 msgstr ""
@@ -479,7 +483,7 @@ msgstr ""
 msgid "Col (default)"
 msgstr ""
 
-#: src/components/QuestionnairesWizard/index.tsx:110
+#: src/components/QuestionnairesWizard/components/QuestionnairesWizardFooter/index.tsx:45
 #: src/containers/PatientDetails/PatientDocument/index.tsx:139
 #: src/containers/PatientDetails/PatientDocument/index.tsx:167
 msgid "Complete"
@@ -902,13 +906,13 @@ msgstr ""
 msgid "Glucose"
 msgstr ""
 
-#: src/components/QuestionnairesWizard/index.tsx:102
-msgid "Go Back"
-msgstr ""
+#: src/components/QuestionnairesWizard/components/QuestionnairesWizardFooter/index.tsx:34
+#~ msgid "Go Back"
+#~ msgstr ""
 
 #: src/components/QuestionnairesWizard/index.tsx:109
-msgid "Go Forward"
-msgstr ""
+#~ msgid "Go Forward"
+#~ msgstr ""
 
 #: src/containers/Scheduling/ScheduleCalendar/components/AppointmentDetailsModal/index.tsx:74
 msgid "Go to the encounter"
@@ -1676,6 +1680,10 @@ msgstr ""
 #: src/uberComponents/ResourceListPage/actions.tsx:98
 #: src/uberComponents/ResourceListPage/actions.tsx:147
 msgid "Submit"
+msgstr ""
+
+#: src/components/QuestionnairesWizard/components/QuestionnairesWizardFooter/index.tsx:44
+msgid "Submit and Go Forward"
 msgstr ""
 
 #: src/uberComponents/ResourceListPage/actions.tsx:78

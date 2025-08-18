@@ -8,6 +8,11 @@ export const S = {
         flex-direction: column;
         gap: 24px 0;
 
+        .ant-steps {
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
         .ant-steps-item-tail:after {
             background-color: ${({ theme }) => theme.neutralPalette.gray_4} !important;
         }
