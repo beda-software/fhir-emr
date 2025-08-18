@@ -73,14 +73,16 @@ const tuple: Required<yup.LocaleObject['tuple']> = {
         const { path, value, spec } = params;
         const typeLen = spec.types.length;
         if (Array.isArray(value)) {
-            if (value.length < typeLen)
+            if (value.length < typeLen) {
                 return t`${path} tuple value has too few items, expected a length of ${typeLen} but got ${
                     value.length
                 } for value: \`${yup.printValue(value, true)}\``;
-            if (value.length > typeLen)
+            }
+            if (value.length > typeLen) {
                 return t`${path} tuple value has too many items, expected a length of ${typeLen} but got ${
                     value.length
                 } for value: \`${yup.printValue(value, true)}\``;
+            }
         }
         return yup.ValidationError.formatError(mixed.notType, params);
     },
