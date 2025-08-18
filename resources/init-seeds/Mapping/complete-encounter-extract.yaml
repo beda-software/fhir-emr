@@ -12,16 +12,8 @@ body:
     serviceCode: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='healthcare-service-code').answer.valueString").0
   $body:
     $let:
-      selectedSubjectReference:
-        $call: splitStr
-        $args:
-          - $ CurrentEncounter.subject.reference
-          - "/"
-      selectedPractitionerRoleReferenceSplit:
-        $call: splitStr
-        $args:
-          - $ CurrentEncounter.participant.0.individual.reference
-          - "/"
+      selectedSubjectReference: $ CurrentEncounter.subject
+      selectedPractitionerRoleReference: $ CurrentEncounter.participant.0.individual
     $body:
       resourceType: Bundle
       type: transaction
@@ -39,10 +31,7 @@ body:
             method: POST
           fullUrl: $ "urn:uuid:charge-item-id"
           resource:
-            subject:
-              resourceType: $ selectedSubjectReference.0
-              id: $ selectedSubjectReference.1
-              display: $ CurrentEncounter.subject.display
+            subject: $ selectedSubjectReference
             status: planned
             code:
               text: $ serviceName
@@ -69,12 +58,6 @@ body:
                       value: $ priceTax
             date: $ endDateTime
             status: issued
-            subject:
-              resourceType: $ selectedSubjectReference.0
-              id: $ selectedSubjectReference.1
-              display: $ CurrentEncounter.subject.display
+            subject: $ selectedSubjectReference
             participant:
-              - actor:
-                  resourceType: $ selectedPractitionerRoleReferenceSplit.0
-                  id: $ selectedPractitionerRoleReferenceSplit.1
-                  display: $ CurrentEncounter.participant.0.individual.display
+              - actor: $ selectedPractitionerRoleReference
