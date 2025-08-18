@@ -43,9 +43,8 @@ body:
                 code: "1988-5"
                 display: "CRP"
           subject:
-            id: $ patientId
+            reference: $ "Patient/" + patientId
             display: $ patientName
-            resourceType: Patient
           effective:
             dateTime: $ dateTime
           value:
