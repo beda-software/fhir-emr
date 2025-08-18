@@ -3,9 +3,9 @@ resourceType: Mapping
 body:
   $let:
     answer:
-        $fn: ["linkId", "type"]
-        $name: answer
-        $body: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='"+ linkId + "').answer."+type).0
+      $fn: ["linkId", "type"]
+      $name: answer
+      $body: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='"+ linkId + "').answer."+type).0
   $body:
     $let:
       patientId: $ answer('patientId', 'valueString')
@@ -46,12 +46,10 @@ body:
                     system: http://loinc.org
                     display: WBC
               subject:
-                id: $ patientId
+                reference: $ "Patient/" + patientId
                 display: $ patientName
-                resourceType: Patient
               encounter:
-                id: $ encounterId
-                resourceType: Encounter
+                reference: $ "Encounter/" + encounterId
         - $if: $ neutrophils
           $then:
             request:
@@ -67,12 +65,10 @@ body:
                     system: http://loinc.org
                     display: Neutrophils
               subject:
-                id: $ patientId
+                reference: $ "Patient/" + patientId
                 display: $ patientName
-                resourceType: Patient
               encounter:
-                id: $ encounterId
-                resourceType: Encounter
+                reference: $ "Encounter/" + encounterId
         - $if: $ lymphocytes
           $then:
             request:
@@ -88,12 +84,10 @@ body:
                     system: http://loinc.org
                     display: Lymphocytes
               subject:
-                id: $ patientId
+                reference: $ "Patient/" + patientId
                 display: $ patientName
-                resourceType: Patient
               encounter:
-                id: $ encounterId
-                resourceType: Encounter
+                reference: $ "Encounter/" + encounterId
         - $if: $ platelets
           $then:
             request:
@@ -109,12 +103,10 @@ body:
                     system: http://loinc.org
                     display: Platelets
               subject:
-                id: $ patientId
+                reference: $ "Patient/" + patientId
                 display: $ patientName
-                resourceType: Patient
               encounter:
-                id: $ encounterId
-                resourceType: Encounter
+                reference: $ "Encounter/" + encounterId
         - $if: $ sodium
           $then:
             request:
@@ -130,12 +122,10 @@ body:
                     system: http://loinc.org
                     display: Sodium
               subject:
-                id: $ patientId
+                reference: $ "Patient/" + patientId
                 display: $ patientName
-                resourceType: Patient
               encounter:
-                id: $ encounterId
-                resourceType: Encounter
+                reference: $ "Encounter/" + encounterId
         - $if: $ potassium
           $then:
             request:
@@ -151,12 +141,10 @@ body:
                     system: http://loinc.org
                     display: Potassium
               subject:
-                id: $ patientId
+                reference: $ "Patient/" + patientId
                 display: $ patientName
-                resourceType: Patient
               encounter:
-                id: $ encounterId
-                resourceType: Encounter
+                reference: $ "Encounter/" + encounterId
         - $if: $ co2
           $then:
             request:
@@ -172,12 +160,10 @@ body:
                     system: http://loinc.org
                     display: CO2
               subject:
-                id: $ patientId
+                reference: $ "Patient/" + patientId
                 display: $ patientName
-                resourceType: Patient
               encounter:
-                id: $ encounterId
-                resourceType: Encounter
+                reference: $ "Encounter/" + encounterId
         - $if: $ chloride
           $then:
             request:
@@ -193,12 +179,10 @@ body:
                     system: http://loinc.org
                     display: Chloride
               subject:
-                id: $ patientId
+                reference: $ "Patient/" + patientId
                 display: $ patientName
-                resourceType: Patient
               encounter:
-                id: $ encounterId
-                resourceType: Encounter
+                reference: $ "Encounter/" + encounterId
         - $if: $ bun
           $then:
             request:
@@ -214,12 +198,10 @@ body:
                     system: http://loinc.org
                     display: BUN
               subject:
-                id: $ patientId
+                reference: $ "Patient/" + patientId
                 display: $ patientName
-                resourceType: Patient
               encounter:
-                id: $ encounterId
-                resourceType: Encounter
+                reference: $ "Encounter/" + encounterId
         - $if: $ creatinine
           $then:
             request:
@@ -235,12 +217,10 @@ body:
                     system: http://loinc.org
                     display: Creatinine
               subject:
-                id: $ patientId
+                reference: $ "Patient/" + patientId
                 display: $ patientName
-                resourceType: Patient
               encounter:
-                id: $ encounterId
-                resourceType: Encounter
+                reference: $ "Encounter/" + encounterId
         - $if: $ albumin
           $then:
             request:
@@ -256,12 +236,10 @@ body:
                     system: http://loinc.org
                     display: Albumin
               subject:
-                id: $ patientId
+                reference: $ "Patient/" + patientId
                 display: $ patientName
-                resourceType: Patient
               encounter:
-                id: $ encounterId
-                resourceType: Encounter
+                reference: $ "Encounter/" + encounterId
         - $if: $ bilirubin
           $then:
             request:
@@ -277,12 +255,10 @@ body:
                     system: http://loinc.org
                     display: Bilirubin
               subject:
-                id: $ patientId
+                reference: $ "Patient/" + patientId
                 display: $ patientName
-                resourceType: Patient
               encounter:
-                id: $ encounterId
-                resourceType: Encounter
+                reference: $ "Encounter/" + encounterId
         - $if: $ il6
           $then:
             request:
@@ -298,12 +274,10 @@ body:
                     system: http://loinc.org
                     display: IL-6
               subject:
-                id: $ patientId
+                reference: $ "Patient/" + patientId
                 display: $ patientName
-                resourceType: Patient
               encounter:
-                id: $ encounterId
-                resourceType: Encounter
+                reference: $ "Encounter/" + encounterId
         - $if: $ crp
           $then:
             request:
@@ -319,12 +293,10 @@ body:
                     system: http://loinc.org
                     display: CRP
               subject:
-                id: $ patientId
+                reference: $ "Patient/" + patientId
                 display: $ patientName
-                resourceType: Patient
               encounter:
-                id: $ encounterId
-                resourceType: Encounter
+                reference: $ "Encounter/" + encounterId
         - $if: $ pct
           $then:
             request:
@@ -340,9 +312,7 @@ body:
                     system: http://loinc.org
                     display: PCT
               subject:
-                id: $ patientId
+                reference: $ "Patient/" + patientId
                 display: $ patientName
-                resourceType: Patient
               encounter:
-                id: $ encounterId
-                resourceType: Encounter
+                reference: $ "Encounter/" + encounterId

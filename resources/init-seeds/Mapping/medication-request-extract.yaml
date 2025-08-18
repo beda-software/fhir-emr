@@ -3,17 +3,11 @@ body:
     author: $ Author
     patient: $ Patient
     medicationRef: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='medication').answer.valueReference").0
-    medicationRefSplit:
-      $call: splitStr
-      $args:
-        - $ medicationRef.reference
-        - "/"
-    medicationId: $ medicationRefSplit.1
   $body:
     type: transaction
     entry:
       - request:
-          url: $ "/Medication/" + medicationRefSplit.1
+          url: $ "/" + medicationRef.reference
           method: PATCH
         resource:
           status: inactive
@@ -26,21 +20,16 @@ body:
           status: active
           intent: plan
           requester:
-            id: $ author.id
-            resourceType: $ author.resourceType
+            reference: $ author.resourceType + "/" + author.id
             display:
               $switch: $ author.resourceType
               Organization: $ author.name
               $default: $ author.name.0.given.0 + " " + author.name.0.family
           subject:
-            id: $ patient.id
-            resourceType: Patient
+            reference: $ "Patient/" + patient.id
             display: $ patient.name.0.given.0 + " " + patient.name.0.family
           medication:
-            Reference:
-              resourceType: $ medicationRefSplit.0
-              id: $ medicationRefSplit.1
-              display: $ medicationRef.display
+            Reference: $ medicationRef
     resourceType: Bundle
 id: medication-request-extract
 type: JUTE

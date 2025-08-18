@@ -24,13 +24,10 @@ body:
           note:
             - text: $ noteContent
               author:
-                Reference:
-                  id: $ authorId
-                  display: $ authorName
-                  resourceType: Practitioner
+                reference: $ "Practitioner/" + authorId
+                display: $ authorName
           subject:
-            id: $ patientId
-            resourceType: Patient
+            reference: $ "Patient/" + patientId
           resourceType: Observation
     resourceType: Bundle
 id: patient-note-create-extract

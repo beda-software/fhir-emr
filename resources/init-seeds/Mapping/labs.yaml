@@ -30,12 +30,10 @@ body:
                     system: http://loinc.org
                     display: IL-6
               subject:
-                id: $ patientId
+                reference: $ "Patient/" + patientId
                 display: $ patientName
-                resourceType: Patient
               encounter:
-                id: $ encounterId
-                resourceType: Encounter
+                reference: $ "Encounter/" + encounterId
               value:
                 Quantity:
                   value: $ il6
@@ -54,14 +52,11 @@ body:
                     system: http://loinc.org
                     display: CRP
               subject:
-                id: $ patientId
+                reference: $ "Patient/" + patientId
                 display: $ patientName
-                resourceType: Patient
               encounter:
-                id: $ encounterId
-                resourceType: Encounter
+                reference: $ "Encounter/" + encounterId
               value:
                 Quantity:
                   value: $ crp
                   unit: pg/ml
-       

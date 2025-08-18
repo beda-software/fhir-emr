@@ -58,15 +58,5 @@ body:
               healthcareService:
                 $map: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='services').answer.valueReference")
                 $as: serviceRef
-                $body:
-                  $let:
-                    selectedHealthcareServiceReferenceSplit:
-                      $call: splitStr
-                      $args:
-                        - $ serviceRef.reference
-                        - "/"
-                  $body:
-                    resourceType: $ selectedHealthcareServiceReferenceSplit.0
-                    id: $ selectedHealthcareServiceReferenceSplit.1
-                    display: $ serviceRef.display
+                $body: $ serviceRef
       $call: concat

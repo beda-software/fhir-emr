@@ -21,11 +21,6 @@ body:
         $args:
           - $ selectedPractitionerRoleReference.reference
           - "/"
-      selectedHealthcareServiceReferenceSplit:
-        $call: splitStr
-        $args:
-          - $ selectedHealthcareServiceReference.reference
-          - "/"
     $body:
       $let:
         patientId: $ predefinedPatientId || selectedPatientReferenceSplit.1
@@ -46,28 +41,20 @@ body:
                       - actor:
                           $if: $ selectedPatientReference
                           $then:
-                            resourceType: $ selectedPatientReferenceSplit.0
-                            id: $ selectedPatientReferenceSplit.1
-                            display: $ selectedPatientReference.display
+                            reference: $ selectedPatientReference
                           $else:
-                            id: $ patientId
-                            resourceType: Patient
+                            reference: $ "Patient/" + patientId
                         status: accepted
                       - actor:
                           $if: $ selectedPractitionerRoleReference
                           $then:
-                            resourceType: $ selectedPractitionerRoleReferenceSplit.0
-                            id: $ selectedPractitionerRoleReferenceSplit.1
-                            display: $ selectedPractitionerRoleReference.display
+                            reference: $ selectedPractitionerRoleReference
                           $else:
-                            resourceType: PractitionerRole
-                            id: $ practitionerRoleId
+                            reference: $ "PractitionerRole/" + practitionerRoleId
                             display: $ predefinedPractitionerRoleDisplay
                         status: accepted
                       - actor:
-                          resourceType: $ selectedHealthcareServiceReferenceSplit.0
-                          id: $ selectedHealthcareServiceReferenceSplit.1
-                          display: $ selectedHealthcareServiceReference.display
+                          reference: $ selectedHealthcareServiceReference
                         status: accepted
                     status: pending
                     start: $ startDateTime

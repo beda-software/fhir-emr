@@ -35,8 +35,7 @@ body:
           resourceType: Role
           name: "patient"
           user:
-            resourceType: User
-            id: $ federatedIdentity.value
+            reference: $ "User/" + federatedIdentity.value
           links:
             patient:
               uri: $ "urn:uuid:patient-id"

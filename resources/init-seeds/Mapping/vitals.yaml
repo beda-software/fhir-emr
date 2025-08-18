@@ -39,12 +39,10 @@ body:
                     system: http://loinc.org
                     display: Body temperature
               subject:
-                id: $ patientId
+                reference: $ "Patient/" + patientId
                 display: $ patientName
-                resourceType: Patient
               encounter:
-                id: $ encounterId
-                resourceType: Encounter
+                reference: $ "Encounter/" + encounterId
               value:
                 Quantity:
                   value: $ temperature
@@ -64,12 +62,10 @@ body:
                     system: http://loinc.org
                     display: Blood pressure
               subject:
-                id: $ patientId
+                reference: $ "Patient/" + patientId
                 display: $ patientName
-                resourceType: Patient
               encounter:
-                id: $ encounterId
-                resourceType: Encounter
+                reference: $ "Encounter/" + encounterId
               bodySite:
                 $if: $ bloodPressureArm || bloodPressurePosition
                 coding:
@@ -109,12 +105,10 @@ body:
                     system: http://loinc.org
                     display: Heart rate
               subject:
-                id: $ patientId
+                reference: $ "Patient/" + patientId
                 display: $ patientName
-                resourceType: Patient
               encounter:
-                id: $ encounterId
-                resourceType: Encounter
+                reference: $ "Encounter/" + encounterId
               value:
                 Quantity:
                   value: $ pulseRate
@@ -134,12 +128,10 @@ body:
                     system: http://loinc.org
                     display: Respiratory rate
               subject:
-                id: $ patientId
+                reference: $ "Patient/" + patientId
                 display: $ patientName
-                resourceType: Patient
               encounter:
-                id: $ encounterId
-                resourceType: Encounter
+                reference: $ "Encounter/" + encounterId
               value:
                 Quantity:
                   value: $ respiratoryRate
@@ -159,12 +151,10 @@ body:
                     system: http://loinc.org
                     display: Oxygen saturation
               subject:
-                id: $ patientId
+                reference: $ "Patient/" + patientId
                 display: $ patientName
-                resourceType: Patient
               encounter:
-                id: $ encounterId
-                resourceType: Encounter
+                reference: $ "Encounter/" + encounterId
               value:
                 Quantity:
                   value: $ oxygenSaturation
@@ -184,12 +174,10 @@ body:
                     system: http://loinc.org
                     display: Body height
               subject:
-                id: $ patientId
+                reference: $ "Patient/" + patientId
                 display: $ patientName
-                resourceType: Patient
               encounter:
-                id: $ encounterId
-                resourceType: Encounter
+                reference: $ "Encounter/" + encounterId
               value:
                 Quantity:
                   value: $ height
@@ -209,12 +197,10 @@ body:
                     system: http://loinc.org
                     display: Body weight
               subject:
-                id: $ patientId
+                reference: $ "Patient/" + patientId
                 display: $ patientName
-                resourceType: Patient
               encounter:
-                id: $ encounterId
-                resourceType: Encounter
+                reference: $ "Encounter/" + encounterId
               value:
                 Quantity:
                   value: $ weight
@@ -229,12 +215,10 @@ body:
               resourceType: Observation
               status: final
               subject:
-                id: $ patientId
+                reference: $ "Patient/" + patientId
                 display: $ patientName
-                resourceType: Patient
               encounter:
-                id: $ encounterId
-                resourceType: Encounter
+                reference: $ "Encounter/" + encounterId
               code:
                 coding:
                   - code: 39156-5

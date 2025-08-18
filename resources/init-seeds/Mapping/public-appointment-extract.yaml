@@ -7,44 +7,35 @@ body:
     startDateTime: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='date-time-slot').answer.valueDateTime").0
     serviceTypeCoding: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='service-type').answer.valueCoding").0
   $body:
-    $let:
-      practitionerRoleReferenceSplit:
-        $call: splitStr
-        $args:
-          - $ practitionerRole.reference
-          - "/"
-    $body:
-      type: transaction
-      entry:
-        - request:
-            url: /Appointment/$book
-            method: POST
-          resource:
-            resourceType: Bundle
-            entry:
-              - resource:
-                  resourceType: Patient
-                  name:
-                    - given:
-                        - $ firstName
-                      family: $ lastName
-                  telecom:
-                    - value: $ mobile
-                      system: phone
-              - resource:
-                  resourceType: Appointment
-                  participant:
-                    - actor:
-                        resourceType: $ practitionerRoleReferenceSplit.0
-                        id: $ practitionerRoleReferenceSplit.1
-                        display: $ practitionerRole.display
-                      status: accepted
-                  status: proposed
-                  start: $ startDateTime
-                  serviceType:
-                    - text: $ serviceTypeCoding.display
-                      coding:
-                        - $ serviceTypeCoding
-      resourceType: Bundle
+    type: transaction
+    entry:
+      - request:
+          url: /Appointment/$book
+          method: POST
+        resource:
+          resourceType: Bundle
+          entry:
+            - resource:
+                resourceType: Patient
+                name:
+                  - given:
+                      - $ firstName
+                    family: $ lastName
+                telecom:
+                  - value: $ mobile
+                    system: phone
+            - resource:
+                resourceType: Appointment
+                participant:
+                  - actor:
+                      reference: $ practitionerRole
+                    status: accepted
+                status: proposed
+                start: $ startDateTime
+                serviceType:
+                  - text: $ serviceTypeCoding.display
+                    coding:
+                      - $ serviceTypeCoding
+    resourceType: Bundle
 id: public-appointment-extract
 resourceType: Mapping

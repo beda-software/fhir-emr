@@ -46,8 +46,7 @@ body:
           appointment:
             $if: $ appointmentId
             $then:
-              - resourceType: Appointment
-                id: $ appointmentId
+              - reference: $ "Appointment/" + appointmentId
           resourceType: Encounter
       - $if: $ appointmentId
         $then:
