@@ -33,8 +33,10 @@ services:
   devbox:
     image: healthsamurai/aidboxone:stable
     depends_on:
-      - devbox-db
-      - build-seeds-init
+      devbox-db:
+        condition: service_started
+      build-seeds-init:
+        condition: service_completed_successfully
     links:
       - "devbox-db:database"
     ports:
@@ -89,6 +91,8 @@ services:
       - /app/init-bundles/demoBundle.json
       - --external-questionnaire-fce-fhir-converter-url
       - http://questionnaire-fce-fhir-converter:3000/to-fhir
+    env_file:
+      - ./env/build-seeds-demo
     depends_on:
       questionnaire-fce-fhir-converter:
         condition: service_healthy
@@ -104,6 +108,8 @@ services:
       - http://root:secret@devbox:8080
       - --external-questionnaire-fce-fhir-converter-url
       - http://questionnaire-fce-fhir-converter:3000/to-fhir
+    env_file:
+      - ./env/build-seeds
     volumes:
       - ./resources/init-seeds:/app/resources
 
@@ -115,6 +121,8 @@ services:
       - http://root:secret@devbox:8080
       - --external-questionnaire-fce-fhir-converter-url
       - http://questionnaire-fce-fhir-converter:3000/to-fhir
+    env_file:
+      - ./env/build-seeds-demo
     volumes:
       - ./resources/demo-seeds:/app/resources
 

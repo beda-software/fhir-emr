@@ -1,6 +1,8 @@
 FHIR_EMR_AUTH_URL="http://localhost:3000/auth"
 SDC_IDE_AUTH_URL="http://localhost:3001/auth"
 
+FHIR_EMR_ADMIN_PASSWORD="password"
+
 EMAIL_PROVIDER=console
 
 DATASEQUENCE_JWT_SECRET=secret

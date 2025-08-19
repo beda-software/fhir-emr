@@ -1,6 +1,5 @@
 id: patient2
 resourceType: User
-password: >-
-  $s0$f0801$LMpyfbkv6WHBT5wNMD3EGw==$1tIoc+3Ja1h56jyLX4WAjiOSCUsRFl4scvAwG4ohhc0=
+password: "${FHIR_EMR_PATIENT_PASSWORD}"
 fhirUser:
   reference: urn:uuid:Patient:patient2
