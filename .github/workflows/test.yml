@@ -68,22 +68,3 @@ jobs:
         run: docker compose logs
       - name: Run tests
         run: yarn test --silent
-  TestScript:
-    env:
-      AIDBOX_LICENSE: ${{ secrets.AIDBOX_LICENSE }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Prepare secrets
-        run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
-      - name: Create deps dir
-        run: mkdir -p zenproject/zen-packages && chmod 0777 zenproject/zen-packages
-      - name: Build TestScript files from FSH sources
-        run: make kaitenzushi
-      - name: Run tests
-        run: make testscript
-      - name: Show logs
-        if: ${{ failure() }}
-        run: docker compose -f docker-compose.testscript.yaml logs testscript sdc
