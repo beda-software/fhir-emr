@@ -14,6 +14,7 @@ import { parseFHIRTime } from '@beda.software/fhir-react';
 import { formatHumanDate, formatHumanDateTime } from './date';
 import { getQuestionItemEnableWhenSchema } from './enableWhen';
 import { evaluate } from './fhirpath';
+import { yupLocale } from './yup-locale';
 
 export function getDisplay(
     value?: AnswerValue,
@@ -198,6 +199,7 @@ export function questionnaireItemsToValidationSchema(
 }
 
 export function questionnaireToValidationSchema(questionnaire: FCEQuestionnaire, customYupTests?: CustomYupTestsMap) {
+    yup.setLocale(yupLocale);
     return questionnaireItemsToValidationSchema(questionnaire.item ?? [], customYupTests);
 }
 
