@@ -16,7 +16,9 @@ body:
           method: PATCH
         resource:
           name: $ visitTypeName
-          duration: $ duration
+          extension:
+            - url: urn:extensions:healthcare-service-duration
+              valueInteger: $ duration
           comment: $ comment
           type:
             - text: $ visitTypeName

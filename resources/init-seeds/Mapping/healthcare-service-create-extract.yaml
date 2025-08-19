@@ -15,7 +15,9 @@ body:
         fullUrl: $ "urn:uuid:healthcare-service-id"
         resource:
           name: $ visitTypeName
-          duration: $ duration
+          extension:
+            - url: urn:extensions:healthcare-service-duration
+              valueInteger: $ duration
           comment: $ comment
           type:
             - text: $ visitTypeName
@@ -47,8 +49,10 @@ body:
                   amount:
                     value: $ priceTax
                     currency: USD
-          healthcareService:
-            uri: $ "urn:uuid:healthcare-service-id"
+          extension:
+            - url: http://beda.software/fhir-extensions/charge-item-healthcare-service
+              valueReference:
+                uri: $ "urn:uuid:healthcare-service-id"
           resourceType: HealthcareService
           meta:
             profile:
