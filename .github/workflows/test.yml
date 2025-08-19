@@ -61,8 +61,6 @@ jobs:
         run: yarn eslint src/
       - name: Check formatting
         run: yarn prettier -c "src/**/*.ts?"
-      - name: Create deps dir
-        run: mkdir -p zenproject/zen-packages && chmod 0777 zenproject/zen-packages
       - name: Run aidbox
         run: make up
       - name: Show logs
