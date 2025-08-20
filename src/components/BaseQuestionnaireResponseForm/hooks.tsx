@@ -10,7 +10,7 @@ import { getFieldErrorMessage } from 'src/components/BaseQuestionnaireResponseFo
 import s from './BaseQuestionnaireResponseForm.module.scss';
 import { FieldLabel } from './FieldLabel';
 
-export function useFieldController<T = unknown>(fieldName: any, questionItem: FCEQuestionnaireItem) {
+export function useFieldController<T = unknown>(fieldName: Array<string | number>, questionItem: FCEQuestionnaireItem) {
     const qrfContext = useQuestionnaireResponseFormContext();
     const { readOnly, hidden, repeats, text, required, entryFormat, helpText } = questionItem;
     // @ts-ignore we can use array as value
@@ -61,7 +61,7 @@ export function useFieldController<T = unknown>(fieldName: any, questionItem: FC
 
     // This is a wrapper for react-select that always wrap single value into array
     // @ts-ignore It's hard to define proper type of onSelect
-    const onSelect = useCallback((option: any) => field.onChange([].concat(option)), [field]);
+    const onSelect = useCallback((option: unknown) => field.onChange([].concat(option)), [field]);
 
     return {
         ...field,

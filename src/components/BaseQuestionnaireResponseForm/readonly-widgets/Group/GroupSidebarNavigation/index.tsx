@@ -1,6 +1,5 @@
 import { Layout } from 'antd';
 import { Content } from 'antd/es/layout/layout';
-import _ from 'lodash';
 import { GroupItemProps, QuestionItems } from 'sdc-qrf';
 import { useTheme } from 'styled-components';
 
