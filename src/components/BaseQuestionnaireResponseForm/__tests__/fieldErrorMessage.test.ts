@@ -26,7 +26,7 @@ describe('Field error message should be relevant and human readable', () => {
     test.each(FIELD_STATE_MESSAGE_MAP)(
         'getFieldErrorMessage returns correctly transformed message',
         (fieldStateMessage) => {
-            const field: ControllerRenderProps<FieldValues, any> = {
+            const field: ControllerRenderProps<FieldValues> = {
                 name: fieldStateMessage.fieldName,
                 value: fieldStateMessage.fieldValue,
                 onChange: () => {

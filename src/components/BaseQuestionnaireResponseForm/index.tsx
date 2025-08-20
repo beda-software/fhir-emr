@@ -36,7 +36,7 @@ import { FormFooterComponentProps, FormFooter } from './FormFooter';
 
 export interface BaseQuestionnaireResponseFormProps {
     formData: QuestionnaireResponseFormData;
-    onSubmit?: (formData: QuestionnaireResponseFormData) => Promise<any>;
+    onSubmit?: (formData: QuestionnaireResponseFormData) => Promise<void>;
     readOnly?: boolean;
     itemControlQuestionItemComponents?: ItemControlQuestionItemComponentMapping;
     itemControlGroupItemComponents?: ItemControlGroupItemComponentMapping;
@@ -215,6 +215,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                     <QuestionnaireResponseFormProvider
                         formValues={formValues}
                         // NOTE: setValue as any is required to speed up performance!
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         setFormValues={(values, fieldPath, value) => (setValue as any)(fieldPath.join('.'), value)}
                         groupItemComponent={groupItemComponent}
                         itemControlGroupItemComponents={itemControlGroupItemComponents}

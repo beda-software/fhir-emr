@@ -7,7 +7,8 @@ import { GroupItemProps, QuestionItems } from 'sdc-qrf';
 import { Title } from 'src/components/Typography';
 
 import { S } from './styles';
-import { RepeatableGroupCard, RepeatableGroups } from '../RepeatableGroups';
+import { RepeatableGroups } from '../RepeatableGroups';
+import { RepeatableGroupCard } from '../RepeatableGroups/RepeatableGroupCard';
 
 interface GroupCardProps extends GroupItemProps {
     variant?: 'main-card' | 'sub-card';

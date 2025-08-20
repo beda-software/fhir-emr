@@ -50,7 +50,7 @@ export function SidebarBottom(props: Props) {
     );
 }
 
-export function renderMenu(items: MenuItem[]): ItemType[] {
+function renderMenu(items: MenuItem[]): ItemType[] {
     return items.map((item) => ({
         key: item.key,
         icon: <S.Icon>{item.icon}</S.Icon>,

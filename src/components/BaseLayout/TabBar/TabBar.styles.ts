@@ -1,4 +1,6 @@
 import { Button, Drawer } from 'antd';
+import type { DrawerProps } from 'antd';
+import type { ComponentType } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -58,7 +60,7 @@ export const S = {
             height: 18px;
         }
     `,
-    Drawer: styled(Drawer as any)`
+    Drawer: styled(Drawer as unknown as ComponentType<DrawerProps>)`
         background-color: ${({ theme }) => theme.neutralPalette.gray_1};
 
         .ant-drawer-body {

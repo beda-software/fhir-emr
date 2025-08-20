@@ -1,4 +1,4 @@
-import { DateSelectArg, EventClickArg } from '@fullcalendar/core';
+import { DateSelectArg, EventClickArg, EventApi } from '@fullcalendar/core';
 import { useCallback, useState } from 'react';
 
 export interface NewAppointmentData {
@@ -8,13 +8,8 @@ export interface NewAppointmentData {
 
 export function useAppointmentEvents() {
     const [newAppointmentData, setNewAppointmentData] = useState<NewAppointmentData | undefined>();
-    const [appointmentDetails, setAppointmentDetails] = useState<EventClickArg['event'] | undefined>();
+    const [appointmentDetails, setAppointmentDetails] = useState<EventApi | undefined>();
     const [editingAppointmentId, setEditingAppointmentId] = useState<string | undefined>();
-
-    // function handleEventChange({ event }: EventChangeArg) {
-    //     // TODO: show confirm modal and discard event change if rejected
-    //     const { id, start, end } = event;
-    // }
 
     const openNewAppointmentModal = useCallback(({ start, end }: DateSelectArg) => {
         setNewAppointmentData({
