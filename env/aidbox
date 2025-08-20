@@ -21,7 +21,7 @@ AIDBOX_STDOUT_PRETTY=all
 
 BOX_FEATURES_FTR_PULL_ENABLE=false
 
-AIDBOX_SDC_ENABLED=false
+AIDBOX_SDC_ENABLED=true
 
 BOX_INIT_BUNDLE=file:///resources/init-bundles/initBundle.json
 
