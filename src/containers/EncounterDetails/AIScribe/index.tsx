@@ -270,7 +270,7 @@ function Extract(props: ExtractProps) {
                             questionnaire: qId,
                             source: { reference: `Communication/${communication.id}` },
                         },
-                        headers: { Authorization: `Bearer ${getToken()}`, 'Content-Type': 'multipart' },
+                        headers: { Authorization: `Bearer ${getToken()}` },
                     });
                 }),
             ),
