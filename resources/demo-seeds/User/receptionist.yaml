@@ -1,0 +1,5 @@
+id: receptionist
+resourceType: User
+password: "${FHIR_EMR_RECEPTIONIST_PASSWORD}"
+fhirUser:
+  reference: urn:uuid:Practitioner:receptionist

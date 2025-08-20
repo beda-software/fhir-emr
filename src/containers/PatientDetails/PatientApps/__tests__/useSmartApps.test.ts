@@ -21,6 +21,7 @@ export async function createAdmin(organization: Partial<Organization> = {}) {
     return ensure(
         await createFHIRResource<Organization>({
             resourceType: 'Organization',
+            name: 'Test Organization',
             ...organization,
         }),
     );

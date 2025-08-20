@@ -1,0 +1,368 @@
+id: medication-knowledge-create
+resourceType: Questionnaire
+name: medication-knowledge-create
+title: medication-knowledge create
+status: active
+mapping:
+  - reference: urn:uuid:Mapping:medication-knowledge-create-extract
+item:
+  - text: Name
+    type: string
+    linkId: name
+  - text: Code
+    type: string
+    linkId: code
+  - text: Packaging type
+    type: choice
+    linkId: packaging-type
+    answerValueSet: http://hl7.org/fhir/ValueSet/medicationknowledge-package-type
+  - text: Dose form
+    type: choice
+    linkId: dose-form
+    answerOption:
+      - valueCoding:
+          code: "46992007"
+          display: Pill
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385018001"
+          display: Oral drops
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385024007"
+          display: Oral suspension
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385025008"
+          display: Oral emulsion
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385032004"
+          display: Syrup
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385038000"
+          display: Oral gel
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385051005"
+          display: Soft capsule
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385055001"
+          display: Tablet
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385064006"
+          display: Pillule
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385088008"
+          display: Dental gel
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385100002"
+          display: Gel
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385104006"
+          display: Shampoo
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385124005"
+          display: Eye drops
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385136004"
+          display: Ear drops
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385152001"
+          display: Nasal drops
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385157007"
+          display: Nasal spray
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385183002"
+          display: Rectal gel
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+  - text: Amount unit
+    type: choice
+    linkId: amount-unit
+    answerOption:
+      - valueCoding:
+          code: "46992007"
+          display: Pill
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385018001"
+          display: Oral drops
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385024007"
+          display: Oral suspension
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385025008"
+          display: Oral emulsion
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385032004"
+          display: Syrup
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385038000"
+          display: Oral gel
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385051005"
+          display: Soft capsule
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385055001"
+          display: Tablet
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385064006"
+          display: Pillule
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385088008"
+          display: Dental gel
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385100002"
+          display: Gel
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385104006"
+          display: Shampoo
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385124005"
+          display: Eye drops
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385136004"
+          display: Ear drops
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385152001"
+          display: Nasal drops
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385157007"
+          display: Nasal spray
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+      - valueCoding:
+          code: "385183002"
+          display: Rectal gel
+          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+  - text: Amount value
+    type: integer
+    linkId: amount-value
+  - item:
+      - text: Ingredient
+        type: choice
+        linkId: ingredientsIngredient
+        answerOption:
+          - valueCoding:
+              code: "1091643"
+              display: azilsartan
+              system: https://mor.nlm.nih.gov
+          - valueCoding:
+              code: "1191"
+              display: aspirin
+              system: https://mor.nlm.nih.gov
+          - valueCoding:
+              code: "327361"
+              display: adalimumab
+              system: https://mor.nlm.nih.gov
+          - valueCoding:
+              code: "1547545"
+              display: pembrolizumab
+              system: https://mor.nlm.nih.gov
+          - valueCoding:
+              code: "1364430"
+              display: apixaban
+              system: https://mor.nlm.nih.gov
+          - valueCoding:
+              code: "342369"
+              display: lenalidomide
+              system: https://mor.nlm.nih.gov
+          - valueCoding:
+              code: "214555"
+              display: etanercept
+              system: https://mor.nlm.nih.gov
+          - valueCoding:
+              code: "1442981"
+              display: ibrutinib
+              system: https://mor.nlm.nih.gov
+          - valueCoding:
+              code: "1232150"
+              display: aflibercept
+              system: https://mor.nlm.nih.gov
+          - valueCoding:
+              code: "1114195"
+              display: rivaroxaban
+              system: https://mor.nlm.nih.gov
+          - valueCoding:
+              code: "1597876"
+              display: nivolumab
+              system: https://mor.nlm.nih.gov
+          - valueCoding:
+              code: "847083"
+              display: ustekinumab
+              system: https://mor.nlm.nih.gov
+      - text: Numerator unit
+        type: choice
+        linkId: numerator-unit
+        answerOption:
+          - valueCoding:
+              code: mg
+              display: Milligram
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: mcg
+              display: Microgram
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: IU
+              display: International Unit
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: mL
+              display: Milliliter
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: L
+              display: Liter
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: drop
+              display: Drop
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: tablet
+              display: Tablet
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: capsule
+              display: Capsule
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: tsp
+              display: Teaspoon
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: tbsp
+              display: Tablespoon
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: cc
+              display: Cubic Centimeter
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: unit
+              display: Unit
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: mEq
+              display: Milliequivalent
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: mOsm
+              display: Milliosmole
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: puff
+              display: Puff
+              system: http://unitsofmeasure.org
+      - text: Numerator value
+        type: decimal
+        linkId: numerator-value
+      - text: Denominator unit
+        type: choice
+        linkId: denominator-unit
+        answerOption:
+          - valueCoding:
+              code: mg
+              display: Milligram
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: mcg
+              display: Microgram
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: IU
+              display: International Unit
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: mL
+              display: Milliliter
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: L
+              display: Liter
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: drop
+              display: Drop
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: tablet
+              display: Tablet
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: capsule
+              display: Capsule
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: tsp
+              display: Teaspoon
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: tbsp
+              display: Tablespoon
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: cc
+              display: Cubic Centimeter
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: unit
+              display: Unit
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: mEq
+              display: Milliequivalent
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: mOsm
+              display: Milliosmole
+              system: http://unitsofmeasure.org
+          - valueCoding:
+              code: puff
+              display: Puff
+              system: http://unitsofmeasure.org
+      - text: Denominator value
+        type: decimal
+        linkId: denominator-value
+    text: Ingredients
+    type: group
+    linkId: ingredients
+    repeats: true
+  - text: Price
+    type: decimal
+    linkId: price
+    unit:
+      code: usd
+      system: http://unitsofmeasure.org
+      display: USD
+
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/medication-knowledge-create

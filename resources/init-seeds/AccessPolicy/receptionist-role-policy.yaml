@@ -1,0 +1,4 @@
+id: receptionist-role-policy
+resourceType: AccessPolicy
+engine: allow
+roleName: receptionist

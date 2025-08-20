@@ -1,0 +1,14 @@
+intent: plan
+status: completed
+subject:
+  reference: urn:uuid:Patient:patient1
+  display: First Patient
+requester:
+  reference: urn:uuid:Practitioner:practitioner1
+  display: Basic-1 Practitioner
+medication:
+  Reference:
+    reference: urn:uuid:Medication:medication-1
+    display: Edarbi 40mg 25 tablets
+id: medication-request-1
+resourceType: MedicationRequest
