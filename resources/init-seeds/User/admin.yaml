@@ -1,0 +1,3 @@
+id: admin
+resourceType: User
+password: "${FHIR_EMR_ADMIN_PASSWORD}"

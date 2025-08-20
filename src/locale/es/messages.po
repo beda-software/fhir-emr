@@ -17,6 +17,170 @@ msgstr ""
 msgid "{0, plural, one {Selected # item} other {Selected # items}}"
 msgstr ""
 
+#: src/utils/yup-locale.ts:8
+msgid "{path} cannot be null"
+msgstr ""
+
+#: src/utils/yup-locale.ts:63
+msgid "{path} field has unspecified keys: {unknown}"
+msgstr ""
+
+#: src/utils/yup-locale.ts:60
+msgid "{path} field must be {value}"
+msgstr ""
+
+#: src/utils/yup-locale.ts:57
+msgid "{path} field must be at earlier than {max}"
+msgstr ""
+
+#: src/utils/yup-locale.ts:56
+msgid "{path} field must be later than {min}"
+msgstr ""
+
+#: src/utils/yup-locale.ts:67
+msgid "{path} field must have at least {min} items"
+msgstr ""
+
+#: src/utils/yup-locale.ts:68
+msgid "{path} field must have less than or equal to {max} items"
+msgstr ""
+
+#: src/utils/yup-locale.ts:6
+msgid "{path} is a required field"
+msgstr ""
+
+#: src/utils/yup-locale.ts:5
+msgid "{path} is invalid"
+msgstr ""
+
+#: src/utils/yup-locale.ts:14
+msgid "{path} must be a `{type}` type, but the final value was: `{0}` (cast from the value `{1}`)."
+msgstr ""
+
+#: src/utils/yup-locale.ts:19
+msgid "{path} must be a `{type}` type, but the final value was: `{0}`."
+msgstr ""
+
+#: src/utils/yup-locale.ts:43
+msgid "{path} must be a lowercase string"
+msgstr ""
+
+#: src/utils/yup-locale.ts:52
+msgid "{path} must be a negative number"
+msgstr ""
+
+#: src/utils/yup-locale.ts:51
+msgid "{path} must be a positive number"
+msgstr ""
+
+#: src/utils/yup-locale.ts:42
+msgid "{path} must be a trimmed string"
+msgstr ""
+
+#: src/utils/yup-locale.ts:44
+msgid "{path} must be a upper case string"
+msgstr ""
+
+#: src/utils/yup-locale.ts:35
+msgid "{path} must be a valid email"
+msgstr ""
+
+#: src/utils/yup-locale.ts:38
+msgid "{path} must be a valid ISO date-time"
+msgstr ""
+
+#: src/utils/yup-locale.ts:40
+msgid "{path} must be a valid ISO date-time with a sub-second precision of exactly {precision} digits"
+msgstr ""
+
+#: src/utils/yup-locale.ts:41
+msgid "{path} must be a valid ISO date-time with UTC \"Z\" timezone"
+msgstr ""
+
+#: src/utils/yup-locale.ts:36
+msgid "{path} must be a valid URL"
+msgstr ""
+
+#: src/utils/yup-locale.ts:37
+msgid "{path} must be a valid UUID"
+msgstr ""
+
+#: src/utils/yup-locale.ts:53
+msgid "{path} must be an integer"
+msgstr ""
+
+#: src/utils/yup-locale.ts:32
+msgid "{path} must be at least {min} characters"
+msgstr ""
+
+#: src/utils/yup-locale.ts:33
+msgid "{path} must be at most {max} characters"
+msgstr ""
+
+#: src/utils/yup-locale.ts:7
+msgid "{path} must be defined"
+msgstr ""
+
+#: src/utils/yup-locale.ts:31
+msgid "{path} must be exactly {length} characters"
+msgstr ""
+
+#: src/utils/yup-locale.ts:50
+msgid "{path} must be greater than {more}"
+msgstr ""
+
+#: src/utils/yup-locale.ts:47
+msgid "{path} must be greater than or equal to {min}"
+msgstr ""
+
+#: src/utils/yup-locale.ts:49
+msgid "{path} must be less than {less}"
+msgstr ""
+
+#: src/utils/yup-locale.ts:48
+msgid "{path} must be less than or equal to {max}"
+msgstr ""
+
+#: src/utils/yup-locale.ts:9
+msgid "{path} must be one of the following values: {values}"
+msgstr ""
+
+#: src/utils/yup-locale.ts:69
+msgid "{path} must have {length} items"
+msgstr ""
+
+#: src/utils/yup-locale.ts:22
+msgid "{path} must match the configured type. The validated value was: `{0}` (cast from the value `{1}`)."
+msgstr ""
+
+#: src/utils/yup-locale.ts:27
+msgid "{path} must match the configured type. The validated value was: `{0}`."
+msgstr ""
+
+#: src/utils/yup-locale.ts:34
+msgid "{path} must match the following: \"{regex}\""
+msgstr ""
+
+#: src/utils/yup-locale.ts:10
+msgid "{path} must not be one of the following values: {values}"
+msgstr ""
+
+#: src/utils/yup-locale.ts:64
+msgid "{path} object contains unknown properties: {properties}"
+msgstr ""
+
+#: src/utils/yup-locale.ts:77
+msgid "{path} tuple value has too few items, expected a length of {typeLen} but got {0} for value: `{1}`"
+msgstr ""
+
+#: src/utils/yup-locale.ts:81
+msgid "{path} tuple value has too many items, expected a length of {typeLen} but got {0} for value: `{1}`"
+msgstr ""
+
+#: src/components/QuestionnairesWizard/hooks.tsx:94
+msgid "{0} was not submitted"
+msgstr "{0} no fue enviado"
+
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/NoteList/index.tsx:55
 msgid "Action"
 msgstr "Acción"
@@ -289,6 +453,7 @@ msgstr "Elija estado"
 #~ msgid "Clear draft"
 #~ msgstr "Borrador claro"
 
+#: src/components/QuestionnaireResponseFormDraft/index.tsx:33
 #: src/containers/PatientDetails/PatientDocument/index.tsx:78
 msgid "Clear draft from local storage and reset form"
 msgstr "Borrar borrador del almacenamiento local y restablecer formulario"
@@ -319,7 +484,7 @@ msgstr "Código"
 msgid "Col (default)"
 msgstr "Columna (predeterminado)"
 
-#: src/components/QuestionnairesWizard/index.tsx:110
+#: src/components/QuestionnairesWizard/components/QuestionnairesWizardFooter/index.tsx:45
 #: src/containers/PatientDetails/PatientDocument/index.tsx:139
 #: src/containers/PatientDetails/PatientDocument/index.tsx:167
 msgid "Complete"
@@ -738,13 +903,13 @@ msgstr "Información General"
 msgid "Glucose"
 msgstr "Glucosa"
 
-#: src/components/QuestionnairesWizard/index.tsx:102
-msgid "Go Back"
-msgstr "Volver"
+#: src/components/QuestionnairesWizard/components/QuestionnairesWizardFooter/index.tsx:34
+#~ msgid "Go Back"
+#~ msgstr "Volver"
 
 #: src/components/QuestionnairesWizard/index.tsx:109
-msgid "Go Forward"
-msgstr "Avanzar"
+#~ msgid "Go Forward"
+#~ msgstr "Avanzar"
 
 #: src/containers/Scheduling/ScheduleCalendar/components/AppointmentDetailsModal/index.tsx:74
 msgid "Go to the encounter"
@@ -978,7 +1143,7 @@ msgstr "Nuevo agendamiento"
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:160
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:186
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:137
-#: src/utils/questionnaire.ts:62
+#: src/utils/questionnaire.ts:63
 msgid "No"
 msgstr "No"
 
@@ -1498,6 +1663,10 @@ msgstr "Tipo de sujeto"
 msgid "Submit"
 msgstr "Enviar"
 
+#: src/components/QuestionnairesWizard/components/QuestionnairesWizardFooter/index.tsx:44
+msgid "Submit and Go Forward"
+msgstr "Presentar y seguir adelante"
+
 #: src/uberComponents/ResourceListPage/actions.tsx:78
 #: src/uberComponents/ResourceListPage/actions.tsx:105
 #: src/uberComponents/ResourceListPage/actions.tsx:146
@@ -1703,7 +1872,7 @@ msgstr "años"
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:159
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:185
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:136
-#: src/utils/questionnaire.ts:62
+#: src/utils/questionnaire.ts:63
 msgid "Yes"
 msgstr "Sí"
 

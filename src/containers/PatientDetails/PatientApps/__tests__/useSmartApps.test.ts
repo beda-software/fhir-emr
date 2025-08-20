@@ -6,10 +6,11 @@ import { ensure, withRootAccess } from '@beda.software/fhir-react';
 import { isSuccess } from '@beda.software/remote-data';
 
 import { useSmartApps } from 'src/containers/PatientDetails/PatientApps/hooks.ts';
-import { createUser } from 'src/containers/PatientList/__tests__/utils.ts';
 import { axiosInstance, createFHIRResource } from 'src/services/fhir.ts';
 import { createPatient, createPractitioner, ensureSave, login } from 'src/setupTests.ts';
 import { matchCurrentUserRole, Role } from 'src/utils/role.ts';
+
+import { createUser } from './utils.ts';
 
 async function renderSmartAppsHook() {
     const { result } = renderHook(() => useSmartApps());
@@ -20,6 +21,7 @@ export async function createAdmin(organization: Partial<Organization> = {}) {
     return ensure(
         await createFHIRResource<Organization>({
             resourceType: 'Organization',
+            name: 'Test Organization',
             ...organization,
         }),
     );

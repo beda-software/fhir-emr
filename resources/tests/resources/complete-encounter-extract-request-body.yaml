@@ -1,8 +1,0 @@
-resourceType: Parameters
-parameter:
-- name: questionnaire
-  resource: !include complete-encounter-questionnaire.yaml
-- name: questionnaire_response
-  resource: !include complete-encounter-questionnaire-response.yaml
-- name: CurrentEncounter
-  resource: !include encounter.yaml

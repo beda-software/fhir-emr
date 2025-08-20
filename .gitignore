@@ -43,13 +43,15 @@ shared/src/locale/**/*.js
 src/locale/**/*.ts
 src/locale/**/*.js
 # Built seeds
-zenproject/seeds.ndjson.gz
+resources/init-bundles/
+resources/demo-bundles/
 
 .clj-kondo/
 .lsp/
 
 .vscode
 
-
-zenproject/zen-packages
 resources/tests/generated/
+tsconfig.node.tsbuildinfo
+vite.config.js
+vite.config.d.ts

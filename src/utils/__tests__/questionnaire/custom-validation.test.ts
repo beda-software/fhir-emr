@@ -15,7 +15,9 @@ const customYupTestsMap: CustomYupTestsMap = {
             name: 'lower-character-set',
             message: () => t`Has at least one lower case letter`,
             test: (value) => {
-                if (!value) return false;
+                if (!value) {
+                    return false;
+                }
                 const hasLowercase = /[a-z]/.test(value);
                 return hasLowercase;
             },
@@ -26,7 +28,9 @@ const customYupTestsMap: CustomYupTestsMap = {
             name: 'lower-character-set',
             message: () => t`Has at least one lower case letter`,
             test: (value) => {
-                if (!value) return false;
+                if (!value) {
+                    return false;
+                }
                 const hasLowercase = /[a-z]/.test(value);
                 return hasLowercase;
             },
@@ -35,7 +39,9 @@ const customYupTestsMap: CustomYupTestsMap = {
             name: 'upper-character-set',
             message: () => t`Has at least one uppercase letter`,
             test: (value) => {
-                if (!value) return false;
+                if (!value) {
+                    return false;
+                }
                 const hasUppercase = /[A-Z]/.test(value);
                 return hasUppercase;
             },
@@ -46,7 +52,9 @@ const customYupTestsMap: CustomYupTestsMap = {
             name: 'lower-character-set',
             message: () => t`Has at least one lower case letter`,
             test: (value) => {
-                if (!value) return false;
+                if (!value) {
+                    return false;
+                }
                 const hasLowercase = /[a-z]/.test(value);
                 return hasLowercase;
             },
@@ -55,7 +63,9 @@ const customYupTestsMap: CustomYupTestsMap = {
             name: 'upper-character-set',
             message: () => t`Has at least one uppercase letter`,
             test: (value) => {
-                if (!value) return false;
+                if (!value) {
+                    return false;
+                }
                 const hasUppercase = /[A-Z]/.test(value);
                 return hasUppercase;
             },
@@ -64,7 +74,9 @@ const customYupTestsMap: CustomYupTestsMap = {
             name: 'number-character-set',
             message: () => t`Has at least one number`,
             test: (value) => {
-                if (!value) return false;
+                if (!value) {
+                    return false;
+                }
                 const hasNumber = /[0-9]/.test(value);
                 return hasNumber;
             },

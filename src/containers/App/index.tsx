@@ -35,10 +35,10 @@ import { InvoiceDetails } from '../InvoiceDetails';
 import { InvoiceList } from '../InvoiceList';
 import { MedicationManagement } from '../MedicationManagement';
 import { NewScheduling } from '../NewScheduling';
+import { MedicationManagementDetail } from '../MedicationManagementDetail';
 import { NotificationPage } from '../NotificationPage';
 import { OrganizationScheduling } from '../OrganizationScheduling';
 import { DocumentPrint } from '../PatientDetails/DocumentPrint';
-import { PatientResourceListExample } from '../PatientResourceListExample';
 import { Prescriptions } from '../Prescriptions';
 import { SetPassword } from '../SetPassword';
 
@@ -167,11 +167,11 @@ function AuthenticatedUserApp({ defaultRoute, extra }: RouteProps) {
                             <Route path="/scheduling" element={<OrganizationScheduling />} />
                             <Route path="/scheduling-new" element={<NewScheduling />} />
                             <Route path="/medications" element={<MedicationManagement />} />
+                            <Route path="/medications/:id/*" element={<MedicationManagementDetail />} />
                             <Route path="/prescriptions" element={<Prescriptions />} />
                             <Route path="/invoices" element={<InvoiceList />} />
                             <Route path="/invoices/:id" element={<InvoiceDetails />} />
                             <Route path="/patients" element={<PatientList />} />
-                            <Route path="/patients-uber" element={<PatientResourceListExample />} />
                             <Route path="/patients/:id/*" element={<PatientDetails />} />
                             <Route path="/patients2/:id/*" element={<NewPatientDetails />} />
                             <Route path="/patients3/:id/*" element={<PatientDetailsCharting />} />
