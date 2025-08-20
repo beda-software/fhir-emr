@@ -169,7 +169,14 @@ export function questionnaireItemsToValidationSchema(
             schema = applyCustomYupTestsToItem(item, schema, customYupTests);
             schema = createSchemaArrayOfValues(yup.object({ date: schema }));
         } else if (item.type === 'time') {
-            schema = yup.string();
+            schema = yup.string().test('time', 'Must be a valid time (HH:mm:ss)', (value) => {
+                if (!value) {
+                    return true;
+                }
+
+                const isoTimeRegex = /([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?/;
+                return isoTimeRegex.test(value);
+            });
             if (item.required) {
                 schema = schema.required();
             }
