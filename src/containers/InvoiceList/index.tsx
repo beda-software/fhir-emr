@@ -143,7 +143,7 @@ export function InvoiceList() {
             searchParams={{
                 _sort: '-_lastUpdated,_id',
                 _count: 10,
-                _include: [
+                '_include:iterate': [
                     'Invoice:patient:Patient',
                     'Invoice:participant:PractitionerRole',
                     'PractitionerRole:practitioner:Practitioner',

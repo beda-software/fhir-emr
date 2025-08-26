@@ -37,7 +37,7 @@ export function useEncounterDetails(props: EncounterDetailsProps) {
         const response = await getFHIRResources<Encounter | PractitionerRole | Practitioner | Patient>('Encounter', {
             _id: encounterId,
             patient: patient.id,
-            _include: [
+            '_include:iterate': [
                 'Encounter:subject',
                 'Encounter:participant:PractitionerRole',
                 'PractitionerRole:practitioner:Practitioner',
