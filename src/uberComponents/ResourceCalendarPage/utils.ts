@@ -158,6 +158,9 @@ export function useCalendarEvents<R extends Resource>(
                         ),
                     ],
                 },
+                qrfProps: {
+                    readOnly: true,
+                },
             },
         }),
         [show, eventDetailsModal.isOpen, eventDetailsModal.close],
