@@ -6,7 +6,7 @@ body:
   - request:
       url: "Appointment"
       method: POST
-    fullUrl: urn:uuid:appointment-id
+    fullUrl: "{{ 'urn:uuid:appointment-id' }}"
     resource:
       status: 'proposed'
       serviceType:
@@ -24,7 +24,7 @@ body:
     resource:
       status: active
       basedOn:
-      - uri: urn:uuid:appointment-id
+      - reference: "Appointment/{{ 'urn:uuid:appointment-id' }}"
       payload:
       - contentReference:
           reference: Questionnaire/chap

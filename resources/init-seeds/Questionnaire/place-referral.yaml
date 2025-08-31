@@ -18,8 +18,7 @@ launchContext:
     type:
       - Practitioner
 mapping:
-  - id: place-referral
-    resourceType: Mapping
+  - reference: Mapping/place-referral
 item:
 - linkId: patient-name
   type: string

@@ -22,10 +22,9 @@ launchContext:
     type:
       - Encounter
 mapping:
-  - id: place-order
-    resourceType: Mapping
+  - reference: Mapping/place-order
 sourceQueries:
-  - localRef: "Bundle#SR"
+  - reference: "#SR"
 contained:
   - resourceType: Bundle
     id: SR
@@ -150,4 +149,4 @@ item:
     - code: barcode
   initialExpression:
     language: text/fhirpath
-    expression: "'BEDA1212-' &  (%SR.entry.resource.total+1).select('00000'&toString()).toChars().skip(count()-6).join()"
+    expression: "'BEDA0109-' &  (%SR.entry.resource.total+1).select('00000'&toString()).toChars().skip(count()-6).join()"
