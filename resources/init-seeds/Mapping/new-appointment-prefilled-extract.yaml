@@ -1,0 +1,36 @@
+resourceType: Mapping
+id: new-appointment-prefilled-extract
+body:
+  $let:
+    selectedPatientReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patient').answer.valueReference").0
+    practitionerRoleDisplay: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-name').answer.valueString").0
+    practitionerRoleId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='predefined-practitioner-role-id').answer.valueString").0
+    healthcareServiceDisplay: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='predefined-healthcare-service-name').answer.valueString").0
+    healthcareServiceId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='predefined-healthcare-service-id').answer.valueString").0
+    startDateTime: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='start-datetime').answer.valueDateTime").0
+  $body:
+    resourceType: Bundle
+    type: transaction
+    entry:
+      - request:
+          url: /Appointment/$book
+          method: POST
+        resource:
+          resourceType: Bundle
+          entry:
+            - resource:
+                resourceType: Appointment
+                participant:
+                  - actor:
+                      reference: $ selectedPatientReference
+                    status: accepted
+                  - actor:
+                      reference: $ "PractitionerRole/" + practitionerRoleId
+                      display: $ practitionerRoleDisplay
+                    status: accepted
+                  - actor:
+                      reference: $ "HealthcareService/" + healthcareServiceId
+                      display: $ healthcareServiceDisplay
+                    status: accepted
+                status: pending
+                start: $ startDateTime

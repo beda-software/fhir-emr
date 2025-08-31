@@ -5075,11 +5075,6 @@ aggregate-error@^3.0.0:
     clean-stack "^2.0.0"
     indent-string "^4.0.0"
 
-aidbox-forms@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/aidbox-forms/-/aidbox-forms-0.0.5.tgz#8f6e62a75b40903eeceaa45c7339eaa3f5bba4a9"
-  integrity sha512-n96UKOQVff2Y/WPw3+n0S6O4jel3lGRpw7z1aBLn0mQv7EQxq2gDSIorpxNCywW/QZqFBLEyzZ0lZjcGvo4SKA==
-
 aidbox-react@^1.11.2:
   version "1.11.2"
   resolved "https://registry.yarnpkg.com/aidbox-react/-/aidbox-react-1.11.2.tgz#579ec35d67c85b7e8e014fdb99dca11dbd0aff49"
@@ -12171,10 +12166,10 @@ scroll-into-view-if-needed@^3.1.0:
   dependencies:
     compute-scroll-into-view "^3.0.2"
 
-sdc-qrf@^1.0.0-beta.15:
-  version "1.0.0-beta.15"
-  resolved "https://registry.yarnpkg.com/sdc-qrf/-/sdc-qrf-1.0.0-beta.15.tgz#542fb1456a8fd82e8c1d6eb142a5ffdc95761c0a"
-  integrity sha512-LzpAbkpd0QY/O8kY118ujFeQMpNMGqn0aJFQvYryy54FAvDdEog/nudadkfXJsBGA5xY1doIx3QxiDjIcYKLUA==
+sdc-qrf@^1.0.0-beta.18:
+  version "1.0.0-beta.18"
+  resolved "https://registry.yarnpkg.com/sdc-qrf/-/sdc-qrf-1.0.0-beta.18.tgz#c6809e2e0aa6ec19a46fcfd8ce192442169b85cc"
+  integrity sha512-3nSFdROvgio1wH87N25Uiy+UaNPrXeTIH+y9BQA88+eTdUjIx2cjU8ggC1Q1KPtSyDOj2B5gUNpX3XQcof/KIg==
   dependencies:
     classnames "^2.5.1"
     fhirpath "^3.18.0"
@@ -13713,10 +13708,10 @@ yocto-queue@^1.0.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-1.0.0.tgz#7f816433fb2cbc511ec8bf7d263c3b58a1a3c251"
   integrity sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==
 
-yup@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/yup/-/yup-1.2.0.tgz#9e51af0c63bdfc9be0fdc6c10aa0710899d8aff6"
-  integrity sha512-PPqYKSAXjpRCgLgLKVGPA33v5c/WgEx3wi6NFjIiegz90zSwyMpvTFp/uGcVnnbx6to28pgnzp/q8ih3QRjLMQ==
+yup@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/yup/-/yup-1.7.0.tgz#5d2feeccc1725c39bfed6ec677cc0622527dafaf"
+  integrity sha512-VJce62dBd+JQvoc+fCVq+KZfPHr+hXaxCcVgotfwWvlR0Ja3ffYKaJBT8rptPOSKOGJDCUnW2C2JWpud7aRP6Q==
   dependencies:
     property-expr "^2.0.5"
     tiny-case "^1.0.3"

@@ -1,0 +1,36 @@
+body:
+  $let:
+    author: $ Author
+    patient: $ Patient
+    medicationRef: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='medication').answer.valueReference").0
+  $body:
+    type: transaction
+    entry:
+      - request:
+          url: $ "/" + medicationRef.reference
+          method: PATCH
+        resource:
+          status: inactive
+      - request:
+          url: /MedicationRequest
+          method: POST
+        fullUrl: $ "urn:uuid:medication-request-id"
+        resource:
+          resourceType: MedicationRequest
+          status: active
+          intent: plan
+          requester:
+            reference: $ author.resourceType + "/" + author.id
+            display:
+              $switch: $ author.resourceType
+              Organization: $ author.name
+              $default: $ author.name.0.given.0 + " " + author.name.0.family
+          subject:
+            reference: $ "Patient/" + patient.id
+            display: $ patient.name.0.given.0 + " " + patient.name.0.family
+          medication:
+            Reference: $ medicationRef
+    resourceType: Bundle
+id: medication-request-extract
+type: JUTE
+resourceType: Mapping

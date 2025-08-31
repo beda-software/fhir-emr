@@ -1,0 +1,23 @@
+id: provenance-by-source
+resourceType: AidboxQuery
+query: >-
+  SELECT
+    resource || jsonb_build_object('resourceType', 'Provenance', 'id', id)
+  AS resource
+  FROM provenance
+  WHERE EXISTS (
+    SELECT 1
+    FROM jsonb_array_elements(resource->'entity') AS entity
+    WHERE entity->'what'->>'uri' LIKE '%' || {{params.source}} || '%'
+    OR
+     (
+      entity->'what'->>'id' LIKE '%' || split_part({{params.source}}, '/', 2) || '%'
+      AND
+      entity->'what'->>'resourceType' LIKE '%' || split_part({{params.source}}, '/', 1) || '%'
+     )
+  )
+params:
+  source:
+    type: "string"
+    format: "%%%s%%"
+    isRequired: true

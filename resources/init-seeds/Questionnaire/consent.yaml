@@ -1,0 +1,55 @@
+id: consent
+resourceType: Questionnaire
+title: Sign-off Consent
+status: active
+subjectType:
+  - Encounter
+  - Patient
+mapping:
+  - reference: urn:uuid:Mapping:consent-extract
+name: Consent
+item:
+  - text: Practitioner
+    type: reference
+    referenceResource:
+      - Practitioner
+    required: true
+    repeats: false
+    linkId: practitioner
+    answerExpression:
+      language: application/x-fhir-query
+      expression: "Practitioner?_has:PractitionerRole:practitioner:role=doctor"
+    choiceColumn:
+      - forDisplay: true
+        path: name.given.first() + ' ' + name.family
+  - text: Service
+    type: reference
+    referenceResource:
+      - Endpoint
+    required: true
+    repeats: false
+    linkId: service
+    answerExpression:
+      language: application/x-fhir-query
+      expression: "Endpoint?identifier=https://fhir.emr.beda.software/CodeSystem/consent-subject|&status=active"
+    choiceColumn:
+      - forDisplay: true
+        path: name
+  - text: Provision
+    type: choice
+    required: true
+    repeats: false
+    linkId: provision
+    answerOption:
+      - valueCoding:
+          code: "deny"
+          system: http://hl7.org/fhir/consent-provision-type
+          display: Deny
+      - valueCoding:
+          code: "permit"
+          system: http://hl7.org/fhir/consent-provision-type
+          display: Permit
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/consent

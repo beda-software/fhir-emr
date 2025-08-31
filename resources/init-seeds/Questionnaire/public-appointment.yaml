@@ -1,0 +1,57 @@
+id: public-appointment
+resourceType: Questionnaire
+name: public-appointment
+title: Public appointment
+status: active
+mapping:
+  - reference: urn:uuid:Mapping:public-appointment-extract
+item:
+  - linkId: first-name
+    type: string
+    text: First name
+    required: true
+  - linkId: last-name
+    type: string
+    text: Last name
+    required: true
+  - linkId: mobile
+    type: string
+    text: Phone number
+    itemControl:
+      coding:
+        - code: phoneWidget
+  - text: Practitioner
+    type: reference
+    referenceResource:
+      - PractitionerRole
+    required: true
+    linkId: practitioner-role
+    answerExpression:
+      language: application/x-fhir-query
+      expression: "PractitionerRole?_assoc=practitioner"
+    choiceColumn:
+      - forDisplay: true
+        path: >-
+          practitioner.resource.name.given.first() + ' ' + 
+          practitioner.resource.name.family + ' - ' + specialty.first().coding.display
+  - text: Type
+    linkId: service-type
+    type: choice
+    hidden: true
+    required: true
+    initial:
+      - valueCoding:
+          system: http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type
+          code: consultation
+          display: The first appointment
+  - linkId: date-time-slot
+    text: Date and Time
+    type: dateTime
+    required: true
+    itemControl:
+      coding:
+        - code: date-time-slot
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/

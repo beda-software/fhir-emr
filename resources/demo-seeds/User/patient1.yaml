@@ -1,0 +1,5 @@
+id: patient1
+resourceType: User
+password: "${FHIR_EMR_PATIENT_PASSWORD}"
+fhirUser:
+  reference: urn:uuid:Patient:patient1

@@ -1,0 +1,100 @@
+body:
+  $let:
+    qrId: $ fhirpath("QuestionnaireResponse.id")
+    qrVersion: $ fhirpath("QuestionnaireResponse.meta.versionId")
+    qrLastUpdated: >-
+      $ fhirpath("QuestionnaireResponse.meta.lastUpdated") || fhirpath("QuestionnaireResponse.repeat(item).where(linkId='dateTime').answer.valueDateTime").0
+    medicationStatementId: $ fhirpath("Provenance.target.where(resourceType='MedicationStatement').id").0
+    author: $ Author
+    encounterId: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='encounterId').answer.valueString").0
+    patientId: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.valueString").0
+    patientName: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.valueString").0
+    medication: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='medication').answer.valueCoding").0
+    startDate: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='start-date').answer.valueDate").0
+    endDate: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='end-date').answer.valueDate").0
+    dosage: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='dosage').answer.valueString").0
+    notes: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='notes').answer.valueString").0
+  $body:
+    type: transaction
+    entry:
+      - request:
+          $if: $ medicationStatementId
+          $then:
+            url: $ "/MedicationStatement/" + medicationStatementId
+            method: PUT
+          $else:
+            url: /MedicationStatement
+            method: POST
+        fullUrl: $ "urn:uuid:medication-id"
+        resource:
+          status: active
+          subject:
+            reference: $ "Patient/" + patientId
+            display: $ patientName
+          context:
+            $if: encounterId
+            $then:
+              reference: $ "Encounter/" + encounterId
+          medication:
+            CodeableConcept:
+              coding:
+                - $ medication
+          dosage:
+            - text: $ dosage
+          note:
+            - text: $ note
+          effective:
+            Period:
+              start: $ startDate
+              end: $ endDate
+          resourceType: MedicationStatement
+      - request:
+          url: /Provenance
+          method: POST
+        resource:
+          resourceType: Provenance
+          target:
+            - uri: $ "urn:uuid:medication-id"
+          recorded: $ qrLastUpdated
+          activity:
+            $if: $ medicationStatementId
+            $then:
+              coding:
+                - code: "UPDATE"
+                  display: "revise"
+                  system: "http://terminology.hl7.org/CodeSystem/v3-DataOperation"
+            $else:
+              coding:
+                - code: "CREATE"
+                  display: "create"
+                  system: "http://terminology.hl7.org/CodeSystem/v3-DataOperation"
+          agent:
+            - who:
+                reference: $ author.resourceType + "/" + author.id
+                display:
+                  $switch: $ author.resourceType
+                  Organization: $ author.name
+                  $default: $ author.name.0.given.0 + " " + author.name.0.family
+          entity:
+            - role: source
+              what:
+                uri: $ "QuestionnaireResponse/" + qrId + "/_history/" + qrVersion
+    resourceType: Bundle
+id: medication-statement-extract
+resourceType: Mapping

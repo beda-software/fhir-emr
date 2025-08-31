@@ -1,0 +1,115 @@
+body:
+  $let:
+    qrId: $ fhirpath("QuestionnaireResponse.id")
+    qrVersion: $ fhirpath("QuestionnaireResponse.meta.versionId")
+    qrLastUpdated: >-
+      $ fhirpath("QuestionnaireResponse.meta.lastUpdated") || fhirpath("QuestionnaireResponse.repeat(item).where(linkId='dateTime').answer.valueDateTime").0
+    conditionId: $ fhirpath("Provenance.target.where(resourceType='Condition').id").0
+    author: $ Author
+    patientId: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.valueString").0
+    patientName: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.valueString").0
+    score: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='anxiety-score').answer.valueInteger").0
+  $body:
+    type: transaction
+    entry:
+      - request:
+          url: /Observation
+          method: POST
+        fullUrl: $ "urn:uuid:observation-id"
+        resource:
+          resourceType: Observation
+          status: final
+          subject:
+            reference: $ "Patient/" + patientId
+            display: $ patientName
+          code:
+            coding:
+              - code: "70274-6"
+                display: "GAD-7 Anxiety Severity Score"
+                system: "http://loinc.org"
+          value:
+            integer: $ score
+          interpretation:
+            - text:
+                $if: $ score <= 4
+                $then: "Minimal anxiety"
+                $else:
+                  $if: $ score <= 9
+                  $then: "Mild anxiety"
+                  $else:
+                    $if: $ score <= 14
+                    $then: "Moderate anxiety"
+                    $else: "Severe anxiety"
+      - request:
+          $if: $ conditionId
+          $then:
+            url: $ "/Condition/" + conditionId
+            method: PUT
+          $else:
+            url: /Condition
+            method: POST
+        fullUrl: $ "urn:uuid:condition-id"
+        resource:
+          resourceType: Condition
+          recordedDate: $ qrLastUpdated
+          clinicalStatus:
+            coding:
+              - code: "active"
+                system: "http://terminology.hl7.org/CodeSystem/condition-clinical"
+          subject:
+            reference: $ "Patient/" + patientId
+            display: $ patientName
+          evidence:
+            - detail:
+                - uri: $ "urn:uuid:observation-id"
+          code:
+            text:
+              $if: $ score <= 4
+              $then: "Minimal anxiety"
+              $else:
+                $if: $ score <= 9
+                $then: "Mild anxiety"
+                $else:
+                  $if: $ score <= 14
+                  $then: "Moderate anxiety"
+                  $else: "Severe anxiety"
+      - request:
+          url: /Provenance
+          method: POST
+        resource:
+          resourceType: Provenance
+          target:
+            - uri: $ "urn:uuid:condition-id"
+          recorded: $ qrLastUpdated
+          activity:
+            $if: $ conditionId
+            $then:
+              coding:
+                - code: "UPDATE"
+                  display: "revise"
+                  system: "http://terminology.hl7.org/CodeSystem/v3-DataOperation"
+            $else:
+              coding:
+                - code: "CREATE"
+                  display: "create"
+                  system: "http://terminology.hl7.org/CodeSystem/v3-DataOperation"
+          agent:
+            - who:
+                reference: $ author.resourceType + "/" + author.id
+                display:
+                  $switch: $ author.resourceType
+                  Organization: $ author.name
+                  $default: $ author.name.0.given.0 + " " + author.name.0.family
+          entity:
+            - role: source
+              what:
+                uri: $ "QuestionnaireResponse/" + qrId + "/_history/" + qrVersion
+    resourceType: Bundle
+id: gad-7-extract
+resourceType: Mapping

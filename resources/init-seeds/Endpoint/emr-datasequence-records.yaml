@@ -1,0 +1,15 @@
+id: emr-datasequence-records
+resourceType: Endpoint
+identifier:
+  - system: "https://fhir.emr.beda.software/CodeSystem/consent-subject"
+    value: "emr-datasequence-records"
+status: "active"
+name: "Activity Data"
+address: "https://ingest.emr.beda.software"
+connectionType:
+  system: "https://spec.openapis.org/oas/v3.1.0"
+  code: "openapi"
+payloadType:
+  - coding:
+      - system: "http://terminology.hl7.org/CodeSystem/endpoint-payload-type"
+        code: "urn:ihe:pcc:xphr:2007"

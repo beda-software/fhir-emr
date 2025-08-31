@@ -1,125 +1,111 @@
-import { Trans, t } from '@lingui/macro';
-import _ from 'lodash';
-import { Outlet, Route, Routes, useParams } from 'react-router-dom';
+import { t } from '@lingui/macro';
+import { ColumnsType } from 'antd/lib/table';
+import { InvoiceLineItem, Bundle, Invoice, ChargeItemDefinition } from 'fhir/r4b';
+import { useParams } from 'react-router-dom';
 
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
+import { extractBundleResources } from '@beda.software/fhir-react';
 
-import { Table } from 'src/components';
-import { PageContainer } from 'src/components/BaseLayout/PageContainer';
-import { Spinner } from 'src/components/Spinner';
-import { getFHIRReferenceResourceId } from 'src/utils/reference';
+import { getInvoiceStatusHumanized } from 'src/containers/InvoiceList/components/InvoiceStatus';
+import { ResourceListPage } from 'src/uberComponents/ResourceListPage';
+import { ReportColumn } from 'src/uberComponents/ResourceListPage/types';
+import { compileAsArray, compileAsFirst } from 'src/utils';
+import { formatHumanDateTime } from 'src/utils/date';
+import { renderHumanName } from 'src/utils/fhir';
 
-import { InvoiceDetailsHeader } from './components/InvoiceDetailsHeader';
-import { useInvoiceDetails, useInvoiceLineItems } from './hooks';
-import { S } from './InvoiceDetails.styles';
-import { InvoiceDetailsLineItemsProps } from './types';
 import { formatMoney } from '../InvoiceList/utils';
+
+const getLineItems = compileAsArray<Bundle, InvoiceLineItem>('Bundle.entry.resource.lineItem');
+const getTotalAmount = compileAsFirst<Invoice, number>('Invoice.lineItem.priceComponent.amount.value.sum()');
+
+// FHIRPath helpers for table columns
+const getLineItemName = compileAsFirst<InvoiceLineItem, string>(
+    '(chargeItemCodeableConcept.coding.display | chargeItemReference.display).first()',
+);
+const getLineItemRate = compileAsFirst<InvoiceLineItem, number>(
+    "priceComponent.where(type = 'base').amount.value.sum()",
+);
+const getLineItemTax = compileAsFirst<InvoiceLineItem, number>("priceComponent.where(type = 'tax').amount.value.sum()");
+const getLineItemAmount = compileAsFirst<InvoiceLineItem, number>('priceComponent.amount.value.sum()');
+
+function getReportColumns(bundle: Bundle): ReportColumn[] {
+    const resources = extractBundleResources(bundle);
+
+    const invoice = resources.Invoice[0];
+    const patient = resources.Patient[0];
+    const practitioner = resources.Practitioner[0];
+
+    const amount = invoice ? getTotalAmount(invoice) : undefined;
+
+    return [
+        { title: t`Patient`, value: renderHumanName(patient?.name?.[0]) },
+        { title: t`Practitioner`, value: renderHumanName(practitioner?.name?.[0]) },
+        { title: t`Date`, value: formatHumanDateTime(invoice?.date) },
+        { title: t`Status`, value: getInvoiceStatusHumanized(invoice) },
+        { title: t`Total`, value: amount ? formatMoney(amount) : '-' },
+    ];
+}
+
+interface Record {
+    resource: InvoiceLineItem;
+    bundle: Bundle<ChargeItemDefinition>;
+}
+
+function getTableColumns(): ColumnsType<Record> {
+    return [
+        {
+            title: t`Name`,
+            dataIndex: 'name',
+            key: 'name',
+            render: (_text, record) => getLineItemName(record.resource) ?? '-',
+        },
+        {
+            title: t`Quantity`,
+            dataIndex: 'quantity',
+            key: 'quantity',
+            width: '10%',
+            render: (_text, record) => 1,
+        },
+        {
+            title: t`Rate`,
+            dataIndex: 'rate',
+            key: 'rate',
+            width: '15%',
+            render: (_text, record) => formatMoney(getLineItemRate(record.resource) ?? 0),
+        },
+        {
+            title: t`Tax`,
+            dataIndex: 'tax',
+            key: 'tax',
+            width: '15%',
+            render: (_text, record) => formatMoney(getLineItemTax(record.resource) ?? 0),
+        },
+        {
+            title: t`Amount`,
+            dataIndex: 'amount',
+            key: 'amount',
+            width: '15%',
+            render: (_text, record) => formatMoney(getLineItemAmount(record.resource) ?? 0),
+        },
+    ];
+}
 
 export function InvoiceDetails() {
     const { id } = useParams<{ id: string }>();
-    const { invoiceDetailsResponse } = useInvoiceDetails(id);
-
     return (
-        <RenderRemoteData remoteData={invoiceDetailsResponse} renderLoading={Spinner}>
-            {({ invoice, patient, practitioner }) => (
-                <PageContainer
-                    layoutVariant="with-tabs"
-                    title={<Trans>Medical Services Invoice</Trans>}
-                    headerContent={
-                        <InvoiceDetailsHeader invoice={invoice} patient={patient} practitioner={practitioner} />
-                    }
-                >
-                    <Routes>
-                        <Route
-                            path="/"
-                            element={
-                                <>
-                                    <Outlet />
-                                </>
-                            }
-                        >
-                            <Route path="/" element={<LineItemsTable invoice={invoice} />} />
-                        </Route>
-                    </Routes>
-                </PageContainer>
-            )}
-        </RenderRemoteData>
-    );
-}
-
-function LineItemsTable(props: InvoiceDetailsLineItemsProps) {
-    const [response] = useInvoiceLineItems(props);
-    const lineItems = props.invoice?.lineItem?.map((lineItem) => {
-        return {
-            id: getFHIRReferenceResourceId(lineItem.chargeItemReference),
-            tax: lineItem.priceComponent?.filter((priceComponent) => priceComponent.type === 'tax'),
-            base: lineItem.priceComponent?.filter((priceComponent) => priceComponent.type === 'base'),
-            amount: _.sum(lineItem.priceComponent?.map((priceComponent) => priceComponent.amount?.value)),
-        };
-    });
-
-    return (
-        <RenderRemoteData remoteData={response} renderLoading={Spinner}>
-            {(data) => (
-                <Table
-                    pagination={false}
-                    bordered
-                    dataSource={lineItems}
-                    columns={[
-                        {
-                            title: t`Item`,
-                            dataIndex: 'item',
-                            key: 'item',
-                            render: (_text, resource) => {
-                                const currentName = data.find((item) => item.id === resource.id)?.serviceName;
-                                return currentName;
-                            },
-                        },
-                        {
-                            title: t`Quantity`,
-                            dataIndex: 'quantity',
-                            key: 'quantity',
-                            align: 'right',
-                            render: () => 1,
-                        },
-                        {
-                            title: t`Rate`,
-                            dataIndex: 'rate',
-                            key: 'rate',
-                            align: 'right',
-                            render: (_text, resource) => formatMoney(resource.base?.[0]?.amount?.value ?? 0),
-                        },
-                        {
-                            title: t`Tax`,
-                            dataIndex: 'tax',
-                            key: 'tax',
-                            align: 'right',
-                            render: (_text, resource) => formatMoney(resource.tax?.[0]?.amount?.value ?? 0),
-                        },
-                        {
-                            title: t`Amount`,
-                            dataIndex: 'amount',
-                            key: 'amount',
-                            align: 'right',
-                            render: (_text, resource) => formatMoney(resource.amount),
-                        },
-                    ]}
-                    footer={() => (
-                        <InvoiceTableFooter totalAmount={_.sum(lineItems?.map((lineItem) => lineItem.amount))} />
-                    )}
-                />
-            )}
-        </RenderRemoteData>
-    );
-}
-
-function InvoiceTableFooter({ totalAmount }: { totalAmount: number }) {
-    return (
-        <S.InvoiceTableFooterContainer>
-            <div>
-                <Trans>Total</Trans>
-            </div>
-            <div>{formatMoney(totalAmount)}</div>
-        </S.InvoiceTableFooterContainer>
+        <ResourceListPage<Invoice>
+            headerTitle={t`Medical Services Invoice`}
+            extractPrimaryResources={getLineItems as any}
+            searchParams={{
+                _id: id,
+                _include: [
+                    'Invoice:subject:Patient',
+                    'Invoice:participant:PractitionerRole',
+                    'PractitionerRole:practitioner:Practitioner',
+                ],
+            }}
+            resourceType="Invoice"
+            getTableColumns={getTableColumns as any}
+            getReportColumns={getReportColumns}
+        />
     );
 }

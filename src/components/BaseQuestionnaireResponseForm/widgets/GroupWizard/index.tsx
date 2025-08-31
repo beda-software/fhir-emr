@@ -39,7 +39,10 @@ export function GroupWizard(props: GroupWizardProps) {
     const isLastStepActive = itemsCount === currentIndex + 1;
     const stepsItems: WizardItem[] = item.map((i) => {
         const groupValues = formValues?.[linkId]?.items?.[i.linkId].items;
-        const hasError = questionnaireItemsToValidationSchema(i.item!).isValidSync(groupValues) === false;
+        const hasError =
+            questionnaireItemsToValidationSchema(i.item!, baseQRFPropsContext?.customYupTests).isValidSync(
+                groupValues,
+            ) === false;
 
         return {
             title: i.text,

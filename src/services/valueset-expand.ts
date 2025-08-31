@@ -97,11 +97,9 @@ export async function expandFHIRValueSet(answerValueSet: string | undefined, sea
         return [];
     }
 
-    const valueSetId = answerValueSet.split('/').slice(-1);
-
     const response: RemoteDataResult<ValueSetOption[]> = mapSuccess(
         await service<ValueSet>({
-            url: `ValueSet/${valueSetId}/$expand`,
+            url: `ValueSet/$expand?url=${answerValueSet}`,
             params: {
                 filter: searchText,
                 count: 50,

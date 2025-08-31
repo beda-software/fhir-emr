@@ -1,0 +1,6 @@
+id: datasequence
+resourceType: TokenIntrospector
+type: jwt
+jwt:
+  iss: https://ingest.emr.beda.software
+  secret: "${DATASEQUENCE_JWT_SECRET}"
