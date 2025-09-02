@@ -119,7 +119,6 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
     });
     const navigate = useNavigate();
 
-    console.log('response', response);
     return (
         <div className={s.container}>
             <S.Content>
