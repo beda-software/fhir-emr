@@ -11,6 +11,7 @@ import { Text } from 'src/components';
 import { AlertMessage } from 'src/components/AlertMessage';
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { AnxietyScore, DepressionScore } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/score';
+import { RemoteDataErrorAlertMessage } from 'src/components/RemoteDataErrorAlertMessage';
 import { Spinner } from 'src/components/Spinner';
 import { QuestionnaireResponseDraftService, QuestionnaireResponseFormSaveResponse } from 'src/hooks';
 import { useQuestionnaireResponseDraft } from 'src/hooks/useQuestionnaireResponseDraft';
@@ -57,7 +58,11 @@ export function PatientDocument(props: PatientDocumentProps) {
     });
 
     return (
-        <RenderRemoteData remoteData={response} renderLoading={Spinner}>
+        <RenderRemoteData
+            remoteData={response}
+            renderLoading={Spinner}
+            renderFailure={(error) => <RemoteDataErrorAlertMessage operationOutcomes={error} />}
+        >
             {(draftQuestionnaireResponse) => (
                 <PatientDocumentContent
                     {...props}
@@ -121,7 +126,11 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
     return (
         <div className={s.container}>
             <S.Content>
-                <RenderRemoteData remoteData={response} renderLoading={Spinner}>
+                <RenderRemoteData
+                    remoteData={response}
+                    renderLoading={Spinner}
+                    renderFailure={(error) => <RemoteDataErrorAlertMessage operationOutcomes={error} />}
+                >
                     {({ document: { formData, onSubmit }, source }) => {
                         if (typeof source === 'undefined') {
                             return (
