@@ -77,6 +77,7 @@ export function PatientDocument(props: PatientDocumentProps) {
                     onQRFUpdate={onUpdateDraft}
                     alertComponent={
                         <AlertMessage
+                            style={{ marginBottom: '20px' }}
                             actionComponent={
                                 <Space>
                                     {qrDraftServiceType === 'local' && (

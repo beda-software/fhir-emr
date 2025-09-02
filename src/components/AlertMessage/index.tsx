@@ -13,14 +13,7 @@ export function AlertMessage(props: Props) {
     return (
         <>
             {!message ? null : (
-                <Alert
-                    style={{ marginBottom: '20px', ...style }}
-                    message={message}
-                    type={type}
-                    showIcon
-                    action={actionComponent}
-                    banner
-                />
+                <Alert style={style} message={message} type={type} showIcon action={actionComponent} banner />
             )}
         </>
     );
