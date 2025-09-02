@@ -7,10 +7,10 @@ import { FormFooter, FormFooterComponentProps } from 'src/components/BaseQuestio
 import { S } from './styles';
 
 export interface QuestionnairesWizardFooterProps extends FormFooterComponentProps {
-    goBack: () => void;
-    goForward: () => void;
-    canGoBack: boolean;
-    canGoForward: boolean;
+    goBack?: () => void;
+    goForward?: () => void;
+    canGoBack?: boolean;
+    canGoForward?: boolean;
     nextButtonTitle?: React.ReactNode;
     finishButtonTitle?: React.ReactNode;
 }

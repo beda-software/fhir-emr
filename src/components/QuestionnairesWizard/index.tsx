@@ -1,4 +1,5 @@
 import { QuestionnaireResponse } from 'fhir/r4b';
+import _ from 'lodash';
 
 import { WithId } from '@beda.software/fhir-react';
 
@@ -42,7 +43,7 @@ export function QuestionnairesWizard(props: QuestionnairesWizardProps) {
                 questionnaireId={currentQuestionnaire!.id!}
                 questionnaireResponse={
                     currentQuestionnaireResponse && currentQuestionnaireResponse.id
-                        ? (currentQuestionnaireResponse as WithId<QuestionnaireResponse>)
+                        ? (_.omit(currentQuestionnaireResponse, 'meta.versionId') as WithId<QuestionnaireResponse>)
                         : undefined
                 }
                 questionnaireLoader={questionnaireIdLoader(currentQuestionnaire!.id!)}
