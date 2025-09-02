@@ -29,6 +29,7 @@ export function QuestionnaireResponseFormDraft(props: QuestionnaireResponseFormD
             {(draftQuestionnaireResponse) => (
                 <>
                     <AlertMessage
+                        style={{ marginBottom: '20px' }}
                         actionComponent={
                             <Tooltip title={t`Clear draft from local storage and reset form`}>
                                 <Button

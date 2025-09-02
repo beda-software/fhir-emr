@@ -25,6 +25,7 @@ import {
     resolveMap,
     sequenceMap,
     success,
+    mapFailure,
 } from '@beda.software/remote-data';
 
 import { onFormResponse } from 'src/components/QuestionnaireResponseForm';
@@ -232,5 +233,9 @@ export function usePatientDocument(props: Props): {
         return success(undefined);
     });
 
-    return { response: sequenceMap({ source: sourceResponse, document: response }), manager, questionnaireId };
+    return {
+        response: mapFailure(sequenceMap({ source: sourceResponse, document: response }), (errors) => errors.flat()[0]),
+        manager,
+        questionnaireId,
+    };
 }

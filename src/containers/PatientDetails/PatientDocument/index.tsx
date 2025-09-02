@@ -5,7 +5,7 @@ import { Organization, ParametersParameter, Patient, Person, Practitioner, Quest
 import React, { useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
+import { formatError, RenderRemoteData, WithId } from '@beda.software/fhir-react';
 
 import { Text } from 'src/components';
 import { AlertMessage } from 'src/components/AlertMessage';
@@ -72,6 +72,7 @@ export function PatientDocument(props: PatientDocumentProps) {
                     onQRFUpdate={onUpdateDraft}
                     alertComponent={
                         <AlertMessage
+                            style={{ marginBottom: '20px' }}
                             actionComponent={
                                 <Space>
                                     {qrDraftServiceType === 'local' && (
@@ -121,7 +122,11 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
     return (
         <div className={s.container}>
             <S.Content>
-                <RenderRemoteData remoteData={response} renderLoading={Spinner}>
+                <RenderRemoteData
+                    remoteData={response}
+                    renderLoading={Spinner}
+                    renderFailure={(error) => <AlertMessage message={formatError(error)} type="error" />}
+                >
                     {({ document: { formData, onSubmit }, source }) => {
                         if (typeof source === 'undefined') {
                             return (
