@@ -121,8 +121,7 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
     }, [questionnaires, stepsStatuses]);
 
     const handleCancel = useCallback(() => {
-        onCancel?.();
-        navigate(-1);
+        onCancel ? onCancel() : navigate(-1);
     }, [navigate, onCancel]);
 
     useEffect(() => {
