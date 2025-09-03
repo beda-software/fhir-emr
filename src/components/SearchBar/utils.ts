@@ -53,7 +53,7 @@ export function getSearchBarColumnFilterValue(filterValue: ColumnFilterValue) {
     }
 
     if (isSplitStringColumnFilterValue(filterValue)) {
-        return filterValue.value?.split(' ').join(',');
+        return filterValue.value?.split(' ');
     }
 
     throw new Error('Unsupported column type');
