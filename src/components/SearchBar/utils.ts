@@ -53,7 +53,11 @@ export function getSearchBarColumnFilterValue(filterValue: ColumnFilterValue) {
     }
 
     if (isSplitStringColumnFilterValue(filterValue)) {
-        return filterValue.value?.split(' ');
+        if (filterValue.column.searchBehavior === 'AND') {
+            return filterValue.value?.split(filterValue.column.separator ?? ' ');
+        } else {
+            return filterValue.value?.split(filterValue.column.separator ?? ' ').join(',');
+        }
     }
 
     throw new Error('Unsupported column type');

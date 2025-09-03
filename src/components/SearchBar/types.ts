@@ -77,6 +77,8 @@ export type SearchBarSplitStringColumn = SearchBarColumnBase & {
     type: SearchBarColumnType.SPLITSTRING;
     placeholder: string;
     defaultValue?: string;
+    searchBehavior: 'AND' | 'OR';
+    separator?: string;
 };
 
 export type SearchBarColumn =
