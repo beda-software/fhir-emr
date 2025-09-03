@@ -75,37 +75,39 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
 
     const checkOtherQuestionnaireResponsesValid = useCallback(
         (exceptQuestionnaireIndex: number) => {
-            const invalidSteps = stepsStatuses
-                .filter((_, index) => index !== exceptQuestionnaireIndex)
-                .filter((status) => status !== 'finish')
-                .map((status, index) => {
-                    return {
-                        status,
-                        index,
-                    };
-                });
-
-            if (invalidSteps.length === 0) {
+            if (questionnaireResponses.length === stepsStatuses.length) {
                 return true;
             }
 
-            invalidSteps.forEach((step) => {
+            const unfinishedSteps = questionnaires.filter(
+                (q) =>
+                    !questionnaireResponses.some((qr) => qr.questionnaire === q.id) &&
+                    q.id !== questionnaires[exceptQuestionnaireIndex]?.id,
+            );
+
+            if (unfinishedSteps.length === 0) {
+                return true;
+            }
+
+            unfinishedSteps.forEach((step) => {
+                const index = questionnaires.findIndex((q) => q.id === step.id);
                 notification.error({
-                    message: t`${questionnaires[step.index]?.title} was not submitted`,
+                    message: t`${questionnaires[index]?.title} was not submitted`,
                 });
             });
 
             setStepsStatuses((prev) => {
                 const newStepsStatuses = [...prev];
-                invalidSteps.forEach((step) => {
-                    newStepsStatuses[step.index] = 'error';
+                unfinishedSteps.forEach((step) => {
+                    const index = questionnaires.findIndex((q) => q.id === step.id);
+                    newStepsStatuses[index] = 'error';
                 });
                 return newStepsStatuses;
             });
 
             return false;
         },
-        [questionnaires, stepsStatuses],
+        [questionnaireResponses, questionnaires, stepsStatuses.length],
     );
 
     const stepsItems: WizardItem[] = useMemo(() => {
@@ -119,8 +121,7 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
     }, [questionnaires, stepsStatuses]);
 
     const handleCancel = useCallback(() => {
-        onCancel?.();
-        navigate(-1);
+        onCancel ? onCancel() : navigate(-1);
     }, [navigate, onCancel]);
 
     useEffect(() => {
