@@ -6,6 +6,7 @@ import {
     ReferenceTypeColumnFilterValue,
     StringTypeColumnFilterValue,
     SingleDateTypeColumnFilterValue,
+    SplitStringTypeColumnFilterValue,
 } from '../types';
 
 export type SearchBarColumnProps = {
@@ -46,4 +47,9 @@ export interface SearchBarColumnChoiceTypeProps {
 export interface SearchBarColumnSolidChoiceTypeProps {
     columnFilterValue: SolidChoiceTypeColumnFilterValue;
     onChange: (value: SolidChoiceTypeColumnFilterValue['value'], key: string) => void;
+}
+
+export interface SearchBarColumnSplitStringTypeProps {
+    columnFilterValue: SplitStringTypeColumnFilterValue;
+    onChange: (value: SplitStringTypeColumnFilterValue['value'], key: string) => void;
 }

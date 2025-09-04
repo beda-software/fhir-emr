@@ -3,6 +3,7 @@ import { DateColumn } from './DateColumn';
 import { DateSingleColumn } from './DateSingleColumn';
 import { ReferenceColumn } from './ReferenceColumn';
 import { SolidChoiceColumn } from './SolidChoiceColumn';
+import { SplitStringColumn } from './SplitStringColumn';
 import { StringColumn } from './StringColumn';
 import { SearchBarColumnProps } from './types';
 import {
@@ -12,6 +13,7 @@ import {
     isChoiceColumnFilterValue,
     isSolidChoiceColumnFilterValue,
     isSingleDateColumnFilterValue,
+    isSplitStringColumnFilterValue,
 } from '../types';
 
 export function SearchBarColumn(props: SearchBarColumnProps) {
@@ -64,6 +66,14 @@ export function SearchBarColumn(props: SearchBarColumnProps) {
         };
 
         return <SolidChoiceColumn {...choiceProps} />;
+    }
+
+    if (isSplitStringColumnFilterValue(columnFilterValue)) {
+        const splitStringProps = {
+            ...props,
+            columnFilterValue,
+        };
+        return <SplitStringColumn {...splitStringProps} />;
     }
 
     return null;
