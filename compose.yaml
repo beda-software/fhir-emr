@@ -194,7 +194,7 @@ services:
     ports:
       - "8099:8090"
   fhirpath_mapping:
-    image: bedasoftware/fhirpath-extract:main
+    image: bedasoftware/fhirpath-extract:0.2.0
     ports:
       - "8091:8090"
 
