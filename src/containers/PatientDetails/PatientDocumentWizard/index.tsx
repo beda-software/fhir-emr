@@ -58,6 +58,7 @@ export function PatientDocumentWizard(props: PatientDocumentProps) {
                             },
                         ]}
                         onSuccess={onSuccess}
+                        disableWaitStepsNavigation={true}
                     />
                 )}
             </RenderRemoteData>
