@@ -28,6 +28,7 @@ export interface QuestionnairesWizardProps
     onQuestionnaireChange?: (q: Questionnaire, index: number) => void;
     patient?: Patient;
     wizard?: Partial<WizardProps>;
+    disableWaitStepsNavigation?: boolean;
 }
 
 export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
@@ -37,6 +38,7 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
         initialQuestionnaireId,
         onQuestionnaireChange,
         onCancel,
+        disableWaitStepsNavigation,
     } = props;
 
     const navigate = useNavigate();
@@ -110,24 +112,41 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
         [questionnaireResponses, questionnaires, stepsStatuses.length],
     );
 
+    const isStepDisabled = useCallback(
+        (index: number) => {
+            return index > currentQuestionnaireIndex && stepsStatuses[index] === 'wait';
+        },
+        [currentQuestionnaireIndex, stepsStatuses],
+    );
+
     const stepsItems: WizardItem[] = useMemo(() => {
         return questionnaires.map((q, index) => {
             return {
                 title: q.title,
                 linkId: q.item?.[0]?.linkId ?? '',
                 status: stepsStatuses[index],
+                disabled: disableWaitStepsNavigation ? isStepDisabled(index) : false,
             };
         });
-    }, [questionnaires, stepsStatuses]);
+    }, [disableWaitStepsNavigation, isStepDisabled, questionnaires, stepsStatuses]);
 
     const handleCancel = useCallback(() => {
         onCancel ? onCancel() : navigate(-1);
     }, [navigate, onCancel]);
 
+    const enableStep = useCallback(
+        (index: number) => {
+            if (stepsStatuses[index] === 'wait') {
+                setStepStatus(index, 'process');
+            }
+        },
+        [setStepStatus, stepsStatuses],
+    );
+
     useEffect(() => {
         onQuestionnaireChange?.(questionnaires[currentQuestionnaireIndex]!, currentQuestionnaireIndex);
-        setStepStatus(currentQuestionnaireIndex, 'process');
-    }, [currentQuestionnaireIndex, onQuestionnaireChange, questionnaires, setStepStatus]);
+        enableStep(currentQuestionnaireIndex);
+    }, [currentQuestionnaireIndex, enableStep, onQuestionnaireChange, questionnaires, setStepStatus]);
 
     return {
         currentQuestionnaire,
