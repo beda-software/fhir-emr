@@ -48,9 +48,15 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
             const defaultIndex = initialQuestionnaireId
                 ? questionnaires.findIndex((q) => q.id === initialQuestionnaireId)
                 : 0;
+
+            if (initialQuestionnaireResponses.some((qr) => qr.questionnaire === q.id)) {
+                return 'finish';
+            }
+
             if (index === defaultIndex) {
                 return 'process';
             }
+
             return 'wait';
         }),
     );
