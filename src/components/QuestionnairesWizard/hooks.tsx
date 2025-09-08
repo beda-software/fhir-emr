@@ -70,9 +70,6 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
         (qr) => qr.questionnaire === currentQuestionnaire?.id,
     );
 
-    const canGoBack = currentQuestionnaireIndex > 0;
-    const canGoForward = currentQuestionnaireIndex + 1 < questionnaires.length;
-
     const setStepStatus = useCallback((index: number, status: StepProps['status']) => {
         setStepsStatuses((prev) => {
             const newStepsStatuses = [...prev];
@@ -125,6 +122,11 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
         [currentQuestionnaireIndex, stepsStatuses],
     );
 
+    const canGoBack = currentQuestionnaireIndex > 0;
+    const canGoForward =
+        currentQuestionnaireIndex + 1 < questionnaires.length && !isStepDisabled(currentQuestionnaireIndex + 1);
+    const canComplete = currentQuestionnaireIndex + 1 === questionnaires.length;
+
     const stepsItems: WizardItem[] = useMemo(() => {
         return questionnaires.map((q, index) => {
             return {
@@ -163,6 +165,7 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
         setQuestionnaireResponses,
         canGoBack,
         canGoForward,
+        canComplete,
         checkOtherQuestionnaireResponsesValid,
         setStepStatus,
         stepsItems,
