@@ -23,6 +23,7 @@ export function QuestionnairesWizard(props: QuestionnairesWizardProps) {
         setQuestionnaireResponses,
         canGoBack,
         canGoForward,
+        canComplete,
         checkOtherQuestionnaireResponsesValid,
         setStepStatus,
         stepsItems,
@@ -67,7 +68,7 @@ export function QuestionnairesWizard(props: QuestionnairesWizardProps) {
 
                     onStepSuccess?.(result);
 
-                    if (canGoForward) {
+                    if (!canComplete) {
                         setCurrentQuestionnaireIndex(currentQuestionnaireIndex + 1);
                     } else if (checkOtherQuestionnaireResponsesValid(currentQuestionnaireIndex)) {
                         onSuccess?.(result);
@@ -91,6 +92,7 @@ export function QuestionnairesWizard(props: QuestionnairesWizardProps) {
                         },
                         canGoBack,
                         canGoForward,
+                        canComplete,
                         onCancel: handleCancel,
                     };
 

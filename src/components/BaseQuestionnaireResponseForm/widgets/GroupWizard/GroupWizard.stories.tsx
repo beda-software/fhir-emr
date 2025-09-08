@@ -59,46 +59,6 @@ export const WithTooltip: Story = {
     ),
 };
 
-export const Autosave: Story = {
-    render: () => (
-        <I18nProvider i18n={i18n}>
-            <BaseQuestionnaireResponseForm
-                formData={{
-                    context: {
-                        fceQuestionnaire: getQuestionnaire('wizard-with-tooltips'),
-                        questionnaire: fromFirstClassExtension(getQuestionnaire('wizard-with-tooltips')),
-                        launchContextParameters: [],
-                        questionnaireResponse,
-                    },
-                    formValues,
-                }}
-                onCancel={() => console.log('onCancel')}
-                saveButtonTitle={'Submit'}
-            />
-        </I18nProvider>
-    ),
-};
-
-export const SaveAsDraft: Story = {
-    render: () => (
-        <I18nProvider i18n={i18n}>
-            <BaseQuestionnaireResponseForm
-                formData={{
-                    context: {
-                        fceQuestionnaire: getQuestionnaire('wizard-with-tooltips'),
-                        questionnaire: fromFirstClassExtension(getQuestionnaire('wizard-with-tooltips')),
-                        launchContextParameters: [],
-                        questionnaireResponse,
-                    },
-                    formValues,
-                }}
-                onCancel={() => console.log('onCancel')}
-                saveButtonTitle={'Submit'}
-            />
-        </I18nProvider>
-    ),
-};
-
 export const inModal: Story = {
     render: () => (
         <I18nProvider i18n={i18n}>

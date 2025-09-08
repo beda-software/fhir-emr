@@ -26,7 +26,7 @@ const getStepBackgroundColorInactive = (theme: DefaultTheme, status?: 'finish' |
         case 'wait':
             return theme.primaryPalette.bcp_1;
         case 'error':
-            return theme.error;
+            return theme.antdTheme?.red4;
         default:
             return theme.primaryPalette.bcp_1;
     }
