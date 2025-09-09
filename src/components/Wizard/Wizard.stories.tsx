@@ -1,11 +1,11 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { Button } from 'antd';
-import { useState } from 'react';
+import { Button, StepsProps } from 'antd';
+import { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 
-import { Wizard, WizardFooter, WizardProps } from './index';
+import { Wizard, WizardFooter, WizardItem, WizardProps } from './index';
 import { Text } from '../Typography';
 
 const args: WizardProps = {
@@ -14,18 +14,22 @@ const args: WizardProps = {
         {
             title: 'Title 1',
             linkId: '1',
+            status: 'process',
         },
         {
             title: 'Title 2',
             linkId: '2',
+            status: 'wait',
         },
         {
             title: 'Title 3',
             linkId: '3',
+            status: 'wait',
         },
         {
             title: 'Title 4',
             linkId: '4',
+            status: 'wait',
         },
     ],
 };
@@ -66,13 +70,47 @@ function WizardStoryWithFooter(props: WizardProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const itemsCount = props.items.length;
 
+    const [stepsStatuses, setStepsStatuses] = useState<StepsProps['status'][]>(
+        props.items.map((i, index) => {
+            if (index === currentIndex) {
+                return 'process';
+            }
+
+            return 'wait';
+        }),
+    );
+
+    const stepsItems: WizardItem[] = useMemo(
+        () =>
+            props.items.map((i, index) => {
+                return {
+                    title: i.title,
+                    linkId: i.linkId,
+                    status: stepsStatuses[index],
+                };
+            }),
+        [props.items, stepsStatuses],
+    );
+    const handleStepChange = useCallback((value: number) => {
+        setCurrentIndex((prevIndex) => {
+            const newIndex = value;
+            setStepsStatuses((prev) => {
+                const newStepsStatuses = [...prev];
+                newStepsStatuses[newIndex] = 'process';
+                newStepsStatuses[prevIndex] = 'finish';
+                return newStepsStatuses;
+            });
+            return newIndex;
+        });
+    }, []);
+
     return (
         <S.Container>
-            <Wizard {...props} currentIndex={currentIndex} onChange={(i) => setCurrentIndex(i)}>
+            <Wizard {...props} currentIndex={currentIndex} onChange={handleStepChange} items={stepsItems}>
                 <S.Content>{content}</S.Content>
                 <WizardFooter
-                    goBack={() => setCurrentIndex((i) => i - 1)}
-                    goForward={() => setCurrentIndex((i) => i + 1)}
+                    goBack={() => handleStepChange(currentIndex - 1)}
+                    goForward={() => handleStepChange(currentIndex + 1)}
                     canGoBack={currentIndex > 0}
                     canGoForward={currentIndex + 1 < itemsCount}
                 >

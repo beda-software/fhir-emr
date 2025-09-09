@@ -1,6 +1,66 @@
-import styled, { css } from 'styled-components';
+import styled, { css, DefaultTheme } from 'styled-components';
 
 import { Title } from '../Typography';
+
+const getStepBackgroundColorActive = (theme: DefaultTheme, status?: 'finish' | 'process' | 'wait' | 'error') => {
+    switch (status) {
+        case 'finish':
+            return theme.secondaryPalette.bcs_6;
+        case 'process':
+            return theme.primaryPalette.bcp_6;
+        case 'wait':
+            return theme.primaryPalette.bcp_1;
+        case 'error':
+            return theme.error;
+        default:
+            return theme.primaryPalette.bcp_1;
+    }
+};
+
+const getStepBackgroundColorInactive = (theme: DefaultTheme, status?: 'finish' | 'process' | 'wait' | 'error') => {
+    switch (status) {
+        case 'finish':
+            return theme.secondaryPalette.bcs_4;
+        case 'process':
+            return theme.primaryPalette.bcp_4;
+        case 'wait':
+            return theme.primaryPalette.bcp_1;
+        case 'error':
+            return theme.antdTheme?.red4;
+        default:
+            return theme.primaryPalette.bcp_1;
+    }
+};
+
+const getStepBorderColorActive = (theme: DefaultTheme, status?: 'finish' | 'process' | 'wait' | 'error') => {
+    switch (status) {
+        case 'finish':
+            return theme.secondaryPalette.bcs_6;
+        case 'process':
+            return theme.primaryPalette.bcp_6;
+        case 'wait':
+            return theme.primaryPalette.bcp_1;
+        case 'error':
+            return theme.error;
+        default:
+            return theme.primaryPalette.bcp_1;
+    }
+};
+
+const getStepIconColorInactive = (theme: DefaultTheme, status?: 'finish' | 'process' | 'wait' | 'error') => {
+    switch (status) {
+        case 'finish':
+            return theme.neutralPalette.gray_1;
+        case 'process':
+            return theme.neutralPalette.gray_1;
+        case 'wait':
+            return theme.neutralPalette.gray_13;
+        case 'error':
+            return theme.neutralPalette.gray_1;
+        default:
+            return theme.neutralPalette.gray_13;
+    }
+};
 
 export const S = {
     Container: styled.div<{ $labelPlacement: 'vertical' | 'tooltip' }>`
@@ -51,35 +111,31 @@ export const S = {
         align-items: center;
         justify-content: center;
         border: 1px solid ${({ theme }) => theme.primaryPalette.bcp_1};
-        background-color: ${({ theme }) => theme.primaryPalette.bcp_1};
         transition: all 0.2s;
 
         .ant-steps-item-container[role='button']:hover & {
-            border-color: ${({ theme }) => theme.primaryPalette.bcp_6};
+            background-color: ${({ theme, $status }) => getStepBackgroundColorActive(theme, $status)};
+            border-color: ${({ theme, $status }) => getStepBorderColorActive(theme, $status)};
         }
 
         ${({ $status, $active }) =>
-            $status === 'error' &&
             !$active &&
             css`
-                background-color: ${({ theme }) => theme.error};
-                border-color: ${({ theme }) => theme.error};
+                background-color: ${({ theme }) => getStepBackgroundColorInactive(theme, $status)};
+                border-color: ${({ theme }) => {
+                    return theme.neutralPalette.gray_1;
+                }};
 
                 * {
-                    color: #fff;
-                }
-
-                .ant-steps-item-container[role='button']:hover & {
-                    border-color: ${({ theme }) => theme.antdTheme?.red6};
-                    background-color: ${({ theme }) => theme.antdTheme?.red6};
+                    color: ${({ theme }) => getStepIconColorInactive(theme, $status)};
                 }
             `}
 
-        ${({ $active }) =>
+        ${({ $active, $status }) =>
             $active &&
             css`
-                background-color: ${({ theme }) => theme.primaryPalette.bcp_6};
-                border-color: ${({ theme }) => theme.primaryPalette.bcp_6};
+                background-color: ${({ theme }) => getStepBackgroundColorActive(theme, $status)};
+                border-color: ${({ theme }) => getStepBorderColorActive(theme, $status)};
 
                 * {
                     color: ${({ theme }) => theme.neutralPalette.gray_1};

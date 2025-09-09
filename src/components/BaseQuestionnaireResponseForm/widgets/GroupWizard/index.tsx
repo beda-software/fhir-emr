@@ -1,4 +1,5 @@
-import { useContext, useState } from 'react';
+import { StepsProps } from 'antd';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { useFormState, useWatch } from 'react-hook-form';
 import { GroupItemProps, QuestionItems } from 'sdc-qrf';
 
@@ -37,23 +38,46 @@ export function GroupWizard(props: GroupWizardProps) {
 
     const itemsCount = item.length;
     const isLastStepActive = itemsCount === currentIndex + 1;
-    const stepsItems: WizardItem[] = item.map((i) => {
-        const groupValues = formValues?.[linkId]?.items?.[i.linkId].items;
-        const hasError =
-            questionnaireItemsToValidationSchema(i.item!, baseQRFPropsContext?.customYupTests).isValidSync(
-                groupValues,
-            ) === false;
 
-        return {
-            title: i.text,
-            linkId: i.linkId,
-            status: hasError && isSubmitted ? 'error' : undefined,
-        };
-    });
+    const [stepsStatuses, setStepsStatuses] = useState<StepsProps['status'][]>(
+        item.map((i, index) => {
+            if (index === currentIndex) {
+                return 'process';
+            }
 
-    const onStepChange = (value: number) => {
-        setCurrentIndex(value);
-    };
+            return 'wait';
+        }),
+    );
+
+    const stepsItems: WizardItem[] = useMemo(
+        () =>
+            item.map((i, index) => {
+                const groupValues = formValues?.[linkId]?.items?.[i.linkId].items;
+                const hasError =
+                    questionnaireItemsToValidationSchema(i.item!, baseQRFPropsContext?.customYupTests).isValidSync(
+                        groupValues,
+                    ) === false;
+                return {
+                    title: i.text,
+                    linkId: i.linkId,
+                    status: hasError && isSubmitted ? 'error' : stepsStatuses[index],
+                };
+            }),
+        [item, formValues, linkId, baseQRFPropsContext?.customYupTests, isSubmitted, stepsStatuses],
+    );
+
+    const handleStepChange = useCallback((value: number) => {
+        setCurrentIndex((prevIndex) => {
+            const newIndex = value;
+            setStepsStatuses((prev) => {
+                const newStepsStatuses = [...prev];
+                newStepsStatuses[newIndex] = 'process';
+                newStepsStatuses[prevIndex] = 'finish';
+                return newStepsStatuses;
+            });
+            return newIndex;
+        });
+    }, []);
 
     if (parentPath.length !== 0) {
         console.error('The wizard item control must be in root group');
@@ -68,7 +92,7 @@ export function GroupWizard(props: GroupWizardProps) {
     }
 
     return (
-        <Wizard items={stepsItems} currentIndex={currentIndex} onChange={onStepChange} {...props.wizard}>
+        <Wizard items={stepsItems} currentIndex={currentIndex} onChange={handleStepChange} {...props.wizard}>
             {item.map((groupItem, index) => {
                 if (index !== currentIndex) {
                     return null;
@@ -85,8 +109,8 @@ export function GroupWizard(props: GroupWizardProps) {
                 );
             })}
             <S.WizardFooter
-                goBack={() => setCurrentIndex((i) => i - 1)}
-                goForward={() => setCurrentIndex((i) => i + 1)}
+                goBack={() => handleStepChange(currentIndex - 1)}
+                goForward={() => handleStepChange(currentIndex + 1)}
                 canGoBack={currentIndex > 0}
                 canGoForward={currentIndex + 1 < itemsCount}
             >
