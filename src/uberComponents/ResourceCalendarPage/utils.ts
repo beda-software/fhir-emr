@@ -41,7 +41,9 @@ export function searchParamsMapping(searchParams: SearchParams, mapping?: Search
     for (const [mappingKey, actualKey] of Object.entries(mapping)) {
         const value = searchParams[mappingKey];
 
-        if (value === undefined) continue;
+        if (value === undefined) {
+            continue;
+        }
 
         const newValue = Array.isArray(value) ? value.map((v) => v.toString()).join(',') : value.toString();
 
@@ -59,7 +61,9 @@ function getBackgroundColor<R extends Resource>(
     resource: R,
     eventColorMapping: EventColorMapping<R>,
 ): string | undefined {
-    if (!eventColorMapping) return undefined;
+    if (!eventColorMapping) {
+        return undefined;
+    }
 
     const { targetExpression, colorMapping } = eventColorMapping;
     const targetValue = targetExpression(resource);
@@ -90,7 +94,9 @@ export function calculateSlots<R extends Resource>(
     data: ResourceContext<Slot>[],
     slot: ResourceCalendarPageProps<R>['slot'],
 ) {
-    if (!slot) return undefined;
+    if (!slot) {
+        return undefined;
+    }
 
     const { eventColorMapping } = slot;
 
@@ -271,7 +277,7 @@ export function prepareResourceToShowOrEdit(
                 return [];
             } else {
                 if (typeof value === 'string') {
-                    const result = value?.split('/')?.[1] || value
+                    const result = value?.split('/')?.[1] || value;
                     return [
                         {
                             url: `ext:${spKey}`,

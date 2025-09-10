@@ -4,7 +4,9 @@ import { S } from './styles';
 
 function eventDateStr(eventStart?: string, eventEnd?: string): string {
     const formatTime = (dateStr?: string) => {
-        if (!dateStr) return null;
+        if (!dateStr) {
+            return null;
+        }
         const date = new Date(dateStr);
         return isNaN(date.getTime()) ? null : date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     };

@@ -5,7 +5,9 @@ import { executeFHIRPathOrDefault } from 'src/uberComponents/ResourceChartingPag
 import { ResourceContext } from 'src/uberComponents/types';
 
 export function capitalizeFirstLetter(str: string): string {
-    if (!str) return '';
+    if (!str) {
+        return '';
+    }
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
