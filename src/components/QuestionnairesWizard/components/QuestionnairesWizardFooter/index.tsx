@@ -11,6 +11,7 @@ export interface QuestionnairesWizardFooterProps extends FormFooterComponentProp
     goForward: () => void;
     canGoBack: boolean;
     canGoForward: boolean;
+    canComplete: boolean;
     nextButtonTitle?: React.ReactNode;
     finishButtonTitle?: React.ReactNode;
 }
@@ -23,6 +24,7 @@ export function QuestionnairesWizardFooter(props: QuestionnairesWizardFooterProp
         submitDisabled,
         canGoBack,
         canGoForward,
+        canComplete,
         nextButtonTitle,
         finishButtonTitle,
         onCancel,
@@ -40,9 +42,7 @@ export function QuestionnairesWizardFooter(props: QuestionnairesWizardFooterProp
                         onCancel={onCancel}
                         formData={baseQRFPropsContext.formData}
                         saveButtonTitle={
-                            canGoForward
-                                ? nextButtonTitle || t`Submit and Go Forward`
-                                : finishButtonTitle || t`Complete`
+                            canComplete ? finishButtonTitle || t`Complete` : nextButtonTitle || t`Submit and Go Forward`
                         }
                     />
                 )}

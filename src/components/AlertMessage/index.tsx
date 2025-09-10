@@ -1,19 +1,19 @@
 import { Alert } from 'antd';
 
-export function AlertMessage(props: { message?: string; actionComponent?: React.ReactNode }) {
-    const { actionComponent, message } = props;
+interface Props {
+    message?: string;
+    actionComponent?: React.ReactNode;
+    type?: 'info' | 'success' | 'warning' | 'error';
+    style?: React.CSSProperties;
+}
+
+export function AlertMessage(props: Props) {
+    const { actionComponent, message, type = 'info', style = {} } = props;
 
     return (
         <>
             {!message ? null : (
-                <Alert
-                    style={{ marginBottom: '20px' }}
-                    message={message}
-                    type="info"
-                    showIcon
-                    action={actionComponent}
-                    banner
-                />
+                <Alert style={style} message={message} type={type} showIcon action={actionComponent} banner />
             )}
         </>
     );

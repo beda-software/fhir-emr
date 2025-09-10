@@ -21,7 +21,7 @@ import {
 import { formatFHIRDateTime } from 'aidbox-react/lib/utils/date';
 import { withRootAccess, LoginService, getToken } from 'aidbox-react/lib/utils/tests';
 
-import { User, ValueSet } from '@beda.software/aidbox-types';
+import { CodeSystem, User, ValueSet } from '@beda.software/aidbox-types';
 import config from '@beda.software/emr-config';
 import { ensure, getReference } from '@beda.software/fhir-react';
 
@@ -143,10 +143,23 @@ export async function createEncounter(subject: Reference, participant: Participa
     );
 }
 
+export async function createCodeSystem(codeSystemData: Partial<CodeSystem>) {
+    return await service<CodeSystem>({
+        baseURL: config.baseURL,
+        url: `/fhir/CodeSystem/${codeSystemData.id ?? ''}`,
+        method: 'PUT',
+        data: {
+            resourceType: 'CodeSystem',
+            status: 'active',
+            ...codeSystemData,
+        },
+    });
+}
+
 export async function createValueSet(valueSetData: Partial<ValueSet>) {
     return await service<ValueSet>({
         baseURL: config.baseURL,
-        url: 'ValueSet',
+        url: `/fhir/ValueSet/${valueSetData.id ?? ''}`,
         method: 'PUT',
         data: {
             resourceType: 'ValueSet',

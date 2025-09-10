@@ -134,7 +134,7 @@ export const PatientEncounter = ({ patient, searchParams, hideCreateButton }: Pr
             searchParams={{
                 subject: patient.id,
                 ...searchParams,
-                _include: [
+                '_include:iterate': [
                     'Encounter:subject',
                     'Encounter:participant:PractitionerRole',
                     'Encounter:participant:Practitioner',

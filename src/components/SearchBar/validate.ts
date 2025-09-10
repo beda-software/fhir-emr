@@ -8,6 +8,7 @@ import {
     ReferenceTypeColumnFilterValue,
     SingleDateTypeColumnFilterValue,
     SolidChoiceTypeColumnFilterValue,
+    SplitStringTypeColumnFilterValue,
     StringTypeColumnFilterValue,
 } from './types';
 
@@ -88,4 +89,14 @@ export function validateSolidChoiceColumnFilterValue(
     }
 
     throw new Error('Invalid solid choice column filter value');
+}
+
+export function validateSplitStringColumnFilterValue(
+    value?: ColumnFilterValue['value'],
+): value is SplitStringTypeColumnFilterValue['value'] {
+    if (_.isUndefined(value) || _.isString(value)) {
+        return true;
+    }
+
+    throw new Error('Invalid split string column filter value');
 }

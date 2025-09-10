@@ -152,7 +152,7 @@ export function EncounterList() {
             resourceType="Encounter"
             searchParams={{
                 ...roleSearchParams,
-                _include: [
+                '_include:iterate': [
                     'Encounter:subject',
                     'Encounter:participant:PractitionerRole',
                     'Encounter:participant:Practitioner',

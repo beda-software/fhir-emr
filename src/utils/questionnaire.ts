@@ -149,7 +149,7 @@ export function questionnaireItemsToValidationSchema(
             schema = createSchemaArrayOfValues(yup.object({ decimal: schema }));
         } else if (item.type === 'quantity') {
             const quantitySchema = yup.object({
-                value: yup.number().required(),
+                value: item.required ? yup.number().required() : yup.number().nullable(),
                 comparator: yup.string().oneOf(['<', '<=', '>=', '>']).nullable(),
                 unit: yup.string().nullable(),
                 system: yup.string().nullable(),

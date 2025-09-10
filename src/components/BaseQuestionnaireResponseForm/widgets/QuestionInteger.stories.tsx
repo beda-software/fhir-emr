@@ -23,6 +23,23 @@ export const Example: Story = {
                 type: 'string',
                 linkId: 'example',
                 required: true,
+                helpText: 'Help text',
+            }}
+            context={{} as ItemContext}
+        />
+    ),
+};
+
+export const Disabled: Story = {
+    render: () => (
+        <QuestionInteger
+            parentPath={[]}
+            questionItem={{
+                text: 'Example',
+                type: 'string',
+                linkId: 'example',
+                required: true,
+                readOnly: true,
             }}
             context={{} as ItemContext}
         />

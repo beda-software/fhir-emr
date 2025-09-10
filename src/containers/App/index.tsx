@@ -182,6 +182,7 @@ function AuthenticatedUserApp({ defaultRoute, extra }: RouteProps) {
                             <Route path="/practitioners/:id/*" element={<PractitionerDetails />} />
                             <Route path="/questionnaires" element={<QuestionnaireList />} />
                             <Route path="/questionnaires/builder" element={<QuestionnaireBuilder />} />
+                            <Route path="/questionnaires/aidbox-builder" element={<AidboxFormsBuilder />} />
                             <Route path="/questionnaires/:id/edit" element={<QuestionnaireBuilder />} />
                             <Route
                                 path="/questionnaires/:id/aidbox-forms-builder/edit"

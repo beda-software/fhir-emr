@@ -21,9 +21,11 @@ const makeFilters = (searchParam: string): SearchBarColumn[] => [
     {
         id: 'name',
         searchParam,
-        type: SearchBarColumnType.STRING,
+        type: SearchBarColumnType.SPLITSTRING,
         placeholder: t`Find patient`,
         placement: ['search-bar', 'table'],
+        searchBehavior: 'AND',
+        separator: ' ',
     },
 ];
 
@@ -90,7 +92,7 @@ function buildColumns<R extends Resource>(
 }
 
 function PatientListConsent(props: { searchParams: SearchParams }) {
-    const getFilters = (): SearchBarColumn[] => makeFilters('patient:Patient.name');
+    const getFilters = (): SearchBarColumn[] => makeFilters('patient:Patient.name:contains');
     const getTableColumns = (_manager: TableManager): ColumnsType<RecordType<Consent>> =>
         buildColumns<Consent>((record) => getPatientFromConsent(record.resource, record.bundle));
 
@@ -120,7 +122,7 @@ function PatientListConsent(props: { searchParams: SearchParams }) {
 }
 
 function PatientListDefault(props: { searchParams: SearchParams }) {
-    const getFilters = (): SearchBarColumn[] => makeFilters('name');
+    const getFilters = (): SearchBarColumn[] => makeFilters('name:contains');
     const getTableColumns = (_manager: TableManager): ColumnsType<RecordType<Patient>> =>
         buildColumns<Patient>((record) => record.resource);
 
