@@ -1,7 +1,5 @@
 import styled, { css } from 'styled-components';
 
-// @ts-ignore
-// @ts-ignore
 export const S = {
     Container: styled.div<{ $disabled: boolean}>`
         display: flex;
