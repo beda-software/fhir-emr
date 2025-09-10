@@ -12,7 +12,12 @@ import { CalendarEventQuestionnaireAction } from './actions';
 import { EventContent } from './EventContent';
 import { useCalendarPage } from './hooks';
 import { ResourceCalendarPageProps } from './types';
-import { HeaderQuestionnaireAction } from '../ResourceListPage/actions';
+import {
+    HeaderNavigationAction,
+    HeaderQuestionnaireAction,
+    isNavigationAction,
+    isQuestionnaireAction,
+} from '../ResourceListPage/actions';
 export { customAction, navigationAction, questionnaireAction } from '../ResourceListPage/actions';
 
 export function ResourceCalendarPage<R extends WithId<Resource>>(props: ResourceCalendarPageProps<R>) {
@@ -54,15 +59,28 @@ export function ResourceCalendarPage<R extends WithId<Resource>>(props: Resource
     return (
         <PageContainer
             title={title}
-            titleRightElement={(getHeaderActions?.() ?? []).map((action, index) => (
-                <React.Fragment key={index}>
-                    <HeaderQuestionnaireAction
-                        action={action}
-                        reload={reload}
-                        defaultLaunchContext={defaultLaunchContext ?? []}
-                    />
-                </React.Fragment>
-            ))}
+            titleRightElement={(getHeaderActions?.() ?? []).map((action, index) => {
+                if (isQuestionnaireAction(action)) {
+                    return (
+                        <React.Fragment key={index}>
+                            <HeaderQuestionnaireAction
+                                action={action}
+                                reload={reload}
+                                defaultLaunchContext={defaultLaunchContext ?? []}
+                            />
+                        </React.Fragment>
+                    );
+                } else if (isNavigationAction(action)) {
+                    return (
+                        <React.Fragment key={index}>
+                            <HeaderNavigationAction action={action} />
+                        </React.Fragment>
+                    );
+                } else {
+                    const a: never = action;
+                    console.log('Unknown action ', a);
+                }
+            })}
             headerContent={
                 columnsFilterValues.length ? (
                     <SearchBar
