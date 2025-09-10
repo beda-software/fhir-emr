@@ -23,7 +23,7 @@ export const Example: Story = {
                 type: 'string',
                 linkId: 'example',
                 required: true,
-                helpText: 'Help text'
+                helpText: 'Help text',
             }}
             context={{} as ItemContext}
         />
