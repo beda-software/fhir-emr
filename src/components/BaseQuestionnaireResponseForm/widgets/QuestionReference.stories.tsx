@@ -73,3 +73,30 @@ export const Radio: Story = {
         />
     ),
 };
+
+export const Disabled: Story = {
+    render: () => (
+        <QuestionReference
+            parentPath={[]}
+            questionItem={{
+                text: 'Select practitioner',
+                type: 'reference',
+                linkId: 'practitioner-role',
+                required: true,
+                referenceResource: ['PractitionerRole'],
+                choiceColumn: [
+                    {
+                        forDisplay: true,
+                        path: "practitioner.resource.name.given.first() + ' ' + practitioner.resource.name.family + iif(specialty.exists(), ' - ' +specialty.first().coding.display, '')",
+                    },
+                ],
+                answerExpression: {
+                    language: 'application/x-fhir-query',
+                    expression: 'PractitionerRole?_assoc=practitioner',
+                },
+                readOnly: true,
+            }}
+            context={{} as ItemContext}
+        />
+    ),
+};

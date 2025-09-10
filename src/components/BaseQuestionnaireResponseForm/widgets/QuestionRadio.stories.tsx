@@ -57,3 +57,25 @@ export const RightOption: Story = {
         />
     ),
 };
+
+export const Disabled: Story = {
+    render: () => (
+        <QuestionSolidRadio
+            parentPath={[]}
+            questionItem={{
+                text: 'Select from list',
+                type: 'string',
+                linkId: 'example',
+                required: true,
+                readOnly: true,
+                answerOption: [
+                    { valueCoding: { code: '1', display: 'Item 1' } },
+                    { valueCoding: { code: '2', display: 'Item 2' } },
+                    { valueCoding: { code: '3', display: 'Item 3' } },
+                    { valueCoding: { code: '4', display: 'Item 4' } },
+                ],
+            }}
+            context={{} as ItemContext}
+        />
+    ),
+};

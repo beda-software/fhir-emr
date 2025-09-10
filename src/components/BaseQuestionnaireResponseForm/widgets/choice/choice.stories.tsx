@@ -122,3 +122,26 @@ export const Multiple: Story = {
         item3values.forEach(async (i) => await expect(i).not.toBeInTheDocument());
     },
 };
+
+export const Disabled: Story = {
+    render: () => (
+        <QuestionChoice
+            parentPath={[]}
+            questionItem={{
+                text: 'Select from list',
+                type: 'choice',
+                linkId: 'example',
+                required: true,
+                readOnly: true,
+                answerOption: [
+                    { valueCoding: { code: '1', display: 'Item 1' } },
+                    { valueCoding: { code: '2', display: 'Item 2' } },
+                    { valueCoding: { code: '3', display: 'Item 3' } },
+                    { valueCoding: { code: '4', display: 'Item 4' } },
+                ],
+                entryFormat: 'Select...',
+            }}
+            context={{} as ItemContext}
+        />
+    ),
+};
