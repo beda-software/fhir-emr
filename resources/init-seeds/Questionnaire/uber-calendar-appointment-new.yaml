@@ -1,0 +1,67 @@
+resourceType: Questionnaire
+id: uber-calendar-appointment-new
+name: uber-calendar-appointment-new
+title: New appointment
+status: active
+launchContext:
+  - name:
+      code: Appointment
+    type:
+      - Appointment
+    description: Appointment date passing from calendar
+mapping:
+  - id: new-appointment-extract
+    resourceType: Mapping
+item:
+  - type: group
+    linkId: root-group
+    item:
+      - text: Patient
+        type: reference
+        required: true
+        linkId: patient
+        referenceResource:
+          - Patient
+        answerExpression:
+          language: application/x-fhir-query
+          expression: "Patient?_count=25"
+        choiceColumn:
+          - forDisplay: true
+            path: "name.first().given.first() + ' ' + name.first().family"
+      - text: Practitioner
+        type: reference
+        referenceResource:
+          - PractitionerRole
+        required: true
+        linkId: practitioner-role
+        answerExpression:
+          language: application/x-fhir-query
+          expression: "PractitionerRole?_assoc=practitioner"
+        choiceColumn:
+          - forDisplay: true
+            path: >-
+              practitioner.resource.name.given.first() + ' ' +
+              practitioner.resource.name.family + ' - ' + specialty.first().coding.display
+      - text: Service
+        type: reference
+        referenceResource:
+          - HealthcareService
+        required: true
+        linkId: service-type
+        answerExpression:
+          language: application/x-fhir-query
+          expression: "HealthcareService?active=true"
+        choiceColumn:
+          - forDisplay: true
+            path: type.first().coding.first().display
+      - text: Start time
+        required: true
+        type: dateTime
+        linkId: start-datetime
+        initialExpression:
+          language: text/fhirpath
+          expression: "%Appointment.start"
+meta:
+  profile:
+    - https://beda.software/beda-emr-questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/uber-calendar-appointment-new
