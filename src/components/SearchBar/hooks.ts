@@ -31,45 +31,45 @@ import {
 
 export const createDefaultFiltersValues = (columns: SearchBarProps['columns']): ColumnFilterValue[] => {
     return columns.map((column) => {
-            if (isStringColumn(column)) {
-                return { column, value: column.defaultValue ?? undefined };
-            }
+        if (isStringColumn(column)) {
+            return { column, value: column.defaultValue ?? undefined };
+        }
 
-            if (isDateColumn(column)) {
-                return { column, value: column.defaultValue ?? undefined };
-            }
+        if (isDateColumn(column)) {
+            return { column, value: column.defaultValue ?? undefined };
+        }
 
-            if (isSingleDateColumn(column)) {
-                return { column, value: column.defaultValue ?? undefined };
-            }
+        if (isSingleDateColumn(column)) {
+            return { column, value: column.defaultValue ?? undefined };
+        }
 
-            if (isReferenceColumn(column)) {
-                return {
-                    column,
-                    value: column.defaultValue
-                        ? {
-                              value: {
-                                  Reference: column.defaultValue,
-                              },
-                          }
-                        : null,
-                };
-            }
+        if (isReferenceColumn(column)) {
+            return {
+                column,
+                value: column.defaultValue
+                    ? {
+                          value: {
+                              Reference: column.defaultValue,
+                          },
+                      }
+                    : null,
+            };
+        }
 
-            if (isChoiceColumn(column)) {
-                return { column, value: column.defaultValue ? [column.defaultValue] : null };
-            }
+        if (isChoiceColumn(column)) {
+            return { column, value: column.defaultValue ? [column.defaultValue] : null };
+        }
 
-            if (isSolidChoiceColumn(column)) {
-                return { column, value: column.defaultValue ? [column.defaultValue] : null };
-            }
+        if (isSolidChoiceColumn(column)) {
+            return { column, value: column.defaultValue ? [column.defaultValue] : null };
+        }
 
-            if (isSplitStringColumn(column)) {
-                return { column, value: column.defaultValue ?? undefined };
-            }
+        if (isSplitStringColumn(column)) {
+            return { column, value: column.defaultValue ?? undefined };
+        }
 
-            throw new Error('Unsupported column type');
-        });
+        throw new Error('Unsupported column type');
+    });
 };
 
 export function useSearchBar(props: SearchBarProps): SearchBarData {
