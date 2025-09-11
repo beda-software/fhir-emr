@@ -168,6 +168,13 @@ export function questionnaireItemsToValidationSchema(
             }
             schema = applyCustomYupTestsToItem(item, schema, customYupTests);
             schema = createSchemaArrayOfValues(yup.object({ date: schema }));
+        } else if (item.type === 'time') {
+            schema = yup.string();
+            if (item.required) {
+                schema = schema.required();
+            }
+            schema = applyCustomYupTestsToItem(item, schema, customYupTests);
+            schema = createSchemaArrayOfValues(yup.object({ time: schema }));
         } else if (item.type === 'group' && item.item) {
             schema = yup
                 .object({
