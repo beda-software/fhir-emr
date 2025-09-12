@@ -245,7 +245,7 @@ function isGroupWizard(q: FCEQuestionnaire) {
         const itemControlCode = i.itemControl?.coding?.[0]?.code;
 
         return (
-            itemControlCode && ['wizard', 'wizard-with-tooltips', 'wizard-navigation-group'].includes(itemControlCode)
+            itemControlCode && ['wizard', 'wizard-with-tooltips', 'wizard-vertical', 'wizard-navigation-group'].includes(itemControlCode)
         );
     });
 }

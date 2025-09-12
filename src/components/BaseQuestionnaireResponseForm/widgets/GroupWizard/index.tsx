@@ -1,17 +1,30 @@
-import { StepsProps } from 'antd';
-import { useCallback, useContext, useMemo, useState } from 'react';
+import { QuestionnaireResponse } from 'fhir/r4b';
+import {  useContext, useState } from 'react';
 import { useFormState, useWatch } from 'react-hook-form';
-import { GroupItemProps, QuestionItems } from 'sdc-qrf';
+import { FCEQuestionnaireItem, FormItems, GroupItemProps, ItemContext, QuestionItems } from 'sdc-qrf';
+import { getEnabledQuestions } from 'sdc-qrf/src/utils.ts';
 
 import { Text } from 'src/components/Typography';
 import { Wizard, WizardItem, WizardProps } from 'src/components/Wizard';
-import { questionnaireItemsToValidationSchema } from 'src/utils';
+import { compileAsFirst, questionnaireItemsToValidationSchema } from 'src/utils';
 
 import { S } from './styles';
 import { BaseQuestionnaireResponseFormPropsContext } from '../../context';
 
 interface GroupWizardProps extends GroupItemProps {
     wizard?: Partial<WizardProps>;
+}
+
+export function GroupWizardVertical(props: GroupWizardProps) {
+    return (
+        <GroupWizard
+            {...props}
+            wizard={{
+                direction: 'vertical',
+                size: 'small',
+            }}
+        />
+    );
 }
 
 export function GroupWizardWithTooltips(props: GroupWizardProps) {
@@ -25,8 +38,18 @@ export function GroupWizardWithTooltips(props: GroupWizardProps) {
     );
 }
 
+const getAnswerByLinkId = (linkId: string) =>
+    compileAsFirst<QuestionnaireResponse, string>(`repeat(item).where(linkId='${linkId}').answer.first()`);
+
+interface GroupStats {
+    totalQuestions: number;
+    finishedQuestions: number;
+    totalRequiredQuestions: number;
+    finishedRequiredQuestions: number;
+}
+
 export function GroupWizard(props: GroupWizardProps) {
-    const { parentPath, questionItem, context } = props;
+    const { parentPath, questionItem, context, wizard } = props;
     const baseQRFPropsContext = useContext(BaseQuestionnaireResponseFormPropsContext);
 
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -39,45 +62,52 @@ export function GroupWizard(props: GroupWizardProps) {
     const itemsCount = item.length;
     const isLastStepActive = itemsCount === currentIndex + 1;
 
-    const [stepsStatuses, setStepsStatuses] = useState<StepsProps['status'][]>(
-        item.map((i, index) => {
-            if (index === currentIndex) {
-                return 'process';
-            }
+    const showDescription = wizard?.direction === 'vertical';
 
+    const getGroupStatus = (
+        item: FCEQuestionnaireItem,
+        groupStats: GroupStats,
+    ): 'wait' | 'process' | 'finish' | 'error' => {
+        const groupValues = formValues?.[linkId]?.items?.[item.linkId].items;
+        const hasError =
+            questionnaireItemsToValidationSchema(item.item!, baseQRFPropsContext?.customYupTests).isValidSync(
+                groupValues,
+            ) === false;
+
+        if (hasError && isSubmitted) {
+            return 'error';
+        }
+
+        if (groupStats.finishedRequiredQuestions >= groupStats.totalRequiredQuestions) {
+            return 'finish';
+        }
+
+        if (groupStats.finishedQuestions === 0) {
             return 'wait';
-        }),
-    );
+        }
 
-    const stepsItems: WizardItem[] = useMemo(
-        () =>
-            item.map((i, index) => {
-                const groupValues = formValues?.[linkId]?.items?.[i.linkId].items;
-                const hasError =
-                    questionnaireItemsToValidationSchema(i.item!, baseQRFPropsContext?.customYupTests).isValidSync(
-                        groupValues,
-                    ) === false;
-                return {
-                    title: i.text,
-                    linkId: i.linkId,
-                    status: hasError && isSubmitted ? 'error' : stepsStatuses[index],
-                };
-            }),
-        [item, formValues, linkId, baseQRFPropsContext?.customYupTests, isSubmitted, stepsStatuses],
-    );
+        return 'process';
+    };
 
-    const handleStepChange = useCallback((value: number) => {
-        setCurrentIndex((prevIndex) => {
-            const newIndex = value;
-            setStepsStatuses((prev) => {
-                const newStepsStatuses = [...prev];
-                newStepsStatuses[newIndex] = 'process';
-                newStepsStatuses[prevIndex] = 'finish';
-                return newStepsStatuses;
-            });
-            return newIndex;
-        });
-    }, []);
+    const getStepItem = (item: FCEQuestionnaireItem) => {
+        const groupStats = getGroupStats(item, [...parentPath, linkId], formValues, context);
+        const description = showDescription
+            ? `${groupStats.finishedQuestions} of ${groupStats.totalQuestions} (${groupStats.finishedRequiredQuestions} of ${groupStats.totalRequiredQuestions} required)`
+            : undefined;
+
+        return {
+            title: item.text,
+            linkId: item.linkId,
+            status: getGroupStatus(item, groupStats),
+            description,
+        };
+    };
+
+    const stepsItems: WizardItem[] = item.map((qItem) => getStepItem(qItem));
+
+    const onStepChange = (value: number) => {
+        setCurrentIndex(value);
+    };
 
     if (parentPath.length !== 0) {
         console.error('The wizard item control must be in root group');
@@ -92,7 +122,7 @@ export function GroupWizard(props: GroupWizardProps) {
     }
 
     return (
-        <Wizard items={stepsItems} currentIndex={currentIndex} onChange={handleStepChange} {...props.wizard}>
+        <Wizard items={stepsItems} currentIndex={currentIndex} onChange={onStepChange} {...props.wizard}>
             {item.map((groupItem, index) => {
                 if (index !== currentIndex) {
                     return null;
@@ -109,13 +139,61 @@ export function GroupWizard(props: GroupWizardProps) {
                 );
             })}
             <S.WizardFooter
-                goBack={() => handleStepChange(currentIndex - 1)}
-                goForward={() => handleStepChange(currentIndex + 1)}
+                goBack={() => setCurrentIndex((i) => i - 1)}
+                goForward={() => setCurrentIndex((i) => i + 1)}
                 canGoBack={currentIndex > 0}
                 canGoForward={currentIndex + 1 < itemsCount}
+                $wizardDirection={wizard?.direction ?? 'horizontal'}
             >
                 {baseQRFPropsContext && <S.FormFooter {...baseQRFPropsContext} submitDisabled={!isLastStepActive} />}
             </S.WizardFooter>
         </Wizard>
     );
 }
+
+const getGroupEnabledQuestions = (
+    groupItem: FCEQuestionnaireItem,
+    groupParentPath: string[],
+    formValues: FormItems,
+    groupContext: ItemContext[],
+) => {
+    const groupPath = [...groupParentPath, groupItem.linkId, 'items'];
+    const directItems = getEnabledQuestions(groupItem.item!, groupPath, formValues, groupContext[0]!);
+
+    const allEnabledQuestions: FCEQuestionnaireItem[] = [];
+
+    directItems.forEach((item) => {
+        if (item.type === 'group' && item.item) {
+            const nestedQuestions = getGroupEnabledQuestions(item, groupPath, formValues, groupContext);
+            allEnabledQuestions.push(...nestedQuestions);
+        } else {
+            allEnabledQuestions.push(item);
+        }
+    });
+
+    return allEnabledQuestions;
+};
+
+const getGroupStats = (
+    groupItem: FCEQuestionnaireItem,
+    parentPath: string[],
+    formValues: FormItems,
+    context: ItemContext[],
+): GroupStats => {
+    const qr = context[0]!.QuestionnaireResponse;
+
+    const allQuestions = getGroupEnabledQuestions(groupItem, [...parentPath, 'items'], formValues, context);
+    const allRequiredQuestions = allQuestions.filter((q) => q.required === true);
+
+    const finishedQuestions = allQuestions.map((q) => getAnswerByLinkId(q.linkId)(qr)).filter((a) => a !== undefined);
+    const finishedRequiredQuestions = allRequiredQuestions
+        .map((q) => getAnswerByLinkId(q.linkId)(qr))
+        .filter((a) => a !== undefined);
+
+    return {
+        totalQuestions: allQuestions.length,
+        finishedQuestions: finishedQuestions.length,
+        totalRequiredQuestions: allRequiredQuestions.length,
+        finishedRequiredQuestions: finishedRequiredQuestions.length,
+    };
+};

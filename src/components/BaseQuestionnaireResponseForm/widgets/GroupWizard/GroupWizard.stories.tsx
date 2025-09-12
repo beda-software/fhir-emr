@@ -79,7 +79,49 @@ export const inModal: Story = {
     ),
 };
 
-function getQuestionnaire(itemControlCode: 'wizard' | 'wizard-with-tooltips' = 'wizard'): FCEQuestionnaire {
+export const inModalVertical: Story = {
+    render: () => (
+        <I18nProvider i18n={i18n}>
+            <Modal open={true} title={'Wizard in modal'} footer={null} width={800}>
+                <BaseQuestionnaireResponseForm
+                    formData={{
+                        context: {
+                            fceQuestionnaire: getQuestionnaire('wizard-vertical'),
+                            questionnaire: fromFirstClassExtension(getQuestionnaire('wizard-vertical')),
+                            launchContextParameters: [],
+                            questionnaireResponse,
+                        },
+                        formValues,
+                    }}
+                />
+            </Modal>
+        </I18nProvider>
+    ),
+};
+
+export const Vertical: Story = {
+    render: () => (
+        <I18nProvider i18n={i18n}>
+            <BaseQuestionnaireResponseForm
+                formData={{
+                    context: {
+                        fceQuestionnaire: getQuestionnaire('wizard-vertical'),
+                        questionnaire: fromFirstClassExtension(getQuestionnaire('wizard-vertical')),
+                        launchContextParameters: [],
+                        questionnaireResponse,
+                    },
+                    formValues,
+                }}
+                onCancel={() => console.log('onCancel')}
+                saveButtonTitle={'Save & complete'}
+            />
+        </I18nProvider>
+    ),
+};
+
+function getQuestionnaire(
+    itemControlCode: 'wizard' | 'wizard-with-tooltips' | 'wizard-vertical' = 'wizard',
+): FCEQuestionnaire {
     return {
         assembledFrom: 'group-wizard',
         subjectType: ['Patient'],
@@ -127,6 +169,23 @@ function getQuestionnaire(itemControlCode: 'wizard' | 'wizard-with-tooltips' = '
                                     },
                                     {
                                         valueString: 'Other',
+                                    },
+                                ],
+                            },
+                            {
+                                type: 'group',
+                                linkId: 'q14',
+                                item: [
+                                    {
+                                        text: 'How many days a week do you engage in physical activity?',
+                                        type: 'integer',
+                                        linkId: 'q141',
+                                        required: true,
+                                    },
+                                    {
+                                        text: 'How many days a week do you engage in physical activity?',
+                                        type: 'string',
+                                        linkId: 'q142',
                                     },
                                 ],
                             },
