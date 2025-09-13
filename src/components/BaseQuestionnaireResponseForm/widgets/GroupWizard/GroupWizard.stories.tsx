@@ -286,7 +286,6 @@ function getQuestionnaire(
                                 text: 'Do you smoke tobacco or use nicotine products?',
                                 type: 'choice',
                                 linkId: 'q41',
-                                required: true,
                                 answerOption: [
                                     {
                                         valueString: 'Yes',
@@ -300,7 +299,6 @@ function getQuestionnaire(
                                 text: 'How often do you consume alcoholic beverages?',
                                 type: 'choice',
                                 linkId: 'q42',
-                                required: true,
                                 answerOption: [
                                     {
                                         valueString: 'Never',

@@ -78,13 +78,15 @@ export function GroupWizard(props: GroupWizardProps) {
             return 'error';
         }
 
+        if (groupStats.finishedQuestions === 0) {
+            return 'wait';
+        }
+
         if (groupStats.finishedRequiredQuestions >= groupStats.totalRequiredQuestions) {
             return 'finish';
         }
 
-        if (groupStats.finishedQuestions === 0) {
-            return 'wait';
-        }
+
 
         return 'process';
     };

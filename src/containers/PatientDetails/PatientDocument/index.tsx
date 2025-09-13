@@ -19,6 +19,7 @@ import s from './PatientDocument.module.scss';
 import { S } from './PatientDocument.styles';
 import { PatientDocumentHeader } from './PatientDocumentHeader';
 import { usePatientDocument } from './usePatientDocument';
+import classNames from 'classnames';
 
 export interface PatientDocumentProps {
     patient: Patient;
@@ -120,7 +121,7 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
     const navigate = useNavigate();
 
     return (
-        <div className={s.container}>
+        <div className={classNames(s.container, 'app-patient-document')}>
             <S.Content>
                 <RenderRemoteData
                     remoteData={response}

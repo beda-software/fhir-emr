@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components';
 
 import { Title } from '../Typography';
+import { PATIENT_DOCUMENT_PADDING } from 'src/containers/PatientDetails/PatientDocument/PatientDocument.styles.ts';
 
 export const WIZARD_SIDEBAR_WIDTH = 294;
 export const WIZARD_GAP = 24;
@@ -130,7 +131,11 @@ export const S = {
         }
 
         .ant-modal-body & {
-            margin: -24px -24px -30px -24px
+            margin: -24px -24px -30px -24px;
+        }
+
+        .app-patient-document & {
+            margin: 0 -${PATIENT_DOCUMENT_PADDING}px -${PATIENT_DOCUMENT_PADDING}px;
         }
 
         ${({ $labelPlacement }) =>
@@ -167,6 +172,11 @@ export const S = {
             padding: 24px;
             background-color: ${({ theme }) => theme.neutralPalette.gray_2};
         `}
+
+        .ant-modal-body &,
+        .app-patient-document & {
+            background-color: ${({ theme }) => theme.neutralPalette.gray_3};
+        }
     `,
     Content: styled.div<{ $direction: 'horizontal' | 'vertical' }>`
         display: flex;
@@ -178,7 +188,8 @@ export const S = {
             flex: 1;
             padding: 24px 0;
 
-            .ant-modal-body & {
+            .ant-modal-body &,
+            .app-patient-document & {
                 padding-right: 24px;
             }
         `}
@@ -224,7 +235,8 @@ export const S = {
         bottom: 0;
         padding: 20px 24px;
 
-        .app-wizard._vertical & {
+        .app-wizard._vertical &,
+        .app-patient-document & {
             padding: 20px 0 20px 24px;
             border-top: 1px solid #f0f0f0;
         }
