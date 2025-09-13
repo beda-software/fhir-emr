@@ -1,7 +1,8 @@
 import styled, { css } from 'styled-components';
 
-import { Title } from '../Typography';
 import { PATIENT_DOCUMENT_PADDING } from 'src/containers/PatientDetails/PatientDocument/PatientDocument.styles.ts';
+
+import { Title } from '../Typography';
 
 export const WIZARD_SIDEBAR_WIDTH = 294;
 export const WIZARD_GAP = 24;
@@ -43,19 +44,19 @@ const processColors = css`
 `
 
 const disabledColors = css`
-    background-color: ${({ theme }) => theme.neutralPalette.gray_4};
-    border-color: ${({ theme }) => theme.neutralPalette.gray_4};
+    background-color: ${({ theme }) => theme.neutralPalette.gray_5};
+    border-color: ${({ theme }) => theme.neutralPalette.gray_5};
     
     * {
-        color: ${({ theme }) => theme.neutralPalette.gray_7};
+        color: ${({ theme }) => theme.neutralPalette.gray_8};
     }
 
     ant-steps-item-container[role='button']:hover & {
-        background-color: ${({ theme }) => theme.neutralPalette.gray_4};
-        border-color: ${({ theme }) => theme.neutralPalette.gray_4};
+        background-color: ${({ theme }) => theme.neutralPalette.gray_5};
+        border-color: ${({ theme }) => theme.neutralPalette.gray_5};
 
         * {
-            color: ${({ theme }) => theme.neutralPalette.gray_7};
+            color: ${({ theme }) => theme.neutralPalette.gray_8};
         }
     }
 `
@@ -136,6 +137,7 @@ export const S = {
 
         .app-patient-document & {
             margin: 0 -${PATIENT_DOCUMENT_PADDING}px -${PATIENT_DOCUMENT_PADDING}px;
+            border-top: 1px solid ${({ theme }) => theme.neutralPalette.gray_2};
         }
 
         ${({ $labelPlacement }) =>
@@ -171,12 +173,14 @@ export const S = {
             width: ${WIZARD_SIDEBAR_WIDTH}px;
             padding: 24px;
             background-color: ${({ theme }) => theme.neutralPalette.gray_2};
+
+            .ant-modal-body &,
+            .app-patient-document & {
+                background-color: ${({ theme }) => theme.neutralPalette.gray_3};
+            }
         `}
 
-        .ant-modal-body &,
-        .app-patient-document & {
-            background-color: ${({ theme }) => theme.neutralPalette.gray_3};
-        }
+       
     `,
     Content: styled.div<{ $direction: 'horizontal' | 'vertical' }>`
         display: flex;
@@ -235,15 +239,15 @@ export const S = {
         bottom: 0;
         padding: 20px 24px;
 
-        .app-wizard._vertical &,
-        .app-patient-document & {
+        .app-wizard._vertical & {
             padding: 20px 0 20px 24px;
-            border-top: 1px solid #f0f0f0;
+            border-top: 1px solid ${({ theme }) => theme.neutralPalette.gray_3};
         }
 
-        .ant-modal & {
+        .ant-modal &,
+        .app-patient-document & {
             padding: 20px 24px !important;
-            border-top: 1px solid #f0f0f0;
+            border-top: 1px solid ${({ theme }) => theme.neutralPalette.gray_2};
         }
     `,
     ControlsLeft: styled.div`

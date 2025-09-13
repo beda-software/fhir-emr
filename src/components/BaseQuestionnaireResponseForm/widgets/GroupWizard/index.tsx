@@ -86,8 +86,6 @@ export function GroupWizard(props: GroupWizardProps) {
             return 'finish';
         }
 
-
-
         return 'process';
     };
 
