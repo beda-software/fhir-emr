@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components';
 
 import { Title } from '../Typography';
 
-export const WIZARD_SIDEBAR_WIDTH = 246;
+export const WIZARD_SIDEBAR_WIDTH = 294;
 export const WIZARD_GAP = 24;
 
 const activeColors = css`
@@ -99,7 +99,9 @@ export const S = {
     Container: styled.div<{ $labelPlacement: 'vertical' | 'tooltip'; $direction: 'horizontal' | 'vertical' }>`
         display: flex;
         flex-direction: column;
-        gap: ${WIZARD_GAP}px 0;
+        gap: 24px 0;
+        position: relative;
+        padding-bottom: 73px;
 
         .ant-steps {
             overflow-x: auto;
@@ -115,16 +117,20 @@ export const S = {
             line-height: 24px !important;
             color: ${({ theme }) => theme.neutral.primaryText} !important;
         }
-        
+
         .ant-steps-item-description {
             line-height: 22px !important;
             margin-top: 4px;
             color: ${({ theme }) => theme.neutral.secondaryText} !important;
         }
-        
+
         .ant-steps-item-icon {
             width: auto;
             margin-right: 8px !important;
+        }
+
+        .ant-modal-body & {
+            margin: -24px -24px -30px -24px
         }
 
         ${({ $labelPlacement }) =>
@@ -143,28 +149,38 @@ export const S = {
                     margin-inline-start: 16px !important;
                 }
             `}
-        
+
         ${({ $direction }) => $direction === 'vertical' && css`
             flex-direction: row;
-            gap: 0 24px;
-            
+            gap: 0 ${WIZARD_GAP}px;
+
             .ant-steps-item-tail {
                 display: none !important;
             }
         `}
     `,
     StepsContainer: styled.div<{ $direction: 'horizontal' | 'vertical' }>`
+        padding: 24px 24px 0;
+        
         ${({ $direction }) => $direction === 'vertical' && css`
             width: ${WIZARD_SIDEBAR_WIDTH}px;
+            padding: 24px;
+            background-color: ${({ theme }) => theme.neutralPalette.gray_2};
         `}
     `,
     Content: styled.div<{ $direction: 'horizontal' | 'vertical' }>`
         display: flex;
         flex-direction: column;
         gap: 24px 0;
+        padding: 0 24px 24px;
         
         ${({ $direction }) => $direction === 'vertical' && css`
             flex: 1;
+            padding: 24px 0;
+
+            .ant-modal-body & {
+                padding-right: 24px;
+            }
         `}
     `,
     Title: styled(Title)`
@@ -202,10 +218,20 @@ export const S = {
     Footer: styled.div`
         display: flex;
         justify-content: space-between;
-        padding-top: 20px;
-        
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 20px 24px;
+
         .app-wizard._vertical & {
-            margin-left: -${WIZARD_SIDEBAR_WIDTH + WIZARD_GAP}px;
+            padding: 20px 0 20px 24px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .ant-modal & {
+            padding: 20px 24px !important;
+            border-top: 1px solid #f0f0f0;
         }
     `,
     ControlsLeft: styled.div`

@@ -143,7 +143,6 @@ export function GroupWizard(props: GroupWizardProps) {
                 goForward={() => setCurrentIndex((i) => i + 1)}
                 canGoBack={currentIndex > 0}
                 canGoForward={currentIndex + 1 < itemsCount}
-                $wizardDirection={wizard?.direction ?? 'horizontal'}
             >
                 {baseQRFPropsContext && <S.FormFooter {...baseQRFPropsContext} submitDisabled={!isLastStepActive} />}
             </S.WizardFooter>
@@ -171,7 +170,7 @@ const getGroupEnabledQuestions = (
         }
     });
 
-    return allEnabledQuestions;
+    return allEnabledQuestions.filter((q) => !q.hidden);
 };
 
 const getGroupStats = (

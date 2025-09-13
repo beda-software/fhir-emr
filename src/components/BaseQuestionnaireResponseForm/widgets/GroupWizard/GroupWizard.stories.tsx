@@ -177,15 +177,21 @@ function getQuestionnaire(
                                 linkId: 'q14',
                                 item: [
                                     {
-                                        text: 'How many days a week do you engage in physical activity?',
+                                        text: 'Some hidden question',
                                         type: 'integer',
                                         linkId: 'q141',
+                                        hidden: true,
+                                    },
+                                    {
+                                        text: 'How much time do you typically spend sitting on an average day? (e.g., at a desk, watching TV, commuting)',
+                                        type: 'integer',
+                                        linkId: 'q142',
                                         required: true,
                                     },
                                     {
-                                        text: 'How many days a week do you engage in physical activity?',
+                                        text: 'What is the single biggest barrier that prevents you from being more physically active?',
                                         type: 'string',
-                                        linkId: 'q142',
+                                        linkId: 'q143',
                                     },
                                 ],
                             },
@@ -255,20 +261,20 @@ function getQuestionnaire(
                                     },
                                 ],
                             },
-                            {
-                                text: 'Do you use any sleep aids (e.g., medication, herbal supplements)?',
-                                type: 'choice',
-                                linkId: 'q33',
-                                required: false,
-                                answerOption: [
-                                    {
-                                        valueString: 'Yes',
-                                    },
-                                    {
-                                        valueString: 'No',
-                                    },
-                                ],
-                            },
+                            // {
+                            //     text: 'Do you use any sleep aids (e.g., medication, herbal supplements)?',
+                            //     type: 'choice',
+                            //     linkId: 'q33',
+                            //     required: false,
+                            //     answerOption: [
+                            //         {
+                            //             valueString: 'Yes',
+                            //         },
+                            //         {
+                            //             valueString: 'No',
+                            //         },
+                            //     ],
+                            // },
                         ],
                         text: 'Sleep Patterns',
                         type: 'group',
