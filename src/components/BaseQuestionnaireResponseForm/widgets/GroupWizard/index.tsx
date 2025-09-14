@@ -41,7 +41,7 @@ export function GroupWizardWithTooltips(props: GroupWizardProps) {
 const getAnswerByLinkId = (linkId: string) =>
     compileAsFirst<QuestionnaireResponse, string>(`repeat(item).where(linkId='${linkId}').answer.first()`);
 
-interface GroupStats {
+export interface GroupStats {
     totalQuestions: number;
     finishedQuestions: number;
     totalRequiredQuestions: number;
@@ -92,7 +92,7 @@ export function GroupWizard(props: GroupWizardProps) {
     const getStepItem = (item: FCEQuestionnaireItem) => {
         const groupStats = getGroupStats(item, [...parentPath, linkId], formValues, context);
         const description = showDescription
-            ? `${groupStats.finishedQuestions} of ${groupStats.totalQuestions} (${groupStats.finishedRequiredQuestions} of ${groupStats.totalRequiredQuestions} required)`
+            ? `${groupStats.finishedQuestions} of ${groupStats.totalQuestions}`
             : undefined;
 
         return {
@@ -173,7 +173,7 @@ const getGroupEnabledQuestions = (
     return allEnabledQuestions.filter((q) => !q.hidden);
 };
 
-const getGroupStats = (
+export const getGroupStats = (
     groupItem: FCEQuestionnaireItem,
     parentPath: string[],
     formValues: FormItems,

@@ -22,6 +22,7 @@ import { QuestionDateTime } from './readonly-widgets/date';
 import { Display } from './readonly-widgets/display';
 import { Col, Group, Row } from './readonly-widgets/Group';
 import { NavigationGroup } from './readonly-widgets/Group/NavigationGroup';
+import { GroupWizardVertical } from './readonly-widgets/GroupWizard';
 import { QuestionInteger, QuestionDecimal, QuestionQuantity } from './readonly-widgets/number';
 import { QuestionReference } from './readonly-widgets/reference';
 import { AnxietyScore, DepressionScore } from './readonly-widgets/score';
@@ -65,6 +66,7 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
                         row: Row,
                         'time-range-picker': TimeRangePickerControl,
                         'wizard-navigation-group': NavigationGroup,
+                        'wizard-vertical': GroupWizardVertical,
                         ...itemControlGroupItemComponents,
                         ...ItemControlGroupItemReadonlyWidgetsFromContext,
                     }}

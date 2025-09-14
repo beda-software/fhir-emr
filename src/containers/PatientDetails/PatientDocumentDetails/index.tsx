@@ -34,6 +34,7 @@ import { isExternalQuestionnaire } from 'src/utils/smart-apps';
 import { PatientDocumentDetailsWrapperContext } from './context';
 import { ExternalDocumentView } from './ExternalDocumentView';
 import s from './PatientDocumentDetails.module.scss';
+import classNames from 'classnames';
 
 interface Props {
     patient: WithId<Patient>;
@@ -132,7 +133,7 @@ function PatientDocumentDetailsReadonly(props: {
     const { Wrapper, Content } = useContext(PatientDocumentDetailsWrapperContext);
 
     return (
-        <div className={s.container}>
+        <div className={classNames(s.container, 'app-patient-document-details')}>
             <Wrapper>
                 <div className={s.header}>
                     <Title level={4} className={s.title}>

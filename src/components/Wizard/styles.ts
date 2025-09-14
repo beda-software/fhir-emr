@@ -137,7 +137,13 @@ export const S = {
 
         .app-patient-document & {
             margin: 0 -${PATIENT_DOCUMENT_PADDING}px -${PATIENT_DOCUMENT_PADDING}px;
-            border-top: 1px solid ${({ theme }) => theme.neutralPalette.gray_2};
+            border-top: 1px solid ${({ theme }) => theme.neutralPalette.gray_3};
+        }
+        
+        .app-patient-document-details & {
+            margin-left: -32px;
+            border-top: 1px solid ${({ theme }) => theme.neutralPalette.gray_3};
+            padding-bottom: 0;
         }
 
         ${({ $labelPlacement }) =>
@@ -241,13 +247,13 @@ export const S = {
 
         .app-wizard._vertical & {
             padding: 20px 0 20px 24px;
-            border-top: 1px solid ${({ theme }) => theme.neutralPalette.gray_3};
+            border-top: 1px solid ${({ theme }) => theme.neutralPalette.gray_2};
         }
 
         .ant-modal &,
         .app-patient-document & {
             padding: 20px 24px !important;
-            border-top: 1px solid ${({ theme }) => theme.neutralPalette.gray_2};
+            border-top: 1px solid ${({ theme }) => theme.neutralPalette.gray_3} !important;
         }
     `,
     ControlsLeft: styled.div`
