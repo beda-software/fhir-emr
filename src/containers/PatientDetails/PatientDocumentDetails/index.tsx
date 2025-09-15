@@ -31,7 +31,7 @@ import { forceDeleteFHIRResource, getFHIRResources, patchFHIRResource } from 'sr
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 import { isExternalQuestionnaire } from 'src/utils/smart-apps';
 
-import { PatientDocumentDetailsWrapperContext } from './context';
+import { PatientDocumentDetailsReadonlyContext, PatientDocumentDetailsWrapperContext } from './context';
 import { ExternalDocumentView } from './ExternalDocumentView';
 import s from './PatientDocumentDetails.module.scss';
 import classNames from 'classnames';
@@ -131,10 +131,17 @@ function PatientDocumentDetailsReadonly(props: {
     const canBeEdited = !qrCompleted;
 
     const { Wrapper, Content } = useContext(PatientDocumentDetailsWrapperContext);
+    const { styles: contextStyles, content: contextContent = {} } = useContext(PatientDocumentDetailsReadonlyContext);
+    const S = {
+        Wrapper,
+        Content,
+        ...contextStyles,
+    };
+    const { after: contentAfter } = contextContent;
 
     return (
         <div className={classNames(s.container, 'app-patient-document-details')}>
-            <Wrapper>
+            <S.Wrapper>
                 <div className={s.header}>
                     <Title level={4} className={s.title}>
                         {formData.context.questionnaire.title || formData.context.questionnaire.name}
@@ -202,10 +209,11 @@ function PatientDocumentDetailsReadonly(props: {
                     </div>
                 </div>
 
-                <Content>
+                <S.Content>
                     <ReadonlyQuestionnaireResponseForm formData={formData} />
-                </Content>
-            </Wrapper>
+                    {contentAfter}
+                </S.Content>
+            </S.Wrapper>
         </div>
     );
 }
