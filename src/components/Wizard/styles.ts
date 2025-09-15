@@ -8,16 +8,16 @@ export const WIZARD_SIDEBAR_WIDTH = 294;
 export const WIZARD_GAP = 24;
 
 const activeColors = css`
-    background-color: ${({ theme }) => theme.primaryPalette.bcp_6};
-    border-color: ${({ theme }) => theme.primaryPalette.bcp_6};
+    background-color: ${({ theme }) => theme.antdTheme?.colorPrimary};
+    border-color: ${({ theme }) => theme.antdTheme?.colorPrimaryBorder};
     
     * {
         color: ${({ theme }) => theme.neutralPalette.gray_1};
     }
 
     .ant-steps-item-container[role='button']:hover & {
-        background-color: ${({ theme }) => theme.primaryPalette.bcp_6};
-        border-color: ${({ theme }) => theme.primaryPalette.bcp_6};
+        background-color: ${({ theme }) => theme.antdTheme?.colorPrimary};
+        border-color: ${({ theme }) => theme.antdTheme?.colorPrimaryBorder};
 
         * {
             color: ${({ theme }) => theme.neutralPalette.gray_1};
@@ -26,19 +26,19 @@ const activeColors = css`
 `
 
 const processColors = css`
-    background-color: ${({ theme }) => theme.primaryPalette.bcp_1};
-    border-color: ${({ theme }) => theme.primaryPalette.bcp_1};
+    background-color: ${({ theme }) => theme.antdTheme?.colorPrimaryBg};
+    border-color: ${({ theme }) => theme.antdTheme?.colorPrimary};
     
     * {
-        color: ${({ theme }) => theme.primaryPalette.bcp_6};
+        color: ${({ theme }) => theme.antdTheme?.colorPrimary};
     }
 
     .ant-steps-item-container[role='button']:hover & {
-        background-color: ${({ theme }) => theme.primaryPalette.bcp_1};
-        border-color: ${({ theme }) => theme.primaryPalette.bcp_6};
+        background-color: ${({ theme }) => theme.primaryPalette.bcp_3};
+        border-color: ${({ theme }) => theme.antdTheme?.colorPrimary};
 
         * {
-            color: ${({ theme }) => theme.primaryPalette.bcp_6};
+            color: ${({ theme }) => theme.antdTheme?.colorPrimary};
         }
     }
 `
@@ -62,16 +62,16 @@ const disabledColors = css`
 `
 
 const errorColors = css`
-    background-color: ${({ theme }) => theme.antdTheme?.red6};
-    border-color: ${({ theme }) => theme.antdTheme?.red6};
+    background-color: ${({ theme }) => theme.antdTheme?.colorError};
+    border-color: ${({ theme }) => theme.antdTheme?.colorError};
 
     * {
         color: ${({ theme }) => theme.neutralPalette.gray_1};
     }
 
     .ant-steps-item-container[role='button']:hover & {
-        background-color: ${({ theme }) => theme.antdTheme?.red7};
-        border-color: ${({ theme }) => theme.antdTheme?.red7};
+        background-color: ${({ theme }) => theme.antdTheme?.colorErrorHover};
+        border-color: ${({ theme }) => theme.antdTheme?.colorError};
 
         * {
             color: ${({ theme }) => theme.neutralPalette.gray_1};
@@ -80,16 +80,16 @@ const errorColors = css`
 `
 
 const finishColors = css`
-    background-color: ${({ theme }) => theme.antdTheme?.green6};
-    border-color: ${({ theme }) => theme.antdTheme?.green6};
+    background-color: ${({ theme }) => theme.antdTheme?.colorSuccess};
+    border-color: ${({ theme }) => theme.antdTheme?.colorSuccess};
 
     * {
         color: ${({ theme }) => theme.neutralPalette.gray_1};
     }
 
     .ant-steps-item-container[role='button']:hover & {
-        background-color: ${({ theme }) => theme.antdTheme?.green7};
-        border-color: ${({ theme }) => theme.antdTheme?.green7};
+        background-color: ${({ theme }) => theme.antdTheme?.colorSuccessHover};
+        border-color: ${({ theme }) => theme.antdTheme?.colorSuccess};
 
         * {
             color: ${({ theme }) => theme.neutralPalette.gray_1};
@@ -178,15 +178,8 @@ export const S = {
         ${({ $direction }) => $direction === 'vertical' && css`
             width: ${WIZARD_SIDEBAR_WIDTH}px;
             padding: 24px;
-            background-color: ${({ theme }) => theme.neutralPalette.gray_2};
-
-            .ant-modal-body &,
-            .app-patient-document & {
-                background-color: ${({ theme }) => theme.neutralPalette.gray_3};
-            }
+            background-color: ${({ theme }) => theme.neutralPalette.gray_3};
         `}
-
-       
     `,
     Content: styled.div<{ $direction: 'horizontal' | 'vertical' }>`
         display: flex;
@@ -214,7 +207,7 @@ export const S = {
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 1px solid ${({ theme }) => theme.primaryPalette.bcp_1};
+        border: 1px solid ${({ theme }) => theme.antdTheme?.colorPrimaryBg};
         transition: all 0.2s;
         
         ${processColors}
@@ -247,13 +240,12 @@ export const S = {
 
         .app-wizard._vertical & {
             padding: 20px 0 20px 24px;
-            border-top: 1px solid ${({ theme }) => theme.neutralPalette.gray_2};
+            border-top: 1px solid ${({ theme }) => theme.neutralPalette.gray_3};
         }
 
         .ant-modal &,
         .app-patient-document & {
             padding: 20px 24px !important;
-            border-top: 1px solid ${({ theme }) => theme.neutralPalette.gray_3} !important;
         }
     `,
     ControlsLeft: styled.div`
