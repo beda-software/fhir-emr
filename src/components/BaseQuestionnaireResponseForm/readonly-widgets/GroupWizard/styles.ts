@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 export const S = {
     Group: styled.div<{ $active: boolean }>`
