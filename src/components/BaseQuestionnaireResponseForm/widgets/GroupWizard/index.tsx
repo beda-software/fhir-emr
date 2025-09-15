@@ -1,7 +1,14 @@
 import { QuestionnaireResponse } from 'fhir/r4b';
-import {  useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useFormState, useWatch } from 'react-hook-form';
-import { FCEQuestionnaireItem, FormItems, getEnabledQuestions, GroupItemProps, ItemContext, QuestionItems } from 'sdc-qrf';
+import {
+    FCEQuestionnaireItem,
+    FormItems,
+    getEnabledQuestions,
+    GroupItemProps,
+    ItemContext,
+    QuestionItems,
+} from 'sdc-qrf';
 
 import { createBus } from '@beda.software/fhir-react';
 

@@ -144,11 +144,12 @@ function WizardStoryWithFooter(props: WizardProps) {
             <Wizard {...props} currentIndex={currentIndex} onChange={handleStepChange} items={stepsItems}>
                 <S.Content direction={props.direction ?? 'horizontal'}>
                     <Text>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. In suscipit magna sed pretium maximus. Duis
-                        bibendum a lacus ut commodo. Nam eget justo tristique, tincidunt ligula vel, accumsan odio. Morbi purus
-                        ante, bibendum vitae arcu eget, ultrices faucibus dolor. Sed fermentum blandit malesuada. Duis fringilla ac
-                        tortor ut convallis. Fusce iaculis arcu dui. Ut non neque rhoncus, tincidunt ipsum in, lobortis magna. Donec
-                        aliquet leo tellus. Proin pulvinar lacus sodales tortor eleifend rhoncus. Praesent varius maximus pulvinar.
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. In suscipit magna sed pretium maximus.
+                        Duis bibendum a lacus ut commodo. Nam eget justo tristique, tincidunt ligula vel, accumsan odio.
+                        Morbi purus ante, bibendum vitae arcu eget, ultrices faucibus dolor. Sed fermentum blandit
+                        malesuada. Duis fringilla ac tortor ut convallis. Fusce iaculis arcu dui. Ut non neque rhoncus,
+                        tincidunt ipsum in, lobortis magna. Donec aliquet leo tellus. Proin pulvinar lacus sodales
+                        tortor eleifend rhoncus. Praesent varius maximus pulvinar.
                     </Text>
                 </S.Content>
                 <WizardFooter
@@ -272,8 +273,7 @@ export const WithFooterVertical: Story = {
 };
 
 const S = {
-    Container: styled.div`
-    `,
+    Container: styled.div``,
     Content: styled.div<{ direction: 'vertical' | 'horizontal' }>`
         display: flex;
         flex-direction: column;
