@@ -18,7 +18,7 @@ import { useFieldController } from '../../hooks';
 export function useUploader({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, repeats, mimeType } = questionItem;
     const fieldName = [...parentPath, linkId];
-    const { formItem, value, onChange } = useFieldController<FormAnswerItems[]>(fieldName, questionItem);
+    const { formItem, value, onChange, disabled } = useFieldController<FormAnswerItems[]>(fieldName, questionItem);
     const acceptedFileExtensions = useMemo(() => (mimeType ? mimeType.join(',') : undefined), [mimeType]);
     const uid = useRef<Record<string, string>>({});
     const initialFileList: Array<UploadFile> = useMemo(
@@ -121,5 +121,6 @@ export function useUploader({ parentPath, questionItem }: QuestionItemProps) {
         onRemove,
         fileList,
         acceptedFileExtensions,
+        disabled,
     };
 }
