@@ -1,12 +1,12 @@
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { Button, StepProps, Steps, Tooltip } from 'antd';
+import classNames from 'classnames';
 import { CSSProperties, ReactNode, useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { FormItems } from 'sdc-qrf';
 
 import { S } from './styles';
 import { Text } from '../Typography';
-import classNames from 'classnames';
 
 export type WizardItem = StepProps & {
     linkId: string;

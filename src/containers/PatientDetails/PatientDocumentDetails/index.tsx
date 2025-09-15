@@ -1,6 +1,7 @@
 import { PrinterOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
+import classNames from 'classnames';
 import {
     Encounter,
     Organization,
@@ -34,7 +35,6 @@ import { isExternalQuestionnaire } from 'src/utils/smart-apps';
 import { PatientDocumentDetailsReadonlyContext, PatientDocumentDetailsWrapperContext } from './context';
 import { ExternalDocumentView } from './ExternalDocumentView';
 import s from './PatientDocumentDetails.module.scss';
-import classNames from 'classnames';
 
 interface Props {
     patient: WithId<Patient>;
