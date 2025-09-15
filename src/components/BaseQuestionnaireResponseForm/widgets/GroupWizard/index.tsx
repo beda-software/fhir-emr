@@ -4,6 +4,8 @@ import { useFormState, useWatch } from 'react-hook-form';
 import { FCEQuestionnaireItem, FormItems, GroupItemProps, ItemContext, QuestionItems } from 'sdc-qrf';
 import { getEnabledQuestions } from 'sdc-qrf/src/utils.ts';
 
+import { createBus } from '@beda.software/fhir-react';
+
 import { Text } from 'src/components/Typography';
 import { Wizard, WizardItem, WizardProps } from 'src/components/Wizard';
 import { compileAsFirst, questionnaireItemsToValidationSchema } from 'src/utils';
@@ -14,6 +16,11 @@ import { BaseQuestionnaireResponseFormPropsContext } from '../../context';
 interface GroupWizardProps extends GroupItemProps {
     wizard?: Partial<WizardProps>;
 }
+
+export const GroupWizardBus = createBus<{
+    type: 'scrollTo';
+    groupLinkId: string;
+}>();
 
 export function GroupWizardVertical(props: GroupWizardProps) {
     return (

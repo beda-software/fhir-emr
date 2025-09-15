@@ -2,7 +2,11 @@ import { useState } from 'react';
 import { useWatch } from 'react-hook-form';
 import { FCEQuestionnaireItem, GroupItemProps, QuestionItems } from 'sdc-qrf';
 
-import { getGroupStats, GroupStats } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupWizard';
+import {
+    getGroupStats,
+    GroupStats,
+    GroupWizardBus,
+} from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupWizard';
 import { Text } from 'src/components/Typography';
 import { Wizard, WizardItem, WizardProps } from 'src/components/Wizard';
 
@@ -34,9 +38,7 @@ export function GroupWizard(props: GroupWizardProps) {
 
     const showDescription = wizard?.direction === 'vertical';
 
-    const getGroupStatus = (
-        groupStats: GroupStats,
-    ): 'wait' | 'process' | 'finish' | 'error' => {
+    const getGroupStatus = (groupStats: GroupStats): 'wait' | 'process' | 'finish' | 'error' => {
         if (groupStats.finishedQuestions === 0) {
             return 'wait';
         }
@@ -64,9 +66,29 @@ export function GroupWizard(props: GroupWizardProps) {
 
     const stepsItems: WizardItem[] = item.map((qItem) => getStepItem(qItem));
 
-    const onStepChange = (value: number) => {
-        setCurrentIndex(value);
+    const onStepChange = (valueIndex: number) => {
+        setCurrentIndex(valueIndex);
+        const step = stepsItems[valueIndex];
+
+        if (step && valueIndex !== -1) {
+            const element = document.getElementById(`group-${step.linkId}`);
+            if (element) {
+                element.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start',
+                });
+            }
+        }
     };
+
+    GroupWizardBus.useBus(
+        'scrollTo',
+        ({ groupLinkId }) => {
+            const valueIndex = stepsItems.findIndex((step) => step.linkId === groupLinkId);
+            onStepChange(valueIndex);
+        },
+        [],
+    );
 
     if (parentPath.length !== 0) {
         console.error('The wizard item control must be in root group');
@@ -83,12 +105,12 @@ export function GroupWizard(props: GroupWizardProps) {
     return (
         <Wizard items={stepsItems} currentIndex={currentIndex} onChange={onStepChange} {...props.wizard}>
             {item.map((groupItem, index) => {
-                if (index !== currentIndex) {
-                    return null;
-                }
-
                 return (
-                    <S.Group $active={index === currentIndex} key={`group-item-${groupItem.linkId}`}>
+                    <S.Group
+                        $active={index === currentIndex}
+                        key={`group-item-${groupItem.linkId}`}
+                        id={`group-${groupItem.linkId}`}
+                    >
                         <QuestionItems
                             questionItems={groupItem.item!}
                             parentPath={[...parentPath, linkId, 'items', groupItem.linkId, 'items']}
