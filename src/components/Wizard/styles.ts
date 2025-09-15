@@ -9,7 +9,7 @@ export const WIZARD_GAP = 24;
 
 const activeColors = css`
     background-color: ${({ theme }) => theme.antdTheme?.colorPrimary};
-    border-color: ${({ theme }) => theme.antdTheme?.colorPrimaryBorder};
+    border-color: ${({ theme }) => theme.antdTheme?.colorPrimary};
     
     * {
         color: ${({ theme }) => theme.neutralPalette.gray_1};
@@ -17,7 +17,7 @@ const activeColors = css`
 
     .ant-steps-item-container[role='button']:hover & {
         background-color: ${({ theme }) => theme.antdTheme?.colorPrimary};
-        border-color: ${({ theme }) => theme.antdTheme?.colorPrimaryBorder};
+        border-color: ${({ theme }) => theme.antdTheme?.colorPrimary};
 
         * {
             color: ${({ theme }) => theme.neutralPalette.gray_1};
@@ -26,15 +26,15 @@ const activeColors = css`
 `
 
 const processColors = css`
-    background-color: ${({ theme }) => theme.antdTheme?.colorPrimaryBg};
-    border-color: ${({ theme }) => theme.antdTheme?.colorPrimary};
+    background-color: ${({ theme }) => theme.neutralPalette.gray_1};
+    border-color: ${({ theme }) => theme.antdTheme?.colorSuccess};
     
     * {
-        color: ${({ theme }) => theme.antdTheme?.colorPrimary};
+        color: ${({ theme }) => theme.antdTheme?.colorSuccess};
     }
 
     .ant-steps-item-container[role='button']:hover & {
-        background-color: ${({ theme }) => theme.primaryPalette.bcp_3};
+        background-color: ${({ theme }) => theme.antdTheme?.colorPrimaryBg};
         border-color: ${({ theme }) => theme.antdTheme?.colorPrimary};
 
         * {
@@ -70,8 +70,8 @@ const errorColors = css`
     }
 
     .ant-steps-item-container[role='button']:hover & {
-        background-color: ${({ theme }) => theme.antdTheme?.colorErrorHover};
-        border-color: ${({ theme }) => theme.antdTheme?.colorError};
+        background-color: ${({ theme }) => theme.antdTheme?.colorErrorActive};
+        border-color: ${({ theme }) => theme.antdTheme?.colorErrorActive};
 
         * {
             color: ${({ theme }) => theme.neutralPalette.gray_1};
@@ -88,8 +88,8 @@ const finishColors = css`
     }
 
     .ant-steps-item-container[role='button']:hover & {
-        background-color: ${({ theme }) => theme.antdTheme?.colorSuccessHover};
-        border-color: ${({ theme }) => theme.antdTheme?.colorSuccess};
+        background-color: ${({ theme }) => theme.antdTheme?.colorSuccessActive};
+        border-color: ${({ theme }) => theme.antdTheme?.colorSuccessActive};
 
         * {
             color: ${({ theme }) => theme.neutralPalette.gray_1};
@@ -207,7 +207,8 @@ export const S = {
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 1px solid ${({ theme }) => theme.antdTheme?.colorPrimaryBg};
+        border-width: 1px;
+        border-style: solid;
         transition: all 0.2s;
         
         ${processColors}
