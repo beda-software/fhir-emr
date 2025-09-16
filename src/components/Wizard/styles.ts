@@ -10,7 +10,7 @@ export const WIZARD_GAP = 24;
 const activeColors = css`
     background-color: ${({ theme }) => theme.antdTheme?.colorPrimary};
     border-color: ${({ theme }) => theme.antdTheme?.colorPrimary};
-    
+
     * {
         color: ${({ theme }) => theme.neutralPalette.gray_1};
     }
@@ -23,12 +23,12 @@ const activeColors = css`
             color: ${({ theme }) => theme.neutralPalette.gray_1};
         }
     }
-`
+`;
 
 const processColors = css`
     background-color: ${({ theme }) => theme.neutralPalette.gray_1};
     border-color: ${({ theme }) => theme.antdTheme?.colorSuccess};
-    
+
     * {
         color: ${({ theme }) => theme.antdTheme?.colorSuccess};
     }
@@ -41,12 +41,12 @@ const processColors = css`
             color: ${({ theme }) => theme.antdTheme?.colorPrimary};
         }
     }
-`
+`;
 
 const disabledColors = css`
     background-color: ${({ theme }) => theme.neutralPalette.gray_5};
     border-color: ${({ theme }) => theme.neutralPalette.gray_5};
-    
+
     * {
         color: ${({ theme }) => theme.neutralPalette.gray_8};
     }
@@ -59,7 +59,7 @@ const disabledColors = css`
             color: ${({ theme }) => theme.neutralPalette.gray_8};
         }
     }
-`
+`;
 
 const errorColors = css`
     background-color: ${({ theme }) => theme.antdTheme?.colorError};
@@ -77,7 +77,7 @@ const errorColors = css`
             color: ${({ theme }) => theme.neutralPalette.gray_1};
         }
     }
-`
+`;
 
 const finishColors = css`
     background-color: ${({ theme }) => theme.antdTheme?.colorSuccess};
@@ -95,7 +95,7 @@ const finishColors = css`
             color: ${({ theme }) => theme.neutralPalette.gray_1};
         }
     }
-`
+`;
 
 export const S = {
     Container: styled.div<{ $labelPlacement: 'vertical' | 'tooltip'; $direction: 'horizontal' | 'vertical' }>`
@@ -139,7 +139,7 @@ export const S = {
             margin: 0 -${PATIENT_DOCUMENT_PADDING}px -${PATIENT_DOCUMENT_PADDING}px;
             border-top: 1px solid ${({ theme }) => theme.neutralPalette.gray_3};
         }
-        
+
         .app-patient-document-details & {
             margin-left: -32px;
             border-top: 1px solid ${({ theme }) => theme.neutralPalette.gray_3};
@@ -163,44 +163,59 @@ export const S = {
                 }
             `}
 
-        ${({ $direction }) => $direction === 'vertical' && css`
-            flex-direction: row;
-            gap: 0 ${WIZARD_GAP}px;
+        ${({ $direction }) =>
+            $direction === 'vertical' &&
+            css`
+                flex-direction: row;
+                gap: 0 ${WIZARD_GAP}px;
 
-            .ant-steps-item-tail {
-                display: none !important;
-            }
-        `}
+                .ant-steps-item-tail {
+                    display: none !important;
+                }
+
+                .ant-steps-item-title {
+                    font-weight: 600;
+                }
+            `}
     `,
     StepsContainer: styled.div<{ $direction: 'horizontal' | 'vertical' }>`
         padding: 24px 24px 0;
-        
-        ${({ $direction }) => $direction === 'vertical' && css`
-            width: ${WIZARD_SIDEBAR_WIDTH}px;
-            padding: 24px;
-            background-color: ${({ theme }) => theme.neutralPalette.gray_3};
-        `}
+
+        ${({ $direction }) =>
+            $direction === 'vertical' &&
+            css`
+                width: ${WIZARD_SIDEBAR_WIDTH}px;
+                padding: 24px;
+                background-color: ${({ theme }) => theme.neutralPalette.gray_3};
+            `}
     `,
     Content: styled.div<{ $direction: 'horizontal' | 'vertical' }>`
         display: flex;
         flex-direction: column;
         gap: 24px 0;
         padding: 0 24px 24px;
-        
-        ${({ $direction }) => $direction === 'vertical' && css`
-            flex: 1;
-            padding: 24px 0;
 
-            .ant-modal-body &,
-            .app-patient-document & {
-                padding-right: 24px;
-            }
-        `}
+        ${({ $direction }) =>
+            $direction === 'vertical' &&
+            css`
+                flex: 1;
+                padding: 24px 0;
+
+                .ant-modal-body &,
+                .app-patient-document & {
+                    padding-right: 24px;
+                }
+            `}
     `,
     Title: styled(Title)`
         margin-bottom: 0 !important;
     `,
-    Icon: styled.div<{ $active: boolean; $status?: 'wait' | 'process' | 'finish' | 'error', $size?: 'small' | 'default', $disabled?: boolean }>`
+    Icon: styled.div<{
+        $active: boolean;
+        $status?: 'wait' | 'process' | 'finish' | 'error';
+        $size?: 'small' | 'default';
+        $disabled?: boolean;
+    }>`
         width: 32px;
         height: 32px;
         border-radius: 50%;
@@ -210,7 +225,7 @@ export const S = {
         border-width: 1px;
         border-style: solid;
         transition: all 0.2s;
-        
+
         ${processColors}
 
         ${({ $status }) => $status === 'process' && processColors}
@@ -225,10 +240,12 @@ export const S = {
         
         ${({ $disabled }) => $disabled && disabledColors}
         
-        ${({ $size }) => $size === 'small' && css`
-            width: 24px;
-            height: 24px;
-        `}
+        ${({ $size }) =>
+            $size === 'small' &&
+            css`
+                width: 24px;
+                height: 24px;
+            `}
     `,
     Footer: styled.div`
         display: flex;
