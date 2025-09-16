@@ -1,6 +1,7 @@
 import { DeleteOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 import { Button, Space, Splitter, Tooltip } from 'antd';
+import classNames from 'classnames';
 import { Organization, ParametersParameter, Patient, Person, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
 import React, { useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -120,7 +121,7 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
     const navigate = useNavigate();
 
     return (
-        <div className={s.container}>
+        <div className={classNames(s.container, 'app-patient-document')}>
             <S.Content>
                 <RenderRemoteData
                     remoteData={response}
