@@ -39,6 +39,7 @@ export function PageTabs<R extends Resource, Extra = unknown>({ tabs }: PageTabs
 
     return (
         <Tabs
+            type="card"
             boxShadow={false}
             activeKey={activeKey}
             items={menuItems.map((route) => ({
@@ -51,7 +52,7 @@ export function PageTabs<R extends Resource, Extra = unknown>({ tabs }: PageTabs
 }
 
 export function ResourceDetailPage<R extends Resource>(props: DetailPageProps<R>) {
-    const { getTitle, tabs } = props;
+    const { getTitle, tabs, maxWidth } = props;
 
     return (
         <RenderBundleResourceContext<R> {...props}>
@@ -60,6 +61,7 @@ export function ResourceDetailPage<R extends Resource>(props: DetailPageProps<R>
                     title={getTitle(context)}
                     layoutVariant="with-tabs"
                     headerContent={<PageTabs tabs={tabs} />}
+                    maxWidth={maxWidth}
                 >
                     <Routes>
                         {tabs.map(({ path, component }) => (
