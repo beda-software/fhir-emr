@@ -41,6 +41,7 @@ export function PatientDetailsTabs(props: { extraMenuItems?: RouteItem[]; isDefa
 
     return (
         <Tabs
+            type="card"
             boxShadow={false}
             activeKey={currentPath.split('/').slice(0, 4).join('/')}
             items={menuItems.map((route) => ({

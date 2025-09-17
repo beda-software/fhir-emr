@@ -39,6 +39,7 @@ export function PageTabs<R extends Resource, Extra = unknown>({ tabs }: PageTabs
 
     return (
         <Tabs
+            type="card"
             boxShadow={false}
             activeKey={activeKey}
             items={menuItems.map((route) => ({
