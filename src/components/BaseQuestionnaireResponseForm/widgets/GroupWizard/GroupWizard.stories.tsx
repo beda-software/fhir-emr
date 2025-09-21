@@ -79,7 +79,49 @@ export const inModal: Story = {
     ),
 };
 
-function getQuestionnaire(itemControlCode: 'wizard' | 'wizard-with-tooltips' = 'wizard'): FCEQuestionnaire {
+export const inModalVertical: Story = {
+    render: () => (
+        <I18nProvider i18n={i18n}>
+            <Modal open={true} title={'Wizard in modal'} footer={null} width={800}>
+                <BaseQuestionnaireResponseForm
+                    formData={{
+                        context: {
+                            fceQuestionnaire: getQuestionnaire('wizard-vertical'),
+                            questionnaire: fromFirstClassExtension(getQuestionnaire('wizard-vertical')),
+                            launchContextParameters: [],
+                            questionnaireResponse,
+                        },
+                        formValues,
+                    }}
+                />
+            </Modal>
+        </I18nProvider>
+    ),
+};
+
+export const Vertical: Story = {
+    render: () => (
+        <I18nProvider i18n={i18n}>
+            <BaseQuestionnaireResponseForm
+                formData={{
+                    context: {
+                        fceQuestionnaire: getQuestionnaire('wizard-vertical'),
+                        questionnaire: fromFirstClassExtension(getQuestionnaire('wizard-vertical')),
+                        launchContextParameters: [],
+                        questionnaireResponse,
+                    },
+                    formValues,
+                }}
+                onCancel={() => console.log('onCancel')}
+                saveButtonTitle={'Save & complete'}
+            />
+        </I18nProvider>
+    ),
+};
+
+function getQuestionnaire(
+    itemControlCode: 'wizard' | 'wizard-with-tooltips' | 'wizard-vertical' = 'wizard',
+): FCEQuestionnaire {
     return {
         assembledFrom: 'group-wizard',
         subjectType: ['Patient'],
@@ -127,6 +169,29 @@ function getQuestionnaire(itemControlCode: 'wizard' | 'wizard-with-tooltips' = '
                                     },
                                     {
                                         valueString: 'Other',
+                                    },
+                                ],
+                            },
+                            {
+                                type: 'group',
+                                linkId: 'q14',
+                                item: [
+                                    {
+                                        text: 'Some hidden question',
+                                        type: 'integer',
+                                        linkId: 'q141',
+                                        hidden: true,
+                                    },
+                                    {
+                                        text: 'How much time do you typically spend sitting on an average day? (e.g., at a desk, watching TV, commuting)',
+                                        type: 'integer',
+                                        linkId: 'q142',
+                                        required: true,
+                                    },
+                                    {
+                                        text: 'What is the single biggest barrier that prevents you from being more physically active?',
+                                        type: 'string',
+                                        linkId: 'q143',
                                     },
                                 ],
                             },
@@ -196,20 +261,20 @@ function getQuestionnaire(itemControlCode: 'wizard' | 'wizard-with-tooltips' = '
                                     },
                                 ],
                             },
-                            {
-                                text: 'Do you use any sleep aids (e.g., medication, herbal supplements)?',
-                                type: 'choice',
-                                linkId: 'q33',
-                                required: false,
-                                answerOption: [
-                                    {
-                                        valueString: 'Yes',
-                                    },
-                                    {
-                                        valueString: 'No',
-                                    },
-                                ],
-                            },
+                            // {
+                            //     text: 'Do you use any sleep aids (e.g., medication, herbal supplements)?',
+                            //     type: 'choice',
+                            //     linkId: 'q33',
+                            //     required: false,
+                            //     answerOption: [
+                            //         {
+                            //             valueString: 'Yes',
+                            //         },
+                            //         {
+                            //             valueString: 'No',
+                            //         },
+                            //     ],
+                            // },
                         ],
                         text: 'Sleep Patterns',
                         type: 'group',
@@ -221,7 +286,6 @@ function getQuestionnaire(itemControlCode: 'wizard' | 'wizard-with-tooltips' = '
                                 text: 'Do you smoke tobacco or use nicotine products?',
                                 type: 'choice',
                                 linkId: 'q41',
-                                required: true,
                                 answerOption: [
                                     {
                                         valueString: 'Yes',
@@ -235,7 +299,6 @@ function getQuestionnaire(itemControlCode: 'wizard' | 'wizard-with-tooltips' = '
                                 text: 'How often do you consume alcoholic beverages?',
                                 type: 'choice',
                                 linkId: 'q42',
-                                required: true,
                                 answerOption: [
                                     {
                                         valueString: 'Never',

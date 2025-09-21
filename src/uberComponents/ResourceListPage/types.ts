@@ -84,6 +84,9 @@ export interface ResourceListProps<R extends Resource, Extra = unknown, Link = s
      * TODO: https://github.com/beda-software/fhir-emr/issues/414
      */
     getReportColumns?: (bundle: Bundle, reportBundle?: Bundle) => Array<ReportColumn>;
+
+    /* Page content max width */
+    maxWidth?: number | string;
 }
 
 export interface NavigationActionType<Link = string> {

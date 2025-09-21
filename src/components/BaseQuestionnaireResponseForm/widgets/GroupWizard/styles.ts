@@ -9,6 +9,7 @@ export const S = {
         display: none;
         flex-direction: column;
         gap: inherit;
+        flex: 1;
 
         ${({ $active }) =>
             $active &&
@@ -16,13 +17,7 @@ export const S = {
                 display: flex;
             `}
     `,
-    WizardFooter: styled(WizardFooter)`
-        .ant-modal & {
-            padding: 16px 24px;
-            border-top: 1px solid #f0f0f0;
-            margin: 0 -24px -30px;
-        }
-    `,
+    WizardFooter: styled(WizardFooter)``,
     FormFooter: styled(FormFooter)`
         padding: 0 !important;
         margin: 0 !important;

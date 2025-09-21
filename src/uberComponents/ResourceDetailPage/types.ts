@@ -16,6 +16,9 @@ export interface DetailPageProps<R extends Resource> {
     getTitle: (context: RecordType<WithId<R>>) => string;
     tabs: Array<Tab<WithId<R>>>;
     extractPrimaryResource?: (bundle: Bundle<R>) => WithId<R>;
+
+    /* Page content max width */
+    maxWidth?: number | string;
 }
 
 export type PageTabsProps<R extends Resource, Extra = unknown> = {

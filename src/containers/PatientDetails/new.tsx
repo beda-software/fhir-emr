@@ -17,6 +17,7 @@ function PatientEncounter({ patient }: { patient: Patient }) {
         <ResourceListPageContent<Encounter>
             resourceType="Encounter"
             searchParams={{ patient: patient.id! }}
+            maxWidth="100%"
             getTableColumns={() => [
                 {
                     title: 'Practitioner',
@@ -109,6 +110,7 @@ export function NewPatientDetails() {
             getSearchParams={({ id }) => ({ _id: id })}
             getTitle={({ resource, bundle }) => getName(resource, { bundle })!}
             tabs={tabs}
+            maxWidth="100%"
         />
     );
 }
