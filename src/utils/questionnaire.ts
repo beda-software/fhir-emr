@@ -168,6 +168,27 @@ export function questionnaireItemsToValidationSchema(
             }
             schema = applyCustomYupTestsToItem(item, schema, customYupTests);
             schema = createSchemaArrayOfValues(yup.object({ date: schema }));
+        } else if (item.type === 'dateTime') {
+            schema = yup.date();
+            if (item.required) {
+                schema = schema.required();
+            }
+            schema = applyCustomYupTestsToItem(item, schema, customYupTests);
+            schema = createSchemaArrayOfValues(yup.object({ dateTime: schema }));
+        } else if (item.type === 'time') {
+            schema = yup.string().test(t`time`, t`Must be a valid time (HH:mm:ss)`, (value) => {
+                if (!value) {
+                    return true;
+                }
+
+                const isoTimeRegex = /([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?/;
+                return isoTimeRegex.test(value);
+            });
+            if (item.required) {
+                schema = schema.required();
+            }
+            schema = applyCustomYupTestsToItem(item, schema, customYupTests);
+            schema = createSchemaArrayOfValues(yup.object({ time: schema }));
         } else if (item.type === 'group' && item.item) {
             schema = yup
                 .object({
