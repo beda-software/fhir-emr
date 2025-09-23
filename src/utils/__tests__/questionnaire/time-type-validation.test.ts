@@ -1,4 +1,4 @@
-import { FCEQuestionnaire, FormAnswerItems } from 'sdc-qrf';
+import { FCEQuestionnaire, FCEQuestionnaireItem, FormAnswerItems } from 'sdc-qrf';
 
 import { questionnaireToValidationSchema } from 'src/utils';
 
@@ -9,40 +9,48 @@ type TimeQuestionnaireData = {
     description: string;
 };
 
-const TIME_TEST_DATA: TimeQuestionnaireData[] = [
-    {
-        description: 'Required time - missing value',
+interface PrepareQuestionnaireProps {
+    description: string;
+    item: Required<Pick<FCEQuestionnaireItem, 'type'>> & Partial<Omit<FCEQuestionnaireItem, 'type'>>;
+    answer: Record<string, FormAnswerItems[] | undefined>;
+    success: boolean;
+}
+
+const prepareQuestionnaire = (props: PrepareQuestionnaireProps): TimeQuestionnaireData => {
+    const { description, item, answer, success } = props;
+    return {
+        description,
         questionnaire: {
             resourceType: 'Questionnaire',
-            id: 'time-required',
-            title: 'Required Time Test',
+            id: 'time-test',
+            title: 'Time Test',
             status: 'active',
             item: [
                 {
                     linkId: 'time',
-                    type: 'time',
-                    text: 'Time',
-                    required: true,
+                    ...item,
                 },
             ],
+        },
+        answer,
+        success,
+    };
+};
+
+const TIME_TEST_DATA: PrepareQuestionnaireProps[] = [
+    {
+        description: 'Required time - missing value',
+        item: {
+            type: 'time',
+            required: true,
         },
         answer: {},
         success: false,
     },
     {
         description: 'Valid time',
-        questionnaire: {
-            resourceType: 'Questionnaire',
-            id: 'time-valid',
-            title: 'Valid Time Test',
-            status: 'active',
-            item: [
-                {
-                    linkId: 'time',
-                    type: 'time',
-                    text: 'Time',
-                },
-            ],
+        item: {
+            type: 'time',
         },
         answer: {
             time: [{ value: { time: '12:00:00' } }],
@@ -51,18 +59,8 @@ const TIME_TEST_DATA: TimeQuestionnaireData[] = [
     },
     {
         description: 'Invalid time - missing seconds',
-        questionnaire: {
-            resourceType: 'Questionnaire',
-            id: 'time-invalid',
-            title: 'Invalid Time Test',
-            status: 'active',
-            item: [
-                {
-                    linkId: 'time',
-                    type: 'time',
-                    text: 'Time',
-                },
-            ],
+        item: {
+            type: 'time',
         },
         answer: {
             time: [{ value: { time: '12:00' } }],
@@ -71,18 +69,8 @@ const TIME_TEST_DATA: TimeQuestionnaireData[] = [
     },
     {
         description: 'Valid time - extra milliseconds',
-        questionnaire: {
-            resourceType: 'Questionnaire',
-            id: 'time-valid-milliseconds',
-            title: 'Valid Time Test with milliseconds',
-            status: 'active',
-            item: [
-                {
-                    linkId: 'time',
-                    type: 'time',
-                    text: 'Time',
-                },
-            ],
+        item: {
+            type: 'time',
         },
         answer: {
             time: [{ value: { time: '12:00:00.000' } }],
@@ -91,18 +79,8 @@ const TIME_TEST_DATA: TimeQuestionnaireData[] = [
     },
     {
         description: 'Valid time - with timezone',
-        questionnaire: {
-            resourceType: 'Questionnaire',
-            id: 'time-valid-timezone',
-            title: 'Valid Time Test with timezone',
-            status: 'active',
-            item: [
-                {
-                    linkId: 'time',
-                    type: 'time',
-                    text: 'Time',
-                },
-            ],
+        item: {
+            type: 'time',
         },
         answer: {
             time: [{ value: { time: '12:00:00.000Z' } }],
@@ -111,18 +89,8 @@ const TIME_TEST_DATA: TimeQuestionnaireData[] = [
     },
     {
         description: 'Valid time - with timezone - ISO 8601',
-        questionnaire: {
-            resourceType: 'Questionnaire',
-            id: 'time-valid-timezone-iso-8601',
-            title: 'Valid Time Test with timezone - ISO 8601',
-            status: 'active',
-            item: [
-                {
-                    linkId: 'time',
-                    type: 'time',
-                    text: 'Time',
-                },
-            ],
+        item: {
+            type: 'time',
         },
         answer: {
             time: [{ value: { time: '12:00:00.000+00:00' } }],
@@ -131,18 +99,8 @@ const TIME_TEST_DATA: TimeQuestionnaireData[] = [
     },
     {
         description: 'Invalid time - 24 hours',
-        questionnaire: {
-            resourceType: 'Questionnaire',
-            id: 'time-invalid-24-hours',
-            title: 'Invalid Time Test with 24 hours',
-            status: 'active',
-            item: [
-                {
-                    linkId: 'time',
-                    type: 'time',
-                    text: 'Time',
-                },
-            ],
+        item: {
+            type: 'time',
         },
         answer: {
             time: [{ value: { time: '24:00:00' } }],
@@ -151,18 +109,8 @@ const TIME_TEST_DATA: TimeQuestionnaireData[] = [
     },
     {
         description: 'Invalid time - 60 minutes',
-        questionnaire: {
-            resourceType: 'Questionnaire',
-            id: 'time-invalid-60-minutes',
-            title: 'Invalid Time Test with 60 minutes',
-            status: 'active',
-            item: [
-                {
-                    linkId: 'time',
-                    type: 'time',
-                    text: 'Time',
-                },
-            ],
+        item: {
+            type: 'time',
         },
         answer: {
             time: [{ value: { time: '00:60:00' } }],
@@ -171,18 +119,8 @@ const TIME_TEST_DATA: TimeQuestionnaireData[] = [
     },
     {
         description: 'Invalid time - 61 seconds',
-        questionnaire: {
-            resourceType: 'Questionnaire',
-            id: 'time-invalid-61-seconds',
-            title: 'Invalid Time Test with 61 seconds',
-            status: 'active',
-            item: [
-                {
-                    linkId: 'time',
-                    type: 'time',
-                    text: 'Time',
-                },
-            ],
+        item: {
+            type: 'time',
         },
         answer: {
             time: [{ value: { time: '00:00:61' } }],
@@ -191,10 +129,233 @@ const TIME_TEST_DATA: TimeQuestionnaireData[] = [
     },
 ];
 
+const DATE_TEST_DATA: PrepareQuestionnaireProps[] = [
+    {
+        description: 'Required date - missing value',
+        item: {
+            type: 'date',
+            required: true,
+        },
+        answer: {},
+        success: false,
+    },
+    {
+        description: 'Valid date with year',
+        item: {
+            type: 'date',
+        },
+        answer: {
+            time: [{ value: { date: '2025' } }],
+        },
+        success: true,
+    },
+    {
+        description: 'Valid date with year and month',
+        item: {
+            type: 'date',
+        },
+        answer: {
+            time: [{ value: { date: '2025-01' } }],
+        },
+        success: true,
+    },
+    {
+        description: 'Valid date with year, month and day',
+        item: {
+            type: 'date',
+        },
+        answer: {
+            time: [{ value: { date: '2025-01-01' } }],
+        },
+        success: true,
+    },
+    {
+        description: 'Valid date with year, month and day - ISO 8601',
+        item: {
+            type: 'date',
+        },
+        answer: {
+            time: [{ value: { date: '2025-01-01T00:00:00.000Z' } }],
+        },
+        success: true,
+    },
+    {
+        description: 'Valid date with year, month and day - ISO 8601 with timezone',
+        item: {
+            type: 'date',
+        },
+        answer: {
+            time: [{ value: { date: '2025-01-01T00:00:00.000+00:00' } }],
+        },
+        success: true,
+    },
+    {
+        description: 'Valid date with year, month and day - ISO 8601 - missing seconds',
+        item: {
+            type: 'date',
+        },
+        answer: {
+            time: [{ value: { date: '2025-01-01T00:00' } }],
+        },
+        success: true,
+    },
+    {
+        description: 'Invalid date with year, month, day, hour',
+        item: {
+            type: 'date',
+        },
+        answer: {
+            time: [{ value: { date: '2025-01-01T00' } }],
+        },
+        success: false,
+    },
+    {
+        description: 'Invalid date - time only',
+        item: {
+            type: 'date',
+        },
+        answer: {
+            time: [{ value: { date: '00:00:00' } }],
+        },
+        success: false,
+    },
+    {
+        description: 'Invalid date - time only',
+        item: {
+            type: 'date',
+        },
+        answer: {
+            time: [{ value: { date: 'T00:00:00Z' } }],
+        },
+        success: false,
+    },
+];
+
+const DATE_TIME_TEST_DATA: PrepareQuestionnaireProps[] = [
+    {
+        description: 'Required dateTime - missing value',
+        item: {
+            type: 'dateTime',
+            required: true,
+        },
+        answer: {},
+        success: false,
+    },
+    {
+        description: 'Valid dateTime with year',
+        item: {
+            type: 'dateTime',
+        },
+        answer: {
+            time: [{ value: { dateTime: '2025' } }],
+        },
+        success: true,
+    },
+    {
+        description: 'Valid dateTime with year and month',
+        item: {
+            type: 'dateTime',
+        },
+        answer: {
+            time: [{ value: { dateTime: '2025-01' } }],
+        },
+        success: true,
+    },
+    {
+        description: 'Valid dateTime with year, month and day',
+        item: {
+            type: 'dateTime',
+        },
+        answer: {
+            time: [{ value: { dateTime: '2025-01-01' } }],
+        },
+        success: true,
+    },
+    {
+        description: 'Valid dateTime with year, month and day - ISO 8601',
+        item: {
+            type: 'dateTime',
+        },
+        answer: {
+            time: [{ value: { dateTime: '2025-01-01T00:00:00.000Z' } }],
+        },
+        success: true,
+    },
+    {
+        description: 'Valid dateTime with year, month and day - ISO 8601 with timezone',
+        item: {
+            type: 'dateTime',
+        },
+        answer: {
+            time: [{ value: { dateTime: '2025-01-01T00:00:00.000+00:00' } }],
+        },
+        success: true,
+    },
+    {
+        description: 'Valid dateTime with year, month and day - ISO 8601 - missing seconds',
+        item: {
+            type: 'dateTime',
+        },
+        answer: {
+            time: [{ value: { dateTime: '2025-01-01T00:00' } }],
+        },
+        success: true,
+    },
+    {
+        description: 'Invalid dateTime with year, month, day, hour',
+        item: {
+            type: 'dateTime',
+        },
+        answer: {
+            time: [{ value: { dateTime: '2025-01-01T00' } }],
+        },
+        success: false,
+    },
+    {
+        description: 'Invalid dateTime - time only',
+        item: {
+            type: 'dateTime',
+        },
+        answer: {
+            time: [{ value: { dateTime: 'T00:00:00' } }],
+        },
+        success: false,
+    },
+    {
+        description: 'Invalid dateTime - time only',
+        item: {
+            type: 'dateTime',
+        },
+        answer: {
+            time: [{ value: { dateTime: '00:00:00' } }],
+        },
+        success: false,
+    },
+];
+
 describe('Time type validation', () => {
-    test.each(TIME_TEST_DATA)('$description', async (timeQuestionnaireData) => {
-        const validationSchema = questionnaireToValidationSchema(timeQuestionnaireData.questionnaire);
-        const isValid = await validationSchema.isValid(timeQuestionnaireData.answer);
-        expect(isValid).toBe(timeQuestionnaireData.success);
+    test.each(TIME_TEST_DATA)(`$description`, async (timeQuestionnaireData) => {
+        const { questionnaire, answer, success } = prepareQuestionnaire(timeQuestionnaireData);
+        const validationSchema = questionnaireToValidationSchema(questionnaire);
+        const isValid = await validationSchema.isValid(answer);
+        expect(isValid).toBe(success);
+    });
+});
+
+describe('Date type validation', () => {
+    test.each(DATE_TEST_DATA)(`$description`, async (dateQuestionnaireData) => {
+        const { questionnaire, answer, success } = prepareQuestionnaire(dateQuestionnaireData);
+        const validationSchema = questionnaireToValidationSchema(questionnaire);
+        const isValid = await validationSchema.isValid(answer);
+        expect(isValid).toBe(success);
+    });
+});
+
+describe('DateTime type validation', () => {
+    test.each(DATE_TIME_TEST_DATA)(`$description`, async (dateTimeQuestionnaireData) => {
+        const { questionnaire, answer, success } = prepareQuestionnaire(dateTimeQuestionnaireData);
+        const validationSchema = questionnaireToValidationSchema(questionnaire);
+        const isValid = await validationSchema.isValid(answer);
+        expect(isValid).toBe(success);
     });
 });
