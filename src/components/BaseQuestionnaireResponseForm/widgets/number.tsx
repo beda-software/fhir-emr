@@ -61,7 +61,9 @@ export function QuestionQuantity(props: QuestionItemProps) {
     const { value, onChange, disabled, formItem, placeholder } = useFieldController<Quantity>(fieldName, questionItem);
 
     const [numericValue, setNumericValue] = useState<number | undefined>(value?.value);
-    const [selectedUnit, setSelectedUnit] = useState(unitOption?.[0]);
+    const [selectedUnit, setSelectedUnit] = useState(
+        value ? { code: value.code, display: value.unit, system: value.system } : unitOption?.[0],
+    );
 
     const onUnitChange = (unitDisplay: string) => {
         const unit = unitOption?.find((unit) => unit.display === unitDisplay);
