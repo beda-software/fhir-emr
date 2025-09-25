@@ -100,7 +100,11 @@ export function GroupWizard(props: GroupWizardProps) {
 
                 return (
                     <S.Group $active={index === currentIndex} key={`group-item-${groupItem.linkId}`}>
-                        {groupItem.text && wizard?.direction === 'vertical' ? <Title level={4} style={{ fontWeight: 700 }}>{groupItem.text}</Title> : null}
+                        {groupItem.text && wizard?.direction === 'vertical' ? (
+                            <Title level={4} style={{ fontWeight: 700 }}>
+                                {groupItem.text}
+                            </Title>
+                        ) : null}
                         <QuestionItems
                             questionItems={groupItem.item!}
                             parentPath={[...parentPath, linkId, 'items', groupItem.linkId, 'items']}
