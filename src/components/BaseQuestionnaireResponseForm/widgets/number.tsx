@@ -4,6 +4,8 @@ import _ from 'lodash';
 import { useState } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 
+import { useDebouncedInput } from 'src/utils';
+
 import { useFieldController } from '../hooks';
 
 const inputStyle = { width: '100%' };
@@ -16,7 +18,13 @@ export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps)
     const { linkId, required } = questionItem;
     const { unit } = questionItem as NumericItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'integer'];
-    const { value, onChange, disabled, formItem, placeholder } = useFieldController<number>(fieldName, questionItem);
+    const { onChange, disabled, formItem, placeholder } = useFieldController<number>(fieldName, questionItem);
+
+    const { valueInput, handleChange } = useDebouncedInput<number | null, number | null>({
+        onChange,
+        getValue: (value: number | null) => value,
+        initialValue: formItem.initialValue,
+    });
 
     return (
         <Form.Item {...formItem} data-testid={linkId}>
@@ -24,8 +32,8 @@ export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps)
                 addonAfter={unit?.display}
                 style={inputStyle}
                 disabled={disabled}
-                onChange={onChange}
-                value={value}
+                onChange={handleChange}
+                value={valueInput}
                 required={required}
                 placeholder={placeholder}
                 parser={(displayValue) => _.toInteger(displayValue)}
@@ -38,7 +46,13 @@ export function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps)
     const { linkId } = questionItem;
     const { unit } = questionItem as NumericItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'decimal'];
-    const { value, onChange, disabled, formItem, placeholder } = useFieldController<number>(fieldName, questionItem);
+    const { onChange, disabled, formItem, placeholder } = useFieldController<number>(fieldName, questionItem);
+
+    const { valueInput, handleChange } = useDebouncedInput<number | null, number | null>({
+        onChange,
+        getValue: (value: number | null) => value,
+        initialValue: formItem.initialValue,
+    });
 
     return (
         <Form.Item {...formItem} data-testid={linkId}>
@@ -46,8 +60,8 @@ export function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps)
                 addonAfter={unit?.display}
                 style={inputStyle}
                 disabled={disabled}
-                onChange={onChange}
-                value={value}
+                onChange={handleChange}
+                value={valueInput}
                 placeholder={placeholder}
             />
         </Form.Item>
