@@ -7,7 +7,7 @@ import {
     GroupStats,
     GroupWizardBus,
 } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupWizard';
-import { Text } from 'src/components/Typography';
+import { Text, Title } from 'src/components/Typography';
 import { Wizard, WizardItem, WizardProps } from 'src/components/Wizard';
 
 import { S } from './styles';
@@ -66,19 +66,8 @@ export function GroupWizard(props: GroupWizardProps) {
 
     const stepsItems: WizardItem[] = item.map((qItem) => getStepItem(qItem));
 
-    const onStepChange = (valueIndex: number) => {
-        setCurrentIndex(valueIndex);
-        const step = stepsItems[valueIndex];
-
-        if (step && valueIndex !== -1) {
-            const element = document.getElementById(`group-${step.linkId}`);
-            if (element) {
-                element.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start',
-                });
-            }
-        }
+    const onStepChange = (value: number) => {
+        setCurrentIndex(value);
     };
 
     GroupWizardBus.useBus(
@@ -105,12 +94,13 @@ export function GroupWizard(props: GroupWizardProps) {
     return (
         <Wizard items={stepsItems} currentIndex={currentIndex} onChange={onStepChange} {...props.wizard}>
             {item.map((groupItem, index) => {
+                if (index !== currentIndex) {
+                    return null;
+                }
+
                 return (
-                    <S.Group
-                        $active={index === currentIndex}
-                        key={`group-item-${groupItem.linkId}`}
-                        id={`group-${groupItem.linkId}`}
-                    >
+                    <S.Group $active={index === currentIndex} key={`group-item-${groupItem.linkId}`}>
+                        {groupItem.text && wizard?.direction === 'vertical' ? <Title level={4} style={{ fontWeight: 700 }}>{groupItem.text}</Title> : null}
                         <QuestionItems
                             questionItems={groupItem.item!}
                             parentPath={[...parentPath, linkId, 'items', groupItem.linkId, 'items']}
