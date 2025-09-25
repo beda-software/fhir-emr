@@ -42,7 +42,7 @@ interface Props {
     launchContextParameters?: ParametersParameter[];
 }
 
-const deleteDraft = async (navigate: NavigateFunction, patientId?: string, qrId?: string) => {
+const deleteDraft = async (navigate: NavigateFunction, qrId?: string) => {
     if (!qrId) {
         console.error('QuestionnaireResponse ID does not exist');
         return;
@@ -121,14 +121,10 @@ function PatientDocumentDetailsReadonly(props: {
     hideControls?: boolean;
 }) {
     const location = useLocation();
-    const navigate = useNavigate();
     const { formData, reload, provenance, hideControls } = props;
 
     const patientId = location.pathname.split('/')[2];
-    const qrCompleted = formData.context.questionnaireResponse.status === 'completed';
     const qrId = formData.context.questionnaireResponse.id;
-
-    const canBeEdited = !qrCompleted;
 
     const { Wrapper, Content } = useContext(PatientDocumentDetailsWrapperContext);
     const { styles: contextStyles, content: contextContent = {} } = useContext(PatientDocumentDetailsReadonlyContext);
@@ -146,74 +142,130 @@ function PatientDocumentDetailsReadonly(props: {
                     <Title level={4} className={s.title}>
                         {formData.context.questionnaire.title || formData.context.questionnaire.name}
                     </Title>
-
-                    <div className={s.buttons}>
-                        {qrCompleted ? (
-                            <>
-                                <Button
-                                    type="primary"
-                                    icon={<PrinterOutlined />}
-                                    onClick={() => navigate(`/print-patient-document/${patientId}/${qrId}`)}
-                                >
-                                    {t`Prepare for print`}
-                                </Button>
-                                {hideControls ? null : (
-                                    <>
-                                        <ConfirmActionButton
-                                            action={() => amendDocument(reload, qrId)}
-                                            reload={reload}
-                                            qrId={qrId}
-                                            title={t`Are you sure you want to amend the document?`}
-                                            okText={t`Yes`}
-                                            cancelText={t`No`}
-                                        >
-                                            <Button className={s.button}>
-                                                <Trans>Amend</Trans>
-                                            </Button>
-                                        </ConfirmActionButton>
-                                        <Button
-                                            type="primary"
-                                            onClick={() => navigate(`${location.pathname}/history`)}
-                                            className={s.button}
-                                            disabled={!provenance}
-                                        >
-                                            <Trans>History</Trans>
-                                        </Button>
-                                    </>
-                                )}
-                            </>
-                        ) : null}
-
-                        {canBeEdited ? (
-                            <>
-                                <ConfirmActionButton
-                                    action={() => deleteDraft(navigate, patientId, qrId)}
-                                    qrId={qrId}
-                                    title={t`Are you sure you want to delete the document?`}
-                                    okText={t`Yes`}
-                                    cancelText={t`No`}
-                                >
-                                    <Button className={s.button} type={'text'} danger>
-                                        <Trans>Delete</Trans>
-                                    </Button>
-                                </ConfirmActionButton>
-                                <Button
-                                    type="primary"
-                                    onClick={() => navigate(`${location.pathname}/edit`)}
-                                    className={s.button}
-                                >
-                                    <Trans>Edit</Trans>
-                                </Button>
-                            </>
-                        ) : null}
-                    </div>
                 </div>
-
+                <PatientDocumentDetailsReadonlyButtons
+                    printUtl={`/print-patient-document/${patientId}/${qrId}`}
+                    questionnaireResponse={formData.context.questionnaireResponse}
+                    provenance={provenance}
+                    reload={reload}
+                    controls={
+                        hideControls
+                            ? {
+                                  print: true,
+                                  amend: false,
+                                  history: false,
+                                  delete: false,
+                                  edit: false,
+                              }
+                            : undefined
+                    }
+                />
                 <S.Content>
                     <ReadonlyQuestionnaireResponseForm formData={formData} />
                     {contentAfter}
                 </S.Content>
             </S.Wrapper>
+        </div>
+    );
+}
+
+interface PatientDocumentDetailsReadonlyButtonsProps {
+    printUtl?: string;
+    questionnaireResponse: QuestionnaireResponse;
+    provenance?: WithId<Provenance>;
+    reload?: () => void;
+    controls?: {
+        print?: boolean;
+        amend?: boolean;
+        history?: boolean;
+        delete?: boolean;
+        edit?: boolean;
+    };
+}
+
+export function PatientDocumentDetailsReadonlyButtons(props: PatientDocumentDetailsReadonlyButtonsProps) {
+    const {
+        questionnaireResponse,
+        provenance,
+        reload,
+        printUtl,
+        controls = {
+            print: true,
+            amend: true,
+            history: true,
+            delete: true,
+            edit: true,
+        },
+    } = props;
+    const navigate = useNavigate();
+
+    const qrCompleted = questionnaireResponse.status === 'completed';
+    const qrId = questionnaireResponse.id;
+
+    const canBeEdited = !qrCompleted;
+
+    return (
+        <div className={s.buttons}>
+            {qrCompleted ? (
+                <>
+                    {printUtl && controls.print ? (
+                        <Button type="primary" icon={<PrinterOutlined />} onClick={() => navigate(printUtl)}>
+                            {t`Prepare for print`}
+                        </Button>
+                    ) : null}
+                    {controls.amend ? (
+                        <ConfirmActionButton
+                            action={() => (reload ? amendDocument(reload, qrId) : {})}
+                            reload={reload}
+                            qrId={qrId}
+                            title={t`Are you sure you want to amend the document?`}
+                            okText={t`Yes`}
+                            cancelText={t`No`}
+                        >
+                            <Button className={s.button}>
+                                <Trans>Amend</Trans>
+                            </Button>
+                        </ConfirmActionButton>
+                    ) : null}
+                    {controls.history ? (
+                        <Button
+                            type="primary"
+                            onClick={() => navigate(`${location.pathname}/history`)}
+                            className={s.button}
+                            disabled={!provenance}
+                        >
+                            <Trans>History</Trans>
+                        </Button>
+                    ) : null}
+                </>
+            ) : null}
+
+            {canBeEdited ? (
+                <>
+                    {controls.delete ? (
+                        <ConfirmActionButton
+                            action={() => deleteDraft(navigate, qrId)}
+                            qrId={qrId}
+                            title={t`Are you sure you want to delete the document?`}
+                            okText={t`Yes`}
+                            cancelText={t`No`}
+                        >
+                            <Button className={s.button} type={'text'} danger>
+                                <Trans>Delete</Trans>
+                            </Button>
+                        </ConfirmActionButton>
+                    ) : null}
+                    {controls.edit ? (
+                        <Button
+                            type="primary"
+                            onClick={() => navigate(`${location.pathname}/edit`)}
+                            className={s.button}
+                        >
+                            <Trans>Edit</Trans>
+                        </Button>
+                    ) : null}
+                </>
+            ) : null}
         </div>
     );
 }
