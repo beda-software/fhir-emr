@@ -127,13 +127,12 @@ function PatientDocumentDetailsReadonly(props: {
     const qrId = formData.context.questionnaireResponse.id;
 
     const { Wrapper, Content } = useContext(PatientDocumentDetailsWrapperContext);
-    const { styles: contextStyles, content: contextContent = {} } = useContext(PatientDocumentDetailsReadonlyContext);
+    const { styles: contextStyles } = useContext(PatientDocumentDetailsReadonlyContext);
     const S = {
         Wrapper,
         Content,
         ...contextStyles,
     };
-    const { after: contentAfter } = contextContent;
 
     return (
         <div className={classNames(s.container, 'app-patient-document-details')}>
@@ -144,11 +143,11 @@ function PatientDocumentDetailsReadonly(props: {
                     </Title>
                 </div>
                 <PatientDocumentDetailsReadonlyButtons
-                    printUtl={`/print-patient-document/${patientId}/${qrId}`}
+                    printUrl={`/print-patient-document/${patientId}/${qrId}`}
                     questionnaireResponse={formData.context.questionnaireResponse}
                     provenance={provenance}
                     reload={reload}
-                    controls={
+                    enabledControls={
                         hideControls
                             ? {
                                   print: true,
@@ -162,7 +161,6 @@ function PatientDocumentDetailsReadonly(props: {
                 />
                 <S.Content>
                     <ReadonlyQuestionnaireResponseForm formData={formData} />
-                    {contentAfter}
                 </S.Content>
             </S.Wrapper>
         </div>
@@ -170,11 +168,11 @@ function PatientDocumentDetailsReadonly(props: {
 }
 
 interface PatientDocumentDetailsReadonlyButtonsProps {
-    printUtl?: string;
     questionnaireResponse: QuestionnaireResponse;
     provenance?: WithId<Provenance>;
+    printUrl?: string;
     reload?: () => void;
-    controls?: {
+    enabledControls?: {
         print?: boolean;
         amend?: boolean;
         history?: boolean;
@@ -184,20 +182,25 @@ interface PatientDocumentDetailsReadonlyButtonsProps {
 }
 
 export function PatientDocumentDetailsReadonlyButtons(props: PatientDocumentDetailsReadonlyButtonsProps) {
+    const enabledControlsDefault = {
+        print: true,
+        amend: true,
+        history: true,
+        delete: true,
+        edit: true,
+    };
+    const location = useLocation();
+    const navigate = useNavigate();
+
     const {
         questionnaireResponse,
         provenance,
         reload,
-        printUtl,
-        controls = {
-            print: true,
-            amend: true,
-            history: true,
-            delete: true,
-            edit: true,
-        },
+        printUrl,
+        enabledControls: initialEnabledControls = {},
     } = props;
-    const navigate = useNavigate();
+    const enabledControls = { ...enabledControlsDefault, ...initialEnabledControls };
+
 
     const qrCompleted = questionnaireResponse.status === 'completed';
     const qrId = questionnaireResponse.id;
@@ -208,12 +211,12 @@ export function PatientDocumentDetailsReadonlyButtons(props: PatientDocumentDeta
         <div className={s.buttons}>
             {qrCompleted ? (
                 <>
-                    {printUtl && controls.print ? (
-                        <Button type="primary" icon={<PrinterOutlined />} onClick={() => navigate(printUtl)}>
+                    {enabledControls.print && printUrl ? (
+                        <Button type="primary" icon={<PrinterOutlined />} onClick={() => navigate(printUrl)}>
                             {t`Prepare for print`}
                         </Button>
                     ) : null}
-                    {controls.amend ? (
+                    {enabledControls.amend ? (
                         <ConfirmActionButton
                             action={() => (reload ? amendDocument(reload, qrId) : {})}
                             reload={reload}
@@ -227,7 +230,7 @@ export function PatientDocumentDetailsReadonlyButtons(props: PatientDocumentDeta
                             </Button>
                         </ConfirmActionButton>
                     ) : null}
-                    {controls.history ? (
+                    {enabledControls.history ? (
                         <Button
                             type="primary"
                             onClick={() => navigate(`${location.pathname}/history`)}
@@ -242,7 +245,7 @@ export function PatientDocumentDetailsReadonlyButtons(props: PatientDocumentDeta
 
             {canBeEdited ? (
                 <>
-                    {controls.delete ? (
+                    {enabledControls.delete ? (
                         <ConfirmActionButton
                             action={() => deleteDraft(navigate, qrId)}
                             qrId={qrId}
@@ -255,7 +258,7 @@ export function PatientDocumentDetailsReadonlyButtons(props: PatientDocumentDeta
                             </Button>
                         </ConfirmActionButton>
                     ) : null}
-                    {controls.edit ? (
+                    {enabledControls.edit ? (
                         <Button
                             type="primary"
                             onClick={() => navigate(`${location.pathname}/edit`)}

@@ -37,9 +37,6 @@ export const PatientDocumentDetailsWrapperContext = createContext<PatientDocumen
 
 export type PatientDocumentDetailsReadonlyContext = {
     styles?: { [key: string]: IStyledComponentBase<'web'> };
-    content?: {
-        after?: React.ReactNode;
-    };
 };
 
 export const PatientDocumentDetailsReadonlyContext = createContext<PatientDocumentDetailsReadonlyContext>({});
