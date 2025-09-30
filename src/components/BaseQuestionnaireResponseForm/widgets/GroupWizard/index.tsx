@@ -1,6 +1,6 @@
 import { QuestionnaireResponse } from 'fhir/r4b';
 import { useContext, useState } from 'react';
-import { useFormState, useWatch } from 'react-hook-form';
+import { useFormContext, useFormState } from 'react-hook-form';
 import {
     FCEQuestionnaireItem,
     FormItems,
@@ -68,7 +68,9 @@ export function GroupWizard(props: GroupWizardProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const { item = [], linkId } = questionItem;
 
-    const formValues = useWatch();
+    const methods = useFormContext();
+
+    const formValues = methods.getValues();
 
     const { isSubmitted } = useFormState();
 
