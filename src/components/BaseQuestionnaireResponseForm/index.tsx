@@ -2,12 +2,13 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import classNames from 'classnames';
 import { QuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
-import React, { ComponentType, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { FormProvider, useForm, useFormState } from 'react-hook-form';
+import React, { ComponentType, useCallback, useContext, useMemo, useRef, useState } from 'react';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import {
     calcInitialContext,
     FCEQuestionnaire,
     FormItems,
+    getEnabledQuestions,
     GroupItemComponent,
     GroupItemProps,
     ItemControlGroupItemComponentMapping,
@@ -77,23 +78,46 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         resolver: yupResolver(schema),
         mode: 'onBlur',
     });
-    const { setValue, handleSubmit, watch } = methods;
+    const { getValues, setValue, handleSubmit } = methods;
 
-    const formValues = watch();
+    const formValuesRef = useRef(getValues());
 
-    const { isDirty } = useFormState({
-        control: methods.control,
-    });
+    const formValues =
+        useWatch({
+            control: methods.control,
+            compute: () => {
+                const values = getValues();
+                if (!_.isEqual(values, formValuesRef.current)) {
+                    const prevRootContext = calcInitialContext(formData.context, formValuesRef.current);
+                    const prevEnabledQuestions = getEnabledQuestions(
+                        formData.context.fceQuestionnaire.item ?? [],
+                        [],
+                        formValuesRef.current,
+                        prevRootContext,
+                    );
+
+                    const updatedRootContext = calcInitialContext(formData.context, values);
+                    const updatedEnabledQuestions = getEnabledQuestions(
+                        formData.context.fceQuestionnaire.item ?? [],
+                        [],
+                        values,
+                        updatedRootContext,
+                    );
+
+                    formValuesRef.current = _.cloneDeep(values);
+                    onQRFUpdate?.(updatedRootContext.resource);
+
+                    if (!_.isEqual(prevEnabledQuestions, updatedEnabledQuestions)) {
+                        return formValuesRef.current;
+                    }
+                }
+                return null;
+            },
+        }) ?? getValues();
 
     const rootContext = calcInitialContext(formData.context, formValues);
-    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    useEffect(() => {
-        // We use isDirty to trigger the onQRFUpdate callback only when user starts changing the form
-        if (isDirty) {
-            onQRFUpdate?.(rootContext.resource);
-        }
-    }, [rootContext.resource, onQRFUpdate, isDirty]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const wrapControls = useCallback(
         (mapping: { [x: string]: QuestionItemComponent }): { [x: string]: QuestionItemComponent } => {
@@ -199,7 +223,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
             <form
                 onSubmit={handleSubmit(async () => {
                     setIsSubmitting(true);
-                    await onSubmit?.({ ...formData, formValues });
+                    await onSubmit?.({ ...formData, formValues: getValues() });
                     setIsSubmitting(false);
                 })}
                 className={classNames(s.form, 'app-form')}
