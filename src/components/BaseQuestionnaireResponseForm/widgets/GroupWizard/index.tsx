@@ -1,6 +1,6 @@
 import { QuestionnaireResponse } from 'fhir/r4b';
-import { useContext, useState } from 'react';
-import { useFormContext, useFormState } from 'react-hook-form';
+import { useContext, useMemo, useState } from 'react';
+import { useFormState, useWatch } from 'react-hook-form';
 import {
     FCEQuestionnaireItem,
     FormItems,
@@ -66,7 +66,7 @@ export function GroupWizard(props: GroupWizardProps) {
     const baseQRFPropsContext = useContext(BaseQuestionnaireResponseFormPropsContext);
 
     const [currentIndex, setCurrentIndex] = useState(0);
-    const { item = [], linkId } = questionItem;
+    const { linkId } = questionItem;
 
     const methods = useFormContext();
 
@@ -74,7 +74,10 @@ export function GroupWizard(props: GroupWizardProps) {
 
     const { isSubmitted } = useFormState();
 
-    const itemsCount = item.length;
+    const wizardItems = useMemo(() => (questionItem.item ?? []).filter((i) => !i.hidden), [questionItem.item]);
+    const hiddenItems = useMemo(() => (questionItem.item ?? []).filter((i) => i.hidden), [questionItem.item]);
+
+    const itemsCount = wizardItems.length;
     const isLastStepActive = itemsCount === currentIndex + 1;
 
     const showDescription = wizard?.direction === 'vertical';
@@ -118,7 +121,10 @@ export function GroupWizard(props: GroupWizardProps) {
         };
     };
 
-    const stepsItems: WizardItem[] = item.map((qItem) => getStepItem(qItem));
+    const stepsItems: WizardItem[] = useMemo(
+        () => wizardItems.map((item) => getStepItem(item)),
+        [wizardItems, formValues, isSubmitted],
+    );
 
     const onStepChange = (value: number) => {
         setCurrentIndex(value);
@@ -130,7 +136,7 @@ export function GroupWizard(props: GroupWizardProps) {
         return <Text>The wizard item control must be in root group</Text>;
     }
 
-    if (item.some((i) => i.type !== 'group')) {
+    if (wizardItems.some((i) => i.type !== 'group')) {
         console.error('The wizard item control must contain only group items');
 
         return <Text>The wizard item control must contain only group items</Text>;
@@ -138,13 +144,29 @@ export function GroupWizard(props: GroupWizardProps) {
 
     return (
         <Wizard items={stepsItems} currentIndex={currentIndex} onChange={onStepChange} {...props.wizard}>
-            {item.map((groupItem, index) => {
+            {wizardItems.map((groupItem, index) => {
                 if (index !== currentIndex) {
                     return null;
                 }
 
                 return (
                     <S.Group $active={index === currentIndex} key={`group-item-${groupItem.linkId}`}>
+                        {groupItem.text && wizard?.direction === 'vertical' ? (
+                            <Title level={4} style={{ fontWeight: 700 }}>
+                                {groupItem.text}
+                            </Title>
+                        ) : null}
+                        <QuestionItems
+                            questionItems={groupItem.item!}
+                            parentPath={[...parentPath, linkId, 'items', groupItem.linkId, 'items']}
+                            context={context[0]!}
+                        />
+                    </S.Group>
+                );
+            })}
+            {hiddenItems.map((groupItem) => {
+                return (
+                    <S.Group key={`group-item-${groupItem.linkId}`} $hidden>
                         {groupItem.text && wizard?.direction === 'vertical' ? (
                             <Title level={4} style={{ fontWeight: 700 }}>
                                 {groupItem.text}
@@ -185,7 +207,7 @@ const getGroupEnabledQuestions = (
         if (item.type === 'group' && item.item) {
             const nestedQuestions = getGroupEnabledQuestions(item, groupPath, formValues, groupContext);
             allEnabledQuestions.push(...nestedQuestions);
-        } else {
+        } else if (item.type !== 'display') {
             allEnabledQuestions.push(item);
         }
     });

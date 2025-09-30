@@ -5,7 +5,7 @@ import { WizardFooter } from 'src/components/Wizard';
 import { FormFooter } from '../../FormFooter';
 
 export const S = {
-    Group: styled.div<{ $active: boolean }>`
+    Group: styled.div<{ $active?: boolean; $hidden?: boolean }>`
         display: none;
         flex-direction: column;
         gap: inherit;
@@ -15,6 +15,12 @@ export const S = {
             $active &&
             css`
                 display: flex;
+            `}
+
+        ${({ $hidden }) =>
+            $hidden &&
+            css`
+                display: none;
             `}
     `,
     WizardFooter: styled(WizardFooter)``,
