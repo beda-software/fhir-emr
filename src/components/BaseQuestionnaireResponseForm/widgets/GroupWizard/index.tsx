@@ -121,7 +121,7 @@ export function GroupWizard(props: GroupWizardProps) {
 
     const stepsItems: WizardItem[] = useMemo(
         () => wizardItems.map((item) => getStepItem(item)),
-        [wizardItems, formValues],
+        [wizardItems, formValues, isSubmitted],
     );
 
     const onStepChange = (value: number) => {
