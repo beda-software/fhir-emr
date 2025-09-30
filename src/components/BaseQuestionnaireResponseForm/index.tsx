@@ -2,8 +2,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import classNames from 'classnames';
 import { QuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
-import React, { ComponentType, useCallback, useContext, useMemo, useRef, useState } from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import React, { ComponentType, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { FormProvider, useForm, useFormState, useWatch } from 'react-hook-form';
 import {
     calcInitialContext,
     FCEQuestionnaire,
@@ -87,6 +87,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
             control: methods.control,
             compute: () => {
                 const values = getValues();
+
                 if (!_.isEqual(values, formValuesRef.current)) {
                     const prevRootContext = calcInitialContext(formData.context, formValuesRef.current);
                     const prevEnabledQuestions = getEnabledQuestions(
@@ -105,7 +106,6 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                     );
 
                     formValuesRef.current = _.cloneDeep(values);
-                    onQRFUpdate?.(updatedRootContext.resource);
 
                     if (!_.isEqual(prevEnabledQuestions, updatedEnabledQuestions)) {
                         return formValuesRef.current;
@@ -115,9 +115,20 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
             },
         }) ?? getValues();
 
+    const { isDirty } = useFormState({
+        control: methods.control,
+    });
+
     const rootContext = calcInitialContext(formData.context, formValues);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+        // We use isDirty to trigger the onQRFUpdate callback only when user starts changing the form
+        if (isDirty) {
+            onQRFUpdate?.(rootContext.resource);
+        }
+    }, [rootContext.resource, onQRFUpdate, isDirty]);
 
     const wrapControls = useCallback(
         (mapping: { [x: string]: QuestionItemComponent }): { [x: string]: QuestionItemComponent } => {
