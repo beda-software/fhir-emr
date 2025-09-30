@@ -164,7 +164,7 @@ export function GroupWizard(props: GroupWizardProps) {
             })}
             {hiddenItems.map((groupItem) => {
                 return (
-                    <S.Group $active={false} key={`group-item-${groupItem.linkId}`} $hidden>
+                    <S.Group key={`group-item-${groupItem.linkId}`} $hidden>
                         {groupItem.text && wizard?.direction === 'vertical' ? (
                             <Title level={4} style={{ fontWeight: 700 }}>
                                 {groupItem.text}
