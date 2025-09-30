@@ -1,6 +1,6 @@
 import { QuestionnaireResponse } from 'fhir/r4b';
 import { useContext, useMemo, useState } from 'react';
-import { useFormState, useWatch } from 'react-hook-form';
+import { useFormContext, useFormState } from 'react-hook-form';
 import {
     FCEQuestionnaireItem,
     FormItems,
