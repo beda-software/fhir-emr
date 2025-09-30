@@ -192,15 +192,8 @@ export function PatientDocumentDetailsReadonlyButtons(props: PatientDocumentDeta
     const location = useLocation();
     const navigate = useNavigate();
 
-    const {
-        questionnaireResponse,
-        provenance,
-        reload,
-        printUrl,
-        enabledControls: initialEnabledControls = {},
-    } = props;
+    const { questionnaireResponse, provenance, reload, printUrl, enabledControls: initialEnabledControls = {} } = props;
     const enabledControls = { ...enabledControlsDefault, ...initialEnabledControls };
-
 
     const qrCompleted = questionnaireResponse.status === 'completed';
     const qrId = questionnaireResponse.id;
