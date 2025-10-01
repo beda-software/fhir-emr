@@ -20,6 +20,7 @@ import {
     QuestionnaireResponseFormData,
     QuestionnaireResponseFormProvider,
 } from 'sdc-qrf';
+import { evaluateQuestionItemExpression } from 'sdc-qrf/dist/utils';
 import * as yup from 'yup';
 
 import 'react-phone-input-2/lib/style.css';
@@ -82,6 +83,10 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
 
     const formValuesRef = useRef(getValues());
 
+    const fieldsWithCalculatedExpression = formData.context.fceQuestionnaire.item?.filter(
+        (item) => item.calculatedExpression,
+    );
+
     const formValues =
         useWatch({
             control: methods.control,
@@ -106,6 +111,20 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                     );
 
                     formValuesRef.current = _.cloneDeep(values);
+
+                    const updatedFieldsWithCalculatedExpression = fieldsWithCalculatedExpression?.filter(
+                        (item) =>
+                            updatedEnabledQuestions.find((question) => question.linkId === item.linkId) !== undefined,
+                    );
+                    updatedFieldsWithCalculatedExpression?.forEach((item) => {
+                        const calcValue = evaluateQuestionItemExpression(
+                            item.linkId,
+                            'calculatedExpression',
+                            updatedRootContext,
+                            item.calculatedExpression,
+                        );
+                        methods.setValue(item.linkId + '.0.value.' + item.type, calcValue[0]);
+                    });
 
                     if (!_.isEqual(prevEnabledQuestions, updatedEnabledQuestions)) {
                         return formValuesRef.current;
