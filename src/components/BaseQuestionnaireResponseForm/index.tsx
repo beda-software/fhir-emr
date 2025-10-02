@@ -2,12 +2,13 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import classNames from 'classnames';
 import { QuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
-import React, { ComponentType, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { FormProvider, useForm, useFormState } from 'react-hook-form';
+import React, { ComponentType, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { FormProvider, useForm, useFormState, useWatch } from 'react-hook-form';
 import {
     calcInitialContext,
     FCEQuestionnaire,
     FormItems,
+    removeDisabledAnswers,
     GroupItemComponent,
     GroupItemProps,
     ItemControlGroupItemComponentMapping,
@@ -18,11 +19,14 @@ import {
     QuestionItems,
     QuestionnaireResponseFormData,
     QuestionnaireResponseFormProvider,
+    FCEQuestionnaireItem,
 } from 'sdc-qrf';
+import { evaluateQuestionItemExpression } from 'sdc-qrf/dist/utils';
 import * as yup from 'yup';
 
 import 'react-phone-input-2/lib/style.css';
 
+import { compileAsArray } from 'src/utils/fhirpath';
 import { CustomYupTestsMap, questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
 import s from './BaseQuestionnaireResponseForm.module.scss';
@@ -64,6 +68,36 @@ export interface BaseQuestionnaireResponseFormProps {
     customYupTests?: CustomYupTestsMap;
 }
 
+const getQuestionnaireItemsWithCalculatedExpression = compileAsArray<FCEQuestionnaire, FCEQuestionnaireItem[]>(
+    'Questionnaire.repeat(item).where(calculatedExpression.exists())',
+);
+
+function getQuestionnaireSkeleton(formItemsToParse: FormItems) {
+    const parsedItems = _.cloneDeep(formItemsToParse);
+
+    function traverseAndPrune(currentItem: FormItems) {
+        if (_.isObject(currentItem) && !_.isArray(currentItem)) {
+            if (_.keys(currentItem).includes('items')) {
+                _.forEach(currentItem, (value, key) => {
+                    if (key !== 'items') {
+                        delete currentItem[key];
+                    }
+                });
+            }
+            _.forEach(currentItem, (value, key) => {
+                traverseAndPrune(value as FormItems);
+            });
+        } else if (_.isArray(currentItem)) {
+            _.forEach(currentItem, (item) => {
+                traverseAndPrune(item);
+            });
+        }
+    }
+
+    traverseAndPrune(parsedItems);
+    return parsedItems;
+}
+
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
     const { onSubmit, formData, readOnly, ItemWrapper, GroupWrapper, onCancel, customYupTests, onQRFUpdate } = props;
 
@@ -77,15 +111,68 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         resolver: yupResolver(schema),
         mode: 'onBlur',
     });
-    const { setValue, handleSubmit, watch } = methods;
+    const { getValues, setValue, handleSubmit } = methods;
 
-    const formValues = watch();
+    const formValuesRef = useRef(getValues());
+
+    const formValues =
+        useWatch({
+            control: methods.control,
+            compute: () => {
+                const values = getValues();
+
+                if (!_.isEqual(values, formValuesRef.current)) {
+                    const prevRootContext = calcInitialContext(formData.context, formValuesRef.current);
+                    const prevEnabledQuestionnaire = removeDisabledAnswers(
+                        formData.context.fceQuestionnaire,
+                        formValuesRef.current,
+                        prevRootContext,
+                    );
+
+                    const updatedRootContext = calcInitialContext(formData.context, values);
+                    const updatedEnabledQuestionnaire = removeDisabledAnswers(
+                        formData.context.fceQuestionnaire,
+                        values,
+                        updatedRootContext,
+                    );
+
+                    formValuesRef.current = _.cloneDeep(values);
+
+                    const fieldsWithCalculatedExpression = getQuestionnaireItemsWithCalculatedExpression(
+                        formData.context.fceQuestionnaire,
+                    );
+
+                    fieldsWithCalculatedExpression?.forEach((item) => {
+                        const calcValue = evaluateQuestionItemExpression(
+                            item.linkId,
+                            'calculatedExpression',
+                            updatedRootContext,
+                            item.calculatedExpression,
+                        );
+                        // get parent path for calculated item
+                        const parentPath = '';
+                        methods.setValue(parentPath + '.' + item.linkId + '.0.value.' + item.type, calcValue[0]);
+                    });
+
+                    if (
+                        !_.isEqual(
+                            getQuestionnaireSkeleton(prevEnabledQuestionnaire),
+                            getQuestionnaireSkeleton(updatedEnabledQuestionnaire),
+                        )
+                    ) {
+                        return formValuesRef.current;
+                    }
+                }
+                return null;
+            },
+        }) ?? getValues();
 
     const { isDirty } = useFormState({
         control: methods.control,
     });
 
     const rootContext = calcInitialContext(formData.context, formValues);
+
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
@@ -199,7 +286,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
             <form
                 onSubmit={handleSubmit(async () => {
                     setIsSubmitting(true);
-                    await onSubmit?.({ ...formData, formValues });
+                    await onSubmit?.({ ...formData, formValues: getValues() });
                     setIsSubmitting(false);
                 })}
                 className={classNames(s.form, 'app-form')}
