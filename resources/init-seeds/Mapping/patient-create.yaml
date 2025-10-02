@@ -1,3 +1,6 @@
+id: patient-create
+type: FHIRPath
+resourceType: Mapping
 body:
   "{% assign %}":
     - ssn: "{{ %QuestionnaireResponse.answers('ssn') }}"
@@ -40,7 +43,3 @@ body:
               system: http://hl7.org/fhir/sid/us-ssn
         active: true
         resourceType: Patient
-
-id: patient-create
-type: FHIRPath
-resourceType: Mapping
