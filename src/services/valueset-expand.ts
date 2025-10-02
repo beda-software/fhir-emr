@@ -14,7 +14,8 @@ export type ValueSetOption = {
 };
 
 const instanceHealthSamurai = axios.create({
-    baseURL: 'https://tx.health-samurai.io',
+    // baseURL: 'https://tx.health-samurai.io',
+    baseURL: 'https://tx.dev.hl7.org.au',
     headers: {
         Accept: 'application/json;charset=UTF=8',
     },
@@ -165,8 +166,13 @@ export async function expandEMRValueSet(
     searchText: string,
     preferredTerminologyServer?: string,
 ) {
-    const predefinedValueSetsList: string[] = ['medicationknowledge-package-type'];
-
+    const predefinedValueSetsList: string[] = [
+        'medicationknowledge-package-type',
+        'request-priority',
+        'request-intent',
+        'spia-requesting-refset-3',
+        'radiology-referral',
+    ];
     if (preferredTerminologyServer && answerValueSet) {
         const res = await expandExternalTerminology(preferredTerminologyServer, answerValueSet, searchText);
         if (isSuccess(res)) {
