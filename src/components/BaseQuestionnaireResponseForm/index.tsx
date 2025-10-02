@@ -2,10 +2,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import classNames from 'classnames';
 import { QuestionnaireResponse } from 'fhir/r4b';
 import _ from 'lodash';
-import React, { ComponentType, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import React, { ComponentType, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { FormProvider, useForm, useFormState } from 'react-hook-form';
 import {
     calcInitialContext,
+    FCEQuestionnaire,
     FormItems,
     GroupItemComponent,
     GroupItemProps,
@@ -22,11 +23,7 @@ import * as yup from 'yup';
 
 import 'react-phone-input-2/lib/style.css';
 
-import { Questionnaire as FCEQuestionnaire } from '@beda.software/aidbox-types';
-import { RemoteData, isSuccess, loading } from '@beda.software/remote-data';
-
-import { saveQuestionnaireResponseDraft } from 'src/components/QuestionnaireResponseForm';
-import { questionnaireToValidationSchema } from 'src/utils/questionnaire';
+import { CustomYupTestsMap, questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
 import s from './BaseQuestionnaireResponseForm.module.scss';
 import {
@@ -39,7 +36,7 @@ import { FormFooterComponentProps, FormFooter } from './FormFooter';
 
 export interface BaseQuestionnaireResponseFormProps {
     formData: QuestionnaireResponseFormData;
-    onSubmit?: (formData: QuestionnaireResponseFormData) => Promise<any>;
+    onSubmit?: (formData: QuestionnaireResponseFormData) => Promise<void>;
     readOnly?: boolean;
     itemControlQuestionItemComponents?: ItemControlQuestionItemComponentMapping;
     itemControlGroupItemComponents?: ItemControlGroupItemComponentMapping;
@@ -47,9 +44,8 @@ export interface BaseQuestionnaireResponseFormProps {
     groupItemComponent?: GroupItemComponent;
     onCancel?: () => void;
 
-    autoSave?: boolean;
-    draftSaveResponse?: RemoteData<QuestionnaireResponse>;
-    setDraftSaveResponse?: (data: RemoteData<QuestionnaireResponse>) => void;
+    onQRFUpdate?: (questionnaireResponse: QuestionnaireResponse) => void;
+
     ItemWrapper?: ComponentType<{
         item: QuestionItemProps;
         control: QuestionItemComponent;
@@ -64,25 +60,16 @@ export interface BaseQuestionnaireResponseFormProps {
     FormFooterComponent?: React.ElementType<FormFooterComponentProps>;
     saveButtonTitle?: React.ReactNode;
     cancelButtonTitle?: React.ReactNode;
+
+    customYupTests?: CustomYupTestsMap;
 }
 
 export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFormProps) {
-    const {
-        onSubmit,
-        formData,
-        readOnly,
-        autoSave,
-        draftSaveResponse,
-        setDraftSaveResponse,
-        ItemWrapper,
-        GroupWrapper,
-    } = props;
-
-    const questionnaireId = formData.context.questionnaire.assembledFrom;
+    const { onSubmit, formData, readOnly, ItemWrapper, GroupWrapper, onCancel, customYupTests, onQRFUpdate } = props;
 
     const schema: yup.AnyObjectSchema = useMemo(
-        () => questionnaireToValidationSchema(formData.context.questionnaire),
-        [formData.context.questionnaire],
+        () => questionnaireToValidationSchema(formData.context.fceQuestionnaire, customYupTests),
+        [formData.context.fceQuestionnaire, customYupTests],
     );
 
     const methods = useForm<FormItems>({
@@ -94,29 +81,19 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
 
     const formValues = watch();
 
-    const [isLoading, setIsLoading] = useState(false);
+    const { isDirty } = useFormState({
+        control: methods.control,
+    });
 
-    const previousFormValuesRef = useRef<FormItems | null>(null);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const debouncedSaveDraft = useCallback(
-        _.debounce(async (currentFormValues: FormItems) => {
-            if (!autoSave || !questionnaireId) return;
-
-            if (!_.isEqual(currentFormValues, previousFormValuesRef.current) && setDraftSaveResponse) {
-                setDraftSaveResponse(loading);
-                setDraftSaveResponse(
-                    await saveQuestionnaireResponseDraft(questionnaireId, formData, currentFormValues),
-                );
-                previousFormValuesRef.current = _.cloneDeep(currentFormValues);
-            }
-        }, 1000),
-        [],
-    );
+    const rootContext = calcInitialContext(formData.context, formValues);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
-        debouncedSaveDraft(formValues);
-    }, [formValues, debouncedSaveDraft]);
+        // We use isDirty to trigger the onQRFUpdate callback only when user starts changing the form
+        if (isDirty) {
+            onQRFUpdate?.(rootContext.resource);
+        }
+    }, [rootContext.resource, onQRFUpdate, isDirty]);
 
     const wrapControls = useCallback(
         (mapping: { [x: string]: QuestionItemComponent }): { [x: string]: QuestionItemComponent } => {
@@ -177,6 +154,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
             }),
         [wrapControls, props.questionItemComponents],
     );
+
     const itemControlQuestionItemComponents = useMemo(
         () =>
             wrapControls({
@@ -214,18 +192,15 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         [GroupWrapper],
     );
 
-    const isWizard = isGroupWizard(formData.context.questionnaire);
+    const isWizard = isGroupWizard(formData.context.fceQuestionnaire);
 
     return (
         <FormProvider {...methods}>
             <form
                 onSubmit={handleSubmit(async () => {
-                    setIsLoading(true);
-                    if (questionnaireId && draftSaveResponse && isSuccess(draftSaveResponse)) {
-                        formData.context.questionnaireResponse.id = draftSaveResponse.data.id;
-                    }
+                    setIsSubmitting(true);
                     await onSubmit?.({ ...formData, formValues });
-                    setIsLoading(false);
+                    setIsSubmitting(false);
                 })}
                 className={classNames(s.form, 'app-form')}
                 noValidate
@@ -233,13 +208,15 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                 <BaseQuestionnaireResponseFormPropsContext.Provider
                     value={{
                         ...props,
-                        submitting: isLoading,
-                        debouncedSaveDraft: props.setDraftSaveResponse ? debouncedSaveDraft : undefined,
+                        submitting: isSubmitting,
+                        onCancel: onCancel,
                     }}
                 >
                     <QuestionnaireResponseFormProvider
                         formValues={formValues}
-                        setFormValues={(values, fieldPath, value) => setValue(fieldPath.join('.'), value)}
+                        // NOTE: setValue as any is required to speed up performance!
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        setFormValues={(values, fieldPath, value) => (setValue as any)(fieldPath.join('.'), value)}
                         groupItemComponent={groupItemComponent}
                         itemControlGroupItemComponents={itemControlGroupItemComponents}
                         questionItemComponents={questionItemComponents}
@@ -249,14 +226,12 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                         <>
                             <div className={classNames(s.content, 'form__content')}>
                                 <QuestionItems
-                                    questionItems={formData.context.questionnaire.item!}
+                                    questionItems={formData.context.fceQuestionnaire.item!}
                                     parentPath={[]}
-                                    context={calcInitialContext(formData.context, formValues)}
+                                    context={rootContext}
                                 />
                             </div>
-                            {!isWizard ? (
-                                <FormFooter {...props} submitting={isLoading} debouncedSaveDraft={debouncedSaveDraft} />
-                            ) : null}
+                            {!isWizard ? <FormFooter {...props} submitting={isSubmitting} onCancel={onCancel} /> : null}
                         </>
                     </QuestionnaireResponseFormProvider>
                 </BaseQuestionnaireResponseFormPropsContext.Provider>
@@ -269,6 +244,9 @@ function isGroupWizard(q: FCEQuestionnaire) {
     return q.item?.some((i) => {
         const itemControlCode = i.itemControl?.coding?.[0]?.code;
 
-        return itemControlCode && ['wizard', 'wizard-with-tooltips'].includes(itemControlCode);
+        return (
+            itemControlCode &&
+            ['wizard', 'wizard-with-tooltips', 'wizard-vertical', 'wizard-navigation-group'].includes(itemControlCode)
+        );
     });
 }

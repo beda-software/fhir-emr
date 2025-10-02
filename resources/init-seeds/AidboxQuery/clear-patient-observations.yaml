@@ -1,0 +1,8 @@
+id: clear-patient-observations
+resourceType: AidboxQuery
+type: execute
+query: 'DELETE FROM "observation" WHERE resource#>>''{subject, id}'' = {{params.patient}}'
+params:
+  patient:
+    type: "string"
+    isRequired: true

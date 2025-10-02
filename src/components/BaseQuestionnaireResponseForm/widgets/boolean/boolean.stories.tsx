@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { expect, within, userEvent, findByTestId } from '@storybook/test';
-import { ItemContext } from 'sdc-qrf/lib/types';
+import { ItemContext } from 'sdc-qrf';
 
 import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 
@@ -43,4 +43,20 @@ export const Default: Story = {
         await userEvent.click(checkbox);
         expect(checkbox).not.toBeChecked();
     },
+};
+
+export const Disabled: Story = {
+    render: () => (
+        <QuestionBoolean
+            parentPath={[]}
+            questionItem={{
+                text: 'Boolean question',
+                type: 'boolean',
+                linkId: 'example',
+                required: true,
+                readOnly: true,
+            }}
+            context={{} as ItemContext}
+        />
+    ),
 };

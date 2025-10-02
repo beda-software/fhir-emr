@@ -21,12 +21,18 @@ import {
 import { formatFHIRDateTime } from 'aidbox-react/lib/utils/date';
 import { withRootAccess, LoginService, getToken } from 'aidbox-react/lib/utils/tests';
 
-import { User, ValueSet } from '@beda.software/aidbox-types';
+import { CodeSystem, User, ValueSet } from '@beda.software/aidbox-types';
+import config from '@beda.software/emr-config';
 import { ensure, getReference } from '@beda.software/fhir-react';
 
 import { restoreUserSession } from 'src/containers/App/utils.ts';
 import { login as loginService } from 'src/services/auth';
-import { createFHIRResource, saveFHIRResource, resetInstanceToken as resetFHIRInstanceToken } from 'src/services/fhir';
+import {
+    createFHIRResource,
+    saveFHIRResource,
+    resetInstanceToken as resetFHIRInstanceToken,
+    service,
+} from 'src/services/fhir';
 
 declare global {
     // eslint-disable-next-line no-var, @typescript-eslint/no-explicit-any
@@ -137,11 +143,29 @@ export async function createEncounter(subject: Reference, participant: Participa
     );
 }
 
+export async function createCodeSystem(codeSystemData: Partial<CodeSystem>) {
+    return await service<CodeSystem>({
+        baseURL: config.baseURL,
+        url: `/fhir/CodeSystem/${codeSystemData.id ?? ''}`,
+        method: 'PUT',
+        data: {
+            resourceType: 'CodeSystem',
+            status: 'active',
+            ...codeSystemData,
+        },
+    });
+}
+
 export async function createValueSet(valueSetData: Partial<ValueSet>) {
-    await createFHIRResource<ValueSet>({
-        resourceType: 'ValueSet',
-        status: 'active',
-        ...valueSetData,
+    return await service<ValueSet>({
+        baseURL: config.baseURL,
+        url: `/fhir/ValueSet/${valueSetData.id ?? ''}`,
+        method: 'PUT',
+        data: {
+            resourceType: 'ValueSet',
+            status: 'active',
+            ...valueSetData,
+        },
     });
 }
 
@@ -190,6 +214,28 @@ export const loginAdminUser = async () => {
 export const loginUser = async (user: User) => {
     await login({ ...user, password: USER_PASSWORD });
 };
+
+interface WaitForAPIProcessProps<R> {
+    service: () => Promise<R>;
+    resolver: (result: R) => boolean;
+    retries?: number;
+    timeout?: number;
+}
+export async function waitForAPIProcess<R>(props: WaitForAPIProcessProps<R>) {
+    const { service, resolver, retries = 5, timeout = 1000 } = props;
+
+    for (let i = 0; i < retries; i++) {
+        await new Promise((resolve) => setTimeout(resolve, timeout));
+
+        const result = await service();
+
+        if (resolver(result)) {
+            return true;
+        }
+    }
+
+    throw new Error('API process did not complete');
+}
 
 beforeAll(async () => {
     // vi.useFakeTimers();

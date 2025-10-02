@@ -1,3 +1,0 @@
-{:deps {beda-emr-core "https://github.com/beda-software/beda-emr-core.git"
-        hl7-fhir-r4-core "https://github.com/zen-fhir/hl7-fhir-r4-core.git"
-        hl7-terminology-r4 "git@github.com:zen-fhir/hl7-terminology-r4.git"}}

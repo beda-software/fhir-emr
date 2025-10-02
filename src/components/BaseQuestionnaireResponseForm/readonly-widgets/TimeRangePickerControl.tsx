@@ -4,9 +4,9 @@ import { GroupItemProps } from 'sdc-qrf';
 
 import { getDisplay } from 'src/utils/questionnaire';
 
-import { useTimeRangePickerControl } from '../widgets/TimeRangePickerControl/hooks';
 import s from './ReadonlyWidgets.module.scss';
 import { S } from './ReadonlyWidgets.styles';
+import { useTimeRangePickerControl } from '../widgets/TimeRangePickerControl/hooks';
 
 export function TimeRangePickerControl(props: GroupItemProps) {
     const { questionItem } = props;
@@ -23,7 +23,7 @@ function TimeRangePickerWidget(props: GroupItemProps) {
     const { text } = questionItem;
 
     const { startTimeFieldValue, endTimeFieldValue } = useTimeRangePickerControl(props);
-    const display = _.compact([getDisplay(startTimeFieldValue.value), getDisplay(endTimeFieldValue.value)]).join('–');
+    const display = _.compact([getDisplay(startTimeFieldValue?.value), getDisplay(endTimeFieldValue?.value)]).join('–');
 
     return (
         <S.Question className={classNames(s.question, s.row, 'form__question')}>

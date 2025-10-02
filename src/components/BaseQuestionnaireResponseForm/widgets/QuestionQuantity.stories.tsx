@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { ItemContext } from 'sdc-qrf/lib/types';
+import { ItemContext } from 'sdc-qrf';
 
 import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 
@@ -60,6 +60,39 @@ export const Single: Story = {
                         code: 'foot',
                         system: 'http://unitsofmeasure.org',
                         display: 'ft',
+                    },
+                ],
+            }}
+            context={{} as ItemContext}
+        />
+    ),
+};
+
+export const Disabled: Story = {
+    render: () => (
+        <QuestionQuantity
+            parentPath={[]}
+            questionItem={{
+                text: 'Example',
+                type: 'quantity',
+                linkId: 'example',
+                required: true,
+                readOnly: true,
+                unitOption: [
+                    {
+                        code: 'foot',
+                        system: 'http://unitsofmeasure.org',
+                        display: 'ft',
+                    },
+                    {
+                        code: 'inch',
+                        system: 'http://unitsofmeasure.org',
+                        display: 'in',
+                    },
+                    {
+                        code: 'cm',
+                        system: 'http://unitsofmeasure.org',
+                        display: 'cm',
                     },
                 ],
             }}

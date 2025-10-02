@@ -4,13 +4,15 @@ import { Button } from 'antd';
 import _ from 'lodash';
 import React, { ReactNode } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { GroupItemProps } from 'sdc-qrf';
+import { GroupItemProps, RepeatableFormGroupItems, getItemKey, populateItemKey } from 'sdc-qrf';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 
 import { RepeatableGroupCard } from './RepeatableGroupCard';
 import { RepeatableGroupRow } from './RepeatableGroupRow';
 import { S } from './styles';
+import { RepeatableGroupProps } from './types';
+
 export { RepeatableGroupCard, RepeatableGroupRow };
 
 interface RepeatableGroupsProps {
@@ -24,40 +26,45 @@ function defaultBuildValue(exisingItems: Array<any>) {
 }
 
 export function RepeatableGroups(props: RepeatableGroupsProps) {
-    const { groupItem, renderGroup } = props;
+    const { groupItem, renderGroup, buildValue = defaultBuildValue } = props;
     const { parentPath, questionItem } = groupItem;
-    const { linkId, required, text } = questionItem;
+    const { linkId, text } = questionItem;
+
     const fieldName = [...parentPath, linkId];
-    const { onChange } = useFieldController(fieldName, questionItem);
+
+    const { onChange } = useFieldController<RepeatableFormGroupItems>(fieldName, questionItem);
 
     const { getValues } = useFormContext();
 
     const value = _.get(getValues(), fieldName);
 
-    const items = value?.items && value.items.length ? value.items : required ? [{}] : [];
-    const buildValue = props.buildValue ?? defaultBuildValue;
+    const populateValue = (exisingItems: Array<any>) => (buildValue(exisingItems) || []).map(populateItemKey);
+
+    const items = value?.items || [];
 
     return (
         <S.Group>
-            {_.map(items, (_elem, index: number) => {
+            {_.map(items, (item, index: number) => {
                 if (!items[index]) {
                     return null;
                 }
 
+                const key = getItemKey(item);
+
                 return renderGroup ? (
-                    <React.Fragment key={`${fieldName.join()}-${index}`}>
+                    <React.Fragment key={key}>
                         {renderGroup({
                             index,
-                            value,
+                            items,
                             onChange,
                             groupItem,
                         })}
                     </React.Fragment>
                 ) : (
                     <RepeatableGroupCard
-                        key={index}
+                        key={key}
                         index={index}
-                        value={value}
+                        items={items}
                         onChange={onChange}
                         groupItem={groupItem}
                         variant="main-card"
@@ -71,7 +78,7 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
                         type="primary"
                         ghost
                         onClick={() => {
-                            const updatedInput = { items: buildValue(items ?? []) };
+                            const updatedInput = { ...value, items: populateValue(items ?? []) };
                             onChange(updatedInput);
                         }}
                         size="middle"
@@ -82,30 +89,4 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
             )}
         </S.Group>
     );
-}
-
-export interface RepeatableGroupProps {
-    index: number;
-    value: any;
-    onChange: (event: any) => void;
-    groupItem: GroupItemProps;
-}
-
-export function useRepeatableGroup(props: RepeatableGroupProps) {
-    const { index, value, onChange, groupItem } = props;
-    const { parentPath, questionItem, context } = groupItem;
-    const { linkId } = questionItem;
-
-    const onRemove = () => {
-        const filteredArray = _.filter(value.items, (_val, valIndex: number) => valIndex !== index);
-        onChange({
-            items: [...filteredArray],
-        });
-    };
-
-    return {
-        onRemove,
-        parentPath: [...parentPath, linkId, 'items', index.toString()],
-        context: context[0]!,
-    };
 }

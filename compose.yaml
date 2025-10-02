@@ -1,136 +1,215 @@
 services:
-    file-uploader:
-        image: ghcr.io/beda-software/aidbox-file-uploader:latest
-        depends_on:
-            devbox-healthcheck:
-                condition: service_healthy
-        links:
-            - devbox
-        env_file:
-            - ./env/file-uploader
-            - .env
-        tty: true
-    sdc-ide:
-        image: bedasoftware/sdc-ide:master
-        depends_on:
-            devbox-healthcheck:
-                condition: service_healthy
-        ports:
-            - '3001:5000'
-        env_file:
-            - ./env/sdc-ide
-    sdc:
-        image: bedasoftware/fhir-sdc:master
-        depends_on:
-            devbox-healthcheck:
-                condition: service_healthy
-        links:
-            - devbox
-            - fhirpath_mapping
-        env_file:
-            - ./env/sdc
-        tty: true
-    devbox:
-        image: healthsamurai/aidboxone:stable
-        depends_on:
-            - devbox-db
-            - build-seeds
-        links:
-            - 'devbox-db:database'
-        ports:
-            - '8080:8080'
-        env_file:
-            - ./env/aidbox
-            - .env
-        volumes:
-            - ./config:/var/config:cached
-            - ./zenproject:/zenproject
-    devbox-db:
-        image: 'healthsamurai/aidboxdb:13.2'
-        environment:
-            POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: postgres
-            POSTGRES_DB: devbox
-    devbox-healthcheck:
-        image: curlimages/curl
-        entrypoint: /bin/sleep 10000
-        links:
-            - devbox
-        depends_on:
-            - devbox
-        healthcheck:
-            test: curl --fail http://devbox:8080/health || exit 1
-            interval: 5s
-            timeout: 30s
-            retries: 100
-    build-seeds:
-        image: bedasoftware/fhirsnake:latest
-        command:
-            - export
-            - --output
-            - /app/zenproject/seeds.ndjson.gz
-        volumes:
-            - ./zenproject:/app/zenproject
-            - ./resources/seeds:/app/resources
-    watch-seeds:
-        image: bedasoftware/fhirsnake:latest
-        command:
-            - watch
-            - --external-fhir-server-url
-            - http://root:secret@devbox:8080
-        volumes:
-            - ./resources/seeds:/app/resources
-    scheduling:
-        image: bedasoftware/aidbox-scheduling-node-app:develop
-        depends_on:
-            devbox-healthcheck:
-                condition: service_healthy
-        env_file:
-            - ./env/scheduling
-            - ./env/aidbox
-    datastream-timescaledb:
-        image: timescale/timescaledb:latest-pg15
-        healthcheck:
-            test: ['CMD', 'pg_isready', '-U', 'postgres']
-            interval: 5s
-            timeout: 5s
-            retries: 5
-        environment:
-            POSTGRES_PASSWORD: postgres
-    datastream-timescaledb-migrations:
-        image: bedasoftware/fhir-datasequence:latest
-        entrypoint:
-            - poetry
-            - run
-            - alembic
-            - upgrade
-            - head
-        depends_on:
-            datastream-timescaledb:
-                condition: service_healthy
-        env_file:
-            - ./env/ingestion
-    datastream:
-        image: bedasoftware/fhir-datasequence:latest
-        depends_on:
-            datastream-timescaledb:
-                condition: service_healthy
-            datastream-timescaledb-migrations:
-                condition: service_completed_successfully
-        ports:
-            - '8082:8081'
-        env_file:
-            - ./env/ingestion
-        environment:
-            - METRIPORT_WEBHOOK_AUTH_KEY
-            - METRIPORT_API_SECRET
-            - JWT_TOKEN_ENCODE_SECRET=${DATASEQUENCE_JWT_SECRET}
-    jute:
-        image: bedasoftware/jute-microservice:latest
-        ports:
-            - '8099:8090'
-    fhirpath_mapping:
-        image: bedasoftware/fhirpath-extract:main
-        ports:
-            - '8091:8090'
+  file-uploader:
+    image: ghcr.io/beda-software/aidbox-file-uploader:latest
+    depends_on:
+      devbox-healthcheck:
+        condition: service_healthy
+    links:
+      - devbox
+    env_file:
+      - ./env/file-uploader
+      - .env
+    tty: true
+  sdc-ide:
+    image: bedasoftware/sdc-ide:master
+    depends_on:
+      devbox-healthcheck:
+        condition: service_healthy
+    ports:
+      - "3001:5000"
+    env_file:
+      - ./env/sdc-ide
+  sdc:
+    image: bedasoftware/fhir-sdc:1.0.0a14
+    depends_on:
+      devbox-healthcheck:
+        condition: service_healthy
+    links:
+      - devbox
+      - fhirpath_mapping
+    env_file:
+      - ./env/sdc
+    tty: true
+  devbox:
+    image: healthsamurai/aidboxone:stable
+    depends_on:
+      devbox-db:
+        condition: service_started
+      build-seeds-init:
+        condition: service_completed_successfully
+    links:
+      - "devbox-db:database"
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./env/aidbox
+      - .env
+    volumes:
+      - ./config:/var/config:cached
+      - ./resources/init-bundles:/resources/init-bundles
 
+  devbox-db:
+    image: "healthsamurai/aidboxdb:13.2"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: devbox
+  devbox-healthcheck:
+    image: curlimages/curl
+    entrypoint: /bin/sleep 10000
+    links:
+      - devbox
+    depends_on:
+      - devbox
+    healthcheck:
+      test: curl --fail http://devbox:8080/health || exit 1
+      interval: 5s
+      timeout: 30s
+      retries: 100
+  build-seeds-init:
+    image: bedasoftware/fhirsnake:latest
+    command:
+      - export
+      - --output
+      - /app/init-bundles/initBundle.json
+      - --external-questionnaire-fce-fhir-converter-url
+      - http://questionnaire-fce-fhir-converter:3000/to-fhir
+    env_file:
+      - ./env/build-seeds
+    depends_on:
+      questionnaire-fce-fhir-converter:
+        condition: service_healthy
+    volumes:
+      - ./resources/init-seeds:/app/resources
+      - ./resources/init-bundles:/app/init-bundles
+
+  build-seeds-demo:
+    image: bedasoftware/fhirsnake:latest
+    command:
+      - export
+      - --output
+      - /app/init-bundles/demoBundle.json
+      - --external-questionnaire-fce-fhir-converter-url
+      - http://questionnaire-fce-fhir-converter:3000/to-fhir
+    env_file:
+      - ./env/build-seeds-demo
+    depends_on:
+      questionnaire-fce-fhir-converter:
+        condition: service_healthy
+    volumes:
+      - ./resources/demo-seeds:/app/resources
+      - ./resources/demo-bundles:/app/init-bundles
+
+  watch-seeds-init:
+    image: bedasoftware/fhirsnake:latest
+    command:
+      - watch
+      - --external-fhir-server-url
+      - http://root:secret@devbox:8080
+      - --external-questionnaire-fce-fhir-converter-url
+      - http://questionnaire-fce-fhir-converter:3000/to-fhir
+    env_file:
+      - ./env/build-seeds
+    volumes:
+      - ./resources/init-seeds:/app/resources
+
+  watch-seeds-demo:
+    image: bedasoftware/fhirsnake:latest
+    command:
+      - watch
+      - --external-fhir-server-url
+      - http://root:secret@devbox:8080
+      - --external-questionnaire-fce-fhir-converter-url
+      - http://questionnaire-fce-fhir-converter:3000/to-fhir
+    env_file:
+      - ./env/build-seeds-demo
+    volumes:
+      - ./resources/demo-seeds:/app/resources
+
+  upload-demo-bundle:
+    image: curlimages/curl
+    links:
+      - devbox
+    depends_on:
+      devbox-healthcheck:
+        condition: service_healthy
+      build-seeds-demo:
+        condition: service_completed_successfully
+    working_dir: /app/resources/demo-bundles
+    command:
+      - "sh"
+      - "-c"
+      - "curl -X POST 'http://root:secret@devbox:8080/fhir' -H 'Content-Type: application/json' -d @demoBundle.json"
+    volumes:
+      - ./resources/demo-bundles/:/app/resources/demo-bundles
+
+  scheduling:
+    image: bedasoftware/aidbox-scheduling-node-app:develop
+    depends_on:
+      devbox-healthcheck:
+        condition: service_healthy
+    env_file:
+      - ./env/scheduling
+      - ./env/aidbox
+
+  datastream-timescaledb:
+    image: timescale/timescaledb:latest-pg15
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_PASSWORD: postgres
+  datastream-timescaledb-migrations:
+    image: bedasoftware/fhir-datasequence:latest
+    entrypoint:
+      - poetry
+      - run
+      - alembic
+      - upgrade
+      - head
+    depends_on:
+      datastream-timescaledb:
+        condition: service_healthy
+    env_file:
+      - ./env/ingestion
+  datastream:
+    image: bedasoftware/fhir-datasequence:latest
+    depends_on:
+      datastream-timescaledb:
+        condition: service_healthy
+      datastream-timescaledb-migrations:
+        condition: service_completed_successfully
+    ports:
+      - "8082:8081"
+    env_file:
+      - ./env/ingestion
+    environment:
+      - METRIPORT_WEBHOOK_AUTH_KEY
+      - METRIPORT_API_SECRET
+      - JWT_TOKEN_ENCODE_SECRET=${DATASEQUENCE_JWT_SECRET}
+  jute:
+    image: bedasoftware/jute-microservice:latest
+    ports:
+      - "8099:8090"
+  fhirpath_mapping:
+    image: bedasoftware/fhirpath-extract:0.2.0
+    ports:
+      - "8091:8090"
+
+  questionnaire-fce-fhir-converter:
+    image: bedasoftware/questionnaire-fce-fhir-converter:latest
+    healthcheck:
+      test: curl --fail http://localhost:3000/health || exit 1
+      interval: 5s
+      timeout: 30s
+      retries: 50
+
+  fhir-converters-app:
+    image: bedasoftware/aidbox-fhir-converter:main
+    depends_on:
+      devbox-healthcheck:
+        condition: service_healthy
+    env_file:
+      - ./env/fhir-converters-app

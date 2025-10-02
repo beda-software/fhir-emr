@@ -20,7 +20,9 @@ import { QuestionBoolean } from './readonly-widgets/boolean';
 import { QuestionChoice } from './readonly-widgets/choice';
 import { QuestionDateTime } from './readonly-widgets/date';
 import { Display } from './readonly-widgets/display';
-import { Col, Group, Row } from './readonly-widgets/group';
+import { Col, Group, Row } from './readonly-widgets/Group';
+import { NavigationGroup } from './readonly-widgets/Group/NavigationGroup';
+import { GroupWizardVertical } from './readonly-widgets/GroupWizard';
 import { QuestionInteger, QuestionDecimal, QuestionQuantity } from './readonly-widgets/number';
 import { QuestionReference } from './readonly-widgets/reference';
 import { AnxietyScore, DepressionScore } from './readonly-widgets/score';
@@ -63,11 +65,14 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
                         col: Col,
                         row: Row,
                         'time-range-picker': TimeRangePickerControl,
+                        'wizard-navigation-group': NavigationGroup,
+                        'wizard-vertical': GroupWizardVertical,
                         ...itemControlGroupItemComponents,
                         ...ItemControlGroupItemReadonlyWidgetsFromContext,
                     }}
                     questionItemComponents={{
                         text: QuestionText,
+                        time: QuestionDateTime,
                         string: QuestionText,
                         integer: QuestionInteger,
                         decimal: QuestionDecimal,
@@ -94,7 +99,7 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
                 >
                     <>
                         <QuestionItems
-                            questionItems={formData.context.questionnaire.item!}
+                            questionItems={formData.context.fceQuestionnaire.item!}
                             parentPath={[]}
                             context={calcInitialContext(formData.context, formValues)}
                         />

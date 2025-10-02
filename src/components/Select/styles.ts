@@ -6,8 +6,9 @@ export const S = {
             border-color: ${({ theme }) => theme.antdTheme?.colorBorder};
             min-height: 32px;
             box-shadow: none;
-            border-radius: 6px;
             background-color: ${({ theme }) => theme.antdTheme?.colorBgContainer};
+            border-radius: ${({ theme }) => theme.antdTheme?.borderRadius}px;
+            transition: all ${({ theme }) => theme.antdTheme?.motionDurationMid};
 
             &:hover {
                 border-color: ${({ theme }) => theme.antdTheme?.colorPrimary};
@@ -21,7 +22,7 @@ export const S = {
         .react-select__control--menu-is-open,
         .react-select__control--is-focused {
             border-color: ${({ theme }) => theme.antdTheme?.colorPrimary};
-            box-shadow: 0 0 0 2px rgb(5 145 255 / 10%);
+            box-shadow: 0 0 0 2px ${({ theme }) => theme.antdTheme?.controlOutline};
         }
 
         .react-select__value-container {
@@ -70,7 +71,7 @@ export const S = {
         .react-select__option {
             padding: 5px 12px;
             font-size: 14px;
-            border-radius: 4px;
+            border-radius: ${({ theme }) => theme.antdTheme?.borderRadius}px;
             transition: background 0.3s ease;
             cursor: pointer;
         }
@@ -97,7 +98,7 @@ export const S = {
 
         .react-select__multi-value {
             background-color: ${({ theme }) => theme.antdTheme?.colorFillContent};
-            border-radius: 6px;
+            border-radius: ${({ theme }) => theme.antdTheme?.borderRadius}px;
             padding: 0 4px 0 8px;
         }
 
@@ -116,6 +117,29 @@ export const S = {
             background: 0;
             cursor: pointer;
             color: ${({ theme }) => theme.antdTheme?.colorText};
+        }
+        
+        .react-select--is-disabled {
+            .react-select__control {
+                background-color: ${({ theme }) => theme.antdTheme?.colorBgContainerDisabled};
+            }
+
+            .react-select__single-value {
+                color: ${({ theme }) => theme.antdTheme?.colorTextDisabled};
+            }
+            
+            .react-select__multi-value {
+                padding: 0 8px;
+            }
+
+            .react-select__multi-value__label {
+                color: ${({ theme }) => theme.antdTheme?.colorTextDisabled};
+                margin: 0;
+            }
+            
+            .react-select__multi-value__remove {
+                display: none;
+            }
         }
     `,
 };

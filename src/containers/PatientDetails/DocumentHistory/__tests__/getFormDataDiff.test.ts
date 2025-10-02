@@ -380,8 +380,7 @@ const result3 = {
 
 const currentData4 = {
     'gad-7': {
-        question:
-            'Over the last two weeks, how often have you been bothered by the following problems?',
+        question: 'Over the last two weeks, how often have you been bothered by the following problems?',
         items: {
             '69725-0': [
                 {
@@ -476,8 +475,7 @@ const currentData4 = {
 
 const prevData4 = {
     'gad-7': {
-        question:
-            'Over the last two weeks, how often have you been bothered by the following problems?',
+        question: 'Over the last two weeks, how often have you been bothered by the following problems?',
         items: {
             '69725-0': [
                 {

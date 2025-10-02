@@ -1,6 +1,6 @@
 import { t } from '@lingui/macro';
 import { Meta, StoryObj } from '@storybook/react';
-import { ItemContext } from 'sdc-qrf/lib/types';
+import { ItemContext } from 'sdc-qrf';
 
 import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 
@@ -66,6 +66,21 @@ export const FormatedTime: Story = {
                 type: 'time',
                 linkId: 'time',
                 regex: 'HH:mm',
+            }}
+            context={{} as ItemContext}
+        />
+    ),
+};
+
+export const Disabled: Story = {
+    render: () => (
+        <QuestionDateTime
+            parentPath={[]}
+            questionItem={{
+                text: t`Select date`,
+                type: 'dateTime',
+                linkId: 'date',
+                readOnly: true,
             }}
             context={{} as ItemContext}
         />

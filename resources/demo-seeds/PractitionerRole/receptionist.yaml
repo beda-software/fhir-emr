@@ -1,0 +1,9 @@
+code:
+  - coding:
+      - code: "6868009"
+        system: http://snomed.info/sct
+        display: Hospital administrator
+practitioner:
+  reference: urn:uuid:Practitioner:receptionist
+id: receptionist
+resourceType: PractitionerRole

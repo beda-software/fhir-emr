@@ -1,24 +1,24 @@
 import { t } from '@lingui/macro';
 import _ from 'lodash';
+import {
+    AnswerValue,
+    FCEQuestionnaire,
+    FCEQuestionnaireItem,
+    FCEQuestionnaireItemChoiceColumn,
+    FormAnswerItems,
+} from 'sdc-qrf';
 import * as yup from 'yup';
 
-import {
-    Questionnaire,
-    QuestionnaireItem,
-    QuestionnaireItemAnswerOption,
-    QuestionnaireItemChoiceColumn,
-    QuestionnaireResponseItemAnswer,
-    QuestionnaireResponseItemAnswerValue,
-} from '@beda.software/aidbox-types';
 import { parseFHIRTime } from '@beda.software/fhir-react';
 
 import { formatHumanDate, formatHumanDateTime } from './date';
 import { getQuestionItemEnableWhenSchema } from './enableWhen';
 import { evaluate } from './fhirpath';
+import { yupLocale } from './yup-locale';
 
 export function getDisplay(
-    value?: QuestionnaireResponseItemAnswerValue,
-    choiceColumn?: QuestionnaireItemChoiceColumn[],
+    value?: AnswerValue,
+    choiceColumn?: FCEQuestionnaireItemChoiceColumn[],
 ): string | number | null {
     if (!value) {
         return null;
@@ -73,44 +73,134 @@ export function getDisplay(
 }
 
 export function getArrayDisplay(
-    options?: QuestionnaireResponseItemAnswer[],
-    choiceColumn?: QuestionnaireItemChoiceColumn[],
+    options?: FormAnswerItems[],
+    choiceColumn?: FCEQuestionnaireItemChoiceColumn[],
 ): string | null {
     if (!options) {
         return null;
     }
 
-    return options.map((v: QuestionnaireResponseItemAnswer) => getDisplay(v.value, choiceColumn)).join(', ');
+    return options.map((v) => getDisplay(v.value, choiceColumn)).join(', ');
 }
 
-export function questionnaireItemsToValidationSchema(questionnaireItems: QuestionnaireItem[]) {
+export interface CustomYupTestsMap {
+    [itemControlCode: string]: yup.TestConfig<any>[];
+}
+
+function applyCustomYupTestsToItem(
+    questionnaireItem: FCEQuestionnaireItem,
+    schema: yup.AnySchema,
+    customYupTests?: CustomYupTestsMap,
+): yup.AnySchema {
+    if (!customYupTests) {
+        return schema;
+    }
+
+    const itemControlCode = questionnaireItem.itemControl?.coding?.[0]?.code;
+    if (!itemControlCode) {
+        return schema;
+    }
+
+    const applicableYupTests = customYupTests[itemControlCode] ?? [];
+
+    applicableYupTests.forEach((test) => {
+        schema = schema.test(test);
+    });
+    return schema;
+}
+
+export function questionnaireItemsToValidationSchema(
+    questionnaireItems: FCEQuestionnaireItem[],
+    customYupTests?: CustomYupTestsMap,
+) {
     const validationSchema: Record<string, yup.AnySchema> = {};
-    if (questionnaireItems.length === 0) return yup.object(validationSchema) as yup.AnyObjectSchema;
+    if (questionnaireItems.length === 0) {
+        return yup.object(validationSchema) as yup.AnyObjectSchema;
+    }
     questionnaireItems.forEach((item) => {
         let schema: yup.AnySchema;
+
         if (item.type === 'string' || item.type === 'text') {
             schema = yup.string();
-            if (item.required) schema = schema.required();
-            if (item.maxLength && item.maxLength > 0) schema = (schema as yup.StringSchema).max(item.maxLength);
+            if (item.itemControl?.coding?.[0]?.code === 'email') {
+                schema = (schema as yup.StringSchema).email();
+            }
+            if (item.required) {
+                schema = schema.required();
+            }
+            if (item.maxLength && item.maxLength > 0) {
+                schema = (schema as yup.StringSchema).max(item.maxLength);
+            }
+            schema = applyCustomYupTestsToItem(item, schema, customYupTests);
             schema = createSchemaArrayOfValues(yup.object({ string: schema }));
         } else if (item.type === 'integer') {
             schema = yup.number().integer();
-            if (item.required) schema = schema.required();
+            if (item.required) {
+                schema = schema.required();
+            }
+            schema = applyCustomYupTestsToItem(item, schema, customYupTests);
             schema = createSchemaArrayOfValues(yup.object({ integer: schema }));
+        } else if (item.type === 'decimal') {
+            schema = yup.number();
+            if (item.required) {
+                schema = schema.required();
+            }
+            schema = applyCustomYupTestsToItem(item, schema, customYupTests);
+            schema = createSchemaArrayOfValues(yup.object({ decimal: schema }));
+        } else if (item.type === 'quantity') {
+            const quantitySchema = yup.object({
+                value: item.required ? yup.number().required() : yup.number().nullable(),
+                comparator: yup.string().oneOf(['<', '<=', '>=', '>']).nullable(),
+                unit: yup.string().nullable(),
+                system: yup.string().nullable(),
+                code: yup.string().nullable(),
+            });
+
+            if (item.required) {
+                quantitySchema.required();
+            }
+            schema = applyCustomYupTestsToItem(item, quantitySchema, customYupTests);
+            schema = createSchemaArrayOfValues(yup.object({ Quantity: schema }));
         } else if (item.type === 'date') {
             schema = yup.date();
-            if (item.required) schema = schema.required();
+            if (item.required) {
+                schema = schema.required();
+            }
+            schema = applyCustomYupTestsToItem(item, schema, customYupTests);
             schema = createSchemaArrayOfValues(yup.object({ date: schema }));
-        } else if (item.item) {
+        } else if (item.type === 'dateTime') {
+            schema = yup.date();
+            if (item.required) {
+                schema = schema.required();
+            }
+            schema = applyCustomYupTestsToItem(item, schema, customYupTests);
+            schema = createSchemaArrayOfValues(yup.object({ dateTime: schema }));
+        } else if (item.type === 'time') {
+            schema = yup.string().test(t`time`, t`Must be a valid time (HH:mm:ss)`, (value) => {
+                if (!value) {
+                    return true;
+                }
+
+                const isoTimeRegex = /([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?/;
+                return isoTimeRegex.test(value);
+            });
+            if (item.required) {
+                schema = schema.required();
+            }
+            schema = applyCustomYupTestsToItem(item, schema, customYupTests);
+            schema = createSchemaArrayOfValues(yup.object({ time: schema }));
+        } else if (item.type === 'group' && item.item) {
             schema = yup
                 .object({
                     items: item.repeats
-                        ? yup.array().of(questionnaireItemsToValidationSchema(item.item))
-                        : questionnaireItemsToValidationSchema(item.item),
+                        ? yup.array().of(questionnaireItemsToValidationSchema(item.item, customYupTests))
+                        : questionnaireItemsToValidationSchema(item.item, customYupTests),
                 })
                 .required();
+            schema = applyCustomYupTestsToItem(item, schema, customYupTests);
         } else {
             schema = item.required ? yup.array().of(yup.mixed()).min(1).required() : yup.mixed().nullable();
+            schema = applyCustomYupTestsToItem(item, schema, customYupTests);
         }
 
         schema = item.required ? schema.required() : schema;
@@ -129,17 +219,16 @@ export function questionnaireItemsToValidationSchema(questionnaireItems: Questio
     return yup.object(validationSchema).required() as yup.AnyObjectSchema;
 }
 
-export function questionnaireToValidationSchema(questionnaire: Questionnaire) {
-    return questionnaireItemsToValidationSchema(questionnaire.item ?? []);
+export function questionnaireToValidationSchema(questionnaire: FCEQuestionnaire, customYupTests?: CustomYupTestsMap) {
+    yup.setLocale(yupLocale);
+    return questionnaireItemsToValidationSchema(questionnaire.item ?? [], customYupTests);
 }
 
 function createSchemaArrayOfValues(value: yup.AnyObjectSchema) {
     return yup.array().of(yup.object({ value }));
 }
 
-export function getAnswerDisplay(
-    value: QuestionnaireItemAnswerOption['value'] | QuestionnaireResponseItemAnswer['value'],
-) {
+export function getAnswerDisplay(value: AnswerValue) {
     if (value?.Coding) {
         return value.Coding.display!;
     }
@@ -154,7 +243,7 @@ export function getAnswerDisplay(
     return JSON.stringify(value);
 }
 
-export function getAnswerCode(o: QuestionnaireItemAnswerOption['value'] | QuestionnaireResponseItemAnswer['value']) {
+export function getAnswerCode(o: AnswerValue) {
     if (o?.Coding) {
         return o.Coding.code!;
     }
@@ -163,7 +252,7 @@ export function getAnswerCode(o: QuestionnaireItemAnswerOption['value'] | Questi
     }
 
     if (o?.Reference) {
-        return o.Reference.id;
+        return o.Reference.reference!;
     }
 
     return JSON.stringify(o);

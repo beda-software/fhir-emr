@@ -1,4 +1,5 @@
 export * from './App';
+export * from './App/auth';
 export * from './Appointment';
 export * from './DocumentsList';
 export * from './EncounterDetails';
@@ -7,6 +8,7 @@ export * from './HealthcareServiceList';
 export * from './InvoiceDetails';
 export * from './InvoiceList';
 export * from './MedicationManagement';
+export * from './MedicationManagementDetail';
 export * from './NotificationPage';
 export * from './OrganizationScheduling';
 export * from './PatientDetails';

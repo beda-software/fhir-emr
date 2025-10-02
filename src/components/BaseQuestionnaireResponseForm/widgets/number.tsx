@@ -1,5 +1,5 @@
 import { Form, InputNumber, Select } from 'antd';
-import { Coding } from 'fhir/r4b';
+import { Coding, Quantity } from 'fhir/r4b';
 import _ from 'lodash';
 import { useState } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
@@ -16,7 +16,7 @@ export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps)
     const { linkId, required } = questionItem;
     const { unit } = questionItem as NumericItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'integer'];
-    const { value, onChange, disabled, formItem, placeholder } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, formItem, placeholder } = useFieldController<number>(fieldName, questionItem);
 
     return (
         <Form.Item {...formItem} data-testid={linkId}>
@@ -38,7 +38,7 @@ export function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps)
     const { linkId } = questionItem;
     const { unit } = questionItem as NumericItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'decimal'];
-    const { value, onChange, disabled, formItem, placeholder } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, formItem, placeholder } = useFieldController<number>(fieldName, questionItem);
 
     return (
         <Form.Item {...formItem} data-testid={linkId}>
@@ -58,10 +58,12 @@ export function QuestionQuantity(props: QuestionItemProps) {
     const { parentPath, questionItem } = props;
     const { linkId, unitOption, required } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'Quantity'];
-    const { value, onChange, disabled, formItem, placeholder } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled, formItem, placeholder } = useFieldController<Quantity>(fieldName, questionItem);
 
     const [numericValue, setNumericValue] = useState<number | undefined>(value?.value);
-    const [selectedUnit, setSelectedUnit] = useState(unitOption?.[0]);
+    const [selectedUnit, setSelectedUnit] = useState(
+        value ? { code: value.code, display: value.unit, system: value.system } : unitOption?.[0],
+    );
 
     const onUnitChange = (unitDisplay: string) => {
         const unit = unitOption?.find((unit) => unit.display === unitDisplay);

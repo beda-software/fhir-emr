@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { expect, within, userEvent } from '@storybook/test';
-import { ItemContext } from 'sdc-qrf/lib/types';
+import { ItemContext } from 'sdc-qrf';
 
 import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 
@@ -25,10 +25,10 @@ export const Default: Story = {
                 linkId: 'example',
                 required: true,
                 answerOption: [
-                    { value: { Coding: { code: '1', display: 'Item 1' } } },
-                    { value: { Coding: { code: '2', display: 'Item 2' } } },
-                    { value: { Coding: { code: '3', display: 'Item 3' } } },
-                    { value: { Coding: { code: '4', display: 'Item 4' } } },
+                    { valueCoding: { code: '1', display: 'Item 1' } },
+                    { valueCoding: { code: '2', display: 'Item 2' } },
+                    { valueCoding: { code: '3', display: 'Item 3' } },
+                    { valueCoding: { code: '4', display: 'Item 4' } },
                 ],
                 entryFormat: 'Select...',
             }}
@@ -68,10 +68,10 @@ export const Multiple: Story = {
                 repeats: true,
                 required: true,
                 answerOption: [
-                    { value: { Coding: { code: '1', display: 'Item 1' } } },
-                    { value: { Coding: { code: '2', display: 'Item 2' } } },
-                    { value: { Coding: { code: '3', display: 'Item 3' } } },
-                    { value: { Coding: { code: '4', display: 'Item 4' } } },
+                    { valueCoding: { code: '1', display: 'Item 1' } },
+                    { valueCoding: { code: '2', display: 'Item 2' } },
+                    { valueCoding: { code: '3', display: 'Item 3' } },
+                    { valueCoding: { code: '4', display: 'Item 4' } },
                 ],
                 entryFormat: 'Select...',
             }}
@@ -121,4 +121,27 @@ export const Multiple: Story = {
 
         item3values.forEach(async (i) => await expect(i).not.toBeInTheDocument());
     },
+};
+
+export const Disabled: Story = {
+    render: () => (
+        <QuestionChoice
+            parentPath={[]}
+            questionItem={{
+                text: 'Select from list',
+                type: 'choice',
+                linkId: 'example',
+                required: true,
+                readOnly: true,
+                answerOption: [
+                    { valueCoding: { code: '1', display: 'Item 1' } },
+                    { valueCoding: { code: '2', display: 'Item 2' } },
+                    { valueCoding: { code: '3', display: 'Item 3' } },
+                    { valueCoding: { code: '4', display: 'Item 4' } },
+                ],
+                entryFormat: 'Select...',
+            }}
+            context={{} as ItemContext}
+        />
+    ),
 };

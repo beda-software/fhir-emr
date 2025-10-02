@@ -1,7 +1,9 @@
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { Button, StepProps, Steps, Tooltip } from 'antd';
+import classNames from 'classnames';
 import { CSSProperties, ReactNode, useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { FormItems } from 'sdc-qrf';
 
 import { S } from './styles';
 import { Text } from '../Typography';
@@ -18,12 +20,25 @@ export interface WizardProps {
     children?: ReactNode | undefined;
     className?: string | undefined;
     style?: CSSProperties | undefined;
+    direction?: 'horizontal' | 'vertical';
+    size?: 'small' | 'default';
 }
 
 export function Wizard(props: WizardProps) {
-    const { currentIndex, onChange, children, labelPlacement = 'vertical', items, className, style } = props;
+    const {
+        currentIndex,
+        onChange,
+        children,
+        direction = 'horizontal',
+        labelPlacement = 'vertical',
+        size = 'default',
+        items,
+        className,
+        style,
+    } = props;
 
-    const { trigger, formState } = useFormContext();
+    // NOTE: added default values to allow using Wizard outside of FormContext
+    const { trigger, formState } = useFormContext() ?? { trigger: undefined, formState: { isSubmitted: false } };
 
     const stepsItems: StepProps[] = items.map((step, index) => ({
         ...step,
@@ -40,6 +55,8 @@ export function Wizard(props: WizardProps) {
                 step={step}
                 stepNumber={index + 1}
                 active={currentIndex === index}
+                size={size}
+                disabled={step.disabled}
             />
         ),
     }));
@@ -48,17 +65,34 @@ export function Wizard(props: WizardProps) {
 
     useEffect(() => {
         if (formState.isSubmitted) {
-            trigger();
+            trigger?.();
         }
     }, [currentIndex, trigger, formState.isSubmitted]);
 
     return (
-        <S.Container className={className} style={style} $labelPlacement={labelPlacement}>
-            <Steps items={stepsItems} current={currentIndex} onChange={onChange} labelPlacement="vertical" />
-            {labelPlacement === 'tooltip' && currentStep?.title ? (
-                <S.Title level={4}>{currentStep.title}</S.Title>
-            ) : null}
-            {children}
+        <S.Container
+            className={classNames(className, 'app-wizard', {
+                _vertical: direction === 'vertical',
+            })}
+            style={style}
+            $labelPlacement={labelPlacement}
+            $direction={direction}
+        >
+            <S.StepsContainer $direction={direction}>
+                <Steps
+                    items={stepsItems}
+                    current={currentIndex}
+                    onChange={onChange}
+                    labelPlacement="vertical"
+                    direction={direction}
+                />
+            </S.StepsContainer>
+            <S.Content $direction={direction}>
+                {labelPlacement === 'tooltip' && currentStep?.title ? (
+                    <S.Title level={4}>{currentStep.title}</S.Title>
+                ) : null}
+                {children}
+            </S.Content>
         </S.Container>
     );
 }
@@ -71,6 +105,7 @@ export interface WizardFooterProps {
     children?: ReactNode | undefined;
     className?: string | undefined;
     style?: CSSProperties | undefined;
+    saveDraft?: (currentFormValues: FormItems) => Promise<void>;
 }
 
 export function WizardFooter(props: WizardFooterProps) {
@@ -96,14 +131,22 @@ interface WizardStepNumberIconProps {
     stepNumber: number;
     active: boolean;
     labelPlacement: 'vertical' | 'tooltip';
+    size: 'small' | 'default';
+    disabled?: boolean;
 }
 
 export function WizardStepNumberIcon(props: WizardStepNumberIconProps) {
-    const { step, labelPlacement, stepNumber, active } = props;
+    const { step, labelPlacement, stepNumber, active, size, disabled } = props;
 
     const renderIcon = () => {
         return (
-            <S.Icon $active={active} $status={step.status} data-testid={`wizard-step-icon-${step.linkId}`}>
+            <S.Icon
+                $active={active}
+                $status={step.status}
+                $size={size}
+                $disabled={disabled}
+                data-testid={`wizard-step-icon-${step.linkId}`}
+            >
                 <Text>{stepNumber}</Text>
             </S.Icon>
         );

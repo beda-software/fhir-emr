@@ -3,7 +3,7 @@ import {
     ItemControlGroupItemComponentMapping,
     ItemControlQuestionItemComponentMapping,
     QuestionItemComponentMapping,
-} from 'sdc-qrf/lib/types';
+} from 'sdc-qrf';
 
 import {
     Col,
@@ -31,10 +31,11 @@ import {
     SectionWithDivider,
     MainCard,
     SubCard,
+    QuestionEmail,
 } from './widgets';
 import { AudioRecorderUploader } from './widgets/AudioRecorderUploader';
 import { Display } from './widgets/display';
-import { GroupWizard, GroupWizardWithTooltips } from './widgets/GroupWizard';
+import { GroupWizard, GroupWizardVertical, GroupWizardWithTooltips } from './widgets/GroupWizard';
 import { PasswordInput } from './widgets/PasswordInput';
 import { QuestionReference } from './widgets/reference';
 import { ReferenceRadioButton } from './widgets/ReferenceRadioButton';
@@ -50,6 +51,7 @@ export const itemComponents: QuestionItemComponentMapping = {
     dateTime: QuestionDateTime,
     time: QuestionDateTime,
     choice: QuestionChoice,
+    'open-choice': QuestionChoice,
     boolean: QuestionBoolean,
     display: Display,
     reference: QuestionReference,
@@ -61,6 +63,7 @@ export const groupComponent: GroupItemComponent = Group;
 
 export const itemControlComponents: ItemControlQuestionItemComponentMapping = {
     phoneWidget: QuestionPhone,
+    email: QuestionEmail,
     passwordWidget: PasswordInput,
     slider: QuestionSlider,
     'solid-radio-button': QuestionSolidRadio,
@@ -88,4 +91,6 @@ export const groupControlComponents: ItemControlGroupItemComponentMapping = {
     'time-range-picker': TimeRangePickerControl,
     wizard: GroupWizard,
     'wizard-with-tooltips': GroupWizardWithTooltips,
+    'wizard-navigation-group': GroupWizard,
+    'wizard-vertical': GroupWizardVertical,
 };

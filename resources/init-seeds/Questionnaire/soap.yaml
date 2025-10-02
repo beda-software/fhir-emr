@@ -1,0 +1,38 @@
+item:
+  - linkId: subjective-group
+    type: group
+    item:
+      - linkId: subjective
+        text: "Subjective:"
+        helpText: This section captures the patient's perspective. Here, you document their chief complaint (reason for visit) in their own words. You might also include their medical history, current medications, allergies, and social factors impacting their health (e.g., smoking, occupation).
+        type: string
+  - linkId: objective-group
+    type: group
+    item:
+      - linkId: objective
+        text: "Objective:"
+        helpText: This section focuses on your clinical findings. Document vitals (blood pressure, heart rate, temperature, respiration), physical examination results (e.g., heart sounds, lung auscultation), and any relevant diagnostic tests (e.g., blood work, X-rays).
+        type: string
+  - linkId: assessment-group
+    type: group
+    item:
+      - linkId: assessment
+        text: "Assessment:"
+        helpText: This section integrates the subjective and objective data to formulate a differential diagnosis (list of possible conditions). You might also include the most likely diagnosis based on your findings.
+        type: string
+  - linkId: plan-group
+    type: group
+    item:
+      - linkId: plan
+        text: "Plan:"
+        helpText: Here, you outline the next steps in the patient's care. This might include further investigations (e.g., ECG), medications, referrals to specialists, and patient education.
+        type: string
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+name: SOAP (Subjective, Objective, Assessment, Plan)
+title: SOAP (Subjective, Objective, Assessment, Plan)
+status: active
+subjectType:
+  - Encounter
+resourceType: Questionnaire

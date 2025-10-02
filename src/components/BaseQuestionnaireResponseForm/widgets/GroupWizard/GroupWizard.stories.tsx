@@ -1,9 +1,8 @@
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
 import { Meta, StoryObj } from '@storybook/react';
-
-import { Questionnaire, QuestionnaireResponse } from '@beda.software/aidbox-types/index';
-import { success } from '@beda.software/remote-data';
+import { QuestionnaireResponse } from 'fhir/r4b';
+import { FCEQuestionnaire, fromFirstClassExtension } from 'sdc-qrf';
 
 import { BaseQuestionnaireResponseForm, Modal } from 'src/components';
 
@@ -28,7 +27,8 @@ export const Default: Story = {
             <BaseQuestionnaireResponseForm
                 formData={{
                     context: {
-                        questionnaire: getQuestionnaire(),
+                        fceQuestionnaire: getQuestionnaire(),
+                        questionnaire: fromFirstClassExtension(getQuestionnaire()),
                         launchContextParameters: [],
                         questionnaireResponse,
                     },
@@ -45,7 +45,8 @@ export const WithTooltip: Story = {
             <BaseQuestionnaireResponseForm
                 formData={{
                     context: {
-                        questionnaire: getQuestionnaire('wizard-with-tooltips'),
+                        fceQuestionnaire: getQuestionnaire('wizard-with-tooltips'),
+                        questionnaire: fromFirstClassExtension(getQuestionnaire('wizard-with-tooltips')),
                         launchContextParameters: [],
                         questionnaireResponse,
                     },
@@ -58,50 +59,6 @@ export const WithTooltip: Story = {
     ),
 };
 
-export const Autosave: Story = {
-    render: () => (
-        <I18nProvider i18n={i18n}>
-            <BaseQuestionnaireResponseForm
-                formData={{
-                    context: {
-                        questionnaire: getQuestionnaire('wizard-with-tooltips'),
-                        launchContextParameters: [],
-                        questionnaireResponse,
-                    },
-                    formValues,
-                }}
-                onCancel={() => console.log('onCancel')}
-                saveButtonTitle={'Submit'}
-                autoSave
-                draftSaveResponse={success({} as any)}
-                setDraftSaveResponse={() => console.log('setDraftSaveResponse')}
-            />
-        </I18nProvider>
-    ),
-};
-
-export const SaveAsDraft: Story = {
-    render: () => (
-        <I18nProvider i18n={i18n}>
-            <BaseQuestionnaireResponseForm
-                formData={{
-                    context: {
-                        questionnaire: getQuestionnaire('wizard-with-tooltips'),
-                        launchContextParameters: [],
-                        questionnaireResponse,
-                    },
-                    formValues,
-                }}
-                onCancel={() => console.log('onCancel')}
-                saveButtonTitle={'Submit'}
-                autoSave={false}
-                draftSaveResponse={success({} as any)}
-                setDraftSaveResponse={() => console.log('setDraftSaveResponse')}
-            />
-        </I18nProvider>
-    ),
-};
-
 export const inModal: Story = {
     render: () => (
         <I18nProvider i18n={i18n}>
@@ -109,7 +66,8 @@ export const inModal: Story = {
                 <BaseQuestionnaireResponseForm
                     formData={{
                         context: {
-                            questionnaire: getQuestionnaire('wizard-with-tooltips'),
+                            fceQuestionnaire: getQuestionnaire('wizard-with-tooltips'),
+                            questionnaire: fromFirstClassExtension(getQuestionnaire('wizard-with-tooltips')),
                             launchContextParameters: [],
                             questionnaireResponse,
                         },
@@ -121,12 +79,54 @@ export const inModal: Story = {
     ),
 };
 
-function getQuestionnaire(itemControlCode: 'wizard' | 'wizard-with-tooltips' = 'wizard'): Questionnaire {
+export const inModalVertical: Story = {
+    render: () => (
+        <I18nProvider i18n={i18n}>
+            <Modal open={true} title={'Wizard in modal'} footer={null} width={800}>
+                <BaseQuestionnaireResponseForm
+                    formData={{
+                        context: {
+                            fceQuestionnaire: getQuestionnaire('wizard-vertical'),
+                            questionnaire: fromFirstClassExtension(getQuestionnaire('wizard-vertical')),
+                            launchContextParameters: [],
+                            questionnaireResponse,
+                        },
+                        formValues,
+                    }}
+                />
+            </Modal>
+        </I18nProvider>
+    ),
+};
+
+export const Vertical: Story = {
+    render: () => (
+        <I18nProvider i18n={i18n}>
+            <BaseQuestionnaireResponseForm
+                formData={{
+                    context: {
+                        fceQuestionnaire: getQuestionnaire('wizard-vertical'),
+                        questionnaire: fromFirstClassExtension(getQuestionnaire('wizard-vertical')),
+                        launchContextParameters: [],
+                        questionnaireResponse,
+                    },
+                    formValues,
+                }}
+                onCancel={() => console.log('onCancel')}
+                saveButtonTitle={'Save & complete'}
+            />
+        </I18nProvider>
+    ),
+};
+
+function getQuestionnaire(
+    itemControlCode: 'wizard' | 'wizard-with-tooltips' | 'wizard-vertical' = 'wizard',
+): FCEQuestionnaire {
     return {
         assembledFrom: 'group-wizard',
         subjectType: ['Patient'],
         meta: {
-            profile: ['https://beda.software/beda-emr-questionnaire'],
+            profile: ['https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire'],
         },
         name: 'Group wizard',
         item: [
@@ -153,34 +153,45 @@ function getQuestionnaire(itemControlCode: 'wizard' | 'wizard-with-tooltips' = '
                                 required: false,
                                 answerOption: [
                                     {
-                                        value: {
-                                            string: 'Walking',
-                                        },
+                                        valueString: 'Walking',
                                     },
                                     {
-                                        value: {
-                                            string: 'Running',
-                                        },
+                                        valueString: 'Running',
                                     },
                                     {
-                                        value: {
-                                            string: 'Cycling',
-                                        },
+                                        valueString: 'Cycling',
                                     },
                                     {
-                                        value: {
-                                            string: 'Swimming',
-                                        },
+                                        valueString: 'Swimming',
                                     },
                                     {
-                                        value: {
-                                            string: 'Weightlifting',
-                                        },
+                                        valueString: 'Weightlifting',
                                     },
                                     {
-                                        value: {
-                                            string: 'Other',
-                                        },
+                                        valueString: 'Other',
+                                    },
+                                ],
+                            },
+                            {
+                                type: 'group',
+                                linkId: 'q14',
+                                item: [
+                                    {
+                                        text: 'Some hidden question',
+                                        type: 'integer',
+                                        linkId: 'q141',
+                                        hidden: true,
+                                    },
+                                    {
+                                        text: 'How much time do you typically spend sitting on an average day? (e.g., at a desk, watching TV, commuting)',
+                                        type: 'integer',
+                                        linkId: 'q142',
+                                        required: true,
+                                    },
+                                    {
+                                        text: 'What is the single biggest barrier that prevents you from being more physically active?',
+                                        type: 'string',
+                                        linkId: 'q143',
                                     },
                                 ],
                             },
@@ -204,24 +215,16 @@ function getQuestionnaire(itemControlCode: 'wizard' | 'wizard-with-tooltips' = '
                                 required: true,
                                 answerOption: [
                                     {
-                                        value: {
-                                            string: 'Never',
-                                        },
+                                        valueString: 'Never',
                                     },
                                     {
-                                        value: {
-                                            string: 'Once a week',
-                                        },
+                                        valueString: 'Once a week',
                                     },
                                     {
-                                        value: {
-                                            string: 'Several times a week',
-                                        },
+                                        valueString: 'Several times a week',
                                     },
                                     {
-                                        value: {
-                                            string: 'Daily',
-                                        },
+                                        valueString: 'Daily',
                                     },
                                 ],
                             },
@@ -251,35 +254,27 @@ function getQuestionnaire(itemControlCode: 'wizard' | 'wizard-with-tooltips' = '
                                 required: true,
                                 answerOption: [
                                     {
-                                        value: {
-                                            string: 'Yes',
-                                        },
+                                        valueString: 'Yes',
                                     },
                                     {
-                                        value: {
-                                            string: 'No',
-                                        },
+                                        valueString: 'No',
                                     },
                                 ],
                             },
-                            {
-                                text: 'Do you use any sleep aids (e.g., medication, herbal supplements)?',
-                                type: 'choice',
-                                linkId: 'q33',
-                                required: false,
-                                answerOption: [
-                                    {
-                                        value: {
-                                            string: 'Yes',
-                                        },
-                                    },
-                                    {
-                                        value: {
-                                            string: 'No',
-                                        },
-                                    },
-                                ],
-                            },
+                            // {
+                            //     text: 'Do you use any sleep aids (e.g., medication, herbal supplements)?',
+                            //     type: 'choice',
+                            //     linkId: 'q33',
+                            //     required: false,
+                            //     answerOption: [
+                            //         {
+                            //             valueString: 'Yes',
+                            //         },
+                            //         {
+                            //             valueString: 'No',
+                            //         },
+                            //     ],
+                            // },
                         ],
                         text: 'Sleep Patterns',
                         type: 'group',
@@ -291,17 +286,12 @@ function getQuestionnaire(itemControlCode: 'wizard' | 'wizard-with-tooltips' = '
                                 text: 'Do you smoke tobacco or use nicotine products?',
                                 type: 'choice',
                                 linkId: 'q41',
-                                required: true,
                                 answerOption: [
                                     {
-                                        value: {
-                                            string: 'Yes',
-                                        },
+                                        valueString: 'Yes',
                                     },
                                     {
-                                        value: {
-                                            string: 'No',
-                                        },
+                                        valueString: 'No',
                                     },
                                 ],
                             },
@@ -309,22 +299,15 @@ function getQuestionnaire(itemControlCode: 'wizard' | 'wizard-with-tooltips' = '
                                 text: 'How often do you consume alcoholic beverages?',
                                 type: 'choice',
                                 linkId: 'q42',
-                                required: true,
                                 answerOption: [
                                     {
-                                        value: {
-                                            string: 'Never',
-                                        },
+                                        valueString: 'Never',
                                     },
                                     {
-                                        value: {
-                                            string: 'Occasionally',
-                                        },
+                                        valueString: 'Occasionally',
                                     },
                                     {
-                                        value: {
-                                            string: 'Regularly',
-                                        },
+                                        valueString: 'Regularly',
                                     },
                                 ],
                             },
@@ -335,14 +318,10 @@ function getQuestionnaire(itemControlCode: 'wizard' | 'wizard-with-tooltips' = '
                                 required: false,
                                 answerOption: [
                                     {
-                                        value: {
-                                            string: 'Yes',
-                                        },
+                                        valueString: 'Yes',
                                     },
                                     {
-                                        value: {
-                                            string: 'No',
-                                        },
+                                        valueString: 'No',
                                     },
                                 ],
                             },
@@ -454,8 +433,7 @@ const questionnaireResponse: QuestionnaireResponse = {
         },
     ],
     subject: {
-        id: 'patient1',
-        resourceType: 'Patient',
+        reference: 'Patient/patient1',
     },
 };
 

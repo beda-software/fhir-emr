@@ -1,5 +1,6 @@
 import {
     Bundle,
+    Communication,
     Encounter,
     Organization,
     ParametersParameter,
@@ -8,19 +9,23 @@ import {
     Practitioner,
     Provenance,
     QuestionnaireResponse,
+    Reference,
 } from 'fhir/r4b';
 import _ from 'lodash';
 import { useNavigate } from 'react-router-dom';
+import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
-import { getReference, useService, WithId } from '@beda.software/fhir-react';
+import { getReference, ServiceManager, useService, WithId } from '@beda.software/fhir-react';
 import {
-    failure,
     isSuccess,
     mapSuccess,
     RemoteData,
+    failure,
     RemoteDataResult,
     resolveMap,
+    sequenceMap,
     success,
+    mapFailure,
 } from '@beda.software/remote-data';
 
 import { onFormResponse } from 'src/components/QuestionnaireResponseForm';
@@ -28,15 +33,16 @@ import {
     handleFormDataSave,
     loadQuestionnaireResponseFormData,
     questionnaireIdLoader,
-    QuestionnaireResponseFormData,
     QuestionnaireResponseFormProps,
     QuestionnaireResponseFormSaveResponse,
 } from 'src/hooks/questionnaire-response-form-data';
+import { getFHIRResource, getFHIRResources } from 'src/services';
 import { getProvenanceByEntity } from 'src/services/provenance';
+import { compileAsFirst } from 'src/utils';
 
 export interface Props {
     patient: Patient;
-    author: WithId<Practitioner | Patient | Organization|Person>;
+    author: WithId<Practitioner | Patient | Organization | Person>;
     questionnaireResponse?: WithId<QuestionnaireResponse>;
     questionnaireId: string;
     encounterId?: string;
@@ -90,7 +96,15 @@ function prepareFormInitialParams(
         provenanceBundle,
     } = props;
 
-    const params = {
+    const initialQuestionnaireResponse = _.merge(
+        {
+            subject: getReference(patient),
+            encounter: encounterId ? getReference({ resourceType: 'Encounter', id: encounterId }) : undefined,
+            questionnaire: questionnaireId,
+        },
+        questionnaireResponse,
+    );
+    const params: QuestionnaireResponseFormProps = {
         questionnaireLoader: questionnaireIdLoader(questionnaireId),
         launchContextParameters: [
             { name: 'Patient', resource: patient },
@@ -124,11 +138,7 @@ function prepareFormInitialParams(
                 : []),
             ...launchContextParameters,
         ],
-        initialQuestionnaireResponse: questionnaireResponse || {
-            subject: getReference(patient),
-            encounter: encounterId ? getReference({ resourceType: 'Encounter', id: encounterId }) : undefined,
-            questionnaire: questionnaireId,
-        },
+        initialQuestionnaireResponse,
     };
 
     return params;
@@ -140,14 +150,23 @@ export interface PatientDocumentData {
     provenance?: WithId<Provenance>;
 }
 
+interface Result {
+    document: PatientDocumentData;
+    source?: Communication;
+}
+
+const getSourceRef = compileAsFirst<Bundle, Reference>("Bundle.entry.resource.entity.where(role='source').what");
+
 export function usePatientDocument(props: Props): {
-    response: RemoteData<PatientDocumentData>;
+    response: RemoteData<Result>;
+    manager: ServiceManager<PatientDocumentData, any>;
     questionnaireId: string;
 } {
     const { questionnaireResponse, questionnaireId, onSuccess } = props;
+
     const navigate = useNavigate();
 
-    const [response] = useService(async () => {
+    const [response, manager] = useService<PatientDocumentData>(async () => {
         let provenanceResponse: RemoteDataResult<WithId<Provenance>[]> = success([]);
 
         if (questionnaireResponse && questionnaireResponse.id) {
@@ -198,5 +217,25 @@ export function usePatientDocument(props: Props): {
         return failure({});
     }, [questionnaireResponse]);
 
-    return { response, questionnaireId };
+    const [sourceResponse] = useService(async () => {
+        const result = await getFHIRResources<Provenance>('Provenance', {
+            target: questionnaireResponse?.id ?? 'undefined',
+        });
+        if (isSuccess(result)) {
+            const sourceRef = getSourceRef(result.data);
+            if (sourceRef) {
+                const sourceResponse = await getFHIRResource<Communication>(sourceRef);
+                if (isSuccess(sourceResponse)) {
+                    return sourceResponse;
+                }
+            }
+        }
+        return success(undefined);
+    });
+
+    return {
+        response: mapFailure(sequenceMap({ source: sourceResponse, document: response }), (errors) => errors.flat()[0]),
+        manager,
+        questionnaireId,
+    };
 }

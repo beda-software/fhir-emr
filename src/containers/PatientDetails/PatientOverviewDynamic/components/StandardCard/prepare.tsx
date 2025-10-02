@@ -15,7 +15,7 @@ import {
 } from 'fhir/r4b';
 import _ from 'lodash';
 import moment from 'moment';
-import { extractExtension } from 'sdc-qrf';
+import { extractCreatedAtFromMeta } from 'sdc-qrf';
 
 import { WithId, extractBundleResources, formatFHIRDate, parseFHIRDateTime } from '@beda.software/fhir-react';
 
@@ -52,7 +52,7 @@ export function prepareAllergies(
                 title: t`Date`,
                 key: 'date',
                 render: (r: AllergyIntolerance) => {
-                    const createdAt = extractExtension(r.meta?.extension, 'ex:createdAt');
+                    const createdAt = extractCreatedAtFromMeta(r.meta);
 
                     return createdAt ? formatHumanDate(r.recordedDate || createdAt) : null;
                 },
@@ -89,7 +89,7 @@ export function prepareConditions(
                 title: t`Date`,
                 key: 'date',
                 render: (r: Condition) => {
-                    const createdAt = extractExtension(r.meta?.extension, 'ex:createdAt');
+                    const createdAt = extractCreatedAtFromMeta(r.meta);
 
                     return createdAt ? formatHumanDate(r.recordedDate || createdAt) : null;
                 },
@@ -130,7 +130,7 @@ export function prepareConsents(consents: Consent[], bundle: Bundle<Consent | Pr
                 title: t`Date`,
                 key: 'date',
                 render: (r: Consent) => {
-                    const createdAt = extractExtension(r.meta?.extension, 'ex:createdAt');
+                    const createdAt = extractCreatedAtFromMeta(r.meta);
 
                     return createdAt ? formatHumanDate(r.dateTime || createdAt) : null;
                 },

@@ -44,10 +44,7 @@ async function setup() {
 }
 
 describe('Custom fhirpath invocation for reference option display', () => {
-    // Restore once
-    // https://github.com/HL7/fhirpath.js/pull/163
-    // is merged
-    test.skip('Not implemented function', async () => {
+    test('Not implemented function', async () => {
         const slot = await setup();
         expect(() => {
             evaluate(slot, "Slot.start.formatDate('dddd • D MMM • h:mm A')");
@@ -82,8 +79,7 @@ describe('Custom fhirpath invocation for reference option display', () => {
                 value: {
                     Reference: {
                         display: startString,
-                        id: slot.id,
-                        resourceType: 'Slot',
+                        reference: `Slot/${slot.id}`,
                     },
                 },
             },

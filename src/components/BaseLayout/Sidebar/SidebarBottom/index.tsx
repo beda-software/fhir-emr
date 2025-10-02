@@ -1,6 +1,6 @@
 import { GlobalOutlined } from '@ant-design/icons';
 import { Button, Menu } from 'antd';
-import { ItemType } from 'antd/lib/menu/hooks/useItems';
+import { ItemType } from 'antd/lib/menu/interface';
 import classNames from 'classnames';
 import { useContext } from 'react';
 
@@ -50,7 +50,7 @@ export function SidebarBottom(props: Props) {
     );
 }
 
-export function renderMenu(items: MenuItem[]): ItemType[] {
+function renderMenu(items: MenuItem[]): ItemType[] {
     return items.map((item) => ({
         key: item.key,
         icon: <S.Icon>{item.icon}</S.Icon>,

@@ -1,0 +1,8 @@
+name: patient
+user:
+  reference: urn:uuid:User:patient1
+links:
+  patient:
+    reference: urn:uuid:Patient:patient1
+id: patient1
+resourceType: Role

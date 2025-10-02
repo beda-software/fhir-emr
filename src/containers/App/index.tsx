@@ -5,9 +5,9 @@ import { Route, BrowserRouter, Routes, Navigate, useLocation, useNavigate } from
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
-import { success } from 'aidbox-react/lib/libs/remoteData';
 
 import { User } from '@beda.software/aidbox-types';
+import { RemoteDataResult, success } from '@beda.software/remote-data';
 
 import { AnonymousLayout, BaseLayout } from 'src/components/BaseLayout';
 import { MenuLayout } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
@@ -33,17 +33,17 @@ import { HealthcareServiceList } from '../HealthcareServiceList';
 import { InvoiceDetails } from '../InvoiceDetails';
 import { InvoiceList } from '../InvoiceList';
 import { MedicationManagement } from '../MedicationManagement';
+import { MedicationManagementDetail } from '../MedicationManagementDetail';
 import { NotificationPage } from '../NotificationPage';
 import { OrganizationScheduling } from '../OrganizationScheduling';
 import { DocumentPrint } from '../PatientDetails/DocumentPrint';
-import { PatientResourceListExample } from '../PatientResourceListExample';
 import { Prescriptions } from '../Prescriptions';
 import { SetPassword } from '../SetPassword';
 
 interface AppProps {
     authenticatedRoutes?: ReactElement;
     anonymousRoutes?: ReactElement;
-    populateUserInfoSharedState?: (user: User) => Promise<void>;
+    populateUserInfoSharedState?: () => Promise<RemoteDataResult<User>>;
     UserWithNoRolesComponent?: () => ReactElement;
 }
 
@@ -164,11 +164,11 @@ function AuthenticatedUserApp({ defaultRoute, extra }: RouteProps) {
                             <Route path="/encounters" element={<EncounterList />} />
                             <Route path="/scheduling" element={<OrganizationScheduling />} />
                             <Route path="/medications" element={<MedicationManagement />} />
+                            <Route path="/medications/:id/*" element={<MedicationManagementDetail />} />
                             <Route path="/prescriptions" element={<Prescriptions />} />
                             <Route path="/invoices" element={<InvoiceList />} />
                             <Route path="/invoices/:id" element={<InvoiceDetails />} />
                             <Route path="/patients" element={<PatientList />} />
-                            <Route path="/patients-uber" element={<PatientResourceListExample />} />
                             <Route path="/patients/:id/*" element={<PatientDetails />} />
                             <Route path="/patients2/:id/*" element={<NewPatientDetails />} />
                             <Route path="/questionnaire" element={<PatientQuestionnaire />} />
@@ -178,6 +178,7 @@ function AuthenticatedUserApp({ defaultRoute, extra }: RouteProps) {
                             <Route path="/practitioners/:id/*" element={<PractitionerDetails />} />
                             <Route path="/questionnaires" element={<QuestionnaireList />} />
                             <Route path="/questionnaires/builder" element={<QuestionnaireBuilder />} />
+                            <Route path="/questionnaires/aidbox-builder" element={<AidboxFormsBuilder />} />
                             <Route path="/questionnaires/:id/edit" element={<QuestionnaireBuilder />} />
                             <Route
                                 path="/questionnaires/:id/aidbox-forms-builder/edit"

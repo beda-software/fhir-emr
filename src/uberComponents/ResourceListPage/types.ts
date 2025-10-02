@@ -2,9 +2,9 @@ import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 
 import { SearchParams } from '@beda.software/fhir-react';
 
-import { SearchBarColumn } from '../../components/SearchBar/types';
+import { SearchBarColumn, SorterColumn } from '../../components/SearchBar/types';
 
-export type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
+export type RecordType<R extends Resource> = { resource: R; bundle: Bundle; children?: RecordType<R>[] };
 
 export interface ReportColumn {
     title: React.ReactNode;
@@ -17,7 +17,7 @@ export interface TableManager {
 
 // Extra is a platform specific option
 // For web it could be specific modal property
-export interface ResourceListProps<R extends Resource, Extra = unknown> {
+export interface ResourceListProps<R extends Resource, Extra = unknown, Link = string> {
     /* Primary resource type (for example, Organization) */
     resourceType: R['resourceType'];
 
@@ -29,11 +29,20 @@ export interface ResourceListProps<R extends Resource, Extra = unknown> {
      */
     extractPrimaryResources?: (bundle: Bundle) => R[];
 
+    /**
+     * An optional custom child resource extractor can be used when a row's resource
+     * has descendant records that should be represented as a tree.
+     * For example, Organisation resource has another one as a descendant via the 'partOf' property,
+     * so the descendant will be put to 'children' key of the parent record.
+     */
+    extractChildrenResources?: (resource: R, bundle: Bundle) => R[];
+
     /* Default search params */
     searchParams?: SearchParams;
 
     /* Filter that are displayed in the search bar and inside table columns */
     getFilters?: () => SearchBarColumn[];
+    getSorters?: () => SorterColumn[];
 
     /**
      * Record actions list that is displayed in the table per record
@@ -42,22 +51,22 @@ export interface ResourceListProps<R extends Resource, Extra = unknown> {
     getRecordActions?: (
         record: RecordType<R>,
         manager: TableManager,
-    ) => Array<QuestionnaireActionType<Extra> | NavigationActionType | CustomActionType>;
+    ) => Array<QuestionnaireActionType<Extra> | NavigationActionType<Link> | CustomActionType>;
 
     /**
      * Header actions (for example, new organization)
      *
      * NOTE: Theoretically getHeaderActions can accept all resources Bundle
      */
-    getHeaderActions?: () => Array<QuestionnaireActionType<Extra>>;
+    getHeaderActions?: () => Array<QuestionnaireActionType<Extra> | NavigationActionType<Link>>;
 
     /**
      * Batch actions that are available when rows are selected
      * (for example, delete multiple organizations)
      *
-     * NOTE: Theoretically getHeaderActions can accept selected resources Bundle
+     * Accepts selected resources Bundle
      */
-    getBatchActions?: () => Array<QuestionnaireActionType<Extra>>;
+    getBatchActions?: (selectedResourcesBundle: Bundle<R>) => Array<QuestionnaireActionType<Extra> | CustomActionType>;
 
     /**
      * Default launch context that will be added to all questionnaires
@@ -75,12 +84,15 @@ export interface ResourceListProps<R extends Resource, Extra = unknown> {
      * TODO: https://github.com/beda-software/fhir-emr/issues/414
      */
     getReportColumns?: (bundle: Bundle, reportBundle?: Bundle) => Array<ReportColumn>;
+
+    /* Page content max width */
+    maxWidth?: number | string;
 }
 
-export interface NavigationActionType {
+export interface NavigationActionType<Link = string> {
     type: 'navigation';
     title: React.ReactNode;
-    link: string;
+    link: Link;
     icon?: React.ReactNode;
 }
 
@@ -97,11 +109,11 @@ export interface QuestionnaireActionType<Extra = unknown> {
     extra?: Extra;
 }
 
-export function navigationAction(
+export function navigationAction<Link = string>(
     title: React.ReactNode,
-    link: string,
+    link: Link,
     options?: { icon?: React.ReactNode },
-): NavigationActionType {
+): NavigationActionType<Link> {
     return { type: 'navigation', title, link, icon: options?.icon };
 }
 export function customAction(control: React.ReactNode): CustomActionType {
@@ -124,13 +136,18 @@ export function questionnaireAction<Extra = unknown>(
     };
 }
 
-export type ActionType<Extra = unknown> = QuestionnaireActionType<Extra> | NavigationActionType | CustomActionType;
+export type ActionType<Extra = unknown, Link = string> =
+    | QuestionnaireActionType<Extra>
+    | NavigationActionType<Link>
+    | CustomActionType;
 export function isQuestionnaireAction<Extra = unknown>(
     action: ActionType<Extra>,
 ): action is QuestionnaireActionType<Extra> {
     return action.type === 'questionnaire';
 }
-export function isNavigationAction(action: ActionType): action is NavigationActionType {
+export function isNavigationAction<Link = string>(
+    action: ActionType<unknown, Link>,
+): action is NavigationActionType<Link> {
     return action.type === 'navigation';
 }
 export function isCustomAction(action: ActionType): action is CustomActionType {

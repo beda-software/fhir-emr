@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { ItemContext } from 'sdc-qrf/lib/types';
+import { ItemContext } from 'sdc-qrf';
 
 import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 
@@ -83,6 +83,24 @@ export const HelpText: Story = {
                 start: 1,
                 stop: 10,
                 helpText: 'Some additional information about the control',
+            }}
+            context={{} as ItemContext}
+        />
+    ),
+};
+
+export const Disabled: Story = {
+    render: () => (
+        <QuestionSlider
+            parentPath={[]}
+            questionItem={{
+                text: 'Example',
+                type: 'string',
+                linkId: 'example',
+                required: true,
+                readOnly: true,
+                start: 1,
+                stop: 10,
             }}
             context={{} as ItemContext}
         />

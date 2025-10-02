@@ -1,0 +1,5 @@
+id: anonymous
+resourceType: Client
+grant_types:
+  - basic
+secret: "secret"

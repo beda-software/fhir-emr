@@ -1,22 +1,26 @@
-import { Bundle, Resource } from 'fhir/r4b';
 import { ColumnsType, ColumnType } from 'antd/lib/table';
-import { ColumnFilterValue } from 'src/components/SearchBar/types';
-import { TableFilter } from './TableFilter';
-import { FilterDropdownProps } from 'antd/lib/table/interface';
+import { FilterDropdownProps, SorterResult } from 'antd/lib/table/interface';
+import { Bundle, Resource } from 'fhir/r4b';
 import _ from 'lodash';
+
+import { ColumnFilterValue, SorterColumn } from 'src/components/SearchBar/types';
+
+import { TableFilter } from './TableFilter';
 
 export type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
 
 interface Props<R extends Resource> {
     tableColumns: ColumnsType<RecordType<R>>;
     filters: ColumnFilterValue[];
+    sorters: SorterColumn[];
+    currentSorter: SorterResult;
     onChange: (value: ColumnFilterValue['value'], key: string) => void;
 }
 
 export function populateTableColumnsWithFiltersAndSorts<R extends Resource>(
     props: Props<R>,
 ): ColumnsType<RecordType<R>> {
-    const { tableColumns, filters, onChange } = props;
+    const { tableColumns, filters, sorters, currentSorter, onChange } = props;
     const result = tableColumns.map((column) => {
         const filter = filters.find((f) => f.column.id === column.key);
 
@@ -26,6 +30,8 @@ export function populateTableColumnsWithFiltersAndSorts<R extends Resource>(
             filterDropdown: filter
                 ? (props: FilterDropdownProps) => <TableFilter {...props} filter={filter} onChange={onChange} />
                 : undefined,
+            sorter: !!sorters.find((sorter) => sorter.id === column.key),
+            sortOrder: currentSorter.columnKey === column.key ? currentSorter.order : undefined,
         };
 
         return updatedColumn;

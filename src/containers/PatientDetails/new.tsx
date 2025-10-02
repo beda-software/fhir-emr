@@ -4,7 +4,7 @@ import { Encounter, Patient } from 'fhir/r4b';
 
 import { SearchBarColumnType } from 'src/components/SearchBar/types';
 import { navigationAction, questionnaireAction } from 'src/uberComponents';
-import { DetailPage, Tab } from 'src/uberComponents/DetailPage';
+import { ResourceDetailPage, Tab } from 'src/uberComponents/ResourceDetailPage';
 import { ResourceListPageContent } from 'src/uberComponents/ResourceListPageContent';
 import { compileAsFirst, formatPeriodDateTime } from 'src/utils';
 
@@ -17,6 +17,7 @@ function PatientEncounter({ patient }: { patient: Patient }) {
         <ResourceListPageContent<Encounter>
             resourceType="Encounter"
             searchParams={{ patient: patient.id! }}
+            maxWidth="100%"
             getTableColumns={() => [
                 {
                     title: 'Practitioner',
@@ -104,11 +105,12 @@ const tabs: Array<Tab<Patient>> = [
 
 export function NewPatientDetails() {
     return (
-        <DetailPage<Patient>
+        <ResourceDetailPage<Patient>
             resourceType="Patient"
             getSearchParams={({ id }) => ({ _id: id })}
             getTitle={({ resource, bundle }) => getName(resource, { bundle })!}
             tabs={tabs}
+            maxWidth="100%"
         />
     );
 }

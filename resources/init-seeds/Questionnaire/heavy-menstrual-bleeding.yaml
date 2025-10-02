@@ -1,0 +1,2252 @@
+resourceType: Questionnaire
+title: Heavy Menstrual Bleeding (HMB)
+status: active
+id: heavy-menstrual-bleeding
+url: heavy-menstrual-bleeding
+name: heavy-menstrual-bleeding
+subjectType:
+  - Patient
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+item:
+  - type: group
+    linkId: wizard
+    itemControl:
+      coding:
+        - code: wizard
+    item:
+      - linkId: g1
+        type: group
+        item:
+          - linkId: demographics-group
+            type: group
+            text: Demographics
+            item:
+              - linkId: demographics-group-1
+                type: group
+                extension:
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                    valueCodeableConcept:
+                      coding:
+                        - code: row
+                item:
+                  - linkId: first-name
+                    text: First name
+                    type: string
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%Patient.name.first().given.first()"
+                    required: true
+                  - linkId: surname
+                    text: Surname
+                    type: string
+                    required: true
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%Patient.name.first().family"
+                  - linkId: preferred-name
+                    text: Preferred Name
+                    type: string
+              - linkId: demographics-group-2
+                type: group
+                extension:
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                    valueCodeableConcept:
+                      coding:
+                        - code: row
+                item:
+                  - linkId: birth-date
+                    text: Date of Birth
+                    type: date
+                    required: true
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%Patient.birthDate"
+                  - linkId: email
+                    text: Email
+                    type: string
+                    required: true
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%Patient.telecom.where(system='email').value"
+
+          - linkId: main-health-concerns-group
+            type: group
+            item:
+              - linkId: main-health-concerns-display
+                type: display
+                text: Please outline your main health related concern(s)
+              - linkId: main-health-concerns
+                type: string
+
+          - linkId: past-medical-history
+            type: group
+            text: Past Medical History
+            helpText: Please check any past or current medical conditions that apply to you
+            item:
+              - linkId: row-1
+                type: group
+                itemControl:
+                  coding:
+                    - code: row
+                item:
+                  - linkId: arthritis
+                    text: Arthritis
+                    type: boolean
+                  - linkId: eating-disorder
+                    text: Eating Disorder
+                    type: boolean
+                  - linkId: insomnia
+                    text: Insomnia
+                    type: boolean
+                  - linkId: endometriosis
+                    text: Endometriosis
+                    type: boolean
+
+              - linkId: row-2
+                type: group
+                itemControl:
+                  coding:
+                    - code: row
+                item:
+                  - linkId: asthma-copd
+                    text: Asthma / COPD
+                    type: boolean
+                  - linkId: epilepsy
+                    text: Epilepsy
+                    type: boolean
+                  - linkId: kidney-disease
+                    text: Kidney Disease
+                    type: boolean
+                  - linkId: adenomyosis
+                    text: Adenomyosis
+                    type: boolean
+
+              - linkId: row-3
+                type: group
+                itemControl:
+                  coding:
+                    - code: row
+                item:
+                  - linkId: chronic-fatigue
+                    text: Chronic Fatigue
+                    type: boolean
+                  - linkId: fibromyalgia
+                    text: Fibromyalgia
+                    type: boolean
+                  - linkId: malnutrition
+                    text: Malnutrition
+                    type: boolean
+                  - linkId: pcos
+                    text: PCOS
+                    type: boolean
+
+              - linkId: row-4
+                type: group
+                itemControl:
+                  coding:
+                    - code: row
+                item:
+                  - linkId: row-4-blood-clotting-disorders
+                    text: Blood & Clotting Disorders
+                    type: boolean
+                  - linkId: diabetes
+                    text: Diabetes
+                    type: boolean
+                  - linkId: osteoporosis
+                    text: Osteoporosis
+                    type: boolean
+                  - linkId: uterine-fibroids
+                    text: Uterine Fibroids
+                    type: boolean
+
+              - linkId: row-5
+                type: group
+                itemControl:
+                  coding:
+                    - code: row
+                item:
+                  - linkId: crohns-colitis
+                    text: Crohn's / Colitis
+                    type: boolean
+                  - linkId: low-blood-pressure
+                    text: Low Blood Pressure
+                    type: boolean
+                  - linkId: stroke
+                    text: Stroke
+                    type: boolean
+                  - linkId: uterine-cervical-polyps
+                    text: Uterine/Cervical Polyps
+                    type: boolean
+
+              - linkId: row-6
+                type: group
+                itemControl:
+                  coding:
+                    - code: row
+                item:
+                  - linkId: depression
+                    text: Depression
+                    type: boolean
+                  - linkId: high-blood-pressure
+                    text: High Blood Pressure
+                    type: boolean
+                  - linkId: varicose-veins
+                    text: Varicose Veins
+                    type: boolean
+                  - linkId: interstitial-cystitis
+                    text: Interstitial Cystitis
+                    type: boolean
+
+              - linkId: row-7
+                type: group
+                itemControl:
+                  coding:
+                    - code: row
+                item:
+                  - linkId: anxiety
+                    text: Anxiety
+                    type: boolean
+                  - linkId: high-cholesterol
+                    text: High Cholesterol
+                    type: boolean
+                  - linkId: anaemia-iron-deficiency
+                    text: Anaemia/Iron Deficiency
+                    type: boolean
+                  - linkId: pelvic-organ-prolapse
+                    text: Pelvic Organ Prolapse
+                    type: boolean
+
+              - linkId: row-8
+                type: group
+                itemControl:
+                  coding:
+                    - code: row
+                item:
+                  - linkId: adhd
+                    text: ADHD
+                    type: boolean
+                  - linkId: migraines
+                    text: Migraines
+                    type: boolean
+
+              - linkId: childhood-disease-boolean
+                text: Childhood Disease
+                type: boolean
+              - linkId: childhood-disease-text
+                text: Please specify childhood disease
+                type: string
+                enableWhen:
+                  - question: childhood-disease-boolean
+                    operator: "="
+                    answerBoolean: true
+              - linkId: cardiovascular-disease-boolean
+                text: Cardiovascular Disease
+                type: boolean
+              - linkId: cardiovascular-disease-text
+                text: Please specify cardiovascular disease
+                type: string
+                enableWhen:
+                  - question: cardiovascular-disease-boolean
+                    operator: "="
+                    answerBoolean: true
+              - linkId: cancer-boolean
+                text: Cancer
+                type: boolean
+              - linkId: cancer-text
+                text: Please specify cancer disease
+                type: string
+                enableWhen:
+                  - question: cancer-boolean
+                    operator: "="
+                    answerBoolean: true
+              - linkId: other-boolean
+                text: Other
+                type: boolean
+              - linkId: other-details
+                text: Please specify other diseases
+                type: choice
+                repeats: true
+                answerValueSet: https://healthterminologies.gov.au/fhir/ValueSet/clinical-condition-1
+                enableWhen:
+                  - question: other-boolean
+                    operator: "="
+                    answerBoolean: true
+
+          - linkId: menstrual-history
+            text: Menstrual History
+            helpText: (FIGO AUB parameters, SAMANTA, VAS, PIPPA)
+            type: group
+            item:
+              - linkId: menstrual-history-group
+                type: group
+                extension:
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                    valueCodeableConcept:
+                      coding:
+                        - code: row
+                item:
+                  - linkId: age-first-menstruation
+                    text: Age of first menstrual period
+                    type: integer
+                  - linkId: date-last-period-began
+                    text: Date your last period began
+                    type: date
+                  - linkId: duration-menstruation
+                    text: Duration of menstrual period
+                    type: integer
+                    unit:
+                      code: d
+                      system: http://unitsofmeasure.org
+                      display: days
+              - linkId: regularity-period-length
+                text: Regularity of period length
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      code: "regular"
+                      display: Regular variation
+                  - valueCoding:
+                      code: "irregular"
+                      display: Irregular
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+              - linkId: flow-volume
+                text: Flow Volume
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      code: "heavy"
+                      display: Heavy
+                  - valueCoding:
+                      code: "normal"
+                      display: Normal
+                  - valueCoding:
+                      code: "light"
+                      display: Light
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+              - linkId: intensity-menstrual-bleeding
+                text: Please assess the intensity of your menstrual bleeding, generally
+                helpText: Use the slider to indicate how heavy your menstrual bleeding is, from 1 (no bleeding) to 10 (the heaviest you've experienced)
+                type: integer
+                extension:
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                    valueCodeableConcept:
+                      coding:
+                        - code: slider
+                  - url: https://emr-core.beda.software/StructureDefinition/slider-start
+                    valueInteger: 1
+                  - url: https://emr-core.beda.software/StructureDefinition/slider-stop
+                    valueInteger: 10
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue
+                    valueInteger: 1
+              - linkId: days-between-periods
+                text: Number of days between periods
+                type: choice
+                answerOption:
+                  - valueString: Absent (no periods/bleeding)
+                  - valueString: Frequent (< 24 days)
+                  - valueString: Normal (24-38 days)
+                  - valueString: Infrequent (>38 days)
+              - linkId: predictability-cycle-length
+                text: Predictability (regularity) of cycle length
+                type: choice
+                answerOption:
+                  - valueString: Absent (no periods/bleeding)
+                  - valueString: Predictable (regular, varies by 2-7 days in length)
+                  - valueString: Unpredictable (irregular, varies by > 10 days in length)
+              - linkId: intermenstrual-bleeding
+                text: >-
+                  Do you experience any Intermenstrual Bleeding (IMB)
+                  (bleeding in between periods)
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueString: None
+                  - valueString: Random
+                  - valueString: Cyclic/Predictable
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+              - linkId: intermenstrual-bleeding-details
+                text: Please specify
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueString: Early Cycle
+                  - valueString: Mid Cycle
+                  - valueString: Late cycle
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+                enableWhen:
+                  - answerString: Cyclic/Predictable
+                    operator: "="
+                    question: intermenstrual-bleeding
+              - linkId: impact-daily-activities
+                text: To what extent does your period impact your daily activities
+                helpText: >-
+                  Use the slider to indicate how much your menstrual period affects your daily life,
+                  from 1 (it does not interfere with my daily activities at all)
+                  to 10 (it completely interferes with my daily activities)
+                type: integer
+                extension:
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                    valueCodeableConcept:
+                      coding:
+                        - code: slider
+                  - url: https://emr-core.beda.software/StructureDefinition/slider-start
+                    valueInteger: 1
+                  - url: https://emr-core.beda.software/StructureDefinition/slider-stop
+                    valueInteger: 10
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue
+                    valueInteger: 1
+              - linkId: heavier-bleeding-conditions
+                text: "During heavier bleeding days do you:"
+                type: choice
+                repeats: true
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      code: double-protection
+                      display: Have to use double protection or get up to change your sanitary protection during the night
+                  - valueCoding:
+                      code: worry-staining
+                      display: Worry about staining the seat of your chair, sofa, etc
+                  - valueCoding:
+                      code: avoid-activities
+                      display: Avoid certain activities, travel, or leisure plans, because you need to change your tampon or pad frequently
+
+          - linkId: period-pain-group
+            text: Period Pain
+            type: group
+            item:
+              - linkId: period-pain-presence
+                text: Do you have period pain?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      code: "yes"
+                      display: "Yes"
+                  - valueCoding:
+                      code: "no"
+                      display: "No"
+                  - valueCoding:
+                      code: occasionally
+                      display: Occasionally
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+              - linkId: period-pain-details
+                type: group
+                enableBehavior: any
+                enableWhen:
+                  - answerCoding:
+                      code: "yes"
+                    operator: "="
+                    question: period-pain-presence
+                  - answerCoding:
+                      code: occasionally
+                    operator: "="
+                    question: period-pain-presence
+                item:
+                  - linkId: pain-score
+                    text: Pain Score
+                    helpText: Use the slider to rate your pain from 1 (no pain) to 10 (worst possible)
+                    type: integer
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - code: slider
+                      - url: https://emr-core.beda.software/StructureDefinition/slider-start
+                        valueInteger: 1
+                      - url: https://emr-core.beda.software/StructureDefinition/slider-stop
+                        valueInteger: 10
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue
+                        valueInteger: 1
+                  - linkId: age-when-periods-became-painful
+                    text: How old were you when your periods became painful?
+                    type: integer
+                  - linkId: how-many-days-pain-month
+                    text: How many days each month do you have period pain for?
+                    type: integer
+                  - linkId: where-feel-period-pain
+                    text: Where do you feel your period pain?
+                    type: choice
+                    repeats: true
+                    answerOption:
+                      - valueCoding:
+                          code: low-abdomen-front
+                          display: Low abdomen at the front
+                      - valueCoding:
+                          code: lower-back
+                          display: Lower back
+                      - valueCoding:
+                          code: low-abdomen-left
+                          display: Left side lower abdomen
+                      - valueCoding:
+                          code: low-abdomen-right
+                          display: Right side lower abdomen
+                      - valueCoding:
+                          code: legs-front
+                          display: Front at the legs
+                      - valueCoding:
+                          code: legs-back
+                          display: Back of the legs
+                      - valueCoding:
+                          code: foot
+                          display: Foot
+                      - valueCoding:
+                          code: anal-area
+                          display: Anal area
+                      - valueCoding:
+                          code: other
+                          display: Other
+                  - linkId: where-feel-period-pain-other
+                    text: Please specify where
+                    type: string
+                    enableWhen:
+                      - question: where-feel-period-pain
+                        operator: "="
+                        answerCoding:
+                          code: other
+                  - linkId: pain-medications-help
+                    text: >-
+                      Do pain medications (Ibuprofen, Ponstan, Naprogesic etc.) help your period pain?
+                    type: choice
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: a little
+                          display: A little
+                      - valueCoding:
+                          code: not at all
+                          display: Not at all
+                      - valueCoding:
+                          code: neber-tried
+                          display: I have never tried these medications
+
+      - linkId: g2
+        type: group
+        item:
+          - linkId: sexual-reproductive-history
+            text: Sexual & Reproductive History
+            type: group
+            item:
+              - linkId: sexually-active
+                text: Are you currently sexually active?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      code: "yes"
+                      display: "Yes"
+                  - valueCoding:
+                      code: "no"
+                      display: "No"
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+              - linkId: sexual-reproductive-history-details
+                type: group
+                enableWhen:
+                  - answerCoding:
+                      code: "yes"
+                    operator: "="
+                    question: sexually-active
+                item:
+                  - linkId: trying-to-get-pregnant
+                    text: Are you currently trying to get pregnant?
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+                      - valueCoding:
+                          code: want-in-future
+                          display: Want in future
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                  - linkId: bleeding-after-sexual-intercourse
+                    text: Do you experience any bleeding after sexual intercourse?
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                  - linkId: pain-during-sexual-intercourse
+                    text: Do you experience any excessive pain during sexual intercourse?
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                  - linkId: pain-during-sexual-intercourse-scale
+                    text: How would you describe this pain on a scale from 1-10?
+                    helpText: Use the slider to rate your pain from 1 (minimal discomfort) to 10 (the most severe pain imaginable)
+                    type: integer
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - code: slider
+                      - url: https://emr-core.beda.software/StructureDefinition/slider-start
+                        valueInteger: 1
+                      - url: https://emr-core.beda.software/StructureDefinition/slider-stop
+                        valueInteger: 10
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue
+                        valueInteger: 1
+                    enableWhen:
+                      - answerCoding:
+                          code: "yes"
+                        operator: "="
+                        question: pain-during-sexual-intercourse
+
+                  - linkId: contraception
+                    text: Do you use contraception?
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                  - linkId: contraception-type
+                    text: Which type of contraception are you currently using?
+                    type: string
+                    enableWhen:
+                      - answerCoding:
+                          code: "yes"
+                        operator: "="
+                        question: contraception
+                  - linkId: contraception-how-long
+                    text: For how long have you been using it?
+                    type: string
+                    enableWhen:
+                      - answerCoding:
+                          code: "yes"
+                        operator: "="
+                        question: contraception
+                  - linkId: hormonal-contraception-impact
+                    text: >-
+                      For any hormonal contraception, what impact has this had on your
+                      period/cycle? (flow volume, duration, frequency etc.)
+                    type: text
+                    enableWhen:
+                      - answerCoding:
+                          code: "yes"
+                        operator: "="
+                        question: contraception
+
+                  - linkId: contraception-in-past
+                    text: Have you used contraception in the past?
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                  - linkId: contraception-in-past-type
+                    text: Which type of contraception have you used in the past?
+                    type: string
+                    enableWhen:
+                      - answerCoding:
+                          code: "yes"
+                        operator: "="
+                        question: contraception-in-past
+                  - linkId: hormonal-contraception-impact-past
+                    text: >-
+                      For any previous hormonal contraception, what impact did they have on
+                      your period/cycle?
+                    type: text
+                    enableWhen:
+                      - answerCoding:
+                          code: "yes"
+                        operator: "="
+                        question: contraception-in-past
+
+                  - linkId: transmitted-diseases
+                    text: >-
+                      Do you have any current or a previous history of sexually transmitted
+                      diseases?
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                  - linkId: transmitted-diseases-details
+                    text: Please provide details (date, type, treatment)
+                    type: text
+                    enableWhen:
+                      - answerCoding:
+                          code: "yes"
+                        operator: "="
+                        question: transmitted-diseases
+
+                  - linkId: sexual-dysfunctions
+                    text: Do you have any other sexual dysfunctions/issues related to sex?
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                  - linkId: sexual-dysfunctions-details
+                    text: Please provide details about sexual dysfunctions/issues related to sex
+                    type: text
+                    enableWhen:
+                      - answerCoding:
+                          code: "yes"
+                        operator: "="
+                        question: sexual-dysfunctions
+                  - linkId: previous-pregnancy-history-display
+                    text: Please let us know of any previous pregnancy history including abortions & miscarriages (if comfortable)
+                    type: display
+                  - linkId: previous-pregnancy-history-group
+                    text: Individual pregnancy details
+                    type: group
+                    repeats: true
+                    item:
+                      - linkId: date-gestation-birthplace-group
+                        type: group
+                        extension:
+                          - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                            valueCodeableConcept:
+                              coding:
+                                - code: row
+                        item:
+                          - linkId: gestation-birth-date
+                            text: Birth Date
+                            type: date
+                          - linkId: gestation-birth-place
+                            text: Birth Place
+                            type: string
+                          - linkId: gestation
+                            text: Gestation
+                            type: integer
+                            unit:
+                              code: wk
+                              system: http://unitsofmeasure.org
+                              display: weeks
+                      - linkId: delivery-method-care-model-birth-weight-group
+                        type: group
+                        extension:
+                          - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                            valueCodeableConcept:
+                              coding:
+                                - code: row
+                        item:
+                          - linkId: delivery-method
+                            text: Delivery Method
+                            type: choice
+                            answerOption:
+                              - valueCoding:
+                                  code: vaginal
+                                  display: Vaginal delivery
+                              - valueCoding:
+                                  code: c-section
+                                  display: C-section
+                              - valueCoding:
+                                  code: assisted
+                                  display: Assisted delivery
+                              - valueCoding:
+                                  code: multiple-delivery
+                                  display: Multiple delivery
+                          - linkId: care-model
+                            text: Model of Care
+                            helpText: (e.g. Midwife, Public OB)
+                            type: string
+                          - linkId: birth-weight
+                            text: Birth Weight
+                            type: integer
+                            unit:
+                              code: g
+                              system: http://unitsofmeasure.org
+                              display: grams
+                      - linkId: child-details-group
+                        type: group
+                        helpText: Provide child information, if applicable
+                        extension:
+                          - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                            valueCodeableConcept:
+                              coding:
+                                - code: row
+                        item:
+                          - linkId: child-gender
+                            text: Sex Assigned at Birth
+                            type: choice
+                            answerOption:
+                              - valueCoding:
+                                  system: http://snomed.info/sct
+                                  code: "248153007"
+                                  display: Male
+                              - valueCoding:
+                                  system: http://snomed.info/sct
+                                  code: "248152002"
+                                  display: Female
+                              - valueCoding:
+                                  system: http://snomed.info/sct
+                                  code: "74964007"
+                                  display: Other
+                              - valueCoding:
+                                  system: http://snomed.info/sct
+                                  code: "261665006"
+                                  display: Unknown
+                          - linkId: child-name
+                            text: Name of Child
+                            type: string
+
+              - linkId: cervical-screening-group
+                text: Cervical Screening Test (CST)
+                type: group
+                item:
+                  - linkId: cervical-screening
+                    text: Have you ever had a Cervical Screening Test (CST), such as a Pap Smear?
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                  - linkId: cst-date-result-group-1
+                    type: group
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - code: row
+                    enableWhen:
+                      - answerCoding:
+                          code: "yes"
+                        operator: "="
+                        question: cervical-screening
+                    item:
+                      - linkId: cervical-screening-date
+                        text: When was your most recent CST (Pap Smear)?
+                        type: date
+                      - linkId: cervical-screening-result
+                        text: What was the result of the CST (Pap Smear)?
+                        type: string
+                  - linkId: cst-date-result-group-2
+                    type: group
+                    enableWhen:
+                      - answerCoding:
+                          code: "yes"
+                        operator: "="
+                        question: cervical-screening
+                    item:
+                      - linkId: abnormal-cervical-screening-result
+                        text: Any past abnormal CST(s)?
+                        type: choice
+                        itemControl:
+                          coding:
+                            - code: inline-choice
+                        answerOption:
+                          - value:
+                              Coding:
+                                code: "yes"
+                                display: "Yes"
+                          - value:
+                              Coding:
+                                code: "no"
+                                display: "No"
+                        extension:
+                          - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                            valueString: horizontal
+                      - linkId: abnormal-cervical-screening-result-group
+                        type: group
+                        enableWhen:
+                          - answer:
+                              Coding:
+                                code: "yes"
+                            operator: "="
+                            question: abnormal-cervical-screening-result
+                        item:
+                          - linkId: abnormal-cervical-screening-result-details
+                            text: Please provide details about past abnormal CST(s)
+                            type: text
+                      - linkId: cst-attachment
+                        text: >-
+                          If possible, provide a copy of your most recent screening
+                          test(s) results or bring a copy of these results with you on the day
+                          of your appointment
+                        type: attachment
+
+          - linkId: associated-systemic-symptoms
+            text: Associated or Systemic Symptoms
+            type: group
+            item:
+              - linkId: pelvic-pain
+                text: Do you experience any pelvic pain?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      code: "yes"
+                      display: "Yes"
+                  - valueCoding:
+                      code: "no"
+                      display: "No"
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+              - linkId: pelvic-pain-scale
+                text: How would you describe this pain on a scale from 1-10?
+                helpText: Use the slider to rate your pain from 1 (little to no pain) to 10 (severe pain)
+                type: integer
+                extension:
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                    valueCodeableConcept:
+                      coding:
+                        - code: slider
+                  - url: https://emr-core.beda.software/StructureDefinition/slider-start
+                    valueInteger: 1
+                  - url: https://emr-core.beda.software/StructureDefinition/slider-stop
+                    valueInteger: 10
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue
+                    valueInteger: 1
+                enableWhen:
+                  - answerCoding:
+                      code: "yes"
+                    operator: "="
+                    question: pelvic-pain
+
+              - linkId: vaginal-discharge
+                text: Have you noticed any abnormal vaginal discharge?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      code: "yes"
+                      display: "Yes"
+                  - valueCoding:
+                      code: "no"
+                      display: "No"
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+              - linkId: vaginal-discharge-details
+                text: Please provide details about vaginal discharge
+                type: text
+                enableWhen:
+                  - answerCoding:
+                      code: "yes"
+                    operator: "="
+                    question: vaginal-discharge
+
+              - linkId: urinary-bowel-concerns
+                text: Do you currently have any urinary and/or bowel related concerns?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      code: "yes"
+                      display: "Yes"
+                  - valueCoding:
+                      code: "no"
+                      display: "No"
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+              - linkId: urinary-bowel-concerns-details
+                text: Please provide details about urinary and/or bowel related concerns
+                helpText: i.e. motion of passing/incontinence issues etc.
+                type: text
+                enableWhen:
+                  - answerCoding:
+                      code: "yes"
+                    operator: "="
+                    question: urinary-bowel-concerns
+
+              - linkId: current-weight-height-group
+                type: group
+                extension:
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                    valueCodeableConcept:
+                      coding:
+                        - code: row
+                item:
+                  - linkId: current-weight
+                    text: What is your current weight?
+                    type: decimal
+                    unit:
+                      code: kg
+                      system: http://unitsofmeasure.org
+                      display: kg
+                  - linkId: current-height
+                    text: What is your height?
+                    type: decimal
+                    unit:
+                      code: cm
+                      system: http://unitsofmeasure.org
+                      display: cm
+
+              - linkId: weight-change
+                text: Have you noticed any significant weight loss or gain?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      code: "yes"
+                      display: "Yes"
+                  - valueCoding:
+                      code: "no"
+                      display: "No"
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+              - linkId: weight-change-details
+                text: Please provide details about weight loss or gain
+                type: text
+                enableWhen:
+                  - answerCoding:
+                      code: "yes"
+                    operator: "="
+                    question: weight-change
+
+              - linkId: blood-tests
+                text: Have you had any blood tests done in the past 12 months?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      code: "yes"
+                      display: "Yes"
+                  - valueCoding:
+                      code: "no"
+                      display: "No"
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+
+              - linkId: blood-tests-date-provider-group
+                type: group
+                extension:
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                    valueCodeableConcept:
+                      coding:
+                        - code: row
+                enableWhen:
+                  - answerCoding:
+                      code: "yes"
+                    operator: "="
+                    question: blood-tests
+                item:
+                  - linkId: recent-blood-tests-date
+                    text: "Date of most recent test:"
+                    type: date
+                  - linkId: pathology-provider
+                    text: Pathology Provider
+                    helpText: e.g. Douglas Hanly Moir, Laverty, Aus Clinical Labs etc.
+                    type: string
+
+              - linkId: blood-кesults
+                text: Any clinically significant bloods results & outcomes?
+                type: text
+                enableWhen:
+                  - answerCoding:
+                      code: "yes"
+                    operator: "="
+                    question: blood-tests
+
+              - linkId: medical-imaging
+                text: Have you had any medical imaging done in the past 12 months?
+                helpText: i.e. Ultrasound, MRI - of pelvis/abdomen
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      code: "yes"
+                      display: "Yes"
+                  - valueCoding:
+                      code: "no"
+                      display: "No"
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+              - linkId: medical-imaging-display
+                text: Provide details of each medical imaging performed in the past 12 months
+                type: display
+                enableWhen:
+                  - answerCoding:
+                      code: "yes"
+                    operator: "="
+                    question: medical-imaging
+              - linkId: medical-imaging-details
+                text: Imaging record
+                type: group
+                repeats: true
+                enableWhen:
+                  - answerCoding:
+                      code: "yes"
+                    operator: "="
+                    question: medical-imaging
+                item:
+                  - linkId: type-date-provider-of-imaging-group
+                    type: group
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - code: row
+                    item:
+                      - linkId: type-of-imaging
+                        text: Type of Imaging
+                        type: string
+                      - linkId: date-of-imaging
+                        text: Date
+                        type: date
+                      - linkId: imaging-provider
+                        text: Imaging Provider
+                        type: string
+                  - linkId: location-reason-results-of-imaging-group
+                    type: group
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - code: row
+                    item:
+                      - linkId: imaging-location
+                        text: Imaging Location
+                        type: text
+                      - linkId: clinical-reason
+                        text: Clinical Reason
+                        type: text
+                      - linkId: results-findings
+                        text: Results / Findings
+                        type: text
+
+              - linkId: current-medications-group
+                type: group
+                text: Current Medications
+                item:
+                  - linkId: current-medications
+                    type: choice
+                    text: Are you on any regular medications at the moment?
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                  - linkId: current-medications-display
+                    text: Provide details of each regular medication you are currently taking
+                    type: display
+                    enableWhen:
+                      - answerCoding:
+                          code: "yes"
+                        operator: "="
+                        question: current-medications
+                  - linkId: current-medications-table
+                    type: group
+                    text: Medication
+                    enableWhen:
+                      - answerCoding:
+                          code: "yes"
+                        operator: "="
+                        question: current-medications
+                    repeats: true
+                    item:
+                      - linkId: medication-dose-frequency-group
+                        type: group
+                        extension:
+                          - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                            valueCodeableConcept:
+                              coding:
+                                - code: row
+                        item:
+                          - linkId: medication
+                            text: Medication
+                            type: string
+                            # type: choice
+                            # answerValueSet: https://healthterminologies.gov.au/fhir/ValueSet/australian-medication-1
+                          - linkId: dose
+                            text: Dose
+                            type: string
+                          - linkId: frequency
+                            text: Frequency
+                            type: string
+                      - linkId: medication-reason-duration-group
+                        type: group
+                        extension:
+                          - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                            valueCodeableConcept:
+                              coding:
+                                - code: row
+                        item:
+                          - linkId: medication-reason
+                            text: Reason for Medication
+                            type: string
+                          - linkId: medication-duration
+                            text: Duration of Use
+                            # helpText: For how long have you been taking this medication
+                            type: string
+
+      - linkId: g3
+        type: group
+        item:
+          - linkId: family-history
+            text: Family History
+            helpText: Indicate any conditions diagnosed in your family (parents, siblings, grandparents)
+            type: group
+            item:
+              - linkId: family-history-details-row-4-blood-clotting-disorders
+                text: Blood and Clotting Disorders
+                type: choice
+                repeats: true
+                answerOption:
+                  - valueCoding:
+                      code: von-willebrand-disease
+                      display: Von Willebrand disease
+                  - valueCoding:
+                      code: haemophilia
+                      display: Haemophilia
+                  - valueCoding:
+                      code: thrombophilia
+                      display: Thrombophilia (e.g. Factor V Leiden, Protein C/S deficiency)
+                  - valueCoding:
+                      code: easy-bruising
+                      display: Easy bruising or excessive bleeding
+                  - valueCoding:
+                      code: history-blood-clots
+                      display: History of blood clots (DVT, stroke before age 50)
+
+              - linkId: endocrine-hormonal-conditions
+                text: Endocrine and Hormonal Conditions
+                type: choice
+                repeats: true
+                answerOption:
+                  - valueCoding:
+                      code: thyroid-disease
+                      display: Thyroid Disease
+                  - valueCoding:
+                      code: pcos
+                      display: PCOS
+                  - valueCoding:
+                      code: diabetes
+                      display: Diabetes (Type 1 or Type 2)
+                  - valueCoding:
+                      code: early-menopause
+                      display: Early menopause / premature ovarian insufficiency
+                  - valueCoding:
+                      code: adrenal-disorders
+                      display: Adrenal disorders
+
+              - linkId: cancer-malignancy
+                text: Cancer / Malignancy
+                type: choice
+                repeats: true
+                answerOption:
+                  - valueCoding:
+                      code: breast-cancer
+                      display: Breast Cancer
+                  - valueCoding:
+                      code: ovarian-cancer
+                      display: Ovarian cancer
+                  - valueCoding:
+                      code: uterine-endometrial-cancer
+                      display: Uterine (endometrial cancer)
+                  - valueCoding:
+                      code: cervical-cancer
+                      display: Cervical cancer
+                  - valueCoding:
+                      code: colon-cancer
+                      display: Colon cancer (<50 yrs or related to Lynch Syndrome)
+                  - valueCoding:
+                      code: other-cancer
+                      display: Other hereditary cancers (e.g. BRCA1/2, Lynch Syndrome)
+
+              - linkId: other-relevant-conditions
+                text: Other relevant conditions
+                type: choice
+                repeats: true
+                answerOption:
+                  - valueCoding:
+                      code: endometriosis-adenomyosis
+                      display: Endometriosis or adenomyosis
+                  - valueCoding:
+                      code: fibroids
+                      display: Fibroids
+                  - valueCoding:
+                      code: osteoporosis
+                      display: Osteoporosis or early bone loss
+                  - valueCoding:
+                      code: cardiovascular-disease
+                      display: Cardiovascular disease
+                  - valueCoding:
+                      code: autoimmune-conditions
+                      display: Autoimmune conditions
+                  - valueCoding:
+                      code: genetic-syndromes
+                      display: Genetic syndromes (e.g. Turner syndrome, Kallmann syndrome)
+              - linkId: cardiovascular-disease-details
+                text: Were you diagnosed with cardiovascular disease before the age of 55?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      code: "yes"
+                      display: "Yes"
+                  - valueCoding:
+                      code: "no"
+                      display: "No"
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+                enableWhen:
+                  - answerCoding:
+                      code: cardiovascular-disease
+                    operator: "="
+                    question: other-relevant-conditions
+
+              - linkId: family-history-details
+                text: Please provide details (i.e. date & age at diagnosis, outcome of diagnosis, type of cancer etc.)
+                type: text
+                enableBehavior: any
+                enableWhen:
+                  - question: family-history-details-row-4-blood-clotting-disorders
+                    operator: exists
+                    answerBoolean: true
+                  - question: endocrine-hormonal-conditions
+                    operator: exists
+                    answerBoolean: true
+                  - question: cancer-malignancy
+                    operator: exists
+                    answerBoolean: true
+                  - question: other-relevant-conditions
+                    operator: exists
+                    answerBoolean: true
+
+          - linkId: social-history
+            text: Social History
+            type: group
+            item:
+              - linkId: partner
+                text: Do you currently have a partner(s)?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      code: "yes"
+                      display: "Yes"
+                  - valueCoding:
+                      code: "no"
+                      display: "No"
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+              - linkId: partner-details
+                text: >-
+                  If you are comfortable to share, what is your partner/s' name and
+                  sex/gender/age?
+                type: text
+                enableWhen:
+                  - answerCoding:
+                      code: "yes"
+                    operator: "="
+                    question: partner
+
+              - linkId: working
+                text: Are you currently working?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      code: "yes"
+                      display: "Yes"
+                  - valueCoding:
+                      code: "no"
+                      display: "No"
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+              - linkId: working-group
+                type: group
+                extension:
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                    valueCodeableConcept:
+                      coding:
+                        - code: row
+                enableWhen:
+                  - answerCoding:
+                      code: "yes"
+                    operator: "="
+                    question: working
+                item:
+                  - linkId: employment-type
+                    text: Employment Type (PT, FT, Casual)
+                    type: string
+                  - linkId: occupation
+                    text: Occupation
+                    type: string
+
+              - linkId: studying
+                text: Are you currently studying?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      code: "yes"
+                      display: "Yes"
+                  - valueCoding:
+                      code: "no"
+                      display: "No"
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+              - linkId: studying-group
+                type: group
+                extension:
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                    valueCodeableConcept:
+                      coding:
+                        - code: row
+                enableWhen:
+                  - answerCoding:
+                      code: "yes"
+                    operator: "="
+                    question: studying
+                item:
+                  - linkId: institution
+                    text: Institution
+                    type: string
+                  - linkId: level-area-study
+                    text: Level & Area of study
+                    type: string
+
+          - linkId: lifestyle
+            text: Lifestyle
+            type: group
+            item:
+              - linkId: smoking
+                text: Do you currently smoke?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      code: "yes"
+                      display: "Yes"
+                  - valueCoding:
+                      code: "no"
+                      display: "No"
+                  - valueCoding:
+                      code: in-past
+                      display: In Past
+                  - valueCoding:
+                      code: vape
+                      display: Vape
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+              - linkId: recreational-drugs
+                text: Do you take any recreational drugs?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      code: "yes"
+                      display: "Yes"
+                  - valueCoding:
+                      code: "no"
+                      display: "No"
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+
+              - linkId: alcohol-frequency
+                text: How often do you drink alcohol?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      code: never
+                      display: Never
+                  - valueCoding:
+                      code: monthly
+                      display: < Monthly
+                  - valueCoding:
+                      code: 1-2-days-per-month
+                      display: 1-2 days per month
+                  - valueCoding:
+                      code: 1-2-days-a-week
+                      display: 1-2 days a week
+                  - valueCoding:
+                      code: 3-4-days-a-week
+                      display: 3-4 days a week
+                  - valueCoding:
+                      code: 5-6-days-a-week
+                      display: 5-6 days a week
+                  - valueCoding:
+                      code: everyday
+                      display: Everyday
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+              - linkId: alcohol-amount
+                text: On each occasion, how much do you normally drink?
+                helpText: 1 drink = 1 can of beer, 1 glass of wine, or 1 shot of spirits
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      code: 1-3
+                      display: 1-3
+                  - valueCoding:
+                      code: 3-5
+                      display: 3-5
+                  - valueCoding:
+                      code: 5-7
+                      display: 5-7
+                  - valueCoding:
+                      code: 7+
+                      display: 7+
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+                enableBehavior: any
+                enableWhen:
+                  - answerCoding:
+                      code: monthly
+                    operator: "="
+                    question: alcohol-frequency
+                  - answerCoding:
+                      code: 1-2-days-per-month
+                    operator: "="
+                    question: alcohol-frequency
+                  - answerCoding:
+                      code: 1-2-days-a-week
+                    operator: "="
+                    question: alcohol-frequency
+                  - answerCoding:
+                      code: 3-4-days-a-week
+                    operator: "="
+                    question: alcohol-frequency
+                  - answerCoding:
+                      code: 5-6-days-a-week
+                    operator: "="
+                    question: alcohol-frequency
+                  - answerCoding:
+                      code: everyday
+                    operator: "="
+                    question: alcohol-frequency
+
+              - linkId: physical-activity
+                text: How much physical activity do you do on an average week?
+                type: integer
+                unit:
+                  code: h
+                  system: http://unitsofmeasure.org
+                  display: hours
+              - linkId: physical-activity-group
+                type: group
+                extension:
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                    valueCodeableConcept:
+                      coding:
+                        - code: row
+                item:
+                  - linkId: frequency-activity
+                    text: Frequency of physical activity
+                    type: string
+                  - linkId: intensity-activity
+                    text: Intensity of physical activity
+                    type: string
+
+          - linkId: surgical-history
+            text: Surgical History
+            type: group
+            item:
+              - linkId: had-surgeries
+                text: Have you had any surgeries in the past?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      code: "yes"
+                      display: "Yes"
+                  - valueCoding:
+                      code: "no"
+                      display: "No"
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+              - linkId: surgical-history-details
+                text: Provide details about any surgical procedures you have had
+                type: display
+                enableWhen:
+                  - question: had-surgeries
+                    operator: "="
+                    answerCoding:
+                      code: "yes"
+              - linkId: surgical-history-table
+                text: Surgical procedure
+                type: group
+                repeats: true
+                enableWhen:
+                  - question: had-surgeries
+                    operator: "="
+                    answerCoding:
+                      code: "yes"
+                item:
+                  - linkId: year-place-of-surgery-group
+                    type: group
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - code: row
+                    item:
+                      - linkId: year
+                        text: Year
+                        type: integer
+                      - linkId: surgeon
+                        text: Surgeon
+                        type: string
+                      - linkId: place-of-surgery
+                        text: Place of Surgery
+                        type: string
+                  - linkId: surgery-details-group
+                    type: group
+                    extension:
+                      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                        valueCodeableConcept:
+                          coding:
+                            - code: row
+                    item:
+                      - linkId: surgery-details
+                        text: Details
+                        helpText: Type of Procedure, any complications or issues?, findings
+                        type: text
+
+          - linkId: menopause-group
+            text: Menopause
+            type: group
+            item:
+              - linkId: menopause
+                text: Have you gone through menopause?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      code: "yes"
+                      display: "Yes"
+                  - valueCoding:
+                      code: "no"
+                      display: "No"
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+              - linkId: menopause-details-display
+                text: Judge the severity of your symptoms
+                type: display
+                enableWhen:
+                  - question: menopause
+                    operator: "="
+                    answerCoding:
+                      code: "yes"
+              - linkId: menopause-details
+                type: group
+                enableWhen:
+                  - question: menopause
+                    operator: "="
+                    answerCoding:
+                      code: "yes"
+                item:
+                  - linkId: hot-flushes
+                    type: choice
+                    text: Hot flushes
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "0"
+                          display: None
+                      - valueCoding:
+                          code: "1"
+                          display: Mild
+                      - valueCoding:
+                          code: "2"
+                          display: Moderate
+                      - valueCoding:
+                          code: "3"
+                          display: Severe
+                  - linkId: lightheaded-feelings
+                    type: choice
+                    text: Lightheaded feelings
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "0"
+                          display: None
+                      - valueCoding:
+                          code: "1"
+                          display: Mild
+                      - valueCoding:
+                          code: "2"
+                          display: Moderate
+                      - valueCoding:
+                          code: "3"
+                          display: Severe
+                  - linkId: headaches
+                    type: choice
+                    text: Headaches
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "0"
+                          display: None
+                      - valueCoding:
+                          code: "1"
+                          display: Mild
+                      - valueCoding:
+                          code: "2"
+                          display: Moderate
+                      - valueCoding:
+                          code: "3"
+                          display: Severe
+                  - linkId: irritability
+                    type: choice
+                    text: Irritability
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "0"
+                          display: None
+                      - valueCoding:
+                          code: "1"
+                          display: Mild
+                      - valueCoding:
+                          code: "2"
+                          display: Moderate
+                      - valueCoding:
+                          code: "3"
+                          display: Severe
+                  - linkId: menopause-depression
+                    type: choice
+                    text: Depression
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "0"
+                          display: None
+                      - valueCoding:
+                          code: "1"
+                          display: Mild
+                      - valueCoding:
+                          code: "2"
+                          display: Moderate
+                      - valueCoding:
+                          code: "3"
+                          display: Severe
+                  - linkId: unloved-feelings
+                    type: choice
+                    text: Unloved feelings
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "0"
+                          display: None
+                      - valueCoding:
+                          code: "1"
+                          display: Mild
+                      - valueCoding:
+                          code: "2"
+                          display: Moderate
+                      - valueCoding:
+                          code: "3"
+                          display: Severe
+                  - linkId: menopause-anxiety
+                    type: choice
+                    text: Anxiety
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "0"
+                          display: None
+                      - valueCoding:
+                          code: "1"
+                          display: Mild
+                      - valueCoding:
+                          code: "2"
+                          display: Moderate
+                      - valueCoding:
+                          code: "3"
+                          display: Severe
+                  - linkId: mood-changes
+                    type: choice
+                    text: Mood changes
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "0"
+                          display: None
+                      - valueCoding:
+                          code: "1"
+                          display: Mild
+                      - valueCoding:
+                          code: "2"
+                          display: Moderate
+                      - valueCoding:
+                          code: "3"
+                          display: Severe
+                  - linkId: sleeplessness
+                    type: choice
+                    text: Sleeplessness
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "0"
+                          display: None
+                      - valueCoding:
+                          code: "1"
+                          display: Mild
+                      - valueCoding:
+                          code: "2"
+                          display: Moderate
+                      - valueCoding:
+                          code: "3"
+                          display: Severe
+                  - linkId: unusual-tiredness
+                    type: choice
+                    text: Unusual tiredness
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "0"
+                          display: None
+                      - valueCoding:
+                          code: "1"
+                          display: Mild
+                      - valueCoding:
+                          code: "2"
+                          display: Moderate
+                      - valueCoding:
+                          code: "3"
+                          display: Severe
+                  - linkId: backache
+                    type: choice
+                    text: Backache
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "0"
+                          display: None
+                      - valueCoding:
+                          code: "1"
+                          display: Mild
+                      - valueCoding:
+                          code: "2"
+                          display: Moderate
+                      - valueCoding:
+                          code: "3"
+                          display: Severe
+                  - linkId: joint-pains
+                    type: choice
+                    text: Joint pains
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "0"
+                          display: None
+                      - valueCoding:
+                          code: "1"
+                          display: Mild
+                      - valueCoding:
+                          code: "2"
+                          display: Moderate
+                      - valueCoding:
+                          code: "3"
+                          display: Severe
+                  - linkId: muscle-pains
+                    type: choice
+                    text: Muscle pains
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "0"
+                          display: None
+                      - valueCoding:
+                          code: "1"
+                          display: Mild
+                      - valueCoding:
+                          code: "2"
+                          display: Moderate
+                      - valueCoding:
+                          code: "3"
+                          display: Severe
+                  - linkId: new-facial-hair
+                    type: choice
+                    text: New facial hair
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "0"
+                          display: None
+                      - valueCoding:
+                          code: "1"
+                          display: Mild
+                      - valueCoding:
+                          code: "2"
+                          display: Moderate
+                      - valueCoding:
+                          code: "3"
+                          display: Severe
+                  - linkId: dry-skin
+                    type: choice
+                    text: Dry skin
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "0"
+                          display: None
+                      - valueCoding:
+                          code: "1"
+                          display: Mild
+                      - valueCoding:
+                          code: "2"
+                          display: Moderate
+                      - valueCoding:
+                          code: "3"
+                          display: Severe
+                  - linkId: crawling-feelings
+                    type: choice
+                    text: Crawling feelings under the skin
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "0"
+                          display: None
+                      - valueCoding:
+                          code: "1"
+                          display: Mild
+                      - valueCoding:
+                          code: "2"
+                          display: Moderate
+                      - valueCoding:
+                          code: "3"
+                          display: Severe
+                  - linkId: less-sexual-feelings
+                    type: choice
+                    text: Less sexual feelings
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "0"
+                          display: None
+                      - valueCoding:
+                          code: "1"
+                          display: Mild
+                      - valueCoding:
+                          code: "2"
+                          display: Moderate
+                      - valueCoding:
+                          code: "3"
+                          display: Severe
+                  - linkId: dry-vagina
+                    type: choice
+                    text: Dry vagina
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "0"
+                          display: None
+                      - valueCoding:
+                          code: "1"
+                          display: Mild
+                      - valueCoding:
+                          code: "2"
+                          display: Moderate
+                      - valueCoding:
+                          code: "3"
+                          display: Severe
+                  - linkId: uncomfortable-intercourse
+                    type: choice
+                    text: Uncomfortable intercourse
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "0"
+                          display: None
+                      - valueCoding:
+                          code: "1"
+                          display: Mild
+                      - valueCoding:
+                          code: "2"
+                          display: Moderate
+                      - valueCoding:
+                          code: "3"
+                          display: Severe
+                  - linkId: urinary-frequency-changes
+                    type: choice
+                    text: Urinary frequency changes
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "0"
+                          display: None
+                      - valueCoding:
+                          code: "1"
+                          display: Mild
+                      - valueCoding:
+                          code: "2"
+                          display: Moderate
+                      - valueCoding:
+                          code: "3"
+                          display: Severe
+
+                  - linkId: total-score
+                    type: decimal
+                    text: Total
+                    calculatedExpression:
+                      language: text/fhirpath
+                      expression: >-
+                        (
+                          %QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='1').count()
+                          +
+                          (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='2').count() * 2)
+                          +
+                          (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='3').count() * 3)
+                        )
+
+          - linkId: other-notes-group
+            text: Other Notes
+            type: group
+            item:
+              - linkId: other-notes
+                text: >-
+                  Please use the space below to let us know of anything else we
+                  can do or need to note to best support your health journey at WHR:
+                type: text

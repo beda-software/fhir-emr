@@ -1,7 +1,7 @@
 import { EditFilled, PlusOutlined, SaveFilled } from '@ant-design/icons';
 import { Trans, t } from '@lingui/macro';
 import { Button, notification, Select } from 'antd';
-import { Communication, Questionnaire, Reference } from 'fhir/r4b';
+import { Communication, Questionnaire } from 'fhir/r4b';
 import { useState } from 'react';
 // eslint-disable-next-line
 import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder';
@@ -35,6 +35,7 @@ interface FillWithAudioProps {
     senderReference: string;
     reloadDocuments: () => void;
     recorderControls: any;
+    isEncounterCompleted: boolean;
 }
 
 function AudioRecorderButton(props: FillWithAudioProps) {
@@ -44,6 +45,7 @@ function AudioRecorderButton(props: FillWithAudioProps) {
         const response = await getFHIRResources<Communication>('Communication', {
             encounter: props.encounterId,
             patient: props.patientId,
+            category: 'scribe-result',
         });
         if (isSuccess(response)) {
             const communication = response.data.entry?.[0]?.resource;
@@ -72,6 +74,24 @@ function AudioRecorderButton(props: FillWithAudioProps) {
                 status: 'completed',
                 subject: { reference: `/Patient/${props.patientId}` },
                 encounter: { reference: `/Encounter/${props.encounterId}` },
+                topic: {
+                    coding: [
+                        {
+                            code: 'scribe-text',
+                            system: 'http://emr.beda.software/CodeSystem/scribe',
+                        },
+                    ],
+                },
+                category: [
+                    {
+                        coding: [
+                            {
+                                code: 'scribe-result',
+                                system: 'http://emr.beda.software/CodeSystem/communications',
+                            },
+                        ],
+                    },
+                ],
                 sender: { reference: props.senderReference },
                 payload: [{ contentString: response.data.text }],
             };
@@ -111,6 +131,7 @@ function AudioRecorderButton(props: FillWithAudioProps) {
                         communication={communication}
                         reload={manager.reload}
                         reloadDocuments={props.reloadDocuments}
+                        hideControls={props.isEncounterCompleted}
                     />
                 )}
             </RenderRemoteData>
@@ -121,6 +142,7 @@ function AudioRecorderButton(props: FillWithAudioProps) {
 interface AIScribeProps {
     patientId: string;
     encounterId: string;
+    isEncounterCompleted: boolean;
     reloadDocuments: () => void;
     recorderControls: any;
 }
@@ -142,9 +164,10 @@ interface RecordedNotesProps {
     communication: Communication;
     reload: () => void;
     reloadDocuments: () => void;
+    hideControls: boolean;
 }
 
-function RecordedNotes({ communication, reload, reloadDocuments }: RecordedNotesProps) {
+function RecordedNotes({ hideControls, communication, reload, reloadDocuments }: RecordedNotesProps) {
     const originaltext = communication.payload?.[0]?.contentString ?? '';
     const [text, setText] = useState(originaltext);
     const [isEditingMode, setIsEditingMode] = useState(false);
@@ -175,46 +198,45 @@ function RecordedNotes({ communication, reload, reloadDocuments }: RecordedNotes
                     <Text>{sentences.join('.\n')}</Text>
                 </S.TextResults>
             )}
-            <S.Controls>
-                {typeof communication.id === 'undefined' || isEditingMode ? (
-                    <Button icon={<SaveFilled />} type="primary" onClick={save}>
-                        <span>
-                            <Trans>Save</Trans>
-                        </span>
-                    </Button>
-                ) : (
-                    <>
-                        <Extract
-                            text={originaltext}
-                            patient={communication.subject!}
-                            encounter={communication.encounter!}
-                            reloadDocumnents={reloadDocuments}
-                            updateExtractLoading={setIsExtractLoading}
-                        />
-                        {!isExtractLoading ? (
-                            <Button icon={<EditFilled />} type="default" onClick={() => setIsEditingMode(true)}>
-                                <span>
-                                    <Trans>Edit</Trans>
-                                </span>
-                            </Button>
-                        ) : null}
-                    </>
-                )}
-            </S.Controls>
+            {hideControls ? null : (
+                <S.Controls>
+                    {typeof communication.id === 'undefined' || isEditingMode ? (
+                        <Button icon={<SaveFilled />} type="primary" onClick={save}>
+                            <span>
+                                <Trans>Save</Trans>
+                            </span>
+                        </Button>
+                    ) : (
+                        <>
+                            <Extract
+                                communication={communication}
+                                reloadDocumnents={reloadDocuments}
+                                updateExtractLoading={setIsExtractLoading}
+                            />
+                            {!isExtractLoading ? (
+                                <Button icon={<EditFilled />} type="default" onClick={() => setIsEditingMode(true)}>
+                                    <span>
+                                        <Trans>Edit</Trans>
+                                    </span>
+                                </Button>
+                            ) : null}
+                        </>
+                    )}
+                </S.Controls>
+            )}
         </S.Scriber>
     );
 }
 
 interface ExtractProps {
+    communication: Communication;
     reloadDocumnents: () => void;
-    encounter: Reference;
-    patient: Reference;
-    text: string;
     updateExtractLoading: (v: boolean) => void;
 }
 
 function Extract(props: ExtractProps) {
-    const { updateExtractLoading } = props;
+    const { updateExtractLoading, communication } = props;
+    const text = communication.payload?.[0]?.contentString ?? '';
     const [selectedQuestionnaires, setSelectedQuestionnaires] = useState<Array<string>>([]);
     function handleChange(value: string[]) {
         setSelectedQuestionnaires(value);
@@ -242,10 +264,13 @@ function Extract(props: ExtractProps) {
                         baseURL: config.aiAssistantServiceUrl ?? undefined,
                         url: '/extract',
                         data: {
-                            ...props,
+                            text,
+                            patient: communication.subject,
+                            encounter: communication.encounter,
                             questionnaire: qId,
+                            source: { reference: `Communication/${communication.id}` },
                         },
-                        headers: { Authorization: `Bearer ${getToken()}`, 'Content-Type': 'multipart' },
+                        headers: { Authorization: `Bearer ${getToken()}` },
                     });
                 }),
             ),

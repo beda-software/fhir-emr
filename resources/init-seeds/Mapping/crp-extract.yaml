@@ -1,0 +1,58 @@
+body:
+  $let:
+    qrId: $ fhirpath("QuestionnaireResponse.id")
+    qrVersion: $ fhirpath("QuestionnaireResponse.meta.versionId")
+    qrLastUpdated: >-
+      $ fhirpath("QuestionnaireResponse.meta.lastUpdated") || fhirpath("QuestionnaireResponse.repeat(item).where(linkId='dateTime').answer.valueDateTime").0
+    observationId: $ fhirpath("Provenance.target.where(resourceType='Observation').id").0
+    author: $ Author
+    patientId: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.valueString").0
+    patientName: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patientName').answer.valueString").0
+    crp: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='crp-level').answer.valueDecimal").0
+    dateTime: >-
+      $
+      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='dateTime').answer.valueDateTime").0
+  $body:
+    resourceType: Bundle
+    type: transaction
+    entry:
+      - request:
+          $if: $ observationId
+          $then:
+            url: $ "/Observation/" + observationId
+            method: PUT
+          $else:
+            url: /Observation
+            method: POST
+        fullUrl: $ "urn:uuid:observation-id"
+        resource:
+          status: final
+          category:
+            - coding:
+                - system: "http://terminology.hl7.org/CodeSystem/observation-category"
+                  code: "laboratory"
+          code:
+            coding:
+              - system: "http://loinc.org"
+                code: "1988-5"
+                display: "CRP"
+          subject:
+            reference: $ "Patient/" + patientId
+            display: $ patientName
+          effective:
+            dateTime: $ dateTime
+          value:
+            Quantity:
+              value: $ crp
+              unit: "pg/ml"
+              system: "http://unitsofmeasure.org"
+              code: "pg/ml"
+          resourceType: Observation
+id: crp-extract
+resourceType: Mapping

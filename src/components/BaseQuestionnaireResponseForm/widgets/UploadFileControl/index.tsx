@@ -1,14 +1,15 @@
 import { InboxOutlined } from '@ant-design/icons';
+import { Trans } from '@lingui/macro';
 import { Form, Upload } from 'antd';
 import { QuestionItemProps } from 'sdc-qrf';
 
 import { useUploader } from './hooks';
-import { Trans } from '@lingui/macro';
 
 const { Dragger } = Upload;
 
 export function UploadFileControl(props: QuestionItemProps) {
-    const { showDragger, formItem, customRequest, onChange, onRemove, fileList } = useUploader(props);
+    const { showDragger, formItem, customRequest, onChange, onRemove, fileList, acceptedFileExtensions, disabled } =
+        useUploader(props);
     const { helpText, repeats } = props.questionItem;
 
     return (
@@ -21,6 +22,8 @@ export function UploadFileControl(props: QuestionItemProps) {
                     onChange={onChange}
                     fileList={fileList}
                     onRemove={onRemove}
+                    accept={acceptedFileExtensions}
+                    disabled={disabled}
                 >
                     <p className="ant-upload-drag-icon">
                         <InboxOutlined />
@@ -36,6 +39,7 @@ export function UploadFileControl(props: QuestionItemProps) {
                     showUploadList={{ showRemoveIcon: true }}
                     fileList={fileList}
                     onRemove={onRemove}
+                    disabled={disabled}
                 />
             )}
         </Form.Item>

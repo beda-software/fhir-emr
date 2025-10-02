@@ -1,6 +1,7 @@
-import React from 'react';
-import { S } from './styles';
 import _ from 'lodash';
+import React from 'react';
+
+import { S } from './styles';
 
 export interface ReportProps {
     items: Array<{

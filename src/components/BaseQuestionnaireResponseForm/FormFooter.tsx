@@ -1,12 +1,6 @@
-import { CheckOutlined } from '@ant-design/icons';
 import { Trans } from '@lingui/macro';
 import { Button } from 'antd';
-import { DebouncedFunc } from 'lodash';
 import { CSSProperties } from 'react';
-import { useWatch } from 'react-hook-form';
-import { FormItems } from 'sdc-qrf';
-
-import { isLoading, isSuccess } from '@beda.software/remote-data';
 
 import { BaseQuestionnaireResponseFormProps } from '.';
 import { S } from './BaseQuestionnaireResponseForm.styles';
@@ -19,7 +13,6 @@ export interface FormFooterComponentProps {
 
 export interface Props extends BaseQuestionnaireResponseFormProps {
     submitting: boolean;
-    debouncedSaveDraft?: DebouncedFunc<(currentFormValues: FormItems) => Promise<void>>;
     className?: string | undefined;
     style?: CSSProperties | undefined;
     submitDisabled?: boolean;
@@ -27,78 +20,24 @@ export interface Props extends BaseQuestionnaireResponseFormProps {
 
 export function FormFooter(props: Props) {
     const {
-        formData,
         readOnly,
         onCancel,
         FormFooterComponent,
         saveButtonTitle,
         cancelButtonTitle,
         submitting,
-        debouncedSaveDraft,
-        autoSave,
-        draftSaveResponse,
-        setDraftSaveResponse,
         className,
         style,
         submitDisabled: initialSubmitDisabled,
     } = props;
 
-    const formValues = useWatch();
-    const assembledFromQuestionnaireId = formData.context.questionnaire.assembledFrom;
-
     if (readOnly) {
         return null;
     }
 
-    const submitLoading = submitting;
     const submitDisabled = submitting || initialSubmitDisabled;
 
-    const draftLoading = draftSaveResponse && isLoading(draftSaveResponse);
-    const draftSaved = draftSaveResponse && isSuccess(draftSaveResponse);
-
-    const isSomeButtonInLoading = submitLoading || draftLoading;
-
-    const renderDraftButton = () => {
-        if (!assembledFromQuestionnaireId) {
-            return null;
-        }
-
-        if (!setDraftSaveResponse || !debouncedSaveDraft) {
-            return null;
-        }
-
-        if (!autoSave) {
-            return (
-                <Button
-                    loading={draftLoading}
-                    disabled={isSomeButtonInLoading}
-                    onClick={() => debouncedSaveDraft(formValues)}
-                >
-                    <Trans>Save as draft</Trans>
-                </Button>
-            );
-        }
-
-        if (autoSave && draftLoading) {
-            return (
-                <Button type="ghost" disabled loading={draftLoading}>
-                    <Trans>Saving draft</Trans>
-                </Button>
-            );
-        }
-
-        if (autoSave && draftSaved) {
-            return (
-                <Button type="ghost" disabled icon={<CheckOutlined />}>
-                    <span>
-                        <Trans>Saved as draft</Trans>
-                    </span>
-                </Button>
-            );
-        }
-
-        return null;
-    };
+    const isSomeButtonInLoading = submitting;
 
     return (
         <>
@@ -106,7 +45,6 @@ export function FormFooter(props: Props) {
                 <FormFooterComponent submitting={submitting} submitDisabled={submitDisabled} onCancel={onCancel} />
             ) : (
                 <S.Footer className={className} style={style}>
-                    {renderDraftButton()}
                     {onCancel && (
                         <Button
                             type="default"
@@ -121,7 +59,7 @@ export function FormFooter(props: Props) {
                         type="primary"
                         htmlType="submit"
                         data-testid="submit-button"
-                        loading={submitLoading}
+                        loading={submitting}
                         disabled={submitDisabled || isSomeButtonInLoading}
                     >
                         {saveButtonTitle ?? <Trans>Save</Trans>}

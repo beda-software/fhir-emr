@@ -1,27 +1,22 @@
 import { JitsiMeeting } from '@jitsi/react-sdk';
 import { Trans } from '@lingui/macro';
-import { ContactPoint } from 'fhir/r4b';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import config from '@beda.software/emr-config';
 
 import { PageContainer } from 'src/components/BaseLayout/PageContainer';
-import { EncounterData } from 'src/components/EncountersTable/types';
 import { sharedJitsiAuthToken } from 'src/sharedState';
+import { selectCurrentUserRoleResource } from 'src/utils';
 import { renderHumanName } from 'src/utils/fhir';
 
 import { S } from './VideoCall.styles';
 
 export function VideoCall() {
+    const { encounterId } = useParams<{ encounterId: string }>();
+    const userResource = selectCurrentUserRoleResource();
     const navigate = useNavigate();
-    const location = useLocation();
-    const state = location.state as { encounterData: EncounterData };
-    const encounter = state.encounterData;
-    const practitionerName = renderHumanName(encounter.practitioner?.name?.[0]);
-    const practitionerEmail = `${encounter.practitioner?.telecom?.find((t: ContactPoint) => t.system === 'email')
-        ?.value}`;
-    const patientName = renderHumanName(encounter.patient?.name?.[0]);
-    const roomName = [...practitionerName.split(' '), ...patientName.split(' ')].join('-').toLowerCase();
+    const name =
+        userResource.resourceType === 'Organization' ? userResource.name : renderHumanName(userResource.name?.[0]);
     const jwtAuthToken = sharedJitsiAuthToken.getSharedState();
 
     return (
@@ -30,7 +25,7 @@ export function VideoCall() {
             <S.Content>
                 <JitsiMeeting
                     domain={config.jitsiMeetServer}
-                    roomName={roomName}
+                    roomName={encounterId ?? 'N/A'}
                     jwt={jwtAuthToken}
                     configOverwrite={{
                         startWithAudioMuted: true,
@@ -41,14 +36,14 @@ export function VideoCall() {
                         readOnlyName: true,
                     }}
                     userInfo={{
-                        displayName: practitionerName.split('-').join(' '),
-                        email: practitionerEmail,
+                        displayName: name ?? 'N/A',
+                        email: 'N/A',
                     }}
                     getIFrameRef={(iframeRef) => {
                         iframeRef.style.height = '500px';
                     }}
                     onReadyToClose={() => {
-                        navigate(`/patients/${encounter.patient?.id}/encounters/${encounter.id}`);
+                        navigate('encounters');
                     }}
                 />
             </S.Content>

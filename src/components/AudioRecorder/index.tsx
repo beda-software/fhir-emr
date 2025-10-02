@@ -1,14 +1,16 @@
+import { DeleteOutlined } from '@ant-design/icons';
 import { Trans } from '@lingui/macro';
+import { Upload, type UploadFile } from 'antd';
+import { RcFile } from 'antd/lib/upload/interface';
 // eslint-disable-next-line
 import { AudioRecorder as AudioRecorderControl } from 'react-audio-voice-recorder';
 
+import { uuid4 } from '@beda.software/fhir-react';
+
+import { Text } from 'src/components/Typography';
+
 import { RecorderControls } from './hooks';
 import { S } from './styles';
-import { uuid4 } from '@beda.software/fhir-react';
-import { Upload, type UploadFile } from 'antd';
-import { RcFile } from 'antd/lib/upload/interface';
-import { DeleteOutlined } from '@ant-design/icons';
-import { Text } from 'src/components/Typography';
 
 interface AudioRecorderProps {
     onChange: (url: RcFile) => Promise<void>;
@@ -92,7 +94,8 @@ export function AudioPlayerRecord(props: AudioPlayerRecordProps) {
                     {isSafari && isWebm ? (
                         <Text>
                             <Trans>
-                                This audio cannot be played in Safari, please download the audio or use the Chrome browser
+                                This audio cannot be played in Safari, please download the audio or use the Chrome
+                                browser
                             </Trans>
                         </Text>
                     ) : (

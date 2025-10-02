@@ -21,18 +21,18 @@ function ReferenceRadioButtonUnsafe<R extends Resource = any, IR extends Resourc
     const { formItem, value, onSelect, disabled } = fieldController;
 
     return (
-        <RenderRemoteData
-            remoteData={optionsRD}
-            renderLoading={Spinner}
-            renderFailure={(error) => <Text>{formatError(error)}</Text>}
-        >
-            {(options) => (
-                <Form.Item {...formItem}>
+        <Form.Item {...formItem}>
+            <RenderRemoteData
+                remoteData={optionsRD}
+                renderLoading={Spinner}
+                renderFailure={(error) => <Text>{formatError(error)}</Text>}
+            >
+                {(options) => (
                     <Space direction={choiceOrientation}>
                         {options.map((answerOption) => (
                             <Radio
                                 key={JSON.stringify(answerOption)}
-                                checked={_.isEqual(value?.value, answerOption.value)}
+                                checked={!!value?.find((v) => _.isEqual(v.value, answerOption.value))}
                                 disabled={disabled}
                                 onChange={() => onSelect(answerOption)}
                                 data-testid={`inline-choice__${_.kebabCase(
@@ -43,9 +43,9 @@ function ReferenceRadioButtonUnsafe<R extends Resource = any, IR extends Resourc
                             </Radio>
                         ))}
                     </Space>
-                </Form.Item>
-            )}
-        </RenderRemoteData>
+                )}
+            </RenderRemoteData>
+        </Form.Item>
     );
 }
 

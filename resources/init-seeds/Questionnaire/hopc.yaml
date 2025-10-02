@@ -1,0 +1,26 @@
+item:
+  - linkId: history-of-complaint-group
+    type: group
+    item:
+      - linkId: history-of-complaint
+        text: "History of Present Illness:"
+        helpText: Briefly describe the patient's main concern.
+        type: string
+      - linkId: onset-of-symptoms
+        text: "Onset: When did the symptoms start?"
+        type: string
+      - linkId: factors-of-symptoms
+        text: "Provocation: What makes the symptoms better or worse?"
+        type: string
+      - linkId: character-of-symptoms
+        text: "Characterization: Describe the symptoms in detail (e.g., location, duration, severity, quality)."
+        type: string
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+name: HOPC (History of Present Illness, Onset, Provocation, Characterization)
+title: HOPC (History of Present Illness, Onset, Provocation, Characterization)
+status: active
+subjectType:
+  - Encounter
+resourceType: Questionnaire

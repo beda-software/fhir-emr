@@ -7,6 +7,7 @@ import {
     isReferenceColumnFilterValue,
     isSingleDateColumnFilterValue,
     isSolidChoiceColumnFilterValue,
+    isSplitStringColumnFilterValue,
     isStringColumnFilterValue,
     SearchBarColumn,
 } from './types';
@@ -40,7 +41,7 @@ export function getSearchBarColumnFilterValue(filterValue: ColumnFilterValue) {
     }
 
     if (isReferenceColumnFilterValue(filterValue)) {
-        return filterValue.value?.value.Reference.id;
+        return filterValue.value?.value.Reference.reference;
     }
 
     if (isChoiceColumnFilterValue(filterValue)) {
@@ -49,6 +50,14 @@ export function getSearchBarColumnFilterValue(filterValue: ColumnFilterValue) {
 
     if (isSolidChoiceColumnFilterValue(filterValue)) {
         return filterValue.value?.map((option) => option.code!);
+    }
+
+    if (isSplitStringColumnFilterValue(filterValue)) {
+        if (filterValue.column.searchBehavior === 'AND') {
+            return filterValue.value?.split(filterValue.column.separator ?? ' ');
+        } else {
+            return filterValue.value?.split(filterValue.column.separator ?? ' ').join(',');
+        }
     }
 
     throw new Error('Unsupported column type');

@@ -1,87 +1,70 @@
 name: test
 on: push
 jobs:
-    StoryBook:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-              with:
-                fetch-depth: 0
-            - uses: actions/setup-node@v3
-              with:
-                  node-version: 18
-            - name: Prepare config
-              run: cp contrib/emr-config/config.local.js contrib/emr-config/config.js
-            - name: Prepare secrets
-              run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
-            - name: Install deps
-              run: yarn install
-            - run: yarn extract
-            - run: yarn compile
-            - name: Install Playwright
-              run: npx playwright@latest install --with-deps
-            - name: Build Storybook
-              env:
-                NODE_OPTIONS: "--max_old_space_size=4096"
-              run: yarn build-storybook --quiet
-            - name: Test storybook
-              run: |
-                npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
-                  "npx http-server storybook-static --port 6006 --silent" \
-                  "npx wait-on tcp:127.0.0.1:6006 && yarn test-storybook"
-            - name: Publish to Chromatic
-              uses: chromaui/action@v1
-              env:
-                NODE_OPTIONS: "--max_old_space_size=4096"
-              with:
-                projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-                onlyChanged: true
-    Tests:
+  StoryBook:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Prepare config
+        run: cp contrib/emr-config/config.local.js contrib/emr-config/config.js
+      - name: Prepare secrets
+        run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
+      - name: Install deps
+        run: yarn install
+      - run: yarn extract
+      - run: yarn compile
+      - name: Install Playwright
+        run: npx playwright@latest install --with-deps
+      - name: Build Storybook
         env:
-            AIDBOX_LICENSE: ${{ secrets.AIDBOX_LICENSE }}
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-              with:
-                fetch-depth: 0
-            - uses: actions/setup-node@v3
-              with:
-                  node-version: 18
-            - name: Prepare config
-              run: cp contrib/emr-config/config.local.js contrib/emr-config/config.js
-            - name: Prepare secrets
-              run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
-            - name: Install deps
-              run: yarn install
-            - run: yarn extract
-            - run: yarn compile
-            - name: Check types
-              run: yarn typecheck
-            - name: Create deps dir
-              run: mkdir -p zenproject/zen-packages && chmod 0777 zenproject/zen-packages
-            - name: Run aidbox
-              run: make up
-            - name: Show logs
-              if: ${{ failure() }}
-              run: docker-compose logs
-            - name: Run tests
-              run: yarn test --silent
-    TestScript:
+          NODE_OPTIONS: "--max_old_space_size=4096"
+        run: yarn build-storybook --quiet
+      - name: Test storybook
+        run: |
+          npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
+            "npx http-server storybook-static --port 6006 --silent" \
+            "npx wait-on tcp:127.0.0.1:6006 && yarn test-storybook"
+      - name: Publish to Chromatic
+        uses: chromaui/action@v1
         env:
-            AIDBOX_LICENSE: ${{ secrets.AIDBOX_LICENSE }}
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-              with:
-                fetch-depth: 0
-            - name: Prepare secrets
-              run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
-            - name: Create deps dir
-              run: mkdir -p zenproject/zen-packages && chmod 0777 zenproject/zen-packages
-            - name: Build TestScript files from FSH sources
-              run: make kaitenzushi
-            - name: Run tests
-              run: make testscript
-            - name: Show logs
-              if: ${{ failure() }}
-              run: docker compose -f docker-compose.testscript.yaml logs testscript sdc
+          NODE_OPTIONS: "--max_old_space_size=4096"
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          onlyChanged: true
+  Tests:
+    env:
+      AIDBOX_LICENSE: ${{ secrets.AIDBOX_LICENSE }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Prepare config
+        run: cp contrib/emr-config/config.local.js contrib/emr-config/config.js
+      - name: Prepare secrets
+        run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
+      - name: Install deps
+        run: yarn install
+      - run: yarn extract
+      - run: yarn compile
+      - name: Check types
+        run: yarn typecheck
+      - name: Check eslint
+        run: yarn eslint src/
+      - name: Check formatting
+        run: yarn prettier -c "src/**/*.ts?"
+      - name: Run aidbox
+        run: make up
+      - name: Show logs
+        if: ${{ failure() }}
+        run: docker compose logs
+      - name: Run tests
+        run: yarn test --silent

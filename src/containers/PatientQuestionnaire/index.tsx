@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro';
-import { Patient } from 'fhir/r4b';
+import { ParametersParameter, Patient } from 'fhir/r4b';
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -44,7 +44,13 @@ function usePatientQuestionnaire() {
     };
 }
 
-export function PatientQuestionnaire({ onSuccess }: { onSuccess?: () => void }) {
+interface PatientQuestionnaireProps {
+    onSuccess?: () => void;
+    autosave?: boolean;
+    launchContextParameters?: ParametersParameter[];
+}
+
+export function PatientQuestionnaire(props: PatientQuestionnaireProps) {
     const appToken = getToken();
     const isAnonymousUser = !appToken;
     const [isLoading, setIsLoading] = useState(!appToken);
@@ -68,12 +74,14 @@ export function PatientQuestionnaire({ onSuccess }: { onSuccess?: () => void }) 
 
     return (
         <PageContainer title={<Trans>Questionnaire</Trans>}>
-            {isLoading ? <Spinner /> : <PatientQuestionnaireForm onSuccess={onSuccess} />}
+            {isLoading ? <Spinner /> : <PatientQuestionnaireForm {...props} />}
         </PageContainer>
     );
 }
 
-function PatientQuestionnaireForm({ onSuccess }: { onSuccess?: () => void }) {
+function PatientQuestionnaireForm(props: PatientQuestionnaireProps) {
+    const { onSuccess, autosave, launchContextParameters } = props;
+
     const { response, questionnaireId, encounterId } = usePatientQuestionnaire();
     const appToken = getToken();
     const isAnonymousUser = !appToken;
@@ -94,6 +102,8 @@ function PatientQuestionnaireForm({ onSuccess }: { onSuccess?: () => void }) {
                     questionnaireId={questionnaireId!}
                     encounterId={encounterId}
                     onSuccess={onSuccess}
+                    autoSave={autosave}
+                    launchContextParameters={launchContextParameters}
                 />
             )}
         </RenderRemoteData>

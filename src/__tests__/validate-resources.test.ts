@@ -13,7 +13,7 @@ describe('Validate all questionnaires', () => {
         await loginAdminUser();
     });
 
-    const filenames = readdirSync('resources/seeds/Questionnaire').map((filename) => parsePath(filename).name);
+    const filenames = readdirSync('resources/init-seeds/Questionnaire').map((filename) => parsePath(filename).name);
 
     test.each(filenames)('Questionnaire %s is valid', async (questionnaireId) => {
         const questionnaire = ensure(
@@ -21,7 +21,7 @@ describe('Validate all questionnaires', () => {
         );
         expect(questionnaire.meta?.profile?.length).toBeGreaterThanOrEqual(1);
         const bedaQuestionnaireProfile = questionnaire.meta?.profile?.find(
-            (profileUrl) => profileUrl === 'https://beda.software/beda-emr-questionnaire',
+            (profileUrl) => profileUrl === 'https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire',
         );
         expect(bedaQuestionnaireProfile).not.toBeUndefined();
         const outcome = ensure(

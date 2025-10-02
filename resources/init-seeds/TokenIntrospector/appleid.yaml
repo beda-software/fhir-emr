@@ -1,0 +1,6 @@
+id: appleid
+resourceType: TokenIntrospector
+type: jwt
+jwks_uri: https://appleid.apple.com/auth/keys
+jwt:
+  iss: https://appleid.apple.com

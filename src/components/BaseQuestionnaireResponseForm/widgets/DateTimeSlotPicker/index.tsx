@@ -124,7 +124,7 @@ function AvailableDateControl(props: AvailableDatePickerProps & { practitionerRo
     const { questionItem, parentPath, practitionerRole } = props;
     const { linkId } = questionItem;
     const fieldName = [...parentPath, linkId, 0, 'value', 'dateTime'];
-    const { value, onChange, disabled } = useFieldController(fieldName, questionItem);
+    const { value, onChange, disabled } = useFieldController<string>(fieldName, questionItem);
     const { response } = useDateTimeSlots(practitionerRole);
 
     const onDateChange = (date: moment.Moment | null, timeSlots: TimeSlots) => {
@@ -160,7 +160,8 @@ function AvailableDateControl(props: AvailableDatePickerProps & { practitionerRo
                         disabledDate={(date) => !enabledDates.includes(formatFHIRDate(date))}
                         disabledTime={(date) => getDisabledTime(date, timeSlots)}
                         onBlur={(e) => {
-                            const date = e.target.value ? moment(e.target.value, humanDateTime) : null;
+                            const target = e.target as HTMLInputElement;
+                            const date = target.value ? moment(target.value, humanDateTime) : null;
                             onDateChange(date, timeSlots);
                         }}
                     />

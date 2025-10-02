@@ -7,7 +7,9 @@ import { PatientHeaderContext } from './context';
  * @deprecated
  */
 export function usePatientHeaderLocationTitle(config: { title: string }) {
-    console.warn('DEPRECATED: Do not use usePatientHeaderLocationTitle hook. It will be removed in future versions of the EMR.');
+    console.warn(
+        'DEPRECATED: Do not use usePatientHeaderLocationTitle hook. It will be removed in future versions of the EMR.',
+    );
 
     const { setBreadcrumbs } = useContext(PatientHeaderContext);
     const { title } = config;

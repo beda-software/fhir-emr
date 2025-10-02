@@ -16,6 +16,8 @@ import {
     isSolidChoiceColumnFilterValue,
     isSingleDateColumn,
     isSingleDateColumnFilterValue,
+    isSplitStringColumn,
+    isSplitStringColumnFilterValue,
 } from './types';
 import {
     validateStringColumnFilterValue,
@@ -24,6 +26,7 @@ import {
     validateChoiceColumnFilterValue,
     validateSolidChoiceColumnFilterValue,
     validateSingleDateColumnFilterValue,
+    validateSplitStringColumnFilterValue,
 } from './validate';
 
 export function useSearchBar(props: SearchBarProps): SearchBarData {
@@ -32,11 +35,11 @@ export function useSearchBar(props: SearchBarProps): SearchBarData {
     const defaultFiltersValues = useMemo<ColumnFilterValue[]>(() => {
         return columns.map((column) => {
             if (isStringColumn(column)) {
-                return { column, value: undefined };
+                return { column, value: column.defaultValue ?? undefined };
             }
 
             if (isDateColumn(column)) {
-                return { column, value: undefined };
+                return { column, value: column.defaultValue ?? undefined };
             }
 
             if (isSingleDateColumn(column)) {
@@ -62,6 +65,10 @@ export function useSearchBar(props: SearchBarProps): SearchBarData {
 
             if (isSolidChoiceColumn(column)) {
                 return { column, value: column.defaultValue ? [column.defaultValue] : null };
+            }
+
+            if (isSplitStringColumn(column)) {
+                return { column, value: column.defaultValue ?? undefined };
             }
 
             throw new Error('Unsupported column type');
@@ -117,6 +124,13 @@ export function useSearchBar(props: SearchBarProps): SearchBarData {
 
                     if (isSolidChoiceColumnFilterValue(newFilterValue)) {
                         if (validateSolidChoiceColumnFilterValue(value)) {
+                            newFilterValue.value = value;
+                            return newFilterValue;
+                        }
+                    }
+
+                    if (isSplitStringColumnFilterValue(newFilterValue)) {
+                        if (validateSplitStringColumnFilterValue(value)) {
                             newFilterValue.value = value;
                             return newFilterValue;
                         }
