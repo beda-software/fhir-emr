@@ -3,16 +3,25 @@ name: vitals
 title: Vitals
 resourceType: Questionnaire
 status: active
+mapping:
+  - reference: urn:uuid:Mapping:vitals
 subjectType:
   - Encounter
   - Patient
-mapping:
-  - reference: urn:uuid:Mapping:vitals
 launchContext:
   - name:
       code: Patient
     type:
       - Patient
+  - name:
+      code: Encounter
+    type:
+      - Encounter
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/vitals
+
 item:
   - text: PatientId
     type: string
@@ -28,73 +37,72 @@ item:
     initialExpression:
       language: text/fhirpath
       expression: "%Patient.name.first().given.first() + ' ' + %Patient.name.first().family"
-  - type: decimal
-    linkId: height
+  - linkId: height
+    type: quantity
     text: Height
-    unit:
-      code: cm
-      system: http://unitsofmeasure.org
-      display: cm
-  - type: decimal
-    linkId: weight
+    unitOption:
+      - code: cm
+        system: http://unitsofmeasure.org
+        display: cm
+  - linkId: weight
+    type: quantity
     text: Weight
-    unit:
-      code: kg
-      system: http://unitsofmeasure.org
-      display: kg
-  - type: decimal
-    linkId: temperature
+    unitOption:
+      - code: kg
+        system: http://unitsofmeasure.org
+        display: kg
+  - linkId: temperature
+    type: quantity
     text: Temperature
-    unit:
-      code: Celsius
-      system: http://unitsofmeasure.org
-      display: Celsius
-  - type: decimal
-    linkId: oxygen-saturation
+    unitOption:
+      - code: Cel
+        system: http://unitsofmeasure.org
+        display: °C
+  - linkId: oxygen-saturation
+    type: quantity
     text: Oxygen saturation
-    unit:
-      code: "%"
-      system: http://unitsofmeasure.org
-      display: "%"
-  - type: decimal
-    linkId: pulse-rate
+    unitOption:
+      - code: "%"
+        system: http://unitsofmeasure.org
+        display: "%"
+  - linkId: pulse-rate
+    type: quantity
     text: Pulse rate
-    unit:
-      code: bpm
-      system: http://unitsofmeasure.org
-      display: bpm
-  - type: decimal
-    linkId: respiratory-rate
+    unitOption:
+      - code: bpm
+        system: http://unitsofmeasure.org
+        display: bpm
+  - linkId: respiratory-rate
+    type: quantity
     text: Respiratory Rate
-    unit:
-      code: bpm
-      system: http://unitsofmeasure.org
-      display: bpm
-  - text: Blood Pressure
+    unitOption:
+      - code: bpm
+        system: http://unitsofmeasure.org
+        display: bpm
+
+  - linkId: blood-pressure
     type: group
-    linkId: blood-pressure
     item:
-      - type: group
-        linkId: blood-pressure-systolic-diastolic
+      - linkId: blood-pressure-systolic-diastolic
+        type: group
         itemControl:
           coding:
             - code: blood-pressure
         item:
-          - type: decimal
+          - linkId: blood-pressure-systolic
+            type: quantity
             text: BP systolic
-            linkId: blood-pressure-systolic
-            unit:
-              code: mmHg
-              system: http://unitsofmeasure.org
-              display: mmHg
-          - type: decimal
+            unitOption:
+              - code: mmHg
+                system: http://unitsofmeasure.org
+                display: mmHg
+          - linkId: blood-pressure-diastolic
+            type: quantity
             text: BP diastolic
-            linkId: blood-pressure-diastolic
-            unit:
-              code: mmHg
-              system: http://unitsofmeasure.org
-              display: mmHg
-
+            unitOption:
+              - code: mmHg
+                system: http://unitsofmeasure.org
+                display: mmHg
       - linkId: blood-pressure-positions
         text: Positions
         type: choice
@@ -111,7 +119,6 @@ item:
           - valueCoding:
               code: standing
               display: Standing
-
       - linkId: blood-pressure-arm
         text: Arm
         type: choice
@@ -125,10 +132,11 @@ item:
           - valueCoding:
               code: biceps-right
               display: Biceps right
+
   - linkId: bmi
     text: BMI
-    required: true
     type: decimal
+    required: true
     readOnly: true
     unit:
       code: kg/m2
@@ -136,8 +144,13 @@ item:
       display: kg/m2
     calculatedExpression:
       language: text/fhirpath
-      expression: "(%QuestionnaireResponse.item.where(linkId='weight').answer.valueDecimal / ((%QuestionnaireResponse.item.where(linkId='height').answer.valueDecimal / 100) * (%QuestionnaireResponse.item.where(linkId='height').answer.valueDecimal / 100))).round(2)"
-meta:
-  profile:
-    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/vitals
+      expression: >-
+        (
+          %QuestionnaireResponse.item.where(linkId='weight').answer.valueQuantity.value.toDecimal()
+          /
+          (
+            (%QuestionnaireResponse.item.where(linkId='height').answer.valueQuantity.value.toDecimal() / 100)
+            *
+            (%QuestionnaireResponse.item.where(linkId='height').answer.valueQuantity.value.toDecimal() / 100)
+          )
+        ).round(2)
