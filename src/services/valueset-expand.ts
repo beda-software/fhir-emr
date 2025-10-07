@@ -100,7 +100,7 @@ export async function expandFHIRValueSet(answerValueSet: string | undefined, sea
         await service<ValueSet>({
             url: `/fhir/ValueSet/$expand?url=${answerValueSet}`,
             params: {
-                filter: searchText,
+                ...(searchText ? { filter: searchText } : {}),
                 count: 50,
             },
         }),
