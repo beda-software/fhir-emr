@@ -269,7 +269,7 @@ body:
             reference: "Encounter/{{ %encounterId }}"
           effectiveDateTime: "{{ now() }}"
           valueQuantity:
-            value: "{{ %bmi.value }}"
+            value: "{{ iif(%bmi.exists(), %bmi, (%weight.value / ((%height.value / 100) * (%height.value / 100))).round(2)) }}"
             unit: kg/m2
             system: http://unitsofmeasure.org
             code: kg/m2
