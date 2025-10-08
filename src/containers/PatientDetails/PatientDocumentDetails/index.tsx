@@ -141,24 +141,24 @@ function PatientDocumentDetailsReadonly(props: {
                     <Title level={4} className={s.title}>
                         {formData.context.questionnaire.title || formData.context.questionnaire.name}
                     </Title>
+                    <PatientDocumentDetailsReadonlyButtons
+                        printUrl={`/print-patient-document/${patientId}/${qrId}`}
+                        questionnaireResponse={formData.context.questionnaireResponse}
+                        provenance={provenance}
+                        reload={reload}
+                        enabledControls={
+                            hideControls
+                                ? {
+                                      print: true,
+                                      amend: false,
+                                      history: false,
+                                      delete: false,
+                                      edit: false,
+                                  }
+                                : undefined
+                        }
+                    />
                 </div>
-                <PatientDocumentDetailsReadonlyButtons
-                    printUrl={`/print-patient-document/${patientId}/${qrId}`}
-                    questionnaireResponse={formData.context.questionnaireResponse}
-                    provenance={provenance}
-                    reload={reload}
-                    enabledControls={
-                        hideControls
-                            ? {
-                                  print: true,
-                                  amend: false,
-                                  history: false,
-                                  delete: false,
-                                  edit: false,
-                              }
-                            : undefined
-                    }
-                />
                 <S.Content>
                     <ReadonlyQuestionnaireResponseForm formData={formData} />
                 </S.Content>
