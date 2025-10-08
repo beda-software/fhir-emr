@@ -1,84 +1,66 @@
-body:
-  $let:
-    duration: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='duration').answer.valueInteger").0
-    visitTypeCode: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='visit-type-code').answer.valueString").0
-    visitTypeName: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='visit-type-name').answer.valueString").0
-    comment: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='comment').answer.valueString").0
-    priceBase: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='price-base').answer.valueDecimal").0
-    priceTax: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='price-tax').answer.valueDecimal").0
-  $body:
-    type: transaction
-    entry:
-      - request:
-          url: /HealthcareService
-          method: POST
-        fullUrl: $ "urn:uuid:healthcare-service-id"
-        resource:
-          name: $ visitTypeName
-          extension:
-            - url: urn:extensions:healthcare-service-duration
-              valueInteger: $ duration
-          comment: $ comment
-          type:
-            - text: $ visitTypeName
-              coding:
-                - code: $ visitTypeCode
-                  display: $ visitTypeName
-                  system: http://beda.software/custom-healthcare-service-list
-          active: true
-          appointmentRequired: true
-          resourceType: HealthcareService
-          meta:
-            profile:
-              - https://beda.software/beda-emr-healthcare-service
-      - request:
-          url: /ChargeItemDefinition
-          method: POST
-        fullUrl: $ "urn:uuid:charge-item-definition-id"
-        resource:
-          url: $ 'https://emr.beda.software/charge-item/' + visitTypeCode
-          status: active
-          title: $ visitTypeName
-          propertyGroup:
-            - priceComponent:
-                - type: base
-                  amount:
-                    value: $ priceBase
-                    currency: USD
-                - type: tax
-                  amount:
-                    value: $ priceTax
-                    currency: USD
-          extension:
-            - url: http://beda.software/fhir-extensions/charge-item-healthcare-service
-              valueReference:
-                uri: $ "urn:uuid:healthcare-service-id"
-          resourceType: HealthcareService
-          meta:
-            profile:
-              - https://beda.software/beda-emr-charge-item-definition
-      # - request:
-      #     url: /ChargeItem
-      #     method: POST
-      #   resource:
-      #     status: planned
-      #     definitionCanonical:
-      #       - urn:uuid:charge-item-definition-id
-      #     resourceType: ChargeItem
-      #     subject:
-      #       resourceType: Group
-      #       id: patients-group
-      #     quantity:
-      #       value: 1
-      #       unit: "procedure"
-      #       system: "http://unitsofmeasure.org"
-      #       code: "proc"
-      #     code:
-      #       text: $ visitTypeName
-      #       coding:
-      #         - code: $ visitTypeCode
-      #           display: $ visitTypeName
-      #           system: http://beda.software/custom-healthcare-service-list
-    resourceType: Bundle
-id: healthcare-service-create-extract
 resourceType: Mapping
+id: healthcare-service-create-extract
+type: FHIRPath
+body:
+  "{% assign %}":
+    - duration: "{{ %QuestionnaireResponse.answers('duration') }}"
+    - visitTypeCode: "{{ %QuestionnaireResponse.answers('visit-type-code') }}"
+    - visitTypeName: "{{ %QuestionnaireResponse.answers('visit-type-name') }}"
+    - comment: "{{ %QuestionnaireResponse.answers('comment') }}"
+    - priceBase: "{{ %QuestionnaireResponse.answers('price-base') }}"
+    - priceTax: "{{ %QuestionnaireResponse.answers('price-tax') }}"
+
+  resourceType: Bundle
+  type: transaction
+  entry:
+    - request:
+        method: POST
+        url: /HealthcareService
+      fullUrl: "urn:uuid:healthcare-service-id"
+      resource:
+        resourceType: HealthcareService
+        name: "{{ %visitTypeName }}"
+        comment: "{{ %comment }}"
+        type:
+          - text: "{{ %visitTypeName }}"
+            coding:
+              - system: "http://beda.software/custom-healthcare-service-list"
+                code: "{{ %visitTypeCode }}"
+                display: "{{ %visitTypeName }}"
+        extension:
+          - url: "urn:extensions:healthcare-service-duration"
+            valueInteger: "{{ %duration }}"
+        active: true
+        appointmentRequired: true
+        meta:
+          profile:
+            - "https://beda.software/beda-emr-healthcare-service"
+
+    - request:
+        method: POST
+        url: /ChargeItemDefinition
+      fullUrl: "urn:uuid:charge-item-definition-id"
+      resource:
+        resourceType: ChargeItemDefinition
+        url: "https://emr.beda.software/charge-item/{{ %visitTypeCode }}"
+        status: active
+        title: "{{ %visitTypeName }}"
+        propertyGroup:
+          - priceComponent:
+              - "{% if %priceBase.exists() %}":
+                  type: base
+                  amount:
+                    value: "{{ %priceBase }}"
+                    currency: USD
+              - "{% if %priceTax.exists() %}":
+                  type: tax
+                  amount:
+                    value: "{{ %priceTax }}"
+                    currency: USD
+        extension:
+          - url: "http://beda.software/fhir-extensions/charge-item-healthcare-service"
+            valueReference:
+              reference: "urn:uuid:healthcare-service-id"
+        meta:
+          profile:
+            - "https://beda.software/beda-emr-charge-item-definition"
