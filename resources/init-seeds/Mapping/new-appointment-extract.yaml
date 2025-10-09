@@ -1,60 +1,47 @@
 resourceType: Mapping
 id: new-appointment-extract
+type: FHIRPath
 body:
-  $let:
-    predefinedPatientId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='predefined-patient-id').answer.valueString").0
-    predefinedPractitionerRoleDisplay: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='predefined-practitioner-role-display').answer.valueString").0
-    selectedPatientReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patient').answer.valueReference").0
-    predefinedPractitionerRoleId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='predefined-practitioner-role-id').answer.valueString").0
-    selectedPractitionerRoleReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='practitioner-role').answer.valueReference").0
-    startDateTime: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='start-datetime').answer.valueDateTime").0
-    selectedHealthcareServiceReference: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='service-type').answer.valueReference").0
-  $body:
-    $let:
-      selectedPatientReferenceSplit:
-        $call: splitStr
-        $args:
-          - $ selectedPatientReference.reference
-          - "/"
-      selectedPractitionerRoleReferenceSplit:
-        $call: splitStr
-        $args:
-          - $ selectedPractitionerRoleReference.reference
-          - "/"
-    $body:
-      $let:
-        patientId: $ predefinedPatientId || selectedPatientReferenceSplit.1
-        practitionerRoleId: $ predefinedPractitionerRoleId || selectedPractitionerRoleReferenceSplit.1
-      $body:
-        resourceType: Bundle
-        type: transaction
-        entry:
-          - request:
-              url: /Appointment/$book
-              method: POST
-            resource:
-              resourceType: Bundle
-              entry:
-                - resource:
-                    resourceType: Appointment
-                    participant:
-                      - actor:
-                          $if: $ selectedPatientReference
-                          $then:
-                            reference: $ selectedPatientReference
-                          $else:
-                            reference: $ "Patient/" + patientId
-                        status: accepted
-                      - actor:
-                          $if: $ selectedPractitionerRoleReference
-                          $then:
-                            reference: $ selectedPractitionerRoleReference
-                          $else:
-                            reference: $ "PractitionerRole/" + practitionerRoleId
-                            display: $ predefinedPractitionerRoleDisplay
-                        status: accepted
-                      - actor:
-                          reference: $ selectedHealthcareServiceReference
-                        status: accepted
-                    status: pending
-                    start: $ startDateTime
+  "{% assign %}":
+    - patientId: "{{ %QuestionnaireResponse.answers('predefined-patient-id') }}"
+    - practitionerRoleId: "{{ %QuestionnaireResponse.answers('predefined-practitioner-role-id') }}"
+    - practitionerRoleDisplay: "{{ %QuestionnaireResponse.answers('predefined-practitioner-role-display') }}"
+    - patientRef: "{{ %QuestionnaireResponse.answers('patient') }}"
+    - practitionerRoleRef: "{{ %QuestionnaireResponse.answers('practitioner-role') }}"
+    - serviceRef: "{{ %QuestionnaireResponse.answers('service-type') }}"
+    - startDateTime: "{{ %QuestionnaireResponse.answers('start-datetime') }}"
+
+  resourceType: Bundle
+  type: transaction
+  entry:
+    - request:
+        method: POST
+        url: /Appointment
+      resource:
+        resourceType: Appointment
+        status: booked
+        start: "{{ %startDateTime }}"
+        end: "{{ %startDateTime }}"
+        # need to fix duration to show correct 'end' DateTime
+        participant:
+          - actor:
+              "{% if %patientRef.exists() %}":
+                reference: "{{ %patientRef.reference }}"
+                display: "{{ %patientRef.display }}"
+              "{% else %}":
+                reference: "{{ 'Patient/' + %patientId }}"
+            status: accepted
+
+          - actor:
+              "{% if %practitionerRoleRef.exists() %}":
+                reference: "{{ %practitionerRoleRef.reference }}"
+                display: "{{ %practitionerRoleRef.display }}"
+              "{% else %}":
+                reference: "{{ 'PractitionerRole/' + %practitionerRoleId }}"
+                display: "{{ %practitionerRoleDisplay }}"
+            status: accepted
+
+          - actor:
+              reference: "{{ %serviceRef.reference }}"
+              display: "{{ %serviceRef.display }}"
+            status: accepted
