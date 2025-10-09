@@ -1,230 +1,258 @@
 id: vitals
 resourceType: Mapping
+type: FHIRPath
 body:
-  $let:
-    answer:
-      $fn: ["linkId", "type"]
-      $name: answer
-      $body: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='"+ linkId + "').answer."+type).0
-  $body:
-    $let:
-      patientId: $ answer('patientId', 'valueString')
-      patientName: $ answer('patientName', 'valueString')
-      encounterId: $ fhirpath("Encounter.id")
-      temperature: $ answer('temperature', 'valueDecimal')
-      bloodPressureSystolic: $ answer('blood-pressure-systolic', 'valueDecimal')
-      bloodPressureDiastolic: $ answer('blood-pressure-diastolic', 'valueDecimal')
-      bloodPressureArm: $ answer('blood-pressure-arm', 'valueCoding')
-      bloodPressurePosition: $ answer('blood-pressure-positions', 'valueCoding')
-      pulseRate: $ answer('pulse-rate', 'valueDecimal')
-      respiratoryRate: $ answer('respiratory-rate', 'valueDecimal')
-      oxygenSaturation: $ answer('oxygen-saturation', 'valueDecimal')
-      height: $ answer('height', 'valueDecimal')
-      weight: $ answer('weight', 'valueDecimal')
-      bmi: $ answer('bmi', 'valueDecimal')
-    $body:
-      type: transaction
-      entry:
-        - $if: $ temperature
-          $then:
-            request:
-              url: /Observation
-              method: POST
-            resource:
-              resourceType: Observation
-              status: final
-              code:
-                coding:
-                  - code: 8310-5
-                    system: http://loinc.org
-                    display: Body temperature
-              subject:
-                reference: $ "Patient/" + patientId
-                display: $ patientName
-              encounter:
-                reference: $ "Encounter/" + encounterId
-              value:
-                Quantity:
-                  value: $ temperature
-                  unit: degC
+  "{% assign %}":
+    - patientId: "{{ %QuestionnaireResponse.answers('patientId') }}"
+    - patientName: "{{ %QuestionnaireResponse.answers('patientName') }}"
+    - temperature: "{{ %QuestionnaireResponse.answers('temperature') }}"
+    - bloodPressureSystolic: "{{ %QuestionnaireResponse.answers('blood-pressure-systolic') }}"
+    - bloodPressureDiastolic: "{{ %QuestionnaireResponse.answers('blood-pressure-diastolic') }}"
+    - bloodPressureArm: "{{ %QuestionnaireResponse.answers('blood-pressure-arm') }}"
+    - bloodPressurePosition: "{{ %QuestionnaireResponse.answers('blood-pressure-positions') }}"
+    - pulseRate: "{{ %QuestionnaireResponse.answers('pulse-rate') }}"
+    - respiratoryRate: "{{ %QuestionnaireResponse.answers('respiratory-rate') }}"
+    - oxygenSaturation: "{{ %QuestionnaireResponse.answers('oxygen-saturation') }}"
+    - height: "{{ %QuestionnaireResponse.answers('height') }}"
+    - weight: "{{ %QuestionnaireResponse.answers('weight') }}"
+    - bmi: "{{ %QuestionnaireResponse.answers('bmi') }}"
 
-        - $if: $ bloodPressureSystolic && bloodPressureDiastolic
-          $then:
-            request:
-              url: /Observation
-              method: POST
-            resource:
-              resourceType: Observation
-              status: final
-              code:
-                coding:
-                  - code: 85354-9
-                    system: http://loinc.org
-                    display: Blood pressure
-              subject:
-                reference: $ "Patient/" + patientId
-                display: $ patientName
-              encounter:
-                reference: $ "Encounter/" + encounterId
-              bodySite:
-                $if: $ bloodPressureArm || bloodPressurePosition
-                coding:
-                  - $ bloodPressureArm
-                  - $ bloodPressurePosition
-              component:
-                - code:
-                    coding:
-                      - code: 8480-6
-                        system: http://loinc.org
-                        display: Systolic blood pressure
-                  value:
-                    Quantity:
-                      value: $ bloodPressureSystolic
-                      unit: mmHg
-                - code:
-                    coding:
-                      - code: 8462-4
-                        system: http://loinc.org
-                        display: Diastolic blood pressure
-                  value:
-                    Quantity:
-                      value: $ bloodPressureDiastolic
-                      unit: mmHg
+  resourceType: Bundle
+  type: transaction
+  entry:
+    - "{% if %temperature.exists() %}":
+        request:
+          method: POST
+          url: /Observation
+        resource:
+          resourceType: Observation
+          status: final
+          code:
+            coding:
+              - code: 8310-5
+                system: http://loinc.org
+                display: Body temperature
+          category:
+            - coding:
+                - code: vital-signs
+                  system: http://terminology.hl7.org/CodeSystem/observation-category
+                  display: Vital Signs
+          subject:
+            reference: "Patient/{{ %patientId }}"
+            display: "{{ %patientName }}"
+          effectiveDateTime: "{{ now() }}"
+          valueQuantity:
+            value: "{{ %temperature.value }}"
+            unit: "°C"
+            code: "Cel"
+            system: "http://unitsofmeasure.org"
 
-        - $if: $ pulseRate
-          $then:
-            request:
-              url: /Observation
-              method: POST
-            resource:
-              resourceType: Observation
-              status: final
-              code:
+    - "{% if %bloodPressureSystolic.exists() and %bloodPressureDiastolic.exists() %}":
+        request:
+          method: POST
+          url: /Observation
+        resource:
+          resourceType: Observation
+          status: final
+          code:
+            coding:
+              - code: 85354-9
+                system: http://loinc.org
+                display: Blood pressure
+          category:
+            - coding:
+                - code: vital-signs
+                  system: http://terminology.hl7.org/CodeSystem/observation-category
+                  display: Vital Signs
+          subject:
+            reference: "Patient/{{ %patientId }}"
+            display: "{{ %patientName }}"
+          effectiveDateTime: "{{ now() }}"
+          bodySite:
+            "{% if %bloodPressureArm.exists() or %bloodPressurePosition.exists() %}":
+              coding:
+                - "{{ %bloodPressureArm }}"
+                - "{{ %bloodPressurePosition }}"
+          component:
+            - code:
                 coding:
-                  - code: 8867-4
+                  - code: 8480-6
                     system: http://loinc.org
-                    display: Heart rate
-              subject:
-                reference: $ "Patient/" + patientId
-                display: $ patientName
-              encounter:
-                reference: $ "Encounter/" + encounterId
-              value:
-                Quantity:
-                  value: $ pulseRate
-                  unit: /min
+                    display: Systolic blood pressure
+              valueQuantity:
+                value: "{{ %bloodPressureSystolic.value }}"
+                unit: mmHg
+                system: http://unitsofmeasure.org
+                code: mmHg
+            - code:
+                coding:
+                  - code: 8462-4
+                    system: http://loinc.org
+                    display: Diastolic blood pressure
+              valueQuantity:
+                value: "{{ %bloodPressureDiastolic.value }}"
+                unit: mmHg
+                system: http://unitsofmeasure.org
+                code: mmHg
 
-        - $if: $ respiratoryRate
-          $then:
-            request:
-              url: /Observation
-              method: POST
-            resource:
-              resourceType: Observation
-              status: final
-              code:
-                coding:
-                  - code: 9279-1
-                    system: http://loinc.org
-                    display: Respiratory rate
-              subject:
-                reference: $ "Patient/" + patientId
-                display: $ patientName
-              encounter:
-                reference: $ "Encounter/" + encounterId
-              value:
-                Quantity:
-                  value: $ respiratoryRate
-                  unit: /min
+    - "{% if %pulseRate.exists() %}":
+        request:
+          method: POST
+          url: /Observation
+        resource:
+          resourceType: Observation
+          status: final
+          code:
+            coding:
+              - code: 8867-4
+                system: http://loinc.org
+                display: Heart rate
+          category:
+            - coding:
+                - code: vital-signs
+                  system: http://terminology.hl7.org/CodeSystem/observation-category
+                  display: Vital Signs
+          subject:
+            reference: "Patient/{{ %patientId }}"
+            display: "{{ %patientName }}"
+          effectiveDateTime: "{{ now() }}"
+          valueQuantity:
+            value: "{{ %pulseRate.value }}"
+            unit: bpm
+            code: bpm
+            system: http://unitsofmeasure.org
 
-        - $if: $ oxygenSaturation
-          $then:
-            request:
-              url: /Observation
-              method: POST
-            resource:
-              resourceType: Observation
-              status: final
-              code:
-                coding:
-                  - code: 59408-5
-                    system: http://loinc.org
-                    display: Oxygen saturation
-              subject:
-                reference: $ "Patient/" + patientId
-                display: $ patientName
-              encounter:
-                reference: $ "Encounter/" + encounterId
-              value:
-                Quantity:
-                  value: $ oxygenSaturation
-                  unit: "%"
+    - "{% if %respiratoryRate.exists() %}":
+        request:
+          method: POST
+          url: /Observation
+        resource:
+          resourceType: Observation
+          status: final
+          code:
+            coding:
+              - code: 9279-1
+                system: http://loinc.org
+                display: Respiratory rate
+          category:
+            - coding:
+                - code: vital-signs
+                  system: http://terminology.hl7.org/CodeSystem/observation-category
+                  display: Vital Signs
+          subject:
+            reference: "Patient/{{ %patientId }}"
+            display: "{{ %patientName }}"
+          effectiveDateTime: "{{ now() }}"
+          valueQuantity:
+            value: "{{ %respiratoryRate.value }}"
+            unit: bpm
+            code: bpm
+            system: http://unitsofmeasure.org
 
-        - $if: $ height
-          $then:
-            request:
-              url: /Observation
-              method: POST
-            resource:
-              resourceType: Observation
-              status: final
-              code:
-                coding:
-                  - code: 8302-2
-                    system: http://loinc.org
-                    display: Body height
-              subject:
-                reference: $ "Patient/" + patientId
-                display: $ patientName
-              encounter:
-                reference: $ "Encounter/" + encounterId
-              value:
-                Quantity:
-                  value: $ height
-                  unit: cm
+    - "{% if %oxygenSaturation.exists() %}":
+        request:
+          method: POST
+          url: /Observation
+        resource:
+          resourceType: Observation
+          status: final
+          code:
+            coding:
+              - system: http://loinc.org
+                code: 59408-5
+                display: Oxygen saturation
+          category:
+            - coding:
+                - system: http://terminology.hl7.org/CodeSystem/observation-category
+                  code: vital-signs
+                  display: Vital Signs
+          subject:
+            reference: "Patient/{{ %patientId }}"
+            display: "{{ %patientName }}"
+          effectiveDateTime: "{{ now() }}"
+          valueQuantity:
+            value: "{{ %oxygenSaturation.value }}"
+            unit: "%"
+            system: http://unitsofmeasure.org
+            code: "%"
 
-        - $if: $ weight
-          $then:
-            request:
-              url: /Observation
-              method: POST
-            resource:
-              resourceType: Observation
-              status: final
-              code:
-                coding:
-                  - code: 29463-7
-                    system: http://loinc.org
-                    display: Body weight
-              subject:
-                reference: $ "Patient/" + patientId
-                display: $ patientName
-              encounter:
-                reference: $ "Encounter/" + encounterId
-              value:
-                Quantity:
-                  value: $ weight
-                  unit: kg
+    - "{% if %height.exists() %}":
+        request:
+          method: POST
+          url: /Observation
+        resource:
+          resourceType: Observation
+          status: final
+          code:
+            coding:
+              - system: http://loinc.org
+                code: 8302-2
+                display: Body height
+          category:
+            - coding:
+                - system: http://terminology.hl7.org/CodeSystem/observation-category
+                  code: vital-signs
+                  display: Vital Signs
+          subject:
+            reference: "Patient/{{ %patientId }}"
+            display: "{{ %patientName }}"
+          effectiveDateTime: "{{ now() }}"
+          valueQuantity:
+            value: "{{ %height.value }}"
+            unit: cm
+            system: http://unitsofmeasure.org
+            code: cm
 
-        - $if: $ bmi
-          $then:
-            request:
-              url: /Observation
-              method: POST
-            resource:
-              resourceType: Observation
-              status: final
-              subject:
-                reference: $ "Patient/" + patientId
-                display: $ patientName
-              encounter:
-                reference: $ "Encounter/" + encounterId
-              code:
-                coding:
-                  - code: 39156-5
-                    system: http://loinc.org
-                    display: BMI
-              value:
-                Quantity:
-                  value: $ bmi
-                  unit: kg/m2
+    - "{% if %weight.exists() %}":
+        request:
+          method: POST
+          url: /Observation
+        resource:
+          resourceType: Observation
+          status: final
+          code:
+            coding:
+              - system: http://loinc.org
+                code: 29463-7
+                display: Body weight
+          category:
+            - coding:
+                - system: http://terminology.hl7.org/CodeSystem/observation-category
+                  code: vital-signs
+                  display: Vital Signs
+          subject:
+            reference: "Patient/{{ %patientId }}"
+            display: "{{ %patientName }}"
+          effectiveDateTime: "{{ now() }}"
+          valueQuantity:
+            value: "{{ %weight.value }}"
+            unit: kg
+            system: http://unitsofmeasure.org
+            code: kg
+
+    - "{% if %bmi.exists() %}":
+        request:
+          method: POST
+          url: /Observation
+        resource:
+          resourceType: Observation
+          status: final
+          code:
+            coding:
+              - system: http://loinc.org
+                code: 39156-5
+                display: Body mass index (BMI) [Ratio]
+          category:
+            - coding:
+                - system: http://terminology.hl7.org/CodeSystem/observation-category
+                  code: vital-signs
+                  display: Vital Signs
+          subject:
+            reference: "Patient/{{ %patientId }}"
+            display: "{{ %patientName }}"
+          effectiveDateTime: "{{ now() }}"
+          valueQuantity:
+            value: "{{ iif(%bmi.exists(), %bmi, (%weight.value / ((%height.value / 100) * (%height.value / 100))).round(2)) }}"
+            unit: kg/m2
+            system: http://unitsofmeasure.org
+            code: kg/m2
