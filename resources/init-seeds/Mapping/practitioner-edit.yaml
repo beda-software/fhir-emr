@@ -14,7 +14,7 @@ body:
   resourceType: Bundle
   type: transaction
   entry:
-    - fullUrl: "urn:uuid:practitioner-id"
+    - fullUrl: "{{ 'urn:uuid:practitionerid' }}"
       request:
         method: PUT
         url: "/Practitioner/{{ %practitionerId }}"
@@ -42,6 +42,6 @@ body:
               coding:
                 - "{{ %specialtyItem }}"
         practitioner:
-          reference: "urn:uuid:practitioner-id"
+          reference: "{{ 'urn:uuid:practitionerid' }}"
         healthcareService:
           - "{% for serviceRef in %services %}": "{{ %serviceRef }}"
