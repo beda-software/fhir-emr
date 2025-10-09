@@ -26,7 +26,7 @@ body:
           start: "{{ %startDateTime }}"
           end: "{{ %endDateTime }}"
 
-    - fullUrl: "urn:uuid:charge-item-id"
+    - fullUrl: "{{ 'urn:uuid:charge-item-id'}}"
       request:
         method: POST
         url: "/ChargeItem/"
@@ -49,7 +49,7 @@ body:
         resourceType: Invoice
         lineItem:
           - chargeItemReference:
-              reference: "urn:uuid:charge-item-id"
+              reference: "{{ 'urn:uuid:charge-item-id' }}"
             priceComponent:
               - type: base
                 amount:
