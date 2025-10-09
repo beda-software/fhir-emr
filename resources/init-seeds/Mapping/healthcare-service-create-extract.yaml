@@ -16,7 +16,7 @@ body:
     - request:
         method: POST
         url: /HealthcareService
-      fullUrl: "urn:uuid:healthcare-service-id"
+      fullUrl: "{{ 'urn:uuid:healthcare-service-id' }}"
       resource:
         resourceType: HealthcareService
         name: "{{ %visitTypeName }}"
@@ -39,7 +39,7 @@ body:
     - request:
         method: POST
         url: /ChargeItemDefinition
-      fullUrl: "urn:uuid:charge-item-definition-id"
+      fullUrl: "{{ 'urn:uuid:charge-item-definition-id' }}"
       resource:
         resourceType: ChargeItemDefinition
         url: "https://emr.beda.software/charge-item/{{ %visitTypeCode }}"
@@ -60,7 +60,7 @@ body:
         extension:
           - url: "http://beda.software/fhir-extensions/charge-item-healthcare-service"
             valueReference:
-              reference: "urn:uuid:healthcare-service-id"
+              reference: "{{ 'urn:uuid:healthcare-service-id' }}"
         meta:
           profile:
             - "https://beda.software/beda-emr-charge-item-definition"
