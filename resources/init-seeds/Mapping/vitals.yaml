@@ -5,7 +5,6 @@ body:
   "{% assign %}":
     - patientId: "{{ %QuestionnaireResponse.answers('patientId') }}"
     - patientName: "{{ %QuestionnaireResponse.answers('patientName') }}"
-    - encounterId: "{{ %Encounter.id }}"
     - temperature: "{{ %QuestionnaireResponse.answers('temperature') }}"
     - bloodPressureSystolic: "{{ %QuestionnaireResponse.answers('blood-pressure-systolic') }}"
     - bloodPressureDiastolic: "{{ %QuestionnaireResponse.answers('blood-pressure-diastolic') }}"
@@ -41,8 +40,6 @@ body:
           subject:
             reference: "Patient/{{ %patientId }}"
             display: "{{ %patientName }}"
-          encounter:
-            reference: "Encounter/{{ %encounterId }}"
           effectiveDateTime: "{{ now() }}"
           valueQuantity:
             value: "{{ %temperature.value }}"
@@ -70,8 +67,6 @@ body:
           subject:
             reference: "Patient/{{ %patientId }}"
             display: "{{ %patientName }}"
-          encounter:
-            reference: "Encounter/{{ %encounterId }}"
           effectiveDateTime: "{{ now() }}"
           bodySite:
             "{% if %bloodPressureArm.exists() or %bloodPressurePosition.exists() %}":
@@ -120,8 +115,6 @@ body:
           subject:
             reference: "Patient/{{ %patientId }}"
             display: "{{ %patientName }}"
-          encounter:
-            reference: "Encounter/{{ %encounterId }}"
           effectiveDateTime: "{{ now() }}"
           valueQuantity:
             value: "{{ %pulseRate.value }}"
@@ -149,8 +142,6 @@ body:
           subject:
             reference: "Patient/{{ %patientId }}"
             display: "{{ %patientName }}"
-          encounter:
-            reference: "Encounter/{{ %encounterId }}"
           effectiveDateTime: "{{ now() }}"
           valueQuantity:
             value: "{{ %respiratoryRate.value }}"
@@ -178,8 +169,6 @@ body:
           subject:
             reference: "Patient/{{ %patientId }}"
             display: "{{ %patientName }}"
-          encounter:
-            reference: "Encounter/{{ %encounterId }}"
           effectiveDateTime: "{{ now() }}"
           valueQuantity:
             value: "{{ %oxygenSaturation.value }}"
@@ -207,8 +196,6 @@ body:
           subject:
             reference: "Patient/{{ %patientId }}"
             display: "{{ %patientName }}"
-          encounter:
-            reference: "Encounter/{{ %encounterId }}"
           effectiveDateTime: "{{ now() }}"
           valueQuantity:
             value: "{{ %height.value }}"
@@ -236,8 +223,6 @@ body:
           subject:
             reference: "Patient/{{ %patientId }}"
             display: "{{ %patientName }}"
-          encounter:
-            reference: "Encounter/{{ %encounterId }}"
           effectiveDateTime: "{{ now() }}"
           valueQuantity:
             value: "{{ %weight.value }}"
@@ -265,8 +250,6 @@ body:
           subject:
             reference: "Patient/{{ %patientId }}"
             display: "{{ %patientName }}"
-          encounter:
-            reference: "Encounter/{{ %encounterId }}"
           effectiveDateTime: "{{ now() }}"
           valueQuantity:
             value: "{{ iif(%bmi.exists(), %bmi, (%weight.value / ((%height.value / 100) * (%height.value / 100))).round(2)) }}"

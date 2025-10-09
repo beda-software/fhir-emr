@@ -13,10 +13,6 @@ launchContext:
       code: Patient
     type:
       - Patient
-  - name:
-      code: Encounter
-    type:
-      - Encounter
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
@@ -87,7 +83,7 @@ item:
         type: group
         itemControl:
           coding:
-            - code: blood-pressure
+            - code: inline-choice
         item:
           - linkId: blood-pressure-systolic
             type: quantity
