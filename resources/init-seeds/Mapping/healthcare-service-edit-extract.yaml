@@ -1,47 +1,49 @@
-body:
-  $let:
-    healthcareServiceId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='healthcareServiceId').answer.valueString").0
-    chargeItemDefinitionId: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='charge-item-definition-id').answer.valueString").0
-    duration: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='duration').answer.valueInteger").0
-    visitTypeCode: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='visit-type-code').answer.valueString").0
-    visitTypeName: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='visit-type-name').answer.valueString").0
-    comment: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='comment').answer.valueString").0
-    priceBase: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='price-base').answer.valueDecimal").0
-    priceTax: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='price-tax').answer.valueDecimal").0
-  $body:
-    type: transaction
-    entry:
-      - request:
-          url: $ "/HealthcareService/" + healthcareServiceId
-          method: PATCH
-        resource:
-          name: $ visitTypeName
-          extension:
-            - url: urn:extensions:healthcare-service-duration
-              valueInteger: $ duration
-          comment: $ comment
-          type:
-            - text: $ visitTypeName
-              coding:
-                - code: $ visitTypeCode
-                  display: $ visitTypeName
-                  system: http://beda.software/custom-healthcare-service-list
-      - request:
-          url: $ "/ChargeItemDefinition/" + chargeItemDefinitionId
-          method: PATCH
-        resource:
-          url: $ 'https://emr.beda.software/charge-item/' + visitTypeCode
-          title: $ visitTypeName
-          propertyGroup:
-            - priceComponent:
-                - type: base
-                  amount:
-                    value: $ priceBase
-                    currency: USD
-                - type: tax
-                  amount:
-                    value: $ priceTax
-                    currency: USD
-    resourceType: Bundle
-id: healthcare-service-edit-extract
 resourceType: Mapping
+id: healthcare-service-edit-extract
+type: FHIRPath
+body:
+  "{% assign %}":
+    - healthcareServiceId: "{{ %QuestionnaireResponse.answers('healthcareServiceId') }}"
+    - chargeItemDefinitionId: "{{ %QuestionnaireResponse.answers('charge-item-definition-id') }}"
+    - duration: "{{ %QuestionnaireResponse.answers('duration') }}"
+    - visitTypeCode: "{{ %QuestionnaireResponse.answers('visit-type-code') }}"
+    - visitTypeName: "{{ %QuestionnaireResponse.answers('visit-type-name') }}"
+    - comment: "{{ %QuestionnaireResponse.answers('comment') }}"
+    - priceBase: "{{ %QuestionnaireResponse.answers('price-base') }}"
+    - priceTax: "{{ %QuestionnaireResponse.answers('price-tax') }}"
+
+  resourceType: Bundle
+  type: transaction
+  entry:
+    - request:
+        url: "/HealthcareService/{{ %healthcareServiceId }}"
+        method: PATCH
+      resource:
+        name: "{{ %visitTypeName }}"
+        extension:
+          - url: "urn:extensions:healthcare-service-duration"
+            valueInteger: "{{ %duration }}"
+        comment: "{{ %comment }}"
+        type:
+          - text: "{{ %visitTypeName }}"
+            coding:
+              - system: "http://beda.software/custom-healthcare-service-list"
+                code: "{{ %visitTypeCode }}"
+                display: "{{ %visitTypeName }}"
+
+    - request:
+        url: "/ChargeItemDefinition/{{ %chargeItemDefinitionId }}"
+        method: PATCH
+      resource:
+        url: "https://emr.beda.software/charge-item/{{ %visitTypeCode }}"
+        title: "{{ %visitTypeName }}"
+        propertyGroup:
+          - priceComponent:
+              - type: base
+                amount:
+                  value: "{{ %priceBase }}"
+                  currency: USD
+              - type: tax
+                amount:
+                  value: "{{ %priceTax }}"
+                  currency: USD
