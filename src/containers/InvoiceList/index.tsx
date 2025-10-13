@@ -8,7 +8,7 @@ import { SearchBarColumn, SearchBarColumnType, SorterColumn } from 'src/componen
 import { ResourceListPage, questionnaireAction, navigationAction } from 'src/uberComponents/ResourceListPage';
 import { RecordType, TableManager } from 'src/uberComponents/ResourceListPage/types';
 import { formatHumanDateTime } from 'src/utils';
-import { matchCurrentUserRole, Role, selectCurrentUserRoleResource } from 'src/utils/role';
+import { matchCurrentUserRole, Role } from 'src/utils/role';
 
 import { InvoiceAmount } from './components/InvoiceAmount';
 import { InvoiceStatus } from './components/InvoiceStatus';
@@ -122,20 +122,6 @@ export function InvoiceList() {
         return [...actions, ...roleSpecificActions];
     };
 
-    const getHeaderActions = () => {
-        const author = selectCurrentUserRoleResource();
-
-        return [
-            questionnaireAction(<Trans>Create invoice</Trans>, 'invoice-create', {
-                extra: {
-                    qrfProps: {
-                        launchContextParameters: [{ name: 'Author', resource: author }],
-                    },
-                },
-            }),
-        ];
-    };
-
     return (
         <ResourceListPage
             headerTitle={t`Invoices`}
@@ -153,7 +139,6 @@ export function InvoiceList() {
             getSorters={getSorters}
             getTableColumns={getTableColumns}
             getRecordActions={getRecordActions}
-            getHeaderActions={getHeaderActions}
         />
     );
 }
