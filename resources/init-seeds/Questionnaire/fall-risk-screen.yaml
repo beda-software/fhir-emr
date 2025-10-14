@@ -1,0 +1,398 @@
+resourceType: Questionnaire
+title: Fall Risk Screen
+status: active
+id: fall-risk-screen
+url: fall-risk-screen
+name: fall-risk-screen
+subjectType:
+  - Encounter
+  - Patient
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+item:
+  - linkId: demographics-group
+    text: Demographics
+    type: group
+    item:
+      - linkId: row-1
+        type: group
+        extension:
+          - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+            valueCodeableConcept: { coding: [{ code: row }] }
+        item:
+          - linkId: family-name
+            text: Family name
+            type: string
+            required: true
+            initialExpression:
+              language: text/fhirpath
+              expression: "%Patient.name.first().family"
+          - linkId: first-name
+            text: First name
+            type: string
+            required: true
+            initialExpression:
+              language: text/fhirpath
+              expression: "%Patient.name.first().given.first()"
+          - linkId: mrn
+            text: MRN
+            type: string
+            initialExpression:
+              language: text/fhirpath
+              expression: "%Patient.id"
+
+      - linkId: row-2
+        type: group
+        extension:
+          - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+            valueCodeableConcept: { coding: [{ code: row }] }
+        item:
+          - linkId: birth-date
+            text: Date of Birth
+            type: date
+            required: true
+            initialExpression:
+              language: text/fhirpath
+              expression: "%Patient.birthDate"
+          - linkId: medical-officer
+            text: M.O.
+            type: reference
+            referenceResource:
+              - Practitioner
+          - linkId: gender
+            text: Gender
+            type: choice
+            answerOption:
+              - valueCoding:
+                  code: male
+                  system: http://hl7.org/fhir/administrative-gender
+                  display: Male
+              - valueCoding:
+                  code: female
+                  system: http://hl7.org/fhir/administrative-gender
+                  display: Female
+            initialExpression:
+              language: text/fhirpath
+              expression: "%Questionnaire.repeat(item).where(linkId='gender').answerOption.valueCoding.where(code=%Patient.gender)"
+            extension:
+              - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                valueString: horizontal
+
+  - linkId: falls-risk-group
+    text: Falls Risk Screening
+    type: group
+    item:
+      - linkId: falls-history
+        text: "1. Number of falls in the past 12 months?"
+        type: choice
+        required: true
+        itemControl: { coding: [{ code: inline-choice }] }
+        extension:
+          - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+            valueString: horizontal
+        answerOption:
+          - valueCoding: { code: "0", display: "None" }
+          - valueCoding: { code: "1", display: "1 fall" }
+          - valueCoding: { code: "2", display: "2 falls" }
+          - valueCoding: { code: "3", display: "3 or more" }
+
+      - linkId: adl-status
+        text: "2. Prior to this fall, how much assistance was required for instrumental ADL (e.g. cooking, housework, laundry)? If no fall in last 12 months, rate current function."
+        type: choice
+        required: true
+        itemControl: { coding: [{ code: inline-choice }] }
+        answerOption:
+          - valueCoding: { code: "0", display: "None (completely independent)" }
+          - valueCoding: { code: "1", display: "Supervision" }
+          - valueCoding: { code: "2", display: "Some assistance required" }
+          - valueCoding: { code: "3", display: "Completely dependent" }
+
+      - linkId: balance
+        text: "3. When walking and turning, does the person appear unsteady or at risk of losing their balance?"
+        type: choice
+        required: true
+        itemControl: { coding: [{ code: inline-choice }] }
+        answerOption:
+          - valueCoding: { code: "0", display: "No unsteadiness observed" }
+          - valueCoding: { code: "1", display: "Yes, minimally unsteady" }
+          - valueCoding: { code: "2", display: "Yes, moderately unsteady (needs supervision)" }
+          - valueCoding:
+              { code: "3", display: "Yes, consistently and severely unsteady (needs constant hands-on assistance)" }
+
+      - linkId: result-score
+        type: group
+        extension:
+          - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+            valueCodeableConcept: { coding: [{ code: row }] }
+        item:
+          - linkId: total-risk-score
+            text: Total risk score
+            type: decimal
+            readOnly: true
+            enableBehavior: all
+            enableWhen:
+              - question: falls-history
+                operator: exists
+                answerBoolean: true
+              - question: adl-status
+                operator: exists
+                answerBoolean: true
+              - question: balance
+                operator: exists
+                answerBoolean: true
+            calculatedExpression:
+              language: text/fhirpath
+              expression: >
+                (
+                  %QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='1').count()
+                  +
+                  (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='2').count() * 2)
+                  +
+                  (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='3').count() * 3)
+                )
+
+          - linkId: risk-of-being-a-faller
+            text: Risk of being a faller
+            type: decimal
+            readOnly: true
+            enableBehavior: all
+            enableWhen:
+              - question: falls-history
+                operator: exists
+                answerBoolean: true
+              - question: adl-status
+                operator: exists
+                answerBoolean: true
+              - question: balance
+                operator: exists
+                answerBoolean: true
+            calculatedExpression:
+              language: text/fhirpath
+              expression: >
+                iif(
+                  (
+                    %QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='1').count()
+                    +
+                    (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='2').count() * 2)
+                    +
+                    (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='3').count() * 3)
+                  ) <= 1, 0.25,
+                iif(
+                  (
+                    %QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='1').count()
+                    +
+                    (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='2').count() * 2)
+                    +
+                    (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='3').count() * 3)
+                  ) <= 3, 0.7,
+                iif(
+                  (
+                    %QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='1').count()
+                    +
+                    (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='2').count() * 2)
+                    +
+                    (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='3').count() * 3)
+                  ) <= 5, 1.4,
+                iif(
+                  (
+                    %QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='1').count()
+                    +
+                    (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='2').count() * 2)
+                    +
+                    (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='3').count() * 3)
+                  ) <= 7, 4.0,
+                iif(
+                  (
+                    %QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='1').count()
+                    +
+                    (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='2').count() * 2)
+                    +
+                    (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='3').count() * 3)
+                  ) <= 9, 7.7, {})))))
+
+          - linkId: falls-risk-grading
+            text: Grading of falls risk
+            type: string
+            readOnly: true
+            enableBehavior: all
+            enableWhen:
+              - question: falls-history
+                operator: exists
+                answerBoolean: true
+              - question: adl-status
+                operator: exists
+                answerBoolean: true
+              - question: balance
+                operator: exists
+                answerBoolean: true
+            calculatedExpression:
+              language: text/fhirpath
+              expression: >
+                iif(
+                  (
+                    %QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='1').count()
+                    +
+                    (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='2').count() * 2)
+                    +
+                    (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='3').count() * 3)
+                  ) <= 3, 'Low risk', 'High risk'
+                )
+
+  - linkId: medications-group
+    text: Medications
+    type: group
+    item:
+      - linkId: medications-risky
+        text: "These can increase fall risk"
+        type: choice
+        repeats: true
+        itemControl: { coding: [{ code: inline-choice }] }
+        extension:
+          - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+            valueString: horizontal
+        answerOption:
+          - valueCoding: { code: antipsychotics, display: Antipsychotics }
+          - valueCoding: { code: antidepressants, display: Antidepressants }
+          - valueCoding: { code: sedatives-hypnotics, display: Sedatives/Hypnotics }
+          - valueCoding: { code: opioids, display: Opioids }
+
+      - linkId: medications-refer-note
+        text: "If one or more medications above are taken refer to General Practitioner/Medical Officer for review"
+        type: display
+        enableWhen:
+          - question: medications-risky
+            operator: exists
+            answerBoolean: true
+
+  - linkId: recommendations-referrals-group
+    text: Recommendations / Referrals
+    type: group
+    enableBehavior: all
+    enableWhen:
+      - question: falls-history
+        operator: exists
+        answerBoolean: true
+      - question: adl-status
+        operator: exists
+        answerBoolean: true
+      - question: balance
+        operator: exists
+        answerBoolean: true
+    item:
+      - linkId: recommendations-low-risk
+        text: Recommendations — Low risk
+        type: text
+        enableWhen:
+          - question: falls-risk-grading
+            operator: "="
+            answerString: "Low risk"
+        initialExpression:
+          language: text/fhirpath
+          expression: >
+            'Plan of care (Low risk)\n'
+            + '\n'
+            + '• Discuss and provide fall-prevention resources.\n'
+            + '• Notify GP of any fall risk factors (e.g., poor balance, mobility, medication issues).\n'
+            + '\n'
+            + '• Encourage programs/exercises.\n'
+            + '• Balance and strength exercises.\n'
+            + '• Give booklet “Staying active and on your feet”.\n'
+            + '• Refer to local Stepping On program.\n'
+            + '• Use NSW Health “Active and Healthy” website to find balance/strength programs.\n'
+            + '• Provide other Falls Prevention flyers.\n'
+            + '\n'
+            + 'If problem with Balance and/or Mobility:\n'
+            + '• Refer to Physiotherapist, Exercise Physiologist and/or GP.\n'
+            + '\n'
+            + 'If problem with ADL, home environment or functional issue:\n'
+            + '• Refer to Occupational Therapist and/or GP.\n'
+            + '\n'
+            + 'Other:\n'
+      - linkId: recommendations-high-risk
+        text: Recommendations — High risk
+        type: text
+        enableWhen:
+          - question: falls-risk-grading
+            operator: "="
+            answerString: "High risk"
+        initialExpression:
+          language: text/fhirpath
+          expression: >
+            'Plan of care (High risk)\n'
+            + '\n'
+            + 'Conduct or refer for a multifactorial risk assessment:\n'
+            + '• Cognitive screen / Delirium screen\n'
+            + '• Medication review\n'
+            + '• Feet/foot pain and footwear\n'
+            + '• Vision check or referral for vision\n'
+            + '• Vitamin D +/- Calcium\n'
+            + '• Postural dizziness / postural hypotension\n'
+            + '• Mobility\n'
+            + '• Continence issues\n'
+            + '• Nutrition status — under/overweight\n'
+            + '\n'
+            + 'Referral suggestions:\n'
+            + '• General Practitioner; Community Nurse; Pharmacist; ACAT\n'
+            + '• Optometrist; Podiatrist; Dietitian\n'
+            + '• Aboriginal Health; Migrant health service\n'
+            + '• Physiotherapist; Occupational Therapist; Continence Nurse; Exercise Physiologist\n'
+            + '\n'
+            + 'Prioritise according to main concern:\n'
+            + '• Balance-related → Physiotherapist / Exercise Physiologist / GP (for mobility/balance assessment)\n'
+            + '• ADL / function-related → Occupational Therapist and GP (for ADL/functional assessment)\n'
+            + '\n'
+            + 'Other:\n'
+
+      - linkId: recommendations-text
+        text: "Recommendations / Referrals must be documented in the health record."
+        type: display
+
+  - linkId: practitioner-details
+    text: Assessing Practitioner
+    type: group
+    item:
+      - linkId: practitioner-row-1
+        type: group
+        extension:
+          - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+            valueCodeableConcept: { coding: [{ code: row }] }
+        item:
+          - linkId: practitioner-role
+            text: Practitioner
+            type: reference
+            referenceResource:
+              - PractitionerRole
+            required: true
+
+            enableWhen:
+              - question: predefined-practitioner-role-id
+                operator: "exists"
+                answerBoolean: false
+            answerExpression:
+              language: application/x-fhir-query
+              expression: "PractitionerRole?_assoc=practitioner"
+            choiceColumn:
+              - forDisplay: true
+                path: >-
+                  practitioner.resource.name.given.first() + ' ' + 
+                  practitioner.resource.name.family + ' - ' + specialty.first().coding.display
+          - linkId: date
+            text: Date of assessment
+            type: date
+            initialExpression:
+              language: text/fhirpath
+              expression: "today()"
+
+      - linkId: practitioner-signature
+        text: "Practitioner electronic signature:"
+        type: choice
+        itemControl: { coding: [{ code: inline-choice }] }
+        required: true
+        answerOption:
+          - valueCoding: { code: "+", display: "I certify that I have reviewed and approved this form" }
