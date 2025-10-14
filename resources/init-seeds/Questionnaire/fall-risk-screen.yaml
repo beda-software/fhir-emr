@@ -15,10 +15,6 @@ launchContext:
       code: Patient
     type:
       - Patient
-  # - name:
-  #     code: Practitioner
-  #   type:
-  #     - Practitioner
 item:
   - linkId: demographics-group
     text: Demographics
@@ -38,8 +34,8 @@ item:
               language: text/fhirpath
               expression: "%Patient.name.first().family"
           - linkId: first-name
-            type: string
             text: First name
+            type: string
             required: true
             initialExpression:
               language: text/fhirpath
@@ -70,8 +66,8 @@ item:
             referenceResource:
               - Practitioner
           - linkId: gender
-            type: choice
             text: Gender
+            type: choice
             answerOption:
               - valueCoding:
                   code: male
@@ -85,33 +81,17 @@ item:
               language: text/fhirpath
               expression: "%Questionnaire.repeat(item).where(linkId='gender').answerOption.valueCoding.where(code=%Patient.gender)"
             extension:
-              - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
-                valueCodeableConcept: { coding: [{ code: radio-button }] }
               - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
                 valueString: horizontal
 
-      - linkId: address
-        text: Address
-        type: text
-        initialExpression:
-          language: text/fhirpath
-          expression: "iif(%Patient.address.first().text.exists(), %Patient.address.first().text,
-            (%Patient.address.first().line.join(', ') + ', ' + %Patient.address.first().city + ' ' +
-            %Patient.address.first().postalCode).trim())"
-        extension:
-          - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
-            valueCodeableConcept: { coding: [{ code: textarea }] }
-      - linkId: location-ward
-        text: Location / Ward
-        type: string
-
   - linkId: falls-risk-group
-    text: Fall Risk
+    text: Falls Risk Screening
     type: group
     item:
       - linkId: falls-history
         text: "1. Number of falls in the past 12 months?"
         type: choice
+        required: true
         itemControl: { coding: [{ code: inline-choice }] }
         extension:
           - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
@@ -125,6 +105,7 @@ item:
       - linkId: adl-status
         text: "2. Prior to this fall, how much assistance was required for instrumental ADL (e.g. cooking, housework, laundry)? If no fall in last 12 months, rate current function."
         type: choice
+        required: true
         itemControl: { coding: [{ code: inline-choice }] }
         answerOption:
           - valueCoding: { code: "0", display: "None (completely independent)" }
@@ -135,6 +116,7 @@ item:
       - linkId: balance
         text: "3. When walking and turning, does the person appear unsteady or at risk of losing their balance?"
         type: choice
+        required: true
         itemControl: { coding: [{ code: inline-choice }] }
         answerOption:
           - valueCoding: { code: "0", display: "No unsteadiness observed" }
@@ -143,107 +125,124 @@ item:
           - valueCoding:
               { code: "3", display: "Yes, consistently and severely unsteady (needs constant hands-on assistance)" }
 
-      - linkId: total-risk-score
-        text: Total Risk Score
-        type: decimal
-        readOnly: true
-        calculatedExpression:
-          language: text/fhirpath
-          expression: >
-            (
-              %QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='1').count()
-              +
-              (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='2').count() * 2)
-              +
-              (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='3').count() * 3)
-            )
+      - linkId: result-score
+        type: group
+        extension:
+          - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+            valueCodeableConcept: { coding: [{ code: row }] }
+        item:
+          - linkId: total-risk-score
+            text: Total risk score
+            type: decimal
+            readOnly: true
+            enableBehavior: all
+            enableWhen:
+              - question: falls-history
+                operator: exists
+                answerBoolean: true
+              - question: adl-status
+                operator: exists
+                answerBoolean: true
+              - question: balance
+                operator: exists
+                answerBoolean: true
+            calculatedExpression:
+              language: text/fhirpath
+              expression: >
+                (
+                  %QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='1').count()
+                  +
+                  (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='2').count() * 2)
+                  +
+                  (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='3').count() * 3)
+                )
 
-      - linkId: risk-of-being-a-faller
-        text: Risk of being a faller
-        type: decimal
-        readOnly: true
-        enableBehavior: all
-        enableWhen:
-          - question: falls-history
-            operator: exists
-            answerBoolean: true
-          - question: adl-status
-            operator: exists
-            answerBoolean: true
-          - question: balance
-            operator: exists
-            answerBoolean: true
-        calculatedExpression:
-          language: text/fhirpath
-          expression: >
-            iif(
-              (
-                %QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='1').count()
-                +
-                (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='2').count() * 2)
-                +
-                (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='3').count() * 3)
-              ) <= 1, 0.25,
-            iif(
-              (
-                %QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='1').count()
-                +
-                (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='2').count() * 2)
-                +
-                (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='3').count() * 3)
-              ) <= 3, 0.7,
-            iif(
-              (
-                %QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='1').count()
-                +
-                (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='2').count() * 2)
-                +
-                (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='3').count() * 3)
-              ) <= 5, 1.4,
-            iif(
-              (
-                %QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='1').count()
-                +
-                (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='2').count() * 2)
-                +
-                (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='3').count() * 3)
-              ) <= 7, 4.0,
-            iif(
-              (
-                %QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='1').count()
-                +
-                (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='2').count() * 2)
-                +
-                (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='3').count() * 3)
-              ) <= 9, 7.7, {})))))
+          - linkId: risk-of-being-a-faller
+            text: Risk of being a faller
+            type: decimal
+            readOnly: true
+            enableBehavior: all
+            enableWhen:
+              - question: falls-history
+                operator: exists
+                answerBoolean: true
+              - question: adl-status
+                operator: exists
+                answerBoolean: true
+              - question: balance
+                operator: exists
+                answerBoolean: true
+            calculatedExpression:
+              language: text/fhirpath
+              expression: >
+                iif(
+                  (
+                    %QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='1').count()
+                    +
+                    (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='2').count() * 2)
+                    +
+                    (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='3').count() * 3)
+                  ) <= 1, 0.25,
+                iif(
+                  (
+                    %QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='1').count()
+                    +
+                    (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='2').count() * 2)
+                    +
+                    (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='3').count() * 3)
+                  ) <= 3, 0.7,
+                iif(
+                  (
+                    %QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='1').count()
+                    +
+                    (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='2').count() * 2)
+                    +
+                    (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='3').count() * 3)
+                  ) <= 5, 1.4,
+                iif(
+                  (
+                    %QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='1').count()
+                    +
+                    (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='2').count() * 2)
+                    +
+                    (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='3').count() * 3)
+                  ) <= 7, 4.0,
+                iif(
+                  (
+                    %QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='1').count()
+                    +
+                    (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='2').count() * 2)
+                    +
+                    (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='3').count() * 3)
+                  ) <= 9, 7.7, {})))))
 
-      - linkId: falls-risk-grading
-        text: Grading of falls risk
-        type: string
-        readOnly: true
-        enableBehavior: all
-        enableWhen:
-          - question: falls-history
-            operator: exists
-            answerBoolean: true
-          - question: adl-status
-            operator: exists
-            answerBoolean: true
-          - question: balance
-            operator: exists
-            answerBoolean: true
-        calculatedExpression:
-          language: text/fhirpath
-          expression: >
-            iif(
-              (
-                %QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='1').count()
-                +
-                (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='2').count() * 2)
-                +
-                (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='3').count() * 3)
-              ) <= 3, 'Low risk', 'High risk'
-            )
+          - linkId: falls-risk-grading
+            text: Grading of falls risk
+            type: string
+            readOnly: true
+            enableBehavior: all
+            enableWhen:
+              - question: falls-history
+                operator: exists
+                answerBoolean: true
+              - question: adl-status
+                operator: exists
+                answerBoolean: true
+              - question: balance
+                operator: exists
+                answerBoolean: true
+            calculatedExpression:
+              language: text/fhirpath
+              expression: >
+                iif(
+                  (
+                    %QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='1').count()
+                    +
+                    (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='2').count() * 2)
+                    +
+                    (%QuestionnaireResponse.repeat(item).answer.valueCoding.where(code='3').count() * 3)
+                  ) <= 3, 'Low risk', 'High risk'
+                )
 
   - linkId: medications-group
     text: Medications
@@ -253,7 +252,7 @@ item:
         text: "These can increase fall risk"
         type: choice
         repeats: true
-        itemControl: { coding: [{ code: check-box }] }
+        itemControl: { coding: [{ code: inline-choice }] }
         extension:
           - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
             valueString: horizontal
@@ -264,8 +263,8 @@ item:
           - valueCoding: { code: opioids, display: Opioids }
 
       - linkId: medications-refer-note
-        type: display
         text: "If one or more medications above are taken refer to General Practitioner/Medical Officer for review"
+        type: display
         enableWhen:
           - question: medications-risky
             operator: exists
@@ -274,6 +273,17 @@ item:
   - linkId: recommendations-referrals-group
     text: Recommendations / Referrals
     type: group
+    enableBehavior: all
+    enableWhen:
+      - question: falls-history
+        operator: exists
+        answerBoolean: true
+      - question: adl-status
+        operator: exists
+        answerBoolean: true
+      - question: balance
+        operator: exists
+        answerBoolean: true
     item:
       - linkId: recommendations-low-risk
         text: Recommendations — Low risk
@@ -305,7 +315,7 @@ item:
             + '\n'
             + 'Other:\n'
       - linkId: recommendations-high-risk
-        text: Recommendations— High risk
+        text: Recommendations — High risk
         type: text
         enableWhen:
           - question: falls-risk-grading
@@ -340,42 +350,49 @@ item:
             + 'Other:\n'
 
       - linkId: recommendations-text
-        type: display
         text: "Recommendations / Referrals must be documented in the health record."
+        type: display
 
-      - linkId: practitioner-details
+  - linkId: practitioner-details
+    text: Assessing Practitioner
+    type: group
+    item:
+      - linkId: practitioner-row-1
         type: group
+        extension:
+          - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+            valueCodeableConcept: { coding: [{ code: row }] }
         item:
-          - linkId: practitioner-row
-            type: group
-            extension:
-              - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
-                valueCodeableConcept: { coding: [{ code: row }] }
-            item:
-              - linkId: practitioner-name
-                text: Name
-                type: string
-                # initialExpression:
-                #   language: text/fhirpath
-                #   expression: "%practitioner.name.given.first() + ' ' + %practitioner.name.family"
-              - linkId: practitioner-specialty
-                text: Specialty
-                type: string
-                # initialExpression:
-                #   language: text/fhirpath
-                #   expression: "%practitionerRole.specialty.first().coding.display"
-
-          - linkId: practitioner-signature-note
-            type: display
-            text: "Practitioner electronic signature:"
-          - linkId: practitioner-signature
-            text: I certify that I have reviewed and approved this form
-            type: boolean
+          - linkId: practitioner-role
+            text: Practitioner
+            type: reference
+            referenceResource:
+              - PractitionerRole
             required: true
 
+            enableWhen:
+              - question: predefined-practitioner-role-id
+                operator: "exists"
+                answerBoolean: false
+            answerExpression:
+              language: application/x-fhir-query
+              expression: "PractitionerRole?_assoc=practitioner"
+            choiceColumn:
+              - forDisplay: true
+                path: >-
+                  practitioner.resource.name.given.first() + ' ' + 
+                  practitioner.resource.name.family + ' - ' + specialty.first().coding.display
           - linkId: date
-            text: Date
+            text: Date of assessment
             type: date
             initialExpression:
               language: text/fhirpath
               expression: "today()"
+
+      - linkId: practitioner-signature
+        text: "Practitioner electronic signature:"
+        type: choice
+        itemControl: { coding: [{ code: inline-choice }] }
+        required: true
+        answerOption:
+          - valueCoding: { code: "+", display: "I certify that I have reviewed and approved this form" }
