@@ -15,6 +15,13 @@ launchContext:
       code: Patient
     type:
       - Patient
+  - name:
+      code: Author
+    type:
+      - PractitionerRole
+      - Practitioner
+      - Patient
+      - Organization
 item:
   - linkId: demographics-group
     text: Demographics
@@ -363,17 +370,12 @@ item:
           - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
             valueCodeableConcept: { coding: [{ code: row }] }
         item:
-          - linkId: practitioner-role
+          - linkId: author-not-practitioner
             text: Practitioner
             type: reference
             referenceResource:
               - PractitionerRole
             required: true
-
-            enableWhen:
-              - question: predefined-practitioner-role-id
-                operator: "exists"
-                answerBoolean: false
             answerExpression:
               language: application/x-fhir-query
               expression: "PractitionerRole?_assoc=practitioner"
@@ -382,6 +384,33 @@ item:
                 path: >-
                   practitioner.resource.name.given.first() + ' ' + 
                   practitioner.resource.name.family + ' - ' + specialty.first().coding.display
+            enableWhenExpression:
+              language: text/fhirpath
+              expression: "%Author.resourceType != 'Practitioner'"
+
+          - linkId: author-practitioner-id
+            text: PractitionerID
+            type: string
+            readOnly: true
+            hidden: true
+            initialExpression:
+              language: text/fhirpath
+              expression: "%Author.id"
+            enableWhenExpression:
+              language: text/fhirpath
+              expression: "%Author.resourceType = 'Practitioner'"
+
+          - linkId: author-practitioner
+            text: Practitioner
+            type: string
+            readOnly: true
+            initialExpression:
+              language: text/fhirpath
+              expression: "%Author.name.given.first() + ' ' + %Author.name.family"
+            enableWhenExpression:
+              language: text/fhirpath
+              expression: "%Author.resourceType = 'Practitioner'"
+
           - linkId: date
             text: Date of assessment
             type: date
