@@ -4,6 +4,7 @@ import { createContext } from 'react';
 
 import { EncountersIcon } from 'src/icons/menu/EncountersIcon';
 import { InvoicesIcon } from 'src/icons/menu/InvoicesIcon';
+import { MagicSearchIcon } from 'src/icons/menu/MagicSearchIcon.tsx';
 import { MedicationsIcon } from 'src/icons/menu/MedicationsIcon';
 import { PatientsIcon } from 'src/icons/menu/PatientsIcon';
 import { PractitionersIcon } from 'src/icons/menu/PractitionersIcon';
@@ -29,6 +30,8 @@ const defaultMenuLayout: MenuLayoutValue = () =>
             { label: t`Patients`, path: '/patients', icon: <PatientsIcon /> },
             { label: t`Practitioners`, path: '/practitioners', icon: <PractitionersIcon /> },
             { label: t`Questionnaires`, path: '/questionnaires', icon: <QuestionnairesIcon /> },
+            { label: t`Medications`, path: '/medications', icon: <MedicationsIcon /> },
+            { label: t`Magic Search`, path: '/magic-search', icon: <MagicSearchIcon /> },
         ],
         [Role.Practitioner]: () => [
             { label: t`Encounters`, path: '/encounters', icon: <EncountersIcon /> },
