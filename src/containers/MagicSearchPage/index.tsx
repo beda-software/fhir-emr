@@ -5,7 +5,7 @@ import { ColumnsType } from 'antd/lib/table';
 import { Resource } from 'fhir/r4b';
 import { useState } from 'react';
 
-import { RenderRemoteData } from '@beda.software/fhir-react';
+import {formatError, RenderRemoteData} from '@beda.software/fhir-react';
 import { isLoading, loading, notAsked, RemoteData } from '@beda.software/remote-data';
 
 import { performMagicSearch, MagicSearchResponse, TableColumnConfig } from 'src/services';
@@ -91,7 +91,7 @@ export function MagicSearchPage() {
                 renderLoading={() => null as any}
                 renderFailure={(error) => (
                     <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto', color: 'red' }}>
-                        <Trans>Error: {error.message}</Trans>
+                        <Trans>{formatError(error)}</Trans>
                     </div>
                 )}
             >
