@@ -6,7 +6,7 @@ import { Resource } from 'fhir/r4b';
 import { useState } from 'react';
 
 import { RenderRemoteData } from '@beda.software/fhir-react';
-import { isSuccess, loading, notAsked, RemoteData } from '@beda.software/remote-data';
+import { isLoading, loading, notAsked, RemoteData } from '@beda.software/remote-data';
 
 import { performMagicSearch, MagicSearchResponse, TableColumnConfig } from 'src/services';
 import { RecordType } from 'src/uberComponents/ResourceListPage/types.ts';
@@ -50,9 +50,7 @@ export function MagicSearchPage() {
         setResponse(loading);
 
         const data = await performMagicSearch(searchQuery);
-        if (isSuccess(data)) {
-            setResponse(data);
-        }
+        setResponse(data);
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -61,72 +59,39 @@ export function MagicSearchPage() {
         }
     };
 
+    const isDataLoading = isLoading(response);
+
     return (
         <div>
+            <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
+                <Space.Compact style={{ width: '100%' }}>
+                    <Input
+                        placeholder={t`Enter your search query`}
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onKeyPress={handleKeyPress}
+                        size="large"
+                        disabled={isDataLoading}
+                    />
+                    <Button
+                        type="primary"
+                        icon={<SearchOutlined />}
+                        onClick={handleSearch}
+                        size="large"
+                        disabled={!searchQuery.trim() || isDataLoading}
+                        loading={isDataLoading}
+                    >
+                        {isDataLoading ? <Trans>Searching...</Trans> : <Trans>Search</Trans>}
+                    </Button>
+                </Space.Compact>
+            </div>
+
             <RenderRemoteData
                 remoteData={response}
-                renderNotAsked={() => (
-                    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
-                        <Space.Compact style={{ width: '100%' }}>
-                            <Input
-                                placeholder={t`Enter your search query`}
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                onKeyPress={handleKeyPress}
-                                size="large"
-                            />
-                            <Button
-                                type="primary"
-                                icon={<SearchOutlined />}
-                                onClick={handleSearch}
-                                size="large"
-                                disabled={!searchQuery.trim()}
-                            >
-                                <Trans>Search</Trans>
-                            </Button>
-                        </Space.Compact>
-                    </div>
-                )}
-                renderLoading={() => (
-                    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
-                        <Space.Compact style={{ width: '100%' }}>
-                            <Input
-                                placeholder={t`Enter your search query`}
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                onKeyPress={handleKeyPress}
-                                size="large"
-                                disabled
-                            />
-                            <Button type="primary" icon={<SearchOutlined />} loading size="large">
-                                <Trans>Searching...</Trans>
-                            </Button>
-                        </Space.Compact>
-                    </div>
-                )}
+                renderLoading={() => null as any}
                 renderFailure={(error) => (
-                    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
-                        <Space.Compact style={{ width: '100%' }}>
-                            <Input
-                                placeholder={t`Enter your search query`}
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                onKeyPress={handleKeyPress}
-                                size="large"
-                            />
-                            <Button
-                                type="primary"
-                                icon={<SearchOutlined />}
-                                onClick={handleSearch}
-                                size="large"
-                                disabled={!searchQuery.trim()}
-                            >
-                                <Trans>Search</Trans>
-                            </Button>
-                        </Space.Compact>
-                        <div style={{ marginTop: '16px', color: 'red' }}>
-                            <Trans>Error: {error.message}</Trans>
-                        </div>
+                    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto', color: 'red' }}>
+                        <Trans>Error: {error.message}</Trans>
                     </div>
                 )}
             >
@@ -135,37 +100,15 @@ export function MagicSearchPage() {
                         buildDynamicColumns<Resource>(data.tableColumns);
 
                     return (
-                        <div>
-                            <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto 20px' }}>
-                                <Space.Compact style={{ width: '100%' }}>
-                                    <Input
-                                        placeholder={t`Enter your search query`}
-                                        value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}
-                                        onKeyPress={handleKeyPress}
-                                        size="large"
-                                    />
-                                    <Button
-                                        type="primary"
-                                        icon={<SearchOutlined />}
-                                        onClick={handleSearch}
-                                        size="large"
-                                        disabled={!searchQuery.trim()}
-                                    >
-                                        <Trans>Search</Trans>
-                                    </Button>
-                                </Space.Compact>
-                            </div>
-                            <ResourceListPageContent
-                                resourceType={data.resourceType as any}
-                                searchParams={{
-                                    _sort: '-_lastUpdated,_id',
-                                    _count: 10,
-                                    ...data.searchParams,
-                                }}
-                                getTableColumns={getTableColumns}
-                            />
-                        </div>
+                        <ResourceListPageContent
+                            resourceType={data.resourceType as any}
+                            searchParams={{
+                                _sort: '-_lastUpdated,_id',
+                                _count: 10,
+                                ...data.searchParams,
+                            }}
+                            getTableColumns={getTableColumns}
+                        />
                     );
                 }}
             </RenderRemoteData>
