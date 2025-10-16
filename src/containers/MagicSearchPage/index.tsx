@@ -5,7 +5,7 @@ import { ColumnsType } from 'antd/lib/table';
 import { Resource } from 'fhir/r4b';
 import { useState } from 'react';
 
-import {formatError, RenderRemoteData} from '@beda.software/fhir-react';
+import { formatError, RenderRemoteData } from '@beda.software/fhir-react';
 import { isLoading, loading, notAsked, RemoteData } from '@beda.software/remote-data';
 
 import { performMagicSearch, MagicSearchResponse, TableColumnConfig } from 'src/services';
