@@ -1,122 +1,77 @@
-body:
-  $let:
-    code: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='code').answer.valueString").0
-    name: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='name').answer.valueString").0
-    doseForm: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='dose-form').answer.valueCoding").0
-    amountUnit: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='amount-unit').answer.valueCoding").0
-    amountValue: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='amount-value').answer.valueInteger").0
-    ingredients: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='ingredients')")
-    packagingType: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='packaging-type').answer.valueCoding").0
-    price: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='price').answer.valueDecimal").0
-  $body:
-    type: transaction
-    entry:
-      - fullUrl: $ "urn:uuid:medication-knowledge-id"
-        request:
-          url: /MedicationKnowledge
-          method: POST
-        resource:
-          cost:
-            - type:
-                coding:
-                  - system: "http://terminology.hl7.org/CodeSystem/cost-type"
-                    code: "wholesale"
-                    display: "Wholesale Price"
-              cost:
-                value: $ price
-                currency: usd
-          code:
-            coding:
-              - code: $ code
-                system: http://beda.software/custom-medication-list
-                display: $ name
-          amount:
-            code: $ amountUnit.code
-            unit: $ amountUnit.display
-            value: $ amountValue
-            system: http://unitsofmeasure.org
-          status: active
-          doseForm:
-            coding:
-              - $ doseForm
-          packaging:
-            type:
-              coding:
-                - $ packagingType
-          ingredient:
-            $as: ingredientData
-            $map: $ ingredients
-            $body:
-              $let:
-                itemCode: >-
-                  $
-                  fhirpath("%context.item.where(linkId='ingredientsIngredient').answer.valueCoding.code",
-                  ingredientData).0
-                itemDisplay: >-
-                  $
-                  fhirpath("%context.item.where(linkId='ingredientsIngredient').answer.valueCoding.display",
-                  ingredientData).0
-                numeratorCode: >-
-                  $
-                  fhirpath("%context.item.where(linkId='numerator-unit').answer.valueCoding.code",
-                  ingredientData).0
-                numeratorUnit: >-
-                  $
-                  fhirpath("%context.item.where(linkId='numerator-unit').answer.valueCoding.display",
-                  ingredientData).0
-                numeratorValue: >-
-                  $
-                  fhirpath("%context.item.where(linkId='numerator-value').answer.valueDecimal",
-                  ingredientData).0
-                denominatorCode: >-
-                  $
-                  fhirpath("%context.item.where(linkId='denominator-unit').answer.valueCoding.code",
-                  ingredientData).0
-                denominatorUnit: >-
-                  $
-                  fhirpath("%context.item.where(linkId='denominator-unit').answer.valueCoding.display",
-                  ingredientData).0
-                denominatorValue: >-
-                  $
-                  fhirpath("%context.item.where(linkId='denominator-value').answer.valueDecimal",
-                  ingredientData).0
-              $body:
-                item:
-                  CodeableConcept:
-                    coding:
-                      - code: $ itemCode
-                        system: http://www.nlm.nih.gov/research/umls/rxnorm
-                        display: $ itemDisplay
-                isActive: true
-                strength:
-                  numerator:
-                    code: $ numeratorCode
-                    unit: $ numeratorUnit
-                    value: $ numeratorValue
-                    system: http://unitsofmeasure.org
-                  denominator:
-                    code: $ denominatorCode
-                    unit: $ denominatorUnit
-                    value: $ denominatorValue
-                    system: http://unitsofmeasure.org
-          resourceType: MedicationKnowledge
-    resourceType: Bundle
-type: JUTE
-id: medication-knowledge-create-extract
 resourceType: Mapping
+id: medication-knowledge-create-extract
+type: FHIRPath
+body:
+  "{% assign %}":
+    - code: "{{ %QuestionnaireResponse.answers('code') }}"
+    - name: "{{ %QuestionnaireResponse.answers('name') }}"
+    - doseForm: "{{ %QuestionnaireResponse.answers('dose-form') }}"
+    - amountUnit: "{{ %QuestionnaireResponse.answers('amount-unit') }}"
+    - amountValue: "{{ %QuestionnaireResponse.answers('amount-value') }}"
+    - packagingType: "{{ %QuestionnaireResponse.answers('packaging-type') }}"
+    - price: "{{ %QuestionnaireResponse.answers('price') }}"
+    - ingredientsItems: "{[ %QuestionnaireResponse.repeat(item).where(linkId='ingredients') ]}"
+
+  resourceType: Bundle
+  type: transaction
+  entry:
+    - fullUrl: "{{ 'urn:uuid:medication-knowledge-id' }}"
+      request:
+        method: POST
+        url: /MedicationKnowledge
+      resource:
+        resourceType: MedicationKnowledge
+        status: active
+        code:
+          coding:
+            - system: "http://beda.software/custom-medication-list"
+              code: "{{ %code }}"
+              display: "{{ %name }}"
+        amount:
+          system: "http://unitsofmeasure.org"
+          code: "{{ %amountUnit.code }}"
+          unit: "{{ %amountUnit.display }}"
+          value: "{{ %amountValue }}"
+
+        "{% merge %}":
+          - "{% if %doseForm.exists() %}":
+              doseForm:
+                coding:
+                  - "{{ %doseForm }}"
+          - "{% if %packagingType.exists() %}":
+              packaging:
+                type:
+                  coding:
+                    - "{{ %packagingType }}"
+          - "{% if %price.exists() %}":
+              cost:
+                - type:
+                    coding:
+                      - system: "http://terminology.hl7.org/CodeSystem/cost-type"
+                        code: "wholesale"
+                        display: "Wholesale Price"
+                  cost:
+                    value: "{{ %price }}"
+                    currency: "USD"
+
+          - "{% if %ingredientsItems.exists() and %ingredientsItems.count() > 0 %}":
+              ingredient:
+                - "{% for ingredient in %ingredientsItems %}":
+                    item:
+                      CodeableConcept:
+                        coding:
+                          - system: "http://www.nlm.nih.gov/research/umls/rxnorm"
+                            code: "{{ %ingredient.item.where(linkId='ingredientsIngredient').answer.valueCoding.code }}"
+                            display: "{{ %ingredient.item.where(linkId='ingredientsIngredient').answer.valueCoding.display }}"
+                    isActive: true
+                    strength:
+                      numerator:
+                        system: "http://unitsofmeasure.org"
+                        code: "{{ %ingredient.item.where(linkId='numerator-unit').answer.valueCoding.code }}"
+                        unit: "{{ %ingredient.item.where(linkId='numerator-unit').answer.valueCoding.display }}"
+                        value: "{{ %ingredient.item.where(linkId='numerator-value').answer.valueDecimal }}"
+                      denominator:
+                        system: "http://unitsofmeasure.org"
+                        code: "{{ %ingredient.item.where(linkId='denominator-unit').answer.valueCoding.code }}"
+                        unit: "{{ %ingredient.item.where(linkId='denominator-unit').answer.valueCoding.display }}"
+                        value: "{{ %ingredient.item.where(linkId='denominator-value').answer.valueDecimal }}"
