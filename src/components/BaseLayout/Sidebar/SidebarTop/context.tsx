@@ -30,7 +30,6 @@ const defaultMenuLayout: MenuLayoutValue = () =>
             { label: t`Patients`, path: '/patients', icon: <PatientsIcon /> },
             { label: t`Practitioners`, path: '/practitioners', icon: <PractitionersIcon /> },
             { label: t`Questionnaires`, path: '/questionnaires', icon: <QuestionnairesIcon /> },
-            { label: t`Medications`, path: '/medications', icon: <MedicationsIcon /> },
             { label: t`Magic Search`, path: '/magic-search', icon: <MagicSearchIcon /> },
         ],
         [Role.Practitioner]: () => [

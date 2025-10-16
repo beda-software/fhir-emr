@@ -14,7 +14,7 @@ import { MenuLayout } from 'src/components/BaseLayout/Sidebar/SidebarTop/context
 import { Spinner } from 'src/components/Spinner';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { EncounterList } from 'src/containers/EncounterList';
-import { MagicSearchPage } from "src/containers/MagicSearchPage";
+import { MagicSearchPage } from 'src/containers/MagicSearchPage';
 import { PatientDetails } from 'src/containers/PatientDetails';
 import { NewPatientDetails } from 'src/containers/PatientDetails/new';
 import { PatientList } from 'src/containers/PatientList';

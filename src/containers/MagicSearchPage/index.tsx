@@ -1,26 +1,24 @@
-import { SearchOutlined } from "@ant-design/icons";
-import {t, Trans} from "@lingui/macro";
-import { Input, Button, Space } from "antd";
-import {ColumnsType} from "antd/lib/table";
-import {Resource} from "fhir/r4b";
-import {useState} from "react";
+import { SearchOutlined } from '@ant-design/icons';
+import { t, Trans } from '@lingui/macro';
+import { Input, Button, Space } from 'antd';
+import { ColumnsType } from 'antd/lib/table';
+import { Resource } from 'fhir/r4b';
+import { useState } from 'react';
 
 import { RenderRemoteData } from '@beda.software/fhir-react';
-import {isSuccess, loading, notAsked, RemoteData} from "@beda.software/remote-data";
+import { isSuccess, loading, notAsked, RemoteData } from '@beda.software/remote-data';
 
-import {performMagicSearch, MagicSearchResponse, TableColumnConfig} from "src/services";
-import {RecordType} from "src/uberComponents/ResourceListPage/types.ts";
-import {ResourceListPageContent} from "src/uberComponents/ResourceListPageContent";
-import {compileAsFirst, formatHumanDate, renderHumanName} from "src/utils";
+import { performMagicSearch, MagicSearchResponse, TableColumnConfig } from 'src/services';
+import { RecordType } from 'src/uberComponents/ResourceListPage/types.ts';
+import { ResourceListPageContent } from 'src/uberComponents/ResourceListPageContent';
+import { compileAsFirst, formatHumanDate, renderHumanName } from 'src/utils';
 
 const compileGeneric = <R extends Resource, T>(fhirPath: string): ((resource: R) => T | undefined) => {
     return compileAsFirst(fhirPath) as (resource: R) => T | undefined;
 };
 
-function buildDynamicColumns<R extends Resource>(
-    columnConfigs: TableColumnConfig[]
-): ColumnsType<RecordType<R>> {
-    return columnConfigs.map(column => {
+function buildDynamicColumns<R extends Resource>(columnConfigs: TableColumnConfig[]): ColumnsType<RecordType<R>> {
+    return columnConfigs.map((column) => {
         const valueExtractor = compileGeneric<R, any>(column.fhirPath);
 
         return {
@@ -39,21 +37,21 @@ function buildDynamicColumns<R extends Resource>(
                 }
 
                 return value ? String(value) : null;
-            }
+            },
         };
     });
 }
 
 export function MagicSearchPage() {
     const [response, setResponse] = useState<RemoteData<MagicSearchResponse>>(notAsked);
-    const [searchQuery, setSearchQuery] = useState("");
+    const [searchQuery, setSearchQuery] = useState('');
 
     const handleSearch = async () => {
         setResponse(loading);
 
         const data = await performMagicSearch(searchQuery);
         if (isSuccess(data)) {
-            setResponse(data)
+            setResponse(data);
         }
     };
 
@@ -100,12 +98,7 @@ export function MagicSearchPage() {
                                 size="large"
                                 disabled
                             />
-                            <Button
-                                type="primary"
-                                icon={<SearchOutlined />}
-                                loading
-                                size="large"
-                            >
+                            <Button type="primary" icon={<SearchOutlined />} loading size="large">
                                 <Trans>Searching...</Trans>
                             </Button>
                         </Space.Compact>
@@ -138,8 +131,9 @@ export function MagicSearchPage() {
                 )}
             >
                 {(data) => {
-                    const getTableColumns = (): ColumnsType<RecordType<Resource>> => buildDynamicColumns<Resource>(data.tableColumns);
-                    
+                    const getTableColumns = (): ColumnsType<RecordType<Resource>> =>
+                        buildDynamicColumns<Resource>(data.tableColumns);
+
                     return (
                         <div>
                             <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto 20px' }}>
@@ -171,8 +165,8 @@ export function MagicSearchPage() {
                                 }}
                                 getTableColumns={getTableColumns}
                             />
-                    </div>
-                );
+                        </div>
+                    );
                 }}
             </RenderRemoteData>
         </div>

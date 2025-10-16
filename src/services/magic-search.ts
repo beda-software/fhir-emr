@@ -1,7 +1,7 @@
-import config from "@beda.software/emr-config";
+import config from '@beda.software/emr-config';
 
-import {getToken} from "src/services/auth.ts";
-import {service} from "src/services/fhir.ts";
+import { getToken } from 'src/services/auth.ts';
+import { service } from 'src/services/fhir.ts';
 
 export interface TableColumnConfig {
     title: string;
