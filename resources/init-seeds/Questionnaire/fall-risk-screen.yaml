@@ -396,9 +396,6 @@ item:
             initialExpression:
               language: text/fhirpath
               expression: "%Author.id"
-            enableWhenExpression:
-              language: text/fhirpath
-              expression: "%Author.resourceType = 'Practitioner'"
 
           - linkId: author-practitioner
             text: Practitioner
