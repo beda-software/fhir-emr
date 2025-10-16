@@ -91,7 +91,7 @@ export function MagicSearchPage() {
                 renderLoading={() => null as any}
                 renderFailure={(error) => (
                     <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto', color: 'red' }}>
-                        <Trans>{formatError(error)}</Trans>
+                        {formatError(error)}
                     </div>
                 )}
             >
