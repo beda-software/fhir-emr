@@ -14,6 +14,7 @@ import { MenuLayout } from 'src/components/BaseLayout/Sidebar/SidebarTop/context
 import { Spinner } from 'src/components/Spinner';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { EncounterList } from 'src/containers/EncounterList';
+import { MagicSearchPage } from 'src/containers/MagicSearchPage';
 import { PatientDetails } from 'src/containers/PatientDetails';
 import { NewPatientDetails } from 'src/containers/PatientDetails/new';
 import { PatientList } from 'src/containers/PatientList';
@@ -185,6 +186,7 @@ function AuthenticatedUserApp({ defaultRoute, extra }: RouteProps) {
                                 element={<AidboxFormsBuilder />}
                             />
                             <Route path="/questionnaires/:id" element={<div>questionnaires/:id</div>} />
+                            <Route path="/magic-search" element={<MagicSearchPage />} />
                             <Route path="/healthcare-services" element={<HealthcareServiceList />} />
                             <Route path="*" element={<Navigate to={defaultRoute} />} />
                         </Routes>
