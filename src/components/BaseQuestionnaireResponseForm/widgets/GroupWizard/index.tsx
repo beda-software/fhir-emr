@@ -1,4 +1,4 @@
-import { QuestionnaireResponse } from 'fhir/r4b';
+import _ from 'lodash';
 import { useContext, useMemo, useState } from 'react';
 import { useFormState, useWatch } from 'react-hook-form';
 import {
@@ -8,13 +8,15 @@ import {
     GroupItemProps,
     ItemContext,
     QuestionItems,
+    FormAnswerItems,
+    cleanFormAnswerItems,
 } from 'sdc-qrf';
 
 import { createBus } from '@beda.software/fhir-react';
 
 import { Text, Title } from 'src/components/Typography';
 import { Wizard, WizardItem, WizardProps } from 'src/components/Wizard';
-import { compileAsFirst, questionnaireItemsToValidationSchema } from 'src/utils';
+import { questionnaireItemsToValidationSchema } from 'src/utils';
 
 import { S } from './styles';
 import { BaseQuestionnaireResponseFormPropsContext } from '../../context';
@@ -50,9 +52,6 @@ export function GroupWizardWithTooltips(props: GroupWizardProps) {
         />
     );
 }
-
-const getAnswerByLinkId = (linkId: string) =>
-    compileAsFirst<QuestionnaireResponse, string>(`repeat(item).where(linkId='${linkId}').answer.first()`);
 
 export interface GroupStats {
     totalQuestions: number;
@@ -193,24 +192,37 @@ export function GroupWizard(props: GroupWizardProps) {
 const getGroupEnabledQuestions = (
     groupItem: FCEQuestionnaireItem,
     groupParentPath: string[],
+    groupValues: FormItems,
     formValues: FormItems,
     groupContext: ItemContext[],
 ) => {
-    const groupPath = [...groupParentPath, groupItem.linkId, 'items'];
+    const groupRelativePath = [groupItem.linkId, 'items'];
+    const groupPath = [...groupParentPath, ...groupRelativePath];
     const directItems = getEnabledQuestions(groupItem.item!, groupPath, formValues, groupContext[0]!);
 
-    const allEnabledQuestions: FCEQuestionnaireItem[] = [];
+    const allEnabledQuestions: [FCEQuestionnaireItem, boolean][] = [];
 
     directItems.forEach((item) => {
-        if (item.type === 'group' && item.item) {
-            const nestedQuestions = getGroupEnabledQuestions(item, groupPath, formValues, groupContext);
-            allEnabledQuestions.push(...nestedQuestions);
+        if (item.type === 'group') {
+            if (item.item) {
+                const nestedQuestions = getGroupEnabledQuestions(
+                    item,
+                    groupPath,
+                    _.get(groupValues, groupRelativePath, {} as FormItems),
+                    formValues,
+                    groupContext,
+                );
+                allEnabledQuestions.push(...nestedQuestions);
+            }
         } else if (item.type !== 'display') {
-            allEnabledQuestions.push(item);
+            const answers = cleanFormAnswerItems(
+                _.get(groupValues, [...groupRelativePath, item.linkId], []) as (FormAnswerItems | undefined)[],
+            );
+            allEnabledQuestions.push([item, answers.length > 0]);
         }
     });
 
-    return allEnabledQuestions.filter((q) => !q.hidden);
+    return allEnabledQuestions.filter(([q, _hasAnswers]) => !q.hidden);
 };
 
 export const getGroupStats = (
@@ -219,15 +231,18 @@ export const getGroupStats = (
     formValues: FormItems,
     context: ItemContext[],
 ): GroupStats => {
-    const qr = context[0]!.QuestionnaireResponse;
+    const groupParentPath = [...parentPath, 'items'];
+    const allQuestions = getGroupEnabledQuestions(
+        groupItem,
+        groupParentPath,
+        _.get(formValues, groupParentPath),
+        formValues,
+        context,
+    );
+    const allRequiredQuestions = allQuestions.filter(([q, _hasAnswers]) => q.required === true);
 
-    const allQuestions = getGroupEnabledQuestions(groupItem, [...parentPath, 'items'], formValues, context);
-    const allRequiredQuestions = allQuestions.filter((q) => q.required === true);
-
-    const finishedQuestions = allQuestions.map((q) => getAnswerByLinkId(q.linkId)(qr)).filter((a) => a !== undefined);
-    const finishedRequiredQuestions = allRequiredQuestions
-        .map((q) => getAnswerByLinkId(q.linkId)(qr))
-        .filter((a) => a !== undefined);
+    const finishedQuestions = allQuestions.filter(([_q, hasAnswers]) => hasAnswers);
+    const finishedRequiredQuestions = allRequiredQuestions.filter(([_q, hasAnswers]) => hasAnswers);
 
     return {
         totalQuestions: allQuestions.length,
