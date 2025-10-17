@@ -51,7 +51,7 @@ export function GroupWizard(props: GroupWizardProps) {
     };
 
     const getStepItem = (item: FCEQuestionnaireItem) => {
-        const groupStats = getGroupStats(item, [...parentPath, linkId], formValues, context);
+        const groupStats = getGroupStats(item, [...parentPath, linkId], formValues, context[0]!);
         const description = showDescription
             ? `${groupStats.finishedQuestions} of ${groupStats.totalQuestions}`
             : undefined;
