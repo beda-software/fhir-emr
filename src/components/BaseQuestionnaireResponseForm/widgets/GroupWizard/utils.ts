@@ -48,11 +48,11 @@ function getAllGroupQuestionsWithAnswerStatusRecursive(
         if (item.type === 'group') {
             if (item.item) {
                 // NOTE: The first repeatable group is taken for the statistics calculation only
-                const itemRelativePath = [item.linkId, 'items', ...(item.repeats ? ['0'] : [])];
-                const subGroupValues: FormItems = _.get(groupValues, itemRelativePath, {} as FormItems);
+                const subGroupRelativePath = [item.linkId, 'items', ...(item.repeats ? ['0'] : [])];
+                const subGroupValues: FormItems = _.get(groupValues, subGroupRelativePath, {} as FormItems);
                 const nestedItems = getAllGroupQuestionsWithAnswerStatusRecursive(
                     item,
-                    [...parentPath, ...itemRelativePath],
+                    [...parentPath, ...subGroupRelativePath],
                     subGroupValues,
                     formValues,
                     context,
