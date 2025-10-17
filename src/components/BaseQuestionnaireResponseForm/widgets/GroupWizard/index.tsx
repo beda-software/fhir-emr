@@ -1,16 +1,7 @@
 import _ from 'lodash';
 import { useContext, useMemo, useState } from 'react';
 import { useFormState, useWatch } from 'react-hook-form';
-import {
-    FCEQuestionnaireItem,
-    FormItems,
-    getEnabledQuestions,
-    GroupItemProps,
-    ItemContext,
-    QuestionItems,
-    FormAnswerItems,
-    cleanFormAnswerItems,
-} from 'sdc-qrf';
+import { FCEQuestionnaireItem, FormItems, GroupItemProps, ItemContext, QuestionItems } from 'sdc-qrf';
 
 import { createBus } from '@beda.software/fhir-react';
 
@@ -19,6 +10,7 @@ import { Wizard, WizardItem, WizardProps } from 'src/components/Wizard';
 import { questionnaireItemsToValidationSchema } from 'src/utils';
 
 import { S } from './styles';
+import { getAllGroupQuestionsWithAnswerStatus } from './utils';
 import { BaseQuestionnaireResponseFormPropsContext } from '../../context';
 
 interface GroupWizardProps extends GroupItemProps {
@@ -64,6 +56,11 @@ export function GroupWizard(props: GroupWizardProps) {
     const { parentPath, questionItem, context, wizard } = props;
     const baseQRFPropsContext = useContext(BaseQuestionnaireResponseFormPropsContext);
 
+    if (questionItem.repeats) {
+        console.warn('GroupWizard does not support repeatable groups in the first level');
+    }
+    const groupContext = context[0]!;
+
     const [currentIndex, setCurrentIndex] = useState(0);
     const { linkId } = questionItem;
 
@@ -105,7 +102,7 @@ export function GroupWizard(props: GroupWizardProps) {
     };
 
     const getStepItem = (item: FCEQuestionnaireItem) => {
-        const groupStats = getGroupStats(item, [...parentPath, linkId], formValues, context);
+        const groupStats = getGroupStats(item, [...parentPath, linkId], formValues, groupContext);
         const description = showDescription
             ? `${groupStats.finishedQuestions} of ${groupStats.totalQuestions}`
             : undefined;
@@ -156,7 +153,7 @@ export function GroupWizard(props: GroupWizardProps) {
                         <QuestionItems
                             questionItems={groupItem.item!}
                             parentPath={[...parentPath, linkId, 'items', groupItem.linkId, 'items']}
-                            context={context[0]!}
+                            context={groupContext}
                         />
                     </S.Group>
                 );
@@ -172,7 +169,7 @@ export function GroupWizard(props: GroupWizardProps) {
                         <QuestionItems
                             questionItems={groupItem.item!}
                             parentPath={[...parentPath, linkId, 'items', groupItem.linkId, 'items']}
-                            context={context[0]!}
+                            context={groupContext}
                         />
                     </S.Group>
                 );
@@ -189,60 +186,19 @@ export function GroupWizard(props: GroupWizardProps) {
     );
 }
 
-const getGroupEnabledQuestions = (
-    groupItem: FCEQuestionnaireItem,
-    groupParentPath: string[],
-    groupValues: FormItems,
-    formValues: FormItems,
-    groupContext: ItemContext[],
-) => {
-    const groupRelativePath = [groupItem.linkId, 'items'];
-    const groupPath = [...groupParentPath, ...groupRelativePath];
-    const directItems = getEnabledQuestions(groupItem.item!, groupPath, formValues, groupContext[0]!);
-
-    const allEnabledQuestions: [FCEQuestionnaireItem, boolean][] = [];
-
-    directItems.forEach((item) => {
-        if (item.type === 'group') {
-            if (item.item) {
-                const nestedQuestions = getGroupEnabledQuestions(
-                    item,
-                    groupPath,
-                    _.get(groupValues, groupRelativePath, {} as FormItems),
-                    formValues,
-                    groupContext,
-                );
-                allEnabledQuestions.push(...nestedQuestions);
-            }
-        } else if (item.type !== 'display') {
-            const answers = cleanFormAnswerItems(
-                _.get(groupValues, [...groupRelativePath, item.linkId], []) as (FormAnswerItems | undefined)[],
-            );
-            allEnabledQuestions.push([item, answers.length > 0]);
-        }
-    });
-
-    return allEnabledQuestions.filter(([q, _hasAnswers]) => !q.hidden);
-};
-
 export const getGroupStats = (
     groupItem: FCEQuestionnaireItem,
     parentPath: string[],
     formValues: FormItems,
-    context: ItemContext[],
+    context: ItemContext,
 ): GroupStats => {
-    const groupParentPath = [...parentPath, 'items'];
-    const allQuestions = getGroupEnabledQuestions(
-        groupItem,
-        groupParentPath,
-        _.get(formValues, groupParentPath),
-        formValues,
-        context,
+    const allQuestions = getAllGroupQuestionsWithAnswerStatus(groupItem, parentPath, formValues, context).filter(
+        ([item]) => !item.hidden,
     );
-    const allRequiredQuestions = allQuestions.filter(([q, _hasAnswers]) => q.required === true);
+    const allRequiredQuestions = allQuestions.filter(([q]) => q.required === true);
 
-    const finishedQuestions = allQuestions.filter(([_q, hasAnswers]) => hasAnswers);
-    const finishedRequiredQuestions = allRequiredQuestions.filter(([_q, hasAnswers]) => hasAnswers);
+    const finishedQuestions = allQuestions.filter(([, hasAnswers]) => hasAnswers);
+    const finishedRequiredQuestions = allRequiredQuestions.filter(([, hasAnswers]) => hasAnswers);
 
     return {
         totalQuestions: allQuestions.length,
