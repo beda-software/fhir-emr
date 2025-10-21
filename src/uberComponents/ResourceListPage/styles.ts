@@ -7,6 +7,7 @@ export const S = {
     Actions: styled.div`
         display: flex;
         gap: 8px 16px;
+        align-items: center;
 
         @media screen and (max-width: ${() => `${mobileWidth - 1}px`}) {
             gap: 2px 16px;
