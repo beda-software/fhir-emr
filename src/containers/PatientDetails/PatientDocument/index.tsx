@@ -76,7 +76,7 @@ export function PatientDocument(props: PatientDocumentProps) {
                         props.onSuccess && props.onSuccess(resource);
                     }}
                     onQRFUpdate={onUpdateDraft}
-                    onSaveDraft={saveDraft}
+                    onSaveDraft={qrDraftServiceType === 'server' ? saveDraft : undefined}
                     alertComponent={
                         <AlertMessage
                             style={{ marginBottom: '20px' }}

@@ -41,7 +41,9 @@ export function PatientDocumentFooter(props: PatientDocumentFooterProps) {
         <S.Footer>
             {baseQRFPropsContext && baseQRFPropsContext.formData && (
                 <>
-                    <S.Button onClick={handleSaveDraft}>{saveDraftButtonTitle || t`Save as Draft`}</S.Button>
+                    {onSaveDraft && (
+                        <S.Button onClick={handleSaveDraft}>{saveDraftButtonTitle || t`Save as Draft`}</S.Button>
+                    )}
 
                     <FormFooter
                         submitting={submitting}
