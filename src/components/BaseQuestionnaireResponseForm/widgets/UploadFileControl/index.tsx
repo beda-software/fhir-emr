@@ -10,7 +10,7 @@ const { Dragger } = Upload;
 export function UploadFileControl(props: QuestionItemProps) {
     const { showDragger, formItem, customRequest, onChange, onRemove, fileList, acceptedFileExtensions, disabled } =
         useUploader(props);
-    const { helpText, repeats } = props.questionItem;
+    const { repeats } = props.questionItem;
 
     return (
         <Form.Item {...formItem}>
@@ -31,7 +31,6 @@ export function UploadFileControl(props: QuestionItemProps) {
                     <p className="ant-upload-text">
                         <Trans>Click or drag file to this area to upload</Trans>
                     </p>
-                    <p className="ant-upload-hint">{helpText}</p>
                 </Dragger>
             ) : (
                 <Upload

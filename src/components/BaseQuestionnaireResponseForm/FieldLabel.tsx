@@ -1,7 +1,7 @@
-import { InfoCircleOutlined } from '@ant-design/icons';
-import { Tooltip } from 'antd';
 import { useContext } from 'react';
 import { FCEQuestionnaireItem } from 'sdc-qrf';
+
+import { ItemHelpText } from 'src/components/BaseQuestionnaireResponseForm/ItemHelpText';
 
 import { S } from './BaseQuestionnaireResponseForm.styles';
 import { GroupContext } from './widgets/Group/context';
@@ -16,14 +16,9 @@ export function FieldLabel({ questionItem }: { questionItem: FCEQuestionnaireIte
 
     return (
         <S.Label $isDate={['date', 'dateTime', 'time'].includes(type)}>
-            {text}{' '}
-            {helpText && (
-                <Tooltip title={<S.HelpText>{helpText}</S.HelpText>}>
-                    <S.HelpTextIcon>
-                        <InfoCircleOutlined />
-                    </S.HelpTextIcon>
-                </Tooltip>
-            )}
+            {text}
+            {text && helpText && ` `}
+            {helpText && <ItemHelpText helpText={helpText} />}
         </S.Label>
     );
 }
