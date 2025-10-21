@@ -4,13 +4,15 @@ import { Button, Space, Splitter, Tooltip } from 'antd';
 import classNames from 'classnames';
 import { Organization, ParametersParameter, Patient, Person, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
 import React, { useMemo } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { formatError, RenderRemoteData, WithId } from '@beda.software/fhir-react';
+import { RemoteDataResult } from '@beda.software/remote-data';
 
 import { Text } from 'src/components';
 import { AlertMessage } from 'src/components/AlertMessage';
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
+import { FormFooterComponentProps } from 'src/components/BaseQuestionnaireResponseForm/FormFooter';
 import { AnxietyScore, DepressionScore } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/score';
 import { Spinner } from 'src/components/Spinner';
 import { QuestionnaireResponseDraftService, QuestionnaireResponseFormSaveResponse } from 'src/hooks';
@@ -18,6 +20,7 @@ import { useQuestionnaireResponseDraft } from 'src/hooks/useQuestionnaireRespons
 
 import s from './PatientDocument.module.scss';
 import { S } from './PatientDocument.styles';
+import { PatientDocumentFooter } from './PatientDocumentFooter';
 import { PatientDocumentHeader } from './PatientDocumentHeader';
 import { usePatientDocument } from './usePatientDocument';
 
@@ -37,6 +40,7 @@ interface PatientDocumentContentProps extends PatientDocumentProps {
     onCancel?: () => void;
     onQRFUpdate?: (questionnaireResponse: QuestionnaireResponse) => void;
     alertComponent?: React.ReactNode | (() => React.ReactNode);
+    onSaveDraft?: (questionnaireResponse: QuestionnaireResponse) => Promise<RemoteDataResult<QuestionnaireResponse>>;
 }
 
 export function PatientDocument(props: PatientDocumentProps) {
@@ -49,6 +53,7 @@ export function PatientDocument(props: PatientDocumentProps) {
         draftInfoMessage,
         updateDraft: onUpdateDraft,
         deleteDraft,
+        saveDraft,
     } = useQuestionnaireResponseDraft({
         subject: `${props.patient.resourceType}/${props.patient.id}`,
         questionnaireId: props.questionnaireId ?? params.questionnaireId!,
@@ -71,6 +76,7 @@ export function PatientDocument(props: PatientDocumentProps) {
                         props.onSuccess && props.onSuccess(resource);
                     }}
                     onQRFUpdate={onUpdateDraft}
+                    onSaveDraft={saveDraft}
                     alertComponent={
                         <AlertMessage
                             style={{ marginBottom: '20px' }}
@@ -99,7 +105,7 @@ export function PatientDocument(props: PatientDocumentProps) {
 }
 
 function PatientDocumentContent(props: PatientDocumentContentProps) {
-    const { onCancel, onQRFUpdate, alertComponent } = props;
+    const { onQRFUpdate, alertComponent, onSaveDraft } = props;
 
     // additional itemControlQuestionItemComponents should be memoized
     const itemControlQuestionItemComponents = useMemo(() => {
@@ -113,12 +119,11 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
     const encounterId = props.encounterId || params.encounterId;
     const questionnaireId = props.questionnaireId || params.questionnaireId!;
 
-    const { response } = usePatientDocument({
+    const { response, handleCancel } = usePatientDocument({
         ...props,
         questionnaireId,
         encounterId,
     });
-    const navigate = useNavigate();
 
     return (
         <div className={classNames(s.container, 'app-patient-document')}>
@@ -138,12 +143,18 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
                                         formData={formData}
                                         onSubmit={onSubmit}
                                         itemControlQuestionItemComponents={itemControlQuestionItemComponents}
-                                        onCancel={() => {
-                                            onCancel?.();
-                                            navigate(-1);
-                                        }}
+                                        onCancel={handleCancel}
                                         saveButtonTitle={t`Complete`}
                                         onQRFUpdate={onQRFUpdate}
+                                        FormFooterComponent={(passedProps: FormFooterComponentProps) => {
+                                            const footerProps = {
+                                                ...passedProps,
+                                                onCancel: handleCancel,
+                                                onSaveDraft,
+                                            };
+
+                                            return <PatientDocumentFooter {...footerProps} />;
+                                        }}
                                     />
                                 </>
                             );
@@ -166,12 +177,18 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
                                                 formData={formData}
                                                 onSubmit={onSubmit}
                                                 itemControlQuestionItemComponents={itemControlQuestionItemComponents}
-                                                onCancel={() => {
-                                                    onCancel?.();
-                                                    navigate(-1);
-                                                }}
+                                                onCancel={handleCancel}
                                                 saveButtonTitle={t`Complete`}
                                                 onQRFUpdate={onQRFUpdate}
+                                                FormFooterComponent={(passedProps: FormFooterComponentProps) => {
+                                                    const footerProps = {
+                                                        ...passedProps,
+                                                        onCancel: handleCancel,
+                                                        onSaveDraft,
+                                                    };
+
+                                                    return <PatientDocumentFooter {...footerProps} />;
+                                                }}
                                             />
                                         </Splitter.Panel>
                                     </Splitter>
