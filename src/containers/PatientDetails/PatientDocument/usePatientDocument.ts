@@ -12,6 +12,7 @@ import {
     Reference,
 } from 'fhir/r4b';
 import _ from 'lodash';
+import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
@@ -48,6 +49,7 @@ export interface Props {
     encounterId?: string;
     launchContextParameters?: ParametersParameter[];
     onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
+    onCancel?: () => void;
 }
 
 async function onFormSubmit(
@@ -161,8 +163,9 @@ export function usePatientDocument(props: Props): {
     response: RemoteData<Result>;
     manager: ServiceManager<PatientDocumentData, any>;
     questionnaireId: string;
+    handleCancel: () => void;
 } {
-    const { questionnaireResponse, questionnaireId, onSuccess } = props;
+    const { questionnaireResponse, questionnaireId, onSuccess, onCancel } = props;
 
     const navigate = useNavigate();
 
@@ -233,9 +236,14 @@ export function usePatientDocument(props: Props): {
         return success(undefined);
     });
 
+    const handleCancel = useCallback(() => {
+        onCancel ? onCancel() : navigate(-2);
+    }, [onCancel, navigate]);
+
     return {
         response: mapFailure(sequenceMap({ source: sourceResponse, document: response }), (errors) => errors.flat()[0]),
         manager,
         questionnaireId,
+        handleCancel,
     };
 }
