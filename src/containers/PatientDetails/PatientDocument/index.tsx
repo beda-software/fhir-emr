@@ -12,7 +12,6 @@ import { RemoteDataResult } from '@beda.software/remote-data';
 import { Text } from 'src/components';
 import { AlertMessage } from 'src/components/AlertMessage';
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
-import { FormFooterComponentProps } from 'src/components/BaseQuestionnaireResponseForm/FormFooter';
 import { AnxietyScore, DepressionScore } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/score';
 import { Spinner } from 'src/components/Spinner';
 import { QuestionnaireResponseDraftService, QuestionnaireResponseFormSaveResponse } from 'src/hooks';
@@ -20,7 +19,6 @@ import { useQuestionnaireResponseDraft } from 'src/hooks/useQuestionnaireRespons
 
 import s from './PatientDocument.module.scss';
 import { S } from './PatientDocument.styles';
-import { PatientDocumentFooter } from './PatientDocumentFooter';
 import { PatientDocumentHeader } from './PatientDocumentHeader';
 import { usePatientDocument } from './usePatientDocument';
 
@@ -146,15 +144,7 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
                                         onCancel={handleCancel}
                                         saveButtonTitle={t`Complete`}
                                         onQRFUpdate={onQRFUpdate}
-                                        FormFooterComponent={(passedProps: FormFooterComponentProps) => {
-                                            const footerProps = {
-                                                ...passedProps,
-                                                onCancel: handleCancel,
-                                                onSaveDraft,
-                                            };
-
-                                            return <PatientDocumentFooter {...footerProps} />;
-                                        }}
+                                        onSaveDraft={onSaveDraft}
                                     />
                                 </>
                             );
@@ -180,15 +170,7 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
                                                 onCancel={handleCancel}
                                                 saveButtonTitle={t`Complete`}
                                                 onQRFUpdate={onQRFUpdate}
-                                                FormFooterComponent={(passedProps: FormFooterComponentProps) => {
-                                                    const footerProps = {
-                                                        ...passedProps,
-                                                        onCancel: handleCancel,
-                                                        onSaveDraft,
-                                                    };
-
-                                                    return <PatientDocumentFooter {...footerProps} />;
-                                                }}
+                                                onSaveDraft={onSaveDraft}
                                             />
                                         </Splitter.Panel>
                                     </Splitter>
