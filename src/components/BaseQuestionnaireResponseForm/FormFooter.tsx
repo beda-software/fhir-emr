@@ -1,8 +1,11 @@
 import { Trans, t } from '@lingui/macro';
 import { Button } from 'antd';
+import { QuestionnaireResponse } from 'fhir/r4b';
 import { CSSProperties, useCallback, useContext } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { calcInitialContext } from 'sdc-qrf';
+
+import { RemoteDataResult } from '@beda.software/remote-data';
 
 import { BaseQuestionnaireResponseFormPropsContext } from 'src/components/BaseQuestionnaireResponseForm/context';
 
@@ -13,6 +16,7 @@ export interface FormFooterComponentProps {
     submitting: boolean;
     submitDisabled?: boolean;
     onCancel?: () => void;
+    onSaveDraft?: (questionnaireResponse: QuestionnaireResponse) => Promise<RemoteDataResult<QuestionnaireResponse>>;
 }
 
 export interface Props extends BaseQuestionnaireResponseFormProps {
