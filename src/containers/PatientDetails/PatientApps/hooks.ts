@@ -68,7 +68,7 @@ export async function launch({ user, client, patient, practitioner, encounter }:
         },
     });
     if (isSuccess(response)) {
-        window.location.href = response.data.result.uri;
+        window.open(response.data.result.uri, '_blank');
     } else {
         notification.error({ message: 'Launch fail', description: JSON.stringify(response.error, undefined, 4) });
     }
