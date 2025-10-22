@@ -1,5 +1,7 @@
 import { GroupItemProps } from 'sdc-qrf';
 
+import { ItemHelpText } from 'src/components/BaseQuestionnaireResponseForm/ItemHelpText';
+
 import { S } from './GTable.styles';
 import { RepeatableGroupRow, RepeatableGroups } from '../RepeatableGroups';
 
@@ -18,13 +20,16 @@ export function GTable({ groupItem }: Props) {
                     .filter((i) => !i.hidden)
                     .map((i) => (
                         <S.Column key={`column-${i.linkId}`}>
-                            {i.text && (
-                                <S.Text>
-                                    <b>{i.text}</b>
-                                </S.Text>
-                            )}
-                            {i.text && i.helpText && ` `}
-                            {i.helpText && <S.Text>{i.helpText}</S.Text>}
+                            <S.Title>
+                                {i.text && (
+                                    <S.Text>
+                                        <b>{i.text}</b>
+                                    </S.Text>
+                                )}
+                                {i.text && i.helpText && ` `}
+
+                                {i.helpText && <ItemHelpText helpText={i.helpText} />}
+                            </S.Title>
                         </S.Column>
                     ))}
             </S.Header>

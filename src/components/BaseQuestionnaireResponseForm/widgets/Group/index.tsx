@@ -1,8 +1,8 @@
 import classNames from 'classnames';
-import _ from 'lodash';
 import { GroupItemProps, QuestionItems } from 'sdc-qrf';
 
-import { Text, Title } from 'src/components/Typography';
+import { ItemHelpText } from 'src/components/BaseQuestionnaireResponseForm/ItemHelpText';
+import { Title } from 'src/components/Typography';
 
 import { GroupContext, GroupContextProps } from './context';
 import { GridGroup } from './GridGroup';
@@ -46,8 +46,10 @@ function Flex(props: GroupItemProps & { type?: GroupContextProps['type'] }) {
         <S.Group>
             {text || helpText ? (
                 <S.Header $type={type}>
-                    {text && <Title level={isSection ? 4 : 5}>{text}</Title>}
-                    {helpText && <Text>{helpText}</Text>}
+                    <S.Title>
+                        {text && <Title level={isSection ? 4 : 5}>{text}</Title>}
+                        {helpText && <ItemHelpText helpText={helpText} />}
+                    </S.Title>
                 </S.Header>
             ) : null}
             {item && (
