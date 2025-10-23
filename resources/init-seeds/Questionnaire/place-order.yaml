@@ -101,6 +101,7 @@ item:
   required: true
   type: choice
   answerValueSet: https://www.rcpa.edu.au/fhir/ValueSet/spia-requesting-refset-3
+  preferredTerminologyServer: https://tx.dev.hl7.org.au/fhir/
 - linkId: test-code-radiology
   enableWhen:
   - operator: '='
@@ -111,11 +112,13 @@ item:
   required: true
   type: choice
   answerValueSet: https://ranzcr.com/fhir/ValueSet/radiology-referral
+  preferredTerminologyServer: https://tx.dev.hl7.org.au/fhir/
 - linkId: priority
   required: true
   text: Priority
   type: choice
   answerValueSet: http://hl7.org/fhir/ValueSet/request-priority
+  preferredTerminologyServer: https://tx.dev.hl7.org.au/fhir/
 - linkId: patient-id
   type: string
   text: patientId

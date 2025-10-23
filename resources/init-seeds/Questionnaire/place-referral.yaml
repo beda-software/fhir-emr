@@ -45,6 +45,7 @@ item:
         type: choice
         linkId: urgency
         answerValueSet: http://hl7.org/fhir/ValueSet/request-priority
+        preferredTerminologyServer: https://tx.dev.hl7.org.au/fhir/
   text: Referral Details
   type: group
   linkId: referralDetails
