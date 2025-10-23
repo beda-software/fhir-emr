@@ -1,14 +1,14 @@
 import styled, { css } from 'styled-components';
 
 export const S = {
-    Container: styled.div<{ $disabled: boolean}>`
+    Container: styled.div<{ $disabled: boolean }>`
         display: flex;
         width: fit-content;
-        
+
         .react-tel-input {
             transition: all ${({ theme }) => theme.antdTheme?.motionDurationMid};
         }
-        
+
         .react-tel-input._focused {
             border-radius: ${({ theme }) => theme.antdTheme?.borderRadius}px;
             box-shadow: 0 0 0 2px ${({ theme }) => theme.antdTheme?.controlOutline};
@@ -30,7 +30,8 @@ export const S = {
         }
 
         .flag-dropdown {
-            border-radius: ${({ theme }) => theme.antdTheme?.borderRadius}px 0 0 ${({ theme }) => theme.antdTheme?.borderRadius}px !important;
+            border-radius: ${({ theme }) => theme.antdTheme?.borderRadius}px 0 0
+                ${({ theme }) => theme.antdTheme?.borderRadius}px !important;
             background: 0 !important;
         }
 
@@ -68,19 +69,21 @@ export const S = {
                 background-color: ${({ theme }) => theme.primaryPalette.bcp_1} !important;
             }
         }
-        
-        ${({ $disabled }) => $disabled && css`
-            .react-phone-input {
-                background-color: ${({ theme }) => theme.antdTheme?.colorBgContainerDisabled};
-                color: ${({ theme }) => theme.antdTheme?.colorTextDisabled};
-            }
 
-            &:hover {
-                .react-phone-input,
-                .react-phone-input__button {
-                    border-color: ${({ theme }) => theme.antdTheme?.colorBorder};
+        ${({ $disabled }) =>
+            $disabled &&
+            css`
+                .react-phone-input {
+                    background-color: ${({ theme }) => theme.antdTheme?.colorBgContainerDisabled};
+                    color: ${({ theme }) => theme.antdTheme?.colorTextDisabled};
                 }
-            }
-        `}
+
+                &:hover {
+                    .react-phone-input,
+                    .react-phone-input__button {
+                        border-color: ${({ theme }) => theme.antdTheme?.colorBorder};
+                    }
+                }
+            `}
     `,
 };

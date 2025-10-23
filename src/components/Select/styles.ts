@@ -118,7 +118,7 @@ export const S = {
             cursor: pointer;
             color: ${({ theme }) => theme.antdTheme?.colorText};
         }
-        
+
         .react-select--is-disabled {
             .react-select__control {
                 background-color: ${({ theme }) => theme.antdTheme?.colorBgContainerDisabled};
@@ -127,7 +127,7 @@ export const S = {
             .react-select__single-value {
                 color: ${({ theme }) => theme.antdTheme?.colorTextDisabled};
             }
-            
+
             .react-select__multi-value {
                 padding: 0 8px;
             }
@@ -136,7 +136,7 @@ export const S = {
                 color: ${({ theme }) => theme.antdTheme?.colorTextDisabled};
                 margin: 0;
             }
-            
+
             .react-select__multi-value__remove {
                 display: none;
             }

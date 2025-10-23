@@ -30,6 +30,7 @@ body:
               - "{{ %firstName }}"
               - "{{ %middleName }}"
             family: "{{ %lastName }}"
+            use: official
         gender: "{{ %gender }}"
         telecom:
           - value: "{{ %mobile }}"
