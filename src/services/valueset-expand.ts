@@ -14,8 +14,7 @@ export type ValueSetOption = {
 };
 
 const instanceHealthSamurai = axios.create({
-    // baseURL: 'https://tx.health-samurai.io',
-    baseURL: 'https://tx.dev.hl7.org.au',
+    baseURL: 'https://tx.health-samurai.io',
     headers: {
         Accept: 'application/json;charset=UTF=8',
     },
