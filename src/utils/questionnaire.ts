@@ -149,7 +149,7 @@ export function questionnaireItemsToValidationSchema(
             schema = createSchemaArrayOfValues(yup.object({ decimal: schema }));
         } else if (item.type === 'quantity') {
             const quantitySchema = yup.object({
-                value: yup.number().required(),
+                value: item.required ? yup.number().required() : yup.number().nullable(),
                 comparator: yup.string().oneOf(['<', '<=', '>=', '>']).nullable(),
                 unit: yup.string().nullable(),
                 system: yup.string().nullable(),
@@ -168,6 +168,27 @@ export function questionnaireItemsToValidationSchema(
             }
             schema = applyCustomYupTestsToItem(item, schema, customYupTests);
             schema = createSchemaArrayOfValues(yup.object({ date: schema }));
+        } else if (item.type === 'dateTime') {
+            schema = yup.date();
+            if (item.required) {
+                schema = schema.required();
+            }
+            schema = applyCustomYupTestsToItem(item, schema, customYupTests);
+            schema = createSchemaArrayOfValues(yup.object({ dateTime: schema }));
+        } else if (item.type === 'time') {
+            schema = yup.string().test(t`time`, t`Must be a valid time (HH:mm:ss)`, (value) => {
+                if (!value) {
+                    return true;
+                }
+
+                const isoTimeRegex = /([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?/;
+                return isoTimeRegex.test(value);
+            });
+            if (item.required) {
+                schema = schema.required();
+            }
+            schema = applyCustomYupTestsToItem(item, schema, customYupTests);
+            schema = createSchemaArrayOfValues(yup.object({ time: schema }));
         } else if (item.type === 'group' && item.item) {
             schema = yup
                 .object({

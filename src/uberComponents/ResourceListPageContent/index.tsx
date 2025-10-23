@@ -46,6 +46,7 @@ export function ResourceListPageContent<R extends Resource>({
     getTableColumns,
     defaultLaunchContext,
     getReportColumns,
+    maxWidth,
 }: ResourceListPageContentProps<R>) {
     const allFilters = getFilters?.() ?? [];
     const allSorters = getSorters?.() ?? [];
@@ -147,7 +148,7 @@ export function ResourceListPageContent<R extends Resource>({
     };
 
     return (
-        <PageContainerContent level={2}>
+        <PageContainerContent level={2} maxWidth={maxWidth}>
             {renderHeader()}
 
             {getReportColumns ? (

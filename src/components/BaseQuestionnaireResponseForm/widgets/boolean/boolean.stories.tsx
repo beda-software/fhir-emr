@@ -44,3 +44,19 @@ export const Default: Story = {
         expect(checkbox).not.toBeChecked();
     },
 };
+
+export const Disabled: Story = {
+    render: () => (
+        <QuestionBoolean
+            parentPath={[]}
+            questionItem={{
+                text: 'Boolean question',
+                type: 'boolean',
+                linkId: 'example',
+                required: true,
+                readOnly: true,
+            }}
+            context={{} as ItemContext}
+        />
+    ),
+};

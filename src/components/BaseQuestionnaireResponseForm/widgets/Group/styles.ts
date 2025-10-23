@@ -31,4 +31,11 @@ export const S = {
                 border-top: 1px solid ${({ theme }) => theme.primary};
             `}
     `,
+    Title: styled.div`
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+    `,
 };

@@ -28,7 +28,7 @@ contained:
     entry:
       - request:
           method: GET
-          url: /PractitionerRole?_id={{%practitionerRole.id}}&_include=practitioner
+          url: /PractitionerRole?_id={{%practitionerRole.id}}&_include=PractitionerRole:practitioner
 sourceQueries:
   - reference: "#PractitionerRoleWithPractitioner"
 item:

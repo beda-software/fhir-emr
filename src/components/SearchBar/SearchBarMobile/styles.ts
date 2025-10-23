@@ -1,4 +1,6 @@
 import { Badge, Button, Drawer } from 'antd';
+import type { DrawerProps } from 'antd';
+import type { ComponentType } from 'react';
 import styled from 'styled-components';
 
 export const S = {
@@ -25,7 +27,7 @@ export const S = {
             background: 0 !important;
         }
     `,
-    Drawer: styled(Drawer as any)`
+    Drawer: styled(Drawer as unknown as ComponentType<DrawerProps>)`
         padding-top: 56px;
         padding-bottom: 129px;
         background-color: ${({ theme }) => theme.neutralPalette.gray_1};

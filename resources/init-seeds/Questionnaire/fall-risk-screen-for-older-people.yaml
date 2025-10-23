@@ -1,0 +1,1516 @@
+resourceType: Questionnaire
+title: Fall Risk Screen for Older People
+status: active
+id: fall-risk-screen-for-older-people
+url: fall-risk-screen-for-older-people
+name: fall-risk-screen-for-older-people
+subjectType:
+  - Encounter
+  - Patient
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+item:
+  - type: group
+    linkId: wizard
+    itemControl:
+      coding:
+        - code: wizard
+    item:
+      - linkId: g1
+        text: Demographics
+        type: group
+        item:
+          - linkId: demographics-group
+            text: Demographics
+            type: group
+            item:
+              - linkId: row-1
+                type: group
+                extension:
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                    valueCodeableConcept: { coding: [{ code: row }] }
+                item:
+                  - linkId: family-name
+                    text: Family name
+                    type: string
+                    required: true
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%Patient.name.first().family"
+                  - linkId: first-name
+                    type: string
+                    text: First name
+                    required: true
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%Patient.name.first().given.first()"
+
+              - linkId: row-2
+                type: group
+                extension:
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                    valueCodeableConcept: { coding: [{ code: row }] }
+                item:
+                  - linkId: personal-code
+                    text: Personal code
+                    type: string
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%Patient.id"
+                  - linkId: birth-date
+                    text: Date of birth
+                    type: date
+                    required: true
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%Patient.birthDate"
+                  - linkId: gender
+                    text: Gender
+                    type: choice
+                    itemControl: { coding: [{ code: inline-choice }] }
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: male
+                          system: http://hl7.org/fhir/administrative-gender
+                          display: Male
+                      - valueCoding:
+                          code: female
+                          system: http://hl7.org/fhir/administrative-gender
+                          display: Female
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%Questionnaire.repeat(item).where(linkId='gender').answerOption.valueCoding.where(code=%Patient.gender)"
+
+              - linkId: row-3
+                type: group
+                extension:
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                    valueCodeableConcept: { coding: [{ code: row }] }
+                item:
+                  - linkId: mobile
+                    text: Phone number
+                    type: string
+                    itemControl:
+                      coding:
+                        - code: phoneWidget
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "%Patient.telecom.where(system='phone').value"
+                  - linkId: date-of-assessment
+                    text: Date of Assessment
+                    type: date
+                    initialExpression:
+                      language: text/fhirpath
+                      expression: "today()"
+
+              - linkId: row-4
+                type: group
+                item:
+                  - linkId: marital-status
+                    text: Marital status
+                    type: choice
+                    itemControl: { coding: [{ code: inline-choice }] }
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: S
+                          system: http://terminology.hl7.org/CodeSystem/v3-MaritalStatus
+                          display: "Single"
+                      - valueCoding:
+                          code: M
+                          system: http://terminology.hl7.org/CodeSystem/v3-MaritalStatus
+                          display: "Married (defacto)"
+                      - valueCoding:
+                          code: W
+                          system: http://terminology.hl7.org/CodeSystem/v3-MaritalStatus
+                          display: "Widowed"
+                      - valueCoding:
+                          code: D
+                          system: http://terminology.hl7.org/CodeSystem/v3-MaritalStatus
+                          display: "Divorced (separated)"
+                      - valueCoding:
+                          code: UNK
+                          system: http://terminology.hl7.org/CodeSystem/v3-MaritalStatus
+                          display: "Unknown"
+                  - linkId: living-arrangements
+                    text: Usual living arrangements
+                    type: string
+
+          - linkId: language-group
+            text: Language
+            type: group
+            item:
+              - linkId: preferred-english
+                text: Is English the individual's preferred language?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+                answerOption:
+                  - valueCoding:
+                      code: "yes"
+                      display: "Yes"
+                  - valueCoding:
+                      code: "no"
+                      display: "No"
+
+              - linkId: preferred-language-other
+                text: If not, what is it?
+                type: string
+                enableWhen:
+                  - answerCoding:
+                      code: "no"
+                    operator: "="
+                    question: preferred-english
+
+              - linkId: functional-english
+                text: Does the individual have functional English?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+                answerOption:
+                  - valueCoding:
+                      code: "yes"
+                      display: "Yes"
+                  - valueCoding:
+                      code: "no"
+                      display: "No"
+
+      - linkId: g2
+        text: Service Use
+        type: group
+        item:
+          - linkId: services-use-group
+            text: Recent health / community services use
+            type: group
+            item:
+              - linkId: services-row-1
+                type: group
+                extension:
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                    valueCodeableConcept: { coding: [{ code: row }] }
+                item:
+                  - linkId: svc-1
+                    text: 1. Community Aged Care Packages/Services
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+                  - linkId: svc-2
+                    text: 2. Community Rehabilitation
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+
+              - linkId: services-row-2
+                type: group
+                extension:
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                    valueCodeableConcept: { coding: [{ code: row }] }
+                item:
+                  - linkId: svc-3
+                    text: 3. Doctor's Appointment
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+                  - linkId: svc-4
+                    text: 4. Doctor Home Visit
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+
+              - linkId: services-row-3
+                type: group
+                extension:
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                    valueCodeableConcept: { coding: [{ code: row }] }
+                item:
+                  - linkId: svc-5
+                    text: 5. Home Help
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+                  - linkId: svc-6
+                    text: 6. Home Modifications
+                    type: choice
+                    itemControl: { coding: [{ code: inline-choice }] }
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+
+              - linkId: services-row-4
+                type: group
+                extension:
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                    valueCodeableConcept: { coding: [{ code: row }] }
+                item:
+                  - linkId: svc-7
+                    text: 7. Home Rehabilitation
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+                  - linkId: svc-8
+                    text: 8. Linkages Package
+                    type: choice
+                    itemControl: { coding: [{ code: inline-choice }] }
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+
+              - linkId: services-row-5
+                type: group
+                extension:
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                    valueCodeableConcept: { coding: [{ code: row }] }
+                item:
+                  - linkId: svc-9
+                    text: 9. Meals on Wheels
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+                  - linkId: svc-10
+                    text: 10. OT Home visit
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+
+              - linkId: services-row-6
+                type: group
+                extension:
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                    valueCodeableConcept: { coding: [{ code: row }] }
+                item:
+                  - linkId: svc-11
+                    text: 11. Outpatient Appointment
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+                  - linkId: svc-12
+                    text: 12. Other
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+
+              - linkId: services-row-7
+                type: group
+                extension:
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                    valueCodeableConcept: { coding: [{ code: row }] }
+                item:
+                  - linkId: svc-13
+                    text: 13. Post Acute Care
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+                  - linkId: svc-14
+                    text: 14. Personal Care
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+
+              - linkId: services-row-8
+                type: group
+                extension:
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                    valueCodeableConcept: { coding: [{ code: row }] }
+                item:
+                  - linkId: svc-15
+                    text: 15. Respite Care
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+                  - linkId: svc-16
+                    text: 16. District Nursing Services
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+
+              - linkId: services-row-9
+                type: group
+                extension:
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                    valueCodeableConcept: { coding: [{ code: row }] }
+                item:
+                  - linkId: svc-17
+                    text: 17. Physiotherapist Appointment
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+                  - linkId: svc-18
+                    text: 18. Dietician
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+
+              - linkId: services-row-10
+                type: group
+                extension:
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                    valueCodeableConcept: { coding: [{ code: row }] }
+                item:
+                  - linkId: svc-19
+                    text: 19. Podiatrist
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+                  - linkId: svc-20
+                    text: 20. Personal Alarm
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+
+              - linkId: services-row-11
+                type: group
+                extension:
+                  - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+                    valueCodeableConcept: { coding: [{ code: row }] }
+                item:
+                  - linkId: svc-21
+                    text: 21. Day Centre
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+                  - linkId: svc-22
+                    text: 22. Falls and Balance clinic
+                    type: choice
+                    itemControl:
+                      coding:
+                        - code: inline-choice
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding:
+                          code: "yes"
+                          display: "Yes"
+                      - valueCoding:
+                          code: "no"
+                          display: "No"
+
+              - linkId: services-other-details
+                text: Other — details
+                type: text
+                enableWhen:
+                  - question: svc-12
+                    operator: "="
+                    answerCoding: { code: "yes" }
+
+              - linkId: services-comments
+                text: Comments
+                type: text
+
+      - linkId: g3
+        text: Falls risk pt 1
+        type: group
+        item:
+          - linkId: history-of-falls-group
+            text: History of falls
+            type: group
+            item:
+              - linkId: falls-number-12m
+                text: Number of falls in the past 12 months?
+                type: choice
+                required: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+                answerOption:
+                  - valueCoding: { code: "0", display: "No falls" }
+                  - valueCoding: { code: "1", display: "1 fall" }
+                  - valueCoding: { code: "2", display: "2 falls" }
+                  - valueCoding: { code: "3", display: "3 or more" }
+              - linkId: falls-number-12m-details
+                text: If known, specify exact number of falls
+                type: integer
+                enableWhen:
+                  - answerCoding:
+                      code: "3"
+                    operator: "="
+                    question: falls-number-12m
+
+              - linkId: falls-injury-severity
+                text: Was an injury sustained in any of the fall(s) in the past 12 months? (rate most severe)
+                type: choice
+                required: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                answerOption:
+                  - valueCoding: { code: "0", display: "No" }
+                  - valueCoding: { code: "1", display: "Minor injury, did not require medical attention" }
+                  - valueCoding: { code: "2", display: "Minor injury, did require medical attention" }
+                  - valueCoding: { code: "3", display: "Severe injury (fracture, etc.)" }
+
+              - linkId: fall-circumstances-group
+                type: group
+                enableBehavior: any
+                enableWhen:
+                  - answerCoding:
+                      code: "1"
+                    operator: "="
+                    question: falls-number-12m
+                  - answerCoding:
+                      code: "2"
+                    operator: "="
+                    question: falls-number-12m
+                  - answerCoding:
+                      code: "3"
+                    operator: "="
+                    question: falls-number-12m
+                item:
+                  - linkId: most-recent-fall
+                    text: Describe the circumstances of the most recent fall in the past 12 months
+                    type: display
+                  - linkId: time-of-fall
+                    text: Time of fall
+                    type: choice
+                    itemControl: { coding: [{ code: inline-choice }] }
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding: { code: "am", display: "AM" }
+                      - valueCoding: { code: "pm", display: "PM" }
+                  - linkId: location-of-fall
+                    text: Location of fall
+                    type: choice
+                    itemControl: { coding: [{ code: inline-choice }] }
+                    extension:
+                      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                        valueString: horizontal
+                    answerOption:
+                      - valueCoding: { code: "inside-home", display: "Inside home" }
+                      - valueCoding: { code: "outside-home", display: "Outside home" }
+                      - valueCoding: { code: "community", display: "Community" }
+                  - linkId: direction-of-fall
+                    text: Direction of fall
+                    type: choice
+                    answerOption:
+                      - valueCoding: { code: "left", display: "Left" }
+                      - valueCoding: { code: "right", display: "Right" }
+                      - valueCoding: { code: "forward", display: "Forward" }
+                      - valueCoding: { code: "backward", display: "Backward" }
+                      - valueCoding: { code: "down", display: "Down" }
+                      - valueCoding: { code: "cant-remember", display: "Can't remember" }
+                      - valueCoding: { code: "other", display: "Other" }
+                  - linkId: direction-of-fall-specify
+                    text: Specify direction
+                    type: string
+                    enableWhen:
+                      - question: direction-of-fall
+                        operator: "="
+                        answerCoding: { code: "other" }
+                  - linkId: cause-of-fall
+                    text: Cause of fall
+                    type: choice
+                    answerOption:
+                      - valueCoding: { code: "trip", display: "Trip" }
+                      - valueCoding: { code: "slip", display: "Slip" }
+                      - valueCoding: { code: "loss-of-balance", display: "Loss of balance" }
+                      - valueCoding: { code: "knees-gave-way", display: "Knees gave way" }
+                      - valueCoding: { code: "fainted", display: "Fainted" }
+                      - valueCoding: { code: "dizzy-giddy", display: "Feeling dizzy or giddy" }
+                      - valueCoding: { code: "alcohol-meds", display: "Alcohol or meds" }
+                      - valueCoding: { code: "fell-out-of-bed", display: "Fell out of bed" }
+                      - valueCoding: { code: "unknown", display: "Unknown" }
+                      - valueCoding: { code: "other", display: "Other" }
+                  - linkId: cause-of-fall-specify
+                    text: Specify cause
+                    type: string
+                    enableWhen:
+                      - question: cause-of-fall
+                        operator: "="
+                        answerCoding: { code: "other" }
+                  - linkId: recent-fall-comments
+                    text: Comments
+                    type: text
+                  - linkId: recent-fall-injuries
+                    text: Injuries
+                    type: text
+
+          - linkId: medications-group
+            text: Medications
+            type: group
+            item:
+              - linkId: meds-list
+                text: List all medications currently taken
+                type: text
+              - linkId: meds-count
+                text: Number of prescription medications
+                type: choice
+                required: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+                answerOption:
+                  - valueCoding: { code: "0", display: "No medication" }
+                  - valueCoding: { code: "1", display: "1-2 medications" }
+                  - valueCoding: { code: "2", display: "3 medications" }
+                  - valueCoding: { code: "3", display: "4 or more medications" }
+
+              - linkId: meds-flags
+                text: Do you take any of the following types of medication? (select all that apply, then rate total)
+                type: choice
+                repeats: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                answerOption:
+                  - valueCoding: { code: "antiarrhythmic", display: "Type 1a antiarrhythmic" }
+                  - valueCoding: { code: "antidepressant", display: "Antidepressant" }
+                  - valueCoding: { code: "antiepileptics", display: "Anti-epileptics" }
+                  - valueCoding: { code: "central-analgesic", display: "Central acting analgesic" }
+                  - valueCoding: { code: "digoxin", display: "Digoxin" }
+                  - valueCoding: { code: "diuretics", display: "Diuretics" }
+                  - valueCoding: { code: "sedative", display: "Sedative" }
+                  - valueCoding: { code: "vestibular", display: "Vestibular suppressant" }
+
+              - linkId: meds-types-score-label
+                text: Total number of types taken (rating)
+                type: choice
+                required: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+                answerOption:
+                  - valueCoding: { code: "0", display: "None apply" }
+                  - valueCoding: { code: "1", display: "1-2 apply" }
+                  - valueCoding: { code: "2", display: "3 apply" }
+                  - valueCoding: { code: "3", display: "4 or more apply" }
+
+          - linkId: medical-conditions-group
+            text: Medical conditions
+            type: group
+            item:
+              - linkId: medcond-multiselect
+                text: Chronic condition(s) affecting balance & mobility (select all that apply)
+                type: choice
+                repeats: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                answerOption:
+                  - valueCoding: { code: arthritis, display: Arthritis }
+                  - valueCoding: { code: back-pain, display: Back pain }
+                  - valueCoding: { code: cardiac, display: Cardiac condition }
+                  - valueCoding: { code: diabetes, display: Diabetes }
+                  - valueCoding: { code: dementia, display: Dementia }
+                  - valueCoding: { code: lower-limb-amputation, display: Lower limb amputation }
+                  - valueCoding: { code: lower-limb-joint-replacement, display: Lower limb joint replacement }
+                  - valueCoding: { code: osteoporosis, display: Osteoporosis }
+                  - valueCoding: { code: parkinsons, display: Parkinson's disease }
+                  - valueCoding: { code: peripheral-neuropathy, display: Peripheral neuropathy }
+                  - valueCoding: { code: respiratory, display: Respiratory condition }
+                  - valueCoding: { code: stroke, display: Stroke }
+                  - valueCoding: { code: vestibular-disorder, display: Vestibular disorder }
+                  - valueCoding: { code: neuro-other, display: Other neurological conditions }
+                  - valueCoding: { code: other-dizziness, display: Other dizziness }
+
+              - linkId: medcond-multiselect-specify
+                text: Please, specify
+                type: string
+                enableBehavior: any
+                enableWhen:
+                  - question: medcond-multiselect
+                    operator: "="
+                    answerCoding: { code: neuro-other }
+                  - question: medcond-multiselect
+                    operator: "="
+                    answerCoding: { code: other-dizziness }
+
+              - linkId: medcond-score-label
+                text: Number of chronic conditions that apply
+                type: choice
+                required: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                extension:
+                  - url: "https://emr-core.beda.software/StructureDefinition/inline-choice-direction"
+                    valueString: horizontal
+                answerOption:
+                  - valueCoding: { code: "0", display: "None apply" }
+                  - valueCoding: { code: "1", display: "1-2 apply" }
+                  - valueCoding: { code: "2", display: "3-4 apply" }
+                  - valueCoding: { code: "3", display: "5 or more apply" }
+
+              - linkId: osteoporosis-status
+                text: Osteoporosis status
+                type: choice
+                itemControl: { coding: [{ code: inline-choice }] }
+                extension:
+                  - url: "https://emr-core.beda.software/StructureDefinition/inline-choice-direction"
+                    valueString: horizontal
+                answerOption:
+                  - valueCoding: { code: has, display: Has osteoporosis }
+                  - valueCoding: { code: unknown, display: Unknown }
+                  - valueCoding: { code: none, display: Does not have }
+
+      - linkId: g4
+        text: Falls risk pt 2
+        type: group
+        item:
+          - linkId: sensory-loss-group
+            text: Sensory loss
+            type: group
+            item:
+              - linkId: sensory-vision
+                text: Do you have any uncorrected vision deficit that limits your functional ability?
+                type: choice
+                required: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+                answerOption:
+                  - valueCoding: { code: "1", display: "Yes" }
+                  - valueCoding: { code: "0", display: "No" }
+
+              - linkId: sensory-somato
+                text: Do you have any uncorrected somatosensory deficit that limits your functional ability?
+                type: choice
+                required: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+                answerOption:
+                  - valueCoding: { code: "1", display: "Yes" }
+                  - valueCoding: { code: "0", display: "No" }
+
+          - linkId: feet-footwear-group
+            text: Feet and footwear
+            type: group
+            item:
+              - linkId: foot-problems
+                text: Do you have any foot problems (e.g. corns, bunions, swelling etc.)?
+                type: choice
+                required: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+                answerOption:
+                  - valueCoding: { code: "1", display: "Yes" }
+                  - valueCoding: { code: "0", display: "No" }
+
+              - linkId: foot-problems-specify
+                text: Specify foot problems
+                type: string
+                enableWhen:
+                  - question: foot-problems
+                    operator: "="
+                    answerCoding: { code: "1" }
+
+              - linkId: footwear-inappropriate
+                text: Do you have any inappropriate, poorly fitting or worn footwear?
+                type: choice
+                required: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+                answerOption:
+                  - valueCoding: { code: "1", display: "Yes" }
+                  - valueCoding: { code: "0", display: "No" }
+
+              - linkId: footwear-specify
+                text: Specify footwear issues
+                type: string
+                enableWhen:
+                  - question: footwear-inappropriate
+                    operator: "="
+                    answerCoding: { code: "1" }
+
+          - linkId: cognitive-status-group
+            text: Cognitive status
+            type: group
+            item:
+              - linkId: amts-score-multiselect
+                text: AMTS score — mark the items answered correctly
+                type: choice
+                repeats: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                answerOption:
+                  - valueCoding: { code: age, display: Age }
+                  - valueCoding: { code: time-to-hour, display: Time to the nearest hour }
+                  - valueCoding: { code: address-42-west-st, display: Address to recall — 42 West St }
+                  - valueCoding: { code: current-year, display: Current year }
+                  - valueCoding: { code: current-location, display: "Current location (where are we?)" }
+                  - valueCoding: { code: recognition-two-persons, display: "Recognition of two persons (Dr, nurse)" }
+                  - valueCoding: { code: date-of-birth, display: Date of birth }
+                  - valueCoding: { code: first-world-war, display: Years of first World War }
+                  - valueCoding: { code: prime-minister, display: Name of current prime minister }
+                  - valueCoding: { code: count-backwards-20, display: Count backwards from 20 by ones }
+
+          - linkId: amts-correct-range
+            text: Number of correct responses
+            type: choice
+            required: true
+            itemControl: { coding: [{ code: inline-choice }] }
+            extension:
+              - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                valueString: horizontal
+            answerOption:
+              - valueCoding: { code: "0", display: "9-10" }
+              - valueCoding: { code: "1", display: "7-8" }
+              - valueCoding: { code: "2", display: "5-6" }
+              - valueCoding: { code: "3", display: "4 or less" }
+
+      - linkId: g5
+        text: Falls risk pt 3
+        type: group
+        item:
+          - linkId: continence-group
+            text: Continence
+            type: group
+            item:
+              - linkId: continence-status
+                text: Are you continent?
+                type: choice
+                required: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+                answerOption:
+                  - valueCoding: { code: "0", display: "Yes" }
+                  - valueCoding: { code: "1", display: "No" }
+
+              - linkId: nocturia
+                text: Do you regularly have to go to the toilet at night (3 or more times)?
+                helpText: If a bottle is used, choose "No"
+                type: choice
+                required: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+                answerOption:
+                  - valueCoding: { code: "1", display: "Yes" }
+                  - valueCoding: { code: "0", display: "No" }
+
+          - linkId: nutritional-status-group
+            text: Nutritional status
+            type: group
+            item:
+              - linkId: food-intake-decline
+                text: Has your food intake declined in the past three months due to loss of appetite, digestive problems, chewing or swallowing difficulties?
+                type: choice
+                required: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                answerOption:
+                  - valueCoding: { code: "0", display: "No" }
+                  - valueCoding: { code: "1", display: "Small change, but intake remains good" }
+                  - valueCoding: { code: "2", display: "Moderate loss of appetite" }
+                  - valueCoding: { code: "3", display: "Severe loss of appetite / poor oral intake" }
+
+              - linkId: weight-loss-3-12m
+                text: Weight loss during the last 3-12 months
+                type: choice
+                required: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+                answerOption:
+                  - valueCoding: { code: "0", display: "Nil" }
+                  - valueCoding: { code: "1", display: "Minimal (<1 kg) or unsure" }
+                  - valueCoding: { code: "2", display: "Moderate (1-3 kg)" }
+                  - valueCoding: { code: "3", display: "Marked (>3 kg)" }
+
+              - linkId: alcohol-drinks-week
+                text: Number of alcoholic drinks consumed in the past week
+                type: choice
+                required: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+                answerOption:
+                  - valueCoding: { code: "0", display: "Nil" }
+                  - valueCoding: { code: "1", display: "1-3" }
+                  - valueCoding: { code: "2", display: "4-10" }
+                  - valueCoding: { code: "3", display: "11+" }
+
+          - linkId: environment-group
+            text: Environment
+            type: group
+            item:
+              - linkId: home-environment-safe
+                text: Did the home environment appear safe? (only rate if undertaking a home visit assessment)
+                type: choice
+                itemControl: { coding: [{ code: inline-choice }] }
+                answerOption:
+                  - valueCoding: { code: "0", display: "Yes" }
+                  - valueCoding: { code: "1", display: "Minimal environmental hazards" }
+                  - valueCoding: { code: "2", display: "Moderate hazards requiring modification" }
+                  - valueCoding: { code: "3", display: "Extremely unsafe environment" }
+
+          - linkId: functional-behaviour-group
+            text: Functional Behaviour
+            type: group
+            item:
+              - linkId: adl-mobility-behaviour
+                text: Observed behaviours in Activities of Daily Living and Mobility indicate
+                type: choice
+                required: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+                answerOption:
+                  - valueCoding:
+                      {
+                        code: "0",
+                        display: "Consistently aware of current abilities / seeks appropriate assistance as required",
+                      }
+                  - valueCoding:
+                      { code: "1", display: "Generally aware of current abilities / occasional risk-taking behaviour" }
+                  - valueCoding:
+                      { code: "2", display: "Under-estimates abilities / inappropriately fearful of activity" }
+                  - valueCoding: { code: "3", display: "Over-estimates abilities / frequent risk-taking behaviour" }
+
+      - linkId: g6
+        text: Falls risk pt 4
+        type: group
+        item:
+          - linkId: function-group
+            text: Function
+            type: group
+            item:
+              - linkId: adl-personal
+                text: Prior to this fall, how much assistance was required for personal care ADL (e.g. dressing, grooming, toileting)? (If no fall in last 12 months, rate current function)
+                type: choice
+                required: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                answerOption:
+                  - valueCoding: { code: "0", display: "None (completely independent)" }
+                  - valueCoding: { code: "1", display: "Supervision" }
+                  - valueCoding: { code: "2", display: "Some assistance required" }
+                  - valueCoding: { code: "3", display: "Completely dependent" }
+
+              - linkId: adl-personal-changed
+                text: Has this changed since the most recent fall? (leave blank if no falls in 12 months)
+                type: choice
+                required: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+                answerOption:
+                  - valueCoding: { code: "1", display: "Yes" }
+                  - valueCoding: { code: "0", display: "No" }
+
+              - linkId: adl-personal-changed-specify
+                text: Specify change
+                type: string
+                enableWhen:
+                  - question: adl-personal-changed
+                    operator: "="
+                    answerCoding: { code: "1" }
+
+              - linkId: adl-instrumental
+                text: Prior to this fall, how much assistance was required for instrumental ADL (e.g. shopping, housework, laundry)? (If no fall in last 12 months, rate current function)
+                type: choice
+                required: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                answerOption:
+                  - valueCoding: { code: "0", display: "None (completely independent)" }
+                  - valueCoding: { code: "1", display: "Supervision" }
+                  - valueCoding: { code: "2", display: "Some assistance required" }
+                  - valueCoding: { code: "3", display: "Completely dependent" }
+
+              - linkId: adl-instrumental-changed
+                text: Has this changed since the most recent fall? (leave blank if no falls in 12 months)
+                type: choice
+                required: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+                answerOption:
+                  - valueCoding: { code: "1", display: "Yes" }
+                  - valueCoding: { code: "0", display: "No" }
+
+              - linkId: adl-instrumental-changed-specify
+                text: Specify change
+                type: string
+                enableWhen:
+                  - question: adl-instrumental-changed
+                    operator: "="
+                    answerCoding: { code: "1" }
+
+          - linkId: balance-group
+            text: Balance
+            type: group
+            item:
+              - linkId: balance-observation
+                text: Upon observation of walking and turning, does the person appear unsteady or at risk of losing balance? (Rate with usual walking aid. If level fluctuates, tick the most unsteady rating)
+                type: choice
+                required: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                answerOption:
+                  - valueCoding: { code: "0", display: "No unsteadiness observed" }
+                  - valueCoding: { code: "1", display: "Yes, minimally unsteady on walking or turning" }
+                  - valueCoding:
+                      { code: "2", display: "Yes, moderately unsteady on walking or turning (needs supervision)" }
+                  - valueCoding:
+                      {
+                        code: "3",
+                        display: "Yes, consistently and severely unsteady on walking or turning (needs constant hands-on assistance)",
+                      }
+
+          - linkId: gait-physical-group
+            text: Gait / Physical Activity
+            type: group
+            item:
+              - linkId: gait-home-safety
+                text: Can the person walk safely around their own home?
+                type: choice
+                required: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                answerOption:
+                  - valueCoding: { code: "0", display: "Independent, no gait aid needed" }
+                  - valueCoding: { code: "1", display: "Independent with a gait aid" }
+                  - valueCoding: { code: "2", display: "Safe with supervision / physical assistance" }
+                  - valueCoding: { code: "3", display: "Unsafe" }
+
+              - linkId: gait-community-safety
+                text: Can the person walk safely in the community?
+                type: choice
+                required: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                answerOption:
+                  - valueCoding: { code: "0", display: "Independent, no gait aid needed" }
+                  - valueCoding: { code: "1", display: "Independent with a gait aid" }
+                  - valueCoding: { code: "2", display: "Safe with supervision / physical assistance" }
+                  - valueCoding: { code: "3", display: "Unsafe" }
+
+              - linkId: gait-aid-info
+                text: If a walking aid is used, list the aid and when it is used
+                type: display
+              - linkId: gait-aid-type
+                text: Aid type
+                type: string
+              - linkId: gait-aid-location
+                text: Location of use
+                type: choice
+                itemControl: { coding: [{ code: inline-choice }] }
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+                answerOption:
+                  - valueCoding: { code: "indoors", display: "Indoors" }
+                  - valueCoding: { code: "outdoors", display: "Outdoors" }
+
+              - linkId: physical-activity
+                text: How physically active is the person?
+                type: choice
+                required: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                answerOption:
+                  - valueCoding: { code: "0", display: "Very active (exercises 3 times per week)" }
+                  - valueCoding: { code: "1", display: "Moderately active (exercises less than twice per week)" }
+                  - valueCoding: { code: "2", display: "Not very active (rarely leaves the house)" }
+                  - valueCoding: { code: "3", display: "Inactive (rarely leaves one room of the house)" }
+
+              - linkId: physical-activity-change
+                text: Has this changed since the most recent fall?
+                type: choice
+                required: true
+                itemControl: { coding: [{ code: inline-choice }] }
+                extension:
+                  - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                    valueString: horizontal
+                answerOption:
+                  - valueCoding: { code: "1", display: "Yes" }
+                  - valueCoding: { code: "0", display: "No" }
+
+              - linkId: physical-activity-change-specify
+                text: Specify change
+                type: string
+                enableWhen:
+                  - question: physical-activity-change
+                    operator: "="
+                    answerCoding: { code: "1" }
+
+          - linkId: all-answered
+            text: All required scoring answers present
+            type: boolean
+            hidden: false
+            readOnly: true
+            calculatedExpression:
+              language: text/fhirpath
+              expression: >-
+                (
+                  %QuestionnaireResponse.repeat(item).where(linkId='falls-number-12m').answer.exists()
+                  and %QuestionnaireResponse.repeat(item).where(linkId='falls-injury-severity').answer.exists()
+                  and %QuestionnaireResponse.repeat(item).where(linkId='meds-count').answer.exists()
+                  and %QuestionnaireResponse.repeat(item).where(linkId='meds-types-score-label').answer.exists()
+                  and %QuestionnaireResponse.repeat(item).where(linkId='medcond-score-label').answer.exists()
+                  and %QuestionnaireResponse.repeat(item).where(linkId='sensory-vision').answer.exists()
+                  and %QuestionnaireResponse.repeat(item).where(linkId='sensory-somato').answer.exists()
+                  and %QuestionnaireResponse.repeat(item).where(linkId='foot-problems').answer.exists()
+                  and %QuestionnaireResponse.repeat(item).where(linkId='footwear-inappropriate').answer.exists()
+                  and %QuestionnaireResponse.repeat(item).where(linkId='amts-correct-range').answer.exists()
+                  and %QuestionnaireResponse.repeat(item).where(linkId='continence-status').answer.exists()
+                  and %QuestionnaireResponse.repeat(item).where(linkId='nocturia').answer.exists()
+                  and %QuestionnaireResponse.repeat(item).where(linkId='food-intake-decline').answer.exists()
+                  and %QuestionnaireResponse.repeat(item).where(linkId='weight-loss-3-12m').answer.exists()
+                  and %QuestionnaireResponse.repeat(item).where(linkId='alcohol-drinks-week').answer.exists()
+                  and %QuestionnaireResponse.repeat(item).where(linkId='adl-mobility-behaviour').answer.exists()
+                  and %QuestionnaireResponse.repeat(item).where(linkId='adl-personal').answer.exists()
+                  and %QuestionnaireResponse.repeat(item).where(linkId='adl-personal-changed').answer.exists()
+                  and %QuestionnaireResponse.repeat(item).where(linkId='adl-instrumental').answer.exists()
+                  and %QuestionnaireResponse.repeat(item).where(linkId='adl-instrumental-changed').answer.exists()
+                  and %QuestionnaireResponse.repeat(item).where(linkId='balance-observation').answer.exists()
+                  and %QuestionnaireResponse.repeat(item).where(linkId='gait-home-safety').answer.exists()
+                  and %QuestionnaireResponse.repeat(item).where(linkId='gait-community-safety').answer.exists()
+                  and %QuestionnaireResponse.repeat(item).where(linkId='physical-activity').answer.exists()
+                  and %QuestionnaireResponse.repeat(item).where(linkId='physical-activity-change').answer.exists()
+                )
+
+          - linkId: total-risk-score
+            text: Total Risk Score (maximum = 60)
+            type: decimal
+            readOnly: true
+            enableWhen:
+              - question: all-answered
+                operator: "="
+                answerBoolean: true
+            calculatedExpression:
+              language: text/fhirpath
+              expression: >
+                (
+                  // History of falls
+                  (
+                    %QuestionnaireResponse.repeat(item).where(linkId='falls-number-12m').answer.valueCoding.where(code='1').count()
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='falls-number-12m').answer.valueCoding.where(code='2').count() * 2)
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='falls-number-12m').answer.valueCoding.where(code='3').count() * 3)
+                  )
+                  +
+                  (
+                    %QuestionnaireResponse.repeat(item).where(linkId='falls-injury-severity').answer.valueCoding.where(code='1').count()
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='falls-injury-severity').answer.valueCoding.where(code='2').count() * 2)
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='falls-injury-severity').answer.valueCoding.where(code='3').count() * 3)
+                  )
+                  +
+                  // Medications
+                  (
+                    %QuestionnaireResponse.repeat(item).where(linkId='meds-count').answer.valueCoding.where(code='1').count()
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='meds-count').answer.valueCoding.where(code='2').count() * 2)
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='meds-count').answer.valueCoding.where(code='3').count() * 3)
+                  )
+                  +
+                  (
+                    %QuestionnaireResponse.repeat(item).where(linkId='meds-types-score-label').answer.valueCoding.where(code='1').count()
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='meds-types-score-label').answer.valueCoding.where(code='2').count() * 2)
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='meds-types-score-label').answer.valueCoding.where(code='3').count() * 3)
+                  )
+                  +
+                  // Medical conditions
+                  (
+                    %QuestionnaireResponse.repeat(item).where(linkId='medcond-score-label').answer.valueCoding.where(code='1').count()
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='medcond-score-label').answer.valueCoding.where(code='2').count() * 2)
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='medcond-score-label').answer.valueCoding.where(code='3').count() * 3)
+                  )
+                  +
+                  // Sensory loss (binary each)
+                  %QuestionnaireResponse.repeat(item).where(linkId='sensory-vision').answer.valueCoding.where(code='1').count()
+                  + %QuestionnaireResponse.repeat(item).where(linkId='sensory-somato').answer.valueCoding.where(code='1').count()
+                  +
+                  // Feet & footwear (binary each)
+                  %QuestionnaireResponse.repeat(item).where(linkId='foot-problems').answer.valueCoding.where(code='1').count()
+                  + %QuestionnaireResponse.repeat(item).where(linkId='footwear-inappropriate').answer.valueCoding.where(code='1').count()
+                  +
+                  // Cognitive status (AMTS band)
+                  (
+                    %QuestionnaireResponse.repeat(item).where(linkId='amts-correct-range').answer.valueCoding.where(code='1').count()
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='amts-correct-range').answer.valueCoding.where(code='2').count() * 2)
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='amts-correct-range').answer.valueCoding.where(code='3').count() * 3)
+                  )
+                  +
+                  // Continence
+                  %QuestionnaireResponse.repeat(item).where(linkId='continence-status').answer.valueCoding.where(code='1').count()
+                  + %QuestionnaireResponse.repeat(item).where(linkId='nocturia').answer.valueCoding.where(code='1').count()
+                  +
+                  // Nutritional status
+                  (
+                    %QuestionnaireResponse.repeat(item).where(linkId='food-intake-decline').answer.valueCoding.where(code='1').count()
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='food-intake-decline').answer.valueCoding.where(code='2').count() * 2)
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='food-intake-decline').answer.valueCoding.where(code='3').count() * 3)
+                  )
+                  +
+                  (
+                    %QuestionnaireResponse.repeat(item).where(linkId='weight-loss-3-12m').answer.valueCoding.where(code='1').count()
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='weight-loss-3-12m').answer.valueCoding.where(code='2').count() * 2)
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='weight-loss-3-12m').answer.valueCoding.where(code='3').count() * 3)
+                  )
+                  +
+                  (
+                    %QuestionnaireResponse.repeat(item).where(linkId='alcohol-drinks-week').answer.valueCoding.where(code='1').count()
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='alcohol-drinks-week').answer.valueCoding.where(code='2').count() * 2)
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='alcohol-drinks-week').answer.valueCoding.where(code='3').count() * 3)
+                  )
+                  +
+                  // Environment
+                  (
+                    %QuestionnaireResponse.repeat(item).where(linkId='home-environment-safe').answer.valueCoding.where(code='1').count()
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='home-environment-safe').answer.valueCoding.where(code='2').count() * 2)
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='home-environment-safe').answer.valueCoding.where(code='3').count() * 3)
+                  )
+                  +
+                  // Functional behaviour
+                  (
+                    %QuestionnaireResponse.repeat(item).where(linkId='adl-mobility-behaviour').answer.valueCoding.where(code='1').count()
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='adl-mobility-behaviour').answer.valueCoding.where(code='2').count() * 2)
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='adl-mobility-behaviour').answer.valueCoding.where(code='3').count() * 3)
+                  )
+                  +
+                  // Function (ADL)
+                  (
+                    %QuestionnaireResponse.repeat(item).where(linkId='adl-personal').answer.valueCoding.where(code='1').count()
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='adl-personal').answer.valueCoding.where(code='2').count() * 2)
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='adl-personal').answer.valueCoding.where(code='3').count() * 3)
+                  )
+                  +
+                  (
+                    %QuestionnaireResponse.repeat(item).where(linkId='adl-personal-changed').answer.valueCoding.where(code='1').count()
+                  )
+                  +
+                  (
+                    %QuestionnaireResponse.repeat(item).where(linkId='adl-instrumental').answer.valueCoding.where(code='1').count()
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='adl-instrumental').answer.valueCoding.where(code='2').count() * 2)
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='adl-instrumental').answer.valueCoding.where(code='3').count() * 3)
+                  )
+                  +
+                  (
+                    %QuestionnaireResponse.repeat(item).where(linkId='adl-instrumental-changed').answer.valueCoding.where(code='1').count()
+                  )
+                  +
+                  // Balance
+                  (
+                    %QuestionnaireResponse.repeat(item).where(linkId='balance-observation').answer.valueCoding.where(code='1').count()
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='balance-observation').answer.valueCoding.where(code='2').count() * 2)
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='balance-observation').answer.valueCoding.where(code='3').count() * 3)
+                  )
+                  +
+                  // Gait / Physical activity
+                  (
+                    %QuestionnaireResponse.repeat(item).where(linkId='gait-home-safety').answer.valueCoding.where(code='1').count()
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='gait-home-safety').answer.valueCoding.where(code='2').count() * 2)
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='gait-home-safety').answer.valueCoding.where(code='3').count() * 3)
+                  )
+                  +
+                  (
+                    %QuestionnaireResponse.repeat(item).where(linkId='gait-community-safety').answer.valueCoding.where(code='1').count()
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='gait-community-safety').answer.valueCoding.where(code='2').count() * 2)
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='gait-community-safety').answer.valueCoding.where(code='3').count() * 3)
+                  )
+                  +
+                  (
+                    %QuestionnaireResponse.repeat(item).where(linkId='physical-activity').answer.valueCoding.where(code='1').count()
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='physical-activity').answer.valueCoding.where(code='2').count() * 2)
+                    + (%QuestionnaireResponse.repeat(item).where(linkId='physical-activity').answer.valueCoding.where(code='3').count() * 3)
+                  )
+                  +
+                  // Change since most recent fall (binary)
+                  %QuestionnaireResponse.repeat(item).where(linkId='physical-activity-change').answer.valueCoding.where(code='1').count()
+                )
+
+          - linkId: grading-of-falls-risk
+            text: Grading of falls risk
+            type: string
+            readOnly: true
+            enableWhen:
+              - question: all-answered
+                operator: "="
+                answerBoolean: true
+            calculatedExpression:
+              language: text/fhirpath
+              expression: >
+                iif(%QuestionnaireResponse.repeat(item).where(linkId='total-risk-score').answer.valueDecimal <= 11,
+                  'Mild falls risk',
+                  iif(%QuestionnaireResponse.repeat(item).where(linkId='total-risk-score').answer.valueDecimal <= 18,
+                    'Moderate falls risk',
+                    'High falls risk'
+                  )
+                )
+
+          - linkId: grading-of-mild-falls-risk-description
+            type: display
+            text: >-
+              Implement actions for identified individual risk factors, & recommend health promotion
+              behaviour to minimise future ongoing risk (e.g. - increased physical activity, good nutrition)
+            enableBehavior: all
+            enableWhen:
+              - question: all-answered
+                operator: "="
+                answerBoolean: true
+              - question: total-risk-score
+                operator: "<="
+                answerDecimal: 11
+
+          - linkId: grading-of-moderate-falls-risk-description
+            type: display
+            text: >-
+              Implement actions for identified individual risk factors
+            enableBehavior: all
+            enableWhen:
+              - question: all-answered
+                operator: "="
+                answerBoolean: true
+              - question: total-risk-score
+                operator: "<="
+                answerDecimal: 18
+
+          - linkId: grading-of-high-falls-risk-description
+            type: display
+            text: >-
+              Implement actions for identified individual risk
+              factors, and implement additional actions for high
+              falls risk (e.g. refer to a specialist Falls Clinic)
+            enableBehavior: all
+            enableWhen:
+              - question: all-answered
+                operator: "="
+                answerBoolean: true
+              - question: total-risk-score
+                operator: ">"
+                answerDecimal: 18

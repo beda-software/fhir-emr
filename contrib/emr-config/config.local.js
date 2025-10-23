@@ -6,7 +6,6 @@ const config = {
     tier: 'develop',
     baseURL: 'http://localhost:8080',
     sdcIdeUrl: 'http://localhost:3001',
-    aiQuestionnaireBuilderUrl: 'http://localhost:3002',
     sdcBackendUrl: null,
 
     webSentryDSN: null,
@@ -17,7 +16,7 @@ const config = {
     wearablesDataStreamService: 'http://localhost:8082/api/v1',
 
     metriportIdentifierSystem: 'https://api.sandbox.metriport.com',
-    aiAssistantServiceUrl: null,
+    aiAssistantServiceUrl: 'http://localhost:3002/',
 };
 
 export { config as default };

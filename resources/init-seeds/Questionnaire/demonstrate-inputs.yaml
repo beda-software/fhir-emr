@@ -6,9 +6,11 @@ meta:
 item:
   - text: String items
     type: display
+    helpText: This is help text for display items.
     linkId: display-string-block
   - text: string (!repeats, required)
     type: string
+    helpText: This is help text for string items.
     linkId: string-no-repeats-required
     repeats: false
     required: true
@@ -27,6 +29,7 @@ item:
     linkId: display-text-block
   - text: text (!repeats, required)
     type: text
+    helpText: This is help text for text items.
     linkId: text-no-repeats-required
     repeats: false
     required: true
@@ -40,6 +43,7 @@ item:
     linkId: display-url-block
   - text: url (!repeats, required)
     type: url
+    helpText: This is help text for url items.
     linkId: url-no-repeats-required
     repeats: false
     required: true
@@ -53,6 +57,7 @@ item:
     linkId: display-integer-block
   - text: integer (!repeats, required)
     type: integer
+    helpText: This is help text for integer items.
     linkId: integer-no-repeats-required
     repeats: false
     required: true
@@ -66,6 +71,7 @@ item:
     linkId: display-decimal-block
   - text: decimal (!repeats, required)
     type: decimal
+    helpText: This is help text for decimal items.
     linkId: decimal-no-repeats-required
     repeats: false
     required: true
@@ -79,9 +85,14 @@ item:
     linkId: display-quantity-block
   - text: quantity (!repeats, required)
     type: quantity
+    helpText: This is help text for quantity items.
     linkId: quantity-no-repeats-required
     repeats: false
     required: true
+    unitOption:
+      - code: cm
+        system: http://unitsofmeasure.org
+        display: cm
   - text: quantity (!repeats, !required)
     type: quantity
     linkId: quantity-no-repeats-no-required
@@ -92,6 +103,7 @@ item:
     linkId: display-date-block
   - text: date (!repeats, required)
     type: date
+    helpText: This is help text for date items.
     linkId: date-no-repeats-required
     repeats: false
     required: true
@@ -105,6 +117,7 @@ item:
     linkId: display-time-block
   - text: time (!repeats, required)
     type: time
+    helpText: This is help text for time items.
     linkId: time-no-repeats-required
     repeats: false
     required: true
@@ -118,6 +131,7 @@ item:
     linkId: display-dateTime-block
   - text: dateTime (!repeats, required)
     type: dateTime
+    helpText: This is help text for dateTime items.
     linkId: dateTime-no-repeats-required
     repeats: false
     required: true
@@ -131,6 +145,7 @@ item:
     linkId: display-boolean-block
   - text: boolean (!repeats, required)
     type: boolean
+    helpText: This is help text for boolean items.
     linkId: boolean-no-repeats-required
     repeats: false
     required: true
@@ -144,6 +159,7 @@ item:
     linkId: display-reference-block
   - text: reference (repeats, required)
     type: reference
+    helpText: This is help text for reference items.
     linkId: reference-repeats-required
     repeats: true
     required: true
@@ -211,6 +227,7 @@ item:
     linkId: display-choice-block
   - text: choice (repeats, required)
     type: choice
+    helpText: This is help text for choice items.
     linkId: choice-repeats-required
     repeats: true
     required: true
@@ -262,6 +279,7 @@ item:
     linkId: display-open-choice-block
   - text: open-choice (repeats, required)
     type: open-choice
+    helpText: This is help text for open-choice items.
     linkId: open-choice-repeats-required
     repeats: true
     required: true
@@ -313,6 +331,7 @@ item:
     linkId: display-attachment-block
   - text: attachment (!repeats, required)
     type: attachment
+    helpText: This is help text for attachment items.
     linkId: attachment-no-repeats-required
     repeats: false
     required: true
@@ -359,10 +378,12 @@ item:
             / 100))).round(2)
     text: BMI
     type: group
+    helpText: This is help text for group items.
     linkId: bmi-group
   - item:
       - text: Systolic
         type: integer
+        helpText: This is the systolic blood pressure of the patient.
         unit:
           code: mmHg
           system: http://unitsofmeasure.org
@@ -385,6 +406,7 @@ item:
     text: Blood Pressure
     type: group
     repeats: true
+    helpText: This is help text for repeatable group items.
     linkId: bp-group
   - text: enableWhen items
     type: display
@@ -477,6 +499,18 @@ item:
       - answerInteger: 10
         operator: <=
         question: enableWhen-integer
+  - linkId: slider
+    itemControl:
+      coding:
+        - code: slider
+    start: 1
+    type: decimal
+    stop: 20
+    helpText: How many beverages you are consuming per day?
+    stopLabel: 20+
+    sliderStepValue: 2
+    text: Frequency per week
+
 resourceType: Questionnaire
 title: Inputs demonstration
 status: active

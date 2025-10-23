@@ -28,6 +28,7 @@ export interface QuestionnairesWizardProps
     onQuestionnaireChange?: (q: Questionnaire, index: number) => void;
     patient?: Patient;
     wizard?: Partial<WizardProps>;
+    disableWaitStepsNavigation?: boolean;
 }
 
 export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
@@ -37,6 +38,7 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
         initialQuestionnaireId,
         onQuestionnaireChange,
         onCancel,
+        disableWaitStepsNavigation,
     } = props;
 
     const navigate = useNavigate();
@@ -46,9 +48,15 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
             const defaultIndex = initialQuestionnaireId
                 ? questionnaires.findIndex((q) => q.id === initialQuestionnaireId)
                 : 0;
+
+            if (initialQuestionnaireResponses.some((qr) => qr.questionnaire === q.id)) {
+                return 'finish';
+            }
+
             if (index === defaultIndex) {
                 return 'process';
             }
+
             return 'wait';
         }),
     );
@@ -62,9 +70,6 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
         (qr) => qr.questionnaire === currentQuestionnaire?.id,
     );
 
-    const canGoBack = currentQuestionnaireIndex > 0;
-    const canGoForward = currentQuestionnaireIndex + 1 < questionnaires.length;
-
     const setStepStatus = useCallback((index: number, status: StepProps['status']) => {
         setStepsStatuses((prev) => {
             const newStepsStatuses = [...prev];
@@ -75,38 +80,52 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
 
     const checkOtherQuestionnaireResponsesValid = useCallback(
         (exceptQuestionnaireIndex: number) => {
-            const invalidSteps = stepsStatuses
-                .filter((_, index) => index !== exceptQuestionnaireIndex)
-                .filter((status) => status !== 'finish')
-                .map((status, index) => {
-                    return {
-                        status,
-                        index,
-                    };
-                });
-
-            if (invalidSteps.length === 0) {
+            if (questionnaireResponses.length === stepsStatuses.length) {
                 return true;
             }
 
-            invalidSteps.forEach((step) => {
+            const unfinishedSteps = questionnaires.filter(
+                (q) =>
+                    !questionnaireResponses.some((qr) => qr.questionnaire === q.id) &&
+                    q.id !== questionnaires[exceptQuestionnaireIndex]?.id,
+            );
+
+            if (unfinishedSteps.length === 0) {
+                return true;
+            }
+
+            unfinishedSteps.forEach((step) => {
+                const index = questionnaires.findIndex((q) => q.id === step.id);
                 notification.error({
-                    message: t`${questionnaires[step.index]?.title} was not submitted`,
+                    message: t`${questionnaires[index]?.title} was not submitted`,
                 });
             });
 
             setStepsStatuses((prev) => {
                 const newStepsStatuses = [...prev];
-                invalidSteps.forEach((step) => {
-                    newStepsStatuses[step.index] = 'error';
+                unfinishedSteps.forEach((step) => {
+                    const index = questionnaires.findIndex((q) => q.id === step.id);
+                    newStepsStatuses[index] = 'error';
                 });
                 return newStepsStatuses;
             });
 
             return false;
         },
-        [questionnaires, stepsStatuses],
+        [questionnaireResponses, questionnaires, stepsStatuses.length],
     );
+
+    const isStepDisabled = useCallback(
+        (index: number) => {
+            return index > currentQuestionnaireIndex && stepsStatuses[index] === 'wait';
+        },
+        [currentQuestionnaireIndex, stepsStatuses],
+    );
+
+    const canGoBack = currentQuestionnaireIndex > 0;
+    const canGoForward =
+        currentQuestionnaireIndex + 1 < questionnaires.length && !isStepDisabled(currentQuestionnaireIndex + 1);
+    const canComplete = currentQuestionnaireIndex + 1 === questionnaires.length;
 
     const stepsItems: WizardItem[] = useMemo(() => {
         return questionnaires.map((q, index) => {
@@ -114,19 +133,28 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
                 title: q.title,
                 linkId: q.item?.[0]?.linkId ?? '',
                 status: stepsStatuses[index],
+                disabled: disableWaitStepsNavigation ? isStepDisabled(index) : false,
             };
         });
-    }, [questionnaires, stepsStatuses]);
+    }, [disableWaitStepsNavigation, isStepDisabled, questionnaires, stepsStatuses]);
 
     const handleCancel = useCallback(() => {
-        onCancel?.();
-        navigate(-1);
+        onCancel ? onCancel() : navigate(-1);
     }, [navigate, onCancel]);
+
+    const enableStep = useCallback(
+        (index: number) => {
+            if (stepsStatuses[index] === 'wait') {
+                setStepStatus(index, 'process');
+            }
+        },
+        [setStepStatus, stepsStatuses],
+    );
 
     useEffect(() => {
         onQuestionnaireChange?.(questionnaires[currentQuestionnaireIndex]!, currentQuestionnaireIndex);
-        setStepStatus(currentQuestionnaireIndex, 'process');
-    }, [currentQuestionnaireIndex, onQuestionnaireChange, questionnaires, setStepStatus]);
+        enableStep(currentQuestionnaireIndex);
+    }, [currentQuestionnaireIndex, enableStep, onQuestionnaireChange, questionnaires, setStepStatus]);
 
     return {
         currentQuestionnaire,
@@ -137,6 +165,7 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
         setQuestionnaireResponses,
         canGoBack,
         canGoForward,
+        canComplete,
         checkOtherQuestionnaireResponsesValid,
         setStepStatus,
         stepsItems,

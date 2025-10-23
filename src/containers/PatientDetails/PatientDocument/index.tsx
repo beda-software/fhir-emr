@@ -1,11 +1,12 @@
 import { DeleteOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 import { Button, Space, Splitter, Tooltip } from 'antd';
+import classNames from 'classnames';
 import { Organization, ParametersParameter, Patient, Person, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
 import React, { useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
+import { formatError, RenderRemoteData, WithId } from '@beda.software/fhir-react';
 
 import { Text } from 'src/components';
 import { AlertMessage } from 'src/components/AlertMessage';
@@ -72,6 +73,7 @@ export function PatientDocument(props: PatientDocumentProps) {
                     onQRFUpdate={onUpdateDraft}
                     alertComponent={
                         <AlertMessage
+                            style={{ marginBottom: '20px' }}
                             actionComponent={
                                 <Space>
                                     {qrDraftServiceType === 'local' && (
@@ -119,9 +121,13 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
     const navigate = useNavigate();
 
     return (
-        <div className={s.container}>
+        <div className={classNames(s.container, 'app-patient-document')}>
             <S.Content>
-                <RenderRemoteData remoteData={response} renderLoading={Spinner}>
+                <RenderRemoteData
+                    remoteData={response}
+                    renderLoading={Spinner}
+                    renderFailure={(error) => <AlertMessage message={formatError(error)} type="error" />}
+                >
                     {({ document: { formData, onSubmit }, source }) => {
                         if (typeof source === 'undefined') {
                             return (

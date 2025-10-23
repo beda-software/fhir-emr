@@ -17,7 +17,7 @@ import { MenuItem } from './types';
 
 export type BottomMenuLayoutValue = (onItemClick?: () => void) => Array<MenuItem>;
 
-export const defaultBottomMenuLayout: BottomMenuLayoutValue = (onItemClick?: () => void) => {
+const defaultBottomMenuLayout: BottomMenuLayoutValue = (onItemClick?: () => void) => {
     const user = sharedAuthorizedUser.getSharedState()!;
     const hasRole = (user?.role || []).length > 0;
 

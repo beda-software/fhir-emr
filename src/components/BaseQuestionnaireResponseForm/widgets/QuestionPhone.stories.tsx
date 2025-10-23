@@ -28,3 +28,19 @@ export const Example: Story = {
         />
     ),
 };
+
+export const Disabled: Story = {
+    render: () => (
+        <QuestionPhone
+            parentPath={[]}
+            questionItem={{
+                text: 'Example',
+                type: 'string',
+                linkId: 'example',
+                required: true,
+                readOnly: true,
+            }}
+            context={{} as ItemContext}
+        />
+    ),
+};

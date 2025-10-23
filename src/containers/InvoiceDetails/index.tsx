@@ -97,7 +97,7 @@ export function InvoiceDetails() {
             extractPrimaryResources={getLineItems as any}
             searchParams={{
                 _id: id,
-                _include: [
+                '_include:iterate': [
                     'Invoice:subject:Patient',
                     'Invoice:participant:PractitionerRole',
                     'PractitionerRole:practitioner:Practitioner',

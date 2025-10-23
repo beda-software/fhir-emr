@@ -34,3 +34,21 @@ export const Default: Story = {
         </I18nProvider>
     ),
 };
+
+export const Disabled: Story = {
+    render: () => (
+        <I18nProvider i18n={i18n}>
+            <UploadFileControl
+                parentPath={[]}
+                questionItem={{
+                    text: 'Upload Document',
+                    type: 'attachment',
+                    linkId: 'upload-file',
+                    required: true,
+                    readOnly: true,
+                }}
+                context={{} as ItemContext}
+            />
+        </I18nProvider>
+    ),
+};

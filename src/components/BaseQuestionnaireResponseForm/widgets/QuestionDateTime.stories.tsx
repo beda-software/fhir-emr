@@ -71,3 +71,18 @@ export const FormatedTime: Story = {
         />
     ),
 };
+
+export const Disabled: Story = {
+    render: () => (
+        <QuestionDateTime
+            parentPath={[]}
+            questionItem={{
+                text: t`Select date`,
+                type: 'dateTime',
+                linkId: 'date',
+                readOnly: true,
+            }}
+            context={{} as ItemContext}
+        />
+    ),
+};

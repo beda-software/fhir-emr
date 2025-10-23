@@ -98,9 +98,9 @@ export async function expandFHIRValueSet(answerValueSet: string | undefined, sea
 
     const response: RemoteDataResult<ValueSetOption[]> = mapSuccess(
         await service<ValueSet>({
-            url: `ValueSet/$expand?url=${answerValueSet}`,
+            url: `/fhir/ValueSet/$expand?url=${answerValueSet}`,
             params: {
-                filter: searchText,
+                ...(searchText ? { filter: searchText } : {}),
                 count: 50,
             },
         }),
