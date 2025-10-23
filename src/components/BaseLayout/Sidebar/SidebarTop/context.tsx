@@ -36,7 +36,7 @@ const defaultMenuLayout: MenuLayoutValue = () =>
             { label: t`Questionnaires`, path: '/questionnaires', icon: <QuestionnairesIcon /> },
         ],
         [Role.Patient]: (patient: Patient) => [
-            { label: t`Patient`, path: `/patients2/${patient!.id}`, icon: <PatientsIcon /> },
+            { label: t`Patient`, path: `/patients/${patient!.id}`, icon: <PatientsIcon /> },
         ],
         [Role.Receptionist]: () => [
             { label: t`Patients`, path: '/patients', icon: <PatientsIcon /> },
