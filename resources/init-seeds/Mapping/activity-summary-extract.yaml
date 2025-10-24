@@ -1,78 +1,85 @@
-body:
-  $let:
-    patient: $ fhirpath("QuestionnaireResponse.subject.reference")
-    effective: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='effective').answer.valueDate").0
-    activeEnergyBurnedGoal: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='active-energy-burned-goal').answer.valueQuantity").0
-    activeEnergyBurned: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='active-energy-burned').answer.valueQuantity").0
-    standHoursGoal: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='stand-hours-goal').answer.valueQuantity").0
-    standHours: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='stand-hours').answer.valueQuantity").0
-    exerciseTimeGoal: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='exercise-time-goal').answer.valueQuantity").0
-    exerciseTime: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='exercise-time').answer.valueQuantity").0
-  $body:
-    type: transaction
-    entry:
-      - request:
-          url: $ "/fhir/Observation?patient=" + patient + "&date=" + effective
-          method: PUT
-        resource:
-          resourceType: Observation
-          status: final
-          subject:
-            reference: $ patient
-          code:
-            coding:
-              - system: "https://fhir.emr.beda.software/CodeSystem/activity-measurements"
-                code: activity-summary
-          effectiveDateTime: $ effective
-          component:
-            - code:
-                coding:
-                  - system: https://fhir.emr.beda.software/CodeSystem/activity-summary
-                    code: active-energy-burned-goal
-              valueQuantity:
-                system: http://unitsofmeasure.org
-                code: kcal
-                value: $ activeEnergyBurnedGoal.value
-            - code:
-                coding:
-                  - system: https://fhir.emr.beda.software/CodeSystem/activity-summary
-                    code: active-energy-burned
-              valueQuantity:
-                system: http://unitsofmeasure.org
-                code: kcal
-                value: $ activeEnergyBurned.value
-            - code:
-                coding:
-                  - system: https://fhir.emr.beda.software/CodeSystem/activity-summary
-                    code: stand-hours-goal
-              valueQuantity:
-                system: http://unitsofmeasure.org
-                code: "{count}"
-                value: $ standHoursGoal.value
-            - code:
-                coding:
-                  - system: https://fhir.emr.beda.software/CodeSystem/activity-summary
-                    code: stand-hours
-              valueQuantity:
-                system: http://unitsofmeasure.org
-                code: "{count}"
-                value: $ standHours.value
-            - code:
-                coding:
-                  - system: https://fhir.emr.beda.software/CodeSystem/activity-summary
-                    code: exercise-time-goal
-              valueQuantity:
-                system: http://unitsofmeasure.org
-                code: s
-                value: $ exerciseTimeGoal.value
-            - code:
-                coding:
-                  - system: https://fhir.emr.beda.software/CodeSystem/activity-summary
-                    code: exercise-time
-              valueQuantity:
-                system: http://unitsofmeasure.org
-                code: s
-                value: $ exerciseTime.value
-    resourceType: Bundle
-id: activity-summary-extract
 resourceType: Mapping
+id: activity-summary-extract
+type: FHIRPath
+body:
+  "{% assign %}":
+    - patient: "{{ 'Patient/' + %Patient.id }}"
+    - effective: "{{ %QuestionnaireResponse.answers('effective') }}"
+    - activeEnergyBurnedGoal: "{{ %QuestionnaireResponse.answers('active-energy-burned-goal') }}"
+    - activeEnergyBurned: "{{ %QuestionnaireResponse.answers('active-energy-burned') }}"
+    - standHoursGoal: "{{ %QuestionnaireResponse.answers('stand-hours-goal') }}"
+    - standHours: "{{ %QuestionnaireResponse.answers('stand-hours') }}"
+    - exerciseTimeGoal: "{{ %QuestionnaireResponse.answers('exercise-time-goal') }}"
+    - exerciseTime: "{{ %QuestionnaireResponse.answers('exercise-time') }}"
+
+  resourceType: Bundle
+  type: transaction
+  entry:
+    - request:
+        method: PATCH
+        url: "{{ '/Observation?patient=' + %patient + '&date=' + %effective }}"
+      resource:
+        resourceType: Observation
+        status: final
+        subject:
+          reference: "{{ %patient }}"
+        code:
+          coding:
+            - system: "https://fhir.emr.beda.software/CodeSystem/activity-measurements"
+              code: "activity-summary"
+        effectiveDateTime: "{{ %effective }}"
+        component:
+          - "{% if %activeEnergyBurnedGoal.exists() %}":
+              code:
+                coding:
+                  - system: "https://fhir.emr.beda.software/CodeSystem/activity-summary"
+                    code: "active-energy-burned-goal"
+              valueQuantity:
+                system: "http://unitsofmeasure.org"
+                code: "kcal"
+                value: "{{ %activeEnergyBurnedGoal.value }}"
+          - "{% if %activeEnergyBurned.exists() %}":
+              code:
+                coding:
+                  - system: "https://fhir.emr.beda.software/CodeSystem/activity-summary"
+                    code: "active-energy-burned"
+              valueQuantity:
+                system: "http://unitsofmeasure.org"
+                code: "kcal"
+                value: "{{ %activeEnergyBurned.value }}"
+          - "{% if %standHoursGoal.exists() %}":
+              code:
+                coding:
+                  - system: "https://fhir.emr.beda.software/CodeSystem/activity-summary"
+                    code: "stand-hours-goal"
+              valueQuantity:
+                system: "http://unitsofmeasure.org"
+                code: "{count}"
+                value: "{{ %standHoursGoal.value }}"
+          - "{% if %standHours.exists() %}":
+              code:
+                coding:
+                  - system: "https://fhir.emr.beda.software/CodeSystem/activity-summary"
+                    code: "stand-hours"
+              valueQuantity:
+                system: "http://unitsofmeasure.org"
+                code: "{count}"
+                value: "{{ %standHours.value }}"
+          - "{% if %exerciseTimeGoal.exists() %}":
+              code:
+                coding:
+                  - system: "https://fhir.emr.beda.software/CodeSystem/activity-summary"
+                    code: "exercise-time-goal"
+              valueQuantity:
+                system: "http://unitsofmeasure.org"
+                code: "s"
+                value: "{{ %exerciseTimeGoal.value }}"
+          - "{% if %exerciseTime.exists() %}":
+              code:
+                coding:
+                  - system: "https://fhir.emr.beda.software/CodeSystem/activity-summary"
+                    code: "exercise-time"
+              valueQuantity:
+                system: "http://unitsofmeasure.org"
+                code: "s"
+                value: "{{ %exerciseTime.value }}"
