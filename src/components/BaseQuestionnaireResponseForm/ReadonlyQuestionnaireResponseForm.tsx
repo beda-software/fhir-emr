@@ -29,6 +29,7 @@ import { AnxietyScore, DepressionScore } from './readonly-widgets/score';
 import { QuestionText, TextWithInput } from './readonly-widgets/string';
 import { TimeRangePickerControl } from './readonly-widgets/TimeRangePickerControl';
 import { UploadFile } from './readonly-widgets/UploadFile';
+import { Barcode } from './widgets/barcode';
 
 interface Props extends Partial<QRFContextData> {
     formData: QuestionnaireResponseFormData;
@@ -92,6 +93,7 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
                         'depression-score': DepressionScore,
                         'input-inside-text': TextWithInput,
                         'audio-recorder-uploader': AudioAttachment,
+                        barcode: Barcode,
                         'markdown-editor': MarkdownRenderControl,
                         ...itemControlQuestionItemComponents,
                         ...ItemControlQuestionItemReadonlyWidgetsFromContext,

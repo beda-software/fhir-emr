@@ -34,6 +34,7 @@ import {
     QuestionEmail,
 } from './widgets';
 import { AudioRecorderUploader } from './widgets/AudioRecorderUploader';
+import { Barcode } from './widgets/barcode';
 import { Display } from './widgets/display';
 import { GroupWizard, GroupWizardVertical, GroupWizardWithTooltips } from './widgets/GroupWizard';
 import { PasswordInput } from './widgets/PasswordInput';
@@ -75,6 +76,7 @@ export const itemControlComponents: ItemControlQuestionItemComponentMapping = {
     'input-inside-text': QuestionInputInsideText,
     'markdown-editor': MDEditorControl,
     'audio-recorder-uploader': AudioRecorderUploader,
+    barcode: Barcode,
 };
 
 export const groupControlComponents: ItemControlGroupItemComponentMapping = {

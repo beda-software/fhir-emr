@@ -165,8 +165,13 @@ export async function expandEMRValueSet(
     searchText: string,
     preferredTerminologyServer?: string,
 ) {
-    const predefinedValueSetsList: string[] = ['medicationknowledge-package-type'];
-
+    const predefinedValueSetsList: string[] = [
+        'medicationknowledge-package-type',
+        'request-priority',
+        'request-intent',
+        'spia-requesting-refset-3',
+        'radiology-referral',
+    ];
     if (preferredTerminologyServer && answerValueSet) {
         const res = await expandExternalTerminology(preferredTerminologyServer, answerValueSet, searchText);
         if (isSuccess(res)) {

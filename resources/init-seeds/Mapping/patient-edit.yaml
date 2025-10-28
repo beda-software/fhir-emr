@@ -28,6 +28,7 @@ body:
               - "{{ %firstName }}"
               - "{{ %middleName }}"
             family: "{{ %lastName }}"
+            use: official
         gender: "{{ %gender }}"
         telecom:
           - "{% if %mobile.exists() and %mobile!='' %}":
