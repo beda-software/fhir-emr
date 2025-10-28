@@ -414,7 +414,7 @@ msgstr ""
 msgid "Calories"
 msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:55
+#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:82
 #: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:56
 #: src/containers/InvoiceList/index.tsx:108
 #: src/containers/InvoiceList/index.tsx:113
@@ -460,7 +460,7 @@ msgstr ""
 #~ msgstr ""
 
 #: src/components/QuestionnaireResponseFormDraft/index.tsx:34
-#: src/containers/PatientDetails/PatientDocument/index.tsx:80
+#: src/containers/PatientDetails/PatientDocument/index.tsx:84
 msgid "Clear draft from local storage and reset form"
 msgstr ""
 
@@ -492,7 +492,7 @@ msgstr ""
 
 #: src/components/QuestionnairesWizard/components/QuestionnairesWizardFooter/index.tsx:45
 #: src/containers/PatientDetails/PatientDocument/index.tsx:145
-#: src/containers/PatientDetails/PatientDocument/index.tsx:173
+#: src/containers/PatientDetails/PatientDocument/index.tsx:171
 msgid "Complete"
 msgstr ""
 
@@ -731,7 +731,7 @@ msgstr ""
 #~ msgid "Draft successfully saved"
 #~ msgstr ""
 
-#: src/hooks/useQuestionnaireResponseDraft.ts:85
+#: src/hooks/useQuestionnaireResponseDraft.ts:86
 msgid "Draft was successfully loaded from {0}"
 msgstr ""
 
@@ -739,7 +739,7 @@ msgstr ""
 #~ msgid "Draft was successfully saved at {0}"
 #~ msgstr ""
 
-#: src/hooks/useQuestionnaireResponseDraft.ts:126
+#: src/hooks/useQuestionnaireResponseDraft.ts:127
 msgid "Draft was successfully saved at {0} to {1}"
 msgstr ""
 
@@ -837,7 +837,7 @@ msgstr ""
 msgid "Error deleting a draft"
 msgstr ""
 
-#: src/hooks/useQuestionnaireResponseDraft.ts:255
+#: src/hooks/useQuestionnaireResponseDraft.ts:257
 msgid "Error saving a draft:"
 msgstr ""
 
@@ -1396,7 +1396,7 @@ msgstr ""
 msgid "Questionnaire"
 msgstr ""
 
-#: src/hooks/useQuestionnaireResponseDraft.ts:59
+#: src/hooks/useQuestionnaireResponseDraft.ts:60
 msgid "Questionnaire not found"
 msgstr ""
 
@@ -1404,7 +1404,7 @@ msgstr ""
 msgid "Questionnaire properties"
 msgstr ""
 
-#: src/hooks/useQuestionnaireResponseDraft.ts:94
+#: src/hooks/useQuestionnaireResponseDraft.ts:95
 msgid "Questionnaire response is required"
 msgstr ""
 
@@ -1466,7 +1466,7 @@ msgstr ""
 #~ msgid "Resource id is not provided"
 #~ msgstr ""
 
-#: src/hooks/useQuestionnaireResponseDraft.ts:266
+#: src/hooks/useQuestionnaireResponseDraft.ts:268
 msgid "Resource id not provided"
 msgstr ""
 
@@ -1483,7 +1483,7 @@ msgstr ""
 msgid "Saturday"
 msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:65
+#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:101
 #: src/containers/EncounterDetails/AIScribe/index.tsx:206
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:130
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:98
@@ -1492,8 +1492,12 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:123
-#~ msgid "Save as draft"
+#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:91
+msgid "Save as draft"
+msgstr ""
+
+#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:72
+#~ msgid "Save as Draft"
 #~ msgstr ""
 
 #: src/containers/QuestionnaireBuilder/index.tsx:49

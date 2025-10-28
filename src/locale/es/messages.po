@@ -414,7 +414,7 @@ msgstr "por"
 msgid "Calories"
 msgstr "Calorías"
 
-#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:55
+#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:82
 #: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:56
 #: src/containers/InvoiceList/index.tsx:108
 #: src/containers/InvoiceList/index.tsx:113
@@ -460,7 +460,7 @@ msgstr "Elija estado"
 #~ msgstr "Borrador claro"
 
 #: src/components/QuestionnaireResponseFormDraft/index.tsx:34
-#: src/containers/PatientDetails/PatientDocument/index.tsx:80
+#: src/containers/PatientDetails/PatientDocument/index.tsx:84
 msgid "Clear draft from local storage and reset form"
 msgstr "Borrar borrador del almacenamiento local y restablecer formulario"
 
@@ -492,7 +492,7 @@ msgstr "Columna (predeterminado)"
 
 #: src/components/QuestionnairesWizard/components/QuestionnairesWizardFooter/index.tsx:45
 #: src/containers/PatientDetails/PatientDocument/index.tsx:145
-#: src/containers/PatientDetails/PatientDocument/index.tsx:173
+#: src/containers/PatientDetails/PatientDocument/index.tsx:171
 msgid "Complete"
 msgstr "Completado"
 
@@ -727,7 +727,7 @@ msgstr "Borrador eliminado exitosamente"
 #~ msgid "Draft successfully saved"
 #~ msgstr "Borrador guardado exitosamente"
 
-#: src/hooks/useQuestionnaireResponseDraft.ts:85
+#: src/hooks/useQuestionnaireResponseDraft.ts:86
 msgid "Draft was successfully loaded from {0}"
 msgstr "El borrador se cargó correctamente desde {0}"
 
@@ -735,7 +735,7 @@ msgstr "El borrador se cargó correctamente desde {0}"
 #~ msgid "Draft was successfully saved at {0}"
 #~ msgstr "El borrador se guardó correctamente en {0}"
 
-#: src/hooks/useQuestionnaireResponseDraft.ts:126
+#: src/hooks/useQuestionnaireResponseDraft.ts:127
 msgid "Draft was successfully saved at {0} to {1}"
 msgstr "El borrador se guardó correctamente en {0} a {1}"
 
@@ -833,7 +833,7 @@ msgstr "Ingresado erróneamente"
 msgid "Error deleting a draft"
 msgstr "Error al eliminar un borrador"
 
-#: src/hooks/useQuestionnaireResponseDraft.ts:255
+#: src/hooks/useQuestionnaireResponseDraft.ts:257
 msgid "Error saving a draft:"
 msgstr "Error al guardar el borrador:"
 
@@ -1384,7 +1384,7 @@ msgstr "Cantidad"
 msgid "Questionnaire"
 msgstr "Cuestionario"
 
-#: src/hooks/useQuestionnaireResponseDraft.ts:59
+#: src/hooks/useQuestionnaireResponseDraft.ts:60
 msgid "Questionnaire not found"
 msgstr "Cuestionario no encontrado"
 
@@ -1392,7 +1392,7 @@ msgstr "Cuestionario no encontrado"
 msgid "Questionnaire properties"
 msgstr "Propiedades del cuestionario"
 
-#: src/hooks/useQuestionnaireResponseDraft.ts:94
+#: src/hooks/useQuestionnaireResponseDraft.ts:95
 msgid "Questionnaire response is required"
 msgstr "Se requiere responder al cuestionario"
 
@@ -1450,7 +1450,7 @@ msgstr "Limpiar selección"
 #~ msgid "Resource id is not provided"
 #~ msgstr "No se proporciona el ID del recurso"
 
-#: src/hooks/useQuestionnaireResponseDraft.ts:266
+#: src/hooks/useQuestionnaireResponseDraft.ts:268
 msgid "Resource id not provided"
 msgstr "No se proporcionó el ID del recurso"
 
@@ -1467,7 +1467,7 @@ msgstr "Fila"
 msgid "Saturday"
 msgstr "Sábado"
 
-#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:65
+#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:101
 #: src/containers/EncounterDetails/AIScribe/index.tsx:206
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:130
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:98
@@ -1476,9 +1476,13 @@ msgstr "Sábado"
 msgid "Save"
 msgstr "Guardar"
 
-#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:123
-#~ msgid "Save as draft"
-#~ msgstr "Guardar borrador"
+#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:91
+msgid "Save as draft"
+msgstr "Guardar borrador"
+
+#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:72
+#~ msgid "Save as Draft"
+#~ msgstr ""
 
 #: src/containers/QuestionnaireBuilder/index.tsx:49
 #: src/containers/QuestionnaireBuilder/index.tsx:50
