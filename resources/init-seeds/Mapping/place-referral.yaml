@@ -24,11 +24,11 @@ body:
     resource:
       status: active
       basedOn:
-      - reference: "Appointment/{{ 'urn:uuid:appointment-id' }}"
+      - reference: "{{ 'urn:uuid:appointment-id' }}"
       payload:
       - contentReference:
-          reference: Questionnaire/chap
-          display: CHAP
+          reference: Questionnaire/vitals
+          display: Vitals
       requester:
         reference: "{{ 'Practitioner/' + QuestionnaireResponse.repeat(item).where(linkId='practitiner-id').answer.valueString }}"
       recipient:
