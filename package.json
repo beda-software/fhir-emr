@@ -17,7 +17,7 @@
         "build-storybook": "storybook build",
         "typecheck": "tsc",
         "chromatic": "chromatic --only-changed",
-        "prepare": "yarn compile && yarn build:lib"
+        "prepare": "husky install && yarn compile && yarn build:lib"
     },
     "workspaces": [
         "contrib/*"
