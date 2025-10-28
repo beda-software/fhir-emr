@@ -13,7 +13,6 @@ import {
     prepareImmunizations,
     prepareMedications,
     prepareReferral,
-    prepareServiceRequest,
 } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare';
 import { CreatinineDashboardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/CreatinineDashboardContainer';
 import { GeneralInformationDashboardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer';
@@ -63,17 +62,6 @@ export const patientDashboardConfig: DashboardInstance = {
             },
             widget: StandardCardContainerFabric(prepareReferral),
         },
-        {
-            query: {
-                resourceType: 'Observation',
-                search: (patient: Patient) => ({
-                    patient: patient.id,
-                    code: 'http://loinc.org|2160-0',
-                    _sort: ['-date'],
-                }),
-            },
-            widget: CreatinineDashboardContainer,
-        },
     ],
     left: [
         {
@@ -112,18 +100,6 @@ export const patientDashboardConfig: DashboardInstance = {
             },
             widget: StandardCardContainerFabric(prepareActivitySummary),
         },
-        {
-            query: {
-                resourceType: 'MedicationStatement',
-                search: (patient: Patient) => ({
-                    patient: patient.id,
-                    _sort: ['-_lastUpdated'],
-                    _revinclude: ['Provenance:target'],
-                    _count: 7,
-                }),
-            },
-            widget: StandardCardContainerFabric(prepareMedications),
-        },
     ],
     right: [
         {
@@ -154,13 +130,28 @@ export const patientDashboardConfig: DashboardInstance = {
         },
         {
             query: {
-                resourceType: 'ServiceRequest',
+                resourceType: 'MedicationStatement',
                 search: (patient: Patient) => ({
-                    subject: patient.id,
+                    patient: patient.id,
+                    _sort: ['-_lastUpdated'],
+                    _revinclude: ['Provenance:target'],
+                    _count: 7,
                 }),
             },
-            widget: StandardCardContainerFabric(prepareServiceRequest),
+            widget: StandardCardContainerFabric(prepareMedications),
         },
     ],
-    bottom: [],
+    bottom: [
+        {
+            query: {
+                resourceType: 'Observation',
+                search: (patient: Patient) => ({
+                    patient: patient.id,
+                    code: 'http://loinc.org|2160-0',
+                    _sort: ['-date'],
+                }),
+            },
+            widget: CreatinineDashboardContainer,
+        },
+    ],
 };

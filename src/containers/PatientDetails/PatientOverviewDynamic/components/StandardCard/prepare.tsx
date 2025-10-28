@@ -282,33 +282,6 @@ export function prepareAppointmentDetails(appointment: Appointment) {
     return [...appointmentDetails, ...participants];
 }
 
-export function prepareServiceRequest(
-    serviceRequests: ServiceRequest[],
-    bundle: Bundle<ServiceRequest>,
-): OverviewCard<ServiceRequest> {
-    return {
-        title: t`Orders`,
-        key: 'service-request',
-        icon: <HeartOutlined />,
-        data: serviceRequests,
-        total: bundle.total!,
-        getKey: (r: ServiceRequest) => r.id!,
-        columns: [
-            {
-                title: t`Name`,
-                key: 'name',
-                render: (resource: ServiceRequest) => resource.code?.text ?? resource.code?.coding?.[0]?.display,
-            },
-            {
-                title: t`Intent`,
-                key: 'intent',
-                render: (r: ServiceRequest) => r.intent,
-                width: 120,
-            },
-        ],
-    };
-}
-
 const getBarcode = compileAsFirst<ServiceRequest, string>(
     "ServiceRequest.identifier.where(system='http://diagnostic-orders-are-us.com.au/ids/pgn').value",
 );
