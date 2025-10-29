@@ -37,16 +37,27 @@ function buildDynamicColumns<R extends Resource>(columnConfigs: TableColumnConfi
                     return formatHumanDate(value);
                 }
 
-                if (
-                    typeof value === 'string' &&
-                    /^Patient\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value)
-                ) {
-                    const id = value.split('/')[1];
-                    return (
-                        <Link to={`/patients/${id}`}>
-                            <Trans>{id}</Trans>
-                        </Link>
-                    );
+                if (typeof value === 'string' && value.includes('Patient/')) {
+                    const patientMatch = value.match(/Patient\/(\S+)/);
+                    if (patientMatch) {
+                        const id = patientMatch[1];
+
+                        if (value.trim() === `Patient/${id}`) {
+                            return (
+                                <Link to={`/patients/${id}`}>
+                                    <Trans>{id}</Trans>
+                                </Link>
+                            );
+                        } else {
+                            const parts = value.split(/Patient\/\S+/);
+                            const text = parts[0] ? parts[0].trim() : id;
+                            return (
+                                <Link to={`/patients/${id}`}>
+                                    <Trans>{text}</Trans>
+                                </Link>
+                            );
+                        }
+                    }
                 }
 
                 return value ? String(value) : null;
