@@ -33,30 +33,29 @@ function buildDynamicColumns<R extends Resource>(columnConfigs: TableColumnConfi
                     return renderHumanName(value);
                 }
 
-                if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(value)) {
+                if (value && typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(value)) {
                     return formatHumanDate(value);
                 }
 
-                if (typeof value === 'string' && value.includes('Patient/')) {
-                    const patientMatch = value.match(/Patient\/(\S+)/);
-                    if (patientMatch) {
-                        const id = patientMatch[1];
-
-                        if (value.trim() === `Patient/${id}`) {
-                            return (
-                                <Link to={`/patients/${id}`}>
-                                    <Trans>{id}</Trans>
-                                </Link>
-                            );
-                        } else {
-                            const parts = value.split(/Patient\/\S+/);
-                            const text = parts[0] ? parts[0].trim() : id;
-                            return (
-                                <Link to={`/patients/${id}`}>
-                                    <Trans>{text}</Trans>
-                                </Link>
-                            );
-                        }
+                if (
+                    value &&
+                    typeof value === 'object' &&
+                    'reference' in value &&
+                    value.reference.includes('Patient/')
+                ) {
+                    const id = value.reference.split('Patient/')[1];
+                    if (value.display) {
+                        return (
+                            <Link to={`/patients/${id}`}>
+                                <Trans>{value.display}</Trans>
+                            </Link>
+                        );
+                    } else {
+                        return (
+                            <Link to={`/patients/${id}`}>
+                                <Trans>{id}</Trans>
+                            </Link>
+                        );
                     }
                 }
 
