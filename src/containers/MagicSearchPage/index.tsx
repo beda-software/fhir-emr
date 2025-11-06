@@ -4,6 +4,7 @@ import { Input, Button, Space } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { Resource } from 'fhir/r4b';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { formatError, RenderRemoteData } from '@beda.software/fhir-react';
 import { isLoading, loading, notAsked, RemoteData } from '@beda.software/remote-data';
@@ -32,8 +33,22 @@ function buildDynamicColumns<R extends Resource>(columnConfigs: TableColumnConfi
                     return renderHumanName(value);
                 }
 
-                if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(value)) {
+                if (value && typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(value)) {
                     return formatHumanDate(value);
+                }
+
+                if (
+                    value &&
+                    typeof value === 'object' &&
+                    'reference' in value &&
+                    value.reference.includes('Patient/')
+                ) {
+                    const id = value.reference.split('Patient/')[1];
+                    if (value.display) {
+                        return <Link to={`/patients/${id}`}>{value.display}</Link>;
+                    } else {
+                        return <Link to={`/patients/${id}`}>{id}</Link>;
+                    }
                 }
 
                 return value ? String(value) : null;
