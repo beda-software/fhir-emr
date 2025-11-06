@@ -45,17 +45,9 @@ function buildDynamicColumns<R extends Resource>(columnConfigs: TableColumnConfi
                 ) {
                     const id = value.reference.split('Patient/')[1];
                     if (value.display) {
-                        return (
-                            <Link to={`/patients/${id}`}>
-                                <Trans>{value.display}</Trans>
-                            </Link>
-                        );
+                        return <Link to={`/patients/${id}`}>{value.display}</Link>;
                     } else {
-                        return (
-                            <Link to={`/patients/${id}`}>
-                                <Trans>{id}</Trans>
-                            </Link>
-                        );
+                        return <Link to={`/patients/${id}`}>{id}</Link>;
                     }
                 }
 
