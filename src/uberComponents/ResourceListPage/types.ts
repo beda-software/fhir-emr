@@ -84,6 +84,9 @@ export interface ResourceListBaseProps<R extends Resource, Extra = unknown, Link
      * TODO: https://github.com/beda-software/fhir-emr/issues/414
      */
     getReportColumns?: (bundle: Bundle, reportBundle?: Bundle) => Array<ReportColumn>;
+
+    /* Page content max width */
+    maxWidth?: number | string;
 }
 
 // Extra is a platform specific option

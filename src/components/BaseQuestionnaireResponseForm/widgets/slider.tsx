@@ -17,7 +17,7 @@ interface QuestionSliderExtensions {
 
 export function QuestionSlider({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId } = questionItem;
-    const { start, stop, startLabel, stopLabel, sliderStepValue, helpText } = questionItem as QuestionSliderExtensions;
+    const { start, stop, startLabel, stopLabel, sliderStepValue } = questionItem as QuestionSliderExtensions;
     const fieldName = [...parentPath, linkId, 0, 'value', 'integer'];
     const { value, onChange, disabled, formItem } = useFieldController<number>(fieldName, questionItem);
 
@@ -41,7 +41,6 @@ export function QuestionSlider({ parentPath, questionItem }: QuestionItemProps) 
                 step={sliderStepValue ?? 1}
                 disabled={disabled}
             />
-            <span>{helpText}</span>
         </Form.Item>
     );
 }

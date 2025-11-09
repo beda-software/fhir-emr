@@ -47,6 +47,7 @@ const table = (
 
 const tabs = (
     <Tabs
+        type="card"
         boxShadow={false}
         items={[
             {

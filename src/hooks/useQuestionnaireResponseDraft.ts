@@ -36,6 +36,7 @@ interface QuestionnaireResponseDraftResponse {
     response: RemoteData<WithId<QuestionnaireResponse> | undefined>;
     draftInfoMessage?: string;
     updateDraft: (questionnaireResponse: QuestionnaireResponse) => Promise<void>;
+    saveDraft: (questionnaireResponse: QuestionnaireResponse) => Promise<RemoteDataResult<QuestionnaireResponse>>;
 }
 
 export const useQuestionnaireResponseDraft = (
@@ -47,6 +48,9 @@ export const useQuestionnaireResponseDraft = (
     const draftKeyRef = useRef<string | undefined>();
 
     const [response, manager] = useService<WithId<QuestionnaireResponse> | undefined>(async () => {
+        if (qrDraftServiceType === 'server' && typeof questionnaireResponse !== 'undefined') {
+            return success(questionnaireResponse);
+        }
         const questionnaireRD = await getFHIRResources<Questionnaire>('Questionnaire', {
             id: questionnaireId,
             _elements: ['id', 'meta'].join(','),
@@ -66,6 +70,7 @@ export const useQuestionnaireResponseDraft = (
                       questionnaire,
                       questionnaireResponse,
                   });
+
         const draftQRRD = await loadQuestionnaireResponseDraft(draftKeyRef.current, qrDraftServiceType);
 
         if (isFailure(draftQRRD)) {
@@ -159,6 +164,7 @@ export const useQuestionnaireResponseDraft = (
         response,
         draftInfoMessage,
         updateDraft,
+        saveDraft,
     };
 };
 

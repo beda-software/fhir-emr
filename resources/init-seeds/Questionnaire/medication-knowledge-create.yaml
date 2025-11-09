@@ -93,73 +93,65 @@ item:
     linkId: amount-unit
     answerOption:
       - valueCoding:
-          code: "46992007"
-          display: Pill
-          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+          code: mg
+          display: Milligram
+          system: http://unitsofmeasure.org
       - valueCoding:
-          code: "385018001"
-          display: Oral drops
-          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+          code: mcg
+          display: Microgram
+          system: http://unitsofmeasure.org
       - valueCoding:
-          code: "385024007"
-          display: Oral suspension
-          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+          code: IU
+          display: International Unit
+          system: http://unitsofmeasure.org
       - valueCoding:
-          code: "385025008"
-          display: Oral emulsion
-          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+          code: mL
+          display: Milliliter
+          system: http://unitsofmeasure.org
       - valueCoding:
-          code: "385032004"
-          display: Syrup
-          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+          code: L
+          display: Liter
+          system: http://unitsofmeasure.org
       - valueCoding:
-          code: "385038000"
-          display: Oral gel
-          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+          code: drop
+          display: Drop
+          system: http://unitsofmeasure.org
       - valueCoding:
-          code: "385051005"
-          display: Soft capsule
-          system: http://hl7.org/fhir/ValueSet/medication-form-codes
-      - valueCoding:
-          code: "385055001"
+          code: tablet
           display: Tablet
-          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+          system: http://unitsofmeasure.org
       - valueCoding:
-          code: "385064006"
-          display: Pillule
-          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+          code: capsule
+          display: Capsule
+          system: http://unitsofmeasure.org
       - valueCoding:
-          code: "385088008"
-          display: Dental gel
-          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+          code: tsp
+          display: Teaspoon
+          system: http://unitsofmeasure.org
       - valueCoding:
-          code: "385100002"
-          display: Gel
-          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+          code: tbsp
+          display: Tablespoon
+          system: http://unitsofmeasure.org
       - valueCoding:
-          code: "385104006"
-          display: Shampoo
-          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+          code: cc
+          display: Cubic Centimeter
+          system: http://unitsofmeasure.org
       - valueCoding:
-          code: "385124005"
-          display: Eye drops
-          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+          code: unit
+          display: Unit
+          system: http://unitsofmeasure.org
       - valueCoding:
-          code: "385136004"
-          display: Ear drops
-          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+          code: mEq
+          display: Milliequivalent
+          system: http://unitsofmeasure.org
       - valueCoding:
-          code: "385152001"
-          display: Nasal drops
-          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+          code: mOsm
+          display: Milliosmole
+          system: http://unitsofmeasure.org
       - valueCoding:
-          code: "385157007"
-          display: Nasal spray
-          system: http://hl7.org/fhir/ValueSet/medication-form-codes
-      - valueCoding:
-          code: "385183002"
-          display: Rectal gel
-          system: http://hl7.org/fhir/ValueSet/medication-form-codes
+          code: puff
+          display: Puff
+          system: http://unitsofmeasure.org
   - text: Amount value
     type: integer
     linkId: amount-value

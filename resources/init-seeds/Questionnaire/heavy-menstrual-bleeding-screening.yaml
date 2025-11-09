@@ -1,0 +1,437 @@
+resourceType: Questionnaire
+title: Heavy Menstrual Bleeding Screening Questionnaire (HMB)
+status: active
+id: heavy-menstrual-bleeding-screening
+url: heavy-menstrual-bleeding-screening
+name: heavy-menstrual-bleeding-screening
+subjectType:
+  - Patient
+  - Encounter
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+item:
+  - linkId: menstrual-bleeding-flow
+    text: How would you describe the flow of your menstrual bleeding in the past month?
+    type: choice
+    itemControl:
+      coding:
+        - code: inline-choice
+    extension:
+      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+        valueString: horizontal
+    answerOption:
+      - valueCoding:
+          code: "very-heavy"
+          display: Very Heavy
+      - valueCoding:
+          code: "heavy"
+          display: Heavy
+      - valueCoding:
+          code: "moderate"
+          display: Moderate
+      - valueCoding:
+          code: "light"
+          display: Light
+      - valueCoding:
+          code: "very-light"
+          display: Very Light
+
+  - linkId: heavy-menstrual-bleeding-days
+    text: How many days of heavy menstrual bleeding did you have last month?
+    type: choice
+    itemControl:
+      coding:
+        - code: inline-choice
+    extension:
+      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+        valueString: horizontal
+    answerOption:
+      - valueCoding:
+          code: "0"
+          display: "0"
+      - valueCoding:
+          code: "1-3"
+          display: "1-3"
+      - valueCoding:
+          code: "4-6"
+          display: "4-6"
+      - valueCoding:
+          code: "more-than-6"
+          display: "6+"
+
+  - linkId: intensity-menstrual-bleeding
+    text: "Please assess the intensity of your menstrual bleeding, generally:"
+    helpText: Use the slider to indicate how heavy your menstrual bleeding is, from 1 (No bleeding at all) to 10 (the heaviest you've experienced)
+    type: integer
+    extension:
+      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+        valueCodeableConcept:
+          coding:
+            - code: slider
+      - url: https://emr-core.beda.software/StructureDefinition/slider-start
+        valueInteger: 1
+      - url: https://emr-core.beda.software/StructureDefinition/slider-stop
+        valueInteger: 10
+      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue
+        valueInteger: 1
+
+  - linkId: regularity-period-length
+    text: "Predictability (regularity) of cycle length:"
+    type: choice
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "absent"
+          display: Absent (no periods/bleeding)
+      - valueCoding:
+          code: "regular"
+          display: Predictable (regular, varies by 2-7 days in length)
+      - valueCoding:
+          code: "irregular"
+          display: Unpredictable (irregular, varies by > 10 days in length)
+
+  - linkId: days-between-periods
+    text: "Number of days between periods:"
+    type: choice
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "absent"
+          display: Absent (no periods/bleeding)
+      - valueCoding:
+          code: "frequent"
+          display: Frequent (< 24 days)
+      - valueCoding:
+          code: "normal"
+          display: Normal (24-38 days)
+      - valueCoding:
+          code: "infrequent"
+          display: Infrequent (> 38 days)
+
+  - linkId: intermenstrual-bleeding
+    text: >-
+      Do you experience any Intermenstrual Bleeding (IMB)
+      (bleeding in between periods)?
+    type: choice
+    itemControl:
+      coding:
+        - code: inline-choice
+    extension:
+      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+        valueString: horizontal
+    answerOption:
+      - valueCoding:
+          code: "none"
+          display: "None"
+      - valueCoding:
+          code: "random"
+          display: "Random"
+      - valueCoding:
+          code: "cyclic"
+          display: "Cyclic/Predictable"
+
+  - linkId: intermenstrual-bleeding-details
+    text: "Please, specify:"
+    type: choice
+    itemControl:
+      coding:
+        - code: inline-choice
+    extension:
+      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+        valueString: horizontal
+    answerOption:
+      - valueCoding:
+          code: "early"
+          display: "Early cycle"
+      - valueCoding:
+          code: "mid"
+          display: "Mid cycle"
+      - valueCoding:
+          code: "late"
+          display: "Late cycle"
+    enableWhen:
+      - question: intermenstrual-bleeding
+        operator: "="
+        answerCoding:
+          code: "cyclic"
+          display: "Cyclic/Predictable"
+
+  - linkId: menstrual-pain-severity
+    text: During the past month, how would you classify the severity of your menstrual pain?
+    type: choice
+    itemControl:
+      coding:
+        - code: inline-choice
+    extension:
+      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+        valueString: horizontal
+    answerOption:
+      - valueCoding:
+          code: "very-severe"
+          display: Very severe
+      - valueCoding:
+          code: "severe"
+          display: Severe
+      - valueCoding:
+          code: "moderate"
+          display: Moderate
+      - valueCoding:
+          code: "mild"
+          display: Mild
+      - valueCoding:
+          code: "no-pain"
+          display: No pain
+
+  - linkId: blood-clots-count
+    text: During the past month, how many times did you pass blood clots (clumps of blood)?
+    type: choice
+    itemControl:
+      coding:
+        - code: inline-choice
+    extension:
+      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+        valueString: horizontal
+    answerOption:
+      - valueCoding:
+          code: "never"
+          display: "Never"
+      - valueCoding:
+          code: "1-3"
+          display: "1-3"
+      - valueCoding:
+          code: "4-6"
+          display: "4-6"
+      - valueCoding:
+          code: "more-than-6"
+          display: "6+"
+
+  - linkId: stressed-before-period
+    text: Do you get stressed or anxious before the start of your period?
+    type: choice
+    itemControl:
+      coding:
+        - code: inline-choice
+    extension:
+      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+        valueString: horizontal
+    answerOption:
+      - valueCoding:
+          code: "always"
+          display: Yes, all the time
+      - valueCoding:
+          code: "sometimes"
+          display: Yes, sometimes
+      - valueCoding:
+          code: "no"
+          display: "No"
+
+  - linkId: double-protection-during-heavier-bleeding
+    text: During heavier bleeding days do you have to use double protection or get up to change your sanitary protection during the night?
+    type: choice
+    itemControl:
+      coding:
+        - code: inline-choice
+    extension:
+      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+        valueString: horizontal
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+
+  - linkId: activity-avoidance-household
+    text: >-
+      During the past month, how many days did you avoid certain household activities 
+      (e.g. cooking, cleaning, gardening) because 
+      you need to change your tampon or pad frequently?
+    type: choice
+    itemControl:
+      coding:
+        - code: inline-choice
+    extension:
+      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+        valueString: horizontal
+    answerOption:
+      - valueCoding:
+          code: "none"
+          display: "None"
+      - valueCoding:
+          code: "1-3"
+          display: "1-3"
+      - valueCoding:
+          code: "4-8"
+          display: "4-8"
+      - valueCoding:
+          code: "9-12"
+          display: "9-12"
+
+  - linkId: soaking-display
+    text: Soaking is defined as completely saturating a high absorbency sanitary product (e.g. a pad or tampon).
+    type: display
+
+  - linkId: sanitary-products-count
+    text: >-
+      On your heaviest day of bleeding during the past month, 
+      how many high absorbency sanitary products did you soak 
+      (either completely or almost completely?)
+    type: choice
+    itemControl:
+      coding:
+        - code: inline-choice
+    extension:
+      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+        valueString: horizontal
+    answerOption:
+      - valueCoding:
+          code: "0"
+          display: "0"
+      - valueCoding:
+          code: "1-4"
+          display: "1-4"
+      - valueCoding:
+          code: "5-8"
+          display: "5-8"
+      - valueCoding:
+          code: "9-12"
+          display: "9-12"
+      - valueCoding:
+          code: "13-16"
+          display: "13-16"
+      - valueCoding:
+          code: "more-than-16"
+          display: "16+"
+
+  - linkId: soaking-through-clothes-count
+    text: >-
+      During the past month, how many times have you had an episode of bleeding 
+      that soaked through your “outer” clothes (pants, skirt, dress)?
+    type: choice
+    itemControl:
+      coding:
+        - code: inline-choice
+    extension:
+      - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+        valueString: horizontal
+    answerOption:
+      - valueCoding:
+          code: "never"
+          display: "Never"
+      - valueCoding:
+          code: "1-3"
+          display: "1-3"
+      - valueCoding:
+          code: "4-6"
+          display: "4-6"
+      - valueCoding:
+          code: "more-than-6"
+          display: "6+"
+
+  - linkId: work-interference-bleeding
+    text: During the past month, how many days do you think bleeding interfered with your job performance?
+    type: choice
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "working-at-home"
+          display: "I am currently not working outside the home"
+      - valueCoding:
+          code: "not-affecting"
+          display: "Never, my bleeding does not affect my work"
+      - valueCoding:
+          code: "1-3"
+          display: "1-3 days"
+      - valueCoding:
+          code: "4-8"
+          display: "4-8 days"
+      - valueCoding:
+          code: "9-12"
+          display: "9-12 days"
+      - valueCoding:
+          code: "more-than-13"
+          display: "13 days or more"
+
+  - linkId: work-missed-bleeding
+    text: During the past month, on how many days did you miss work because you were bleeding?
+    type: choice
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "none"
+          display: "None, no days of work were missed"
+      - valueCoding:
+          code: "less-than-1"
+          display: "1 week or less out of 4 weeks"
+      - valueCoding:
+          code: "more-than-1"
+          display: "More than 1 week, less than 2 weeks out of 4 weeks"
+      - valueCoding:
+          code: "more-than-2"
+          display: "More than 2 weeks, less than 3 weeks out of 4 weeks"
+      - valueCoding:
+          code: "more-than-3"
+          display: "More than 3 weeks out of 4 weeks "
+
+  - linkId: social-activities-avoided-bleeding
+    text: >-
+      During the past month, on how many days did you avoid social activities 
+      (such as getting together with friends, going shopping for fun) when you thought you would be bleeding?
+    type: choice
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "never"
+          display: "Never"
+      - valueCoding:
+          code: "1-3"
+          display: "1-3 days"
+      - valueCoding:
+          code: "4-8"
+          display: "4-8 days"
+      - valueCoding:
+          code: "9-12"
+          display: "9-12 days"
+      - valueCoding:
+          code: "more-than-13"
+          display: "13 days or more"
+
+  - linkId: clothing-choice-bleeding
+    text: During the past month, on how many days did you choose what to wear based on whether or not you were bleeding?
+    type: choice
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "never"
+          display: "Never"
+      - valueCoding:
+          code: "1-3"
+          display: "1-3 days"
+      - valueCoding:
+          code: "4-8"
+          display: "4-8 days"
+      - valueCoding:
+          code: "9-12"
+          display: "9-12 days"
+      - valueCoding:
+          code: "more-than-13"
+          display: "13 days or more"

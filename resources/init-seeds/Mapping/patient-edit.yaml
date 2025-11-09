@@ -1,64 +1,48 @@
 id: patient-edit
 resourceType: Mapping
+type: FHIRPath
 body:
-  $let:
-    ssn: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='ssn').answer.valueString").0
-    gender: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='gender').answer.valueCoding.code").0
-    mobile: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='mobile').answer.valueString").0
-    email: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='email').answer.valueString").0
-    lastName: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='last-name').answer.valueString").0
-    birthDate: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='birth-date').answer.valueDate").0
-    firstName: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='first-name').answer.valueString").0
-    patientId: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='patient-id').answer.valueString").0
-    middleName: >-
-      $
-      fhirpath("QuestionnaireResponse.repeat(item).where(linkId='middle-name').answer.valueString").0
-    appleIdentifier: $ fhirpath("Patient.identifier.where(system='https://appleid.apple.com')").0
-  $body:
-    type: transaction
-    entry:
-      - request:
-          url: $ "/Patient/" + patientId
-          method: PUT
-        resource:
-          name:
-            - given:
-                - $ firstName
-                - $ middleName
-              family: $ lastName
-          gender: $ gender
-          telecom:
-            - value: $ mobile
+  "{% assign %}":
+    - ssn: "{{ %QuestionnaireResponse.answers('ssn') }}"
+    - gender: "{{ %QuestionnaireResponse.answers('gender').code }}"
+    - mobile: "{{ %QuestionnaireResponse.answers('mobile') }}"
+    - email: "{{ %QuestionnaireResponse.answers('email') }}"
+    - lastName: "{{ %QuestionnaireResponse.answers('last-name') }}"
+    - birthDate: "{{ %QuestionnaireResponse.answers('birth-date') }}"
+    - firstName: "{{ %QuestionnaireResponse.answers('first-name') }}"
+    - patientId: "{{ %QuestionnaireResponse.answers('patient-id') }}"
+    - middleName: "{{ %QuestionnaireResponse.answers('middle-name') }}"
+    - appleIdentifier: "{{ %Patient.identifier.where(system='https://appleid.apple.com').first() }}"
+
+  resourceType: Bundle
+  type: transaction
+  entry:
+    - request:
+        method: PUT
+        url: "/Patient/{{ %patientId }}"
+      resource:
+        resourceType: Patient
+        id: "{{ %patientId }}"
+        name:
+          - given:
+              - "{{ %firstName }}"
+              - "{{ %middleName }}"
+            family: "{{ %lastName }}"
+            use: official
+        gender: "{{ %gender }}"
+        telecom:
+          - "{% if %mobile.exists() and %mobile!='' %}":
+              value: "{{ %mobile }}"
               system: phone
-            - value: $ email
+          - "{% if %email.exists() and %email!='' %}":
+              value: "{{ %email }}"
               system: email
-          birthDate: $ birthDate
-          identifier:
-            $if: $ ssn && ssn != ""
-            $then:
-              $call: concat
-              $args:
-                - - $ appleIdentifier
-                - - value: $ ssn
-                    system: http://hl7.org/fhir/sid/us-ssn
-            $else:
-              - $ appleIdentifier
-          active: true
-          resourceType: Patient
-    resourceType: Bundle
+        birthDate: "{{ %birthDate }}"
+        identifier:
+          - "{% if %appleIdentifier.exists() %}":
+              system: "https://appleid.apple.com"
+              value: "{{ %appleIdentifier.value }}"
+          - "{% if %ssn.exists() and %ssn!='' %}":
+              system: "http://hl7.org/fhir/sid/us-ssn"
+              value: "{{ %ssn }}"
+        active: true

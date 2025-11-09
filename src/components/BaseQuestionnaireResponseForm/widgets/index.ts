@@ -14,3 +14,4 @@ export * from './TimeRangePickerControl';
 export * from './DateTimeSlotPicker';
 export * from './UploadFileControl';
 export * from './MDEditorControl';
+export * from './GroupWizard';

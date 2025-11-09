@@ -9,7 +9,7 @@ export async function generateQuestionnaire(prompt: string, questionnaire?: stri
     const appToken = getToken();
 
     return await service<Questionnaire>({
-        baseURL: config.aiQuestionnaireBuilderUrl,
+        baseURL: config.aiAssistantServiceUrl,
         url: `/questionnaire`,
         method: 'POST',
         data: { prompt: prompt, questionnaire },
@@ -28,7 +28,7 @@ export async function generateQuestionnaireFromFile(file: File, questionnaire?: 
     const appToken = getToken();
 
     return await service<{ questionnaire: Questionnaire; markdown: string }>({
-        baseURL: config.aiQuestionnaireBuilderUrl,
+        baseURL: config.aiAssistantServiceUrl,
         url: `/questionnaire-from-file`,
         method: 'POST',
         data: formData,

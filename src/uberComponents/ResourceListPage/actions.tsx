@@ -42,7 +42,11 @@ export function RecordQuestionnaireAction<R extends Resource>({
     return (
         <ModalTrigger
             title={action.title}
-            trigger={<S.LinkButton type="link">{action.title}</S.LinkButton>}
+            trigger={
+                <S.LinkButton type="link" size="small">
+                    {action.title}
+                </S.LinkButton>
+            }
             modalProps={action.extra?.modalProps}
         >
             {({ closeModal }) => (
@@ -167,6 +171,7 @@ export function NavigationAction<R extends Resource>({
     return (
         <S.LinkButton
             type="link"
+            size="small"
             style={{ padding: 0 }}
             onClick={() =>
                 navigate(action.link, {

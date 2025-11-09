@@ -34,8 +34,9 @@ import {
     QuestionEmail,
 } from './widgets';
 import { AudioRecorderUploader } from './widgets/AudioRecorderUploader';
+import { Barcode } from './widgets/barcode';
 import { Display } from './widgets/display';
-import { GroupWizard, GroupWizardWithTooltips } from './widgets/GroupWizard';
+import { GroupWizard, GroupWizardVertical, GroupWizardWithTooltips } from './widgets/GroupWizard';
 import { PasswordInput } from './widgets/PasswordInput';
 import { QuestionReference } from './widgets/reference';
 import { ReferenceRadioButton } from './widgets/ReferenceRadioButton';
@@ -75,6 +76,7 @@ export const itemControlComponents: ItemControlQuestionItemComponentMapping = {
     'input-inside-text': QuestionInputInsideText,
     'markdown-editor': MDEditorControl,
     'audio-recorder-uploader': AudioRecorderUploader,
+    barcode: Barcode,
 };
 
 export const groupControlComponents: ItemControlGroupItemComponentMapping = {
@@ -92,4 +94,5 @@ export const groupControlComponents: ItemControlGroupItemComponentMapping = {
     wizard: GroupWizard,
     'wizard-with-tooltips': GroupWizardWithTooltips,
     'wizard-navigation-group': GroupWizard,
+    'wizard-vertical': GroupWizardVertical,
 };

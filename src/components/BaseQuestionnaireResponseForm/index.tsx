@@ -23,6 +23,8 @@ import * as yup from 'yup';
 
 import 'react-phone-input-2/lib/style.css';
 
+import { RemoteDataResult } from '@beda.software/remote-data';
+
 import { CustomYupTestsMap, questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
 import s from './BaseQuestionnaireResponseForm.module.scss';
@@ -45,6 +47,8 @@ export interface BaseQuestionnaireResponseFormProps {
     onCancel?: () => void;
 
     onQRFUpdate?: (questionnaireResponse: QuestionnaireResponse) => void;
+    saveDraftButtonTitle?: React.ReactNode;
+    onSaveDraft?: (questionnaireResponse: QuestionnaireResponse) => Promise<RemoteDataResult<QuestionnaireResponse>>;
 
     ItemWrapper?: ComponentType<{
         item: QuestionItemProps;
@@ -245,7 +249,8 @@ function isGroupWizard(q: FCEQuestionnaire) {
         const itemControlCode = i.itemControl?.coding?.[0]?.code;
 
         return (
-            itemControlCode && ['wizard', 'wizard-with-tooltips', 'wizard-navigation-group'].includes(itemControlCode)
+            itemControlCode &&
+            ['wizard', 'wizard-with-tooltips', 'wizard-vertical', 'wizard-navigation-group'].includes(itemControlCode)
         );
     });
 }

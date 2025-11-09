@@ -47,6 +47,7 @@ export function ResourceListPageContent<R extends Resource>({
     defaultLaunchContext,
     getReportColumns,
     expandableRowComponent,
+    maxWidth,
 }: ResourceListPageContentProps<R>) {
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBarForGenericFilters(getFilters);
     const allSorters = getSorters?.() ?? [];
@@ -145,7 +146,7 @@ export function ResourceListPageContent<R extends Resource>({
     };
 
     return (
-        <PageContainerContent level={2}>
+        <PageContainerContent level={2} maxWidth={maxWidth}>
             {renderHeader()}
 
             {getReportColumns ? (
