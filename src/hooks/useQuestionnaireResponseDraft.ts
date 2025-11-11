@@ -11,7 +11,6 @@ import {
     formatFHIRDateTime,
     WithId,
     extractBundleResources,
-    uuid4,
 } from '@beda.software/fhir-react';
 import { failure, isFailure, isSuccess, RemoteData, RemoteDataResult, success } from '@beda.software/remote-data';
 
@@ -30,7 +29,6 @@ interface QuestionnaireResponseDraftProps {
     subject: Resource | Reference | string;
     questionnaireId: string;
     questionnaireResponse?: WithId<QuestionnaireResponse>;
-    initialQuestionnaireResponse?: Partial<QuestionnaireResponse>;
 }
 
 interface QuestionnaireResponseDraftResponse {
@@ -44,14 +42,7 @@ interface QuestionnaireResponseDraftResponse {
 export const useQuestionnaireResponseDraft = (
     props: QuestionnaireResponseDraftProps,
 ): QuestionnaireResponseDraftResponse => {
-    const {
-        autoSave = false,
-        qrDraftServiceType = 'local',
-        subject,
-        questionnaireId,
-        questionnaireResponse,
-        initialQuestionnaireResponse,
-    } = props;
+    const { autoSave = false, qrDraftServiceType = 'local', subject, questionnaireId, questionnaireResponse } = props;
 
     const [draftInfoMessage, setDraftInfoMessage] = useState<string | undefined>();
     const draftKeyRef = useRef<string | undefined>();
@@ -83,13 +74,7 @@ export const useQuestionnaireResponseDraft = (
         const draftQRRD = await loadQuestionnaireResponseDraft(draftKeyRef.current, qrDraftServiceType);
 
         if (isFailure(draftQRRD)) {
-            return success({
-                resourceType: 'QuestionnaireResponse',
-                status: 'in-progress',
-                id: uuid4(),
-                ...initialQuestionnaireResponse,
-                ...questionnaireResponse,
-            });
+            return success(questionnaireResponse);
         }
 
         const resultQR = {
