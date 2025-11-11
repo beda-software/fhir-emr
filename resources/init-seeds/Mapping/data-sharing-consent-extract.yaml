@@ -23,10 +23,10 @@ body:
       - request:
           $if: $ consentID
           $then:
-            url: $ "/fhir/Consent/" + consentID
+            url: $ "Consent/" + consentID
             method: PUT
           $else:
-            url: /fhir/Consent
+            url: Consent
             method: POST
         fullUrl: $ "urn:uuid:consent-id"
         resource:
@@ -68,7 +68,7 @@ body:
                 system: http://terminology.hl7.org/CodeSystem/v3-ActReason
                 display: care management
       - request:
-          url: /fhir/Provenance
+          url: Provenance
           method: POST
         resource:
           resourceType: Provenance
