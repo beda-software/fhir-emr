@@ -44,7 +44,7 @@ import { compileAsFirst } from 'src/utils';
 export interface Props {
     patient: Patient;
     author: WithId<Practitioner | Patient | Organization | Person>;
-    questionnaireResponse?: WithId<QuestionnaireResponse>;
+    questionnaireResponse?: Partial<QuestionnaireResponse>;
     questionnaireId: string;
     encounterId?: string;
     launchContextParameters?: ParametersParameter[];

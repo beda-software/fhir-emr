@@ -28,12 +28,12 @@ interface QuestionnaireResponseDraftProps {
 
     subject: Resource | Reference | string;
     questionnaireId: string;
-    questionnaireResponse?: WithId<QuestionnaireResponse>;
+    questionnaireResponse?: Partial<QuestionnaireResponse>;
 }
 
 interface QuestionnaireResponseDraftResponse {
     deleteDraft: () => Promise<void>;
-    response: RemoteData<WithId<QuestionnaireResponse> | undefined>;
+    response: RemoteData<Partial<QuestionnaireResponse> | undefined>;
     draftInfoMessage?: string;
     updateDraft: (questionnaireResponse: QuestionnaireResponse) => Promise<void>;
     saveDraft: (questionnaireResponse: QuestionnaireResponse) => Promise<RemoteDataResult<QuestionnaireResponse>>;
@@ -47,7 +47,7 @@ export const useQuestionnaireResponseDraft = (
     const [draftInfoMessage, setDraftInfoMessage] = useState<string | undefined>();
     const draftKeyRef = useRef<string | undefined>();
 
-    const [response, manager] = useService<WithId<QuestionnaireResponse> | undefined>(async () => {
+    const [response, manager] = useService<Partial<QuestionnaireResponse> | undefined>(async () => {
         if (qrDraftServiceType === 'server' && typeof questionnaireResponse !== 'undefined') {
             return success(questionnaireResponse);
         }
@@ -186,11 +186,11 @@ export function makeReference(resource: Resource | Reference | string): Referenc
 
 export function makeDraftKeyPrefix(props: {
     draftKeySubject?: Resource | Reference | string;
-    questionnaireResponse?: WithId<QuestionnaireResponse>;
+    questionnaireResponse?: Partial<QuestionnaireResponse>;
 }) {
     const { draftKeySubject, questionnaireResponse } = props;
 
-    if (questionnaireResponse) {
+    if (questionnaireResponse?.id) {
         return `QuestionnaireResponse/${questionnaireResponse.id}`;
     }
 
@@ -206,7 +206,7 @@ export function makeLocalStorageDraftVersionedKey(props: {
     prefix?: string;
     subject?: Resource | Reference | string;
     questionnaire?: WithId<Questionnaire>;
-    questionnaireResponse?: WithId<QuestionnaireResponse>;
+    questionnaireResponse?: Partial<QuestionnaireResponse>;
 }) {
     const { prefix = 'draft', subject, questionnaire, questionnaireResponse } = props;
 
