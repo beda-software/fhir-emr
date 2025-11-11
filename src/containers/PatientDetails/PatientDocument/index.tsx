@@ -26,6 +26,7 @@ export interface PatientDocumentProps {
     patient: Patient;
     author: WithId<Practitioner | Patient | Organization | Person>;
     questionnaireResponse?: WithId<QuestionnaireResponse>;
+    initialQuestionnaireResponse?: Partial<QuestionnaireResponse>;
     launchContextParameters?: ParametersParameter[];
     questionnaireId?: string;
     encounterId?: string;
@@ -58,6 +59,7 @@ export function PatientDocument(props: PatientDocumentProps) {
         qrDraftServiceType,
         autoSave,
         questionnaireResponse: props.questionnaireResponse,
+        initialQuestionnaireResponse: props.initialQuestionnaireResponse,
     });
 
     return (
