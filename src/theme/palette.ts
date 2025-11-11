@@ -129,5 +129,12 @@ export function getPalette({ dark }: { dark?: boolean }): DefaultTheme {
         },
         primaryPalette,
         secondaryPalette,
+        calendar: {
+            'bg_slot-taken_default': dark ? primaryPalette.bcp_5 : primaryPalette.bcp_6,
+            'bg_slot-taken_cyan': dark ? secondaryPalette.bcs_5 : ANTDColors?.cyan?.[6],
+            'bg_slot-taken_orange': dark ? ANTDColors?.gold?.[5] : ANTDColors?.gold?.[6],
+            'bg_slot-taken_magenta': dark ? ANTDColors?.magenta?.[5] : ANTDColors?.magenta?.[6],
+            'bg_slot-taken_purple': dark ? ANTDColors?.purple?.[5] : ANTDColors?.purple?.[6],
+        },
     } as DefaultTheme;
 }

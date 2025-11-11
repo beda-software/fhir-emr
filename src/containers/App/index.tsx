@@ -1,7 +1,7 @@
 import { t } from '@lingui/macro';
 import queryString from 'query-string';
 import { ReactElement, useContext, useEffect, useRef } from 'react';
-import { Route, BrowserRouter, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
@@ -17,6 +17,7 @@ import { EncounterList } from 'src/containers/EncounterList';
 import { MagicSearchPage } from 'src/containers/MagicSearchPage';
 import { PatientDetails } from 'src/containers/PatientDetails';
 import { NewPatientDetails } from 'src/containers/PatientDetails/new';
+import { PatientDetailsCharting } from 'src/containers/PatientDetailsCharting';
 import { PatientList } from 'src/containers/PatientList';
 import { PatientQuestionnaire } from 'src/containers/PatientQuestionnaire';
 import { PractitionerDetails } from 'src/containers/PractitionerDetails';
@@ -35,6 +36,7 @@ import { InvoiceDetails } from '../InvoiceDetails';
 import { InvoiceList } from '../InvoiceList';
 import { MedicationManagement } from '../MedicationManagement';
 import { MedicationManagementDetail } from '../MedicationManagementDetail';
+import { NewScheduling } from '../NewScheduling';
 import { NotificationPage } from '../NotificationPage';
 import { OrganizationScheduling } from '../OrganizationScheduling';
 import { DocumentPrint } from '../PatientDetails/DocumentPrint';
@@ -164,6 +166,7 @@ function AuthenticatedUserApp({ defaultRoute, extra }: RouteProps) {
                             {extra}
                             <Route path="/encounters" element={<EncounterList />} />
                             <Route path="/scheduling" element={<OrganizationScheduling />} />
+                            <Route path="/scheduling-new" element={<NewScheduling />} />
                             <Route path="/medications" element={<MedicationManagement />} />
                             <Route path="/medications/:id/*" element={<MedicationManagementDetail />} />
                             <Route path="/prescriptions" element={<Prescriptions />} />
@@ -172,6 +175,7 @@ function AuthenticatedUserApp({ defaultRoute, extra }: RouteProps) {
                             <Route path="/patients" element={<PatientList />} />
                             <Route path="/patients/:id/*" element={<PatientDetails />} />
                             <Route path="/patients2/:id/*" element={<NewPatientDetails />} />
+                            <Route path="/patients3/:id/*" element={<PatientDetailsCharting />} />
                             <Route path="/questionnaire" element={<PatientQuestionnaire />} />
                             <Route path="/documents/:id/edit" element={<div>documents/:id/edit</div>} />
                             <Route path="/encounters/:encounterId/video" element={<VideoCall />} />
