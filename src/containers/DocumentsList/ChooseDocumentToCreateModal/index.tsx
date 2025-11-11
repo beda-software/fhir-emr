@@ -10,7 +10,7 @@ import { mapSuccess } from '@beda.software/remote-data';
 
 import { Modal } from 'src/components/Modal';
 import { Spinner } from 'src/components/Spinner';
-import { getFHIRResources } from 'src/services/fhir';
+import { getAllFHIRResources } from 'src/services/fhir';
 
 interface Props extends ModalProps {
     patient: Patient;
@@ -31,7 +31,7 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
     const [questionnairesResponse] = useService(
         async () =>
             mapSuccess(
-                await getFHIRResources<Questionnaire>('Questionnaire', {
+                await getAllFHIRResources<Questionnaire>('Questionnaire', {
                     'subject-type': subjectType ? [subjectType] : [],
                     _sort: 'title',
                     status: 'active',
