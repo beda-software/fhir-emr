@@ -36,7 +36,7 @@ export interface PatientDocumentProps {
     onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
     autoSave?: boolean;
     qrDraftServiceType?: QuestionnaireResponseDraftService;
-    initialQRFProps?: QuestionnaireResponseFormProps;
+    qrfProps?: Partial<QuestionnaireResponseFormProps>;
 }
 
 interface PatientDocumentContentProps extends PatientDocumentProps {

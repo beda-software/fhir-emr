@@ -28,6 +28,7 @@ import {
     PatientDocumentData,
     usePatientDocument,
 } from 'src/containers/PatientDetails/PatientDocument/usePatientDocument';
+import { QuestionnaireResponseFormProps } from 'src/hooks';
 import { forceDeleteFHIRResource, getFHIRResources, patchFHIRResource } from 'src/services/fhir';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 import { isExternalQuestionnaire } from 'src/utils/smart-apps';
@@ -40,6 +41,7 @@ interface Props {
     patient: WithId<Patient>;
     hideControls?: boolean;
     launchContextParameters?: ParametersParameter[];
+    qrfProps?: Partial<QuestionnaireResponseFormProps>;
 }
 
 const deleteDraft = async (navigate: NavigateFunction, qrId?: string) => {
@@ -287,7 +289,7 @@ function PatientDocumentDetailsFormData(props: {
 }
 
 export function PatientDocumentDetails(props: Props) {
-    const { patient, hideControls, launchContextParameters } = props;
+    const { patient, hideControls, launchContextParameters, qrfProps } = props;
     const { response, manager } = usePatientDocumentDetails(patient.id);
     const navigate = useNavigate();
     const author = selectCurrentUserRoleResource();
@@ -341,6 +343,7 @@ export function PatientDocumentDetails(props: Props) {
                                                     author={author}
                                                     autoSave={true}
                                                     launchContextParameters={launchContextParameters}
+                                                    qrfProps={qrfProps}
                                                 />
                                             }
                                         />
