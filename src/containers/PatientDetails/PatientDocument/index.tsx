@@ -14,7 +14,11 @@ import { AlertMessage } from 'src/components/AlertMessage';
 import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
 import { AnxietyScore, DepressionScore } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/score';
 import { Spinner } from 'src/components/Spinner';
-import { QuestionnaireResponseDraftService, QuestionnaireResponseFormSaveResponse } from 'src/hooks';
+import {
+    QuestionnaireResponseDraftService,
+    QuestionnaireResponseFormProps,
+    QuestionnaireResponseFormSaveResponse,
+} from 'src/hooks';
 import { useQuestionnaireResponseDraft } from 'src/hooks/useQuestionnaireResponseDraft';
 
 import s from './PatientDocument.module.scss';
@@ -32,6 +36,7 @@ export interface PatientDocumentProps {
     onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
     autoSave?: boolean;
     qrDraftServiceType?: QuestionnaireResponseDraftService;
+    initialQRFProps?: QuestionnaireResponseFormProps;
 }
 
 interface PatientDocumentContentProps extends PatientDocumentProps {
