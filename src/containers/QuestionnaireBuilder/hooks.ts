@@ -102,7 +102,8 @@ export function useQuestionnaireBuilder() {
 
                 if (isFailure(saveResponse)) {
                     setError(
-                        saveResponse.error?.message || 'Something went wrong please try again or rewrite the message',
+                        formatError(saveResponse.error) ||
+                            'Something went wrong please try again or rewrite the message',
                     );
                     setResponse(success(response.data));
                 }
@@ -130,7 +131,7 @@ export function useQuestionnaireBuilder() {
                 }
                 if (isFailure(saveResponse)) {
                     setError(
-                        saveResponse.error?.message || 'Something went wrong please try again or reupload the file',
+                        formatError(saveResponse.error) || 'Something went wrong please try again or reupload the file',
                     );
                     setResponse(success(response.data));
                     setUpdateResponse(saveResponse);
