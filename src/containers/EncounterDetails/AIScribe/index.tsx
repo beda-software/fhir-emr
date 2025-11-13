@@ -210,7 +210,7 @@ function RecordedNotes({ hideControls, communication, reload, reloadDocuments }:
                         <>
                             <Extract
                                 communication={communication}
-                                reloadDocumnents={reloadDocuments}
+                                reloadDocuments={reloadDocuments}
                                 updateExtractLoading={setIsExtractLoading}
                             />
                             {!isExtractLoading ? (
@@ -230,7 +230,7 @@ function RecordedNotes({ hideControls, communication, reload, reloadDocuments }:
 
 interface ExtractProps {
     communication: Communication;
-    reloadDocumnents: () => void;
+    reloadDocuments: () => void;
     updateExtractLoading: (v: boolean) => void;
 }
 
@@ -251,11 +251,11 @@ function Extract(props: ExtractProps) {
         ),
     );
 
-    const [extractionRD, setExtarction] = useState<RemoteData<unknown>>(notAsked);
+    const [extractionRD, setExtraction] = useState<RemoteData<unknown>>(notAsked);
 
     async function requestExtract() {
         updateExtractLoading(true);
-        setExtarction(loading);
+        setExtraction(loading);
         const result = sequenceArray(
             await Promise.all(
                 selectedQuestionnaires.map(async (qId) => {
@@ -277,9 +277,12 @@ function Extract(props: ExtractProps) {
         );
         if (isSuccess(result)) {
             notification.success({ message: t`Documents have been successfully extracted` });
-            props.reloadDocumnents();
+            props.reloadDocuments();
         }
-        setExtarction(result);
+        if (isFailure(result)) {
+            notification.error({ message: formatError(result.error[0]) });
+        }
+        setExtraction(result);
         updateExtractLoading(false);
     }
 
