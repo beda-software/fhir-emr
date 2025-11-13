@@ -266,6 +266,7 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
         }
         if (questionnaireLoader.type === 'id') {
             return service<FHIRQuestionnaire>({
+                ...(config.sdcBackendUrl ? { baseURL: config.sdcBackendUrl } : {}),
                 method: 'GET',
                 url: `/Questionnaire/${questionnaireLoader.questionnaireId}/$assemble`,
             });
