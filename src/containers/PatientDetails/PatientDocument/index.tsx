@@ -25,7 +25,7 @@ import { usePatientDocument } from './usePatientDocument';
 export interface PatientDocumentProps {
     patient: Patient;
     author: WithId<Practitioner | Patient | Organization | Person>;
-    questionnaireResponse?: WithId<QuestionnaireResponse>;
+    questionnaireResponse?: Partial<QuestionnaireResponse>;
     launchContextParameters?: ParametersParameter[];
     questionnaireId?: string;
     encounterId?: string;
