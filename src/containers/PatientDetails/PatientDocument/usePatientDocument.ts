@@ -50,6 +50,7 @@ export interface Props {
     launchContextParameters?: ParametersParameter[];
     onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
     onCancel?: () => void;
+    qrfProps?: Partial<QuestionnaireResponseFormProps>;
 }
 
 async function onFormSubmit(
@@ -96,6 +97,7 @@ function prepareFormInitialParams(
         author,
         launchContextParameters = [],
         provenanceBundle,
+        qrfProps,
     } = props;
 
     const initialQuestionnaireResponse = _.merge(
@@ -141,6 +143,7 @@ function prepareFormInitialParams(
             ...launchContextParameters,
         ],
         initialQuestionnaireResponse,
+        ...qrfProps,
     };
 
     return params;
@@ -164,6 +167,7 @@ export function usePatientDocument(props: Props): {
     manager: ServiceManager<PatientDocumentData, any>;
     questionnaireId: string;
     handleCancel: () => void;
+    qrfProps?: Partial<QuestionnaireResponseFormProps>;
 } {
     const { questionnaireResponse, questionnaireId, onSuccess, onCancel } = props;
 
