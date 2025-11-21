@@ -1,6 +1,8 @@
 import { QuestionnaireResponse } from 'fhir/r4b';
 import { ItemControlGroupItemComponentMapping, ItemControlQuestionItemComponentMapping } from 'sdc-qrf';
 
+import { RemoteDataResult } from '@beda.software/remote-data';
+
 import { FormFooterComponentProps } from 'src/components/BaseQuestionnaireResponseForm/FormFooter';
 import {
     QuestionnaireResponseFormProps,
@@ -16,6 +18,7 @@ export interface QRFProps extends QuestionnaireResponseFormProps {
     itemControlGroupItemComponents?: ItemControlGroupItemComponentMapping;
     onCancel?: () => void;
     onQRFUpdate?: (questionnaireResponse: QuestionnaireResponse) => void;
+    onSaveDraft?: (questionnaireResponse: QuestionnaireResponse) => Promise<RemoteDataResult<QuestionnaireResponse>>;
 
     FormFooterComponent?: React.ElementType<FormFooterComponentProps>;
     saveButtonTitle?: React.ReactNode;
