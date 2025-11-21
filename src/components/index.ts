@@ -17,6 +17,7 @@ export * from './Modal';
 export * from './ModalTrigger';
 export * from './PatientEncounter';
 export * from './QuestionnaireResponseForm';
+export * from './QuestionnaireResponseFormDraft';
 export * from './QuestionnairesWizard';
 export * from './ResourceTable';
 export * from '../uberComponents/ResourceListPage';
