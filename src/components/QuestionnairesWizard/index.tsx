@@ -1,7 +1,3 @@
-import { QuestionnaireResponse } from 'fhir/r4b';
-
-import { WithId } from '@beda.software/fhir-react';
-
 import { FormFooterComponentProps } from 'src/components/BaseQuestionnaireResponseForm/FormFooter';
 import { QuestionnaireResponseFormDraft } from 'src/components/QuestionnaireResponseFormDraft';
 import { Wizard } from 'src/components/Wizard';
@@ -39,13 +35,10 @@ export function QuestionnairesWizard(props: QuestionnairesWizardProps) {
         >
             <QuestionnaireResponseFormDraft
                 key={currentQuestionnaire?.id}
+                autoSave
+                qrDraftServiceType="local"
                 subject={props.patient!}
                 questionnaireId={currentQuestionnaire!.id!}
-                questionnaireResponse={
-                    currentQuestionnaireResponse && currentQuestionnaireResponse.id
-                        ? (currentQuestionnaireResponse as WithId<QuestionnaireResponse>)
-                        : undefined
-                }
                 questionnaireLoader={questionnaireIdLoader(currentQuestionnaire!.id!)}
                 onSuccess={(result) => {
                     setStepStatus(currentQuestionnaireIndex, 'finish');
