@@ -3,10 +3,8 @@ import queryString from 'query-string';
 import { ReactElement, useContext, useEffect, useRef } from 'react';
 import { Route, BrowserRouter, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
 
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { useService } from 'aidbox-react/lib/hooks/service';
-
 import { User } from '@beda.software/aidbox-types';
+import { RenderRemoteData, useService } from '@beda.software/fhir-react';
 import { RemoteDataResult, success } from '@beda.software/remote-data';
 
 import { AnonymousLayout, BaseLayout } from 'src/components/BaseLayout';

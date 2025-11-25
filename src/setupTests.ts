@@ -12,26 +12,22 @@ import {
     Resource,
 } from 'fhir/r4b';
 
-import { saveFHIRResource as aidboxSaveFHIRResource } from 'aidbox-react/lib/services/fhir';
-import {
-    axiosInstance,
-    resetInstanceToken as resetAidboxInstanceToken,
-    setInstanceBaseURL as setAidboxInstanceBaseURL,
-} from 'aidbox-react/lib/services/instance';
-import { formatFHIRDateTime } from 'aidbox-react/lib/utils/date';
-import { withRootAccess, LoginService, getToken } from 'aidbox-react/lib/utils/tests';
-
 import { CodeSystem, User, ValueSet } from '@beda.software/aidbox-types';
 import config from '@beda.software/emr-config';
-import { ensure, getReference } from '@beda.software/fhir-react';
+import { ensure, formatFHIRDateTime, getReference, withRootAccess } from '@beda.software/fhir-react';
 
 import { restoreUserSession } from 'src/containers/App/utils.ts';
 import { login as loginService } from 'src/services/auth';
 import {
+    axiosInstance,
+    resetInstanceToken,
+    setInstanceBaseURL,
+    aidboxSaveFHIRResource,
     createFHIRResource,
     saveFHIRResource,
-    resetInstanceToken as resetFHIRInstanceToken,
-    service,
+    aidboxService,
+    LoginService,
+    getAidboxToken,
 } from 'src/services/fhir';
 
 declare global {
@@ -144,7 +140,7 @@ export async function createEncounter(subject: Reference, participant: Participa
 }
 
 export async function createCodeSystem(codeSystemData: Partial<CodeSystem>) {
-    return await service<CodeSystem>({
+    return await aidboxService<CodeSystem>({
         baseURL: config.baseURL,
         url: `/fhir/CodeSystem/${codeSystemData.id ?? ''}`,
         method: 'PUT',
@@ -157,7 +153,7 @@ export async function createCodeSystem(codeSystemData: Partial<CodeSystem>) {
 }
 
 export async function createValueSet(valueSetData: Partial<ValueSet>) {
-    return await service<ValueSet>({
+    return await aidboxService<ValueSet>({
         baseURL: config.baseURL,
         url: `/fhir/ValueSet/${valueSetData.id ?? ''}`,
         method: 'PUT',
@@ -197,10 +193,9 @@ export const createUser = async ({ patient, user }: { patient: Patient; user?: P
 };
 
 export async function login(user: User) {
-    resetAidboxInstanceToken();
-    resetFHIRInstanceToken();
+    resetInstanceToken();
 
-    const token = await getToken(user, loginService as LoginService);
+    const token = await getAidboxToken(user, loginService as LoginService);
 
     await restoreUserSession(token.access_token);
 
@@ -239,13 +234,13 @@ export async function waitForAPIProcess<R>(props: WaitForAPIProcessProps<R>) {
 
 beforeAll(async () => {
     // vi.useFakeTimers();
-    setAidboxInstanceBaseURL('http://localhost:8080');
+    setInstanceBaseURL('http://localhost:8080');
 });
 
 let txId: string;
 
 beforeEach(async () => {
-    await withRootAccess(async () => {
+    await withRootAccess(axiosInstance, async () => {
         const response = await axiosInstance({
             method: 'POST',
             url: '/$psql',
@@ -258,9 +253,8 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-    resetAidboxInstanceToken();
-    resetFHIRInstanceToken();
-    await withRootAccess(async () => {
+    resetInstanceToken();
+    await withRootAccess(axiosInstance, async () => {
         await axiosInstance({
             method: 'POST',
             url: '/$psql',

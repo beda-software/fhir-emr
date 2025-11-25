@@ -1,22 +1,12 @@
 import { Organization, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
 
-import {
-    resetInstanceToken as resetAidboxInstanceToken,
-    setInstanceToken as setAidboxInstanceToken,
-} from 'aidbox-react/lib/services/instance';
-
 import { User } from '@beda.software/aidbox-types';
 import config from '@beda.software/emr-config';
 import { extractBundleResources, extractErrorCode, formatError } from '@beda.software/fhir-react';
 import { failure, isFailure, isSuccess, RemoteDataResult, success } from '@beda.software/remote-data';
 
 import { getJitsiAuthToken, getUserInfo } from 'src/services/auth';
-import {
-    getFHIRResource,
-    getFHIRResources,
-    resetInstanceToken as resetFHIRInstanceToken,
-    setInstanceToken as setFHIRInstanceToken,
-} from 'src/services/fhir';
+import { getFHIRResource, getFHIRResources, resetInstanceToken, setInstanceToken } from 'src/services/fhir';
 import {
     sharedAuthorizedOrganization,
     sharedAuthorizedPatient,
@@ -113,8 +103,7 @@ export async function restoreUserSession(
     token: string,
     populateUserInfoSharedState = aidboxPopulateUserInfoSharedState,
 ): Promise<RemoteDataResult> {
-    setAidboxInstanceToken({ access_token: token, token_type: 'Bearer' });
-    setFHIRInstanceToken({ access_token: token, token_type: 'Bearer' });
+    setInstanceToken({ access_token: token, token_type: 'Bearer' });
 
     const response = await populateUserInfoSharedState();
 
@@ -130,8 +119,7 @@ export async function restoreUserSession(
         }
     } else {
         if (extractErrorCode(response.error) !== 'network_error') {
-            resetAidboxInstanceToken();
-            resetFHIRInstanceToken();
+            resetInstanceToken();
 
             return success(null);
         }

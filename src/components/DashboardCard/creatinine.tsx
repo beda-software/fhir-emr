@@ -1,13 +1,12 @@
 import { InfoOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
-import { isSuccess } from 'aidbox-react';
 import { Observation, Patient } from 'fhir/r4b';
 import moment from 'moment';
 // eslint-disable-next-line import/named
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine, TooltipProps } from 'recharts';
 
 import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
-import { RemoteData } from '@beda.software/remote-data';
+import { RemoteData, isSuccess } from '@beda.software/remote-data';
 
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 import { selectCurrentUserRoleResource } from 'src/utils/role';

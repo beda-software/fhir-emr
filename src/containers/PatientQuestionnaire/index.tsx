@@ -3,15 +3,13 @@ import { ParametersParameter, Patient } from 'fhir/r4b';
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { axiosInstance as axiosAidboxInstance } from 'aidbox-react/lib/services/instance';
-
 import { RenderRemoteData, WithId, useService } from '@beda.software/fhir-react';
 
 import { PageContainer } from 'src/components/BaseLayout/PageContainer';
 import { Spinner } from 'src/components/Spinner';
 import { Paragraph } from 'src/components/Typography';
 import { getToken } from 'src/services/auth';
-import { axiosInstance as axiosFHIRInstance, getFHIRResource } from 'src/services/fhir';
+import { axiosInstance, getFHIRResource } from 'src/services/fhir';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 
 import { PatientDocument } from '../PatientDetails/PatientDocument';
@@ -57,8 +55,7 @@ export function PatientQuestionnaire(props: PatientQuestionnaireProps) {
 
     useEffect(() => {
         if (isAnonymousUser) {
-            axiosFHIRInstance.defaults.headers.Authorization = `Basic ${window.btoa('patient-questionnaire:secret')}`;
-            axiosAidboxInstance.defaults.headers.Authorization = `Basic ${window.btoa('patient-questionnaire:secret')}`;
+            axiosInstance.defaults.headers.Authorization = `Basic ${window.btoa('patient-questionnaire:secret')}`;
             setIsLoading(false);
 
             return;
@@ -66,8 +63,7 @@ export function PatientQuestionnaire(props: PatientQuestionnaireProps) {
 
         return () => {
             if (isAnonymousUser) {
-                axiosFHIRInstance.defaults.headers.Authorization = null;
-                (axiosAidboxInstance.defaults.headers.Authorization as unknown) = undefined;
+                axiosInstance.defaults.headers.Authorization = null;
             }
         };
     }, [isAnonymousUser]);

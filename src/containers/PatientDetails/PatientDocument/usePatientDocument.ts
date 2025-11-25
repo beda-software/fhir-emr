@@ -37,7 +37,7 @@ import {
     QuestionnaireResponseFormProps,
     QuestionnaireResponseFormSaveResponse,
 } from 'src/hooks/questionnaire-response-form-data';
-import { getFHIRResource, getFHIRResources } from 'src/services';
+import { getFHIRResource, getFHIRResources } from 'src/services/fhir';
 import { getProvenanceByEntity } from 'src/services/provenance';
 import { compileAsFirst } from 'src/utils';
 

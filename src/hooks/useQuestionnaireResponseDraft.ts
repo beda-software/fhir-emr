@@ -14,7 +14,7 @@ import {
 } from '@beda.software/fhir-react';
 import { failure, isFailure, isSuccess, RemoteData, RemoteDataResult, success } from '@beda.software/remote-data';
 
-import { getFHIRResources } from 'src/services';
+import { getFHIRResources } from 'src/services/fhir';
 import { formatHumanDateTime } from 'src/utils';
 
 import {

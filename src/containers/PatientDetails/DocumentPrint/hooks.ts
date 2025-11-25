@@ -1,10 +1,8 @@
 import { Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import { useParams } from 'react-router-dom';
 
-import { success } from 'aidbox-react/lib/libs/remoteData';
-
 import { useService } from '@beda.software/fhir-react';
-import { isSuccess } from '@beda.software/remote-data';
+import { success, isSuccess } from '@beda.software/remote-data';
 
 import { getFHIRResources } from 'src/services/fhir';
 import { evaluate } from 'src/utils';
