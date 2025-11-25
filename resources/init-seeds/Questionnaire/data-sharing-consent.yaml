@@ -7,6 +7,18 @@ subjectType:
 mapping:
   - reference: urn:uuid:Mapping:data-sharing-consent-extract
 name: Demographic & clinical data sharing consent
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+  - name:
+      code: Author
+    type:
+      - PractitionerRole
+      - Practitioner
+      - Patient
+      - Organization
 item:
   - text: Practitioner
     type: reference
