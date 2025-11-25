@@ -15,6 +15,7 @@ import {
 import { CodeSystem, User, ValueSet } from '@beda.software/aidbox-types';
 import config from '@beda.software/emr-config';
 import { ensure, formatFHIRDateTime, getReference, withRootAccess } from '@beda.software/fhir-react';
+import { RemoteData, Token } from '@beda.software/remote-data';
 
 import { restoreUserSession } from 'src/containers/App/utils.ts';
 import { login as loginService } from 'src/services/auth';
@@ -26,8 +27,6 @@ import {
     createFHIRResource,
     saveFHIRResource,
     aidboxService,
-    LoginService,
-    getAidboxToken,
 } from 'src/services/fhir';
 
 declare global {
@@ -40,6 +39,18 @@ global.AppleID = {
         init: vi.fn(),
     },
 };
+
+export type LoginService = (user: User) => Promise<RemoteData<Token>>;
+
+export async function getAidboxToken(user: User, loginService: LoginService): Promise<Token> {
+    if (!user.email) {
+        throw new Error('Can not login for user without an email');
+    }
+
+    const result = await loginService(user);
+
+    return ensure(result);
+}
 
 export async function createConsent(consent: Partial<Consent> = {}) {
     return ensure(
