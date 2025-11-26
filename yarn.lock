@@ -818,10 +818,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@beda.software/fhir-react@^1.9.1":
-  version "1.9.1"
-  resolved "https://registry.yarnpkg.com/@beda.software/fhir-react/-/fhir-react-1.9.1.tgz#7bf77b8d402988e284e93c0a8eb3e1ae02b315c4"
-  integrity sha512-z0VI+1IG5TUNmS7bLM4yVv+kCdGSmND46wF3R9UPzNlf7iIiGFVn/uGxVeivjOshC8tkmbd1S3DR6itP3jhXUQ==
+"@beda.software/fhir-react@^1.10.0":
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@beda.software/fhir-react/-/fhir-react-1.10.0.tgz#e24d200db91496b274c1cbacbb8a48bc876dee89"
+  integrity sha512-mLw2DS0Od5JyvY+uEEeP/xHWPXmXLjvjV/O8x4PaW7VSA8FwXSv5/jT9OK05yGjThXALuWig+UdDPH9hSkviIA==
   dependencies:
     "@beda.software/remote-data" "^1.1.4"
     lodash "^4.17.21"

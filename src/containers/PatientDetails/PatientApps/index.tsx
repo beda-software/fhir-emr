@@ -1,9 +1,8 @@
 import { Typography, Card, Button } from 'antd';
 import { Encounter, Patient } from 'fhir/r4b';
 
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-
 import { Client } from '@beda.software/aidbox-types';
+import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { selectCurrentUserRoleResource } from 'src/utils/role.ts';
 

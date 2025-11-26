@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { extractBundleResources, useService, WithId } from '@beda.software/fhir-react';
 import { resolveMap, mapSuccess } from '@beda.software/remote-data';
 
-import { getFHIRResources } from 'src/services';
+import { getFHIRResources } from 'src/services/fhir';
 
 interface PatientDocumentWizardResponse {
     questionnaires: WithId<Questionnaire>[];

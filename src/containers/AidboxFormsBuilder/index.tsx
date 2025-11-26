@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import config from '@beda.software/emr-config';
 import { isSuccess } from '@beda.software/remote-data';
 
-import { axiosInstance, saveFHIRResource } from 'src/services';
+import { axiosInstance, saveFHIRResource } from 'src/services/fhir';
 
 import { S } from './styles';
 

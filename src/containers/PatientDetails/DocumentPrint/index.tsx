@@ -1,7 +1,7 @@
 import { Questionnaire, QuestionnaireItem, QuestionnaireResponse } from 'fhir/r4b';
 import { ReactBarcode } from 'react-jsbarcode';
 
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
+import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { Spinner } from 'src/components/Spinner';
 import { compileAsFirst } from 'src/utils';

@@ -3,14 +3,12 @@ import { I18nProvider } from '@lingui/react';
 import { screen, render, waitFor, fireEvent, act } from '@testing-library/react';
 import { expect, test, vi } from 'vitest';
 
-import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
-
 import { AllergyIntolerance } from '@beda.software/aidbox-types';
-import { ensure, withRootAccess } from '@beda.software/fhir-react';
+import { extractBundleResources, ensure, withRootAccess } from '@beda.software/fhir-react';
 
 import { chooseInlineOption, inputText } from 'src/__tests__/sdc-helpers';
 import { PatientDocument } from 'src/containers/PatientDetails/PatientDocument';
-import { axiosInstance } from 'src/services/fhir';
+import { axiosInstance, getFHIRResources } from 'src/services/fhir';
 import { createPatient, loginAdminUser } from 'src/setupTests';
 import { ThemeProvider } from 'src/theme';
 

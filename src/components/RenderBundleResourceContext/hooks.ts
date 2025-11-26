@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import { useService, WithId } from '@beda.software/fhir-react';
 
-import { getFHIRResources } from 'src/services';
+import { getFHIRResources } from 'src/services/fhir';
 import { DetailPageProps } from 'src/uberComponents/ResourceDetailPage/types';
 import { RecordType } from 'src/uberComponents/ResourceListPage/types';
 import { compileAsFirst } from 'src/utils';

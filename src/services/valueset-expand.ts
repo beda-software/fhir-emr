@@ -2,10 +2,10 @@ import axios from 'axios';
 import { ValueSet, ValueSetExpansionContains } from 'fhir/r4b';
 import { upperFirst } from 'lodash';
 
-import { service } from 'aidbox-react/lib/services/service';
-
 import { SearchParams } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess, success, failure, RemoteDataResult, RemoteData } from '@beda.software/remote-data';
+
+import { aidboxService } from 'src/services/fhir';
 
 import { getCurrentLocale } from './i18n';
 
@@ -97,7 +97,7 @@ export async function expandFHIRValueSet(answerValueSet: string | undefined, sea
     }
 
     const response: RemoteDataResult<ValueSetOption[]> = mapSuccess(
-        await service<ValueSet>({
+        await aidboxService<ValueSet>({
             url: `/fhir/ValueSet/$expand?url=${answerValueSet}`,
             params: {
                 ...(searchText ? { filter: searchText } : {}),

@@ -2,8 +2,6 @@ import { t, Trans } from '@lingui/macro';
 import { notification } from 'antd';
 import { useEffect, useState } from 'react';
 
-import { axiosInstance as axiosAidboxInstance } from 'aidbox-react/lib/services/instance';
-
 import { uuid4 } from '@beda.software/fhir-react';
 
 import { PageContainer } from 'src/components/BaseLayout/PageContainer';
@@ -12,7 +10,7 @@ import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseF
 import { Spinner } from 'src/components/Spinner';
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 import { getToken } from 'src/services/auth';
-import { axiosInstance as axiosFHIRInstance } from 'src/services/fhir';
+import { axiosInstance } from 'src/services/fhir';
 import { history } from 'src/services/history';
 
 import { S } from './PublicAppointment.styles';
@@ -25,8 +23,7 @@ export function PublicAppointment() {
 
     useEffect(() => {
         if (isAnonymousUser) {
-            axiosFHIRInstance.defaults.headers.Authorization = `Basic ${window.btoa('anonymous:secret')}`;
-            axiosAidboxInstance.defaults.headers.Authorization = `Basic ${window.btoa('anonymous:secret')}`;
+            axiosInstance.defaults.headers.Authorization = `Basic ${window.btoa('anonymous:secret')}`;
             setIsLoading(false);
 
             return;
@@ -34,8 +31,7 @@ export function PublicAppointment() {
 
         return () => {
             if (isAnonymousUser) {
-                axiosFHIRInstance.defaults.headers.Authorization = null;
-                (axiosAidboxInstance.defaults.headers.Authorization as unknown) = undefined;
+                axiosInstance.defaults.headers.Authorization = null;
             }
         };
     }, [isAnonymousUser]);
