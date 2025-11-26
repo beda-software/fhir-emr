@@ -26,7 +26,7 @@ body:
         "{% else %}":
           url: /Observation
           method: POST
-      fullUrl: "urn:uuid:observation-id"
+      fullUrl: "{{ 'urn:uuid:observation-id' }}"
       resource:
         resourceType: Observation
         status: final
@@ -70,7 +70,7 @@ body:
       resource:
         resourceType: Provenance
         target:
-          - reference: "urn:uuid:observation-id"
+          - reference: "{{ 'urn:uuid:observation-id' }}"
         recorded: "{{ iif(%qrLastUpdated.exists(), %qrLastUpdated, now()) }}"
         activity:
           coding:
