@@ -70,7 +70,7 @@ body:
       resource:
         resourceType: Provenance
         target:
-          - reference: "urn:uuid:observation-id"
+          - reference: "{{ 'urn:uuid:observation-id' }}"
         recorded: "{{ iif(%qrLastUpdated.exists(), %qrLastUpdated, now()) }}"
         activity:
           coding:
