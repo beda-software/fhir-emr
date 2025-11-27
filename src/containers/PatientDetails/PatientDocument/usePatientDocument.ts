@@ -121,7 +121,12 @@ function prepareFormInitialParams(
                           resource: { resourceType: 'Encounter', id: encounterId } as Encounter,
                       },
                   ]
-                : []),
+                : [
+                      {
+                          name: 'Encounter',
+                          resource: { resourceType: 'Encounter' } as Encounter,
+                      },
+                  ]),
             ...(provenance
                 ? [
                       {
