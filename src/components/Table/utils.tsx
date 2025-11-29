@@ -1,5 +1,4 @@
-import { ColumnsType, ColumnType } from 'antd/lib/table';
-import { FilterDropdownProps, SorterResult } from 'antd/lib/table/interface';
+import type { FilterDropdownProps, SorterResult, ColumnsType, ColumnType } from 'antd/es/table/interface';
 import { Bundle, Resource } from 'fhir/r4b';
 import _ from 'lodash';
 

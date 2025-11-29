@@ -1,4 +1,4 @@
-import { FilterDropdownProps } from 'antd/lib/table/interface';
+import type { FilterDropdownProps } from 'antd/es/table/interface';
 import _ from 'lodash';
 
 import { SearchBarColumn } from 'src/components/SearchBar/SearchBarColumn';

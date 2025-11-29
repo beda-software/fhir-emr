@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro';
-import { ColumnsType } from 'antd/lib/table';
+import type { ColumnsType } from 'antd/es/table/interface';
 import { InvoiceLineItem, Bundle, Invoice, ChargeItemDefinition } from 'fhir/r4b';
 import { useParams } from 'react-router-dom';
 

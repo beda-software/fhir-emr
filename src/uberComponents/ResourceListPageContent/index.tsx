@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro';
 import { Empty } from 'antd';
-import { ColumnsType, TablePaginationConfig } from 'antd/lib/table';
-import { FilterValue, SorterResult } from 'antd/lib/table/interface';
+import type { FilterValue, SorterResult, ColumnsType, TablePaginationConfig } from 'antd/es/table/interface';
 import { Resource } from 'fhir/r4b';
 import React, { useCallback, useMemo } from 'react';
 
