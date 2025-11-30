@@ -1,7 +1,7 @@
 import { DeleteOutlined } from '@ant-design/icons';
 import { Trans } from '@lingui/macro';
 import { Upload, type UploadFile } from 'antd';
-import { RcFile } from 'antd/lib/upload/interface';
+import type { RcFile } from 'antd/es/upload/interface';
 // eslint-disable-next-line
 import { AudioRecorder as AudioRecorderControl } from 'react-audio-voice-recorder';
 

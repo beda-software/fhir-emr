@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro';
-import type { ColumnsType } from 'antd/lib/table';
+import type { ColumnsType } from 'antd/es/table/interface';
 import { Bundle, Medication, MedicationRequest, Patient, HumanName } from 'fhir/r4b';
 import { extractCreatedAtFromMeta } from 'sdc-qrf';
 

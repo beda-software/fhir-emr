@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro';
-import { ColumnsType } from 'antd/lib/table';
+import type { ColumnsType } from 'antd/es/table/interface';
 import { HealthcareService } from 'fhir/r4b';
 
 import { SearchBarColumn, SearchBarColumnType, SorterColumn } from 'src/components/SearchBar/types';

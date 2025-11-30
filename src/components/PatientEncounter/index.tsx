@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro';
-import { ColumnsType } from 'antd/lib/table';
+import type { ColumnsType } from 'antd/es/table/interface';
 import { Bundle, Encounter, Patient, Practitioner, PractitionerRole } from 'fhir/r4b';
 
 import { SearchParams } from '@beda.software/fhir-react';

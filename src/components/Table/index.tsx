@@ -1,5 +1,5 @@
 import { Table as ANTDTable } from 'antd';
-import { TableProps as ANTDTableProps } from 'antd/lib/table';
+import type { TableProps as ANTDTableProps } from 'antd/es/table';
 
 import { S } from './styles';
 import { TableCards } from './TableCards';

@@ -1,4 +1,4 @@
-import { SorterResult } from 'antd/lib/table/interface';
+import type { SorterResult } from 'antd/es/table/interface';
 import { Bundle, Resource } from 'fhir/r4b';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

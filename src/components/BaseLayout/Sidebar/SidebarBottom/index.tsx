@@ -1,6 +1,6 @@
 import { GlobalOutlined } from '@ant-design/icons';
 import { Button, Menu } from 'antd';
-import { ItemType } from 'antd/lib/menu/interface';
+import type { ItemType } from 'antd/es/menu/interface';
 import classNames from 'classnames';
 import { useContext } from 'react';
 

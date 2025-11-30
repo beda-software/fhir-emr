@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro';
 import { Empty } from 'antd';
-import { ColumnsType } from 'antd/lib/table';
+import type { ColumnsType } from 'antd/es/table/interface';
 import { Provenance, Resource } from 'fhir/r4b';
 import { ReactNode } from 'react';
 
