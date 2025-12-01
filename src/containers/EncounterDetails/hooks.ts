@@ -76,7 +76,7 @@ export function useEncounterDetails(props: EncounterDetailsProps) {
                     encounter: saveResponse.data,
                 }));
             } else {
-                notification.error({ message: formatError(saveResponse.error) });
+                notification.error({ title: formatError(saveResponse.error) });
             }
         },
         [manager],

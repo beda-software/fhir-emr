@@ -73,7 +73,7 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
                                         // slotsManager.softReloadAsync is not used here, because otherwise the display of appointments in the table will not be updated
                                         slotsManager.reload();
                                         notification.success({
-                                            message: t`Appointment successfully rescheduled`,
+                                            title: t`Appointment successfully rescheduled`,
                                         });
                                     }}
                                     onClose={closeEditAppointment}
@@ -90,7 +90,7 @@ export function ScheduleCalendar({ practitionerRole }: Props) {
                                         closeNewAppointmentModal();
                                         slotsManager.reload();
                                         notification.success({
-                                            message: t`Appointment successfully added`,
+                                            title: t`Appointment successfully added`,
                                         });
                                     }}
                                     onCancel={closeNewAppointmentModal}

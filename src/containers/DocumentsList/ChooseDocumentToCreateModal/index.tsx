@@ -70,7 +70,7 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
                                           `${window.location.origin}/questionnaire?${questionnaireParams.join('&')}`,
                                       );
                                       notification.success({
-                                          message: t`The link was copied to clipboard`,
+                                          title: t`The link was copied to clipboard`,
                                       });
                                       onCloseModal();
                                   }}

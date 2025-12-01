@@ -25,7 +25,7 @@ function QuestionField(props: QuestionFieldProps) {
         if (fillText && onChange) {
             onChange(fillText);
         } else {
-            notification.warning({ message: t`No prepared text` });
+            notification.warning({ title: t`No prepared text` });
         }
     };
 

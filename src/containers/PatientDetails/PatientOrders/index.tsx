@@ -107,7 +107,7 @@ function useOrders() {
 
     const reloadListAndClose = useCallback(() => {
         notification.success({
-            message: t`Order added`,
+            title: t`Order added`,
         });
         setKey((k) => k + 1);
         close();
