@@ -22,7 +22,7 @@ import { login as loginService } from 'src/services/auth';
 import {
     axiosInstance,
     resetInstanceToken,
-    setInstanceBaseURL,
+    setAidboxInstanceBaseURL,
     aidboxSaveFHIRResource,
     createFHIRResource,
     saveFHIRResource,
@@ -245,7 +245,7 @@ export async function waitForAPIProcess<R>(props: WaitForAPIProcessProps<R>) {
 
 beforeAll(async () => {
     // vi.useFakeTimers();
-    setInstanceBaseURL('http://localhost:8080');
+    setAidboxInstanceBaseURL('http://localhost:8080');
 });
 
 let txId: string;

@@ -3,6 +3,7 @@ import { t, Trans } from '@lingui/macro';
 import { Input, Button, Space } from 'antd';
 import type { ColumnsType } from 'antd/es/table/interface';
 import { Resource } from 'fhir/r4b';
+import fhirpath_r4_model from 'fhirpath/fhir-context/r4';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -15,7 +16,7 @@ import { ResourceListPageContent } from 'src/uberComponents/ResourceListPageCont
 import { compileAsFirst, formatHumanDate, renderHumanName } from 'src/utils';
 
 const compileGeneric = <R extends Resource, T>(fhirPath: string): ((resource: R) => T | undefined) => {
-    return compileAsFirst(fhirPath) as (resource: R) => T | undefined;
+    return compileAsFirst(fhirPath, fhirpath_r4_model) as (resource: R) => T | undefined;
 };
 
 function buildDynamicColumns<R extends Resource>(columnConfigs: TableColumnConfig[]): ColumnsType<RecordType<R>> {
