@@ -29,7 +29,7 @@ function getInstanceBaseURL() {
 }
 
 const fhirService = async <S = any, F = any>(config: AxiosRequestConfig): Promise<RemoteDataResult<S, F>> => {
-    return aidboxService({ ...config, baseURL: getInstanceBaseURL() });
+    return aidboxService({ baseURL: getInstanceBaseURL(), ...config });
 };
 
 export const {
