@@ -7,14 +7,22 @@ import { createNewPatientSummary, getLatestPatientSummary } from 'src/services/a
 import { service } from 'src/services/fhir';
 import { loginAdminUser } from 'src/setupTests';
 
-vi.mock('src/services/fhir', async () => {
+vi.mock('src/services/ai', async () => {
     const actual = await vi.importActual<typeof import('src/services/ai')>('src/services/ai');
     return {
         ...actual,
-        patchFHIRResource: vi.fn(),
-        service: vi.fn(),
+        aiService: vi.fn(),
     };
 });
+vi.mock('src/services/fhir', async () => {
+    const actual = await vi.importActual<typeof import('src/services/fhir')>('src/services/fhir');
+    return {
+        ...actual,
+        service: vi.fn(),
+        patchFHIRResource: vi.fn(),
+    };
+});
+
 
 const patient: Patient = { resourceType: 'Patient', id: 'patient1' };
 
