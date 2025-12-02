@@ -3,15 +3,33 @@ import {
     axiosInstance,
     setInstanceToken,
     resetInstanceToken,
-    setInstanceBaseURL,
+    setInstanceBaseURL as setAidboxInstanceBaseURL,
 } from 'aidbox-react';
 import type { AxiosRequestConfig } from 'axios';
 
+import config from '@beda.software/emr-config';
 import { initServicesFromService } from '@beda.software/fhir-react';
 import { RemoteDataResult } from '@beda.software/remote-data';
 
+let fhirBaseURL: string | null = null;
+
+function setInstanceBaseURL(baseURL: string) {
+    fhirBaseURL = baseURL;
+}
+
+function getInstanceBaseURL() {
+    if (fhirBaseURL) {
+        return fhirBaseURL;
+    }
+    if (config.fhirBaseURL) {
+        return config.fhirBaseURL;
+    }
+
+    return axiosInstance.defaults.baseURL + '/fhir';
+}
+
 const fhirService = async <S = any, F = any>(config: AxiosRequestConfig): Promise<RemoteDataResult<S, F>> => {
-    return aidboxService({ ...config, baseURL: axiosInstance.defaults.baseURL + '/fhir' });
+    return aidboxService({ ...config, baseURL: getInstanceBaseURL() });
 };
 
 export const {
@@ -49,4 +67,11 @@ export const {
     service,
 } = initServicesFromService(fhirService);
 
-export { aidboxService, axiosInstance, setInstanceToken, resetInstanceToken, setInstanceBaseURL };
+export {
+    aidboxService,
+    axiosInstance,
+    setInstanceToken,
+    resetInstanceToken,
+    setInstanceBaseURL,
+    setAidboxInstanceBaseURL,
+};
