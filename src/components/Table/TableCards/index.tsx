@@ -1,6 +1,6 @@
 import { Checkbox, Empty, Pagination, TablePaginationConfig } from 'antd';
-import { TableProps } from 'antd/lib/table';
-import { ColumnTitle, SorterResult, TableCurrentDataSource } from 'antd/lib/table/interface';
+import type { TableProps } from 'antd/es/table';
+import type { ColumnTitle, SorterResult, TableCurrentDataSource } from 'antd/es/table/interface';
 import _ from 'lodash';
 
 import { S } from './styles';

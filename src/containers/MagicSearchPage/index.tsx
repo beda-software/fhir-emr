@@ -1,7 +1,7 @@
 import { SearchOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Input, Button, Space } from 'antd';
-import { ColumnsType } from 'antd/lib/table';
+import type { ColumnsType } from 'antd/es/table/interface';
 import { Resource } from 'fhir/r4b';
 import fhirpath_r4_model from 'fhirpath/fhir-context/r4';
 import { useState } from 'react';

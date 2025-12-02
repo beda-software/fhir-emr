@@ -1,6 +1,6 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
-import { ColumnsType } from 'antd/lib/table';
+import type { ColumnsType } from 'antd/es/table/interface';
 import { Bundle, Consent, HumanName, Patient } from 'fhir/r4b';
 import type { Resource } from 'fhir/r4b';
 

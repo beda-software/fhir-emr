@@ -1,8 +1,7 @@
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Trans } from '@lingui/macro';
 import { Empty } from 'antd';
-import { ColumnsType, TablePaginationConfig } from 'antd/lib/table';
-import { FilterValue, SorterResult } from 'antd/lib/table/interface';
+import type { ColumnsType, FilterValue, SorterResult, TablePaginationConfig } from 'antd/es/table/interface';
 import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 import React, { useCallback, useMemo } from 'react';
 
@@ -20,23 +19,24 @@ import { populateTableColumnsWithFiltersAndSorts } from 'src/components/Table/ut
 import { Text } from 'src/components/Typography';
 
 import {
-    NavigationActionType,
     CustomActionType,
-    QuestionnaireActionType,
-    isNavigationAction,
-    isQuestionnaireAction,
-    NavigationAction,
-    RecordQuestionnaireAction,
     HeaderNavigationAction,
     HeaderQuestionnaireAction,
     isCustomAction,
+    isNavigationAction,
+    isQuestionnaireAction,
+    NavigationAction,
+    NavigationActionType,
+    QuestionnaireActionType,
+    RecordQuestionnaireAction,
     WebExtra,
 } from './actions';
-export { navigationAction, customAction, questionnaireAction } from './actions';
 import { BatchActions } from './BatchActions';
 import { useResourceListPage, useTableSorter } from './hooks';
 import { S } from './styles';
-import { ResourceListProps, ReportColumn, TableManager } from './types';
+import { ReportColumn, ResourceListProps, TableManager } from './types';
+
+export { customAction, navigationAction, questionnaireAction } from './actions';
 
 type RecordType<R extends Resource> = { resource: R; bundle: Bundle };
 

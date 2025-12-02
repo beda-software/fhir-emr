@@ -1,4 +1,4 @@
-import { ItemType } from 'antd/lib/menu/interface';
+import type { ItemType } from 'antd/es/menu/interface';
 
 export interface MenuItem {
     key: string;
