@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/browser';
 
 import config from '@beda.software/emr-config';
-import { setInstanceBaseURL } from 'src/services/fhir';
+import { setAidboxInstanceBaseURL } from 'src/services/fhir';
 
 if (config.webSentryDSN) {
     Sentry.init({
@@ -12,4 +12,4 @@ if (config.webSentryDSN) {
     });
 }
 
-setInstanceBaseURL(config.baseURL);
+setAidboxInstanceBaseURL(config.baseURL);
