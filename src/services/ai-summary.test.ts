@@ -8,7 +8,7 @@ import { service } from 'src/services/fhir';
 import { loginAdminUser } from 'src/setupTests';
 
 vi.mock('src/services/fhir', async () => {
-    const actual = await vi.importActual<typeof import('src/services/fhir')>('src/services/fhir');
+    const actual = await vi.importActual<typeof import('src/services/ai')>('src/services/ai');
     return {
         ...actual,
         patchFHIRResource: vi.fn(),
