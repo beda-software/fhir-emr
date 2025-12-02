@@ -170,7 +170,7 @@ function EditAppointmentWrapper(props: EditAppointmentWrapperProps) {
                 closeEditAppointment();
                 reload();
                 notification.success({
-                    message: t`Appointment successfully rescheduled`,
+                    title: t`Appointment successfully rescheduled`,
                 });
             }}
             onClose={onClose}
@@ -217,7 +217,7 @@ function NewAppointmentModalWrapper(props: NewAppointmentModalProps) {
                 closeNewAppointment();
                 reload();
                 notification.success({
-                    message: t`Appointment successfully added`,
+                    title: t`Appointment successfully added`,
                 });
             }}
             onCancel={onClose}

@@ -96,7 +96,7 @@ function AudioRecorderButton(props: FillWithAudioProps) {
             };
             setCommunication(success(communication));
         } else {
-            notification.error({ message: JSON.stringify(response.error) });
+            notification.error({ title: JSON.stringify(response.error) });
             setCommunication(response);
         }
     };
@@ -176,7 +176,7 @@ function RecordedNotes({ hideControls, communication, reload, reloadDocuments }:
     async function save() {
         const response = await saveFHIRResource({ ...communication, payload: [{ contentString: text }] });
         if (isFailure(response)) {
-            notification.error({ message: JSON.stringify(response.error) });
+            notification.error({ title: formatError(response.error) });
         } else {
             setIsEditingMode(false);
             reload();
@@ -274,11 +274,11 @@ function Extract(props: ExtractProps) {
             ),
         );
         if (isSuccess(result)) {
-            notification.success({ message: t`Documents have been successfully extracted` });
+            notification.success({ title: t`Documents have been successfully extracted` });
             props.reloadDocuments();
         }
         if (isFailure(result)) {
-            notification.error({ message: formatError(result.error[0]) });
+            notification.error({ title: formatError(result.error[0]) });
         }
         setExtraction(result);
         updateExtractLoading(false);

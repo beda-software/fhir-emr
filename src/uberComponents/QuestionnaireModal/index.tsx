@@ -30,7 +30,7 @@ export function QuestionanireModal({ questionnaire, subject, launchContextParame
     const handleSuccess = () => {
         setIsModalVisible(false);
         notification.success({
-            message: `Successfully saved`,
+            title: `Successfully saved`,
         });
     };
 

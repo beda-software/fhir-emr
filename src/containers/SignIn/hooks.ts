@@ -35,7 +35,7 @@ export function useAppleAuthentication() {
             if (error !== 'popup_closed_by_user') {
                 console.error('Failed to sign in with Apple, error:', error);
                 notification.error({
-                    message: 'Can not sign in with Apple, please try again later',
+                    title: 'Can not sign in with Apple, please try again later',
                 });
             }
         };

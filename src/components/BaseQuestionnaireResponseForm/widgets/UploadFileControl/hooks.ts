@@ -77,7 +77,7 @@ export function useUploader({ parentPath, questionItem }: QuestionItemProps) {
                 uid.current[file.uid] = filename;
                 uploadFileWithXHR(options, uploadUrl);
             } else {
-                notification.error({ message: formatError(response.error) });
+                notification.error({ title: formatError(response.error) });
             }
             return response;
         },
@@ -96,7 +96,7 @@ export function useUploader({ parentPath, questionItem }: QuestionItemProps) {
                     onChange([attachement]);
                 }
             } else if (status === 'error') {
-                notification.error({ message: `${info.file.name} file upload failed.` });
+                notification.error({ title: `${info.file.name} file upload failed.` });
             }
         },
         [setFileList, uid, onChange, value],

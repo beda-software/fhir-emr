@@ -1,5 +1,5 @@
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { Button, StepProps, Steps, Tooltip } from 'antd';
+import { Button, StepsProps, Steps, Tooltip } from 'antd';
 import classNames from 'classnames';
 import { CSSProperties, ReactNode, useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -8,7 +8,9 @@ import { FormItems } from 'sdc-qrf';
 import { S } from './styles';
 import { Text } from '../Typography';
 
-export type WizardItem = StepProps & {
+type StepItem = NonNullable<StepsProps['items']>[number];
+
+export type WizardItem = StepItem & {
     linkId: string;
 };
 
@@ -40,7 +42,7 @@ export function Wizard(props: WizardProps) {
     // NOTE: added default values to allow using Wizard outside of FormContext
     const { trigger, formState } = useFormContext() ?? { trigger: undefined, formState: { isSubmitted: false } };
 
-    const stepsItems: StepProps[] = items.map((step, index) => ({
+    const stepsItems: StepsProps['items'] = items.map((step, index) => ({
         ...step,
         ...(labelPlacement === 'tooltip'
             ? {
