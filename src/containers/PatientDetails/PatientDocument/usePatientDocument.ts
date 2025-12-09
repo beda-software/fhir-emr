@@ -62,7 +62,7 @@ async function onFormSubmit(
     const modifiedFormData = _.merge({}, formData, {
         context: {
             questionnaireResponse: {
-                questionnaire: initialQuestionnaireResponse?.questionnaire,
+                questionnaire: formData.context.fceQuestionnaire.url ?? initialQuestionnaireResponse?.questionnaire,
             },
         },
     });
