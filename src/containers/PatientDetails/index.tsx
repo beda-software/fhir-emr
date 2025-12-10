@@ -1,9 +1,8 @@
-import { useService } from 'aidbox-react';
 import { CarePlan, Patient } from 'fhir/r4b';
 import { useMemo } from 'react';
 import { useParams, Outlet, Route, Routes, useNavigate } from 'react-router-dom';
 
-import { RenderRemoteData } from '@beda.software/fhir-react';
+import { useService, RenderRemoteData } from '@beda.software/fhir-react';
 import { isSuccess } from '@beda.software/remote-data';
 
 import { PageContainer } from 'src/components/BaseLayout/PageContainer';
@@ -12,7 +11,7 @@ import { PatientEncounter } from 'src/components/PatientEncounter';
 import { Spinner } from 'src/components/Spinner';
 import { PatientReloadProvider } from 'src/containers/PatientDetails/Dashboard/contexts';
 import { PatientDocumentWizard } from 'src/containers/PatientDetails/PatientDocumentWizard';
-import { getFHIRResource } from 'src/services';
+import { getFHIRResource } from 'src/services/fhir';
 import { sharedAuthorizedPractitionerRoles } from 'src/sharedState';
 import { renderHumanName } from 'src/utils';
 import { matchCurrentUserRole, selectCurrentUserRoleResource, Role } from 'src/utils/role';
