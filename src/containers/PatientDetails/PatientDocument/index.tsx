@@ -66,7 +66,7 @@ export function PatientDocument(props: PatientDocumentProps) {
                 <PatientDocumentContent
                     {...props}
                     key="patient-document-content"
-                    questionnaireResponse={draftQuestionnaireResponse}
+                    questionnaireResponse={draftQuestionnaireResponse ?? props.questionnaireResponse}
                     onSuccess={async (resource: QuestionnaireResponseFormSaveResponse) => {
                         if (qrDraftServiceType === 'local') {
                             await deleteDraft();
