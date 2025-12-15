@@ -29,10 +29,6 @@ export const S = {
         .ant-table-content {
             min-width: fit-content;
         }
-
-        .ant-table-thead .ant-table-cell {
-            background-color: ${({ theme }) => theme.neutralPalette.gray_3};
-        }
     `,
     Cards: styled.div<{ $showCardsOnMobile?: boolean }>`
         ${({ $showCardsOnMobile }) =>
