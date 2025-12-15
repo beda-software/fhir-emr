@@ -31,6 +31,7 @@ export function generateQAndQRData(
         questionnaire: {
             resourceType: 'Questionnaire',
             id: 'questionnaire',
+            url: 'https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/questionnaire',
             title: 'Questionnaire',
             status: 'active',
             item: [

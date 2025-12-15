@@ -14,7 +14,7 @@ export function usePatientDocuments(patient: Patient, encounter?: Reference, con
         if (context) {
             const r = await getFHIRResources<Questionnaire>('Questionnaire', { context, _elements: 'id' });
             if (isSuccess(r)) {
-                questionnaires = evaluate(r.data, 'Bundle.entry.resource.id') ?? [];
+                questionnaires = evaluate(r.data, 'Bundle.entry.resource.url') ?? [];
             }
         }
         const qrResponse = await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {

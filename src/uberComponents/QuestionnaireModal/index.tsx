@@ -48,10 +48,7 @@ export function QuestionanireModal({ questionnaire, subject, launchContextParame
                 maskClosable={false}
             >
                 <QuestionnaireResponseForm
-                    initialQuestionnaireResponse={{
-                        questionnaire: parseFHIRReference(questionnaire).id,
-                        subject,
-                    }}
+                    initialQuestionnaireResponse={{ subject }}
                     questionnaireLoader={questionnaireIdLoader(parseFHIRReference(questionnaire).id!)}
                     onSuccess={handleSuccess}
                     launchContextParameters={launchContextParameters}

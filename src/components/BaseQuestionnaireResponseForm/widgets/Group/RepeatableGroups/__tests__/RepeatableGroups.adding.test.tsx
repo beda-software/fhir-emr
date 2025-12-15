@@ -145,7 +145,8 @@ describe('Repeatable group creates correct questionnaire response', async () => 
 
             await withRootAccess(axiosInstance, async () => {
                 const qrsBundleRD = await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
-                    questionnaire: 'repeatable-group',
+                    questionnaire:
+                        'https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/repeatable-group',
                     _sort: ['-createdAt', '_id'],
                 });
 
@@ -207,7 +208,8 @@ describe('Repeatable group creates correct questionnaire response', async () => 
 
             await withRootAccess(axiosInstance, async () => {
                 const qrsBundleRD = await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
-                    questionnaire: 'repeatable-group',
+                    questionnaire:
+                        'https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/repeatable-group',
                     _sort: ['-createdAt', '_id'],
                 });
 
