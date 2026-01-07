@@ -67,7 +67,11 @@ async function onFormSubmit(
         },
     });
 
-    delete modifiedFormData.context.questionnaireResponse.meta;
+    if (modifiedFormData.context.questionnaireResponse.meta) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { versionId, ...rest } = modifiedFormData.context.questionnaireResponse.meta;
+        modifiedFormData.context.questionnaireResponse.meta = rest;
+    }
 
     const saveResponse = await handleFormDataSave({
         ...props,

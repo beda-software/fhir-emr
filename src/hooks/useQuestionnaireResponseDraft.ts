@@ -57,6 +57,9 @@ export const useQuestionnaireResponseDraft = (
     const draftKeyRef = useRef<string | undefined>();
 
     const [response, manager] = useService<Partial<QuestionnaireResponse> | undefined>(async () => {
+        if (!autoSave) {
+            return success(undefined);
+        }
         if (qrDraftServiceType === 'server' && typeof questionnaireResponse !== 'undefined') {
             return success(questionnaireResponse);
         }
