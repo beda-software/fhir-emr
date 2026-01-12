@@ -21,7 +21,7 @@ function ReferenceRadioButtonUnsafe<R extends Resource = any, IR extends Resourc
     const { formItem, value, onSelect, disabled } = fieldController;
 
     return (
-        <Form.Item {...formItem}>
+        <Form.Item {...formItem} data-testid={'reference-radio-button'} data-linkid={questionItem.linkId}>
             <RenderRemoteData
                 remoteData={optionsRD}
                 renderLoading={Spinner}
