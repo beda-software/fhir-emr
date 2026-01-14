@@ -92,9 +92,12 @@ export interface ResourceListProps<R extends Resource, Extra = unknown, Link = s
     /**
      * Table properties based on ANTD table
      */
-    tableProps?: {
-        scroll?: ANTDTableProps['scroll'];
-    };
+    tableProps?: Partial<
+        Omit<
+            ANTDTableProps<RecordType<R>>,
+            'pagination' | 'onChange' | 'rowSelection' | 'locale' | 'rowKey' | 'dataSource' | 'columns' | 'loading'
+        >
+    >;
 }
 
 export interface NavigationActionType<Link = string> {
