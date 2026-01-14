@@ -70,6 +70,7 @@ export function ResourceListPage<R extends Resource>({
     getTableColumns,
     defaultLaunchContext,
     getReportColumns,
+    tableProps,
 }: ResourceListPageProps<R>) {
     const allFilters = getFilters?.() ?? [];
     const allSorters = useMemo(() => getSorters?.() ?? [], [getSorters]);
@@ -210,6 +211,7 @@ export function ResourceListPage<R extends Resource>({
                         : []),
                 ]}
                 loading={isLoading(recordResponse) && { indicator: SpinIndicator }}
+                {...tableProps}
             />
         </PageContainer>
     );

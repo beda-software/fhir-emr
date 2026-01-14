@@ -46,6 +46,7 @@ export function ResourceListPageContent<R extends Resource>({
     defaultLaunchContext,
     getReportColumns,
     maxWidth,
+    tableProps,
 }: ResourceListPageContentProps<R>) {
     const allFilters = getFilters?.() ?? [];
     const allSorters = getSorters?.() ?? [];
@@ -199,6 +200,7 @@ export function ResourceListPageContent<R extends Resource>({
                         : []),
                 ]}
                 loading={isLoading(recordResponse) && { indicator: SpinIndicator }}
+                {...tableProps}
             />
         </PageContainerContent>
     );
