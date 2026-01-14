@@ -43,7 +43,7 @@ export async function generateDownloadUrl(key: string) {
 }
 
 export async function generateDownloadHeaders(key: string) {
-    return service<{[key: string]: string}>({
+    return aidboxService<{[key: string]: string}>({
             baseURL: config.baseURL,
             url: '/$generate-download-headers',
             method: 'POST',
