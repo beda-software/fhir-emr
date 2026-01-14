@@ -1,3 +1,4 @@
+import type { TableProps as ANTDTableProps } from 'antd/es/table';
 import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 
 import { SearchParams } from '@beda.software/fhir-react';
@@ -87,6 +88,13 @@ export interface ResourceListProps<R extends Resource, Extra = unknown, Link = s
 
     /* Page content max width */
     maxWidth?: number | string;
+
+    /**
+     * Table properties based on ANTD table
+     */
+    tableProps?: {
+        scroll?: ANTDTableProps['scroll'];
+    };
 }
 
 export interface NavigationActionType<Link = string> {
