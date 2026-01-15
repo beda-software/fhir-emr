@@ -4,6 +4,7 @@ import { Empty } from 'antd';
 import type { ColumnsType, FilterValue, SorterResult, TablePaginationConfig } from 'antd/es/table/interface';
 import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 import React, { useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { formatError } from '@beda.software/fhir-react';
 import { isFailure, isLoading, isSuccess, RemoteData } from '@beda.software/remote-data';
@@ -74,6 +75,10 @@ export function ResourceListPage<R extends Resource>({
 }: ResourceListPageProps<R> & { tableProps?: TableProps<R> }) {
     const allFilters = getFilters?.() ?? [];
     const allSorters = useMemo(() => getSorters?.() ?? [], [getSorters]);
+    const navigate = useNavigate();
+    const goBack = useCallback(() => {
+        navigate(-1);
+    }, [navigate]);
 
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
         columns: allFilters ?? [],
@@ -85,7 +90,7 @@ export function ResourceListPage<R extends Resource>({
 
     const { sortSearchParam, setCurrentSorter, currentSorter } = useTableSorter(allSorters, defaultSearchParams);
 
-    const { recordResponse, reload, pagination, selectedRowKeys, setSelectedRowKeys, selectedResourcesBundle, goBack } =
+    const { recordResponse, reload, pagination, selectedRowKeys, setSelectedRowKeys, selectedResourcesBundle } =
         useResourceListPage(resourceType, extractPrimaryResources, extractChildrenResources, columnsFilterValues, {
             ...defaultSearchParams,
             _sort: sortSearchParam,
