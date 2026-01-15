@@ -26,6 +26,7 @@ import {
     RecordType,
     ResourceListProps,
     TableManager,
+    TableProps,
 } from '../ResourceListPage/types';
 
 type ResourceListPageContentProps<R extends Resource> = ResourceListProps<R, WebExtra> & {
@@ -47,7 +48,7 @@ export function ResourceListPageContent<R extends Resource>({
     getReportColumns,
     maxWidth,
     tableProps,
-}: ResourceListPageContentProps<R>) {
+}: ResourceListPageContentProps<R> & { tableProps?: TableProps<R> }) {
     const allFilters = getFilters?.() ?? [];
     const allSorters = getSorters?.() ?? [];
 

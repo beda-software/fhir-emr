@@ -34,7 +34,7 @@ import {
 import { BatchActions } from './BatchActions';
 import { useResourceListPage, useTableSorter } from './hooks';
 import { S } from './styles';
-import { ReportColumn, ResourceListProps, TableManager } from './types';
+import { ReportColumn, ResourceListProps, TableManager, TableProps } from './types';
 
 export { customAction, navigationAction, questionnaireAction } from './actions';
 
@@ -71,7 +71,7 @@ export function ResourceListPage<R extends Resource>({
     defaultLaunchContext,
     getReportColumns,
     tableProps,
-}: ResourceListPageProps<R>) {
+}: ResourceListPageProps<R> & { tableProps?: TableProps<R> }) {
     const allFilters = getFilters?.() ?? [];
     const allSorters = useMemo(() => getSorters?.() ?? [], [getSorters]);
 

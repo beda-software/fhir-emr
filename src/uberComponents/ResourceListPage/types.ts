@@ -7,6 +7,13 @@ import { SearchBarColumn, SorterColumn } from '../../components/SearchBar/types'
 
 export type RecordType<R extends Resource> = { resource: R; bundle: Bundle; children?: RecordType<R>[] };
 
+export type TableProps<R extends Resource> = Partial<
+    Omit<
+        ANTDTableProps<RecordType<R>>,
+        'pagination' | 'onChange' | 'rowSelection' | 'locale' | 'rowKey' | 'dataSource' | 'columns' | 'loading'
+    >
+>;
+
 export interface ReportColumn {
     title: React.ReactNode;
     value: React.ReactNode;
@@ -88,16 +95,6 @@ export interface ResourceListProps<R extends Resource, Extra = unknown, Link = s
 
     /* Page content max width */
     maxWidth?: number | string;
-
-    /**
-     * Table properties based on ANTD table
-     */
-    tableProps?: Partial<
-        Omit<
-            ANTDTableProps<RecordType<R>>,
-            'pagination' | 'onChange' | 'rowSelection' | 'locale' | 'rowKey' | 'dataSource' | 'columns' | 'loading'
-        >
-    >;
 }
 
 export interface NavigationActionType<Link = string> {
