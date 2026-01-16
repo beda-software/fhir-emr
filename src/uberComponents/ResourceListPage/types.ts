@@ -1,3 +1,4 @@
+import type { TableProps as ANTDTableProps } from 'antd/es/table';
 import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 
 import { SearchParams } from '@beda.software/fhir-react';
@@ -5,6 +6,13 @@ import { SearchParams } from '@beda.software/fhir-react';
 import { SearchBarColumn, SorterColumn } from '../../components/SearchBar/types';
 
 export type RecordType<R extends Resource> = { resource: R; bundle: Bundle; children?: RecordType<R>[] };
+
+export type TableProps<R extends Resource> = Partial<
+    Omit<
+        ANTDTableProps<RecordType<R>>,
+        'pagination' | 'onChange' | 'rowSelection' | 'locale' | 'rowKey' | 'dataSource' | 'columns' | 'loading'
+    >
+>;
 
 export interface ReportColumn {
     title: React.ReactNode;
