@@ -12,23 +12,21 @@ export const S = {
                 @media screen and (max-width: ${() => `${mobileWidth - 1}px`}) {
                     display: none;
                 }
-            `}
-
-        .ant-spin-container {
+            `}/* .ant-spin-container {
             min-width: fit-content;
-        }
+        } */
 
-        .ant-table {
+        /* .ant-table {
             min-width: fit-content;
-        }
+        } */
 
-        .ant-table-container {
+        /* .ant-table-container {
             min-width: fit-content;
-        }
+        } */
 
-        .ant-table-content {
+        /* .ant-table-content {
             min-width: fit-content;
-        }
+        } */
     `,
     Cards: styled.div<{ $showCardsOnMobile?: boolean }>`
         ${({ $showCardsOnMobile }) =>
