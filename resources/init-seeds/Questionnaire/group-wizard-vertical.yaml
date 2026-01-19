@@ -129,6 +129,20 @@ item:
         text: Substance Use
         type: group
         linkId: "substance-use"
+      - linkId: conditional-step
+        text: Conditional Step
+        type: group
+        enableWhen:
+          - question: "q11"
+            operator: ">"
+            answer:
+              integer: 0
+        item:
+          - text: Conditional question
+            helpText: This is a conditional question that shown if you are engaged in physical activity
+            type: string
+            linkId: "conditional-question"
+            required: true
 resourceType: Questionnaire
 status: active
 id: group-wizard-vertical
