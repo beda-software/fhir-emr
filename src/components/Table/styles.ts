@@ -12,21 +12,7 @@ export const S = {
                 @media screen and (max-width: ${() => `${mobileWidth - 1}px`}) {
                     display: none;
                 }
-            `}/* .ant-spin-container {
-            min-width: fit-content;
-        } */
-
-        /* .ant-table {
-            min-width: fit-content;
-        } */
-
-        /* .ant-table-container {
-            min-width: fit-content;
-        } */
-
-        /* .ant-table-content {
-            min-width: fit-content;
-        } */
+            `}
     `,
     Cards: styled.div<{ $showCardsOnMobile?: boolean }>`
         ${({ $showCardsOnMobile }) =>
