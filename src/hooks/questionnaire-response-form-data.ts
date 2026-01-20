@@ -122,7 +122,7 @@ export const inMemorySaveService: QuestionnaireResponseSaveService = (qr: FHIRQu
 export const persistSaveService: QuestionnaireResponseSaveService = async (qr: FHIRQuestionnaireResponse) =>
     await saveFHIRResource(qr);
 
-// NOTE: The nerxt step is to create Provenance after extract is done and remove
+// NOTE: The next step is to create Provenance after extract is done and remove
 // Provenance creation from mappers
 export const persistWithProvenanceSaveService: QuestionnaireResponseSaveService = async (
     qr: FHIRQuestionnaireResponse,
