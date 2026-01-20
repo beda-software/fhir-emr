@@ -122,6 +122,8 @@ export const inMemorySaveService: QuestionnaireResponseSaveService = (qr: FHIRQu
 export const persistSaveService: QuestionnaireResponseSaveService = async (qr: FHIRQuestionnaireResponse) =>
     await saveFHIRResource(qr);
 
+// NOTE: The nerxt step is to create Provenance after extract is done and remove
+// Provenance creation from mappers
 export const persistWithProvenanceSaveService: QuestionnaireResponseSaveService = async (
     qr: FHIRQuestionnaireResponse,
 ) => {
@@ -138,9 +140,8 @@ export const persistWithProvenanceSaveService: QuestionnaireResponseSaveService 
             resourceType: 'Provenance',
             target: [
                 {
-                    reference: `QuestionnaireResponse/${qrSaveResponse.data.id}/_history/${
-                        qrSaveResponse.data.meta!.versionId
-                    }`,
+                    // Put non-history ref to target according the current logic
+                    reference: `QuestionnaireResponse/${qrSaveResponse.data.id}`,
                 },
             ],
             recorded: qrSaveResponse.data.meta!.lastUpdated!,
@@ -158,6 +159,16 @@ export const persistWithProvenanceSaveService: QuestionnaireResponseSaveService 
                     },
                 ],
             },
+            entity: [
+                {
+                    role: 'source',
+                    what: {
+                        reference: `QuestionnaireResponse/${qrSaveResponse.data.id}/_history/${
+                            qrSaveResponse.data.meta!.versionId
+                        }`,
+                    },
+                },
+            ],
         });
 
         if (isFailure(provenanceResponse)) {
