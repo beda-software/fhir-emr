@@ -1,0 +1,47 @@
+id: progress-notes
+resourceType: Questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/progress-notes
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+name: progress-notes
+title: Progress Notes
+status: active
+subjectType:
+  - Patient
+description: A questionnaire to display group-table item control
+item:
+  - linkId: progress-notes
+    text: Group table example
+    type: group
+    item:
+      - linkId: note-group
+        text: Progress Notes
+        type: group
+        repeats: true
+        itemControl:
+          coding:
+            - code: group-table
+        item:
+          - linkId: date
+            text: Date
+            type: date
+          - linkId: time
+            text: Time
+            type: time
+          - linkId: note-author
+            text: Written by
+            type: reference
+            referenceResource:
+              - PractitionerRole
+            answerExpression:
+              language: application/x-fhir-query
+              expression: "PractitionerRole?_assoc=practitioner"
+            choiceColumn:
+              - forDisplay: true
+                path: >-
+                  practitioner.resource.name.given.first() + ' ' +
+                  practitioner.resource.name.family + ' - ' + specialty.first().coding.display
+          - linkId: note-text
+            text: Note
+            type: string
