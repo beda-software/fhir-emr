@@ -1,4 +1,4 @@
-import type { UploadRequestOption } from 'rc-upload/lib/interface';
+import { UploadRequestOption } from 'rc-upload/lib/interface';
 
 import config from '@beda.software/emr-config';
 import { mapSuccess } from '@beda.software/remote-data';

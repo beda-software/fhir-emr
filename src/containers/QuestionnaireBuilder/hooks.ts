@@ -72,9 +72,9 @@ export function useQuestionnaireBuilder() {
         if (isSuccess(saveResponse)) {
             setResponse(saveResponse);
             navigate(`/questionnaires/${saveResponse.data.id}/edit`, { replace: true });
-            notification.success({ message: t`The questionnaire is saved` });
+            notification.success({ title: t`The questionnaire is saved` });
         } else {
-            notification.error({ message: formatError(saveResponse.error) });
+            notification.error({ title: formatError(saveResponse.error) });
             setError(formatError(saveResponse.error));
         }
 

@@ -191,7 +191,7 @@ function ModalCompleteEncounter(props: { encounter: Encounter; onSuccess: () => 
                     ]}
                     onSuccess={() => {
                         closeModal();
-                        notification.success({ message: t`Encounter was successfully completed` });
+                        notification.success({ title: t`Encounter was successfully completed` });
                         onSuccess();
                     }}
                     onCancel={closeModal}

@@ -41,7 +41,7 @@ export const ModalNoteCreate = (props: ModalNoteCreateProps) => {
                     }}
                     onSuccess={() => {
                         closeModal();
-                        notification.success({ message: t`Note successfully created` });
+                        notification.success({ title: t`Note successfully created` });
                         props.onCreate();
                     }}
                     onCancel={closeModal}

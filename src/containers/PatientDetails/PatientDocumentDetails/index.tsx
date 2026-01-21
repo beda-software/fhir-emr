@@ -53,13 +53,13 @@ const deleteDraft = async (navigate: NavigateFunction, qrId?: string) => {
     if (isSuccess(response)) {
         navigate(-1);
         notification.success({
-            message: t`Draft successfully deleted`,
+            title: t`Draft successfully deleted`,
         });
     }
     if (isFailure(response)) {
         console.error(response.error);
         notification.error({
-            message: t`Error deleting a draft`,
+            title: t`Error deleting a draft`,
         });
     }
 };
@@ -77,13 +77,13 @@ const amendDocument = async (reload: () => void, qrId?: string) => {
     if (isSuccess(response)) {
         reload();
         notification.success({
-            message: t`The document successfully amended`,
+            title: t`The document successfully amended`,
         });
     }
     if (isFailure(response)) {
         console.error(response.error);
         notification.error({
-            message: t`Error while amending the document`,
+            title: t`Error while amending the document`,
         });
     }
 };

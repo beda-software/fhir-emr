@@ -68,6 +68,6 @@ export async function launch({ user, client, patient, practitioner, encounter }:
     if (isSuccess(response)) {
         window.open(response.data.result.uri, '_blank');
     } else {
-        notification.error({ message: 'Launch fail', description: JSON.stringify(response.error, undefined, 4) });
+        notification.error({ title: 'Launch fail', description: JSON.stringify(response.error, undefined, 4) });
     }
 }

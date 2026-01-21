@@ -28,7 +28,7 @@ export function onFormResponse(props: {
             });
             if (warnings.length > 0) {
                 notification.warning({
-                    message: (
+                    title: (
                         <div>
                             {warnings.map((w) => (
                                 <div key={w}>
@@ -45,7 +45,7 @@ export function onFormResponse(props: {
                 onSuccess(response.data);
             } else {
                 notification.success({
-                    message: t`Form successfully saved`,
+                    title: t`Form successfully saved`,
                 });
             }
         }
@@ -54,7 +54,7 @@ export function onFormResponse(props: {
             onFailure(response.error);
         } else {
             if (response.error.extractedError) {
-                notification.error({ message: formatError(response.error.extractedError) });
+                notification.error({ title: formatError(response.error.extractedError) });
             }
         }
     }

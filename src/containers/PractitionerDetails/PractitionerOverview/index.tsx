@@ -89,7 +89,7 @@ export function PractitionerOverview(props: Props) {
                                     reload();
                                     closeModal();
                                     notification.success({
-                                        message: t`Clinician successfully updated`,
+                                        title: t`Clinician successfully updated`,
                                     });
                                 }}
                                 onCancel={closeModal}

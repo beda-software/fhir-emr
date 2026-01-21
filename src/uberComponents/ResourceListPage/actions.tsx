@@ -58,7 +58,7 @@ export function RecordQuestionnaireAction<R extends Resource>({
                     ]}
                     onSuccess={() => {
                         notification.success({
-                            message: t`Successfully submitted`,
+                            title: t`Successfully submitted`,
                         });
                         reload();
                         closeModal();
@@ -94,7 +94,7 @@ export function HeaderQuestionnaireAction({ action, reload, defaultLaunchContext
                     questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
                     onSuccess={() => {
                         closeModal();
-                        notification.success({ message: t`Successfully submitted` });
+                        notification.success({ title: t`Successfully submitted` });
                         reload();
                     }}
                     launchContextParameters={defaultLaunchContext}
@@ -144,7 +144,7 @@ export function BatchQuestionnaireAction<R extends Resource>({
                         ]}
                         onSuccess={() => {
                             closeModal();
-                            notification.success({ message: t`Successfully submitted` });
+                            notification.success({ title: t`Successfully submitted` });
                             reload();
                         }}
                         onCancel={closeModal}

@@ -22,7 +22,7 @@ export function SummaryCard({ summaryCompositionRD, generateSummary, summaryUpda
     async function handleSummaryUpdate() {
         const response = await generateSummary();
         if (isFailure(response)) {
-            notification.error({ message: formatError(response.error) });
+            notification.error({ title: formatError(response.error) });
         }
     }
 
