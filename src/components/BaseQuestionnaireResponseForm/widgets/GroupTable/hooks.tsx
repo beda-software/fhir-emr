@@ -3,7 +3,7 @@ import { Button, Popconfirm, Space } from 'antd';
 import _ from 'lodash';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { FormItems, GroupItemProps, QuestionItems, RepeatableFormGroupItems } from 'sdc-qrf';
+import { FormItems, GroupItemProps, QuestionItems, RepeatableFormGroupItems, populateItemKey } from 'sdc-qrf';
 
 import {
     ItemControlGroupItemReadonlyWidgetsContext,
@@ -43,10 +43,10 @@ export function useGroupTable(props: GroupItemProps) {
 
     const fields = useMemo(
         () =>
-            _.map(formItems, (item) => {
-                return Object.keys(item).filter((key: string) => key !== '_itemKey');
-            }).flat(),
-        [formItems],
+            _.map(questionItem.item, (item) => {
+                return item.linkId;
+            }),
+        [questionItem.item],
     );
 
     const dataSource: RepeatableGroupTableRow[] = useMemo(() => {
@@ -153,8 +153,10 @@ export function useGroupTable(props: GroupItemProps) {
         return [...dataColumns, actionColumn];
     }, [actionColumn, dataColumns]);
 
+    const populateValue = (exisingItems: Array<any>) => [...exisingItems, {}].map(populateItemKey);
+
     const handleAdd = useCallback(() => {
-        const updatedInput = { ...formValues, items: [...formItems, {}] };
+        const updatedInput = { ...formValues, items: populateValue(formItems) };
         onChange(updatedInput);
         handleOpen(formItems.length);
     }, [formItems, formValues, onChange, handleOpen]);
