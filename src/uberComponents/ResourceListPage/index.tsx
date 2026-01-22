@@ -4,6 +4,7 @@ import { Empty } from 'antd';
 import type { ColumnsType, FilterValue, SorterResult, TablePaginationConfig } from 'antd/es/table/interface';
 import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 import React, { useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { formatError } from '@beda.software/fhir-react';
 import { isFailure, isLoading, isSuccess, RemoteData } from '@beda.software/remote-data';
@@ -34,7 +35,7 @@ import {
 import { BatchActions } from './BatchActions';
 import { useResourceListPage, useTableSorter } from './hooks';
 import { S } from './styles';
-import { ReportColumn, ResourceListProps, TableManager } from './types';
+import { ReportColumn, ResourceListProps, TableManager, TableProps } from './types';
 
 export { customAction, navigationAction, questionnaireAction } from './actions';
 
@@ -70,9 +71,14 @@ export function ResourceListPage<R extends Resource>({
     getTableColumns,
     defaultLaunchContext,
     getReportColumns,
-}: ResourceListPageProps<R>) {
+    tableProps,
+}: ResourceListPageProps<R> & { tableProps?: TableProps<R> }) {
     const allFilters = getFilters?.() ?? [];
     const allSorters = useMemo(() => getSorters?.() ?? [], [getSorters]);
+    const navigate = useNavigate();
+    const goBack = useCallback(() => {
+        navigate(-1);
+    }, [navigate]);
 
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
         columns: allFilters ?? [],
@@ -84,7 +90,7 @@ export function ResourceListPage<R extends Resource>({
 
     const { sortSearchParam, setCurrentSorter, currentSorter } = useTableSorter(allSorters, defaultSearchParams);
 
-    const { recordResponse, reload, pagination, selectedRowKeys, setSelectedRowKeys, selectedResourcesBundle, goBack } =
+    const { recordResponse, reload, pagination, selectedRowKeys, setSelectedRowKeys, selectedResourcesBundle } =
         useResourceListPage(resourceType, extractPrimaryResources, extractChildrenResources, columnsFilterValues, {
             ...defaultSearchParams,
             _sort: sortSearchParam,
@@ -210,6 +216,7 @@ export function ResourceListPage<R extends Resource>({
                         : []),
                 ]}
                 loading={isLoading(recordResponse) && { indicator: SpinIndicator }}
+                {...tableProps}
             />
         </PageContainer>
     );

@@ -26,6 +26,7 @@ import {
     RecordType,
     ResourceListProps,
     TableManager,
+    TableProps,
 } from '../ResourceListPage/types';
 
 type ResourceListPageContentProps<R extends Resource> = ResourceListProps<R, WebExtra> & {
@@ -46,7 +47,8 @@ export function ResourceListPageContent<R extends Resource>({
     defaultLaunchContext,
     getReportColumns,
     maxWidth,
-}: ResourceListPageContentProps<R>) {
+    tableProps,
+}: ResourceListPageContentProps<R> & { tableProps?: TableProps<R> }) {
     const allFilters = getFilters?.() ?? [];
     const allSorters = getSorters?.() ?? [];
 
@@ -199,6 +201,7 @@ export function ResourceListPageContent<R extends Resource>({
                         : []),
                 ]}
                 loading={isLoading(recordResponse) && { indicator: SpinIndicator }}
+                {...tableProps}
             />
         </PageContainerContent>
     );
