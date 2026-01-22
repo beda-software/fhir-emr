@@ -24,7 +24,7 @@ export function QuestionSolidRadio({ parentPath, questionItem }: QuestionItemPro
     const { value, onChange, disabled, formItem } = useFieldController<string>(fieldName, questionItem);
 
     return (
-        <Form.Item {...formItem} data-testid={linkId}>
+        <Form.Item {...formItem} data-testid={linkId} data-linkid={linkId}>
             <RadioItems
                 options={options}
                 rightOption={rightOption}
