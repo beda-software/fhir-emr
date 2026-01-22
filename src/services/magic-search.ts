@@ -13,13 +13,13 @@ export interface MagicSearchResponse {
     tableColumns: TableColumnConfig[];
 }
 
-export async function performMagicSearch(prompt: string) {
+export async function performMagicSearch(prompt: string, mcpServer: 'tx-tools' | 'semmatch' = 'tx-tools') {
     const appToken = getToken();
 
     return await aiService<MagicSearchResponse>({
         url: `/magic-search`,
         method: 'POST',
-        data: { prompt },
+        data: { prompt, mcp_server: mcpServer },
         headers: {
             Authorization: `Bearer ${appToken}`,
         },
