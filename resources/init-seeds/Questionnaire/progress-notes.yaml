@@ -1,22 +1,22 @@
-id: progress-notes
+id: group-table-demo
 resourceType: Questionnaire
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/progress-notes
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/group-table-demo
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
-name: progress-notes
-title: Progress Notes
+name: group-table-demo
+title: Group Table Demo
 status: active
 subjectType:
   - Patient
-description: A questionnaire to display group-table item control
+description: A questionnaire to demonstrate group-table item control
 item:
-  - linkId: progress-notes
-    text: Group table example
+  - linkId: group-table-demo
+    text: Group Table Demo
     type: group
     item:
       - linkId: note-group
-        text: Progress Notes
+        text: Notes
         type: group
         repeats: true
         itemControl:
@@ -45,3 +45,52 @@ item:
           - linkId: note-text
             text: Note
             type: string
+            itemControl:
+              coding:
+                - code: markdown-editor
+      - linkId: inputs-simple
+        text: Inputs Simple
+        type: group
+        repeats: true
+        itemControl:
+          coding:
+            - code: group-table
+        item:
+          - linkId: date-time
+            text: Date Time
+            type: dateTime
+          - linkId: input-boolean
+            text: Boolean
+            type: boolean
+          - linkId: input-coding
+            text: Coding
+            type: choice
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  system: "http://hl7.org/fhir/allergy-intolerance-category"
+                  code: "medication"
+                  display: "Medication"
+              - valueCoding:
+                  system: "http://hl7.org/fhir/allergy-intolerance-category"
+                  code: "food"
+                  display: "Food"
+              - valueCoding:
+                  system: "http://hl7.org/fhir/allergy-intolerance-category"
+                  code: "environment"
+                  display: "Environment"
+          - linkId: input-decimal
+            text: Decimal
+            type: decimal
+          - linkId: input-integer
+            text: Integer
+            type: integer
+          - linkId: input-quantity
+            text: Quantity
+            type: quantity
+            unitOption:
+              - code: cm
+                system: http://unitsofmeasure.org
+                display: cmy
