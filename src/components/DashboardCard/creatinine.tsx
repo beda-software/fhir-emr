@@ -98,7 +98,6 @@ export function CreatinineDashboard({ observationsRemoteData, patient, reload }:
                         <QuestionnaireResponseForm
                             initialQuestionnaireResponse={{
                                 resourceType: 'QuestionnaireResponse',
-                                questionnaire: 'creatinine',
                                 subject: { reference: `Patient/${patient.id}` },
                             }}
                             questionnaireLoader={questionnaireIdLoader('creatinine')}

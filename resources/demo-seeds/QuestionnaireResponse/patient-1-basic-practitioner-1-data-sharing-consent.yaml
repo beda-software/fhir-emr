@@ -23,6 +23,6 @@ status: completed
 subject:
   reference: urn:uuid:Patient:patient1
 authored: "2023-09-21T10:38:43Z"
-questionnaire: data-sharing-consent
+questionnaire: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/data-sharing-consent
 id: patient1-practitioner1-data-sharing-consent
 resourceType: QuestionnaireResponse

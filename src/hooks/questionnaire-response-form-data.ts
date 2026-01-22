@@ -343,8 +343,6 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
 
     const fceQuestionnaire = toFirstClassExtension(questionnaireRemoteData.data);
 
-    const questionnaireId = fceQuestionnaire.id ?? fceQuestionnaire.assembledFrom;
-
     const params: Parameters = {
         resourceType: 'Parameters',
         parameter: [
@@ -364,7 +362,7 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
                 url: '/Questionnaire/$populate',
                 data: params,
             }),
-            (qr) => ({ ...qr, id: qr.id ?? uuid4(), questionnaire: questionnaireId }),
+            (qr) => ({ ...qr, id: qr.id ?? uuid4(), questionnaire: fceQuestionnaire.url }),
         );
     }
 
