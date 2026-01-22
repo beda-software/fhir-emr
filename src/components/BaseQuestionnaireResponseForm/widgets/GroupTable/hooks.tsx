@@ -1,15 +1,13 @@
 import { t } from '@lingui/macro';
 import { Button, Popconfirm, Space } from 'antd';
 import _ from 'lodash';
-import { useCallback, useContext, useMemo, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
-import { FormItems, GroupItemProps, QuestionItems, RepeatableFormGroupItems, populateItemKey } from 'sdc-qrf';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import { FieldValues, useFormContext } from 'react-hook-form';
+import { FormItems, GroupItemProps, ItemContext, RepeatableFormGroupItems, populateItemKey } from 'sdc-qrf';
+import { ITEM_KEY } from 'sdc-qrf/dist/utils';
 
-import {
-    ItemControlGroupItemReadonlyWidgetsContext,
-    ItemControlQuestionItemReadonlyWidgetsContext,
-} from 'src/components/BaseQuestionnaireResponseForm/context';
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
+import { RenderFormItemReadOnly } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/RenderFormItemReadOnly';
 
 import { RepeatableGroupTableRow } from './types';
 
@@ -17,29 +15,27 @@ export function useGroupTable(props: GroupItemProps) {
     const { parentPath, questionItem, context } = props;
     const { linkId, item, repeats, text, hidden } = questionItem;
 
-    const ItemControlQuestionItemReadonlyWidgetsFromContext = useContext(ItemControlQuestionItemReadonlyWidgetsContext);
-    const ItemControlGroupItemReadonlyWidgetsFromContext = useContext(ItemControlGroupItemReadonlyWidgetsContext);
-
     const title = text ? text : linkId;
 
     const fieldName = useMemo(() => [...parentPath, linkId], [parentPath, linkId]);
 
     const { onChange } = useFieldController<RepeatableFormGroupItems>(fieldName, questionItem);
 
-    const { getValues } = useFormContext();
+    const { getValues, reset } = useFormContext<FormItems>();
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [editIndex, setEditIndex] = useState<number | undefined>(undefined);
 
-    const handleOpen = useCallback((index: number) => {
-        setEditIndex(index);
-        setIsModalVisible(true);
-    }, []);
+    const snapshotFullFormValuesRef = useRef<FieldValues | null>(null);
+    const snapshotContextRef = useRef<ItemContext[] | null>(null);
+    const [snapshotDataSource, setSnapshotDataSource] = useState<RepeatableGroupTableRow[] | null>(null);
 
-    const formValues = _.get(getValues(), fieldName);
+    const fullFormValues = getValues();
+    const formValues = useMemo(() => _.get(getValues(), fieldName), [getValues, fieldName]);
+
     const formItems: FormItems[] = useMemo(() => {
         return formValues?.items || [];
-    }, [formValues]);
+    }, [formValues?.items]);
 
     const fields = useMemo(
         () =>
@@ -54,61 +50,72 @@ export function useGroupTable(props: GroupItemProps) {
             return [];
         }
 
-        return _.map(formItems, (item, index: number) => {
+        const dataSource = _.map(formItems, (item, index: number) => {
             const data: RepeatableGroupTableRow = fields.reduce((acc: any, curr: string) => {
+                const questionnaireItem = questionItem.item?.find((qItem) => qItem.linkId === curr);
                 acc[curr] = {
-                    ...(curr in item ? item[curr]?.[index] : {}),
+                    ...(curr in item
+                        ? { formItem: item[curr], questionnaireItem: questionnaireItem ?? undefined }
+                        : {}),
                     index: index,
                     linkId: curr,
-                    itemKey: item._itemKey,
+                    itemKey: item[ITEM_KEY],
                 };
 
                 return acc;
             }, {});
-
+            Object.assign(data, { key: item[ITEM_KEY] });
             return data;
         });
-    }, [fields, formItems]);
 
-    const dataColumns = useMemo(() => {
-        return _.map(item, (questionItem) => {
-            return {
-                title: questionItem.text ? questionItem.text : questionItem.linkId,
-                dataIndex: questionItem.linkId,
-                key: questionItem.linkId,
-                render: (value: any) => {
-                    if (value?.linkId === undefined) {
-                        return null;
-                    }
-                    if (value.index !== undefined && value.index === undefined) {
-                        return null;
-                    }
+        return dataSource;
+    }, [fields, formItems, questionItem.item]);
 
-                    const questionItem = item?.find((item) => item.linkId === value.linkId);
-                    if (questionItem === undefined) {
-                        return null;
-                    }
+    const startEdit = useCallback(
+        (index: number) => {
+            snapshotFullFormValuesRef.current = _.cloneDeep(fullFormValues);
+            snapshotContextRef.current = _.cloneDeep(context);
+            setSnapshotDataSource(_.cloneDeep(dataSource));
+            setEditIndex(index);
+        },
+        [context, dataSource, fullFormValues],
+    );
 
-                    const contextItem = context[value.index];
-                    if (contextItem === undefined) {
-                        return null;
-                    }
-                    return (
-                        <>
-                            {value?.linkId !== undefined && (
-                                <QuestionItems
-                                    key={`${fieldName.join()}-${value.itemKey}-${value.linkId}`}
-                                    questionItems={[questionItem]}
-                                    parentPath={[...parentPath, linkId, 'items', value.index.toString()]}
-                                    context={contextItem}
-                                />
-                            )}
-                        </>
-                    );
-                },
-            };
-        });
-    }, [context, fieldName, item, linkId, parentPath]);
+    const handleOpen = useCallback(
+        (index: number) => {
+            startEdit(index);
+            setIsModalVisible(true);
+        },
+        [startEdit],
+    );
+
+    const handleCancel = useCallback(() => {
+        if (snapshotFullFormValuesRef.current) {
+            reset(snapshotFullFormValuesRef.current, { keepDirty: true });
+            onChange(snapshotFullFormValuesRef.current);
+            snapshotFullFormValuesRef.current = null;
+            snapshotContextRef.current = null;
+            setSnapshotDataSource(null);
+        }
+        setIsModalVisible(false);
+    }, [onChange, reset]);
+
+    const handleSave = useCallback(() => {
+        if (snapshotFullFormValuesRef.current) {
+            snapshotFullFormValuesRef.current = null;
+            snapshotContextRef.current = null;
+            setSnapshotDataSource(null);
+        }
+        setIsModalVisible(false);
+    }, []);
+
+    const populateValue = (exisingItems: Array<any>) => [...exisingItems, {}].map(populateItemKey);
+
+    const handleAdd = useCallback(() => {
+        const updatedInput = { ...formValues, items: populateValue(formItems) };
+        onChange(updatedInput);
+        handleOpen(formItems.length);
+    }, [formItems, formValues, onChange, handleOpen]);
 
     const handleDelete = useCallback(
         (index: number) => {
@@ -120,11 +127,25 @@ export function useGroupTable(props: GroupItemProps) {
         [formItems, onChange],
     );
 
+    const dataColumns = useMemo(() => {
+        return _.map(item, (questionItem) => {
+            return {
+                title: questionItem.text ? questionItem.text : questionItem.linkId,
+                dataIndex: questionItem.linkId,
+                key: questionItem.linkId,
+                render: (value: any) => (
+                    <RenderFormItemReadOnly formItem={value.formItem} questionnaireItem={value.questionnaireItem} />
+                ),
+            };
+        });
+    }, [item]);
+
     const actionColumn = useMemo(() => {
         return {
             title: 'Actions',
             dataIndex: fields[0] ?? 'id',
             key: 'action',
+            width: 180,
             render: (value: any) => {
                 if (value?.index === undefined) {
                     return null;
@@ -153,28 +174,18 @@ export function useGroupTable(props: GroupItemProps) {
         return [...dataColumns, actionColumn];
     }, [actionColumn, dataColumns]);
 
-    const populateValue = (exisingItems: Array<any>) => [...exisingItems, {}].map(populateItemKey);
-
-    const handleAdd = useCallback(() => {
-        const updatedInput = { ...formValues, items: populateValue(formItems) };
-        onChange(updatedInput);
-        handleOpen(formItems.length);
-    }, [formItems, formValues, onChange, handleOpen]);
-
     return {
         repeats,
         hidden,
         title,
         formValues,
-        formItems,
         handleAdd,
         dataSource,
         columns,
         isModalVisible,
-        setIsModalVisible,
         editIndex,
-        onChange,
-        ItemControlQuestionItemReadonlyWidgetsFromContext,
-        ItemControlGroupItemReadonlyWidgetsFromContext,
+        handleCancel,
+        handleSave,
+        snapshotDataSource,
     };
 }

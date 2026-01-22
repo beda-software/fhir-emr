@@ -1,20 +1,19 @@
 import { Modal } from 'antd';
-import { FormItems, GroupItemProps, QuestionItems } from 'sdc-qrf';
+import { GroupItemProps, QuestionItems } from 'sdc-qrf';
 
 import { S } from './styles';
 
 interface ModalQuestionnaireItemProps {
-    isModalVisible: boolean;
-    setIsModalVisible: (isModalVisible: boolean) => void;
+    open: boolean;
     index: number | undefined;
-    items: FormItems[];
-    onChange: (...event: any[]) => void;
     groupItem: GroupItemProps;
     title?: string;
+    handleCancel: () => void;
+    handleSave: () => void;
 }
 
 export function ModalQuestionnaireItem(props: ModalQuestionnaireItemProps) {
-    const { isModalVisible, setIsModalVisible, index, items, onChange, groupItem, title } = props;
+    const { open, index, groupItem, title, handleCancel, handleSave } = props;
     const { questionItem, parentPath, context } = groupItem;
     const { item, linkId } = questionItem;
 
@@ -27,13 +26,12 @@ export function ModalQuestionnaireItem(props: ModalQuestionnaireItemProps) {
     return (
         <Modal
             title={modalTitle}
-            open={isModalVisible}
-            cancelButtonProps={{ style: { display: 'none' } }}
+            open={open}
             onOk={() => {
-                setIsModalVisible(false);
-                onChange({
-                    items: [...items],
-                });
+                handleSave();
+            }}
+            onCancel={() => {
+                handleCancel();
             }}
             destroyOnClose
             closable={false}
