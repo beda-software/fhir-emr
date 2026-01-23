@@ -18,7 +18,7 @@ interface RenderQuestionnaireItemProps {
 }
 
 const RenderString = ({ items }: RenderQuestionnaireItemProps) => {
-    return items.map((item) => item?.string ?? '-').join(', ');
+    return items.map((item) => item?.string || '-').join(', ');
 };
 
 const RenderDecimal = ({ items }: RenderQuestionnaireItemProps) => {
@@ -116,6 +116,10 @@ export const RenderFormItemReadOnly = (props: {
         return '-';
     }
     const answerValues = getAnswerValues(formItem);
+
+    if (answerValues.length === 0) {
+        return '-';
+    }
 
     if (_.some(answerValues, (answerValue) => isAnswerValueEmpty(answerValue))) {
         return '-';
