@@ -19,7 +19,7 @@ export async function performMagicSearch(prompt: string, mcpServer: 'tx-tools' |
     return await aiService<MagicSearchResponse>({
         url: `/magic-search`,
         method: 'POST',
-        data: { prompt, mcp_server: mcpServer },
+        data: { prompt, mcpServer: mcpServer },
         headers: {
             Authorization: `Bearer ${appToken}`,
         },
