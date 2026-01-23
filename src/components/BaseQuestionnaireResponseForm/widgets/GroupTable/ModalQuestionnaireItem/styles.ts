@@ -7,5 +7,9 @@ export const S = {
         padding: 24px 0;
         gap: 16px;
         width: 100%;
+
+        .ant-form-item .ant-form-item-row {
+            width: 100%;
+        }
     `,
 };
