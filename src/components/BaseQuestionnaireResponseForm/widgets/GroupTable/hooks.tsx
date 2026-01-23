@@ -73,7 +73,7 @@ export function useGroupTable(props: GroupItemProps) {
         });
 
         return dataSource;
-    }, [fields, formItems, questionItem.item]);
+    }, [fields, formItems, questionItem]);
 
     const startEdit = useCallback(
         (index: number) => {
@@ -110,8 +110,9 @@ export function useGroupTable(props: GroupItemProps) {
             snapshotContextRef.current = null;
             setSnapshotDataSource(null);
         }
+        reset(fullFormValues, { keepDirty: true });
         setIsModalVisible(false);
-    }, []);
+    }, [fullFormValues, reset]);
 
     const populateValue = (exisingItems: Array<any>) => [...exisingItems, {}].map(populateItemKey);
 
