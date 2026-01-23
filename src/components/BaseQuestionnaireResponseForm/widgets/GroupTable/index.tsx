@@ -29,15 +29,6 @@ export function GroupTable(props: GroupItemProps) {
         return null;
     }
 
-    if (!repeats) {
-        return (
-            <Alert
-                type="error"
-                message={t`This itemControl is designed for repeatable groups, but this group is not repeatable`}
-            />
-        );
-    }
-
     return (
         <>
             <Flex justify="space-between">
@@ -45,7 +36,14 @@ export function GroupTable(props: GroupItemProps) {
                 <Button type="default" icon={<PlusOutlined />} onClick={handleAdd}></Button>
             </Flex>
 
-            {formValues && (
+            {!repeats && (
+                <Alert
+                    type="error"
+                    message={t`This itemControl is designed for repeatable groups, but this group is not repeatable`}
+                />
+            )}
+
+            {repeats && formValues && (
                 <S.Item>
                     <Table<RepeatableGroupTableRow>
                         columns={columns}
