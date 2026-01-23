@@ -15,6 +15,21 @@ item:
     text: Group Table Demo
     type: group
     item:
+      - linkId: group-table-with-error
+        text: Group Table With Error
+        type: group
+        # It should be repeatable
+        repeats: false
+        itemControl:
+          coding:
+            - code: group-table
+        item:
+          - linkId: id
+            text: ID
+            type: string
+          - linkId: error
+            text: Error
+            type: string
       - linkId: note-group
         text: Notes
         type: group
