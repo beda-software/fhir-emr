@@ -50,6 +50,10 @@ export function useGroupTable(props: GroupItemProps) {
             return [];
         }
 
+        if (!_.isArray(formItems)) {
+            return [];
+        }
+
         const dataSource = _.map(formItems, (item, index: number) => {
             const data: RepeatableGroupTableRow = fields.reduce((acc: any, curr: string) => {
                 const questionnaireItem = questionItem.item?.find((qItem) => qItem.linkId === curr);

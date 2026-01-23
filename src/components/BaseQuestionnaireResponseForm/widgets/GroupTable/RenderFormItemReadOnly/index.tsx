@@ -5,7 +5,6 @@ import {
     FormAnswerItems,
     FormGroupItems,
     FormItems,
-    getAnswerValueType,
     getAnswerValues,
     isAnswerValueEmpty,
 } from 'sdc-qrf';
@@ -14,73 +13,85 @@ import { parseFHIRReference } from '@beda.software/fhir-react';
 
 import { formatHumanDate, formatHumanDateTime, formatHumanTime } from 'src/utils';
 
-const RenderString = (item: AnswerValue) => {
-    return item?.string ?? '-';
+interface RenderQuestionnaireItemProps {
+    items: AnswerValue[];
+}
+
+const RenderString = ({ items }: RenderQuestionnaireItemProps) => {
+    return items.map((item) => item?.string ?? '-').join(', ');
 };
 
-const RenderDecimal = (item: AnswerValue) => {
-    return item?.decimal?.toString() ?? '-';
+const RenderDecimal = ({ items }: RenderQuestionnaireItemProps) => {
+    return items.map((item) => item?.decimal?.toString() ?? '-').join(', ');
 };
 
-const RenderInteger = (item: AnswerValue) => {
-    return item?.integer?.toString() ?? '-';
+const RenderInteger = ({ items }: RenderQuestionnaireItemProps) => {
+    return items.map((item) => item?.integer?.toString() ?? '-').join(', ');
 };
 
-const RenderDate = (item: AnswerValue) => {
-    return formatHumanDate(item?.date) ?? '-';
+const RenderDate = ({ items }: RenderQuestionnaireItemProps) => {
+    return items.map((item) => formatHumanDate(item?.date) ?? '-').join(', ');
 };
 
-const RenderDateTime = (item: AnswerValue) => {
-    return formatHumanDateTime(item?.dateTime) ?? '-';
+const RenderDateTime = ({ items }: RenderQuestionnaireItemProps) => {
+    return items.map((item) => formatHumanDateTime(item?.dateTime) ?? '-').join(', ');
 };
 
-const RenderTime = (item: AnswerValue) => {
-    return formatHumanTime(item?.time) ?? '-';
+const RenderTime = ({ items }: RenderQuestionnaireItemProps) => {
+    return items.map((item) => formatHumanTime(item?.time) ?? '-').join(', ');
 };
 
-const RenderBoolean = (item: AnswerValue) => {
-    return item?.boolean ? 'Yes' : 'No' ?? '-';
+const RenderBoolean = ({ items }: RenderQuestionnaireItemProps) => {
+    return items.map((item) => (item?.boolean ? 'Yes' : 'No' ?? '-')).join(', ');
 };
 
-const RenderReference = (item: AnswerValue) => {
-    if (!item.Reference) {
-        return '-';
-    }
-
-    return item.Reference.display ?? parseFHIRReference(item.Reference).id ?? '-';
+const RenderReference = ({ items }: RenderQuestionnaireItemProps) => {
+    return items
+        .map((item) => {
+            if (!item.Reference) {
+                return '-';
+            }
+            return item.Reference.display ?? parseFHIRReference(item.Reference).id ?? '-';
+        })
+        .join(', ');
 };
 
-const RenderQuantity = (item: AnswerValue) => {
-    if (!item.Quantity) {
-        return '-';
-    }
-    const value = item.Quantity.value;
-    const unit = item.Quantity.unit;
-
-    return value?.toString() + (unit ? ' ' + unit : '') ?? '-';
+const RenderQuantity = ({ items }: RenderQuestionnaireItemProps) => {
+    return items
+        .map((item) => {
+            if (!item.Quantity) {
+                return '-';
+            }
+            const value = item.Quantity.value;
+            const unit = item.Quantity.unit;
+            return value?.toString() + (unit ? ' ' + unit : '') ?? '-';
+        })
+        .join(', ');
 };
 
-const RenderAttachment = (item: AnswerValue) => {
-    if (!item.Attachment) {
-        return '-';
-    }
-    const title = item.Attachment.title;
-
-    return title ?? '-';
+const RenderAttachment = ({ items }: RenderQuestionnaireItemProps) => {
+    return items
+        .map((item) => {
+            if (!item.Attachment) {
+                return '-';
+            }
+            const title = item.Attachment.title;
+            return title ?? '-';
+        })
+        .join(', ');
 };
 
-const RenderUri = (item: AnswerValue) => {
-    return item?.uri ?? '-';
-};
-
-const RenderCoding = (item: AnswerValue) => {
-    if (!item.Coding) {
-        return '-';
-    }
-    const display = item.Coding.display;
-    const code = item.Coding.code;
-
-    return display ?? code ?? '-';
+const RenderCoding = ({ items }: RenderQuestionnaireItemProps) => {
+    return items
+        .map((item) => {
+            if (!item.Coding) {
+                return '-';
+            }
+            const display = item.Coding.display;
+            const code = item.Coding.code;
+            return display ?? code ?? '-';
+        })
+        .join(', ');
 };
 
 const isAnswerValue = (
@@ -89,55 +100,54 @@ const isAnswerValue = (
     return Array.isArray(item) && item.every((item) => item !== undefined && item !== null && 'value' in item);
 };
 
-const valueTypeRenderMap: Record<string, (item: AnswerValue) => React.ReactNode> = {
-    Attachment: RenderAttachment,
-    boolean: RenderBoolean,
-    Coding: RenderCoding,
-    date: RenderDate,
-    dateTime: RenderDateTime,
-    decimal: RenderDecimal,
-    integer: RenderInteger,
-    Quantity: RenderQuantity,
-    Reference: RenderReference,
-    string: RenderString,
-    time: RenderTime,
-    uri: RenderUri,
-};
-
 export const RenderFormItemReadOnly = (props: {
     formItem: FormItems | undefined | null;
     questionnaireItem: FCEQuestionnaireItem | undefined | null;
 }) => {
-    const { formItem } = props;
+    const { formItem, questionnaireItem } = props;
 
-    if (!formItem) {
+    if (!formItem || !questionnaireItem) {
         return '-';
     }
 
+    const questionnaireItemType = questionnaireItem.type;
+
     if (!isAnswerValue(formItem)) {
-        return '--';
+        return '-';
     }
     const answerValues = getAnswerValues(formItem);
 
     if (_.some(answerValues, (answerValue) => isAnswerValueEmpty(answerValue))) {
         return '-';
     }
-
-    return (
-        <>
-            {answerValues.map((answerValue, index: number) => {
-                const valueType = getAnswerValueType(answerValue);
-                if (!valueType) {
-                    return '-';
-                }
-
-                const renderValue = valueTypeRenderMap[valueType];
-                if (!renderValue) {
-                    return '-';
-                }
-
-                return <div key={index.toString()}>{renderValue(answerValue) ?? '-'}</div>;
-            })}
-        </>
-    );
+    switch (questionnaireItemType) {
+        case 'string':
+            return <RenderString items={answerValues} />;
+        case 'boolean':
+            return <RenderBoolean items={answerValues} />;
+        case 'date':
+            return <RenderDate items={answerValues} />;
+        case 'dateTime':
+            return <RenderDateTime items={answerValues} />;
+        case 'decimal':
+            return <RenderDecimal items={answerValues} />;
+        case 'integer':
+            return <RenderInteger items={answerValues} />;
+        case 'time':
+            return <RenderTime items={answerValues} />;
+        case 'text':
+            return <RenderString items={answerValues} />;
+        case 'choice':
+            return <RenderCoding items={answerValues} />;
+        case 'open-choice':
+            return <RenderCoding items={answerValues} />;
+        case 'attachment':
+            return <RenderAttachment items={answerValues} />;
+        case 'reference':
+            return <RenderReference items={answerValues} />;
+        case 'quantity':
+            return <RenderQuantity items={answerValues} />;
+        default:
+            return '-';
+    }
 };
