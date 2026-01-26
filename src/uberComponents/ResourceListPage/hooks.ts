@@ -34,7 +34,7 @@ export function useResourceListPage<R extends Resource>(
     const searchParams = {
         ...defaultSearchParams,
         ...searchBarSearchParams,
-        _sort: defaultSearchParams._sort ? `${defaultSearchParams._sort},-_lastUpdated` : '-_lastUpdated',
+        _sort: defaultSearchParams._sort ? defaultSearchParams._sort : '-_lastUpdated',
     };
 
     const defaultPageSize = defaultSearchParams._count;
