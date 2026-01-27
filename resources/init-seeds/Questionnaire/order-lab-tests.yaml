@@ -1,4 +1,4 @@
-id: oreder-lab-tests
+id: order-lab-tests
 name: orderLabTests
 title: Order laboratory tests
 resourceType: Questionnaire
@@ -88,4 +88,4 @@ item:
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/vitals
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/order-lab-tests

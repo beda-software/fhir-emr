@@ -37,7 +37,7 @@ item:
       - text: Are you sure to cancel this request?
         linkId: are-you-sure
         type: display
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/medication-request-cancel
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/medication-request-cancel
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire

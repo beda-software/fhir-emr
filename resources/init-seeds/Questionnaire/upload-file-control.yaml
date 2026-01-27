@@ -9,7 +9,7 @@ subjectType:
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/upload-file-control
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/upload-file-control
 item:
   - linkId: upload-section
     type: group
