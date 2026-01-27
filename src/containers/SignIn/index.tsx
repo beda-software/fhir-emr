@@ -20,7 +20,7 @@ enum SignInService {
 function authorize(state?: OAuthState) {
     window.location.href = getAuthorizeUrl({
         authPath: 'auth/authorize',
-        params: new URLSearchParams({ client_id: config.clientId, response_type: 'token' }),
+        params: new URLSearchParams({ client_id: config.clientId, response_type: config.authType ?? 'token' }),
         state,
     });
 }

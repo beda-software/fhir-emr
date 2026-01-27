@@ -4,6 +4,7 @@ import { ReactElement, useContext, useEffect, useRef } from 'react';
 import { Route, BrowserRouter, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 import { User } from '@beda.software/aidbox-types';
+import config from '@beda.software/emr-config';
 import { RenderRemoteData, useService } from '@beda.software/fhir-react';
 import { RemoteDataResult, success } from '@beda.software/remote-data';
 
@@ -25,6 +26,7 @@ import { SignIn } from 'src/containers/SignIn';
 import { VideoCall } from 'src/containers/VideoCall';
 import { getToken, parseOAuthState, setToken } from 'src/services/auth';
 
+import { CodeGrantAuth } from './auth/CodeGrantAuth';
 import { DefaultUserWithNoRoles } from './DefaultUserWithNoRoles';
 import { restoreUserSession } from './utils';
 import { AidboxFormsBuilder } from '../AidboxFormsBuilder';
@@ -104,7 +106,7 @@ function AnonymousUserApp({ extra }: { extra?: ReactElement }) {
     return (
         <Routes>
             {extra}
-            <Route path="/auth" element={<Auth />} />
+            <Route path="/auth" element={config.authType === 'code' ? <CodeGrantAuth /> : <Auth />} />
             <Route path="/signin" element={<SignIn originPathName={originPathRef.current} />} />
             <Route path="/reset-password/:code" element={<SetPassword />} />
             <Route

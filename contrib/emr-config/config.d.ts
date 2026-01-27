@@ -1,5 +1,9 @@
 declare const config: {
     clientId: string;
+
+    authType?: 'token' | 'code'; // Default: token
+
+    // authTokenPath and authClientRedirectURL are used for `code` authType
     authTokenPath?: string;
     authClientRedirectURL?: string;
 

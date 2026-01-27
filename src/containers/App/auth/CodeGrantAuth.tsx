@@ -3,7 +3,7 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { RenderRemoteData, useService } from '@beda.software/fhir-react';
-import { failure, FetchError, isSuccess } from '@beda.software/remote-data';
+import { failure, isSuccess } from '@beda.software/remote-data';
 
 import { Spinner } from 'src/components';
 import {
@@ -42,7 +42,7 @@ export function CodeGrantAuth() {
 
             return exchangeCodeResponse;
         } else {
-            return failure<FetchError>({ message: 'Auth Code is not provided' });
+            return failure({ error: 'invalid', error_description: 'Auth Code is not provided' });
         }
     });
 

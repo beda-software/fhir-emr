@@ -2,7 +2,7 @@ import { decodeJwt } from 'jose';
 
 import { User } from '@beda.software/aidbox-types';
 import config from '@beda.software/emr-config';
-import { serviceFetch, isSuccess, RemoteDataResult, failure, FetchError, Token } from '@beda.software/remote-data';
+import { serviceFetch, isSuccess, RemoteDataResult, failure, Token, mapFailure } from '@beda.software/remote-data';
 
 import { aidboxService, resetInstanceToken, setInstanceToken } from 'src/services/fhir';
 
@@ -198,11 +198,17 @@ async function getAuthToken(appleToken: string) {
 export async function exchangeAuthorizationCodeForToken(code: string) {
     const tokenPath = config.authTokenPath;
     if (tokenPath === undefined) {
-        return failure<FetchError>({ message: 'authTokenPath is not configured in emr-config package' });
+        return failure({
+            error: 'invalid',
+            error_description: 'authTokenPath is not configured in emr-config package',
+        });
     }
     const redirectURL = config.authClientRedirectURL;
     if (redirectURL === undefined) {
-        return failure<FetchError>({ message: 'authClientRedirectURL is not configured in emr-config package' });
+        return failure({
+            error: 'invalid',
+            error_description: 'authClientRedirectURL is not configured in emr-config package',
+        });
     }
 
     const tokenEndpoint = `${config.baseURL}/${tokenPath}`;
@@ -213,11 +219,14 @@ export async function exchangeAuthorizationCodeForToken(code: string) {
         client_id: `${config.clientId}`,
     };
 
-    return await serviceFetch<AuthTokenResponse>(tokenEndpoint, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams(data),
-    });
+    return mapFailure(
+        await serviceFetch<AuthTokenResponse>(tokenEndpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams(data),
+        }),
+        (error) => ({ error: 'invalid', error_description: error.message }),
+    );
 }
