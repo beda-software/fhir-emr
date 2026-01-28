@@ -36,6 +36,7 @@ import {
 import { AudioRecorderUploader } from './widgets/AudioRecorderUploader';
 import { Barcode } from './widgets/barcode';
 import { Display } from './widgets/display';
+import { GroupTabs } from './widgets/GroupTabs';
 import { GroupWizard, GroupWizardVertical, GroupWizardWithTooltips } from './widgets/GroupWizard';
 import { PasswordInput } from './widgets/PasswordInput';
 import { QuestionReference } from './widgets/reference';
@@ -95,4 +96,5 @@ export const groupControlComponents: ItemControlGroupItemComponentMapping = {
     'wizard-with-tooltips': GroupWizardWithTooltips,
     'wizard-navigation-group': GroupWizard,
     'wizard-vertical': GroupWizardVertical,
+    'group-tabs': GroupTabs,
 };
