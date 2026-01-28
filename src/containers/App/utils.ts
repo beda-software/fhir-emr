@@ -3,7 +3,7 @@ import { Organization, Patient, Practitioner, PractitionerRole } from 'fhir/r4b'
 import { User } from '@beda.software/aidbox-types';
 import config from '@beda.software/emr-config';
 import { extractBundleResources, extractErrorCode, formatError } from '@beda.software/fhir-react';
-import { failure, isFailure, isSuccess, RemoteDataResult, success } from '@beda.software/remote-data';
+import { isFailure, isSuccess, RemoteDataResult, success } from '@beda.software/remote-data';
 
 import { getJitsiAuthToken, getUserInfo } from 'src/services/auth';
 import { getFHIRResource, getFHIRResources, resetInstanceToken, setInstanceToken } from 'src/services/fhir';
@@ -90,11 +90,9 @@ export async function aidboxPopulateUserInfoSharedState(): Promise<RemoteDataRes
 
     sharedAuthorizedUser.setSharedState(user);
 
-    if (!user.role) {
-        return failure({ error: 'User has no roles' });
+    if (user.role) {
+        await fetchUserRoleDetails(user);
     }
-
-    await fetchUserRoleDetails(user);
 
     return userResponse;
 }
