@@ -5,6 +5,8 @@ import {
     QuestionItemComponentMapping,
 } from 'sdc-qrf';
 
+import { GroupTable } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable';
+
 import {
     Col,
     Group,
@@ -97,4 +99,5 @@ export const groupControlComponents: ItemControlGroupItemComponentMapping = {
     'wizard-navigation-group': GroupWizard,
     'wizard-vertical': GroupWizardVertical,
     'group-tabs': GroupTabs,
+    'group-table': GroupTable,
 };

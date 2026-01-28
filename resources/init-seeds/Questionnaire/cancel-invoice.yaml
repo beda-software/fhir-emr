@@ -24,7 +24,7 @@ item:
       - text: Are you sure to cancel this invoice?
         linkId: are-you-sure
         type: display
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/change-invoice-status
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/cancel-invoice
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire

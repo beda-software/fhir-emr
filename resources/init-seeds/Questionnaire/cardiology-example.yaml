@@ -1,4 +1,4 @@
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/cardiology-example
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/cardiology-example
 item:
   - text: Primary compliant
     type: text

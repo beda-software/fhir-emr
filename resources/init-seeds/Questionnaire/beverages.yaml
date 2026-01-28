@@ -1,4 +1,4 @@
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/baverages
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/beverages
 item:
   - linkId: slider
     itemControl:
