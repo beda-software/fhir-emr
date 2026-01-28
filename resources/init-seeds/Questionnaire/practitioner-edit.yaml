@@ -92,4 +92,4 @@ id: practitioner-edit
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/practitioner-edit
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/practitioner-edit

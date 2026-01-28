@@ -1,6 +1,6 @@
 id: medication-request
 resourceType: Questionnaire
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/medication-request
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/medication-request
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire

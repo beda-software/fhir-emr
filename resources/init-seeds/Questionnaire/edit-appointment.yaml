@@ -112,7 +112,7 @@ item:
         initialExpression:
           language: text/fhirpath
           expression: "%CurrentAppointmentBundle.entry[0].resource.entry.resource.start"
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/edit-appointment
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/edit-appointment
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
