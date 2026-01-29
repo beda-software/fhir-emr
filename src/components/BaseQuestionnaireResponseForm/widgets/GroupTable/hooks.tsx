@@ -41,10 +41,10 @@ export function useGroupTable(props: GroupItemProps) {
 
     const fields = useMemo(
         () =>
-            _.map(questionItem.item?.filter((item) => !item.hidden), (item) => {
+            _.map(visibleItem, (item) => {
                 return item.linkId;
             }),
-        [questionItem.item],
+        [visibleItem],
     );
 
     const dataSource: RepeatableGroupTableRow[] = useMemo(() => {
