@@ -3,14 +3,7 @@ import { Button, Popconfirm, Space } from 'antd';
 import _ from 'lodash';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { FieldValues, useFormContext } from 'react-hook-form';
-import {
-    FormItems,
-    GroupItemProps,
-    ItemContext,
-    RepeatableFormGroupItems,
-    populateItemKey,
-    getEnabledQuestions,
-} from 'sdc-qrf';
+import { FormItems, GroupItemProps, ItemContext, RepeatableFormGroupItems, populateItemKey } from 'sdc-qrf';
 import { ITEM_KEY } from 'sdc-qrf/dist/utils';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
@@ -20,7 +13,7 @@ import { RepeatableGroupTableRow } from './types';
 
 export function useGroupTable(props: GroupItemProps) {
     const { parentPath, questionItem, context } = props;
-    const { linkId, repeats, text, hidden } = questionItem;
+    const { linkId, repeats, text, hidden, item } = questionItem;
 
     const title = text ? text : linkId;
 
@@ -40,8 +33,7 @@ export function useGroupTable(props: GroupItemProps) {
     const fullFormValues = getValues();
     const formValues = useMemo(() => _.get(getValues(), fieldName), [getValues, fieldName]);
 
-    const enabledItem = getEnabledQuestions(questionItem.item ?? [], parentPath, formValues, context[0]!);
-    const visibleItem = useMemo(() => enabledItem.filter((i) => !i.hidden), [enabledItem]);
+    const visibleItem = useMemo(() => item?.filter((i) => !i.hidden), [item]);
 
     const formItems: FormItems[] = useMemo(() => {
         return formValues?.items || [];
