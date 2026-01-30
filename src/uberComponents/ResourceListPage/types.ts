@@ -48,6 +48,14 @@ export interface ResourceListProps<R extends Resource, Extra = unknown, Link = s
     /* Default search params */
     searchParams?: SearchParams;
 
+    /**
+     * Search parameter name used to ensure unique and stable ordering of results.
+     * This is typically used as a tie-breaker when sorting by other fields to guarantee
+     * consistent pagination results. Common values include '_id' or '_lastUpdated'.
+     * Set to null to disable unique ordering.
+     */
+    uniqueOrderSortSearchParam?: string | null;
+
     /* Filter that are displayed in the search bar and inside table columns */
     getFilters?: () => SearchBarColumn[];
     getSorters?: () => SorterColumn[];

@@ -1,5 +1,6 @@
 import type { SorterResult } from 'antd/es/table/interface';
 import { Bundle, Resource } from 'fhir/r4b';
+import { compact, uniq } from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { SearchParams, usePager } from '@beda.software/fhir-react';
@@ -18,6 +19,7 @@ export function useResourceListPage<R extends Resource>(
     extractChildrenResources: ((resource: R, bundle: Bundle) => R[]) | undefined,
     filterValues: ColumnFilterValue[],
     defaultSearchParams: SearchParams,
+    uniqueOrderSortSearchParam: string | null = '-_lastUpdated',
 ) {
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
@@ -31,10 +33,12 @@ export function useResourceListPage<R extends Resource>(
             ]),
         ),
     };
+
+    const _sort = getSortSearchParam(defaultSearchParams, uniqueOrderSortSearchParam);
     const searchParams = {
         ...defaultSearchParams,
         ...searchBarSearchParams,
-        _sort: defaultSearchParams._sort ? defaultSearchParams._sort : '-_lastUpdated',
+        _sort,
     };
 
     const defaultPageSize = defaultSearchParams._count;
@@ -159,4 +163,17 @@ export function useTableSorter(sorters: SorterColumn[], defaultSearchParams?: Se
     }, [currentSorter, sorters, defaultSearchParams]);
 
     return { sortSearchParam, setCurrentSorter, currentSorter };
+}
+
+export function getSortSearchParam(
+    defaultSearchParams: SearchParams,
+    uniqueOrderSortSearchParam: string | null = '-_lastUpdated',
+) {
+    const rawSortSearchParamArray = [
+        defaultSearchParams._sort?.toString().split(','),
+        uniqueOrderSortSearchParam,
+    ].flat();
+    const _sort = uniq(compact(rawSortSearchParamArray)).join(',');
+
+    return _sort;
 }
