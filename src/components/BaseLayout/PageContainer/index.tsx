@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import { S } from './styles';
 
 export interface PageContainerProps {
@@ -61,7 +63,8 @@ export function PageContainer(props: PageContainerProps = {}) {
                 <S.Header>
                     <S.HeaderLeftColumn>
                         {titleLeftElement ? titleLeftElement : null}
-                        {title ? <PageContainerTitle>{title}</PageContainerTitle> : null}
+                        {title && !_.isObject(title) ? <PageContainerTitle>{title}</PageContainerTitle> : null}
+                        {title && _.isObject(title) ? title : null}
                     </S.HeaderLeftColumn>
                     {titleRightElement && <S.HeaderRightColumn>{titleRightElement}</S.HeaderRightColumn>}
                 </S.Header>
