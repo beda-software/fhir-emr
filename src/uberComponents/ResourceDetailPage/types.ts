@@ -13,7 +13,9 @@ export type Tab<R extends Resource, Extra = unknown> = {
 export interface DetailPageProps<R extends Resource> {
     resourceType: R['resourceType'];
     getSearchParams: (params: Readonly<Record<string, string | string[] | undefined>>) => SearchParams;
-    getTitle: (context: RecordType<WithId<R>>) => string;
+    getTitle: (context: RecordType<WithId<R>>) => string | React.ReactNode;
+    getTitleLeftElement?: (context: RecordType<WithId<R>>) => React.ReactNode;
+    getTitleRightElement?: (context: RecordType<WithId<R>>) => React.ReactNode;
     tabs: Array<Tab<WithId<R>>>;
     extractPrimaryResource?: (bundle: Bundle<R>) => WithId<R>;
 
