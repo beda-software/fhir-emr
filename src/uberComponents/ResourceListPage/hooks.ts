@@ -175,5 +175,5 @@ export function getSortSearchParam(
     ].flat();
     const _sort = uniq(compact(rawSortSearchParamArray)).join(',');
 
-    return _sort;
+    return _sort || undefined;
 }
