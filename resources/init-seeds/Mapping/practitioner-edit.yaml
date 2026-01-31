@@ -1,0 +1,47 @@
+id: practitioner-edit
+resourceType: Mapping
+type: FHIRPath
+body:
+  "{% assign %}":
+    - practitionerId: "{{ %QuestionnaireResponse.answers('practitioner-id') }}"
+    - practitionerRoleId: "{{ %QuestionnaireResponse.answers('practitioner-role-id') }}"
+    - firstName: "{{ %QuestionnaireResponse.answers('first-name') }}"
+    - middleName: "{{ %QuestionnaireResponse.answers('middle-name') }}"
+    - lastName: "{{ %QuestionnaireResponse.answers('last-name') }}"
+    - specialties: "{[ %QuestionnaireResponse.repeat(item).where(linkId='specialty').answer.valueCoding ]}"
+    - services: "{[ %QuestionnaireResponse.repeat(item).where(linkId='services').answer.valueReference ]}"
+
+  resourceType: Bundle
+  type: transaction
+  entry:
+    - fullUrl: "{{ 'urn:uuid:practitionerid' }}"
+      request:
+        method: PUT
+        url: "/Practitioner/{{ %practitionerId }}"
+      resource:
+        resourceType: Practitioner
+        id: "{{ %practitionerId }}"
+        name:
+          - family: "{{ %lastName  }}"
+            given:
+              - "{{ %firstName }}"
+              - "{{ %middleName }}"
+
+    - request:
+        method: "{{ iif(%practitionerRoleId.exists() and %practitionerRoleId!='', 'PUT', 'POST') }}"
+        url: "{{ iif(%practitionerRoleId.exists() and %practitionerRoleId!='', '/PractitionerRole/' + %practitionerRoleId, '/PractitionerRole') }}"
+      resource:
+        resourceType: PractitionerRole
+        code:
+          - coding:
+              - system: "http://terminology.hl7.org/CodeSystem/practitioner-role"
+                code: "doctor"
+                display: "Doctor"
+        specialty:
+          - "{% for specialtyItem in %specialties %}":
+              coding:
+                - "{{ %specialtyItem }}"
+        practitioner:
+          reference: "{{ 'urn:uuid:practitionerid' }}"
+        healthcareService:
+          - "{% for serviceRef in %services %}": "{{ %serviceRef }}"

@@ -1,0 +1,8 @@
+id: web
+resourceType: Client
+auth:
+  implicit:
+    redirect_uri: "${FHIR_EMR_AUTH_URL}"
+first_party: true
+grant_types:
+  - implicit

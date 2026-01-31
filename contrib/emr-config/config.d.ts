@@ -9,7 +9,6 @@ declare const config: {
     baseURL: string;
     fhirBaseURL?: string;
     sdcIdeUrl: string;
-    aiQuestionnaireBuilderUrl: string;
 
     sdcBackendUrl: string | null;
     webSentryDSN: string | null;

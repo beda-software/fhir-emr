@@ -1,0 +1,61 @@
+id: data-sharing-consent
+resourceType: Questionnaire
+title: Demographic & clinical data sharing consent
+status: active
+subjectType:
+  - Patient
+mapping:
+  - reference: urn:uuid:Mapping:data-sharing-consent-extract
+name: Demographic & clinical data sharing consent
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+  - name:
+      code: Author
+    type:
+      - PractitionerRole
+      - Practitioner
+      - Patient
+      - Organization
+item:
+  - text: Practitioner
+    type: reference
+    referenceResource:
+      - Practitioner
+    required: true
+    repeats: false
+    linkId: practitioner
+    answerExpression:
+      language: application/x-fhir-query
+      expression: "Practitioner?_has:PractitionerRole:practitioner:role=doctor"
+    choiceColumn:
+      - forDisplay: true
+        path: name.given.first() + ' ' + name.family
+  - text: Provision
+    type: choice
+    required: true
+    repeats: false
+    linkId: provision
+    answerOption:
+      - valueCoding:
+          code: "permit"
+          system: http://hl7.org/fhir/consent-provision-type
+          display: Allow access
+      - valueCoding:
+          code: "deny"
+          system: http://hl7.org/fhir/consent-provision-type
+          display: Deny access
+  - text: Date start
+    type: date
+    linkId: date-start
+    required: true
+  - text: Date end
+    type: date
+    linkId: date-end
+    required: true
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/data-sharing-consent

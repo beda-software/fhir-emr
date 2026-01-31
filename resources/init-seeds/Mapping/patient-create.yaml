@@ -1,0 +1,46 @@
+id: patient-create
+type: FHIRPath
+resourceType: Mapping
+body:
+  "{% assign %}":
+    - ssn: "{{ %QuestionnaireResponse.answers('ssn') }}"
+    - gender: "{{ %QuestionnaireResponse.answers('gender').coding.code }}"
+    - mobile: "{{ %QuestionnaireResponse.answers('mobile') }}"
+    - email: "{{ %QuestionnaireResponse.answers('email') }}"
+    - lastName: "{{ %QuestionnaireResponse.answers('last-name') }}"
+    - birthDate: "{{ %QuestionnaireResponse.answers('birth-date') }}"
+    - firstName: "{{ %QuestionnaireResponse.answers('first-name') }}"
+    - patientId: "{{ %QuestionnaireResponse.answers('patient-id') }}"
+    - middleName: "{{ %QuestionnaireResponse.answers('middle-name') }}"
+
+  resourceType: Bundle
+  type: transaction
+  entry:
+    - request:
+        "{% if %patientId.exists() %}":
+          url: "/Patient/{{ %patientId }}"
+          method: PATCH
+        "{% else %}":
+          url: /Patient
+          method: POST
+
+      resource:
+        name:
+          - given:
+              - "{{ %firstName }}"
+              - "{{ %middleName }}"
+            family: "{{ %lastName }}"
+            use: official
+        gender: "{{ %gender }}"
+        telecom:
+          - value: "{{ %mobile }}"
+            system: phone
+          - value: "{{ %email }}"
+            system: email
+        birthDate: "{{ %birthDate }}"
+        identifier:
+          "{% if %ssn %}":
+            - value: "{{ %ssn }}"
+              system: http://hl7.org/fhir/sid/us-ssn
+        active: true
+        resourceType: Patient

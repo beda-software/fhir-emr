@@ -1,137 +1,83 @@
+import { PlusOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
-import { Typography } from 'antd';
+import type { ColumnsType } from 'antd/es/table/interface';
 import { MedicationKnowledge } from 'fhir/r4b';
 
-import { RenderRemoteData } from '@beda.software/fhir-react';
-import { isLoading, isSuccess } from '@beda.software/remote-data';
+import { SearchBarColumn, SearchBarColumnType } from 'src/components/SearchBar/types';
+import { ResourceListPage, questionnaireAction } from 'src/uberComponents/ResourceListPage';
+import { navigationAction } from 'src/uberComponents/ResourceListPage/actions';
+import type { RecordType, TableManager } from 'src/uberComponents/ResourceListPage/types';
+import { compileAsFirst } from 'src/utils';
 
-import { Table } from 'src/components';
-import { PageContainer } from 'src/components/BaseLayout/PageContainer';
-import { SpinIndicator } from 'src/components/Spinner';
-import { formatHumanDate } from 'src/utils/date';
-
-import { MedicationsSearchBar } from './components/MedicationsSearchBar';
-import { useMedicationsSearchBarSelect } from './components/MedicationsSearchBar/hooks';
-import { useMedicationKnowledge, useMedicationList } from './hooks';
-import { ModalNewMedicationBatch } from './ModalNewMedicationBatch';
-import { ModalNewMedicationKnowledge } from './ModalNewMedicationKnowledge';
-import { MedicationKnowledgeCharacteristics, getMedicationTableData } from './utils';
-import { getSelectedValue } from '../OrganizationScheduling/utils';
+// FHIRPath helpers
+const getMedicationName = compileAsFirst<MedicationKnowledge, string>(
+    'MedicationKnowledge.code.coding.first().display',
+);
+const getCostValue = compileAsFirst<MedicationKnowledge, number>('MedicationKnowledge.cost.first().cost.value');
+const getCostCurrency = compileAsFirst<MedicationKnowledge, string>('MedicationKnowledge.cost.first().cost.currency');
 
 export function MedicationManagement() {
-    const { selectedMedication, medicationOptions, onChange, resetFilter } = useMedicationsSearchBarSelect();
-    const { medicationKnowledgeResponse, pagination, handleTableChange, pagerManager } = useMedicationKnowledge(
-        getSelectedValue(selectedMedication),
-    );
+    const getFilters = (): SearchBarColumn[] => [
+        {
+            id: 'code',
+            searchParam: 'code',
+            type: SearchBarColumnType.STRING,
+            placeholder: t`Search by code`,
+            placement: ['search-bar', 'table'],
+        },
+    ];
+
+    const getTableColumns = (): ColumnsType<RecordType<MedicationKnowledge>> => [
+        {
+            title: <Trans>Name</Trans>,
+            dataIndex: 'name',
+            key: 'name',
+            render: (_text, record) => getMedicationName(record.resource),
+        },
+        {
+            title: <Trans>Cost</Trans>,
+            dataIndex: 'cost',
+            key: 'cost',
+            render: (_text, record) => {
+                const value = getCostValue(record.resource);
+                const currency = getCostCurrency(record.resource);
+                return value && currency ? `${value} ${currency}` : '';
+            },
+        },
+    ];
+
+    const getRecordActions = (record: RecordType<MedicationKnowledge>, _manager: TableManager) => [
+        navigationAction(<Trans>Open</Trans>, `/medications/${record.resource.id}`),
+        questionnaireAction(<Trans>Batch</Trans>, 'medication-batch-create', {
+            extra: {
+                qrfProps: {
+                    launchContextParameters: [
+                        {
+                            name: 'CurrentMedicationKnowledge',
+                            resource: record.resource,
+                        },
+                    ],
+                },
+            },
+        }),
+    ];
+
+    const getHeaderActions = () => [
+        questionnaireAction(<Trans>Add Medication</Trans>, 'medication-knowledge-create', { icon: <PlusOutlined /> }),
+    ];
 
     return (
-        <PageContainer
-            title={t`Medications`}
-            layoutVariant="with-table"
-            titleRightElement={<ModalNewMedicationKnowledge onCreate={pagerManager.reload} />}
-            headerContent={
-                <MedicationsSearchBar
-                    selectedMedication={selectedMedication}
-                    loadMedicationOptions={medicationOptions}
-                    onChangeMedication={(selectedOption) => onChange(selectedOption, 'medication')}
-                    reset={resetFilter}
-                />
-            }
-        >
-            <Table
-                pagination={pagination}
-                onChange={handleTableChange}
-                dataSource={
-                    isSuccess(medicationKnowledgeResponse)
-                        ? medicationKnowledgeResponse.data.map((resourceData) => {
-                              return { ...{ key: resourceData.id }, ...resourceData };
-                          })
-                        : []
-                }
-                expandable={{
-                    expandedRowRender: (record) => <OtherDetails medicationKnowledge={record} />,
-                }}
-                columns={[
-                    {
-                        title: <Trans>Name</Trans>,
-                        dataIndex: 'name',
-                        key: 'name',
-                        render: (_text, resource) => resource.code?.coding?.[0]?.display,
-                    },
-                    {
-                        title: <Trans>Cost</Trans>,
-                        dataIndex: 'cost',
-                        key: 'cost',
-                        render: (_text, resource) =>
-                            `${resource.cost?.[0]?.cost.value} ${resource.cost?.[0]?.cost.currency}`,
-                    },
-                    {
-                        title: <Trans>Actions</Trans>,
-                        dataIndex: 'actions',
-                        key: 'actions',
-                        render: (_text, resource) => (
-                            <ModalNewMedicationBatch onCreate={pagerManager.reload} medicationKnowledge={resource} />
-                        ),
-                    },
-                ]}
-                loading={isLoading(medicationKnowledgeResponse) && { indicator: SpinIndicator }}
-            />
-        </PageContainer>
-    );
-}
-
-function OtherDetails({ medicationKnowledge }: { medicationKnowledge: MedicationKnowledge }) {
-    const { medicationResponse, handleTableChange } = useMedicationList({
-        code: medicationKnowledge.code?.coding?.[0]?.code,
-        status: 'active',
-    });
-
-    return (
-        <RenderRemoteData remoteData={medicationResponse}>
-            {(medications) => {
-                return (
-                    <div
-                        style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '12px' }}
-                    >
-                        <div style={{ flex: 0.8 }}>
-                            <MedicationKnowledgeCharacteristics
-                                medicationKnowledge={medicationKnowledge}
-                                medicationList={medications}
-                            />
-                        </div>
-                        <div style={{ flex: 0.3 }}>
-                            <div>
-                                <Typography.Title level={5}>Availability</Typography.Title>
-                            </div>
-                            <Table
-                                pagination={false}
-                                onChange={handleTableChange}
-                                dataSource={getMedicationTableData(medications)}
-                                columns={[
-                                    {
-                                        title: <Trans>Units</Trans>,
-                                        dataIndex: 'availableUnits',
-                                        key: 'availableUnits',
-                                        render: (_text, resource) => resource.availableUnits,
-                                    },
-                                    {
-                                        title: <Trans>Batch</Trans>,
-                                        dataIndex: 'batchNumber',
-                                        key: 'batchNumber',
-                                        render: (_text, resource) => resource.lotNumber,
-                                    },
-                                    {
-                                        title: <Trans>Expiration</Trans>,
-                                        dataIndex: 'expirationDate',
-                                        key: 'expirationDate',
-                                        render: (_text, resource) => formatHumanDate(resource.expiredAt ?? ''),
-                                    },
-                                ]}
-                            />
-                        </div>
-                    </div>
-                );
+        <ResourceListPage<MedicationKnowledge>
+            headerTitle={t`Medications`}
+            resourceType="MedicationKnowledge"
+            searchParams={{
+                _sort: '-_lastUpdated,_id',
+                _count: 10,
             }}
-        </RenderRemoteData>
+            getFilters={getFilters}
+            getTableColumns={getTableColumns}
+            getRecordActions={getRecordActions}
+            getHeaderActions={getHeaderActions}
+        />
     );
 }

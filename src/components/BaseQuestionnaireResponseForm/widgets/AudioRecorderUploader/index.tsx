@@ -1,7 +1,7 @@
 import { AudioOutlined } from '@ant-design/icons';
 import { Trans } from '@lingui/macro';
 import { Form, UploadFile } from 'antd';
-import { RcFile } from 'antd/lib/upload/interface';
+import type { RcFile } from 'antd/es/upload/interface';
 import { useCallback, useEffect, useState } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 

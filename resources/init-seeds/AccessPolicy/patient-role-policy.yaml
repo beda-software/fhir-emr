@@ -1,0 +1,4 @@
+id: patient-role-policy
+resourceType: AccessPolicy
+engine: allow
+roleName: patient

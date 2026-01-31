@@ -1,18 +1,15 @@
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
 import { screen, render, act, fireEvent, waitFor } from '@testing-library/react';
-import { RemoteDataResult } from 'aidbox-react';
 import { Bundle, Patient, Practitioner, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import { describe, expect, test, vi } from 'vitest';
 
-import { axiosInstance } from 'aidbox-react/lib/services/instance';
-
 import { ensure, extractBundleResources, getReference, WithId, withRootAccess } from '@beda.software/fhir-react';
-import { mapSuccess } from '@beda.software/remote-data';
+import { mapSuccess, RemoteDataResult } from '@beda.software/remote-data';
 
 import { PatientDocument } from 'src/containers/PatientDetails/PatientDocument';
 import { makeLocalStorageDraftVersionedKey, QuestionnaireResponseDraftService } from 'src/hooks';
-import { getFHIRResources, updateFHIRResource } from 'src/services';
+import { axiosInstance, getFHIRResources, updateFHIRResource } from 'src/services/fhir';
 import { createPatient, createPractitionerRole, loginAdminUser, waitForAPIProcess } from 'src/setupTests';
 import { ThemeProvider } from 'src/theme';
 

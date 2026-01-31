@@ -1,0 +1,48 @@
+id: patient-edit
+resourceType: Mapping
+type: FHIRPath
+body:
+  "{% assign %}":
+    - ssn: "{{ %QuestionnaireResponse.answers('ssn') }}"
+    - gender: "{{ %QuestionnaireResponse.answers('gender').code }}"
+    - mobile: "{{ %QuestionnaireResponse.answers('mobile') }}"
+    - email: "{{ %QuestionnaireResponse.answers('email') }}"
+    - lastName: "{{ %QuestionnaireResponse.answers('last-name') }}"
+    - birthDate: "{{ %QuestionnaireResponse.answers('birth-date') }}"
+    - firstName: "{{ %QuestionnaireResponse.answers('first-name') }}"
+    - patientId: "{{ %QuestionnaireResponse.answers('patient-id') }}"
+    - middleName: "{{ %QuestionnaireResponse.answers('middle-name') }}"
+    - appleIdentifier: "{{ %Patient.identifier.where(system='https://appleid.apple.com').first() }}"
+
+  resourceType: Bundle
+  type: transaction
+  entry:
+    - request:
+        method: PUT
+        url: "/Patient/{{ %patientId }}"
+      resource:
+        resourceType: Patient
+        id: "{{ %patientId }}"
+        name:
+          - given:
+              - "{{ %firstName }}"
+              - "{{ %middleName }}"
+            family: "{{ %lastName }}"
+            use: official
+        gender: "{{ %gender }}"
+        telecom:
+          - "{% if %mobile.exists() and %mobile!='' %}":
+              value: "{{ %mobile }}"
+              system: phone
+          - "{% if %email.exists() and %email!='' %}":
+              value: "{{ %email }}"
+              system: email
+        birthDate: "{{ %birthDate }}"
+        identifier:
+          - "{% if %appleIdentifier.exists() %}":
+              system: "https://appleid.apple.com"
+              value: "{{ %appleIdentifier.value }}"
+          - "{% if %ssn.exists() and %ssn!='' %}":
+              system: "http://hl7.org/fhir/sid/us-ssn"
+              value: "{{ %ssn }}"
+        active: true

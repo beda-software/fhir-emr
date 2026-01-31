@@ -1,0 +1,67 @@
+resourceType: Questionnaire
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/place-referral
+meta:
+    profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+name: e-request
+title: eReferral
+status: active
+subjectType:
+    - Patient
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+  - name:
+      code: Author
+    type:
+      - Practitioner
+mapping:
+  - reference: Mapping/place-referral
+item:
+- linkId: patient-name
+  type: string
+  text: Patient
+  readOnly: true
+  initialExpression:
+    language: text/fhirpath
+    expression: "%Patient.name.first().given.first() + ' ' + %Patient.name.first().family"
+- item:
+      - text: Referring Physician
+        type: string
+        readOnly: true
+        linkId: referrer
+        initialExpression:
+          language: text/fhirpath
+          expression: "%Author.name.first().given.first() + ' ' + %Author.name.first().family"
+      - text: Type of Specialist
+        type: string
+        linkId: specialistType
+      - text: Reason for Referral
+        type: text
+        linkId: reasonForReferral
+      - text: Urgency Level
+        type: choice
+        linkId: urgency
+        answerValueSet: http://hl7.org/fhir/ValueSet/request-priority
+        preferredTerminologyServer: https://tx.dev.hl7.org.au/fhir/
+  text: Referral Details
+  type: group
+  linkId: referralDetails
+- linkId: practitiner-id
+  type: string
+  text: practitinerId
+  readOnly: true
+  hidden: true
+  initialExpression:
+    language: text/fhirpath
+    expression: "%Author.id"
+- linkId: patient-id
+  type: string
+  text: patientId
+  readOnly: true
+  hidden: true
+  initialExpression:
+    language: text/fhirpath
+    expression: "%Patient.id"

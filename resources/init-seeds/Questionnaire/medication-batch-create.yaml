@@ -1,0 +1,65 @@
+id: medication-batch-create
+resourceType: Questionnaire
+name: medication-batch-create
+title: medication-batch create
+status: active
+mapping:
+  - reference: urn:uuid:Mapping:medication-batch-create-extract
+launchContext:
+  - name:
+      code: CurrentMedicationKnowledge
+    type:
+      - MedicationKnowledge
+contained:
+  - resourceType: Bundle
+    id: CurrentMedicationKnowledgeBundle
+    type: transaction
+    entry:
+      - request:
+          method: GET
+          url: /MedicationKnowledge?_id={{%CurrentMedicationKnowledge.id}}
+sourceQueries:
+  - reference: "#CurrentMedicationKnowledgeBundle"
+item:
+  - text: Current MedicationKnowledge ID
+    type: string
+    linkId: current-medication-knowledge-id
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%CurrentMedicationKnowledgeBundle.entry[0].resource.entry.resource.id"
+  - text: Medication name
+    type: string
+    linkId: display
+    readOnly: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%CurrentMedicationKnowledgeBundle.entry[0].resource.entry.resource.code.coding.first().display"
+  - text: code
+    type: string
+    linkId: code
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%CurrentMedicationKnowledgeBundle.entry[0].resource.entry.resource.code.coding.first().code"
+  - text: system
+    type: string
+    linkId: system
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%CurrentMedicationKnowledgeBundle.entry[0].resource.entry.resource.code.coding.first().system"
+  - text: Items number
+    type: integer
+    linkId: items-number
+  - text: Batch number
+    type: string
+    linkId: batch-number
+  - text: Expiration date
+    type: date
+    linkId: expiration-date
+
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/medication-batch-create

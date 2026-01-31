@@ -1,8 +1,0 @@
-resourceType: Parameters
-parameter:
-- name: questionnaire
-  resource: !include healthcare-service-edit.yaml
-- name: questionnaire_response
-  resource: !include healthcare-service-edit-questionnaire-response.yaml
-- name: HealthcareService
-  resource: !include healthcareServiceEcg.yaml

@@ -1,0 +1,165 @@
+name: Group wizard vertical
+title: Group wizard vertical
+subjectType:
+  - Encounter
+  - Patient
+item:
+  - type: group
+    linkId: wizard
+    itemControl:
+      coding:
+        - code: wizard-vertical
+    item:
+      - item:
+          - text: How many days a week do you engage in physical activity?
+            type: integer
+            linkId: "q11"
+            required: true
+          - text: >-
+              On average, how many minutes do you engage in physical activity each
+              day?
+            type: integer
+            linkId: "q12"
+            required: true
+          - text: >-
+              What types of physical activities do you participate in? (Select all
+              that apply)
+            type: choice
+            linkId: "q13"
+            required: false
+            answerOption:
+              - value:
+                  string: Walking
+              - value:
+                  string: Running
+              - value:
+                  string: Cycling
+              - value:
+                  string: Swimming
+              - value:
+                  string: Weightlifting
+              - value:
+                  string: Other
+        text: Physical Activity
+        type: group
+        linkId: physical-activity
+      - item:
+          - text: How many servings of fruits and vegetables do you consume daily?
+            type: integer
+            linkId: "q21"
+            required: true
+          - text: How often do you eat fast food?
+            type: choice
+            linkId: "q22"
+            required: true
+            answerOption:
+              - value:
+                  string: Never
+              - value:
+                  string: Once a week
+              - value:
+                  string: Several times a week
+              - value:
+                  string: Daily
+          - text: >-
+              Do you follow any specific dietary restrictions? (e.g., vegetarian,
+              vegan, gluten-free)
+            type: string
+            linkId: "q23"
+            required: false
+        text: Dietary Habits
+        type: group
+        linkId: "dietary-habits"
+      - item:
+          - text: On average, how many hours of sleep do you get per night?
+            type: integer
+            linkId: "q31"
+            required: true
+          - text: Do you have trouble falling asleep or staying asleep?
+            type: choice
+            linkId: "q32"
+            required: true
+            answerOption:
+              - value:
+                  string: "Yes"
+              - value:
+                  string: "No"
+          - text: Do you use any sleep aids (e.g., medication, herbal supplements)?
+            type: choice
+            linkId: "q33"
+            required: false
+            answerOption:
+              - value:
+                  string: "Yes"
+              - value:
+                  string: "No"
+        text: Sleep Patterns
+        type: group
+        linkId: "sleep-patterns"
+      - item:
+          - text: Do you smoke tobacco or use nicotine products?
+            type: choice
+            linkId: "q41"
+            required: true
+            answerOption:
+              - value:
+                  string: "Yes"
+              - value:
+                  string: "No"
+          - text: How often do you consume alcoholic beverages?
+            type: choice
+            linkId: "q42"
+            required: true
+            answerOption:
+              - value:
+                  string: Never
+              - value:
+                  string: Occasionally
+              - value:
+                  string: Regularly
+          - text: Have you ever used recreational drugs?
+            type: choice
+            linkId: "q43"
+            required: false
+            answerOption:
+              - value:
+                  string: "Yes"
+              - value:
+                  string: "No"
+        text: Substance Use
+        type: group
+        linkId: "substance-use"
+      - linkId: conditional-step-1
+        text: Conditional Step 1
+        type: group
+        enableWhen:
+          - question: "q11"
+            operator: ">"
+            answer:
+              integer: 0
+        item:
+          - text: Conditional question 1
+            helpText: This is a conditional question that shown if you are engaged in physical activity
+            type: string
+            linkId: "conditional-question-1"
+            required: true
+      - linkId: conditional-step-2
+        text: Conditional Step 2
+        type: group
+        enableWhenExpression:
+          language: text/fhirpath
+          expression: "iif(%resource.repeat(item).where(linkId='q11').answer.valueInteger > 5, true, false)"
+        item:
+          - text: Conditional question 2
+            helpText: This is a conditional question that shown if you are strongly engaged in physical activity
+            type: string
+            linkId: "conditional-question-2"
+            required: true
+resourceType: Questionnaire
+status: active
+id: group-wizard-vertical
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+url: >-
+  https://aidbox.emr.beda.software/fhir/Questionnaire/group-wizard-vertical

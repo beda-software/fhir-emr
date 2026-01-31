@@ -818,10 +818,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@beda.software/fhir-react@^1.9.1":
-  version "1.9.1"
-  resolved "https://registry.yarnpkg.com/@beda.software/fhir-react/-/fhir-react-1.9.1.tgz#7bf77b8d402988e284e93c0a8eb3e1ae02b315c4"
-  integrity sha512-z0VI+1IG5TUNmS7bLM4yVv+kCdGSmND46wF3R9UPzNlf7iIiGFVn/uGxVeivjOshC8tkmbd1S3DR6itP3jhXUQ==
+"@beda.software/fhir-react@^1.10.0":
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@beda.software/fhir-react/-/fhir-react-1.10.0.tgz#e24d200db91496b274c1cbacbb8a48bc876dee89"
+  integrity sha512-mLw2DS0Od5JyvY+uEEeP/xHWPXmXLjvjV/O8x4PaW7VSA8FwXSv5/jT9OK05yGjThXALuWig+UdDPH9hSkviIA==
   dependencies:
     "@beda.software/remote-data" "^1.1.4"
     lodash "^4.17.21"
@@ -5075,11 +5075,6 @@ aggregate-error@^3.0.0:
     clean-stack "^2.0.0"
     indent-string "^4.0.0"
 
-aidbox-forms@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/aidbox-forms/-/aidbox-forms-0.0.5.tgz#8f6e62a75b40903eeceaa45c7339eaa3f5bba4a9"
-  integrity sha512-n96UKOQVff2Y/WPw3+n0S6O4jel3lGRpw7z1aBLn0mQv7EQxq2gDSIorpxNCywW/QZqFBLEyzZ0lZjcGvo4SKA==
-
 aidbox-react@^1.11.2:
   version "1.11.2"
   resolved "https://registry.yarnpkg.com/aidbox-react/-/aidbox-react-1.11.2.tgz#579ec35d67c85b7e8e014fdb99dca11dbd0aff49"
@@ -9195,6 +9190,11 @@ js-yaml@^3.13.1:
     argparse "^1.0.7"
     esprima "^4.0.0"
 
+jsbarcode@^3.11.5:
+  version "3.11.6"
+  resolved "https://registry.yarnpkg.com/jsbarcode/-/jsbarcode-3.11.6.tgz#96e8fbc3395476e162982a6064b98a09b5ea02c0"
+  integrity sha512-G5TKGyKY1zJo0ZQKFM1IIMfy0nF2rs92BLlCz+cU4/TazIc4ZH+X1GYeDRt7TKjrYqmPfTjwTBkU/QnQlsYiuA==
+
 jsdoc-type-pratt-parser@^4.0.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/jsdoc-type-pratt-parser/-/jsdoc-type-pratt-parser-4.1.0.tgz#ff6b4a3f339c34a6c188cbf50a16087858d22113"
@@ -11648,6 +11648,13 @@ react-is@^18.2.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.3.1.tgz#e83557dc12eae63a99e003a46388b1dcbb44db7e"
   integrity sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==
 
+react-jsbarcode@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-jsbarcode/-/react-jsbarcode-1.0.1.tgz#16f2c9df3fcd1bf7f0f73c37237fcf1ee425ed13"
+  integrity sha512-M6Z8M2y3/re4dE8FUhWUO/DWk4Mmo4CfOu34JnncYR0NHS8Q9kJQwzHCyEXJ8HnK2EwR5NWayG7n7bWhHXB2tA==
+  dependencies:
+    jsbarcode "^3.11.5"
+
 react-markdown@^9.0.1:
   version "9.0.1"
   resolved "https://registry.yarnpkg.com/react-markdown/-/react-markdown-9.0.1.tgz#c05ddbff67fd3b3f839f8c648e6fb35d022397d1"
@@ -12159,10 +12166,10 @@ scroll-into-view-if-needed@^3.1.0:
   dependencies:
     compute-scroll-into-view "^3.0.2"
 
-sdc-qrf@^1.0.0-beta.16:
-  version "1.0.0-beta.16"
-  resolved "https://registry.yarnpkg.com/sdc-qrf/-/sdc-qrf-1.0.0-beta.16.tgz#a42cd047ffbac393101507014882008efd789ae2"
-  integrity sha512-XDA6tqlmFuLAdFObfzHTfUAnFvpajgt3J7Ho8w7Egm6zMeeb3xk6DyHmBtgF323NG08HfTsKCFF5R8be95oNkQ==
+sdc-qrf@^1.0.0-beta.18:
+  version "1.0.0-beta.18"
+  resolved "https://registry.yarnpkg.com/sdc-qrf/-/sdc-qrf-1.0.0-beta.18.tgz#c6809e2e0aa6ec19a46fcfd8ce192442169b85cc"
+  integrity sha512-3nSFdROvgio1wH87N25Uiy+UaNPrXeTIH+y9BQA88+eTdUjIx2cjU8ggC1Q1KPtSyDOj2B5gUNpX3XQcof/KIg==
   dependencies:
     classnames "^2.5.1"
     fhirpath "^3.18.0"
@@ -13701,10 +13708,10 @@ yocto-queue@^1.0.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-1.0.0.tgz#7f816433fb2cbc511ec8bf7d263c3b58a1a3c251"
   integrity sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==
 
-yup@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/yup/-/yup-1.2.0.tgz#9e51af0c63bdfc9be0fdc6c10aa0710899d8aff6"
-  integrity sha512-PPqYKSAXjpRCgLgLKVGPA33v5c/WgEx3wi6NFjIiegz90zSwyMpvTFp/uGcVnnbx6to28pgnzp/q8ih3QRjLMQ==
+yup@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/yup/-/yup-1.7.0.tgz#5d2feeccc1725c39bfed6ec677cc0622527dafaf"
+  integrity sha512-VJce62dBd+JQvoc+fCVq+KZfPHr+hXaxCcVgotfwWvlR0Ja3ffYKaJBT8rptPOSKOGJDCUnW2C2JWpud7aRP6Q==
   dependencies:
     property-expr "^2.0.5"
     tiny-case "^1.0.3"

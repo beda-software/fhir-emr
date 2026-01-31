@@ -19,7 +19,7 @@ export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps)
     const { value, onChange, disabled, formItem, placeholder } = useFieldController<number>(fieldName, questionItem);
 
     return (
-        <Form.Item {...formItem} data-testid={linkId}>
+        <Form.Item {...formItem} data-testid={linkId} data-linkid={linkId}>
             <InputNumber
                 addonAfter={unit?.display}
                 style={inputStyle}
@@ -41,7 +41,7 @@ export function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps)
     const { value, onChange, disabled, formItem, placeholder } = useFieldController<number>(fieldName, questionItem);
 
     return (
-        <Form.Item {...formItem} data-testid={linkId}>
+        <Form.Item {...formItem} data-testid={linkId} data-linkid={linkId}>
             <InputNumber
                 addonAfter={unit?.display}
                 style={inputStyle}
@@ -61,7 +61,9 @@ export function QuestionQuantity(props: QuestionItemProps) {
     const { value, onChange, disabled, formItem, placeholder } = useFieldController<Quantity>(fieldName, questionItem);
 
     const [numericValue, setNumericValue] = useState<number | undefined>(value?.value);
-    const [selectedUnit, setSelectedUnit] = useState(unitOption?.[0]);
+    const [selectedUnit, setSelectedUnit] = useState(
+        value ? { code: value.code, display: value.unit, system: value.system } : unitOption?.[0],
+    );
 
     const onUnitChange = (unitDisplay: string) => {
         const unit = unitOption?.find((unit) => unit.display === unitDisplay);
@@ -87,7 +89,7 @@ export function QuestionQuantity(props: QuestionItemProps) {
     };
 
     return (
-        <Form.Item {...formItem} data-testid={linkId}>
+        <Form.Item {...formItem} data-testid={linkId} data-linkid={linkId}>
             <InputNumber
                 addonAfter={
                     unitOption && unitOption.length > 1 ? (

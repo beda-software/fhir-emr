@@ -1,0 +1,152 @@
+id: vitals
+name: vitals
+title: Vitals
+resourceType: Questionnaire
+status: active
+mapping:
+  - reference: urn:uuid:Mapping:vitals
+subjectType:
+  - Encounter
+  - Patient
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/vitals
+
+item:
+  - text: PatientId
+    type: string
+    linkId: patientId
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.id"
+  - text: PatientName
+    type: string
+    linkId: patientName
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.name.first().given.first() + ' ' + %Patient.name.first().family"
+  - linkId: height
+    type: quantity
+    text: Height
+    unitOption:
+      - code: cm
+        system: http://unitsofmeasure.org
+        display: cm
+  - linkId: weight
+    type: quantity
+    text: Weight
+    unitOption:
+      - code: kg
+        system: http://unitsofmeasure.org
+        display: kg
+  - linkId: temperature
+    type: quantity
+    text: Temperature
+    unitOption:
+      - code: Cel
+        system: http://unitsofmeasure.org
+        display: °C
+  - linkId: oxygen-saturation
+    type: quantity
+    text: Oxygen saturation
+    unitOption:
+      - code: "%"
+        system: http://unitsofmeasure.org
+        display: "%"
+  - linkId: pulse-rate
+    type: quantity
+    text: Pulse rate
+    unitOption:
+      - code: bpm
+        system: http://unitsofmeasure.org
+        display: bpm
+  - linkId: respiratory-rate
+    type: quantity
+    text: Respiratory Rate
+    unitOption:
+      - code: bpm
+        system: http://unitsofmeasure.org
+        display: bpm
+
+  - linkId: blood-pressure
+    type: group
+    item:
+      - linkId: blood-pressure-systolic-diastolic
+        type: group
+        itemControl:
+          coding:
+            - code: inline-choice
+        item:
+          - linkId: blood-pressure-systolic
+            type: quantity
+            text: BP systolic
+            unitOption:
+              - code: mmHg
+                system: http://unitsofmeasure.org
+                display: mmHg
+          - linkId: blood-pressure-diastolic
+            type: quantity
+            text: BP diastolic
+            unitOption:
+              - code: mmHg
+                system: http://unitsofmeasure.org
+                display: mmHg
+      - linkId: blood-pressure-positions
+        text: Positions
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: sitting
+              display: Sitting
+          - valueCoding:
+              code: lying
+              display: Lying
+          - valueCoding:
+              code: standing
+              display: Standing
+      - linkId: blood-pressure-arm
+        text: Arm
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: biceps-left
+              display: Biceps left
+          - valueCoding:
+              code: biceps-right
+              display: Biceps right
+
+  - linkId: bmi
+    text: BMI
+    type: decimal
+    required: true
+    readOnly: true
+    unit:
+      code: kg/m2
+      system: http://unitsofmeasure.org
+      display: kg/m2
+    calculatedExpression:
+      language: text/fhirpath
+      expression: >-
+        (
+          %QuestionnaireResponse.item.where(linkId='weight').answer.valueQuantity.value.toDecimal()
+          /
+          (
+            (%QuestionnaireResponse.item.where(linkId='height').answer.valueQuantity.value.toDecimal() / 100)
+            *
+            (%QuestionnaireResponse.item.where(linkId='height').answer.valueQuantity.value.toDecimal() / 100)
+          )
+        ).round(2)

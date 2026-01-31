@@ -11,6 +11,7 @@ export enum SearchBarColumnType {
     REFERENCE = 'reference',
     CHOICE = 'choice',
     SOLIDCHOICE = 'solidChoice',
+    SPLITSTRING = 'splitString',
 }
 
 export interface SearchBarProps {
@@ -72,13 +73,23 @@ export type SearchBarSolidChoiceColumn = SearchBarColumnBase & {
     defaultValue?: Coding;
 };
 
+export type SearchBarSplitStringColumn = SearchBarColumnBase & {
+    type: SearchBarColumnType.SPLITSTRING;
+    placeholder: string;
+    defaultValue?: string;
+    searchBehavior: 'AND' | 'OR';
+    separator?: string;
+};
+
 export type SearchBarColumn =
     | SearchBarStringColumn
     | SearchBarDateColumn
     | SearchBarSingleDateColumn
     | SearchBarReferenceColumn
     | SearchBarChoiceColumn
-    | SearchBarSolidChoiceColumn;
+    | SearchBarSolidChoiceColumn
+    | SearchBarSplitStringColumn;
+
 export function isStringColumn(column: SearchBarColumn): column is SearchBarStringColumn {
     return column.type === SearchBarColumnType.STRING;
 }
@@ -96,6 +107,9 @@ export function isChoiceColumn(column: SearchBarColumn): column is SearchBarChoi
 }
 export function isSolidChoiceColumn(column: SearchBarColumn): column is SearchBarSolidChoiceColumn {
     return column.type === SearchBarColumnType.SOLIDCHOICE;
+}
+export function isSplitStringColumn(column: SearchBarColumn): column is SearchBarSplitStringColumn {
+    return column.type === SearchBarColumnType.SPLITSTRING;
 }
 
 export type DateColumnFilterValue = [moment.Moment, moment.Moment];
@@ -128,13 +142,20 @@ export interface SolidChoiceTypeColumnFilterValue {
     value?: Coding[] | null;
 }
 
+export interface SplitStringTypeColumnFilterValue {
+    column: SearchBarSplitStringColumn;
+    value?: string;
+}
+
 export type ColumnFilterValue =
     | StringTypeColumnFilterValue
     | DateTypeColumnFilterValue
     | SingleDateTypeColumnFilterValue
     | ReferenceTypeColumnFilterValue
     | ChoiceTypeColumnFilterValue
-    | SolidChoiceTypeColumnFilterValue;
+    | SolidChoiceTypeColumnFilterValue
+    | SplitStringTypeColumnFilterValue;
+
 export function isStringColumnFilterValue(filterValue: ColumnFilterValue): filterValue is StringTypeColumnFilterValue {
     return isStringColumn(filterValue.column);
 }
@@ -158,6 +179,11 @@ export function isSolidChoiceColumnFilterValue(
     filterValue: ColumnFilterValue,
 ): filterValue is SolidChoiceTypeColumnFilterValue {
     return isSolidChoiceColumn(filterValue.column);
+}
+export function isSplitStringColumnFilterValue(
+    filterValue: ColumnFilterValue,
+): filterValue is SplitStringTypeColumnFilterValue {
+    return isSplitStringColumn(filterValue.column);
 }
 
 export interface SearchBarData {

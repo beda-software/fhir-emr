@@ -1,7 +1,0 @@
-resourceType: Practitioner
-id: test-practitioner
-name:
-  - use: official
-    given:
-      - Gregory
-    family: House

@@ -22,22 +22,22 @@ export const Default: Story = {
         const getQuestion = () => canvas.findAllByTestId('type');
 
         const questions: HTMLElement[] = await getQuestion();
-        expect(questions.length > 0).toBe(true);
+        await expect(questions.length > 0).toBe(true);
 
         // Choose an item in the list
         const checkbox1 = await findByTestId<HTMLInputElement>(questions[0]!, 'inline-choice__medication');
-        expect(checkbox1).not.toBeChecked();
+        await expect(checkbox1).not.toBeChecked();
 
         await userEvent.click(checkbox1);
-        expect(checkbox1).toBeChecked();
+        await expect(checkbox1).toBeChecked();
 
         // Choose another item in the list
         const checkbox2 = await findByTestId<HTMLInputElement>(questions[0]!, 'inline-choice__food');
-        expect(checkbox2).not.toBeChecked();
+        await expect(checkbox2).not.toBeChecked();
 
         await userEvent.click(checkbox2);
-        expect(checkbox1).not.toBeChecked();
-        expect(checkbox2).toBeChecked();
+        await expect(checkbox1).not.toBeChecked();
+        await expect(checkbox2).toBeChecked();
     },
 };
 
@@ -48,22 +48,22 @@ export const Multiple: Story = {
         const getQuestion = () => canvas.findAllByTestId('reaction');
 
         const questions: HTMLElement[] = await getQuestion();
-        expect(questions.length > 0).toBe(true);
+        await expect(questions.length > 0).toBe(true);
 
         // Choose an item in the list
         const checkbox1 = await findByTestId<HTMLInputElement>(questions[0]!, 'inline-choice__headache');
-        expect(checkbox1).not.toBeChecked();
+        await expect(checkbox1).not.toBeChecked();
 
         await userEvent.click(checkbox1);
-        expect(checkbox1).toBeChecked();
+        await expect(checkbox1).toBeChecked();
 
         // Choose another item in the list
         const checkbox2 = await findByTestId<HTMLInputElement>(questions[0]!, 'inline-choice__nausea');
-        expect(checkbox2).not.toBeChecked();
+        await expect(checkbox2).not.toBeChecked();
 
         await userEvent.click(checkbox2);
-        expect(checkbox1).toBeChecked();
-        expect(checkbox2).toBeChecked();
+        await expect(checkbox1).toBeChecked();
+        await expect(checkbox2).toBeChecked();
     },
 };
 
@@ -87,6 +87,19 @@ export const Columns: Story = {
             questionItem={{
                 ...questionItemMultiple,
                 colsNumber: 3,
+            }}
+            context={{} as ItemContext}
+        />
+    ),
+};
+
+export const Disabled: Story = {
+    render: () => (
+        <InlineChoice
+            parentPath={[]}
+            questionItem={{
+                ...questionItemDefault,
+                readOnly: true,
             }}
             context={{} as ItemContext}
         />

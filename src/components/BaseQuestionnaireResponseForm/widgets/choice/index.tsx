@@ -19,10 +19,11 @@ interface ChoiceQuestionSelectProps {
     repeats?: boolean;
     placeholder?: string;
     choiceColumn?: FCEQuestionnaireItemChoiceColumn[];
+    disabled?: boolean;
 }
 
 export function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
-    const { value, onChange, options, repeats = false, placeholder = t`Select...`, choiceColumn } = props;
+    const { value, onChange, options, repeats = false, placeholder = t`Select...`, choiceColumn, disabled } = props;
 
     return (
         <>
@@ -38,6 +39,7 @@ export function ChoiceQuestionSelect(props: ChoiceQuestionSelectProps) {
                 getOptionLabel={(o) => (getDisplay(o.value, choiceColumn) as string) || ''}
                 classNamePrefix="react-select"
                 placeholder={placeholder}
+                isDisabled={disabled}
             />
         </>
     );
@@ -52,11 +54,12 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
         formItem,
         onSelect,
         placeholder = t`Select...`,
+        disabled,
     } = useFieldController<FormAnswerItems[]>(fieldName, questionItem);
 
     if (answerValueSet) {
         return (
-            <Form.Item {...formItem} data-testid="question-choice">
+            <Form.Item {...formItem} data-testid="question-choice" data-linkid={linkId}>
                 <ChoiceQuestionValueSet
                     answerValueSet={answerValueSet}
                     value={value ?? []}
@@ -65,13 +68,14 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
                     placeholder={placeholder}
                     choiceColumn={choiceColumn}
                     preferredTerminologyServer={questionItem.preferredTerminologyServer}
+                    disabled={disabled}
                 />
             </Form.Item>
         );
     }
 
     return (
-        <Form.Item {...formItem} data-testid="question-choice">
+        <Form.Item {...formItem} data-testid="question-choice" data-linkid={linkId}>
             <ChoiceQuestionSelect
                 options={answerOption ?? []}
                 value={value ?? []}
@@ -79,6 +83,7 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
                 repeats={repeats}
                 placeholder={placeholder}
                 choiceColumn={choiceColumn}
+                disabled={disabled}
             />
         </Form.Item>
     );
@@ -92,6 +97,7 @@ interface ChoiceQuestionValueSetProps {
     placeholder?: string;
     choiceColumn?: FCEQuestionnaireItemChoiceColumn[];
     preferredTerminologyServer?: string;
+    disabled?: boolean;
 }
 
 export function ChoiceQuestionValueSet(props: ChoiceQuestionValueSetProps) {
@@ -103,6 +109,7 @@ export function ChoiceQuestionValueSet(props: ChoiceQuestionValueSetProps) {
         placeholder,
         choiceColumn,
         preferredTerminologyServer,
+        disabled,
     } = props;
     const expand = useContext(ValueSetExpandProvider);
 
@@ -127,6 +134,7 @@ export function ChoiceQuestionValueSet(props: ChoiceQuestionValueSetProps) {
             isMulti={repeats}
             getOptionLabel={(o) => (getDisplay(o.value, choiceColumn) as string) || ''}
             placeholder={placeholder}
+            isDisabled={disabled}
         />
     );
 }

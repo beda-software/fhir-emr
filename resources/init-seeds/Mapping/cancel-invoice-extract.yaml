@@ -1,0 +1,15 @@
+resourceType: Mapping
+id: cancel-invoice-extract
+type: FHIRPath
+body:
+  "{% assign %}":
+    - currentInvoiceId: "{{ %QuestionnaireResponse.answers('current-invoice-id') }}"
+
+  resourceType: Bundle
+  type: transaction
+  entry:
+    - request:
+        method: PATCH
+        url: "/Invoice/{{ %currentInvoiceId }}"
+      resource:
+        status: cancelled

@@ -17,7 +17,7 @@
         "build-storybook": "storybook build",
         "typecheck": "tsc",
         "chromatic": "chromatic --only-changed",
-        "prepare": "yarn compile && yarn build:lib"
+        "prepare": "husky install && yarn compile && yarn build:lib"
     },
     "workspaces": [
         "contrib/*"
@@ -26,7 +26,7 @@
         "@ant-design/colors": "^7.0.0",
         "@ant-design/icons": "^5.1.4",
         "@beda.software/emr-config": "*",
-        "@beda.software/fhir-react": "^1.9.1",
+        "@beda.software/fhir-react": "^1.10.0",
         "@beda.software/remote-data": "^1.1.4",
         "@fullcalendar/core": "^6.1.15",
         "@fullcalendar/daygrid": "^6.1.8",
@@ -39,8 +39,8 @@
         "@lingui/react": "^4.3.0",
         "@mdxeditor/editor": "^3.11.0",
         "@sentry/browser": "^7.57.0",
-        "antd": "5.24.7",
         "aidbox-react": "^1.11.2",
+        "antd": "5.24.7",
         "classnames": "^2.3.2",
         "date-fns": "2.30.0",
         "fhir": "^4.10.3",
@@ -58,15 +58,16 @@
         "react-dnd-html5-backend": "^16.0.1",
         "react-dom": "^18.2.0",
         "react-hook-form": "^7.53.2",
+        "react-jsbarcode": "1.0.1",
         "react-markdown": "^9.0.1",
         "react-phone-input-2": "^2.15.1",
         "react-router-dom": "^6.14.1",
         "react-select": "^5.7.3",
         "recharts": "^2.12.0",
         "sass": "^1.63.6",
-        "sdc-qrf": "^1.0.0-beta.17",
+        "sdc-qrf": "^1.0.0-beta.18",
         "styled-components": "^6.1.11",
-        "yup": "^1.2.0"
+        "yup": "^1.7.0"
     },
     "peerDependencies": {
         "rc-picker": "^3.8.2"
@@ -101,7 +102,6 @@
         "@typescript-eslint/eslint-plugin": "^5.59.0",
         "@typescript-eslint/parser": "^5.59.0",
         "@vitejs/plugin-react": "^4.0.0",
-        "aidbox-forms": "^0.0.5",
         "babel-plugin-macros": "^3.1.0",
         "babel-plugin-styled-components": "^2.1.4",
         "chromatic": "^6.19.9",

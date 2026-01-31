@@ -14,7 +14,7 @@ import {
 } from '@beda.software/fhir-react';
 import { failure, isFailure, isSuccess, RemoteData, RemoteDataResult, success } from '@beda.software/remote-data';
 
-import { getFHIRResources } from 'src/services';
+import { getFHIRResources } from 'src/services/fhir';
 import { formatHumanDateTime } from 'src/utils';
 
 import {
@@ -22,50 +22,71 @@ import {
     QuestionnaireResponseDraftService,
 } from './questionnaire-response-form-data';
 
-interface QuestionnaireResponseDraftProps {
+interface BaseQuestionnaireResponseDraftProps {
     autoSave?: boolean;
-    qrDraftServiceType?: QuestionnaireResponseDraftService;
-
-    subject: Resource | Reference | string;
-    questionnaireId: string;
-    questionnaireResponse?: WithId<QuestionnaireResponse>;
+    questionnaireResponse?: Partial<QuestionnaireResponse>;
+    qrDraftServiceType: QuestionnaireResponseDraftService;
 }
+
+interface QuestionnaireResponseDraftServerProps extends BaseQuestionnaireResponseDraftProps {
+    qrDraftServiceType: 'server';
+}
+
+interface QuestionnaireResponseDraftLocalProps extends BaseQuestionnaireResponseDraftProps {
+    qrDraftServiceType: 'local';
+    questionnaireId: string;
+    subject: Resource | Reference | string;
+}
+
+type QuestionnaireResponseDraftProps = QuestionnaireResponseDraftServerProps | QuestionnaireResponseDraftLocalProps;
 
 interface QuestionnaireResponseDraftResponse {
     deleteDraft: () => Promise<void>;
-    response: RemoteData<WithId<QuestionnaireResponse> | undefined>;
+    response: RemoteData<Partial<QuestionnaireResponse> | undefined>;
     draftInfoMessage?: string;
     updateDraft: (questionnaireResponse: QuestionnaireResponse) => Promise<void>;
+    saveDraft: (questionnaireResponse: QuestionnaireResponse) => Promise<RemoteDataResult<QuestionnaireResponse>>;
 }
 
 export const useQuestionnaireResponseDraft = (
     props: QuestionnaireResponseDraftProps,
 ): QuestionnaireResponseDraftResponse => {
-    const { autoSave = false, qrDraftServiceType = 'local', subject, questionnaireId, questionnaireResponse } = props;
+    const { autoSave = false, qrDraftServiceType = 'local', questionnaireResponse } = props;
 
     const [draftInfoMessage, setDraftInfoMessage] = useState<string | undefined>();
     const draftKeyRef = useRef<string | undefined>();
 
-    const [response, manager] = useService<WithId<QuestionnaireResponse> | undefined>(async () => {
-        const questionnaireRD = await getFHIRResources<Questionnaire>('Questionnaire', {
-            id: questionnaireId,
-            _elements: ['id', 'meta'].join(','),
-        });
+    const [response, manager] = useService<Partial<QuestionnaireResponse> | undefined>(async () => {
+        if (qrDraftServiceType === 'server' && typeof questionnaireResponse !== 'undefined') {
+            return success(questionnaireResponse);
+        }
 
-        if (isFailure(questionnaireRD)) {
+        const questionnaireRD =
+            props.qrDraftServiceType === 'local'
+                ? await getFHIRResources<Questionnaire>('Questionnaire', {
+                      id: props.questionnaireId,
+                      _elements: ['id', 'meta'].join(','),
+                  })
+                : undefined;
+
+        if (questionnaireRD && isFailure(questionnaireRD)) {
             return failure(t`Questionnaire not found`);
         }
 
-        const questionnaire = extractBundleResources(questionnaireRD.data).Questionnaire[0];
+        const questionnaire =
+            questionnaireRD && isSuccess(questionnaireRD)
+                ? extractBundleResources(questionnaireRD.data).Questionnaire[0]
+                : undefined;
 
         draftKeyRef.current =
-            qrDraftServiceType === 'server'
+            props.qrDraftServiceType === 'server'
                 ? makeServerDraftKey(questionnaireResponse?.id)
                 : makeLocalStorageDraftVersionedKey({
-                      subject,
+                      subject: props.subject,
                       questionnaire,
                       questionnaireResponse,
                   });
+
         const draftQRRD = await loadQuestionnaireResponseDraft(draftKeyRef.current, qrDraftServiceType);
 
         if (isFailure(draftQRRD)) {
@@ -82,7 +103,7 @@ export const useQuestionnaireResponseDraft = (
         );
 
         return success(resultQR);
-    }, [questionnaireId]);
+    }, [props.qrDraftServiceType]);
 
     const saveDraft = useCallback(
         async (questionnaireResponse: QuestionnaireResponse): Promise<RemoteDataResult<QuestionnaireResponse>> => {
@@ -159,6 +180,7 @@ export const useQuestionnaireResponseDraft = (
         response,
         draftInfoMessage,
         updateDraft,
+        saveDraft,
     };
 };
 
@@ -180,11 +202,11 @@ export function makeReference(resource: Resource | Reference | string): Referenc
 
 export function makeDraftKeyPrefix(props: {
     draftKeySubject?: Resource | Reference | string;
-    questionnaireResponse?: WithId<QuestionnaireResponse>;
+    questionnaireResponse?: Partial<QuestionnaireResponse>;
 }) {
     const { draftKeySubject, questionnaireResponse } = props;
 
-    if (questionnaireResponse) {
+    if (questionnaireResponse?.id) {
         return `QuestionnaireResponse/${questionnaireResponse.id}`;
     }
 
@@ -200,7 +222,7 @@ export function makeLocalStorageDraftVersionedKey(props: {
     prefix?: string;
     subject?: Resource | Reference | string;
     questionnaire?: WithId<Questionnaire>;
-    questionnaireResponse?: WithId<QuestionnaireResponse>;
+    questionnaireResponse?: Partial<QuestionnaireResponse>;
 }) {
     const { prefix = 'draft', subject, questionnaire, questionnaireResponse } = props;
 

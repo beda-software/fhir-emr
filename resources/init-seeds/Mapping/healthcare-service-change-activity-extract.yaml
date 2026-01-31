@@ -1,0 +1,16 @@
+resourceType: Mapping
+id: healthcare-service-change-activity-extract
+type: FHIRPath
+body:
+  "{% assign %}":
+    - healthcareServiceId: "{{ %QuestionnaireResponse.answers('healthcareServiceId') }}"
+    - activity: "{{ %QuestionnaireResponse.answers('activity') }}"
+
+  resourceType: Bundle
+  type: transaction
+  entry:
+    - request:
+        method: PATCH
+        url: "/HealthcareService/{{ %healthcareServiceId }}"
+      resource:
+        active: "{{ iif(%activity, false, true) }}"

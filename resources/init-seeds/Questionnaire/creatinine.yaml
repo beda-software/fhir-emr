@@ -1,0 +1,73 @@
+id: creatinine-test
+resourceType: Questionnaire
+name: creatinine-test
+title: Creatinine test
+status: active
+subjectType:
+  - Patient
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+  - name:
+      code: Author
+    type:
+      - PractitionerRole
+      - Practitioner
+      - Patient
+      - Organization
+mapping:
+  - reference: urn:uuid:Mapping:creatinine-extract
+item:
+  - text: PatientId
+    type: string
+    linkId: patientId
+    hidden: true
+    required: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.id"
+  - text: PatientName
+    type: string
+    linkId: patientName
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.name.first().given.first() + ' ' + %Patient.name.first().family"
+  - text: Laboratory
+    linkId: laboratory
+    type: choice
+    answerOption:
+      - valueCoding:
+          code: "austinpathology"
+          display: "Austinpathology"
+      - valueCoding:
+          code: "mayo"
+          display: "Mayo Clinic"
+      - valueCoding:
+          code: "medline"
+          display: "Medline"
+  - type: string
+    linkId: order-number
+    text: "Order #"
+  - type: decimal
+    linkId: creatinine-level
+    required: true
+    text: Serum creatinine level
+    unit:
+      code: "mg/dL"
+      system: http://unitsofmeasure.org
+      display: "mg/dL"
+  - text: Collected date
+    type: dateTime
+    linkId: dateTime
+    required: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "now()"
+
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/creatinine

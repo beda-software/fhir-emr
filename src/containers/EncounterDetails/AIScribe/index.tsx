@@ -5,7 +5,6 @@ import { Communication, Questionnaire } from 'fhir/r4b';
 import { useState } from 'react';
 // eslint-disable-next-line
 import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder';
-import config from '@beda.software/emr-config';
 import { RenderRemoteData, extractBundleResources, formatError, useService } from '@beda.software/fhir-react';
 import {
     isSuccess,
@@ -23,8 +22,9 @@ import {
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { Spinner } from 'src/components/Spinner';
 import { Text } from 'src/components/Typography';
+import { aiService } from 'src/services/ai.ts';
 import { getToken } from 'src/services/auth';
-import { saveFHIRResource, service, getFHIRResources } from 'src/services/fhir';
+import { saveFHIRResource, getFHIRResources } from 'src/services/fhir';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 
 import { S } from './AIScribe.styles';
@@ -60,9 +60,8 @@ function AudioRecorderButton(props: FillWithAudioProps) {
         const audioFile = new File([blob], 'voice.webm', { type: blob.type });
         const formData = new FormData();
         formData.append('file', audioFile);
-        const response = await service<{ text: string }>({
+        const response = await aiService<{ text: string }>({
             method: 'POST',
-            baseURL: config.aiAssistantServiceUrl ?? undefined,
             url: '/transcribe',
             data: formData,
             headers: { Authorization: `Bearer ${getToken()}`, 'Content-Type': 'multipart' },
@@ -210,7 +209,7 @@ function RecordedNotes({ hideControls, communication, reload, reloadDocuments }:
                         <>
                             <Extract
                                 communication={communication}
-                                reloadDocumnents={reloadDocuments}
+                                reloadDocuments={reloadDocuments}
                                 updateExtractLoading={setIsExtractLoading}
                             />
                             {!isExtractLoading ? (
@@ -230,7 +229,7 @@ function RecordedNotes({ hideControls, communication, reload, reloadDocuments }:
 
 interface ExtractProps {
     communication: Communication;
-    reloadDocumnents: () => void;
+    reloadDocuments: () => void;
     updateExtractLoading: (v: boolean) => void;
 }
 
@@ -251,17 +250,16 @@ function Extract(props: ExtractProps) {
         ),
     );
 
-    const [extractionRD, setExtarction] = useState<RemoteData<unknown>>(notAsked);
+    const [extractionRD, setExtraction] = useState<RemoteData<unknown>>(notAsked);
 
     async function requestExtract() {
         updateExtractLoading(true);
-        setExtarction(loading);
+        setExtraction(loading);
         const result = sequenceArray(
             await Promise.all(
                 selectedQuestionnaires.map(async (qId) => {
-                    return service({
+                    return aiService({
                         method: 'POST',
-                        baseURL: config.aiAssistantServiceUrl ?? undefined,
                         url: '/extract',
                         data: {
                             text,
@@ -270,16 +268,19 @@ function Extract(props: ExtractProps) {
                             questionnaire: qId,
                             source: { reference: `Communication/${communication.id}` },
                         },
-                        headers: { Authorization: `Bearer ${getToken()}`, 'Content-Type': 'multipart' },
+                        headers: { Authorization: `Bearer ${getToken()}` },
                     });
                 }),
             ),
         );
         if (isSuccess(result)) {
             notification.success({ message: t`Documents have been successfully extracted` });
-            props.reloadDocumnents();
+            props.reloadDocuments();
         }
-        setExtarction(result);
+        if (isFailure(result)) {
+            notification.error({ message: formatError(result.error[0]) });
+        }
+        setExtraction(result);
         updateExtractLoading(false);
     }
 

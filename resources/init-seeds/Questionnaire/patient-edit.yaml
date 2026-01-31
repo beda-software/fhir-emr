@@ -1,0 +1,86 @@
+id: patient-edit
+resourceType: Questionnaire
+name: edit-patient
+title: Edit patient
+status: active
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+mapping:
+  - reference: urn:uuid:Mapping:patient-edit
+item:
+  - linkId: patient-id
+    type: string
+    text: patientId
+    readOnly: true
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.id"
+  - linkId: last-name
+    type: string
+    text: Last name
+    required: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.name.family"
+  - linkId: first-name
+    type: string
+    text: First name
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.name.given[0]"
+  - linkId: middle-name
+    type: string
+    text: Middle name
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.name.given[1]"
+  - linkId: birth-date
+    type: date
+    text: Birth date
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.birthDate"
+  - linkId: gender
+    type: choice
+    text: Gender
+    answerOption:
+      - valueCoding:
+          code: male
+          system: http://hl7.org/fhir/administrative-gender
+          display: Male
+      - valueCoding:
+          code: female
+          system: http://hl7.org/fhir/administrative-gender
+          display: Female
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Questionnaire.repeat(item).where(linkId='gender').answerOption.valueCoding.where(code=%Patient.gender)"
+  - linkId: ssn
+    type: string
+    text: SSN
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.identifier.where(system='http://hl7.org/fhir/sid/us-ssn').value"
+  - linkId: mobile
+    type: string
+    text: Phone number
+    itemControl:
+      coding:
+        - code: phoneWidget
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.telecom.where(system='phone').value"
+  - linkId: email
+    type: string
+    text: Email
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.telecom.where(system='email').value"
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/patient-edit

@@ -1,7 +1,7 @@
-import { SorterResult } from 'antd/lib/table/interface';
+import type { SorterResult } from 'antd/es/table/interface';
 import { Bundle, Resource } from 'fhir/r4b';
+import { compact, uniq } from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { SearchParams, usePager } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess } from '@beda.software/remote-data';
@@ -19,15 +19,11 @@ export function useResourceListPage<R extends Resource>(
     extractChildrenResources: ((resource: R, bundle: Bundle) => R[]) | undefined,
     filterValues: ColumnFilterValue[],
     defaultSearchParams: SearchParams,
+    uniqueOrderSortSearchParam: string | null = '-_lastUpdated',
 ) {
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
     const debouncedFilterValues = useDebounce(filterValues, 300);
-
-    const navigate = useNavigate();
-    const goBack = useCallback(() => {
-        navigate(-1);
-    }, [navigate]);
 
     const searchBarSearchParams = {
         ...Object.fromEntries(
@@ -37,10 +33,12 @@ export function useResourceListPage<R extends Resource>(
             ]),
         ),
     };
+
+    const _sort = getSortSearchParam(defaultSearchParams, uniqueOrderSortSearchParam);
     const searchParams = {
         ...defaultSearchParams,
         ...searchBarSearchParams,
-        _sort: defaultSearchParams._sort ? `${defaultSearchParams._sort},-_lastUpdated` : '-_lastUpdated',
+        _sort,
     };
 
     const defaultPageSize = defaultSearchParams._count;
@@ -121,7 +119,6 @@ export function useResourceListPage<R extends Resource>(
         setSelectedRowKeys,
         selectedResourcesBundle,
         reload,
-        goBack,
     };
 }
 
@@ -166,4 +163,17 @@ export function useTableSorter(sorters: SorterColumn[], defaultSearchParams?: Se
     }, [currentSorter, sorters, defaultSearchParams]);
 
     return { sortSearchParam, setCurrentSorter, currentSorter };
+}
+
+export function getSortSearchParam(
+    defaultSearchParams: SearchParams,
+    uniqueOrderSortSearchParam: string | null = '-_lastUpdated',
+) {
+    const rawSortSearchParamArray = [
+        defaultSearchParams._sort?.toString().split(','),
+        uniqueOrderSortSearchParam,
+    ].flat();
+    const _sort = uniq(compact(rawSortSearchParamArray)).join(',');
+
+    return _sort || undefined;
 }

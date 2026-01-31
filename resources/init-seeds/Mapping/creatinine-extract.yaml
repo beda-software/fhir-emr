@@ -1,0 +1,90 @@
+resourceType: Mapping
+id: creatinine-extract
+type: FHIRPath
+body:
+  "{% assign %}":
+    - qrId: "{{ %QuestionnaireResponse.id }}"
+    - qrVersion: "{{ %QuestionnaireResponse.meta.versionId }}"
+    - qrLastUpdated: "{{ iif(%QuestionnaireResponse.meta.lastUpdated.exists(), %QuestionnaireResponse.meta.lastUpdated, %QuestionnaireResponse.answers('dateTime')) }}"
+    - patientId: "{{ %QuestionnaireResponse.answers('patientId') }}"
+    - patientName: "{{ %QuestionnaireResponse.answers('patientName') }}"
+    - dateTime: "{{ %QuestionnaireResponse.answers('dateTime') }}"
+    - creatinine: "{{ %QuestionnaireResponse.answers('creatinine-level') }}"
+    - orderNumber: "{{ %QuestionnaireResponse.answers('order-number') }}"
+    - laboratory: "{{ %QuestionnaireResponse.answers('laboratory') }}"
+    - author: "{{ %Author }}"
+
+  resourceType: Bundle
+  type: transaction
+  entry:
+    - request:
+        method: POST
+        url: /Observation
+      fullUrl: "{{ 'urn:uuid:observation-id' }}"
+      resource:
+        resourceType: Observation
+        status: final
+        category:
+          - coding:
+              - system: "http://terminology.hl7.org/CodeSystem/observation-category"
+                code: "laboratory"
+        code:
+          coding:
+            - system: "http://loinc.org"
+              code: "2160-0"
+              display: "Creatinine [Mass/volume] in Serum or Plasma"
+        subject:
+          reference: "Patient/{{ %patientId }}"
+          display: "{{ %patientName }}"
+        effectiveDateTime: "{{ %dateTime }}"
+        valueQuantity:
+          value: "{{ %creatinine }}"
+          unit: "mg/dL"
+          system: "http://unitsofmeasure.org"
+          code: "mg/dL"
+
+        "{% merge %}":
+          - "{% if %orderNumber.exists() and %orderNumber != '' %}":
+              identifier:
+                - system: "http://beda.software/lab-order-number"
+                  value: "{{ %orderNumber }}"
+
+          - "{% if %laboratory.exists() %}":
+              performer:
+                - display: "{{ %laboratory.display }}"
+                  "{% merge %}":
+                    - "{% if %laboratory.system.exists() or %laboratory.code.exists() %}":
+                        identifier:
+                          system: "{{ iif(%laboratory.system.exists(), %laboratory.system, 'http://beda.software/lab-code') }}"
+                          value: "{{ %laboratory.code }}"
+
+    - request:
+        url: /Provenance
+        method: POST
+      resource:
+        resourceType: Provenance
+        target:
+          - uri: "{{ 'urn:uuid:observation-id' }}"
+        recorded: "{{ iif(%qrLastUpdated.exists(), %qrLastUpdated, now()) }}"
+        activity:
+          coding:
+            - system: "http://terminology.hl7.org/CodeSystem/v3-DataOperation"
+              code: "CREATE"
+              display: "create"
+
+        "{% merge %}":
+          - "{% if %author.exists() %}":
+              agent:
+                - who:
+                    reference: "{{ %author.resourceType }}/{{ %author.id }}"
+                    "{% merge %}":
+                      - "{% if %author.resourceType = 'Organization' and %author.name.exists() %}":
+                          display: "{{ %author.name }}"
+                      - "{% if %author.resourceType != 'Organization' and %author.name.first().given.first().exists() and %author.name.first().family.exists() %}":
+                          display: "{{ %author.name.first().given.first() + ' ' + %author.name.first().family }}"
+
+          - "{% if %qrId.exists() %}":
+              entity:
+                - role: source
+                  what:
+                    uri: "QuestionnaireResponse/{{ %qrId }}{{ iif(%qrVersion.exists(), '/_history/' + %qrVersion, '') }}"

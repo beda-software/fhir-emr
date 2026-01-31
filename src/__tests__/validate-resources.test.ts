@@ -13,7 +13,7 @@ describe('Validate all questionnaires', () => {
         await loginAdminUser();
     });
 
-    const filenames = readdirSync('resources/seeds/Questionnaire').map((filename) => parsePath(filename).name);
+    const filenames = readdirSync('resources/init-seeds/Questionnaire').map((filename) => parsePath(filename).name);
 
     test.each(filenames)('Questionnaire %s is valid', async (questionnaireId) => {
         const questionnaire = ensure(

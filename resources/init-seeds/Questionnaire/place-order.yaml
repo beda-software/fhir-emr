@@ -1,0 +1,155 @@
+resourceType: Questionnaire
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/place-order
+meta:
+    profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+name: e-request
+title: Laboratory procedure eRequest
+status: active
+subjectType:
+    - Encounter
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+  - name:
+      code: Author
+    type:
+      - Practitioner
+  - name:
+      code: Encounter
+    type:
+      - Encounter
+mapping:
+  - reference: Mapping/place-order
+sourceQueries:
+  - reference: "#SR"
+contained:
+  - resourceType: Bundle
+    id: SR
+    type: batch
+    entry:
+    - request:
+        method: GET
+        url: /ServiceRequest
+item:
+- linkId: practitioner-name
+  type: string
+  text: Requester
+  readOnly: true
+  initialExpression:
+    language: text/fhirpath
+    expression: "%Author.name.first().given.first() + ' ' + %Author.name.first().family"
+- linkId: patient-name
+  type: string
+  text: Patient
+  readOnly: true
+  initialExpression:
+    language: text/fhirpath
+    expression: "%Patient.name.first().given.first() + ' ' + %Patient.name.first().family"
+- linkId: type
+  text: "Type of the order"
+  required: true
+  type: choice
+  answerOption:
+  - value:
+      string: 'Pathology'
+  - value:
+      string: 'Radiology'
+- linkId: assigned-organization-pathology
+  enableWhen:
+  - operator: '='
+    question: type
+    answer:
+      string: 'Pathology'
+  text: Assigned organization
+  type: reference
+  referenceResource:
+    - Organization
+  required: true
+  answerExpression:
+    language: application/x-fhir-query
+    expression: "Organization?type=lab"
+  choiceColumn:
+    - forDisplay: true
+      path: name
+- linkId: assigned-organization-radiology
+  enableWhen:
+  - operator: '='
+    question: type
+    answer:
+      string: 'Radiology'
+  text: Assigned organization
+  type: reference
+  referenceResource:
+    - Organization
+  required: true
+  answerExpression:
+    language: application/x-fhir-query
+    expression: "Organization?type=image"
+  choiceColumn:
+    - forDisplay: true
+      path: name
+- linkId: test-code-pathology
+  enableWhen:
+  - operator: '='
+    question: type
+    answer:
+      string: 'Pathology'
+  text: Test
+  required: true
+  type: choice
+  answerValueSet: https://www.rcpa.edu.au/fhir/ValueSet/spia-requesting-refset-3
+  preferredTerminologyServer: https://tx.dev.hl7.org.au/fhir/
+- linkId: test-code-radiology
+  enableWhen:
+  - operator: '='
+    question: type
+    answer:
+      string: 'Radiology'
+  text: Test
+  required: true
+  type: choice
+  answerValueSet: https://ranzcr.com/fhir/ValueSet/radiology-referral
+  preferredTerminologyServer: https://tx.dev.hl7.org.au/fhir/
+- linkId: priority
+  required: true
+  text: Priority
+  type: choice
+  answerValueSet: http://hl7.org/fhir/ValueSet/request-priority
+  preferredTerminologyServer: https://tx.dev.hl7.org.au/fhir/
+- linkId: patient-id
+  type: string
+  text: patientId
+  readOnly: true
+  hidden: true
+  initialExpression:
+    language: text/fhirpath
+    expression: "%Patient.id"
+- linkId: encounter-id
+  type: string
+  text: encounterId
+  readOnly: true
+  hidden: true
+  initialExpression:
+    language: text/fhirpath
+    expression: "%Encounter.id"
+- linkId: practitiner-id
+  type: string
+  text: practitinerId
+  readOnly: true
+  hidden: true
+  initialExpression:
+    language: text/fhirpath
+    expression: "%Author.id"
+- linkId: barcode
+  text: Barcode
+  readOnly: true
+  type: string
+  itemControl:
+    coding:
+    - code: barcode
+  initialExpression:
+    language: text/fhirpath
+    expression: "'BEDA0109-' &  (%SR.entry.resource.total+1).select('00000'&toString()).toChars().skip(count()-6).join()"

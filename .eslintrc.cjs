@@ -44,6 +44,7 @@ module.exports = {
         '@typescript-eslint/no-non-null-assertion': 'off',
         '@typescript-eslint/ban-ts-comment': 'off',
         'string-to-lingui/t-call-in-function': 2,
+        'curly': ['error', 'all'],
         'import/no-unresolved': [
             2,
             {

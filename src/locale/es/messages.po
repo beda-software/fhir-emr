@@ -13,49 +13,209 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#. js-lingui-explicit-id
+#: src/containers/QuestionnaireList/index.tsx:22
+#~ msgid "msg.QuestionnaireName"
+#~ msgstr "Nombre del cuestionario"
+
 #: src/uberComponents/ResourceListPage/BatchActions.tsx:57
 msgid "{0, plural, one {Selected # item} other {Selected # items}}"
+msgstr ""
+
+#: src/components/QuestionnairesWizard/hooks.tsx:100
+msgid "{0} was not submitted"
+msgstr "{0} no fue enviado"
+
+#: src/utils/yup-locale.ts:8
+msgid "{path} cannot be null"
+msgstr ""
+
+#: src/utils/yup-locale.ts:63
+msgid "{path} field has unspecified keys: {unknown}"
+msgstr ""
+
+#: src/utils/yup-locale.ts:60
+msgid "{path} field must be {value}"
+msgstr ""
+
+#: src/utils/yup-locale.ts:57
+msgid "{path} field must be at earlier than {max}"
+msgstr ""
+
+#: src/utils/yup-locale.ts:56
+msgid "{path} field must be later than {min}"
+msgstr ""
+
+#: src/utils/yup-locale.ts:67
+msgid "{path} field must have at least {min} items"
+msgstr ""
+
+#: src/utils/yup-locale.ts:68
+msgid "{path} field must have less than or equal to {max} items"
+msgstr ""
+
+#: src/utils/yup-locale.ts:6
+msgid "{path} is a required field"
+msgstr ""
+
+#: src/utils/yup-locale.ts:5
+msgid "{path} is invalid"
+msgstr ""
+
+#: src/utils/yup-locale.ts:14
+msgid "{path} must be a `{type}` type, but the final value was: `{0}` (cast from the value `{1}`)."
+msgstr ""
+
+#: src/utils/yup-locale.ts:19
+msgid "{path} must be a `{type}` type, but the final value was: `{0}`."
+msgstr ""
+
+#: src/utils/yup-locale.ts:43
+msgid "{path} must be a lowercase string"
+msgstr ""
+
+#: src/utils/yup-locale.ts:52
+msgid "{path} must be a negative number"
+msgstr ""
+
+#: src/utils/yup-locale.ts:51
+msgid "{path} must be a positive number"
+msgstr ""
+
+#: src/utils/yup-locale.ts:42
+msgid "{path} must be a trimmed string"
+msgstr ""
+
+#: src/utils/yup-locale.ts:44
+msgid "{path} must be a upper case string"
+msgstr ""
+
+#: src/utils/yup-locale.ts:35
+msgid "{path} must be a valid email"
+msgstr ""
+
+#: src/utils/yup-locale.ts:38
+msgid "{path} must be a valid ISO date-time"
+msgstr ""
+
+#: src/utils/yup-locale.ts:40
+msgid "{path} must be a valid ISO date-time with a sub-second precision of exactly {precision} digits"
+msgstr ""
+
+#: src/utils/yup-locale.ts:41
+msgid "{path} must be a valid ISO date-time with UTC \"Z\" timezone"
+msgstr ""
+
+#: src/utils/yup-locale.ts:36
+msgid "{path} must be a valid URL"
+msgstr ""
+
+#: src/utils/yup-locale.ts:37
+msgid "{path} must be a valid UUID"
+msgstr ""
+
+#: src/utils/yup-locale.ts:53
+msgid "{path} must be an integer"
+msgstr ""
+
+#: src/utils/yup-locale.ts:32
+msgid "{path} must be at least {min} characters"
+msgstr ""
+
+#: src/utils/yup-locale.ts:33
+msgid "{path} must be at most {max} characters"
+msgstr ""
+
+#: src/utils/yup-locale.ts:7
+msgid "{path} must be defined"
+msgstr ""
+
+#: src/utils/yup-locale.ts:31
+msgid "{path} must be exactly {length} characters"
+msgstr ""
+
+#: src/utils/yup-locale.ts:50
+msgid "{path} must be greater than {more}"
+msgstr ""
+
+#: src/utils/yup-locale.ts:47
+msgid "{path} must be greater than or equal to {min}"
+msgstr ""
+
+#: src/utils/yup-locale.ts:49
+msgid "{path} must be less than {less}"
+msgstr ""
+
+#: src/utils/yup-locale.ts:48
+msgid "{path} must be less than or equal to {max}"
+msgstr ""
+
+#: src/utils/yup-locale.ts:9
+msgid "{path} must be one of the following values: {values}"
+msgstr ""
+
+#: src/utils/yup-locale.ts:69
+msgid "{path} must have {length} items"
+msgstr ""
+
+#: src/utils/yup-locale.ts:22
+msgid "{path} must match the configured type. The validated value was: `{0}` (cast from the value `{1}`)."
+msgstr ""
+
+#: src/utils/yup-locale.ts:27
+msgid "{path} must match the configured type. The validated value was: `{0}`."
+msgstr ""
+
+#: src/utils/yup-locale.ts:34
+msgid "{path} must match the following: \"{regex}\""
+msgstr ""
+
+#: src/utils/yup-locale.ts:10
+msgid "{path} must not be one of the following values: {values}"
+msgstr ""
+
+#: src/utils/yup-locale.ts:64
+msgid "{path} object contains unknown properties: {properties}"
+msgstr ""
+
+#: src/utils/yup-locale.ts:77
+msgid "{path} tuple value has too few items, expected a length of {typeLen} but got {0} for value: `{1}`"
+msgstr ""
+
+#: src/utils/yup-locale.ts:82
+msgid "{path} tuple value has too many items, expected a length of {typeLen} but got {0} for value: `{1}`"
 msgstr ""
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/NoteList/index.tsx:55
 msgid "Action"
 msgstr "Acción"
 
-#: src/components/PatientEncounter/index.tsx:46
 #: src/containers/DocumentsList/index.tsx:69
-#: src/containers/EncounterList/index.tsx:70
-#: src/containers/HealthcareServiceList/index.tsx:77
-#: src/containers/InvoiceList/tableUtils.tsx:150
-#: src/containers/InvoiceList/tableUtils.tsx:157
-#: src/containers/MedicationManagement/index.tsx:69
-#: src/containers/PatientList/index.tsx:101
-#: src/containers/PractitionerList/index.tsx:119
-#: src/containers/Prescriptions/index.tsx:146
-#: src/uberComponents/ResourceListPage/index.tsx:253
+#: src/uberComponents/ResourceListPage/index.tsx:260
 msgid "Actions"
 msgstr "Acciones"
 
-#: src/components/ModalChangeActiveHealthcareService/index.tsx:17
+#: src/containers/HealthcareServiceList/index.tsx:68
 msgid "Activate"
 msgstr "Activar"
 
 #: src/components/ModalChangeActiveHealthcareService/index.tsx:16
-msgid "Activate healthcare service"
-msgstr "Activar servicio clínico"
+#~ msgid "Activate healthcare service"
+#~ msgstr "Activar servicio clínico"
 
-#: src/containers/HealthcareServiceList/index.tsx:74
-#: src/containers/Prescriptions/components/PrescriptionsSearchBar/hooks.ts:97
-#: src/containers/Prescriptions/index.tsx:185
+#: src/containers/HealthcareServiceList/index.tsx:60
+#: src/containers/Prescriptions/index.tsx:49
+#: src/containers/Prescriptions/index.tsx:252
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:90
 msgid "Active"
 msgstr "Activo"
 
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:215
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:221
 #: src/containers/PatientDetails/PatientResources/utils.tsx:38
 msgid "Active Medications"
 msgstr "Medicamentos Activos"
 
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:151
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:157
 msgid "Activities"
 msgstr "Actividades"
 
@@ -71,28 +231,31 @@ msgstr "Agregar {texto}"
 msgid "Add another answer"
 msgstr "Añadir otra respuesta"
 
+#: src/containers/MedicationManagementDetail/index.tsx:77
+msgid "Add batch"
+msgstr ""
+
 #: src/containers/Scheduling/Availability/index.tsx:119
 msgid "Add break"
 msgstr "Añadir pausa"
 
-#: src/components/ModalNewHealthcareService/index.tsx:22
+#: src/containers/HealthcareServiceList/index.tsx:78
 msgid "Add healthcare service"
 msgstr "Añadir servicio de salud"
 
 #: src/components/ModalNewHealthcareService/index.tsx:18
-msgid "Add Healthcare Service"
-msgstr "Añadir Servicio de Salud"
+#~ msgid "Add Healthcare Service"
+#~ msgstr "Añadir Servicio de Salud"
 
-#: src/containers/MedicationManagement/ModalNewMedicationKnowledge.tsx:15
-#: src/containers/MedicationManagement/ModalNewMedicationKnowledge.tsx:19
+#: src/containers/MedicationManagement/index.tsx:66
 msgid "Add Medication"
 msgstr "Añadir Medicamento"
 
 #: src/containers/MedicationManagement/ModalNewMedicationBatch.tsx:19
-msgid "Add Medication Batch"
-msgstr "Añadir Lote de Medicamento"
+#~ msgid "Add Medication Batch"
+#~ msgstr "Añadir Lote de Medicamento"
 
-#: src/containers/PractitionerList/index.tsx:33
+#: src/containers/PractitionerList/index.tsx:60
 msgid "Add new practitioner"
 msgstr "Añadir nuevo profesional"
 
@@ -104,7 +267,7 @@ msgstr "Agregar nota"
 msgid "Add Note"
 msgstr "Agregar nota"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:307
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:305
 msgid "Add option"
 msgstr "Añadir opción"
 
@@ -113,21 +276,19 @@ msgstr "Añadir opción"
 msgid "Add Order"
 msgstr "Añadir Orden"
 
-#: src/components/ModalNewPatient/index.tsx:16
-#: src/components/ModalNewPatient/index.tsx:20
-#: src/containers/PatientResourceListExample/index.tsx:124
+#: src/containers/PatientList/index.tsx:33
 msgid "Add patient"
 msgstr "Añadir paciente"
 
-#: src/containers/QuestionnaireList/index.tsx:81
+#: src/containers/QuestionnaireList/index.tsx:56
 msgid "Add questionnaire"
 msgstr "Añadir cuestionario"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:88
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:86
 msgid "Adjust Last Option Right"
 msgstr "Ajustar última opción a la derecha"
 
-#: src/containers/QuestionnaireList/index.tsx:39
+#: src/containers/QuestionnaireList/index.tsx:36
 msgid "AI builder"
 msgstr "Creador de IA"
 
@@ -135,22 +296,26 @@ msgstr "Creador de IA"
 msgid "AI Summary"
 msgstr "Resumen de IA"
 
-#: src/containers/QuestionnaireList/index.tsx:56
+#: src/containers/QuestionnaireList/index.tsx:62
+msgid "Aidbox form builder"
+msgstr ""
+
+#: src/containers/QuestionnaireList/index.tsx:47
 msgid "Aidbox Forms Builder"
 msgstr "Constructor de Formularios Aidbox"
 
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:33
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:39
 #: src/containers/PatientDetails/PatientResources/utils.tsx:112
 msgid "Allergies"
 msgstr "Alergias"
 
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:163
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:222
 msgid "Amend"
 msgstr "Modificar"
 
-#: src/containers/InvoiceDetails/index.tsx:100
-#: src/containers/InvoiceList/tableUtils.tsx:143
-#: src/containers/MedicationManagement/utils.tsx:36
+#: src/containers/InvoiceDetails/index.tsx:83
+#: src/containers/InvoiceList/index.tsx:92
+#: src/containers/MedicationManagementDetail/index.tsx:61
 msgid "Amount"
 msgstr "Cantidad"
 
@@ -158,7 +323,7 @@ msgstr "Cantidad"
 msgid "Appointment"
 msgstr "Cita"
 
-#: src/containers/Appointment/PublicAppointment.tsx:44
+#: src/containers/Appointment/PublicAppointment.tsx:40
 msgid "Appointment booking"
 msgstr "Reserva de cita"
 
@@ -167,7 +332,7 @@ msgstr "Reserva de cita"
 msgid "Appointment successfully added"
 msgstr "Cita añadida con éxito"
 
-#: src/containers/Appointment/PublicAppointment.tsx:53
+#: src/containers/Appointment/PublicAppointment.tsx:49
 msgid "Appointment successfully created"
 msgstr "Agendamiento creado exitosamente"
 
@@ -176,14 +341,15 @@ msgstr "Agendamiento creado exitosamente"
 msgid "Appointment successfully rescheduled"
 msgstr "Cita reprogramada con éxito"
 
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:158
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:217
 msgid "Are you sure you want to amend the document?"
 msgstr "¿Estás seguro de que quieres modificar el documento?"
 
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:184
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:245
 msgid "Are you sure you want to delete the document?"
 msgstr "¿Estás seguro de que quieres eliminar el documento?"
 
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:167
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:134
 msgid "Are you sure you want to delete this item?"
 msgstr "¿Estás seguro que deseas eliminar este ítem?"
@@ -195,33 +361,37 @@ msgstr "¿Estás seguro que deseas eliminar este ítem?"
 msgid "Availability"
 msgstr "Disponibilidad"
 
+#: src/containers/MedicationManagementDetail/index.tsx:69
+msgid "Available"
+msgstr ""
+
 #: src/containers/PractitionerDetails/PractitionerOverview/index.tsx:44
 msgid "Available services"
 msgstr "Servicios disponibles"
 
 #: src/containers/MedicationManagement/utils.tsx:43
-msgid "Available units"
-msgstr "Unidades disponibles"
+#~ msgid "Available units"
+#~ msgstr "Unidades disponibles"
 
-#: src/containers/InvoiceList/components/InvoiceListSearchBar/hooks.ts:97
-#: src/containers/InvoiceList/tableUtils.tsx:27
+#: src/containers/InvoiceList/components/InvoiceStatus.tsx:14
 msgid "Balanced"
 msgstr "Saldada"
 
-#: src/containers/MedicationManagement/index.tsx:118
-#: src/containers/MedicationManagement/ModalNewMedicationBatch.tsx:23
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:305
+msgid "Barcode"
+msgstr ""
+
+#: src/containers/MedicationManagement/index.tsx:51
 msgid "Batch"
 msgstr "Lote"
 
-#: src/containers/Prescriptions/index.tsx:123
+#: src/containers/Prescriptions/index.tsx:115
 msgid "Batch Number"
 msgstr "Número de lote"
 
 #: src/components/BaseQuestionnaireResponseForm/widgets/QuestionDateTime.stories.tsx:37
 #: src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer/hooks.ts:31
-#: src/containers/PatientList/index.tsx:85
-#: src/containers/PatientResourceListExample/index.tsx:48
-#: src/containers/PatientResourceListExample/index.tsx:82
+#: src/containers/PatientList/index.tsx:71
 msgid "Birth date"
 msgstr "Fecha de nacimiento"
 
@@ -245,43 +415,44 @@ msgstr "por"
 msgid "Calories"
 msgstr "Calorías"
 
-#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:55
+#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:82
 #: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:56
-#: src/containers/InvoiceList/components/ModalCancelInvoice/index.tsx:18
-#: src/containers/Prescriptions/ModalMedicationRequestCancel.tsx:22
+#: src/containers/InvoiceList/index.tsx:108
+#: src/containers/InvoiceList/index.tsx:113
+#: src/containers/InvoiceList/index.tsx:117
+#: src/containers/Prescriptions/index.tsx:159
 #: src/containers/Scheduling/Availability/index.tsx:70
 msgid "Cancel"
 msgstr "Cancelar"
 
 #: src/containers/InvoiceList/components/ModalCancelInvoice/index.tsx:14
-msgid "Cancel Invoice"
-msgstr "Cancelar recibo"
+#~ msgid "Cancel Invoice"
+#~ msgstr "Cancelar recibo"
 
 #: src/containers/Prescriptions/ModalMedicationRequestCancel.tsx:18
-msgid "Cancel Medication Request"
-msgstr "Cancelar solicitud de medicamento"
+#~ msgid "Cancel Medication Request"
+#~ msgstr "Cancelar solicitud de medicamento"
 
-#: src/containers/InvoiceList/components/InvoiceListSearchBar/hooks.ts:101
-#: src/containers/InvoiceList/tableUtils.tsx:28
-#: src/containers/Prescriptions/components/PrescriptionsSearchBar/hooks.ts:101
-#: src/containers/Prescriptions/index.tsx:187
+#: src/containers/InvoiceList/components/InvoiceStatus.tsx:15
+#: src/containers/Prescriptions/index.tsx:50
+#: src/containers/Prescriptions/index.tsx:254
 msgid "Cancelled"
 msgstr "Cancelada"
 
 #: src/components/AudioRecorder/index.tsx:41
-#: src/containers/EncounterDetails/AIScribe/index.tsx:113
+#: src/containers/EncounterDetails/AIScribe/index.tsx:112
 msgid "Capture in progress"
 msgstr "Ejecución en curso"
 
 #: src/containers/MedicationManagement/utils.tsx:49
-msgid "Characteristics"
-msgstr "Características"
+#~ msgid "Characteristics"
+#~ msgstr "Características"
 
 #: src/containers/PatientResourceListExample/index.tsx:89
-msgid "Choose gender"
-msgstr "Elegir género"
+#~ msgid "Choose gender"
+#~ msgstr "Elegir género"
 
-#: src/containers/PatientDetails/new.tsx:55
+#: src/containers/PatientDetails/new.tsx:56
 msgid "Choose status"
 msgstr "Elija estado"
 
@@ -289,7 +460,8 @@ msgstr "Elija estado"
 #~ msgid "Clear draft"
 #~ msgstr "Borrador claro"
 
-#: src/containers/PatientDetails/PatientDocument/index.tsx:78
+#: src/components/QuestionnaireResponseFormDraft/index.tsx:60
+#: src/containers/PatientDetails/PatientDocument/index.tsx:84
 msgid "Clear draft from local storage and reset form"
 msgstr "Borrar borrador del almacenamiento local y restablecer formulario"
 
@@ -298,7 +470,7 @@ msgstr "Borrar borrador del almacenamiento local y restablecer formulario"
 msgid "Clear filters"
 msgstr "Limpiar filtros"
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/UploadFileControl/index.tsx:29
+#: src/components/BaseQuestionnaireResponseForm/widgets/UploadFileControl/index.tsx:32
 msgid "Click or drag file to this area to upload"
 msgstr "Haz click o arrastra el archivo hasta esta área para cargar"
 
@@ -310,18 +482,18 @@ msgstr "Profesional actualizado exitosamente"
 msgid "Close"
 msgstr "Cerrar"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:176
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:513
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:174
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:511
 msgid "Code"
 msgstr "Código"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:63
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:61
 msgid "Col (default)"
 msgstr "Columna (predeterminado)"
 
-#: src/components/QuestionnairesWizard/index.tsx:110
-#: src/containers/PatientDetails/PatientDocument/index.tsx:139
-#: src/containers/PatientDetails/PatientDocument/index.tsx:167
+#: src/components/QuestionnairesWizard/components/QuestionnairesWizardFooter/index.tsx:45
+#: src/containers/PatientDetails/PatientDocument/index.tsx:145
+#: src/containers/PatientDetails/PatientDocument/index.tsx:171
 msgid "Complete"
 msgstr "Completado"
 
@@ -335,29 +507,29 @@ msgstr "Completar cita"
 msgid "completed"
 msgstr "Completado"
 
-#: src/containers/Prescriptions/components/PrescriptionsSearchBar/hooks.ts:105
-#: src/containers/Prescriptions/index.tsx:188
+#: src/containers/Prescriptions/index.tsx:51
+#: src/containers/Prescriptions/index.tsx:255
 msgid "Completed"
 msgstr "Completado"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:493
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:491
 msgid "Concepts:"
 msgstr "Conceptos:"
 
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:70
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:76
 #: src/containers/PatientDetails/PatientResources/utils.tsx:73
 msgid "Conditions"
 msgstr "Condiciones"
 
-#: src/containers/Prescriptions/ModalMedicationRequestConfirm.tsx:22
+#: src/containers/Prescriptions/index.tsx:149
 msgid "Confirm"
 msgstr "Confirmar"
 
 #: src/containers/Prescriptions/ModalMedicationRequestConfirm.tsx:18
-msgid "Confirm Medication Request"
-msgstr "Confirmar solicitud de medicamento"
+#~ msgid "Confirm Medication Request"
+#~ msgstr "Confirmar solicitud de medicamento"
 
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:104
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:110
 #: src/containers/PatientDetails/PatientResources/utils.tsx:191
 msgid "Consents"
 msgstr "Consentimientos"
@@ -370,8 +542,8 @@ msgstr "Consulta"
 msgid "Contact the patient to obtain their consent for accessing activity data"
 msgstr "Contactar al paciente para obtener su consentimiento para acceder a los datos de esta prestación"
 
-#: src/containers/MedicationManagement/index.tsx:62
-#: src/containers/MedicationManagement/utils.tsx:39
+#: src/containers/MedicationManagement/index.tsx:38
+#: src/containers/MedicationManagementDetail/index.tsx:66
 msgid "Cost"
 msgstr "Costo"
 
@@ -385,19 +557,23 @@ msgstr "Crear"
 msgid "Create document"
 msgstr "Crear documento"
 
-#: src/containers/PatientDetails/new.tsx:79
+#: src/containers/PatientDetails/new.tsx:80
 msgid "Create encounter"
 msgstr "Crear encuentro"
 
-#: src/components/ModalNewEncounter/index.tsx:23
-#: src/components/ModalNewEncounter/index.tsx:25
-#: src/components/ModalNewEncounter/index.tsx:26
+#: src/components/PatientEncounter/index.tsx:115
+#: src/components/PatientEncounter/index.tsx:117
+#: src/components/PatientEncounter/index.tsx:118
 msgid "Create Encounter"
 msgstr "Crear un encuentro"
 
+#: src/containers/InvoiceList/index.tsx:129
+#~ msgid "Create invoice"
+#~ msgstr ""
+
 #: src/containers/PractitionerList/index.tsx:29
-msgid "Create practitioner"
-msgstr "Crear un profesional"
+#~ msgid "Create practitioner"
+#~ msgstr "Crear un profesional"
 
 #: src/components/ChangesDiff/index.tsx:30
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/NoteList/index.tsx:45
@@ -420,25 +596,26 @@ msgstr "PCR"
 msgid "d.o."
 msgstr "días"
 
-#: src/components/PatientEncounter/index.tsx:39
-#: src/containers/EncounterList/index.tsx:63
-#: src/containers/InvoiceDetails/components/InvoiceDetailsHeader/index.tsx:23
-#: src/containers/InvoiceList/tableUtils.tsx:129
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:52
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:89
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:130
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:201
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:256
+#: src/components/PatientEncounter/index.tsx:90
+#: src/containers/EncounterList/index.tsx:121
+#: src/containers/InvoiceDetails/index.tsx:42
+#: src/containers/InvoiceList/index.tsx:44
+#: src/containers/InvoiceList/index.tsx:78
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:58
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:95
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:136
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:207
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:262
 #: src/containers/PatientDetails/PatientResources/utils.tsx:99
 #: src/containers/PatientDetails/PatientResources/utils.tsx:138
 #: src/containers/PatientDetails/PatientResources/utils.tsx:182
 #: src/containers/PatientDetails/PatientResources/utils.tsx:219
 #: src/containers/PatientDetails/PatientResources/utils.tsx:270
-#: src/containers/Prescriptions/index.tsx:136
+#: src/containers/Prescriptions/index.tsx:130
 msgid "Date"
 msgstr "Fecha"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:60
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:58
 msgid "Date & time slot"
 msgstr "Fecha & hora del espacio"
 
@@ -458,26 +635,27 @@ msgstr "Fecha creada"
 msgid "Day"
 msgstr "Día"
 
-#: src/components/ModalChangeActiveHealthcareService/index.tsx:17
+#: src/containers/HealthcareServiceList/index.tsx:68
 msgid "Deactivate"
 msgstr "Desactivar"
 
 #: src/components/ModalChangeActiveHealthcareService/index.tsx:16
-msgid "Deactivate healthcare service"
-msgstr "Desactivar servicio clínico"
+#~ msgid "Deactivate healthcare service"
+#~ msgstr "Desactivar servicio clínico"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:59
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:57
 msgid "Default"
 msgstr "Predeterminado"
 
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:189
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:170
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:250
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:140
 msgid "Delete"
 msgstr "Eliminar"
 
 #: src/containers/PatientResourceListExample/index.tsx:126
-msgid "Delete patients"
-msgstr "Eliminar pacientes"
+#~ msgid "Delete patients"
+#~ msgstr "Eliminar pacientes"
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:133
 msgid "Delete Questionnaire Item"
@@ -491,11 +669,11 @@ msgstr "Describe los requerimientos del formulario o carga un archivo"
 msgid "Describe what to adjust in the questionnaire"
 msgstr "Describe qué modificar en el formulario"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:481
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:479
 msgid "Description:"
 msgstr "Descripción:"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:507
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:505
 msgid "Display"
 msgstr "Mostrar"
 
@@ -504,16 +682,16 @@ msgstr "Mostrar"
 msgid "Documents"
 msgstr "Documentos"
 
-#: src/containers/EncounterDetails/AIScribe/index.tsx:279
+#: src/containers/EncounterDetails/AIScribe/index.tsx:277
 msgid "Documents have been successfully extracted"
 msgstr "Los documentos han sido obtenidos exitosamente"
 
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:237
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:243
 #: src/containers/PatientDetails/PatientResources/utils.tsx:64
 msgid "Dosage"
 msgstr "Dosis"
 
-#: src/containers/MedicationManagement/utils.tsx:37
+#: src/containers/MedicationManagementDetail/index.tsx:64
 msgid "Dose form"
 msgstr "Forma de dosificación"
 
@@ -521,10 +699,9 @@ msgstr "Forma de dosificación"
 msgid "Download audio"
 msgstr "Descargar audio"
 
-#: src/containers/InvoiceList/components/InvoiceListSearchBar/hooks.ts:109
-#: src/containers/InvoiceList/tableUtils.tsx:30
-#: src/containers/Prescriptions/components/PrescriptionsSearchBar/hooks.ts:121
-#: src/containers/Prescriptions/index.tsx:191
+#: src/containers/InvoiceList/components/InvoiceStatus.tsx:17
+#: src/containers/Prescriptions/index.tsx:55
+#: src/containers/Prescriptions/index.tsx:258
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:89
 msgid "Draft"
 msgstr "Borrador"
@@ -537,14 +714,14 @@ msgstr "Borrador"
 #~ msgid "Draft from {draftLastUpdateDate} was successfully loaded"
 #~ msgstr "El borrador de {0} se cargó correctamente"
 
-#: src/hooks/questionnaire-response-form-data.ts:135
-#: src/hooks/questionnaire-response-form-data.ts:144
-#: src/hooks/questionnaire-response-form-data.ts:154
-#: src/hooks/questionnaire-response-form-data.ts:184
+#: src/hooks/questionnaire-response-form-data.ts:195
+#: src/hooks/questionnaire-response-form-data.ts:204
+#: src/hooks/questionnaire-response-form-data.ts:214
+#: src/hooks/questionnaire-response-form-data.ts:244
 msgid "Draft key not provided"
 msgstr "No se proporcionó la clave de borrador"
 
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:55
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:56
 msgid "Draft successfully deleted"
 msgstr "Borrador eliminado exitosamente"
 
@@ -552,7 +729,7 @@ msgstr "Borrador eliminado exitosamente"
 #~ msgid "Draft successfully saved"
 #~ msgstr "Borrador guardado exitosamente"
 
-#: src/hooks/useQuestionnaireResponseDraft.ts:81
+#: src/hooks/useQuestionnaireResponseDraft.ts:102
 msgid "Draft was successfully loaded from {0}"
 msgstr "El borrador se cargó correctamente desde {0}"
 
@@ -560,7 +737,7 @@ msgstr "El borrador se cargó correctamente desde {0}"
 #~ msgid "Draft was successfully saved at {0}"
 #~ msgstr "El borrador se guardó correctamente en {0}"
 
-#: src/hooks/useQuestionnaireResponseDraft.ts:122
+#: src/hooks/useQuestionnaireResponseDraft.ts:143
 msgid "Draft was successfully saved at {0} to {1}"
 msgstr "El borrador se guardó correctamente en {0} a {1}"
 
@@ -568,15 +745,17 @@ msgstr "El borrador se guardó correctamente en {0} a {1}"
 msgid "Duration (min)"
 msgstr "Duración (min)"
 
-#: src/containers/HealthcareServiceList/index.tsx:60
+#: src/containers/HealthcareServiceList/index.tsx:49
 msgid "Duration (minutes)"
 msgstr "Duración (minutos)"
 
-#: src/components/ModalEditHealthcareService/index.tsx:21
-#: src/containers/EncounterDetails/AIScribe/index.tsx:219
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:197
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:165
+#: src/containers/EncounterDetails/AIScribe/index.tsx:218
+#: src/containers/HealthcareServiceList/index.tsx:66
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:260
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/EditPatient/index.tsx:23
-#: src/containers/PatientList/index.tsx:125
+#: src/containers/PatientList/index.tsx:103
+#: src/containers/PatientList/index.tsx:131
 #: src/containers/PractitionerDetails/PractitionerOverview/index.tsx:67
 #: src/containers/Scheduling/ScheduleCalendar/components/AppointmentDetailsModal/index.tsx:87
 msgid "Edit"
@@ -587,19 +766,18 @@ msgid "Edit Appointment"
 msgstr "Editar agendamiento"
 
 #: src/components/ModalEditHealthcareService/index.tsx:17
-msgid "Edit Healthcare Service"
-msgstr "Editar Servicio Clínico"
+#~ msgid "Edit Healthcare Service"
+#~ msgstr "Editar Servicio Clínico"
 
 #: src/containers/QuestionnaireList/index.tsx:29
-msgid "Edit in"
-msgstr "Editar en"
+#~ msgid "Edit in"
+#~ msgstr "Editar en"
 
 #: src/containers/QuestionnaireList/index.tsx:51
 #~ msgid "Edit in SDC IDE"
 #~ msgstr "Editar en SDC IDE"
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/EditPatient/index.tsx:20
-#: src/containers/PatientList/index.tsx:122
 msgid "Edit patient"
 msgstr "Editar paciente"
 
@@ -621,16 +799,16 @@ msgid "Encounter completed"
 msgstr "Encuentro completado"
 
 #: src/components/ModalNewEncounter/index.tsx:39
-msgid "Encounter successfully created"
-msgstr "Encuentro creado exitosamente"
+#~ msgid "Encounter successfully created"
+#~ msgstr "Encuentro creado exitosamente"
 
 #: src/containers/EncounterDetails/index.tsx:194
 msgid "Encounter was successfully completed"
 msgstr "El encuentro se completó con éxito"
 
-#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:28
-#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:34
-#: src/containers/EncounterList/index.tsx:101
+#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:29
+#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:36
+#: src/containers/EncounterList/index.tsx:151
 #: src/containers/PatientDetails/PatientDetailsTabs/index.tsx:19
 #: src/containers/PatientDetails/PatientHeader/index.tsx:93
 msgid "Encounters"
@@ -640,26 +818,29 @@ msgstr "Encuentros"
 msgid "End"
 msgstr "Fin"
 
-#: src/containers/EncounterList/searchBarUtils.ts:22
+#: src/containers/EncounterList/searchBarUtils.ts:23
 msgid "End date"
 msgstr "Fecha de finalización"
 
-#: src/containers/InvoiceList/components/InvoiceListSearchBar/hooks.ts:113
-#: src/containers/InvoiceList/tableUtils.tsx:31
-#: src/containers/Prescriptions/components/PrescriptionsSearchBar/hooks.ts:113
-#: src/containers/Prescriptions/index.tsx:189
+#: src/containers/MagicSearchPage/index.tsx:120
+msgid "Enter your search query"
+msgstr ""
+
+#: src/containers/InvoiceList/components/InvoiceStatus.tsx:18
+#: src/containers/Prescriptions/index.tsx:53
+#: src/containers/Prescriptions/index.tsx:256
 msgid "Entered in error"
 msgstr "Ingresado erróneamente"
 
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:61
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:62
 msgid "Error deleting a draft"
 msgstr "Error al eliminar un borrador"
 
-#: src/hooks/useQuestionnaireResponseDraft.ts:251
+#: src/hooks/useQuestionnaireResponseDraft.ts:273
 msgid "Error saving a draft:"
 msgstr "Error al guardar el borrador:"
 
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:85
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:86
 msgid "Error while amending the document"
 msgstr "Error mientras se modifica el documento"
 
@@ -669,18 +850,22 @@ msgstr "Error mientras se modifica el documento"
 #~ msgstr "Error durante la extracción"
 
 #: src/containers/MedicationManagement/index.tsx:124
-msgid "Expiration"
-msgstr "Vencimiento"
+#~ msgid "Expiration"
+#~ msgstr "Vencimiento"
 
-#: src/containers/EncounterDetails/AIScribe/index.tsx:322
+#: src/containers/MedicationManagementDetail/index.tsx:86
+msgid "Expiration date"
+msgstr ""
+
+#: src/containers/EncounterDetails/AIScribe/index.tsx:323
 msgid "Extract"
 msgstr "Extraer"
 
-#: src/containers/EncounterDetails/AIScribe/index.tsx:293
+#: src/containers/EncounterDetails/AIScribe/index.tsx:294
 msgid "Extract documents"
 msgstr "Extraer documentos"
 
-#: src/containers/EncounterDetails/AIScribe/index.tsx:289
+#: src/containers/EncounterDetails/AIScribe/index.tsx:290
 msgid "Extract medical documents"
 msgstr "Extraer documentos clínicos"
 
@@ -696,20 +881,19 @@ msgstr "Rellenar"
 msgid "Filters"
 msgstr "Filtros"
 
-#: src/containers/PatientDetails/new.tsx:48
+#: src/containers/PatientDetails/new.tsx:49
 msgid "Find encounter"
 msgstr "Encuentra el encuentro"
 
-#: src/containers/PatientList/searchBarUtils.ts:10
-#: src/containers/PatientResourceListExample/index.tsx:75
+#: src/containers/PatientList/index.tsx:25
 msgid "Find patient"
 msgstr "Buscar paciente"
 
-#: src/containers/QuestionnaireList/searchBarUtils.ts:10
+#: src/containers/QuestionnaireList/index.tsx:20
 msgid "Find questionnaire"
 msgstr "Buscar cuestionario"
 
-#: src/containers/PatientDetails/new.tsx:81
+#: src/containers/PatientDetails/new.tsx:82
 msgid "Finish encounters"
 msgstr "Terminar encuentros"
 
@@ -726,10 +910,10 @@ msgid "Friday"
 msgstr "Viernes"
 
 #: src/containers/PatientResourceListExample/index.tsx:55
-msgid "Gender"
-msgstr "Género"
+#~ msgid "Gender"
+#~ msgstr "Género"
 
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/GeneralInformationDashboard/index.tsx:20
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/GeneralInformationDashboard/index.tsx:22
 #: src/containers/PractitionerDetails/PractitionerOverview/index.tsx:61
 msgid "General Information"
 msgstr "Información General"
@@ -738,52 +922,52 @@ msgstr "Información General"
 msgid "Glucose"
 msgstr "Glucosa"
 
-#: src/components/QuestionnairesWizard/index.tsx:102
-msgid "Go Back"
-msgstr "Volver"
+#: src/components/QuestionnairesWizard/components/QuestionnairesWizardFooter/index.tsx:34
+#~ msgid "Go Back"
+#~ msgstr "Volver"
 
 #: src/components/QuestionnairesWizard/index.tsx:109
-msgid "Go Forward"
-msgstr "Avanzar"
+#~ msgid "Go Forward"
+#~ msgstr "Avanzar"
 
 #: src/containers/Scheduling/ScheduleCalendar/components/AppointmentDetailsModal/index.tsx:74
 msgid "Go to the encounter"
 msgstr "Ir al encuentro"
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/Group/GroupCard/index.tsx:66
-#: src/components/BaseQuestionnaireResponseForm/widgets/Group/GroupCard/index.tsx:96
+#: src/components/BaseQuestionnaireResponseForm/widgets/Group/GroupCard/index.tsx:67
+#: src/components/BaseQuestionnaireResponseForm/widgets/Group/GroupCard/index.tsx:97
 msgid "Group"
 msgstr "Grupo"
 
 #: src/utils/__tests__/questionnaire/custom-validation.test.ts:16
-#: src/utils/__tests__/questionnaire/custom-validation.test.ts:27
-#: src/utils/__tests__/questionnaire/custom-validation.test.ts:47
+#: src/utils/__tests__/questionnaire/custom-validation.test.ts:29
+#: src/utils/__tests__/questionnaire/custom-validation.test.ts:53
 msgid "Has at least one lower case letter"
 msgstr "Tiene al menos una letra minúscula"
 
-#: src/utils/__tests__/questionnaire/custom-validation.test.ts:65
+#: src/utils/__tests__/questionnaire/custom-validation.test.ts:75
 msgid "Has at least one number"
 msgstr "Tiene al menos un número"
 
-#: src/utils/__tests__/questionnaire/custom-validation.test.ts:36
-#: src/utils/__tests__/questionnaire/custom-validation.test.ts:56
+#: src/utils/__tests__/questionnaire/custom-validation.test.ts:40
+#: src/utils/__tests__/questionnaire/custom-validation.test.ts:64
 msgid "Has at least one uppercase letter"
 msgstr "Tiene al menos una letra mayúscula"
 
 #: src/components/ModalNewHealthcareService/index.tsx:38
-msgid "Healthcare service successfully created"
-msgstr "Servicio de salud creado con éxito"
+#~ msgid "Healthcare service successfully created"
+#~ msgstr "Servicio de salud creado con éxito"
 
 #: src/components/ModalChangeActiveHealthcareService/index.tsx:36
 #: src/components/ModalEditHealthcareService/index.tsx:34
-msgid "Healthcare service successfully updated"
-msgstr "Servicio de salud actualizado con éxito"
+#~ msgid "Healthcare service successfully updated"
+#~ msgstr "Servicio de salud actualizado con éxito"
 
-#: src/containers/HealthcareServiceList/index.tsx:29
+#: src/containers/HealthcareServiceList/index.tsx:90
 msgid "Healthcare Services"
 msgstr "Servicios de Salud"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:141
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:139
 msgid "Help text"
 msgstr "Texto de ayuda"
 
@@ -791,7 +975,7 @@ msgstr "Texto de ayuda"
 msgid "Here will be your questionnaire"
 msgstr "Aquí estará su cuestionario"
 
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:172
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:233
 msgid "History"
 msgstr "Historial"
 
@@ -803,7 +987,7 @@ msgstr "Historial de cambios"
 msgid "IL-6"
 msgstr "IL-6"
 
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:182
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:188
 #: src/containers/PatientDetails/PatientResources/utils.tsx:151
 msgid "Immunization"
 msgstr "Inmunización"
@@ -812,44 +996,46 @@ msgstr "Inmunización"
 msgid "in progress"
 msgstr "En progreso"
 
-#: src/containers/HealthcareServiceList/index.tsx:74
+#: src/containers/HealthcareServiceList/index.tsx:60
 msgid "Inactive"
 msgstr "Inactivo"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:39
+#: src/containers/MedicationManagementDetail/index.tsx:57
+msgid "Ingridients"
+msgstr ""
+
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:37
 msgid "Inline choice"
 msgstr "Elección en línea"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:250
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:248
 msgid "Inline options?"
 msgstr "¿Opciones en línea?"
 
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:297
-msgid "Intent"
-msgstr "Intención"
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:303
+#~ msgid "Intent"
+#~ msgstr "Intención"
 
 #: src/containers/InvoiceList/components/ModalCancelInvoice/index.tsx:29
-msgid "Invoice was successfully cancelled"
-msgstr "La factura fue cancelada con éxito"
+#~ msgid "Invoice was successfully cancelled"
+#~ msgstr "La factura fue cancelada con éxito"
 
 #: src/containers/InvoiceList/components/ModalPayInvoice/index.tsx:29
-msgid "Invoice was successfully payed"
-msgstr "La factura fue pagada con éxito"
+#~ msgid "Invoice was successfully payed"
+#~ msgstr "La factura fue pagada con éxito"
 
-#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:26
-#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:40
-#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:45
-#: src/containers/InvoiceList/index.tsx:45
+#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:27
+#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:42
+#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:47
+#: src/containers/InvoiceList/index.tsx:127
 msgid "Invoices"
 msgstr "Facturas"
 
-#: src/containers/InvoiceList/components/InvoiceListSearchBar/hooks.ts:105
-#: src/containers/InvoiceList/tableUtils.tsx:29
+#: src/containers/InvoiceList/components/InvoiceStatus.tsx:16
 msgid "Issued"
 msgstr "Agendado"
 
 #: src/components/BaseQuestionnaireResponseForm/widgets/Group/RepeatableGroups/RepeatableGroupCard/index.tsx:19
-#: src/containers/InvoiceDetails/index.tsx:70
 msgid "Item"
 msgstr "Ítem"
 
@@ -873,7 +1059,7 @@ msgstr "Apellido"
 msgid "Listen to the audio"
 msgstr "Escuchar el audio"
 
-#: src/containers/EncounterDetails/AIScribe/index.tsx:337
+#: src/containers/EncounterDetails/AIScribe/index.tsx:338
 msgid "Loading..."
 msgstr "Cargando..."
 
@@ -889,11 +1075,15 @@ msgstr "Iniciar sesión como paciente demo"
 msgid "Log out"
 msgstr "Cerrar sesión"
 
+#: src/containers/MedicationManagementDetail/index.tsx:81
+msgid "Lot number"
+msgstr ""
+
 #: src/utils/relative-date.ts:22
 msgid "m.o."
 msgstr "meses"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:100
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:98
 msgid "Macro text"
 msgstr "Texto macro"
 
@@ -901,37 +1091,40 @@ msgstr "Texto macro"
 msgid "Made with"
 msgstr "Hecho con"
 
-#: src/components/DashboardCard/creatinine.tsx:91
+#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:33
+msgid "Magic Search"
+msgstr ""
+
+#: src/components/DashboardCard/creatinine.tsx:90
 msgid "Max"
 msgstr "Máximo"
 
-#: src/containers/InvoiceDetails/index.tsx:27
+#: src/containers/InvoiceDetails/index.tsx:96
 msgid "Medical Services Invoice"
 msgstr "Recibo de servicios médicos"
 
-#: src/containers/MedicationManagement/components/MedicationsSearchBar/index.tsx:28
-#: src/containers/Prescriptions/index.tsx:111
+#: src/containers/Prescriptions/index.tsx:102
 msgid "Medication"
 msgstr "Medicación"
 
 #: src/containers/MedicationManagement/ModalNewMedicationBatch.tsx:39
-msgid "Medication batch successfully created"
-msgstr "Lote de medicamento creado con éxito"
+#~ msgid "Medication batch successfully created"
+#~ msgstr "Lote de medicamento creado con éxito"
 
 #: src/containers/MedicationManagement/ModalNewMedicationKnowledge.tsx:29
-msgid "Medication knowledge successfully created"
-msgstr "Conocimiento del medicamento creado con éxito"
+#~ msgid "Medication knowledge successfully created"
+#~ msgstr "Conocimiento del medicamento creado con éxito"
 
 #: src/containers/Prescriptions/ModalMedicationRequestCancel.tsx:42
-msgid "Medication request successfully cancelled"
-msgstr "Solicitud de medicamento cancelada con éxito"
+#~ msgid "Medication request successfully cancelled"
+#~ msgstr "Solicitud de medicamento cancelada con éxito"
 
 #: src/containers/Prescriptions/ModalMedicationRequestConfirm.tsx:42
-msgid "Medication request successfully confirmed"
-msgstr "Solicitud de medicamento confirmada con éxito"
+#~ msgid "Medication request successfully confirmed"
+#~ msgstr "Solicitud de medicamento confirmada con éxito"
 
-#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:46
-#: src/containers/MedicationManagement/index.tsx:29
+#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:48
+#: src/containers/MedicationManagement/index.tsx:71
 msgid "Medications"
 msgstr "Medicaciones"
 
@@ -939,7 +1132,7 @@ msgstr "Medicaciones"
 msgid "Middle name"
 msgstr "Segundo nombre"
 
-#: src/components/DashboardCard/creatinine.tsx:90
+#: src/components/DashboardCard/creatinine.tsx:89
 msgid "Min"
 msgstr "Mínimo"
 
@@ -947,52 +1140,47 @@ msgstr "Mínimo"
 msgid "Monday"
 msgstr "Lunes"
 
-#: src/containers/MedicationManagement/index.tsx:56
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:41
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:78
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:112
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:190
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:223
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:292
+#: src/utils/questionnaire.ts:179
+msgid "Must be a valid time (HH:mm:ss)"
+msgstr ""
+
+#: src/containers/HealthcareServiceList/index.tsx:31
+#: src/containers/InvoiceDetails/index.tsx:56
+#: src/containers/MedicationManagement/index.tsx:32
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:47
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:84
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:118
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:196
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:229
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:311
 #: src/containers/PatientDetails/PatientResources/utils.tsx:53
 #: src/containers/PatientDetails/PatientResources/utils.tsx:88
 #: src/containers/PatientDetails/PatientResources/utils.tsx:127
 #: src/containers/PatientDetails/PatientResources/utils.tsx:171
 #: src/containers/PatientDetails/PatientResources/utils.tsx:207
-#: src/containers/PatientList/index.tsx:79
-#: src/containers/PatientResourceListExample/index.tsx:41
-#: src/containers/PractitionerList/index.tsx:106
+#: src/containers/PatientList/index.tsx:60
+#: src/containers/PractitionerList/index.tsx:34
+#: src/containers/QuestionnaireList/index.tsx:26
 msgid "Name"
 msgstr "Nombre"
-
-#. js-lingui-explicit-id
-#: src/containers/QuestionnaireList/index.tsx:22
-msgid "msg.QuestionnaireName"
-msgstr "Nombre del cuestionario"
 
 #: src/containers/OrganizationScheduling/NewAppointmentModal/index.tsx:59
 #: src/containers/Scheduling/ScheduleCalendar/components/NewAppointmentModal/index.tsx:49
 msgid "New Appointment"
 msgstr "Nuevo agendamiento"
 
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:160
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:186
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:219
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:247
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:137
-#: src/utils/questionnaire.ts:62
+#: src/utils/questionnaire.ts:63
 msgid "No"
 msgstr "No"
 
-#: src/components/EncountersTable/index.tsx:30
 #: src/components/ResourceTable/index.tsx:65
-#: src/containers/HealthcareServiceList/index.tsx:46
-#: src/containers/InvoiceList/index.tsx:71
 #: src/containers/PatientDetails/PatientWearables/index.tsx:85
-#: src/containers/PatientList/index.tsx:71
-#: src/containers/PractitionerList/index.tsx:99
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:499
-#: src/containers/QuestionnaireList/index.tsx:100
-#: src/uberComponents/ResourceListPage/index.tsx:194
-#: src/uberComponents/ResourceListPageContent/index.tsx:183
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:497
+#: src/uberComponents/ResourceListPage/index.tsx:200
+#: src/uberComponents/ResourceListPageContent/index.tsx:185
 msgid "No data"
 msgstr "Sin datos"
 
@@ -1008,28 +1196,28 @@ msgstr "Sin texto preparado"
 msgid "Note successfully created"
 msgstr "Nota creada exitosamente"
 
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/index.tsx:31
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/index.tsx:32
 msgid "Notes"
 msgstr "Notas"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:51
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:49
 msgid "Number (default)"
 msgstr "Número (predeterminado)"
 
-#: src/containers/PatientDetails/new.tsx:84
+#: src/containers/PatientDetails/new.tsx:85
 msgid "Number of Encounters"
 msgstr "Número de encuentros"
 
 #: src/containers/PatientResourceListExample/index.tsx:129
-msgid "Number of Patients"
-msgstr "Número de pacientes"
+#~ msgid "Number of Patients"
+#~ msgstr "Número de pacientes"
 
 #: src/containers/PatientDetails/PatientResources/utils.tsx:238
 msgid "Observations"
 msgstr "Resultados"
 
-#: src/containers/Prescriptions/components/PrescriptionsSearchBar/hooks.ts:109
-#: src/containers/Prescriptions/index.tsx:186
+#: src/containers/Prescriptions/index.tsx:52
+#: src/containers/Prescriptions/index.tsx:253
 msgid "On Hold"
 msgstr "Guardado"
 
@@ -1038,24 +1226,26 @@ msgstr "Guardado"
 msgid "On the next page, please, use one of the following credentials"
 msgstr "En la siguiente página, por favor, utilice una de las siguientes credenciales"
 
-#: src/components/PatientEncounter/index.tsx:57
+#: src/components/PatientEncounter/index.tsx:103
 #: src/containers/DocumentsList/index.tsx:79
-#: src/containers/EncounterList/index.tsx:81
-#: src/containers/InvoiceList/tableUtils.tsx:82
+#: src/containers/EncounterList/index.tsx:131
+#: src/containers/InvoiceList/index.tsx:103
+#: src/containers/MedicationManagement/index.tsx:50
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteOpen/index.tsx:22
-#: src/containers/PatientList/index.tsx:117
-#: src/containers/PractitionerList/index.tsx:134
+#: src/containers/PatientList/index.tsx:102
+#: src/containers/PatientList/index.tsx:130
+#: src/containers/PractitionerList/index.tsx:56
 msgid "Open"
 msgstr "Abrir"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:167
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:165
 msgid "Option {0}"
 msgstr "Opción {0}"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:187
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:195
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:214
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:234
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:185
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:193
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:212
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:232
 msgid "Option {index}"
 msgstr "Opción {índice}"
 
@@ -1069,10 +1259,11 @@ msgstr "Orden añadida"
 
 #: src/containers/PatientDetails/PatientDetailsTabs/index.tsx:22
 #: src/containers/PatientDetails/PatientHeader/index.tsx:96
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:284
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:297
 msgid "Orders"
 msgstr "Resultados"
 
+#: src/containers/MedicationManagementDetail/index.tsx:100
 #: src/containers/PatientDetails/PatientDetailsTabs/index.tsx:18
 #: src/containers/PatientDetails/PatientHeader/index.tsx:49
 #: src/containers/PatientDetails/PatientHeader/index.tsx:92
@@ -1082,7 +1273,7 @@ msgstr "Resultados"
 msgid "Overview"
 msgstr "Descripción general"
 
-#: src/containers/MedicationManagement/utils.tsx:35
+#: src/containers/MedicationManagementDetail/index.tsx:59
 msgid "Packaging"
 msgstr "Envase"
 
@@ -1091,13 +1282,12 @@ msgstr "Envase"
 msgid "Password"
 msgstr "Contraseña"
 
-#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:39
-#: src/containers/EncounterList/index.tsx:45
-#: src/containers/InvoiceDetails/components/InvoiceDetailsHeader/index.tsx:17
-#: src/containers/InvoiceList/components/InvoiceListSearchBar/index.tsx:38
-#: src/containers/InvoiceList/tableUtils.tsx:122
-#: src/containers/Prescriptions/components/PrescriptionsSearchBar/index.tsx:46
-#: src/containers/Prescriptions/index.tsx:76
+#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:41
+#: src/containers/EncounterList/index.tsx:97
+#: src/containers/InvoiceDetails/index.tsx:40
+#: src/containers/InvoiceList/index.tsx:67
+#: src/containers/Prescriptions/index.tsx:74
+#: src/containers/Prescriptions/index.tsx:85
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:67
 msgid "Patient"
 msgstr "Paciente"
@@ -1107,27 +1297,32 @@ msgid "Patient consent is required"
 msgstr "El consentimiento del paciente es necesario"
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/EditPatient/index.tsx:33
-#: src/containers/PatientList/index.tsx:135
 msgid "Patient saved"
 msgstr "Paciente guardado"
 
 #: src/components/ModalNewPatient/index.tsx:30
-msgid "Patient successfully created"
-msgstr "Paciente creado con éxito"
+#~ msgid "Patient successfully created"
+#~ msgstr "Paciente creado con éxito"
 
-#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:29
-#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:35
-#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:43
+#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:30
+#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:37
+#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:45
 #: src/containers/PatientDetails/PatientHeader/index.tsx:34
-#: src/containers/PatientList/index.tsx:55
-#: src/containers/PatientResourceListExample/index.tsx:36
+#: src/containers/PatientList/index.tsx:109
+#: src/containers/PatientList/index.tsx:136
 msgid "Patients"
 msgstr "Pacientes"
 
+#: src/containers/InvoiceList/index.tsx:109
+#: src/containers/InvoiceList/index.tsx:114
+#: src/containers/InvoiceList/index.tsx:118
+msgid "Pay"
+msgstr ""
+
 #: src/containers/InvoiceList/components/ModalPayInvoice/index.tsx:14
 #: src/containers/InvoiceList/components/ModalPayInvoice/index.tsx:18
-msgid "Payment"
-msgstr "Pago"
+#~ msgid "Payment"
+#~ msgstr "Pago"
 
 #: src/containers/PatientDetails/PatientOrders/index.tsx:165
 msgid "PCT"
@@ -1138,7 +1333,7 @@ msgstr "PCT"
 msgid "Phone number"
 msgstr "Número telefónico"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:44
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:42
 msgid "Phone widget"
 msgstr "Widget de teléfono"
 
@@ -1146,32 +1341,31 @@ msgstr "Widget de teléfono"
 msgid "Please ask administrator to add a role for your user"
 msgstr "Por favor contactarse con el administrador para agregar un rol a su usuario"
 
-#: src/components/PatientEncounter/index.tsx:25
-#: src/containers/EncounterList/index.tsx:51
-#: src/containers/InvoiceDetails/components/InvoiceDetailsHeader/index.tsx:20
-#: src/containers/InvoiceList/components/InvoiceListSearchBar/index.tsx:32
-#: src/containers/InvoiceList/tableUtils.tsx:114
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:140
+#: src/components/PatientEncounter/index.tsx:73
+#: src/containers/EncounterList/index.tsx:106
+#: src/containers/InvoiceDetails/index.tsx:41
+#: src/containers/InvoiceList/index.tsx:55
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:146
 #: src/containers/PatientDetails/PatientResources/utils.tsx:229
 msgid "Practitioner"
 msgstr "Profesional"
 
 #: src/containers/PractitionerList/index.tsx:79
-msgid "Practitioner successfully created"
-msgstr "Profesional creado con éxito"
+#~ msgid "Practitioner successfully created"
+#~ msgstr "Profesional creado con éxito"
 
-#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:30
+#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:31
 #: src/containers/PractitionerDetails/PractitionerHeader/index.tsx:40
-#: src/containers/PractitionerList/index.tsx:73
+#: src/containers/PractitionerList/index.tsx:65
 msgid "Practitioners"
 msgstr "Profesionales"
 
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:150
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:209
 msgid "Prepare for print"
 msgstr "Preparar para imprimir"
 
-#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:47
-#: src/containers/Prescriptions/index.tsx:48
+#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:49
+#: src/containers/Prescriptions/index.tsx:174
 msgid "Prescriptions"
 msgstr "Prescripciones"
 
@@ -1183,16 +1377,16 @@ msgstr "Propiedades"
 msgid "Provider"
 msgstr "Proveedor"
 
-#: src/containers/InvoiceDetails/index.tsx:79
+#: src/containers/InvoiceDetails/index.tsx:62
 msgid "Quantity"
 msgstr "Cantidad"
 
 #: src/containers/DocumentsList/index.tsx:46
-#: src/containers/PatientQuestionnaire/index.tsx:76
+#: src/containers/PatientQuestionnaire/index.tsx:72
 msgid "Questionnaire"
 msgstr "Cuestionario"
 
-#: src/hooks/useQuestionnaireResponseDraft.ts:56
+#: src/hooks/useQuestionnaireResponseDraft.ts:73
 msgid "Questionnaire not found"
 msgstr "Cuestionario no encontrado"
 
@@ -1200,25 +1394,25 @@ msgstr "Cuestionario no encontrado"
 msgid "Questionnaire properties"
 msgstr "Propiedades del cuestionario"
 
-#: src/hooks/useQuestionnaireResponseDraft.ts:90
+#: src/hooks/useQuestionnaireResponseDraft.ts:111
 msgid "Questionnaire response is required"
 msgstr "Se requiere responder al cuestionario"
 
-#: src/hooks/questionnaire-response-form-data.ts:159
+#: src/hooks/questionnaire-response-form-data.ts:219
 msgid "QuestionnaireResponse not found in local storage"
 msgstr "Respuesta al cuestionario no encontrada en el almacenamiento local"
 
-#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:31
-#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:36
-#: src/containers/QuestionnaireList/index.tsx:76
+#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:32
+#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:38
+#: src/containers/QuestionnaireList/index.tsx:71
 msgid "Questionnaires"
 msgstr "Cuestionarios"
 
-#: src/containers/InvoiceDetails/index.tsx:86
+#: src/containers/InvoiceDetails/index.tsx:69
 msgid "Rate"
 msgstr "Tasa"
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/Group/GroupCard/index.tsx:84
+#: src/components/BaseQuestionnaireResponseForm/widgets/Group/GroupCard/index.tsx:85
 msgid "Remove"
 msgstr "Eliminar"
 
@@ -1226,12 +1420,12 @@ msgstr "Eliminar"
 msgid "Repeats"
 msgstr "Repite"
 
-#: src/components/ModalNewEncounter/index.tsx:24
+#: src/components/PatientEncounter/index.tsx:116
 msgid "Request Appointment"
 msgstr "Solicitar cita"
 
-#: src/containers/Prescriptions/components/PrescriptionsSearchBar/index.tsx:58
-#: src/containers/Prescriptions/index.tsx:87
+#: src/containers/Prescriptions/index.tsx:40
+#: src/containers/Prescriptions/index.tsx:94
 msgid "Requester"
 msgstr "Solicitante"
 
@@ -1239,10 +1433,7 @@ msgstr "Solicitante"
 msgid "Required"
 msgstr "Requerido"
 
-#: src/containers/InvoiceList/components/InvoiceListSearchBar/index.tsx:54
-#: src/containers/MedicationManagement/components/MedicationsSearchBar/index.tsx:32
 #: src/containers/OrganizationScheduling/index.tsx:85
-#: src/containers/Prescriptions/components/PrescriptionsSearchBar/index.tsx:68
 msgid "Reset"
 msgstr "Restablecer"
 
@@ -1261,7 +1452,7 @@ msgstr "Limpiar selección"
 #~ msgid "Resource id is not provided"
 #~ msgstr "No se proporciona el ID del recurso"
 
-#: src/hooks/useQuestionnaireResponseDraft.ts:262
+#: src/hooks/useQuestionnaireResponseDraft.ts:284
 msgid "Resource id not provided"
 msgstr "No se proporcionó el ID del recurso"
 
@@ -1270,7 +1461,7 @@ msgstr "No se proporcionó el ID del recurso"
 msgid "Resources"
 msgstr "Recursos"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:66
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:64
 msgid "Row"
 msgstr "Fila"
 
@@ -1278,8 +1469,8 @@ msgstr "Fila"
 msgid "Saturday"
 msgstr "Sábado"
 
-#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:65
-#: src/containers/EncounterDetails/AIScribe/index.tsx:206
+#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:101
+#: src/containers/EncounterDetails/AIScribe/index.tsx:205
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:130
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:98
 #: src/containers/Scheduling/Availability/index.tsx:73
@@ -1287,9 +1478,13 @@ msgstr "Sábado"
 msgid "Save"
 msgstr "Guardar"
 
-#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:123
-#~ msgid "Save as draft"
-#~ msgstr "Guardar borrador"
+#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:91
+msgid "Save as draft"
+msgstr "Guardar borrador"
+
+#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:72
+#~ msgid "Save as Draft"
+#~ msgstr ""
 
 #: src/containers/QuestionnaireBuilder/index.tsx:49
 #: src/containers/QuestionnaireBuilder/index.tsx:50
@@ -1308,7 +1503,7 @@ msgstr "Guardar cuestionario"
 msgid "Schedule calendar"
 msgstr "Calendario de programación"
 
-#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:44
+#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:46
 #: src/containers/OrganizationScheduling/index.tsx:69
 #: src/containers/PractitionerDetails/PractitionerDetailsTabs/index.tsx:25
 #: src/containers/PractitionerDetails/PractitionerHeader/index.tsx:42
@@ -1316,40 +1511,58 @@ msgstr "Calendario de programación"
 msgid "Scheduling"
 msgstr "Programación"
 
-#: src/containers/EncounterDetails/AIScribe/index.tsx:192
+#: src/containers/EncounterDetails/AIScribe/index.tsx:191
 msgid "Scribe results"
 msgstr "Resultados de escritura"
 
-#: src/containers/QuestionnaireList/index.tsx:50
+#: src/containers/QuestionnaireList/index.tsx:43
 msgid "SDC IDE"
 msgstr "IDE SDC"
 
-#: src/containers/HealthcareServiceList/searchBarUtils.ts:10
-#: src/containers/PractitionerList/searchBarUtils.ts:10
+#: src/containers/MagicSearchPage/index.tsx:150
+msgid "Search"
+msgstr ""
+
+#: src/containers/MedicationManagement/index.tsx:25
+msgid "Search by code"
+msgstr ""
+
+#: src/containers/HealthcareServiceList/index.tsx:23
+#: src/containers/PractitionerList/index.tsx:27
 msgid "Search by name"
 msgstr "Buscar por nombre"
 
 #: src/containers/EncounterList/searchBarUtils.ts:10
+#: src/containers/InvoiceList/index.tsx:27
 msgid "Search by patient"
 msgstr "Buscar por paciente"
 
-#: src/containers/EncounterList/searchBarUtils.ts:17
+#: src/containers/EncounterList/searchBarUtils.ts:18
+#: src/containers/InvoiceList/index.tsx:34
 msgid "Search by practitioner"
 msgstr "Buscar por profesional"
+
+#: src/containers/InvoiceList/index.tsx:22
+msgid "Search by status"
+msgstr ""
 
 #: src/containers/PatientDetails/PatientOrders/index.tsx:178
 msgid "Search orders"
 msgstr "Buscar órdenes"
 
+#: src/containers/MagicSearchPage/index.tsx:150
+msgid "Searching..."
+msgstr ""
+
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/index.tsx:42
 msgid "See all"
 msgstr "Ver todo"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:432
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:430
 msgid "See ValueSet details"
 msgstr "Ver detalles de ValueSet"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:38
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:36
 msgid "Select (default)"
 msgstr "Seleccionar (predeterminado)"
 
@@ -1358,6 +1571,7 @@ msgid "Select all"
 msgstr "Seleccionar todos"
 
 #: src/components/BaseQuestionnaireResponseForm/widgets/QuestionDateTime.stories.tsx:23
+#: src/components/BaseQuestionnaireResponseForm/widgets/QuestionDateTime.stories.tsx:80
 msgid "Select date"
 msgstr "Seleccionar fecha"
 
@@ -1365,8 +1579,8 @@ msgstr "Seleccionar fecha"
 msgid "Select time"
 msgstr "Selecciona hora"
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/choice/index.tsx:25
-#: src/components/BaseQuestionnaireResponseForm/widgets/choice/index.tsx:54
+#: src/components/BaseQuestionnaireResponseForm/widgets/choice/index.tsx:26
+#: src/components/BaseQuestionnaireResponseForm/widgets/choice/index.tsx:56
 msgid "Select..."
 msgstr "Seleccionar..."
 
@@ -1382,7 +1596,7 @@ msgstr "Creatinina sérica"
 msgid "Service Requests"
 msgstr "Solicitud de servicios"
 
-#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:27
+#: src/components/BaseLayout/Sidebar/SidebarTop/context.tsx:28
 msgid "Services"
 msgstr "Servicios"
 
@@ -1402,7 +1616,7 @@ msgstr "Compartir enlace"
 msgid "Show results"
 msgstr "Mostrar resultados"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:52
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:50
 msgid "Slider"
 msgstr "Deslizador"
 
@@ -1411,17 +1625,20 @@ msgstr "Deslizador"
 msgid "Smart Apps"
 msgstr "Aplicaciones Inteligentes"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:40
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:38
 msgid "Solid radio button"
 msgstr "Botón de opción sólido"
 
+#: src/containers/QuestionnaireBuilder/hooks.ts:106
+msgid "Something went wrong please try again or rewrite the message"
+msgstr ""
+
 #: src/containers/PractitionerDetails/PractitionerOverview/index.tsx:40
-#: src/containers/PractitionerList/index.tsx:112
+#: src/containers/PractitionerList/index.tsx:41
 msgid "Specialty"
 msgstr "Especialidad"
 
-#: src/containers/PatientList/index.tsx:92
-#: src/containers/PatientResourceListExample/index.tsx:62
+#: src/containers/PatientList/index.tsx:82
 msgid "SSN"
 msgstr "NSS"
 
@@ -1429,7 +1646,7 @@ msgstr "NSS"
 msgid "Start"
 msgstr "Comenzar"
 
-#: src/containers/EncounterList/searchBarUtils.ts:22
+#: src/containers/EncounterList/searchBarUtils.ts:23
 msgid "Start date"
 msgstr "Fecha de inicio"
 
@@ -1443,7 +1660,7 @@ msgstr "Iniciar escritura"
 msgid "Start the encounter"
 msgstr "Comenzar el encuentro"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:113
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:111
 msgid "Start value"
 msgstr "Valor inicial"
 
@@ -1451,52 +1668,58 @@ msgstr "Valor inicial"
 msgid "Start video call"
 msgstr "Iniciar videollamada"
 
-#: src/components/PatientEncounter/index.tsx:31
+#: src/components/PatientEncounter/index.tsx:82
 #: src/containers/DocumentsList/index.tsx:63
-#: src/containers/EncounterList/index.tsx:57
-#: src/containers/HealthcareServiceList/index.tsx:70
-#: src/containers/InvoiceDetails/components/InvoiceDetailsHeader/index.tsx:26
-#: src/containers/InvoiceList/components/InvoiceListSearchBar/index.tsx:50
-#: src/containers/InvoiceList/tableUtils.tsx:136
+#: src/containers/EncounterList/index.tsx:115
+#: src/containers/HealthcareServiceList/index.tsx:36
+#: src/containers/HealthcareServiceList/index.tsx:56
+#: src/containers/InvoiceDetails/index.tsx:43
+#: src/containers/InvoiceList/index.tsx:49
+#: src/containers/InvoiceList/index.tsx:85
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:318
 #: src/containers/PatientDetails/PatientResources/utils.tsx:166
 #: src/containers/PatientDetails/PatientResources/utils.tsx:365
-#: src/containers/Prescriptions/components/PrescriptionsSearchBar/index.tsx:64
-#: src/containers/Prescriptions/index.tsx:130
+#: src/containers/Prescriptions/index.tsx:46
+#: src/containers/Prescriptions/index.tsx:124
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:85
 msgid "Status"
 msgstr "Estado"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:127
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:125
 msgid "Step"
 msgstr "Paso"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:134
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:132
 msgid "Stop label"
 msgstr "Etiqueta de parada"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:120
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:118
 msgid "Stop value"
 msgstr "Valor de parada"
 
-#: src/containers/Prescriptions/components/PrescriptionsSearchBar/hooks.ts:117
-#: src/containers/Prescriptions/index.tsx:190
+#: src/containers/Prescriptions/index.tsx:54
+#: src/containers/Prescriptions/index.tsx:257
 msgid "Stopped"
 msgstr "Detenido"
 
 #: src/containers/MedicationManagement/utils.tsx:34
-msgid "Strength"
-msgstr "Concentración"
+#~ msgid "Strength"
+#~ msgstr "Concentración"
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:62
 msgid "Subject Type"
 msgstr "Tipo de sujeto"
 
 #: src/containers/QuestionnaireBuilder/PromptForm.tsx:104
-#: src/uberComponents/ResourceListPage/actions.tsx:63
-#: src/uberComponents/ResourceListPage/actions.tsx:98
-#: src/uberComponents/ResourceListPage/actions.tsx:147
+#: src/uberComponents/ResourceListPage/actions.tsx:67
+#: src/uberComponents/ResourceListPage/actions.tsx:102
+#: src/uberComponents/ResourceListPage/actions.tsx:151
 msgid "Submit"
 msgstr "Enviar"
+
+#: src/components/QuestionnairesWizard/components/QuestionnairesWizardFooter/index.tsx:45
+msgid "Submit and Go Forward"
+msgstr "Presentar y seguir adelante"
 
 #: src/uberComponents/ResourceListPage/actions.tsx:78
 #: src/uberComponents/ResourceListPage/actions.tsx:105
@@ -1504,9 +1727,9 @@ msgstr "Enviar"
 #~ msgid "Successfully saved"
 #~ msgstr "Guardado exitosamente"
 
-#: src/uberComponents/ResourceListPage/actions.tsx:57
-#: src/uberComponents/ResourceListPage/actions.tsx:93
-#: src/uberComponents/ResourceListPage/actions.tsx:143
+#: src/uberComponents/ResourceListPage/actions.tsx:61
+#: src/uberComponents/ResourceListPage/actions.tsx:97
+#: src/uberComponents/ResourceListPage/actions.tsx:147
 msgid "Successfully submitted"
 msgstr "Enviado exitosamente"
 
@@ -1518,11 +1741,11 @@ msgstr "Actualizado exitosamente"
 msgid "Sunday"
 msgstr "Domingo"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:258
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:256
 msgid "System"
 msgstr "Sistema"
 
-#: src/containers/InvoiceDetails/index.tsx:93
+#: src/containers/InvoiceDetails/index.tsx:76
 msgid "Tax"
 msgstr "Impuesto"
 
@@ -1530,28 +1753,28 @@ msgstr "Impuesto"
 msgid "Text"
 msgstr "Texto"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:43
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:47
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:41
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:45
 msgid "Text (default)"
 msgstr "Texto (por defecto)"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:48
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:46
 msgid "Text with macro"
 msgstr "Texto con macro"
 
-#: src/containers/App/index.tsx:140
+#: src/containers/App/index.tsx:139
 msgid "Thank you for filling out the questionnaire. Now you can close this page."
 msgstr "Gracias por completar el cuestionario. Ahora puedes cerrar esta página."
 
-#: src/containers/App/index.tsx:139
+#: src/containers/App/index.tsx:138
 msgid "Thank you!"
 msgstr "¡Gracias!"
 
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:107
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:108
 msgid "The document does not exist"
 msgstr "El documento no existe"
 
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:79
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:80
 msgid "The document successfully amended"
 msgstr "El documento fue modificado exitosamente"
 
@@ -1576,11 +1799,19 @@ msgstr "Aún no hay documentos"
 msgid "This audio cannot be played in Safari, please download the audio or use the Chrome browser"
 msgstr "Este audio no se puede reproducir en Safari, por favor descarga el audio o usa el navegador Chrome"
 
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:42
+msgid "This itemControl is designed for repeatable groups, but this group is not repeatable"
+msgstr ""
+
 #: src/containers/Scheduling/available-time.ts:16
 msgid "Thursday"
 msgstr "Jueves"
 
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:260
+#: src/utils/questionnaire.ts:179
+msgid "time"
+msgstr ""
+
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:266
 #: src/containers/Scheduling/Availability/index.tsx:129
 msgid "Time"
 msgstr "Hora"
@@ -1605,7 +1836,7 @@ msgstr "Para obtener esta información, necesitas autorizar tu cuenta en la apli
 msgid "Today"
 msgstr "Hoy"
 
-#: src/containers/InvoiceDetails/index.tsx:120
+#: src/containers/InvoiceDetails/index.tsx:44
 msgid "Total"
 msgstr "Total"
 
@@ -1617,20 +1848,21 @@ msgstr "Verdadero"
 msgid "Tuesday"
 msgstr "Martes"
 
-#: src/containers/HealthcareServiceList/index.tsx:53
+#: src/containers/HealthcareServiceList/index.tsx:42
 msgid "Type"
 msgstr "Tipo"
 
 #: src/containers/MedicationManagement/index.tsx:112
-msgid "Units"
-msgstr "Unidades"
+#~ msgid "Units"
+#~ msgstr "Unidades"
 
 #: src/containers/DocumentsList/hooks.ts:44
 #: src/containers/DocumentsList/hooks.ts:52
-#: src/containers/InvoiceList/tableUtils.tsx:34
+#: src/containers/InvoiceList/components/InvoiceStatus.tsx:21
 #: src/containers/PatientDetails/PatientDocumentDetails/ExternalDocumentView/index.tsx:48
-#: src/containers/Prescriptions/components/PrescriptionsSearchBar/hooks.ts:125
-#: src/containers/Prescriptions/index.tsx:192
+#: src/containers/Prescriptions/index.tsx:56
+#: src/containers/Prescriptions/index.tsx:259
+#: src/containers/Prescriptions/index.tsx:262
 #: src/containers/Scheduling/available-time.ts:22
 msgid "Unknown"
 msgstr "Desconocido"
@@ -1647,7 +1879,7 @@ msgstr "Actualizado"
 msgid "Upload file"
 msgstr "Subir archivo"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:486
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:484
 msgid "Url:"
 msgstr "URL:"
 
@@ -1665,17 +1897,17 @@ msgstr "Nombre de usuario"
 msgid "Value"
 msgstr "Valor"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:430
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:428
 msgid "ValueSet details"
 msgstr "Detalles de ValueSet"
 
-#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:404
+#: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:402
 msgid "ValueSet url"
 msgstr "URL de ValueSet"
 
-#: src/components/PatientEncounter/index.tsx:62
-#: src/containers/EncounterList/index.tsx:90
-#: src/containers/VideoCall/index.tsx:26
+#: src/components/PatientEncounter/index.tsx:106
+#: src/containers/EncounterList/index.tsx:136
+#: src/containers/VideoCall/index.tsx:23
 msgid "Video call"
 msgstr "Videollamada"
 
@@ -1700,10 +1932,10 @@ msgstr "Bienvenido a"
 msgid "y.o."
 msgstr "años"
 
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:159
-#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:185
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:218
+#: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:246
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:136
-#: src/utils/questionnaire.ts:62
+#: src/utils/questionnaire.ts:63
 msgid "Yes"
 msgstr "Sí"
 

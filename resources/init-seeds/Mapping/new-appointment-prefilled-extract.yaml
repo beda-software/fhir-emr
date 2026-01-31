@@ -1,0 +1,37 @@
+resourceType: Mapping
+id: new-appointment-prefilled-extract
+type: FHIRPath
+body:
+  "{% assign %}":
+    - patientRef: "{{ %QuestionnaireResponse.answers('patient') }}"
+    - practitionerRoleId: "{{ %QuestionnaireResponse.answers('predefined-practitioner-role-id') }}"
+    - practitionerRoleDisplay: "{{ %QuestionnaireResponse.answers('practitioner-name') }}"
+    - healthcareServiceId: "{{ %QuestionnaireResponse.answers('predefined-healthcare-service-id') }}"
+    - healthcareServiceDisplay: "{{ %QuestionnaireResponse.answers('predefined-healthcare-service-name') }}"
+    - startDateTime: "{{ %QuestionnaireResponse.answers('start-datetime') }}"
+
+  resourceType: Bundle
+  type: transaction
+  entry:
+    - request:
+        method: POST
+        url: /Appointment
+      resource:
+        resourceType: Appointment
+        status: booked
+        start: "{{ %startDateTime }}"
+        end: "{{ %startDateTime }}"
+        # need to fix duration to show correct 'end' DateTime
+        participant:
+          - actor:
+              reference: "{{ %patientRef.reference }}"
+              display: "{{ %patientRef.display }}"
+            status: accepted
+          - actor:
+              reference: "PractitionerRole/{{ %practitionerRoleId }}"
+              display: "{{ %practitionerRoleDisplay }}"
+            status: accepted
+          - actor:
+              reference: "HealthcareService/{{ %healthcareServiceId }}"
+              display: "{{ %healthcareServiceDisplay }}"
+            status: accepted

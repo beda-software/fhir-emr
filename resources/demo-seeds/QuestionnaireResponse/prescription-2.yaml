@@ -1,0 +1,32 @@
+questionnaire: medication-request
+meta:
+  lastUpdated: "2023-12-03T09:27:37.174177Z"
+  createdAt: "2023-12-03T09:27:37.174177Z"
+  versionId: "103"
+encounter:
+  reference: urn:uuid:Encounter:encounter-2
+item:
+  - answer:
+      - value:
+          string: patient1
+    linkId: patientId
+  - answer:
+      - value:
+          string: practitioner1
+    linkId: authorId
+  - answer:
+      - value:
+          string: Practitioner
+    linkId: authorType
+  - answer:
+      - value:
+          Reference:
+            reference: urn:uuid:Medication:medication-1
+            display: Edarbi 40mg 25 tablets
+    linkId: medication
+resourceType: QuestionnaireResponse
+status: completed
+id: prescription-2
+authored: "2023-12-03T09:27:37Z"
+subject:
+  reference: urn:uuid:Patient:patient1

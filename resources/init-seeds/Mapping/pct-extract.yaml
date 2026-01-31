@@ -1,0 +1,57 @@
+resourceType: Mapping
+id: pct-extract
+type: FHIRPath
+body:
+  "{% assign %}":
+    - qrId: "{{ %QuestionnaireResponse.id }}"
+    - qrVersion: "{{ %QuestionnaireResponse.meta.versionId }}"
+    - qrLastUpdated: "{{ iif(%QuestionnaireResponse.meta.lastUpdated.exists(), %QuestionnaireResponse.meta.lastUpdated, %QuestionnaireResponse.answers('dateTime')) }}"
+    - patientId: "{{ %QuestionnaireResponse.answers('patientId') }}"
+    - patientName: "{{ %QuestionnaireResponse.answers('patientName') }}"
+    - pct: "{{ %QuestionnaireResponse.answers('pct-level') }}"
+    - dateTime: "{{ %QuestionnaireResponse.answers('dateTime') }}"
+    - laboratory: "{{ %QuestionnaireResponse.answers('laboratory') }}"
+    - orderNumber: "{{ %QuestionnaireResponse.answers('order-number') }}"
+
+  resourceType: Bundle
+  type: transaction
+  entry:
+    - request:
+        method: POST
+        url: /Observation
+      fullUrl: "{{ 'urn:uuid:observation-id' }}"
+      resource:
+        resourceType: Observation
+        status: final
+        category:
+          - coding:
+              - system: "http://terminology.hl7.org/CodeSystem/observation-category"
+                code: "laboratory"
+        code:
+          coding:
+            - system: "http://loinc.org"
+              code: "33959-8"
+              display: "PCT"
+        subject:
+          reference: "Patient/{{ %patientId }}"
+          display: "{{ %patientName }}"
+        effectiveDateTime: "{{ %dateTime }}"
+        valueQuantity:
+          value: "{{ %pct }}"
+          unit: "pg/ml"
+          system: "http://unitsofmeasure.org"
+          code: "pg/ml"
+
+        "{% merge %}":
+          - "{% if %orderNumber.exists() and %orderNumber != '' %}":
+              identifier:
+                - system: "http://beda.software/lab-order-number"
+                  value: "{{ %orderNumber }}"
+          - "{% if %laboratory.exists() %}":
+              performer:
+                - display: "{{ %laboratory.display }}"
+                  "{% merge %}":
+                    - "{% if %laboratory.system.exists() or %laboratory.code.exists() %}":
+                        identifier:
+                          system: "{{ iif(%laboratory.system.exists(), %laboratory.system, 'http://beda.software/lab-code') }}"
+                          value: "{{ %laboratory.code }}"

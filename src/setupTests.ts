@@ -12,21 +12,22 @@ import {
     Resource,
 } from 'fhir/r4b';
 
-import { saveFHIRResource as aidboxSaveFHIRResource } from 'aidbox-react/lib/services/fhir';
-import {
-    axiosInstance,
-    resetInstanceToken as resetAidboxInstanceToken,
-    setInstanceBaseURL as setAidboxInstanceBaseURL,
-} from 'aidbox-react/lib/services/instance';
-import { formatFHIRDateTime } from 'aidbox-react/lib/utils/date';
-import { withRootAccess, LoginService, getToken } from 'aidbox-react/lib/utils/tests';
-
-import { User, ValueSet } from '@beda.software/aidbox-types';
-import { ensure, getReference } from '@beda.software/fhir-react';
+import { CodeSystem, User, ValueSet } from '@beda.software/aidbox-types';
+import config from '@beda.software/emr-config';
+import { ensure, formatFHIRDateTime, getReference, withRootAccess } from '@beda.software/fhir-react';
+import { RemoteData, Token } from '@beda.software/remote-data';
 
 import { restoreUserSession } from 'src/containers/App/utils.ts';
 import { login as loginService } from 'src/services/auth';
-import { createFHIRResource, saveFHIRResource, resetInstanceToken as resetFHIRInstanceToken } from 'src/services/fhir';
+import {
+    axiosInstance,
+    resetInstanceToken,
+    setAidboxInstanceBaseURL,
+    aidboxSaveFHIRResource,
+    createFHIRResource,
+    saveFHIRResource,
+    aidboxService,
+} from 'src/services/fhir';
 
 declare global {
     // eslint-disable-next-line no-var, @typescript-eslint/no-explicit-any
@@ -38,6 +39,18 @@ global.AppleID = {
         init: vi.fn(),
     },
 };
+
+export type LoginService = (user: User) => Promise<RemoteData<Token>>;
+
+export async function getAidboxToken(user: User, loginService: LoginService): Promise<Token> {
+    if (!user.email) {
+        throw new Error('Can not login for user without an email');
+    }
+
+    const result = await loginService(user);
+
+    return ensure(result);
+}
 
 export async function createConsent(consent: Partial<Consent> = {}) {
     return ensure(
@@ -137,11 +150,29 @@ export async function createEncounter(subject: Reference, participant: Participa
     );
 }
 
+export async function createCodeSystem(codeSystemData: Partial<CodeSystem>) {
+    return await aidboxService<CodeSystem>({
+        baseURL: config.baseURL,
+        url: `/fhir/CodeSystem/${codeSystemData.id ?? ''}`,
+        method: 'PUT',
+        data: {
+            resourceType: 'CodeSystem',
+            status: 'active',
+            ...codeSystemData,
+        },
+    });
+}
+
 export async function createValueSet(valueSetData: Partial<ValueSet>) {
-    await createFHIRResource<ValueSet>({
-        resourceType: 'ValueSet',
-        status: 'active',
-        ...valueSetData,
+    return await aidboxService<ValueSet>({
+        baseURL: config.baseURL,
+        url: `/fhir/ValueSet/${valueSetData.id ?? ''}`,
+        method: 'PUT',
+        data: {
+            resourceType: 'ValueSet',
+            status: 'active',
+            ...valueSetData,
+        },
     });
 }
 
@@ -173,10 +204,9 @@ export const createUser = async ({ patient, user }: { patient: Patient; user?: P
 };
 
 export async function login(user: User) {
-    resetAidboxInstanceToken();
-    resetFHIRInstanceToken();
+    resetInstanceToken();
 
-    const token = await getToken(user, loginService as LoginService);
+    const token = await getAidboxToken(user, loginService as LoginService);
 
     await restoreUserSession(token.access_token);
 
@@ -221,7 +251,7 @@ beforeAll(async () => {
 let txId: string;
 
 beforeEach(async () => {
-    await withRootAccess(async () => {
+    await withRootAccess(axiosInstance, async () => {
         const response = await axiosInstance({
             method: 'POST',
             url: '/$psql',
@@ -234,9 +264,8 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-    resetAidboxInstanceToken();
-    resetFHIRInstanceToken();
-    await withRootAccess(async () => {
+    resetInstanceToken();
+    await withRootAccess(axiosInstance, async () => {
         await axiosInstance({
             method: 'POST',
             url: '/$psql',

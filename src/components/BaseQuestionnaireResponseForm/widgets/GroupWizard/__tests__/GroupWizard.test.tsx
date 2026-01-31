@@ -4,11 +4,10 @@ import { screen, render, act, fireEvent, waitFor } from '@testing-library/react'
 import { Patient, Practitioner } from 'fhir/r4b';
 import { expect, test, vi } from 'vitest';
 
-import { axiosInstance } from 'aidbox-react/lib/services/instance';
-
 import { WithId, withRootAccess } from '@beda.software/fhir-react';
 
 import { PatientDocument } from 'src/containers/PatientDetails/PatientDocument';
+import { axiosInstance } from 'src/services/fhir';
 import { createPatient, createPractitionerRole, loginAdminUser } from 'src/setupTests';
 import { ThemeProvider } from 'src/theme';
 

@@ -1,7 +1,0 @@
-id: receptionist
-resourceType: User
-password: >-
-  $s0$f0801$LMpyfbkv6WHBT5wNMD3EGw==$1tIoc+3Ja1h56jyLX4WAjiOSCUsRFl4scvAwG4ohhc0=
-fhirUser:
-  id: "receptionist"
-  resourceType: "Practitioner"

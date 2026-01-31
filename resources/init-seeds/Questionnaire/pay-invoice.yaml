@@ -1,0 +1,30 @@
+resourceType: Questionnaire
+id: pay-invoice
+status: active
+title: Pay invoice
+mapping:
+  - reference: urn:uuid:Mapping:pay-invoice-extract
+launchContext:
+  - name:
+      code: Invoice
+    type:
+      - Invoice
+    description: The invoice to change status
+item:
+  - type: group
+    linkId: root-group
+    item:
+      - text: Current Invoice ID
+        type: string
+        linkId: current-invoice-id
+        hidden: true
+        initialExpression:
+          language: text/fhirpath
+          expression: "%Invoice.id"
+      - text: Are you sure to pay this invoice?
+        linkId: are-you-sure
+        type: display
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/pay-invoice
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire

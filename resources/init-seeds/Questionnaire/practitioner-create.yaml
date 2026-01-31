@@ -1,0 +1,59 @@
+id: practitioner-create
+resourceType: Questionnaire
+name: practitioner-create
+title: Practitioner create
+status: active
+mapping:
+  - reference: urn:uuid:Mapping:practitioner-create
+item:
+  - linkId: last-name
+    type: string
+    text: Last name
+    required: true
+  - linkId: first-name
+    type: string
+    text: First name
+  - linkId: middle-name
+    type: string
+    text: Middle name
+  - text: Specialty
+    type: choice
+    linkId: specialty
+    answerOption:
+      - valueCoding:
+          code: "394577000"
+          system: http://snomed.info/sct
+          display: Anesthetics
+      - valueCoding:
+          code: "394579002"
+          system: http://snomed.info/sct
+          display: Cardiology
+      - valueCoding:
+          code: "394582007"
+          system: http://snomed.info/sct
+          display: Dermatology
+      - valueCoding:
+          code: "394583002"
+          system: http://snomed.info/sct
+          display: Endocrinology
+      - valueCoding:
+          code: "419772000"
+          system: http://snomed.info/sct
+          display: Family practice
+  - text: Available services
+    type: reference
+    referenceResource:
+      - HealthcareService
+    required: false
+    repeats: true
+    linkId: services
+    answerExpression:
+      language: application/x-fhir-query
+      expression: "HealthcareService?active=true"
+    choiceColumn:
+      - forDisplay: true
+        path: type.first().coding.first().display
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/practitioner-create

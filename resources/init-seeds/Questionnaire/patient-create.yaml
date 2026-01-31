@@ -1,0 +1,54 @@
+id: patient-create
+resourceType: Questionnaire
+name: patient-create
+title: Patient create
+status: active
+mapping:
+  - reference: urn:uuid:Mapping:patient-create
+item:
+  - linkId: patient-id
+    type: string
+    text: patientId
+    hidden: true
+  - linkId: last-name
+    type: string
+    text: Last name
+    required: true
+  - linkId: first-name
+    type: string
+    text: First name
+    required: true
+  - linkId: middle-name
+    type: string
+    text: Middle name
+  - linkId: birth-date
+    type: date
+    text: Birth date
+  - linkId: gender
+    type: choice
+    text: Gender
+    answerOption:
+      - valueCoding:
+          code: male
+          system: http://hl7.org/fhir/administrative-gender
+          display: Male
+      - valueCoding:
+          code: female
+          system: http://hl7.org/fhir/administrative-gender
+          display: Female
+  - linkId: ssn
+    type: string
+    text: SSN
+  - linkId: mobile
+    type: string
+    text: Phone number
+    itemControl:
+      coding:
+        - code: phoneWidget
+  - linkId: email
+    type: string
+    text: Email
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/patient-create

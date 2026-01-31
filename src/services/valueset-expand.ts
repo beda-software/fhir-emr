@@ -2,10 +2,10 @@ import axios from 'axios';
 import { ValueSet, ValueSetExpansionContains } from 'fhir/r4b';
 import { upperFirst } from 'lodash';
 
-import { service } from 'aidbox-react/lib/services/service';
-
 import { SearchParams } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess, success, failure, RemoteDataResult, RemoteData } from '@beda.software/remote-data';
+
+import { aidboxService } from 'src/services/fhir';
 
 import { getCurrentLocale } from './i18n';
 
@@ -96,13 +96,11 @@ export async function expandFHIRValueSet(answerValueSet: string | undefined, sea
         return [];
     }
 
-    const valueSetId = answerValueSet.split('/').slice(-1);
-
     const response: RemoteDataResult<ValueSetOption[]> = mapSuccess(
-        await service<ValueSet>({
-            url: `ValueSet/${valueSetId}/$expand`,
+        await aidboxService<ValueSet>({
+            url: `/fhir/ValueSet/$expand?url=${answerValueSet}`,
             params: {
-                filter: searchText,
+                ...(searchText ? { filter: searchText } : {}),
                 count: 50,
             },
         }),
@@ -167,8 +165,13 @@ export async function expandEMRValueSet(
     searchText: string,
     preferredTerminologyServer?: string,
 ) {
-    const predefinedValueSetsList: string[] = ['medicationknowledge-package-type'];
-
+    const predefinedValueSetsList: string[] = [
+        'medicationknowledge-package-type',
+        'request-priority',
+        'request-intent',
+        'spia-requesting-refset-3',
+        'radiology-referral',
+    ];
     if (preferredTerminologyServer && answerValueSet) {
         const res = await expandExternalTerminology(preferredTerminologyServer, answerValueSet, searchText);
         if (isSuccess(res)) {

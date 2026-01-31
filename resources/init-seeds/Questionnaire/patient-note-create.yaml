@@ -1,0 +1,56 @@
+id: patient-note-create
+resourceType: Questionnaire
+name: patient-note-create
+title: patient note create
+status: active
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+  - name:
+      code: Author
+    type:
+      - Practitioner
+mapping:
+  - reference: urn:uuid:Mapping:patient-note-create-extract
+item:
+  - text: Title
+    required: true
+    type: string
+    linkId: note-title
+  - text: Note
+    required: true
+    type: string
+    linkId: note-content
+    itemControl:
+      coding:
+        - code: markdown-editor
+  - text: Patient ID
+    required: true
+    type: string
+    linkId: patient-id
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.id"
+  - text: Author ID
+    required: true
+    type: string
+    linkId: author-id
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Author.id"
+  - text: Author Name
+    required: true
+    type: string
+    linkId: author-name
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Author.name.first().given.first() + ' ' + %Author.name.first().family"
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/patient-note-create

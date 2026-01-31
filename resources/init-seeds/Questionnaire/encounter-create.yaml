@@ -1,0 +1,66 @@
+id: encounter-create
+resourceType: Questionnaire
+name: encounter-create
+title: Encounter create
+status: active
+mapping:
+  - reference: urn:uuid:Mapping:encounter-create-extract
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+item:
+  - text: PatientId
+    type: string
+    linkId: patientId
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.id"
+  - text: PatientName
+    type: string
+    linkId: patientName
+    readOnly: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.name.first().given.first() + ' ' + %Patient.name.first().family"
+  - text: Practitioner
+    type: reference
+    referenceResource:
+      - PractitionerRole
+    required: true
+    linkId: practitioner-role
+    answerExpression:
+      language: application/x-fhir-query
+      expression: "PractitionerRole?_assoc=practitioner"
+    choiceColumn:
+      - forDisplay: true
+        path: >-
+          practitioner.resource.name.given.first() + ' ' +
+          practitioner.resource.name.family + ' - ' + specialty.first().coding.display
+  - text: Service
+    type: choice
+    linkId: service
+    required: true
+    repeats: false
+    answerOption:
+      - valueCoding:
+          system: http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type
+          code: consultation
+          display: The first appointment
+      - valueCoding:
+          system: http://fhir.org/guides/argonaut-scheduling/CodeSystem/visit-type
+          code: follow-up
+          display: A follow up visit
+  - text: Date
+    type: dateTime
+    linkId: date
+    initialExpression:
+      language: text/fhirpath
+      expression: "now()"
+
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/encounter-create

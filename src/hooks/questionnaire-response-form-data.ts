@@ -9,6 +9,7 @@ import {
     Resource,
     OperationOutcome,
     QuestionnaireResponse,
+    Provenance,
 } from 'fhir/r4b';
 import { omit } from 'lodash';
 import moment from 'moment';
@@ -28,6 +29,8 @@ import { RemoteDataResult, failure, isFailure, isSuccess, mapSuccess, success } 
 
 import { extractDraftUnversionedKey } from 'src/hooks';
 import { getFHIRResource, patchFHIRResource, saveFHIRResource, service, updateFHIRResource } from 'src/services/fhir';
+import { compileAsFirst } from 'src/utils/fhirpath';
+import { selectCurrentUserRoleResource } from 'src/utils/role';
 
 export type QuestionnaireResponseFormSaveResponse<R extends Resource = any> = {
     questionnaireResponse: FHIRQuestionnaireResponse;
@@ -119,6 +122,63 @@ export const inMemorySaveService: QuestionnaireResponseSaveService = (qr: FHIRQu
 export const persistSaveService: QuestionnaireResponseSaveService = async (qr: FHIRQuestionnaireResponse) =>
     await saveFHIRResource(qr);
 
+// NOTE: The next step is to create Provenance after extract is done and remove
+// Provenance creation from mappers
+export const persistWithProvenanceSaveService: QuestionnaireResponseSaveService = async (
+    qr: FHIRQuestionnaireResponse,
+) => {
+    const qrSaveResponse = await saveFHIRResource<FHIRQuestionnaireResponse>(qr);
+    const author = selectCurrentUserRoleResource();
+    const authorDisplay =
+        author.resourceType === 'Organization'
+            ? author.name
+            : compileAsFirst<typeof author, string>(
+                  `${author.resourceType}.name.0.given.0 + ' ' + ${author.resourceType}.name.0.family`,
+              )(author);
+    if (isSuccess(qrSaveResponse)) {
+        const provenanceResponse = await saveFHIRResource<Provenance>({
+            resourceType: 'Provenance',
+            target: [
+                {
+                    // Put non-history ref to target according the current logic
+                    reference: `QuestionnaireResponse/${qrSaveResponse.data.id}`,
+                },
+            ],
+            recorded: qrSaveResponse.data.meta!.lastUpdated!,
+            agent: [
+                {
+                    who: getReference(author, authorDisplay),
+                },
+            ],
+            activity: {
+                coding: [
+                    {
+                        system: 'http://terminology.hl7.org/CodeSystem/v3-DataOperation',
+                        code: qr.id ? 'UPDATE' : 'CREATE',
+                        display: qr.id ? 'update' : 'create',
+                    },
+                ],
+            },
+            entity: [
+                {
+                    role: 'source',
+                    what: {
+                        reference: `QuestionnaireResponse/${qrSaveResponse.data.id}/_history/${
+                            qrSaveResponse.data.meta!.versionId
+                        }`,
+                    },
+                },
+            ],
+        });
+
+        if (isFailure(provenanceResponse)) {
+            console.error('Failed to save provenance for QuestionnaireResponse', qr.id, provenanceResponse.error);
+        }
+    }
+
+    return qrSaveResponse;
+};
+
 export const persistDraftSaveService: QuestionnaireResponseDraftSaveService = async (qr: FHIRQuestionnaireResponse) => {
     // NOTE: We remove version from draft to avoid conflict with server version
     return await updateFHIRResource<QuestionnaireResponse>(omit(qr, 'meta.versionId'), {
@@ -170,7 +230,7 @@ function findLocalItems(query: string) {
     const results = [];
     for (const localItem in localStorage) {
         if (Object.prototype.hasOwnProperty.call(localStorage, localItem)) {
-            if (localItem.match(query)) {
+            if (extractDraftUnversionedKey(localItem) === query) {
                 const value = JSON.parse(localStorage.getItem(localItem) ?? '{}');
                 results.push({ key: localItem, val: value });
             }
@@ -266,6 +326,7 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
         }
         if (questionnaireLoader.type === 'id') {
             return service<FHIRQuestionnaire>({
+                ...(config.sdcBackendUrl ? { baseURL: config.sdcBackendUrl } : {}),
                 method: 'GET',
                 url: `/Questionnaire/${questionnaireLoader.questionnaireId}/$assemble`,
             });

@@ -6,7 +6,6 @@ const config = {
     tier: 'production',
     baseURL: 'https://aidbox.emr.beda.software',
     sdcIdeUrl: 'https://sdc.beda.software',
-    aiQuestionnaireBuilderUrl: 'https://builder.emr.beda.software',
 
     sdcBackendUrl: null,
     webSentryDSN: null,

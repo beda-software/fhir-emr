@@ -1,0 +1,43 @@
+resourceType: Questionnaire
+id: medication-request-cancel
+status: active
+title: Medication Request Cancel
+name: medication-request-cancel
+mapping:
+  - reference: urn:uuid:Mapping:prescription-cancel
+launchContext:
+  - name:
+      code: MedicationRequest
+    type:
+      - MedicationRequest
+    description: The MedicationRequest to change status
+  - name:
+      code: Medication
+    type:
+      - Medication
+    description: The Medication to change status
+item:
+  - type: group
+    linkId: root-group
+    item:
+      - text: Current MedicationRequest ID
+        type: string
+        linkId: current-medication-request-id
+        hidden: true
+        initialExpression:
+          language: text/fhirpath
+          expression: "%MedicationRequest.id"
+      - text: Current Medication ID
+        type: string
+        linkId: current-medication-id
+        hidden: true
+        initialExpression:
+          language: text/fhirpath
+          expression: "%Medication.id"
+      - text: Are you sure to cancel this request?
+        linkId: are-you-sure
+        type: display
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/medication-request-cancel
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire

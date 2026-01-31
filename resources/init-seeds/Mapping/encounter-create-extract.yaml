@@ -1,0 +1,47 @@
+resourceType: Mapping
+id: encounter-create-extract
+type: FHIRPath
+body:
+  "{% assign %}":
+    - appointmentId: "{{ %QuestionnaireResponse.answers('appointmentId') }}"
+    - service: "{{ %QuestionnaireResponse.answers('service') }}"
+    - patientId: "{{ %QuestionnaireResponse.answers('patientId') }}"
+    - patientReference: "{{ %QuestionnaireResponse.answers('patient-reference') }}"
+    - startDateTime: "{{ %QuestionnaireResponse.answers('date') }}"
+    - patientName: "{{ %QuestionnaireResponse.answers('patientName') }}"
+    - practitionerRole: "{{ %QuestionnaireResponse.answers('practitioner-role') }}"
+
+  resourceType: Bundle
+  type: transaction
+  entry:
+    - request:
+        method: POST
+        url: /Encounter
+      resource:
+        resourceType: Encounter
+        status: in-progress
+        class:
+          code: "{{ %service.code }}"
+          system: "{{ %service.system }}"
+          display: "{{ %service.display }}"
+        period:
+          start: "{{ %startDateTime }}"
+        subject:
+          "{% if %patientReference.exists() %}":
+            reference: "{{ %patientReference.reference }}"
+            display: "{{ %patientReference.display }}"
+          "{% else %}":
+            reference: "{{ 'Patient/' + %patientId }}"
+            display: "{{ %patientName }}"
+        participant:
+          - individual: "{{ %practitionerRole }}"
+        appointment:
+          - "{% if %appointmentId.exists() %}":
+              reference: "{{ 'Appointment/' + %appointmentId }}"
+
+    - "{% if %appointmentId.exists() %}":
+        request:
+          method: PATCH
+          url: "{{ '/Appointment/' + %appointmentId }}"
+        resource:
+          status: checked-in

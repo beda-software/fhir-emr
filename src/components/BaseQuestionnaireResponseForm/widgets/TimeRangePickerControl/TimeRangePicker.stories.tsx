@@ -47,3 +47,23 @@ export const NoItems: Story = {
         />
     ),
 };
+
+export const Disabled: Story = {
+    render: () => (
+        <TimeRangePickerControl
+            parentPath={[]}
+            questionItem={{
+                text: 'Time range picker',
+                type: 'group',
+                linkId: 'example',
+                required: true,
+                readOnly: true,
+                item: [
+                    { type: 'time', linkId: 'start', entryFormat: 'Start time' },
+                    { type: 'time', linkId: 'end', entryFormat: 'End time' },
+                ],
+            }}
+            context={[] as ItemContext[]}
+        />
+    ),
+};

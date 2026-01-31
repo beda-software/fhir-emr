@@ -13,6 +13,7 @@ export function getEncounterListSearchBarColumns(): SearchBarColumn[] {
         },
         {
             id: 'practitioner',
+            searchParam: 'participant-display',
             type: SearchBarColumnType.STRING,
             placeholder: t`Search by practitioner`,
         },

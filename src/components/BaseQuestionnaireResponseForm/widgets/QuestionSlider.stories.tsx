@@ -88,3 +88,21 @@ export const HelpText: Story = {
         />
     ),
 };
+
+export const Disabled: Story = {
+    render: () => (
+        <QuestionSlider
+            parentPath={[]}
+            questionItem={{
+                text: 'Example',
+                type: 'string',
+                linkId: 'example',
+                required: true,
+                readOnly: true,
+                start: 1,
+                stop: 10,
+            }}
+            context={{} as ItemContext}
+        />
+    ),
+};

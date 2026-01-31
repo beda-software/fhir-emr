@@ -23,6 +23,8 @@ import * as yup from 'yup';
 
 import 'react-phone-input-2/lib/style.css';
 
+import { RemoteDataResult } from '@beda.software/remote-data';
+
 import { CustomYupTestsMap, questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
 import s from './BaseQuestionnaireResponseForm.module.scss';
@@ -36,7 +38,7 @@ import { FormFooterComponentProps, FormFooter } from './FormFooter';
 
 export interface BaseQuestionnaireResponseFormProps {
     formData: QuestionnaireResponseFormData;
-    onSubmit?: (formData: QuestionnaireResponseFormData) => Promise<any>;
+    onSubmit?: (formData: QuestionnaireResponseFormData) => Promise<void>;
     readOnly?: boolean;
     itemControlQuestionItemComponents?: ItemControlQuestionItemComponentMapping;
     itemControlGroupItemComponents?: ItemControlGroupItemComponentMapping;
@@ -45,6 +47,8 @@ export interface BaseQuestionnaireResponseFormProps {
     onCancel?: () => void;
 
     onQRFUpdate?: (questionnaireResponse: QuestionnaireResponse) => void;
+    saveDraftButtonTitle?: React.ReactNode;
+    onSaveDraft?: (questionnaireResponse: QuestionnaireResponse) => Promise<RemoteDataResult<QuestionnaireResponse>>;
 
     ItemWrapper?: ComponentType<{
         item: QuestionItemProps;
@@ -93,7 +97,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
         if (isDirty) {
             onQRFUpdate?.(rootContext.resource);
         }
-    }, [formData, formValues, rootContext.resource, onQRFUpdate, isDirty]);
+    }, [rootContext.resource, onQRFUpdate, isDirty]);
 
     const wrapControls = useCallback(
         (mapping: { [x: string]: QuestionItemComponent }): { [x: string]: QuestionItemComponent } => {
@@ -215,6 +219,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                     <QuestionnaireResponseFormProvider
                         formValues={formValues}
                         // NOTE: setValue as any is required to speed up performance!
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         setFormValues={(values, fieldPath, value) => (setValue as any)(fieldPath.join('.'), value)}
                         groupItemComponent={groupItemComponent}
                         itemControlGroupItemComponents={itemControlGroupItemComponents}
@@ -244,7 +249,8 @@ function isGroupWizard(q: FCEQuestionnaire) {
         const itemControlCode = i.itemControl?.coding?.[0]?.code;
 
         return (
-            itemControlCode && ['wizard', 'wizard-with-tooltips', 'wizard-navigation-group'].includes(itemControlCode)
+            itemControlCode &&
+            ['wizard', 'wizard-with-tooltips', 'wizard-vertical', 'wizard-navigation-group'].includes(itemControlCode)
         );
     });
 }

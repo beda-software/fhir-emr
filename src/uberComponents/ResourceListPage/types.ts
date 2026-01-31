@@ -1,3 +1,4 @@
+import type { TableProps as ANTDTableProps } from 'antd/es/table';
 import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 
 import { SearchParams } from '@beda.software/fhir-react';
@@ -5,6 +6,13 @@ import { SearchParams } from '@beda.software/fhir-react';
 import { SearchBarColumn, SorterColumn } from '../../components/SearchBar/types';
 
 export type RecordType<R extends Resource> = { resource: R; bundle: Bundle; children?: RecordType<R>[] };
+
+export type TableProps<R extends Resource> = Partial<
+    Omit<
+        ANTDTableProps<RecordType<R>>,
+        'pagination' | 'onChange' | 'rowSelection' | 'locale' | 'rowKey' | 'dataSource' | 'columns' | 'loading'
+    >
+>;
 
 export interface ReportColumn {
     title: React.ReactNode;
@@ -39,6 +47,14 @@ export interface ResourceListProps<R extends Resource, Extra = unknown, Link = s
 
     /* Default search params */
     searchParams?: SearchParams;
+
+    /**
+     * Search parameter name used to ensure unique and stable ordering of results.
+     * This is typically used as a tie-breaker when sorting by other fields to guarantee
+     * consistent pagination results. Common values include '_id' or '_lastUpdated'.
+     * Set to null to disable unique ordering.
+     */
+    uniqueOrderSortSearchParam?: string | null;
 
     /* Filter that are displayed in the search bar and inside table columns */
     getFilters?: () => SearchBarColumn[];
@@ -84,6 +100,9 @@ export interface ResourceListProps<R extends Resource, Extra = unknown, Link = s
      * TODO: https://github.com/beda-software/fhir-emr/issues/414
      */
     getReportColumns?: (bundle: Bundle, reportBundle?: Bundle) => Array<ReportColumn>;
+
+    /* Page content max width */
+    maxWidth?: number | string;
 }
 
 export interface NavigationActionType<Link = string> {

@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro';
 import { Empty } from 'antd';
-import { ColumnsType, TablePaginationConfig } from 'antd/lib/table';
-import { FilterValue, SorterResult } from 'antd/lib/table/interface';
+import type { FilterValue, SorterResult, ColumnsType, TablePaginationConfig } from 'antd/es/table/interface';
 import { Resource } from 'fhir/r4b';
 import React, { useCallback, useMemo } from 'react';
 
@@ -27,6 +26,7 @@ import {
     RecordType,
     ResourceListProps,
     TableManager,
+    TableProps,
 } from '../ResourceListPage/types';
 
 type ResourceListPageContentProps<R extends Resource> = ResourceListProps<R, WebExtra> & {
@@ -46,7 +46,10 @@ export function ResourceListPageContent<R extends Resource>({
     getTableColumns,
     defaultLaunchContext,
     getReportColumns,
-}: ResourceListPageContentProps<R>) {
+    maxWidth,
+    tableProps,
+    uniqueOrderSortSearchParam,
+}: ResourceListPageContentProps<R> & { tableProps?: TableProps<R> }) {
     const allFilters = getFilters?.() ?? [];
     const allSorters = getSorters?.() ?? [];
 
@@ -60,10 +63,17 @@ export function ResourceListPageContent<R extends Resource>({
     const { sortSearchParam, setCurrentSorter, currentSorter } = useTableSorter(allSorters, defaultSearchParams);
 
     const { recordResponse, reload, pagination, selectedRowKeys, setSelectedRowKeys, selectedResourcesBundle } =
-        useResourceListPage(resourceType, extractPrimaryResources, extractChildrenResources, columnsFilterValues, {
-            ...defaultSearchParams,
-            _sort: sortSearchParam,
-        });
+        useResourceListPage(
+            resourceType,
+            extractPrimaryResources,
+            extractChildrenResources,
+            columnsFilterValues,
+            {
+                ...defaultSearchParams,
+                _sort: sortSearchParam,
+            },
+            uniqueOrderSortSearchParam,
+        );
 
     const handleTableChange = useCallback(
         (
@@ -147,7 +157,7 @@ export function ResourceListPageContent<R extends Resource>({
     };
 
     return (
-        <PageContainerContent level={2}>
+        <PageContainerContent level={2} maxWidth={maxWidth}>
             {renderHeader()}
 
             {getReportColumns ? (
@@ -199,6 +209,7 @@ export function ResourceListPageContent<R extends Resource>({
                         : []),
                 ]}
                 loading={isLoading(recordResponse) && { indicator: SpinIndicator }}
+                {...tableProps}
             />
         </PageContainerContent>
     );

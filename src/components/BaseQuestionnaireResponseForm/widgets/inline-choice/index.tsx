@@ -35,7 +35,7 @@ export function InlineChoice(props: QuestionItemProps) {
 
     if (repeats) {
         return (
-            <Form.Item {...formItem} data-testid={linkId}>
+            <Form.Item {...formItem} data-testid={linkId} data-linkid={linkId}>
                 <Space direction={choiceOrientation} wrap style={styles}>
                     {answerOptionList?.map((answerOption) => {
                         const optionAnswerValue = toAnswerValue(answerOption, 'value')!;
@@ -60,7 +60,7 @@ export function InlineChoice(props: QuestionItemProps) {
         );
     } else {
         return (
-            <Form.Item {...formItem} data-testid={linkId}>
+            <Form.Item {...formItem} data-testid={linkId} data-linkid={linkId}>
                 <Space direction={choiceOrientation} wrap style={styles}>
                     {answerOptionList?.map((answerOption) => {
                         const optionAnswerValue = toAnswerValue(answerOption, 'value');

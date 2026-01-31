@@ -5,8 +5,8 @@ import { useCallback, useMemo } from 'react';
 import { ActionMeta, MultiValue, SingleValue } from 'react-select';
 import { AnswerValue, FormAnswerItems, parseFhirQueryExpression, QuestionItemProps } from 'sdc-qrf';
 
-import { RenderRemoteData, ResourcesMap, useService } from '@beda.software/fhir-react';
-import { buildQueryParams, isSuccess } from '@beda.software/remote-data';
+import { ResourcesMap, useService } from '@beda.software/fhir-react';
+import { buildQueryParams, isLoading, isSuccess } from '@beda.software/remote-data';
 
 import { AsyncSelect } from 'src/components/Select';
 import { LoadResourceOption, loadResourceOptions } from 'src/services/questionnaire';
@@ -178,28 +178,27 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
 function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource = any>(
     props: AnswerReferenceProps<R, IR>,
 ) {
+    const { linkId } = props.questionItem;
     const { debouncedLoadOptions, fieldController, repeats, placeholder, optionsRD } = useAnswerReference(props);
 
     const { formItem, onSelect, disabled } = fieldController;
+    const options = isSuccess(optionsRD) ? optionsRD.data : [];
 
     return (
-        <RenderRemoteData remoteData={optionsRD}>
-            {(options) => (
-                <Form.Item {...formItem} data-testid={props.questionItem.linkId}>
-                    <AsyncSelect
-                        onChange={onSelect}
-                        value={fieldController.value}
-                        loadOptions={debouncedLoadOptions}
-                        defaultOptions={options}
-                        getOptionLabel={(option) => getAnswerDisplay(option.value!)}
-                        getOptionValue={(option) => getAnswerCode(option.value!)}
-                        isMulti={repeats}
-                        placeholder={placeholder}
-                        isDisabled={disabled}
-                    />
-                </Form.Item>
-            )}
-        </RenderRemoteData>
+        <Form.Item {...formItem} data-testid={linkId} data-linkid={linkId}>
+            <AsyncSelect
+                onChange={onSelect}
+                value={fieldController.value}
+                loadOptions={debouncedLoadOptions}
+                defaultOptions={options}
+                getOptionLabel={(option) => getAnswerDisplay(option.value!)}
+                getOptionValue={(option) => getAnswerCode(option.value!)}
+                isMulti={repeats}
+                placeholder={placeholder}
+                isDisabled={disabled}
+                isLoading={isLoading(optionsRD)}
+            />
+        </Form.Item>
     );
 }
 

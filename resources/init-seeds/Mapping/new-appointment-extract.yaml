@@ -1,0 +1,47 @@
+resourceType: Mapping
+id: new-appointment-extract
+type: FHIRPath
+body:
+  "{% assign %}":
+    - patientId: "{{ %QuestionnaireResponse.answers('predefined-patient-id') }}"
+    - practitionerRoleId: "{{ %QuestionnaireResponse.answers('predefined-practitioner-role-id') }}"
+    - practitionerRoleDisplay: "{{ %QuestionnaireResponse.answers('predefined-practitioner-role-display') }}"
+    - patientRef: "{{ %QuestionnaireResponse.answers('patient') }}"
+    - practitionerRoleRef: "{{ %QuestionnaireResponse.answers('practitioner-role') }}"
+    - serviceRef: "{{ %QuestionnaireResponse.answers('service-type') }}"
+    - startDateTime: "{{ %QuestionnaireResponse.answers('start-datetime') }}"
+
+  resourceType: Bundle
+  type: transaction
+  entry:
+    - request:
+        method: POST
+        url: /Appointment
+      resource:
+        resourceType: Appointment
+        status: booked
+        start: "{{ %startDateTime }}"
+        end: "{{ %startDateTime }}"
+        # need to fix duration to show correct 'end' DateTime
+        participant:
+          - actor:
+              "{% if %patientRef.exists() %}":
+                reference: "{{ %patientRef.reference }}"
+                display: "{{ %patientRef.display }}"
+              "{% else %}":
+                reference: "{{ 'Patient/' + %patientId }}"
+            status: accepted
+
+          - actor:
+              "{% if %practitionerRoleRef.exists() %}":
+                reference: "{{ %practitionerRoleRef.reference }}"
+                display: "{{ %practitionerRoleRef.display }}"
+              "{% else %}":
+                reference: "{{ 'PractitionerRole/' + %practitionerRoleId }}"
+                display: "{{ %practitionerRoleDisplay }}"
+            status: accepted
+
+          - actor:
+              reference: "{{ %serviceRef.reference }}"
+              display: "{{ %serviceRef.display }}"
+            status: accepted

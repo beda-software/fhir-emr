@@ -1,0 +1,64 @@
+resourceType: Mapping
+id: complete-encounter-extract
+type: FHIRPath
+body:
+  "{% assign %}":
+    - currentEncounterId: "{{ %QuestionnaireResponse.answers('current-encounter-id') }}"
+    - startDateTime: "{{ %QuestionnaireResponse.answers('start-dateTime') }}"
+    - endDateTime: "{{ %QuestionnaireResponse.answers('end-dateTime') }}"
+    - chargeItemDefinitionUrl: "{{ %QuestionnaireResponse.answers('charge-item-definition-url') }}"
+    - priceBase: "{{ %QuestionnaireResponse.answers('price-base') }}"
+    - priceTax: "{{ %QuestionnaireResponse.answers('price-tax') }}"
+    - serviceName: "{{ %QuestionnaireResponse.answers('healthcare-service-name') }}"
+    - serviceCode: "{{ %QuestionnaireResponse.answers('healthcare-service-code') }}"
+    - subjectRef: "{{ %CurrentEncounter.subject }}"
+    - practitionerRoleRef: "{{ %CurrentEncounter.participant.first().individual }}"
+
+  resourceType: Bundle
+  type: transaction
+  entry:
+    - request:
+        method: PATCH
+        url: "/Encounter/{{ %currentEncounterId }}"
+      resource:
+        status: finished
+        period:
+          start: "{{ %startDateTime }}"
+          end: "{{ %endDateTime }}"
+
+    - fullUrl: "{{ 'urn:uuid:charge-item-id'}}"
+      request:
+        method: POST
+        url: "/ChargeItem/"
+      resource:
+        resourceType: ChargeItem
+        status: planned
+        subject: "{{ %subjectRef }}"
+        code:
+          text: "{{ %serviceName }}"
+          coding:
+            - code: "{{ %serviceCode }}"
+              display: "{{ %serviceName }}"
+        definitionCanonical:
+          - "{{ %chargeItemDefinitionUrl }}"
+
+    - request:
+        method: POST
+        url: "/Invoice/"
+      resource:
+        resourceType: Invoice
+        lineItem:
+          - chargeItemReference:
+              reference: "{{ 'urn:uuid:charge-item-id' }}"
+            priceComponent:
+              - type: base
+                amount:
+                  value: "{{ %priceBase }}"
+              - type: tax
+                amount:
+                  value: "{{ %priceTax }}"
+        date: "{{ %endDateTime }}"
+        status: issued
+        subject: "{{ %subjectRef }}"
+        participant:
+          - actor: "{{ %practitionerRoleRef }}"

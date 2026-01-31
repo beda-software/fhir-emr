@@ -6,8 +6,6 @@ import _ from 'lodash';
 import { useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { service } from 'aidbox-react/lib/services/service';
-
 import {
     WithId,
     extractBundleResources,
@@ -24,7 +22,7 @@ import { ModalTrigger } from 'src/components/ModalTrigger';
 import { AsyncSelect } from 'src/components/Select';
 import { SpinIndicator } from 'src/components/Spinner';
 import { Table } from 'src/components/Table';
-import { getFHIRResources } from 'src/services/fhir';
+import { getFHIRResources, service } from 'src/services/fhir';
 import { humanDate, humanTime } from 'src/utils/date';
 
 import { S } from './QuestionnaireItemSettings.styles';

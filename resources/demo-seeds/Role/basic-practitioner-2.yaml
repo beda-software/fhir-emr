@@ -1,0 +1,8 @@
+name: practitioner
+user:
+  reference: urn:uuid:User:practitioner2
+links:
+  practitioner:
+    reference: urn:uuid:Practitioner:practitioner2
+id: basic-practitioner-2
+resourceType: Role

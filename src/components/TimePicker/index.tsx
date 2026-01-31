@@ -1,4 +1,4 @@
-import { PickerTimeProps, RangePickerTimeProps } from 'antd/lib/time-picker';
+import type { PickerTimeProps, RangePickerTimeProps } from 'antd/es/time-picker';
 import moment from 'moment';
 import { forwardRef } from 'react';
 

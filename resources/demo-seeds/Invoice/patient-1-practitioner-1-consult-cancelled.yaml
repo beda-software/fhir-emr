@@ -1,0 +1,22 @@
+date: "2023-10-12T12:39:54+00:00"
+status: cancelled
+subject:
+  reference: urn:uuid:Patient:patient1
+  display: First Patient
+lineItem:
+  - chargeItem:
+      Reference:
+        reference: urn:uuid:ChargeItem:patient-1-consult
+    priceComponent:
+      - type: base
+        amount:
+          value: 50
+      - type: tax
+        amount:
+          value: 10
+participant:
+  - actor:
+      reference: urn:uuid:PractitionerRole:practitioner1
+      display: Basic-1 Practitioner - Endocrinology
+id: patient1-practitioner-1-consult-cancelled
+resourceType: Invoice

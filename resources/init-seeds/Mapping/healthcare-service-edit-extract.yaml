@@ -1,0 +1,49 @@
+resourceType: Mapping
+id: healthcare-service-edit-extract
+type: FHIRPath
+body:
+  "{% assign %}":
+    - healthcareServiceId: "{{ %QuestionnaireResponse.answers('healthcareServiceId') }}"
+    - chargeItemDefinitionId: "{{ %QuestionnaireResponse.answers('charge-item-definition-id') }}"
+    - duration: "{{ %QuestionnaireResponse.answers('duration') }}"
+    - visitTypeCode: "{{ %QuestionnaireResponse.answers('visit-type-code') }}"
+    - visitTypeName: "{{ %QuestionnaireResponse.answers('visit-type-name') }}"
+    - comment: "{{ %QuestionnaireResponse.answers('comment') }}"
+    - priceBase: "{{ %QuestionnaireResponse.answers('price-base') }}"
+    - priceTax: "{{ %QuestionnaireResponse.answers('price-tax') }}"
+
+  resourceType: Bundle
+  type: transaction
+  entry:
+    - request:
+        url: "/HealthcareService/{{ %healthcareServiceId }}"
+        method: PATCH
+      resource:
+        name: "{{ %visitTypeName }}"
+        extension:
+          - url: "urn:extensions:healthcare-service-duration"
+            valueInteger: "{{ %duration }}"
+        comment: "{{ %comment }}"
+        type:
+          - text: "{{ %visitTypeName }}"
+            coding:
+              - system: "http://beda.software/custom-healthcare-service-list"
+                code: "{{ %visitTypeCode }}"
+                display: "{{ %visitTypeName }}"
+
+    - request:
+        url: "/ChargeItemDefinition/{{ %chargeItemDefinitionId }}"
+        method: PATCH
+      resource:
+        url: "https://emr.beda.software/charge-item/{{ %visitTypeCode }}"
+        title: "{{ %visitTypeName }}"
+        propertyGroup:
+          - priceComponent:
+              - type: base
+                amount:
+                  value: "{{ %priceBase }}"
+                  currency: USD
+              - type: tax
+                amount:
+                  value: "{{ %priceTax }}"
+                  currency: USD

@@ -12,6 +12,7 @@ import {
     Reference,
 } from 'fhir/r4b';
 import _ from 'lodash';
+import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
@@ -25,6 +26,7 @@ import {
     resolveMap,
     sequenceMap,
     success,
+    mapFailure,
 } from '@beda.software/remote-data';
 
 import { onFormResponse } from 'src/components/QuestionnaireResponseForm';
@@ -35,18 +37,19 @@ import {
     QuestionnaireResponseFormProps,
     QuestionnaireResponseFormSaveResponse,
 } from 'src/hooks/questionnaire-response-form-data';
-import { getFHIRResource, getFHIRResources } from 'src/services';
+import { getFHIRResource, getFHIRResources } from 'src/services/fhir';
 import { getProvenanceByEntity } from 'src/services/provenance';
 import { compileAsFirst } from 'src/utils';
 
 export interface Props {
     patient: Patient;
     author: WithId<Practitioner | Patient | Organization | Person>;
-    questionnaireResponse?: WithId<QuestionnaireResponse>;
+    questionnaireResponse?: Partial<QuestionnaireResponse>;
     questionnaireId: string;
     encounterId?: string;
     launchContextParameters?: ParametersParameter[];
     onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
+    onCancel?: () => void;
 }
 
 async function onFormSubmit(
@@ -118,7 +121,12 @@ function prepareFormInitialParams(
                           resource: { resourceType: 'Encounter', id: encounterId } as Encounter,
                       },
                   ]
-                : []),
+                : [
+                      {
+                          name: 'Encounter',
+                          resource: { resourceType: 'Encounter' } as Encounter,
+                      },
+                  ]),
             ...(provenance
                 ? [
                       {
@@ -160,8 +168,9 @@ export function usePatientDocument(props: Props): {
     response: RemoteData<Result>;
     manager: ServiceManager<PatientDocumentData, any>;
     questionnaireId: string;
+    handleCancel: () => void;
 } {
-    const { questionnaireResponse, questionnaireId, onSuccess } = props;
+    const { questionnaireResponse, questionnaireId, onSuccess, onCancel } = props;
 
     const navigate = useNavigate();
 
@@ -232,5 +241,14 @@ export function usePatientDocument(props: Props): {
         return success(undefined);
     });
 
-    return { response: sequenceMap({ source: sourceResponse, document: response }), manager, questionnaireId };
+    const handleCancel = useCallback(() => {
+        onCancel ? onCancel() : navigate(-2);
+    }, [onCancel, navigate]);
+
+    return {
+        response: mapFailure(sequenceMap({ source: sourceResponse, document: response }), (errors) => errors.flat()[0]),
+        manager,
+        questionnaireId,
+        handleCancel,
+    };
 }

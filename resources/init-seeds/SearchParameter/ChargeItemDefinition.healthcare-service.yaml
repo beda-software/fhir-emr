@@ -1,0 +1,11 @@
+id: ChargeItemDefinition.healthcare-service
+resourceType: SearchParameter
+base:
+  - ChargeItemDefinition
+expression: "ChargeItemDefinition.extension.where(url='http://beda.software/fhir-extensions/charge-item-healthcare-service').value.as(Reference)"
+status: active
+url: https://rce.uoh.cl/FHIR/SearchParameter/ChargeItemDefinition.healthcareService
+name: "healthcare-service"
+type: reference
+description: "Search for ChargeItemDefinition resources by their healthService."
+code: "healthcare-service"

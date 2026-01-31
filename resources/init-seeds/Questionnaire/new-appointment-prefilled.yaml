@@ -1,0 +1,84 @@
+resourceType: Questionnaire
+id: new-appointment-prefilled
+name: new-appointment-prefilled
+title: New appointment
+status: active
+mapping:
+  - reference: urn:uuid:Mapping:new-appointment-prefilled-extract
+launchContext:
+  - name:
+      code: practitionerRole
+    type:
+      - PractitionerRole
+    description: PractitionerRole resource
+  - name:
+      code: practitioner
+    type:
+      - Practitioner
+    description: Practitioner resource
+  - name:
+      code: appointment
+    type:
+      - Appointment
+    description: Appointment date passing from calendar
+  - name:
+      code: healthcareService
+    type:
+      - HealthcareService
+    description: HealthcareService passing from scheduling
+item:
+  - type: group
+    linkId: root-group
+    item:
+      - text: Predefined HealthcareService Id
+        type: string
+        linkId: predefined-healthcare-service-id
+        hidden: true
+        initialExpression:
+          language: text/fhirpath
+          expression: "%healthcareService.id"
+      - text: Service
+        type: string
+        linkId: predefined-healthcare-service-name
+        readOnly: true
+        initialExpression:
+          language: text/fhirpath
+          expression: "%healthcareService.name"
+      - text: Predefined PractitionerRole Id
+        type: string
+        linkId: predefined-practitioner-role-id
+        hidden: true
+        initialExpression:
+          language: text/fhirpath
+          expression: "%practitionerRole.id"
+      - text: Practitioner
+        type: string
+        linkId: practitioner-name
+        hidden: false
+        readOnly: true
+        initialExpression:
+          language: text/fhirpath
+          expression: "%practitioner.name.given.first() + ' ' + %practitioner.name.family + ' - ' + %practitionerRole.specialty.first().coding.display"
+      - text: Patient
+        type: reference
+        required: true
+        linkId: patient
+        referenceResource:
+          - Patient
+        answerExpression:
+          language: application/x-fhir-query
+          expression: "Patient?_count=25"
+        choiceColumn:
+          - forDisplay: true
+            path: "name.first().given.first() + ' ' + name.first().family"
+      - text: Start time
+        required: true
+        type: dateTime
+        linkId: start-datetime
+        initialExpression:
+          language: text/fhirpath
+          expression: "%appointment.start"
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/new-appointment-prefilled

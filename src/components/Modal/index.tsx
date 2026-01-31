@@ -1,4 +1,4 @@
-import { ModalProps as ANTDModalProps } from 'antd/lib/modal';
+import type { ModalProps as ANTDModalProps } from 'antd/es/modal';
 
 import { S } from './Modal.styles';
 

@@ -1,103 +1,103 @@
 import { t, Trans } from '@lingui/macro';
-import { Col, Empty, Row } from 'antd';
+import type { ColumnsType } from 'antd/es/table/interface';
+import { HealthcareService } from 'fhir/r4b';
 
-import { isLoading, isSuccess } from '@beda.software/remote-data';
+import { SearchBarColumn, SearchBarColumnType, SorterColumn } from 'src/components/SearchBar/types';
+import { ResourceListPage, questionnaireAction } from 'src/uberComponents/ResourceListPage';
+import { RecordType, TableManager } from 'src/uberComponents/ResourceListPage/types';
+import { compileAsFirst } from 'src/utils';
+import { selectCurrentUserRoleResource } from 'src/utils/role';
 
-import { Table } from 'src/components';
-import { PageContainer } from 'src/components/BaseLayout/PageContainer';
-import { ModalChangeActiveHealthcareService } from 'src/components/ModalChangeActiveHealthcareService';
-import { ModalEditHealthcareService } from 'src/components/ModalEditHealthcareService';
-import { ModalNewHealthcareService } from 'src/components/ModalNewHealthcareService';
-import { SearchBar } from 'src/components/SearchBar';
-import { useSearchBar } from 'src/components/SearchBar/hooks';
-import { SpinIndicator } from 'src/components/Spinner';
-
-import { useHealthcareServiceList } from './hooks';
-import { getHealthcareServiceListSearchBarColumns } from './searchBarUtils';
+// FHIRPath compiled expressions
+const getName = compileAsFirst<HealthcareService, string>('HealthcareService.name');
+const getDuration = compileAsFirst<HealthcareService, number>(
+    "HealthcareService.extension('urn:extensions:healthcare-service-duration').valueInteger",
+);
+const getActive = compileAsFirst<HealthcareService, boolean>('HealthcareService.active');
 
 export function HealthcareServiceList() {
-    const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
-        columns: getHealthcareServiceListSearchBarColumns(),
-    });
+    const getFilters = (): SearchBarColumn[] => [
+        {
+            id: 'name',
+            type: SearchBarColumnType.STRING,
+            placeholder: t`Search by name`,
+        },
+    ];
 
-    const { healthcareServiceResponse, pagination, pagerManager, handleTableChange } =
-        useHealthcareServiceList(columnsFilterValues);
+    const getSorters = (): SorterColumn[] => [
+        {
+            id: 'type',
+            searchParam: 'name',
+            label: t`Name`,
+        },
+        {
+            id: 'active',
+            searchParam: 'active',
+            label: t`Status`,
+        },
+    ];
+
+    const getTableColumns = (manager: TableManager): ColumnsType<RecordType<HealthcareService>> => [
+        {
+            title: <Trans>Type</Trans>,
+            dataIndex: 'type',
+            key: 'type',
+            width: '20%',
+            render: (_text, record) => getName(record.resource),
+        },
+        {
+            title: <Trans>Duration (minutes)</Trans>,
+            dataIndex: 'duration',
+            key: 'duration',
+            width: '20%',
+            render: (_text, record) => getDuration(record.resource),
+        },
+        {
+            title: <Trans>Status</Trans>,
+            dataIndex: 'active',
+            key: 'active',
+            width: '20%',
+            render: (_text, record) => (getActive(record.resource) ? t`Active` : t`Inactive`),
+        },
+    ];
+
+    const getRecordActions = (record: RecordType<HealthcareService>, manager: TableManager) => {
+        return [
+            questionnaireAction(<Trans>Edit</Trans>, 'healthcare-service-edit'),
+            questionnaireAction(
+                getActive(record.resource) ? t`Deactivate` : t`Activate`,
+                'healthcare-service-change-activity',
+            ),
+        ];
+    };
+
+    const getHeaderActions = () => {
+        const author = selectCurrentUserRoleResource();
+
+        return [
+            questionnaireAction(<Trans>Add healthcare service</Trans>, 'healthcare-service-create', {
+                extra: {
+                    qrfProps: {
+                        launchContextParameters: [{ name: 'Author', resource: author }],
+                    },
+                },
+            }),
+        ];
+    };
 
     return (
-        <PageContainer
-            layoutVariant="with-table"
-            title={<Trans>Healthcare Services</Trans>}
-            titleRightElement={<ModalNewHealthcareService onCreate={pagerManager.reload} />}
-            headerContent={
-                <SearchBar
-                    columnsFilterValues={columnsFilterValues}
-                    onChangeColumnFilter={onChangeColumnFilter}
-                    onResetFilters={onResetFilters}
-                />
-            }
-        >
-            <Table
-                pagination={pagination}
-                onChange={handleTableChange}
-                bordered
-                locale={{
-                    emptyText: (
-                        <>
-                            <Empty description={<Trans>No data</Trans>} image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                        </>
-                    ),
-                }}
-                dataSource={isSuccess(healthcareServiceResponse) ? healthcareServiceResponse.data : []}
-                columns={[
-                    {
-                        title: <Trans>Type</Trans>,
-                        dataIndex: 'type',
-                        key: 'type',
-                        width: '20%',
-                        render: (_text, resource) => resource.name,
-                    },
-                    {
-                        title: <Trans>Duration (minutes)</Trans>,
-                        dataIndex: 'duration',
-                        key: 'duration',
-                        width: '20%',
-                        render: (_text, resource) =>
-                            resource.extension?.find(
-                                (extension) => extension.url === 'urn:extensions:healthcare-service-duration',
-                            )?.valueInteger,
-                    },
-                    {
-                        title: <Trans>Status</Trans>,
-                        dataIndex: 'active',
-                        key: 'active',
-                        width: '20%',
-                        render: (_text, resource) => (resource.active ? t`Active` : t`Inactive`),
-                    },
-                    {
-                        title: <Trans>Actions</Trans>,
-                        dataIndex: 'actions',
-                        key: 'actions',
-                        width: '20%',
-                        render: (_text, resource) => (
-                            <Row>
-                                <Col>
-                                    <ModalEditHealthcareService
-                                        onSuccess={pagerManager.reload}
-                                        healthcareService={resource}
-                                    />
-                                </Col>
-                                <Col>
-                                    <ModalChangeActiveHealthcareService
-                                        onSuccess={pagerManager.reload}
-                                        healthcareService={resource}
-                                    />
-                                </Col>
-                            </Row>
-                        ),
-                    },
-                ]}
-                loading={isLoading(healthcareServiceResponse) && { indicator: SpinIndicator }}
-            />
-        </PageContainer>
+        <ResourceListPage
+            headerTitle={t`Healthcare Services`}
+            resourceType="HealthcareService"
+            searchParams={{
+                _sort: '-_lastUpdated,_id',
+                _count: 10,
+            }}
+            getFilters={getFilters}
+            getSorters={getSorters}
+            getTableColumns={getTableColumns}
+            getRecordActions={getRecordActions}
+            getHeaderActions={getHeaderActions}
+        />
     );
 }
