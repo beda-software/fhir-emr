@@ -13,7 +13,7 @@ import { RepeatableGroupTableRow } from './types';
 
 export function useGroupTable(props: GroupItemProps) {
     const { parentPath, questionItem, context } = props;
-    const { linkId, item, repeats, text, hidden } = questionItem;
+    const { linkId, repeats, text, hidden, item } = questionItem;
 
     const title = text ? text : linkId;
 
@@ -33,16 +33,18 @@ export function useGroupTable(props: GroupItemProps) {
     const fullFormValues = getValues();
     const formValues = useMemo(() => _.get(getValues(), fieldName), [getValues, fieldName]);
 
+    const visibleItem = useMemo(() => item?.filter((i) => !i.hidden), [item]);
+
     const formItems: FormItems[] = useMemo(() => {
         return formValues?.items || [];
     }, [formValues?.items]);
 
     const fields = useMemo(
         () =>
-            _.map(questionItem.item, (item) => {
+            _.map(visibleItem, (item) => {
                 return item.linkId;
             }),
-        [questionItem.item],
+        [visibleItem],
     );
 
     const dataSource: RepeatableGroupTableRow[] = useMemo(() => {
@@ -133,7 +135,7 @@ export function useGroupTable(props: GroupItemProps) {
     );
 
     const dataColumns = useMemo(() => {
-        return _.map(item, (questionItem) => {
+        return _.map(visibleItem, (questionItem) => {
             return {
                 title: questionItem.text ? questionItem.text : questionItem.linkId,
                 dataIndex: questionItem.linkId,
@@ -143,7 +145,7 @@ export function useGroupTable(props: GroupItemProps) {
                 ),
             };
         });
-    }, [item]);
+    }, [visibleItem]);
 
     const actionColumn = useMemo(() => {
         return {
