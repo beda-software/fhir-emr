@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { isValidElement } from 'react';
 
 import { S } from './styles';
 
@@ -61,12 +61,25 @@ export function PageContainer(props: PageContainerProps = {}) {
         <>
             <S.HeaderContainer maxWidth={maxWidth} $variant={layoutVariant}>
                 <S.Header>
-                    <S.HeaderLeftColumn>
-                        {titleLeftElement ? titleLeftElement : null}
-                        {title && !_.isObject(title) ? <PageContainerTitle>{title}</PageContainerTitle> : null}
-                        {title && _.isObject(title) ? title : null}
-                    </S.HeaderLeftColumn>
-                    {titleRightElement && <S.HeaderRightColumn>{titleRightElement}</S.HeaderRightColumn>}
+                    {titleLeftElement || title ? (
+                        <S.HeaderLeftColumn>
+                            {titleLeftElement && isValidElement(titleLeftElement) ? (
+                                titleLeftElement
+                            ) : (
+                                <PageContainerTitle>{titleLeftElement}</PageContainerTitle>
+                            )}
+                            {title && isValidElement(title) ? title : <PageContainerTitle>{title}</PageContainerTitle>}
+                        </S.HeaderLeftColumn>
+                    ) : null}
+                    {titleRightElement ? (
+                        <S.HeaderRightColumn>
+                            {isValidElement(titleRightElement) ? (
+                                titleRightElement
+                            ) : (
+                                <S.TitleDetails>{titleRightElement}</S.TitleDetails>
+                            )}
+                        </S.HeaderRightColumn>
+                    ) : null}
                 </S.Header>
                 {headerContent}
             </S.HeaderContainer>
