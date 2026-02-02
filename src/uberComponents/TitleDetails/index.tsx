@@ -9,7 +9,7 @@ import { TitleDetailsItem } from 'src/uberComponents/TitleDetails/TitleDetailsIt
 
 export interface TitleDetailsItem<R extends Resource> {
     key: string;
-    icon?: ReactElement | ((record: RecordType<WithId<R>>) => ReactElement);
+    icon?: ReactElement | ((record: RecordType<WithId<R>>) => ReactElement | undefined);
     getValue?: (record: RecordType<WithId<R>>) => string | ReactElement | undefined;
 }
 
