@@ -8,7 +8,6 @@ interface Props {
 
 export function AppFooter(props: Props) {
     const { type = 'default' } = props;
-
     return (
         <S.Footer className={`_${type}`}>
             <S.Content>

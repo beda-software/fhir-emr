@@ -1,6 +1,6 @@
 import queryString from 'query-string';
-import { ReactElement, useContext, useEffect } from 'react';
-import { BrowserRouter, Routes, Navigate, useLocation, Route } from 'react-router-dom';
+import { ReactElement, useEffect } from 'react';
+import { BrowserRouter, Routes, Navigate, Route, useLocation } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
@@ -9,25 +9,34 @@ import { User } from '@beda.software/aidbox-types';
 import { RemoteDataResult, success } from '@beda.software/remote-data';
 
 import { BaseLayout } from 'src/components/BaseLayout';
-import { MenuLayout } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
+import { FooterLayout, defaultFooterLayout } from 'src/components/BaseLayout/Footer/context';
+import { MenuLayout, MenuLayoutValue } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
 import { Spinner } from 'src/components/Spinner';
+import { DefaultUserWithNoRoles } from 'src/containers/App/DefaultUserWithNoRoles';
+import { restoreUserSession } from 'src/containers/App/utils';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
+import { DocumentPrint } from 'src/containers/PatientDetails/DocumentPrint';
 import { getToken, parseOAuthState, setToken } from 'src/services/auth';
-
-import { DefaultUserWithNoRoles } from '../App/DefaultUserWithNoRoles';
-import { restoreUserSession } from '../App/utils';
-import { DocumentPrint } from '../PatientDetails/DocumentPrint';
 
 interface EMRProps {
     authenticatedRoutes?: ReactElement;
     anonymousRoutes?: ReactElement;
     populateUserInfoSharedState?: () => Promise<RemoteDataResult<User>>;
     UserWithNoRolesComponent?: () => ReactElement;
+    menuLayout: MenuLayoutValue;
+    footer?: ReactElement;
 }
 
 export function EMR(props: EMRProps) {
-    const { authenticatedRoutes, anonymousRoutes, populateUserInfoSharedState, UserWithNoRolesComponent } = props;
-    const menuLayout = useContext(MenuLayout);
+    const {
+        authenticatedRoutes,
+        anonymousRoutes,
+        populateUserInfoSharedState,
+        UserWithNoRolesComponent,
+        menuLayout,
+        footer,
+    } = props;
+
     const [userResponse] = useService(async () => {
         const appToken = getToken();
         return appToken ? restoreUserSession(appToken, populateUserInfoSharedState) : success(null);
@@ -51,28 +60,15 @@ export function EMR(props: EMRProps) {
 
     return (
         <div data-testid="emr-container">
-            <RenderRemoteData remoteData={userResponse} renderLoading={Spinner}>
-                {(user) => <BrowserRouter>{renderRoutes(user)}</BrowserRouter>}
-            </RenderRemoteData>
+            <MenuLayout.Provider value={menuLayout}>
+                <FooterLayout.Provider value={footer ? footer : defaultFooterLayout}>
+                    <RenderRemoteData remoteData={userResponse} renderLoading={Spinner}>
+                        {(user) => <BrowserRouter>{renderRoutes(user)}</BrowserRouter>}
+                    </RenderRemoteData>
+                </FooterLayout.Provider>
+            </MenuLayout.Provider>
         </div>
     );
-}
-
-export function Auth() {
-    const location = useLocation();
-
-    useEffect(() => {
-        const queryParams = queryString.parse(location.hash);
-
-        if (queryParams.access_token) {
-            setToken(queryParams.access_token as string);
-            const state = parseOAuthState(queryParams.state as string | undefined);
-
-            window.location.href = state.nextUrl ?? '/';
-        }
-    }, [location.hash]);
-
-    return null;
 }
 
 function AnonymousUserEMR({ extra }: { extra?: ReactElement }) {
@@ -115,4 +111,21 @@ function AuthenticatedUserEMR({ defaultRoute, extra }: RouteProps) {
             />
         </Routes>
     );
+}
+
+export function Auth() {
+    const location = useLocation();
+
+    useEffect(() => {
+        const queryParams = queryString.parse(location.hash);
+
+        if (queryParams.access_token) {
+            setToken(queryParams.access_token as string);
+            const state = parseOAuthState(queryParams.state as string | undefined);
+
+            window.location.href = state.nextUrl ?? '/';
+        }
+    }, [location.hash]);
+
+    return null;
 }
