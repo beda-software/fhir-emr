@@ -9,7 +9,7 @@ import { TitleDetailsItem } from 'src/uberComponents/TitleDetails/TitleDetailsIt
 
 export interface TitleDetailsItem<R extends Resource> {
     key: string;
-    icon?: ReactElement;
+    icon?: ReactElement | ((record: RecordType<WithId<R>>) => ReactElement);
     getValue?: (record: RecordType<WithId<R>>) => string | ReactElement | undefined;
 }
 
@@ -26,7 +26,7 @@ export function TitleDetails<R extends Resource>(props: TitleDetailsProps<R>) {
             {items.map((item) => (
                 <TitleDetailsItem
                     key={item.key}
-                    icon={item.icon}
+                    icon={item.icon && (typeof item.icon === 'function' ? item.icon(context) : item.icon)}
                     value={item.getValue ? item.getValue(context) : undefined}
                 />
             ))}
