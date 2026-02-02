@@ -103,13 +103,15 @@ export function App(props: AppProps) {
     );
 
     return (
-        <EMR
-            authenticatedRoutes={authenticatedRoutes ? authenticatedRoutes : defaultAuthenticatedRoutes}
-            anonymousRoutes={anonymousRoutes ? anonymousRoutes : defaultAnonymousRoutes}
-            populateUserInfoSharedState={populateUserInfoSharedState}
-            UserWithNoRolesComponent={UserWithNoRolesComponent}
-            menuLayout={defaultMenuLayout}
-            footer={defaultFooterLayout}
-        />
+        <div data-testid="app-container">
+            <EMR
+                authenticatedRoutes={authenticatedRoutes ? authenticatedRoutes : defaultAuthenticatedRoutes}
+                anonymousRoutes={anonymousRoutes ? anonymousRoutes : defaultAnonymousRoutes}
+                populateUserInfoSharedState={populateUserInfoSharedState}
+                UserWithNoRolesComponent={UserWithNoRolesComponent}
+                menuLayout={defaultMenuLayout}
+                footer={defaultFooterLayout}
+            />
+        </div>
     );
 }
