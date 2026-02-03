@@ -1,15 +1,10 @@
 import { t } from '@lingui/macro';
-import queryString from 'query-string';
-import { ReactElement, useContext, useEffect, useRef } from 'react';
-import { Route, BrowserRouter, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { ReactElement } from 'react';
+import { Route, useNavigate } from 'react-router-dom';
 
-import { User } from '@beda.software/aidbox-types';
-import { RenderRemoteData, useService } from '@beda.software/fhir-react';
-import { RemoteDataResult, success } from '@beda.software/remote-data';
-
-import { AnonymousLayout, BaseLayout } from 'src/components/BaseLayout';
-import { MenuLayout } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
-import { Spinner } from 'src/components/Spinner';
+import { AnonymousLayout } from 'src/components/BaseLayout';
+import { defaultFooterLayout } from 'src/components/BaseLayout/Footer/context';
+import { defaultMenuLayout } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { EncounterList } from 'src/containers/EncounterList';
 import { MagicSearchPage } from 'src/containers/MagicSearchPage';
@@ -23,11 +18,9 @@ import { QuestionnaireBuilder } from 'src/containers/QuestionnaireBuilder';
 import { QuestionnaireList } from 'src/containers/QuestionnaireList';
 import { SignIn } from 'src/containers/SignIn';
 import { VideoCall } from 'src/containers/VideoCall';
-import { getToken, parseOAuthState, setToken } from 'src/services/auth';
 
-import { DefaultUserWithNoRoles } from './DefaultUserWithNoRoles';
-import { restoreUserSession } from './utils';
 import { AidboxFormsBuilder } from '../AidboxFormsBuilder';
+import { EMR } from '../EMR';
 import { HealthcareServiceList } from '../HealthcareServiceList';
 import { InvoiceDetails } from '../InvoiceDetails';
 import { InvoiceList } from '../InvoiceList';
@@ -35,77 +28,52 @@ import { MedicationManagement } from '../MedicationManagement';
 import { MedicationManagementDetail } from '../MedicationManagementDetail';
 import { NotificationPage } from '../NotificationPage';
 import { OrganizationScheduling } from '../OrganizationScheduling';
-import { DocumentPrint } from '../PatientDetails/DocumentPrint';
 import { Prescriptions } from '../Prescriptions';
 import { SetPassword } from '../SetPassword';
 
 interface AppProps {
     authenticatedRoutes?: ReactElement;
     anonymousRoutes?: ReactElement;
-    populateUserInfoSharedState?: () => Promise<RemoteDataResult<User>>;
+    populateUserInfoSharedState?: () => Promise<any>;
     UserWithNoRolesComponent?: () => ReactElement;
 }
 
 export function App(props: AppProps) {
     const { authenticatedRoutes, anonymousRoutes, populateUserInfoSharedState, UserWithNoRolesComponent } = props;
-    const menuLayout = useContext(MenuLayout);
-    const [userResponse] = useService(async () => {
-        const appToken = getToken();
-        return appToken ? restoreUserSession(appToken, populateUserInfoSharedState) : success(null);
-    });
-
-    const renderRoutes = (user: User | null) => {
-        if (user) {
-            if ((user.role?.length ?? 0) === 0) {
-                const UserWithNoRoles = UserWithNoRolesComponent ?? DefaultUserWithNoRoles;
-
-                return <UserWithNoRoles />;
-            }
-
-            const layout = menuLayout();
-            const defaultRoute = layout[0]?.path ?? '/encounters';
-            return <AuthenticatedUserApp defaultRoute={defaultRoute} extra={authenticatedRoutes} />;
-        }
-
-        return <AnonymousUserApp extra={anonymousRoutes} />;
-    };
-
-    return (
-        <div data-testid="app-container">
-            <RenderRemoteData remoteData={userResponse} renderLoading={Spinner}>
-                {(user) => <BrowserRouter>{renderRoutes(user)}</BrowserRouter>}
-            </RenderRemoteData>
-        </div>
-    );
-}
-
-export function Auth() {
-    const location = useLocation();
-
-    useEffect(() => {
-        const queryParams = queryString.parse(location.hash);
-
-        if (queryParams.access_token) {
-            setToken(queryParams.access_token as string);
-            const state = parseOAuthState(queryParams.state as string | undefined);
-
-            window.location.href = state.nextUrl ?? '/';
-        }
-    }, [location.hash]);
-
-    return null;
-}
-
-function AnonymousUserApp({ extra }: { extra?: ReactElement }) {
-    const location = useLocation();
-    const originPathRef = useRef(location.pathname);
     const navigate = useNavigate();
 
-    return (
-        <Routes>
-            {extra}
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/signin" element={<SignIn originPathName={originPathRef.current} />} />
+    // Define the default authenticated routes
+    const defaultAuthenticatedRoutes = (
+        <>
+            <Route path="/encounters" element={<EncounterList />} />
+            <Route path="/scheduling" element={<OrganizationScheduling />} />
+            <Route path="/medications" element={<MedicationManagement />} />
+            <Route path="/medications/:id/*" element={<MedicationManagementDetail />} />
+            <Route path="/prescriptions" element={<Prescriptions />} />
+            <Route path="/invoices" element={<InvoiceList />} />
+            <Route path="/invoices/:id" element={<InvoiceDetails />} />
+            <Route path="/patients" element={<PatientList />} />
+            <Route path="/patients/:id/*" element={<PatientDetails />} />
+            <Route path="/patients2/:id/*" element={<NewPatientDetails />} />
+            <Route path="/questionnaire" element={<PatientQuestionnaire />} />
+            <Route path="/documents/:id/edit" element={<div>documents/:id/edit</div>} />
+            <Route path="/encounters/:encounterId/video" element={<VideoCall />} />
+            <Route path="/practitioners" element={<PractitionerList />} />
+            <Route path="/practitioners/:id/*" element={<PractitionerDetails />} />
+            <Route path="/questionnaires" element={<QuestionnaireList />} />
+            <Route path="/questionnaires/builder" element={<QuestionnaireBuilder />} />
+            <Route path="/questionnaires/:id/edit" element={<QuestionnaireBuilder />} />
+            <Route path="/questionnaires/:id/aidbox-forms-builder/edit" element={<AidboxFormsBuilder />} />
+            <Route path="/questionnaires/:id" element={<div>questionnaires/:id</div>} />
+            <Route path="/magic-search" element={<MagicSearchPage />} />
+            <Route path="/healthcare-services" element={<HealthcareServiceList />} />
+        </>
+    );
+
+    // Define the default anonymous routes
+    const defaultAnonymousRoutes = (
+        <>
+            <Route path="/signin" element={<SignIn originPathName={window.location.pathname} />} />
             <Route path="/reset-password/:code" element={<SetPassword />} />
             <Route
                 path="/appointment/book"
@@ -124,14 +92,6 @@ function AnonymousUserApp({ extra }: { extra?: ReactElement }) {
                 }
             />
             <Route
-                path="*"
-                element={
-                    <>
-                        <Navigate to="/signin" replace={true} />
-                    </>
-                }
-            />
-            <Route
                 path="/thanks"
                 element={
                     <NotificationPage
@@ -140,57 +100,19 @@ function AnonymousUserApp({ extra }: { extra?: ReactElement }) {
                     />
                 }
             />
-        </Routes>
+        </>
     );
-}
 
-interface RouteProps {
-    defaultRoute: string;
-    extra?: ReactElement;
-}
-
-function AuthenticatedUserApp({ defaultRoute, extra }: RouteProps) {
     return (
-        <Routes>
-            <Route path={`/print-patient-document/:id/:qrId`} element={<DocumentPrint />} />
-            <Route path="/appointment/book" element={<PublicAppointment />} />
-            <Route
-                path="*"
-                element={
-                    <BaseLayout>
-                        <Routes>
-                            {extra}
-                            <Route path="/encounters" element={<EncounterList />} />
-                            <Route path="/scheduling" element={<OrganizationScheduling />} />
-                            <Route path="/medications" element={<MedicationManagement />} />
-                            <Route path="/medications/:id/*" element={<MedicationManagementDetail />} />
-                            <Route path="/prescriptions" element={<Prescriptions />} />
-                            <Route path="/invoices" element={<InvoiceList />} />
-                            <Route path="/invoices/:id" element={<InvoiceDetails />} />
-                            <Route path="/patients" element={<PatientList />} />
-                            <Route path="/patients/:id/*" element={<PatientDetails />} />
-                            <Route path="/patients2/:id/*" element={<NewPatientDetails />} />
-                            <Route path="/questionnaire" element={<PatientQuestionnaire />} />
-                            <Route path="/documents/:id/edit" element={<div>documents/:id/edit</div>} />
-                            <Route path="/encounters/:encounterId/video" element={<VideoCall />} />
-                            <Route path="/practitioners" element={<PractitionerList />} />
-                            <Route path="/practitioners/:id/*" element={<PractitionerDetails />} />
-                            <Route path="/questionnaires" element={<QuestionnaireList />} />
-                            <Route path="/questionnaires/builder" element={<QuestionnaireBuilder />} />
-                            <Route path="/questionnaires/aidbox-builder" element={<AidboxFormsBuilder />} />
-                            <Route path="/questionnaires/:id/edit" element={<QuestionnaireBuilder />} />
-                            <Route
-                                path="/questionnaires/:id/aidbox-forms-builder/edit"
-                                element={<AidboxFormsBuilder />}
-                            />
-                            <Route path="/questionnaires/:id" element={<div>questionnaires/:id</div>} />
-                            <Route path="/magic-search" element={<MagicSearchPage />} />
-                            <Route path="/healthcare-services" element={<HealthcareServiceList />} />
-                            <Route path="*" element={<Navigate to={defaultRoute} />} />
-                        </Routes>
-                    </BaseLayout>
-                }
+        <div data-testid="app-container">
+            <EMR
+                authenticatedRoutes={authenticatedRoutes ? authenticatedRoutes : defaultAuthenticatedRoutes}
+                anonymousRoutes={anonymousRoutes ? anonymousRoutes : defaultAnonymousRoutes}
+                populateUserInfoSharedState={populateUserInfoSharedState}
+                UserWithNoRolesComponent={UserWithNoRolesComponent}
+                menuLayout={defaultMenuLayout}
+                footer={defaultFooterLayout}
             />
-        </Routes>
+        </div>
     );
 }
