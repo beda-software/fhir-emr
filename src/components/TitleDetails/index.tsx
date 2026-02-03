@@ -1,7 +1,7 @@
 import { Flex } from 'antd';
 import { ReactElement } from 'react';
 
-import { TitleDetailsItem } from 'src/uberComponents/TitleDetails/TitleDetailsItem';
+import { TitleDetailsItem } from './TitleDetailsItem';
 
 export interface TitleDetailsItem {
     key: string;
