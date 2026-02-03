@@ -1,6 +1,6 @@
 import { t } from '@lingui/macro';
 import { ReactElement } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, useNavigate } from 'react-router-dom';
 
 import { AnonymousLayout } from 'src/components/BaseLayout';
 import { defaultFooterLayout } from 'src/components/BaseLayout/Footer/context';
@@ -40,6 +40,7 @@ interface AppProps {
 
 export function App(props: AppProps) {
     const { authenticatedRoutes, anonymousRoutes, populateUserInfoSharedState, UserWithNoRolesComponent } = props;
+    const navigate = useNavigate();
 
     // Define the default authenticated routes
     const defaultAuthenticatedRoutes = (
@@ -86,7 +87,7 @@ export function App(props: AppProps) {
                 path="/questionnaire"
                 element={
                     <AnonymousLayout>
-                        <PatientQuestionnaire onSuccess={() => (window.location.href = '/thanks')} />
+                        <PatientQuestionnaire onSuccess={() => navigate('thanks')} />
                     </AnonymousLayout>
                 }
             />
