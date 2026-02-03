@@ -1,34 +1,25 @@
 import { Flex } from 'antd';
-import { Resource } from 'fhir/r4b';
 import { ReactElement } from 'react';
 
-import { WithId } from '@beda.software/fhir-react';
-
-import { RecordType } from 'src/uberComponents/ResourceListPage/types';
 import { TitleDetailsItem } from 'src/uberComponents/TitleDetails/TitleDetailsItem';
 
-export interface TitleDetailsItem<R extends Resource> {
+export interface TitleDetailsItem {
     key: string;
-    icon?: ReactElement | ((record: RecordType<WithId<R>>) => ReactElement | undefined);
-    getValue?: (record: RecordType<WithId<R>>) => string | ReactElement | undefined;
+    icon?: ReactElement;
+    value?: string | ReactElement | undefined;
 }
 
-export interface TitleDetailsProps<R extends Resource> {
-    items: Array<TitleDetailsItem<R>>;
-    context: RecordType<WithId<R>>;
+export interface TitleDetailsProps {
+    items: Array<TitleDetailsItem>;
 }
 
-export function TitleDetails<R extends Resource>(props: TitleDetailsProps<R>) {
-    const { items, context } = props;
+export function TitleDetails(props: TitleDetailsProps) {
+    const { items } = props;
 
     return (
         <Flex gap={16} align="center">
-            {items.map((item) => (
-                <TitleDetailsItem
-                    key={item.key}
-                    icon={item.icon && (typeof item.icon === 'function' ? item.icon(context) : item.icon)}
-                    value={item.getValue ? item.getValue(context) : undefined}
-                />
+            {items.map(({ key, icon, value }) => (
+                <TitleDetailsItem key={key} icon={icon} value={value} />
             ))}
         </Flex>
     );
