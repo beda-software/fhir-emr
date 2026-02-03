@@ -1,4 +1,5 @@
 import { Bundle, Resource } from 'fhir/r4b';
+import { ReactElement } from 'react';
 
 import { SearchParams, WithId } from '@beda.software/fhir-react';
 
@@ -13,7 +14,9 @@ export type Tab<R extends Resource, Extra = unknown> = {
 export interface DetailPageProps<R extends Resource> {
     resourceType: R['resourceType'];
     getSearchParams: (params: Readonly<Record<string, string | string[] | undefined>>) => SearchParams;
-    getTitle: (context: RecordType<WithId<R>>) => string;
+    getTitle: (context: RecordType<WithId<R>>) => string | ReactElement;
+    getTitleLeftElement?: (context: RecordType<WithId<R>>) => string | ReactElement;
+    getTitleRightElement?: (context: RecordType<WithId<R>>) => string | ReactElement;
     tabs: Array<Tab<WithId<R>>>;
     extractPrimaryResource?: (bundle: Bundle<R>) => WithId<R>;
 

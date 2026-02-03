@@ -48,6 +48,7 @@ export function ResourceListPageContent<R extends Resource>({
     getReportColumns,
     maxWidth,
     tableProps,
+    uniqueOrderSortSearchParam,
 }: ResourceListPageContentProps<R> & { tableProps?: TableProps<R> }) {
     const allFilters = getFilters?.() ?? [];
     const allSorters = getSorters?.() ?? [];
@@ -62,10 +63,17 @@ export function ResourceListPageContent<R extends Resource>({
     const { sortSearchParam, setCurrentSorter, currentSorter } = useTableSorter(allSorters, defaultSearchParams);
 
     const { recordResponse, reload, pagination, selectedRowKeys, setSelectedRowKeys, selectedResourcesBundle } =
-        useResourceListPage(resourceType, extractPrimaryResources, extractChildrenResources, columnsFilterValues, {
-            ...defaultSearchParams,
-            _sort: sortSearchParam,
-        });
+        useResourceListPage(
+            resourceType,
+            extractPrimaryResources,
+            extractChildrenResources,
+            columnsFilterValues,
+            {
+                ...defaultSearchParams,
+                _sort: sortSearchParam,
+            },
+            uniqueOrderSortSearchParam,
+        );
 
     const handleTableChange = useCallback(
         (

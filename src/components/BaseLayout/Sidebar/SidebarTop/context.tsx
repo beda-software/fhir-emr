@@ -21,7 +21,7 @@ interface Layout {
 
 export type MenuLayoutValue = () => Array<Layout>;
 
-const defaultMenuLayout: MenuLayoutValue = () =>
+export const defaultMenuLayout: MenuLayoutValue = () =>
     matchCurrentUserRole({
         [Role.Admin]: () => [
             { label: t`Invoices`, path: '/invoices', icon: <InvoicesIcon /> },
