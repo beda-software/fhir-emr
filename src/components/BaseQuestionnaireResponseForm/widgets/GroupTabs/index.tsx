@@ -10,19 +10,22 @@ export function GroupTabs(props: GroupItemProps) {
     if (questionItem.repeats) {
         console.warn('GroupTabs does not support repeatable groups in the first level');
     }
-    const groupContext = context[0]!;
-
-    const { linkId } = questionItem;
 
     const formValues = useWatch();
 
-    const item = getEnabledQuestions(questionItem.item ?? [], parentPath, formValues, groupContext);
+    const tabsItems: Tab[] = useMemo(() => {
+        const { linkId } = questionItem;
 
-    const tabItems = useMemo(() => item.filter((i) => !i.hidden), [item]);
+        const groupContext = context[0];
+        if (!groupContext) {
+            return [];
+        }
 
-    const tabsItems: Tab[] = useMemo(
-        () =>
-            tabItems.map((item) => {
+        const item = getEnabledQuestions(questionItem.item ?? [], parentPath, formValues, groupContext);
+
+        return item
+            .filter((i) => !i.hidden)
+            .map((item) => {
                 return {
                     key: item.linkId,
                     label: item.text,
@@ -34,9 +37,8 @@ export function GroupTabs(props: GroupItemProps) {
                         />
                     ),
                 };
-            }),
-        [groupContext, linkId, parentPath, tabItems],
-    );
+            });
+    }, [context, formValues, parentPath, questionItem]);
 
     return <Tabs type="card" items={tabsItems} />;
 }
