@@ -25,15 +25,18 @@ interface RenderQuestionnaireItemProps {
 const RenderString = ({ items, questionnaireItem }: RenderQuestionnaireItemProps) => {
     const itemControlCode = getItemControlCode(questionnaireItem);
 
-    return itemControlCode === 'markdown-editor' ? (
-        <>
-            {items.map((item) => (
-                <Markdown key={item[ITEM_KEY]}>{item?.string || '-'}</Markdown>
-            ))}
-        </>
-    ) : (
-        items.map((item) => item?.string || '-').join(', ')
-    );
+    switch (itemControlCode) {
+        case 'markdown-editor':
+            return (
+                <>
+                    {items.map((item) => (
+                        <Markdown key={item[ITEM_KEY]}>{item?.string || '-'}</Markdown>
+                    ))}
+                </>
+            );
+        default:
+            return items.map((item) => item?.string || '-').join(', ');
+    }
 };
 
 const RenderDecimal = ({ items }: RenderQuestionnaireItemProps) => {
