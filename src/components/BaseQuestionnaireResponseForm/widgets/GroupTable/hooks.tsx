@@ -1,10 +1,10 @@
 import { t } from '@lingui/macro';
 import { Button, Popconfirm, Space } from 'antd';
 import _ from 'lodash';
-import { useCallback, useMemo, useRef, useState } from 'react';
-import { FieldValues, useFormContext } from 'react-hook-form';
-import { FormItems, GroupItemProps, ItemContext, RepeatableFormGroupItems, populateItemKey } from 'sdc-qrf';
-import { ITEM_KEY } from 'sdc-qrf/dist/utils';
+import { useCallback, useMemo, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
+import { FormItems, GroupItemProps, RepeatableFormGroupItems, populateItemKey } from 'sdc-qrf';
+import { ITEM_KEY, isAnswerValueEmpty, toAnswerValue } from 'sdc-qrf/dist/utils';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { RenderFormItemReadOnly } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/RenderFormItemReadOnly';
@@ -12,7 +12,7 @@ import { RenderFormItemReadOnly } from 'src/components/BaseQuestionnaireResponse
 import { RepeatableGroupTableRow } from './types';
 
 export function useGroupTable(props: GroupItemProps) {
-    const { parentPath, questionItem, context } = props;
+    const { parentPath, questionItem } = props;
     const { linkId, repeats, text, hidden, item } = questionItem;
 
     const title = text ? text : linkId;
@@ -26,12 +26,11 @@ export function useGroupTable(props: GroupItemProps) {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [editIndex, setEditIndex] = useState<number | undefined>(undefined);
 
-    const snapshotFullFormValuesRef = useRef<FieldValues | null>(null);
-    const snapshotContextRef = useRef<ItemContext[] | null>(null);
+    const [snapshotFormValues, setSnapshotFormValues] = useState<FormItems[] | null>(null);
     const [snapshotDataSource, setSnapshotDataSource] = useState<RepeatableGroupTableRow[] | null>(null);
 
     const fullFormValues = getValues();
-    const formValues = useMemo(() => _.get(getValues(), fieldName), [getValues, fieldName]);
+    const formValues = _.get(getValues(), fieldName);
 
     const visibleItem = useMemo(() => item?.filter((i) => !i.hidden), [item]);
 
@@ -74,17 +73,39 @@ export function useGroupTable(props: GroupItemProps) {
             return data;
         });
 
-        return dataSource;
+        if (dataSource.length > 1) {
+            return dataSource;
+        } else if (dataSource.length === 1) {
+            const innerItems = dataSource[0];
+            if (!innerItems) {
+                return [];
+            }
+            const isRowEmpty = Object.entries(innerItems).map(([, value]) => {
+                if (!value.formItem) {
+                    return true;
+                }
+                const answer = value.formItem ? toAnswerValue(value.formItem[0], 'value') : undefined;
+                if (!answer) {
+                    return true;
+                }
+                const isAnswerEmpty = isAnswerValueEmpty(answer);
+                return isAnswerEmpty;
+            });
+            const rowIsEmpty = isRowEmpty.every((element) => element);
+
+            return rowIsEmpty ? [] : dataSource;
+        }
+
+        return [];
     }, [fields, formItems, questionItem]);
 
     const startEdit = useCallback(
         (index: number) => {
-            snapshotFullFormValuesRef.current = _.cloneDeep(fullFormValues);
-            snapshotContextRef.current = _.cloneDeep(context);
+            setSnapshotFormValues(_.cloneDeep(formValues));
             setSnapshotDataSource(_.cloneDeep(dataSource));
             setEditIndex(index);
         },
-        [context, dataSource, fullFormValues],
+        [dataSource, formValues],
     );
 
     const handleOpen = useCallback(
@@ -96,22 +117,19 @@ export function useGroupTable(props: GroupItemProps) {
     );
 
     const handleCancel = useCallback(() => {
-        if (snapshotFullFormValuesRef.current) {
-            reset(snapshotFullFormValuesRef.current, { keepDirty: true });
-            onChange(snapshotFullFormValuesRef.current);
-            snapshotFullFormValuesRef.current = null;
-            snapshotContextRef.current = null;
-            setSnapshotDataSource(null);
-        }
+        const currentFullFormValues = _.cloneDeep(getValues());
+        _.set(currentFullFormValues, fieldName, _.cloneDeep(snapshotFormValues));
+        reset(currentFullFormValues, { keepDirty: true });
+        onChange({ items: snapshotFormValues });
+        setSnapshotFormValues(null);
+        setSnapshotDataSource(null);
+        setEditIndex(undefined);
         setIsModalVisible(false);
-    }, [onChange, reset]);
+    }, [fieldName, getValues, onChange, reset, snapshotFormValues]);
 
     const handleSave = useCallback(() => {
-        if (snapshotFullFormValuesRef.current) {
-            snapshotFullFormValuesRef.current = null;
-            snapshotContextRef.current = null;
-            setSnapshotDataSource(null);
-        }
+        setSnapshotFormValues(null);
+        setSnapshotDataSource(null);
         reset(fullFormValues, { keepDirty: true });
         setIsModalVisible(false);
     }, [fullFormValues, reset]);
@@ -119,10 +137,18 @@ export function useGroupTable(props: GroupItemProps) {
     const populateValue = (exisingItems: Array<any>) => [...exisingItems, {}].map(populateItemKey);
 
     const handleAdd = useCallback(() => {
-        const updatedInput = { ...formValues, items: populateValue(formItems) };
-        onChange(updatedInput);
-        handleOpen(formItems.length);
-    }, [formItems, formValues, onChange, handleOpen]);
+        if (dataSource.length === 0 && formItems.length !== 0) {
+            // This one case happens when the user deletes all items
+            handleOpen(0);
+        } else {
+            const updatedInput = { ...formValues, items: populateValue(formItems) };
+            const currentFullFormValues = _.cloneDeep(getValues());
+            const updatedItems = populateValue(formItems);
+            _.set(currentFullFormValues, fieldName, _.cloneDeep(updatedItems));
+            onChange(updatedInput);
+            handleOpen(formItems.length);
+        }
+    }, [dataSource, formItems, handleOpen, formValues, getValues, fieldName, onChange]);
 
     const handleDelete = useCallback(
         (index: number) => {
