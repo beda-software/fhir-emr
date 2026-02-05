@@ -6,4 +6,8 @@ export const S = {
             display: none;
         }
     `,
+    ChartItem: styled.div`
+        width: 100%;
+        height: 215px;
+    `,
 };
