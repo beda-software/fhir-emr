@@ -1,15 +1,28 @@
 import { t } from '@lingui/macro';
 import { Button, Popconfirm, Space } from 'antd';
+import { Extension, QuestionnaireItem } from 'fhir/r4b';
 import _ from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { FormItems, GroupItemProps, RepeatableFormGroupItems, populateItemKey } from 'sdc-qrf';
-import { ITEM_KEY, isAnswerValueEmpty, toAnswerValue } from 'sdc-qrf/dist/utils';
+import { ITEM_KEY, getBranchItems, isAnswerValueEmpty, toAnswerValue } from 'sdc-qrf/dist/utils';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { RenderFormItemReadOnly } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/RenderFormItemReadOnly';
+import { compileAsFirst } from 'src/utils';
 
 import { RepeatableGroupTableRow } from './types';
+
+const getEnableChartExtension = compileAsFirst<QuestionnaireItem, Extension>(
+    `extension.where(url='https://emr-core.beda.software/StructureDefinition/enableChart')`,
+);
+
+const getChartLinkIdX = compileAsFirst<Extension, string>(
+    `extension.where(url='https://emr-core.beda.software/StructureDefinition/enableChart-linkIdX').valueString`,
+);
+const getChartLinkIdY = compileAsFirst<Extension, string>(
+    `extension.where(url='https://emr-core.beda.software/StructureDefinition/enableChart-linkIdY').valueString`,
+);
 
 export function useGroupTable(props: GroupItemProps) {
     const { parentPath, questionItem } = props;
@@ -19,10 +32,20 @@ export function useGroupTable(props: GroupItemProps) {
 
     const fieldName = useMemo(() => [...parentPath, linkId], [parentPath, linkId]);
 
+    const branchItem = getBranchItems(
+        fieldName,
+        props.context?.[0]?.Questionnaire,
+        props.context?.[0]?.QuestionnaireReponse,
+    );
+    const extensionEnableChart = getEnableChartExtension(branchItem.qItem);
+    const chartLinkIdX = extensionEnableChart && getChartLinkIdX(extensionEnableChart);
+    const chartLinkIdY = extensionEnableChart && getChartLinkIdY(extensionEnableChart);
+
     const { onChange } = useFieldController<RepeatableFormGroupItems>(fieldName, questionItem);
 
     const { getValues, reset } = useFormContext<FormItems>();
 
+    const [renderAsTable, setRenderAsTable] = useState<boolean>(!chartLinkIdX && !chartLinkIdY);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [editIndex, setEditIndex] = useState<number | undefined>(undefined);
 
@@ -207,6 +230,10 @@ export function useGroupTable(props: GroupItemProps) {
         return [...dataColumns, actionColumn];
     }, [actionColumn, dataColumns]);
 
+    const handleRenderTypeToggle = useCallback((renderAsTable: boolean) => {
+        setRenderAsTable(renderAsTable);
+    }, []);
+
     return {
         repeats,
         hidden,
@@ -220,5 +247,10 @@ export function useGroupTable(props: GroupItemProps) {
         handleCancel,
         handleSave,
         snapshotDataSource,
+        renderAsTable,
+        handleRenderTypeToggle,
+        enabledChart: !!extensionEnableChart,
+        chartLinkIdX,
+        chartLinkIdY,
     };
 }

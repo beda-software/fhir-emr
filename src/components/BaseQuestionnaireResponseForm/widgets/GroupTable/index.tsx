@@ -1,11 +1,12 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
-import { Alert, Button, Flex, Table, Typography } from 'antd';
+import { Alert, Button, Flex, Space, Switch, Table, Typography } from 'antd';
 import { GroupItemProps } from 'sdc-qrf';
 
 import { useGroupTable } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks';
 import { ModalQuestionnaireItem } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/ModalQuestionnaireItem';
 
+import { GroupTableChart } from './GroupTableChart';
 import { S } from './styles';
 import { RepeatableGroupTableRow } from './types';
 
@@ -23,6 +24,11 @@ export function GroupTable(props: GroupItemProps) {
         handleCancel,
         handleSave,
         snapshotDataSource,
+        renderAsTable,
+        handleRenderTypeToggle,
+        enabledChart,
+        chartLinkIdX,
+        chartLinkIdY,
     } = useGroupTable(props);
 
     if (hidden) {
@@ -33,7 +39,15 @@ export function GroupTable(props: GroupItemProps) {
         <>
             <Flex justify="space-between">
                 <Typography.Title level={4}>{title}</Typography.Title>
-                <Button type="default" icon={<PlusOutlined />} onClick={handleAdd}></Button>
+                <Space size={16}>
+                    {enabledChart && (
+                        <Space size="small">
+                            <Switch checked={renderAsTable} onChange={handleRenderTypeToggle} />
+                            <Typography.Text>{t`Table View`}</Typography.Text>
+                        </Space>
+                    )}
+                    <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>{t`Add entry`}</Button>
+                </Space>
             </Flex>
 
             {!repeats && (
@@ -43,19 +57,29 @@ export function GroupTable(props: GroupItemProps) {
                 />
             )}
 
-            {repeats && formValues && (
-                <S.Item>
-                    <Table<RepeatableGroupTableRow>
-                        columns={columns}
-                        dataSource={snapshotDataSource ?? dataSource}
-                        rowKey={(record) => {
-                            return record['key'];
-                        }}
-                        pagination={false}
-                        bordered
-                    />
-                </S.Item>
-            )}
+            {repeats &&
+                formValues &&
+                (renderAsTable ? (
+                    <S.Item>
+                        <Table<RepeatableGroupTableRow>
+                            columns={columns}
+                            dataSource={snapshotDataSource ?? dataSource}
+                            rowKey={(record) => {
+                                return record['key'];
+                            }}
+                            pagination={false}
+                            bordered
+                        />
+                    </S.Item>
+                ) : (
+                    <S.ChartItem>
+                        <GroupTableChart
+                            dataSource={snapshotDataSource ?? dataSource}
+                            linkIdX={chartLinkIdX}
+                            linkIdY={chartLinkIdY}
+                        />
+                    </S.ChartItem>
+                ))}
 
             <ModalQuestionnaireItem
                 open={isModalVisible}
