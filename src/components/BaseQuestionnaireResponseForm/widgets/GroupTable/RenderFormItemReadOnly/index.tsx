@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import Markdown from 'react-markdown';
 import {
     AnswerValue,
     FCEQuestionnaireItem,
@@ -8,17 +9,34 @@ import {
     getAnswerValues,
     isAnswerValueEmpty,
 } from 'sdc-qrf';
+import { ITEM_KEY } from 'sdc-qrf/dist/utils';
 
 import { parseFHIRReference } from '@beda.software/fhir-react';
 
-import { formatHumanDate, formatHumanDateTime, formatHumanTime } from 'src/utils';
+import { compileAsFirst, formatHumanDate, formatHumanDateTime, formatHumanTime } from 'src/utils';
+
+const getItemControlCode = compileAsFirst<FCEQuestionnaireItem | undefined, string>('itemControl.coding.code');
 
 interface RenderQuestionnaireItemProps {
     items: AnswerValue[];
+    questionnaireItem?: FCEQuestionnaireItem;
 }
 
-const RenderString = ({ items }: RenderQuestionnaireItemProps) => {
-    return items.map((item) => item?.string || '-').join(', ');
+const RenderString = ({ items, questionnaireItem }: RenderQuestionnaireItemProps) => {
+    const itemControlCode = getItemControlCode(questionnaireItem);
+
+    switch (itemControlCode) {
+        case 'markdown-editor':
+            return (
+                <>
+                    {items.map((item) => (
+                        <Markdown key={item[ITEM_KEY]}>{item?.string || '-'}</Markdown>
+                    ))}
+                </>
+            );
+        default:
+            return items.map((item) => item?.string || '-').join(', ');
+    }
 };
 
 const RenderDecimal = ({ items }: RenderQuestionnaireItemProps) => {
@@ -126,7 +144,7 @@ export const RenderFormItemReadOnly = (props: {
     }
     switch (questionnaireItemType) {
         case 'string':
-            return <RenderString items={answerValues} />;
+            return <RenderString items={answerValues} questionnaireItem={questionnaireItem} />;
         case 'boolean':
             return <RenderBoolean items={answerValues} />;
         case 'date':
@@ -140,7 +158,7 @@ export const RenderFormItemReadOnly = (props: {
         case 'time':
             return <RenderTime items={answerValues} />;
         case 'text':
-            return <RenderString items={answerValues} />;
+            return <RenderString items={answerValues} questionnaireItem={questionnaireItem} />;
         case 'choice':
             return <RenderCoding items={answerValues} />;
         case 'open-choice':
