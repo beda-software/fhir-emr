@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { FormItems, GroupItemProps, RepeatableFormGroupItems, populateItemKey } from 'sdc-qrf';
-import { ITEM_KEY, getBranchItems, isAnswerValueEmpty, toAnswerValue } from 'sdc-qrf/dist/utils';
+import { getBranchItems, getItemKey, isAnswerValueEmpty, toAnswerValue } from 'sdc-qrf/dist/utils';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { RenderFormItemReadOnly } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/RenderFormItemReadOnly';
@@ -78,8 +78,8 @@ export function useGroupTable(props: GroupItemProps) {
             return [];
         }
 
-        const dataSource = _.map(formItems, (item, index: number) => {
-            const data: RepeatableGroupTableRow = fields.reduce((acc: any, curr: string) => {
+        const dataSource = _.map(formItems, (item, index) => {
+            const data: RepeatableGroupTableRow = fields.reduce((acc: RepeatableGroupTableRow, curr: string) => {
                 const questionnaireItem = questionItem.item?.find((qItem) => qItem.linkId === curr);
                 acc[curr] = {
                     ...(curr in item
@@ -87,12 +87,11 @@ export function useGroupTable(props: GroupItemProps) {
                         : {}),
                     index: index,
                     linkId: curr,
-                    itemKey: item[ITEM_KEY],
                 };
 
                 return acc;
-            }, {});
-            Object.assign(data, { key: item[ITEM_KEY] });
+            }, {} as RepeatableGroupTableRow);
+            data.key = getItemKey(item);
             return data;
         });
 
@@ -104,10 +103,13 @@ export function useGroupTable(props: GroupItemProps) {
                 return [];
             }
             const isRowEmpty = Object.entries(innerItems).map(([, value]) => {
-                if (!value.formItem) {
+                if (_.isString(value)) {
                     return true;
                 }
-                const answer = value.formItem ? toAnswerValue(value.formItem[0], 'value') : undefined;
+                if (!value.formItem || !value.formItem[0]) {
+                    return true;
+                }
+                const answer = toAnswerValue(value.formItem[0], 'value');
                 if (!answer) {
                     return true;
                 }

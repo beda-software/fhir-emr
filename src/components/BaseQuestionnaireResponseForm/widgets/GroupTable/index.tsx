@@ -65,7 +65,7 @@ export function GroupTable(props: GroupItemProps) {
                             columns={columns}
                             dataSource={snapshotDataSource ?? dataSource}
                             rowKey={(record) => {
-                                return record['key'];
+                                return record.key;
                             }}
                             pagination={false}
                             bordered

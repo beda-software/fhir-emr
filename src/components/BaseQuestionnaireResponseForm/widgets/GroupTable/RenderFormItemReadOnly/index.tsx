@@ -1,17 +1,11 @@
 import _ from 'lodash';
-import {
-    AnswerValue,
-    FCEQuestionnaireItem,
-    FormAnswerItems,
-    FormGroupItems,
-    FormItems,
-    getAnswerValues,
-    isAnswerValueEmpty,
-} from 'sdc-qrf';
+import { AnswerValue, FCEQuestionnaireItem, FormItems, getAnswerValues, isAnswerValueEmpty } from 'sdc-qrf';
 
 import { parseFHIRReference } from '@beda.software/fhir-react';
 
 import { formatHumanDate, formatHumanDateTime, formatHumanTime } from 'src/utils';
+
+import { isFormAnswerItems } from '../utils';
 
 interface RenderQuestionnaireItemProps {
     items: AnswerValue[];
@@ -94,12 +88,6 @@ const RenderCoding = ({ items }: RenderQuestionnaireItemProps) => {
         .join(', ');
 };
 
-const isAnswerValue = (
-    item: FormGroupItems | (FormAnswerItems | undefined)[] | undefined,
-): item is FormAnswerItems[] => {
-    return Array.isArray(item) && item.every((item) => item !== undefined && item !== null && 'value' in item);
-};
-
 export const RenderFormItemReadOnly = (props: {
     formItem: FormItems | undefined | null;
     questionnaireItem: FCEQuestionnaireItem | undefined | null;
@@ -112,7 +100,7 @@ export const RenderFormItemReadOnly = (props: {
 
     const questionnaireItemType = questionnaireItem.type;
 
-    if (!isAnswerValue(formItem)) {
+    if (!isFormAnswerItems(formItem)) {
         return '-';
     }
     const answerValues = getAnswerValues(formItem);
