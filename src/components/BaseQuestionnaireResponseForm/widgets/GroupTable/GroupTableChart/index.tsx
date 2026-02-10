@@ -5,17 +5,14 @@ import { getFormAnswerItemFirstValue, isFormAnswerItems } from '../utils';
 
 interface GroupTableChartProps {
     dataSource: RepeatableGroupTableRow[];
-    linkIdX: string | undefined;
-    linkIdY: string | undefined;
+    linkIdX: string;
+    linkIdY: string;
 }
 
 export function GroupTableChart(props: GroupTableChartProps) {
     const { dataSource, linkIdX, linkIdY } = props;
 
     const data = dataSource.map((item) => {
-        if (!linkIdX || !linkIdY) {
-            return null;
-        }
         const formItemX = item[linkIdX]?.formItem;
         const questionnaireItemXType = item[linkIdX]?.questionnaireItem?.type;
         if (!isFormAnswerItems(formItemX) || !questionnaireItemXType) {

@@ -232,9 +232,14 @@ export function useGroupTable(props: GroupItemProps) {
         return [...dataColumns, actionColumn];
     }, [actionColumn, dataColumns]);
 
-    const handleRenderTypeToggle = useCallback((renderAsTable: boolean) => {
-        setRenderAsTable(renderAsTable);
-    }, []);
+    const handleRenderTypeToggle = useMemo(() => {
+        if (!chartLinkIdX || !chartLinkIdY) {
+            return undefined;
+        }
+        return (renderAsTable: boolean) => {
+            setRenderAsTable(renderAsTable);
+        };
+    }, [chartLinkIdX, chartLinkIdY]);
 
     return {
         repeats,
@@ -251,7 +256,6 @@ export function useGroupTable(props: GroupItemProps) {
         snapshotDataSource,
         renderAsTable,
         handleRenderTypeToggle,
-        enabledChart: !!extensionEnableChart,
         chartLinkIdX,
         chartLinkIdY,
     };

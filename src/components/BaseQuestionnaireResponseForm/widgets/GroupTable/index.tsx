@@ -26,7 +26,6 @@ export function GroupTable(props: GroupItemProps) {
         snapshotDataSource,
         renderAsTable,
         handleRenderTypeToggle,
-        enabledChart,
         chartLinkIdX,
         chartLinkIdY,
     } = useGroupTable(props);
@@ -40,7 +39,7 @@ export function GroupTable(props: GroupItemProps) {
             <Flex justify="space-between">
                 <Typography.Title level={4}>{title}</Typography.Title>
                 <Space size={16}>
-                    {enabledChart && (
+                    {handleRenderTypeToggle && (
                         <Space size="small">
                             <Switch checked={renderAsTable} onChange={handleRenderTypeToggle} />
                             <Typography.Text>{t`Table View`}</Typography.Text>
@@ -72,13 +71,16 @@ export function GroupTable(props: GroupItemProps) {
                         />
                     </S.Item>
                 ) : (
-                    <S.ChartItem>
-                        <GroupTableChart
-                            dataSource={snapshotDataSource ?? dataSource}
-                            linkIdX={chartLinkIdX}
-                            linkIdY={chartLinkIdY}
-                        />
-                    </S.ChartItem>
+                    chartLinkIdX &&
+                    chartLinkIdY && (
+                        <S.ChartItem>
+                            <GroupTableChart
+                                dataSource={snapshotDataSource ?? dataSource}
+                                linkIdX={chartLinkIdX}
+                                linkIdY={chartLinkIdY}
+                            />
+                        </S.ChartItem>
+                    )
                 ))}
 
             <ModalQuestionnaireItem
