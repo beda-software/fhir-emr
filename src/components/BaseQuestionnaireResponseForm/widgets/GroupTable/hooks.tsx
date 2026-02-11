@@ -13,12 +13,14 @@ import { compileAsFirst } from 'src/utils';
 
 import { RepeatableGroupTableRow } from './types';
 
+// TODO: getting top-level extension should be done via `extension` FHIRPath function when this issue is resolved
+// https://github.com/HL7/fhirpath.js/issues/181
 const getEnableChartExtension = compileAsFirst<QuestionnaireItem, Extension>(
     `extension.where(url='https://emr-core.beda.software/StructureDefinition/enable-chart')`,
 );
 
-const getChartLinkIdX = compileAsFirst<Extension, string>(`extension.where(url='link-id-x').valueString`);
-const getChartLinkIdY = compileAsFirst<Extension, string>(`extension.where(url='link-id-y').valueString`);
+const getChartLinkIdX = compileAsFirst<Extension, string>(`extension('link-id-x').valueString`);
+const getChartLinkIdY = compileAsFirst<Extension, string>(`extension('link-id-y').valueString`);
 
 export function useGroupTable(props: GroupItemProps) {
     const { parentPath, questionItem } = props;
