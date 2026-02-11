@@ -49,38 +49,40 @@ export function GroupTable(props: GroupItemProps) {
                 </Space>
             </Flex>
 
-            {!repeats && (
+            {repeats ? (
+                formValues ? (
+                    renderAsTable ? (
+                        <S.Item>
+                            <Table<RepeatableGroupTableRow>
+                                columns={columns}
+                                dataSource={snapshotDataSource ?? dataSource}
+                                rowKey={(record) => {
+                                    return record.key;
+                                }}
+                                pagination={false}
+                                bordered
+                            />
+                        </S.Item>
+                    ) : chartLinkIdX && chartLinkIdY ? (
+                        <S.ChartItem>
+                            <GroupTableChart
+                                dataSource={snapshotDataSource ?? dataSource}
+                                linkIdX={chartLinkIdX}
+                                linkIdY={chartLinkIdY}
+                            />
+                        </S.ChartItem>
+                    ) : (
+                        <Alert type="error" message={t`linkIdX or linkIdY not defined`} />
+                    )
+                ) : (
+                    <Alert type="error" message={t`Error getting form values`} />
+                )
+            ) : (
                 <Alert
                     type="error"
                     message={t`This itemControl is designed for repeatable groups, but this group is not repeatable`}
                 />
             )}
-
-            {repeats &&
-                formValues &&
-                (renderAsTable ? (
-                    <S.Item>
-                        <Table<RepeatableGroupTableRow>
-                            columns={columns}
-                            dataSource={snapshotDataSource ?? dataSource}
-                            rowKey={(record) => {
-                                return record.key;
-                            }}
-                            pagination={false}
-                            bordered
-                        />
-                    </S.Item>
-                ) : chartLinkIdX && chartLinkIdY ? (
-                    <S.ChartItem>
-                        <GroupTableChart
-                            dataSource={snapshotDataSource ?? dataSource}
-                            linkIdX={chartLinkIdX}
-                            linkIdY={chartLinkIdY}
-                        />
-                    </S.ChartItem>
-                ) : (
-                    <Alert type="error" message={t`linkIdX or linkIdY not defined`} />
-                ))}
 
             <ModalQuestionnaireItem
                 open={isModalVisible}
