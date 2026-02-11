@@ -1,26 +1,15 @@
 import { t } from '@lingui/macro';
 import { Button, Popconfirm, Space } from 'antd';
-import { Extension, QuestionnaireItem } from 'fhir/r4b';
 import _ from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { FormItems, GroupItemProps, RepeatableFormGroupItems, populateItemKey } from 'sdc-qrf';
-import { getBranchItems, getItemKey, isAnswerValueEmpty, toAnswerValue } from 'sdc-qrf/dist/utils';
+import { getItemKey, isAnswerValueEmpty, toAnswerValue } from 'sdc-qrf/dist/utils';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { RenderFormItemReadOnly } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/RenderFormItemReadOnly';
-import { compileAsFirst } from 'src/utils';
 
 import { RepeatableGroupTableRow } from './types';
-
-// TODO: getting top-level extension should be done via `extension` FHIRPath function when this issue is resolved
-// https://github.com/HL7/fhirpath.js/issues/181
-const getEnableChartExtension = compileAsFirst<QuestionnaireItem, Extension>(
-    `extension.where(url='https://emr-core.beda.software/StructureDefinition/enable-chart')`,
-);
-
-const getChartLinkIdX = compileAsFirst<Extension, string>(`extension('link-id-x').valueString`);
-const getChartLinkIdY = compileAsFirst<Extension, string>(`extension('link-id-y').valueString`);
 
 export function useGroupTable(props: GroupItemProps) {
     const { parentPath, questionItem } = props;
@@ -30,14 +19,8 @@ export function useGroupTable(props: GroupItemProps) {
 
     const fieldName = useMemo(() => [...parentPath, linkId], [parentPath, linkId]);
 
-    const branchItem = getBranchItems(
-        fieldName,
-        props.context?.[0]?.Questionnaire,
-        props.context?.[0]?.QuestionnaireReponse,
-    );
-    const extensionEnableChart = getEnableChartExtension(branchItem.qItem);
-    const chartLinkIdX = extensionEnableChart && getChartLinkIdX(extensionEnableChart);
-    const chartLinkIdY = extensionEnableChart && getChartLinkIdY(extensionEnableChart);
+    const chartLinkIdX = questionItem.enableChart?.linkIdX;
+    const chartLinkIdY = questionItem.enableChart?.linkIdY;
 
     const { onChange } = useFieldController<RepeatableFormGroupItems>(fieldName, questionItem);
 
