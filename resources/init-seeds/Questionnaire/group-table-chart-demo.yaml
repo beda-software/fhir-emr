@@ -1,0 +1,38 @@
+id: group-table-chart-demo
+resourceType: Questionnaire
+url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/group-table-chart-demo
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+name: group-table-chart-demo
+title: Group Table Chart Demo
+status: active
+subjectType:
+  - Patient
+description: A questionnaire to demonstrate group-table item control with enabled chart extension
+item:
+  - linkId: group-table-chart-demo
+    text: Group Table Chart Demo
+    type: group
+    item:
+      - linkId: chart-group
+        text: Chart data
+        type: group
+        repeats: true
+        itemControl:
+          coding:
+            - code: group-table
+        enableChart:
+          linkIdX: date
+          linkIdY: weight
+        item:
+          - linkId: date
+            text: Date
+            type: date
+          - linkId: weight
+            text: Weight
+            type: quantity
+            unitOption:
+              - code: kg
+                system: http://unitsofmeasure.org
+                display: kg
