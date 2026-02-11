@@ -14,15 +14,11 @@ import { compileAsFirst } from 'src/utils';
 import { RepeatableGroupTableRow } from './types';
 
 const getEnableChartExtension = compileAsFirst<QuestionnaireItem, Extension>(
-    `extension.where(url='https://emr-core.beda.software/StructureDefinition/enableChart')`,
+    `extension.where(url='https://emr-core.beda.software/StructureDefinition/enable-chart')`,
 );
 
-const getChartLinkIdX = compileAsFirst<Extension, string>(
-    `extension.where(url='https://emr-core.beda.software/StructureDefinition/enableChart-linkIdX').valueString`,
-);
-const getChartLinkIdY = compileAsFirst<Extension, string>(
-    `extension.where(url='https://emr-core.beda.software/StructureDefinition/enableChart-linkIdY').valueString`,
-);
+const getChartLinkIdX = compileAsFirst<Extension, string>(`extension.where(url='link-id-x').valueString`);
+const getChartLinkIdY = compileAsFirst<Extension, string>(`extension.where(url='link-id-y').valueString`);
 
 export function useGroupTable(props: GroupItemProps) {
     const { parentPath, questionItem } = props;
