@@ -70,17 +70,16 @@ export function GroupTable(props: GroupItemProps) {
                             bordered
                         />
                     </S.Item>
+                ) : chartLinkIdX && chartLinkIdY ? (
+                    <S.ChartItem>
+                        <GroupTableChart
+                            dataSource={snapshotDataSource ?? dataSource}
+                            linkIdX={chartLinkIdX}
+                            linkIdY={chartLinkIdY}
+                        />
+                    </S.ChartItem>
                 ) : (
-                    chartLinkIdX &&
-                    chartLinkIdY && (
-                        <S.ChartItem>
-                            <GroupTableChart
-                                dataSource={snapshotDataSource ?? dataSource}
-                                linkIdX={chartLinkIdX}
-                                linkIdY={chartLinkIdY}
-                            />
-                        </S.ChartItem>
-                    )
+                    <Alert type="error" message={t`linkIdX or linkIdY not defined`} />
                 ))}
 
             <ModalQuestionnaireItem
