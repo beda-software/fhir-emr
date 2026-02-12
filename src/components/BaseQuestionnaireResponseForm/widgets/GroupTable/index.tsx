@@ -15,7 +15,6 @@ export function GroupTable(props: GroupItemProps) {
         repeats,
         hidden,
         title,
-        formValues,
         handleAdd,
         dataSource,
         columns,
@@ -50,32 +49,28 @@ export function GroupTable(props: GroupItemProps) {
             </Flex>
 
             {repeats ? (
-                formValues ? (
-                    renderAsTable ? (
-                        <S.Item>
-                            <Table<RepeatableGroupTableRow>
-                                columns={columns}
-                                dataSource={snapshotDataSource ?? dataSource}
-                                rowKey={(record) => {
-                                    return record.key;
-                                }}
-                                pagination={false}
-                                bordered
-                            />
-                        </S.Item>
-                    ) : chartLinkIdX && chartLinkIdY ? (
-                        <S.ChartItem>
-                            <GroupTableChart
-                                dataSource={snapshotDataSource ?? dataSource}
-                                linkIdX={chartLinkIdX}
-                                linkIdY={chartLinkIdY}
-                            />
-                        </S.ChartItem>
-                    ) : (
-                        <Alert type="error" message={t`linkIdX or linkIdY not defined`} />
-                    )
+                renderAsTable ? (
+                    <S.Item>
+                        <Table<RepeatableGroupTableRow>
+                            columns={columns}
+                            dataSource={snapshotDataSource ?? dataSource}
+                            rowKey={(record) => {
+                                return record.key;
+                            }}
+                            pagination={false}
+                            bordered
+                        />
+                    </S.Item>
+                ) : chartLinkIdX && chartLinkIdY ? (
+                    <S.ChartItem>
+                        <GroupTableChart
+                            dataSource={snapshotDataSource ?? dataSource}
+                            linkIdX={chartLinkIdX}
+                            linkIdY={chartLinkIdY}
+                        />
+                    </S.ChartItem>
                 ) : (
-                    <Alert type="error" message={t`Error getting form values`} />
+                    <Alert type="error" message={t`linkIdX or linkIdY not defined`} />
                 )
             ) : (
                 <Alert

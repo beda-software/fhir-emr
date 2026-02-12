@@ -226,7 +226,6 @@ export function useGroupTable(props: GroupItemProps) {
         repeats,
         hidden,
         title,
-        formValues,
         handleAdd,
         dataSource,
         columns,
