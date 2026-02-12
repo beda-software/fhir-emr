@@ -1,8 +1,9 @@
-import { Modal } from 'antd';
+import classNames from 'classnames';
 import { GroupItemProps, QuestionItems } from 'sdc-qrf';
 
-import { S } from './styles';
+import { Modal } from 'src/components';
 
+import s from '../../../BaseQuestionnaireResponseForm.module.scss';
 interface ModalQuestionnaireItemProps {
     open: boolean;
     index: number | undefined;
@@ -36,13 +37,13 @@ export function ModalQuestionnaireItem(props: ModalQuestionnaireItemProps) {
             destroyOnClose
             closable={false}
         >
-            <S.GroupContent>
+            <div className={classNames(s.content, 'form__content', s.form)}>
                 <QuestionItems
                     questionItems={item!}
                     parentPath={[...parentPath, linkId, 'items', index.toString()]}
                     context={context[index]!}
                 />
-            </S.GroupContent>
+            </div>
         </Modal>
     );
 }
