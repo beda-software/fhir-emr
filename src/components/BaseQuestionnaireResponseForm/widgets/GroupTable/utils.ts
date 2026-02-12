@@ -11,9 +11,6 @@ export const isFormAnswerItems = (
     return Array.isArray(item) && item.every((item) => item !== undefined && item !== null && 'value' in item);
 };
 
-export const substituteUndefined = (value: string | number | boolean | undefined, symbol = '-') =>
-    value === undefined ? symbol : value;
-
 export const getValueFromAnswerValue = (
     answerValue: AnswerValue,
     questionnaireItemType: QuestionnaireItem['type'],

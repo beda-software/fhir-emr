@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { FCEQuestionnaireItem, FormItems, getAnswerValues, isAnswerValueEmpty } from 'sdc-qrf';
 
-import { getValueFromAnswerValue, isFormAnswerItems, substituteUndefined } from '../utils';
+import { getValueFromAnswerValue, isFormAnswerItems } from '../utils';
 
 export const RenderFormItemReadOnly = (props: {
     formItem: FormItems | undefined | null;
@@ -32,9 +32,7 @@ export const RenderFormItemReadOnly = (props: {
     return (
         <>
             {answerValues
-                .map((value) =>
-                    substituteUndefined(getValueFromAnswerValue(value, questionnaireItemType, true), emptySymbol),
-                )
+                .map((value) => getValueFromAnswerValue(value, questionnaireItemType, true) ?? emptySymbol)
                 .join(', ')}
         </>
     );
