@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { FormItems, GroupItemProps, RepeatableFormGroupItems, populateItemKey } from 'sdc-qrf';
-import { ITEM_KEY, isAnswerValueEmpty, toAnswerValue } from 'sdc-qrf/dist/utils';
+import { getItemKey, isAnswerValueEmpty, toAnswerValue } from 'sdc-qrf/dist/utils';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { RenderFormItemReadOnly } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/RenderFormItemReadOnly';
@@ -19,10 +19,14 @@ export function useGroupTable(props: GroupItemProps) {
 
     const fieldName = useMemo(() => [...parentPath, linkId], [parentPath, linkId]);
 
+    const chartLinkIdX = questionItem.enableChart?.linkIdX;
+    const chartLinkIdY = questionItem.enableChart?.linkIdY;
+
     const { onChange } = useFieldController<RepeatableFormGroupItems>(fieldName, questionItem);
 
     const { getValues, reset } = useFormContext<FormItems>();
 
+    const [renderAsTable, setRenderAsTable] = useState<boolean>(!chartLinkIdX && !chartLinkIdY);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [editIndex, setEditIndex] = useState<number | undefined>(undefined);
 
@@ -55,8 +59,8 @@ export function useGroupTable(props: GroupItemProps) {
             return [];
         }
 
-        const dataSource = _.map(formItems, (item, index: number) => {
-            const data: RepeatableGroupTableRow = fields.reduce((acc: any, curr: string) => {
+        const dataSource = _.map(formItems, (item, index) => {
+            const data: RepeatableGroupTableRow = fields.reduce((acc: RepeatableGroupTableRow, curr: string) => {
                 const questionnaireItem = questionItem.item?.find((qItem) => qItem.linkId === curr);
                 acc[curr] = {
                     ...(curr in item
@@ -64,12 +68,11 @@ export function useGroupTable(props: GroupItemProps) {
                         : {}),
                     index: index,
                     linkId: curr,
-                    itemKey: item[ITEM_KEY],
                 };
 
                 return acc;
-            }, {});
-            Object.assign(data, { key: item[ITEM_KEY] });
+            }, {} as RepeatableGroupTableRow);
+            data.key = getItemKey(item);
             return data;
         });
 
@@ -81,10 +84,13 @@ export function useGroupTable(props: GroupItemProps) {
                 return [];
             }
             const isRowEmpty = Object.entries(innerItems).map(([, value]) => {
-                if (!value.formItem) {
+                if (_.isString(value)) {
                     return true;
                 }
-                const answer = value.formItem ? toAnswerValue(value.formItem[0], 'value') : undefined;
+                if (!value.formItem || !value.formItem[0]) {
+                    return true;
+                }
+                const answer = toAnswerValue(value.formItem[0], 'value');
                 if (!answer) {
                     return true;
                 }
@@ -207,11 +213,19 @@ export function useGroupTable(props: GroupItemProps) {
         return [...dataColumns, actionColumn];
     }, [actionColumn, dataColumns]);
 
+    const handleRenderTypeToggle = useMemo(() => {
+        if (!chartLinkIdX || !chartLinkIdY) {
+            return undefined;
+        }
+        return (renderAsTable: boolean) => {
+            setRenderAsTable(renderAsTable);
+        };
+    }, [chartLinkIdX, chartLinkIdY]);
+
     return {
         repeats,
         hidden,
         title,
-        formValues,
         handleAdd,
         dataSource,
         columns,
@@ -220,5 +234,9 @@ export function useGroupTable(props: GroupItemProps) {
         handleCancel,
         handleSave,
         snapshotDataSource,
+        renderAsTable,
+        handleRenderTypeToggle,
+        chartLinkIdX,
+        chartLinkIdY,
     };
 }
