@@ -21,10 +21,23 @@ export const S = {
         .mdxeditor-toolbar {
             z-index: 0;
             position: unset;
+            z-index: 1;
+            margin: 0;
+            width: 100%;
+            overflow-x: scroll;
+            scrollbar-width: thin;
         }
 
         .mdxeditor-popup-container {
             z-index: 1000;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        blockquote {
+            background: ${({ theme }) => theme.primaryPalette.bcp_1};
         }
     `,
 };
