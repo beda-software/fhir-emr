@@ -101,5 +101,5 @@ export const groupControlComponents: ItemControlGroupItemComponentMapping = {
     'wizard-vertical': GroupWizardVertical,
     'group-tabs': GroupTabs,
     'group-table': GroupTable,
-    'group-item': EditableGroup,
+    'editable-group': EditableGroup,
 };
