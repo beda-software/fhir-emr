@@ -64,7 +64,7 @@ export function useEditableGroup(props: GroupItemProps) {
         }, {} as EditableGroupTableRow);
         data.key = getItemKey(formItems);
         return [data];
-    }, [fields, formItems, item, questionItem.item]);
+    }, [fields, formItems, questionItem.item]);
 
     const startEdit = useCallback(() => {
         setSnapshotFormValues(_.cloneDeep(formValues));
