@@ -4,7 +4,7 @@ import { Alert, Button, Flex, Space, Switch, Table, Typography } from 'antd';
 import { GroupItemProps } from 'sdc-qrf';
 
 import { useGroupTable } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks';
-import { ModalQuestionnaireItem } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/ModalQuestionnaireItem';
+import { ModalQuestionnaireGroupItem } from 'src/components/ModalQuestionnaireGroupItem';
 
 import { GroupTableChart } from './GroupTableChart';
 import { S } from './styles';
@@ -79,7 +79,7 @@ export function GroupTable(props: GroupItemProps) {
                 />
             )}
 
-            <ModalQuestionnaireItem
+            <ModalQuestionnaireGroupItem
                 open={isModalVisible}
                 index={editIndex}
                 groupItem={props}
