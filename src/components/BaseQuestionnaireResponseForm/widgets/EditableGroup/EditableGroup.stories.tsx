@@ -7,25 +7,33 @@ import { FCEQuestionnaire, fromFirstClassExtension } from 'sdc-qrf';
 import { BaseQuestionnaireResponseForm } from 'src/components';
 import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 
-import { EditableGroup } from './index';
+interface EditableGroupProps {
+    readOnly: boolean;
+}
 
-const meta: Meta<typeof EditableGroup> = {
+const meta: Meta<EditableGroupProps> = {
     title: 'Questionnaire / questions / EditableGroup',
-    component: EditableGroup,
     decorators: [withColorSchemeDecorator, WithQuestionFormProviderDecorator],
+    args: {
+        readOnly: false,
+    },
 };
 
 export default meta;
-type Story = StoryObj<typeof EditableGroup>;
+type Story = StoryObj<EditableGroupProps>;
 
 export const Example: Story = {
-    render: () => (
+    args: {
+        readOnly: false,
+    },
+    render: ({ readOnly }) => (
         <I18nProvider i18n={i18n}>
             <BaseQuestionnaireResponseForm
+                key={readOnly ? 'readOnly' : 'editable'}
                 formData={{
                     context: {
-                        fceQuestionnaire: getQuestionnaire(false),
-                        questionnaire: fromFirstClassExtension(getQuestionnaire(true)),
+                        fceQuestionnaire: getQuestionnaire(readOnly),
+                        questionnaire: fromFirstClassExtension(getQuestionnaire(readOnly)),
                         launchContextParameters: [],
                         questionnaireResponse,
                     },
@@ -37,13 +45,17 @@ export const Example: Story = {
 };
 
 export const Readonly: Story = {
-    render: () => (
+    args: {
+        readOnly: true,
+    },
+    render: ({ readOnly }) => (
         <I18nProvider i18n={i18n}>
             <BaseQuestionnaireResponseForm
+                key={readOnly ? 'readOnly' : 'editable'}
                 formData={{
                     context: {
-                        fceQuestionnaire: getQuestionnaire(true),
-                        questionnaire: fromFirstClassExtension(getQuestionnaire(true)),
+                        fceQuestionnaire: getQuestionnaire(readOnly),
+                        questionnaire: fromFirstClassExtension(getQuestionnaire(readOnly)),
                         launchContextParameters: [],
                         questionnaireResponse,
                     },
