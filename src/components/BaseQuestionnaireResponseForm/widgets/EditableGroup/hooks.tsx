@@ -3,10 +3,10 @@ import _ from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { FormItems, GroupItemProps, RepeatableFormGroupItems } from 'sdc-qrf';
-import { getItemKey } from 'sdc-qrf/dist/utils';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { RenderFormItemReadOnly } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/RenderFormItemReadOnly';
+import { getDataSource } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/utils';
 
 import { EditableGroupTableItem, EditableGroupTableRow } from './types';
 
@@ -33,8 +33,8 @@ export function useEditableGroup(props: GroupItemProps) {
 
     const visibleItem = useMemo(() => item?.filter((i) => !i.hidden), [item]);
 
-    const formItems: FormItems = useMemo(() => {
-        return formValues?.items || [];
+    const formItems: FormItems[] = useMemo(() => {
+        return [formValues?.items] || [];
     }, [formValues]);
 
     const fields = useMemo(
@@ -46,25 +46,8 @@ export function useEditableGroup(props: GroupItemProps) {
     );
 
     const dataSource: EditableGroupTableRow[] = useMemo(() => {
-        if (fields.length === 0) {
-            return [];
-        }
-
-        const data: EditableGroupTableRow = fields.reduce((acc: EditableGroupTableRow, curr: string) => {
-            const questionnaireItem = questionItem.item?.find((qItem) => qItem.linkId === curr);
-
-            acc[curr] = {
-                ...(curr in formItems
-                    ? { formItem: formItems[curr], questionnaireItem: questionnaireItem ?? undefined }
-                    : {}),
-                linkId: curr,
-            };
-
-            return acc;
-        }, {} as EditableGroupTableRow);
-        data.key = getItemKey(formItems);
-        return [data];
-    }, [fields, formItems, questionItem.item]);
+        return getDataSource(fields, formItems, questionItem);
+    }, [fields, formItems, questionItem]);
 
     const startEdit = useCallback(() => {
         setSnapshotFormValues(_.cloneDeep(formValues));

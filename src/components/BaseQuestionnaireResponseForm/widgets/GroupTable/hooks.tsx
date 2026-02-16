@@ -4,12 +4,12 @@ import _ from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { FormItems, GroupItemProps, RepeatableFormGroupItems, populateItemKey } from 'sdc-qrf';
-import { getItemKey, isAnswerValueEmpty, toAnswerValue } from 'sdc-qrf/dist/utils';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { RenderFormItemReadOnly } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/RenderFormItemReadOnly';
 
 import { RepeatableGroupTableRow } from './types';
+import { getDataSource } from './utils';
 
 export function useGroupTable(props: GroupItemProps) {
     const { parentPath, questionItem } = props;
@@ -51,58 +51,7 @@ export function useGroupTable(props: GroupItemProps) {
     );
 
     const dataSource: RepeatableGroupTableRow[] = useMemo(() => {
-        if (fields.length === 0) {
-            return [];
-        }
-
-        if (!_.isArray(formItems)) {
-            return [];
-        }
-
-        const dataSource = _.map(formItems, (item, index) => {
-            const data: RepeatableGroupTableRow = fields.reduce((acc: RepeatableGroupTableRow, curr: string) => {
-                const questionnaireItem = questionItem.item?.find((qItem) => qItem.linkId === curr);
-                acc[curr] = {
-                    ...(curr in item
-                        ? { formItem: item[curr], questionnaireItem: questionnaireItem ?? undefined }
-                        : {}),
-                    index: index,
-                    linkId: curr,
-                };
-
-                return acc;
-            }, {} as RepeatableGroupTableRow);
-            data.key = getItemKey(item);
-            return data;
-        });
-
-        if (dataSource.length > 1) {
-            return dataSource;
-        } else if (dataSource.length === 1) {
-            const innerItems = dataSource[0];
-            if (!innerItems) {
-                return [];
-            }
-            const isRowEmpty = Object.entries(innerItems).map(([, value]) => {
-                if (_.isString(value)) {
-                    return true;
-                }
-                if (!value.formItem || !value.formItem[0]) {
-                    return true;
-                }
-                const answer = toAnswerValue(value.formItem[0], 'value');
-                if (!answer) {
-                    return true;
-                }
-                const isAnswerEmpty = isAnswerValueEmpty(answer);
-                return isAnswerEmpty;
-            });
-            const rowIsEmpty = isRowEmpty.every((element) => element);
-
-            return rowIsEmpty ? [] : dataSource;
-        }
-
-        return [];
+        return getDataSource(fields, formItems, questionItem);
     }, [fields, formItems, questionItem]);
 
     const startEdit = useCallback(
