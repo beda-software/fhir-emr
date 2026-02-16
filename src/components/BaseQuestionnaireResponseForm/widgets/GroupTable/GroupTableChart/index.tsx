@@ -1,10 +1,10 @@
 import { CartesianGrid, ComposedChart, Line, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 
-import { RepeatableGroupTableRow } from '../types';
+import { GroupTableRow } from '../types';
 import { getFormAnswerItemFirstValue, isFormAnswerItems } from '../utils';
 
 interface GroupTableChartProps {
-    dataSource: RepeatableGroupTableRow[];
+    dataSource: GroupTableRow[];
     linkIdX: string;
     linkIdY: string;
 }

@@ -2,10 +2,10 @@ import { t } from '@lingui/macro';
 import { Alert, Button, Flex, Table, Typography } from 'antd';
 import { GroupItemProps } from 'sdc-qrf';
 
+import { GroupTableRow } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/types';
 import { ModalQuestionnaireGroupItem } from 'src/components/ModalQuestionnaireGroupItem';
 
 import { useEditableGroup } from './hooks';
-import { EditableGroupTableRow } from './types';
 
 export function EditableGroup(props: GroupItemProps) {
     const {
@@ -34,7 +34,7 @@ export function EditableGroup(props: GroupItemProps) {
             </Flex>
 
             {!repeats ? (
-                <Table<EditableGroupTableRow>
+                <Table<GroupTableRow>
                     columns={dataColumns}
                     dataSource={snapshotDataSource ?? dataSource}
                     rowKey={(record) => {

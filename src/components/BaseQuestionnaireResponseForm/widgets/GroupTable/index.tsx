@@ -8,7 +8,7 @@ import { ModalQuestionnaireGroupItem } from 'src/components/ModalQuestionnaireGr
 
 import { GroupTableChart } from './GroupTableChart';
 import { S } from './styles';
-import { RepeatableGroupTableRow } from './types';
+import { GroupTableRow } from './types';
 
 export function GroupTable(props: GroupItemProps) {
     const {
@@ -50,7 +50,7 @@ export function GroupTable(props: GroupItemProps) {
 
             {repeats ? (
                 renderAsTable ? (
-                    <Table<RepeatableGroupTableRow>
+                    <Table<GroupTableRow>
                         columns={columns}
                         dataSource={snapshotDataSource ?? dataSource}
                         rowKey={(record) => {

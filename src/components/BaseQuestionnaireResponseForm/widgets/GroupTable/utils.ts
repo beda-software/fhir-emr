@@ -16,7 +16,7 @@ import { parseFHIRReference } from '@beda.software/fhir-react';
 
 import { formatHumanDate, formatHumanDateTime, formatHumanTime } from 'src/utils';
 
-import { RepeatableGroupTableRow } from './types';
+import { GroupTableRow } from './types';
 
 export const isFormAnswerItems = (
     item: FormGroupItems | (FormAnswerItems | undefined)[] | undefined,
@@ -103,7 +103,7 @@ export const getDataSource = (
     fields: string[],
     formItems: FormItems[],
     questionItem: FCEQuestionnaireItem,
-): RepeatableGroupTableRow[] => {
+): GroupTableRow[] => {
     if (fields.length === 0) {
         return [];
     }
@@ -113,7 +113,7 @@ export const getDataSource = (
     }
 
     const dataSource = _.map(formItems, (item, index) => {
-        const data: RepeatableGroupTableRow = fields.reduce((acc: RepeatableGroupTableRow, curr: string) => {
+        const data: GroupTableRow = fields.reduce((acc: GroupTableRow, curr: string) => {
             const questionnaireItem = questionItem.item?.find((qItem) => qItem.linkId === curr);
             acc[curr] = {
                 ...(curr in item ? { formItem: item[curr], questionnaireItem: questionnaireItem ?? undefined } : {}),
@@ -122,7 +122,7 @@ export const getDataSource = (
             };
 
             return acc;
-        }, {} as RepeatableGroupTableRow);
+        }, {} as GroupTableRow);
         data.key = getItemKey(item);
         return data;
     });

@@ -8,7 +8,7 @@ import { FormItems, GroupItemProps, RepeatableFormGroupItems, populateItemKey } 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { RenderFormItemReadOnly } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/RenderFormItemReadOnly';
 
-import { RepeatableGroupTableRow } from './types';
+import { GroupTableRow } from './types';
 import { getDataSource } from './utils';
 
 export function useGroupTable(props: GroupItemProps) {
@@ -31,7 +31,7 @@ export function useGroupTable(props: GroupItemProps) {
     const [editIndex, setEditIndex] = useState<number | undefined>(undefined);
 
     const [snapshotFormValues, setSnapshotFormValues] = useState<FormItems[] | null>(null);
-    const [snapshotDataSource, setSnapshotDataSource] = useState<RepeatableGroupTableRow[] | null>(null);
+    const [snapshotDataSource, setSnapshotDataSource] = useState<GroupTableRow[] | null>(null);
 
     const fullFormValues = getValues();
     const formValues = _.get(getValues(), fieldName);
@@ -50,7 +50,7 @@ export function useGroupTable(props: GroupItemProps) {
         [visibleItem],
     );
 
-    const dataSource: RepeatableGroupTableRow[] = useMemo(() => {
+    const dataSource: GroupTableRow[] = useMemo(() => {
         return getDataSource(fields, formItems, questionItem);
     }, [fields, formItems, questionItem]);
 

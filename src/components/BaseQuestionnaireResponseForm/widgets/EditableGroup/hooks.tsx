@@ -6,9 +6,8 @@ import { FormItems, GroupItemProps, RepeatableFormGroupItems } from 'sdc-qrf';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { RenderFormItemReadOnly } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/RenderFormItemReadOnly';
+import { GroupTableItem, GroupTableRow } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/types';
 import { getDataSource } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/utils';
-
-import { EditableGroupTableItem, EditableGroupTableRow } from './types';
 
 export function useEditableGroup(props: GroupItemProps) {
     const { parentPath, questionItem } = props;
@@ -26,7 +25,7 @@ export function useEditableGroup(props: GroupItemProps) {
     const [isModalVisible, setIsModalVisible] = useState(false);
 
     const [snapshotFormValues, setSnapshotFormValues] = useState<FormItems[] | null>(null);
-    const [snapshotDataSource, setSnapshotDataSource] = useState<EditableGroupTableRow[] | null>(null);
+    const [snapshotDataSource, setSnapshotDataSource] = useState<GroupTableRow[] | null>(null);
 
     const fullFormValues = getValues();
     const formValues = _.get(getValues(), fieldName);
@@ -45,7 +44,7 @@ export function useEditableGroup(props: GroupItemProps) {
         [visibleItem],
     );
 
-    const dataSource: EditableGroupTableRow[] = useMemo(() => {
+    const dataSource: GroupTableRow[] = useMemo(() => {
         return getDataSource(fields, formItems, questionItem);
     }, [fields, formItems, questionItem]);
 
@@ -76,13 +75,13 @@ export function useEditableGroup(props: GroupItemProps) {
         setIsModalVisible(false);
     }, [fullFormValues, reset]);
 
-    const dataColumns: ColumnsType<EditableGroupTableRow> = useMemo(() => {
+    const dataColumns: ColumnsType<GroupTableRow> = useMemo(() => {
         return _.map(visibleItem, (questionItem) => {
             return {
                 title: questionItem.text ? questionItem.text : questionItem.linkId,
                 dataIndex: questionItem.linkId,
                 key: questionItem.linkId,
-                render: (value: EditableGroupTableItem) => (
+                render: (value: GroupTableItem) => (
                     <RenderFormItemReadOnly formItem={value.formItem} questionnaireItem={value.questionnaireItem} />
                 ),
             };
