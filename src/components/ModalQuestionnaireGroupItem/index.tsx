@@ -6,7 +6,7 @@ import s from 'src/components/BaseQuestionnaireResponseForm/BaseQuestionnaireRes
 
 interface ModalQuestionnaireItemProps {
     open: boolean;
-    index?: number | undefined;
+    index?: number;
     groupItem: GroupItemProps;
     title?: string;
     handleCancel: () => void;
