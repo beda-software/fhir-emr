@@ -50,17 +50,15 @@ export function GroupTable(props: GroupItemProps) {
 
             {repeats ? (
                 renderAsTable ? (
-                    <S.Item>
-                        <Table<RepeatableGroupTableRow>
-                            columns={columns}
-                            dataSource={snapshotDataSource ?? dataSource}
-                            rowKey={(record) => {
-                                return record.key;
-                            }}
-                            pagination={false}
-                            bordered
-                        />
-                    </S.Item>
+                    <Table<RepeatableGroupTableRow>
+                        columns={columns}
+                        dataSource={snapshotDataSource ?? dataSource}
+                        rowKey={(record) => {
+                            return record.key;
+                        }}
+                        pagination={false}
+                        bordered
+                    />
                 ) : chartLinkIdX && chartLinkIdY ? (
                     <S.ChartItem>
                         <GroupTableChart

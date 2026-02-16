@@ -5,7 +5,6 @@ import { GroupItemProps } from 'sdc-qrf';
 import { ModalQuestionnaireGroupItem } from 'src/components/ModalQuestionnaireGroupItem';
 
 import { useEditableGroup } from './hooks';
-import { S } from './styles';
 import { EditableGroupTableRow } from './types';
 
 export function EditableGroup(props: GroupItemProps) {
@@ -35,17 +34,15 @@ export function EditableGroup(props: GroupItemProps) {
             </Flex>
 
             {!repeats ? (
-                <S.Item>
-                    <Table<EditableGroupTableRow>
-                        columns={dataColumns}
-                        dataSource={snapshotDataSource ?? dataSource}
-                        rowKey={(record) => {
-                            return record.key;
-                        }}
-                        pagination={false}
-                        bordered
-                    />
-                </S.Item>
+                <Table<EditableGroupTableRow>
+                    columns={dataColumns}
+                    dataSource={snapshotDataSource ?? dataSource}
+                    rowKey={(record) => {
+                        return record.key;
+                    }}
+                    pagination={false}
+                    bordered
+                />
             ) : (
                 <Alert type="error" message={t`This itemControl is designed for non-repeatable groups`} />
             )}
