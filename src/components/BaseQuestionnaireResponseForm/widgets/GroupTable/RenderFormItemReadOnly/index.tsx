@@ -1,10 +1,10 @@
 import _ from 'lodash';
-import { FCEQuestionnaireItem, FormItems, getAnswerValues, isAnswerValueEmpty } from 'sdc-qrf';
+import { FCEQuestionnaireItem, FormAnswerItems, FormGroupItems, getAnswerValues, isAnswerValueEmpty } from 'sdc-qrf';
 
 import { getValueFromAnswerValue, isFormAnswerItems } from '../utils';
 
 export const RenderFormItemReadOnly = (props: {
-    formItem: FormItems | undefined | null;
+    formItem: FormGroupItems | (FormAnswerItems | undefined)[] | undefined;
     questionnaireItem: FCEQuestionnaireItem | undefined | null;
 }) => {
     const { formItem, questionnaireItem } = props;

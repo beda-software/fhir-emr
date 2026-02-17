@@ -4,11 +4,11 @@ import { Alert, Button, Flex, Space, Switch, Table, Typography } from 'antd';
 import { GroupItemProps } from 'sdc-qrf';
 
 import { useGroupTable } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks';
-import { ModalQuestionnaireItem } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/ModalQuestionnaireItem';
+import { ModalQuestionnaireGroupItem } from 'src/components/ModalQuestionnaireGroupItem';
 
 import { GroupTableChart } from './GroupTableChart';
 import { S } from './styles';
-import { RepeatableGroupTableRow } from './types';
+import { GroupTableRow } from './types';
 
 export function GroupTable(props: GroupItemProps) {
     const {
@@ -50,17 +50,15 @@ export function GroupTable(props: GroupItemProps) {
 
             {repeats ? (
                 renderAsTable ? (
-                    <S.Item>
-                        <Table<RepeatableGroupTableRow>
-                            columns={columns}
-                            dataSource={snapshotDataSource ?? dataSource}
-                            rowKey={(record) => {
-                                return record.key;
-                            }}
-                            pagination={false}
-                            bordered
-                        />
-                    </S.Item>
+                    <Table<GroupTableRow>
+                        columns={columns}
+                        dataSource={snapshotDataSource ?? dataSource}
+                        rowKey={(record) => {
+                            return record.key;
+                        }}
+                        pagination={false}
+                        bordered
+                    />
                 ) : chartLinkIdX && chartLinkIdY ? (
                     <S.ChartItem>
                         <GroupTableChart
@@ -79,7 +77,7 @@ export function GroupTable(props: GroupItemProps) {
                 />
             )}
 
-            <ModalQuestionnaireItem
+            <ModalQuestionnaireGroupItem
                 open={isModalVisible}
                 index={editIndex}
                 groupItem={props}

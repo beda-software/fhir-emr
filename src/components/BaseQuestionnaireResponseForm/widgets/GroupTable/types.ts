@@ -7,4 +7,4 @@ export interface GroupTableItem {
     questionnaireItem?: FCEQuestionnaireItem | undefined;
 }
 
-export type RepeatableGroupTableRow = Record<string, GroupTableItem> & { key: string };
+export type GroupTableRow = Record<string, GroupTableItem> & { key: string };
