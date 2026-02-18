@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro';
 import {
     AdmonitionDirectiveDescriptor,
     BlockTypeSelect,
@@ -47,7 +48,7 @@ import { MarkDownEditorContext } from './context';
 import { MarkDownEditorProps } from './types';
 
 export const useMarkDownEditor = (props: MarkDownEditorProps) => {
-    const { markdownString = '', readOnly = false, context } = props;
+    const { markdownString = '', readOnly = false, context, mdEditorFeatures } = props;
 
     const mdxEditorRef = useRef<MDXEditorMethods>(null);
 
@@ -60,36 +61,52 @@ export const useMarkDownEditor = (props: MarkDownEditorProps) => {
         }
     }, [markdownString]);
 
-    const imageUploadHandler = useCallback(async (image: File) => {
-        if (image.name.startsWith('http')) {
-            return image.name;
-        }
+    const imageUploadHandler = useCallback(
+        async (image: File) => {
+            if (image.name.startsWith('http')) {
+                return image.name;
+            }
 
-        const response = await generateUploadUrl(encodeURIComponent(image.name));
+            if (!mdEditorFeatures?.image) {
+                notification.error({ message: t`Image upload is not supported` });
+                return image.name;
+            }
 
-        if (isSuccess(response)) {
-            const { filename, uploadUrl } = response.data;
-            const options: CustomUploadRequestOption = {
-                file: image,
-            };
-            uploadFileWithXHR(options, uploadUrl);
-            return filename;
-        } else {
-            notification.error({ message: formatError(response.error) });
+            const response = await generateUploadUrl(encodeURIComponent(image.name));
+
+            if (isSuccess(response)) {
+                const { filename, uploadUrl } = response.data;
+                const options: CustomUploadRequestOption = {
+                    file: image,
+                };
+                uploadFileWithXHR(options, uploadUrl);
+                return filename;
+            } else {
+                notification.error({ message: formatError(response.error) });
+                return '';
+            }
+        },
+        [mdEditorFeatures?.image],
+    );
+
+    const imagePreviewHandler = useCallback(
+        async (file: string): Promise<string> => {
+            if (file.startsWith('http')) {
+                return file;
+            }
+
+            if (!mdEditorFeatures?.image) {
+                return 'https://placehold.co/800x300?text=Service+not+supported';
+            }
+
+            const signedDownloadURLRD = await generateDownloadUrl(file);
+            if (isSuccess(signedDownloadURLRD)) {
+                return signedDownloadURLRD.data.downloadUrl;
+            }
             return '';
-        }
-    }, []);
-
-    const imagePreviewHandler = useCallback(async (file: string): Promise<string> => {
-        if (file.startsWith('http')) {
-            return file;
-        }
-        const signedDownloadURLRD = await generateDownloadUrl(file);
-        if (isSuccess(signedDownloadURLRD)) {
-            return signedDownloadURLRD.data.downloadUrl;
-        }
-        return '';
-    }, []);
+        },
+        [mdEditorFeatures?.image],
+    );
 
     // TODO Add a button to add link and make a custom modal to enter the link
     // https://mdxeditor.dev/editor/api/functions/linkDialogPlugin
@@ -127,7 +144,7 @@ export const useMarkDownEditor = (props: MarkDownEditorProps) => {
                 <CodeToggle key="codeToggle" />
                 <Divider type={'vertical'} key={'vertical-divider-3'} />
                 <Fragment key={'insert-image'}>
-                    <InsertImage />
+                    {mdEditorFeatures?.image ? <InsertImage /> : null}
                     <CreateLink />
                     <InsertTable />
                     <InsertAdmonition />
@@ -166,7 +183,15 @@ export const useMarkDownEditor = (props: MarkDownEditorProps) => {
               ];
 
         return plugins;
-    }, [initPlugins, context, initToolbarPlugins, readOnly, imageUploadHandler, imagePreviewHandler]);
+    }, [
+        imageUploadHandler,
+        imagePreviewHandler,
+        mdEditorFeatures?.image,
+        initPlugins,
+        context,
+        initToolbarPlugins,
+        readOnly,
+    ]);
     const theme = useTheme();
 
     return {

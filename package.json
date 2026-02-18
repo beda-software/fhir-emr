@@ -68,7 +68,7 @@
         "remark-directive": "^4.0.0",
         "remark-gfm": "^4.0.1",
         "sass": "^1.63.6",
-        "sdc-qrf": "^1.0.0-beta.25",
+        "sdc-qrf": "^1.0.0-beta.27",
         "styled-components": "^6.1.11",
         "yup": "^1.7.0"
     },

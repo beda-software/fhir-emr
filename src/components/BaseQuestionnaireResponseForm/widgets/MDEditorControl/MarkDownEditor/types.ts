@@ -5,4 +5,9 @@ export interface MarkDownEditorProps {
     onChange?: (markdown: string) => void;
     readOnly?: boolean;
     context?: ItemContext;
+    mdEditorFeatures?: MDEditorFeatures;
 }
+
+export type MDEditorFeature = 'image';
+
+export type MDEditorFeatures = Record<MDEditorFeature, boolean>;
