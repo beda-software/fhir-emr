@@ -991,6 +991,10 @@ msgstr "Historial de cambios"
 msgid "IL-6"
 msgstr "IL-6"
 
+#: src/components/BaseQuestionnaireResponseForm/widgets/MDEditorControl/MarkDownEditor/hooks.tsx:71
+msgid "Image upload is not supported"
+msgstr ""
+
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:188
 #: src/containers/PatientDetails/PatientResources/utils.tsx:151
 msgid "Immunization"
