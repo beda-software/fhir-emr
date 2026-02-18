@@ -30,19 +30,13 @@ export function useEditableGroup(props: GroupItemProps) {
     const fullFormValues = getValues();
     const formValues = _.get(getValues(), fieldName);
 
-    const visibleItem = useMemo(() => item?.filter((i) => !i.hidden), [item]);
+    const visibleItem = useMemo(() => item?.filter((i) => !i.hidden && i.type !== 'display'), [item]);
 
     const formItems: FormItems[] = useMemo(() => {
         return [formValues?.items] || [];
     }, [formValues]);
 
-    const fields = useMemo(
-        () =>
-            _.map(visibleItem, (item) => {
-                return item.linkId;
-            }),
-        [visibleItem],
-    );
+    const fields = useMemo(() => _.map(visibleItem, (item) => item.linkId), [visibleItem]);
 
     const dataSource: GroupTableRow[] = useMemo(() => {
         return getDataSource(fields, formItems, questionItem);
