@@ -239,6 +239,10 @@ msgstr ""
 msgid "Add break"
 msgstr ""
 
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:47
+msgid "Add entry"
+msgstr ""
+
 #: src/containers/HealthcareServiceList/index.tsx:78
 msgid "Add healthcare service"
 msgstr ""
@@ -349,7 +353,7 @@ msgstr ""
 msgid "Are you sure you want to delete the document?"
 msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:169
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:150
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:134
 msgid "Are you sure you want to delete this item?"
 msgstr ""
@@ -647,7 +651,7 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:172
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:153
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:250
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:140
 msgid "Delete"
@@ -753,7 +757,7 @@ msgstr ""
 msgid "Duration (minutes)"
 msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:167
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:148
 #: src/containers/EncounterDetails/AIScribe/index.tsx:218
 #: src/containers/HealthcareServiceList/index.tsx:66
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:260
@@ -1057,6 +1061,10 @@ msgstr ""
 
 #: src/containers/PractitionerDetails/PractitionerOverview/index.tsx:32
 msgid "Last name"
+msgstr ""
+
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:71
+msgid "linkIdX or linkIdY not defined"
 msgstr ""
 
 #: src/components/AudioRecorder/index.tsx:70
@@ -1761,6 +1769,10 @@ msgstr ""
 msgid "System"
 msgstr ""
 
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:44
+msgid "Table View"
+msgstr ""
+
 #: src/containers/InvoiceDetails/index.tsx:76
 msgid "Tax"
 msgstr ""
@@ -1778,11 +1790,11 @@ msgstr ""
 msgid "Text with macro"
 msgstr ""
 
-#: src/containers/App/index.tsx:99
+#: src/containers/App/index.tsx:98
 msgid "Thank you for filling out the questionnaire. Now you can close this page."
 msgstr ""
 
-#: src/containers/App/index.tsx:98
+#: src/containers/App/index.tsx:97
 msgid "Thank you!"
 msgstr ""
 
@@ -1815,7 +1827,11 @@ msgstr ""
 msgid "This audio cannot be played in Safari, please download the audio or use the Chrome browser"
 msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:42
+#: src/components/BaseQuestionnaireResponseForm/widgets/EditableGroup/index.tsx:47
+msgid "This itemControl is designed for non-repeatable groups"
+msgstr ""
+
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:76
 msgid "This itemControl is designed for repeatable groups, but this group is not repeatable"
 msgstr ""
 
@@ -1885,6 +1901,10 @@ msgstr ""
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/AppointmentCard/index.tsx:20
 msgid "Upcoming appointment"
+msgstr ""
+
+#: src/components/BaseQuestionnaireResponseForm/widgets/EditableGroup/index.tsx:33
+msgid "Update"
 msgstr ""
 
 #: src/components/ChangesDiff/index.tsx:31
