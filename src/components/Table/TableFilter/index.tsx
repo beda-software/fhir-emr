@@ -2,7 +2,12 @@ import type { FilterDropdownProps } from 'antd/es/table/interface';
 import _ from 'lodash';
 
 import { SearchBarColumn } from 'src/components/SearchBar/SearchBarColumn';
-import { ColumnFilterValue, isSingleDateColumn, isStringColumn } from 'src/components/SearchBar/types';
+import {
+    ColumnFilterValue,
+    isSingleDateColumn,
+    isSplitStringColumn,
+    isStringColumn,
+} from 'src/components/SearchBar/types';
 
 import { S } from './styles';
 
@@ -18,6 +23,12 @@ export function TableFilter(props: TableFilterProps) {
 
     const onChange = (value: ColumnFilterValue['value'], key: string) => {
         if (isStringColumn(filter.column)) {
+            onInitialChange(value, key);
+
+            return;
+        }
+
+        if (isSplitStringColumn(filter.column)) {
             onInitialChange(value, key);
 
             return;
