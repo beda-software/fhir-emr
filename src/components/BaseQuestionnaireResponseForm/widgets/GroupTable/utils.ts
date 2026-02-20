@@ -1,5 +1,7 @@
+import type { ColumnType, ColumnsType } from 'antd/es/table/interface';
 import { QuestionnaireItem } from 'fhir/r4b';
 import _ from 'lodash';
+import moment from 'moment';
 import {
     AnswerValue,
     FCEQuestionnaireItem,
@@ -14,9 +16,25 @@ import {
 
 import { parseFHIRReference } from '@beda.software/fhir-react';
 
+import {
+    ColumnFilterValue,
+    SearchBarColumn,
+    SearchBarColumnType,
+    isChoiceColumn,
+    isDateColumn,
+    isDateColumnFilterValue,
+    isReferenceColumn,
+    isSingleDateColumn,
+    isSingleDateColumnFilterValue,
+    isSolidChoiceColumn,
+    isSplitStringColumn,
+    isSplitStringColumnFilterValue,
+    isStringColumn,
+    isStringColumnFilterValue,
+} from 'src/components/SearchBar/types';
 import { formatHumanDate, formatHumanDateTime, formatHumanTime } from 'src/utils';
 
-import { GroupTableRow } from './types';
+import { GroupTableItem, GroupTableRow } from './types';
 
 export const isFormAnswerItems = (
     item: FormGroupItems | (FormAnswerItems | undefined)[] | undefined,
@@ -154,4 +172,129 @@ export const getDataSource = (
     }
 
     return [];
+};
+
+export const getSearchBarColumnType = (questionItem: FCEQuestionnaireItem): SearchBarColumn => {
+    const type = questionItem.type;
+    switch (type) {
+        case 'date':
+        case 'dateTime':
+            return {
+                id: questionItem.linkId,
+                type: SearchBarColumnType.DATE,
+                placeholder: ['From...', 'To...'],
+            };
+        case 'choice':
+        case 'open-choice':
+        case 'time':
+        case 'reference':
+        case 'boolean':
+        case 'decimal':
+        case 'integer':
+        case 'attachment':
+        case 'quantity':
+        case 'string':
+        case 'text':
+        default:
+            return {
+                id: questionItem.linkId,
+                type: SearchBarColumnType.STRING,
+                placeholder: 'Search...',
+                // TODO: better switch to SplitString after merging https://github.com/beda-software/fhir-emr/pull/717
+                // type: SearchBarColumnType.SPLITSTRING,
+                // searchBehavior: 'OR',
+                // separator: ' ',
+            };
+    }
+};
+
+export const getTableItemValue = (
+    formItem: FormGroupItems | (FormAnswerItems | undefined)[] | undefined,
+    questionItem: FCEQuestionnaireItem,
+) => {
+    if (!isFormAnswerItems(formItem)) {
+        return undefined;
+    }
+    const answerValue = getAnswerValues(formItem);
+    if (!answerValue[0]) {
+        return undefined;
+    }
+    const value = getValueFromAnswerValue(answerValue[0], questionItem.type);
+    return value;
+};
+
+export const isColumnTypeArray = (column: ColumnsType<GroupTableRow>): column is ColumnType<GroupTableRow>[] => {
+    return 'dataIndex' in column;
+};
+
+export const isTableItemFiltered = (item?: GroupTableItem, filterValue?: ColumnFilterValue) => {
+    if (!item || !item.formItem || !item.questionnaireItem || !filterValue) {
+        return true;
+    }
+    const itemValue = getTableItemValue(item.formItem, item.questionnaireItem);
+
+    if (!itemValue) {
+        return true;
+    }
+    console.log('itemValue', itemValue, _.isString(itemValue));
+
+    if (isStringColumnFilterValue(filterValue) && _.isString(itemValue)) {
+        const value = filterValue.value;
+        const isFiltered = value && !_.isEmpty(value) ? itemValue.toLowerCase().includes(value.toLowerCase()) : true;
+        return isFiltered;
+    }
+
+    if (isSplitStringColumnFilterValue(filterValue) && _.isString(itemValue)) {
+        if (filterValue.column.searchBehavior === 'AND') {
+            const values = filterValue.value?.split(filterValue.column.separator ?? ' ') ?? [];
+            const isFiltered = values?.every((value) => itemValue.toLowerCase().includes(value.toLowerCase()));
+            return isFiltered;
+        } else if (filterValue.column.searchBehavior === 'OR') {
+            const values = filterValue.value?.split(filterValue.column.separator ?? ' ') ?? [];
+            const isFiltered = values?.some((value) => itemValue.toLowerCase().includes(value.toLowerCase()));
+            return isFiltered;
+        }
+    }
+
+    if (isDateColumnFilterValue(filterValue) && _.isString(itemValue)) {
+        const fromDate = filterValue.value?.[0];
+        const toDate = filterValue.value?.[1];
+        const testValue = moment(itemValue);
+        const isFiltered = testValue.isBetween(fromDate, toDate, undefined, '[]');
+        return isFiltered;
+    }
+
+    if (isSingleDateColumnFilterValue(filterValue) && _.isString(itemValue)) {
+        const testValue = moment(itemValue);
+        const isFiltered = testValue.isSameOrAfter(filterValue.value) && testValue.isSameOrBefore(filterValue.value);
+        return isFiltered;
+    }
+
+    return true;
+};
+
+export const createColumnFilterValue = (column: SearchBarColumn): ColumnFilterValue => {
+    if (isStringColumn(column)) {
+        return { column };
+    }
+    if (isDateColumn(column)) {
+        return { column };
+    }
+    if (isSingleDateColumn(column)) {
+        return { column };
+    }
+    if (isReferenceColumn(column)) {
+        return { column };
+    }
+    if (isChoiceColumn(column)) {
+        return { column };
+    }
+    if (isSolidChoiceColumn(column)) {
+        return { column };
+    }
+    if (isSplitStringColumn(column)) {
+        return { column };
+    }
+
+    throw new Error('Unsupported column type');
 };
