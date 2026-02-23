@@ -42,9 +42,9 @@ import { Display } from './widgets/display';
 import { EditableGroup } from './widgets/EditableGroup';
 import { GroupTabs } from './widgets/GroupTabs';
 import { GroupWizard, GroupWizardVertical, GroupWizardWithTooltips } from './widgets/GroupWizard';
+import { InlineReference } from './widgets/inline-reference';
 import { PasswordInput } from './widgets/PasswordInput';
 import { QuestionReference } from './widgets/reference';
-import { ReferenceRadioButton } from './widgets/ReferenceRadioButton';
 import { UploadFileControl } from './widgets/UploadFileControl';
 
 export const itemComponents: QuestionItemComponentMapping = {
@@ -73,14 +73,17 @@ export const itemControlComponents: ItemControlQuestionItemComponentMapping = {
     slider: QuestionSlider,
     'solid-radio-button': QuestionSolidRadio,
     'inline-choice': InlineChoice,
+    'inline-reference': InlineReference,
     'text-with-macro': TextWithMacroFill,
     'radio-button': InlineChoice,
-    'reference-radio-button': ReferenceRadioButton,
     'check-box': InlineChoice,
     'input-inside-text': QuestionInputInsideText,
     'markdown-editor': MDEditorControl,
     'audio-recorder-uploader': AudioRecorderUploader,
     barcode: Barcode,
+
+    // reference-radio-button is deprecated, use inline-reference instead
+    'reference-radio-button': InlineReference,
 };
 
 export const groupControlComponents: ItemControlGroupItemComponentMapping = {
