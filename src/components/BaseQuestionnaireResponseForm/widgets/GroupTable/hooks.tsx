@@ -20,26 +20,14 @@ import {
     getDataSource,
     getSearchBarColumnType,
     isColumnTypeArray,
-    isTableItemFiltered,
+    isTableItemMatchesFilter,
 } from './utils';
 
 export function useGroupTableFilter() {
     const [filterValueMap, setFilterValueMap] = useState<Record<string, ColumnFilterValue>>({});
 
     const handleFilterChange = useCallback(
-        (
-            value:
-                | string
-                | Coding[]
-                | DateColumnFilterValue
-                | moment.Moment
-                | LoadResourceOption
-                | ValueSetOption[]
-                | null
-                | undefined,
-            key: string,
-            filter: ColumnFilterValue,
-        ) => {
+        (value: ColumnFilterValue['value'], key: string, filter: ColumnFilterValue) => {
             setFilterValueMap((prev: Record<string, ColumnFilterValue>) => {
                 if (value && !_.isEmpty(value)) {
                     return {
@@ -50,9 +38,7 @@ export function useGroupTableFilter() {
                         },
                     } as Record<string, ColumnFilterValue>;
                 }
-                const newFilterMap = { ...prev };
-                delete newFilterMap[key];
-                return newFilterMap;
+                return _.omit(prev, key);
             });
         },
         [],
@@ -105,7 +91,7 @@ export function useGroupTableFilter() {
                 const filteredValue = filterValue ? [filterValue] : [];
                 const onFilter = (value: ColumnFilterValue, record: GroupTableRow) => {
                     const item = record[linkId];
-                    return isTableItemFiltered(item, value);
+                    return isTableItemMatchesFilter(item, value);
                 };
 
                 // TODO: refactor types to eliminate 'as any' hack
@@ -169,8 +155,7 @@ export function useGroupTable(props: GroupItemProps) {
     );
 
     const dataSource: GroupTableRow[] = useMemo(() => {
-        const dataDource = getDataSource(fields, formItems, questionItem);
-        return dataDource;
+        return getDataSource(fields, formItems, questionItem);
     }, [fields, formItems, questionItem]);
 
     const startEdit = useCallback(
