@@ -146,30 +146,44 @@ export function useGroupTableSorter() {
         return sorters;
     };
 
-    const populateColumnWithSorters = (
-        columns: ColumnsType<GroupTableRow>,
-        questionItem: FCEQuestionnaireItem,
-    ): ColumnType<GroupTableRow>[] => {
-        const enableSorters = getEnabledSorters(questionItem);
-        if (_.isEmpty(enableSorters || !isColumnTypeArray(columns))) {
-            return columns;
+    const getDefaultSortOrder = (questionItem: FCEQuestionnaireItem, linkId: string) => {
+        const defaultSortLinkId = questionItem.defaultSort?.linkId;
+        const defaultSort = questionItem.defaultSort?.sort;
+        if (!defaultSortLinkId || defaultSortLinkId !== linkId || !defaultSort) {
+            return undefined;
         }
-
-        return columns.map((column) => {
-            const linkId = column.key!.toString();
-            const enableSorter = enableSorters[linkId];
-            if (enableSorter !== true) {
-                return column;
-            }
-            const sorter = getSorter(questionItem, linkId);
-            // TODO: refactor types to eliminate 'as any' hack
-            const columnWithSorters = {
-                ...column,
-                sorter: sorter,
-            } as any as ColumnType<GroupTableRow>;
-            return columnWithSorters;
-        });
+        if (defaultSort === 'asc') {
+            return 'ascend';
+        }
+        return 'descend';
     };
+
+    const populateColumnWithSorters = useCallback(
+        (columns: ColumnsType<GroupTableRow>, questionItem: FCEQuestionnaireItem): ColumnType<GroupTableRow>[] => {
+            const enableSorters = getEnabledSorters(questionItem);
+            if (_.isEmpty(enableSorters || !isColumnTypeArray(columns))) {
+                return columns;
+            }
+
+            return columns.map((column) => {
+                const linkId = column.key!.toString();
+                const enableSorter = enableSorters[linkId];
+                if (enableSorter !== true) {
+                    return column;
+                }
+                const sorter = getSorter(questionItem, linkId);
+                const defaultSortOrder = getDefaultSortOrder(questionItem, linkId);
+                // TODO: refactor types to eliminate 'as any' hack
+                const columnWithSorters = {
+                    ...column,
+                    sorter: sorter,
+                    ...(defaultSortOrder ? { defaultSortOrder: defaultSortOrder } : {}),
+                } as any as ColumnType<GroupTableRow>;
+                return columnWithSorters;
+            });
+        },
+        [],
+    );
 
     return {
         populateColumnWithSorters,
