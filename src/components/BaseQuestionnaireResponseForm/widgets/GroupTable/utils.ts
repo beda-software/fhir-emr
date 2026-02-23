@@ -1,4 +1,4 @@
-import type { ColumnType, ColumnsType } from 'antd/es/table/interface';
+import type { ColumnType, ColumnsType, CompareFn } from 'antd/es/table/interface';
 import { QuestionnaireItem } from 'fhir/r4b';
 import _ from 'lodash';
 import moment from 'moment';
@@ -14,7 +14,7 @@ import {
     toAnswerValue,
 } from 'sdc-qrf';
 
-import { parseFHIRReference } from '@beda.software/fhir-react';
+import { FHIRTimeFormat, parseFHIRReference } from '@beda.software/fhir-react';
 
 import {
     ColumnFilterValue,
@@ -297,4 +297,94 @@ export const createColumnFilterValue = (column: SearchBarColumn): ColumnFilterVa
     }
 
     throw new Error('Unsupported column type');
+};
+
+const getGroupTableItemValue = (item: GroupTableRow, linkId: string, type: QuestionnaireItem['type']) => {
+    return item[linkId]?.formItem?.[0]?.value?.[type];
+};
+
+const getDateTimeSorter = (linkId: string, type: 'date' | 'dateTime' | 'time'): CompareFn<GroupTableRow> => {
+    return (a, b) => {
+        const valueA = moment(getGroupTableItemValue(a, linkId, type), FHIRTimeFormat);
+        const valueB = moment(getGroupTableItemValue(b, linkId, type), FHIRTimeFormat);
+        return valueA.diff(valueB);
+    };
+};
+
+const getNumberSorter = (linkId: string, type: 'decimal' | 'integer'): CompareFn<GroupTableRow> => {
+    return (a, b) => {
+        const valueA: number | undefined = getGroupTableItemValue(a, linkId, type);
+        const valueB: number | undefined = getGroupTableItemValue(b, linkId, type);
+        return valueA !== undefined && valueB !== undefined ? valueA - valueB : 0;
+    };
+};
+
+const getStringSorter = (linkId: string, type: 'string' | 'text'): CompareFn<GroupTableRow> => {
+    return (a, b) => {
+        const valueA: string | undefined = getGroupTableItemValue(a, linkId, type);
+        const valueB: string | undefined = getGroupTableItemValue(b, linkId, type);
+
+        return valueA !== undefined && valueB !== undefined ? valueA.localeCompare(valueB) : 0;
+    };
+};
+
+const getBooleanSorter = (linkId: string): CompareFn<GroupTableRow> => {
+    return (a, b) => {
+        const valueA = getGroupTableItemValue(a, linkId, 'boolean') ? 1 : -1;
+        const valueB = getGroupTableItemValue(b, linkId, 'boolean') ? 1 : -1;
+
+        return valueA - valueB;
+    };
+};
+
+export const getSorter = (questionItem: FCEQuestionnaireItem, linkId: string): CompareFn<GroupTableRow> => {
+    const sortedQuestionItem = questionItem.item?.find((item) => item.linkId === linkId);
+    if (!sortedQuestionItem) {
+        return () => 0;
+    }
+
+    const type = sortedQuestionItem?.type;
+    switch (type) {
+        case 'date':
+            return getDateTimeSorter(linkId, 'date');
+        case 'dateTime':
+            return getDateTimeSorter(linkId, 'dateTime');
+        case 'time':
+            return getDateTimeSorter(linkId, 'time');
+        case 'decimal':
+            return getNumberSorter(linkId, 'decimal');
+        case 'integer':
+            return getNumberSorter(linkId, 'integer');
+        case 'string':
+            return getStringSorter(linkId, 'string');
+        case 'text':
+            return getStringSorter(linkId, 'text');
+        case 'boolean':
+            return getBooleanSorter(linkId);
+        case 'choice':
+        case 'open-choice':
+        case 'reference':
+        case 'attachment':
+        case 'quantity':
+        default:
+            return (a, b) => {
+                const itemA = a[linkId];
+                const itemB = b[linkId];
+                if (itemA === undefined || itemB === undefined) {
+                    return 0;
+                }
+                const valueA = getTableItemValue(itemA.formItem, sortedQuestionItem);
+                const valueB = getTableItemValue(itemB.formItem, sortedQuestionItem);
+                if (_.isString(valueA) && _.isString(valueB)) {
+                    return valueA.localeCompare(valueB);
+                }
+                if (_.isNumber(valueA) && _.isNumber(valueB)) {
+                    return valueA - valueB;
+                }
+                if (_.isBoolean(valueA) && _.isBoolean(valueB)) {
+                    return valueA === valueB ? 0 : valueA ? 1 : -1;
+                }
+                return 0;
+            };
+    }
 };

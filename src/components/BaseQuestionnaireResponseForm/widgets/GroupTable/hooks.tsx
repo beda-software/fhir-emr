@@ -19,6 +19,7 @@ import {
     createColumnFilterValue,
     getDataSource,
     getSearchBarColumnType,
+    getSorter,
     isColumnTypeArray,
     isTableItemFiltered,
 } from './utils';
@@ -127,6 +128,54 @@ export function useGroupTableFilter() {
     };
 }
 
+export function useGroupTableSorter() {
+    const getEnabledSorters = (questionItem: FCEQuestionnaireItem): Record<string, boolean> => {
+        const items = questionItem.item || [];
+        const sorters = _.reduce(
+            items,
+            (acc, item) => {
+                if (!item.enableSort) {
+                    return acc;
+                }
+                const sorterKey = item.linkId;
+                acc[sorterKey] = true;
+                return acc;
+            },
+            {} as Record<string, boolean>,
+        );
+        return sorters;
+    };
+
+    const populateColumnWithSorters = (
+        columns: ColumnsType<GroupTableRow>,
+        questionItem: FCEQuestionnaireItem,
+    ): ColumnType<GroupTableRow>[] => {
+        const enableSorters = getEnabledSorters(questionItem);
+        if (_.isEmpty(enableSorters || !isColumnTypeArray(columns))) {
+            return columns;
+        }
+
+        return columns.map((column) => {
+            const linkId = column.key!.toString();
+            const enableSorter = enableSorters[linkId];
+            if (enableSorter !== true) {
+                return column;
+            }
+            const sorter = getSorter(questionItem, linkId);
+            // TODO: refactor types to eliminate 'as any' hack
+            const columnWithSorters = {
+                ...column,
+                sorter: sorter,
+            } as any as ColumnType<GroupTableRow>;
+            return columnWithSorters;
+        });
+    };
+
+    return {
+        populateColumnWithSorters,
+    };
+}
+
 export function useGroupTable(props: GroupItemProps) {
     const { parentPath, questionItem } = props;
     const { linkId, repeats, text, hidden, item } = questionItem;
@@ -150,6 +199,7 @@ export function useGroupTable(props: GroupItemProps) {
     const [snapshotDataSource, setSnapshotDataSource] = useState<GroupTableRow[] | null>(null);
 
     const { populateColumnWithFilters } = useGroupTableFilter();
+    const { populateColumnWithSorters } = useGroupTableSorter();
 
     const fullFormValues = getValues();
     const formValues = _.get(getValues(), fieldName);
@@ -248,8 +298,9 @@ export function useGroupTable(props: GroupItemProps) {
             return column;
         });
 
-        return populateColumnWithFilters(columns, questionItem);
-    }, [populateColumnWithFilters, questionItem, visibleItem]);
+        const columnsWithSorters = populateColumnWithSorters(columns, questionItem);
+        return populateColumnWithFilters(columnsWithSorters, questionItem);
+    }, [populateColumnWithFilters, populateColumnWithSorters, questionItem, visibleItem]);
 
     const actionColumn = useMemo(() => {
         return {
