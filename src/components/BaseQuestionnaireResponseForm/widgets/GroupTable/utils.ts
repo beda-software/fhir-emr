@@ -227,7 +227,7 @@ export const isColumnTypeArray = (column: ColumnsType<GroupTableRow>): column is
     return 'dataIndex' in column;
 };
 
-export const isTableItemFiltered = (item?: GroupTableItem, filterValue?: ColumnFilterValue) => {
+export const isTableItemMatchesFilter = (item?: GroupTableItem, filterValue?: ColumnFilterValue) => {
     if (!item || !item.formItem || !item.questionnaireItem || !filterValue) {
         return true;
     }
@@ -236,23 +236,19 @@ export const isTableItemFiltered = (item?: GroupTableItem, filterValue?: ColumnF
     if (!itemValue) {
         return true;
     }
-    console.log('itemValue', itemValue, _.isString(itemValue));
 
     if (isStringColumnFilterValue(filterValue) && _.isString(itemValue)) {
         const value = filterValue.value;
-        const isFiltered = value && !_.isEmpty(value) ? itemValue.toLowerCase().includes(value.toLowerCase()) : true;
-        return isFiltered;
+        return value && !_.isEmpty(value) ? itemValue.toLowerCase().includes(value.toLowerCase()) : true;
     }
 
     if (isSplitStringColumnFilterValue(filterValue) && _.isString(itemValue)) {
         if (filterValue.column.searchBehavior === 'AND') {
             const values = filterValue.value?.split(filterValue.column.separator ?? ' ') ?? [];
-            const isFiltered = values?.every((value) => itemValue.toLowerCase().includes(value.toLowerCase()));
-            return isFiltered;
+            return values?.every((value) => itemValue.toLowerCase().includes(value.toLowerCase()));
         } else if (filterValue.column.searchBehavior === 'OR') {
             const values = filterValue.value?.split(filterValue.column.separator ?? ' ') ?? [];
-            const isFiltered = values?.some((value) => itemValue.toLowerCase().includes(value.toLowerCase()));
-            return isFiltered;
+            return values?.some((value) => itemValue.toLowerCase().includes(value.toLowerCase()));
         }
     }
 
@@ -260,14 +256,12 @@ export const isTableItemFiltered = (item?: GroupTableItem, filterValue?: ColumnF
         const fromDate = filterValue.value?.[0];
         const toDate = filterValue.value?.[1];
         const testValue = moment(itemValue);
-        const isFiltered = testValue.isBetween(fromDate, toDate, undefined, '[]');
-        return isFiltered;
+        return testValue.isBetween(fromDate, toDate, undefined, '[]');
     }
 
     if (isSingleDateColumnFilterValue(filterValue) && _.isString(itemValue)) {
         const testValue = moment(itemValue);
-        const isFiltered = testValue.isSameOrAfter(filterValue.value) && testValue.isSameOrBefore(filterValue.value);
-        return isFiltered;
+        return testValue.isSameOrAfter(filterValue.value) && testValue.isSameOrBefore(filterValue.value);
     }
 
     return true;
