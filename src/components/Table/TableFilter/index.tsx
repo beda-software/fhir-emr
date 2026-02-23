@@ -22,20 +22,13 @@ export function TableFilter(props: TableFilterProps) {
     const { filter, onChange: onInitialChange, close, visible } = props;
 
     const onChange = (value: ColumnFilterValue['value'], key: string) => {
-        if (isStringColumn(filter.column)) {
-            onInitialChange(value, key);
-
-            return;
-        }
-
-        if (isSplitStringColumn(filter.column)) {
-            onInitialChange(value, key);
-
-            return;
-        }
-
         onInitialChange(value, key);
-        close();
+
+        if (!isStringColumn(filter.column) && !isSplitStringColumn(filter.column)) {
+            close();
+        }
+
+        return;
     };
 
     if (isSingleDateColumn(filter.column)) {
