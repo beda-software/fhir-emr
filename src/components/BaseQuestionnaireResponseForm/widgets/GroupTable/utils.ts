@@ -14,7 +14,7 @@ import {
     toAnswerValue,
 } from 'sdc-qrf';
 
-import { FHIRTimeFormat, parseFHIRReference } from '@beda.software/fhir-react';
+import { FHIRDateFormat, FHIRDateTimeFormat, FHIRTimeFormat, parseFHIRReference } from '@beda.software/fhir-react';
 
 import {
     ColumnFilterValue,
@@ -303,10 +303,21 @@ const getGroupTableItemValue = (item: GroupTableRow, linkId: string, type: Quest
     return item[linkId]?.formItem?.[0]?.value?.[type];
 };
 
+const getFHIRFormat = (type: 'date' | 'dateTime' | 'time') => {
+    if (type === 'date') {
+        return FHIRDateFormat;
+    }
+
+    if (type === 'dateTime') {
+        return FHIRDateTimeFormat;
+    }
+    return FHIRTimeFormat;
+};
+
 const getDateTimeSorter = (linkId: string, type: 'date' | 'dateTime' | 'time'): CompareFn<GroupTableRow> => {
     return (a, b) => {
-        const valueA = moment(getGroupTableItemValue(a, linkId, type), FHIRTimeFormat);
-        const valueB = moment(getGroupTableItemValue(b, linkId, type), FHIRTimeFormat);
+        const valueA = moment(getGroupTableItemValue(a, linkId, type), getFHIRFormat(type));
+        const valueB = moment(getGroupTableItemValue(b, linkId, type), getFHIRFormat(type));
         return valueA.diff(valueB);
     };
 };
