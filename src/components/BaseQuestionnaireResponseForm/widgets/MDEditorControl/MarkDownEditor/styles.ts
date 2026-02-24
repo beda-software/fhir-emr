@@ -28,10 +28,6 @@ export const S = {
             scrollbar-width: thin;
         }
 
-        .mdxeditor-popup-container {
-            z-index: 1000;
-        }
-
         img {
             max-width: 100%;
         }

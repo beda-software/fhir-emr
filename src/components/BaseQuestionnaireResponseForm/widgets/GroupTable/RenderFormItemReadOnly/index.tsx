@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import { FCEQuestionnaireItem, FormAnswerItems, FormGroupItems, getAnswerValues, isAnswerValueEmpty } from 'sdc-qrf';
 
+import { MarkdownRender } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/MarkdownRender';
+
 import { getValueFromAnswerValue, isFormAnswerItems } from '../utils';
 
 export const RenderFormItemReadOnly = (props: {
@@ -15,6 +17,8 @@ export const RenderFormItemReadOnly = (props: {
     }
 
     const questionnaireItemType = questionnaireItem.type;
+    const itemControl = questionnaireItem.itemControl?.coding?.[0]?.code;
+    const isMarkdownString = itemControl === 'markdown-editor';
 
     if (!isFormAnswerItems(formItem)) {
         return emptySymbol;
@@ -31,9 +35,11 @@ export const RenderFormItemReadOnly = (props: {
 
     return (
         <>
-            {answerValues
-                .map((value) => getValueFromAnswerValue(value, questionnaireItemType, true) ?? emptySymbol)
-                .join(', ')}
+            {isMarkdownString
+                ? answerValues.map((value, index) => <MarkdownRender key={index} text={value.string ?? ''} />)
+                : answerValues
+                      .map((value) => getValueFromAnswerValue(value, questionnaireItemType, true) ?? emptySymbol)
+                      .join(', ')}
         </>
     );
 };
