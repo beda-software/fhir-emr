@@ -22,6 +22,10 @@ const GlobalStyle = createGlobalStyle<{ $whiteColor?: boolean }>`
   body {
     background-color: ${({ theme }) => theme.antdTheme?.colorBgBase};
   }
+
+  .mdxeditor-popup-container {
+      z-index: 1000;
+  }
 `;
 
 export function ThemeProvider(props: Props) {
