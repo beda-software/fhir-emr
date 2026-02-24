@@ -201,12 +201,10 @@ export const getSearchBarColumnType = (questionItem: FCEQuestionnaireItem): Sear
         default:
             return {
                 id: questionItem.linkId,
-                type: SearchBarColumnType.STRING,
                 placeholder: 'Search...',
-                // TODO: better switch to SplitString after merging https://github.com/beda-software/fhir-emr/pull/717
-                // type: SearchBarColumnType.SPLITSTRING,
-                // searchBehavior: 'OR',
-                // separator: ' ',
+                type: SearchBarColumnType.SPLITSTRING,
+                searchBehavior: 'AND',
+                separator: ' ',
             };
     }
 };
