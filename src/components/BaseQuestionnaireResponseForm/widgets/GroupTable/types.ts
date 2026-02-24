@@ -1,10 +1,10 @@
-import { FCEQuestionnaireItem, FormItems } from 'sdc-qrf';
+import { FCEQuestionnaireItem, FormAnswerItems, FormGroupItems } from 'sdc-qrf';
 
-export interface RepeatableGroupTableRow {
-    key: string;
+export interface GroupTableItem {
     linkId: string;
     index: number;
-    itemKey: string;
-    formItem?: FormItems;
+    formItem?: FormGroupItems | (FormAnswerItems | undefined)[] | undefined;
     questionnaireItem?: FCEQuestionnaireItem | undefined;
 }
+
+export type GroupTableRow = Record<string, GroupTableItem> & { key: string };

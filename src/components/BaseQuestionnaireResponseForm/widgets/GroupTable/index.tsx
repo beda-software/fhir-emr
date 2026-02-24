@@ -1,20 +1,20 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
-import { Alert, Button, Flex, Table, Typography } from 'antd';
+import { Alert, Button, Flex, Space, Switch, Table, Typography } from 'antd';
 import { GroupItemProps } from 'sdc-qrf';
 
 import { useGroupTable } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks';
-import { ModalQuestionnaireItem } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/ModalQuestionnaireItem';
+import { ModalQuestionnaireGroupItem } from 'src/components/ModalQuestionnaireGroupItem';
 
+import { GroupTableChart } from './GroupTableChart';
 import { S } from './styles';
-import { RepeatableGroupTableRow } from './types';
+import { GroupTableRow } from './types';
 
 export function GroupTable(props: GroupItemProps) {
     const {
         repeats,
         hidden,
         title,
-        formValues,
         handleAdd,
         dataSource,
         columns,
@@ -23,6 +23,10 @@ export function GroupTable(props: GroupItemProps) {
         handleCancel,
         handleSave,
         snapshotDataSource,
+        renderAsTable,
+        handleRenderTypeToggle,
+        chartLinkIdX,
+        chartLinkIdY,
     } = useGroupTable(props);
 
     if (hidden) {
@@ -33,31 +37,47 @@ export function GroupTable(props: GroupItemProps) {
         <>
             <Flex justify="space-between">
                 <Typography.Title level={4}>{title}</Typography.Title>
-                <Button type="default" icon={<PlusOutlined />} onClick={handleAdd}></Button>
+                <Space size={16}>
+                    {handleRenderTypeToggle && (
+                        <Space size="small">
+                            <Switch checked={renderAsTable} onChange={handleRenderTypeToggle} />
+                            <Typography.Text>{t`Table View`}</Typography.Text>
+                        </Space>
+                    )}
+                    <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>{t`Add entry`}</Button>
+                </Space>
             </Flex>
 
-            {!repeats && (
+            {repeats ? (
+                renderAsTable ? (
+                    <Table<GroupTableRow>
+                        columns={columns}
+                        dataSource={snapshotDataSource ?? dataSource}
+                        rowKey={(record) => {
+                            return record.key;
+                        }}
+                        pagination={false}
+                        bordered
+                    />
+                ) : chartLinkIdX && chartLinkIdY ? (
+                    <S.ChartItem>
+                        <GroupTableChart
+                            dataSource={snapshotDataSource ?? dataSource}
+                            linkIdX={chartLinkIdX}
+                            linkIdY={chartLinkIdY}
+                        />
+                    </S.ChartItem>
+                ) : (
+                    <Alert type="error" message={t`linkIdX or linkIdY not defined`} />
+                )
+            ) : (
                 <Alert
                     type="error"
                     message={t`This itemControl is designed for repeatable groups, but this group is not repeatable`}
                 />
             )}
 
-            {repeats && formValues && (
-                <S.Item>
-                    <Table<RepeatableGroupTableRow>
-                        columns={columns}
-                        dataSource={snapshotDataSource ?? dataSource}
-                        rowKey={(record) => {
-                            return record['key'];
-                        }}
-                        pagination={false}
-                        bordered
-                    />
-                </S.Item>
-            )}
-
-            <ModalQuestionnaireItem
+            <ModalQuestionnaireGroupItem
                 open={isModalVisible}
                 index={editIndex}
                 groupItem={props}

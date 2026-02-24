@@ -6,6 +6,7 @@ import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm
 import { MarkdownProcessorContext } from 'src/contexts/markdown-editor-context';
 
 import { MarkDownEditor } from './MarkDownEditor';
+import { MDEditorFeatures } from './MarkDownEditor/types';
 
 export function MDEditorControl({ parentPath, questionItem, context }: QuestionItemProps) {
     const { linkId } = questionItem;
@@ -16,6 +17,9 @@ export function MDEditorControl({ parentPath, questionItem, context }: QuestionI
 
     const processedMarkdown = processMarkdown(value ?? '');
 
+    const mdEditorFeatures: MDEditorFeatures = {
+        image: !!questionItem?.mdEditorFeature?.find((feature) => feature === 'image'),
+    };
     return (
         <Form.Item {...formItem}>
             <MarkDownEditor
@@ -23,6 +27,7 @@ export function MDEditorControl({ parentPath, questionItem, context }: QuestionI
                 onChange={onChange}
                 readOnly={questionItem.readOnly}
                 context={context}
+                mdEditorFeatures={mdEditorFeatures}
             />
         </Form.Item>
     );

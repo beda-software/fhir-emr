@@ -239,6 +239,10 @@ msgstr ""
 msgid "Add break"
 msgstr "Añadir pausa"
 
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:47
+msgid "Add entry"
+msgstr ""
+
 #: src/containers/HealthcareServiceList/index.tsx:78
 msgid "Add healthcare service"
 msgstr "Añadir servicio de salud"
@@ -349,7 +353,7 @@ msgstr "¿Estás seguro de que quieres modificar el documento?"
 msgid "Are you sure you want to delete the document?"
 msgstr "¿Estás seguro de que quieres eliminar el documento?"
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:169
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:253
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:134
 msgid "Are you sure you want to delete this item?"
 msgstr "¿Estás seguro que deseas eliminar este ítem?"
@@ -647,7 +651,7 @@ msgstr "Desactivar"
 msgid "Default"
 msgstr "Predeterminado"
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:172
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:256
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:250
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:140
 msgid "Delete"
@@ -749,7 +753,7 @@ msgstr "Duración (min)"
 msgid "Duration (minutes)"
 msgstr "Duración (minutos)"
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:167
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:251
 #: src/containers/EncounterDetails/AIScribe/index.tsx:218
 #: src/containers/HealthcareServiceList/index.tsx:66
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:260
@@ -987,6 +991,10 @@ msgstr "Historial de cambios"
 msgid "IL-6"
 msgstr "IL-6"
 
+#: src/components/BaseQuestionnaireResponseForm/widgets/MDEditorControl/MarkDownEditor/hooks.tsx:71
+msgid "Image upload is not supported"
+msgstr ""
+
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:188
 #: src/containers/PatientDetails/PatientResources/utils.tsx:151
 msgid "Immunization"
@@ -1054,6 +1062,10 @@ msgstr "Etiqueta"
 #: src/containers/PractitionerDetails/PractitionerOverview/index.tsx:32
 msgid "Last name"
 msgstr "Apellido"
+
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:71
+msgid "linkIdX or linkIdY not defined"
+msgstr ""
 
 #: src/components/AudioRecorder/index.tsx:70
 msgid "Listen to the audio"
@@ -1745,6 +1757,10 @@ msgstr "Domingo"
 msgid "System"
 msgstr "Sistema"
 
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:44
+msgid "Table View"
+msgstr ""
+
 #: src/containers/InvoiceDetails/index.tsx:76
 msgid "Tax"
 msgstr "Impuesto"
@@ -1762,11 +1778,11 @@ msgstr "Texto (por defecto)"
 msgid "Text with macro"
 msgstr "Texto con macro"
 
-#: src/containers/App/index.tsx:99
+#: src/containers/App/index.tsx:98
 msgid "Thank you for filling out the questionnaire. Now you can close this page."
 msgstr "Gracias por completar el cuestionario. Ahora puedes cerrar esta página."
 
-#: src/containers/App/index.tsx:98
+#: src/containers/App/index.tsx:97
 msgid "Thank you!"
 msgstr "¡Gracias!"
 
@@ -1799,7 +1815,11 @@ msgstr "Aún no hay documentos"
 msgid "This audio cannot be played in Safari, please download the audio or use the Chrome browser"
 msgstr "Este audio no se puede reproducir en Safari, por favor descarga el audio o usa el navegador Chrome"
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:42
+#: src/components/BaseQuestionnaireResponseForm/widgets/EditableGroup/index.tsx:47
+msgid "This itemControl is designed for non-repeatable groups"
+msgstr ""
+
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:76
 msgid "This itemControl is designed for repeatable groups, but this group is not repeatable"
 msgstr ""
 
@@ -1870,6 +1890,10 @@ msgstr "Desconocido"
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/AppointmentCard/index.tsx:20
 msgid "Upcoming appointment"
 msgstr "Próxima cita"
+
+#: src/components/BaseQuestionnaireResponseForm/widgets/EditableGroup/index.tsx:33
+msgid "Update"
+msgstr ""
 
 #: src/components/ChangesDiff/index.tsx:31
 msgid "Updated"
