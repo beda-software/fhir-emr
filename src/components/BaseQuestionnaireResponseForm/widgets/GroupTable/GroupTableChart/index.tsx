@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { CartesianGrid, ComposedChart, Line, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 
 import { GroupTableRow } from '../types';
-import { getFormAnswerItemFirstValue, isFormAnswerItems } from '../utils';
+import { getFormAnswerItemFirstValue, getGeneralSorter, isFormAnswerItems } from '../utils';
 
 interface GroupTableChartProps {
     dataSource: GroupTableRow[];
@@ -14,31 +14,39 @@ interface GroupTableChartProps {
 export function GroupTableChart(props: GroupTableChartProps) {
     const { dataSource, linkIdX, linkIdY } = props;
 
-    const data = dataSource.map((item) => {
-        const formItemX = item[linkIdX]?.formItem;
-        const questionnaireItemXType = item[linkIdX]?.questionnaireItem?.type;
-        if (!isFormAnswerItems(formItemX) || !questionnaireItemXType) {
-            return null;
-        }
-        const valueX = getFormAnswerItemFirstValue(formItemX, questionnaireItemXType, (type) =>
-            ['dateTime', 'date', 'time'].includes(type),
-        );
+    const data = dataSource
+        .sort((a, b) => {
+            const questionItem = a[linkIdX]?.questionnaireItem ?? b[linkIdX]?.questionnaireItem;
+            if (!questionItem) {
+                return 0;
+            }
+            return getGeneralSorter(linkIdX, questionItem)(a, b);
+        })
+        .map((item) => {
+            const formItemX = item[linkIdX]?.formItem;
+            const questionnaireItemXType = item[linkIdX]?.questionnaireItem?.type;
+            if (!isFormAnswerItems(formItemX) || !questionnaireItemXType) {
+                return null;
+            }
+            const valueX = getFormAnswerItemFirstValue(formItemX, questionnaireItemXType, (type) =>
+                ['dateTime', 'date', 'time'].includes(type),
+            );
 
-        const formItemY = item[linkIdY]?.formItem;
-        const questionnaireItemYType = item[linkIdY]?.questionnaireItem?.type;
-        if (!isFormAnswerItems(formItemY) || !questionnaireItemYType) {
-            return null;
-        }
-        const valueY = getFormAnswerItemFirstValue(formItemY, questionnaireItemYType, (type) =>
-            ['dateTime', 'date', 'time'].includes(type),
-        );
+            const formItemY = item[linkIdY]?.formItem;
+            const questionnaireItemYType = item[linkIdY]?.questionnaireItem?.type;
+            if (!isFormAnswerItems(formItemY) || !questionnaireItemYType) {
+                return null;
+            }
+            const valueY = getFormAnswerItemFirstValue(formItemY, questionnaireItemYType, (type) =>
+                ['dateTime', 'date', 'time'].includes(type),
+            );
 
-        return {
-            name: item.key,
-            x: valueX,
-            y: valueY,
-        };
-    });
+            return {
+                name: item.key,
+                x: valueX,
+                y: valueY,
+            };
+        });
 
     const xAxisType = data[0]?.x ? (_.isNumber(data[0]?.x) ? 'number' : 'category') : 'category';
 

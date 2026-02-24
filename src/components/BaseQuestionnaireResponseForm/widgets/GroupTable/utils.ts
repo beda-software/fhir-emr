@@ -314,7 +314,7 @@ const mapChoiceToNumber = (value: GroupTableItem, options: Coding[]) => {
     return options.findIndex((option) => option.code === valueCode);
 };
 
-const getGeneralSorter =
+export const getGeneralSorter =
     (linkId: string, questionItem: FCEQuestionnaireItem): CompareFn<GroupTableRow> =>
     (a, b) => {
         const itemA = a[linkId];
