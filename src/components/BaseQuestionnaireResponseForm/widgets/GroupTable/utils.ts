@@ -45,14 +45,15 @@ export const isFormAnswerItems = (
 export const getValueFromAnswerValue = (
     answerValue: AnswerValue,
     questionnaireItemType: QuestionnaireItem['type'],
-    preFormat = false,
+    preFormat: boolean | ((type: QuestionnaireItem['type']) => boolean) = false,
 ) => {
+    const applyPreFormat = typeof preFormat === 'function' ? preFormat(questionnaireItemType) : preFormat;
     switch (questionnaireItemType) {
         case 'string':
         case 'text':
             return answerValue.string;
         case 'boolean':
-            if (!preFormat) {
+            if (!applyPreFormat) {
                 return answerValue.boolean;
             }
             if (answerValue.boolean === undefined) {
@@ -60,17 +61,17 @@ export const getValueFromAnswerValue = (
             }
             return answerValue.boolean ? 'Yes' : 'No';
         case 'date':
-            if (!preFormat) {
+            if (!applyPreFormat) {
                 return answerValue.date;
             }
             return formatHumanDate(answerValue.date);
         case 'dateTime':
-            if (!preFormat) {
+            if (!applyPreFormat) {
                 return answerValue.dateTime;
             }
             return formatHumanDateTime(answerValue.dateTime);
         case 'time':
-            if (!preFormat) {
+            if (!applyPreFormat) {
                 return answerValue.time;
             }
             return formatHumanTime(answerValue.time);
@@ -84,7 +85,7 @@ export const getValueFromAnswerValue = (
         case 'attachment':
             return answerValue.Attachment?.title;
         case 'reference':
-            if (!preFormat) {
+            if (!applyPreFormat) {
                 return answerValue.Reference?.display;
             }
             return (
@@ -92,7 +93,7 @@ export const getValueFromAnswerValue = (
                 (answerValue.Reference ? parseFHIRReference(answerValue.Reference).id : undefined)
             );
         case 'quantity':
-            if (!preFormat) {
+            if (!applyPreFormat) {
                 return answerValue.Quantity?.value;
             }
             return answerValue.Quantity
@@ -108,13 +109,15 @@ export const getValueFromAnswerValue = (
 export const getFormAnswerItemFirstValue = (
     FormAnswerItem: FormAnswerItems[],
     questionnaireItemType: QuestionnaireItem['type'],
+    preFormat: boolean | ((type: QuestionnaireItem['type']) => boolean) = false,
 ) => {
     const answerValues = getAnswerValues(FormAnswerItem);
     if (!answerValues[0]) {
         return null;
     }
     const firstValue = answerValues[0];
-    return getValueFromAnswerValue(firstValue, questionnaireItemType, false);
+
+    return getValueFromAnswerValue(firstValue, questionnaireItemType, preFormat);
 };
 
 export const getDataSource = (
