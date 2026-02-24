@@ -14,7 +14,7 @@ import {
     toAnswerValue,
 } from 'sdc-qrf';
 
-import { FHIRDateFormat, FHIRDateTimeFormat, FHIRTimeFormat, parseFHIRReference } from '@beda.software/fhir-react';
+import { parseFHIRReference } from '@beda.software/fhir-react';
 
 import {
     ColumnFilterValue,
@@ -298,25 +298,6 @@ const getGroupTableItemValue = (item: GroupTableRow, linkId: string, type: Quest
     return item[linkId]?.formItem?.[0]?.value?.[type];
 };
 
-const getFHIRFormat = (type: 'date' | 'dateTime' | 'time') => {
-    if (type === 'date') {
-        return FHIRDateFormat;
-    }
-
-    if (type === 'dateTime') {
-        return FHIRDateTimeFormat;
-    }
-    return FHIRTimeFormat;
-};
-
-const getDateTimeSorter = (linkId: string, type: 'date' | 'dateTime' | 'time'): CompareFn<GroupTableRow> => {
-    return (a, b) => {
-        const valueA = moment(getGroupTableItemValue(a, linkId, type), getFHIRFormat(type));
-        const valueB = moment(getGroupTableItemValue(b, linkId, type), getFHIRFormat(type));
-        return valueA.diff(valueB);
-    };
-};
-
 const getNumberSorter = (linkId: string, type: 'decimal' | 'integer'): CompareFn<GroupTableRow> => {
     return (a, b) => {
         const valueA: number | undefined = getGroupTableItemValue(a, linkId, type);
@@ -351,12 +332,6 @@ export const getSorter = (questionItem: FCEQuestionnaireItem, linkId: string): C
 
     const type = sortedQuestionItem?.type;
     switch (type) {
-        case 'date':
-            return getDateTimeSorter(linkId, 'date');
-        case 'dateTime':
-            return getDateTimeSorter(linkId, 'dateTime');
-        case 'time':
-            return getDateTimeSorter(linkId, 'time');
         case 'decimal':
             return getNumberSorter(linkId, 'decimal');
         case 'integer':
@@ -367,6 +342,9 @@ export const getSorter = (questionItem: FCEQuestionnaireItem, linkId: string): C
             return getStringSorter(linkId, 'text');
         case 'boolean':
             return getBooleanSorter(linkId);
+        case 'date':
+        case 'dateTime':
+        case 'time':
         case 'choice':
         case 'open-choice':
         case 'reference':
