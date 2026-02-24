@@ -1,5 +1,5 @@
 import type { ColumnType, ColumnsType, CompareFn } from 'antd/es/table/interface';
-import { QuestionnaireItem } from 'fhir/r4b';
+import { Coding, QuestionnaireItem } from 'fhir/r4b';
 import _ from 'lodash';
 import moment from 'moment';
 import {
@@ -32,9 +32,11 @@ import {
     isStringColumn,
     isStringColumnFilterValue,
 } from 'src/components/SearchBar/types';
-import { formatHumanDate, formatHumanDateTime, formatHumanTime } from 'src/utils';
+import { compileAsArray, formatHumanDate, formatHumanDateTime, formatHumanTime } from 'src/utils';
 
 import { GroupTableItem, GroupTableRow } from './types';
+
+const questionnaireItemChoiceOptions = compileAsArray<FCEQuestionnaireItem, Coding>(`item.answerOption.valueCoding`);
 
 export const isFormAnswerItems = (
     item: FormGroupItems | (FormAnswerItems | undefined)[] | undefined,
@@ -294,35 +296,50 @@ export const createColumnFilterValue = (column: SearchBarColumn): ColumnFilterVa
     throw new Error('Unsupported column type');
 };
 
-const getGroupTableItemValue = (item: GroupTableRow, linkId: string, type: QuestionnaireItem['type']) => {
-    return item[linkId]?.formItem?.[0]?.value?.[type];
+const mapBooleanToNumber = (value: boolean | undefined) => {
+    switch (value) {
+        case true:
+            return 1;
+        case false:
+            return 0;
+        case undefined:
+            return -1;
+        default:
+            throw new Error('Invalid boolean value');
+    }
 };
 
-const getNumberSorter = (linkId: string, type: 'decimal' | 'integer'): CompareFn<GroupTableRow> => {
-    return (a, b) => {
-        const valueA: number | undefined = getGroupTableItemValue(a, linkId, type);
-        const valueB: number | undefined = getGroupTableItemValue(b, linkId, type);
-        return valueA !== undefined && valueB !== undefined ? valueA - valueB : 0;
+const mapChoiceToNumber = (value: GroupTableItem, options: Coding[]) => {
+    const valueCode = value.formItem?.[0]?.value?.Coding?.code;
+    return options.findIndex((option) => option.code === valueCode);
+};
+
+const getGeneralSorter =
+    (linkId: string, questionItem: FCEQuestionnaireItem): CompareFn<GroupTableRow> =>
+    (a, b) => {
+        const itemA = a[linkId];
+        const itemB = b[linkId];
+        if (itemA === undefined || itemB === undefined) {
+            return 0;
+        }
+
+        const valueA = getTableItemValue(itemA.formItem, questionItem);
+        const valueB = getTableItemValue(itemB.formItem, questionItem);
+
+        if ((_.isString(valueA) || valueA === undefined) && (_.isString(valueB) || valueB === undefined)) {
+            return (valueA ?? '').localeCompare(valueB ?? '');
+        }
+
+        if ((_.isNumber(valueA) || valueA === undefined) && (_.isNumber(valueB) || valueB === undefined)) {
+            return (valueA ?? 0) - (valueB ?? 0);
+        }
+
+        if ((_.isBoolean(valueA) || valueA === undefined) && (_.isBoolean(valueB) || valueB === undefined)) {
+            return mapBooleanToNumber(valueA) - mapBooleanToNumber(valueB);
+        }
+
+        return 0;
     };
-};
-
-const getStringSorter = (linkId: string, type: 'string' | 'text'): CompareFn<GroupTableRow> => {
-    return (a, b) => {
-        const valueA: string | undefined = getGroupTableItemValue(a, linkId, type);
-        const valueB: string | undefined = getGroupTableItemValue(b, linkId, type);
-
-        return valueA !== undefined && valueB !== undefined ? valueA.localeCompare(valueB) : 0;
-    };
-};
-
-const getBooleanSorter = (linkId: string): CompareFn<GroupTableRow> => {
-    return (a, b) => {
-        const valueA = getGroupTableItemValue(a, linkId, 'boolean') ? 1 : -1;
-        const valueB = getGroupTableItemValue(b, linkId, 'boolean') ? 1 : -1;
-
-        return valueA - valueB;
-    };
-};
 
 export const getSorter = (questionItem: FCEQuestionnaireItem, linkId: string): CompareFn<GroupTableRow> => {
     const sortedQuestionItem = questionItem.item?.find((item) => item.linkId === linkId);
@@ -331,44 +348,22 @@ export const getSorter = (questionItem: FCEQuestionnaireItem, linkId: string): C
     }
 
     const type = sortedQuestionItem?.type;
+
     switch (type) {
-        case 'decimal':
-            return getNumberSorter(linkId, 'decimal');
-        case 'integer':
-            return getNumberSorter(linkId, 'integer');
-        case 'string':
-            return getStringSorter(linkId, 'string');
-        case 'text':
-            return getStringSorter(linkId, 'text');
-        case 'boolean':
-            return getBooleanSorter(linkId);
-        case 'date':
-        case 'dateTime':
-        case 'time':
         case 'choice':
         case 'open-choice':
-        case 'reference':
-        case 'attachment':
-        case 'quantity':
-        default:
             return (a, b) => {
                 const itemA = a[linkId];
                 const itemB = b[linkId];
-                if (itemA === undefined || itemB === undefined) {
-                    return 0;
+                const options = questionnaireItemChoiceOptions(questionItem);
+                if (options.length > 0) {
+                    const valueAnumber = itemA ? mapChoiceToNumber(itemA, options) : -1;
+                    const valueBnumber = itemB ? mapChoiceToNumber(itemB, options) : -1;
+                    return valueAnumber - valueBnumber;
                 }
-                const valueA = getTableItemValue(itemA.formItem, sortedQuestionItem);
-                const valueB = getTableItemValue(itemB.formItem, sortedQuestionItem);
-                if (_.isString(valueA) && _.isString(valueB)) {
-                    return valueA.localeCompare(valueB);
-                }
-                if (_.isNumber(valueA) && _.isNumber(valueB)) {
-                    return valueA - valueB;
-                }
-                if (_.isBoolean(valueA) && _.isBoolean(valueB)) {
-                    return valueA === valueB ? 0 : valueA ? 1 : -1;
-                }
-                return 0;
+                return getGeneralSorter(linkId, sortedQuestionItem)(a, b);
             };
+        default:
+            return getGeneralSorter(linkId, sortedQuestionItem);
     }
 };
