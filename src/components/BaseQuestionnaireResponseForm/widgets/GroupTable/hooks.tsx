@@ -17,6 +17,7 @@ import {
     createColumnFilterValue,
     getDataSource,
     getSearchBarColumnType,
+    getSorter,
     isColumnTypeArray,
     isTableItemMatchesFilter,
 } from './utils';
@@ -114,6 +115,67 @@ export function useGroupTableFilter() {
     };
 }
 
+export function useGroupTableSorter() {
+    const getEnabledSorters = (questionItem: FCEQuestionnaireItem): Record<string, boolean> => {
+        const items = questionItem.item || [];
+        const sorters = _.reduce(
+            items,
+            (acc, item) => {
+                if (!item.enableSort) {
+                    return acc;
+                }
+                const sorterKey = item.linkId;
+                acc[sorterKey] = true;
+                return acc;
+            },
+            {} as Record<string, boolean>,
+        );
+        return sorters;
+    };
+
+    const getDefaultSortOrder = (questionItem: FCEQuestionnaireItem, linkId: string) => {
+        const defaultSortLinkId = questionItem.defaultSort?.linkId;
+        const defaultSort = questionItem.defaultSort?.sort;
+        if (!defaultSortLinkId || defaultSortLinkId !== linkId || !defaultSort) {
+            return undefined;
+        }
+        if (defaultSort === 'asc') {
+            return 'ascend';
+        }
+        return 'descend';
+    };
+
+    const populateColumnWithSorters = useCallback(
+        (columns: ColumnsType<GroupTableRow>, questionItem: FCEQuestionnaireItem): ColumnType<GroupTableRow>[] => {
+            const enableSorters = getEnabledSorters(questionItem);
+            if (_.isEmpty(enableSorters || !isColumnTypeArray(columns))) {
+                return columns;
+            }
+
+            return columns.map((column) => {
+                const linkId = column.key!.toString();
+                const enableSorter = enableSorters[linkId];
+                if (enableSorter !== true) {
+                    return column;
+                }
+                const sorter: ColumnType<GroupTableRow>['sorter'] = getSorter(questionItem, linkId);
+                const defaultSortOrder = getDefaultSortOrder(questionItem, linkId);
+                const columnWithSorters: ColumnType<GroupTableRow> = {
+                    ...column,
+                    sorter: sorter,
+                    ...(defaultSortOrder ? { defaultSortOrder: defaultSortOrder } : {}),
+                };
+                return columnWithSorters;
+            });
+        },
+        [],
+    );
+
+    return {
+        populateColumnWithSorters,
+    };
+}
+
 export function useGroupTable(props: GroupItemProps) {
     const { parentPath, questionItem } = props;
     const { linkId, repeats, text, hidden, item } = questionItem;
@@ -137,6 +199,7 @@ export function useGroupTable(props: GroupItemProps) {
     const [snapshotDataSource, setSnapshotDataSource] = useState<GroupTableRow[] | null>(null);
 
     const { populateColumnWithFilters } = useGroupTableFilter();
+    const { populateColumnWithSorters } = useGroupTableSorter();
 
     const fullFormValues = getValues();
     const formValues = _.get(getValues(), fieldName);
@@ -228,8 +291,9 @@ export function useGroupTable(props: GroupItemProps) {
             return column;
         });
 
-        return populateColumnWithFilters(columns, questionItem);
-    }, [populateColumnWithFilters, questionItem, visibleItem]);
+        const columnsWithSorters = populateColumnWithSorters(columns, questionItem);
+        return populateColumnWithFilters(columnsWithSorters, questionItem);
+    }, [populateColumnWithFilters, populateColumnWithSorters, questionItem, visibleItem]);
 
     const actionColumn = useMemo(() => {
         return {

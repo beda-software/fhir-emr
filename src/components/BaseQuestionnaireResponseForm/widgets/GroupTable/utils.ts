@@ -1,5 +1,5 @@
-import type { ColumnType, ColumnsType } from 'antd/es/table/interface';
-import { QuestionnaireItem } from 'fhir/r4b';
+import type { ColumnType, ColumnsType, CompareFn } from 'antd/es/table/interface';
+import { Coding, QuestionnaireItem } from 'fhir/r4b';
 import _ from 'lodash';
 import moment from 'moment';
 import {
@@ -32,9 +32,11 @@ import {
     isStringColumn,
     isStringColumnFilterValue,
 } from 'src/components/SearchBar/types';
-import { formatHumanDate, formatHumanDateTime, formatHumanTime } from 'src/utils';
+import { compileAsArray, formatHumanDate, formatHumanDateTime, formatHumanTime } from 'src/utils';
 
 import { GroupTableItem, GroupTableRow } from './types';
+
+const questionnaireItemChoiceOptions = compileAsArray<FCEQuestionnaireItem, Coding>(`item.answerOption.valueCoding`);
 
 export const isFormAnswerItems = (
     item: FormGroupItems | (FormAnswerItems | undefined)[] | undefined,
@@ -292,4 +294,76 @@ export const createColumnFilterValue = (column: SearchBarColumn): ColumnFilterVa
     }
 
     throw new Error('Unsupported column type');
+};
+
+const mapBooleanToNumber = (value: boolean | undefined) => {
+    switch (value) {
+        case true:
+            return 1;
+        case false:
+            return 0;
+        case undefined:
+            return -1;
+        default:
+            throw new Error('Invalid boolean value');
+    }
+};
+
+const mapChoiceToNumber = (value: GroupTableItem, options: Coding[]) => {
+    const valueCode = value.formItem?.[0]?.value?.Coding?.code;
+    return options.findIndex((option) => option.code === valueCode);
+};
+
+const getGeneralSorter =
+    (linkId: string, questionItem: FCEQuestionnaireItem): CompareFn<GroupTableRow> =>
+    (a, b) => {
+        const itemA = a[linkId];
+        const itemB = b[linkId];
+        if (itemA === undefined || itemB === undefined) {
+            return 0;
+        }
+
+        const valueA = getTableItemValue(itemA.formItem, questionItem);
+        const valueB = getTableItemValue(itemB.formItem, questionItem);
+
+        if ((_.isString(valueA) || valueA === undefined) && (_.isString(valueB) || valueB === undefined)) {
+            return (valueA ?? '').localeCompare(valueB ?? '');
+        }
+
+        if ((_.isNumber(valueA) || valueA === undefined) && (_.isNumber(valueB) || valueB === undefined)) {
+            return (valueA ?? 0) - (valueB ?? 0);
+        }
+
+        if ((_.isBoolean(valueA) || valueA === undefined) && (_.isBoolean(valueB) || valueB === undefined)) {
+            return mapBooleanToNumber(valueA) - mapBooleanToNumber(valueB);
+        }
+
+        return 0;
+    };
+
+export const getSorter = (questionItem: FCEQuestionnaireItem, linkId: string): CompareFn<GroupTableRow> => {
+    const sortedQuestionItem = questionItem.item?.find((item) => item.linkId === linkId);
+    if (!sortedQuestionItem) {
+        return () => 0;
+    }
+
+    const type = sortedQuestionItem?.type;
+
+    switch (type) {
+        case 'choice':
+        case 'open-choice':
+            return (a, b) => {
+                const itemA = a[linkId];
+                const itemB = b[linkId];
+                const options = questionnaireItemChoiceOptions(questionItem);
+                if (options.length > 0) {
+                    const valueAnumber = itemA ? mapChoiceToNumber(itemA, options) : -1;
+                    const valueBnumber = itemB ? mapChoiceToNumber(itemB, options) : -1;
+                    return valueAnumber - valueBnumber;
+                }
+                return getGeneralSorter(linkId, sortedQuestionItem)(a, b);
+            };
+        default:
+            return getGeneralSorter(linkId, sortedQuestionItem);
+    }
 };

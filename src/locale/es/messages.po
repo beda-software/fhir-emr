@@ -353,7 +353,7 @@ msgstr "¿Estás seguro de que quieres modificar el documento?"
 msgid "Are you sure you want to delete the document?"
 msgstr "¿Estás seguro de que quieres eliminar el documento?"
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:253
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:317
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:134
 msgid "Are you sure you want to delete this item?"
 msgstr "¿Estás seguro que deseas eliminar este ítem?"
@@ -651,7 +651,7 @@ msgstr "Desactivar"
 msgid "Default"
 msgstr "Predeterminado"
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:256
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:320
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:250
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:140
 msgid "Delete"
@@ -753,7 +753,7 @@ msgstr "Duración (min)"
 msgid "Duration (minutes)"
 msgstr "Duración (minutos)"
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:251
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:315
 #: src/containers/EncounterDetails/AIScribe/index.tsx:218
 #: src/containers/HealthcareServiceList/index.tsx:66
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:260
