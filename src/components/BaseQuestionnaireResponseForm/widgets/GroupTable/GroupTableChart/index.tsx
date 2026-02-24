@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { CartesianGrid, ComposedChart, Line, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 
 import { GroupTableRow } from '../types';
-import { getFormAnswerItemFirstValue, getGeneralSorter, isFormAnswerItems } from '../utils';
+import { getFormAnswerItemFirstValue, getGroupTableItemSorter, isFormAnswerItems } from '../utils';
 
 interface GroupTableChartProps {
     dataSource: GroupTableRow[];
@@ -20,7 +20,7 @@ export function GroupTableChart(props: GroupTableChartProps) {
             if (!questionItem) {
                 return 0;
             }
-            return getGeneralSorter(linkIdX, questionItem)(a, b);
+            return getGroupTableItemSorter(questionItem, linkIdX)(a, b);
         })
         .map((item) => {
             const formItemX = item[linkIdX]?.formItem;

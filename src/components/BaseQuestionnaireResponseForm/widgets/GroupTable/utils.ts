@@ -341,14 +341,11 @@ export const getGeneralSorter =
         return 0;
     };
 
-export const getSorter = (questionItem: FCEQuestionnaireItem, linkId: string): CompareFn<GroupTableRow> => {
-    const sortedQuestionItem = questionItem.item?.find((item) => item.linkId === linkId);
-    if (!sortedQuestionItem) {
-        return () => 0;
-    }
-
-    const type = sortedQuestionItem?.type;
-
+export const getGroupTableItemSorter = (
+    questionItem: FCEQuestionnaireItem,
+    linkId: string,
+): CompareFn<GroupTableRow> => {
+    const type = questionItem.type;
     switch (type) {
         case 'choice':
         case 'open-choice':
@@ -361,9 +358,17 @@ export const getSorter = (questionItem: FCEQuestionnaireItem, linkId: string): C
                     const valueBnumber = itemB ? mapChoiceToNumber(itemB, options) : -1;
                     return valueAnumber - valueBnumber;
                 }
-                return getGeneralSorter(linkId, sortedQuestionItem)(a, b);
+                return getGeneralSorter(linkId, questionItem)(a, b);
             };
         default:
-            return getGeneralSorter(linkId, sortedQuestionItem);
+            return getGeneralSorter(linkId, questionItem);
     }
+};
+
+export const getSorter = (questionItem: FCEQuestionnaireItem, linkId: string): CompareFn<GroupTableRow> => {
+    const sortedQuestionItem = questionItem.item?.find((item) => item.linkId === linkId);
+    if (!sortedQuestionItem) {
+        return () => 0;
+    }
+    return getGroupTableItemSorter(questionItem, linkId);
 };
