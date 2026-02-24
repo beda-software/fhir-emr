@@ -158,14 +158,13 @@ export function useGroupTableSorter() {
                 if (enableSorter !== true) {
                     return column;
                 }
-                const sorter = getSorter(questionItem, linkId);
+                const sorter: ColumnType<GroupTableRow>['sorter'] = getSorter(questionItem, linkId);
                 const defaultSortOrder = getDefaultSortOrder(questionItem, linkId);
-                // TODO: refactor types to eliminate 'as any' hack
-                const columnWithSorters = {
+                const columnWithSorters: ColumnType<GroupTableRow> = {
                     ...column,
                     sorter: sorter,
                     ...(defaultSortOrder ? { defaultSortOrder: defaultSortOrder } : {}),
-                } as any as ColumnType<GroupTableRow>;
+                };
                 return columnWithSorters;
             });
         },
