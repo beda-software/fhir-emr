@@ -1,15 +1,118 @@
 import { t } from '@lingui/macro';
 import { Button, Popconfirm, Space } from 'antd';
+import type { ColumnType, ColumnsType } from 'antd/es/table';
+import type { FilterDropdownProps } from 'antd/es/table/interface';
 import _ from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { FormItems, GroupItemProps, RepeatableFormGroupItems, populateItemKey } from 'sdc-qrf';
+import { FCEQuestionnaireItem, FormItems, GroupItemProps, RepeatableFormGroupItems, populateItemKey } from 'sdc-qrf';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { RenderFormItemReadOnly } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/RenderFormItemReadOnly';
+import { ColumnFilterValue, SearchBarColumn } from 'src/components/SearchBar/types';
+import { TableFilter } from 'src/components/Table/TableFilter';
 
 import { GroupTableRow } from './types';
-import { getDataSource } from './utils';
+import {
+    createColumnFilterValue,
+    getDataSource,
+    getSearchBarColumnType,
+    isColumnTypeArray,
+    isTableItemMatchesFilter,
+} from './utils';
+
+export function useGroupTableFilter() {
+    const [filterValueMap, setFilterValueMap] = useState<Record<string, ColumnFilterValue>>({});
+
+    const handleFilterChange = useCallback(
+        (value: ColumnFilterValue['value'], key: string, filter: ColumnFilterValue) => {
+            setFilterValueMap((prev: Record<string, ColumnFilterValue>) => {
+                if (value && !_.isEmpty(value)) {
+                    return {
+                        ...prev,
+                        [key]: {
+                            ...filter,
+                            value,
+                        },
+                    } as Record<string, ColumnFilterValue>;
+                }
+                return _.omit(prev, key);
+            });
+        },
+        [],
+    );
+
+    const getFilters = useCallback((questionItem: FCEQuestionnaireItem): Record<string, SearchBarColumn> => {
+        const items = questionItem.item || [];
+        const filters = _.reduce(
+            items,
+            (acc, item) => {
+                if (!item.enableFiltering) {
+                    return acc;
+                }
+                const filterKey = item.linkId;
+                const column = getSearchBarColumnType(item);
+                acc[filterKey] = column;
+                return acc;
+            },
+            {} as Record<string, SearchBarColumn>,
+        );
+        return filters;
+    }, []);
+
+    const populateColumnWithFilters = useCallback(
+        (columns: ColumnsType<GroupTableRow>, questionItem: FCEQuestionnaireItem): ColumnType<GroupTableRow>[] => {
+            const enableFilters = getFilters(questionItem);
+            if (_.isEmpty(enableFilters || !isColumnTypeArray(columns))) {
+                return columns;
+            }
+
+            return columns.map((column) => {
+                const linkId = column.key!;
+                const searchBarColumn = enableFilters[linkId];
+                if (!searchBarColumn) {
+                    return column;
+                }
+                const filter = createColumnFilterValue(searchBarColumn);
+                const filterValue = filterValueMap[linkId];
+
+                const filterDropdown = filter
+                    ? (props: FilterDropdownProps) => (
+                          <TableFilter
+                              {...props}
+                              filter={filter}
+                              onChange={(value, key) => handleFilterChange(value, key, filter)}
+                          />
+                      )
+                    : undefined;
+                const filtered = !!filterValueMap[linkId]?.value;
+                const filteredValue: ColumnType<GroupTableRow>['filteredValue'] = filterValue ? [linkId] : [];
+                const onFilter: ColumnType<GroupTableRow>['onFilter'] = (value, record) => {
+                    if (!_.isString(value)) {
+                        return true;
+                    }
+                    const filterValue = filterValueMap[value];
+                    const item = record[linkId];
+                    return isTableItemMatchesFilter(item, filterValue);
+                };
+
+                const columnWithFilters: ColumnType<GroupTableRow> = {
+                    ...column,
+                    filterDropdown,
+                    filtered,
+                    filteredValue,
+                    onFilter,
+                };
+                return columnWithFilters;
+            });
+        },
+        [filterValueMap, getFilters, handleFilterChange],
+    );
+
+    return {
+        populateColumnWithFilters,
+    };
+}
 
 export function useGroupTable(props: GroupItemProps) {
     const { parentPath, questionItem } = props;
@@ -33,22 +136,18 @@ export function useGroupTable(props: GroupItemProps) {
     const [snapshotFormValues, setSnapshotFormValues] = useState<FormItems[] | null>(null);
     const [snapshotDataSource, setSnapshotDataSource] = useState<GroupTableRow[] | null>(null);
 
+    const { populateColumnWithFilters } = useGroupTableFilter();
+
     const fullFormValues = getValues();
     const formValues = _.get(getValues(), fieldName);
 
-    const visibleItem = useMemo(() => item?.filter((i) => !i.hidden), [item]);
+    const visibleItem = useMemo(() => item?.filter((i) => !i.hidden && i.type !== 'display'), [item]);
 
     const formItems: FormItems[] = useMemo(() => {
         return formValues?.items || [];
     }, [formValues?.items]);
 
-    const fields = useMemo(
-        () =>
-            _.map(visibleItem, (item) => {
-                return item.linkId;
-            }),
-        [visibleItem],
-    );
+    const fields = useMemo(() => _.map(visibleItem, (item) => item.linkId), [visibleItem]);
 
     const dataSource: GroupTableRow[] = useMemo(() => {
         return getDataSource(fields, formItems, questionItem);
@@ -115,18 +214,22 @@ export function useGroupTable(props: GroupItemProps) {
         [formItems, onChange],
     );
 
-    const dataColumns = useMemo(() => {
-        return _.map(visibleItem, (questionItem) => {
-            return {
-                title: questionItem.text ? questionItem.text : questionItem.linkId,
-                dataIndex: questionItem.linkId,
-                key: questionItem.linkId,
+    const dataColumns: ColumnsType<GroupTableRow> = useMemo(() => {
+        const columns: ColumnsType<GroupTableRow> = _.map(visibleItem, (questionItem) => {
+            const linkId = questionItem.linkId;
+            const column: ColumnType<GroupTableRow> = {
+                title: questionItem.text ? questionItem.text : linkId,
+                dataIndex: linkId,
+                key: linkId,
                 render: (value: any) => (
                     <RenderFormItemReadOnly formItem={value.formItem} questionnaireItem={value.questionnaireItem} />
                 ),
             };
+            return column;
         });
-    }, [visibleItem]);
+
+        return populateColumnWithFilters(columns, questionItem);
+    }, [populateColumnWithFilters, questionItem, visibleItem]);
 
     const actionColumn = useMemo(() => {
         return {
