@@ -17,7 +17,7 @@ import {
     createColumnFilterValue,
     getDataSource,
     getSearchBarColumnType,
-    getSorter,
+    getGroupSorter,
     isColumnTypeArray,
     isTableItemMatchesFilter,
 } from './utils';
@@ -158,7 +158,7 @@ export function useGroupTableSorter() {
                 if (enableSorter !== true) {
                     return column;
                 }
-                const sorter: ColumnType<GroupTableRow>['sorter'] = getSorter(questionItem, linkId);
+                const sorter: ColumnType<GroupTableRow>['sorter'] = getGroupSorter(questionItem, linkId);
                 const defaultSortOrder = getDefaultSortOrder(questionItem, linkId);
                 const columnWithSorters: ColumnType<GroupTableRow> = {
                     ...column,
