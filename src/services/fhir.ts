@@ -47,7 +47,7 @@ export const {
     getConcepts: aidboxGetConcepts,
     applyFHIRService: aidboxApplyFHIRService,
     applyFHIRServices: aidboxApplyFHIRServices,
-} = initServicesFromService(aidboxService);
+} = initServicesFromService(aidboxService, config.inactiveMapping);
 
 export const {
     createFHIRResource,
@@ -65,7 +65,7 @@ export const {
     applyFHIRService,
     applyFHIRServices,
     service,
-} = initServicesFromService(fhirService);
+} = initServicesFromService(fhirService, config.inactiveMapping);
 
 export {
     aidboxService,
