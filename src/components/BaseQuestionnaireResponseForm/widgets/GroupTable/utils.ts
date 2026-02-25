@@ -365,8 +365,8 @@ export const getGroupTableItemSorter = (
     }
 };
 
-export const getSorter = (questionItem: FCEQuestionnaireItem, linkId: string): CompareFn<GroupTableRow> => {
-    const sortedQuestionItem = questionItem.item?.find((item) => item.linkId === linkId);
+export const getGroupSorter = (groupItem: FCEQuestionnaireItem, linkId: string): CompareFn<GroupTableRow> => {
+    const sortedQuestionItem = groupItem.item?.find((item) => item.linkId === linkId);
     if (!sortedQuestionItem) {
         return () => 0;
     }

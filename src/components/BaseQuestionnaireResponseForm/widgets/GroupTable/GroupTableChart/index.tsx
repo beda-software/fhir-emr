@@ -1,6 +1,7 @@
 import { Empty } from 'antd';
 import _ from 'lodash';
 import { CartesianGrid, ComposedChart, Line, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import { FCEQuestionnaireItem } from 'sdc-qrf';
 
 import { GroupTableRow } from '../types';
 import { getFormAnswerItemFirstValue, getGroupTableItemSorter, isFormAnswerItems } from '../utils';
@@ -10,6 +11,8 @@ interface GroupTableChartProps {
     linkIdX: string;
     linkIdY: string;
 }
+
+const needsFormattedValue = (type: FCEQuestionnaireItem['type']) => ['dateTime', 'date', 'time'].includes(type);
 
 export function GroupTableChart(props: GroupTableChartProps) {
     const { dataSource, linkIdX, linkIdY } = props;
@@ -28,18 +31,15 @@ export function GroupTableChart(props: GroupTableChartProps) {
             if (!isFormAnswerItems(formItemX) || !questionnaireItemXType) {
                 return null;
             }
-            const valueX = getFormAnswerItemFirstValue(formItemX, questionnaireItemXType, (type) =>
-                ['dateTime', 'date', 'time'].includes(type),
-            );
+
+            const valueX = getFormAnswerItemFirstValue(formItemX, questionnaireItemXType, needsFormattedValue);
 
             const formItemY = item[linkIdY]?.formItem;
             const questionnaireItemYType = item[linkIdY]?.questionnaireItem?.type;
             if (!isFormAnswerItems(formItemY) || !questionnaireItemYType) {
                 return null;
             }
-            const valueY = getFormAnswerItemFirstValue(formItemY, questionnaireItemYType, (type) =>
-                ['dateTime', 'date', 'time'].includes(type),
-            );
+            const valueY = getFormAnswerItemFirstValue(formItemY, questionnaireItemYType, needsFormattedValue);
 
             return {
                 name: item.key,
