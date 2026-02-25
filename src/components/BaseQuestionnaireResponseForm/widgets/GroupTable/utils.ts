@@ -370,5 +370,5 @@ export const getSorter = (questionItem: FCEQuestionnaireItem, linkId: string): C
     if (!sortedQuestionItem) {
         return () => 0;
     }
-    return getGroupTableItemSorter(questionItem, linkId);
+    return getGroupTableItemSorter(sortedQuestionItem, linkId);
 };
