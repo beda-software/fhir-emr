@@ -36,7 +36,7 @@ import { compileAsArray, formatHumanDate, formatHumanDateTime, formatHumanTime }
 
 import { GroupTableItem, GroupTableRow } from './types';
 
-const questionnaireItemChoiceOptions = compileAsArray<FCEQuestionnaireItem, Coding>(`item.answerOption.valueCoding`);
+export const questionnaireItemChoiceOptions = compileAsArray<FCEQuestionnaireItem, Coding>(`answerOption.valueCoding`);
 
 export const isFormAnswerItems = (
     item: FormGroupItems | (FormAnswerItems | undefined)[] | undefined,
@@ -309,7 +309,7 @@ const mapBooleanToNumber = (value: boolean | undefined) => {
     }
 };
 
-const mapChoiceToNumber = (value: GroupTableItem, options: Coding[]) => {
+export const mapChoiceToNumber = (value: GroupTableItem, options: Coding[]) => {
     const valueCode = value.formItem?.[0]?.value?.Coding?.code;
     return options.findIndex((option) => option.code === valueCode);
 };
