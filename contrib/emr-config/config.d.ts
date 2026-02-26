@@ -17,6 +17,11 @@ declare const config: {
     wearablesDataStreamService: string;
     metriportIdentifierSystem: string;
     aiAssistantServiceUrl: string;
+    inactiveMapping?: Record<string, {
+        searchField: string;
+        statusField: string;
+        value: any;
+    }>;
 };
 
 export default config;
