@@ -1,81 +1,61 @@
 import { Empty } from 'antd';
-import _ from 'lodash';
-import { CartesianGrid, ComposedChart, Line, ResponsiveContainer, XAxis, YAxis } from 'recharts';
-import { FCEQuestionnaireItem } from 'sdc-qrf';
+import { CartesianGrid, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
-import { GroupTableRow } from '../types';
-import { getFormAnswerItemFirstValue, getGroupTableItemSorter, isFormAnswerItems } from '../utils';
-
-interface GroupTableChartProps {
-    dataSource: GroupTableRow[];
-    linkIdX: string;
-    linkIdY: string;
-}
-
-const needsFormattedValue = (type: FCEQuestionnaireItem['type']) => ['dateTime', 'date', 'time'].includes(type);
+import { useGroupTableChart } from './hooks';
+import { GroupTableChartProps } from './types';
 
 export function GroupTableChart(props: GroupTableChartProps) {
-    const { dataSource, linkIdX, linkIdY } = props;
-
-    const data = dataSource
-        .sort((a, b) => {
-            const questionItem = a[linkIdX]?.questionnaireItem ?? b[linkIdX]?.questionnaireItem;
-            if (!questionItem) {
-                return 0;
-            }
-            return getGroupTableItemSorter(questionItem, linkIdX)(a, b);
-        })
-        .map((item) => {
-            const formItemX = item[linkIdX]?.formItem;
-            const questionnaireItemXType = item[linkIdX]?.questionnaireItem?.type;
-            if (!isFormAnswerItems(formItemX) || !questionnaireItemXType) {
-                return null;
-            }
-
-            const valueX = getFormAnswerItemFirstValue(formItemX, questionnaireItemXType, needsFormattedValue);
-
-            const formItemY = item[linkIdY]?.formItem;
-            const questionnaireItemYType = item[linkIdY]?.questionnaireItem?.type;
-            if (!isFormAnswerItems(formItemY) || !questionnaireItemYType) {
-                return null;
-            }
-            const valueY = getFormAnswerItemFirstValue(formItemY, questionnaireItemYType, needsFormattedValue);
-
-            return {
-                name: item.key,
-                x: valueX,
-                y: valueY,
-            };
-        });
-
-    const xAxisType = data[0]?.x ? (_.isNumber(data[0]?.x) ? 'number' : 'category') : 'category';
-
-    const yAxisType = data[0]?.y ? (_.isNumber(data[0]?.y) ? 'number' : 'category') : 'category';
+    const {
+        data,
+        xAxisType,
+        yAxisType,
+        domainX,
+        tickCountX,
+        tickFormatterX,
+        labelFormatterX,
+        tickFormatterY,
+        domainY,
+        tickCountY,
+        tooltipFormatterY,
+        yAxisWidth,
+    } = useGroupTableChart(props);
 
     return (
         <>
             {data.length > 0 ? (
                 <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart margin={{ top: 8, right: 20, left: 10, bottom: 8 }} data={data}>
+                    <ComposedChart margin={{ top: 18, right: 20, left: 30, bottom: 8 }} data={data}>
                         <Line type="monotone" dataKey="y" stroke="#8884d8" strokeWidth={2} />
                         <XAxis
                             type={xAxisType}
                             interval="preserveStartEnd"
                             dataKey="x"
                             axisLine={false}
-                            tickLine={{ transform: 'translate(0, -6)' }}
+                            domain={domainX}
+                            padding={{ left: 60, right: 60 }}
+                            tickCount={tickCountX}
+                            tickLine={{ transform: 'translate(0, -6)', strokeWidth: 0.5 }}
+                            tickFormatter={tickFormatterX}
+                            tick={{ fontSize: 10, fontWeight: 600 }}
                         />
                         <YAxis
                             type={yAxisType}
                             dataKey="y"
-                            domain={['auto', 'auto']}
+                            domain={domainY}
                             interval={'preserveStartEnd'}
-                            width={40}
+                            tickCount={tickCountY}
+                            width={yAxisWidth}
                             allowDataOverflow={false}
                             alignmentBaseline="baseline"
                             axisLine={false}
+                            tickFormatter={tickFormatterY}
+                            tick={{ fontSize: 10, fontWeight: 600 }}
+                            tickLine={{ transform: 'translate(6, 0)', strokeWidth: 0.5 }}
+                            padding={{ top: 10, bottom: 10 }}
                         />
-                        <CartesianGrid />
+                        <CartesianGrid strokeWidth={0.5} color={'#b1b1b1'} syncWithTicks={true} />
+
+                        <Tooltip formatter={tooltipFormatterY} labelFormatter={labelFormatterX} cursor={false} />
                     </ComposedChart>
                 </ResponsiveContainer>
             ) : (
