@@ -1,5 +1,11 @@
 import { QuestionnaireResponse } from 'fhir/r4b';
-import { ItemControlGroupItemComponentMapping, ItemControlQuestionItemComponentMapping } from 'sdc-qrf';
+import { ComponentType } from 'react';
+import {
+    GroupItemComponent,
+    GroupItemProps,
+    ItemControlGroupItemComponentMapping,
+    ItemControlQuestionItemComponentMapping,
+} from 'sdc-qrf';
 
 import { RemoteDataResult } from '@beda.software/remote-data';
 
@@ -24,4 +30,10 @@ export interface QRFProps extends QuestionnaireResponseFormProps {
     saveButtonTitle?: React.ReactNode;
     cancelButtonTitle?: React.ReactNode;
     customYupTests?: CustomYupTestsMap;
+
+    GroupWrapper?: ComponentType<{
+        item: GroupItemProps;
+        control: GroupItemComponent;
+        children: React.ReactElement;
+    }>;
 }
