@@ -1,11 +1,13 @@
 import { Coding } from 'fhir/r4b';
 import _ from 'lodash';
-import { useMemo, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import type { TooltipProps } from 'recharts';
+import type { Payload } from 'recharts/types/component/DefaultTooltipContent';
 import type { BaseAxisProps } from 'recharts/types/util/types';
 import { FCEQuestionnaireItem } from 'sdc-qrf';
 
 import { GroupTableChartProps } from './types';
+import { GroupTableRow } from '../types';
 import {
     getFormAnswerItemFirstValue,
     getGroupTableItemSorter,
@@ -21,15 +23,29 @@ export function useGroupTableChart(props: GroupTableChartProps) {
     const { dataSource, linkIdX, linkIdY } = props;
 
     const [answerOptionsY, setAnswerOptionsY] = useState<Coding[]>([]);
+    const [answerOptionsX, setAnswerOptionsX] = useState<Coding[]>([]);
 
-    const hasAnswerOptionsY = useMemo(() => answerOptionsY.length > 0, [answerOptionsY.length]);
+    useEffect(() => {
+        const questionItemY = dataSource.find((item) => item[linkIdY]?.questionnaireItem)?.[linkIdY]?.questionnaireItem;
+        setAnswerOptionsY(questionItemY ? questionnaireItemChoiceOptions(questionItemY) : []);
+        const questionItemX = dataSource.find((item) => item[linkIdX]?.questionnaireItem)?.[linkIdX]?.questionnaireItem;
+        setAnswerOptionsX(questionItemX ? questionnaireItemChoiceOptions(questionItemX) : []);
+    }, [dataSource, linkIdX, linkIdY]);
 
-    const hasAnswerOptions = (questionItem?: FCEQuestionnaireItem) => {
-        return questionItem && questionnaireItemChoiceOptions(questionItem).length > 0 ? true : false;
-    };
+    const getDataValue = (answerOptions: Coding[], groupTableRow: GroupTableRow, linkId: string) => {
+        const hasAnswerOptions = answerOptions.length > 0;
 
-    const getAnswerOptions = (questionItem?: FCEQuestionnaireItem) => {
-        return questionItem ? questionnaireItemChoiceOptions(questionItem) : [];
+        if (hasAnswerOptions) {
+            const groupTableItem = groupTableRow[linkId];
+            return groupTableItem ? mapChoiceToNumber(groupTableItem, answerOptions) : -1;
+        }
+
+        const formItem = groupTableRow[linkId]?.formItem;
+        const questionnaireItemType = groupTableRow[linkId]?.questionnaireItem?.type;
+        if (!isFormAnswerItems(formItem) || !questionnaireItemType) {
+            return null;
+        }
+        return getFormAnswerItemFirstValue(formItem, questionnaireItemType, needsFormattedValue);
     };
 
     const { data, yAxisName } = useMemo(() => {
@@ -42,38 +58,13 @@ export function useGroupTableChart(props: GroupTableChartProps) {
                 return getGroupTableItemSorter(questionItem, linkIdX)(a, b);
             })
             .map((item) => {
-                const formItemX = item[linkIdX]?.formItem;
-                const questionnaireItemXType = item[linkIdX]?.questionnaireItem?.type;
-                if (!isFormAnswerItems(formItemX) || !questionnaireItemXType) {
-                    return null;
-                }
-                const valueX = getFormAnswerItemFirstValue(formItemX, questionnaireItemXType, needsFormattedValue);
-
-                const formItemY = item[linkIdY]?.formItem;
-                const questionnaireItemYType = item[linkIdY]?.questionnaireItem?.type;
-                if (!isFormAnswerItems(formItemY) || !questionnaireItemYType) {
-                    return null;
-                }
-                const valueY = getFormAnswerItemFirstValue(formItemY, questionnaireItemYType, needsFormattedValue);
-
-                if (hasAnswerOptions(item[linkIdY]?.questionnaireItem)) {
-                    const questionYAnswerOptions = getAnswerOptions(item[linkIdY]?.questionnaireItem);
-                    setAnswerOptionsY(questionYAnswerOptions);
-                    const itemY = item[linkIdY];
-                    const valueYNumber = itemY ? mapChoiceToNumber(itemY, questionYAnswerOptions) : -1;
-                    return {
-                        name: item.key,
-                        x: valueX,
-                        y: valueYNumber,
-                        yLabel: valueY,
-                    };
-                }
+                const valueX = getDataValue(answerOptionsX, item, linkIdX);
+                const valueY = getDataValue(answerOptionsY, item, linkIdY);
 
                 return {
                     name: item.key,
                     x: valueX,
                     y: valueY,
-                    yLabel: valueY,
                 };
             });
 
@@ -83,55 +74,81 @@ export function useGroupTableChart(props: GroupTableChartProps) {
         const yAxisName = questionItem?.text ?? 'Value';
 
         return { data, yAxisName };
-    }, [dataSource, linkIdX, linkIdY]);
+    }, [answerOptionsX, answerOptionsY, dataSource, linkIdX, linkIdY]);
 
     const xAxisType: BaseAxisProps['type'] = data.some((d) => d && _.isNumber(d.x)) ? 'number' : 'category';
 
     const yAxisType: BaseAxisProps['type'] = data.some((d) => d && _.isNumber(d.y)) ? 'number' : 'category';
 
-    const yAxisWidth = useMemo(
-        () => (!hasAnswerOptionsY && yAxisType === 'number' ? 10 : 30),
-        [hasAnswerOptionsY, yAxisType],
-    );
+    const getYParams = useCallback((): {
+        domainY: BaseAxisProps['domain'];
+        yAxisWidth: number;
+        tickFormatterY: BaseAxisProps['tickFormatter'];
+        tooltipFormatterY: TooltipProps<string | number, string>['formatter'];
+        tickCountY: number | undefined;
+    } => {
+        const hasAnswerOptions = answerOptionsY.length > 0;
 
-    const domainY: BaseAxisProps['domain'] = useMemo(
-        () => (hasAnswerOptionsY ? [0, answerOptionsY.length - 1] : ['auto', 'auto']),
-        [hasAnswerOptionsY, answerOptionsY.length],
-    );
+        if (hasAnswerOptions) {
+            return {
+                domainY: [0, answerOptionsY.length - 1],
+                yAxisWidth: 30,
+                tickFormatterY: (value) => {
+                    return _.isInteger(value) ? answerOptionsY[value]?.display ?? '' : '';
+                },
+                tooltipFormatterY: (value) => {
+                    return _.isNumber(value) ? [answerOptionsY[value]?.display, yAxisName] : ['', yAxisName];
+                },
+                tickCountY: answerOptionsY.length,
+            };
+        }
 
-    const tickFormatterY: BaseAxisProps['tickFormatter'] = useMemo(
-        () =>
-            hasAnswerOptionsY
-                ? (value) => {
-                      return _.isInteger(value) ? answerOptionsY[value]?.display ?? '' : '';
-                  }
-                : undefined,
-        [answerOptionsY, hasAnswerOptionsY],
-    );
+        return {
+            domainY: ['auto', 'auto'],
+            yAxisWidth: yAxisType === 'number' ? 10 : 30,
+            tickFormatterY: undefined,
+            tooltipFormatterY: undefined,
+            tickCountY: undefined,
+        };
+    }, [answerOptionsY, yAxisName, yAxisType]);
 
-    const tooltipFormatterY: TooltipProps<string | number, string>['formatter'] = useMemo(
-        () =>
-            hasAnswerOptionsY
-                ? (value) => {
-                      return _.isNumber(value) ? [answerOptionsY[value]?.display, yAxisName] : ['', yAxisName];
-                  }
-                : (value) => [value, yAxisName],
-        [hasAnswerOptionsY, answerOptionsY, yAxisName],
-    );
+    const getXParams = useCallback((): {
+        domainX: BaseAxisProps['domain'];
+        tickFormatterX: BaseAxisProps['tickFormatter'];
+        labelFormatterX: (label: any, payload: Payload<string | number, string>[]) => ReactNode;
+        tickCountX: number | undefined;
+    } => {
+        const hasAnswerOptions = answerOptionsX.length > 0;
 
-    const tickCountY: number | undefined = useMemo(
-        () => (hasAnswerOptionsY ? answerOptionsY.length : undefined),
-        [hasAnswerOptionsY, answerOptionsY.length],
-    );
+        if (hasAnswerOptions) {
+            return {
+                domainX: [0, answerOptionsX.length - 1],
+                tickFormatterX: (value) => {
+                    return _.isInteger(value) ? answerOptionsX[value]?.display ?? '' : '';
+                },
+                labelFormatterX: (value) => {
+                    return _.isNumber(value) ? answerOptionsX[value]?.display : '';
+                },
+                tickCountX: answerOptionsX.length,
+            };
+        }
+
+        return {
+            domainX: ['auto', 'auto'],
+            tickFormatterX: undefined,
+            labelFormatterX: (label) => label,
+            tickCountX: undefined,
+        };
+    }, [answerOptionsX]);
+
+    const yParams = getYParams();
+    const xParams = getXParams();
 
     return {
         data,
         xAxisType,
         yAxisType,
-        tickFormatterY,
-        domainY,
-        tickCountY,
-        tooltipFormatterY,
-        yAxisWidth,
+        ...yParams,
+        ...xParams,
     };
 }

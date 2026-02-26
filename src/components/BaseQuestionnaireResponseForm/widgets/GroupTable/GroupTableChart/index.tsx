@@ -5,8 +5,20 @@ import { useGroupTableChart } from './hooks';
 import { GroupTableChartProps } from './types';
 
 export function GroupTableChart(props: GroupTableChartProps) {
-    const { data, xAxisType, yAxisType, tickFormatterY, domainY, tickCountY, tooltipFormatterY, yAxisWidth } =
-        useGroupTableChart(props);
+    const {
+        data,
+        xAxisType,
+        yAxisType,
+        domainX,
+        tickCountX,
+        tickFormatterX,
+        labelFormatterX,
+        tickFormatterY,
+        domainY,
+        tickCountY,
+        tooltipFormatterY,
+        yAxisWidth,
+    } = useGroupTableChart(props);
 
     return (
         <>
@@ -19,9 +31,11 @@ export function GroupTableChart(props: GroupTableChartProps) {
                             interval="preserveStartEnd"
                             dataKey="x"
                             axisLine={false}
-                            domain={['auto', 'auto']}
+                            domain={domainX}
                             padding={{ left: 60, right: 60 }}
+                            tickCount={tickCountX}
                             tickLine={{ transform: 'translate(0, -6)', strokeWidth: 0.5 }}
+                            tickFormatter={tickFormatterX}
                             tick={{ fontSize: 10, fontWeight: 600 }}
                         />
                         <YAxis
@@ -41,7 +55,7 @@ export function GroupTableChart(props: GroupTableChartProps) {
                         />
                         <CartesianGrid strokeWidth={0.5} color={'#b1b1b1'} syncWithTicks={true} />
 
-                        <Tooltip formatter={tooltipFormatterY} cursor={false} />
+                        <Tooltip formatter={tooltipFormatterY} labelFormatter={labelFormatterX} cursor={false} />
                     </ComposedChart>
                 </ResponsiveContainer>
             ) : (
