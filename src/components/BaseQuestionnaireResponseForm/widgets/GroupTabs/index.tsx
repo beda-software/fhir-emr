@@ -1,4 +1,4 @@
-import { Tabs } from 'antd';
+import { Flex, Tabs } from 'antd';
 import type { Tab } from 'rc-tabs/lib/interface';
 import { useMemo } from 'react';
 import { useWatch } from 'react-hook-form';
@@ -30,11 +30,13 @@ export function GroupTabs(props: GroupItemProps) {
                     key: item.linkId,
                     label: item.text,
                     children: (
-                        <QuestionItems
-                            questionItems={item.item!}
-                            parentPath={[...parentPath, linkId, 'items', item.linkId, 'items']}
-                            context={groupContext}
-                        />
+                        <Flex gap={16} vertical={true}>
+                            <QuestionItems
+                                questionItems={item.item!}
+                                parentPath={[...parentPath, linkId, 'items', item.linkId, 'items']}
+                                context={groupContext}
+                            />
+                        </Flex>
                     ),
                 };
             });
