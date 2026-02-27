@@ -26,7 +26,7 @@
         "@ant-design/colors": "^7.0.0",
         "@ant-design/icons": "^5.1.4",
         "@beda.software/emr-config": "*",
-        "@beda.software/fhir-react": "^1.11.0",
+        "@beda.software/fhir-react": "^1.11.1",
         "@beda.software/remote-data": "^1.1.4",
         "@fullcalendar/core": "^6.1.15",
         "@fullcalendar/daygrid": "^6.1.8",
