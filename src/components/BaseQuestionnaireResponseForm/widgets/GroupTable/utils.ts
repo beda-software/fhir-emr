@@ -34,7 +34,7 @@ import {
 } from 'src/components/SearchBar/types';
 import { compileAsArray, formatHumanDate, formatHumanDateTime, formatHumanTime } from 'src/utils';
 
-import { GroupTableItem, GroupTableRow } from './types';
+import { ChartHighlightArea, GroupTableItem, GroupTableRow } from './types';
 
 export const questionnaireItemChoiceOptions = compileAsArray<FCEQuestionnaireItem, Coding>(`answerOption.valueCoding`);
 
@@ -371,4 +371,47 @@ export const getGroupSorter = (groupItem: FCEQuestionnaireItem, linkId: string):
         return () => 0;
     }
     return getGroupTableItemSorter(sortedQuestionItem, linkId);
+};
+
+// TODO: update after merging:
+// - https://github.com/beda-software/sdc-qrf/pull/43
+export const getChartYRange = (questionItem: FCEQuestionnaireItem): number[] | undefined => {
+    const chartYRangeLow = 0; //questionItem.chartYAxisRange?.low?.value;
+    const chartYRangeHigh = 100; //questionItem.chartYAxisRange?.high?.value;
+    if (chartYRangeLow !== undefined && chartYRangeHigh !== undefined) {
+        return [chartYRangeLow, chartYRangeHigh];
+    }
+    return undefined;
+};
+
+// TODO: update after merging:
+// - https://github.com/beda-software/sdc-qrf/pull/43
+export const getChartHighlightAreas = (questionItem: FCEQuestionnaireItem): ChartHighlightArea[] | undefined => {
+    const chartHighlightAreas: ChartHighlightArea[] = [
+        // questionItem.chartHighlight;
+        {
+            to: 15,
+            color: '#ffccc766',
+        },
+        {
+            from: 15,
+            to: 25,
+            color: '#fffbe6cc',
+        },
+        {
+            from: 75,
+            to: 85,
+            color: '#fffbe6cc',
+        },
+        {
+            from: 85,
+            color: '#FFCCC766',
+        },
+    ];
+
+    if (!chartHighlightAreas?.length) {
+        return undefined;
+    }
+
+    return chartHighlightAreas;
 };

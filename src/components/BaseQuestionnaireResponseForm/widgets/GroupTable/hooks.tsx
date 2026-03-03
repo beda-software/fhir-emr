@@ -12,7 +12,7 @@ import { RenderFormItemReadOnly } from 'src/components/BaseQuestionnaireResponse
 import { ColumnFilterValue, SearchBarColumn } from 'src/components/SearchBar/types';
 import { TableFilter } from 'src/components/Table/TableFilter';
 
-import { GroupTableRow } from './types';
+import { GroupTableItem, GroupTableRow } from './types';
 import {
     createColumnFilterValue,
     getDataSource,
@@ -20,6 +20,8 @@ import {
     getGroupSorter,
     isColumnTypeArray,
     isTableItemMatchesFilter,
+    getChartYRange,
+    getChartHighlightAreas,
 } from './utils';
 
 export function useGroupTableFilter() {
@@ -187,6 +189,9 @@ export function useGroupTable(props: GroupItemProps) {
     const chartLinkIdX = questionItem.enableChart?.linkIdX;
     const chartLinkIdY = questionItem.enableChart?.linkIdY;
 
+    const chartYRange = getChartYRange(questionItem);
+    const chartHighlightAreas = getChartHighlightAreas(questionItem);
+
     const { onChange } = useFieldController<RepeatableFormGroupItems>(fieldName, questionItem);
 
     const { getValues, reset } = useFormContext<FormItems>();
@@ -284,9 +289,11 @@ export function useGroupTable(props: GroupItemProps) {
                 title: questionItem.text ? questionItem.text : linkId,
                 dataIndex: linkId,
                 key: linkId,
-                render: (value: any) => (
-                    <RenderFormItemReadOnly formItem={value.formItem} questionnaireItem={value.questionnaireItem} />
-                ),
+                render: (value: GroupTableItem) => {
+                    return (
+                        <RenderFormItemReadOnly formItem={value.formItem} questionnaireItem={value.questionnaireItem} />
+                    );
+                },
             };
             return column;
         });
@@ -301,7 +308,7 @@ export function useGroupTable(props: GroupItemProps) {
             dataIndex: fields[0] ?? 'id',
             key: 'action',
             width: 180,
-            render: (value: any) => {
+            render: (value: GroupTableItem) => {
                 if (value?.index === undefined) {
                     return null;
                 }
@@ -354,5 +361,7 @@ export function useGroupTable(props: GroupItemProps) {
         handleRenderTypeToggle,
         chartLinkIdX,
         chartLinkIdY,
+        chartYRange,
+        chartHighlightAreas,
     };
 }
