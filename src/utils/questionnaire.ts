@@ -189,13 +189,6 @@ export function questionnaireItemsToValidationSchema(
             }
             schema = applyCustomYupTestsToItem(item, schema, customYupTests);
             schema = createSchemaArrayOfValues(yup.object({ time: schema }));
-        } else if (item.type === 'boolean') {
-            schema = yup.boolean();
-            if (item.required) {
-                schema = schema.oneOf([true]).required();
-            }
-            schema = applyCustomYupTestsToItem(item, schema, customYupTests);
-            schema = createSchemaArrayOfValues(yup.object({ boolean: schema }));
         } else if (item.type === 'group' && item.item) {
             schema = yup
                 .object({

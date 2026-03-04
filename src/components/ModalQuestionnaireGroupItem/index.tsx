@@ -1,28 +1,49 @@
 import classNames from 'classnames';
-import { QuestionItems } from 'sdc-qrf';
+import { GroupItemProps, QuestionItems } from 'sdc-qrf';
 
 import { Modal } from 'src/components';
 import s from 'src/components/BaseQuestionnaireResponseForm/BaseQuestionnaireResponseForm.module.scss';
 
-import { useModalQuestionnaireGroupItem } from './hooks';
-import { ModalQuestionnaireItemProps } from './types';
+interface ModalQuestionnaireItemProps {
+    open: boolean;
+    index?: number;
+    groupItem: GroupItemProps;
+    title?: string;
+    handleCancel: () => void;
+    handleSave: () => void;
+}
 
 export function ModalQuestionnaireGroupItem(props: ModalQuestionnaireItemProps) {
-    const { open, groupItem, handleCancel } = props;
-    const { questionItem } = groupItem;
-    const { item } = questionItem;
+    const { open, index, groupItem, title, handleCancel, handleSave } = props;
+    const { questionItem, parentPath, context } = groupItem;
+    const { item, linkId } = questionItem;
 
-    const modalProps = useModalQuestionnaireGroupItem(props);
-
-    if (!modalProps) {
+    if (index === undefined) {
         return null;
     }
-    const { handleOk, itemContext, modalParentPath, modalTitle } = modalProps;
+
+    const repeats = !!questionItem.repeats;
+
+    const modalTitle = repeats ? `${title} ${index + 1}` : title;
+    const modalParentPath = repeats
+        ? [...parentPath, linkId, 'items', index.toString()]
+        : [...parentPath, linkId, 'items'];
 
     return (
-        <Modal title={modalTitle} open={open} onOk={handleOk} onCancel={handleCancel} destroyOnClose closable={false}>
+        <Modal
+            title={modalTitle}
+            open={open}
+            onOk={() => {
+                handleSave();
+            }}
+            onCancel={() => {
+                handleCancel();
+            }}
+            destroyOnClose
+            closable={false}
+        >
             <div className={classNames(s.content, 'form__content', s.form)}>
-                <QuestionItems questionItems={item!} parentPath={[...modalParentPath]} context={itemContext!} />
+                <QuestionItems questionItems={item!} parentPath={[...modalParentPath]} context={context[index]!} />
             </div>
         </Modal>
     );
