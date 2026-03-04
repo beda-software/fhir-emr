@@ -20,7 +20,7 @@ const needsFormattedValue = (type: FCEQuestionnaireItem['type']) =>
     ['dateTime', 'date', 'time', 'boolean'].includes(type);
 
 export function useGroupTableChart(props: GroupTableChartProps) {
-    const { dataSource, linkIdX, linkIdY } = props;
+    const { dataSource, linkIdX, linkIdY, chartYRange } = props;
 
     const [answerOptionsY, setAnswerOptionsY] = useState<Coding[]>([]);
     const [answerOptionsX, setAnswerOptionsX] = useState<Coding[]>([]);
@@ -108,13 +108,13 @@ export function useGroupTableChart(props: GroupTableChartProps) {
         }
 
         return {
-            domainY: props.chartYRange ?? ['auto', 'auto'],
+            domainY: chartYRange ?? ['auto', 'auto'],
             yAxisWidth: yAxisType === 'number' ? 10 : 30,
             tickFormatterY: undefined,
             tooltipFormatterY: undefined,
             tickCountY: undefined,
         };
-    }, [answerOptionsY, props.chartYRange, yAxisName, yAxisType]);
+    }, [answerOptionsY, chartYRange, yAxisName, yAxisType]);
 
     const getXParams = useCallback((): {
         domainX: BaseAxisProps['domain'];

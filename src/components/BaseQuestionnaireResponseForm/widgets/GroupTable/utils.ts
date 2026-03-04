@@ -2,6 +2,7 @@ import type { ColumnType, ColumnsType, CompareFn } from 'antd/es/table/interface
 import { Coding, QuestionnaireItem } from 'fhir/r4b';
 import _ from 'lodash';
 import moment from 'moment';
+import type { AxisDomain } from 'recharts/types/util/types';
 import {
     AnswerValue,
     FCEQuestionnaireItem,
@@ -373,45 +374,20 @@ export const getGroupSorter = (groupItem: FCEQuestionnaireItem, linkId: string):
     return getGroupTableItemSorter(sortedQuestionItem, linkId);
 };
 
-// TODO: update after merging:
-// - https://github.com/beda-software/sdc-qrf/pull/43
-export const getChartYRange = (questionItem: FCEQuestionnaireItem): number[] | undefined => {
-    const chartYRangeLow = 0; //questionItem.chartYAxisRange?.low?.value;
-    const chartYRangeHigh = 100; //questionItem.chartYAxisRange?.high?.value;
-    if (chartYRangeLow !== undefined && chartYRangeHigh !== undefined) {
-        return [chartYRangeLow, chartYRangeHigh];
-    }
-    return undefined;
+export const getChartYRange = (questionItem: FCEQuestionnaireItem): AxisDomain | undefined => {
+    const chartYRangeLow = questionItem.chartYAxisRange?.low?.value ?? 'auto';
+    const chartYRangeHigh = questionItem.chartYAxisRange?.high?.value ?? 'auto';
+
+    return [chartYRangeLow, chartYRangeHigh];
 };
 
-// TODO: update after merging:
-// - https://github.com/beda-software/sdc-qrf/pull/43
 export const getChartHighlightAreas = (questionItem: FCEQuestionnaireItem): ChartHighlightArea[] | undefined => {
-    const chartHighlightAreas: ChartHighlightArea[] = [
-        // questionItem.chartHighlight;
-        {
-            to: 15,
-            color: '#ffccc766',
-        },
-        {
-            from: 15,
-            to: 25,
-            color: '#fffbe6cc',
-        },
-        {
-            from: 75,
-            to: 85,
-            color: '#fffbe6cc',
-        },
-        {
-            from: 85,
-            color: '#FFCCC766',
-        },
-    ];
-
-    if (!chartHighlightAreas?.length) {
-        return undefined;
-    }
+    const chartHighlightAreas: ChartHighlightArea[] =
+        questionItem.chartHighlight?.map(({ from, to, color }) => ({
+            from,
+            to,
+            color,
+        })) ?? [];
 
     return chartHighlightAreas;
 };
