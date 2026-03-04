@@ -27,6 +27,8 @@ export function GroupTable(props: GroupItemProps) {
         handleRenderTypeToggle,
         chartLinkIdX,
         chartLinkIdY,
+        chartYRange,
+        chartHighlightAreas,
     } = useGroupTable(props);
 
     if (hidden) {
@@ -65,6 +67,8 @@ export function GroupTable(props: GroupItemProps) {
                             dataSource={snapshotDataSource ?? dataSource}
                             linkIdX={chartLinkIdX}
                             linkIdY={chartLinkIdY}
+                            chartYRange={chartYRange}
+                            chartHighlightAreas={chartHighlightAreas}
                         />
                     </S.ChartItem>
                 ) : (
