@@ -74,8 +74,10 @@ export function useGroupTableChart(props: GroupTableChartProps) {
             ?.questionnaireItem;
 
         const yAxisName = questionItemY?.text ?? 'Value';
-        const yAxisLabel = questionItemY?.unitOption?.[0]?.display ?? questionItemY?.text;
-        const xAxisLabel = questionItemX?.unitOption?.[0]?.display ?? questionItemX?.text;
+        const yAxisLabel =
+            questionItemY?.unitOption?.[0]?.display ?? questionItemY?.unit?.display ?? questionItemY?.text;
+        const xAxisLabel =
+            questionItemX?.unitOption?.[0]?.display ?? questionItemX?.unit?.display ?? questionItemX?.text;
 
         return { data, yAxisName, yAxisLabel, xAxisLabel };
     }, [answerOptionsX, answerOptionsY, dataSource, linkIdX, linkIdY]);

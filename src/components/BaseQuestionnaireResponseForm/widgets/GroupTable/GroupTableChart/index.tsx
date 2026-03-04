@@ -73,7 +73,7 @@ export function GroupTableChart(props: GroupTableChartProps) {
                                 position: 'top',
                                 fontSize: 10,
                                 fontWeight: 600,
-                                transform: 'translate(-30, 0)',
+                                transform: `translate(-${yAxisWidth}, 0)`,
                             }}
                         />
                         <CartesianGrid strokeWidth={0.5} color={'#b1b1b1'} syncWithTicks={true} />
