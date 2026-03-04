@@ -20,7 +20,7 @@ const needsFormattedValue = (type: FCEQuestionnaireItem['type']) =>
     ['dateTime', 'date', 'time', 'boolean'].includes(type);
 
 export function useGroupTableChart(props: GroupTableChartProps) {
-    const { dataSource, linkIdX, linkIdY } = props;
+    const { dataSource, linkIdX, linkIdY, chartYRange } = props;
 
     const [answerOptionsY, setAnswerOptionsY] = useState<Coding[]>([]);
     const [answerOptionsX, setAnswerOptionsX] = useState<Coding[]>([]);
@@ -48,7 +48,7 @@ export function useGroupTableChart(props: GroupTableChartProps) {
         return getFormAnswerItemFirstValue(formItem, questionnaireItemType, needsFormattedValue);
     };
 
-    const { data, yAxisName } = useMemo(() => {
+    const { data, yAxisName, yAxisLabel, xAxisLabel } = useMemo(() => {
         const data = dataSource
             .sort((a, b) => {
                 const questionItem = a[linkIdX]?.questionnaireItem ?? b[linkIdX]?.questionnaireItem;
@@ -68,12 +68,16 @@ export function useGroupTableChart(props: GroupTableChartProps) {
                 };
             });
 
-        const questionItem = dataSource.find((source) => source[linkIdY]?.questionnaireItem !== undefined)?.[linkIdY]
+        const questionItemY = dataSource.find((source) => source[linkIdY]?.questionnaireItem !== undefined)?.[linkIdY]
+            ?.questionnaireItem;
+        const questionItemX = dataSource.find((source) => source[linkIdY]?.questionnaireItem !== undefined)?.[linkIdX]
             ?.questionnaireItem;
 
-        const yAxisName = questionItem?.text ?? 'Value';
+        const yAxisName = questionItemY?.text ?? 'Value';
+        const yAxisLabel = questionItemY?.unitOption?.[0]?.display ?? questionItemY?.text;
+        const xAxisLabel = questionItemX?.unitOption?.[0]?.display ?? questionItemX?.text;
 
-        return { data, yAxisName };
+        return { data, yAxisName, yAxisLabel, xAxisLabel };
     }, [answerOptionsX, answerOptionsY, dataSource, linkIdX, linkIdY]);
 
     const xAxisType: BaseAxisProps['type'] = data.some((d) => d && _.isNumber(d.x)) ? 'number' : 'category';
@@ -104,13 +108,13 @@ export function useGroupTableChart(props: GroupTableChartProps) {
         }
 
         return {
-            domainY: ['auto', 'auto'],
+            domainY: chartYRange ?? ['auto', 'auto'],
             yAxisWidth: yAxisType === 'number' ? 10 : 30,
             tickFormatterY: undefined,
             tooltipFormatterY: undefined,
             tickCountY: undefined,
         };
-    }, [answerOptionsY, yAxisName, yAxisType]);
+    }, [answerOptionsY, chartYRange, yAxisName, yAxisType]);
 
     const getXParams = useCallback((): {
         domainX: BaseAxisProps['domain'];
@@ -148,6 +152,8 @@ export function useGroupTableChart(props: GroupTableChartProps) {
         data,
         xAxisType,
         yAxisType,
+        yAxisLabel,
+        xAxisLabel,
         ...yParams,
         ...xParams,
     };

@@ -8,3 +8,9 @@ export interface GroupTableItem {
 }
 
 export type GroupTableRow = Record<string, GroupTableItem> & { key: string };
+
+export type ChartHighlightArea = {
+    from?: number;
+    to?: number;
+    color?: string;
+};

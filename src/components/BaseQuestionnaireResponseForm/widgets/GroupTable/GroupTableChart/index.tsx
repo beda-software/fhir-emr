@@ -1,6 +1,7 @@
 import { Empty } from 'antd';
-import { CartesianGrid, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { CartesianGrid, ComposedChart, Customized, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
+import { HighlightArea } from './HighlightArea';
 import { useGroupTableChart } from './hooks';
 import { GroupTableChartProps } from './types';
 
@@ -9,6 +10,8 @@ export function GroupTableChart(props: GroupTableChartProps) {
         data,
         xAxisType,
         yAxisType,
+        yAxisLabel,
+        xAxisLabel,
         domainX,
         tickCountX,
         tickFormatterX,
@@ -25,6 +28,13 @@ export function GroupTableChart(props: GroupTableChartProps) {
             {data.length > 0 ? (
                 <ResponsiveContainer width="100%" height="100%">
                     <ComposedChart margin={{ top: 18, right: 20, left: 30, bottom: 8 }} data={data}>
+                        {props.chartHighlightAreas?.map((chartHighlight) => (
+                            <Customized
+                                key={`${chartHighlight.from}-${chartHighlight.to}`}
+                                component={HighlightArea}
+                                chartHighlight={chartHighlight}
+                            />
+                        ))}
                         <Line type="monotone" dataKey="y" stroke="#8884d8" strokeWidth={2} />
                         <XAxis
                             type={xAxisType}
@@ -34,9 +44,15 @@ export function GroupTableChart(props: GroupTableChartProps) {
                             domain={domainX}
                             padding={{ left: 60, right: 60 }}
                             tickCount={tickCountX}
-                            tickLine={{ transform: 'translate(0, -6)', strokeWidth: 0.5 }}
+                            tickLine={false}
                             tickFormatter={tickFormatterX}
                             tick={{ fontSize: 10, fontWeight: 600 }}
+                            label={{
+                                value: xAxisLabel,
+                                position: 'insideBottomRight',
+                                fontSize: 10,
+                                fontWeight: 600,
+                            }}
                         />
                         <YAxis
                             type={yAxisType}
@@ -50,11 +66,17 @@ export function GroupTableChart(props: GroupTableChartProps) {
                             axisLine={false}
                             tickFormatter={tickFormatterY}
                             tick={{ fontSize: 10, fontWeight: 600 }}
-                            tickLine={{ transform: 'translate(6, 0)', strokeWidth: 0.5 }}
+                            tickLine={false}
                             padding={{ top: 10, bottom: 10 }}
+                            label={{
+                                value: yAxisLabel,
+                                position: 'top',
+                                fontSize: 10,
+                                fontWeight: 600,
+                                transform: 'translate(-30, 0)',
+                            }}
                         />
                         <CartesianGrid strokeWidth={0.5} color={'#b1b1b1'} syncWithTicks={true} />
-
                         <Tooltip formatter={tooltipFormatterY} labelFormatter={labelFormatterX} cursor={false} />
                     </ComposedChart>
                 </ResponsiveContainer>

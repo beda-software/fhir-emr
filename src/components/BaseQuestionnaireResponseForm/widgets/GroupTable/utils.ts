@@ -2,6 +2,7 @@ import type { ColumnType, ColumnsType, CompareFn } from 'antd/es/table/interface
 import { Coding, QuestionnaireItem } from 'fhir/r4b';
 import _ from 'lodash';
 import moment from 'moment';
+import type { AxisDomain } from 'recharts/types/util/types';
 import {
     AnswerValue,
     FCEQuestionnaireItem,
@@ -371,4 +372,11 @@ export const getGroupSorter = (groupItem: FCEQuestionnaireItem, linkId: string):
         return () => 0;
     }
     return getGroupTableItemSorter(sortedQuestionItem, linkId);
+};
+
+export const getChartYRange = (questionItem: FCEQuestionnaireItem): AxisDomain | undefined => {
+    const chartYRangeLow = questionItem.chartYAxisRange?.low?.value ?? 'auto';
+    const chartYRangeHigh = questionItem.chartYAxisRange?.high?.value ?? 'auto';
+
+    return [chartYRangeLow, chartYRangeHigh];
 };
