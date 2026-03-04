@@ -21,7 +21,6 @@ import {
     isColumnTypeArray,
     isTableItemMatchesFilter,
     getChartYRange,
-    getChartHighlightAreas,
 } from './utils';
 
 export function useGroupTableFilter() {
@@ -190,7 +189,7 @@ export function useGroupTable(props: GroupItemProps) {
     const chartLinkIdY = questionItem.enableChart?.linkIdY;
 
     const chartYRange = getChartYRange(questionItem);
-    const chartHighlightAreas = getChartHighlightAreas(questionItem);
+    const chartHighlightAreas = questionItem.chartHighlight;
 
     const { onChange } = useFieldController<RepeatableFormGroupItems>(fieldName, questionItem);
 

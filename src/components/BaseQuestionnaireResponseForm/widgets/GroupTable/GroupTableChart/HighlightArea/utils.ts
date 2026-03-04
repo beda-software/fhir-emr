@@ -1,8 +1,8 @@
 import _ from 'lodash';
 
-import { CustomHighlightProps } from './types';
+import { HighlightProps } from './types';
 
-export const getHighlightYParams = (props: CustomHighlightProps): { y: number; height: number } | null => {
+export const getHighlightYParams = (props: HighlightProps): { y: number; height: number } | null => {
     const { xAxisMap, yAxisMap, offset, chartHighlight } = props;
     const { from, to } = chartHighlight;
 

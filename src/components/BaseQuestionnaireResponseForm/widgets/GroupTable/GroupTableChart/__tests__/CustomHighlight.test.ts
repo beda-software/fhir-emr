@@ -1,6 +1,6 @@
-import { CustomHighlightProps, getHighlightYParams } from '../CustomHighlightArea';
+import { HighlightProps, getHighlightYParams } from '../HighlightArea';
 
-const createProps = (overrides: Partial<CustomHighlightProps> = {}): CustomHighlightProps => ({
+const createProps = (overrides: Partial<HighlightProps> = {}): HighlightProps => ({
     xAxisMap: { 0: { x: 0, width: 100 } },
     yAxisMap: { 0: { y: 0, height: 100 } },
     offset: { top: 0, bottom: 0, left: 0, right: 0, width: 100, height: 100 },

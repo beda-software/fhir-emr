@@ -2,7 +2,7 @@ import type { XAxisMap, YAxisMap } from 'recharts/types/util/types';
 
 import { ChartHighlightArea } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/types';
 
-export interface CustomHighlightProps {
+export interface HighlightProps {
     xAxisMap?: XAxisMap;
     yAxisMap?: YAxisMap;
     offset?: {

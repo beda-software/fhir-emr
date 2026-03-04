@@ -1,7 +1,7 @@
-import { CustomHighlightProps } from './types';
+import { HighlightProps } from './types';
 import { getHighlightYParams } from './utils';
 
-export function CustomHighlightArea(props: CustomHighlightProps) {
+export function HighlightArea(props: HighlightProps) {
     const { xAxisMap, yAxisMap, offset, chartHighlight } = props;
     const { color } = chartHighlight;
 

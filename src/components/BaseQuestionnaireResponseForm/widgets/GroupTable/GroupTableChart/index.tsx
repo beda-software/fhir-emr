@@ -1,17 +1,7 @@
 import { Empty } from 'antd';
-import {
-    CartesianGrid,
-    ComposedChart,
-    Customized,
-    Line,
-    Rectangle,
-    ResponsiveContainer,
-    Tooltip,
-    XAxis,
-    YAxis,
-} from 'recharts';
+import { CartesianGrid, ComposedChart, Customized, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
-import { CustomHighlightArea } from './CustomHighlightArea';
+import { HighlightArea } from './HighlightArea';
 import { useGroupTableChart } from './hooks';
 import { GroupTableChartProps } from './types';
 
@@ -41,7 +31,7 @@ export function GroupTableChart(props: GroupTableChartProps) {
                         {props.chartHighlightAreas?.map((chartHighlight) => (
                             <Customized
                                 key={`${chartHighlight.from}-${chartHighlight.to}`}
-                                component={CustomHighlightArea}
+                                component={HighlightArea}
                                 chartHighlight={chartHighlight}
                             />
                         ))}
@@ -87,7 +77,6 @@ export function GroupTableChart(props: GroupTableChartProps) {
                             }}
                         />
                         <CartesianGrid strokeWidth={0.5} color={'#b1b1b1'} syncWithTicks={true} />
-                        <Rectangle x1={65} x2={600} y1={70} y2={80} fill="#00FF00" />
                         <Tooltip formatter={tooltipFormatterY} labelFormatter={labelFormatterX} cursor={false} />
                     </ComposedChart>
                 </ResponsiveContainer>

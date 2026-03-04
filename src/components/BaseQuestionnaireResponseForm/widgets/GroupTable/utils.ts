@@ -35,7 +35,7 @@ import {
 } from 'src/components/SearchBar/types';
 import { compileAsArray, formatHumanDate, formatHumanDateTime, formatHumanTime } from 'src/utils';
 
-import { ChartHighlightArea, GroupTableItem, GroupTableRow } from './types';
+import { GroupTableItem, GroupTableRow } from './types';
 
 export const questionnaireItemChoiceOptions = compileAsArray<FCEQuestionnaireItem, Coding>(`answerOption.valueCoding`);
 
@@ -379,15 +379,4 @@ export const getChartYRange = (questionItem: FCEQuestionnaireItem): AxisDomain |
     const chartYRangeHigh = questionItem.chartYAxisRange?.high?.value ?? 'auto';
 
     return [chartYRangeLow, chartYRangeHigh];
-};
-
-export const getChartHighlightAreas = (questionItem: FCEQuestionnaireItem): ChartHighlightArea[] | undefined => {
-    const chartHighlightAreas: ChartHighlightArea[] =
-        questionItem.chartHighlight?.map(({ from, to, color }) => ({
-            from,
-            to,
-            color,
-        })) ?? [];
-
-    return chartHighlightAreas;
 };
