@@ -192,7 +192,7 @@ export function questionnaireItemsToValidationSchema(
         } else if (item.type === 'boolean') {
             schema = yup.boolean();
             if (item.required) {
-                schema = schema.oneOf([true]).required();
+                schema = schema.required();
             }
             schema = applyCustomYupTestsToItem(item, schema, customYupTests);
             schema = createSchemaArrayOfValues(yup.object({ boolean: schema }));
