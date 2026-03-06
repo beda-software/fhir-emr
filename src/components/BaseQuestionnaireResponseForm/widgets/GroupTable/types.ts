@@ -1,4 +1,5 @@
-import { FCEQuestionnaireItem, FormAnswerItems, FormGroupItems } from 'sdc-qrf';
+import { CSSProperties } from 'react';
+import { FCEQuestionnaireItem, FormAnswerItems, FormGroupItems, GroupItemProps } from 'sdc-qrf';
 
 export interface GroupTableItem {
     linkId: string;
@@ -14,3 +15,9 @@ export type ChartHighlightArea = {
     to?: number;
     color?: string;
 };
+
+export interface GroupTableProps extends GroupItemProps {
+    chartHeight?: number;
+    tickCSSProperties?: CSSProperties;
+    labelCSSProperties?: CSSProperties;
+}

@@ -1,16 +1,17 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 import { Alert, Button, Flex, Space, Switch, Table, Typography } from 'antd';
-import { GroupItemProps } from 'sdc-qrf';
 
 import { useGroupTable } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks';
 import { ModalQuestionnaireGroupItem } from 'src/components/ModalQuestionnaireGroupItem';
 
 import { GroupTableChart } from './GroupTableChart';
 import { S } from './styles';
-import { GroupTableRow } from './types';
+import { GroupTableProps, GroupTableRow } from './types';
 
-export function GroupTable(props: GroupItemProps) {
+export function GroupTable(props: GroupTableProps) {
+    const { chartHeight } = props;
+
     const {
         repeats,
         hidden,
@@ -62,13 +63,14 @@ export function GroupTable(props: GroupItemProps) {
                         bordered
                     />
                 ) : chartLinkIdX && chartLinkIdY ? (
-                    <S.ChartItem>
+                    <S.ChartItem $chartHeight={chartHeight}>
                         <GroupTableChart
                             dataSource={snapshotDataSource ?? dataSource}
                             linkIdX={chartLinkIdX}
                             linkIdY={chartLinkIdY}
                             chartYRange={chartYRange}
                             chartHighlightAreas={chartHighlightAreas}
+                            {...props}
                         />
                     </S.ChartItem>
                 ) : (

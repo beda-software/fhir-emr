@@ -5,14 +5,14 @@ import type { FilterDropdownProps } from 'antd/es/table/interface';
 import _ from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { FCEQuestionnaireItem, FormItems, GroupItemProps, RepeatableFormGroupItems, populateItemKey } from 'sdc-qrf';
+import { FCEQuestionnaireItem, FormItems, RepeatableFormGroupItems, populateItemKey } from 'sdc-qrf';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { RenderFormItemReadOnly } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/RenderFormItemReadOnly';
 import { ColumnFilterValue, SearchBarColumn } from 'src/components/SearchBar/types';
 import { TableFilter } from 'src/components/Table/TableFilter';
 
-import { GroupTableItem, GroupTableRow } from './types';
+import { GroupTableItem, GroupTableProps, GroupTableRow } from './types';
 import {
     createColumnFilterValue,
     getDataSource,
@@ -177,7 +177,7 @@ export function useGroupTableSorter() {
     };
 }
 
-export function useGroupTable(props: GroupItemProps) {
+export function useGroupTable(props: GroupTableProps) {
     const { parentPath, questionItem } = props;
     const { linkId, repeats, text, hidden, item } = questionItem;
 

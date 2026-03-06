@@ -1,3 +1,4 @@
+import { CSSProperties } from 'react';
 import type { AxisDomain } from 'recharts/types/util/types';
 
 import { ChartHighlightArea, GroupTableRow } from '../types';
@@ -8,4 +9,8 @@ export interface GroupTableChartProps {
     linkIdY: string;
     chartYRange?: AxisDomain;
     chartHighlightAreas?: ChartHighlightArea[];
+    tickFontSize?: number;
+    labelFontSize?: number;
+    tickCSSProperties?: CSSProperties;
+    labelCSSProperties?: CSSProperties;
 }

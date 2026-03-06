@@ -1,11 +1,17 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const S = {
-    ChartItem: styled.div`
+    ChartItem: styled.div<{ $chartHeight?: number }>`
         width: 100%;
-        height: 215px;
+        height: 273px;
         display: flex;
         justify-content: center;
         align-items: center;
+
+        ${({ $chartHeight }) =>
+            $chartHeight &&
+            css`
+                height: ${$chartHeight}px;
+            `}
     `,
 };
