@@ -40,9 +40,9 @@ export function Availability(props: Props) {
         if (isSuccess(response)) {
             setPractitionerRole(response.data);
             onSave?.(response.data);
-            notification.success({ message: t`Successfully updated` });
+            notification.success({ title: t`Successfully updated` });
         } else {
-            notification.error({ message: formatError(response.error) });
+            notification.error({ title: formatError(response.error) });
         }
     };
 

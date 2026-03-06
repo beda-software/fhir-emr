@@ -46,7 +46,7 @@ export function PublicAppointment() {
                         questionnaireLoader={questionnaireIdLoader('public-appointment')}
                         onSuccess={() => {
                             notification.success({
-                                message: t`Appointment successfully created`,
+                                title: t`Appointment successfully created`,
                             });
                             history.replace('/');
                         }}

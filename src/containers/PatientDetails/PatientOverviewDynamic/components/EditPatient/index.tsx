@@ -30,7 +30,7 @@ export function EditPatient({ patient }: Props) {
                     launchContextParameters={[{ name: 'Patient', resource: patient }]}
                     onSuccess={() => {
                         notification.success({
-                            message: t`Patient saved`,
+                            title: t`Patient saved`,
                         });
                         reload();
                         closeModal();

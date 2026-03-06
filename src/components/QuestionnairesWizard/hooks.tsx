@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro';
-import { notification, StepProps, StepsProps } from 'antd';
+import { notification, StepsProps } from 'antd';
 import { Patient, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +12,8 @@ import {
 } from 'src/hooks/questionnaire-response-form-data';
 
 import { BaseQuestionnaireResponseFormProps } from '../BaseQuestionnaireResponseForm';
+
+type StepItem = NonNullable<StepsProps['items']>[number];
 
 export interface QuestionnairesWizardProps
     extends Omit<BaseQuestionnaireResponseFormProps, 'formData' | 'FormFooterComponent'>,
@@ -70,7 +72,7 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
         (qr) => qr.questionnaire === currentQuestionnaire?.id,
     );
 
-    const setStepStatus = useCallback((index: number, status: StepProps['status']) => {
+    const setStepStatus = useCallback((index: number, status: StepItem['status']) => {
         setStepsStatuses((prev) => {
             const newStepsStatuses = [...prev];
             newStepsStatuses[index] = status;
@@ -97,7 +99,7 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
             unfinishedSteps.forEach((step) => {
                 const index = questionnaires.findIndex((q) => q.id === step.id);
                 notification.error({
-                    message: t`${questionnaires[index]?.title} was not submitted`,
+                    title: t`${questionnaires[index]?.title} was not submitted`,
                 });
             });
 
