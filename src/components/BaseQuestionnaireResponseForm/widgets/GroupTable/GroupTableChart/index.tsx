@@ -1,5 +1,4 @@
 import { Empty } from 'antd';
-import _ from 'lodash';
 import {
     CartesianGrid,
     ComposedChart,
@@ -26,11 +25,10 @@ export function GroupTableChart(props: GroupTableChartProps) {
         domainX,
         tickCountX,
         tickFormatterX,
-        labelFormatterX,
         tickFormatterY,
         domainY,
         tickCountY,
-        tooltipFormatterY,
+        tooltipContent,
         yAxisWidth,
         tickCSSProperties,
         labelCSSProperties,
@@ -87,6 +85,7 @@ export function GroupTableChart(props: GroupTableChartProps) {
                             axisLine={false}
                             tickFormatter={tickFormatterY}
                             tick={{ style: tickCSSProperties }}
+                            padding={{ top: 14, bottom: 14 }}
                             tickLine={false}
                             tickMargin={0}
                         >
@@ -99,7 +98,7 @@ export function GroupTableChart(props: GroupTableChartProps) {
                             />
                         </YAxis>
                         <CartesianGrid strokeWidth={0.5} color={'#b1b1b1'} syncWithTicks={true} />
-                        <Tooltip formatter={tooltipFormatterY} labelFormatter={labelFormatterX} cursor={false} />
+                        <Tooltip content={tooltipContent} />
                     </ComposedChart>
                 </ResponsiveContainer>
             ) : (
