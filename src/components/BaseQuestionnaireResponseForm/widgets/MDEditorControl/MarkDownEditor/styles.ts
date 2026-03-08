@@ -25,8 +25,31 @@ export const S = {
             z-index: 1;
             margin: 0;
             width: 100%;
-            /* overflow-x: scroll; */
-            /* scrollbar-width: thin; */
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            align-content: flex-start;
+            direction: ltr;
+            overflow: visible;
+            height: auto;
+            row-gap: 4px;
+        }
+
+        .mdxeditor-toolbar .MarkDownToolBar {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            width: 100%;
+            justify-content: flex-start;
+            align-content: flex-start;
+            direction: ltr;
+            row-gap: 4px;
+        }
+
+        .mdxeditor-toolbar [style*='margin-left: auto'] {
+            margin-left: 0 !important;
+            flex-basis: 100%;
         }
 
         img {
