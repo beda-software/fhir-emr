@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const S = {
     MDXEditorWrapper: styled.div`
         transition: all 0.2s;
+        position: relative;
 
         .mdxeditor {
             border: 1px solid ${({ theme }) => theme.neutralPalette.gray_5};
@@ -24,8 +25,8 @@ export const S = {
             z-index: 1;
             margin: 0;
             width: 100%;
-            overflow-x: scroll;
-            scrollbar-width: thin;
+            /* overflow-x: scroll; */
+            /* scrollbar-width: thin; */
         }
 
         img {
