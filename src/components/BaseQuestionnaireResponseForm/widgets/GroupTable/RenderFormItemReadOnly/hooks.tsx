@@ -44,7 +44,7 @@ const getAnswerValuesRecursive = (
         return [];
     }
 
-    const label = questionnaireItem.text ?? questionnaireItem.linkId ?? '';
+    const label = questionnaireItem.text ?? '';
     const value = `${formattedValues.join(', ')}`;
 
     return [
