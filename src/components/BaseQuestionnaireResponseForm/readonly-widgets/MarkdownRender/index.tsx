@@ -10,55 +10,58 @@ import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm
 import s from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/ReadonlyWidgets.module.scss';
 import { S as ROWidgetsStyles } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/ReadonlyWidgets.styles';
 import { RenderImage } from 'src/components/RenderImage';
+import { RenderImageCacheProvider } from 'src/components/RenderImage/cache';
 
 import { S } from './styles';
 import { remarkAdmonition } from './utils';
 
 export function MarkdownRender({ text }: { text: string }) {
     return (
-        <S.WrapperMDRender>
-            <Markdown
-                rehypePlugins={[rehypeRaw]}
-                remarkPlugins={[remarkGfm, remarkDirective, remarkAdmonition]}
-                components={{
-                    img({ src, alt }) {
-                        return src ? <RenderImage src={src} alt={alt} /> : null;
-                    },
-                    p({ children }) {
-                        if (
-                            isValidElement(children) &&
-                            typeof children.type !== 'string' &&
-                            children.type.name === 'img'
-                        ) {
-                            return children;
-                        }
-                        return <p>{children}</p>;
-                    },
-                    u(props) {
-                        return <span style={{ textDecoration: 'underline' }} {...props} />;
-                    },
-                    div: ({ className, children }) => {
-                        if (className && typeof className === 'string' && className?.startsWith('admonition')) {
+        <RenderImageCacheProvider>
+            <S.WrapperMDRender>
+                <Markdown
+                    rehypePlugins={[rehypeRaw]}
+                    remarkPlugins={[remarkGfm, remarkDirective, remarkAdmonition]}
+                    components={{
+                        img({ src, alt }) {
+                            return src ? <RenderImage src={src} alt={alt} /> : null;
+                        },
+                        p({ children }) {
+                            if (
+                                isValidElement(children) &&
+                                typeof children.type !== 'string' &&
+                                children.type.name === 'img'
+                            ) {
+                                return children;
+                            }
+                            return <p>{children}</p>;
+                        },
+                        u(props) {
+                            return <span style={{ textDecoration: 'underline' }} {...props} />;
+                        },
+                        div: ({ className, children }) => {
+                            if (className && typeof className === 'string' && className?.startsWith('admonition')) {
+                                return (
+                                    <div className={className}>
+                                        <div className="admonition-content">{children}</div>
+                                    </div>
+                                );
+                            }
+                            return <div>{children}</div>;
+                        },
+                        table: ({ children }) => {
                             return (
-                                <div className={className}>
-                                    <div className="admonition-content">{children}</div>
+                                <div className="md-render-table-wrapper">
+                                    <table>{children}</table>
                                 </div>
                             );
-                        }
-                        return <div>{children}</div>;
-                    },
-                    table: ({ children }) => {
-                        return (
-                            <div className="md-render-table-wrapper">
-                                <table>{children}</table>
-                            </div>
-                        );
-                    },
-                }}
-            >
-                {text || '-'}
-            </Markdown>
-        </S.WrapperMDRender>
+                        },
+                    }}
+                >
+                    {text || '-'}
+                </Markdown>
+            </S.WrapperMDRender>
+        </RenderImageCacheProvider>
     );
 }
 
