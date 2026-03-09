@@ -2,13 +2,15 @@ import { scaleLinear } from 'd3-scale';
 import { Coding } from 'fhir/r4b';
 import _ from 'lodash';
 import { CSSProperties, useCallback, useEffect, useMemo, useState } from 'react';
-import type { TooltipProps } from 'recharts';
-import type { BaseAxisProps } from 'recharts/types/util/types';
-import { FCEQuestionnaireItem } from 'sdc-qrf';
+import type { TooltipContentProps, TooltipProps } from 'recharts';
+import type { TickFormatter } from 'recharts/types/cartesian/CartesianAxis';
+import type { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
+import type { AxisDomain, AxisDomainTypeInput } from 'recharts/types/util/types';
+import { FCEQuestionnaireItem, FormGroupItems } from 'sdc-qrf';
 import { useTheme } from 'styled-components';
 
 import { Tooltip } from './Tooltip';
-import { GroupTableChartProps } from './types';
+import { ChartType, GroupTableChartProps } from './types';
 import { getCanvasTextWidth } from './utils';
 import { GroupTableRow } from '../types';
 import {
@@ -97,10 +99,26 @@ export function useGroupTableChart(props: GroupTableChartProps) {
         }
 
         const formItem = groupTableRow[linkId]?.formItem;
-        const questionnaireItemType = groupTableRow[linkId]?.questionnaireItem?.type;
+        const questionnaireItem = groupTableRow[linkId]?.questionnaireItem;
+        const questionnaireItemType = questionnaireItem?.type;
+
+        const isGroupItem = questionnaireItemType === 'group';
+        if (isGroupItem) {
+            const groupFormItem = formItem as FormGroupItems | undefined;
+            const groupQuestionnaireItems = questionnaireItem?.item ?? [];
+            return groupQuestionnaireItems.map((item) => {
+                const childAnswerItems = groupFormItem?.items?.[item.linkId];
+                if (!childAnswerItems || !isFormAnswerItems(childAnswerItems)) {
+                    return null;
+                }
+                return getFormAnswerItemFirstValue(childAnswerItems, item.type, needsFormattedValue);
+            });
+        }
+
         if (!isFormAnswerItems(formItem) || !questionnaireItemType) {
             return null;
         }
+
         return getFormAnswerItemFirstValue(formItem, questionnaireItemType, needsFormattedValue);
     };
 
@@ -138,26 +156,44 @@ export function useGroupTableChart(props: GroupTableChartProps) {
         return { data, yAxisName, yAxisLabel, xAxisLabel };
     }, [answerOptionsX, answerOptionsY, dataSource, linkIdX, linkIdY]);
 
-    const xAxisType: BaseAxisProps['type'] = data.some((d) => d && _.isNumber(d.x)) ? 'number' : 'category';
+    const getChartType = useCallback((): ChartType => (data.some((d) => Array.isArray(d.y)) ? 'bar' : 'line'), [data]);
 
-    const yAxisType: BaseAxisProps['type'] = data.some((d) => d && _.isNumber(d.y)) ? 'number' : 'category';
+    const normalizeValues = (value: unknown) => (Array.isArray(value) ? value : [value]);
+    const hasNumberValue = (value: unknown) => normalizeValues(value).some((item) => _.isNumber(item));
+    const formatChartValue = (value: unknown) => {
+        if (Array.isArray(value)) {
+            return value.map((item) => (item ?? '').toString()).join('/');
+        }
+        return value ?? '';
+    };
+
+    const xAxisType: AxisDomainTypeInput = data.some((d) => d && hasNumberValue(d.x)) ? 'number' : 'category';
+
+    const yAxisType: AxisDomainTypeInput = data.some((d) => d && hasNumberValue(d.y)) ? 'number' : 'category';
 
     const getYParams = useCallback((): {
-        domainY: BaseAxisProps['domain'];
+        domainY: AxisDomain;
         yAxisWidth: number;
-        tickFormatterY: BaseAxisProps['tickFormatter'];
-        tooltipContent: TooltipProps<string | number, string>['content'];
+        tickFormatterY: TickFormatter | undefined;
+        tooltipContent: TooltipProps<ValueType, NameType>['content'];
         tickCountY: number | undefined;
     } => {
         const hasAnswerOptionsY = answerOptionsY.length > 0;
         const hasAnswerOptionsX = answerOptionsX.length > 0;
 
-        const tooltipContent: TooltipProps<string | number, string>['content'] = ({ label, payload }) => {
+        const tooltipContent: TooltipProps<ValueType, NameType>['content'] = ({
+            label,
+            payload,
+        }: TooltipContentProps<ValueType, NameType>) => {
             if (!payload || payload?.length === 0) {
                 return null;
             }
 
-            const labelText = hasAnswerOptionsX ? answerOptionsX[label]?.display : label;
+            const labelIndex =
+                _.isNumber(label) || (_.isString(label) && _.isInteger(Number(label))) ? Number(label) : undefined;
+            const labelTextRaw =
+                hasAnswerOptionsX && labelIndex !== undefined ? answerOptionsX[labelIndex]?.display : label;
+            const labelText = labelTextRaw !== undefined && labelTextRaw !== null ? labelTextRaw.toString() : undefined;
 
             const values = payload.map((p) => {
                 const payloadValue = hasAnswerOptionsY ? `${answerOptionsY[p?.payload.y]?.display}` : `${p.payload.y}`;
@@ -172,7 +208,7 @@ export function useGroupTableChart(props: GroupTableChartProps) {
             return {
                 domainY: [0, answerOptionsY.length - 1],
                 yAxisWidth,
-                tickFormatterY: (value) => {
+                tickFormatterY: (value: number | string) => {
                     return _.isInteger(value) ? answerOptionsY[value]?.display ?? '' : '';
                 },
                 tooltipContent,
@@ -184,16 +220,18 @@ export function useGroupTableChart(props: GroupTableChartProps) {
             if (d === undefined || d === null) {
                 return acc;
             }
-
-            return _.isNumber(d.y) ? [...acc, d.y] : acc;
+            const values = normalizeValues(d.y);
+            const numbers = values.filter((value) => _.isNumber(value)) as number[];
+            return numbers.length > 0 ? [...acc, ...numbers] : acc;
         }, [] as number[]);
 
         const dataValuesString = data.reduce((acc, d) => {
             if (d === undefined || d === null) {
                 return acc;
             }
-            const value = d.y;
-            return _.isString(value) ? [...acc, value] : acc;
+            const values = normalizeValues(d.y);
+            const strings = values.filter((value) => _.isString(value)) as string[];
+            return strings.length > 0 ? [...acc, ...strings] : acc;
         }, [] as string[]);
 
         const d3Scale = scaleLinear()
@@ -214,14 +252,19 @@ export function useGroupTableChart(props: GroupTableChartProps) {
             domainY: d3Domain,
             yAxisWidth: yAxisWidth,
             tickFormatterY: undefined,
-            tooltipContent: ({ label, payload }) => {
+            tooltipContent: ({ label, payload }: TooltipContentProps<ValueType, NameType>) => {
                 if (!payload || payload?.length === 0) {
                     return null;
                 }
 
                 const hasAnswerOptionsX = answerOptionsX.length > 0;
-                const labelText = hasAnswerOptionsX ? answerOptionsX[label]?.display : label;
-                const values = payload.map((p) => `${p.payload.y} ${yAxisLabel}`);
+                const labelIndex =
+                    _.isNumber(label) || (_.isString(label) && _.isInteger(Number(label))) ? Number(label) : undefined;
+                const labelTextRaw =
+                    hasAnswerOptionsX && labelIndex !== undefined ? answerOptionsX[labelIndex]?.display : label;
+                const labelText =
+                    labelTextRaw !== undefined && labelTextRaw !== null ? labelTextRaw.toString() : undefined;
+                const values = payload.map((p) => `${formatChartValue(p.payload.y)} ${yAxisLabel}`);
                 return <Tooltip values={values} label={labelText} />;
             },
             tickCountY: d3Ticks.length,
@@ -229,8 +272,8 @@ export function useGroupTableChart(props: GroupTableChartProps) {
     }, [answerOptionsX, answerOptionsY, chartYRange, data, getMaxTickWidth, yAxisLabel]);
 
     const getXParams = useCallback((): {
-        domainX: BaseAxisProps['domain'];
-        tickFormatterX: BaseAxisProps['tickFormatter'];
+        domainX: AxisDomain;
+        tickFormatterX: TickFormatter | undefined;
         tickCountX: number | undefined;
     } => {
         const hasAnswerOptions = answerOptionsX.length > 0;
@@ -238,7 +281,7 @@ export function useGroupTableChart(props: GroupTableChartProps) {
         if (hasAnswerOptions) {
             return {
                 domainX: [0, answerOptionsX.length - 1],
-                tickFormatterX: (value) => {
+                tickFormatterX: (value: number | string) => {
                     return _.isInteger(value) ? answerOptionsX[value]?.display ?? '' : '';
                 },
                 tickCountX: answerOptionsX.length,
@@ -266,6 +309,7 @@ export function useGroupTableChart(props: GroupTableChartProps) {
         marginTopBottom,
         xAxisLabelDy,
         yAxisLabelDy,
+        getChartType,
         ...yParams,
         ...xParams,
     };

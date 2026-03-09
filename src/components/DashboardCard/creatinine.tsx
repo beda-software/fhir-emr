@@ -1,9 +1,10 @@
 import { InfoOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 import { Observation, Patient } from 'fhir/r4b';
+import _ from 'lodash';
 import moment from 'moment';
 // eslint-disable-next-line import/named
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine, TooltipProps } from 'recharts';
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine, TooltipContentProps } from 'recharts';
 
 import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
 import { RemoteData, isSuccess } from '@beda.software/remote-data';
@@ -24,10 +25,15 @@ interface Props {
 
 const formatTime = (unixTime: number) => moment(unixTime).format('HH:mm Do');
 
-function CustomTooltip({ payload, label }: TooltipProps<number, number>) {
+function CustomTooltip({ payload, label }: Partial<TooltipContentProps<number, number>>) {
+    if (label === undefined || label === null) {
+        return null;
+    }
+    const labelValue = _.isNumber(label) ? label : Number(label);
+
     return (
         <div>
-            <span>{formatTime(label)}</span>
+            <span>{formatTime(labelValue)}</span>
             <br />
             <span>{payload?.[0]?.value} mg/dL</span>
         </div>

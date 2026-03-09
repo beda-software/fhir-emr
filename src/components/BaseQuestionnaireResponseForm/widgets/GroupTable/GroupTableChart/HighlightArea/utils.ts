@@ -1,31 +1,31 @@
 import _ from 'lodash';
 
-import { HighlightProps } from './types';
+import { HighlightParams } from './types';
 
-export const getHighlightYParams = (props: HighlightProps): { y: number; height: number } | null => {
-    const { xAxisMap, yAxisMap, offset, chartHighlight } = props;
+const getPaddingValue = (padding?: number) => (padding && padding > 0 ? padding : 0);
+
+export const getHighlightYParams = (props: HighlightParams): { y: number; height: number } | null => {
+    const { chartHighlight, plotArea, yAxisPadding, yScale } = props;
     const { from, to } = chartHighlight;
-
-    const xAxis = xAxisMap?.[0];
-    const yAxis = yAxisMap?.[0];
-
-    if (!xAxis || !yAxis || !offset) {
+    if (!plotArea || !yScale || !_.isFunction(yScale)) {
         return null;
     }
 
-    const scaleY = yAxis.scale;
-    if (!_.isFunction(scaleY)) {
-        return null;
-    }
+    const paddingTop = typeof yAxisPadding === 'object' ? getPaddingValue(yAxisPadding.top) : 0;
+    const paddingBottom = typeof yAxisPadding === 'object' ? getPaddingValue(yAxisPadding.bottom) : 0;
+    const minY = plotArea.y + paddingTop;
+    const maxY = plotArea.y + plotArea.height - paddingBottom;
 
-    const paddingTop = yAxis.padding?.top ?? 0;
+    const scaleY = (value: number) => yScale(value);
     // from and to
     if (from !== undefined && to !== undefined) {
-        const startY = Math.min(
-            Math.max(scaleY(from), offset.top + paddingTop),
-            offset.height + offset.top - paddingTop,
-        );
-        const endY = Math.min(Math.max(scaleY(to), offset.top + paddingTop), offset.height + offset.top - paddingTop);
+        const startValue = scaleY(from);
+        const endValue = scaleY(to);
+        if (startValue === undefined || endValue === undefined) {
+            return null;
+        }
+        const startY = Math.min(Math.max(startValue, minY), maxY);
+        const endY = Math.min(Math.max(endValue, minY), maxY);
         return {
             y: Math.min(endY, startY),
             height: Math.abs(startY - endY),
@@ -33,19 +33,24 @@ export const getHighlightYParams = (props: HighlightProps): { y: number; height:
     }
     // only from
     if (from !== undefined) {
-        const startY = Math.min(
-            Math.max(scaleY(from), offset.top + paddingTop),
-            offset.height + offset.top - paddingTop,
-        );
+        const startValue = scaleY(from);
+        if (startValue === undefined) {
+            return null;
+        }
+        const startY = Math.min(Math.max(startValue, minY), maxY);
         return {
-            y: offset.top + paddingTop,
-            height: startY - (offset.top + paddingTop),
+            y: minY,
+            height: startY - minY,
         };
     }
     // only to
-    const endY = Math.min(Math.max(scaleY(to), offset.top + paddingTop), offset.height + offset.top - paddingTop);
+    const endValue = to !== undefined ? scaleY(to) : undefined;
+    if (endValue === undefined) {
+        return null;
+    }
+    const endY = Math.min(Math.max(endValue, minY), maxY);
     return {
-        y: Math.max(scaleY(to), offset.top + paddingTop),
-        height: offset.height + offset.top - paddingTop - endY,
+        y: Math.max(endY, minY),
+        height: maxY - endY,
     };
 };

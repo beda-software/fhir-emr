@@ -1,15 +1,6 @@
 import { Empty } from 'antd';
-import {
-    CartesianGrid,
-    ComposedChart,
-    Customized,
-    Label,
-    Line,
-    ResponsiveContainer,
-    Tooltip,
-    XAxis,
-    YAxis,
-} from 'recharts';
+import { Bar, CartesianGrid, ComposedChart, Label, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { useTheme } from 'styled-components';
 
 import { HighlightArea } from './HighlightArea';
 import { useGroupTableChart } from './hooks';
@@ -35,7 +26,12 @@ export function GroupTableChart(props: GroupTableChartProps) {
         marginTopBottom,
         xAxisLabelDy,
         yAxisLabelDy,
+        getChartType,
     } = useGroupTableChart(props);
+
+    const theme = useTheme();
+
+    const chartType = getChartType();
 
     return (
         <>
@@ -45,14 +41,31 @@ export function GroupTableChart(props: GroupTableChartProps) {
                         margin={{ top: marginTopBottom, right: 0, left: 0, bottom: marginTopBottom }}
                         data={data}
                     >
+                        <CartesianGrid
+                            strokeWidth={0.5}
+                            stroke={theme.neutralPalette.gray_5}
+                            zIndex={1}
+                            syncWithTicks={true}
+                        />
                         {props.chartHighlightAreas?.map((chartHighlight) => (
-                            <Customized
+                            <HighlightArea
                                 key={`${chartHighlight.from}-${chartHighlight.to}`}
-                                component={HighlightArea}
                                 chartHighlight={chartHighlight}
                             />
                         ))}
-                        <Line type="monotone" dataKey="y" stroke="#8884d8" strokeWidth={2} />
+                        {chartType === 'line' && (
+                            <Line type="monotone" dataKey="y" stroke={theme.primary} strokeWidth={1} />
+                        )}
+                        {chartType === 'bar' && (
+                            <Bar
+                                dataKey="y"
+                                fill={theme.antdTheme?.magenta4}
+                                stroke={theme.neutralPalette.gray_1}
+                                strokeWidth={2}
+                                maxBarSize={24}
+                                radius={24}
+                            />
+                        )}
                         <XAxis
                             type={xAxisType}
                             interval="preserveStartEnd"
@@ -97,7 +110,6 @@ export function GroupTableChart(props: GroupTableChartProps) {
                                 style={labelCSSProperties}
                             />
                         </YAxis>
-                        <CartesianGrid strokeWidth={0.5} color={'#b1b1b1'} syncWithTicks={true} />
                         <Tooltip content={tooltipContent} />
                     </ComposedChart>
                 </ResponsiveContainer>

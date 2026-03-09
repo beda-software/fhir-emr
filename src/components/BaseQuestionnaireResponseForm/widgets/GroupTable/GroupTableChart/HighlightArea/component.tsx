@@ -1,17 +1,25 @@
+import { usePlotArea, useYAxisScale } from 'recharts';
+
 import { HighlightProps } from './types';
 import { getHighlightYParams } from './utils';
 
 export function HighlightArea(props: HighlightProps) {
-    const { xAxisMap, yAxisMap, offset, chartHighlight } = props;
+    const { yAxisId = 0, chartHighlight } = props;
     const { color } = chartHighlight;
 
-    const xAxis = xAxisMap?.[0];
-    const yAxis = yAxisMap?.[0];
-    if (!xAxis || !yAxis || !offset) {
+    const yScale = useYAxisScale(yAxisId);
+    const plotArea = usePlotArea();
+
+    if (!plotArea) {
         return null;
     }
 
-    const yParams = getHighlightYParams(props);
+    const yParams = getHighlightYParams({
+        chartHighlight,
+        plotArea,
+        yAxisPadding: undefined,
+        yScale,
+    });
     if (!yParams) {
         return null;
     }
@@ -19,8 +27,8 @@ export function HighlightArea(props: HighlightProps) {
 
     return (
         <rect
-            x={offset.left}
-            width={offset.width}
+            x={plotArea.x}
+            width={plotArea.width}
             y={y}
             height={height}
             stroke="#00000000"
