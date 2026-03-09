@@ -1,11 +1,10 @@
 import { notification } from 'antd';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { ImageEditModalProps } from './index';
-import { S } from './styles';
 
-const brushColors = ['#000000', '#FFFFFF', '#FF3B30', '#34C759', '#007AFF', '#FF9500'];
-const brushSizes = [2, 4, 8, 12];
+export const brushColors = ['#000000', '#FFFFFF', '#FF3B30', '#34C759', '#007AFF', '#FF9500'];
+export const brushSizes = [2, 4, 8, 12];
 
 export function useImageEdit(props: ImageEditModalProps) {
     const { open, imageUrl, onSave } = props;
@@ -154,30 +153,6 @@ export function useImageEdit(props: ImageEditModalProps) {
         }, 'image/png');
     }, [onSave]);
 
-    const paletteButtons = useMemo(
-        () =>
-            brushColors.map((color) => (
-                <S.PaletteButton
-                    key={color}
-                    $color={color}
-                    $active={brushColor === color}
-                    onClick={() => setBrushColor(color)}
-                    aria-label={`Select color ${color}`}
-                />
-            )),
-        [brushColor],
-    );
-
-    const sizeButtons = useMemo(
-        () =>
-            brushSizes.map((size) => (
-                <S.SizeButton key={size} $active={brushSize === size} onClick={() => setBrushSize(size)}>
-                    {size}px
-                </S.SizeButton>
-            )),
-        [brushSize],
-    );
-
     return {
         handleClear,
         handleSave,
@@ -186,7 +161,9 @@ export function useImageEdit(props: ImageEditModalProps) {
         handlePointerDown,
         handlePointerMove,
         handlePointerUp,
-        paletteButtons,
-        sizeButtons,
+        brushColor,
+        setBrushColor,
+        brushSize,
+        setBrushSize,
     };
 }

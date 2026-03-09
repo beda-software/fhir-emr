@@ -1,6 +1,6 @@
 import { Button, Modal, Space } from 'antd';
 
-import { useImageEdit } from './hooks';
+import { brushColors, brushSizes, useImageEdit } from './hooks';
 import { S } from './styles';
 
 export interface ImageEditModalProps {
@@ -21,8 +21,10 @@ export function ImageEditModal(props: ImageEditModalProps) {
         handlePointerDown,
         handlePointerMove,
         handlePointerUp,
-        paletteButtons,
-        sizeButtons,
+        brushColor,
+        setBrushColor,
+        brushSize,
+        setBrushSize,
     } = useImageEdit(props);
 
     return (
@@ -44,8 +46,24 @@ export function ImageEditModal(props: ImageEditModalProps) {
         >
             <S.ModalBody>
                 <S.ToolbarRow>
-                    <S.Palette>{paletteButtons}</S.Palette>
-                    <Space>{sizeButtons}</Space>
+                    <S.Palette>
+                        {brushColors.map((color) => (
+                            <S.PaletteButton
+                                key={color}
+                                $color={color}
+                                $active={brushColor === color}
+                                onClick={() => setBrushColor(color)}
+                                aria-label={`Select color ${color}`}
+                            />
+                        ))}
+                    </S.Palette>
+                    <Space>
+                        {brushSizes.map((size) => (
+                            <S.SizeButton key={size} $active={brushSize === size} onClick={() => setBrushSize(size)}>
+                                {size}px
+                            </S.SizeButton>
+                        ))}
+                    </Space>
                 </S.ToolbarRow>
                 <S.CanvasWrapper>
                     <S.Canvas
