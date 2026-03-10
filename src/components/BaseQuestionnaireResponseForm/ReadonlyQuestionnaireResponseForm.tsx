@@ -14,6 +14,7 @@ import {
     ItemControlQuestionItemReadonlyWidgetsContext,
 } from 'src/components/BaseQuestionnaireResponseForm/context';
 import { MarkdownRenderControl } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/MarkdownRender';
+import { service } from 'src/services/fhir';
 
 import { AudioAttachment } from './readonly-widgets/AudioAttachment';
 import { QuestionBoolean } from './readonly-widgets/boolean';
@@ -58,6 +59,7 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
             <form>
                 <QuestionnaireResponseFormProvider
                     {...other}
+                    fhirService={service}
                     formValues={formValues}
                     // eslint-disable-next-line @typescript-eslint/no-empty-function
                     setFormValues={() => {}}

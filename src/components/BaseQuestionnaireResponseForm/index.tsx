@@ -25,6 +25,7 @@ import 'react-phone-input-2/lib/style.css';
 
 import { RemoteDataResult } from '@beda.software/remote-data';
 
+import { service } from 'src/services';
 import { CustomYupTestsMap, questionnaireToValidationSchema } from 'src/utils/questionnaire';
 
 import s from './BaseQuestionnaireResponseForm.module.scss';
@@ -217,6 +218,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
                     }}
                 >
                     <QuestionnaireResponseFormProvider
+                        fhirService={service}
                         formValues={formValues}
                         // NOTE: setValue as any is required to speed up performance!
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
