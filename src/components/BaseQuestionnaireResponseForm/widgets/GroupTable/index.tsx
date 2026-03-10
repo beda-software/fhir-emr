@@ -19,6 +19,7 @@ export function GroupTable(props: GroupTableProps) {
         handleAdd,
         dataSource,
         columns,
+        expandable,
         isModalVisible,
         editIndex,
         handleCancel,
@@ -53,15 +54,18 @@ export function GroupTable(props: GroupTableProps) {
 
             {repeats ? (
                 renderAsTable ? (
-                    <Table<GroupTableRow>
-                        columns={columns}
-                        dataSource={snapshotDataSource ?? dataSource}
-                        rowKey={(record) => {
-                            return record.key;
-                        }}
-                        pagination={false}
-                        bordered
-                    />
+                    <S.TableWrapper>
+                        <Table<GroupTableRow>
+                            columns={columns}
+                            dataSource={snapshotDataSource ?? dataSource}
+                            rowKey={(record) => {
+                                return record.key;
+                            }}
+                            pagination={false}
+                            bordered
+                            expandable={expandable}
+                        />
+                    </S.TableWrapper>
                 ) : chartLinkIdX && chartLinkIdY ? (
                     <S.ChartItem $chartHeight={chartHeight}>
                         <GroupTableChart

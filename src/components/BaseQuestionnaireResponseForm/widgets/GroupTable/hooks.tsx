@@ -1,7 +1,7 @@
 import { t } from '@lingui/macro';
-import { Button, Popconfirm, Space } from 'antd';
+import { Button, Popconfirm, Space, Table } from 'antd';
 import type { ColumnType, ColumnsType } from 'antd/es/table';
-import type { FilterDropdownProps } from 'antd/es/table/interface';
+import type { ExpandableConfig, FilterDropdownProps } from 'antd/es/table/interface';
 import _ from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -12,6 +12,7 @@ import { RenderFormItemReadOnly } from 'src/components/BaseQuestionnaireResponse
 import { ColumnFilterValue, SearchBarColumn } from 'src/components/SearchBar/types';
 import { TableFilter } from 'src/components/Table/TableFilter';
 
+import { S } from './styles';
 import { GroupTableItem, GroupTableProps, GroupTableRow } from './types';
 import {
     createColumnFilterValue,
@@ -178,7 +179,7 @@ export function useGroupTableSorter() {
 }
 
 export function useGroupTable(props: GroupTableProps) {
-    const { parentPath, questionItem } = props;
+    const { parentPath, questionItem, expandableMaxHeight = 200 } = props;
     const { linkId, repeats, text, hidden, item } = questionItem;
 
     const title = text ? text : linkId;
@@ -281,25 +282,70 @@ export function useGroupTable(props: GroupTableProps) {
         [formItems, onChange],
     );
 
+    const populateExpandableColumn = useCallback(
+        (columns: ColumnsType<GroupTableRow>) => {
+            const expandableColumnIndex = visibleItem?.findIndex((item) => item.type === 'text') ?? -1;
+            if (expandableColumnIndex === -1) {
+                return columns;
+            }
+            return [
+                ...columns.slice(0, expandableColumnIndex),
+                Table.EXPAND_COLUMN,
+                ...columns.slice(expandableColumnIndex),
+            ];
+        },
+        [visibleItem],
+    );
+
     const dataColumns: ColumnsType<GroupTableRow> = useMemo(() => {
         const columns: ColumnsType<GroupTableRow> = _.map(visibleItem, (questionItem) => {
             const linkId = questionItem.linkId;
+            const isExpandable = questionItem.type === 'text';
             const column: ColumnType<GroupTableRow> = {
                 title: questionItem.text ? questionItem.text : linkId,
                 dataIndex: linkId,
                 key: linkId,
                 render: (value: GroupTableItem) => {
                     return (
-                        <RenderFormItemReadOnly formItem={value.formItem} questionnaireItem={value.questionnaireItem} />
+                        <S.ReadonlyItemWrapper $maxHeight={isExpandable ? expandableMaxHeight : undefined}>
+                            <RenderFormItemReadOnly
+                                formItem={value.formItem}
+                                questionnaireItem={value.questionnaireItem}
+                            />
+                        </S.ReadonlyItemWrapper>
                     );
                 },
             };
             return column;
         });
 
-        const columnsWithSorters = populateColumnWithSorters(columns, questionItem);
+        const expandableColumns = populateExpandableColumn(columns);
+        const columnsWithSorters = populateColumnWithSorters(expandableColumns, questionItem);
         return populateColumnWithFilters(columnsWithSorters, questionItem);
-    }, [populateColumnWithFilters, populateColumnWithSorters, questionItem, visibleItem]);
+    }, [
+        expandableMaxHeight,
+        populateColumnWithFilters,
+        populateColumnWithSorters,
+        populateExpandableColumn,
+        questionItem,
+        visibleItem,
+    ]);
+
+    const expandable: ExpandableConfig<GroupTableRow> | undefined = useMemo(() => {
+        const hasExpandable = dataColumns.some((column) => column === Table.EXPAND_COLUMN);
+        if (!hasExpandable) {
+            return undefined;
+        }
+
+        return {
+            expandedRowRender: (record) => (
+                <RenderFormItemReadOnly
+                    formItem={record['note-text']?.formItem}
+                    questionnaireItem={record['note-text']?.questionnaireItem}
+                />
+            ),
+        };
+    }, [dataColumns]);
 
     const actionColumn = useMemo(() => {
         return {
@@ -351,6 +397,7 @@ export function useGroupTable(props: GroupTableProps) {
         handleAdd,
         dataSource,
         columns,
+        expandable,
         isModalVisible,
         editIndex,
         handleCancel,
