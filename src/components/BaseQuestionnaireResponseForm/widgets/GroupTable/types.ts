@@ -20,4 +20,5 @@ export interface GroupTableProps extends GroupItemProps {
     chartHeight?: number;
     tickCSSProperties?: CSSProperties;
     labelCSSProperties?: CSSProperties;
+    expandableMaxHeight?: number;
 }
