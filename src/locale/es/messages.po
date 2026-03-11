@@ -239,7 +239,7 @@ msgstr ""
 msgid "Add break"
 msgstr "Añadir pausa"
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:50
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:51
 msgid "Add entry"
 msgstr ""
 
@@ -353,7 +353,7 @@ msgstr "¿Estás seguro de que quieres modificar el documento?"
 msgid "Are you sure you want to delete the document?"
 msgstr "¿Estás seguro de que quieres eliminar el documento?"
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:323
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:373
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:134
 msgid "Are you sure you want to delete this item?"
 msgstr "¿Estás seguro que deseas eliminar este ítem?"
@@ -655,7 +655,7 @@ msgstr "Desactivar"
 msgid "Default"
 msgstr "Predeterminado"
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:326
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:376
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:250
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:140
 msgid "Delete"
@@ -757,7 +757,7 @@ msgstr "Duración (min)"
 msgid "Duration (minutes)"
 msgstr "Duración (minutos)"
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:321
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:371
 #: src/containers/EncounterDetails/AIScribe/index.tsx:218
 #: src/containers/HealthcareServiceList/index.tsx:66
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:260
@@ -1076,7 +1076,7 @@ msgstr "Etiqueta"
 msgid "Last name"
 msgstr "Apellido"
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:77
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:81
 msgid "linkIdX or linkIdY not defined"
 msgstr ""
 
@@ -1120,7 +1120,7 @@ msgstr "Hecho con"
 msgid "Magic Search"
 msgstr ""
 
-#: src/components/DashboardCard/creatinine.tsx:90
+#: src/components/DashboardCard/creatinine.tsx:96
 msgid "Max"
 msgstr "Máximo"
 
@@ -1157,7 +1157,7 @@ msgstr "Medicaciones"
 msgid "Middle name"
 msgstr "Segundo nombre"
 
-#: src/components/DashboardCard/creatinine.tsx:89
+#: src/components/DashboardCard/creatinine.tsx:95
 msgid "Min"
 msgstr "Mínimo"
 
@@ -1770,7 +1770,7 @@ msgstr "Domingo"
 msgid "System"
 msgstr "Sistema"
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:47
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:48
 msgid "Table View"
 msgstr ""
 
@@ -1832,7 +1832,7 @@ msgstr "Este audio no se puede reproducir en Safari, por favor descarga el audio
 msgid "This itemControl is designed for non-repeatable groups"
 msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:82
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:86
 msgid "This itemControl is designed for repeatable groups, but this group is not repeatable"
 msgstr ""
 

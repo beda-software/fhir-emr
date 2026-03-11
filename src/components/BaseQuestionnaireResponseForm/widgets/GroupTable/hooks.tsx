@@ -319,9 +319,9 @@ export function useGroupTable(props: GroupTableProps) {
             return column;
         });
 
-        const expandableColumns = populateExpandableColumn(columns);
-        const columnsWithSorters = populateColumnWithSorters(expandableColumns, questionItem);
-        return populateColumnWithFilters(columnsWithSorters, questionItem);
+        const columnsWithSorters = populateColumnWithSorters(columns, questionItem);
+        const columnsWithFilters = populateColumnWithFilters(columnsWithSorters, questionItem);
+        return populateExpandableColumn(columnsWithFilters);
     }, [
         expandableMaxHeight,
         populateColumnWithFilters,
@@ -332,16 +332,20 @@ export function useGroupTable(props: GroupTableProps) {
     ]);
 
     const expandable: ExpandableConfig<GroupTableRow> | undefined = useMemo(() => {
-        const hasExpandable = dataColumns.some((column) => column === Table.EXPAND_COLUMN);
-        if (!hasExpandable) {
+        const expandableIndex = dataColumns.indexOf(Table.EXPAND_COLUMN);
+        if (expandableIndex === -1) {
             return undefined;
         }
+        const expandableColumnKey = dataColumns[expandableIndex + 1]?.key;
 
+        if (!expandableColumnKey) {
+            return undefined;
+        }
         return {
             expandedRowRender: (record) => (
                 <RenderFormItemReadOnly
-                    formItem={record['note-text']?.formItem}
-                    questionnaireItem={record['note-text']?.questionnaireItem}
+                    formItem={record[expandableColumnKey]?.formItem}
+                    questionnaireItem={record[expandableColumnKey]?.questionnaireItem}
                 />
             ),
         };
