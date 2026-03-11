@@ -14,3 +14,5 @@ export interface GroupTableChartProps {
     tickCSSProperties?: CSSProperties;
     labelCSSProperties?: CSSProperties;
 }
+
+export type ChartType = 'bar' | 'line';
