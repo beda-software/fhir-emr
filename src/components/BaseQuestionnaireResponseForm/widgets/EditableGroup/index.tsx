@@ -6,6 +6,7 @@ import { GroupTableRow } from 'src/components/BaseQuestionnaireResponseForm/widg
 import { ModalQuestionnaireGroupItem } from 'src/components/ModalQuestionnaireGroupItem';
 
 import { useEditableGroup } from './hooks';
+import { S } from '../GroupTable/styles';
 
 export function EditableGroup(props: GroupItemProps) {
     const {
@@ -34,15 +35,17 @@ export function EditableGroup(props: GroupItemProps) {
             </Flex>
 
             {!repeats ? (
-                <Table<GroupTableRow>
-                    columns={dataColumns}
-                    dataSource={snapshotDataSource ?? dataSource}
-                    rowKey={(record) => {
-                        return record.key;
-                    }}
-                    pagination={false}
-                    bordered
-                />
+                <S.TableWrapper>
+                    <Table<GroupTableRow>
+                        columns={dataColumns}
+                        dataSource={snapshotDataSource ?? dataSource}
+                        rowKey={(record) => {
+                            return record.key;
+                        }}
+                        pagination={false}
+                        bordered
+                    />
+                </S.TableWrapper>
             ) : (
                 <Alert type="error" message={t`This itemControl is designed for non-repeatable groups`} />
             )}

@@ -6,6 +6,10 @@ export const S = {
         .ant-table-tbody > tr > td.ant-table-row-expand-icon-cell {
             border-right: none !important;
         }
+
+        td.ant-table-cell {
+            align-content: start;
+        }
     `,
     ReadonlyItemWrapper: styled.div<{ $maxHeight?: number }>`
         ${({ $maxHeight }) =>
@@ -13,6 +17,9 @@ export const S = {
             css`
                 max-height: ${$maxHeight}px;
                 overflow: hidden;
+                position: relative;
+                -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+                mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
             `}
     `,
     ChartItem: styled.div<{ $chartHeight?: number }>`
