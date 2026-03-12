@@ -7,7 +7,7 @@ export const S = {
             border-right: none !important;
         }
 
-        td.ant-table-cell {
+        .ant-table-cell {
             align-content: start;
         }
     `,
