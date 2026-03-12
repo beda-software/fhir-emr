@@ -3,7 +3,7 @@ import { Button, Popconfirm, Space, Table } from 'antd';
 import type { ColumnType, ColumnsType } from 'antd/es/table';
 import type { ExpandableConfig, FilterDropdownProps } from 'antd/es/table/interface';
 import _ from 'lodash';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { FCEQuestionnaireItem, FormItems, RepeatableFormGroupItems, populateItemKey } from 'sdc-qrf';
 
@@ -179,7 +179,7 @@ export function useGroupTableSorter() {
 }
 
 export function useGroupTable(props: GroupTableProps) {
-    const { parentPath, questionItem, expandableMaxHeight = 200 } = props;
+    const { parentPath, questionItem, expandableMaxHeight = 100 } = props;
     const { linkId, repeats, text, hidden, item } = questionItem;
 
     const title = text ? text : linkId;
@@ -205,6 +205,9 @@ export function useGroupTable(props: GroupTableProps) {
 
     const { populateColumnWithFilters } = useGroupTableFilter();
     const { populateColumnWithSorters } = useGroupTableSorter();
+
+    const [overflowByRowKey, setOverflowByRowKey] = useState<Record<string, boolean>>({});
+    const overflowObserversRef = useRef<Map<string, ResizeObserver>>(new Map());
 
     const fullFormValues = getValues();
     const formValues = _.get(getValues(), fieldName);
@@ -297,6 +300,51 @@ export function useGroupTable(props: GroupTableProps) {
         [visibleItem],
     );
 
+    const setRowOverflow = useCallback((rowKey: string, hasOverflow: boolean) => {
+        setOverflowByRowKey((prev) => {
+            if (prev[rowKey] === hasOverflow) {
+                return prev;
+            }
+            return {
+                ...prev,
+                [rowKey]: hasOverflow,
+            };
+        });
+    }, []);
+
+    const getOverflowRef = useCallback(
+        (rowKey: string, maxHeight: number) => (node: HTMLDivElement | null) => {
+            const existingObserver = overflowObserversRef.current.get(rowKey);
+            if (existingObserver) {
+                existingObserver.disconnect();
+                overflowObserversRef.current.delete(rowKey);
+            }
+
+            if (!node) {
+                return;
+            }
+
+            const measure = () => {
+                const contentHeight = node.getBoundingClientRect().height;
+                const hasOverflow = contentHeight > maxHeight + 1;
+                setRowOverflow(rowKey, hasOverflow);
+            };
+
+            if (typeof ResizeObserver === 'undefined') {
+                requestAnimationFrame(() => requestAnimationFrame(measure));
+                return;
+            }
+
+            const observer = new ResizeObserver(() => {
+                requestAnimationFrame(() => requestAnimationFrame(measure));
+            });
+            observer.observe(node);
+            overflowObserversRef.current.set(rowKey, observer);
+            requestAnimationFrame(() => requestAnimationFrame(measure));
+        },
+        [setRowOverflow],
+    );
+
     const dataColumns: ColumnsType<GroupTableRow> = useMemo(() => {
         const columns: ColumnsType<GroupTableRow> = _.map(visibleItem, (questionItem) => {
             const linkId = questionItem.linkId;
@@ -305,13 +353,16 @@ export function useGroupTable(props: GroupTableProps) {
                 title: questionItem.text ? questionItem.text : linkId,
                 dataIndex: linkId,
                 key: linkId,
-                render: (value: GroupTableItem) => {
+                render: (value: GroupTableItem, record) => {
+                    const rowKey = record.key;
                     return (
                         <S.ReadonlyItemWrapper $maxHeight={isExpandable ? expandableMaxHeight : undefined}>
-                            <RenderFormItemReadOnly
-                                formItem={value.formItem}
-                                questionnaireItem={value.questionnaireItem}
-                            />
+                            <div ref={isExpandable ? getOverflowRef(rowKey, expandableMaxHeight) : undefined}>
+                                <RenderFormItemReadOnly
+                                    formItem={value.formItem}
+                                    questionnaireItem={value.questionnaireItem}
+                                />
+                            </div>
                         </S.ReadonlyItemWrapper>
                     );
                 },
@@ -324,6 +375,7 @@ export function useGroupTable(props: GroupTableProps) {
         return populateExpandableColumn(columnsWithFilters);
     }, [
         expandableMaxHeight,
+        getOverflowRef,
         populateColumnWithFilters,
         populateColumnWithSorters,
         populateExpandableColumn,
@@ -332,16 +384,15 @@ export function useGroupTable(props: GroupTableProps) {
     ]);
 
     const expandable: ExpandableConfig<GroupTableRow> | undefined = useMemo(() => {
-        const expandableIndex = dataColumns.indexOf(Table.EXPAND_COLUMN);
-        if (expandableIndex === -1) {
-            return undefined;
-        }
-        const expandableColumnKey = dataColumns[expandableIndex + 1]?.key;
+        const expandableItem = visibleItem?.find((item) => item.type === 'text');
+        const expandableColumnKey = expandableItem?.linkId;
 
         if (!expandableColumnKey) {
             return undefined;
         }
+
         return {
+            rowExpandable: (record) => overflowByRowKey[record.key] === true,
             expandedRowRender: (record) => (
                 <RenderFormItemReadOnly
                     formItem={record[expandableColumnKey]?.formItem}
@@ -349,7 +400,7 @@ export function useGroupTable(props: GroupTableProps) {
                 />
             ),
         };
-    }, [dataColumns]);
+    }, [overflowByRowKey, visibleItem]);
 
     const actionColumn = useMemo(() => {
         return {
