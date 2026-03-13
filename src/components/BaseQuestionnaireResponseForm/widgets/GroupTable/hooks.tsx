@@ -178,54 +178,19 @@ export function useGroupTableSorter() {
     };
 }
 
-export function useGroupTable(props: GroupTableProps) {
-    const { parentPath, questionItem, expandableMaxHeight = 100 } = props;
-    const { linkId, repeats, text, hidden, item } = questionItem;
+export interface UseRowExpandabilityProps {
+    expandableMaxHeight: number;
+    dataSource: GroupTableRow[];
+}
 
-    const title = text ? text : linkId;
-
-    const fieldName = useMemo(() => [...parentPath, linkId], [parentPath, linkId]);
-
-    const chartLinkIdX = questionItem.enableChart?.linkIdX;
-    const chartLinkIdY = questionItem.enableChart?.linkIdY;
-
-    const chartYRange = getChartYRange(questionItem);
-    const chartHighlightAreas = questionItem.chartHighlight;
-
-    const { onChange } = useFieldController<RepeatableFormGroupItems>(fieldName, questionItem);
-
-    const { getValues, reset } = useFormContext<FormItems>();
-
-    const [renderAsTable, setRenderAsTable] = useState<boolean>(!chartLinkIdX && !chartLinkIdY);
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [editIndex, setEditIndex] = useState<number | undefined>(undefined);
-
-    const [snapshotFormValues, setSnapshotFormValues] = useState<FormItems[] | null>(null);
-    const [snapshotDataSource, setSnapshotDataSource] = useState<GroupTableRow[] | null>(null);
-
-    const { populateColumnWithFilters } = useGroupTableFilter();
-    const { populateColumnWithSorters } = useGroupTableSorter();
+export function useRowExpandability(props: UseRowExpandabilityProps) {
+    const { expandableMaxHeight, dataSource } = props;
 
     const rowRefs = useRef<Record<string, HTMLDivElement>>({});
     const rowObserverRef = useRef<ResizeObserver | null>(null);
     const rowNodeKeyRef = useRef<WeakMap<Element, string>>(new WeakMap());
     const expandableMaxHeightRef = useRef<number>(expandableMaxHeight);
     const [rowExpandableMap, setRowExpandableMap] = useState<Record<string, boolean>>({});
-
-    const fullFormValues = getValues();
-    const formValues = _.get(getValues(), fieldName);
-
-    const visibleItem = useMemo(() => item?.filter((i) => !i.hidden && i.type !== 'display'), [item]);
-
-    const formItems: FormItems[] = useMemo(() => {
-        return formValues?.items || [];
-    }, [formValues?.items]);
-
-    const fields = useMemo(() => _.map(visibleItem, (item) => item.linkId), [visibleItem]);
-
-    const dataSource: GroupTableRow[] = useMemo(() => {
-        return getDataSource(fields, formItems, questionItem);
-    }, [fields, formItems, questionItem]);
 
     useEffect(() => {
         expandableMaxHeightRef.current = expandableMaxHeight;
@@ -327,6 +292,79 @@ export function useGroupTable(props: GroupTableProps) {
         return () => window.removeEventListener('resize', handleResize);
     }, [recomputeRowExpandability]);
 
+    const compareRowHeight = useCallback(
+        (rowKey: string) => {
+            const cachedExpandable = rowExpandableMap[rowKey];
+            if (cachedExpandable !== undefined) {
+                return cachedExpandable;
+            }
+            const rowHeight = rowRefs.current[rowKey]?.clientHeight ?? 0;
+            return rowHeight > expandableMaxHeight + 32;
+        },
+        [expandableMaxHeight, rowExpandableMap],
+    );
+
+    const handleRowHeightRecompute = useCallback(() => {
+        requestAnimationFrame(() => {
+            requestAnimationFrame(recomputeRowExpandability);
+        });
+    }, [recomputeRowExpandability]);
+
+    return {
+        observeRow,
+        compareRowHeight,
+        handleRowHeightRecompute,
+    };
+}
+
+export function useGroupTable(props: GroupTableProps) {
+    const { parentPath, questionItem, expandableMaxHeight = 100 } = props;
+    const { linkId, repeats, text, hidden, item } = questionItem;
+
+    const title = text ? text : linkId;
+
+    const fieldName = useMemo(() => [...parentPath, linkId], [parentPath, linkId]);
+
+    const chartLinkIdX = questionItem.enableChart?.linkIdX;
+    const chartLinkIdY = questionItem.enableChart?.linkIdY;
+
+    const chartYRange = getChartYRange(questionItem);
+    const chartHighlightAreas = questionItem.chartHighlight;
+
+    const { onChange } = useFieldController<RepeatableFormGroupItems>(fieldName, questionItem);
+
+    const { getValues, reset } = useFormContext<FormItems>();
+
+    const [renderAsTable, setRenderAsTable] = useState<boolean>(!chartLinkIdX && !chartLinkIdY);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [editIndex, setEditIndex] = useState<number | undefined>(undefined);
+
+    const [snapshotFormValues, setSnapshotFormValues] = useState<FormItems[] | null>(null);
+    const [snapshotDataSource, setSnapshotDataSource] = useState<GroupTableRow[] | null>(null);
+
+    const { populateColumnWithFilters } = useGroupTableFilter();
+    const { populateColumnWithSorters } = useGroupTableSorter();
+
+    const fullFormValues = getValues();
+    const formValues = _.get(getValues(), fieldName);
+
+    const visibleItem = useMemo(() => item?.filter((i) => !i.hidden && i.type !== 'display'), [item]);
+
+    const formItems: FormItems[] = useMemo(() => {
+        return formValues?.items || [];
+    }, [formValues?.items]);
+
+    const fields = useMemo(() => _.map(visibleItem, (item) => item.linkId), [visibleItem]);
+
+    const dataSource: GroupTableRow[] = useMemo(() => {
+        return getDataSource(fields, formItems, questionItem);
+    }, [fields, formItems, questionItem]);
+
+    const { observeRow, compareRowHeight, handleRowHeightRecompute } = useRowExpandability({
+        expandableMaxHeight,
+        dataSource,
+    });
+
     const startEdit = useCallback(
         (index: number) => {
             setSnapshotFormValues(_.cloneDeep(formValues));
@@ -360,10 +398,8 @@ export function useGroupTable(props: GroupTableProps) {
         setSnapshotDataSource(null);
         reset(fullFormValues, { keepDirty: true });
         setIsModalVisible(false);
-        requestAnimationFrame(() => {
-            requestAnimationFrame(recomputeRowExpandability);
-        });
-    }, [fullFormValues, recomputeRowExpandability, reset]);
+        handleRowHeightRecompute();
+    }, [fullFormValues, handleRowHeightRecompute, reset]);
 
     const populateValue = (exisingItems: Array<any>) => [...exisingItems, {}].map(populateItemKey);
 
@@ -445,18 +481,6 @@ export function useGroupTable(props: GroupTableProps) {
         visibleItem,
     ]);
 
-    const compareRowHeight = useCallback(
-        (rowKey: string) => {
-            const cachedExpandable = rowExpandableMap[rowKey];
-            if (cachedExpandable !== undefined) {
-                return cachedExpandable;
-            }
-            const rowHeight = rowRefs.current[rowKey]?.clientHeight ?? 0;
-            return rowHeight > expandableMaxHeight + 32;
-        },
-        [expandableMaxHeight, rowExpandableMap],
-    );
-
     const expandable: ExpandableConfig<GroupTableRow> | undefined = useMemo(() => {
         const expandableItem = visibleItem?.find((item) => item.type === 'text');
         const expandableColumnKey = expandableItem?.linkId;
@@ -466,10 +490,7 @@ export function useGroupTable(props: GroupTableProps) {
         }
 
         return {
-            rowExpandable: (record) => {
-                const rowKey = record.key;
-                return compareRowHeight(rowKey);
-            },
+            rowExpandable: (record) => compareRowHeight(record.key),
             expandedRowRender: (record) => (
                 <RenderFormItemReadOnly
                     formItem={record[expandableColumnKey]?.formItem}
