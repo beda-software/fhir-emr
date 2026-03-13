@@ -319,6 +319,14 @@ export function useGroupTable(props: GroupTableProps) {
         });
     }, []);
 
+    useEffect(() => {
+        const handleResize = () => {
+            recomputeRowExpandability();
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [recomputeRowExpandability]);
+
     const startEdit = useCallback(
         (index: number) => {
             setSnapshotFormValues(_.cloneDeep(formValues));
