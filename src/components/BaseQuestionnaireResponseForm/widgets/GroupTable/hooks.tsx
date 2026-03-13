@@ -3,7 +3,7 @@ import { Button, Popconfirm, Space, Table } from 'antd';
 import type { ColumnType, ColumnsType } from 'antd/es/table';
 import type { ExpandableConfig, FilterDropdownProps } from 'antd/es/table/interface';
 import _ from 'lodash';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { FCEQuestionnaireItem, FormItems, RepeatableFormGroupItems, populateItemKey } from 'sdc-qrf';
 
@@ -206,12 +206,7 @@ export function useGroupTable(props: GroupTableProps) {
     const { populateColumnWithFilters } = useGroupTableFilter();
     const { populateColumnWithSorters } = useGroupTableSorter();
 
-    const [overflowByRowKey, setOverflowByRowKey] = useState<Record<string, boolean>>({});
-    const overflowObserversRef = useRef<Map<string, ResizeObserver>>(new Map());
-    const freezeTimersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
-    const frozenRowsRef = useRef<Set<string>>(new Set());
-    const lastMeasuredHeightRef = useRef<Map<string, number>>(new Map());
-    const lastChangeAtRef = useRef<Map<string, number>>(new Map());
+    const rowRefs = useRef<Record<string, HTMLDivElement>>({});
 
     const fullFormValues = getValues();
     const formValues = _.get(getValues(), fieldName);
@@ -227,16 +222,6 @@ export function useGroupTable(props: GroupTableProps) {
     const dataSource: GroupTableRow[] = useMemo(() => {
         return getDataSource(fields, formItems, questionItem);
     }, [fields, formItems, questionItem]);
-
-    useEffect(() => {
-        freezeTimersRef.current.forEach((timer) => clearTimeout(timer));
-        freezeTimersRef.current.clear();
-        overflowObserversRef.current.forEach((observer) => observer.disconnect());
-        overflowObserversRef.current.clear();
-        frozenRowsRef.current.clear();
-        lastMeasuredHeightRef.current.clear();
-        lastChangeAtRef.current.clear();
-    }, [dataSource]);
 
     const startEdit = useCallback(
         (index: number) => {
@@ -314,99 +299,6 @@ export function useGroupTable(props: GroupTableProps) {
         [visibleItem],
     );
 
-    const setRowOverflow = useCallback((rowKey: string, hasOverflow: boolean) => {
-        setOverflowByRowKey((prev) => {
-            if (prev[rowKey] === hasOverflow) {
-                return prev;
-            }
-            return {
-                ...prev,
-                [rowKey]: hasOverflow,
-            };
-        });
-    }, []);
-
-    const getOverflowRef = useCallback(
-        (rowKey: string, maxHeight: number) => (node: HTMLDivElement | null) => {
-            const existingObserver = overflowObserversRef.current.get(rowKey);
-            if (existingObserver) {
-                existingObserver.disconnect();
-                overflowObserversRef.current.delete(rowKey);
-            }
-
-            const existingFreezeTimer = freezeTimersRef.current.get(rowKey);
-            if (existingFreezeTimer) {
-                clearTimeout(existingFreezeTimer);
-                freezeTimersRef.current.delete(rowKey);
-            }
-
-            if (!node) {
-                return;
-            }
-
-            if (frozenRowsRef.current.has(rowKey)) {
-                return;
-            }
-
-            const measure = () => {
-                const existingFreezeTimer = freezeTimersRef.current.get(rowKey);
-                if (existingFreezeTimer) {
-                    clearTimeout(existingFreezeTimer);
-                    freezeTimersRef.current.delete(rowKey);
-                }
-
-                const contentHeight = node.getBoundingClientRect().height;
-                const previousHeight = lastMeasuredHeightRef.current.get(rowKey);
-                if (previousHeight !== undefined && Math.abs(contentHeight - previousHeight) < 2) {
-                    const pendingFreezeTimer = setTimeout(() => {
-                        const lastChangeAt = lastChangeAtRef.current.get(rowKey) ?? 0;
-                        if (Date.now() - lastChangeAt >= 1000) {
-                            const observer = overflowObserversRef.current.get(rowKey);
-                            if (observer) {
-                                observer.disconnect();
-                                overflowObserversRef.current.delete(rowKey);
-                            }
-                            frozenRowsRef.current.add(rowKey);
-                        }
-                    }, 1000);
-                    freezeTimersRef.current.set(rowKey, pendingFreezeTimer);
-                    return;
-                }
-                lastMeasuredHeightRef.current.set(rowKey, contentHeight);
-                lastChangeAtRef.current.set(rowKey, Date.now());
-
-                const hasOverflow = contentHeight > maxHeight + 1;
-                setRowOverflow(rowKey, hasOverflow);
-
-                const pendingFreezeTimer = setTimeout(() => {
-                    const lastChangeAt = lastChangeAtRef.current.get(rowKey) ?? 0;
-                    if (Date.now() - lastChangeAt >= 1000) {
-                        const observer = overflowObserversRef.current.get(rowKey);
-                        if (observer) {
-                            observer.disconnect();
-                            overflowObserversRef.current.delete(rowKey);
-                        }
-                        frozenRowsRef.current.add(rowKey);
-                    }
-                }, 1000);
-                freezeTimersRef.current.set(rowKey, pendingFreezeTimer);
-            };
-
-            if (typeof ResizeObserver === 'undefined') {
-                requestAnimationFrame(() => requestAnimationFrame(measure));
-                return;
-            }
-
-            const observer = new ResizeObserver(() => {
-                requestAnimationFrame(() => requestAnimationFrame(measure));
-            });
-            observer.observe(node);
-            overflowObserversRef.current.set(rowKey, observer);
-            requestAnimationFrame(() => requestAnimationFrame(measure));
-        },
-        [setRowOverflow],
-    );
-
     const dataColumns: ColumnsType<GroupTableRow> = useMemo(() => {
         const columns: ColumnsType<GroupTableRow> = _.map(visibleItem, (questionItem) => {
             const linkId = questionItem.linkId;
@@ -415,11 +307,22 @@ export function useGroupTable(props: GroupTableProps) {
                 title: questionItem.text ? questionItem.text : linkId,
                 dataIndex: linkId,
                 key: linkId,
+
                 render: (value: GroupTableItem, record) => {
                     const rowKey = record.key;
                     return (
                         <S.ReadonlyItemWrapper $maxHeight={isExpandable ? expandableMaxHeight : undefined}>
-                            <div ref={isExpandable ? getOverflowRef(rowKey, expandableMaxHeight) : undefined}>
+                            <div
+                                ref={
+                                    isExpandable
+                                        ? (node) => {
+                                              if (node) {
+                                                  rowRefs.current[rowKey] = node;
+                                              }
+                                          }
+                                        : undefined
+                                }
+                            >
                                 <RenderFormItemReadOnly
                                     formItem={value.formItem}
                                     questionnaireItem={value.questionnaireItem}
@@ -437,13 +340,20 @@ export function useGroupTable(props: GroupTableProps) {
         return populateExpandableColumn(columnsWithFilters);
     }, [
         expandableMaxHeight,
-        getOverflowRef,
         populateColumnWithFilters,
         populateColumnWithSorters,
         populateExpandableColumn,
         questionItem,
         visibleItem,
     ]);
+
+    const compareRowHeight = useCallback(
+        (rowKey: string) => {
+            const rowHeight = rowRefs.current[rowKey]?.clientHeight ?? 0;
+            return rowHeight > expandableMaxHeight + 32;
+        },
+        [expandableMaxHeight],
+    );
 
     const expandable: ExpandableConfig<GroupTableRow> | undefined = useMemo(() => {
         const expandableItem = visibleItem?.find((item) => item.type === 'text');
@@ -454,7 +364,11 @@ export function useGroupTable(props: GroupTableProps) {
         }
 
         return {
-            rowExpandable: (record) => overflowByRowKey[record.key] === true,
+            rowExpandable: (record) => {
+                const rowKey = record.key;
+                console.log(rowRefs.current[rowKey]?.clientHeight, rowRefs.current[rowKey]);
+                return compareRowHeight(rowKey);
+            },
             expandedRowRender: (record) => (
                 <RenderFormItemReadOnly
                     formItem={record[expandableColumnKey]?.formItem}
@@ -462,7 +376,7 @@ export function useGroupTable(props: GroupTableProps) {
                 />
             ),
         };
-    }, [overflowByRowKey, visibleItem]);
+    }, [compareRowHeight, visibleItem]);
 
     const actionColumn = useMemo(() => {
         return {
