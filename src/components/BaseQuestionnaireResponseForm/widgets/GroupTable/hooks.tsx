@@ -3,7 +3,7 @@ import { Button, Popconfirm, Space, Table } from 'antd';
 import type { ColumnType, ColumnsType } from 'antd/es/table';
 import type { ExpandableConfig, FilterDropdownProps } from 'antd/es/table/interface';
 import _ from 'lodash';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { FCEQuestionnaireItem, FormItems, RepeatableFormGroupItems, populateItemKey } from 'sdc-qrf';
 
@@ -178,6 +178,145 @@ export function useGroupTableSorter() {
     };
 }
 
+export interface UseRowExpandabilityProps {
+    expandableMaxHeight: number;
+    dataSource: GroupTableRow[];
+}
+
+export function useRowExpandability(props: UseRowExpandabilityProps) {
+    const { expandableMaxHeight, dataSource } = props;
+
+    const rowRefs = useRef<Record<string, HTMLDivElement>>({});
+    const rowObserverRef = useRef<ResizeObserver | null>(null);
+    const rowNodeKeyRef = useRef<WeakMap<Element, string>>(new WeakMap());
+    const expandableMaxHeightRef = useRef<number>(expandableMaxHeight);
+    const [rowExpandableMap, setRowExpandableMap] = useState<Record<string, boolean>>({});
+
+    useEffect(() => {
+        expandableMaxHeightRef.current = expandableMaxHeight;
+    }, [expandableMaxHeight]);
+
+    useEffect(() => {
+        const observer = new ResizeObserver((entries) => {
+            entries.forEach((entry) => {
+                const rowKey = rowNodeKeyRef.current.get(entry.target);
+                if (!rowKey) {
+                    return;
+                }
+                const nextHeight = entry.contentRect.height;
+                if (nextHeight <= expandableMaxHeightRef.current + 32) {
+                    return;
+                }
+                setRowExpandableMap((prev) => {
+                    if (prev[rowKey] === true) {
+                        return prev;
+                    }
+                    return {
+                        ...prev,
+                        [rowKey]: true,
+                    };
+                });
+            });
+        });
+        rowObserverRef.current = observer;
+        _.forEach(rowRefs.current, (node) => observer.observe(node));
+        return () => {
+            observer.disconnect();
+            rowObserverRef.current = null;
+        };
+    }, []);
+
+    const observeRow = useCallback(
+        (rowKey: string) => (node: HTMLDivElement | null) => {
+            const observer = rowObserverRef.current;
+            const prevNode = rowRefs.current[rowKey];
+            if (prevNode && prevNode !== node && observer) {
+                observer.unobserve(prevNode);
+                rowNodeKeyRef.current.delete(prevNode);
+            }
+            if (node) {
+                rowRefs.current[rowKey] = node;
+                rowNodeKeyRef.current.set(node, rowKey);
+                observer?.observe(node);
+            } else {
+                if (prevNode) {
+                    rowNodeKeyRef.current.delete(prevNode);
+                }
+                delete rowRefs.current[rowKey];
+            }
+        },
+        [],
+    );
+
+    useEffect(() => {
+        const keys = new Set(dataSource.map((row) => row.key));
+        setRowExpandableMap((prev) => {
+            let changed = false;
+            const next: Record<string, boolean> = {};
+            Object.keys(prev).forEach((key) => {
+                const value = prev[key];
+                if (keys.has(key) && value !== undefined) {
+                    next[key] = value;
+                } else {
+                    changed = true;
+                }
+            });
+            return changed ? next : prev;
+        });
+    }, [dataSource]);
+
+    const recomputeRowExpandability = useCallback(() => {
+        const maxHeight = expandableMaxHeightRef.current + 32;
+        const next: Record<string, boolean> = {};
+        Object.entries(rowRefs.current).forEach(([rowKey, node]) => {
+            if (node) {
+                next[rowKey] = node.clientHeight > maxHeight;
+            }
+        });
+        setRowExpandableMap((prev) => {
+            const prevKeys = Object.keys(prev);
+            const nextKeys = Object.keys(next);
+            if (prevKeys.length !== nextKeys.length) {
+                return next;
+            }
+            const unchanged = prevKeys.every((key) => prev[key] === next[key]);
+            return unchanged ? prev : next;
+        });
+    }, []);
+
+    useEffect(() => {
+        const handleResize = () => {
+            recomputeRowExpandability();
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [recomputeRowExpandability]);
+
+    const compareRowHeight = useCallback(
+        (rowKey: string) => {
+            const cachedExpandable = rowExpandableMap[rowKey];
+            if (cachedExpandable !== undefined) {
+                return cachedExpandable;
+            }
+            const rowHeight = rowRefs.current[rowKey]?.clientHeight ?? 0;
+            return rowHeight > expandableMaxHeight + 32;
+        },
+        [expandableMaxHeight, rowExpandableMap],
+    );
+
+    const handleRowHeightRecompute = useCallback(() => {
+        requestAnimationFrame(() => {
+            requestAnimationFrame(recomputeRowExpandability);
+        });
+    }, [recomputeRowExpandability]);
+
+    return {
+        observeRow,
+        compareRowHeight,
+        handleRowHeightRecompute,
+    };
+}
+
 export function useGroupTable(props: GroupTableProps) {
     const { parentPath, questionItem, expandableMaxHeight = 100 } = props;
     const { linkId, repeats, text, hidden, item } = questionItem;
@@ -206,9 +345,6 @@ export function useGroupTable(props: GroupTableProps) {
     const { populateColumnWithFilters } = useGroupTableFilter();
     const { populateColumnWithSorters } = useGroupTableSorter();
 
-    const [overflowByRowKey, setOverflowByRowKey] = useState<Record<string, boolean>>({});
-    const overflowObserversRef = useRef<Map<string, ResizeObserver>>(new Map());
-
     const fullFormValues = getValues();
     const formValues = _.get(getValues(), fieldName);
 
@@ -223,6 +359,11 @@ export function useGroupTable(props: GroupTableProps) {
     const dataSource: GroupTableRow[] = useMemo(() => {
         return getDataSource(fields, formItems, questionItem);
     }, [fields, formItems, questionItem]);
+
+    const { observeRow, compareRowHeight, handleRowHeightRecompute } = useRowExpandability({
+        expandableMaxHeight,
+        dataSource,
+    });
 
     const startEdit = useCallback(
         (index: number) => {
@@ -257,7 +398,8 @@ export function useGroupTable(props: GroupTableProps) {
         setSnapshotDataSource(null);
         reset(fullFormValues, { keepDirty: true });
         setIsModalVisible(false);
-    }, [fullFormValues, reset]);
+        handleRowHeightRecompute();
+    }, [fullFormValues, handleRowHeightRecompute, reset]);
 
     const populateValue = (exisingItems: Array<any>) => [...exisingItems, {}].map(populateItemKey);
 
@@ -300,51 +442,6 @@ export function useGroupTable(props: GroupTableProps) {
         [visibleItem],
     );
 
-    const setRowOverflow = useCallback((rowKey: string, hasOverflow: boolean) => {
-        setOverflowByRowKey((prev) => {
-            if (prev[rowKey] === hasOverflow) {
-                return prev;
-            }
-            return {
-                ...prev,
-                [rowKey]: hasOverflow,
-            };
-        });
-    }, []);
-
-    const getOverflowRef = useCallback(
-        (rowKey: string, maxHeight: number) => (node: HTMLDivElement | null) => {
-            const existingObserver = overflowObserversRef.current.get(rowKey);
-            if (existingObserver) {
-                existingObserver.disconnect();
-                overflowObserversRef.current.delete(rowKey);
-            }
-
-            if (!node) {
-                return;
-            }
-
-            const measure = () => {
-                const contentHeight = node.getBoundingClientRect().height;
-                const hasOverflow = contentHeight > maxHeight + 1;
-                setRowOverflow(rowKey, hasOverflow);
-            };
-
-            if (typeof ResizeObserver === 'undefined') {
-                requestAnimationFrame(() => requestAnimationFrame(measure));
-                return;
-            }
-
-            const observer = new ResizeObserver(() => {
-                requestAnimationFrame(() => requestAnimationFrame(measure));
-            });
-            observer.observe(node);
-            overflowObserversRef.current.set(rowKey, observer);
-            requestAnimationFrame(() => requestAnimationFrame(measure));
-        },
-        [setRowOverflow],
-    );
-
     const dataColumns: ColumnsType<GroupTableRow> = useMemo(() => {
         const columns: ColumnsType<GroupTableRow> = _.map(visibleItem, (questionItem) => {
             const linkId = questionItem.linkId;
@@ -353,11 +450,12 @@ export function useGroupTable(props: GroupTableProps) {
                 title: questionItem.text ? questionItem.text : linkId,
                 dataIndex: linkId,
                 key: linkId,
+
                 render: (value: GroupTableItem, record) => {
                     const rowKey = record.key;
                     return (
                         <S.ReadonlyItemWrapper $maxHeight={isExpandable ? expandableMaxHeight : undefined}>
-                            <div ref={isExpandable ? getOverflowRef(rowKey, expandableMaxHeight) : undefined}>
+                            <div ref={isExpandable ? observeRow(rowKey) : undefined}>
                                 <RenderFormItemReadOnly
                                     formItem={value.formItem}
                                     questionnaireItem={value.questionnaireItem}
@@ -375,7 +473,7 @@ export function useGroupTable(props: GroupTableProps) {
         return populateExpandableColumn(columnsWithFilters);
     }, [
         expandableMaxHeight,
-        getOverflowRef,
+        observeRow,
         populateColumnWithFilters,
         populateColumnWithSorters,
         populateExpandableColumn,
@@ -392,7 +490,7 @@ export function useGroupTable(props: GroupTableProps) {
         }
 
         return {
-            rowExpandable: (record) => overflowByRowKey[record.key] === true,
+            rowExpandable: (record) => compareRowHeight(record.key),
             expandedRowRender: (record) => (
                 <RenderFormItemReadOnly
                     formItem={record[expandableColumnKey]?.formItem}
@@ -400,7 +498,7 @@ export function useGroupTable(props: GroupTableProps) {
                 />
             ),
         };
-    }, [overflowByRowKey, visibleItem]);
+    }, [compareRowHeight, visibleItem]);
 
     const actionColumn = useMemo(() => {
         return {
