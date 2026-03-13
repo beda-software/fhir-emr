@@ -208,6 +208,8 @@ export function useGroupTable(props: GroupTableProps) {
 
     const [overflowByRowKey, setOverflowByRowKey] = useState<Record<string, boolean>>({});
     const overflowObserversRef = useRef<Map<string, ResizeObserver>>(new Map());
+    const overflowDebounceTimersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
+    const lastMeasuredHeightRef = useRef<Map<string, number>>(new Map());
 
     const fullFormValues = getValues();
     const formValues = _.get(getValues(), fieldName);
@@ -320,14 +322,30 @@ export function useGroupTable(props: GroupTableProps) {
                 overflowObserversRef.current.delete(rowKey);
             }
 
+            const existingTimer = overflowDebounceTimersRef.current.get(rowKey);
+            if (existingTimer) {
+                clearTimeout(existingTimer);
+                overflowDebounceTimersRef.current.delete(rowKey);
+            }
+
             if (!node) {
                 return;
             }
 
             const measure = () => {
                 const contentHeight = node.getBoundingClientRect().height;
+                const previousHeight = lastMeasuredHeightRef.current.get(rowKey);
+                if (previousHeight !== undefined && Math.abs(contentHeight - previousHeight) < 2) {
+                    return;
+                }
+                lastMeasuredHeightRef.current.set(rowKey, contentHeight);
+
                 const hasOverflow = contentHeight > maxHeight + 1;
-                setRowOverflow(rowKey, hasOverflow);
+                const pendingTimer = setTimeout(() => {
+                    setRowOverflow(rowKey, hasOverflow);
+                    overflowDebounceTimersRef.current.delete(rowKey);
+                }, 500);
+                overflowDebounceTimersRef.current.set(rowKey, pendingTimer);
             };
 
             if (typeof ResizeObserver === 'undefined') {
