@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro';
-import { Button, Popconfirm, Space, Table } from 'antd';
+import { Button, Popconfirm, Table } from 'antd';
 import type { ColumnType, ColumnsType } from 'antd/es/table';
 import type { ExpandableConfig, FilterDropdownProps } from 'antd/es/table/interface';
 import _ from 'lodash';
@@ -292,14 +292,14 @@ export function useRowExpandability(props: UseRowExpandabilityProps) {
         return () => window.removeEventListener('resize', handleResize);
     }, [recomputeRowExpandability]);
 
-    const compareRowHeight = useCallback(
+    const rowHeightExceedsMaxHeight = useCallback(
         (rowKey: string) => {
             const cachedExpandable = rowExpandableMap[rowKey];
             if (cachedExpandable !== undefined) {
                 return cachedExpandable;
             }
             const rowHeight = rowRefs.current[rowKey]?.clientHeight ?? 0;
-            return rowHeight > expandableMaxHeight + 32;
+            return rowHeight > expandableMaxHeight;
         },
         [expandableMaxHeight, rowExpandableMap],
     );
@@ -312,13 +312,13 @@ export function useRowExpandability(props: UseRowExpandabilityProps) {
 
     return {
         observeRow,
-        compareRowHeight,
+        rowHeightExceedsMaxHeight,
         handleRowHeightRecompute,
     };
 }
 
 export function useGroupTable(props: GroupTableProps) {
-    const { parentPath, questionItem, expandableMaxHeight = 100 } = props;
+    const { parentPath, questionItem, expandableMaxHeight = 100, columnAlignment } = props;
     const { linkId, repeats, text, hidden, item } = questionItem;
 
     const title = text ? text : linkId;
@@ -360,7 +360,7 @@ export function useGroupTable(props: GroupTableProps) {
         return getDataSource(fields, formItems, questionItem);
     }, [fields, formItems, questionItem]);
 
-    const { observeRow, compareRowHeight, handleRowHeightRecompute } = useRowExpandability({
+    const { observeRow, rowHeightExceedsMaxHeight, handleRowHeightRecompute } = useRowExpandability({
         expandableMaxHeight,
         dataSource,
     });
@@ -401,7 +401,7 @@ export function useGroupTable(props: GroupTableProps) {
         handleRowHeightRecompute();
     }, [fullFormValues, handleRowHeightRecompute, reset]);
 
-    const populateValue = (exisingItems: Array<any>) => [...exisingItems, {}].map(populateItemKey);
+    const populateValue = (existingItems: Array<any>) => [...existingItems, {}].map(populateItemKey);
 
     const handleAdd = useCallback(() => {
         if (dataSource.length === 0 && formItems.length !== 0) {
@@ -442,6 +442,19 @@ export function useGroupTable(props: GroupTableProps) {
         [visibleItem],
     );
 
+    const getColumnAlignment = (questionItem: FCEQuestionnaireItem) => {
+        const type = questionItem.type;
+
+        switch (type) {
+            case 'integer':
+            case 'decimal':
+            case 'quantity':
+                return 'right';
+            default:
+                return 'left';
+        }
+    };
+
     const dataColumns: ColumnsType<GroupTableRow> = useMemo(() => {
         const columns: ColumnsType<GroupTableRow> = _.map(visibleItem, (questionItem) => {
             const linkId = questionItem.linkId;
@@ -450,11 +463,19 @@ export function useGroupTable(props: GroupTableProps) {
                 title: questionItem.text ? questionItem.text : linkId,
                 dataIndex: linkId,
                 key: linkId,
+                align: columnAlignment
+                    ? typeof columnAlignment === 'function'
+                        ? columnAlignment(questionItem)
+                        : columnAlignment
+                    : getColumnAlignment(questionItem),
 
                 render: (value: GroupTableItem, record) => {
                     const rowKey = record.key;
                     return (
-                        <S.ReadonlyItemWrapper $maxHeight={isExpandable ? expandableMaxHeight : undefined}>
+                        <S.ReadonlyItemWrapper
+                            $maxHeight={isExpandable ? expandableMaxHeight : undefined}
+                            $notFitsMaxHeight={rowHeightExceedsMaxHeight(rowKey)}
+                        >
                             <div ref={isExpandable ? observeRow(rowKey) : undefined}>
                                 <RenderFormItemReadOnly
                                     formItem={value.formItem}
@@ -472,12 +493,14 @@ export function useGroupTable(props: GroupTableProps) {
         const columnsWithFilters = populateColumnWithFilters(columnsWithSorters, questionItem);
         return populateExpandableColumn(columnsWithFilters);
     }, [
+        columnAlignment,
         expandableMaxHeight,
         observeRow,
         populateColumnWithFilters,
         populateColumnWithSorters,
         populateExpandableColumn,
         questionItem,
+        rowHeightExceedsMaxHeight,
         visibleItem,
     ]);
 
@@ -490,7 +513,7 @@ export function useGroupTable(props: GroupTableProps) {
         }
 
         return {
-            rowExpandable: (record) => compareRowHeight(record.key),
+            rowExpandable: (record) => rowHeightExceedsMaxHeight(record.key),
             expandedRowRender: (record) => (
                 <RenderFormItemReadOnly
                     formItem={record[expandableColumnKey]?.formItem}
@@ -498,7 +521,7 @@ export function useGroupTable(props: GroupTableProps) {
                 />
             ),
         };
-    }, [compareRowHeight, visibleItem]);
+    }, [rowHeightExceedsMaxHeight, visibleItem]);
 
     const actionColumn = useMemo(() => {
         return {
@@ -511,7 +534,7 @@ export function useGroupTable(props: GroupTableProps) {
                     return null;
                 }
                 return (
-                    <Space>
+                    <S.ActionButtons>
                         <Button
                             type="link"
                             onClick={() => {
@@ -524,7 +547,7 @@ export function useGroupTable(props: GroupTableProps) {
                         >
                             <Button type="link" danger>{t`Delete`}</Button>
                         </Popconfirm>
-                    </Space>
+                    </S.ActionButtons>
                 );
             },
         };
