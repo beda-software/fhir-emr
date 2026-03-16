@@ -11,9 +11,10 @@ export const S = {
             align-content: start;
         }
     `,
-    ReadonlyItemWrapper: styled.div<{ $maxHeight?: number }>`
-        ${({ $maxHeight }) =>
+    ReadonlyItemWrapper: styled.div<{ $maxHeight?: number; $notFitsMaxHeight?: boolean }>`
+        ${({ $maxHeight, $notFitsMaxHeight }) =>
             $maxHeight &&
+            $notFitsMaxHeight &&
             css`
                 max-height: ${$maxHeight}px;
                 overflow: hidden;
@@ -34,5 +35,12 @@ export const S = {
             css`
                 height: ${$chartHeight}px;
             `}
+    `,
+    ActionButtons: styled.div`
+        display: flex;
+        gap: 16px;
+        .ant-btn {
+            padding: 0;
+        }
     `,
 };
