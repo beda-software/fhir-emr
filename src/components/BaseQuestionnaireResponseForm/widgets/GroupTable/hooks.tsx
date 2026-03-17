@@ -1,5 +1,6 @@
+import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
-import { Button, Popconfirm, Table } from 'antd';
+import { Button, Popconfirm } from 'antd';
 import type { ColumnType, ColumnsType } from 'antd/es/table';
 import type { ExpandableConfig, FilterDropdownProps } from 'antd/es/table/interface';
 import _ from 'lodash';
@@ -191,6 +192,7 @@ export function useRowExpandability(props: UseRowExpandabilityProps) {
     const rowNodeKeyRef = useRef<WeakMap<Element, string>>(new WeakMap());
     const expandableMaxHeightRef = useRef<number>(expandableMaxHeight);
     const [rowExpandableMap, setRowExpandableMap] = useState<Record<string, boolean>>({});
+    const [isRowExpanded, setIsRowExpanded] = useState<readonly React.Key[]>([]);
 
     useEffect(() => {
         expandableMaxHeightRef.current = expandableMaxHeight;
@@ -310,10 +312,20 @@ export function useRowExpandability(props: UseRowExpandabilityProps) {
         });
     }, [recomputeRowExpandability]);
 
+    const handleRowExpand = useCallback(
+        (expanded: boolean, record: GroupTableRow) => {
+            setIsRowExpanded(expanded ? [...isRowExpanded, record.key] : isRowExpanded.filter((k) => k !== record.key));
+            console.log('isRowExpanded', isRowExpanded);
+        },
+        [isRowExpanded],
+    );
+
     return {
         observeRow,
         rowHeightExceedsMaxHeight,
         handleRowHeightRecompute,
+        handleRowExpand,
+        isRowExpanded,
     };
 }
 
@@ -360,10 +372,11 @@ export function useGroupTable(props: GroupTableProps) {
         return getDataSource(fields, formItems, questionItem);
     }, [fields, formItems, questionItem]);
 
-    const { observeRow, rowHeightExceedsMaxHeight, handleRowHeightRecompute } = useRowExpandability({
-        expandableMaxHeight,
-        dataSource,
-    });
+    const { observeRow, rowHeightExceedsMaxHeight, handleRowHeightRecompute, handleRowExpand, isRowExpanded } =
+        useRowExpandability({
+            expandableMaxHeight,
+            dataSource,
+        });
 
     const startEdit = useCallback(
         (index: number) => {
@@ -427,21 +440,6 @@ export function useGroupTable(props: GroupTableProps) {
         [formItems, onChange],
     );
 
-    const populateExpandableColumn = useCallback(
-        (columns: ColumnsType<GroupTableRow>) => {
-            const expandableColumnIndex = visibleItem?.findIndex((item) => item.type === 'text') ?? -1;
-            if (expandableColumnIndex === -1) {
-                return columns;
-            }
-            return [
-                ...columns.slice(0, expandableColumnIndex),
-                Table.EXPAND_COLUMN,
-                ...columns.slice(expandableColumnIndex),
-            ];
-        },
-        [visibleItem],
-    );
-
     const getColumnAlignment = (questionItem: FCEQuestionnaireItem) => {
         const type = questionItem.type;
 
@@ -471,18 +469,27 @@ export function useGroupTable(props: GroupTableProps) {
 
                 render: (value: GroupTableItem, record) => {
                     const rowKey = record.key;
+                    const notFitsMaxHeight = rowHeightExceedsMaxHeight(rowKey);
+                    const isExpanded = isRowExpanded.includes(rowKey);
                     return (
-                        <S.ReadonlyItemWrapper
-                            $maxHeight={isExpandable ? expandableMaxHeight : undefined}
-                            $notFitsMaxHeight={rowHeightExceedsMaxHeight(rowKey)}
-                        >
-                            <div ref={isExpandable ? observeRow(rowKey) : undefined}>
-                                <RenderFormItemReadOnly
-                                    formItem={value.formItem}
-                                    questionnaireItem={value.questionnaireItem}
-                                />
-                            </div>
-                        </S.ReadonlyItemWrapper>
+                        <>
+                            <S.ReadonlyItemWrapper
+                                $maxHeight={isExpandable ? expandableMaxHeight : undefined}
+                                $notFitsMaxHeight={notFitsMaxHeight}
+                            >
+                                <div ref={isExpandable ? observeRow(rowKey) : undefined}>
+                                    <RenderFormItemReadOnly
+                                        formItem={value.formItem}
+                                        questionnaireItem={value.questionnaireItem}
+                                    />
+                                </div>
+                            </S.ReadonlyItemWrapper>
+                            <S.ExpandButton $isExpanded={isExpanded}>
+                                {isExpandable && notFitsMaxHeight && (
+                                    <Button icon={isExpanded ? <MinusOutlined /> : <PlusOutlined />} />
+                                )}
+                            </S.ExpandButton>
+                        </>
                     );
                 },
             };
@@ -490,15 +497,14 @@ export function useGroupTable(props: GroupTableProps) {
         });
 
         const columnsWithSorters = populateColumnWithSorters(columns, questionItem);
-        const columnsWithFilters = populateColumnWithFilters(columnsWithSorters, questionItem);
-        return populateExpandableColumn(columnsWithFilters);
+        return populateColumnWithFilters(columnsWithSorters, questionItem);
     }, [
         columnAlignment,
         expandableMaxHeight,
+        isRowExpanded,
         observeRow,
         populateColumnWithFilters,
         populateColumnWithSorters,
-        populateExpandableColumn,
         questionItem,
         rowHeightExceedsMaxHeight,
         visibleItem,
@@ -520,8 +526,11 @@ export function useGroupTable(props: GroupTableProps) {
                     questionnaireItem={record[expandableColumnKey]?.questionnaireItem}
                 />
             ),
+            onExpand: (expanded: boolean, record: GroupTableRow) => handleRowExpand(expanded, record),
+            showExpandColumn: false,
+            expandRowByClick: true,
         };
-    }, [rowHeightExceedsMaxHeight, visibleItem]);
+    }, [handleRowExpand, rowHeightExceedsMaxHeight, visibleItem]);
 
     const actionColumn = useMemo(() => {
         return {
