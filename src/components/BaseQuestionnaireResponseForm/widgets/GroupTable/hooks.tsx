@@ -315,7 +315,6 @@ export function useRowExpandability(props: UseRowExpandabilityProps) {
     const handleRowExpand = useCallback(
         (expanded: boolean, record: GroupTableRow) => {
             setIsRowExpanded(expanded ? [...isRowExpanded, record.key] : isRowExpanded.filter((k) => k !== record.key));
-            console.log('isRowExpanded', isRowExpanded);
         },
         [isRowExpanded],
     );
