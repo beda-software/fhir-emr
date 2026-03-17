@@ -545,7 +545,8 @@ export function useGroupTable(props: GroupTableProps) {
                     <S.ActionButtons>
                         <Button
                             type="link"
-                            onClick={() => {
+                            onClick={(event) => {
+                                event.stopPropagation();
                                 handleOpen(value?.index);
                             }}
                         >{t`Edit`}</Button>
@@ -553,7 +554,7 @@ export function useGroupTable(props: GroupTableProps) {
                             title={t`Are you sure you want to delete this item?`}
                             onConfirm={() => handleDelete(value.index)}
                         >
-                            <Button type="link" danger>{t`Delete`}</Button>
+                            <Button type="link" danger onClick={(event) => event.stopPropagation()}>{t`Delete`}</Button>
                         </Popconfirm>
                     </S.ActionButtons>
                 );
