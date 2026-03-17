@@ -23,6 +23,30 @@ export const S = {
                 mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
             `}
     `,
+    ExpandButton: styled.div<{ $isExpanded?: boolean }>`
+        .ant-btn {
+            width: 16px;
+            height: 16px;
+            font-size: 10px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            .ant-btn-icon {
+                color: ${({ theme }) => theme.neutralPalette.gray_13};
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+                transform: ${({ $isExpanded }) => ($isExpanded ? 'rotate(180deg)' : 'rotate(0deg)')};
+
+                svg {
+                    display: block;
+                    margin: 0;
+                }
+            }
+        }
+    `,
     ChartItem: styled.div<{ $chartHeight?: number }>`
         width: 100%;
         height: 273px;
