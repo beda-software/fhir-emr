@@ -420,9 +420,9 @@ export function useGroupTable(props: GroupTableProps) {
             // This one case happens when the user deletes all items
             handleOpen(0);
         } else {
-            const updatedInput = { ...formValues, items: populateValue(formItems) };
-            const currentFullFormValues = _.cloneDeep(getValues());
             const updatedItems = populateValue(formItems);
+            const updatedInput = { ...formValues, items: updatedItems };
+            const currentFullFormValues = _.cloneDeep(getValues());
             _.set(currentFullFormValues, fieldName, _.cloneDeep(updatedItems));
             onChange(updatedInput);
             handleOpen(formItems.length);
@@ -432,11 +432,13 @@ export function useGroupTable(props: GroupTableProps) {
     const handleDelete = useCallback(
         (index: number) => {
             const filteredArray = _.filter(formItems, (_val, valIndex: number) => valIndex !== index);
-            onChange({
-                items: [...filteredArray],
-            });
+            const updatedGroupValue = { items: [...filteredArray] };
+            const currentFullFormValues = _.cloneDeep(getValues());
+            _.set(currentFullFormValues, fieldName, _.cloneDeep(updatedGroupValue));
+            reset(currentFullFormValues, { keepDirty: true });
+            onChange(updatedGroupValue);
         },
-        [formItems, onChange],
+        [fieldName, formItems, getValues, onChange, reset],
     );
 
     const getColumnAlignment = (questionItem: FCEQuestionnaireItem) => {
