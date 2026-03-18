@@ -5,7 +5,7 @@ import type { ColumnType, ColumnsType } from 'antd/es/table';
 import type { ExpandableConfig, FilterDropdownProps } from 'antd/es/table/interface';
 import _ from 'lodash';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 import { FCEQuestionnaireItem, FormItems, RepeatableFormGroupItems, populateItemKey } from 'sdc-qrf';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
@@ -13,6 +13,7 @@ import { RenderFormItemReadOnly } from 'src/components/BaseQuestionnaireResponse
 import { ColumnFilterValue, SearchBarColumn } from 'src/components/SearchBar/types';
 import { TableFilter } from 'src/components/Table/TableFilter';
 
+import { HelperHiddenQuestionItems } from './HelperHiddenQuestionItems';
 import { S } from './styles';
 import { GroupTableItem, GroupTableProps, GroupTableRow } from './types';
 import {
@@ -329,7 +330,7 @@ export function useRowExpandability(props: UseRowExpandabilityProps) {
 }
 
 export function useGroupTable(props: GroupTableProps) {
-    const { parentPath, questionItem, expandableMaxHeight = 100, columnAlignment } = props;
+    const { parentPath, questionItem, context, expandableMaxHeight = 100, columnAlignment } = props;
     const { linkId, repeats, text, hidden, item } = questionItem;
 
     const title = text ? text : linkId;
@@ -344,7 +345,7 @@ export function useGroupTable(props: GroupTableProps) {
 
     const { onChange } = useFieldController<RepeatableFormGroupItems>(fieldName, questionItem);
 
-    const { getValues, reset } = useFormContext<FormItems>();
+    const { control, getValues, reset } = useFormContext<FormItems>();
 
     const [renderAsTable, setRenderAsTable] = useState<boolean>(!chartLinkIdX && !chartLinkIdY);
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -356,20 +357,18 @@ export function useGroupTable(props: GroupTableProps) {
     const { populateColumnWithFilters } = useGroupTableFilter();
     const { populateColumnWithSorters } = useGroupTableSorter();
 
-    const fullFormValues = getValues();
-    const formValues = _.get(getValues(), fieldName);
+    const fullFormValues = useWatch({ control });
+    const formValues = _.get(fullFormValues, fieldName);
 
     const visibleItem = useMemo(() => item?.filter((i) => !i.hidden && i.type !== 'display'), [item]);
 
     const formItems: FormItems[] = useMemo(() => {
         return formValues?.items || [];
-    }, [formValues?.items]);
+    }, [formValues]);
 
     const fields = useMemo(() => _.map(visibleItem, (item) => item.linkId), [visibleItem]);
 
-    const dataSource: GroupTableRow[] = useMemo(() => {
-        return getDataSource(fields, formItems, questionItem);
-    }, [fields, formItems, questionItem]);
+    const dataSource: GroupTableRow[] = getDataSource(fields, formItems, questionItem);
 
     const { observeRow, rowHeightExceedsMaxHeight, handleRowHeightRecompute, handleRowExpand, isRowExpanded } =
         useRowExpandability({
@@ -408,10 +407,11 @@ export function useGroupTable(props: GroupTableProps) {
     const handleSave = useCallback(() => {
         setSnapshotFormValues(null);
         setSnapshotDataSource(null);
-        reset(fullFormValues, { keepDirty: true });
+        const latestFullFormValues = getValues();
+        reset(latestFullFormValues, { keepDirty: true });
         setIsModalVisible(false);
         handleRowHeightRecompute();
-    }, [fullFormValues, handleRowHeightRecompute, reset]);
+    }, [getValues, handleRowHeightRecompute, reset]);
 
     const populateValue = (existingItems: Array<any>) => [...existingItems, {}].map(populateItemKey);
 
@@ -454,26 +454,37 @@ export function useGroupTable(props: GroupTableProps) {
         }
     };
 
+    const rowQuestionItems = useMemo(() => questionItem.item ?? [], [questionItem.item]);
+
     const dataColumns: ColumnsType<GroupTableRow> = useMemo(() => {
-        const columns: ColumnsType<GroupTableRow> = _.map(visibleItem, (questionItem) => {
-            const linkId = questionItem.linkId;
-            const isExpandable = questionItem.type === 'text';
+        const columns: ColumnsType<GroupTableRow> = _.map(visibleItem, (columnQuestionItem, columnIndex) => {
+            const columnLinkId = columnQuestionItem.linkId;
+            const isExpandable = columnQuestionItem.type === 'text';
             const column: ColumnType<GroupTableRow> = {
-                title: questionItem.text ? questionItem.text : linkId,
-                dataIndex: linkId,
-                key: linkId,
+                title: columnQuestionItem.text ? columnQuestionItem.text : '',
+                dataIndex: columnLinkId,
+                key: columnLinkId,
                 align: columnAlignment
                     ? typeof columnAlignment === 'function'
-                        ? columnAlignment(questionItem)
+                        ? columnAlignment(columnQuestionItem)
                         : columnAlignment
-                    : getColumnAlignment(questionItem),
+                    : getColumnAlignment(columnQuestionItem),
 
                 render: (value: GroupTableItem, record) => {
                     const rowKey = record.key;
                     const notFitsMaxHeight = rowHeightExceedsMaxHeight(rowKey);
                     const isExpanded = isRowExpanded.includes(rowKey);
+                    const isFirstColumn = columnIndex === 0;
+                    const rowIndex = value.index;
+                    const rowParentPath = [...parentPath, linkId, 'items', rowIndex.toString()];
                     return (
                         <>
+                            <HelperHiddenQuestionItems
+                                enabled={!isModalVisible && isFirstColumn}
+                                questionItems={rowQuestionItems}
+                                parentPath={rowParentPath}
+                                context={context[rowIndex] ?? context[0]}
+                            />
                             <S.ReadonlyItemWrapper
                                 $maxHeight={isExpandable ? expandableMaxHeight : undefined}
                                 $notFitsMaxHeight={notFitsMaxHeight}
@@ -501,13 +512,18 @@ export function useGroupTable(props: GroupTableProps) {
         return populateColumnWithFilters(columnsWithSorters, questionItem);
     }, [
         columnAlignment,
+        context,
         expandableMaxHeight,
+        isModalVisible,
         isRowExpanded,
+        linkId,
         observeRow,
+        parentPath,
         populateColumnWithFilters,
         populateColumnWithSorters,
         questionItem,
         rowHeightExceedsMaxHeight,
+        rowQuestionItems,
         visibleItem,
     ]);
 
