@@ -7,6 +7,7 @@ import { defaultFooterLayout } from 'src/components/BaseLayout/Footer/context';
 import { defaultMenuLayout } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { EncounterList } from 'src/containers/EncounterList';
+import { FormList } from 'src/containers/FormList';
 import { MagicSearchPage } from 'src/containers/MagicSearchPage';
 import { PatientDetails } from 'src/containers/PatientDetails';
 import { NewPatientDetails } from 'src/containers/PatientDetails/new';
@@ -60,6 +61,7 @@ export function App(props: AppProps) {
             <Route path="/practitioners" element={<PractitionerList />} />
             <Route path="/practitioners/:id/*" element={<PractitionerDetails />} />
             <Route path="/questionnaires" element={<QuestionnaireList />} />
+            <Route path="/forms" element={<FormList />} />
             <Route path="/questionnaires/builder" element={<QuestionnaireBuilder />} />
             <Route path="/questionnaires/:id/edit" element={<QuestionnaireBuilder />} />
             <Route path="/questionnaires/:id/aidbox-forms-builder/edit" element={<AidboxFormsBuilder />} />

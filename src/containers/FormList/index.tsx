@@ -11,13 +11,12 @@ import { RecordType, TableManager } from 'src/uberComponents/ResourceListPage/ty
 
 import { S } from './styles';
 
-// Helper functions and configurations
 const getFilters = (): SearchBarColumn[] => [
     {
-        id: 'questionnaire',
+        id: 'form',
         searchParam: 'name:contains',
         type: SearchBarColumnType.SPLITSTRING,
-        placeholder: t`Find questionnaire`,
+        placeholder: t`Find form`,
         searchBehavior: 'AND',
         separator: ' ',
     },
@@ -67,12 +66,13 @@ const getHeaderActions = () => [
     ),
 ];
 
-export function QuestionnaireList() {
+export function FormList() {
     return (
         <ResourceListPage<Questionnaire>
-            headerTitle={t`Questionnaires`}
+            headerTitle={t`Forms Library`}
             resourceType="Questionnaire"
             searchParams={{
+                context: 'form-library',
                 _sort: ['-_lastUpdated', '_id'],
             }}
             getFilters={getFilters}

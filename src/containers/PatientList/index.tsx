@@ -99,7 +99,8 @@ function PatientListConsent(props: { searchParams: SearchParams }) {
     const getRecordActions = (record: RecordType<Consent>, _manager: TableManager) => {
         const patient = getPatientFromConsent(record.resource, record.bundle);
         return [
-            navigationAction(<Trans>Open</Trans>, `/patients/${patient?.id}`),
+            navigationAction(<Trans>Chart</Trans>, `/patients/${patient?.id}`),
+            navigationAction(<Trans>Forms</Trans>, `/patients/${patient?.id}/forms`),
             questionnaireAction(<Trans>Edit</Trans>, 'patient-edit'),
         ];
     };
@@ -127,7 +128,8 @@ function PatientListDefault(props: { searchParams: SearchParams }) {
         buildColumns<Patient>((record) => record.resource);
 
     const getRecordActions = (record: RecordType<Patient>, _manager: TableManager) => [
-        navigationAction(<Trans>Open</Trans>, `/patients/${record.resource.id}`),
+        navigationAction(<Trans>Chart</Trans>, `/patients/${record.resource.id}`),
+        navigationAction(<Trans>Forms</Trans>, `/patients/${record.resource.id}/forms`),
         questionnaireAction(<Trans>Edit</Trans>, 'patient-edit'),
     ];
 
