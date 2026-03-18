@@ -6,6 +6,14 @@ status: active
 subjectType:
   - Encounter
   - Patient
+useContext:
+  - code:
+      code: questionnaire-type
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+    value:
+      CodeableConcept:
+        coding:
+          - code: form-library
 mapping:
   - reference: urn:uuid:Mapping:phq2phq9-extract
 launchContext:

@@ -47,7 +47,7 @@ export const PatientDetails = (props: PatientDetailsProps) => {
         if (isSuccess(patientResponse)) {
             return props.embeddedPages?.(patientResponse.data.patient, patientResponse.data.carePlans);
         }
-    }, [patientResponse]);
+    }, [patientResponse, props]);
 
     return (
         <RenderRemoteData remoteData={patientResponse} renderLoading={Spinner}>
@@ -128,7 +128,24 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                             />
                                             <Route path="/documents" element={<PatientDocuments patient={patient} />} />
                                             <Route
+                                                path="/forms"
+                                                element={<PatientDocuments patient={patient} context="form-library" />}
+                                            />
+                                            <Route
                                                 path="/documents/new/:questionnaireId"
+                                                element={
+                                                    <PatientDocument
+                                                        patient={patient}
+                                                        author={author}
+                                                        autoSave={true}
+                                                        onSuccess={() => {
+                                                            navigate(-1);
+                                                        }}
+                                                    />
+                                                }
+                                            />
+                                            <Route
+                                                path="/forms/new/:questionnaireId"
                                                 element={
                                                     <PatientDocument
                                                         patient={patient}
@@ -155,6 +172,10 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                             />
                                             <Route
                                                 path="/documents/:qrId/*"
+                                                element={<PatientDocumentDetails patient={patient} />}
+                                            />
+                                            <Route
+                                                path="/forms/:qrId/*"
                                                 element={<PatientDocumentDetails patient={patient} />}
                                             />
                                             <Route path="/wearables" element={<PatientWearables patient={patient} />} />
