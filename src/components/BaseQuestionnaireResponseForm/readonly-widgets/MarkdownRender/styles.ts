@@ -160,4 +160,64 @@ export const S = {
             }
         }
     `,
+    AdmonitionWrapper: styled.div`
+        width: 100%;
+        .admonition .inner {
+            border: none;
+            margin-top: 0;
+            padding: 8px 16px;
+        }
+
+        .admonition:not(.inner) {
+            margin-bottom: 24px;
+            border: none;
+            padding: 16px;
+        }
+
+        .admonition:not(.inner) > .admonition-content {
+            /* column-count: 2; */
+            /* column-gap: 40px; */
+            /* column-rule: 1px solid ${({ theme }) => theme.neutral.dividers}; */
+            align-items: start;
+            padding: 0;
+        }
+
+        .admonition-content h3 {
+            column-span: all;
+            font-size: 20px;
+            line-height: 28px;
+            font-weight: 700;
+            padding: 8px 16px 16px 16px;
+            margin-bottom: 0;
+            border-radius: 6px 6px 0 0;
+        }
+
+        .admonition.info {
+            background-color: ${({ theme }) => theme.link}66;
+
+            h3 {
+                background-color: ${({ theme }) => theme.link}66;
+            }
+        }
+
+        .admonition.warning {
+            background-color: ${({ theme }) => theme.warning}66;
+
+            h3 {
+                background-color: ${({ theme }) => theme.warning}66;
+            }
+        }
+
+        .admonition.error {
+            background-color: ${({ theme }) => theme.error}66;
+
+            h3 {
+                background-color: ${({ theme }) => theme.error}66;
+            }
+        }
+    `,
+    InstructionContainer: styled.div`
+        max-width: 720px;
+        justify-self: center;
+    `,
 };
