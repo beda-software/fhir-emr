@@ -122,7 +122,7 @@ export const markdownContentStyles = css`
         border-radius: 6px;
         background: ${({ theme }) => theme.neutralPalette.gray_1};
 
-        p {
+        p:last-child {
             margin: 0;
         }
     }
