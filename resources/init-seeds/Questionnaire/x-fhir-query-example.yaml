@@ -1,0 +1,50 @@
+id: x-fhir-query-example
+resourceType: Questionnaire
+name: x-fhir-query-example
+title: X-FHIR Query usage example
+status: active
+item:
+  - linkId: text
+    type: string
+    text: Text
+    initialExpression: 
+      language: text/fhirpath
+      expression: "'Choose patient in any group, and observe network requests'"
+
+  - linkId: patients-group
+    type: group
+    text: Patients
+    repeats: true
+    required: true
+    variable:
+      - name: PatientRef
+        language: text/fhirpath
+        expression: "%context.item.where(linkId='patient-ref').answer.valueReference.reference"
+    item:
+      - linkId: patient-ref
+        type: reference
+        text: Patient
+        referenceResource:
+          - Patient
+        answerExpression:
+          language: application/x-fhir-query
+          expression: "Patient"
+        choiceColumn:
+          - forDisplay: true
+            path: "name.given.first() + ' ' + name.family"
+
+      - linkId: patient-appointments
+        type: string
+        text: Patient Appointment Ids
+        variable:
+          - name: PatientAppointmentBundle
+            language: application/x-fhir-query
+            expression: "Appointment?patient={{ %PatientRef }}"
+        calculatedExpression:
+          language: text/fhirpath
+          expression: "%PatientAppointmentBundle.entry.resource.id.join(', ')"
+
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/x-fhir-query-example
