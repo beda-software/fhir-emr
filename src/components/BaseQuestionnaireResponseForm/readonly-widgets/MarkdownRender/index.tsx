@@ -1,4 +1,3 @@
-import { Alert } from 'antd';
 import classNames from 'classnames';
 import { isValidElement } from 'react';
 import Markdown from 'react-markdown';
@@ -82,33 +81,9 @@ export function MarkdownRenderControl({ parentPath, questionItem }: QuestionItem
 export function MarkdownDisplay(props: QuestionItemProps) {
     const { questionItem } = props;
 
-    const text = questionItem?.text;
-    return <>{text && <MarkdownRender text={text} />}</>;
-}
+    const { text } = questionItem;
 
-export function MarkdownAlert(props: QuestionItemProps) {
-    const { questionItem } = props;
-
-    const text = questionItem?.text;
-
-    const getAlertType = (text?: string): 'info' | 'warning' | 'error' => {
-        const isInfo = text?.includes('::info');
-        const isWarning = text?.includes('::warning');
-        const isError = text?.includes('::error');
-
-        if (isInfo) {
-            return 'info';
-        } else if (isWarning) {
-            return 'warning';
-        } else if (isError) {
-            return 'error';
-        }
-        return 'info';
-    };
-
-    const alertType = getAlertType(text);
-
-    return <Alert type={alertType} message={text && <MarkdownRender text={text} />} />;
+    return <>{text ? <MarkdownRender text={text} /> : null}</>;
 }
 
 export function MarkdownCard(props: QuestionItemProps) {
@@ -118,11 +93,9 @@ export function MarkdownCard(props: QuestionItemProps) {
     return (
         <>
             {text && (
-                <S.AdmonitionWrapper>
-                    <S.InstructionContainer>
-                        <MarkdownRender text={text} />
-                    </S.InstructionContainer>
-                </S.AdmonitionWrapper>
+                <S.CardWrapper>
+                    <MarkdownRender text={text} />
+                </S.CardWrapper>
             )}
         </>
     );

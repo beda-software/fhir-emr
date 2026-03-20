@@ -6,10 +6,8 @@ import {
 } from 'sdc-qrf';
 
 import {
-    MarkdownAlert,
     MarkdownCard,
     MarkdownDisplay,
-    MarkdownRenderControl,
 } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/MarkdownRender';
 import { GroupTable } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable';
 import { TextWithMacroFill } from 'src/components/TextWithMacroFill';
@@ -64,7 +62,6 @@ export const itemComponents: QuestionItemComponentMapping = {
     choice: QuestionChoice,
     'open-choice': QuestionChoice,
     boolean: QuestionBoolean,
-    markdown: MarkdownRenderControl,
     display: Display,
     reference: QuestionReference,
     quantity: QuestionQuantity,
@@ -89,7 +86,6 @@ export const itemControlComponents: ItemControlQuestionItemComponentMapping = {
     'audio-recorder-uploader': AudioRecorderUploader,
     barcode: Barcode,
     markdown: MarkdownDisplay,
-    'markdown-alert': MarkdownAlert,
     'markdown-card': MarkdownCard,
     // reference-radio-button is deprecated, use inline-reference instead
     'reference-radio-button': InlineReference,

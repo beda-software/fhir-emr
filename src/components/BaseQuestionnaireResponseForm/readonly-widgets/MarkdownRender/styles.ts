@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const S = {
     WrapperMDRender: styled.div`
+        width: 100%;
         padding: 9px 0;
         gap: 4px 16px;
         margin: 0;
@@ -56,50 +57,6 @@ export const S = {
             align-items: center;
             gap: 8px;
             margin: 0;
-        }
-
-        .admonition {
-            margin: 4px 0;
-            border-left: 3px solid gray;
-            overflow: hidden;
-            border-radius: 6px;
-            padding: 8px 12px;
-        }
-
-        .admonition-content {
-            margin: 0;
-            padding: 4px 8px;
-            border-radius: 6px;
-            background: ${({ theme }) => theme.neutralPalette.gray_1};
-
-            p {
-                margin: 0;
-            }
-        }
-
-        .admonition.note {
-            border-color: #b9bbc6;
-            background: #e8e8ec;
-        }
-
-        .admonition.tip {
-            border-color: #3db9cf;
-            background: #caf1f6;
-        }
-
-        .admonition.danger {
-            border-color: #eb8e90;
-            background: #ffdbdc;
-        }
-
-        .admonition.info {
-            border-color: #65ba74;
-            background: #daf1db;
-        }
-
-        .admonition.caution {
-            border-color: #e2a336;
-            background: #ffee9c;
         }
 
         .md-render-table-wrapper {
@@ -159,65 +116,153 @@ export const S = {
                 border-right: none;
             }
         }
-    `,
-    AdmonitionWrapper: styled.div`
-        width: 100%;
-        .admonition .inner {
-            border: none;
-            margin-top: 0;
-            padding: 8px 16px;
+
+        .admonition {
+            margin: 4px 0;
+            border-left: 3px solid ${({ theme }) => theme.neutralPalette.gray_9}66;
+            overflow: hidden;
+            border-radius: 6px;
+            padding: 8px 12px;
         }
 
-        .admonition:not(.inner) {
-            margin-bottom: 24px;
+        .admonition-content {
+            margin: 0;
+            padding: 4px 8px;
+            border-radius: 6px;
+            background: ${({ theme }) => theme.neutralPalette.gray_1};
+
+            p {
+                margin: 0;
+            }
+        }
+
+        .admonition {
+            width: 100%;
+        }
+
+        .admonition:is([class^='layout-'], [class*=' layout-']) {
+            border: none;
+            margin-top: 0;
+        }
+
+        .admonition:not([class^='layout-'], [class*=' layout-']) {
+            display: inline-block;
+            margin-top: 12px;
+            margin-bottom: 12px;
+        }
+
+        .admonition:is([class$='-card'], [class*='-card ']) {
             border: none;
             padding: 16px;
         }
 
-        .admonition:not(.inner) > .admonition-content {
-            /* column-count: 2; */
-            /* column-gap: 40px; */
-            /* column-rule: 1px solid ${({ theme }) => theme.neutral.dividers}; */
+        .admonition:is([class^='layout-'], [class*=' layout-']) > .admonition-content {
+            padding: 0;
+        }
+
+        .admonition.layout-columns > .admonition-content {
+            column-count: 2;
+            column-gap: 40px;
+            column-rule: 1px solid ${({ theme }) => theme.neutral.dividers};
+        }
+
+        .admonition:is([class$='-card'], [class*='-card ']) > .admonition-content {
             align-items: start;
             padding: 0;
         }
 
-        .admonition-content h3 {
-            column-span: all;
-            font-size: 20px;
-            line-height: 28px;
-            font-weight: 700;
-            padding: 8px 16px 16px 16px;
-            margin-bottom: 0;
-            border-radius: 6px 6px 0 0;
+        .admonition:is([class$='-card'], [class*='-card ']) > .admonition-content {
+            & :is(h1, h2, h3, h4, h5, h6) {
+                column-span: all;
+                padding: 8px 16px;
+            }
+
+            :first-child:is(h1, h2, h3, h4, h5, h6) {
+                padding: 0 16px 16px 16px;
+                border-radius: 6px 6px 0 0;
+            }
+        }
+
+        .admonition.note {
+            background-color: ${({ theme }) => theme.neutralPalette.gray_5};
+        }
+
+        .admonition.tip {
+            background-color: ${({ theme }) => theme.antdTheme?.colorInfoBorder};
+        }
+
+        .admonition.info-card {
+            background-color: ${({ theme }) => theme.antdTheme?.colorInfoBorder};
+
+            & :is(h1, h2, h3, h4, h5, h6) {
+                background-color: ${({ theme }) => theme.antdTheme?.colorInfoBorder};
+            }
         }
 
         .admonition.info {
-            background-color: ${({ theme }) => theme.link}66;
+            background-color: ${({ theme }) => theme.antdTheme?.colorSuccessBorder};
+        }
 
-            h3 {
-                background-color: ${({ theme }) => theme.link}66;
+        .admonition.success-card {
+            background-color: ${({ theme }) => theme.antdTheme?.colorSuccessBorder};
+
+            & :is(h1, h2, h3, h4, h5, h6) {
+                background-color: ${({ theme }) => theme.antdTheme?.colorSuccessBorder};
             }
         }
 
-        .admonition.warning {
-            background-color: ${({ theme }) => theme.warning}66;
+        .admonition.caution {
+            background-color: ${({ theme }) => theme.antdTheme?.colorWarningBorder};
+        }
 
-            h3 {
-                background-color: ${({ theme }) => theme.warning}66;
+        .admonition.warning-card {
+            background-color: ${({ theme }) => theme.antdTheme?.colorWarningBorder};
+
+            & :is(h1, h2, h3, h4, h5, h6) {
+                background-color: ${({ theme }) => theme.antdTheme?.colorWarningBorder};
             }
         }
 
-        .admonition.error {
-            background-color: ${({ theme }) => theme.error}66;
+        .admonition.danger {
+            background-color: ${({ theme }) => theme.antdTheme?.colorErrorBorder};
+        }
 
-            h3 {
-                background-color: ${({ theme }) => theme.error}66;
+        .admonition.error-card {
+            background-color: ${({ theme }) => theme.antdTheme?.colorErrorBorder};
+
+            & :is(h1, h2, h3, h4, h5, h6) {
+                background-color: ${({ theme }) => theme.antdTheme?.colorErrorBorder};
             }
+        }
+
+        .admonition.info-alert {
+            background-color: ${({ theme }) => theme.antdTheme?.colorInfoBg};
+            border: 1px solid ${({ theme }) => theme.antdTheme?.colorInfoBorder};
+        }
+
+        .admonition.success-alert {
+            background-color: ${({ theme }) => theme.antdTheme?.colorSuccessBg};
+            border: 1px solid ${({ theme }) => theme.antdTheme?.colorSuccessBorder};
+        }
+
+        .admonition.warning-alert {
+            background-color: ${({ theme }) => theme.antdTheme?.colorWarningBg};
+            border: 1px solid ${({ theme }) => theme.antdTheme?.colorWarningBorder};
+        }
+
+        .admonition.error-alert {
+            background-color: ${({ theme }) => theme.antdTheme?.colorErrorBg};
+            border: 1px solid ${({ theme }) => theme.antdTheme?.colorErrorBorder};
+        }
+
+        .admonition:is(.info-alert, .success-alert, .warning-alert, .error-alert) > .admonition-content {
+            background-color: transparent;
         }
     `,
-    InstructionContainer: styled.div`
+    CardWrapper: styled.div`
         max-width: 720px;
         justify-self: center;
+        margin-left: auto;
+        margin-right: auto;
     `,
 };
