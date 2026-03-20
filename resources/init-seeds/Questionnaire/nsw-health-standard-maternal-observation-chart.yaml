@@ -156,7 +156,7 @@ item:
 
                   ### **Red Zone Response**
 
-                  If a woman in your care has any **red zone observations or additional criteria(*)** you **MUST** call for a **RAPID RESPONSE** (as per local CERS) and:**
+                  If a woman in your care has any **red zone observations or additional criteria(*)** you **MUST** call for a **RAPID RESPONSE** (as per local CERS) **AND**:
 
                   1. Initiate appropriate clinical care.
 
@@ -1833,7 +1833,7 @@ item:
 
               ::::info-card
 
-              ### Blue Zone Response – Cumulative Blood Loss
+              ### **Blue Zone Response – Cumulative Blood Loss**
 
               :::layout-inner
 
@@ -1849,7 +1849,7 @@ item:
 
               ::::warning-card
 
-              ### Yellow Zone Response
+              ### **Yellow Zone Response**
 
               :::layout-inner
 
@@ -1883,7 +1883,7 @@ item:
 
               :::
 
-              #### (*)Additional YELLOW ZONE Criteria:
+              #### **(*)Additional YELLOW ZONE Criteria:**
 
               :::layout-columns
 
@@ -1918,7 +1918,7 @@ item:
 
               :::::error-card
 
-              ### Red Zone Response
+              ### **Red Zone Response**
 
               ::::layout-inner
 
@@ -1937,7 +1937,7 @@ item:
               ::::
 
 
-              #### (*)Additional RED ZONE Criteria:
+              #### **(*)Additional RED ZONE Criteria:**
 
               ::::layout-columns
 
