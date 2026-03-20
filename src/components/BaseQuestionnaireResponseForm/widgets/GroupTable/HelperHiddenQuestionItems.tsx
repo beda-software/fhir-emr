@@ -7,6 +7,8 @@ type Props = {
     context?: GroupItemProps['context'][number];
 };
 
+// NOTE: This component is used to trigger form items evaluation
+// TODO: refactor after https://github.com/beda-software/sdc-qrf/issues/49
 export function HelperHiddenQuestionItems(props: Props) {
     const { enabled, questionItems, parentPath, context } = props;
 
