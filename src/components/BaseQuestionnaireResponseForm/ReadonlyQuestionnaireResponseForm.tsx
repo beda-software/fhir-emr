@@ -13,7 +13,10 @@ import {
     ItemControlGroupItemReadonlyWidgetsContext,
     ItemControlQuestionItemReadonlyWidgetsContext,
 } from 'src/components/BaseQuestionnaireResponseForm/context';
-import { MarkdownRenderControl } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/MarkdownRender';
+import {
+    MarkdownCard,
+    MarkdownRenderControl,
+} from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/MarkdownRender';
 import { service } from 'src/services/fhir';
 
 import { AudioAttachment } from './readonly-widgets/AudioAttachment';
@@ -96,6 +99,7 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
                         'input-inside-text': TextWithInput,
                         'audio-recorder-uploader': AudioAttachment,
                         barcode: Barcode,
+                        'markdown-card': MarkdownCard,
                         'markdown-editor': MarkdownRenderControl,
                         ...itemControlQuestionItemComponents,
                         ...ItemControlQuestionItemReadonlyWidgetsFromContext,
