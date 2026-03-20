@@ -15,6 +15,7 @@ import {
 } from 'src/components/BaseQuestionnaireResponseForm/context';
 import { MarkdownRenderControl } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/MarkdownRender';
 import { service } from 'src/services/fhir';
+import { evaluate } from 'src/utils/fhirpath';
 
 import { AudioAttachment } from './readonly-widgets/AudioAttachment';
 import { QuestionBoolean } from './readonly-widgets/boolean';
@@ -100,6 +101,7 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
                         ...itemControlQuestionItemComponents,
                         ...ItemControlQuestionItemReadonlyWidgetsFromContext,
                     }}
+                    evaluateFhirpath={evaluate}
                 >
                     <>
                         <QuestionItems
