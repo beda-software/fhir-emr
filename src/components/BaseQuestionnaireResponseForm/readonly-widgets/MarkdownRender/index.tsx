@@ -13,7 +13,7 @@ import { RenderImage } from 'src/components/RenderImage';
 import { RenderImageCacheProvider } from 'src/components/RenderImage/cache';
 
 import { S } from './styles';
-import { remarkAdmonition } from './utils';
+import { remarkAdmonition, remarkRestoreUnsupportedDirectives } from './utils';
 
 export function MarkdownRender({ text }: { text: string }) {
     return (
@@ -21,7 +21,7 @@ export function MarkdownRender({ text }: { text: string }) {
             <S.WrapperMDRender>
                 <Markdown
                     rehypePlugins={[rehypeRaw]}
-                    remarkPlugins={[remarkGfm, remarkDirective, remarkAdmonition]}
+                    remarkPlugins={[remarkGfm, remarkDirective, remarkRestoreUnsupportedDirectives, remarkAdmonition]}
                     components={{
                         img({ src, alt }) {
                             return src ? <RenderImage src={src} alt={alt} /> : null;
