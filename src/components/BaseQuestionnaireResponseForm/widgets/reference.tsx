@@ -116,7 +116,7 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
     // TODO: add support for fhirpath and application/x-fhir-query
     const expression = answerExpression!.expression!;
     const [resourceType, searchParams] = useMemo(() => {
-        return parseFhirQueryExpression(expression, context);
+        return parseFhirQueryExpression(expression, context, undefined, evaluate);
     }, [expression, context]);
 
     const loadOptions = useCallback(
