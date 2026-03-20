@@ -1,7 +1,6 @@
 import { EditOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 import {
-    AdmonitionDirectiveDescriptor,
     BlockTypeSelect,
     BoldItalicUnderlineToggles,
     ChangeAdmonitionType,
@@ -9,7 +8,7 @@ import {
     ConditionalContents,
     CreateLink,
     DiffSourceToggleWrapper,
-    InsertAdmonition,
+    DirectiveDescriptor,
     InsertImage,
     InsertTable,
     InsertThematicBreak,
@@ -47,6 +46,7 @@ import {
 } from 'src/services/file-upload';
 
 import { MarkDownEditorContext } from './context';
+import { ADMONITION_OPTIONS, createAdmonitionDirectiveDescriptor, InsertAdmonitionDropdown } from './directives';
 import { MarkDownEditorProps } from './types';
 
 type Notify = Pick<typeof notification, 'info' | 'success' | 'error'>;
@@ -587,6 +587,11 @@ export const useMarkDownEditor = (props: MarkDownEditorProps) => {
 
     useMarkdownSync(mdxEditorRef, markdownString);
 
+    const DIRECTIVE_DESCRIPTORS: DirectiveDescriptor[] = useMemo(
+        () => ADMONITION_OPTIONS.map(createAdmonitionDirectiveDescriptor),
+        [],
+    );
+
     const replaceImageSource = useCallback(
         (oldSrc: string, newSrc: string) => {
             if (!mdxEditorRef.current) {
@@ -645,7 +650,7 @@ export const useMarkDownEditor = (props: MarkDownEditorProps) => {
             quotePlugin(),
             codeBlockPlugin({ defaultCodeBlockLanguage: 'js' }),
             codeMirrorPlugin({ codeBlockLanguages: { js: 'JavaScript', css: 'CSS' } }),
-            directivesPlugin({ directiveDescriptors: [AdmonitionDirectiveDescriptor] }),
+            directivesPlugin({ directiveDescriptors: DIRECTIVE_DESCRIPTORS }),
             thematicBreakPlugin({
                 thematicBreakMarkdown: '---',
             }),
@@ -667,7 +672,7 @@ export const useMarkDownEditor = (props: MarkDownEditorProps) => {
                     {mdEditorFeatures?.image ? <InsertImage /> : null}
                     <CreateLink />
                     <InsertTable />
-                    <InsertAdmonition />
+                    <InsertAdmonitionDropdown />
                     <ConditionalContents
                         options={[
                             {
@@ -706,6 +711,7 @@ export const useMarkDownEditor = (props: MarkDownEditorProps) => {
     }, [
         imageUploadHandler,
         imagePreviewHandler,
+        DIRECTIVE_DESCRIPTORS,
         mdEditorFeatures?.image,
         initPlugins,
         context,
