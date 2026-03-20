@@ -15,6 +15,7 @@ import {
 } from 'src/components/BaseQuestionnaireResponseForm/context';
 import {
     MarkdownCard,
+    MarkdownDisplay,
     MarkdownRenderControl,
 } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/MarkdownRender';
 import { service } from 'src/services/fhir';
@@ -99,6 +100,7 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
                         'input-inside-text': TextWithInput,
                         'audio-recorder-uploader': AudioAttachment,
                         barcode: Barcode,
+                        markdown: MarkdownDisplay,
                         'markdown-card': MarkdownCard,
                         'markdown-editor': MarkdownRenderControl,
                         ...itemControlQuestionItemComponents,
