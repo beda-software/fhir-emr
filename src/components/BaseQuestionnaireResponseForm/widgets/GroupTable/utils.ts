@@ -380,3 +380,12 @@ export const getChartYRange = (questionItem: FCEQuestionnaireItem): AxisDomain |
 
     return [chartYRangeLow, chartYRangeHigh];
 };
+
+export const getColumnWidth = (questionItem: FCEQuestionnaireItem): string | undefined => {
+    if (questionItem.columnWidth?.value) {
+        return `${questionItem.columnWidth.value}${
+            questionItem.columnWidth.unit ? questionItem.columnWidth.unit : 'px'
+        }`;
+    }
+    return undefined;
+};
