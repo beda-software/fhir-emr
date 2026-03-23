@@ -1,6 +1,6 @@
 import { FCEQuestionnaireItem, FormItems } from 'sdc-qrf';
 
-import { getDataSource } from '../utils';
+import { getColumnWidth, getDataSource } from '../utils';
 
 const fields = ['date', 'weight'];
 
@@ -28,7 +28,7 @@ const getFormItem = (date: string, weight: number): FormItems => {
     };
 };
 
-const getQuestionnaireItem = (repeats: boolean): FCEQuestionnaireItem => {
+const getGroupQuestionnaireItem = (repeats: boolean): FCEQuestionnaireItem => {
     return {
         type: 'group',
         repeats,
@@ -53,10 +53,21 @@ const getQuestionnaireItem = (repeats: boolean): FCEQuestionnaireItem => {
     };
 };
 
+const getQuestionnaireItem = (
+    props: { columnWidth?: { value?: number; unit?: string } } = {},
+): FCEQuestionnaireItem => {
+    return {
+        type: 'string',
+        linkId: 'string',
+        text: 'string',
+        columnWidth: props.columnWidth,
+    };
+};
+
 describe('GroupTable', () => {
     test('dataSource for repeatable group is extracted correctly', () => {
         const formItems = [getFormItem('2022-01-01', 70), getFormItem('2022-01-02', 75)];
-        const questionnaireItem = getQuestionnaireItem(true);
+        const questionnaireItem = getGroupQuestionnaireItem(true);
         const dataSource = getDataSource(fields, formItems, questionnaireItem);
         expect(dataSource.length).toBe(2);
         expect(dataSource[0]!.date?.linkId).toBe('date');
@@ -71,12 +82,44 @@ describe('GroupTable', () => {
 
     test('dataSource for non-repeatable group is extracted correctly', () => {
         const formItems = [getFormItem('2022-01-01', 70)];
-        const questionnaireItem = getQuestionnaireItem(false);
+        const questionnaireItem = getGroupQuestionnaireItem(false);
         const dataSource = getDataSource(fields, formItems, questionnaireItem);
         expect(dataSource.length).toBe(1);
         expect(dataSource[0]!.date?.linkId).toBe('date');
         expect(dataSource[0]!.date?.index).toBe(0);
         expect(dataSource[0]!.date!.formItem![0]!.value!.date!).toBe('2022-01-01');
         expect(dataSource[0]!.weight!.formItem![0]!.value!.Quantity!.value).toBe(70);
+    });
+});
+
+describe('getColumnWidth', () => {
+    test('returns undefined if columnWidth is not set', () => {
+        const questionItem = getQuestionnaireItem();
+        const columnWidth = getColumnWidth(questionItem);
+        expect(columnWidth).toBe(undefined);
+    });
+
+    test('returns the correct column width if columnWidth is set', () => {
+        const questionItem = getQuestionnaireItem({ columnWidth: { value: 100, unit: 'px' } });
+        const columnWidth = getColumnWidth(questionItem);
+        expect(columnWidth).toBe('100px');
+    });
+
+    test('returns the correct column width if columnWidth is set with unit', () => {
+        const questionItem = getQuestionnaireItem({ columnWidth: { value: 100, unit: '%' } });
+        const columnWidth = getColumnWidth(questionItem);
+        expect(columnWidth).toBe('100%');
+    });
+
+    test('returns the correct column width if columnWidth is set without unit', () => {
+        const questionItem = getQuestionnaireItem({ columnWidth: { value: 100 } });
+        const columnWidth = getColumnWidth(questionItem);
+        expect(columnWidth).toBe('100px');
+    });
+
+    test('returns the correct column width if columnWidth is set without value', () => {
+        const questionItem = getQuestionnaireItem({ columnWidth: { unit: '%' } });
+        const columnWidth = getColumnWidth(questionItem);
+        expect(columnWidth).toBe(undefined);
     });
 });

@@ -24,6 +24,7 @@ import {
     isColumnTypeArray,
     isTableItemMatchesFilter,
     getChartYRange,
+    getColumnWidth,
 } from './utils';
 
 export function useGroupTableFilter() {
@@ -469,6 +470,7 @@ export function useGroupTable(props: GroupTableProps) {
                         ? columnAlignment(columnQuestionItem)
                         : columnAlignment
                     : getColumnAlignment(columnQuestionItem),
+                width: getColumnWidth(columnQuestionItem),
 
                 render: (value: GroupTableItem, record) => {
                     const rowKey = record.key;
