@@ -8,7 +8,7 @@ import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm
 import { HelperHiddenQuestionItems } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/HelperHiddenQuestionItems';
 import { RenderFormItemReadOnly } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/RenderFormItemReadOnly';
 import { GroupTableItem, GroupTableRow } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/types';
-import { getDataSource } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/utils';
+import { getColumnWidth, getDataSource } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/utils';
 
 export function useEditableGroup(props: GroupItemProps) {
     const { parentPath, questionItem, context } = props;
@@ -79,6 +79,7 @@ export function useEditableGroup(props: GroupItemProps) {
                 title: columnQuestionItem.text ? columnQuestionItem.text : '',
                 dataIndex: columnQuestionItem.linkId,
                 key: columnQuestionItem.linkId,
+                width: getColumnWidth(columnQuestionItem),
                 render: (value: GroupTableItem) => (
                     <>
                         <HelperHiddenQuestionItems
