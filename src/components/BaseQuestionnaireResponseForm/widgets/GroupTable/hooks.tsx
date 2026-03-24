@@ -442,6 +442,12 @@ export function useGroupTable(props: GroupTableProps) {
         [fieldName, formItems, getValues, onChange, reset],
     );
 
+    useEffect(() => {
+        if (dataSource.length === 0 && formItems.length === 1 && !isModalVisible) {
+            handleDelete(0);
+        }
+    }, [dataSource.length, formItems.length, handleDelete, isModalVisible]);
+
     const getColumnAlignment = (questionItem: FCEQuestionnaireItem) => {
         const type = questionItem.type;
 

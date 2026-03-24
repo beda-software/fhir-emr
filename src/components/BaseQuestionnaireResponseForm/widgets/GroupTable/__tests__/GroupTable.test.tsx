@@ -1,5 +1,9 @@
+import { renderHook, waitFor } from '@testing-library/react';
 import { FCEQuestionnaireItem, FormItems } from 'sdc-qrf';
+import { beforeAll, beforeEach, describe, expect, test, vi } from 'vitest';
 
+import { useGroupTable } from '../hooks';
+import type { GroupTableProps } from '../types';
 import { getColumnWidth, getDataSource } from '../utils';
 
 const fields = ['date', 'weight'];
@@ -64,6 +68,30 @@ const getQuestionnaireItem = (
     };
 };
 
+const groupTableHookMocks = {
+    mockOnChange: vi.fn(),
+    mockReset: vi.fn(),
+    formValuesState: { group: { items: [{} as FormItems] } } as { group: { items: FormItems[] } },
+};
+
+vi.mock('src/components/BaseQuestionnaireResponseForm/hooks', () => ({
+    useFieldController: () => ({
+        onChange: (next: { items: FormItems[] }) => {
+            groupTableHookMocks.formValuesState = { group: next };
+            groupTableHookMocks.mockOnChange(next);
+        },
+    }),
+}));
+
+vi.mock('react-hook-form', () => ({
+    useFormContext: () => ({
+        control: {},
+        getValues: () => groupTableHookMocks.formValuesState,
+        reset: groupTableHookMocks.mockReset,
+    }),
+    useWatch: () => groupTableHookMocks.formValuesState,
+}));
+
 describe('GroupTable', () => {
     test('dataSource for repeatable group is extracted correctly', () => {
         const formItems = [getFormItem('2022-01-01', 70), getFormItem('2022-01-02', 75)];
@@ -89,6 +117,51 @@ describe('GroupTable', () => {
         expect(dataSource[0]!.date?.index).toBe(0);
         expect(dataSource[0]!.date!.formItem![0]!.value!.date!).toBe('2022-01-01');
         expect(dataSource[0]!.weight!.formItem![0]!.value!.Quantity!.value).toBe(70);
+    });
+
+    test('dataSource is empty when a single row has no answers', () => {
+        const formItems = [{} as FormItems];
+        const questionnaireItem = getGroupQuestionnaireItem(true);
+        const dataSource = getDataSource(fields, formItems, questionnaireItem);
+        expect(dataSource.length).toBe(0);
+    });
+});
+
+describe('useGroupTable', () => {
+    beforeAll(() => {
+        global.ResizeObserver = class {
+            observe(): void {
+                void 0;
+            }
+            unobserve(): void {
+                void 0;
+            }
+            disconnect(): void {
+                void 0;
+            }
+        };
+    });
+
+    beforeEach(() => {
+        groupTableHookMocks.mockOnChange.mockClear();
+        groupTableHookMocks.mockReset.mockClear();
+        groupTableHookMocks.formValuesState = { group: { items: [{}] } };
+    });
+
+    test('removes a lone empty form row when dataSource is empty and modal is closed', async () => {
+        const props: GroupTableProps = {
+            parentPath: [],
+            context: [],
+            questionItem: getGroupQuestionnaireItem(true),
+        };
+
+        renderHook(() => useGroupTable(props));
+
+        await waitFor(() => {
+            expect(groupTableHookMocks.mockOnChange).toHaveBeenCalledWith({ items: [] });
+        });
+        expect(groupTableHookMocks.mockOnChange).toHaveBeenCalledTimes(1);
+        expect(groupTableHookMocks.mockReset).toHaveBeenCalled();
     });
 });
 
