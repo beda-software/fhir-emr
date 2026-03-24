@@ -13,7 +13,7 @@ import { RenderImage } from 'src/components/RenderImage';
 import { RenderImageCacheProvider } from 'src/components/RenderImage/cache';
 
 import { S } from './styles';
-import { remarkAdmonition } from './utils';
+import { remarkAdmonition, remarkRestoreUnsupportedDirectives } from './utils';
 
 export function MarkdownRender({ text }: { text: string }) {
     return (
@@ -21,7 +21,7 @@ export function MarkdownRender({ text }: { text: string }) {
             <S.WrapperMDRender>
                 <Markdown
                     rehypePlugins={[rehypeRaw]}
-                    remarkPlugins={[remarkGfm, remarkDirective, remarkAdmonition]}
+                    remarkPlugins={[remarkGfm, remarkDirective, remarkRestoreUnsupportedDirectives, remarkAdmonition]}
                     components={{
                         img({ src, alt }) {
                             return src ? <RenderImage src={src} alt={alt} /> : null;
@@ -75,5 +75,28 @@ export function MarkdownRenderControl({ parentPath, questionItem }: QuestionItem
             <span className={s.questionText}>{text}</span>
             {value ? <MarkdownRender text={value} /> : null}
         </ROWidgetsStyles.Question>
+    );
+}
+
+export function MarkdownDisplay(props: QuestionItemProps) {
+    const { questionItem } = props;
+
+    const { text } = questionItem;
+
+    return <>{text ? <MarkdownRender text={text} /> : null}</>;
+}
+
+export function MarkdownCard(props: QuestionItemProps) {
+    const { questionItem } = props;
+
+    const text = questionItem?.text;
+    return (
+        <>
+            {text && (
+                <S.CardWrapper>
+                    <MarkdownRender text={text} />
+                </S.CardWrapper>
+            )}
+        </>
     );
 }

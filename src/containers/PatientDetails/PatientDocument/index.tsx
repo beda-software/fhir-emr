@@ -32,6 +32,7 @@ export interface PatientDocumentProps {
     onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
     autoSave?: boolean;
     qrDraftServiceType?: QuestionnaireResponseDraftService;
+    maxWidth?: number | string;
 }
 
 interface PatientDocumentContentProps extends PatientDocumentProps {
@@ -103,7 +104,7 @@ export function PatientDocument(props: PatientDocumentProps) {
 }
 
 function PatientDocumentContent(props: PatientDocumentContentProps) {
-    const { onQRFUpdate, alertComponent, onSaveDraft } = props;
+    const { onQRFUpdate, alertComponent, onSaveDraft, maxWidth } = props;
 
     // additional itemControlQuestionItemComponents should be memoized
     const itemControlQuestionItemComponents = useMemo(() => {
@@ -125,7 +126,7 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
 
     return (
         <div className={classNames(s.container, 'app-patient-document')}>
-            <S.Content>
+            <S.Content $maxWidth={maxWidth}>
                 <RenderRemoteData
                     remoteData={response}
                     renderLoading={Spinner}

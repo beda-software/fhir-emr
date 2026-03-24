@@ -13,6 +13,10 @@ interface Props {
 }
 
 const GlobalStyle = createGlobalStyle<{ $whiteColor?: boolean }>`
+  html {
+    scrollbar-gutter: stable;
+  }
+
   :root {
     --theme-icon-primary: ${({ theme }) => theme.iconColors.primary};
     --theme-icon-secondary: ${({ theme }) => theme.iconColors.secondary};
