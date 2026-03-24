@@ -29,6 +29,7 @@ export function GroupTabs(props: GroupItemProps) {
                 return {
                     key: item.linkId,
                     label: item.text,
+                    forceRender: true,
                     children: (
                         <Flex gap={16} vertical={true}>
                             <QuestionItems
