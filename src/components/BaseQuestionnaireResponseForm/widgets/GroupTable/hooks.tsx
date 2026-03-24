@@ -369,7 +369,25 @@ export function useGroupTable(props: GroupTableProps) {
 
     const fields = useMemo(() => _.map(visibleItem, (item) => item.linkId), [visibleItem]);
 
-    const dataSource: GroupTableRow[] = getDataSource(fields, formItems, questionItem);
+    const handleDelete = useCallback(
+        (index: number) => {
+            const filteredArray = _.filter(formItems, (_val, valIndex: number) => valIndex !== index);
+            const updatedGroupValue = { items: [...filteredArray] };
+            const currentFullFormValues = _.cloneDeep(getValues());
+            _.set(currentFullFormValues, fieldName, _.cloneDeep(updatedGroupValue));
+            reset(currentFullFormValues, { keepDirty: true });
+            onChange(updatedGroupValue);
+        },
+        [fieldName, formItems, getValues, onChange, reset],
+    );
+
+    const dataSource: GroupTableRow[] = useMemo(() => {
+        const dataSource = getDataSource(fields, formItems, questionItem);
+        if (dataSource.length === 0 && formItems.length === 1) {
+            handleDelete(0);
+        }
+        return dataSource;
+    }, [fields, formItems, handleDelete, questionItem]);
 
     const { observeRow, rowHeightExceedsMaxHeight, handleRowHeightRecompute, handleRowExpand, isRowExpanded } =
         useRowExpandability({
@@ -429,18 +447,6 @@ export function useGroupTable(props: GroupTableProps) {
             handleOpen(formItems.length);
         }
     }, [dataSource, formItems, handleOpen, formValues, getValues, fieldName, onChange]);
-
-    const handleDelete = useCallback(
-        (index: number) => {
-            const filteredArray = _.filter(formItems, (_val, valIndex: number) => valIndex !== index);
-            const updatedGroupValue = { items: [...filteredArray] };
-            const currentFullFormValues = _.cloneDeep(getValues());
-            _.set(currentFullFormValues, fieldName, _.cloneDeep(updatedGroupValue));
-            reset(currentFullFormValues, { keepDirty: true });
-            onChange(updatedGroupValue);
-        },
-        [fieldName, formItems, getValues, onChange, reset],
-    );
 
     const getColumnAlignment = (questionItem: FCEQuestionnaireItem) => {
         const type = questionItem.type;
