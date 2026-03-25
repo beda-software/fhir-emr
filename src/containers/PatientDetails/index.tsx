@@ -137,10 +137,24 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                                 path="/encounters/:encounterId/:qrId/*"
                                                 element={<PatientDocumentDetails patient={patient} />}
                                             />
-                                            <Route path="/documents" element={<PatientDocuments patient={patient} />} />
+                                            <Route
+                                                path="/documents"
+                                                element={
+                                                    <PatientDocuments
+                                                        key={`documents-${patient.id}`}
+                                                        patient={patient}
+                                                    />
+                                                }
+                                            />
                                             <Route
                                                 path="/forms"
-                                                element={<PatientDocuments patient={patient} context="form-library" />}
+                                                element={
+                                                    <PatientDocuments
+                                                        key={`forms-${patient.id}`}
+                                                        patient={patient}
+                                                        context="form-library"
+                                                    />
+                                                }
                                             />
                                             <Route
                                                 path="/documents/new/:questionnaireId"
