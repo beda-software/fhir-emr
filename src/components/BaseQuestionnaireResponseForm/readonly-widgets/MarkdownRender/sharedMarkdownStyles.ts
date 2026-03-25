@@ -242,7 +242,7 @@ export const markdownContentStyles = css`
         border: 1px solid ${({ theme }) => theme.antdTheme?.colorErrorBorder};
     }
 
-    .admonition:is(.info-alert, .success-alert, .warning-alert, .error-alert) > .admonition-content {
+    .admonition:is([class$='-alert'], [class*='-alert ']) > .admonition-content {
         background-color: transparent;
     }
 `;

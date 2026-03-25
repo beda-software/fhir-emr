@@ -5,7 +5,7 @@ import { markdownContentStyles } from './sharedMarkdownStyles';
 export const S = {
     WrapperMDRender: styled.div`
         width: 100%;
-        padding: 9px 12px;
+        padding: 0;
         gap: 4px 16px;
         margin: 0;
         font-size: 14px;
