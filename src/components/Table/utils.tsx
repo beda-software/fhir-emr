@@ -1,4 +1,10 @@
-import type { FilterDropdownProps, SorterResult, ColumnsType } from 'antd/es/table/interface';
+import type {
+    FilterDropdownProps,
+    SorterResult,
+    ColumnsType,
+    ColumnType,
+    ColumnGroupType,
+} from 'antd/es/table/interface';
 import { Bundle, Resource } from 'fhir/r4b';
 import _ from 'lodash';
 
@@ -16,11 +22,14 @@ interface Props<R extends Resource> {
     onChange: (value: ColumnFilterValue['value'], key: string) => void;
 }
 
+export type TableColumn<R extends Resource> = ColumnGroupType<RecordType<R>> | ColumnType<RecordType<R>>;
+
 export function populateTableColumnsWithFiltersAndSorts<R extends Resource>(
     props: Props<R>,
 ): ColumnsType<RecordType<R>> {
     const { tableColumns, filters, sorters, currentSorter, onChange } = props;
-    const updateColumn = (column: ColumnsType<RecordType<R>>[number]): ColumnsType<RecordType<R>>[number] => {
+
+    function updateColumn(column: TableColumn<R>): TableColumn<R> {
         const filter = filters.find((f) => f.column.id === column.key);
 
         const updatedColumn = {
@@ -41,9 +50,9 @@ export function populateTableColumnsWithFiltersAndSorts<R extends Resource>(
         }
 
         return updatedColumn;
-    };
+    }
 
-    const result = tableColumns.map(updateColumn);
+    const result = tableColumns.map((column) => updateColumn(column));
 
     return result;
 }
