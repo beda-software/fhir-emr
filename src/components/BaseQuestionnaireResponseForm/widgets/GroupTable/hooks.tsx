@@ -432,14 +432,16 @@ export function useGroupTable(props: GroupTableProps) {
 
     const handleDelete = useCallback(
         (index: number) => {
-            const filteredArray = _.filter(formItems, (_val, valIndex: number) => valIndex !== index);
-            const updatedGroupValue = { items: [...filteredArray] };
             const currentFullFormValues = _.cloneDeep(getValues());
+            const latestGroupValue = (_.get(currentFullFormValues, fieldName) ?? {}) as RepeatableFormGroupItems;
+            const latestItems = _.isArray(latestGroupValue.items) ? latestGroupValue.items : [];
+            const filteredArray = _.filter(latestItems, (_val, valIndex: number) => valIndex !== index);
+            const updatedGroupValue: RepeatableFormGroupItems = { ...latestGroupValue, items: [...filteredArray] };
             _.set(currentFullFormValues, fieldName, _.cloneDeep(updatedGroupValue));
             reset(currentFullFormValues, { keepDirty: true });
             onChange(updatedGroupValue);
         },
-        [fieldName, formItems, getValues, onChange, reset],
+        [fieldName, getValues, onChange, reset],
     );
 
     useEffect(() => {
@@ -482,17 +484,8 @@ export function useGroupTable(props: GroupTableProps) {
                     const rowKey = record.key;
                     const notFitsMaxHeight = rowHeightExceedsMaxHeight(rowKey);
                     const isExpanded = isRowExpanded.includes(rowKey);
-                    const isFirstColumn = columnIndex === 0;
-                    const rowIndex = value.index;
-                    const rowParentPath = [...parentPath, linkId, 'items', rowIndex.toString()];
                     return (
                         <>
-                            <HelperHiddenQuestionItems
-                                enabled={!isModalVisible && isFirstColumn}
-                                questionItems={rowQuestionItems}
-                                parentPath={rowParentPath}
-                                context={context[rowIndex] ?? context[0]}
-                            />
                             <S.ReadonlyItemWrapper
                                 $maxHeight={isExpandable ? expandableMaxHeight : undefined}
                                 $notFitsMaxHeight={notFitsMaxHeight}
@@ -601,6 +594,22 @@ export function useGroupTable(props: GroupTableProps) {
         };
     }, [chartLinkIdX, chartLinkIdY]);
 
+    const hiddenItems = useMemo(() => {
+        return dataSource.map((row) => {
+            const rowIndex = row[fields[0] ?? 'id']?.index ?? 0;
+            const rowParentPath = [...parentPath, linkId, 'items', rowIndex.toString()];
+            return (
+                <HelperHiddenQuestionItems
+                    key={rowIndex}
+                    enabled={!isModalVisible}
+                    questionItems={rowQuestionItems}
+                    parentPath={rowParentPath}
+                    context={context[rowIndex] ?? context[0]}
+                />
+            );
+        });
+    }, [context, dataSource, fields, isModalVisible, linkId, parentPath, rowQuestionItems]);
+
     return {
         repeats,
         hidden,
@@ -620,5 +629,6 @@ export function useGroupTable(props: GroupTableProps) {
         chartLinkIdY,
         chartYRange,
         chartHighlightAreas,
+        hiddenItems,
     };
 }
