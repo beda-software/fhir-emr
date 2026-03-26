@@ -13,7 +13,6 @@ import { RenderFormItemReadOnly } from 'src/components/BaseQuestionnaireResponse
 import { ColumnFilterValue, SearchBarColumn } from 'src/components/SearchBar/types';
 import { TableFilter } from 'src/components/Table/TableFilter';
 
-import { HelperHiddenQuestionItems } from './HelperHiddenQuestionItems';
 import { S } from './styles';
 import { GroupTableItem, GroupTableProps, GroupTableRow } from './types';
 import {
@@ -331,7 +330,7 @@ export function useRowExpandability(props: UseRowExpandabilityProps) {
 }
 
 export function useGroupTable(props: GroupTableProps) {
-    const { parentPath, questionItem, context, expandableMaxHeight = 100, columnAlignment } = props;
+    const { parentPath, questionItem, expandableMaxHeight = 100, columnAlignment } = props;
     const { linkId, repeats, text, hidden, item } = questionItem;
 
     const title = text ? text : linkId;
@@ -463,10 +462,8 @@ export function useGroupTable(props: GroupTableProps) {
         }
     };
 
-    const rowQuestionItems = useMemo(() => questionItem.item ?? [], [questionItem.item]);
-
-    const dataColumns: ColumnsType<GroupTableRow> = useMemo(() => {
-        const columns: ColumnsType<GroupTableRow> = _.map(visibleItem, (columnQuestionItem, columnIndex) => {
+    const dataColumns: ColumnsType<GroupTableRow> = (() => {
+        const columns: ColumnsType<GroupTableRow> = _.map(visibleItem, (columnQuestionItem) => {
             const columnLinkId = columnQuestionItem.linkId;
             const isExpandable = columnQuestionItem.type === 'text';
             const column: ColumnType<GroupTableRow> = {
@@ -511,22 +508,7 @@ export function useGroupTable(props: GroupTableProps) {
 
         const columnsWithSorters = populateColumnWithSorters(columns, questionItem);
         return populateColumnWithFilters(columnsWithSorters, questionItem);
-    }, [
-        columnAlignment,
-        context,
-        expandableMaxHeight,
-        isModalVisible,
-        isRowExpanded,
-        linkId,
-        observeRow,
-        parentPath,
-        populateColumnWithFilters,
-        populateColumnWithSorters,
-        questionItem,
-        rowHeightExceedsMaxHeight,
-        rowQuestionItems,
-        visibleItem,
-    ]);
+    })();
 
     const expandable: ExpandableConfig<GroupTableRow> | undefined = useMemo(() => {
         const expandableItem = visibleItem?.find((item) => item.type === 'text');
@@ -594,22 +576,6 @@ export function useGroupTable(props: GroupTableProps) {
         };
     }, [chartLinkIdX, chartLinkIdY]);
 
-    const hiddenItems = useMemo(() => {
-        return dataSource.map((row) => {
-            const rowIndex = row[fields[0] ?? 'id']?.index ?? 0;
-            const rowParentPath = [...parentPath, linkId, 'items', rowIndex.toString()];
-            return (
-                <HelperHiddenQuestionItems
-                    key={rowIndex}
-                    enabled={!isModalVisible}
-                    questionItems={rowQuestionItems}
-                    parentPath={rowParentPath}
-                    context={context[rowIndex] ?? context[0]}
-                />
-            );
-        });
-    }, [context, dataSource, fields, isModalVisible, linkId, parentPath, rowQuestionItems]);
-
     return {
         repeats,
         hidden,
@@ -629,6 +595,5 @@ export function useGroupTable(props: GroupTableProps) {
         chartLinkIdY,
         chartYRange,
         chartHighlightAreas,
-        hiddenItems,
     };
 }

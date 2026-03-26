@@ -31,7 +31,6 @@ export function GroupTable(props: GroupTableProps) {
         chartLinkIdY,
         chartYRange,
         chartHighlightAreas,
-        hiddenItems,
     } = useGroupTable(props);
 
     if (hidden) {
@@ -40,7 +39,6 @@ export function GroupTable(props: GroupTableProps) {
 
     return (
         <>
-            {hiddenItems}
             <Flex justify="space-between">
                 <Typography.Title level={4}>{title}</Typography.Title>
                 <Space size={16}>
