@@ -1,0 +1,496 @@
+resourceType: Questionnaire
+id: preadmission
+name: preadmission
+title: Pre-Procedure Health Questionnaire Form
+status: active
+subjectType:
+  - Patient
+  - Encounter
+url: preadmission
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+useContext:
+  - code:
+      code: questionnaire-type
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+    value:
+      CodeableConcept:
+        coding:
+          - code: form-library
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+  - name:
+      code: Author
+    type:
+      - PractitionerRole
+      - Practitioner
+      - Patient
+      - Organization
+# mapping:
+#   - reference: Mapping/preadmission-composition
+item:
+  - text: PatientId
+    type: string
+    linkId: patientId
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.id"
+
+  - linkId: wizard
+    type: group
+    itemControl:
+      coding:
+        - code: wizard-vertical
+    item:
+      # Header
+      - linkId: instructions
+        text: Instructions
+        type: group
+        item:
+          - linkId: form-title
+            itemControl:
+              coding:
+                - code: markdown
+            type: display
+            text: >-
+              Please answer every question as best you can.
+              Parents or guardians should answer for children.
+              If necessary, ask a relative, friend or your **general practitioner (GP)** to help you.
+
+          - linkId: hospital-location
+            text: Which hospital are you having your procedure at?
+            type: reference
+            required: true
+            entryFormat: Select hospital
+            referenceResource:
+              - Organization
+            answerExpression:
+              language: application/x-fhir-query
+              expression: "Organization"
+            choiceColumn:
+              - forDisplay: true
+                path: name
+
+      # Personal Details
+      - type: group
+        linkId: personal-details
+        text: Personal Details
+        item:
+          - linkId: title
+            text: Title
+            type: string
+            required: true
+            entryFormat: Title
+
+          - linkId: family-name
+            text: Family Name
+            type: string
+            required: true
+            entryFormat: Family Name
+
+          - linkId: given-name
+            text: Given Name
+            type: string
+            required: true
+            entryFormat: Given Name
+
+          - linkId: middle-name
+            text: Middle Name
+            type: string
+            entryFormat: Middle Name
+
+          - linkId: preferred-name
+            text: Preferred Name
+            type: string
+            entryFormat: Preferred Name
+
+          - linkId: date-of-birth
+            text: Date of Birth
+            type: date
+            required: true
+            entryFormat: dd/mm/yyyy
+
+          - linkId: sex
+            text: Sex
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  system: http://hl7.org/fhir/administrative-gender
+                  code: "male"
+                  display: "Male"
+              - valueCoding:
+                  system: http://hl7.org/fhir/administrative-gender
+                  code: "female"
+                  display: "Female"
+              - valueCoding:
+                  system: http://hl7.org/fhir/administrative-gender
+                  code: "other"
+                  display: "Other"
+              - valueCoding:
+                  system: http://hl7.org/fhir/administrative-gender
+                  code: "unknown"
+                  display: "Unknown"
+
+          - linkId: maiden-name
+            text: Maiden Name
+            type: string
+            entryFormat: Maiden Name
+
+          - linkId: previous-family-name
+            text: Previous Family Name
+            type: string
+            entryFormat: Previous Family Name
+
+          - linkId: medicare-number
+            text: Medicare number (if any)
+            type: string
+            required: true
+            entryFormat: Medicare number
+
+          - linkId: medicare-single-digit
+            text: Single digit next to patient name (if any)
+            type: string
+            entryFormat: Single digit
+
+          - linkId: medicare-expiry
+            text: Expiry Date (if any)
+            type: date
+            required: true
+            entryFormat: mm/yyyy
+
+          - linkId: pension-centrelink-number
+            text: Pension/Centrelink number (if any)
+            type: string
+            entryFormat: Pension/Centrelink number
+
+          - linkId: type-of-care
+            text: Type of care (if any)
+            type: string
+            entryFormat: Type of care
+
+          - linkId: overseas-visitor
+            text: Are you an overseas visitor?
+            type: choice
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "N"
+                  display: "No"
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "Y"
+                  display: "Yes"
+
+          - linkId: admitted-for-non-surgery
+            text: Have you ever been admitted to hospital for something other than surgery?
+            type: choice
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "N"
+                  display: "No"
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "Y"
+                  display: "Yes"
+
+          - linkId: private-health-insurance
+            text: Do you have private health insurance/travel insurance?
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "N"
+                  display: "No"
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "Y"
+                  display: "Yes"
+
+          - linkId: veterans-affairs
+            text: Is your health covered by Veterans Affairs?
+            type: choice
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "N"
+                  display: "No"
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "Y"
+                  display: "Yes"
+
+          - linkId: self-funded-patient
+            text: Are you a self-funded patient?
+            type: choice
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "N"
+                  display: "No"
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "Y"
+                  display: "Yes"
+
+          - linkId: compensable-claim
+            text: Is your surgery related to a motor vehicle accident or compensable claim?
+            type: choice
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "N"
+                  display: "No"
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "Y"
+                  display: "Yes"
+
+          - linkId: ndis-support
+            text: Are you receiving NDIS Support?
+            type: choice
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "N"
+                  display: "No"
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "Y"
+                  display: "Yes"
+
+          - linkId: marital-status
+            text: Marital Status
+            type: choice
+            entryFormat: Select marital status
+            answerValueSet: http://hl7.org/fhir/ValueSet/marital-status
+            preferredTerminologyServer: https://tx.dev.hl7.org.au/fhir
+
+          - linkId: indigenous-origin
+            text: Are you of Aboriginal or Torres Strait Islander Origin?
+            type: choice
+            required: true
+            entryFormat: Select indigenous origin
+            answerValueSet: https://healthterminologies.gov.au/fhir/ValueSet/australian-indigenous-status-1
+            preferredTerminologyServer: https://tx.dev.hl7.org.au/fhir
+
+          - linkId: interpreter-required
+            text: Interpreter required?
+            type: boolean
+
+          # - linkId: preferred-language
+          #   text: Preferred language
+          #   type: choice
+          #   entryFormat: Select preferred language
+          #   preferredTerminologyServer: https://tx.fhir.org/r4
+          #   answerValueSet: http://hl7.org/fhir/ValueSet/languages
+
+      # Residential address
+      - type: group
+        linkId: residential-address
+        text: Residential address
+        item:
+          - linkId: residential-street-address
+            text: Street address
+            type: string
+            required: true
+            entryFormat: Street address
+
+          - linkId: residential-suburb
+            text: Suburb
+            type: string
+            required: true
+            entryFormat: Suburb
+
+          - linkId: residential-state
+            text: State
+            type: choice
+            entryFormat: Please select
+            required: true
+            answerValueSet: https://healthterminologies.gov.au/fhir/ValueSet/australian-states-territories-2
+            preferredTerminologyServer: https://tx.dev.hl7.org.au/fhir
+
+          - linkId: residential-postcode
+            text: Postcode
+            type: string
+            required: true
+            entryFormat: Postcode
+
+          - linkId: residential-email
+            text: Email
+            type: string
+            required: true
+            entryFormat: Email address
+
+          - linkId: residential-home-phone
+            text: Home phone
+            type: string
+            entryFormat: Home phone
+
+          - linkId: residential-mobile
+            text: Mobile
+            type: string
+            entryFormat: Mobile
+            itemControl:
+              coding:
+                - code: phoneWidget
+            initialExpression:
+              language: text/fhirpath
+              expression: "'+61 '"
+
+          - linkId: residential-business-phone
+            text: Business
+            type: string
+            entryFormat: Business
+
+          - linkId: information-preference
+            text: How do you prefer information to be sent?
+            type: choice
+            entryFormat: Select how you prefer information to be sent
+            answerValueSet: http://hl7.org/fhir/ValueSet/contact-point-system
+            preferredTerminologyServer: https://tx.dev.hl7.org.au/fhir
+
+      # Postal/Temporary address
+      - linkId: postal-temporary-address-group
+        text: Postal/Temporary address
+        type: group
+        item:
+          - linkId: postal-temporary-address-different-from-residential
+            text: Postal/Temporary address different from the Residential address
+            type: boolean
+
+          - linkId: postal-temporary-address-details-group
+            type: group
+            enableWhenExpression:
+              language: text/fhirpath
+              expression: >-
+                %resource.repeat(item).where(linkId='postal-temporary-address-different-from-residential').answer.valueBoolean.where($this = true).exists()
+            item:
+              - linkId: postal-po-box
+                text: PO Box
+                type: string
+                entryFormat: PO Box
+
+              - linkId: postal-street-address
+                text: Building/Property name and street address
+                type: string
+                entryFormat: Building/Property name and street address
+
+              - linkId: postal-suburb
+                text: Suburb
+                type: string
+                entryFormat: Suburb
+
+              - linkId: postal-state
+                text: State
+                type: choice
+                entryFormat: Please select
+                answerValueSet: https://healthterminologies.gov.au/fhir/ValueSet/australian-states-territories-2
+                preferredTerminologyServer: https://tx.dev.hl7.org.au/fhir
+
+              - linkId: postal-postcode
+                text: Postcode
+                type: string
+                entryFormat: Postcode
+
+      # Person to Contact group
+      - linkId: person-to-contact-group
+        text: Person to Contact
+        type: group
+        itemControl:
+          coding:
+            - code: group-table
+        item:
+          - linkId: person-to-contact-item
+            text: Contact
+            type: group
+            repeats: true
+            itemControl:
+              coding:
+                - code: group-table
+            item:
+              - linkId: contact-given-name
+                text: Given Name
+                type: string
+                required: true
+                entryFormat: Given Name
+
+              - linkId: contact-family-name
+                text: Family Name
+                type: string
+                required: true
+                entryFormat: Family Name
+
+              - linkId: contact-relationship
+                text: Relationship to Patient
+                type: choice
+                required: true
+                entryFormat: Relationship to Patient
+                answerValueSet: http://hl7.org/fhir/ValueSet/relatedperson-relationshiptype
+                preferredTerminologyServer: https://tx.dev.hl7.org.au/fhir
+
+              # - linkId: contact-address-same-as-patient
+              #   text: Address same as Patient
+              #   type: boolean
+              - linkId: contact-address
+                text: Address
+                type: string
+                required: true
+                entryFormat: Address
+                # calculatedExpression:
+                #   language: text/fhirpath
+                #   expression: >
+                #     iif(
+                #       %context.item.where(linkId='contact-address-same-as-patient')
+                #         .answer.valueBoolean.where($this = true)
+                #         .exists(),
+                #       %resource.repeat(item).where(linkId='residential-street-address').answer.valueString.first(),
+                #       %context.answer.valueString
+                #     )
+
+              - linkId: contact-home-phone
+                text: Home phone
+                type: string
+                entryFormat: Home phone
+
+              - linkId: contact-mobile
+                text: Mobile
+                type: string
+                entryFormat: Mobile
+                itemControl:
+                  coding:
+                    - code: phoneWidget
+                # initialExpression:
+                #   language: text/fhirpath
+                #   expression: "'+61 '"
