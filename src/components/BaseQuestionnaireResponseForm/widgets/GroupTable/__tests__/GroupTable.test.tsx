@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import { FCEQuestionnaireItem, FormItems } from 'sdc-qrf';
 import { beforeAll, beforeEach, describe, expect, test, vi } from 'vitest';
 
@@ -72,12 +72,14 @@ const groupTableHookMocks = {
     mockOnChange: vi.fn(),
     mockReset: vi.fn(),
     formValuesState: { group: { items: [{} as FormItems] } } as { group: { items: FormItems[] } },
+    watchedFormValuesState: { group: { items: [{} as FormItems] } } as { group: { items: FormItems[] } },
 };
 
 vi.mock('src/components/BaseQuestionnaireResponseForm/hooks', () => ({
     useFieldController: () => ({
         onChange: (next: { items: FormItems[] }) => {
             groupTableHookMocks.formValuesState = { group: next };
+            groupTableHookMocks.watchedFormValuesState = { group: next };
             groupTableHookMocks.mockOnChange(next);
         },
     }),
@@ -89,7 +91,7 @@ vi.mock('react-hook-form', () => ({
         getValues: () => groupTableHookMocks.formValuesState,
         reset: groupTableHookMocks.mockReset,
     }),
-    useWatch: () => groupTableHookMocks.formValuesState,
+    useWatch: () => groupTableHookMocks.watchedFormValuesState,
 }));
 
 describe('GroupTable', () => {
@@ -146,6 +148,7 @@ describe('useGroupTable', () => {
         groupTableHookMocks.mockOnChange.mockClear();
         groupTableHookMocks.mockReset.mockClear();
         groupTableHookMocks.formValuesState = { group: { items: [{}] } };
+        groupTableHookMocks.watchedFormValuesState = { group: { items: [{}] } };
     });
 
     test('removes a lone empty form row when dataSource is empty and modal is closed', async () => {
@@ -162,6 +165,64 @@ describe('useGroupTable', () => {
         });
         expect(groupTableHookMocks.mockOnChange).toHaveBeenCalledTimes(1);
         expect(groupTableHookMocks.mockReset).toHaveBeenCalled();
+    });
+
+    test('deleting the middle row keeps data in other rows intact', async () => {
+        const row1 = getFormItem('2022-01-01', 70);
+        const row2 = getFormItem('2022-01-02', 75);
+        const row3 = getFormItem('2022-01-03', 80);
+        const rows = [row1, row2, row3];
+
+        groupTableHookMocks.formValuesState = { group: { items: rows } };
+        groupTableHookMocks.watchedFormValuesState = { group: { items: rows } };
+
+        const props: GroupTableProps = {
+            parentPath: [],
+            context: [],
+            questionItem: getGroupQuestionnaireItem(true),
+        };
+
+        const { result } = renderHook(() => useGroupTable(props));
+        const actionColumn: any = result.current.columns[result.current.columns.length - 1];
+        const actionCell: any = actionColumn.render(result.current.dataSource[1]!.date);
+        const popconfirm: any = actionCell.props.children[1];
+
+        await act(async () => {
+            popconfirm.props.onConfirm();
+        });
+
+        await waitFor(() => {
+            expect(groupTableHookMocks.mockOnChange).toHaveBeenLastCalledWith({ items: [row1, row3] });
+        });
+        expect(groupTableHookMocks.mockReset).toHaveBeenCalled();
+    });
+
+    test('delete uses latest getValues snapshot when watched values are stale', async () => {
+        const latestRow1 = getFormItem('2022-01-01', 70);
+        const latestRow2 = getFormItem('2022-01-02', 75);
+        const latestRow3 = getFormItem('2022-01-03', 80);
+
+        groupTableHookMocks.formValuesState = { group: { items: [latestRow1, latestRow2, latestRow3] } };
+        groupTableHookMocks.watchedFormValuesState = { group: { items: [latestRow1, latestRow2] } };
+
+        const props: GroupTableProps = {
+            parentPath: [],
+            context: [],
+            questionItem: getGroupQuestionnaireItem(true),
+        };
+
+        const { result } = renderHook(() => useGroupTable(props));
+        const actionColumn: any = result.current.columns[result.current.columns.length - 1];
+        const actionCell: any = actionColumn.render(result.current.dataSource[0]!.date);
+        const popconfirm: any = actionCell.props.children[1];
+
+        await act(async () => {
+            popconfirm.props.onConfirm();
+        });
+
+        await waitFor(() => {
+            expect(groupTableHookMocks.mockOnChange).toHaveBeenLastCalledWith({ items: [latestRow2, latestRow3] });
+        });
     });
 });
 

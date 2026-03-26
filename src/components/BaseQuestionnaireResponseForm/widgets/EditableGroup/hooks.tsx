@@ -5,13 +5,12 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { FormItems, GroupItemProps, RepeatableFormGroupItems } from 'sdc-qrf';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
-import { HelperHiddenQuestionItems } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/HelperHiddenQuestionItems';
 import { RenderFormItemReadOnly } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/RenderFormItemReadOnly';
 import { GroupTableItem, GroupTableRow } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/types';
 import { getColumnWidth, getDataSource } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/utils';
 
 export function useEditableGroup(props: GroupItemProps) {
-    const { parentPath, questionItem, context } = props;
+    const { parentPath, questionItem } = props;
     const { linkId, repeats, text, hidden, item } = questionItem;
 
     const title = text ? text : linkId;
@@ -69,31 +68,19 @@ export function useEditableGroup(props: GroupItemProps) {
         setIsModalVisible(false);
     }, [getValues, reset]);
 
-    const rowQuestionItems = useMemo(() => questionItem.item ?? [], [questionItem.item]);
-    const rowParentPath = useMemo(() => [...parentPath, linkId, 'items'], [parentPath, linkId]);
-
-    const dataColumns: ColumnsType<GroupTableRow> = useMemo(() => {
-        return _.map(visibleItem, (columnQuestionItem, columnIndex) => {
-            const isFirstColumn = columnIndex === 0;
-            return {
-                title: columnQuestionItem.text ? columnQuestionItem.text : '',
-                dataIndex: columnQuestionItem.linkId,
-                key: columnQuestionItem.linkId,
-                width: getColumnWidth(columnQuestionItem),
-                render: (value: GroupTableItem) => (
-                    <>
-                        <HelperHiddenQuestionItems
-                            enabled={!isModalVisible && isFirstColumn}
-                            questionItems={rowQuestionItems}
-                            parentPath={rowParentPath}
-                            context={context[0]}
-                        />
-                        <RenderFormItemReadOnly formItem={value.formItem} questionnaireItem={value.questionnaireItem} />
-                    </>
-                ),
-            };
-        });
-    }, [context, isModalVisible, rowParentPath, rowQuestionItems, visibleItem]);
+    const dataColumns: ColumnsType<GroupTableRow> = _.map(visibleItem, (columnQuestionItem) => {
+        return {
+            title: columnQuestionItem.text ? columnQuestionItem.text : '',
+            dataIndex: columnQuestionItem.linkId,
+            key: columnQuestionItem.linkId,
+            width: getColumnWidth(columnQuestionItem),
+            render: (value: GroupTableItem) => (
+                <>
+                    <RenderFormItemReadOnly formItem={value.formItem} questionnaireItem={value.questionnaireItem} />
+                </>
+            ),
+        };
+    });
 
     return {
         repeats,
