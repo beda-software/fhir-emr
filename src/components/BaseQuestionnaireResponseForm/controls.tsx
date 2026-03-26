@@ -9,6 +9,7 @@ import {
     MarkdownCard,
     MarkdownDisplay,
 } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/MarkdownRender';
+import { AnxietyScore, DepressionScore } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/score';
 import { GroupTable } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable';
 import { TextWithMacroFill } from 'src/components/TextWithMacroFill';
 
@@ -89,6 +90,8 @@ export const itemControlComponents: ItemControlQuestionItemComponentMapping = {
     'markdown-card': MarkdownCard,
     // reference-radio-button is deprecated, use inline-reference instead
     'reference-radio-button': InlineReference,
+    'anxiety-score': AnxietyScore,
+    'depression-score': DepressionScore,
 };
 
 export const groupControlComponents: ItemControlGroupItemComponentMapping = {

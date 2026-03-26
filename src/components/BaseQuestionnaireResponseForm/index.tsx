@@ -248,7 +248,7 @@ export function BaseQuestionnaireResponseForm(props: BaseQuestionnaireResponseFo
     );
 }
 
-function isGroupWizard(q: FCEQuestionnaire) {
+export function isGroupWizard(q: FCEQuestionnaire) {
     return q.item?.some((i) => {
         const itemControlCode = i.itemControl?.coding?.[0]?.code;
 

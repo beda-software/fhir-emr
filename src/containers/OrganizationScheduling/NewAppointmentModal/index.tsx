@@ -3,11 +3,13 @@ import { HealthcareService, Practitioner, PractitionerRole } from 'fhir/r4b';
 
 import { RenderRemoteData, formatFHIRDateTime } from '@beda.software/fhir-react';
 
-import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
+import { FormWrapper, GroupItemComponent } from 'src/components/FormWrapper';
 import { Modal } from 'src/components/Modal';
 import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
 import { inMemorySaveService } from 'src/hooks/questionnaire-response-form-data';
+import { BaseQuestionnaireResponseForm } from 'src/packages/@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/BaseQuestionnaireResponseForm';
+import { service } from 'src/services';
 
 interface NewAppointmentModalProps {
     practitionerRole: PractitionerRole;
@@ -60,7 +62,14 @@ export function NewAppointmentModal(props: NewAppointmentModalProps) {
             <RenderRemoteData remoteData={response} renderLoading={Spinner}>
                 {(formData) => {
                     return (
-                        <BaseQuestionnaireResponseForm formData={formData} onSubmit={onSubmit} readOnly={readOnly} />
+                        <BaseQuestionnaireResponseForm
+                            formData={formData}
+                            onSubmit={onSubmit}
+                            readOnly={readOnly}
+                            fhirService={service}
+                            groupItemComponent={GroupItemComponent}
+                            FormWrapper={(props) => <FormWrapper {...props} formData={formData} onCancel={onCancel} />}
+                        />
                     );
                 }}
             </RenderRemoteData>

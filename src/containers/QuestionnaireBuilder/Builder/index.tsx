@@ -8,10 +8,12 @@ import { GroupItemProps, QuestionItemProps, toFirstClassExtension } from 'sdc-qr
 import { RenderRemoteData } from '@beda.software/fhir-react';
 import { RemoteData, isLoading } from '@beda.software/remote-data';
 
-import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
+import { FormWrapper, GroupItemComponent } from 'src/components/FormWrapper';
 import { Spinner } from 'src/components/Spinner';
 import { Title, Text } from 'src/components/Typography';
 import { toQuestionnaireResponseFormData } from 'src/hooks/questionnaire-response-form-data';
+import { BaseQuestionnaireResponseForm } from 'src/packages/@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/BaseQuestionnaireResponseForm';
+import { service } from 'src/services';
 
 import { BuilderField } from './BuilderField';
 import { BuilderGroup } from './BuilderGroup';
@@ -102,6 +104,9 @@ export function Builder(props: Props) {
                                     <DndProvider backend={HTML5Backend}>
                                         <BaseQuestionnaireResponseForm
                                             formData={formData}
+                                            fhirService={service}
+                                            groupItemComponent={GroupItemComponent}
+                                            FormWrapper={(props) => <FormWrapper {...props} formData={formData} />}
                                             // onSubmit={async (values) =>
                                             //     console.log(
                                             //         'result',

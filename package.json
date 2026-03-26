@@ -20,13 +20,16 @@
         "prepare": "husky install && yarn compile && yarn build:lib"
     },
     "workspaces": [
-        "contrib/*"
+        "contrib/*",
+        "src/packages/*",
+        "src/packages/@beda.software/*"
     ],
     "dependencies": {
         "@ant-design/colors": "^7.0.0",
         "@ant-design/icons": "^5.1.4",
         "@beda.software/emr-config": "*",
         "@beda.software/fhir-react": "^1.11.1",
+        "@beda.software/fhir-questionnaire": "2.0.0-alpha.0",
         "@beda.software/remote-data": "^1.1.4",
         "@fullcalendar/core": "^6.1.15",
         "@fullcalendar/daygrid": "^6.1.8",
@@ -72,8 +75,14 @@
         "styled-components": "^6.1.11",
         "yup": "^1.7.0"
     },
-    "peerDependencies": {
-        "rc-picker": "^3.8.2"
+    "resolutions": {
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "sdc-qrf": "^1.1.0-alpha.3",
+        "@types/react": "^18.0.37",
+        "react-hook-form": "^7.53.2",
+        "rc-picker": "^4.11.3",
+        "yup": "^1.7.0"
     },
     "devDependencies": {
         "@babel/preset-typescript": "^7.26.0",
