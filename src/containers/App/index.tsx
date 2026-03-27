@@ -4,8 +4,8 @@ import { Route } from 'react-router-dom';
 
 import { AnonymousLayout } from 'src/components/BaseLayout';
 import { defaultFooterLayout } from 'src/components/BaseLayout/Footer/context';
-import { defaultMenuLayout } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
 import { LocaleConfig } from 'src/components/BaseLayout/Sidebar/SidebarBottom/context';
+import { defaultMenuLayout } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { EncounterList } from 'src/containers/EncounterList';
 import { MagicSearchPage } from 'src/containers/MagicSearchPage';
@@ -41,8 +41,13 @@ interface AppProps {
 }
 
 export function App(props: AppProps) {
-    const { authenticatedRoutes, anonymousRoutes, populateUserInfoSharedState, UserWithNoRolesComponent, localeConfig } =
-        props;
+    const {
+        authenticatedRoutes,
+        anonymousRoutes,
+        populateUserInfoSharedState,
+        UserWithNoRolesComponent,
+        localeConfig,
+    } = props;
 
     // Define the default authenticated routes
     const defaultAuthenticatedRoutes = (
