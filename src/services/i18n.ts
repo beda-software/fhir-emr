@@ -1,18 +1,21 @@
 import { i18n } from '@lingui/core';
 import type { Locale } from 'antd/es/locale';
+import deAntdLocale from 'antd/es/locale/de_DE';
 import enAntdLocale from 'antd/es/locale/en_US';
 import esAntdLocale from 'antd/es/locale/es_ES';
 import ruAntdLocale from 'antd/es/locale/ru_RU';
-import { en, es, ru } from 'make-plural/plurals';
+import { de, en, es, ru } from 'make-plural/plurals';
 import { type ReactNode } from 'react';
 
+import { messages as deMessages } from 'src/locale/de/messages';
 import { messages as enMessages } from 'src/locale/en/messages';
 import { messages as esMessages } from 'src/locale/es/messages';
 import { messages as ruMessages } from 'src/locale/ru/messages';
 
-export type LocaleCode = 'en' | 'es' | 'ru';
+export type LocaleCode = 'en' | 'es' | 'ru' | 'de';
 
 const localMap = {
+    de: deMessages,
     en: enMessages,
     es: esMessages,
     ru: ruMessages,
@@ -22,12 +25,14 @@ export const locales: Record<string, string> = {
     en: 'English',
     es: 'Español',
     ru: 'Русский',
+    de: 'Deutsch',
 };
 
 i18n.loadLocaleData({
     en: { plurals: en },
     es: { plurals: es },
     ru: { plurals: ru },
+    de: { plurals: de },
 });
 
 export const getCurrentLocale = () => {
@@ -52,6 +57,7 @@ export const antdLocaleMap: { [localeCode in LocaleCode]: Locale } = {
     en: enAntdLocale,
     es: esAntdLocale,
     ru: ruAntdLocale,
+    de: deAntdLocale,
 };
 
 export function getAvailableLocales() {
