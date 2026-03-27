@@ -4,7 +4,6 @@ import { Route } from 'react-router-dom';
 
 import { AnonymousLayout } from 'src/components/BaseLayout';
 import { defaultFooterLayout } from 'src/components/BaseLayout/Footer/context';
-import { LocaleConfig } from 'src/components/BaseLayout/Sidebar/SidebarBottom/context';
 import { defaultMenuLayout } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { EncounterList } from 'src/containers/EncounterList';
@@ -19,6 +18,7 @@ import { QuestionnaireBuilder } from 'src/containers/QuestionnaireBuilder';
 import { QuestionnaireList } from 'src/containers/QuestionnaireList';
 import { SignIn } from 'src/containers/SignIn';
 import { VideoCall } from 'src/containers/VideoCall';
+import { LocaleConfig } from 'src/services/i18n';
 
 import { AidboxFormsBuilder } from '../AidboxFormsBuilder';
 import { EMR } from '../EMR';

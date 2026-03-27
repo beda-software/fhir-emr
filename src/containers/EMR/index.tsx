@@ -10,7 +10,7 @@ import { RemoteDataResult, success } from '@beda.software/remote-data';
 
 import { BaseLayout } from 'src/components/BaseLayout';
 import { FooterLayout, defaultFooterLayout } from 'src/components/BaseLayout/Footer/context';
-import { defaultLocaleConfig, LocaleConfig, LocaleConfigProvider } from 'src/components/BaseLayout/Sidebar/SidebarBottom/context';
+import { LocaleConfigProvider } from 'src/components/BaseLayout/Sidebar/SidebarBottom/context';
 import { MenuLayout, MenuLayoutValue } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
 import { Spinner } from 'src/components/Spinner';
 import { DefaultUserWithNoRoles } from 'src/containers/App/DefaultUserWithNoRoles';
@@ -18,6 +18,7 @@ import { restoreUserSession } from 'src/containers/App/utils';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { DocumentPrint } from 'src/containers/PatientDetails/DocumentPrint';
 import { getToken, parseOAuthState, setToken } from 'src/services/auth';
+import { defaultLocaleConfig, LocaleConfig } from 'src/services/i18n';
 
 interface EMRProps {
     authenticatedRoutes?: ReactElement;
