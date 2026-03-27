@@ -19,6 +19,7 @@ import { QuestionnaireBuilder } from 'src/containers/QuestionnaireBuilder';
 import { QuestionnaireList } from 'src/containers/QuestionnaireList';
 import { SignIn } from 'src/containers/SignIn';
 import { VideoCall } from 'src/containers/VideoCall';
+import { LocaleConfig } from 'src/services/i18n';
 
 import { AidboxFormsBuilder } from '../AidboxFormsBuilder';
 import { EMR } from '../EMR';
@@ -37,10 +38,17 @@ interface AppProps {
     anonymousRoutes?: ReactElement;
     populateUserInfoSharedState?: () => Promise<any>;
     UserWithNoRolesComponent?: () => ReactElement;
+    localeConfig?: LocaleConfig;
 }
 
 export function App(props: AppProps) {
-    const { authenticatedRoutes, anonymousRoutes, populateUserInfoSharedState, UserWithNoRolesComponent } = props;
+    const {
+        authenticatedRoutes,
+        anonymousRoutes,
+        populateUserInfoSharedState,
+        UserWithNoRolesComponent,
+        localeConfig,
+    } = props;
 
     // Define the default authenticated routes
     const defaultAuthenticatedRoutes = (
@@ -113,6 +121,7 @@ export function App(props: AppProps) {
                 UserWithNoRolesComponent={UserWithNoRolesComponent}
                 menuLayout={defaultMenuLayout}
                 footer={defaultFooterLayout}
+                localeConfig={localeConfig}
             />
         </div>
     );

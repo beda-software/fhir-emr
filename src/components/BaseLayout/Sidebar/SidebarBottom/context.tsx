@@ -4,6 +4,7 @@ import { createContext } from 'react';
 
 import { AvatarImage } from 'src/images/AvatarImage';
 import { doLogout } from 'src/services/auth';
+import { defaultLocaleConfig, LocaleConfig } from 'src/services/i18n';
 import {
     sharedAuthorizedOrganization,
     sharedAuthorizedPatient,
@@ -76,3 +77,5 @@ function OrganizationName() {
 }
 
 export const BottomMenuLayout = createContext<BottomMenuLayoutValue>(defaultBottomMenuLayout);
+
+export const LocaleConfigProvider = createContext<LocaleConfig>(defaultLocaleConfig);

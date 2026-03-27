@@ -4,6 +4,7 @@ import enAntdLocale from 'antd/es/locale/en_US';
 import esAntdLocale from 'antd/es/locale/es_ES';
 import ruAntdLocale from 'antd/es/locale/ru_RU';
 import { en, es, ru } from 'make-plural/plurals';
+import { type ReactNode } from 'react';
 
 import { messages as enMessages } from 'src/locale/en/messages';
 import { messages as esMessages } from 'src/locale/es/messages';
@@ -17,7 +18,7 @@ const localMap = {
     ru: ruMessages,
 };
 
-export const locales = {
+export const locales: Record<string, string> = {
     en: 'English',
     es: 'Español',
     ru: 'Русский',
@@ -51,4 +52,30 @@ export const antdLocaleMap: { [localeCode in LocaleCode]: Locale } = {
     en: enAntdLocale,
     es: esAntdLocale,
     ru: ruAntdLocale,
+};
+
+export function getAvailableLocales() {
+    return Object.entries(locales).map(([code, label]) => ({ code, label }));
+}
+
+export function changeLocale(locale: LocaleCode) {
+    setCurrentLocale(locale);
+    dynamicActivate(locale);
+    location.reload();
+}
+
+export interface LocaleConfig {
+    getCurrentLocale: () => string;
+    getAvailableLocales: () => Array<{ code: string; label: ReactNode }>;
+    getLocaleLabel: (code: string) => ReactNode;
+    changeLocale: (code: string) => void;
+}
+
+export const defaultLocaleConfig: LocaleConfig = {
+    getCurrentLocale,
+    getAvailableLocales,
+    getLocaleLabel: (code: string) => locales[code] ?? code,
+    changeLocale: (code: string) => {
+        changeLocale(code as LocaleCode);
+    },
 };

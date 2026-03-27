@@ -10,6 +10,7 @@ import { RemoteDataResult, success } from '@beda.software/remote-data';
 
 import { BaseLayout } from 'src/components/BaseLayout';
 import { FooterLayout, defaultFooterLayout } from 'src/components/BaseLayout/Footer/context';
+import { LocaleConfigProvider } from 'src/components/BaseLayout/Sidebar/SidebarBottom/context';
 import { MenuLayout, MenuLayoutValue } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
 import { Spinner } from 'src/components/Spinner';
 import { DefaultUserWithNoRoles } from 'src/containers/App/DefaultUserWithNoRoles';
@@ -17,6 +18,7 @@ import { restoreUserSession } from 'src/containers/App/utils';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { DocumentPrint } from 'src/containers/PatientDetails/DocumentPrint';
 import { getToken, parseOAuthState, setToken } from 'src/services/auth';
+import { defaultLocaleConfig, LocaleConfig } from 'src/services/i18n';
 
 interface EMRProps {
     authenticatedRoutes?: ReactElement;
@@ -25,6 +27,7 @@ interface EMRProps {
     UserWithNoRolesComponent?: () => ReactElement;
     menuLayout: MenuLayoutValue;
     footer?: ReactElement;
+    localeConfig?: LocaleConfig;
 }
 
 export function EMR(props: EMRProps) {
@@ -35,6 +38,7 @@ export function EMR(props: EMRProps) {
         UserWithNoRolesComponent,
         menuLayout,
         footer,
+        localeConfig,
     } = props;
 
     const [userResponse] = useService(async () => {
@@ -60,13 +64,15 @@ export function EMR(props: EMRProps) {
 
     return (
         <div data-testid="emr-container">
-            <MenuLayout.Provider value={menuLayout}>
-                <FooterLayout.Provider value={footer ? footer : defaultFooterLayout}>
-                    <RenderRemoteData remoteData={userResponse} renderLoading={Spinner}>
-                        {(user) => <BrowserRouter>{renderRoutes(user)}</BrowserRouter>}
-                    </RenderRemoteData>
-                </FooterLayout.Provider>
-            </MenuLayout.Provider>
+            <LocaleConfigProvider.Provider value={localeConfig ?? defaultLocaleConfig}>
+                <MenuLayout.Provider value={menuLayout}>
+                    <FooterLayout.Provider value={footer ? footer : defaultFooterLayout}>
+                        <RenderRemoteData remoteData={userResponse} renderLoading={Spinner}>
+                            {(user) => <BrowserRouter>{renderRoutes(user)}</BrowserRouter>}
+                        </RenderRemoteData>
+                    </FooterLayout.Provider>
+                </MenuLayout.Provider>
+            </LocaleConfigProvider.Provider>
         </div>
     );
 }
