@@ -1,9 +1,16 @@
 import { LogoutOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
-import { createContext } from 'react';
+import { ReactNode, createContext } from 'react';
 
 import { AvatarImage } from 'src/images/AvatarImage';
 import { doLogout } from 'src/services/auth';
+import {
+    changeLocale,
+    getAvailableLocales,
+    getCurrentLocale,
+    LocaleCode,
+    locales,
+} from 'src/services/i18n';
 import {
     sharedAuthorizedOrganization,
     sharedAuthorizedPatient,
@@ -16,6 +23,22 @@ import { Role, matchCurrentUserRole } from 'src/utils/role';
 import { MenuItem } from './types';
 
 export type BottomMenuLayoutValue = (onItemClick?: () => void) => Array<MenuItem>;
+
+export type LocaleConfig = {
+    getCurrentLocale: () => string;
+    getAvailableLocales: () => Array<{ code: string; label: ReactNode }>;
+    getLocaleLabel: (code: string) => ReactNode;
+    changeLocale: (code: string) => void;
+};
+
+export const defaultLocaleConfig: LocaleConfig = {
+    getCurrentLocale,
+    getAvailableLocales,
+    getLocaleLabel: (code: string) => locales[code] ?? code,
+    changeLocale: (code: string) => {
+        changeLocale(code as LocaleCode);
+    },
+};
 
 const defaultBottomMenuLayout: BottomMenuLayoutValue = (onItemClick?: () => void) => {
     const user = sharedAuthorizedUser.getSharedState()!;
@@ -76,3 +99,5 @@ function OrganizationName() {
 }
 
 export const BottomMenuLayout = createContext<BottomMenuLayoutValue>(defaultBottomMenuLayout);
+
+export const LocaleConfigProvider = createContext<LocaleConfig>(defaultLocaleConfig);

@@ -52,3 +52,13 @@ export const antdLocaleMap: { [localeCode in LocaleCode]: Locale } = {
     es: esAntdLocale,
     ru: ruAntdLocale,
 };
+
+export function getAvailableLocales() {
+    return Object.entries(locales).map(([code, label]) => ({ code, label }));
+}
+
+export function changeLocale(locale: LocaleCode) {
+    setCurrentLocale(locale);
+    dynamicActivate(locale);
+    location.reload();
+}
