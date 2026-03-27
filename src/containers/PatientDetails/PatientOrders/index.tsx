@@ -6,13 +6,20 @@ import { useCallback, useState } from 'react';
 import { extractCreatedAtFromMeta } from 'sdc-qrf';
 import styled from 'styled-components';
 
+import { QuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm';
 import { WithId } from '@beda.software/fhir-react';
 
+import {
+    groupControlComponents,
+    itemComponents,
+    itemControlComponents,
+} from 'src/components/BaseQuestionnaireResponseForm/controls';
+import { FormWrapper, GroupItemComponent } from 'src/components/FormWrapper';
 import { LinkToEdit } from 'src/components/LinkToEdit';
 import { Modal } from 'src/components/Modal';
-import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { ResourceTable } from 'src/components/ResourceTable';
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
+import { serviceProvider } from 'src/services';
 import { formatHumanDate } from 'src/utils/date';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 
@@ -205,7 +212,13 @@ export function PatientOrders({ patient }: Props) {
                         { name: 'Author', resource: author },
                     ]}
                     onSuccess={reloadListAndClose}
-                    onCancel={close}
+                    // onCancel={close}
+                    serviceProvider={serviceProvider}
+                    FormWrapper={(props) => <FormWrapper {...props} onCancel={close} />}
+                    groupItemComponent={GroupItemComponent}
+                    widgetsByQuestionType={itemComponents}
+                    widgetsByQuestionItemControl={itemControlComponents}
+                    widgetsByGroupQuestionItemControl={groupControlComponents}
                 />
             </Modal>
             <ResourceTable<Observation>

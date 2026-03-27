@@ -67,6 +67,28 @@ export const {
     service,
 } = initServicesFromService(fhirService, config.inactiveMapping);
 
+export const serviceProvider = {
+    axiosInstance,
+    setInstanceToken,
+    resetInstanceToken,
+    createFHIRResource,
+    updateFHIRResource,
+    getFHIRResource,
+    getFHIRResources,
+    getAllFHIRResources,
+    findFHIRResource,
+    saveFHIRResource,
+    saveFHIRResources,
+    patchFHIRResource,
+    deleteFHIRResource,
+    forceDeleteFHIRResource,
+    getConcepts,
+    setInstanceBaseURL,
+    applyFHIRService,
+    applyFHIRServices,
+    service,
+};
+
 export {
     aidboxService,
     axiosInstance,

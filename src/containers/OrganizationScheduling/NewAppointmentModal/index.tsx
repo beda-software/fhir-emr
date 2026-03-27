@@ -1,6 +1,7 @@
 import { t } from '@lingui/macro';
 import { HealthcareService, Practitioner, PractitionerRole } from 'fhir/r4b';
 
+import { BaseQuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/BaseQuestionnaireResponseForm';
 import { RenderRemoteData, formatFHIRDateTime } from '@beda.software/fhir-react';
 
 import { FormWrapper, GroupItemComponent } from 'src/components/FormWrapper';
@@ -8,7 +9,6 @@ import { Modal } from 'src/components/Modal';
 import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
 import { inMemorySaveService } from 'src/hooks/questionnaire-response-form-data';
-import { BaseQuestionnaireResponseForm } from 'src/packages/@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/BaseQuestionnaireResponseForm';
 import { service } from 'src/services';
 
 interface NewAppointmentModalProps {
@@ -68,7 +68,13 @@ export function NewAppointmentModal(props: NewAppointmentModalProps) {
                             readOnly={readOnly}
                             fhirService={service}
                             groupItemComponent={GroupItemComponent}
-                            FormWrapper={(props) => <FormWrapper {...props} formData={formData} onCancel={onCancel} />}
+                            FormWrapper={(props) => (
+                                <FormWrapper
+                                    {...props}
+                                    // formData={formData}
+                                    onCancel={onCancel}
+                                />
+                            )}
                         />
                     );
                 }}

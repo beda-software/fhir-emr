@@ -19,7 +19,8 @@
       "baseUrl": ".",
       "paths": {
         "src/*": ["./src/*"],
-        "shared/src/contrib/aidbox": ["contrib/aidbox-types/index.d.ts"]
+        "shared/src/contrib/aidbox": ["contrib/aidbox-types/index.d.ts"],
+        "@beda.software/*": ["packages/@beda.software/*"]
       },
       "types": ["node", "vitest/globals", "jest", "@testing-library/jest-dom"],
   
@@ -40,7 +41,7 @@
       "ignoreDeprecations": "5.0",
     },
     "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],
-    "exclude": ["node_modules", "lib", "src/packages"],
+    "exclude": ["node_modules", "lib"],
     "references": [{ "path": "./tsconfig.node.json" }]
   }
   

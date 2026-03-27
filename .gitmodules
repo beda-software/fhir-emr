@@ -1,3 +1,3 @@
-[submodule "src/packages/@beda.software/fhir-questionnaire"]
-	path = src/packages/@beda.software/fhir-questionnaire
+[submodule "packages/@beda.software/fhir-questionnaire"]
+	path = packages/@beda.software/fhir-questionnaire
 	url = https://github.com/beda-software/fhir-questionnaire.git

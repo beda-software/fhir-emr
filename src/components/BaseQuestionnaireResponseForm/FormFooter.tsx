@@ -19,7 +19,18 @@ export interface FormFooterComponentProps {
     onSaveDraft?: (questionnaireResponse: QuestionnaireResponse) => Promise<RemoteDataResult<QuestionnaireResponse>>;
 }
 
-export interface Props extends BaseQuestionnaireResponseFormProps {
+export interface Props
+    // extends BaseQuestionnaireResponseFormProps,
+    extends Pick<
+        BaseQuestionnaireResponseFormProps,
+        | 'readOnly'
+        | 'onCancel'
+        | 'FormFooterComponent'
+        | 'saveButtonTitle'
+        | 'cancelButtonTitle'
+        | 'saveDraftButtonTitle'
+        | 'onSaveDraft'
+    > {
     submitting: boolean;
     className?: string | undefined;
     style?: CSSProperties | undefined;
@@ -46,7 +57,7 @@ export function FormFooter(props: Props) {
     const formContext = useFormContext();
 
     const handleSaveDraft = useCallback(async () => {
-        const qrfDataContext = baseQRFPropsContext?.formData.context;
+        const qrfDataContext = baseQRFPropsContext?.formData?.context;
         const formValues = formContext.getValues();
         const rootContext = qrfDataContext ? calcInitialContext(qrfDataContext, formValues) : undefined;
 
@@ -56,7 +67,7 @@ export function FormFooter(props: Props) {
         } else {
             onCancel?.();
         }
-    }, [baseQRFPropsContext?.formData.context, formContext, onSaveDraft, onCancel]);
+    }, [baseQRFPropsContext?.formData?.context, formContext, onSaveDraft, onCancel]);
 
     if (readOnly) {
         return null;

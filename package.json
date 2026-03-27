@@ -21,8 +21,7 @@
     },
     "workspaces": [
         "contrib/*",
-        "src/packages/*",
-        "src/packages/@beda.software/*"
+        "packages/@beda.software/fhir-questionnaire"
     ],
     "dependencies": {
         "@ant-design/colors": "^7.0.0",

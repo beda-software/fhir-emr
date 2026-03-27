@@ -1,35 +1,39 @@
 import classNames from 'classnames';
 import { QuestionnaireResponse } from 'fhir/r4b';
-import { useState } from 'react';
-import { GroupItemProps, QuestionnaireResponseFormData } from 'sdc-qrf';
+import { ReactElement, useState } from 'react';
+import {
+    GroupItemProps,
+    // QuestionnaireResponseFormData
+} from 'sdc-qrf';
 
+import { FormWrapperProps } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/BaseQuestionnaireResponseForm';
 import { RemoteDataResult } from '@beda.software/remote-data';
 
-import { isGroupWizard } from 'src/components';
+// import { isGroupWizard } from 'src/components';
+import { BaseQuestionnaireResponseFormPropsContext } from 'src/components/BaseQuestionnaireResponseForm/context';
 import { groupComponent } from 'src/components/BaseQuestionnaireResponseForm/controls';
 import { FormFooter } from 'src/components/BaseQuestionnaireResponseForm/FormFooter';
-import { FormWrapperProps } from 'src/packages/@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/BaseQuestionnaireResponseForm';
 
 import s from './FormWrapper.module.scss';
 
 export function FormWrapper(
     props: FormWrapperProps & {
-        formData: QuestionnaireResponseFormData;
+        // formData?: QuestionnaireResponseFormData;
         onCancel?: () => void;
         onSaveDraft?: (
             questionnaireResponse: QuestionnaireResponse,
         ) => Promise<RemoteDataResult<QuestionnaireResponse>>;
+        saveButtonTitle?: string | ReactElement;
     },
 ) {
-    const { handleSubmit, items, formData, onCancel, onSaveDraft } = props;
+    const { handleSubmit, items, onCancel, onSaveDraft, saveButtonTitle } = props;
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const isWizard = isGroupWizard(formData.context.fceQuestionnaire);
+    // const isWizard = formData?.context?.fceQuestionnaire ? isGroupWizard(formData.context.fceQuestionnaire) : false;
 
     return (
         <form
-            onSubmit={async (event) => {
-                event.preventDefault();
+            onSubmit={async () => {
                 setIsSubmitting(true);
                 await handleSubmit();
                 setIsSubmitting(false);
@@ -37,10 +41,24 @@ export function FormWrapper(
             className={classNames(s.form, 'app-form')}
             noValidate
         >
-            {items}
-            {!isWizard ? (
-                <FormFooter {...props} onSaveDraft={onSaveDraft} submitting={isSubmitting} onCancel={onCancel} />
-            ) : null}
+            <BaseQuestionnaireResponseFormPropsContext.Provider
+                value={{
+                    ...props,
+                    submitting: isSubmitting,
+                    onCancel: onCancel,
+                }}
+            >
+                {items}
+                {/* {!isWizard ? ( */}
+                <FormFooter
+                    {...props}
+                    onSaveDraft={onSaveDraft}
+                    submitting={isSubmitting}
+                    onCancel={onCancel}
+                    saveButtonTitle={saveButtonTitle}
+                />
+                {/* ) : null} */}
+            </BaseQuestionnaireResponseFormPropsContext.Provider>
         </form>
     );
 }

@@ -140,7 +140,7 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
                                         formData={formData}
                                         onSubmit={onSubmit}
                                         onEdit={async ({ context }) => {
-                                            await onQRFUpdate?.(context.questionnaireResponse);
+                                            // await onQRFUpdate?.(context.questionnaireResponse);
                                         }}
                                         // itemControlQuestionItemComponents={itemControlQuestionItemComponents}
                                         widgetsByQuestionType={itemComponents}
@@ -155,7 +155,7 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
                                         FormWrapper={(props) => (
                                             <FormWrapper
                                                 {...props}
-                                                formData={formData}
+                                                // formData={formData}
                                                 onCancel={handleCancel}
                                                 onSaveDraft={onSaveDraft}
                                             />
@@ -192,7 +192,7 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
                                                 FormWrapper={(props) => (
                                                     <FormWrapper
                                                         {...props}
-                                                        formData={formData}
+                                                        // formData={formData}
                                                         onCancel={handleCancel}
                                                         onSaveDraft={onSaveDraft}
                                                     />

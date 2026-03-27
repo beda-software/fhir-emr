@@ -10,7 +10,7 @@ export const ItemControlGroupItemWidgetsContext = createContext<ItemControlGroup
 export const ItemControlQuestionItemReadonlyWidgetsContext = createContext<ItemControlQuestionItemComponentMapping>({});
 export const ItemControlGroupItemReadonlyWidgetsContext = createContext<ItemControlGroupItemComponentMapping>({});
 
-interface BaseQuestionnaireResponseFormPropsContextProps extends BaseQuestionnaireResponseFormProps {
+interface BaseQuestionnaireResponseFormPropsContextProps extends Partial<BaseQuestionnaireResponseFormProps> {
     submitting: boolean;
     saveDraft?: (currentFormValues: FormItems) => Promise<void>;
     debouncedSaveDraft?: DebouncedFunc<(currentFormValues: FormItems) => Promise<void>>;

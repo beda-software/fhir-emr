@@ -6,14 +6,21 @@ import moment from 'moment';
 // eslint-disable-next-line import/named
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine, TooltipContentProps } from 'recharts';
 
+import { QuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm';
 import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
 import { RemoteData, isSuccess } from '@beda.software/remote-data';
 
+import {
+    groupControlComponents,
+    itemComponents,
+    itemControlComponents,
+} from 'src/components/BaseQuestionnaireResponseForm/controls';
+import { FormWrapper, GroupItemComponent } from 'src/components/FormWrapper';
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
+import { serviceProvider } from 'src/services';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 
 import { S } from './DashboardCard.styles';
-import { QuestionnaireResponseForm } from '../QuestionnaireResponseForm';
 
 export type ObservationWithDate = WithId<Observation> & { effective: Date };
 
@@ -113,6 +120,12 @@ export function CreatinineDashboard({ observationsRemoteData, patient, reload }:
                                 { name: 'Author', resource: author },
                             ]}
                             onSuccess={reload}
+                            serviceProvider={serviceProvider}
+                            FormWrapper={(props) => <FormWrapper {...props} />}
+                            groupItemComponent={GroupItemComponent}
+                            widgetsByQuestionType={itemComponents}
+                            widgetsByQuestionItemControl={itemControlComponents}
+                            widgetsByGroupQuestionItemControl={groupControlComponents}
                         />
                     </div>
                 </S.Content>

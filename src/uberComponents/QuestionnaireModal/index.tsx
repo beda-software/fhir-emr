@@ -3,15 +3,22 @@ import { Button, notification } from 'antd';
 import { ParametersParameter, Reference } from 'fhir/r4b';
 import { useState } from 'react';
 
+import { QuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm';
 import { parseFHIRReference } from '@beda.software/fhir-react';
 
-import { Modal } from 'src/components/Modal';
-import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import {
-    inMemorySaveService,
-    persistSaveService,
+    groupControlComponents,
+    itemComponents,
+    itemControlComponents,
+} from 'src/components/BaseQuestionnaireResponseForm/controls';
+import { FormWrapper, GroupItemComponent } from 'src/components/FormWrapper';
+import { Modal } from 'src/components/Modal';
+import {
+    // inMemorySaveService,
+    // persistSaveService,
     questionnaireIdLoader,
 } from 'src/hooks/questionnaire-response-form-data';
+import { serviceProvider } from 'src/services';
 
 export interface QuestionnaireModalProps {
     questionnaire: Reference;
@@ -55,10 +62,15 @@ export function QuestionanireModal({ questionnaire, subject, launchContextParame
                     questionnaireLoader={questionnaireIdLoader(parseFHIRReference(questionnaire).id!)}
                     onSuccess={handleSuccess}
                     launchContextParameters={launchContextParameters}
-                    onCancel={() => setIsModalVisible(false)}
-                    questionnaireResponseSaveService={
-                        typeof subject === 'undefined' ? inMemorySaveService : persistSaveService
-                    }
+                    // questionnaireResponseSaveService={
+                    //     typeof subject === 'undefined' ? inMemorySaveService : persistSaveService
+                    // }
+                    serviceProvider={serviceProvider}
+                    FormWrapper={(props) => <FormWrapper {...props} onCancel={() => setIsModalVisible(false)} />}
+                    groupItemComponent={GroupItemComponent}
+                    widgetsByQuestionType={itemComponents}
+                    widgetsByQuestionItemControl={itemControlComponents}
+                    widgetsByGroupQuestionItemControl={groupControlComponents}
                 />
             </Modal>
         </>

@@ -2,15 +2,21 @@ import { t, Trans } from '@lingui/macro';
 import { notification } from 'antd';
 import { useEffect, useState } from 'react';
 
+import { QuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm';
 import { uuid4 } from '@beda.software/fhir-react';
 
 import { PageContainer } from 'src/components/BaseLayout/PageContainer';
+import {
+    groupControlComponents,
+    itemComponents,
+    itemControlComponents,
+} from 'src/components/BaseQuestionnaireResponseForm/controls';
 import { DateTimeSlotPicker } from 'src/components/BaseQuestionnaireResponseForm/widgets';
-import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { FormWrapper, GroupItemComponent } from 'src/components/FormWrapper';
 import { Spinner } from 'src/components/Spinner';
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 import { getToken } from 'src/services/auth';
-import { axiosInstance } from 'src/services/fhir';
+import { axiosInstance, serviceProvider } from 'src/services/fhir';
 import { history } from 'src/services/history';
 
 import { S } from './PublicAppointment.styles';
@@ -50,11 +56,6 @@ export function PublicAppointment() {
                             });
                             history.replace('/');
                         }}
-                        itemControlQuestionItemComponents={{
-                            'date-time-slot': (props) => (
-                                <DateTimeSlotPicker {...props} practitionerRolePath={practitionerRolePath} />
-                            ),
-                        }}
                         initialQuestionnaireResponse={{
                             questionnaire: 'public-appointment',
                         }}
@@ -67,6 +68,17 @@ export function PublicAppointment() {
                                 },
                             },
                         ]}
+                        serviceProvider={serviceProvider}
+                        FormWrapper={(props) => <FormWrapper {...props} />}
+                        groupItemComponent={GroupItemComponent}
+                        widgetsByQuestionType={itemComponents}
+                        widgetsByQuestionItemControl={{
+                            ...itemControlComponents,
+                            'date-time-slot': (props) => (
+                                <DateTimeSlotPicker {...props} practitionerRolePath={practitionerRolePath} />
+                            ),
+                        }}
+                        widgetsByGroupQuestionItemControl={groupControlComponents}
                     />
                 )}
             </S.Content>

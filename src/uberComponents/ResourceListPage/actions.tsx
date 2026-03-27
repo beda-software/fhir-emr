@@ -4,9 +4,18 @@ import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 import { omit } from 'lodash';
 import { useNavigate } from 'react-router-dom';
 
+import { QuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm';
+
+import {
+    groupControlComponents,
+    itemComponents,
+    itemControlComponents,
+} from 'src/components/BaseQuestionnaireResponseForm/controls';
+import { FormWrapper, GroupItemComponent } from 'src/components/FormWrapper';
 import { ModalTrigger } from 'src/components/ModalTrigger';
-import { QRFProps, QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { QRFProps } from 'src/components/QuestionnaireResponseForm';
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
+import { serviceProvider } from 'src/services';
 
 import { S } from './styles';
 import {
@@ -65,6 +74,12 @@ export function RecordQuestionnaireAction<R extends Resource>({
                     }}
                     onCancel={closeModal}
                     saveButtonTitle={t`Submit`}
+                    serviceProvider={serviceProvider}
+                    FormWrapper={(props) => <FormWrapper {...props} onCancel={closeModal} />}
+                    groupItemComponent={GroupItemComponent}
+                    widgetsByQuestionType={itemComponents}
+                    widgetsByQuestionItemControl={itemControlComponents}
+                    widgetsByGroupQuestionItemControl={groupControlComponents}
                     {...(action.extra?.qrfProps ?? {})}
                 />
             )}
@@ -100,6 +115,12 @@ export function HeaderQuestionnaireAction({ action, reload, defaultLaunchContext
                     launchContextParameters={defaultLaunchContext}
                     onCancel={closeModal}
                     saveButtonTitle={t`Submit`}
+                    serviceProvider={serviceProvider}
+                    FormWrapper={(props) => <FormWrapper {...props} onCancel={closeModal} />}
+                    groupItemComponent={GroupItemComponent}
+                    widgetsByQuestionType={itemComponents}
+                    widgetsByQuestionItemControl={itemControlComponents}
+                    widgetsByGroupQuestionItemControl={groupControlComponents}
                     {...(action.extra?.qrfProps ?? {})}
                 />
             )}
@@ -149,6 +170,12 @@ export function BatchQuestionnaireAction<R extends Resource>({
                         }}
                         onCancel={closeModal}
                         saveButtonTitle={t`Submit`}
+                        serviceProvider={serviceProvider}
+                        FormWrapper={(props) => <FormWrapper {...props} onCancel={closeModal} />}
+                        groupItemComponent={GroupItemComponent}
+                        widgetsByQuestionType={itemComponents}
+                        widgetsByQuestionItemControl={itemControlComponents}
+                        widgetsByGroupQuestionItemControl={groupControlComponents}
                         {...(action.extra?.qrfProps ? omit(action.extra?.qrfProps, 'launchContextParameters') : {})}
                     />
                 )}
