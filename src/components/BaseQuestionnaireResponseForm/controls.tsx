@@ -45,6 +45,7 @@ import { Barcode } from './widgets/barcode';
 import { Display } from './widgets/display';
 import { EditableGroup } from './widgets/EditableGroup';
 import { GroupTabs } from './widgets/GroupTabs';
+import { GroupVoice } from './widgets/GroupVoice';
 import { GroupWizard, GroupWizardVertical, GroupWizardWithTooltips } from './widgets/GroupWizard';
 import { InlineReference } from './widgets/inline-reference';
 import { PasswordInput } from './widgets/PasswordInput';
@@ -110,4 +111,5 @@ export const groupControlComponents: ItemControlGroupItemComponentMapping = {
     'group-tabs': GroupTabs,
     'group-table': GroupTable,
     'editable-group': EditableGroup,
+    'group-voice': GroupVoice,
 };

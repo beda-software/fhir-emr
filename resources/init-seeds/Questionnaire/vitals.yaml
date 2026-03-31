@@ -33,101 +33,107 @@ item:
     initialExpression:
       language: text/fhirpath
       expression: "%Patient.name.first().given.first() + ' ' + %Patient.name.first().family"
-  - linkId: height
-    type: quantity
-    text: Height
-    unitOption:
-      - code: cm
-        system: http://unitsofmeasure.org
-        display: cm
-  - linkId: weight
-    type: quantity
-    text: Weight
-    unitOption:
-      - code: kg
-        system: http://unitsofmeasure.org
-        display: kg
-  - linkId: temperature
-    type: quantity
-    text: Temperature
-    unitOption:
-      - code: Cel
-        system: http://unitsofmeasure.org
-        display: °C
-  - linkId: oxygen-saturation
-    type: quantity
-    text: Oxygen saturation
-    unitOption:
-      - code: "%"
-        system: http://unitsofmeasure.org
-        display: "%"
-  - linkId: pulse-rate
-    type: quantity
-    text: Pulse rate
-    unitOption:
-      - code: bpm
-        system: http://unitsofmeasure.org
-        display: bpm
-  - linkId: respiratory-rate
-    type: quantity
-    text: Respiratory Rate
-    unitOption:
-      - code: bpm
-        system: http://unitsofmeasure.org
-        display: bpm
-
-  - linkId: blood-pressure
+  - linkId: vitals-data
     type: group
+    itemControl:
+      coding:
+      - code: group-voice
     item:
-      - linkId: blood-pressure-systolic-diastolic
-        type: group
-        itemControl:
-          coding:
-            - code: inline-choice
-        item:
-          - linkId: blood-pressure-systolic
-            type: quantity
-            text: BP systolic
-            unitOption:
-              - code: mmHg
-                system: http://unitsofmeasure.org
-                display: mmHg
-          - linkId: blood-pressure-diastolic
-            type: quantity
-            text: BP diastolic
-            unitOption:
-              - code: mmHg
-                system: http://unitsofmeasure.org
-                display: mmHg
-      - linkId: blood-pressure-positions
-        text: Positions
-        type: choice
-        itemControl:
-          coding:
-            - code: inline-choice
-        answerOption:
-          - valueCoding:
-              code: sitting
-              display: Sitting
-          - valueCoding:
-              code: lying
-              display: Lying
-          - valueCoding:
-              code: standing
-              display: Standing
-      - linkId: blood-pressure-arm
-        text: Arm
-        type: choice
-        itemControl:
-          coding:
-            - code: inline-choice
-        answerOption:
-          - valueCoding:
-              code: biceps-left
-              display: Biceps left
-          - valueCoding:
-              code: biceps-right
-              display: Biceps right
+    - linkId: height
+      type: quantity
+      text: Height
+      unitOption:
+        - code: cm
+          system: http://unitsofmeasure.org
+          display: cm
+    - linkId: weight
+      type: quantity
+      text: Weight
+      unitOption:
+        - code: kg
+          system: http://unitsofmeasure.org
+          display: kg
+    - linkId: temperature
+      type: quantity
+      text: Temperature
+      unitOption:
+        - code: Cel
+          system: http://unitsofmeasure.org
+          display: °C
+    - linkId: oxygen-saturation
+      type: quantity
+      text: Oxygen saturation
+      unitOption:
+        - code: "%"
+          system: http://unitsofmeasure.org
+          display: "%"
+    - linkId: pulse-rate
+      type: quantity
+      text: Pulse rate
+      unitOption:
+        - code: bpm
+          system: http://unitsofmeasure.org
+          display: bpm
+    - linkId: respiratory-rate
+      type: quantity
+      text: Respiratory Rate
+      unitOption:
+        - code: bpm
+          system: http://unitsofmeasure.org
+          display: bpm
+
+    - linkId: blood-pressure
+      type: group
+      item:
+        - linkId: blood-pressure-systolic-diastolic
+          type: group
+          itemControl:
+            coding:
+              - code: inline-choice
+          item:
+            - linkId: blood-pressure-systolic
+              type: quantity
+              text: BP systolic
+              unitOption:
+                - code: mmHg
+                  system: http://unitsofmeasure.org
+                  display: mmHg
+            - linkId: blood-pressure-diastolic
+              type: quantity
+              text: BP diastolic
+              unitOption:
+                - code: mmHg
+                  system: http://unitsofmeasure.org
+                  display: mmHg
+        - linkId: blood-pressure-positions
+          text: Positions
+          type: choice
+          itemControl:
+            coding:
+              - code: inline-choice
+          answerOption:
+            - valueCoding:
+                code: sitting
+                display: Sitting
+            - valueCoding:
+                code: lying
+                display: Lying
+            - valueCoding:
+                code: standing
+                display: Standing
+        - linkId: blood-pressure-arm
+          text: Arm
+          type: choice
+          itemControl:
+            coding:
+              - code: inline-choice
+          answerOption:
+            - valueCoding:
+                code: biceps-left
+                display: Biceps left
+            - valueCoding:
+                code: biceps-right
+                display: Biceps right
 
   - linkId: bmi
     text: BMI
