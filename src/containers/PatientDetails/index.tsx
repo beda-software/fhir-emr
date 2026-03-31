@@ -1,6 +1,7 @@
 import { CarePlan, Patient } from 'fhir/r4b';
 import { useMemo } from 'react';
 import { useParams, Outlet, Route, Routes, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 
 import { RenderRemoteData } from '@beda.software/fhir-react';
 import { isSuccess } from '@beda.software/remote-data';
@@ -10,6 +11,7 @@ import { RouteItem } from 'src/components/BaseLayout/Sidebar/SidebarTop';
 import { PatientEncounter } from 'src/components/PatientEncounter';
 import { Spinner } from 'src/components/Spinner';
 import { PatientReloadProvider } from 'src/containers/PatientDetails/Dashboard/contexts';
+import { PatientDocumentDetailsReadonlyContext } from 'src/containers/PatientDetails/PatientDocumentDetails/context';
 import { PatientDocumentWizard } from 'src/containers/PatientDetails/PatientDocumentWizard';
 import { sharedAuthorizedPractitionerRoles } from 'src/sharedState';
 import { renderHumanName } from 'src/utils';
@@ -47,7 +49,16 @@ export const PatientDetails = (props: PatientDetailsProps) => {
         if (isSuccess(patientResponse)) {
             return props.embeddedPages?.(patientResponse.data.patient, patientResponse.data.carePlans);
         }
-    }, [patientResponse]);
+    }, [patientResponse, props]);
+
+    const formsStyles = {
+        Wrapper: styled.div`
+            width: '100%';
+            background-color: ${({ theme }) => theme.antdTheme?.colorBgContainer};
+            border: 1px solid ${({ theme }) => theme.antdTheme?.colorBorderSecondary};
+            border-radius: 10px;
+        `,
+    };
 
     return (
         <RenderRemoteData remoteData={patientResponse} renderLoading={Spinner}>
@@ -126,7 +137,25 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                                 path="/encounters/:encounterId/:qrId/*"
                                                 element={<PatientDocumentDetails patient={patient} />}
                                             />
-                                            <Route path="/documents" element={<PatientDocuments patient={patient} />} />
+                                            <Route
+                                                path="/documents"
+                                                element={
+                                                    <PatientDocuments
+                                                        key={`documents-${patient.id}`}
+                                                        patient={patient}
+                                                    />
+                                                }
+                                            />
+                                            <Route
+                                                path="/forms"
+                                                element={
+                                                    <PatientDocuments
+                                                        key={`forms-${patient.id}`}
+                                                        patient={patient}
+                                                        context="form-library"
+                                                    />
+                                                }
+                                            />
                                             <Route
                                                 path="/documents/new/:questionnaireId"
                                                 element={
@@ -137,6 +166,20 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                                         onSuccess={() => {
                                                             navigate(-1);
                                                         }}
+                                                    />
+                                                }
+                                            />
+                                            <Route
+                                                path="/forms/new/:questionnaireId"
+                                                element={
+                                                    <PatientDocument
+                                                        patient={patient}
+                                                        author={author}
+                                                        autoSave={true}
+                                                        onSuccess={() => {
+                                                            navigate(-1);
+                                                        }}
+                                                        maxWidth={'100%'}
                                                     />
                                                 }
                                             />
@@ -156,6 +199,16 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                             <Route
                                                 path="/documents/:qrId/*"
                                                 element={<PatientDocumentDetails patient={patient} />}
+                                            />
+                                            <Route
+                                                path="/forms/:qrId/*"
+                                                element={
+                                                    <PatientDocumentDetailsReadonlyContext.Provider
+                                                        value={{ styles: formsStyles }}
+                                                    >
+                                                        <PatientDocumentDetails patient={patient} maxWidth={'100%'} />
+                                                    </PatientDocumentDetailsReadonlyContext.Provider>
+                                                }
                                             />
                                             <Route path="/wearables" element={<PatientWearables patient={patient} />} />
                                             <Route

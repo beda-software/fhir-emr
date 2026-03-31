@@ -1,7 +1,7 @@
-import Markdown from 'react-markdown';
 import { QuestionItemProps } from 'sdc-qrf';
 
 import { ItemHelpText } from 'src/components/BaseQuestionnaireResponseForm/ItemHelpText';
+import { MarkdownRender } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/MarkdownRender';
 import { Paragraph } from 'src/components/Typography';
 
 import { S } from './styles';
@@ -16,7 +16,7 @@ export function Display({ questionItem }: QuestionItemProps) {
             {text && (
                 <S.Title>
                     <Paragraph style={{ margin: 0, fontWeight: 'bold' }}>
-                        {isMarkdown ? <Markdown>{text}</Markdown> : <TextWithLink text={text} />}
+                        {isMarkdown ? <MarkdownRender text={text} /> : <TextWithLink text={text} />}
                     </Paragraph>
                     {helpText && <ItemHelpText helpText={helpText} />}
                 </S.Title>

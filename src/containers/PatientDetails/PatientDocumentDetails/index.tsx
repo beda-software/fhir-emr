@@ -40,6 +40,7 @@ interface Props {
     patient: WithId<Patient>;
     hideControls?: boolean;
     launchContextParameters?: ParametersParameter[];
+    maxWidth?: number | string;
 }
 
 const deleteDraft = async (navigate: NavigateFunction, qrId?: string) => {
@@ -287,7 +288,7 @@ function PatientDocumentDetailsFormData(props: {
 }
 
 export function PatientDocumentDetails(props: Props) {
-    const { patient, hideControls, launchContextParameters } = props;
+    const { patient, hideControls, launchContextParameters, maxWidth } = props;
     const { response, manager } = usePatientDocumentDetails(patient.id);
     const navigate = useNavigate();
     const author = selectCurrentUserRoleResource();
@@ -341,6 +342,7 @@ export function PatientDocumentDetails(props: Props) {
                                                     author={author}
                                                     autoSave={true}
                                                     launchContextParameters={launchContextParameters}
+                                                    maxWidth={maxWidth}
                                                 />
                                             }
                                         />

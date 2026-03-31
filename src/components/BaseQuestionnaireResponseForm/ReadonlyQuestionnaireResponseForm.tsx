@@ -13,7 +13,13 @@ import {
     ItemControlGroupItemReadonlyWidgetsContext,
     ItemControlQuestionItemReadonlyWidgetsContext,
 } from 'src/components/BaseQuestionnaireResponseForm/context';
-import { MarkdownRenderControl } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/MarkdownRender';
+import {
+    MarkdownCard,
+    MarkdownDisplay,
+    MarkdownRenderControl,
+} from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/MarkdownRender';
+import { service } from 'src/services/fhir';
+import { evaluate } from 'src/utils/fhirpath';
 
 import { AudioAttachment } from './readonly-widgets/AudioAttachment';
 import { QuestionBoolean } from './readonly-widgets/boolean';
@@ -58,6 +64,7 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
             <form>
                 <QuestionnaireResponseFormProvider
                     {...other}
+                    fhirService={service}
                     formValues={formValues}
                     // eslint-disable-next-line @typescript-eslint/no-empty-function
                     setFormValues={() => {}}
@@ -94,10 +101,13 @@ export function ReadonlyQuestionnaireResponseForm(props: Props) {
                         'input-inside-text': TextWithInput,
                         'audio-recorder-uploader': AudioAttachment,
                         barcode: Barcode,
+                        markdown: MarkdownDisplay,
+                        'markdown-card': MarkdownCard,
                         'markdown-editor': MarkdownRenderControl,
                         ...itemControlQuestionItemComponents,
                         ...ItemControlQuestionItemReadonlyWidgetsFromContext,
                     }}
+                    evaluateFhirpath={evaluate}
                 >
                     <>
                         <QuestionItems

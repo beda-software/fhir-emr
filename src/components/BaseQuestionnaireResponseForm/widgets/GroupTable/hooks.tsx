@@ -1,10 +1,11 @@
+import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
-import { Button, Popconfirm, Space, Table } from 'antd';
+import { Button, Popconfirm } from 'antd';
 import type { ColumnType, ColumnsType } from 'antd/es/table';
 import type { ExpandableConfig, FilterDropdownProps } from 'antd/es/table/interface';
 import _ from 'lodash';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 import { FCEQuestionnaireItem, FormItems, RepeatableFormGroupItems, populateItemKey } from 'sdc-qrf';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
@@ -22,6 +23,7 @@ import {
     isColumnTypeArray,
     isTableItemMatchesFilter,
     getChartYRange,
+    getColumnWidth,
 } from './utils';
 
 export function useGroupTableFilter() {
@@ -191,6 +193,7 @@ export function useRowExpandability(props: UseRowExpandabilityProps) {
     const rowNodeKeyRef = useRef<WeakMap<Element, string>>(new WeakMap());
     const expandableMaxHeightRef = useRef<number>(expandableMaxHeight);
     const [rowExpandableMap, setRowExpandableMap] = useState<Record<string, boolean>>({});
+    const [isRowExpanded, setIsRowExpanded] = useState<readonly React.Key[]>([]);
 
     useEffect(() => {
         expandableMaxHeightRef.current = expandableMaxHeight;
@@ -292,14 +295,14 @@ export function useRowExpandability(props: UseRowExpandabilityProps) {
         return () => window.removeEventListener('resize', handleResize);
     }, [recomputeRowExpandability]);
 
-    const compareRowHeight = useCallback(
+    const rowHeightExceedsMaxHeight = useCallback(
         (rowKey: string) => {
             const cachedExpandable = rowExpandableMap[rowKey];
             if (cachedExpandable !== undefined) {
                 return cachedExpandable;
             }
             const rowHeight = rowRefs.current[rowKey]?.clientHeight ?? 0;
-            return rowHeight > expandableMaxHeight + 32;
+            return rowHeight > expandableMaxHeight;
         },
         [expandableMaxHeight, rowExpandableMap],
     );
@@ -310,15 +313,24 @@ export function useRowExpandability(props: UseRowExpandabilityProps) {
         });
     }, [recomputeRowExpandability]);
 
+    const handleRowExpand = useCallback(
+        (expanded: boolean, record: GroupTableRow) => {
+            setIsRowExpanded(expanded ? [...isRowExpanded, record.key] : isRowExpanded.filter((k) => k !== record.key));
+        },
+        [isRowExpanded],
+    );
+
     return {
         observeRow,
-        compareRowHeight,
+        rowHeightExceedsMaxHeight,
         handleRowHeightRecompute,
+        handleRowExpand,
+        isRowExpanded,
     };
 }
 
 export function useGroupTable(props: GroupTableProps) {
-    const { parentPath, questionItem, expandableMaxHeight = 100 } = props;
+    const { parentPath, questionItem, expandableMaxHeight = 100, columnAlignment } = props;
     const { linkId, repeats, text, hidden, item } = questionItem;
 
     const title = text ? text : linkId;
@@ -333,7 +345,7 @@ export function useGroupTable(props: GroupTableProps) {
 
     const { onChange } = useFieldController<RepeatableFormGroupItems>(fieldName, questionItem);
 
-    const { getValues, reset } = useFormContext<FormItems>();
+    const { control, getValues, reset } = useFormContext<FormItems>();
 
     const [renderAsTable, setRenderAsTable] = useState<boolean>(!chartLinkIdX && !chartLinkIdY);
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -345,25 +357,24 @@ export function useGroupTable(props: GroupTableProps) {
     const { populateColumnWithFilters } = useGroupTableFilter();
     const { populateColumnWithSorters } = useGroupTableSorter();
 
-    const fullFormValues = getValues();
-    const formValues = _.get(getValues(), fieldName);
+    const fullFormValues = useWatch({ control });
+    const formValues = _.get(fullFormValues, fieldName);
 
     const visibleItem = useMemo(() => item?.filter((i) => !i.hidden && i.type !== 'display'), [item]);
 
     const formItems: FormItems[] = useMemo(() => {
         return formValues?.items || [];
-    }, [formValues?.items]);
+    }, [formValues]);
 
     const fields = useMemo(() => _.map(visibleItem, (item) => item.linkId), [visibleItem]);
 
-    const dataSource: GroupTableRow[] = useMemo(() => {
-        return getDataSource(fields, formItems, questionItem);
-    }, [fields, formItems, questionItem]);
+    const dataSource: GroupTableRow[] = getDataSource(fields, formItems, questionItem);
 
-    const { observeRow, compareRowHeight, handleRowHeightRecompute } = useRowExpandability({
-        expandableMaxHeight,
-        dataSource,
-    });
+    const { observeRow, rowHeightExceedsMaxHeight, handleRowHeightRecompute, handleRowExpand, isRowExpanded } =
+        useRowExpandability({
+            expandableMaxHeight,
+            dataSource,
+        });
 
     const startEdit = useCallback(
         (index: number) => {
@@ -396,21 +407,22 @@ export function useGroupTable(props: GroupTableProps) {
     const handleSave = useCallback(() => {
         setSnapshotFormValues(null);
         setSnapshotDataSource(null);
-        reset(fullFormValues, { keepDirty: true });
+        const latestFullFormValues = getValues();
+        reset(latestFullFormValues, { keepDirty: true });
         setIsModalVisible(false);
         handleRowHeightRecompute();
-    }, [fullFormValues, handleRowHeightRecompute, reset]);
+    }, [getValues, handleRowHeightRecompute, reset]);
 
-    const populateValue = (exisingItems: Array<any>) => [...exisingItems, {}].map(populateItemKey);
+    const populateValue = (existingItems: Array<any>) => [...existingItems, {}].map(populateItemKey);
 
     const handleAdd = useCallback(() => {
         if (dataSource.length === 0 && formItems.length !== 0) {
             // This one case happens when the user deletes all items
             handleOpen(0);
         } else {
-            const updatedInput = { ...formValues, items: populateValue(formItems) };
-            const currentFullFormValues = _.cloneDeep(getValues());
             const updatedItems = populateValue(formItems);
+            const updatedInput = { ...formValues, items: updatedItems };
+            const currentFullFormValues = _.cloneDeep(getValues());
             _.set(currentFullFormValues, fieldName, _.cloneDeep(updatedItems));
             onChange(updatedInput);
             handleOpen(formItems.length);
@@ -419,49 +431,75 @@ export function useGroupTable(props: GroupTableProps) {
 
     const handleDelete = useCallback(
         (index: number) => {
-            const filteredArray = _.filter(formItems, (_val, valIndex: number) => valIndex !== index);
-            onChange({
-                items: [...filteredArray],
-            });
+            const currentFullFormValues = _.cloneDeep(getValues());
+            const latestGroupValue = (_.get(currentFullFormValues, fieldName) ?? {}) as RepeatableFormGroupItems;
+            const latestItems = _.isArray(latestGroupValue.items) ? latestGroupValue.items : [];
+            const filteredArray = _.filter(latestItems, (_val, valIndex: number) => valIndex !== index);
+            const updatedGroupValue: RepeatableFormGroupItems = { ...latestGroupValue, items: [...filteredArray] };
+            _.set(currentFullFormValues, fieldName, _.cloneDeep(updatedGroupValue));
+            reset(currentFullFormValues, { keepDirty: true });
+            onChange(updatedGroupValue);
         },
-        [formItems, onChange],
+        [fieldName, getValues, onChange, reset],
     );
 
-    const populateExpandableColumn = useCallback(
-        (columns: ColumnsType<GroupTableRow>) => {
-            const expandableColumnIndex = visibleItem?.findIndex((item) => item.type === 'text') ?? -1;
-            if (expandableColumnIndex === -1) {
-                return columns;
-            }
-            return [
-                ...columns.slice(0, expandableColumnIndex),
-                Table.EXPAND_COLUMN,
-                ...columns.slice(expandableColumnIndex),
-            ];
-        },
-        [visibleItem],
-    );
+    useEffect(() => {
+        if (dataSource.length === 0 && formItems.length === 1 && !isModalVisible) {
+            handleDelete(0);
+        }
+    }, [dataSource.length, formItems.length, handleDelete, isModalVisible]);
 
-    const dataColumns: ColumnsType<GroupTableRow> = useMemo(() => {
-        const columns: ColumnsType<GroupTableRow> = _.map(visibleItem, (questionItem) => {
-            const linkId = questionItem.linkId;
-            const isExpandable = questionItem.type === 'text';
+    const getColumnAlignment = (questionItem: FCEQuestionnaireItem) => {
+        const type = questionItem.type;
+
+        switch (type) {
+            case 'integer':
+            case 'decimal':
+            case 'quantity':
+                return 'right';
+            default:
+                return 'left';
+        }
+    };
+
+    const dataColumns: ColumnsType<GroupTableRow> = (() => {
+        const columns: ColumnsType<GroupTableRow> = _.map(visibleItem, (columnQuestionItem) => {
+            const columnLinkId = columnQuestionItem.linkId;
+            const isExpandable = columnQuestionItem.type === 'text';
             const column: ColumnType<GroupTableRow> = {
-                title: questionItem.text ? questionItem.text : linkId,
-                dataIndex: linkId,
-                key: linkId,
+                title: columnQuestionItem.text ? columnQuestionItem.text : '',
+                dataIndex: columnLinkId,
+                key: columnLinkId,
+                align: columnAlignment
+                    ? typeof columnAlignment === 'function'
+                        ? columnAlignment(columnQuestionItem)
+                        : columnAlignment
+                    : getColumnAlignment(columnQuestionItem),
+                width: getColumnWidth(columnQuestionItem),
 
                 render: (value: GroupTableItem, record) => {
                     const rowKey = record.key;
+                    const notFitsMaxHeight = rowHeightExceedsMaxHeight(rowKey);
+                    const isExpanded = isRowExpanded.includes(rowKey);
                     return (
-                        <S.ReadonlyItemWrapper $maxHeight={isExpandable ? expandableMaxHeight : undefined}>
-                            <div ref={isExpandable ? observeRow(rowKey) : undefined}>
-                                <RenderFormItemReadOnly
-                                    formItem={value.formItem}
-                                    questionnaireItem={value.questionnaireItem}
-                                />
-                            </div>
-                        </S.ReadonlyItemWrapper>
+                        <>
+                            <S.ReadonlyItemWrapper
+                                $maxHeight={isExpandable ? expandableMaxHeight : undefined}
+                                $notFitsMaxHeight={notFitsMaxHeight}
+                            >
+                                <div ref={isExpandable ? observeRow(rowKey) : undefined}>
+                                    <RenderFormItemReadOnly
+                                        formItem={value.formItem}
+                                        questionnaireItem={value.questionnaireItem}
+                                    />
+                                </div>
+                            </S.ReadonlyItemWrapper>
+                            <S.ExpandButton $isExpanded={isExpanded}>
+                                {isExpandable && notFitsMaxHeight && (
+                                    <Button icon={isExpanded ? <MinusOutlined /> : <PlusOutlined />} />
+                                )}
+                            </S.ExpandButton>
+                        </>
                     );
                 },
             };
@@ -469,17 +507,8 @@ export function useGroupTable(props: GroupTableProps) {
         });
 
         const columnsWithSorters = populateColumnWithSorters(columns, questionItem);
-        const columnsWithFilters = populateColumnWithFilters(columnsWithSorters, questionItem);
-        return populateExpandableColumn(columnsWithFilters);
-    }, [
-        expandableMaxHeight,
-        observeRow,
-        populateColumnWithFilters,
-        populateColumnWithSorters,
-        populateExpandableColumn,
-        questionItem,
-        visibleItem,
-    ]);
+        return populateColumnWithFilters(columnsWithSorters, questionItem);
+    })();
 
     const expandable: ExpandableConfig<GroupTableRow> | undefined = useMemo(() => {
         const expandableItem = visibleItem?.find((item) => item.type === 'text');
@@ -490,15 +519,18 @@ export function useGroupTable(props: GroupTableProps) {
         }
 
         return {
-            rowExpandable: (record) => compareRowHeight(record.key),
+            rowExpandable: (record) => rowHeightExceedsMaxHeight(record.key),
             expandedRowRender: (record) => (
                 <RenderFormItemReadOnly
                     formItem={record[expandableColumnKey]?.formItem}
                     questionnaireItem={record[expandableColumnKey]?.questionnaireItem}
                 />
             ),
+            onExpand: (expanded: boolean, record: GroupTableRow) => handleRowExpand(expanded, record),
+            showExpandColumn: false,
+            expandRowByClick: true,
         };
-    }, [compareRowHeight, visibleItem]);
+    }, [handleRowExpand, rowHeightExceedsMaxHeight, visibleItem]);
 
     const actionColumn = useMemo(() => {
         return {
@@ -511,10 +543,11 @@ export function useGroupTable(props: GroupTableProps) {
                     return null;
                 }
                 return (
-                    <Space>
+                    <S.ActionButtons>
                         <Button
                             type="link"
-                            onClick={() => {
+                            onClick={(event) => {
+                                event.stopPropagation();
                                 handleOpen(value?.index);
                             }}
                         >{t`Edit`}</Button>
@@ -522,9 +555,9 @@ export function useGroupTable(props: GroupTableProps) {
                             title={t`Are you sure you want to delete this item?`}
                             onConfirm={() => handleDelete(value.index)}
                         >
-                            <Button type="link" danger>{t`Delete`}</Button>
+                            <Button type="link" danger onClick={(event) => event.stopPropagation()}>{t`Delete`}</Button>
                         </Popconfirm>
-                    </Space>
+                    </S.ActionButtons>
                 );
             },
         };

@@ -1,3 +1,4 @@
+import type { AlignType } from 'rc-table/lib/interface';
 import { CSSProperties } from 'react';
 import { FCEQuestionnaireItem, FormAnswerItems, FormGroupItems, GroupItemProps } from 'sdc-qrf';
 
@@ -21,4 +22,5 @@ export interface GroupTableProps extends GroupItemProps {
     tickCSSProperties?: CSSProperties;
     labelCSSProperties?: CSSProperties;
     expandableMaxHeight?: number;
+    columnAlignment?: AlignType | ((questionItem: FCEQuestionnaireItem) => AlignType);
 }

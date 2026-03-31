@@ -1,4 +1,10 @@
-import type { FilterDropdownProps, SorterResult, ColumnsType, ColumnType } from 'antd/es/table/interface';
+import type {
+    FilterDropdownProps,
+    SorterResult,
+    ColumnsType,
+    ColumnType,
+    ColumnGroupType,
+} from 'antd/es/table/interface';
 import { Bundle, Resource } from 'fhir/r4b';
 import _ from 'lodash';
 
@@ -16,14 +22,17 @@ interface Props<R extends Resource> {
     onChange: (value: ColumnFilterValue['value'], key: string) => void;
 }
 
+export type TableColumn<R extends Resource> = ColumnGroupType<RecordType<R>> | ColumnType<RecordType<R>>;
+
 export function populateTableColumnsWithFiltersAndSorts<R extends Resource>(
     props: Props<R>,
 ): ColumnsType<RecordType<R>> {
     const { tableColumns, filters, sorters, currentSorter, onChange } = props;
-    const result = tableColumns.map((column) => {
+
+    function updateColumn(column: TableColumn<R>): TableColumn<R> {
         const filter = filters.find((f) => f.column.id === column.key);
 
-        const updatedColumn: ColumnType<RecordType<R>> = {
+        const updatedColumn = {
             ...column,
             filtered: !_.isUndefined(filter?.value) && !_.isNull(filter?.value) && filter?.value !== '',
             filterDropdown: filter
@@ -33,8 +42,17 @@ export function populateTableColumnsWithFiltersAndSorts<R extends Resource>(
             sortOrder: currentSorter.columnKey === column.key ? currentSorter.order : undefined,
         };
 
+        if ('children' in column && column.children) {
+            return {
+                ...updatedColumn,
+                children: column.children.map(updateColumn),
+            };
+        }
+
         return updatedColumn;
-    });
+    }
+
+    const result = tableColumns.map((column) => updateColumn(column));
 
     return result;
 }

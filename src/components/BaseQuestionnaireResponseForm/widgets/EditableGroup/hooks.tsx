@@ -1,13 +1,13 @@
 import type { ColumnsType } from 'antd/es/table/interface';
 import _ from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 import { FormItems, GroupItemProps, RepeatableFormGroupItems } from 'sdc-qrf';
 
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { RenderFormItemReadOnly } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/RenderFormItemReadOnly';
 import { GroupTableItem, GroupTableRow } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/types';
-import { getDataSource } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/utils';
+import { getColumnWidth, getDataSource } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/utils';
 
 export function useEditableGroup(props: GroupItemProps) {
     const { parentPath, questionItem } = props;
@@ -20,15 +20,15 @@ export function useEditableGroup(props: GroupItemProps) {
 
     const { onChange } = useFieldController<RepeatableFormGroupItems>(fieldName, questionItem);
 
-    const { getValues, reset } = useFormContext<FormItems>();
+    const { control, getValues, reset } = useFormContext<FormItems>();
 
     const [isModalVisible, setIsModalVisible] = useState(false);
 
     const [snapshotFormValues, setSnapshotFormValues] = useState<FormItems[] | null>(null);
     const [snapshotDataSource, setSnapshotDataSource] = useState<GroupTableRow[] | null>(null);
 
-    const fullFormValues = getValues();
-    const formValues = _.get(getValues(), fieldName);
+    const fullFormValues = useWatch({ control });
+    const formValues = _.get(fullFormValues, fieldName);
 
     const visibleItem = useMemo(() => item?.filter((i) => !i.hidden && i.type !== 'display'), [item]);
 
@@ -38,9 +38,7 @@ export function useEditableGroup(props: GroupItemProps) {
 
     const fields = useMemo(() => _.map(visibleItem, (item) => item.linkId), [visibleItem]);
 
-    const dataSource: GroupTableRow[] = useMemo(() => {
-        return getDataSource(fields, formItems, questionItem);
-    }, [fields, formItems, questionItem]);
+    const dataSource: GroupTableRow[] = getDataSource(fields, formItems, questionItem);
 
     const startEdit = useCallback(() => {
         setSnapshotFormValues(_.cloneDeep(formValues));
@@ -65,22 +63,24 @@ export function useEditableGroup(props: GroupItemProps) {
     const handleSave = useCallback(() => {
         setSnapshotFormValues(null);
         setSnapshotDataSource(null);
-        reset(fullFormValues, { keepDirty: true });
+        const latestFullFormValues = getValues();
+        reset(latestFullFormValues, { keepDirty: true });
         setIsModalVisible(false);
-    }, [fullFormValues, reset]);
+    }, [getValues, reset]);
 
-    const dataColumns: ColumnsType<GroupTableRow> = useMemo(() => {
-        return _.map(visibleItem, (questionItem) => {
-            return {
-                title: questionItem.text ? questionItem.text : questionItem.linkId,
-                dataIndex: questionItem.linkId,
-                key: questionItem.linkId,
-                render: (value: GroupTableItem) => (
+    const dataColumns: ColumnsType<GroupTableRow> = _.map(visibleItem, (columnQuestionItem) => {
+        return {
+            title: columnQuestionItem.text ? columnQuestionItem.text : '',
+            dataIndex: columnQuestionItem.linkId,
+            key: columnQuestionItem.linkId,
+            width: getColumnWidth(columnQuestionItem),
+            render: (value: GroupTableItem) => (
+                <>
                     <RenderFormItemReadOnly formItem={value.formItem} questionnaireItem={value.questionnaireItem} />
-                ),
-            };
-        });
-    }, [visibleItem]);
+                </>
+            ),
+        };
+    });
 
     return {
         repeats,
