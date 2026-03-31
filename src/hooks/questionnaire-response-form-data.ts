@@ -133,8 +133,8 @@ export const persistWithProvenanceSaveService: QuestionnaireResponseSaveService 
         author.resourceType === 'Organization'
             ? author.name
             : compileAsFirst<typeof author, string>(
-                  `${author.resourceType}.name.0.given.0 + ' ' + ${author.resourceType}.name.0.family`,
-              )(author);
+                `${author.resourceType}.name.given.first() + ' ' + ${author.resourceType}.name.family`,
+            )(author);
     if (isSuccess(qrSaveResponse)) {
         const provenanceResponse = await saveFHIRResource<Provenance>({
             resourceType: 'Provenance',
@@ -163,9 +163,7 @@ export const persistWithProvenanceSaveService: QuestionnaireResponseSaveService 
                 {
                     role: 'source',
                     what: {
-                        reference: `QuestionnaireResponse/${qrSaveResponse.data.id}/_history/${
-                            qrSaveResponse.data.meta!.versionId
-                        }`,
+                        reference: `QuestionnaireResponse/${qrSaveResponse.data.id}/_history/${qrSaveResponse.data.meta!.versionId}`,
                     },
                 },
             ],
