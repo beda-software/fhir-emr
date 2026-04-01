@@ -1,4 +1,4 @@
-import { i18n } from '@lingui/core';
+import { i18n, Messages } from '@lingui/core';
 import type { Locale as AntdLocale} from 'antd/es/locale';
 import deAntdLocale from 'antd/es/locale/de_DE';
 import enAntdLocale from 'antd/es/locale/en_US';
@@ -45,8 +45,7 @@ export function changeLocale(locale: string, localesConfig: LocalesConfig) {
 
 export interface LocaleData {
     label: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    messages: any;
+    messages: Messages;
     antdLocale: AntdLocale;
 }
 
