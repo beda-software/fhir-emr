@@ -6,8 +6,9 @@ import { useContext } from 'react';
 
 import { MenuIcon } from 'src/icons/general/Menu';
 import { getToken } from 'src/services/auth';
+import { changeLocale, getCurrentLocale } from 'src/services/i18n';
 
-import { BottomMenuLayout, LocaleConfigProvider } from './context';
+import { BottomMenuLayout, LocalesConfigProvider } from './context';
 import s from './SidebarBottom.module.scss';
 import { S } from './SidebarBottom.styles';
 import { MenuItem } from './types';
@@ -74,13 +75,13 @@ function BottomMenu(props: BottomMenuProps) {
 
 function LocaleSwitcher(props: { onItemClick?: () => void }) {
     const { onItemClick } = props;
-    const localeConfig = useContext(LocaleConfigProvider);
-    const currentLocale = localeConfig.getCurrentLocale();
-    const items = localeConfig.getAvailableLocales().map(({ code, label }) => ({
+    const localesConfig = useContext(LocalesConfigProvider);
+    const currentLocale = getCurrentLocale();
+    const items = Object.entries(localesConfig).map(([code, { label }]) => ({
         label: <div>{label}</div>,
         key: code,
         onClick: () => {
-            localeConfig.changeLocale(code);
+            changeLocale(code, localesConfig);
             onItemClick?.();
         },
     }));
@@ -94,7 +95,7 @@ function LocaleSwitcher(props: { onItemClick?: () => void }) {
                 {
                     key: 'locale',
                     icon: <GlobalOutlined />,
-                    label: localeConfig.getLocaleLabel(currentLocale),
+                    label: localesConfig[currentLocale]!.label,
                     children: items,
                 },
             ])}

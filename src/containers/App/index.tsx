@@ -1,5 +1,7 @@
+import { i18n } from '@lingui/core';
 import { t } from '@lingui/macro';
-import { ReactElement } from 'react';
+import { I18nProvider } from '@lingui/react';
+import { ReactElement, useEffect } from 'react';
 import { Route } from 'react-router-dom';
 
 import { AnonymousLayout } from 'src/components/BaseLayout';
@@ -19,7 +21,7 @@ import { QuestionnaireBuilder } from 'src/containers/QuestionnaireBuilder';
 import { QuestionnaireList } from 'src/containers/QuestionnaireList';
 import { SignIn } from 'src/containers/SignIn';
 import { VideoCall } from 'src/containers/VideoCall';
-import { LocaleConfig } from 'src/services/i18n';
+import { defaultLocalesConfig, dynamicActivate, getCurrentLocale, LocalesConfig } from 'src/services/i18n';
 
 import { AidboxFormsBuilder } from '../AidboxFormsBuilder';
 import { EMR } from '../EMR';
@@ -38,7 +40,7 @@ interface AppProps {
     anonymousRoutes?: ReactElement;
     populateUserInfoSharedState?: () => Promise<any>;
     UserWithNoRolesComponent?: () => ReactElement;
-    localeConfig?: LocaleConfig;
+    localesConfig?: LocalesConfig;
 }
 
 export function App(props: AppProps) {
@@ -47,8 +49,12 @@ export function App(props: AppProps) {
         anonymousRoutes,
         populateUserInfoSharedState,
         UserWithNoRolesComponent,
-        localeConfig,
+        localesConfig,
     } = props;
+
+    useEffect(() => {
+        dynamicActivate(getCurrentLocale(), localesConfig ?? defaultLocalesConfig);
+    }, [localesConfig]);
 
     // Define the default authenticated routes
     const defaultAuthenticatedRoutes = (
@@ -114,15 +120,17 @@ export function App(props: AppProps) {
 
     return (
         <div data-testid="app-container">
-            <EMR
-                authenticatedRoutes={authenticatedRoutes ? authenticatedRoutes : defaultAuthenticatedRoutes}
-                anonymousRoutes={anonymousRoutes ? anonymousRoutes : defaultAnonymousRoutes}
-                populateUserInfoSharedState={populateUserInfoSharedState}
-                UserWithNoRolesComponent={UserWithNoRolesComponent}
-                menuLayout={defaultMenuLayout}
-                footer={defaultFooterLayout}
-                localeConfig={localeConfig}
-            />
+            <I18nProvider i18n={i18n}>
+                <EMR
+                    authenticatedRoutes={authenticatedRoutes ? authenticatedRoutes : defaultAuthenticatedRoutes}
+                    anonymousRoutes={anonymousRoutes ? anonymousRoutes : defaultAnonymousRoutes}
+                    populateUserInfoSharedState={populateUserInfoSharedState}
+                    UserWithNoRolesComponent={UserWithNoRolesComponent}
+                    menuLayout={defaultMenuLayout}
+                    footer={defaultFooterLayout}
+                    localesConfig={localesConfig}
+                />
+            </I18nProvider>
         </div>
     );
 }

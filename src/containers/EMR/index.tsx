@@ -10,7 +10,7 @@ import { RemoteDataResult, success } from '@beda.software/remote-data';
 
 import { BaseLayout } from 'src/components/BaseLayout';
 import { FooterLayout, defaultFooterLayout } from 'src/components/BaseLayout/Footer/context';
-import { LocaleConfigProvider } from 'src/components/BaseLayout/Sidebar/SidebarBottom/context';
+import { LocalesConfigProvider } from 'src/components/BaseLayout/Sidebar/SidebarBottom/context';
 import { MenuLayout, MenuLayoutValue } from 'src/components/BaseLayout/Sidebar/SidebarTop/context';
 import { Spinner } from 'src/components/Spinner';
 import { DefaultUserWithNoRoles } from 'src/containers/App/DefaultUserWithNoRoles';
@@ -18,7 +18,7 @@ import { restoreUserSession } from 'src/containers/App/utils';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { DocumentPrint } from 'src/containers/PatientDetails/DocumentPrint';
 import { getToken, parseOAuthState, setToken } from 'src/services/auth';
-import { defaultLocaleConfig, LocaleConfig } from 'src/services/i18n';
+import { defaultLocalesConfig, LocalesConfig } from 'src/services/i18n';
 
 interface EMRProps {
     authenticatedRoutes?: ReactElement;
@@ -27,7 +27,7 @@ interface EMRProps {
     UserWithNoRolesComponent?: () => ReactElement;
     menuLayout: MenuLayoutValue;
     footer?: ReactElement;
-    localeConfig?: LocaleConfig;
+    localesConfig?: LocalesConfig;
 }
 
 export function EMR(props: EMRProps) {
@@ -38,7 +38,7 @@ export function EMR(props: EMRProps) {
         UserWithNoRolesComponent,
         menuLayout,
         footer,
-        localeConfig,
+        localesConfig,
     } = props;
 
     const [userResponse] = useService(async () => {
@@ -64,7 +64,7 @@ export function EMR(props: EMRProps) {
 
     return (
         <div data-testid="emr-container">
-            <LocaleConfigProvider.Provider value={localeConfig ?? defaultLocaleConfig}>
+            <LocalesConfigProvider.Provider value={localesConfig ?? defaultLocalesConfig}>
                 <MenuLayout.Provider value={menuLayout}>
                     <FooterLayout.Provider value={footer ? footer : defaultFooterLayout}>
                         <RenderRemoteData remoteData={userResponse} renderLoading={Spinner}>
@@ -72,7 +72,7 @@ export function EMR(props: EMRProps) {
                         </RenderRemoteData>
                     </FooterLayout.Provider>
                 </MenuLayout.Provider>
-            </LocaleConfigProvider.Provider>
+            </LocalesConfigProvider.Provider>
         </div>
     );
 }

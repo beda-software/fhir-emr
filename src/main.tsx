@@ -1,6 +1,4 @@
-import { i18n } from '@lingui/core';
-import { I18nProvider } from '@lingui/react';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { createRoot } from 'react-dom/client';
 
 import 'src/services/initialize';
@@ -11,7 +9,6 @@ import 'src/styles/index.scss';
 import { PatientDashboardProvider } from 'src/components/Dashboard/contexts';
 import { App } from 'src/containers/App';
 import { dashboard } from 'src/dashboard.config';
-import { dynamicActivate, getCurrentLocale } from 'src/services/i18n';
 
 import { ValueSetExpandProvider } from './contexts';
 import { expandEMRValueSet } from './services';
@@ -19,20 +16,14 @@ import * as serviceWorker from './serviceWorker';
 import { ThemeProvider } from './theme/ThemeProvider';
 
 const AppWithContext = () => {
-    useEffect(() => {
-        dynamicActivate(getCurrentLocale());
-    }, []);
-
     return (
-        <I18nProvider i18n={i18n}>
-            <PatientDashboardProvider dashboard={dashboard}>
-                <ValueSetExpandProvider.Provider value={expandEMRValueSet}>
-                    <ThemeProvider>
-                        <App />
-                    </ThemeProvider>
-                </ValueSetExpandProvider.Provider>
-            </PatientDashboardProvider>
-        </I18nProvider>
+        <PatientDashboardProvider dashboard={dashboard}>
+            <ValueSetExpandProvider.Provider value={expandEMRValueSet}>
+                <ThemeProvider>
+                    <App />
+                </ThemeProvider>
+            </ValueSetExpandProvider.Provider>
+        </PatientDashboardProvider>
     );
 };
 

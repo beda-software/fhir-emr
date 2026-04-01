@@ -1,81 +1,69 @@
 import { i18n } from '@lingui/core';
-import type { Locale } from 'antd/es/locale';
+import type { Locale as AntdLocale } from 'antd/es/locale';
 import enAntdLocale from 'antd/es/locale/en_US';
 import esAntdLocale from 'antd/es/locale/es_ES';
 import ruAntdLocale from 'antd/es/locale/ru_RU';
-import { en, es, ru } from 'make-plural/plurals';
-import { type ReactNode } from 'react';
 
 import { messages as enMessages } from 'src/locale/en/messages';
 import { messages as esMessages } from 'src/locale/es/messages';
 import { messages as ruMessages } from 'src/locale/ru/messages';
 
-export type LocaleCode = 'en' | 'es' | 'ru';
-
-const localMap = {
-    en: enMessages,
-    es: esMessages,
-    ru: ruMessages,
-};
-
-export const locales: Record<string, string> = {
-    en: 'English',
-    es: 'Español',
-    ru: 'Русский',
-};
-
-i18n.loadLocaleData({
-    en: { plurals: en },
-    es: { plurals: es },
-    ru: { plurals: ru },
-});
-
 export const getCurrentLocale = () => {
-    return (localStorage.getItem('locale') || 'en') as LocaleCode;
+    return localStorage.getItem('locale') || 'en';
 };
 
 export const setCurrentLocale = (locale: string) => {
     localStorage.setItem('locale', locale);
 };
 
-export function dynamicActivate(locale: LocaleCode) {
-    const messages = localMap[locale];
+export function dynamicActivate(localeCode: string, localesConfig: LocalesConfig) {
+    const messages = localesConfig[localeCode]?.messages;
 
     if (messages) {
-        i18n.load(locale, messages);
+        i18n.load(localeCode, messages);
     }
 
-    i18n.activate(locale);
+    i18n.activate(localeCode);
 }
 
-export const antdLocaleMap: { [localeCode in LocaleCode]: Locale } = {
+/**
+ * @deprecated Use `LocalesConfig` and access `antdLocale` from the locale entry instead.
+ */
+export const antdLocaleMap: Record<string, AntdLocale> = {
     en: enAntdLocale,
     es: esAntdLocale,
     ru: ruAntdLocale,
 };
 
-export function getAvailableLocales() {
-    return Object.entries(locales).map(([code, label]) => ({ code, label }));
-}
-
-export function changeLocale(locale: LocaleCode) {
+export function changeLocale(locale: string, localesConfig: LocalesConfig) {
     setCurrentLocale(locale);
-    dynamicActivate(locale);
+    dynamicActivate(locale, localesConfig);
     location.reload();
 }
 
-export interface LocaleConfig {
-    getCurrentLocale: () => string;
-    getAvailableLocales: () => Array<{ code: string; label: ReactNode }>;
-    getLocaleLabel: (code: string) => ReactNode;
-    changeLocale: (code: string) => void;
+export interface LocaleData {
+    label: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    messages: any;
+    antdLocale: AntdLocale;
 }
 
-export const defaultLocaleConfig: LocaleConfig = {
-    getCurrentLocale,
-    getAvailableLocales,
-    getLocaleLabel: (code: string) => locales[code] ?? code,
-    changeLocale: (code: string) => {
-        changeLocale(code as LocaleCode);
+export type LocalesConfig = Record<string, LocaleData>;
+
+export const defaultLocalesConfig: LocalesConfig = {
+    ru: {
+        label: 'Русский',
+        messages: ruMessages,
+        antdLocale: ruAntdLocale,
+    },
+    en: {
+        label: 'English',
+        messages: enMessages,
+        antdLocale: enAntdLocale,
+    },
+    es: {
+        label: 'Español',
+        messages: esMessages,
+        antdLocale: esAntdLocale,
     },
 };
