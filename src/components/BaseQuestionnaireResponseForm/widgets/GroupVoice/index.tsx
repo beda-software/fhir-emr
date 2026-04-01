@@ -21,16 +21,7 @@ import { Paragraph, Text } from 'src/components/Typography';
 import { aiService } from 'src/services/ai';
 import { getToken } from 'src/services/auth';
 import { compileAsFirst } from 'src/utils';
-
-function customizer<T>(objValue: T, srcValue: T):T|undefined {
-    if (_.isArray(objValue)) {
-        return _.concat(objValue, srcValue) as unknown as T;
-    }
-}
-
-function merge<T>(src: T, dst: T):T {
-    return _.mergeWith(src, dst, customizer<T>);
-}
+import { merge, normalize} from './utils';
 
 function GroupVoiceScriber(props: { disabled?: boolean; onRecorded: (file: RcFile) => Promise<void> }) {
     const { disabled, onRecorded } = props;
@@ -114,7 +105,10 @@ export function GroupVoice(props: GroupItemProps) {
 
         const old = { [linkId]: value };
         const newValue = mapResponseToForm(extractResponse.data, questionnaire);
-        const result = merge(old, newValue);
+        const mergedValue = merge(old, newValue);
+        console.log("newValue", mergedValue);
+        const result = normalize(mergedValue,
+                                 (linkId:string) => getByLinkId(rootContext?.questionnaire!, { linkId })!);
         console.log("merge", old, "with", newValue, "=>", result);
 
         onChange(result[linkId] ?? {});
