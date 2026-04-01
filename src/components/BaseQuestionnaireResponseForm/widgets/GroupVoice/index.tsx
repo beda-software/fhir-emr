@@ -2,11 +2,11 @@ import { AudioOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Alert, Button, notification } from 'antd';
 import type { RcFile } from 'antd/es/upload/interface';
-import { Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
+import { Questionnaire, QuestionnaireItem } from 'fhir/r4b';
 import { useEffect, useMemo, useState } from 'react';
+import * as _ from 'lodash';
 import {
     mapResponseToForm,
-    mapFormToResponse,
     QuestionItems,
     useQuestionnaireResponseFormContext,
     type GroupItemProps,
@@ -20,8 +20,17 @@ import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm
 import { Paragraph, Text } from 'src/components/Typography';
 import { aiService } from 'src/services/ai';
 import { getToken } from 'src/services/auth';
+import { compileAsFirst } from 'src/utils';
 
-import { mergeQR } from './utils';
+function customizer<T>(objValue: T, srcValue: T):T|undefined {
+    if (_.isArray(objValue)) {
+        return _.concat(objValue, srcValue) as unknown as T;
+    }
+}
+
+function merge<T>(src: T, dst: T):T {
+    return _.mergeWith(src, dst, customizer<T>);
+}
 
 function GroupVoiceScriber(props: { disabled?: boolean; onRecorded: (file: RcFile) => Promise<void> }) {
     const { disabled, onRecorded } = props;
@@ -36,6 +45,8 @@ function GroupVoiceScriber(props: { disabled?: boolean; onRecorded: (file: RcFil
     return <AudioRecorder recorderControls={recorderControls} onChange={onRecorded} />;
 }
 
+const getByLinkId = compileAsFirst<Questionnaire, QuestionnaireItem>('Questionnaire.repeat(item).where(linkId=%linkId)');
+
 export function GroupVoice(props: GroupItemProps) {
     const { parentPath, questionItem, context } = props;
     const { linkId, repeats, text, hidden, item, readOnly } = questionItem;
@@ -48,7 +59,6 @@ export function GroupVoice(props: GroupItemProps) {
     // We keep the extracted QR items inside the group form field.
     // For non-repeatable groups, the expected value is: { question?: string, items?: FormItems }.
     const { value, onChange } = useFieldController<any>(fieldName, questionItem);
-    console.log('Current value', value);
 
     const [isExtracting, setIsExtracting] = useState(false);
     const [showScriber, setShowScriber] = useState(false);
@@ -56,6 +66,7 @@ export function GroupVoice(props: GroupItemProps) {
 
     const [gen, setGen] = useState(0);
     const rootContext = context[0];
+    const questionItemFHIR = getByLinkId(rootContext?.questionnaire!, { linkId });
 
     const extractAndFillGroup = async (file: RcFile) => {
         setShowScriber(false);
@@ -83,7 +94,7 @@ export function GroupVoice(props: GroupItemProps) {
         const questionnaire: Questionnaire = {
             resourceType: 'Questionnaire',
             status: 'active',
-            item: [questionItem],
+            item: [questionItemFHIR!],
         };
         const extractResponse = await aiService<any>({
             method: 'POST',
@@ -101,19 +112,12 @@ export function GroupVoice(props: GroupItemProps) {
             return;
         }
 
-        const wrappedValue = { [linkId]: value };
+        const old = { [linkId]: value };
+        const newValue = mapResponseToForm(extractResponse.data, questionnaire);
+        const result = merge(old, newValue);
+        console.log("merge", old, "with", newValue, "=>", result);
 
-        const old = mapFormToResponse(wrappedValue, questionnaire);
-
-        const merged = mergeQR(old?.item?.[0] ?? { linkId: 'empty' }, extractResponse.data.item[0]);
-        const qr: QuestionnaireResponse = {
-            resourceType: 'QuestionnaireResponse',
-            status: 'completed',
-            item: [merged],
-        };
-        const newValue = mapResponseToForm(qr, questionnaire)[linkId];
-
-        onChange(newValue);
+        onChange(result[linkId] ?? {});
         setGen((g) => g + 1);
         setIsExtracting(false);
     };
