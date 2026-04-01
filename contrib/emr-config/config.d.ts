@@ -22,6 +22,7 @@ declare const config: {
         statusField: string;
         value: any;
     }>;
+    defaultLocale?: string;
 };
 
 export default config;

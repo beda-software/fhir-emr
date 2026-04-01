@@ -5,13 +5,15 @@ import enAntdLocale from 'antd/es/locale/en_US';
 import esAntdLocale from 'antd/es/locale/es_ES';
 import ruAntdLocale from 'antd/es/locale/ru_RU';
 
+import config from '@beda.software/emr-config';
+
 import { messages as deMessages } from 'src/locale/de/messages';
 import { messages as enMessages } from 'src/locale/en/messages';
 import { messages as esMessages } from 'src/locale/es/messages';
 import { messages as ruMessages } from 'src/locale/ru/messages';
 
 export const getCurrentLocale = () => {
-    return localStorage.getItem('locale') || 'en';
+    return localStorage.getItem('locale') ?? config.defaultLocale ?? 'en';
 };
 
 export const setCurrentLocale = (locale: string) => {
