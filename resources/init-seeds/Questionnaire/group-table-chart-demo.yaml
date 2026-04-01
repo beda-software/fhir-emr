@@ -11,6 +11,12 @@ subjectType:
   - Patient
 description: A questionnaire to demonstrate group-table item control with enabled chart extension
 item:
+- linkId: voice
+  type: group
+  itemControl:
+    coding:
+    - code: group-voice
+  item:
   - linkId: group-table-chart-demo
     text: Group Table Chart Demo
     type: group
