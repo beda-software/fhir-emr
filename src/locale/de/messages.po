@@ -435,7 +435,7 @@ msgstr ""
 #: src/components/SearchBar/index.tsx:38
 #: src/components/SearchBar/SearchBarMobile/index.tsx:52
 msgid "Clear filters"
-msgstr ""
+msgstr "Filter zurücksetzen"
 
 #: src/components/BaseQuestionnaireResponseForm/widgets/UploadFileControl/index.tsx:32
 msgid "Click or drag file to this area to upload"
