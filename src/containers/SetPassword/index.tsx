@@ -1,15 +1,12 @@
 import { Trans, t } from '@lingui/macro';
 import { useParams } from 'react-router-dom';
 
+import { inMemorySaveService } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/questionnaire-response-form-data';
+
 import { FormWrapper } from 'src/components/FormWrapper';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Title } from 'src/components/Typography';
-import {
-    inMemorySaveFHIRResourceService,
-    // inMemorySaveService,
-    questionnaireIdLoader,
-} from 'src/hooks/questionnaire-response-form-data';
-import { serviceProvider } from 'src/services';
+import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 import { CustomYupTestsMap } from 'src/utils';
 
 import { S } from './SetPassword.styles';
@@ -30,7 +27,7 @@ export function SetPassword(props: SetPasswordProps) {
                 <QuestionnaireResponseForm
                     // customYupTests={props.customYupTests}
                     questionnaireLoader={questionnaireIdLoader('set-password')}
-                    // questionnaireResponseSaveService={inMemorySaveService}
+                    questionnaireResponseSaveService={inMemorySaveService}
                     onSuccess={() => {
                         window.location.href = '/';
                     }}
@@ -48,7 +45,6 @@ export function SetPassword(props: SetPasswordProps) {
                             },
                         ],
                     }}
-                    serviceProvider={{ ...serviceProvider, saveFHIRResource: inMemorySaveFHIRResourceService }}
                     FormWrapper={(props) => <FormWrapper {...props} saveButtonTitle={t`Save`} />}
                 />
             </S.Form>

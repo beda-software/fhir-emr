@@ -1,32 +1,29 @@
-import _ from 'lodash';
-import { useMemo } from 'react';
-import { QuestionnaireResponseFormData } from 'sdc-qrf';
+import {
+    useQuestionnaireResponseForm as useFHIRQuestionnaireResponseForm,
+    Props,
+} from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm';
 
-import { onFormResponse, QRFProps } from 'src/components/QuestionnaireResponseForm';
-import { useQuestionnaireResponseFormData } from 'src/hooks/questionnaire-response-form-data';
+import {
+    groupControlComponents,
+    itemComponents,
+    itemControlComponents,
+} from 'src/components/BaseQuestionnaireResponseForm/controls';
+import { FormWrapper, GroupItemComponent } from 'src/components/FormWrapper';
+import { saveFHIRResource, sdcService, service } from 'src/services';
 
-export function useQuestionnaireResponseForm(props: QRFProps) {
-    // TODO find what cause rerender and fix it
-    // remove this temporary hack
-    const memoizedProps = useMemo(() => props, [JSON.stringify(props)]);
-
-    const { response, handleSave } = useQuestionnaireResponseFormData(memoizedProps);
-    const { onSuccess, onFailure, readOnly, initialQuestionnaireResponse, onCancel } = memoizedProps;
-
-    const onSubmit = async (formData: QuestionnaireResponseFormData) => {
-        const modifiedFormData = _.merge({}, formData, {
-            context: {
-                questionnaireResponse: {
-                    questionnaire: initialQuestionnaireResponse?.questionnaire,
-                },
-            },
-        });
-
-        /* delete modifiedFormData.context.questionnaireResponse.meta; */
-
-        const saveResponse = await handleSave(modifiedFormData);
-        onFormResponse({ response: saveResponse, onSuccess, onFailure });
-    };
-
-    return { response, onSubmit, readOnly, onCancel };
+export function useQuestionnaireResponseForm(props: Pick<Props, 'questionnaireLoader'> & Partial<Props>) {
+    return useFHIRQuestionnaireResponseForm({
+        ...props,
+        serviceProvider: props.serviceProvider ?? {
+            service,
+            saveFHIRResource,
+        },
+        fhirService: props.fhirService ?? service,
+        sdcService: props.sdcService ?? sdcService,
+        FormWrapper: props.FormWrapper ?? FormWrapper,
+        groupItemComponent: props.groupItemComponent ?? GroupItemComponent,
+        widgetsByQuestionType: props.widgetsByQuestionType ?? itemComponents,
+        widgetsByQuestionItemControl: props.widgetsByQuestionItemControl ?? itemControlComponents,
+        widgetsByGroupQuestionItemControl: props.widgetsByGroupQuestionItemControl ?? groupControlComponents,
+    });
 }

@@ -1,15 +1,11 @@
 import { t } from '@lingui/macro';
 import { PractitionerRole } from 'fhir/r4b';
 
-import { BaseQuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/BaseQuestionnaireResponseForm';
-import { RenderRemoteData, formatFHIRDateTime } from '@beda.software/fhir-react';
+import { formatFHIRDateTime } from '@beda.software/fhir-react';
 
-import { FormWrapper, GroupItemComponent } from 'src/components/FormWrapper';
 import { Modal } from 'src/components/Modal';
-import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
-import { Spinner } from 'src/components/Spinner';
+import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { inMemorySaveService } from 'src/hooks/questionnaire-response-form-data';
-import { service } from 'src/services';
 
 interface NewAppointmentModalProps {
     practitionerRole: PractitionerRole;
@@ -23,52 +19,33 @@ interface NewAppointmentModalProps {
 export function NewAppointmentModal(props: NewAppointmentModalProps) {
     const { showModal, start, onOk, onCancel } = props;
     const appointmentStartDateTime = start ? formatFHIRDateTime(start) : formatFHIRDateTime(new Date());
-    const { response, onSubmit, readOnly } = useQuestionnaireResponseForm({
-        onSuccess: onOk,
-        questionnaireResponseSaveService: inMemorySaveService,
-        questionnaireLoader: { type: 'id', questionnaireId: 'new-appointment' },
-        launchContextParameters: [
-            {
-                name: 'patient',
-                resource: { resourceType: 'Patient' },
-            },
-            {
-                name: 'practitionerRole',
-                resource: props.practitionerRole,
-            },
-            {
-                name: 'appointment',
-                resource: {
-                    resourceType: 'Appointment',
-                    start: appointmentStartDateTime,
-                    status: 'pending',
-                    participant: [{ status: 'accepted' }],
-                },
-            },
-        ],
-    });
+
     return (
         <Modal title={t`New Appointment`} open={showModal} footer={null} onCancel={onCancel}>
-            <RenderRemoteData remoteData={response} renderLoading={Spinner}>
-                {(formData) => {
-                    return (
-                        <BaseQuestionnaireResponseForm
-                            formData={formData}
-                            onSubmit={onSubmit}
-                            readOnly={readOnly}
-                            fhirService={service}
-                            groupItemComponent={GroupItemComponent}
-                            FormWrapper={(props) => (
-                                <FormWrapper
-                                    {...props}
-                                    // formData={formData}
-                                    onCancel={onCancel}
-                                />
-                            )}
-                        />
-                    );
-                }}
-            </RenderRemoteData>
+            <QuestionnaireResponseForm
+                onSuccess={onOk}
+                questionnaireResponseSaveService={inMemorySaveService}
+                questionnaireLoader={{ type: 'id', questionnaireId: 'new-appointment' }}
+                launchContextParameters={[
+                    {
+                        name: 'patient',
+                        resource: { resourceType: 'Patient' },
+                    },
+                    {
+                        name: 'practitionerRole',
+                        resource: props.practitionerRole,
+                    },
+                    {
+                        name: 'appointment',
+                        resource: {
+                            resourceType: 'Appointment',
+                            start: appointmentStartDateTime,
+                            status: 'pending',
+                            participant: [{ status: 'accepted' }],
+                        },
+                    },
+                ]}
+            />
         </Modal>
     );
 }
