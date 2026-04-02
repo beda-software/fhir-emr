@@ -29,6 +29,19 @@ function normalizeArray(fi: FormItems[]) {
     })
 }
 
+function normalizeGroupArray(fi: object[]) {
+    return _.filter(fi, (item: object) => {
+        const keys = Object.keys(item);
+        if (keys.length === 0) {
+            return false;
+        }
+        if (keys.length === 1 && keys[0] === '_itemKey') {
+            return false;
+        }
+        return true;
+    })
+}
+
 function normalizeArrayLastWin(fi: FormItems[]){
     const result = normalizeArray(fi);
     if(result.length > 0){
@@ -43,8 +56,10 @@ export function normalize(qr: FormItems, getDefinition: (linkId: string) => Ques
     }
     const result: FormItems = {}
     for (const [key, value] of Object.entries(qr)) {
-        console.log(`${key}: ${JSON.stringify(value)}`);
-        if(typeof value === 'undefined'){
+        if (key === '_itemKey') {
+            continue;
+        }
+        if (typeof value === 'undefined') {
             continue;
         }
         if (_.isArray(value)) {
@@ -54,7 +69,17 @@ export function normalize(qr: FormItems, getDefinition: (linkId: string) => Ques
                 result[key] = normalizeArrayLastWin(value);
             }
         } else {
-            result[key] = {...value, items: normalize(value.items, getDefinition)};
+            let items:any = [];
+            if (_.isArray(value.items)) {
+                if (getDefinition(key).repeats) {
+                    items = normalizeGroupArray(value.items);
+                } else {
+                    console.error("Unpossible state", key, value);
+                }
+            } else {
+                items = normalize(value.items, getDefinition)
+            };
+        result[key] = { ...value, items};
         }
     }
     return result;

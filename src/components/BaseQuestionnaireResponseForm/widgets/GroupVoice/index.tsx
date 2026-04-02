@@ -106,11 +106,8 @@ export function GroupVoice(props: GroupItemProps) {
         const old = { [linkId]: value };
         const newValue = mapResponseToForm(extractResponse.data, questionnaire);
         const mergedValue = merge(old, newValue);
-        console.log("newValue", mergedValue);
         const result = normalize(mergedValue,
-                                 (linkId:string) => getByLinkId(rootContext?.questionnaire!, { linkId })!);
-        console.log("merge", old, "with", newValue, "=>", result);
-
+                                (linkId:string) => getByLinkId(rootContext?.questionnaire!, { linkId })!);
         onChange(result[linkId] ?? {});
         setGen((g) => g + 1);
         setIsExtracting(false);
