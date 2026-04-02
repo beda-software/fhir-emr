@@ -6,23 +6,16 @@ import { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import config from '@beda.software/emr-config';
-import { QuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm';
 import { RenderRemoteData } from '@beda.software/fhir-react';
 import { isLoading, isSuccess } from '@beda.software/remote-data';
 
-import {
-    groupControlComponents,
-    itemComponents,
-    itemControlComponents,
-} from 'src/components/BaseQuestionnaireResponseForm/controls';
-import { FormWrapper, GroupItemComponent } from 'src/components/FormWrapper';
 import { ModalTrigger } from 'src/components/ModalTrigger';
+import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
 import { Text } from 'src/components/Typography';
 import { DocumentsList } from 'src/containers/DocumentsList';
 import { ChooseDocumentToCreateModal } from 'src/containers/DocumentsList/ChooseDocumentToCreateModal';
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
-import { serviceProvider } from 'src/services';
 
 import { AIScribe, useAIScribe } from './AIScribe';
 import { S } from './EncounterDetails.styles';
@@ -201,12 +194,6 @@ function ModalCompleteEncounter(props: { encounter: Encounter; onSuccess: () => 
                         notification.success({ message: t`Encounter was successfully completed` });
                         onSuccess();
                     }}
-                    serviceProvider={serviceProvider}
-                    FormWrapper={(props) => <FormWrapper {...props} onCancel={closeModal} />}
-                    groupItemComponent={GroupItemComponent}
-                    widgetsByQuestionType={itemComponents}
-                    widgetsByQuestionItemControl={itemControlComponents}
-                    widgetsByGroupQuestionItemControl={groupControlComponents}
                 />
             )}
         </ModalTrigger>

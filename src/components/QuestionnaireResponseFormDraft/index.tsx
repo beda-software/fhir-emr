@@ -3,24 +3,16 @@ import { t } from '@lingui/macro';
 import { Button, Tooltip } from 'antd';
 import { Resource } from 'fhir/r4b';
 
-import { QuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm';
 import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { Spinner } from 'src/components';
 import { AlertMessage } from 'src/components/AlertMessage';
-import {
-    groupControlComponents,
-    itemComponents,
-    itemControlComponents,
-} from 'src/components/BaseQuestionnaireResponseForm/controls';
-import { FormWrapper, GroupItemComponent } from 'src/components/FormWrapper';
-import { QRFProps } from 'src/components/QuestionnaireResponseForm';
+import { QuestionnaireResponseForm, QRFProps } from 'src/components/QuestionnaireResponseForm';
 import {
     QuestionnaireResponseDraftService,
     QuestionnaireResponseFormSaveResponse,
     useQuestionnaireResponseDraft,
 } from 'src/hooks';
-import { serviceProvider } from 'src/services';
 
 interface BaseQuestionnaireResponseFormDraftProps extends QRFProps {
     autoSave: boolean;
@@ -95,12 +87,6 @@ export function QuestionnaireResponseFormDraft(props: QuestionnaireResponseFormD
                         }}
                         // onQRFUpdate={updateDraft}
                         // onSaveDraft={props.qrDraftServiceType === 'server' ? saveDraft : undefined}
-                        serviceProvider={serviceProvider}
-                        FormWrapper={(props) => <FormWrapper {...props} />}
-                        groupItemComponent={GroupItemComponent}
-                        widgetsByQuestionType={itemComponents}
-                        widgetsByQuestionItemControl={itemControlComponents}
-                        widgetsByGroupQuestionItemControl={groupControlComponents}
                     />
                 </>
             )}

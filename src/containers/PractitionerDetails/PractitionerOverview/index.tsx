@@ -3,19 +3,12 @@ import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
 import { HealthcareService, Practitioner, PractitionerRole } from 'fhir/r4b';
 
-import { QuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm';
 import { WithId } from '@beda.software/fhir-react';
 
-import {
-    groupControlComponents,
-    itemComponents,
-    itemControlComponents,
-} from 'src/components/BaseQuestionnaireResponseForm/controls';
 import { DashboardCard } from 'src/components/DashboardCard';
-import { FormWrapper, GroupItemComponent } from 'src/components/FormWrapper';
 import { ModalTrigger } from 'src/components/ModalTrigger';
+import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
-import { serviceProvider } from 'src/services';
 
 import s from './PractitionerOverview.module.scss';
 import { S } from './PractitionerOverview.styles';
@@ -99,12 +92,6 @@ export function PractitionerOverview(props: Props) {
                                         message: t`Clinician successfully updated`,
                                     });
                                 }}
-                                serviceProvider={serviceProvider}
-                                FormWrapper={(props) => <FormWrapper {...props} onCancel={closeModal} />}
-                                groupItemComponent={GroupItemComponent}
-                                widgetsByQuestionType={itemComponents}
-                                widgetsByQuestionItemControl={itemControlComponents}
-                                widgetsByGroupQuestionItemControl={groupControlComponents}
                             />
                         )}
                     </ModalTrigger>

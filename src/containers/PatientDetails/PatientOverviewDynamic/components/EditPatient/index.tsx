@@ -2,19 +2,11 @@ import { t, Trans } from '@lingui/macro';
 import { notification } from 'antd';
 import { Patient } from 'fhir/r4b';
 
-import { QuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm';
-
-import {
-    groupControlComponents,
-    itemComponents,
-    itemControlComponents,
-} from 'src/components/BaseQuestionnaireResponseForm/controls';
-import { FormWrapper, GroupItemComponent } from 'src/components/FormWrapper';
+import { QuestionnaireResponseForm } from 'src/components';
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { usePatientReload } from 'src/containers/PatientDetails/Dashboard/contexts';
 import { S } from 'src/containers/PatientDetails/PatientOverviewDynamic/PatientOverview.styles';
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
-import { serviceProvider } from 'src/services';
 
 interface Props {
     patient: Patient;
@@ -43,12 +35,6 @@ export function EditPatient({ patient }: Props) {
                         reload();
                         closeModal();
                     }}
-                    serviceProvider={serviceProvider}
-                    FormWrapper={(props) => <FormWrapper {...props} onCancel={closeModal} />}
-                    groupItemComponent={GroupItemComponent}
-                    widgetsByQuestionType={itemComponents}
-                    widgetsByQuestionItemControl={itemControlComponents}
-                    widgetsByGroupQuestionItemControl={groupControlComponents}
                 />
             )}
         </ModalTrigger>

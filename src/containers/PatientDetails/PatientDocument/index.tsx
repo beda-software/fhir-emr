@@ -147,7 +147,6 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
                                         widgetsByQuestionItemControl={itemControlComponents}
                                         widgetsByGroupQuestionItemControl={groupControlComponents}
                                         // onCancel={handleCancel}
-                                        // saveButtonTitle={t`Complete`}
                                         // onQRFUpdate={onQRFUpdate}
                                         // onSaveDraft={onSaveDraft}
                                         fhirService={service}
@@ -158,6 +157,7 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
                                                 // formData={formData}
                                                 onCancel={handleCancel}
                                                 onSaveDraft={onSaveDraft}
+                                                saveButtonTitle={t`Complete`}
                                             />
                                         )}
                                     />
@@ -195,10 +195,10 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
                                                         // formData={formData}
                                                         onCancel={handleCancel}
                                                         onSaveDraft={onSaveDraft}
+                                                        saveButtonTitle={t`Complete`}
                                                     />
                                                 )}
                                                 // onCancel={handleCancel}
-                                                // saveButtonTitle={t`Complete`}
                                                 // onQRFUpdate={onQRFUpdate}
                                                 // onSaveDraft={onSaveDraft}
                                                 fhirService={service}

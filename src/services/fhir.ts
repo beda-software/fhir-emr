@@ -68,25 +68,14 @@ export const {
 } = initServicesFromService(fhirService, config.inactiveMapping);
 
 export const serviceProvider = {
-    axiosInstance,
-    setInstanceToken,
-    resetInstanceToken,
-    createFHIRResource,
-    updateFHIRResource,
-    getFHIRResource,
-    getFHIRResources,
-    getAllFHIRResources,
-    findFHIRResource,
     saveFHIRResource,
-    saveFHIRResources,
-    patchFHIRResource,
-    deleteFHIRResource,
-    forceDeleteFHIRResource,
-    getConcepts,
-    setInstanceBaseURL,
-    applyFHIRService,
-    applyFHIRServices,
     service,
+};
+
+export const sdcService = async <S = any, F = any>(
+    axiosConfig: AxiosRequestConfig,
+): Promise<RemoteDataResult<S, F>> => {
+    return fhirService({ ...(config.sdcBackendUrl ? { baseURL: config.sdcBackendUrl } : {}), ...axiosConfig });
 };
 
 export {

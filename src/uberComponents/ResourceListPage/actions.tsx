@@ -4,8 +4,6 @@ import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 import { omit } from 'lodash';
 import { useNavigate } from 'react-router-dom';
 
-import { QuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm';
-
 import {
     groupControlComponents,
     itemComponents,
@@ -13,9 +11,9 @@ import {
 } from 'src/components/BaseQuestionnaireResponseForm/controls';
 import { FormWrapper, GroupItemComponent } from 'src/components/FormWrapper';
 import { ModalTrigger } from 'src/components/ModalTrigger';
-import { QRFProps } from 'src/components/QuestionnaireResponseForm';
+import { QuestionnaireResponseForm, QRFProps } from 'src/components/QuestionnaireResponseForm';
 import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
-import { serviceProvider } from 'src/services';
+import { sdcService, service, serviceProvider } from 'src/services';
 
 import { S } from './styles';
 import {
@@ -72,14 +70,7 @@ export function RecordQuestionnaireAction<R extends Resource>({
                         reload();
                         closeModal();
                     }}
-                    onCancel={closeModal}
-                    saveButtonTitle={t`Submit`}
-                    serviceProvider={serviceProvider}
-                    FormWrapper={(props) => <FormWrapper {...props} onCancel={closeModal} />}
-                    groupItemComponent={GroupItemComponent}
-                    widgetsByQuestionType={itemComponents}
-                    widgetsByQuestionItemControl={itemControlComponents}
-                    widgetsByGroupQuestionItemControl={groupControlComponents}
+                    FormWrapper={(props) => <FormWrapper {...props} saveButtonTitle={t`Submit`} />}
                     {...(action.extra?.qrfProps ?? {})}
                 />
             )}
@@ -121,6 +112,8 @@ export function HeaderQuestionnaireAction({ action, reload, defaultLaunchContext
                     widgetsByQuestionType={itemComponents}
                     widgetsByQuestionItemControl={itemControlComponents}
                     widgetsByGroupQuestionItemControl={groupControlComponents}
+                    fhirService={service}
+                    sdcService={sdcService}
                     {...(action.extra?.qrfProps ?? {})}
                 />
             )}
@@ -176,6 +169,8 @@ export function BatchQuestionnaireAction<R extends Resource>({
                         widgetsByQuestionType={itemComponents}
                         widgetsByQuestionItemControl={itemControlComponents}
                         widgetsByGroupQuestionItemControl={groupControlComponents}
+                        fhirService={service}
+                        sdcService={sdcService}
                         {...(action.extra?.qrfProps ? omit(action.extra?.qrfProps, 'launchContextParameters') : {})}
                     />
                 )}

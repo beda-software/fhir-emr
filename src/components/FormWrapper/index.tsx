@@ -1,10 +1,7 @@
 import classNames from 'classnames';
 import { QuestionnaireResponse } from 'fhir/r4b';
 import { ReactElement, useState } from 'react';
-import {
-    GroupItemProps,
-    // QuestionnaireResponseFormData
-} from 'sdc-qrf';
+import { GroupItemProps } from 'sdc-qrf';
 
 import { FormWrapperProps } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/BaseQuestionnaireResponseForm';
 import { RemoteDataResult } from '@beda.software/remote-data';
@@ -33,9 +30,9 @@ export function FormWrapper(
 
     return (
         <form
-            onSubmit={async () => {
+            onSubmit={async (event) => {
                 setIsSubmitting(true);
-                await handleSubmit();
+                await handleSubmit(event);
                 setIsSubmitting(false);
             }}
             className={classNames(s.form, 'app-form')}
@@ -57,7 +54,7 @@ export function FormWrapper(
                     onCancel={onCancel}
                     saveButtonTitle={saveButtonTitle}
                 />
-                {/* ) : null} */}
+                {/*) : null} */}
             </BaseQuestionnaireResponseFormPropsContext.Provider>
         </form>
     );
