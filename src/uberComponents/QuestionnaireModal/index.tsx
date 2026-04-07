@@ -4,8 +4,8 @@ import { ParametersParameter, Reference } from 'fhir/r4b';
 import { useState } from 'react';
 
 import {
-    inMemorySaveService,
-    persistSaveService,
+    inMemorySaveQuestionnaireResponseService,
+    persistSaveQuestionnaireReponseService,
 } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/questionnaire-response-form-data';
 import { parseFHIRReference } from '@beda.software/fhir-react';
 
@@ -56,9 +56,12 @@ export function QuestionanireModal({ questionnaire, subject, launchContextParame
                     questionnaireLoader={questionnaireIdLoader(parseFHIRReference(questionnaire).id!)}
                     onSuccess={handleSuccess}
                     launchContextParameters={launchContextParameters}
-                    questionnaireResponseSaveService={
-                        typeof subject === 'undefined' ? inMemorySaveService : persistSaveService
-                    }
+                    sdcServiceProvider={{
+                        saveQuestionnaireResponse:
+                            typeof subject === 'undefined'
+                                ? inMemorySaveQuestionnaireResponseService
+                                : persistSaveQuestionnaireReponseService,
+                    }}
                     FormWrapper={(props) => <FormWrapper {...props} onCancel={() => setIsModalVisible(false)} />}
                 />
             </Modal>

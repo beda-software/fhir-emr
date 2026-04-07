@@ -1,7 +1,7 @@
 import { Trans, t } from '@lingui/macro';
 import { useParams } from 'react-router-dom';
 
-import { inMemorySaveService } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/questionnaire-response-form-data';
+import { inMemorySaveQuestionnaireResponseService } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/questionnaire-response-form-data';
 
 import { FormWrapper } from 'src/components/FormWrapper';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
@@ -27,7 +27,9 @@ export function SetPassword(props: SetPasswordProps) {
                 <QuestionnaireResponseForm
                     // customYupTests={props.customYupTests}
                     questionnaireLoader={questionnaireIdLoader('set-password')}
-                    questionnaireResponseSaveService={inMemorySaveService}
+                    sdcServiceProvider={{
+                        saveQuestionnaireResponse: inMemorySaveQuestionnaireResponseService,
+                    }}
                     onSuccess={() => {
                         window.location.href = '/';
                     }}

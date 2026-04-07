@@ -1,11 +1,11 @@
 import { t } from '@lingui/macro';
 import { HealthcareService, Practitioner, PractitionerRole } from 'fhir/r4b';
 
+import { inMemorySaveQuestionnaireResponseService } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/questionnaire-response-form-data';
 import { formatFHIRDateTime } from '@beda.software/fhir-react';
 
 import { Modal } from 'src/components/Modal';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
-import { inMemorySaveService } from 'src/hooks/questionnaire-response-form-data';
 
 interface NewAppointmentModalProps {
     practitionerRole: PractitionerRole;
@@ -26,7 +26,9 @@ export function NewAppointmentModal(props: NewAppointmentModalProps) {
         <Modal title={t`New Appointment`} open={showModal} footer={null} onCancel={onCancel}>
             <QuestionnaireResponseForm
                 onSuccess={onOk}
-                questionnaireResponseSaveService={inMemorySaveService}
+                sdcServiceProvider={{
+                    saveQuestionnaireResponse: inMemorySaveQuestionnaireResponseService,
+                }}
                 questionnaireLoader={{ type: 'id', questionnaireId: 'new-appointment-prefilled' }}
                 launchContextParameters={[
                     {

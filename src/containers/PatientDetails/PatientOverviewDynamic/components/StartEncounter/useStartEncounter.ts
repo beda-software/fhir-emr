@@ -13,7 +13,9 @@ export function useStartEncounter(props: StartEncounterProps) {
 
     const { response, onSubmit } = useQuestionnaireResponseForm({
         questionnaireLoader: { type: 'id', questionnaireId: 'encounter-create-from-appointment' },
-        questionnaireResponseSaveService: inMemorySaveService,
+        sdcServiceProvider: {
+            saveQuestionnaireResponse: inMemorySaveService,
+        },
         launchContextParameters: [
             {
                 name: 'Appointment',

@@ -1,7 +1,10 @@
 import { t } from '@lingui/macro';
 import { PractitionerRole } from 'fhir/r4b';
 
-import { inMemorySaveService } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/questionnaire-response-form-data';
+import {
+    inMemorySaveQuestionnaireResponseService,
+    questionnaireIdLoader,
+} from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/questionnaire-response-form-data';
 
 import { Modal } from 'src/components/Modal';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
@@ -15,13 +18,15 @@ interface Props {
 }
 
 export function EditAppointmentModal(props: Props) {
-    const { showModal, onClose, appointmentId, practitionerRole } = props;
+    const { showModal, onClose, onSubmit, appointmentId, practitionerRole } = props;
 
     return (
         <Modal open={showModal} title={t`Edit Appointment`} footer={null} onCancel={onClose}>
             <QuestionnaireResponseForm
-                questionnaireLoader={{ type: 'id', questionnaireId: 'edit-appointment' }}
-                questionnaireResponseSaveService={inMemorySaveService}
+                questionnaireLoader={questionnaireIdLoader('edit-appointment')}
+                sdcServiceProvider={{
+                    saveQuestionnaireResponse: inMemorySaveQuestionnaireResponseService,
+                }}
                 launchContextParameters={[
                     {
                         name: 'CurrentAppointment',
@@ -37,7 +42,7 @@ export function EditAppointmentModal(props: Props) {
                         resource: practitionerRole,
                     },
                 ]}
-                onSuccess={props.onSubmit}
+                onSuccess={() => onSubmit()}
             />
         </Modal>
     );
