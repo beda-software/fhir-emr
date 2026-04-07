@@ -45,8 +45,9 @@ export function FormWrapper(
                     onCancel: onCancel,
                 }}
             >
-                {items}
+                <div className={classNames(s.content, 'form__content')}>{items}</div>
                 {/* {!isWizard ? ( */}
+
                 <FormFooter
                     {...props}
                     onSaveDraft={onSaveDraft}
@@ -60,6 +61,46 @@ export function FormWrapper(
     );
 }
 
+export function ReadonlyFormWrapper(
+    props: FormWrapperProps & {
+        // formData?: QuestionnaireResponseFormData;
+        onCancel?: () => void;
+        onSaveDraft?: (
+            questionnaireResponse: QuestionnaireResponse,
+        ) => Promise<RemoteDataResult<QuestionnaireResponse>>;
+        saveButtonTitle?: string | ReactElement;
+    },
+) {
+    const { handleSubmit, items, onCancel } = props;
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // const isWizard = formData?.context?.fceQuestionnaire ? isGroupWizard(formData.context.fceQuestionnaire) : false;
+
+    return (
+        <form
+            onSubmit={async (event) => {
+                setIsSubmitting(true);
+                await handleSubmit(event);
+                setIsSubmitting(false);
+            }}
+            className={classNames(s.form, 'app-form')}
+            noValidate
+        >
+            <BaseQuestionnaireResponseFormPropsContext.Provider
+                value={{
+                    ...props,
+                    submitting: isSubmitting,
+                    onCancel: onCancel,
+                }}
+            >
+                <div className={classNames(s.content, 'form__content')}>{items}</div>
+                {/* {!isWizard ? ( */}
+
+                {/*) : null} */}
+            </BaseQuestionnaireResponseFormPropsContext.Provider>
+        </form>
+    );
+}
 export function GroupItemComponent(itemProps: GroupItemProps) {
     const Control = groupComponent;
 
