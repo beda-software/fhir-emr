@@ -4,9 +4,14 @@ import { Meta, StoryObj } from '@storybook/react';
 import { QuestionnaireResponse } from 'fhir/r4b';
 import { FCEQuestionnaire, fromFirstClassExtension } from 'sdc-qrf';
 
-import { BaseQuestionnaireResponseForm, Modal } from 'src/components';
+import { BaseQuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/BaseQuestionnaireResponseForm';
+
+import { Modal } from 'src/components';
+import { FormWrapper, GroupItemComponent } from 'src/components/FormWrapper';
+import { service } from 'src/services';
 
 import { GroupWizard } from './index';
+import { groupControlComponents, itemComponents, itemControlComponents } from '../../controls';
 
 i18n.activate('en');
 
@@ -34,6 +39,12 @@ export const Default: Story = {
                     },
                     formValues,
                 }}
+                widgetsByQuestionType={itemComponents}
+                widgetsByQuestionItemControl={itemControlComponents}
+                widgetsByGroupQuestionItemControl={groupControlComponents}
+                fhirService={service}
+                groupItemComponent={GroupItemComponent}
+                FormWrapper={FormWrapper}
             />
         </I18nProvider>
     ),
@@ -52,8 +63,18 @@ export const WithTooltip: Story = {
                     },
                     formValues,
                 }}
-                onCancel={() => console.log('onCancel')}
-                saveButtonTitle={'Save & complete'}
+                widgetsByQuestionType={itemComponents}
+                widgetsByQuestionItemControl={itemControlComponents}
+                widgetsByGroupQuestionItemControl={groupControlComponents}
+                fhirService={service}
+                groupItemComponent={GroupItemComponent}
+                FormWrapper={(props) => (
+                    <FormWrapper
+                        {...props}
+                        saveButtonTitle={'Save & complete'}
+                        onCancel={() => console.log('onCancel')}
+                    />
+                )}
             />
         </I18nProvider>
     ),
@@ -73,6 +94,12 @@ export const inModal: Story = {
                         },
                         formValues,
                     }}
+                    widgetsByQuestionType={itemComponents}
+                    widgetsByQuestionItemControl={itemControlComponents}
+                    widgetsByGroupQuestionItemControl={groupControlComponents}
+                    fhirService={service}
+                    groupItemComponent={GroupItemComponent}
+                    FormWrapper={FormWrapper}
                 />
             </Modal>
         </I18nProvider>
@@ -93,6 +120,12 @@ export const inModalVertical: Story = {
                         },
                         formValues,
                     }}
+                    widgetsByQuestionType={itemComponents}
+                    widgetsByQuestionItemControl={itemControlComponents}
+                    widgetsByGroupQuestionItemControl={groupControlComponents}
+                    fhirService={service}
+                    groupItemComponent={GroupItemComponent}
+                    FormWrapper={FormWrapper}
                 />
             </Modal>
         </I18nProvider>
@@ -112,8 +145,18 @@ export const Vertical: Story = {
                     },
                     formValues,
                 }}
-                onCancel={() => console.log('onCancel')}
-                saveButtonTitle={'Save & complete'}
+                widgetsByQuestionType={itemComponents}
+                widgetsByQuestionItemControl={itemControlComponents}
+                widgetsByGroupQuestionItemControl={groupControlComponents}
+                fhirService={service}
+                groupItemComponent={GroupItemComponent}
+                FormWrapper={(props) => (
+                    <FormWrapper
+                        {...props}
+                        saveButtonTitle={'Save & complete'}
+                        onCancel={() => console.log('onCancel')}
+                    />
+                )}
             />
         </I18nProvider>
     ),
