@@ -1,10 +1,8 @@
 import { t } from '@lingui/macro';
 import { PractitionerRole } from 'fhir/r4b';
 
-import {
-    inMemorySaveQuestionnaireResponseService,
-    questionnaireIdLoader,
-} from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/questionnaire-response-form-data';
+import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
+import { inMemorySaveQuestionnaireResponseService } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/questionnaire-response-form-data';
 
 import { Modal } from 'src/components/Modal';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';

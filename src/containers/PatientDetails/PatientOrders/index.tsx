@@ -6,13 +6,13 @@ import { useCallback, useState } from 'react';
 import { extractCreatedAtFromMeta } from 'sdc-qrf';
 import styled from 'styled-components';
 
+import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
 import { WithId } from '@beda.software/fhir-react';
 
 import { LinkToEdit } from 'src/components/LinkToEdit';
 import { Modal } from 'src/components/Modal';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { ResourceTable } from 'src/components/ResourceTable';
-import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 import { formatHumanDate } from 'src/utils/date';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 

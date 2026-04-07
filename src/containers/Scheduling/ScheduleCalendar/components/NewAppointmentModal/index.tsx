@@ -1,6 +1,7 @@
 import { t } from '@lingui/macro';
 import { PractitionerRole } from 'fhir/r4b';
 
+import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
 import { inMemorySaveQuestionnaireResponseService } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/questionnaire-response-form-data';
 import { formatFHIRDateTime } from '@beda.software/fhir-react';
 
@@ -27,7 +28,7 @@ export function NewAppointmentModal(props: NewAppointmentModalProps) {
                 sdcServiceProvider={{
                     saveQuestionnaireResponse: inMemorySaveQuestionnaireResponseService,
                 }}
-                questionnaireLoader={{ type: 'id', questionnaireId: 'new-appointment' }}
+                questionnaireLoader={questionnaireIdLoader('new-appointment')}
                 launchContextParameters={[
                     {
                         name: 'patient',

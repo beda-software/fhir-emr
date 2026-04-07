@@ -2,6 +2,7 @@ import { t, Trans } from '@lingui/macro';
 import { Button } from 'antd';
 import { Appointment, Encounter } from 'fhir/r4b';
 
+import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
 import { extractBundleResources, parseFHIRReference, useService } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 
@@ -103,7 +104,7 @@ export function AppointmentDetailsModal(props: Props) {
     return (
         <Modal open={showModal} title={t`Appointment`} footer={renderFooter()} onCancel={onClose}>
             <ReadonlyQuestionnaireResponseForm
-                questionnaireLoader={{ type: 'id', questionnaireId: 'encounter-create-from-appointment' }}
+                questionnaireLoader={questionnaireIdLoader('encounter-create-from-appointment')}
                 launchContextParameters={[
                     {
                         name: 'Appointment',

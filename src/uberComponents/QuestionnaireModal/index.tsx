@@ -3,6 +3,7 @@ import { Button, notification } from 'antd';
 import { ParametersParameter, Reference } from 'fhir/r4b';
 import { useState } from 'react';
 
+import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
 import {
     inMemorySaveQuestionnaireResponseService,
     persistSaveQuestionnaireReponseService,
@@ -12,7 +13,6 @@ import { parseFHIRReference } from '@beda.software/fhir-react';
 import { FormWrapper } from 'src/components/FormWrapper';
 import { Modal } from 'src/components/Modal';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
-import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 
 export interface QuestionnaireModalProps {
     questionnaire: Reference;

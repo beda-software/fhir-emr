@@ -1,12 +1,12 @@
 import { Trans, t } from '@lingui/macro';
 import { useParams } from 'react-router-dom';
 
+import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
 import { inMemorySaveQuestionnaireResponseService } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/questionnaire-response-form-data';
 
 import { FormWrapper } from 'src/components/FormWrapper';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Title } from 'src/components/Typography';
-import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 import { CustomYupTestsMap } from 'src/utils';
 
 import { S } from './SetPassword.styles';

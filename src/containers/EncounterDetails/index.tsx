@@ -6,6 +6,7 @@ import { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import config from '@beda.software/emr-config';
+import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
 import { RenderRemoteData } from '@beda.software/fhir-react';
 import { isLoading, isSuccess } from '@beda.software/remote-data';
 
@@ -15,7 +16,6 @@ import { Spinner } from 'src/components/Spinner';
 import { Text } from 'src/components/Typography';
 import { DocumentsList } from 'src/containers/DocumentsList';
 import { ChooseDocumentToCreateModal } from 'src/containers/DocumentsList/ChooseDocumentToCreateModal';
-import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 
 import { AIScribe, useAIScribe } from './AIScribe';
 import { S } from './EncounterDetails.styles';

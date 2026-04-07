@@ -2,11 +2,12 @@ import { t, Trans } from '@lingui/macro';
 import { notification } from 'antd';
 import { Patient } from 'fhir/r4b';
 
+import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
+
 import { QuestionnaireResponseForm } from 'src/components';
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { usePatientReload } from 'src/containers/PatientDetails/Dashboard/contexts';
 import { S } from 'src/containers/PatientDetails/PatientOverviewDynamic/PatientOverview.styles';
-import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 
 interface Props {
     patient: Patient;

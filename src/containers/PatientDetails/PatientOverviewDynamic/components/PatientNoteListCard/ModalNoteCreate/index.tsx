@@ -2,11 +2,11 @@ import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
 import { Patient, Practitioner } from 'fhir/r4b';
 
+import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
 import { WithId } from '@beda.software/fhir-react';
 
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
-import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 
 interface ModalNoteCreateProps {
