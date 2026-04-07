@@ -6,7 +6,7 @@ import { GroupItemProps } from 'sdc-qrf';
 import { FormWrapperProps } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/BaseQuestionnaireResponseForm';
 import { RemoteDataResult } from '@beda.software/remote-data';
 
-// import { isGroupWizard } from 'src/components';
+import { isGroupWizard } from 'src/components';
 import { BaseQuestionnaireResponseFormPropsContext } from 'src/components/BaseQuestionnaireResponseForm/context';
 import { groupComponent } from 'src/components/BaseQuestionnaireResponseForm/controls';
 import { FormFooter } from 'src/components/BaseQuestionnaireResponseForm/FormFooter';
@@ -15,7 +15,6 @@ import s from './FormWrapper.module.scss';
 
 export function FormWrapper(
     props: FormWrapperProps & {
-        // formData?: QuestionnaireResponseFormData;
         onCancel?: () => void;
         onSaveDraft?: (
             questionnaireResponse: QuestionnaireResponse,
@@ -23,10 +22,10 @@ export function FormWrapper(
         saveButtonTitle?: string | ReactElement;
     },
 ) {
-    const { handleSubmit, items, onCancel, onSaveDraft, saveButtonTitle } = props;
+    const { handleSubmit, items, onCancel, onSaveDraft, saveButtonTitle, formData } = props;
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // const isWizard = formData?.context?.fceQuestionnaire ? isGroupWizard(formData.context.fceQuestionnaire) : false;
+    const isWizard = formData?.context?.fceQuestionnaire ? isGroupWizard(formData.context.fceQuestionnaire) : false;
 
     return (
         <form
@@ -46,16 +45,15 @@ export function FormWrapper(
                 }}
             >
                 <div className={classNames(s.content, 'form__content')}>{items}</div>
-                {/* {!isWizard ? ( */}
-
-                <FormFooter
-                    {...props}
-                    onSaveDraft={onSaveDraft}
-                    submitting={isSubmitting}
-                    onCancel={onCancel}
-                    saveButtonTitle={saveButtonTitle}
-                />
-                {/*) : null} */}
+                {!isWizard ? (
+                    <FormFooter
+                        {...props}
+                        onSaveDraft={onSaveDraft}
+                        submitting={isSubmitting}
+                        onCancel={onCancel}
+                        saveButtonTitle={saveButtonTitle}
+                    />
+                ) : null}
             </BaseQuestionnaireResponseFormPropsContext.Provider>
         </form>
     );
@@ -63,7 +61,6 @@ export function FormWrapper(
 
 export function ReadonlyFormWrapper(
     props: FormWrapperProps & {
-        // formData?: QuestionnaireResponseFormData;
         onCancel?: () => void;
         onSaveDraft?: (
             questionnaireResponse: QuestionnaireResponse,
@@ -74,8 +71,6 @@ export function ReadonlyFormWrapper(
     const { handleSubmit, items, onCancel } = props;
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // const isWizard = formData?.context?.fceQuestionnaire ? isGroupWizard(formData.context.fceQuestionnaire) : false;
-
     return (
         <form
             onSubmit={async (event) => {
@@ -94,9 +89,6 @@ export function ReadonlyFormWrapper(
                 }}
             >
                 <div className={classNames(s.content, 'form__content')}>{items}</div>
-                {/* {!isWizard ? ( */}
-
-                {/*) : null} */}
             </BaseQuestionnaireResponseFormPropsContext.Provider>
         </form>
     );
