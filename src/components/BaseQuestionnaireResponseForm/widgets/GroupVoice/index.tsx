@@ -22,6 +22,7 @@ import { aiService } from 'src/services/ai';
 import { getToken } from 'src/services/auth';
 import { compileAsFirst } from 'src/utils';
 import { merge, normalize} from './utils';
+import { startRealtimeVoice } from './connection';
 
 function GroupVoiceScriber(props: { disabled?: boolean; onRecorded: (file: RcFile) => Promise<void> }) {
     const { disabled, onRecorded } = props;
@@ -59,29 +60,21 @@ export function GroupVoice(props: GroupItemProps) {
     const rootContext = context[0];
     const questionItemFHIR = getByLinkId(rootContext?.questionnaire!, { linkId });
 
-    const extractAndFillGroup = async (file: RcFile) => {
-        setShowScriber(false);
-        setIsExtracting(true);
-
-        const formData = new FormData();
-        formData.append('file', file);
-
-        const transcribeResponse = await aiService<{ text: string }>({
-            method: 'POST',
-            url: '/transcribe',
-            data: formData,
-            headers: { Authorization: `Bearer ${getToken()}`, 'Content-Type': 'multipart' },
-        });
-
-        if (isFailure(transcribeResponse)) {
-            notification.error({ message: JSON.stringify(transcribeResponse.error) });
-            setIsExtracting(false);
-            return;
+    useEffect(() => {(async function(){
+        const voice = await startRealtimeVoice(aiService);
+        function _handleEvent(evt: any) {
+            if (evt.type === 'conversation.item.input_audio_transcription.completed') {
+                console.log(evt);
+                populate(evt.transcript);
+            }
         }
+        voice.onEvent(_handleEvent);
+        voice.clearAudioBuffer();
+        voice.unmuteAudio();
+    })()}, [])
 
-        const textFromAudio = transcribeResponse.data.text ?? '';
-        setTranscribedText(textFromAudio);
 
+    async function populate(textFromAudio: string){
         const questionnaire: Questionnaire = {
             resourceType: 'Questionnaire',
             status: 'active',
@@ -110,6 +103,31 @@ export function GroupVoice(props: GroupItemProps) {
                                 (linkId:string) => getByLinkId(rootContext?.questionnaire!, { linkId })!);
         onChange(result[linkId] ?? {});
         setGen((g) => g + 1);
+    }
+
+    const extractAndFillGroup = async (file: RcFile) => {
+        setShowScriber(false);
+        setIsExtracting(true);
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const transcribeResponse = await aiService<{ text: string }>({
+            method: 'POST',
+            url: '/transcribe',
+            data: formData,
+            headers: { Authorization: `Bearer ${getToken()}`, 'Content-Type': 'multipart' },
+        });
+
+        if (isFailure(transcribeResponse)) {
+            notification.error({ message: JSON.stringify(transcribeResponse.error) });
+            setIsExtracting(false);
+            return;
+        }
+
+        const textFromAudio = transcribeResponse.data.text ?? '';
+        setTranscribedText(textFromAudio);
+        await populate(textFromAudio)
         setIsExtracting(false);
     };
 
