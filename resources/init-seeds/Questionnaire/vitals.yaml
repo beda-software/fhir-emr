@@ -148,11 +148,11 @@ item:
       language: text/fhirpath
       expression: >-
         (
-          %QuestionnaireResponse.item.where(linkId='weight').answer.valueQuantity.value.toDecimal()
+          %QuestionnaireResponse.repeat(item).where(linkId='weight').answer.valueQuantity.value.toDecimal()
           /
           (
-            (%QuestionnaireResponse.item.where(linkId='height').answer.valueQuantity.value.toDecimal() / 100)
+            (%QuestionnaireResponse.repeat(item).where(linkId='height').answer.valueQuantity.value.toDecimal() / 100)
             *
-            (%QuestionnaireResponse.item.where(linkId='height').answer.valueQuantity.value.toDecimal() / 100)
+            (%QuestionnaireResponse.repeat(item).where(linkId='height').answer.valueQuantity.value.toDecimal() / 100)
           )
         ).round(2)
