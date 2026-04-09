@@ -1,19 +1,21 @@
 import { notification } from 'antd';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import {
-    mapResponseToForm,
-    type GroupItemProps,
-} from 'sdc-qrf';
 import { Questionnaire, QuestionnaireItem } from 'fhir/r4b';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { mapResponseToForm, type GroupItemProps } from 'sdc-qrf';
+
 import { isFailure } from '@beda.software/remote-data';
+
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { aiService } from 'src/services/ai';
 import { getToken } from 'src/services/auth';
-import { merge, normalize } from './utils';
-import { RealtimeVoiceSession, startRealtimeVoice } from './connection';
 import { compileAsFirst } from 'src/utils';
 
-const getByLinkId = compileAsFirst<Questionnaire, QuestionnaireItem>('Questionnaire.repeat(item).where(linkId=%linkId)');
+import { RealtimeVoiceSession, startRealtimeVoice } from './connection';
+import { merge, normalize } from './utils';
+
+const getByLinkId = compileAsFirst<Questionnaire, QuestionnaireItem>(
+    'Questionnaire.repeat(item).where(linkId=%linkId)',
+);
 
 type ConnectionStatus = 'notStarted' | 'connecting' | 'connected';
 
@@ -29,20 +31,20 @@ export function useGroupVoice(props: GroupItemProps) {
 
     const [gen, setGen] = useState(0);
     const rootContext = context[0];
-    const questionItemFHIR = getByLinkId(rootContext?.questionnaire!, { linkId });
+    const questionItemFHIR = getByLinkId(rootContext!.questionnaire!, { linkId });
     const voice = useRef<RealtimeVoiceSession>();
     const [connection, setConnection] = useState<ConnectionStatus>('notStarted');
-    const [text, setText] = useState("");
+    const [text, setText] = useState('');
 
-    async function startRecording(){
-        setConnection('connecting')
+    async function startRecording() {
+        setConnection('connecting');
         voice.current = await startRealtimeVoice(aiService);
         function _handleEvent(evt: any) {
             if (evt.type === 'session.updated') {
                 setConnection('connected');
             }
             if (evt.type == 'conversation.item.input_audio_transcription.delta') {
-                    setText(t => t + evt.delta);
+                setText((t) => t + evt.delta);
             }
             if (evt.type == 'debug') {
                 console.log(evt);
@@ -57,14 +59,16 @@ export function useGroupVoice(props: GroupItemProps) {
     }
 
     function stopRecording() {
-        setConnection('notStarted')
+        setConnection('notStarted');
         voice.current?.stop();
         voice.current = undefined;
     }
 
-    useEffect(() => {return () => stopRecording()}, []);
+    useEffect(() => {
+        return () => stopRecording();
+    }, []);
 
-    async function populate(textFromAudio: string){
+    async function populate(textFromAudio: string) {
         const questionnaire: Questionnaire = {
             resourceType: 'Questionnaire',
             status: 'active',
@@ -88,11 +92,13 @@ export function useGroupVoice(props: GroupItemProps) {
         const old = { [linkId]: value };
         const newValue = mapResponseToForm(extractResponse.data, questionnaire);
         const mergedValue = merge(old, newValue);
-        const result = normalize(mergedValue,
-                                (linkId:string) => getByLinkId(rootContext?.questionnaire!, { linkId })!);
+        const result = normalize(
+            mergedValue,
+            (linkId: string) => getByLinkId(rootContext!.questionnaire!, { linkId })!,
+        );
         onChange(result[linkId] ?? {});
         setGen((g) => g + 1);
-        setText("");
+        setText('');
     }
 
     return {
@@ -100,6 +106,6 @@ export function useGroupVoice(props: GroupItemProps) {
         startRecording,
         stopRecording,
         text,
-        gen
-    }
+        gen,
+    };
 }

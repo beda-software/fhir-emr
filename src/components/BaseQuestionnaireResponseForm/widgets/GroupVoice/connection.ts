@@ -2,17 +2,14 @@ import { initServices } from '@beda.software/fhir-react';
 import { isSuccess } from '@beda.software/remote-data';
 
 function ensureWebRTCAvailable() {
-    if (typeof navigator.mediaDevices === 'undefined'
-
-        ||
-        typeof window.RTCPeerConnection === 'undefined') {
+    if (typeof navigator.mediaDevices === 'undefined' || typeof window.RTCPeerConnection === 'undefined') {
         const msg = `WebRTC is not available.
 Your browser does not support WebRTC. Use a modern browser (Chrome, Firefox, Safari, Edge).`;
         throw new Error(msg);
     }
 }
 
-type RealtimeEvent = { type?: string;[k: string]: any };
+type RealtimeEvent = { type?: string; [k: string]: any };
 
 export type RealtimeVoiceSession = {
     pc: RTCPeerConnection;
@@ -24,8 +21,8 @@ export type RealtimeVoiceSession = {
     unmuteAudio: () => Promise<void>;
 };
 
-
-export async function startRealtimeVoice(service: Awaited<ReturnType<typeof initServices>['service']>,
+export async function startRealtimeVoice(
+    service: Awaited<ReturnType<typeof initServices>['service']>,
 ): Promise<RealtimeVoiceSession> {
     // 0) Guard and basic event bus
     ensureWebRTCAvailable();
@@ -51,7 +48,9 @@ export async function startRealtimeVoice(service: Awaited<ReturnType<typeof init
     }
 
     const { client_secret } = response.data;
-    if (!client_secret?.value) throw new Error('Ephemeral token response missing client_secret.value');
+    if (!client_secret?.value) {
+        throw new Error('Ephemeral token response missing client_secret.value');
+    }
 
     // 2) Create PeerConnection
     const pc = new RTCPeerConnection({
@@ -161,7 +160,9 @@ export async function startRealtimeVoice(service: Awaited<ReturnType<typeof init
     const offer = await pc.createOffer({ offerToReceiveAudio: true });
     await pc.setLocalDescription(offer);
     await new Promise<void>((resolve) => {
-        if (pc.iceGatheringState === 'complete') return resolve();
+        if (pc.iceGatheringState === 'complete') {
+            return resolve();
+        }
         const check = () => {
             if (pc.iceGatheringState === 'complete') {
                 pc.removeEventListener('icegatheringstatechange', check);
@@ -193,13 +194,19 @@ export async function startRealtimeVoice(service: Awaited<ReturnType<typeof init
             if (localStream) {
                 localStream.getTracks().forEach((t: MediaStreamTrack) => t.stop());
             }
-        } catch {}
+        } catch (e) {
+            console.error(e);
+        }
         try {
             eventsChannel?.close?.();
-        } catch {}
+        } catch (e) {
+            console.error(e);
+        }
         try {
             pc.close();
-        } catch {}
+        } catch (e) {
+            console.error(e);
+        }
     };
     const onEvent = (handler: (evt: RealtimeEvent) => void) => {
         eventHandlers.add(handler);
