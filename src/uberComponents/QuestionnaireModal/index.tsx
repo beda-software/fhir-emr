@@ -58,7 +58,7 @@ export function QuestionanireModal({ questionnaire, subject, launchContextParame
                     onSuccess={handleSuccess}
                     launchContextParameters={launchContextParameters}
                     sdcServiceProvider={{
-                        saveQuestionnaireResponse:
+                        saveCompletedQuestionnaireResponse:
                             typeof subject === 'undefined'
                                 ? inMemorySaveQuestionnaireResponseService
                                 : persistSaveQuestionnaireReponseServiceFactory(service),

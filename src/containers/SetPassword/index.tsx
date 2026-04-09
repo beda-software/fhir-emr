@@ -28,7 +28,7 @@ export function SetPassword(props: SetPasswordProps) {
                     // customYupTests={props.customYupTests}
                     questionnaireLoader={questionnaireIdLoader('set-password')}
                     sdcServiceProvider={{
-                        saveQuestionnaireResponse: inMemorySaveQuestionnaireResponseService,
+                        saveCompletedQuestionnaireResponse: inMemorySaveQuestionnaireResponseService,
                     }}
                     onSuccess={() => {
                         window.location.href = '/';

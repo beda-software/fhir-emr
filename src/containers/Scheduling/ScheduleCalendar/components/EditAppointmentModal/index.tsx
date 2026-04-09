@@ -23,7 +23,7 @@ export function EditAppointmentModal(props: Props) {
             <QuestionnaireResponseForm
                 questionnaireLoader={questionnaireIdLoader('edit-appointment')}
                 sdcServiceProvider={{
-                    saveQuestionnaireResponse: inMemorySaveQuestionnaireResponseService,
+                    saveCompletedQuestionnaireResponse: inMemorySaveQuestionnaireResponseService,
                 }}
                 launchContextParameters={[
                     {

@@ -26,7 +26,7 @@ export function NewAppointmentModal(props: NewAppointmentModalProps) {
             <QuestionnaireResponseForm
                 onSuccess={onOk}
                 sdcServiceProvider={{
-                    saveQuestionnaireResponse: inMemorySaveQuestionnaireResponseService,
+                    saveCompletedQuestionnaireResponse: inMemorySaveQuestionnaireResponseService,
                 }}
                 questionnaireLoader={questionnaireIdLoader('new-appointment')}
                 launchContextParameters={[
