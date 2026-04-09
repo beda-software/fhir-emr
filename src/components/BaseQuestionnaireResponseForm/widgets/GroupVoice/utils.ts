@@ -1,11 +1,6 @@
-import {
-    FormAnswerItems,
-    FormGroupItems,
-    type FormItems,
-} from 'sdc-qrf';
-import * as _ from 'lodash';
-
 import { QuestionnaireItem } from 'fhir/r4b';
+import * as _ from 'lodash';
+import { FormAnswerItems, FormGroupItems, type FormItems } from 'sdc-qrf';
 
 function customizer<T>(objValue: T, srcValue: T): T | undefined {
     if (_.isArray(objValue)) {
@@ -17,20 +12,23 @@ export function merge<T>(src: T, dst: T): T {
     return _.mergeWith(src, dst, customizer<T>);
 }
 
-function normalizeArray(fi: FormItems[]) {
-    return _.filter(fi, (item: FormGroupItems | FormAnswerItems) => {
+function normalizeArray(fi: (FormAnswerItems | undefined)[]): FormAnswerItems[] {
+    return _.filter(fi, (item): item is FormAnswerItems => {
+        if (typeof item === 'undefined') {
+            return false;
+        }
         if (typeof item.items !== 'undefined') {
             return true;
         }
         if (typeof item.value === 'undefined' || _.isEmpty(item.value)) {
-            return false
+            return false;
         }
         return true;
-    })
+    });
 }
 
-function normalizeGroupArray(fi: object[]) {
-    return _.filter(fi, (item: object) => {
+function normalizeGroupArray(fi: FormItems[]): FormItems[] {
+    return _.filter(fi, (item) => {
         const keys = Object.keys(item);
         if (keys.length === 0) {
             return false;
@@ -39,13 +37,16 @@ function normalizeGroupArray(fi: object[]) {
             return false;
         }
         return true;
-    })
+    });
 }
 
-function normalizeArrayLastWin(fi: FormItems[]){
+function normalizeArrayLastWin(fi: (FormAnswerItems | undefined)[]): FormAnswerItems[] {
     const result = normalizeArray(fi);
-    if(result.length > 0){
-        return [_.last(result)]
+    if (result.length > 0) {
+        const last = result[result.length - 1];
+        if (typeof last !== 'undefined') {
+            return [last];
+        }
     }
     return result;
 }
@@ -54,7 +55,7 @@ export function normalize(qr: FormItems, getDefinition: (linkId: string) => Ques
     if (typeof qr === 'undefined') {
         return {};
     }
-    const result: FormItems = {}
+    const result: FormItems = {};
     for (const [key, value] of Object.entries(qr)) {
         if (key === '_itemKey') {
             continue;
@@ -62,24 +63,26 @@ export function normalize(qr: FormItems, getDefinition: (linkId: string) => Ques
         if (typeof value === 'undefined') {
             continue;
         }
-        if (_.isArray(value)) {
+        if (Array.isArray(value)) {
             if (getDefinition(key).repeats) {
                 result[key] = normalizeArray(value);
             } else {
                 result[key] = normalizeArrayLastWin(value);
             }
         } else {
-            let items:any = [];
-            if (_.isArray(value.items)) {
+            const groupValue = value;
+            let items: FormItems | FormItems[] = {};
+            if (Array.isArray(groupValue.items)) {
                 if (getDefinition(key).repeats) {
-                    items = normalizeGroupArray(value.items);
+                    items = normalizeGroupArray(groupValue.items);
                 } else {
-                    console.error("Unpossible state", key, value);
+                    console.error('Unpossible state', key, groupValue);
+                    items = groupValue.items[0] ?? {};
                 }
             } else {
-                items = normalize(value.items, getDefinition)
-            };
-        result[key] = { ...value, items};
+                items = normalize(groupValue.items ?? {}, getDefinition);
+            }
+            result[key] = { ...groupValue, items } as FormGroupItems;
         }
     }
     return result;
