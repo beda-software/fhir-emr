@@ -7,6 +7,7 @@ import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { Spinner } from 'src/components';
 import { AlertMessage } from 'src/components/AlertMessage';
+import { FormWrapper } from 'src/components/FormWrapper';
 import { QuestionnaireResponseForm, QRFProps } from 'src/components/QuestionnaireResponseForm';
 import {
     QuestionnaireResponseDraftService,
@@ -34,13 +35,7 @@ type QuestionnaireResponseFormDraftProps =
     | BaseQuestionnaireResponseFormDraftLocalProps;
 
 export function QuestionnaireResponseFormDraft(props: QuestionnaireResponseFormDraftProps) {
-    const {
-        response,
-        draftInfoMessage,
-        deleteDraft,
-        // updateDraft,
-        // saveDraft
-    } = useQuestionnaireResponseDraft(
+    const { response, draftInfoMessage, deleteDraft, handleEdit, saveDraft } = useQuestionnaireResponseDraft(
         props.qrDraftServiceType === 'server'
             ? {
                   autoSave: props.autoSave,
@@ -85,6 +80,8 @@ export function QuestionnaireResponseFormDraft(props: QuestionnaireResponseFormD
                             await deleteDraft();
                             props.onSuccess && props.onSuccess(resource);
                         }}
+                        onEdit={handleEdit}
+                        FormWrapper={(props) => <FormWrapper {...props} onSaveDraft={saveDraft} />}
                         // onQRFUpdate={updateDraft}
                         // onSaveDraft={props.qrDraftServiceType === 'server' ? saveDraft : undefined}
                     />

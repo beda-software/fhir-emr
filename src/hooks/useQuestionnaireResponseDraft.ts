@@ -3,6 +3,7 @@ import { Resource, Reference, QuestionnaireResponse, Questionnaire } from 'fhir/
 import _ from 'lodash';
 import moment from 'moment';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { calcInitialContext, QuestionnaireResponseFormData } from 'sdc-qrf';
 
 import {
     isReference,
@@ -44,7 +45,7 @@ interface QuestionnaireResponseDraftResponse {
     deleteDraft: () => Promise<void>;
     response: RemoteData<Partial<QuestionnaireResponse> | undefined>;
     draftInfoMessage?: string;
-    updateDraft: (questionnaireResponse: QuestionnaireResponse) => Promise<void>;
+    handleEdit: (formData: QuestionnaireResponseFormData) => Promise<any>;
     saveDraft: (questionnaireResponse: QuestionnaireResponse) => Promise<RemoteDataResult<QuestionnaireResponse>>;
 }
 
@@ -105,6 +106,18 @@ export const useQuestionnaireResponseDraft = (
         return success(resultQR);
     }, [props.qrDraftServiceType]);
 
+    const updateMessageFromQR = useCallback(
+        (qrRD: RemoteDataResult<QuestionnaireResponse>) => {
+            if (isSuccess(qrRD)) {
+                const message = t`Draft was successfully saved at ${formatHumanDateTime(qrRD.data.authored)} to ${
+                    qrDraftServiceType === 'local' ? 'local storage' : 'FHIR server'
+                }`;
+                setDraftInfoMessage(message);
+            }
+        },
+        [qrDraftServiceType],
+    );
+
     const saveDraft = useCallback(
         async (questionnaireResponse: QuestionnaireResponse): Promise<RemoteDataResult<QuestionnaireResponse>> => {
             if (!questionnaireResponse) {
@@ -117,9 +130,11 @@ export const useQuestionnaireResponseDraft = (
                 qrDraftServiceType,
             });
 
+            updateMessageFromQR(draftQRRD);
+
             return draftQRRD;
         },
-        [qrDraftServiceType],
+        [qrDraftServiceType, updateMessageFromQR],
     );
 
     const isRunningDebouncedSaveDraftRef = useRef(false);
@@ -139,12 +154,7 @@ export const useQuestionnaireResponseDraft = (
 
             try {
                 const draftQRRD = await saveDraft(questionnaireResponse);
-                if (isSuccess(draftQRRD)) {
-                    const message = t`Draft was successfully saved at ${formatHumanDateTime(
-                        draftQRRD.data.authored,
-                    )} to ${qrDraftServiceType === 'local' ? 'local storage' : 'FHIR server'}`;
-                    setDraftInfoMessage(message);
-                }
+                updateMessageFromQR(draftQRRD);
             } finally {
                 isRunningDebouncedSaveDraftRef.current = false;
             }
@@ -153,13 +163,21 @@ export const useQuestionnaireResponseDraft = (
         return () => {
             debouncedSaveDraftRef.current?.cancel();
         };
-    }, [autoSave, qrDraftServiceType, saveDraft]);
+    }, [autoSave, qrDraftServiceType, saveDraft, updateMessageFromQR]);
 
-    const updateDraft = useCallback(async (questionnaireResponse: QuestionnaireResponse) => {
-        if (!isRunningDebouncedSaveDraftRef.current) {
-            debouncedSaveDraftRef.current?.(questionnaireResponse);
-        }
-    }, []);
+    const handleEdit = useCallback(
+        async (formData: QuestionnaireResponseFormData) => {
+            if (!autoSave) {
+                return Promise.resolve();
+            }
+
+            const rootContext = calcInitialContext(formData.context, formData.formValues);
+            if (!isRunningDebouncedSaveDraftRef.current) {
+                return debouncedSaveDraftRef.current?.(rootContext?.resource);
+            }
+        },
+        [autoSave],
+    );
 
     const deleteDraft = useCallback(async () => {
         isRunningDebouncedSaveDraftRef.current = true;
@@ -179,7 +197,7 @@ export const useQuestionnaireResponseDraft = (
         deleteDraft,
         response,
         draftInfoMessage,
-        updateDraft,
+        handleEdit,
         saveDraft,
     };
 };

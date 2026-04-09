@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { Organization, ParametersParameter, Patient, Person, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
 import React from 'react';
 import { useParams } from 'react-router-dom';
+import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
 import { BaseQuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/BaseQuestionnaireResponseForm';
 import { formatError, RenderRemoteData, WithId } from '@beda.software/fhir-react';
@@ -43,7 +44,7 @@ export interface PatientDocumentProps {
 
 interface PatientDocumentContentProps extends PatientDocumentProps {
     onCancel?: () => void;
-    onQRFUpdate?: (questionnaireResponse: QuestionnaireResponse) => void;
+    onEdit?: (formData: QuestionnaireResponseFormData) => Promise<any>;
     alertComponent?: React.ReactNode | (() => React.ReactNode);
     onSaveDraft?: (questionnaireResponse: QuestionnaireResponse) => Promise<RemoteDataResult<QuestionnaireResponse>>;
 }
@@ -53,13 +54,7 @@ export function PatientDocument(props: PatientDocumentProps) {
 
     const params = useParams<{ questionnaireId: string; encounterId?: string }>();
 
-    const {
-        response,
-        draftInfoMessage,
-        updateDraft: onUpdateDraft,
-        deleteDraft,
-        saveDraft,
-    } = useQuestionnaireResponseDraft({
+    const { response, draftInfoMessage, handleEdit, deleteDraft, saveDraft } = useQuestionnaireResponseDraft({
         subject: `${props.patient.resourceType}/${props.patient.id}`,
         questionnaireId: props.questionnaireId ?? params.questionnaireId!,
         qrDraftServiceType,
@@ -80,7 +75,7 @@ export function PatientDocument(props: PatientDocumentProps) {
                         }
                         props.onSuccess && props.onSuccess(resource);
                     }}
-                    onQRFUpdate={onUpdateDraft}
+                    onEdit={handleEdit}
                     onSaveDraft={qrDraftServiceType === 'server' ? saveDraft : undefined}
                     alertComponent={
                         <AlertMessage
@@ -110,7 +105,7 @@ export function PatientDocument(props: PatientDocumentProps) {
 }
 
 function PatientDocumentContent(props: PatientDocumentContentProps) {
-    const { onQRFUpdate, alertComponent, onSaveDraft, maxWidth } = props;
+    const { alertComponent, onSaveDraft, maxWidth, onEdit } = props;
 
     const params = useParams<{ questionnaireId: string; encounterId?: string }>();
     const encounterId = props.encounterId || params.encounterId;
@@ -139,22 +134,15 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
                                     <BaseQuestionnaireResponseForm
                                         formData={formData}
                                         onSubmit={onSubmit}
-                                        onEdit={async ({ context }) => {
-                                            // await onQRFUpdate?.(context.questionnaireResponse);
-                                        }}
-                                        // itemControlQuestionItemComponents={itemControlQuestionItemComponents}
+                                        onEdit={onEdit}
                                         widgetsByQuestionType={itemComponents}
                                         widgetsByQuestionItemControl={itemControlComponents}
                                         widgetsByGroupQuestionItemControl={groupControlComponents}
-                                        // onCancel={handleCancel}
-                                        // onQRFUpdate={onQRFUpdate}
-                                        // onSaveDraft={onSaveDraft}
                                         fhirService={service}
                                         groupItemComponent={GroupItemComponent}
                                         FormWrapper={(props) => (
                                             <FormWrapper
                                                 {...props}
-                                                // formData={formData}
                                                 onCancel={handleCancel}
                                                 onSaveDraft={onSaveDraft}
                                                 saveButtonTitle={t`Complete`}
@@ -181,10 +169,7 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
                                             <BaseQuestionnaireResponseForm
                                                 formData={formData}
                                                 onSubmit={onSubmit}
-                                                onEdit={async ({ context }) => {
-                                                    await onQRFUpdate?.(context.questionnaireResponse);
-                                                }}
-                                                // itemControlQuestionItemComponents={itemControlQuestionItemComponents}
+                                                onEdit={onEdit}
                                                 widgetsByQuestionType={itemComponents}
                                                 widgetsByQuestionItemControl={itemControlComponents}
                                                 widgetsByGroupQuestionItemControl={groupControlComponents}
@@ -192,15 +177,11 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
                                                 FormWrapper={(props) => (
                                                     <FormWrapper
                                                         {...props}
-                                                        // formData={formData}
                                                         onCancel={handleCancel}
                                                         onSaveDraft={onSaveDraft}
                                                         saveButtonTitle={t`Complete`}
                                                     />
                                                 )}
-                                                // onCancel={handleCancel}
-                                                // onQRFUpdate={onQRFUpdate}
-                                                // onSaveDraft={onSaveDraft}
                                                 fhirService={service}
                                             />
                                         </Splitter.Panel>
