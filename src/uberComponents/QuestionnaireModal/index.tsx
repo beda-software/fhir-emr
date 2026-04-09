@@ -6,13 +6,14 @@ import { useState } from 'react';
 import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
 import {
     inMemorySaveQuestionnaireResponseService,
-    persistSaveQuestionnaireReponseService,
+    persistSaveQuestionnaireReponseServiceFactory,
 } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/questionnaire-response-form-data';
 import { parseFHIRReference } from '@beda.software/fhir-react';
 
 import { FormWrapper } from 'src/components/FormWrapper';
 import { Modal } from 'src/components/Modal';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { service } from 'src/services';
 
 export interface QuestionnaireModalProps {
     questionnaire: Reference;
@@ -60,7 +61,7 @@ export function QuestionanireModal({ questionnaire, subject, launchContextParame
                         saveQuestionnaireResponse:
                             typeof subject === 'undefined'
                                 ? inMemorySaveQuestionnaireResponseService
-                                : persistSaveQuestionnaireReponseService,
+                                : persistSaveQuestionnaireReponseServiceFactory(service),
                     }}
                     FormWrapper={(props) => <FormWrapper {...props} onCancel={() => setIsModalVisible(false)} />}
                 />

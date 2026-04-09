@@ -2,7 +2,6 @@ import {
     QuestionnaireResponseForm as FHIRQuestionnaireResponseForm,
     Props,
 } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm';
-import { persistSaveQuestionnaireReponseService } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/questionnaire-response-form-data';
 
 import {
     groupControlComponents,
@@ -27,15 +26,7 @@ export function QuestionnaireResponseForm(props: Pick<Props, 'questionnaireLoade
                 }
             }
             fhirService={props.fhirService ?? service}
-            sdcServiceProvider={{
-                service: props.sdcServiceProvider?.service ?? props.fhirService ?? service,
-                assemble: props.sdcServiceProvider?.assemble ?? props.fhirService ?? service,
-                constraintCheck: props.sdcServiceProvider?.constraintCheck ?? props.fhirService ?? service,
-                populate: props.sdcServiceProvider?.populate ?? props.fhirService ?? service,
-                extract: props.sdcServiceProvider?.extract ?? props.fhirService ?? service,
-                saveQuestionnaireResponse:
-                    props.sdcServiceProvider?.saveQuestionnaireResponse ?? persistSaveQuestionnaireReponseService,
-            }}
+            sdcServiceProvider={props.sdcServiceProvider}
             FormWrapper={props.FormWrapper ?? FormWrapper}
             groupItemComponent={props.groupItemComponent ?? GroupItemComponent}
             widgetsByQuestionType={props.widgetsByQuestionType ?? itemComponents}
@@ -55,15 +46,7 @@ export function ReadonlyQuestionnaireResponseForm(props: Pick<Props, 'questionna
                 }
             }
             fhirService={props.fhirService ?? service}
-            sdcServiceProvider={{
-                service: props.sdcServiceProvider?.service ?? props.fhirService ?? service,
-                assemble: props.sdcServiceProvider?.assemble ?? props.fhirService ?? service,
-                constraintCheck: props.sdcServiceProvider?.constraintCheck ?? props.fhirService ?? service,
-                populate: props.sdcServiceProvider?.populate ?? props.fhirService ?? service,
-                extract: props.sdcServiceProvider?.extract ?? props.fhirService ?? service,
-                saveQuestionnaireResponse:
-                    props.sdcServiceProvider?.saveQuestionnaireResponse ?? persistSaveQuestionnaireReponseService,
-            }}
+            sdcServiceProvider={props.sdcServiceProvider}
             FormWrapper={props.FormWrapper ?? ReadonlyFormWrapper}
             groupItemComponent={props.groupItemComponent ?? GroupItemComponent}
             widgetsByQuestionType={props.widgetsByQuestionType ?? readonlyItemComponents}
