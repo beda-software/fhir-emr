@@ -16,6 +16,12 @@ launchContext:
     type:
       - Patient
 item:
+- linkId: voice
+  type: group
+  itemControl:
+   coding:
+   - code: group-voice
+  item:
   - linkId: menstrual-bleeding-flow
     text: How would you describe the flow of your menstrual bleeding in the past month?
     type: choice
