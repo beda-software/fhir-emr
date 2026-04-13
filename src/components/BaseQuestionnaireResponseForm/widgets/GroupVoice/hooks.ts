@@ -35,11 +35,18 @@ export function useGroupVoice(props: GroupItemProps) {
     const voice = useRef<RealtimeVoiceSession>();
     const [connection, setConnection] = useState<ConnectionStatus>('notStarted');
     const [text, setText] = useState('');
+    const [isSpeaking, setIsSpeaking] = useState(false);
 
     async function startRecording() {
         setConnection('connecting');
         voice.current = await startRealtimeVoice(aiService);
         function _handleEvent(evt: any) {
+            if (evt.type == 'input_audio_buffer.speech_started') {
+                setIsSpeaking(true);
+            }
+            if (evt.type == 'input_audio_buffer.speech_stopped') {
+                setIsSpeaking(false);
+            }
             if (evt.type === 'session.updated') {
                 setConnection('connected');
             }
@@ -107,5 +114,6 @@ export function useGroupVoice(props: GroupItemProps) {
         stopRecording,
         text,
         gen,
+        isSpeaking,
     };
 }
