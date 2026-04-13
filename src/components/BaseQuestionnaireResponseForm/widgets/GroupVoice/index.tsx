@@ -9,7 +9,7 @@ import { useGroupVoice } from './hooks';
 export function GroupVoice(props: GroupItemProps) {
     const { linkId, item } = props.questionItem;
     const rootContext = props.context[0];
-    const { connection, startRecording, stopRecording, text, gen } = useGroupVoice(props);
+    const { connection, startRecording, stopRecording, text, gen, isSpeaking } = useGroupVoice(props);
     return (
         <div style={{ margin: '0 0 32px' }} id={`group-${linkId}`}>
             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -20,6 +20,7 @@ export function GroupVoice(props: GroupItemProps) {
                 ) : (
                     <Button onClick={() => stopRecording()}>Stop</Button>
                 )}
+                <Paragraph>{isSpeaking ? 'Speacking' : ''}</Paragraph>
                 <Paragraph> {text}</Paragraph>
             </div>
             <QuestionItems
