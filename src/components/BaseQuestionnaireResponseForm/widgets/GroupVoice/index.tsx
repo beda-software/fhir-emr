@@ -5,6 +5,19 @@ import { QuestionItems, type GroupItemProps } from 'sdc-qrf';
 import { Paragraph } from 'src/components/Typography';
 
 import { useGroupVoice } from './hooks';
+import s from './styles.module.scss';
+
+function Speaking() {
+    return (
+        <span className={s.speaking} role="status" aria-label="Speaking">
+            <span className={s.bar} />
+            <span className={s.bar} />
+            <span className={s.bar} />
+            <span className={s.bar} />
+            <span className={s.bar} />
+        </span>
+    );
+}
 
 export function GroupVoice(props: GroupItemProps) {
     const { linkId, item } = props.questionItem;
@@ -20,8 +33,10 @@ export function GroupVoice(props: GroupItemProps) {
                 ) : (
                     <Button onClick={() => stopRecording()}>Stop</Button>
                 )}
-                <Paragraph>{isSpeaking ? 'Speacking' : ''}</Paragraph>
-                <Paragraph> {text}</Paragraph>
+                <Paragraph>
+                    {isSpeaking ? <Speaking /> : null}
+                    {text}
+                </Paragraph>
             </div>
             <QuestionItems
                 key={gen}
