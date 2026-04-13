@@ -2,12 +2,11 @@ import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
 import { Patient, Practitioner } from 'fhir/r4b';
 
+import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
 import { WithId } from '@beda.software/fhir-react';
 
-import { MDEditorControl } from 'src/components/BaseQuestionnaireResponseForm/widgets/MDEditorControl';
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
-import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 
 interface ModalNoteCreateProps {
@@ -36,15 +35,11 @@ export const ModalNoteCreate = (props: ModalNoteCreateProps) => {
                         { name: 'Patient', resource: props.patient },
                         { name: 'Author', resource: author },
                     ]}
-                    itemControlQuestionItemComponents={{
-                        'markdown-editor': (props) => <MDEditorControl {...props} />,
-                    }}
                     onSuccess={() => {
                         closeModal();
                         notification.success({ message: t`Note successfully created` });
                         props.onCreate();
                     }}
-                    onCancel={closeModal}
                 />
             )}
         </ModalTrigger>

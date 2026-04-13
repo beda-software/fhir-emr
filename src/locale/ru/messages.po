@@ -22,7 +22,7 @@ msgstr ""
 msgid "{0, plural, one {Selected # item} other {Selected # items}}"
 msgstr ""
 
-#: src/components/QuestionnairesWizard/hooks.tsx:100
+#: src/components/QuestionnairesWizard/hooks.tsx:101
 msgid "{0} was not submitted"
 msgstr ""
 
@@ -223,11 +223,11 @@ msgstr ""
 msgid "Activity"
 msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/Group/RepeatableGroups/index.tsx:86
+#: src/components/BaseQuestionnaireResponseForm/widgets/Group/RepeatableGroups/index.tsx:87
 msgid "Add {text}"
 msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/Group/RepeatableGroups/index.tsx:86
+#: src/components/BaseQuestionnaireResponseForm/widgets/Group/RepeatableGroups/index.tsx:87
 msgid "Add another answer"
 msgstr ""
 
@@ -263,11 +263,11 @@ msgstr ""
 msgid "Add new practitioner"
 msgstr ""
 
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteCreate/index.tsx:27
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteCreate/index.tsx:26
 msgid "Add note"
 msgstr ""
 
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteCreate/index.tsx:23
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteCreate/index.tsx:22
 msgid "Add Note"
 msgstr ""
 
@@ -331,7 +331,7 @@ msgstr ""
 msgid "Appointment"
 msgstr ""
 
-#: src/containers/Appointment/PublicAppointment.tsx:40
+#: src/containers/Appointment/PublicAppointment.tsx:41
 msgid "Appointment booking"
 msgstr ""
 
@@ -340,7 +340,7 @@ msgstr ""
 msgid "Appointment successfully added"
 msgstr ""
 
-#: src/containers/Appointment/PublicAppointment.tsx:49
+#: src/containers/Appointment/PublicAppointment.tsx:50
 msgid "Appointment successfully created"
 msgstr ""
 
@@ -357,7 +357,7 @@ msgstr ""
 msgid "Are you sure you want to delete the document?"
 msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:572
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:555
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:134
 msgid "Are you sure you want to delete this item?"
 msgstr ""
@@ -423,7 +423,7 @@ msgstr ""
 msgid "Calories"
 msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:82
+#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:88
 #: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:56
 #: src/containers/InvoiceList/index.tsx:108
 #: src/containers/InvoiceList/index.tsx:113
@@ -474,8 +474,8 @@ msgstr ""
 #~ msgid "Clear draft"
 #~ msgstr ""
 
-#: src/components/QuestionnaireResponseFormDraft/index.tsx:60
-#: src/containers/PatientDetails/PatientDocument/index.tsx:85
+#: src/components/QuestionnaireResponseFormDraft/index.tsx:61
+#: src/containers/PatientDetails/PatientDocument/index.tsx:86
 msgid "Clear draft from local storage and reset form"
 msgstr ""
 
@@ -506,8 +506,8 @@ msgid "Col (default)"
 msgstr ""
 
 #: src/components/QuestionnairesWizard/components/QuestionnairesWizardFooter/index.tsx:45
-#: src/containers/PatientDetails/PatientDocument/index.tsx:146
-#: src/containers/PatientDetails/PatientDocument/index.tsx:172
+#: src/containers/PatientDetails/PatientDocument/index.tsx:148
+#: src/containers/PatientDetails/PatientDocument/index.tsx:182
 msgid "Complete"
 msgstr ""
 
@@ -665,7 +665,7 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:575
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:558
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:251
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:140
 msgid "Delete"
@@ -736,10 +736,10 @@ msgstr "Черновик"
 #~ msgid "Draft from {draftLastUpdateDate} was successfully loaded"
 #~ msgstr ""
 
-#: src/hooks/questionnaire-response-form-data.ts:195
-#: src/hooks/questionnaire-response-form-data.ts:204
+#: src/hooks/questionnaire-response-form-data.ts:205
 #: src/hooks/questionnaire-response-form-data.ts:214
-#: src/hooks/questionnaire-response-form-data.ts:244
+#: src/hooks/questionnaire-response-form-data.ts:224
+#: src/hooks/questionnaire-response-form-data.ts:254
 msgid "Draft key not provided"
 msgstr ""
 
@@ -751,7 +751,7 @@ msgstr ""
 #~ msgid "Draft successfully saved"
 #~ msgstr ""
 
-#: src/hooks/useQuestionnaireResponseDraft.ts:102
+#: src/hooks/useQuestionnaireResponseDraft.ts:103
 msgid "Draft was successfully loaded from {0}"
 msgstr ""
 
@@ -759,7 +759,7 @@ msgstr ""
 #~ msgid "Draft was successfully saved at {0}"
 #~ msgstr ""
 
-#: src/hooks/useQuestionnaireResponseDraft.ts:143
+#: src/hooks/useQuestionnaireResponseDraft.ts:112
 msgid "Draft was successfully saved at {0} to {1}"
 msgstr ""
 
@@ -771,11 +771,11 @@ msgstr ""
 msgid "Duration (minutes)"
 msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:570
+#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/hooks.tsx:553
 #: src/containers/EncounterDetails/AIScribe/index.tsx:218
 #: src/containers/HealthcareServiceList/index.tsx:66
 #: src/containers/PatientDetails/PatientDocumentDetails/index.tsx:261
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/EditPatient/index.tsx:23
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/EditPatient/index.tsx:24
 #: src/containers/PatientList/index.tsx:104
 #: src/containers/PatientList/index.tsx:133
 #: src/containers/PractitionerDetails/PractitionerOverview/index.tsx:67
@@ -783,7 +783,7 @@ msgstr ""
 msgid "Edit"
 msgstr "Редактировать"
 
-#: src/containers/Scheduling/ScheduleCalendar/components/EditAppointmentModal/index.tsx:46
+#: src/containers/Scheduling/ScheduleCalendar/components/EditAppointmentModal/index.tsx:22
 msgid "Edit Appointment"
 msgstr ""
 
@@ -799,7 +799,7 @@ msgstr ""
 #~ msgid "Edit in SDC IDE"
 #~ msgstr ""
 
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/EditPatient/index.tsx:20
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/EditPatient/index.tsx:21
 msgid "Edit patient"
 msgstr "Редактировать пациента"
 
@@ -858,7 +858,7 @@ msgstr ""
 msgid "Error deleting a draft"
 msgstr ""
 
-#: src/hooks/useQuestionnaireResponseDraft.ts:273
+#: src/hooks/useQuestionnaireResponseDraft.ts:291
 msgid "Error saving a draft:"
 msgstr ""
 
@@ -980,17 +980,17 @@ msgstr ""
 #: src/utils/__tests__/questionnaire/custom-validation.test.ts:16
 #: src/utils/__tests__/questionnaire/custom-validation.test.ts:29
 #: src/utils/__tests__/questionnaire/custom-validation.test.ts:53
-msgid "Has at least one lower case letter"
-msgstr ""
+#~ msgid "Has at least one lower case letter"
+#~ msgstr ""
 
 #: src/utils/__tests__/questionnaire/custom-validation.test.ts:75
-msgid "Has at least one number"
-msgstr ""
+#~ msgid "Has at least one number"
+#~ msgstr ""
 
 #: src/utils/__tests__/questionnaire/custom-validation.test.ts:40
 #: src/utils/__tests__/questionnaire/custom-validation.test.ts:64
-msgid "Has at least one uppercase letter"
-msgstr ""
+#~ msgid "Has at least one uppercase letter"
+#~ msgstr ""
 
 #: src/components/ModalNewHealthcareService/index.tsx:38
 #~ msgid "Healthcare service successfully created"
@@ -1009,7 +1009,7 @@ msgstr ""
 msgid "Help text"
 msgstr ""
 
-#: src/containers/QuestionnaireBuilder/Builder/index.tsx:151
+#: src/containers/QuestionnaireBuilder/Builder/index.tsx:161
 msgid "Here will be your questionnaire"
 msgstr ""
 
@@ -1224,8 +1224,8 @@ msgstr ""
 msgid "Name"
 msgstr "Имя"
 
-#: src/containers/OrganizationScheduling/NewAppointmentModal/index.tsx:59
-#: src/containers/Scheduling/ScheduleCalendar/components/NewAppointmentModal/index.tsx:49
+#: src/containers/OrganizationScheduling/NewAppointmentModal/index.tsx:27
+#: src/containers/Scheduling/ScheduleCalendar/components/NewAppointmentModal/index.tsx:25
 msgid "New Appointment"
 msgstr ""
 
@@ -1252,7 +1252,7 @@ msgstr ""
 msgid "No prepared text"
 msgstr ""
 
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteCreate/index.tsx:44
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteCreate/index.tsx:40
 msgid "Note successfully created"
 msgstr ""
 
@@ -1357,7 +1357,7 @@ msgstr "Пациент"
 msgid "Patient consent is required"
 msgstr ""
 
-#: src/containers/PatientDetails/PatientOverviewDynamic/components/EditPatient/index.tsx:33
+#: src/containers/PatientDetails/PatientOverviewDynamic/components/EditPatient/index.tsx:34
 msgid "Patient saved"
 msgstr "Пациент сохранен"
 
@@ -1447,7 +1447,7 @@ msgstr ""
 msgid "Questionnaire"
 msgstr "Опросник"
 
-#: src/hooks/useQuestionnaireResponseDraft.ts:73
+#: src/hooks/useQuestionnaireResponseDraft.ts:74
 msgid "Questionnaire not found"
 msgstr ""
 
@@ -1455,11 +1455,11 @@ msgstr ""
 msgid "Questionnaire properties"
 msgstr ""
 
-#: src/hooks/useQuestionnaireResponseDraft.ts:111
+#: src/hooks/useQuestionnaireResponseDraft.ts:124
 msgid "Questionnaire response is required"
 msgstr ""
 
-#: src/hooks/questionnaire-response-form-data.ts:219
+#: src/hooks/questionnaire-response-form-data.ts:229
 msgid "QuestionnaireResponse not found in local storage"
 msgstr ""
 
@@ -1517,7 +1517,7 @@ msgstr ""
 #~ msgid "Resource id is not provided"
 #~ msgstr ""
 
-#: src/hooks/useQuestionnaireResponseDraft.ts:284
+#: src/hooks/useQuestionnaireResponseDraft.ts:302
 msgid "Resource id not provided"
 msgstr ""
 
@@ -1534,16 +1534,16 @@ msgstr ""
 msgid "Saturday"
 msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:101
+#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:107
 #: src/containers/EncounterDetails/AIScribe/index.tsx:205
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:130
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:98
 #: src/containers/Scheduling/Availability/index.tsx:73
-#: src/containers/SetPassword/index.tsx:31
+#: src/containers/SetPassword/index.tsx:50
 msgid "Save"
 msgstr "Сохранить"
 
-#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:91
+#: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:97
 msgid "Save as draft"
 msgstr ""
 
@@ -1666,7 +1666,7 @@ msgstr ""
 msgid "Services"
 msgstr ""
 
-#: src/containers/SetPassword/index.tsx:22
+#: src/containers/SetPassword/index.tsx:25
 msgid "Set password"
 msgstr "Задать пароль"
 
@@ -1777,9 +1777,9 @@ msgid "Subject Type"
 msgstr ""
 
 #: src/containers/QuestionnaireBuilder/PromptForm.tsx:104
-#: src/uberComponents/ResourceListPage/actions.tsx:67
-#: src/uberComponents/ResourceListPage/actions.tsx:102
-#: src/uberComponents/ResourceListPage/actions.tsx:151
+#: src/uberComponents/ResourceListPage/actions.tsx:68
+#: src/uberComponents/ResourceListPage/actions.tsx:103
+#: src/uberComponents/ResourceListPage/actions.tsx:152
 msgid "Submit"
 msgstr ""
 
@@ -1793,9 +1793,9 @@ msgstr ""
 #~ msgid "Successfully saved"
 #~ msgstr ""
 
-#: src/uberComponents/ResourceListPage/actions.tsx:61
-#: src/uberComponents/ResourceListPage/actions.tsx:97
-#: src/uberComponents/ResourceListPage/actions.tsx:147
+#: src/uberComponents/ResourceListPage/actions.tsx:63
+#: src/uberComponents/ResourceListPage/actions.tsx:98
+#: src/uberComponents/ResourceListPage/actions.tsx:148
 msgid "Successfully submitted"
 msgstr ""
 
@@ -1832,11 +1832,11 @@ msgstr ""
 msgid "Text with macro"
 msgstr ""
 
-#: src/containers/App/index.tsx:100
+#: src/containers/App/index.tsx:169
 msgid "Thank you for filling out the questionnaire. Now you can close this page."
 msgstr ""
 
-#: src/containers/App/index.tsx:99
+#: src/containers/App/index.tsx:168
 msgid "Thank you!"
 msgstr ""
 
@@ -1852,8 +1852,8 @@ msgstr ""
 msgid "The link was copied to clipboard"
 msgstr ""
 
-#: src/containers/QuestionnaireBuilder/Builder/index.tsx:48
-#: src/containers/QuestionnaireBuilder/Builder/index.tsx:65
+#: src/containers/QuestionnaireBuilder/Builder/index.tsx:50
+#: src/containers/QuestionnaireBuilder/Builder/index.tsx:67
 msgid "The process of generating or updating a questionnaire may require some time to complete"
 msgstr ""
 

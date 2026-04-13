@@ -4,9 +4,13 @@ import { Meta, StoryObj } from '@storybook/react';
 import { QuestionnaireResponse } from 'fhir/r4b';
 import { FCEQuestionnaire, fromFirstClassExtension } from 'sdc-qrf';
 
-import { BaseQuestionnaireResponseForm } from 'src/components';
+import { BaseQuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components';
+
+import { FormWrapper, GroupItemComponent } from 'src/components/FormWrapper';
+import { service } from 'src/services';
 
 import { GroupTabs } from './index';
+import { groupControlComponents, itemComponents, itemControlComponents } from '../../controls';
 
 i18n.activate('en');
 
@@ -34,6 +38,12 @@ export const Default: Story = {
                     },
                     formValues,
                 }}
+                widgetsByQuestionType={itemComponents}
+                widgetsByQuestionItemControl={itemControlComponents}
+                widgetsByGroupQuestionItemControl={groupControlComponents}
+                fhirService={service}
+                groupItemComponent={GroupItemComponent}
+                FormWrapper={FormWrapper}
             />
         </I18nProvider>
     ),

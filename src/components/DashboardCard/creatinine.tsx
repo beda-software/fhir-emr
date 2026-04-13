@@ -6,14 +6,14 @@ import moment from 'moment';
 // eslint-disable-next-line import/named
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine, TooltipContentProps } from 'recharts';
 
+import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
 import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
 import { RemoteData, isSuccess } from '@beda.software/remote-data';
 
-import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
+import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 
 import { S } from './DashboardCard.styles';
-import { QuestionnaireResponseForm } from '../QuestionnaireResponseForm';
 
 export type ObservationWithDate = WithId<Observation> & { effective: Date };
 

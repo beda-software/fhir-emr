@@ -1,24 +1,60 @@
-import { RenderRemoteData } from '@beda.software/fhir-react';
+import {
+    QuestionnaireResponseForm as FHIRQuestionnaireResponseForm,
+    Props,
+} from '@beda.software/fhir-questionnaire/components';
 
-import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
-import { QRFProps, useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import {
+    groupControlComponents,
+    itemComponents,
+    itemControlComponents,
+} from 'src/components/BaseQuestionnaireResponseForm/controls';
+import {
+    groupControlComponents as readonlyGroupControlComponents,
+    itemComponents as readonlyItemComponents,
+    itemControlComponents as readonlyItemControlComponents,
+} from 'src/components/BaseQuestionnaireResponseForm/readonly-controls';
+import { FormWrapper, GroupItemComponent, ReadonlyFormWrapper } from 'src/components/FormWrapper';
+import { service } from 'src/services';
 
-import { Spinner } from '../Spinner';
-
-export function QuestionnaireResponseForm(props: QRFProps) {
-    const { response, onSubmit, readOnly, onCancel } = useQuestionnaireResponseForm(props);
-
+export function QuestionnaireResponseForm(props: Pick<Props, 'questionnaireLoader'> & Partial<Props>) {
     return (
-        <RenderRemoteData remoteData={response} renderLoading={Spinner}>
-            {(formData) => (
-                <BaseQuestionnaireResponseForm
-                    formData={formData}
-                    onSubmit={onSubmit}
-                    readOnly={readOnly}
-                    onCancel={onCancel}
-                    {...props}
-                />
-            )}
-        </RenderRemoteData>
+        <FHIRQuestionnaireResponseForm
+            {...props}
+            serviceProvider={
+                props.serviceProvider ?? {
+                    service,
+                }
+            }
+            fhirService={props.fhirService ?? service}
+            sdcServiceProvider={props.sdcServiceProvider}
+            FormWrapper={props.FormWrapper ?? FormWrapper}
+            groupItemComponent={props.groupItemComponent ?? GroupItemComponent}
+            widgetsByQuestionType={props.widgetsByQuestionType ?? itemComponents}
+            widgetsByQuestionItemControl={props.widgetsByQuestionItemControl ?? itemControlComponents}
+            widgetsByGroupQuestionItemControl={props.widgetsByGroupQuestionItemControl ?? groupControlComponents}
+        />
+    );
+}
+
+export function ReadonlyQuestionnaireResponseForm(props: Pick<Props, 'questionnaireLoader'> & Partial<Props>) {
+    return (
+        <FHIRQuestionnaireResponseForm
+            {...props}
+            serviceProvider={
+                props.serviceProvider ?? {
+                    service,
+                }
+            }
+            fhirService={props.fhirService ?? service}
+            sdcServiceProvider={props.sdcServiceProvider}
+            FormWrapper={props.FormWrapper ?? ReadonlyFormWrapper}
+            groupItemComponent={props.groupItemComponent ?? GroupItemComponent}
+            widgetsByQuestionType={props.widgetsByQuestionType ?? readonlyItemComponents}
+            widgetsByQuestionItemControl={props.widgetsByQuestionItemControl ?? readonlyItemControlComponents}
+            widgetsByGroupQuestionItemControl={
+                props.widgetsByGroupQuestionItemControl ?? readonlyGroupControlComponents
+            }
+            readOnly={true}
+        />
     );
 }

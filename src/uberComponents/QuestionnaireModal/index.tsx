@@ -3,15 +3,17 @@ import { Button, notification } from 'antd';
 import { ParametersParameter, Reference } from 'fhir/r4b';
 import { useState } from 'react';
 
+import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
+import {
+    inMemorySaveQuestionnaireResponseService,
+    persistSaveQuestionnaireReponseServiceFactory,
+} from '@beda.software/fhir-questionnaire/components';
 import { parseFHIRReference } from '@beda.software/fhir-react';
 
+import { FormWrapper } from 'src/components/FormWrapper';
 import { Modal } from 'src/components/Modal';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
-import {
-    inMemorySaveService,
-    persistSaveService,
-    questionnaireIdLoader,
-} from 'src/hooks/questionnaire-response-form-data';
+import { service } from 'src/services';
 
 export interface QuestionnaireModalProps {
     questionnaire: Reference;
@@ -55,10 +57,13 @@ export function QuestionanireModal({ questionnaire, subject, launchContextParame
                     questionnaireLoader={questionnaireIdLoader(parseFHIRReference(questionnaire).id!)}
                     onSuccess={handleSuccess}
                     launchContextParameters={launchContextParameters}
-                    onCancel={() => setIsModalVisible(false)}
-                    questionnaireResponseSaveService={
-                        typeof subject === 'undefined' ? inMemorySaveService : persistSaveService
-                    }
+                    sdcServiceProvider={{
+                        saveCompletedQuestionnaireResponse:
+                            typeof subject === 'undefined'
+                                ? inMemorySaveQuestionnaireResponseService
+                                : persistSaveQuestionnaireReponseServiceFactory(service),
+                    }}
+                    FormWrapper={(props) => <FormWrapper {...props} onCancel={() => setIsModalVisible(false)} />}
                 />
             </Modal>
         </>

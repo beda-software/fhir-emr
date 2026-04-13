@@ -5,11 +5,11 @@ import { CSSProperties, useCallback, useContext } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { calcInitialContext } from 'sdc-qrf';
 
+import { BaseQuestionnaireResponseFormProps } from '@beda.software/fhir-questionnaire/components';
 import { RemoteDataResult } from '@beda.software/remote-data';
 
 import { BaseQuestionnaireResponseFormPropsContext } from 'src/components/BaseQuestionnaireResponseForm/context';
 
-import { BaseQuestionnaireResponseFormProps } from '.';
 import { S } from './BaseQuestionnaireResponseForm.styles';
 
 export interface FormFooterComponentProps {
@@ -19,7 +19,13 @@ export interface FormFooterComponentProps {
     onSaveDraft?: (questionnaireResponse: QuestionnaireResponse) => Promise<RemoteDataResult<QuestionnaireResponse>>;
 }
 
-export interface Props extends BaseQuestionnaireResponseFormProps {
+export interface Props extends Pick<BaseQuestionnaireResponseFormProps, 'readOnly'> {
+    saveButtonTitle?: React.ReactNode;
+    cancelButtonTitle?: React.ReactNode;
+    saveDraftButtonTitle?: React.ReactNode;
+    FormFooterComponent?: React.ElementType<FormFooterComponentProps>;
+    onCancel?: () => void;
+    onSaveDraft?: (questionnaireResponse: QuestionnaireResponse) => Promise<RemoteDataResult<QuestionnaireResponse>>;
     submitting: boolean;
     className?: string | undefined;
     style?: CSSProperties | undefined;
@@ -46,7 +52,7 @@ export function FormFooter(props: Props) {
     const formContext = useFormContext();
 
     const handleSaveDraft = useCallback(async () => {
-        const qrfDataContext = baseQRFPropsContext?.formData.context;
+        const qrfDataContext = baseQRFPropsContext?.formData?.context;
         const formValues = formContext.getValues();
         const rootContext = qrfDataContext ? calcInitialContext(qrfDataContext, formValues) : undefined;
 
@@ -56,7 +62,7 @@ export function FormFooter(props: Props) {
         } else {
             onCancel?.();
         }
-    }, [baseQRFPropsContext?.formData.context, formContext, onSaveDraft, onCancel]);
+    }, [baseQRFPropsContext?.formData?.context, formContext, onSaveDraft, onCancel]);
 
     if (readOnly) {
         return null;

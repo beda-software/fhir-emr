@@ -2,12 +2,12 @@ import { t, Trans } from '@lingui/macro';
 import { Button } from 'antd';
 import { Appointment, Encounter } from 'fhir/r4b';
 
-import { extractBundleResources, parseFHIRReference, RenderRemoteData, useService } from '@beda.software/fhir-react';
+import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
+import { extractBundleResources, parseFHIRReference, useService } from '@beda.software/fhir-react';
 import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 
-import { ReadonlyQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm/ReadonlyQuestionnaireResponseForm';
 import { Modal } from 'src/components/Modal';
-import { Spinner } from 'src/components/Spinner';
+import { ReadonlyQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { useNavigateToEncounter } from 'src/containers/EncounterDetails/hooks';
 import { useStartEncounter } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StartEncounter/useStartEncounter';
 import { getFHIRResources } from 'src/services/fhir';
@@ -103,9 +103,20 @@ export function AppointmentDetailsModal(props: Props) {
 
     return (
         <Modal open={showModal} title={t`Appointment`} footer={renderFooter()} onCancel={onClose}>
-            <RenderRemoteData remoteData={questionnaireResponseRD} renderLoading={Spinner}>
-                {(formData) => <ReadonlyQuestionnaireResponseForm formData={formData} />}
-            </RenderRemoteData>
+            <ReadonlyQuestionnaireResponseForm
+                questionnaireLoader={questionnaireIdLoader('encounter-create-from-appointment')}
+                launchContextParameters={[
+                    {
+                        name: 'Appointment',
+                        resource: {
+                            resourceType: 'Appointment',
+                            id: appointmentId,
+                            status: 'booked',
+                            participant: [{ status: 'accepted' }],
+                        },
+                    },
+                ]}
+            />
         </Modal>
     );
 }

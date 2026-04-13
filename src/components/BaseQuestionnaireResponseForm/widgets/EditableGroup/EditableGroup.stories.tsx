@@ -4,8 +4,13 @@ import { Meta, StoryObj } from '@storybook/react';
 import { QuestionnaireResponse } from 'fhir/r4b';
 import { FCEQuestionnaire, fromFirstClassExtension } from 'sdc-qrf';
 
-import { BaseQuestionnaireResponseForm } from 'src/components';
+import { BaseQuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components';
+
+import { FormWrapper, GroupItemComponent } from 'src/components/FormWrapper';
+import { service } from 'src/services';
 import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
+
+import { groupControlComponents, itemComponents, itemControlComponents } from '../../controls';
 
 interface EditableGroupProps {
     readOnly: boolean;
@@ -39,6 +44,12 @@ export const Example: Story = {
                     },
                     formValues,
                 }}
+                widgetsByQuestionType={itemComponents}
+                widgetsByQuestionItemControl={itemControlComponents}
+                widgetsByGroupQuestionItemControl={groupControlComponents}
+                fhirService={service}
+                groupItemComponent={GroupItemComponent}
+                FormWrapper={FormWrapper}
             />
         </I18nProvider>
     ),
@@ -61,6 +72,12 @@ export const Readonly: Story = {
                     },
                     formValues,
                 }}
+                widgetsByQuestionType={itemComponents}
+                widgetsByQuestionItemControl={itemControlComponents}
+                widgetsByGroupQuestionItemControl={groupControlComponents}
+                fhirService={service}
+                groupItemComponent={GroupItemComponent}
+                FormWrapper={FormWrapper}
             />
         </I18nProvider>
     ),

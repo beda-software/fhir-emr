@@ -4,9 +4,11 @@ import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 import { omit } from 'lodash';
 import { useNavigate } from 'react-router-dom';
 
+import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
+
+import { FormWrapper } from 'src/components/FormWrapper';
 import { ModalTrigger } from 'src/components/ModalTrigger';
-import { QRFProps, QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
-import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
+import { QuestionnaireResponseForm, QRFProps } from 'src/components/QuestionnaireResponseForm';
 
 import { S } from './styles';
 import {
@@ -63,8 +65,7 @@ export function RecordQuestionnaireAction<R extends Resource>({
                         reload();
                         closeModal();
                     }}
-                    onCancel={closeModal}
-                    saveButtonTitle={t`Submit`}
+                    FormWrapper={(props) => <FormWrapper {...props} saveButtonTitle={t`Submit`} />}
                     {...(action.extra?.qrfProps ?? {})}
                 />
             )}
@@ -99,7 +100,7 @@ export function HeaderQuestionnaireAction({ action, reload, defaultLaunchContext
                     }}
                     launchContextParameters={defaultLaunchContext}
                     onCancel={closeModal}
-                    saveButtonTitle={t`Submit`}
+                    FormWrapper={(props) => <FormWrapper {...props} saveButtonTitle={t`Submit`} />}
                     {...(action.extra?.qrfProps ?? {})}
                 />
             )}
@@ -148,7 +149,7 @@ export function BatchQuestionnaireAction<R extends Resource>({
                             reload();
                         }}
                         onCancel={closeModal}
-                        saveButtonTitle={t`Submit`}
+                        FormWrapper={(props) => <FormWrapper {...props} saveButtonTitle={t`Submit`} />}
                         {...(action.extra?.qrfProps ? omit(action.extra?.qrfProps, 'launchContextParameters') : {})}
                     />
                 )}

@@ -2,7 +2,7 @@ import { DebouncedFunc } from 'lodash';
 import { createContext } from 'react';
 import { FormItems, ItemControlGroupItemComponentMapping, ItemControlQuestionItemComponentMapping } from 'sdc-qrf';
 
-import { BaseQuestionnaireResponseFormProps } from '.';
+import { BaseQuestionnaireResponseFormProps } from '@beda.software/fhir-questionnaire/components';
 
 export const ItemControlQuestionItemWidgetsContext = createContext<ItemControlQuestionItemComponentMapping>({});
 export const ItemControlGroupItemWidgetsContext = createContext<ItemControlGroupItemComponentMapping>({});
@@ -10,7 +10,7 @@ export const ItemControlGroupItemWidgetsContext = createContext<ItemControlGroup
 export const ItemControlQuestionItemReadonlyWidgetsContext = createContext<ItemControlQuestionItemComponentMapping>({});
 export const ItemControlGroupItemReadonlyWidgetsContext = createContext<ItemControlGroupItemComponentMapping>({});
 
-interface BaseQuestionnaireResponseFormPropsContextProps extends BaseQuestionnaireResponseFormProps {
+interface BaseQuestionnaireResponseFormPropsContextProps extends Partial<BaseQuestionnaireResponseFormProps> {
     submitting: boolean;
     saveDraft?: (currentFormValues: FormItems) => Promise<void>;
     debouncedSaveDraft?: DebouncedFunc<(currentFormValues: FormItems) => Promise<void>>;
