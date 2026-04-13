@@ -77,6 +77,12 @@ item:
             type: group
             text: Main health related consern
             item:
+            - linkId: main-health-concerns-group-voice
+              type: group
+              itemControl:
+                coding:
+                  - code: group-voice
+              item:
               - linkId: main-health-concerns-display
                 type: display
                 text: Please outline your main health related concern(s)
@@ -288,6 +294,12 @@ item:
             helpText: (FIGO AUB parameters, SAMANTA, VAS, PIPPA)
             type: group
             item:
+            - linkId: menstrual-history-voice
+              type: group
+              itemControl:
+                coding:
+                  - code: group-voice
+              item:
               - linkId: menstrual-history-group
                 type: group
                 extension:
@@ -446,6 +458,12 @@ item:
             text: Period Pain
             type: group
             item:
+            - linkId: period-pain-group-voice
+              type: group
+              itemControl:
+                coding:
+                  - code: group-voice
+              item:
               - linkId: period-pain-presence
                 text: Do you have period pain?
                 type: choice
@@ -560,6 +578,12 @@ item:
             text: Sexual & Reproductive History
             type: group
             item:
+            - linkId: sexual-reproductive-history-voice
+              type: group
+              itemControl:
+                coding:
+                  - code: group-voice
+              item:
               - linkId: sexually-active
                 text: Are you currently sexually active?
                 type: choice
@@ -970,6 +994,12 @@ item:
             text: Associated or Systemic Symptoms
             type: group
             item:
+            - linkId: associated-systemic-symptoms-voice
+              type: group
+              itemControl:
+                coding:
+                  - code: group-voice
+              item:
               - linkId: pelvic-pain
                 text: Do you experience any pelvic pain?
                 type: choice
@@ -1300,6 +1330,12 @@ item:
             helpText: Indicate any conditions diagnosed in your family (parents, siblings, grandparents)
             type: group
             item:
+            - linkId: family-history-voice
+              type: group
+              itemControl:
+                coding:
+                  - code: group-voice
+              item:
               - linkId: family-history-details-row-4-blood-clotting-disorders
                 text: Blood and Clotting Disorders
                 type: choice
@@ -1433,6 +1469,12 @@ item:
             text: Social History
             type: group
             item:
+            - linkId: social-history-voice
+              type: group
+              itemControl:
+                coding:
+                  - code: group-voice
+              item:
               - linkId: partner
                 text: Do you currently have a partner(s)?
                 type: choice
@@ -1536,6 +1578,12 @@ item:
             text: Lifestyle
             type: group
             item:
+            - linkId: lifestyle-voice
+              type: group
+              itemControl:
+                coding:
+                  - code: group-voice
+              item:
               - linkId: smoking
                 text: Do you currently smoke?
                 type: choice
@@ -1682,6 +1730,12 @@ item:
             text: Surgical History
             type: group
             item:
+            - linkId: surgical-history-voice
+              type: group
+              itemControl:
+                coding:
+                  - code: group-voice
+              item:
               - linkId: had-surgeries
                 text: Have you had any surgeries in the past?
                 type: choice
@@ -1750,6 +1804,12 @@ item:
             text: Menopause
             type: group
             item:
+            - linkId: menopause-group-voice
+              type: group
+              itemControl:
+                coding:
+                  - code: group-voice
+              item:
               - linkId: menopause
                 text: Have you gone through menopause?
                 type: choice
@@ -2241,6 +2301,12 @@ item:
             text: Other Notes
             type: group
             item:
+            - linkId: other-notes-group-voice
+              type: group
+              itemControl:
+                coding:
+                  - code: group-voice
+              item:
               - linkId: other-notes
                 text: >-
                   Please use the space below to let us know of anything else we
