@@ -19,11 +19,8 @@ item:
     linkId: wizard
     itemControl:
       coding:
-        - code: wizard
+        - code: wizard-vertical
     item:
-      - linkId: g1
-        type: group
-        item:
           - linkId: demographics-group
             type: group
             text: Demographics
@@ -39,6 +36,7 @@ item:
                   - linkId: first-name
                     text: First name
                     type: string
+                    readOnly: true
                     initialExpression:
                       language: text/fhirpath
                       expression: "%Patient.name.first().given.first()"
@@ -47,12 +45,10 @@ item:
                     text: Surname
                     type: string
                     required: true
+                    readOnly: true
                     initialExpression:
                       language: text/fhirpath
                       expression: "%Patient.name.first().family"
-                  - linkId: preferred-name
-                    text: Preferred Name
-                    type: string
               - linkId: demographics-group-2
                 type: group
                 extension:
@@ -65,19 +61,21 @@ item:
                     text: Date of Birth
                     type: date
                     required: true
+                    readOnly: true
                     initialExpression:
                       language: text/fhirpath
                       expression: "%Patient.birthDate"
                   - linkId: email
                     text: Email
                     type: string
-                    required: true
+                    readOnly: true
                     initialExpression:
                       language: text/fhirpath
                       expression: "%Patient.telecom.where(system='email').value"
 
           - linkId: main-health-concerns-group
             type: group
+            text: Main health related consern
             item:
               - linkId: main-health-concerns-display
                 type: display
@@ -90,6 +88,12 @@ item:
             text: Past Medical History
             helpText: Please check any past or current medical conditions that apply to you
             item:
+            - linkId: past-medical-history-voice
+              type: group
+              itemControl:
+                coding:
+                - code: group-voice
+              item:
               - linkId: row-1
                 type: group
                 itemControl:
@@ -552,10 +556,6 @@ item:
                       - valueCoding:
                           code: neber-tried
                           display: I have never tried these medications
-
-      - linkId: g2
-        type: group
-        item:
           - linkId: sexual-reproductive-history
             text: Sexual & Reproductive History
             type: group
@@ -1295,10 +1295,6 @@ item:
                             text: Duration of Use
                             # helpText: For how long have you been taking this medication
                             type: string
-
-      - linkId: g3
-        type: group
-        item:
           - linkId: family-history
             text: Family History
             helpText: Indicate any conditions diagnosed in your family (parents, siblings, grandparents)
