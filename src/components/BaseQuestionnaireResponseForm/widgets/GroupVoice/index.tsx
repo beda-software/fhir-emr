@@ -4,18 +4,18 @@ import { QuestionItems, type GroupItemProps } from 'sdc-qrf';
 
 import { Paragraph } from 'src/components/Typography';
 
+import { S } from './GroupVoice.styles';
 import { useGroupVoice } from './hooks';
-import s from './styles.module.scss';
 
 function Speaking() {
     return (
-        <span className={s.speaking} role="status" aria-label="Speaking">
-            <span className={s.bar} />
-            <span className={s.bar} />
-            <span className={s.bar} />
-            <span className={s.bar} />
-            <span className={s.bar} />
-        </span>
+        <S.Speaking role="status" aria-label="Speaking">
+            <S.Bar />
+            <S.Bar />
+            <S.Bar />
+            <S.Bar />
+            <S.Bar />
+        </S.Speaking>
     );
 }
 
@@ -24,8 +24,8 @@ export function GroupVoice(props: GroupItemProps) {
     const rootContext = props.context[0];
     const { connection, startRecording, stopRecording, text, gen, isSpeaking } = useGroupVoice(props);
     return (
-        <div style={{ margin: '0 0 32px' }} id={`group-${linkId}`}>
-            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+        <S.Root id={`group-${linkId}`}>
+            <S.Row>
                 {connection !== 'connected' ? (
                     <Button loading={connection == 'connecting'} onClick={() => startRecording()}>
                         Start filling by voice
@@ -37,13 +37,13 @@ export function GroupVoice(props: GroupItemProps) {
                     {isSpeaking ? <Speaking /> : null}
                     {text}
                 </Paragraph>
-            </div>
+            </S.Row>
             <QuestionItems
                 key={gen}
                 questionItems={item!}
                 parentPath={[...props.parentPath, linkId, 'items']}
                 context={rootContext!}
             />
-        </div>
+        </S.Root>
     );
 }
