@@ -7,7 +7,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
-import { BaseQuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/BaseQuestionnaireResponseForm';
+import { BaseQuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components';
 import { formatError, RenderRemoteData, WithId } from '@beda.software/fhir-react';
 import { RemoteDataResult } from '@beda.software/remote-data';
 

@@ -82,6 +82,7 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
                             onChange(updatedInput);
                         }}
                         size="middle"
+                        data-testid="add-another-answer-button"
                     >
                         <span>{text ? <Trans>Add {text}</Trans> : <Trans>Add another answer</Trans>}</span>
                     </Button>

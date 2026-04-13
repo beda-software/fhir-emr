@@ -5,9 +5,11 @@ import { QuestionnaireResponseFormData } from 'sdc-qrf';
 import { getReference, RenderRemoteData, WithId } from '@beda.software/fhir-react';
 
 import { QuestionnairesWizard } from 'src/components';
+import { FormWrapper, GroupItemComponent } from 'src/components/FormWrapper';
 import { Spinner } from 'src/components/Spinner';
 import { usePatientDocumentWizard } from 'src/containers/PatientDetails/PatientDocumentWizard/hooks';
 import { QuestionnaireResponseDraftService, QuestionnaireResponseFormSaveResponse } from 'src/hooks';
+import { service } from 'src/services';
 
 import { S } from './styles';
 
@@ -59,6 +61,9 @@ export function PatientDocumentWizard(props: PatientDocumentProps) {
                         ]}
                         onSuccess={onSuccess}
                         disableWaitStepsNavigation={true}
+                        fhirService={service}
+                        groupItemComponent={GroupItemComponent}
+                        FormWrapper={FormWrapper}
                     />
                 )}
             </RenderRemoteData>

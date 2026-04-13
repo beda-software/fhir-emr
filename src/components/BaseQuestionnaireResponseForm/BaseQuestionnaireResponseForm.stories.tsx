@@ -7,7 +7,7 @@ import { fromFirstClassExtension, QuestionnaireResponseFormData } from 'sdc-qrf'
 import {
     BaseQuestionnaireResponseForm,
     BaseQuestionnaireResponseFormProps,
-} from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/BaseQuestionnaireResponseForm';
+} from '@beda.software/fhir-questionnaire/components';
 
 import { service } from 'src/services';
 

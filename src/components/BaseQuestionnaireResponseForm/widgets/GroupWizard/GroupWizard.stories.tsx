@@ -4,7 +4,7 @@ import { Meta, StoryObj } from '@storybook/react';
 import { QuestionnaireResponse } from 'fhir/r4b';
 import { FCEQuestionnaire, fromFirstClassExtension } from 'sdc-qrf';
 
-import { BaseQuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/BaseQuestionnaireResponseForm';
+import { BaseQuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components';
 
 import { Modal } from 'src/components';
 import { FormWrapper, GroupItemComponent } from 'src/components/FormWrapper';

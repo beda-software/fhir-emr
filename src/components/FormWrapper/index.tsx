@@ -3,13 +3,13 @@ import { QuestionnaireResponse } from 'fhir/r4b';
 import { ReactElement, useState } from 'react';
 import { GroupItemProps } from 'sdc-qrf';
 
-import { FormWrapperProps } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/BaseQuestionnaireResponseForm';
+import { FormWrapperProps } from '@beda.software/fhir-questionnaire/components';
 import { RemoteDataResult } from '@beda.software/remote-data';
 
-import { isGroupWizard } from 'src/components';
 import { BaseQuestionnaireResponseFormPropsContext } from 'src/components/BaseQuestionnaireResponseForm/context';
 import { groupComponent } from 'src/components/BaseQuestionnaireResponseForm/controls';
 import { FormFooter } from 'src/components/BaseQuestionnaireResponseForm/FormFooter';
+import { isGroupWizard } from 'src/components/BaseQuestionnaireResponseForm/utils';
 
 import s from './FormWrapper.module.scss';
 
@@ -41,7 +41,6 @@ export function FormWrapper(
                 value={{
                     ...props,
                     submitting: isSubmitting,
-                    onCancel: onCancel,
                 }}
             >
                 <div className={classNames(s.content, 'form__content')}>{items}</div>
@@ -68,7 +67,7 @@ export function ReadonlyFormWrapper(
         saveButtonTitle?: string | ReactElement;
     },
 ) {
-    const { handleSubmit, items, onCancel } = props;
+    const { handleSubmit, items } = props;
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     return (
@@ -85,7 +84,6 @@ export function ReadonlyFormWrapper(
                 value={{
                     ...props,
                     submitting: isSubmitting,
-                    onCancel: onCancel,
                 }}
             >
                 <div className={classNames(s.content, 'form__content')}>{items}</div>

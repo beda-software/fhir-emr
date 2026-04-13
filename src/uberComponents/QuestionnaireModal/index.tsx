@@ -7,7 +7,7 @@ import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
 import {
     inMemorySaveQuestionnaireResponseService,
     persistSaveQuestionnaireReponseServiceFactory,
-} from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/questionnaire-response-form-data';
+} from '@beda.software/fhir-questionnaire/components';
 import { parseFHIRReference } from '@beda.software/fhir-react';
 
 import { FormWrapper } from 'src/components/FormWrapper';

@@ -1,7 +1,7 @@
 import {
     QuestionnaireResponseForm as FHIRQuestionnaireResponseForm,
     Props,
-} from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm';
+} from '@beda.software/fhir-questionnaire/components';
 
 import {
     groupControlComponents,

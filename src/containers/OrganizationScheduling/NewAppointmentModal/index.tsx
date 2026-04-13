@@ -2,7 +2,7 @@ import { t } from '@lingui/macro';
 import { HealthcareService, Practitioner, PractitionerRole } from 'fhir/r4b';
 
 import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
-import { inMemorySaveQuestionnaireResponseService } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/questionnaire-response-form-data';
+import { inMemorySaveQuestionnaireResponseService } from '@beda.software/fhir-questionnaire/components';
 import { formatFHIRDateTime } from '@beda.software/fhir-react';
 
 import { Modal } from 'src/components/Modal';

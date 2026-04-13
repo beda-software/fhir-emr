@@ -5,7 +5,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { GroupItemProps, QuestionItemProps, toFirstClassExtension } from 'sdc-qrf';
 
-import { BaseQuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/BaseQuestionnaireResponseForm';
+import { BaseQuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components';
 import { RenderRemoteData } from '@beda.software/fhir-react';
 import { RemoteData, isLoading } from '@beda.software/remote-data';
 

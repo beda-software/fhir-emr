@@ -81,9 +81,12 @@ export function QuestionnaireResponseFormDraft(props: QuestionnaireResponseFormD
                             props.onSuccess && props.onSuccess(resource);
                         }}
                         onEdit={handleEdit}
-                        FormWrapper={(props) => <FormWrapper {...props} onSaveDraft={saveDraft} />}
-                        // onQRFUpdate={updateDraft}
-                        // onSaveDraft={props.qrDraftServiceType === 'server' ? saveDraft : undefined}
+                        FormWrapper={(formWrapperProps) => (
+                            <FormWrapper
+                                {...formWrapperProps}
+                                onSaveDraft={props.qrDraftServiceType === 'server' ? saveDraft : undefined}
+                            />
+                        )}
                     />
                 </>
             )}

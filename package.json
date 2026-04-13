@@ -20,15 +20,14 @@
         "prepare": "husky install && yarn compile && yarn build:lib"
     },
     "workspaces": [
-        "contrib/*",
-        "packages/@beda.software/fhir-questionnaire"
+        "contrib/*"
     ],
     "dependencies": {
         "@ant-design/colors": "^7.0.0",
         "@ant-design/icons": "^5.1.4",
         "@beda.software/emr-config": "*",
-        "@beda.software/fhir-react": "^1.11.1",
-        "@beda.software/fhir-questionnaire": "2.0.0-alpha.0",
+        "@beda.software/fhir-questionnaire": "https://github.com/beda-software/fhir-questionnaire.git#sdc-service-provider",
+        "@beda.software/fhir-react": "^1.11.0",
         "@beda.software/remote-data": "^1.1.4",
         "@fullcalendar/core": "^6.1.15",
         "@fullcalendar/daygrid": "^6.1.8",
@@ -75,10 +74,12 @@
         "yup": "^1.7.0"
     },
     "resolutions": {
+        "axios": "1.8.4",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "sdc-qrf": "^1.1.0-alpha.3",
         "@types/react": "^18.0.37",
+        "@beda.software/fhir-react": "1.11.0",
         "react-hook-form": "^7.53.2",
         "rc-picker": "^4.11.3",
         "yup": "^1.7.0"
@@ -89,6 +90,7 @@
         "@chromatic-com/storybook": "^3.2.2",
         "@lingui/cli": "^4.3.0",
         "@lingui/macro": "^4.3.0",
+        "@lingui/swc-plugin": "^5.11.0",
         "@lingui/vite-plugin": "^4.3.0",
         "@storybook/addon-essentials": "^8.4.1",
         "@storybook/addon-interactions": "^8.4.1",
@@ -139,7 +141,7 @@
         "vite": "^4.1.5",
         "vite-plugin-externalize-deps": "^0.8.0",
         "vite-plugin-turbosnap": "^1.0.2",
-        "vitest": "^0.33.0"
+        "vitest": "^0.34.6"
     },
     "main": "./dist/index.js",
     "module": "./dist/index.js",
