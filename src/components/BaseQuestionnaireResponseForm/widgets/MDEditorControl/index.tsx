@@ -2,11 +2,10 @@ import { Form } from 'antd';
 import { useContext } from 'react';
 import { QuestionItemProps } from 'sdc-qrf';
 
+import { MarkDownEditor, MDEditorFeatures } from '@beda.software/web-item-controls/controls';
+
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { MarkdownProcessorContext } from 'src/contexts/markdown-editor-context';
-
-import { MarkDownEditor } from './MarkDownEditor';
-import { MDEditorFeatures } from './MarkDownEditor/types';
 
 export function MDEditorControl({ parentPath, questionItem, context }: QuestionItemProps) {
     const { linkId } = questionItem;
