@@ -874,7 +874,7 @@
 
 "@beda.software/web-item-controls@https://github.com/beda-software/web-item-controls.git":
   version "0.1.0"
-  resolved "https://github.com/beda-software/web-item-controls.git#da7bd2f62bfeb8848b0fa62da84913d43f7f2c14"
+  resolved "https://github.com/beda-software/web-item-controls.git#30fbd0aac1531f1f81c0c69d72991ffcf1d9d06e"
   dependencies:
     "@ant-design/colors" "^7.0.0"
     "@ant-design/icons" "^5.1.4"

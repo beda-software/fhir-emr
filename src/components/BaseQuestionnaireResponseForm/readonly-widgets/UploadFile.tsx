@@ -2,9 +2,10 @@ import { Upload } from 'antd';
 import classNames from 'classnames';
 import { QuestionItemProps } from 'sdc-qrf';
 
+import { useUploader } from '@beda.software/web-item-controls/controls';
+
 import s from './ReadonlyWidgets.module.scss';
 import { S } from './ReadonlyWidgets.styles';
-import { useUploader } from '../widgets/UploadFileControl/hooks';
 
 export function UploadFile(props: QuestionItemProps) {
     const { questionItem } = props;

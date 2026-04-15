@@ -3,9 +3,9 @@ import { I18nProvider } from '@lingui/react';
 import { Meta, StoryObj } from '@storybook/react';
 import { ItemContext } from 'sdc-qrf';
 
-import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
+import { UploadFileControl } from '@beda.software/web-item-controls/controls';
 
-import { UploadFileControl } from './index';
+import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 
 const meta: Meta<typeof UploadFileControl> = {
     title: 'Questionnaire / questions / UploadFileControl',

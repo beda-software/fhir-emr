@@ -1,11 +1,12 @@
 import classNames from 'classnames';
 import { QuestionItemProps } from 'sdc-qrf';
 
+import { useUploader } from '@beda.software/web-item-controls/controls';
+
 import { AudioPlayerRecord } from 'src/components/AudioRecorder';
 
 import s from './ReadonlyWidgets.module.scss';
 import { S } from './ReadonlyWidgets.styles';
-import { useUploader } from '../widgets/UploadFileControl/hooks';
 
 export function AudioAttachment(props: QuestionItemProps) {
     const { questionItem } = props;

@@ -2,11 +2,12 @@ import classNames from 'classnames';
 import _ from 'lodash';
 import { GroupItemProps } from 'sdc-qrf';
 
+import { useTimeRangePickerControl } from '@beda.software/web-item-controls/controls';
+
 import { getDisplay } from 'src/utils/questionnaire';
 
 import s from './ReadonlyWidgets.module.scss';
 import { S } from './ReadonlyWidgets.styles';
-import { useTimeRangePickerControl } from '../widgets/TimeRangePickerControl/hooks';
 
 export function TimeRangePickerControl(props: GroupItemProps) {
     const { questionItem } = props;

@@ -1,11 +1,12 @@
 import classNames from 'classnames';
 import { GroupItemProps, QuestionItems } from 'sdc-qrf';
 
+import { GridGroup } from '@beda.software/web-item-controls/controls';
+
 import { ItemHelpText } from 'src/components/BaseQuestionnaireResponseForm/ItemHelpText';
 import { Title } from 'src/components/Typography';
 
 import { GroupContext, GroupContextProps } from './context';
-import { GridGroup } from './GridGroup';
 import s from './group.module.scss';
 import { GroupCard } from './GroupCard';
 import { GTable } from './GTable';
