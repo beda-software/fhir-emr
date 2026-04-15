@@ -2,9 +2,9 @@ import { Meta, StoryObj } from '@storybook/react';
 import { expect, within, userEvent } from '@storybook/test';
 import { ItemContext } from 'sdc-qrf';
 
-import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
+import { QuestionChoice } from '@beda.software/web-item-controls/controls';
 
-import { QuestionChoice } from './index';
+import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 
 const meta: Meta<typeof QuestionChoice> = {
     title: 'Questionnaire / questions / choice',
