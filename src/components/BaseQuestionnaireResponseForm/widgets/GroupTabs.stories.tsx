@@ -5,26 +5,25 @@ import { QuestionnaireResponse } from 'fhir/r4b';
 import { FCEQuestionnaire, fromFirstClassExtension } from 'sdc-qrf';
 
 import { BaseQuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components';
+import { GroupTabs } from '@beda.software/web-item-controls/controls';
 
-import { Modal } from 'src/components';
 import { FormWrapper, GroupItemComponent } from 'src/components/FormWrapper';
 import { service } from 'src/services';
 
-import { GroupWizard } from './index';
-import { groupControlComponents, itemComponents, itemControlComponents } from '../../controls';
+import { groupControlComponents, itemComponents, itemControlComponents } from '../controls';
 
 i18n.activate('en');
 
-const meta: Meta<typeof GroupWizard> = {
-    title: 'Questionnaire / GroupWizard',
-    component: GroupWizard,
+const meta: Meta<typeof GroupTabs> = {
+    title: 'Questionnaire / GroupTabs',
+    component: GroupTabs,
     parameters: {
         layout: 'padded',
     },
 };
 
 export default meta;
-type Story = StoryObj<typeof GroupWizard>;
+type Story = StoryObj<typeof GroupTabs>;
 
 export const Default: Story = {
     render: () => (
@@ -50,128 +49,14 @@ export const Default: Story = {
     ),
 };
 
-export const WithTooltip: Story = {
-    render: () => (
-        <I18nProvider i18n={i18n}>
-            <BaseQuestionnaireResponseForm
-                formData={{
-                    context: {
-                        fceQuestionnaire: getQuestionnaire('wizard-with-tooltips'),
-                        questionnaire: fromFirstClassExtension(getQuestionnaire('wizard-with-tooltips')),
-                        launchContextParameters: [],
-                        questionnaireResponse,
-                    },
-                    formValues,
-                }}
-                widgetsByQuestionType={itemComponents}
-                widgetsByQuestionItemControl={itemControlComponents}
-                widgetsByGroupQuestionItemControl={groupControlComponents}
-                fhirService={service}
-                groupItemComponent={GroupItemComponent}
-                FormWrapper={(props) => (
-                    <FormWrapper
-                        {...props}
-                        saveButtonTitle={'Save & complete'}
-                        onCancel={() => console.log('onCancel')}
-                    />
-                )}
-            />
-        </I18nProvider>
-    ),
-};
-
-export const inModal: Story = {
-    render: () => (
-        <I18nProvider i18n={i18n}>
-            <Modal open={true} title={'Wizard in modal'} footer={null}>
-                <BaseQuestionnaireResponseForm
-                    formData={{
-                        context: {
-                            fceQuestionnaire: getQuestionnaire('wizard-with-tooltips'),
-                            questionnaire: fromFirstClassExtension(getQuestionnaire('wizard-with-tooltips')),
-                            launchContextParameters: [],
-                            questionnaireResponse,
-                        },
-                        formValues,
-                    }}
-                    widgetsByQuestionType={itemComponents}
-                    widgetsByQuestionItemControl={itemControlComponents}
-                    widgetsByGroupQuestionItemControl={groupControlComponents}
-                    fhirService={service}
-                    groupItemComponent={GroupItemComponent}
-                    FormWrapper={FormWrapper}
-                />
-            </Modal>
-        </I18nProvider>
-    ),
-};
-
-export const inModalVertical: Story = {
-    render: () => (
-        <I18nProvider i18n={i18n}>
-            <Modal open={true} title={'Wizard in modal'} footer={null} width={800}>
-                <BaseQuestionnaireResponseForm
-                    formData={{
-                        context: {
-                            fceQuestionnaire: getQuestionnaire('wizard-vertical'),
-                            questionnaire: fromFirstClassExtension(getQuestionnaire('wizard-vertical')),
-                            launchContextParameters: [],
-                            questionnaireResponse,
-                        },
-                        formValues,
-                    }}
-                    widgetsByQuestionType={itemComponents}
-                    widgetsByQuestionItemControl={itemControlComponents}
-                    widgetsByGroupQuestionItemControl={groupControlComponents}
-                    fhirService={service}
-                    groupItemComponent={GroupItemComponent}
-                    FormWrapper={FormWrapper}
-                />
-            </Modal>
-        </I18nProvider>
-    ),
-};
-
-export const Vertical: Story = {
-    render: () => (
-        <I18nProvider i18n={i18n}>
-            <BaseQuestionnaireResponseForm
-                formData={{
-                    context: {
-                        fceQuestionnaire: getQuestionnaire('wizard-vertical'),
-                        questionnaire: fromFirstClassExtension(getQuestionnaire('wizard-vertical')),
-                        launchContextParameters: [],
-                        questionnaireResponse,
-                    },
-                    formValues,
-                }}
-                widgetsByQuestionType={itemComponents}
-                widgetsByQuestionItemControl={itemControlComponents}
-                widgetsByGroupQuestionItemControl={groupControlComponents}
-                fhirService={service}
-                groupItemComponent={GroupItemComponent}
-                FormWrapper={(props) => (
-                    <FormWrapper
-                        {...props}
-                        saveButtonTitle={'Save & complete'}
-                        onCancel={() => console.log('onCancel')}
-                    />
-                )}
-            />
-        </I18nProvider>
-    ),
-};
-
-function getQuestionnaire(
-    itemControlCode: 'wizard' | 'wizard-with-tooltips' | 'wizard-vertical' = 'wizard',
-): FCEQuestionnaire {
+function getQuestionnaire(): FCEQuestionnaire {
     return {
-        assembledFrom: 'group-wizard',
+        assembledFrom: 'group-tabs',
         subjectType: ['Patient'],
         meta: {
             profile: ['https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire'],
         },
-        name: 'Group wizard',
+        name: 'Group tabs',
         item: [
             {
                 item: [
@@ -304,20 +189,6 @@ function getQuestionnaire(
                                     },
                                 ],
                             },
-                            // {
-                            //     text: 'Do you use any sleep aids (e.g., medication, herbal supplements)?',
-                            //     type: 'choice',
-                            //     linkId: 'q33',
-                            //     required: false,
-                            //     answerOption: [
-                            //         {
-                            //             valueString: 'Yes',
-                            //         },
-                            //         {
-                            //             valueString: 'No',
-                            //         },
-                            //     ],
-                            // },
                         ],
                         text: 'Sleep Patterns',
                         type: 'group',
@@ -379,14 +250,14 @@ function getQuestionnaire(
                 itemControl: {
                     coding: [
                         {
-                            code: itemControlCode,
+                            code: 'group-tabs',
                         },
                     ],
                 },
             },
         ],
         resourceType: 'Questionnaire',
-        title: 'Group wizard',
+        title: 'Group tabs',
         status: 'active',
         url: 'https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/group-wizard',
     };

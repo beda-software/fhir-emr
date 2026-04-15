@@ -2,11 +2,8 @@ import { useState } from 'react';
 import { useWatch } from 'react-hook-form';
 import { FCEQuestionnaireItem, getEnabledQuestions, GroupItemProps, QuestionItems } from 'sdc-qrf';
 
-import {
-    getGroupStats,
-    GroupStats,
-    GroupWizardBus,
-} from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupWizard';
+import { getGroupStats, GroupStats, GroupWizardBus } from '@beda.software/web-item-controls/controls';
+
 import { Text, Title } from 'src/components/Typography';
 import { Wizard, WizardItem, WizardProps } from 'src/components/Wizard';
 

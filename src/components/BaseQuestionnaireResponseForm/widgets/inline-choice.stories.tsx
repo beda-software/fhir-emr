@@ -2,9 +2,9 @@ import { Meta, StoryObj } from '@storybook/react';
 import { expect, within, userEvent, findByTestId } from '@storybook/test';
 import { FCEQuestionnaireItem, ItemContext } from 'sdc-qrf';
 
-import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
+import { InlineChoice } from '@beda.software/web-item-controls/controls';
 
-import { InlineChoice } from './index';
+import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 
 const meta: Meta<typeof InlineChoice> = {
     title: 'Questionnaire / questions / inline-choice',

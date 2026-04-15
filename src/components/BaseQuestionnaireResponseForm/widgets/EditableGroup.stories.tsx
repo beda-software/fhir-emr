@@ -10,7 +10,7 @@ import { FormWrapper, GroupItemComponent } from 'src/components/FormWrapper';
 import { service } from 'src/services';
 import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 
-import { groupControlComponents, itemComponents, itemControlComponents } from '../../controls';
+import { groupControlComponents, itemComponents, itemControlComponents } from '../controls';
 
 interface EditableGroupProps {
     readOnly: boolean;

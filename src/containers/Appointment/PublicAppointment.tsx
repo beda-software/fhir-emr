@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react';
 
 import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
 import { uuid4 } from '@beda.software/fhir-react';
+import { DateTimeSlotPicker } from '@beda.software/web-item-controls/controls';
 
 import { PageContainer } from 'src/components/BaseLayout/PageContainer';
 import { itemControlComponents } from 'src/components/BaseQuestionnaireResponseForm/controls';
-import { DateTimeSlotPicker } from 'src/components/BaseQuestionnaireResponseForm/widgets';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
 import { axiosInstance } from 'src/services';
