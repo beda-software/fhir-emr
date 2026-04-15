@@ -8,7 +8,6 @@ export * from './BaseQuestionnaireResponseForm/utils';
 export * from './BaseQuestionnaireResponseForm/context';
 export * from './BaseQuestionnaireResponseForm/controls';
 export * from './BaseQuestionnaireResponseForm/ItemHelpText';
-export * from './BaseQuestionnaireResponseForm/widgets';
 
 export * from './Breadcrumbs';
 export * from './Calendar';
