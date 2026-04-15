@@ -3,12 +3,11 @@ import { Resource } from 'fhir/r4b';
 import _ from 'lodash';
 
 import { formatError, RenderRemoteData } from '@beda.software/fhir-react';
+import { AnswerReferenceProps, useAnswerReference } from '@beda.software/web-item-controls/controls';
 
 import { Spinner } from 'src/components/Spinner';
 import { Text } from 'src/components/Typography';
 import { getDisplay } from 'src/utils';
-
-import { AnswerReferenceProps, useAnswerReference } from '../reference';
 
 function InlineReferenceUnsafe<R extends Resource = any, IR extends Resource = any>(
     props: AnswerReferenceProps<R, IR>,

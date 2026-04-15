@@ -1,11 +1,12 @@
 import classNames from 'classnames';
 import { QuestionItemProps } from 'sdc-qrf';
 
+import { TextWithLink } from '@beda.software/web-item-controls/controls';
+
 import { MarkdownRender } from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/MarkdownRender';
 
 import s from './ReadonlyWidgets.module.scss';
 import { S } from './ReadonlyWidgets.styles';
-import { TextWithLink } from '../widgets/display';
 
 export function Display({ questionItem }: QuestionItemProps) {
     const { text, hidden, itemControl } = questionItem;

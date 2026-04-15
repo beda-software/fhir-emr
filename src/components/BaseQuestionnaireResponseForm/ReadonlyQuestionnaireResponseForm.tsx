@@ -9,6 +9,8 @@ import {
     QuestionnaireResponseFormProvider,
 } from 'sdc-qrf';
 
+import { Barcode } from '@beda.software/web-item-controls/controls';
+
 import {
     ItemControlGroupItemReadonlyWidgetsContext,
     ItemControlQuestionItemReadonlyWidgetsContext,
@@ -35,7 +37,6 @@ import { AnxietyScore, DepressionScore } from './readonly-widgets/score';
 import { QuestionText, TextWithInput } from './readonly-widgets/string';
 import { TimeRangePickerControl } from './readonly-widgets/TimeRangePickerControl';
 import { UploadFile } from './readonly-widgets/UploadFile';
-import { Barcode } from './widgets/barcode';
 
 interface Props extends Partial<QRFContextData> {
     formData: QuestionnaireResponseFormData;

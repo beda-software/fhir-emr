@@ -5,6 +5,8 @@ import {
     QuestionItemComponentMapping,
 } from 'sdc-qrf';
 
+import { Barcode } from '@beda.software/web-item-controls/controls';
+
 import { AudioAttachment } from './readonly-widgets/AudioAttachment';
 import { QuestionBoolean } from './readonly-widgets/boolean';
 import { QuestionChoice } from './readonly-widgets/choice';
@@ -20,7 +22,6 @@ import { AnxietyScore, DepressionScore } from './readonly-widgets/score';
 import { QuestionText, TextWithInput } from './readonly-widgets/string';
 import { TimeRangePickerControl } from './readonly-widgets/TimeRangePickerControl';
 import { UploadFile } from './readonly-widgets/UploadFile';
-import { Barcode } from './widgets/barcode';
 
 export const itemComponents: QuestionItemComponentMapping = {
     text: QuestionText,

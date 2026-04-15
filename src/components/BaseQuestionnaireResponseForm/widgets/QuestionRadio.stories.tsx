@@ -1,9 +1,9 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { ItemContext } from 'sdc-qrf';
 
-import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
+import { QuestionSolidRadio } from '@beda.software/web-item-controls/controls';
 
-import { QuestionSolidRadio } from './index';
+import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 
 const meta: Meta<typeof QuestionSolidRadio> = {
     title: 'Questionnaire / questions / solid-radio-button',
