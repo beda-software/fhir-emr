@@ -23,10 +23,8 @@ import { PatientDetailsTabs } from './PatientDetailsTabs';
 import { PatientDocument } from './PatientDocument';
 import { PatientDocumentDetails } from './PatientDocumentDetails';
 import { PatientDocuments } from './PatientDocuments';
-import { PatientOrders } from './PatientOrders';
 import { PatientOverview } from './PatientOverviewDynamic';
 import { PatientResources } from './PatientResources';
-import { PatientWearables } from './PatientWearables';
 import { EncounterDetails } from '../EncounterDetails';
 
 export interface PatientDetailsEmbeddedPageDefinition extends RouteItem {
@@ -210,14 +208,12 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                                     </PatientDocumentDetailsReadonlyContext.Provider>
                                                 }
                                             />
-                                            <Route path="/wearables" element={<PatientWearables patient={patient} />} />
                                             <Route
                                                 path="/resources/:type"
                                                 element={<PatientResources patient={patient} />}
                                             />
                                             <Route path="/resources" element={<PatientResources patient={patient} />} />
                                             <Route path="/apps" element={<PatientApps patient={patient} />} />
-                                            <Route path="/orders" element={<PatientOrders patient={patient} />} />
                                         </>
                                     )}
                                     {embeddedPages?.flatMap(({ routes }) => routes)}

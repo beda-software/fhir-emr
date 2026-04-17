@@ -1,3 +1,5 @@
+// TODO: Not exposed in Patient Details menu or routes as of 2026-04-17.
+// Safe to delete this folder if it remains unused long-term.
 import { DownOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Input, MenuProps, notification, Dropdown, Space } from 'antd';
