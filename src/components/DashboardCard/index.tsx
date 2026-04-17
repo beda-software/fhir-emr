@@ -2,8 +2,8 @@ import classNames from 'classnames';
 
 import { S } from './DashboardCard.styles';
 
-interface Props extends React.HTMLAttributes<HTMLDivElement> {
-    title: string;
+interface Props extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
+    title: React.ReactNode;
     icon: React.ReactNode;
     extra?: React.ReactNode;
     empty?: boolean;
