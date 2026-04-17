@@ -17,6 +17,7 @@ import { sharedAuthorizedPractitionerRoles } from 'src/sharedState';
 import { renderHumanName } from 'src/utils';
 import { matchCurrentUserRole, selectCurrentUserRoleResource, Role } from 'src/utils/role';
 
+import { HMBDiagnosticDashboard } from './HMBDiagnostic';
 import { usePatientResource } from './hooks';
 import { PatientApps } from './PatientApps';
 import { PatientDetailsTabs } from './PatientDetailsTabs';
@@ -94,7 +95,7 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                                             [Role.Admin]: () => {
                                                                 return {};
                                                             },
-                                                            [Role.Practitioner]: (practitioner) => {
+                                                            [Role.Practitioner]: () => {
                                                                 return {
                                                                     participant: (
                                                                         sharedAuthorizedPractitionerRoles.getSharedState() ||
@@ -214,6 +215,10 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                             />
                                             <Route path="/resources" element={<PatientResources patient={patient} />} />
                                             <Route path="/apps" element={<PatientApps patient={patient} />} />
+                                            <Route
+                                                path="/hmb-diagnostic"
+                                                element={<HMBDiagnosticDashboard patient={patient} />}
+                                            />
                                         </>
                                     )}
                                     {embeddedPages?.flatMap(({ routes }) => routes)}

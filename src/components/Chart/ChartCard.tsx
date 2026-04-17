@@ -9,11 +9,18 @@ import { ChartCardProps, ChartDatumBase } from './Chart.types';
 import { S } from './ChartCard.styles';
 
 export function ChartCard<TRow, TDatum extends ChartDatumBase = ChartDatumBase>(props: ChartCardProps<TRow, TDatum>) {
-    const { title, icon, rows, transform, loading, failure, ...chartProps } = props;
+    const { title, icon, iconBackground, iconColor, compactIcon, rows, transform, loading, failure, ...chartProps } =
+        props;
     const stateHeight = chartProps.height ?? 260;
 
     return (
-        <DashboardCard title={title} icon={icon ?? null}>
+        <DashboardCard
+            title={title}
+            icon={icon ?? null}
+            iconBackground={iconBackground}
+            iconColor={iconColor}
+            compactIcon={compactIcon}
+        >
             <RenderRemoteData
                 remoteData={rows}
                 renderLoading={() =>

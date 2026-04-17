@@ -1,3 +1,5 @@
+import { ChartDatumBase } from 'src/components/Chart';
+
 export interface HMBResponseRow {
     id: string;
     patient_id: string;
@@ -7,4 +9,11 @@ export interface HMBResponseRow {
     pain_score: number | null;
     impact_score: number | null;
     intensity: number | null;
+}
+
+export interface HMBChartDatum extends ChartDatumBase {
+    xLabel: string;
+    xDate: string;
+    qrId: string;
+    rawValue?: string;
 }

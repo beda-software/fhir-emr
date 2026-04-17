@@ -20,6 +20,7 @@ export function PatientDetailsTabs(props: { extraMenuItems?: RouteItem[]; isDefa
                       { label: t`Documents`, path: `/patients/${params.id}/documents` },
                       { label: t`Forms`, path: `/patients/${params.id}/forms` },
                       { label: t`Smart Apps`, path: `/patients/${params.id}/apps` },
+                      { label: t`HMB Diagnostic`, path: `/patients/${params.id}/hmb-diagnostic` },
                       { label: t`Resources`, path: `/patients/${params.id}/resources` },
                   ]
                 : []

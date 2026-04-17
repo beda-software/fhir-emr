@@ -29,9 +29,9 @@ export interface ChartMargin {
     left?: number;
 }
 
-export type ChartXAxisProps = Partial<Pick<XAxisProps, 'tickMargin' | 'minTickGap' | 'interval'>>;
+export type ChartXAxisProps = Partial<Pick<XAxisProps, 'tickMargin' | 'minTickGap' | 'interval' | 'tickFormatter'>>;
 
-export type ChartYAxisProps = Partial<Pick<YAxisProps, 'width' | 'tickMargin' | 'interval'>>;
+export type ChartYAxisProps = Partial<Pick<YAxisProps, 'width' | 'tickMargin' | 'interval' | 'tick' | 'axisLine'>>;
 
 export type ChartGridProps = Partial<
     Pick<CartesianGridProps, 'horizontal' | 'vertical' | 'stroke' | 'strokeWidth' | 'strokeDasharray'>
@@ -64,7 +64,7 @@ export type ChartLineProps = Partial<
 
 export type ChartAreaProps = Partial<
     Pick<
-        AreaProps<any, any>,
+        AreaProps<unknown, unknown>,
         'stroke' | 'strokeWidth' | 'fill' | 'fillOpacity' | 'dot' | 'activeDot' | 'type' | 'connectNulls' | 'name'
     >
 >;
@@ -97,6 +97,9 @@ export interface ChartCardProps<TRow, TDatum extends ChartDatumBase = ChartDatum
     extends Omit<ChartProps<TDatum>, 'data'> {
     title: ReactNode;
     icon?: ReactNode;
+    iconBackground?: string;
+    iconColor?: string;
+    compactIcon?: boolean;
     rows: RemoteData<TRow[]>;
     transform: (rows: TRow[]) => TDatum[];
     loading?: ReactNode;

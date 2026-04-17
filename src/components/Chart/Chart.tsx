@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { Empty } from 'antd';
 import {
     Area,
@@ -15,6 +16,21 @@ import type { MouseHandlerDataParam } from 'recharts';
 import { useTheme } from 'styled-components';
 
 import { ChartDatumBase, ChartProps } from './Chart.types';
+
+const DEFAULT_MARGIN = { top: 12, right: 16, bottom: 8, left: 12 };
+export const chartDotSpec = (stroke: string, fill: string) => ({
+    r: 5,
+    fill,
+    stroke,
+    strokeWidth: 2,
+});
+
+export const chartActiveDotSpec = (stroke: string, fill: string) => ({
+    r: 6,
+    fill,
+    stroke,
+    strokeWidth: 2,
+});
 
 export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: ChartProps<TDatum>) {
     const {
@@ -50,7 +66,7 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
         <ResponsiveContainer width="100%" height={height}>
             <ComposedChart
                 data={data}
-                margin={{ top: 12, right: 16, left: 12, bottom: 8, ...margin }}
+                margin={{ ...DEFAULT_MARGIN, ...margin }}
                 onClick={(event) => {
                     const activePayload = (
                         event as (MouseHandlerDataParam & { activePayload?: Array<{ payload?: TDatum }> }) | undefined

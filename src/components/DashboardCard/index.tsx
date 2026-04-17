@@ -5,25 +5,28 @@ import { S } from './DashboardCard.styles';
 interface Props extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
     title: React.ReactNode;
     icon: React.ReactNode;
+    iconBackground?: string;
+    iconColor?: string;
+    compactIcon?: boolean;
     extra?: React.ReactNode;
     empty?: boolean;
 }
 
-interface TableProps {
+interface TableProps<TRow> {
     title: string;
-    data: any[];
+    data: TRow[];
     total?: number;
     columns: {
         title: string;
         key: string;
-        render: (r: any) => React.ReactNode;
+        render: (r: TRow) => React.ReactNode;
         width?: string | number;
     }[];
-    getKey: (r: any) => string;
+    getKey: (r: TRow) => string;
 }
 
 export function DashboardCard(props: Props) {
-    const { title, icon, extra, children, className, empty = false } = props;
+    const { title, icon, iconBackground, iconColor, compactIcon, extra, children, className, empty = false } = props;
 
     return (
         <S.Wrapper>
@@ -34,7 +37,14 @@ export function DashboardCard(props: Props) {
             >
                 <S.Header>
                     <div>
-                        <S.Icon className={classNames({ _empty: empty })}>{icon}</S.Icon>
+                        <S.Icon
+                            className={classNames({ _empty: empty })}
+                            $background={iconBackground}
+                            $color={iconColor}
+                            $compact={compactIcon}
+                        >
+                            {icon}
+                        </S.Icon>
                         <S.Title>{title}</S.Title>
                     </div>
                     {extra && <div>{extra}</div>}
@@ -45,7 +55,7 @@ export function DashboardCard(props: Props) {
     );
 }
 
-export function DashboardCardTable(props: TableProps) {
+export function DashboardCardTable<TRow>(props: TableProps<TRow>) {
     const { title, data, columns, getKey } = props;
 
     return (
