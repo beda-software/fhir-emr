@@ -43,14 +43,8 @@ const S = {
 };
 
 type ValueFormatter = (value: number, dataKey: string) => string;
-type LabelFormatter = (label: string | number) => React.ReactNode;
 
-interface HMBTooltipProps {
-    labelFormatter?: LabelFormatter;
-    valueFormatter?: ValueFormatter;
-}
-
-export function makeHMBTooltip({ labelFormatter, valueFormatter }: HMBTooltipProps) {
+export function makeHMBTooltip(valueFormatter?: ValueFormatter) {
     return function TooltipContent({ active, label, payload }: TooltipContentProps<ValueType, string | number>) {
         if (!active || !payload?.length) {
             return null;
@@ -60,9 +54,7 @@ export function makeHMBTooltip({ labelFormatter, valueFormatter }: HMBTooltipPro
 
         return (
             <S.TooltipCard>
-                <S.TooltipTitle>
-                    {tooltipLabel ?? (labelFormatter ? labelFormatter(label ?? '') : label)}
-                </S.TooltipTitle>
+                <S.TooltipTitle>{tooltipLabel ?? label}</S.TooltipTitle>
                 {payload.map((entry) => {
                     const dataKey = String(entry.dataKey ?? '');
                     const formatted =
@@ -82,14 +74,10 @@ export function makeHMBTooltip({ labelFormatter, valueFormatter }: HMBTooltipPro
     };
 }
 
-export const flowTooltip = makeHMBTooltip({
-    valueFormatter: (value) => getFlowLabel(value),
-});
+export const flowTooltip = makeHMBTooltip((value) => getFlowLabel(value));
 
-export const painTooltip = makeHMBTooltip({
-    valueFormatter: (value, dataKey) => (dataKey === 'y' ? getSeverityLabel(value) : String(value)),
-});
+export const painTooltip = makeHMBTooltip((value, dataKey) =>
+    dataKey === 'y' ? getSeverityLabel(value) : String(value),
+);
 
-export const numericTooltip = makeHMBTooltip({
-    valueFormatter: (value) => value.toFixed(1),
-});
+export const numericTooltip = makeHMBTooltip((value) => value.toFixed(1));

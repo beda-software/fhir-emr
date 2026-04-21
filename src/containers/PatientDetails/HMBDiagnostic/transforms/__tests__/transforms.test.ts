@@ -2,8 +2,8 @@ import { i18n } from '@lingui/core';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import type { HMBResponseRow } from '../../types';
+import { toImpact } from '../index';
 import { toFlowVolume } from '../toFlowVolume';
-import { toImpact } from '../toImpact';
 import { toPainScore } from '../toPainScore';
 import { formatAuthoredDate, formatAuthoredDateTime, getChartDisplayLabel } from '../utils';
 

@@ -6,12 +6,9 @@ import { DashboardCard } from 'src/components/DashboardCard';
 
 import { Chart } from './Chart';
 import { ChartCardProps, ChartDatumBase } from './Chart.types';
-import { S } from './ChartCard.styles';
 
 export function ChartCard<TRow, TDatum extends ChartDatumBase = ChartDatumBase>(props: ChartCardProps<TRow, TDatum>) {
-    const { title, icon, iconBackground, iconColor, compactIcon, rows, transform, loading, failure, ...chartProps } =
-        props;
-    const stateHeight = chartProps.height ?? 260;
+    const { title, icon, iconBackground, iconColor, compactIcon, rows, transform, ...chartProps } = props;
 
     return (
         <DashboardCard
@@ -23,24 +20,8 @@ export function ChartCard<TRow, TDatum extends ChartDatumBase = ChartDatumBase>(
         >
             <RenderRemoteData
                 remoteData={rows}
-                renderLoading={() =>
-                    loading ? (
-                        <>{loading}</>
-                    ) : (
-                        <S.StateBox $minHeight={stateHeight}>
-                            <Spin />
-                        </S.StateBox>
-                    )
-                }
-                renderFailure={(error) =>
-                    failure ? (
-                        <>{failure(error)}</>
-                    ) : (
-                        <S.StateBox $minHeight={stateHeight}>
-                            <Alert type="error" message={formatError(error)} />
-                        </S.StateBox>
-                    )
-                }
+                renderLoading={() => <Spin style={{ display: 'block', padding: 24 }} />}
+                renderFailure={(error) => <Alert type="error" message={formatError(error)} style={{ margin: 24 }} />}
             >
                 {(data) => <Chart<TDatum> data={transform(data)} {...chartProps} />}
             </RenderRemoteData>

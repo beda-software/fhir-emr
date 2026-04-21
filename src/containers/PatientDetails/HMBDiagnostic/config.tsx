@@ -31,8 +31,9 @@ const LEGEND_STYLE = { paddingTop: 24 };
 const COMMON: Partial<HMBChartConfig> = {
     height: CHART_HEIGHT,
     margin: { top: 20, right: 20, bottom: 8, left: 12 },
-    xAxisProps: { minTickGap: 12, interval: 'preserveStartEnd' },
-    gridProps: { horizontal: false },
+    xAxisProps: { minTickGap: 12, interval: 'preserveStartEnd', tickFormatter: getChartDisplayLabel },
+    gridProps: { horizontal: false, strokeDasharray: '4 4' },
+    yAxisProps: { width: CATEGORY_AXIS_WIDTH, tickMargin: 16 },
 };
 
 export const getHMBCharts = (theme: DefaultTheme): HMBChartConfig[] => {
@@ -44,8 +45,6 @@ export const getHMBCharts = (theme: DefaultTheme): HMBChartConfig[] => {
     const iconColor = theme.primaryPalette.bcp_6;
 
     const iconStyle = { iconBackground, iconColor, compactIcon: true };
-    const hmbXAxisProps = { ...COMMON.xAxisProps, tickFormatter: getChartDisplayLabel };
-    const categoryYAxis = { width: CATEGORY_AXIS_WIDTH, tickMargin: 16 };
     const areaSpec = {
         stroke: areaStroke,
         fill: areaStroke,
@@ -68,9 +67,6 @@ export const getHMBCharts = (theme: DefaultTheme): HMBChartConfig[] => {
             yTickFormatter: flowYTickFormatter,
             barProps: { fill: lavender, radius: [4, 4, 0, 0], maxBarSize: 40, opacity: 0.4, name: 'Flow Volume' },
             tooltipProps: { content: flowTooltip },
-            xAxisProps: hmbXAxisProps,
-            gridProps: { ...COMMON.gridProps, strokeDasharray: '4 4' },
-            yAxisProps: categoryYAxis,
         },
         {
             ...COMMON,
@@ -95,9 +91,6 @@ export const getHMBCharts = (theme: DefaultTheme): HMBChartConfig[] => {
             },
             legendProps: { align: 'center', verticalAlign: 'bottom', iconSize: 12, wrapperStyle: LEGEND_STYLE },
             tooltipProps: { content: painTooltip },
-            xAxisProps: hmbXAxisProps,
-            gridProps: { ...COMMON.gridProps, strokeDasharray: '4 4' },
-            yAxisProps: categoryYAxis,
             yLineAxisProps: { width: 28, tickMargin: 8 },
         },
         {
@@ -111,9 +104,6 @@ export const getHMBCharts = (theme: DefaultTheme): HMBChartConfig[] => {
             yTicks: NUMERIC_TICKS,
             areaProps: { ...areaSpec, name: 'Impact Score' },
             tooltipProps: { content: numericTooltip },
-            xAxisProps: hmbXAxisProps,
-            gridProps: { ...COMMON.gridProps, strokeDasharray: '4 4' },
-            yAxisProps: categoryYAxis,
         },
         {
             ...COMMON,
@@ -126,9 +116,6 @@ export const getHMBCharts = (theme: DefaultTheme): HMBChartConfig[] => {
             yTicks: NUMERIC_TICKS,
             areaProps: { ...areaSpec, name: 'Intensity' },
             tooltipProps: { content: numericTooltip },
-            xAxisProps: hmbXAxisProps,
-            gridProps: { ...COMMON.gridProps, strokeDasharray: '4 4' },
-            yAxisProps: categoryYAxis,
         },
     ];
 };

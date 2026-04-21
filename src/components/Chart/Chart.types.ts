@@ -72,7 +72,7 @@ export type ChartAreaProps = Partial<
 export interface ChartProps<TDatum extends ChartDatumBase = ChartDatumBase> {
     variant: ChartVariant;
     data: TDatum[];
-    yDomain: AxisDomain;
+    yDomain?: AxisDomain;
     yTicks?: number[];
     yTickFormatter?: (n: number) => string;
     yLineDomain?: AxisDomain;
@@ -102,6 +102,4 @@ export interface ChartCardProps<TRow, TDatum extends ChartDatumBase = ChartDatum
     compactIcon?: boolean;
     rows: RemoteData<TRow[]>;
     transform: (rows: TRow[]) => TDatum[];
-    loading?: ReactNode;
-    failure?: (error: unknown) => ReactNode;
 }

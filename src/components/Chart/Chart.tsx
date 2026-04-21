@@ -36,7 +36,7 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
     const {
         variant,
         data,
-        yDomain,
+        yDomain = ['auto', 'auto'],
         yTicks,
         yTickFormatter,
         yLineDomain,
