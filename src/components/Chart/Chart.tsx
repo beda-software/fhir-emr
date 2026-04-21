@@ -12,7 +12,6 @@ import {
     XAxis,
     YAxis,
 } from 'recharts';
-import type { MouseHandlerDataParam } from 'recharts';
 import { useTheme } from 'styled-components';
 
 import { ChartDatumBase, ChartProps } from './Chart.types';
@@ -67,12 +66,12 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
             <ComposedChart
                 data={data}
                 margin={{ ...DEFAULT_MARGIN, ...margin }}
-                onClick={(event) => {
-                    const activePayload = (
-                        event as (MouseHandlerDataParam & { activePayload?: Array<{ payload?: TDatum }> }) | undefined
-                    )?.activePayload;
-                    const datum = activePayload?.[0]?.payload;
-                    if (datum && onPointClick) {
+                onClick={(state) => {
+                    if (!onPointClick || state.activeTooltipIndex == null) {
+                        return;
+                    }
+                    const datum = data[state.activeTooltipIndex as number];
+                    if (datum) {
                         onPointClick(datum);
                     }
                 }}
