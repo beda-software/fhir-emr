@@ -54,7 +54,6 @@ export const getHMBCharts = (theme: DefaultTheme): HMBChartConfig[] => {
     return [
         {
             ...COMMON,
-            compactIcon: true,
             title: t`Flow Volume`,
             icon: <BarChartOutlined />,
             variant: 'bar',
@@ -67,7 +66,6 @@ export const getHMBCharts = (theme: DefaultTheme): HMBChartConfig[] => {
         },
         {
             ...COMMON,
-            compactIcon: true,
             title: t`Period Pain Score`,
             icon: <HeartOutlined />,
             variant: 'bar+line',
@@ -92,7 +90,6 @@ export const getHMBCharts = (theme: DefaultTheme): HMBChartConfig[] => {
         },
         {
             ...COMMON,
-            compactIcon: true,
             title: t`Impact of Period on Daily Activities`,
             icon: <CalendarOutlined />,
             variant: 'area',
@@ -104,7 +101,6 @@ export const getHMBCharts = (theme: DefaultTheme): HMBChartConfig[] => {
         },
         {
             ...COMMON,
-            compactIcon: true,
             title: t`Intensity of Menstrual Bleeding`,
             icon: <AreaChartOutlined />,
             variant: 'area',
