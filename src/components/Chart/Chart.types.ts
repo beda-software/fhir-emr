@@ -97,8 +97,6 @@ export interface ChartCardProps<TRow, TDatum extends ChartDatumBase = ChartDatum
     extends Omit<ChartProps<TDatum>, 'data'> {
     title: ReactNode;
     icon?: ReactNode;
-    iconBackground?: string;
-    iconColor?: string;
     compactIcon?: boolean;
     rows: RemoteData<TRow[]>;
     transform: (rows: TRow[]) => TDatum[];

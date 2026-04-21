@@ -8,16 +8,10 @@ import { Chart } from './Chart';
 import { ChartCardProps, ChartDatumBase } from './Chart.types';
 
 export function ChartCard<TRow, TDatum extends ChartDatumBase = ChartDatumBase>(props: ChartCardProps<TRow, TDatum>) {
-    const { title, icon, iconBackground, iconColor, compactIcon, rows, transform, ...chartProps } = props;
+    const { title, icon, compactIcon, rows, transform, ...chartProps } = props;
 
     return (
-        <DashboardCard
-            title={title}
-            icon={icon ?? null}
-            iconBackground={iconBackground}
-            iconColor={iconColor}
-            compactIcon={compactIcon}
-        >
+        <DashboardCard title={title} icon={icon ?? null} compactIcon={compactIcon}>
             <RenderRemoteData
                 remoteData={rows}
                 renderLoading={() => <Spin style={{ display: 'block', padding: 24 }} />}

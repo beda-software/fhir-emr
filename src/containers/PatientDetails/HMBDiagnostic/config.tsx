@@ -41,10 +41,7 @@ export const getHMBCharts = (theme: DefaultTheme): HMBChartConfig[] => {
     const areaStroke = theme.primaryPalette.bcp_5;
     const painLine = theme.success;
     const gray_1 = theme.neutralPalette.gray_1;
-    const iconBackground = theme.primaryPalette.bcp_2;
-    const iconColor = theme.primaryPalette.bcp_6;
 
-    const iconStyle = { iconBackground, iconColor, compactIcon: true };
     const areaSpec = {
         stroke: areaStroke,
         fill: areaStroke,
@@ -57,7 +54,7 @@ export const getHMBCharts = (theme: DefaultTheme): HMBChartConfig[] => {
     return [
         {
             ...COMMON,
-            ...iconStyle,
+            compactIcon: true,
             title: t`Flow Volume`,
             icon: <BarChartOutlined />,
             variant: 'bar',
@@ -70,7 +67,7 @@ export const getHMBCharts = (theme: DefaultTheme): HMBChartConfig[] => {
         },
         {
             ...COMMON,
-            ...iconStyle,
+            compactIcon: true,
             title: t`Period Pain Score`,
             icon: <HeartOutlined />,
             variant: 'bar+line',
@@ -95,7 +92,7 @@ export const getHMBCharts = (theme: DefaultTheme): HMBChartConfig[] => {
         },
         {
             ...COMMON,
-            ...iconStyle,
+            compactIcon: true,
             title: t`Impact of Period on Daily Activities`,
             icon: <CalendarOutlined />,
             variant: 'area',
@@ -107,7 +104,7 @@ export const getHMBCharts = (theme: DefaultTheme): HMBChartConfig[] => {
         },
         {
             ...COMMON,
-            ...iconStyle,
+            compactIcon: true,
             title: t`Intensity of Menstrual Bleeding`,
             icon: <AreaChartOutlined />,
             variant: 'area',

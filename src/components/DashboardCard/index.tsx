@@ -5,8 +5,6 @@ import { S } from './DashboardCard.styles';
 interface Props extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
     title: React.ReactNode;
     icon: React.ReactNode;
-    iconBackground?: string;
-    iconColor?: string;
     compactIcon?: boolean;
     extra?: React.ReactNode;
     empty?: boolean;
@@ -26,7 +24,7 @@ interface TableProps<TRow> {
 }
 
 export function DashboardCard(props: Props) {
-    const { title, icon, iconBackground, iconColor, compactIcon, extra, children, className, empty = false } = props;
+    const { title, icon, compactIcon, extra, children, className, empty = false } = props;
 
     return (
         <S.Wrapper>
@@ -37,12 +35,7 @@ export function DashboardCard(props: Props) {
             >
                 <S.Header>
                     <div>
-                        <S.Icon
-                            className={classNames({ _empty: empty })}
-                            $background={iconBackground}
-                            $color={iconColor}
-                            $compact={compactIcon}
-                        >
+                        <S.Icon className={classNames({ _empty: empty })} $compact={compactIcon}>
                             {icon}
                         </S.Icon>
                         <S.Title>{title}</S.Title>
