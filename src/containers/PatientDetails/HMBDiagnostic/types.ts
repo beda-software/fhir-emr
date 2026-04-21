@@ -15,5 +15,4 @@ export interface HMBChartDatum extends ChartDatumBase {
     xLabel: string;
     xDate: string;
     qrId: string;
-    rawValue?: string;
 }

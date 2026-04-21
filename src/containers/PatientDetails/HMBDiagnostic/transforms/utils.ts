@@ -30,19 +30,15 @@ export function getChartDisplayLabel(value: string | number): string {
     return String(value).split(HMB_X_VALUE_SEPARATOR)[0] ?? String(value);
 }
 
-function getAuthoredDayKey(iso: string): string {
-    return formatAuthoredDate(iso);
-}
-
 export function toChartMeta(rows: HMBResponseRow[]): Array<Pick<HMBChartDatum, 'x' | 'xLabel' | 'xDate' | 'qrId'>> {
     const responsesByDay = rows.reduce<Map<string, number>>((acc, row) => {
-        const dayKey = getAuthoredDayKey(row.authored);
+        const dayKey = formatAuthoredDate(row.authored);
         acc.set(dayKey, (acc.get(dayKey) ?? 0) + 1);
         return acc;
     }, new Map());
 
     return rows.map((row) => {
-        const hasSameDayResponses = (responsesByDay.get(getAuthoredDayKey(row.authored)) ?? 0) > 1;
+        const hasSameDayResponses = (responsesByDay.get(formatAuthoredDate(row.authored)) ?? 0) > 1;
         const xLabel = hasSameDayResponses ? formatAuthoredDateTime(row.authored) : formatAuthoredDate(row.authored);
 
         return {
@@ -70,13 +66,29 @@ export interface OrderedCategory<Key extends string> {
     label: string;
 }
 
-export function categoricalOrder<Key extends string>(categories: readonly OrderedCategory<Key>[]) {
-    const byKey = new Map(categories.map((c, i) => [c.key, i]));
+export interface CategoricalAxis<Key extends string> {
+    toIndex: (key: Key | null | undefined) => number;
+    labelAt: (index: number) => string;
+    chartProps: {
+        yDomain: [number, number];
+        yTicks: number[];
+        yTickFormatter: (index: number) => string;
+    };
+}
+
+export function categoricalAxis<Key extends string>(categories: readonly OrderedCategory<Key>[]): CategoricalAxis<Key> {
+    const byKey = new Map(categories.map((c, i) => [c.key, i] as const));
     const labels = categories.map((c) => c.label);
+    const ticks = categories.map((_, i) => i);
+    const labelAt = (index: number) => labels[index] ?? '';
 
     return {
-        toIndex: (key: Key | null | undefined): number => (key != null && byKey.has(key) ? byKey.get(key)! : NaN),
-        labelAt: (index: number): string => labels[index] ?? '',
-        ticks: categories.map((_, i) => i),
+        toIndex: (key) => (key != null && byKey.has(key) ? byKey.get(key)! : NaN),
+        labelAt,
+        chartProps: {
+            yDomain: [-0.5, categories.length - 0.5],
+            yTicks: ticks,
+            yTickFormatter: labelAt,
+        },
     };
 }

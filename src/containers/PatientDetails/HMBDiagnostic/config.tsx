@@ -6,40 +6,18 @@ import type { DefaultTheme } from 'styled-components';
 import { chartActiveDotSpec, chartDotSpec, ChartCardProps } from 'src/components/Chart';
 
 import { flowTooltip, numericTooltip, painTooltip } from './HMBTooltip';
-import {
-    getChartDisplayLabel,
-    flowTicks,
-    flowYTickFormatter,
-    severityTicks,
-    severityYTickFormatter,
-    toFlowVolume,
-    toImpact,
-    toIntensity,
-    toPainScore,
-} from './transforms';
+import { getChartDisplayLabel, toFlowVolume, toImpact, toIntensity, toPainScore } from './transforms';
+import { flowAxis } from './transforms/toFlowVolume';
+import { severityAxis } from './transforms/toPainScore';
 import { HMBChartDatum, HMBResponseRow } from './types';
 
 type HMBChartConfig = Omit<ChartCardProps<HMBResponseRow, HMBChartDatum>, 'rows' | 'onPointClick'>;
 
-const CHART_HEIGHT = 340;
-const CATEGORICAL_DOMAIN: [number, number] = [-0.5, 4.5];
 const NUMERIC_DOMAIN: [number, number] = [0, 10];
 const NUMERIC_TICKS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-const CATEGORY_AXIS_WIDTH = 90;
-const LEGEND_STYLE = { paddingTop: 24 };
-
-const COMMON: Partial<HMBChartConfig> = {
-    height: CHART_HEIGHT,
-    margin: { top: 20, right: 20, bottom: 8, left: 12 },
-    xAxisProps: { minTickGap: 12, interval: 'preserveStartEnd', tickFormatter: getChartDisplayLabel },
-    gridProps: { horizontal: false, strokeDasharray: '4 4' },
-    yAxisProps: { width: CATEGORY_AXIS_WIDTH, tickMargin: 16 },
-};
 
 export const getHMBCharts = (theme: DefaultTheme): HMBChartConfig[] => {
-    const lavender = theme.primaryPalette.bcp_4;
     const areaStroke = theme.primaryPalette.bcp_5;
-    const painLine = theme.success;
     const gray_1 = theme.neutralPalette.gray_1;
 
     const areaSpec = {
@@ -51,45 +29,39 @@ export const getHMBCharts = (theme: DefaultTheme): HMBChartConfig[] => {
         activeDot: chartActiveDotSpec(areaStroke, gray_1),
     };
 
+    const flow = flowAxis();
+    const severity = severityAxis();
+
     return [
         {
-            ...COMMON,
+            xAxisProps: { tickFormatter: getChartDisplayLabel },
+            ...flow.chartProps,
             title: t`Flow Volume`,
             icon: <BarChartOutlined />,
             variant: 'bar',
             transform: toFlowVolume,
-            yDomain: CATEGORICAL_DOMAIN,
-            yTicks: flowTicks,
-            yTickFormatter: flowYTickFormatter,
-            barProps: { fill: lavender, radius: [4, 4, 0, 0], maxBarSize: 40, opacity: 0.4, name: 'Flow Volume' },
+            barProps: { name: 'Flow Volume' },
             tooltipProps: { content: flowTooltip },
+            yAxisProps: { width: 90 },
         },
         {
-            ...COMMON,
+            xAxisProps: { tickFormatter: getChartDisplayLabel },
+            ...severity.chartProps,
             title: t`Period Pain Score`,
             icon: <HeartOutlined />,
             variant: 'bar+line',
             transform: toPainScore,
-            yDomain: CATEGORICAL_DOMAIN,
-            yTicks: severityTicks,
-            yTickFormatter: severityYTickFormatter,
             yLineDomain: [1, 10],
             yLineTicks: NUMERIC_TICKS,
-            margin: { ...COMMON.margin, bottom: 24 },
-            barProps: { fill: lavender, radius: [4, 4, 0, 0], maxBarSize: 40, opacity: 0.4, name: 'Pain Presence' },
+            barProps: { name: 'Pain Presence' },
             lineProps: {
-                stroke: painLine,
-                strokeWidth: 2,
-                dot: chartDotSpec(painLine, gray_1),
-                activeDot: chartActiveDotSpec(painLine, gray_1),
                 name: 'Pain Score',
             },
-            legendProps: { align: 'center', verticalAlign: 'bottom', iconSize: 12, wrapperStyle: LEGEND_STYLE },
             tooltipProps: { content: painTooltip },
-            yLineAxisProps: { width: 28, tickMargin: 8 },
+            yAxisProps: { width: 100 },
         },
         {
-            ...COMMON,
+            xAxisProps: { tickFormatter: getChartDisplayLabel },
             title: t`Impact of Period on Daily Activities`,
             icon: <CalendarOutlined />,
             variant: 'area',
@@ -100,7 +72,7 @@ export const getHMBCharts = (theme: DefaultTheme): HMBChartConfig[] => {
             tooltipProps: { content: numericTooltip },
         },
         {
-            ...COMMON,
+            xAxisProps: { tickFormatter: getChartDisplayLabel },
             title: t`Intensity of Menstrual Bleeding`,
             icon: <AreaChartOutlined />,
             variant: 'area',

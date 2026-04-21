@@ -1,5 +1,4 @@
 /* eslint-disable react-refresh/only-export-components */
-import { Empty } from 'antd';
 import {
     Area,
     Bar,
@@ -16,7 +15,6 @@ import { useTheme } from 'styled-components';
 
 import { ChartDatumBase, ChartProps } from './Chart.types';
 
-const DEFAULT_MARGIN = { top: 12, right: 16, bottom: 8, left: 12 };
 export const chartDotSpec = (stroke: string, fill: string) => ({
     r: 5,
     fill,
@@ -42,9 +40,8 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
         yLineTicks,
         yLineTickFormatter,
         onPointClick,
-        empty,
-        height = 260,
-        margin,
+        height = 340,
+        margin = { left: 20, right: 20, top: 20, bottom: 20 },
         xAxisProps,
         yAxisProps,
         yLineAxisProps,
@@ -57,15 +54,11 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
     } = props;
     const theme = useTheme();
 
-    if (data.length === 0) {
-        return empty === undefined ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : <>{empty}</>;
-    }
-
     return (
         <ResponsiveContainer width="100%" height={height}>
             <ComposedChart
                 data={data}
-                margin={{ ...DEFAULT_MARGIN, ...margin }}
+                margin={margin}
                 onClick={(state) => {
                     if (!onPointClick || state.activeTooltipIndex == null) {
                         return;
@@ -76,48 +69,48 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
                     }
                 }}
             >
-                <CartesianGrid strokeWidth={0.5} stroke={theme.neutralPalette.gray_5} syncWithTicks {...gridProps} />
-                <XAxis dataKey="x" axisLine={false} tickLine={false} tickMargin={12} minTickGap={24} {...xAxisProps} />
+                <CartesianGrid
+                    strokeWidth={0.5}
+                    stroke={theme.neutralPalette.gray_5}
+                    zIndex={1}
+                    syncWithTicks={true}
+                    {...gridProps}
+                />
+                <XAxis dataKey="x" fontSize={10} {...xAxisProps} />
                 <YAxis
                     yAxisId="left"
+                    fontSize={10}
                     domain={yDomain}
                     ticks={yTicks}
                     tickFormatter={yTickFormatter}
                     axisLine={false}
                     tickLine={false}
-                    allowDecimals={false}
-                    width="auto"
-                    tickMargin={12}
+                    tickMargin={2}
                     {...yAxisProps}
                 />
                 {variant === 'bar+line' && (
                     <YAxis
                         yAxisId="right"
                         orientation="right"
+                        fontSize={10}
                         domain={yLineDomain}
                         ticks={yLineTicks}
                         tickFormatter={yLineTickFormatter}
                         axisLine={false}
                         tickLine={false}
-                        allowDecimals={false}
-                        width="auto"
-                        tickMargin={12}
+                        tickMargin={2}
+                        width={28}
                         {...yLineAxisProps}
                     />
                 )}
 
                 <Tooltip cursor={{ fill: 'transparent' }} {...tooltipProps} />
-                {legendProps && <Legend {...legendProps} />}
+                {variant === 'bar+line' && (
+                    <Legend align="center" iconSize={8} wrapperStyle={{ fontSize: 10 }} {...legendProps} />
+                )}
 
                 {(variant === 'bar' || variant === 'bar+line') && (
-                    <Bar
-                        yAxisId="left"
-                        dataKey="y"
-                        fill={theme.primary}
-                        radius={[8, 8, 0, 0]}
-                        maxBarSize={32}
-                        {...barProps}
-                    />
+                    <Bar yAxisId="left" dataKey="y" fill={theme.primaryPalette.bcp_6} opacity={0.4} {...barProps} />
                 )}
                 {variant === 'area' && (
                     <Area
@@ -137,11 +130,13 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
                         yAxisId="right"
                         type="monotone"
                         dataKey="yLine"
-                        stroke={theme.primaryPalette?.bcp_6 ?? theme.primary}
+                        stroke={theme.success}
                         strokeWidth={2}
-                        dot={{ r: 3 }}
                         connectNulls={false}
-                        activeDot={{ r: 5 }}
+                        dot={{
+                            fill: theme.success,
+                        }}
+                        activeDot={{ r: 4, stroke: theme.neutralPalette.gray_3, strokeWidth: 2 }}
                         {...lineProps}
                     />
                 )}

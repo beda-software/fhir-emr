@@ -3,8 +3,8 @@ import type { ValueType } from 'recharts/types/component/DefaultTooltipContent';
 import type { TooltipContentProps } from 'recharts/types/component/Tooltip';
 import styled from 'styled-components';
 
-import { getFlowLabel } from './transforms/toFlowVolume';
-import { getSeverityLabel } from './transforms/toPainScore';
+import { flowAxis } from './transforms/toFlowVolume';
+import { severityAxis } from './transforms/toPainScore';
 import { HMBChartDatum } from './types';
 
 const S = {
@@ -74,10 +74,10 @@ export function makeHMBTooltip(valueFormatter?: ValueFormatter) {
     };
 }
 
-export const flowTooltip = makeHMBTooltip((value) => getFlowLabel(value));
+export const flowTooltip = makeHMBTooltip((value) => flowAxis().labelAt(value));
 
 export const painTooltip = makeHMBTooltip((value, dataKey) =>
-    dataKey === 'y' ? getSeverityLabel(value) : String(value),
+    dataKey === 'y' ? severityAxis().labelAt(value) : String(value),
 );
 
 export const numericTooltip = makeHMBTooltip((value) => value.toFixed(1));
