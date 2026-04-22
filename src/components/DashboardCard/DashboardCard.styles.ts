@@ -32,17 +32,17 @@ export const S = {
         line-height: 24px;
         font-weight: bold;
     `,
-    Icon: styled.div`
+    Icon: styled.div<{ $compact?: boolean }>`
         display: flex;
         justify-content: center;
         align-items: center;
         background-color: ${({ theme }) => theme.primary};
-        width: 48px;
-        height: 48px;
-        min-width: 48px;
+        width: ${({ $compact }) => ($compact ? '32px' : '48px')};
+        height: ${({ $compact }) => ($compact ? '32px' : '48px')};
+        min-width: ${({ $compact }) => ($compact ? '32px' : '48px')};
         border-radius: 50%;
         color: #fff;
-        font-size: 24px;
+        font-size: ${({ $compact }) => ($compact ? '16px' : '24px')};
 
         &._empty {
             background-color: ${({ theme }) => theme.primaryPalette.bcp_2};

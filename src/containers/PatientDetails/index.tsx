@@ -17,16 +17,15 @@ import { sharedAuthorizedPractitionerRoles } from 'src/sharedState';
 import { renderHumanName } from 'src/utils';
 import { matchCurrentUserRole, selectCurrentUserRoleResource, Role } from 'src/utils/role';
 
+import { HMBDiagnosticDashboard } from './HMBDiagnostic';
 import { usePatientResource } from './hooks';
 import { PatientApps } from './PatientApps';
 import { PatientDetailsTabs } from './PatientDetailsTabs';
 import { PatientDocument } from './PatientDocument';
 import { PatientDocumentDetails } from './PatientDocumentDetails';
 import { PatientDocuments } from './PatientDocuments';
-import { PatientOrders } from './PatientOrders';
 import { PatientOverview } from './PatientOverviewDynamic';
 import { PatientResources } from './PatientResources';
-import { PatientWearables } from './PatientWearables';
 import { EncounterDetails } from '../EncounterDetails';
 
 export interface PatientDetailsEmbeddedPageDefinition extends RouteItem {
@@ -96,7 +95,7 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                                             [Role.Admin]: () => {
                                                                 return {};
                                                             },
-                                                            [Role.Practitioner]: (practitioner) => {
+                                                            [Role.Practitioner]: () => {
                                                                 return {
                                                                     participant: (
                                                                         sharedAuthorizedPractitionerRoles.getSharedState() ||
@@ -210,14 +209,16 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                                     </PatientDocumentDetailsReadonlyContext.Provider>
                                                 }
                                             />
-                                            <Route path="/wearables" element={<PatientWearables patient={patient} />} />
                                             <Route
                                                 path="/resources/:type"
                                                 element={<PatientResources patient={patient} />}
                                             />
                                             <Route path="/resources" element={<PatientResources patient={patient} />} />
                                             <Route path="/apps" element={<PatientApps patient={patient} />} />
-                                            <Route path="/orders" element={<PatientOrders patient={patient} />} />
+                                            <Route
+                                                path="/hmb-diagnostic"
+                                                element={<HMBDiagnosticDashboard patient={patient} />}
+                                            />
                                         </>
                                     )}
                                     {embeddedPages?.flatMap(({ routes }) => routes)}
