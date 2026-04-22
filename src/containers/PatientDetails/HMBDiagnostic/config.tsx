@@ -1,12 +1,12 @@
 import { AreaChartOutlined, BarChartOutlined, CalendarOutlined, HeartOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 
-import { createCategoricalAxis, formatAuthored, makeUniqueX } from 'src/components/Chart';
+import { createCategoricalAxis, formatAuthored, formatChartDateTime, makeUniqueX } from 'src/components/Chart';
 import type { CategoricalAxis, ChartCardProps } from 'src/components/Chart';
 
 import { HMBChartDatum, HMBResponseRow } from './types';
 
-type HMBChartMeta = Pick<HMBChartDatum, 'x' | 'xLabel' | 'xDate' | 'qrId'>;
+type HMBChartMeta = Pick<HMBChartDatum, 'x' | 'xLabel' | 'xDate' | 'xTooltipLabel' | 'qrId'>;
 type HMBChartConfig = Omit<ChartCardProps<HMBResponseRow, HMBChartDatum>, 'rows' | 'onPointClick'>;
 type AreaScoreField = 'impact_score' | 'intensity';
 type FlowAxis = CategoricalAxis<NonNullable<HMBResponseRow['flow']>>;
@@ -24,6 +24,7 @@ function toChartMetaRow(row: HMBResponseRow): HMBChartMeta {
         x: makeUniqueX(xLabel, row.id),
         xLabel,
         xDate: row.authored,
+        xTooltipLabel: formatChartDateTime(row.authored),
         qrId: row.id,
     };
 }

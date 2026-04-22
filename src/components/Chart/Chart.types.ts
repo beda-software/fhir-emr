@@ -21,6 +21,8 @@ export type ChartNumericValue = number | null | undefined;
 export interface ChartDatumBase {
     /** Category/date label rendered on the x-axis. */
     x: string;
+    /** Optional full label rendered in the tooltip title. Falls back to `x` when absent. */
+    xTooltipLabel?: string;
     /** Main series value. Used by bars and areas, and by the left axis in bar+line charts. */
     y: ChartNumericValue;
     /** Secondary line value. Used only by the right axis in bar+line charts. */

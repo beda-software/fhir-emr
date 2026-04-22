@@ -16,7 +16,7 @@ import { useTheme } from 'styled-components';
 
 import type { ChartDatumBase, ChartProps } from './Chart.types';
 import { ChartTooltip } from './ChartTooltip';
-import { getChartDisplayLabel } from './formatters';
+import { getChartDisplayLabel, getDefaultChartTooltipLabel } from './formatters';
 
 type HaloDotProps = { cx?: number; cy?: number };
 
@@ -132,9 +132,7 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
                 <Tooltip
                     cursor={{ fill: 'transparent' }}
                     content={ChartTooltip}
-                    labelFormatter={(label) =>
-                        typeof label === 'string' || typeof label === 'number' ? getChartDisplayLabel(label) : label
-                    }
+                    labelFormatter={getDefaultChartTooltipLabel}
                     {...tooltipProps}
                 />
                 {variant === 'bar+line' && (
