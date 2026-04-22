@@ -1,4 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
+import { useId } from 'react';
 import {
     Area,
     Bar,
@@ -15,19 +16,24 @@ import { useTheme } from 'styled-components';
 
 import { ChartDatumBase, ChartProps } from './Chart.types';
 
-export const chartDotSpec = (stroke: string, fill: string) => ({
-    r: 5,
-    fill,
-    stroke,
-    strokeWidth: 2,
-});
+type HaloDotProps = { cx?: number; cy?: number };
 
-export const chartActiveDotSpec = (stroke: string, fill: string) => ({
-    r: 6,
-    fill,
-    stroke,
-    strokeWidth: 2,
-});
+const renderHaloDot = (stroke: string, fill: string, coreR: number, haloR: number) =>
+    function HaloDot({ cx, cy }: HaloDotProps) {
+        if (cx == null || cy == null) {
+            return null;
+        }
+        return (
+            <g>
+                <circle cx={cx} cy={cy} r={haloR} fill={stroke} opacity={0.2} />
+                <circle cx={cx} cy={cy} r={coreR} fill={fill} stroke={stroke} strokeWidth={1.5} />
+            </g>
+        );
+    };
+
+export const chartDotSpec = (stroke: string, fill: string) => renderHaloDot(stroke, fill, 4, 8);
+
+export const chartActiveDotSpec = (stroke: string, fill: string) => renderHaloDot(stroke, fill, 5, 10);
 
 export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: ChartProps<TDatum>) {
     const {
@@ -41,7 +47,7 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
         yLineTickFormatter,
         onPointClick,
         height = 340,
-        margin = { left: 20, right: 20, top: 20, bottom: 20 },
+        margin = { left: 0, right: 20, top: 20, bottom: 20 },
         xAxisProps,
         yAxisProps,
         yLineAxisProps,
@@ -53,6 +59,8 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
         areaProps,
     } = props;
     const theme = useTheme();
+    const gradientId = useId();
+    const areaColor = (areaProps?.fill as string | undefined) ?? theme.primary;
 
     return (
         <ResponsiveContainer width="100%" height={height}>
@@ -76,9 +84,13 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
                     syncWithTicks={true}
                     {...gridProps}
                 />
-                <XAxis dataKey="x" fontSize={10} {...xAxisProps} />
+                <XAxis
+                    dataKey="x"
+                    fontSize={10}
+                    padding={variant === 'area' ? { left: 20, right: 20 } : undefined}
+                    {...xAxisProps}
+                />
                 <YAxis
-                    yAxisId="left"
                     fontSize={10}
                     domain={yDomain}
                     ticks={yTicks}
@@ -110,20 +122,34 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
                 )}
 
                 {(variant === 'bar' || variant === 'bar+line') && (
-                    <Bar yAxisId="left" dataKey="y" fill={theme.primaryPalette.bcp_6} opacity={0.4} {...barProps} />
+                    <Bar
+                        dataKey="y"
+                        fill={theme.primaryPalette.bcp_6}
+                        opacity={0.4}
+                        minPointSize={5}
+                        activeBar={{ opacity: 1 }}
+                        {...barProps}
+                    />
                 )}
                 {variant === 'area' && (
-                    <Area
-                        yAxisId="left"
-                        type="monotone"
-                        dataKey="y"
-                        stroke={theme.primary}
-                        fill={theme.primary}
-                        fillOpacity={0.15}
-                        dot={false}
-                        activeDot={{ r: 4 }}
-                        {...areaProps}
-                    />
+                    <>
+                        <defs>
+                            <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor={areaColor} stopOpacity={0.4} />
+                                <stop offset="100%" stopColor={areaColor} stopOpacity={0} />
+                            </linearGradient>
+                        </defs>
+                        <Area
+                            type="monotone"
+                            dataKey="y"
+                            stroke={theme.primary}
+                            dot={false}
+                            activeDot={{ r: 4 }}
+                            {...areaProps}
+                            fill={`url(#${gradientId})`}
+                            fillOpacity={1}
+                        />
+                    </>
                 )}
                 {variant === 'bar+line' && (
                     <Line

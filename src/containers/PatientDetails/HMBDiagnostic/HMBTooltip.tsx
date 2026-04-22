@@ -3,8 +3,7 @@ import type { ValueType } from 'recharts/types/component/DefaultTooltipContent';
 import type { TooltipContentProps } from 'recharts/types/component/Tooltip';
 import styled from 'styled-components';
 
-import { flowAxis } from './transforms/toFlowVolume';
-import { severityAxis } from './transforms/toPainScore';
+import { flowAxis, severityAxis } from './config';
 import { HMBChartDatum } from './types';
 
 const S = {
