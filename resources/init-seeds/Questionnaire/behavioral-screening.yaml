@@ -107,7 +107,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: favorite-people-or-toys
         text: Does your child have favorite people or toys?
         type: choice
@@ -121,7 +120,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: shows-fear
         text: Does your child show fear in some situations (e.g., loud sounds,
           strangers)?
@@ -136,7 +134,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: notices-others-upset
         text:
           Does your child notice when others are upset (e.g., looks concerned or
@@ -152,7 +149,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: expresses-frustration
         text: How does your child express frustration or anger?
         type: text
@@ -169,7 +165,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: social-referencing
         text: Does your child look to you when unsure about a new situation?
         type: choice
@@ -183,7 +178,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
 
   # Screening for 2 years
   - linkId: behavioral-screening-2yo-group
@@ -211,7 +205,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: play-with-others-2
         text: Does your child show interest in playing with other children?
         type: choice
@@ -225,7 +218,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: calm-after-upset
         text: Is your child able to calm themselves when upset?
         type: choice
@@ -239,7 +231,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: frustration-response
         text: How does your child react when they can't do something they want?
         type: text
@@ -256,7 +247,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
 
   # Screening for 3 years
   - linkId: behavioral-screening-3yo-group
@@ -284,7 +274,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: play-with-others-3
         text: Does your child enjoy playing with other children and take turns?
         type: choice
@@ -298,7 +287,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: understand-express-emotions
         text: Is your child beginning to understand and express emotions?
         type: choice
@@ -312,7 +300,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: easily-upset
         text: Is your child easily upset or frustrated?
         type: choice
@@ -326,7 +313,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: reacts-to-change
         text: Does your child have difficulty adjusting to changes in routine?
         type: choice
@@ -340,7 +326,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: sleep-concerns
         text: Do you have concerns about your child's sleep or if they often seem tired?
         type: choice
@@ -354,7 +339,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: calm-after-tantrum
         text: Is your child able to calm themselves after a tantrum with little help?
         type: choice
@@ -368,7 +352,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
 
   # Screening for 4 years
   - linkId: behavioral-screening-4yo-group
@@ -396,7 +379,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: show-empathy
         text: Does your child show empathy and recognize others' emotions?
         type: choice
@@ -410,7 +392,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: dress-undress
         text: Does your child dress and undress themselves with minimal help?
         type: choice
@@ -424,7 +405,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: use-utensils
         text: Does your child use a fork and spoon properly?
         type: choice
@@ -438,7 +418,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: speech-hearing-movement-concerns
         text: Do you have any concerns about your child's speech hearing or movement?
         type: choice
@@ -452,7 +431,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: speech-hearing-movement-concerns-details
         text: Describe
         type: text
@@ -489,7 +467,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: count-to-10
         text: Can your child count to 10 or higher?
         type: choice
@@ -503,7 +480,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: follow-instructions
         text: Can your child follow three-step instructions?
         type: choice
@@ -517,7 +493,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: play-with-others-5-6
         text: Does your child play well with other children and share toys?
         type: choice
@@ -531,7 +506,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: show-independence
         text: Does your child show independence and try to do things on their own?
         type: choice
@@ -545,7 +519,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: express-emotions
         text:
           Does your child express emotions in appropriate ways (e.g., not hitting
@@ -561,7 +534,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: follow-rules
         text: Does your child follow simple rules or routines at home or school?
         type: choice
@@ -575,7 +547,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: attention-span
         text: Can your child stay focused on an activity for at least 5 minutes?
         type: choice
@@ -589,7 +560,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
 
   # Screening for 7-10 years
   - linkId: behavioral-screening-7-10yo-group
@@ -617,7 +587,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: handles-emotions
         text: Does your child handle emotions appropriately most of the time?
         type: choice
@@ -631,7 +600,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: shows-curiosity
         text: Does your child show curiosity and interest in learning?
         type: choice
@@ -645,7 +613,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: bullying-concerns
         text: Are you concerned about bullying or peer relationships?
         type: choice
@@ -659,7 +626,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: bullying-concerns-details
         text: Describe
         type: text
@@ -683,7 +649,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: trouble-sleeping-tired
         text: Does your child have trouble sleeping or often feel tired?
         type: choice
@@ -697,7 +662,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: self-harm-thoughts-7-10
         text: Has your child ever talked about or shown signs of wanting to hurt
           themselves?
@@ -712,7 +676,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: self-harm-thoughts-7-10-details
         text: Describe
         type: text
@@ -735,7 +698,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: self-esteem
         text: Does your child seem satisfied with how they look or feel about themselves?
         type: choice
@@ -749,7 +711,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: risky-behavior-7-10
         text: Has your child ever engaged in risky behavior (e.g. unsafe stunts,
           breaking rules)?
@@ -764,7 +725,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: online-negative-emotions
         text:
           Does your child ever feel worse after spending time online or on social
@@ -780,21 +740,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
-      - linkId: trusted-person
-        text: Does your child have someone they trust and can talk to about problems?
-        type: choice
-        itemControl:
-          coding:
-            - code: inline-choice
-        answerOption:
-          - valueCoding:
-              code: "yes"
-              display: "Yes"
-          - valueCoding:
-              code: "no"
-              display: "No"
-        choiceOrientation: horizontal
 
   # ADOLESCENT SECTIONS (11-14 years, 15-21 years)
   # Screening for 11-14 years
@@ -823,7 +768,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: trusted-person-to-talk
         text: Do you have at least one trusted person to talk to about problems?
         type: choice
@@ -837,7 +781,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: trouble-sleeping
         text: Do you have trouble sleeping or often feel tired?
         type: choice
@@ -851,7 +794,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: feel-successful
         text: Do you feel successful or motivated at school?
         type: choice
@@ -865,7 +807,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: satisfied-with-self
         text: Are you satisfied with how you look or feel about yourself?
         type: choice
@@ -879,7 +820,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: social-media-impact
         text: Do you ever feel worse after spending time online or on social media?
         type: choice
@@ -893,7 +833,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: online-safety-cyberbullying
         text: Do you know about online safety and how to protect yourself from
           cyberbullying?
@@ -908,7 +847,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
 
   # Screening for 15-21 years
   - linkId: behavioral-screening-15-21yo-group
@@ -936,7 +874,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: trouble-sleeping-fatigue
         text: Do you have trouble sleeping or often feel tired?
         type: choice
@@ -950,7 +887,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: self-harm-thoughts-15-21
         text: Have you ever thought about hurting yourself?
         type: choice
@@ -964,7 +900,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: self-harm-thoughts-15-21-details
         text: Describe
         type: text
@@ -986,7 +921,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: self-image-satisfaction
         text: Are you satisfied with how you look or feel about yourself?
         type: choice
@@ -1000,7 +934,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: someone-to-talk-to
         text: Do you have someone to talk to when you feel down?
         type: choice
@@ -1014,7 +947,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: relationship-safety-concerns
         text: Do you have any concerns about relationships or personal safety?
         type: choice
@@ -1028,7 +960,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: relationship-safety-concerns-details
         text: Describe
         type: text
@@ -1050,7 +981,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: risky-behavior-15-21
         text:
           Have you ever done something risky (like unsafe sex, reckless driving,
@@ -1066,7 +996,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: risky-behavior-15-21-details
         text: Describe
         type: text
@@ -1088,7 +1017,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
 
   # GENERAL CONCERNS - relevant for toddlers (1-4 years)
   - linkId: child-behavior-concerns-group
@@ -1122,7 +1050,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: child-behavior-concerns-details
         text: Describe
         type: text
