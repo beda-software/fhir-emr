@@ -1,20 +1,13 @@
-import {
-    AreaChartOutlined,
-    BarChartOutlined,
-    DotChartOutlined,
-    LineChartOutlined,
-    PlusOutlined,
-    RocketOutlined,
-    ThunderboltOutlined,
-} from '@ant-design/icons';
+import { BarChartOutlined, DotChartOutlined, LineChartOutlined, PlusOutlined } from '@ant-design/icons';
 import { Meta, StoryObj } from '@storybook/react';
 import { Button } from 'antd';
-import type { TooltipContentProps } from 'recharts';
-import type { ValueType } from 'recharts/types/component/DefaultTooltipContent';
-import styled, { useTheme } from 'styled-components';
+import styled from 'styled-components';
 
 import { failure, loading, success } from '@beda.software/remote-data';
 
+import { getHMBCharts } from 'src/containers/PatientDetails/HMBDiagnostic/config';
+import { S as HMBStyles } from 'src/containers/PatientDetails/HMBDiagnostic/styles';
+import type { HMBChartDatum, HMBResponseRow } from 'src/containers/PatientDetails/HMBDiagnostic/types';
 import { withColorSchemeDecorator } from 'src/storybook/decorators';
 
 import { Chart } from './Chart';
@@ -68,79 +61,68 @@ const rows = [
 ];
 type StoryRow = (typeof rows)[number];
 
-const flowLabels: Record<number, string> = {
-    0: 'Very Light',
-    1: 'Light',
-    2: 'Moderate',
-    3: 'Heavy',
-    4: 'Very Heavy',
-};
-
-const painSeverityLabels: Record<number, string> = {
-    0: 'No Pain',
-    1: 'Mild',
-    2: 'Moderate',
-    3: 'Severe',
-    4: 'Very Severe',
-};
-
-const hmbRows = [
+const hmbRows: HMBResponseRow[] = [
     {
         id: 'hmb-1',
-        label: '21 Nov 2025',
-        flow: 1,
-        painSeverity: 0,
-        painScore: 1,
-        impactScore: 6.1,
+        patient_id: 'patient-hmb-story',
+        authored: '2025-11-21T09:00:00Z',
+        flow: 'light',
+        pain_severity: 'no-pain',
+        pain_score: 1,
+        impact_score: 6.1,
         intensity: 6.1,
     },
     {
         id: 'hmb-2',
-        label: '19 Dec 2025',
-        flow: 3,
-        painSeverity: 3,
-        painScore: 10,
-        impactScore: 6.8,
+        patient_id: 'patient-hmb-story',
+        authored: '2025-12-19T09:00:00Z',
+        flow: 'heavy',
+        pain_severity: 'severe',
+        pain_score: 10,
+        impact_score: 6.8,
         intensity: 6.8,
     },
     {
         id: 'hmb-3',
-        label: '16 Jan 2026',
-        flow: 4,
-        painSeverity: 3,
-        painScore: 6.3,
-        impactScore: 7.9,
+        patient_id: 'patient-hmb-story',
+        authored: '2026-01-16T09:00:00Z',
+        flow: 'very-heavy',
+        pain_severity: 'severe',
+        pain_score: 6.3,
+        impact_score: 7.9,
         intensity: 7.9,
     },
     {
         id: 'hmb-4',
-        label: '13 Feb 2026',
-        flow: 1,
-        painSeverity: 2,
-        painScore: 5.5,
-        impactScore: 8.1,
+        patient_id: 'patient-hmb-story',
+        authored: '2026-02-13T09:00:00Z',
+        flow: 'light',
+        pain_severity: 'moderate',
+        pain_score: 5.5,
+        impact_score: 8.1,
         intensity: 8.1,
     },
     {
         id: 'hmb-5',
-        label: '13 Mar 2026',
-        flow: 2,
-        painSeverity: 2,
-        painScore: 5.5,
-        impactScore: 7.3,
+        patient_id: 'patient-hmb-story',
+        authored: '2026-03-13T09:00:00Z',
+        flow: 'moderate',
+        pain_severity: 'moderate',
+        pain_score: 5.5,
+        impact_score: 7.3,
         intensity: 7.3,
     },
     {
         id: 'hmb-6',
-        label: '10 Apr 2026',
-        flow: 1,
-        painSeverity: 0,
-        painScore: 1,
-        impactScore: 4.4,
+        patient_id: 'patient-hmb-story',
+        authored: '2026-04-10T09:00:00Z',
+        flow: 'light',
+        pain_severity: 'no-pain',
+        pain_score: 1,
+        impact_score: 4.4,
         intensity: 4.4,
     },
 ];
-type HMBStoryRow = (typeof hmbRows)[number];
 
 const meta = {
     title: 'components / Chart',
@@ -262,43 +244,7 @@ export const ChartCardSuccess: Story = {
     ),
 };
 
-function makeHMBTooltip(props: {
-    labelFormatter?: (label: string | number) => React.ReactNode;
-    valueFormatter?: (value: number, key: string) => React.ReactNode;
-}) {
-    return function TooltipContent({ active, label, payload }: TooltipContentProps<ValueType, string | number>) {
-        if (!active || !payload?.length) {
-            return null;
-        }
-
-        return (
-            <S.TooltipCard>
-                <S.TooltipTitle>{props.labelFormatter ? props.labelFormatter(label ?? '') : label}</S.TooltipTitle>
-                {payload.map((entry) => (
-                    <S.TooltipRow key={`${entry.dataKey ?? entry.name}-${entry.value}`}>
-                        <S.TooltipMarker style={{ backgroundColor: entry.color ?? 'currentColor' }} />
-                        <span>{entry.name}</span>
-                        <strong>
-                            {typeof entry.value === 'number' && props.valueFormatter
-                                ? props.valueFormatter(entry.value, String(entry.dataKey ?? ''))
-                                : entry.value}
-                        </strong>
-                    </S.TooltipRow>
-                ))}
-            </S.TooltipCard>
-        );
-    };
-}
-
 function HMBDashboardPreview() {
-    const theme = useTheme();
-    const lavender = theme.primaryPalette.bcp_4;
-    const areaStroke = theme.primaryPalette.bcp_5;
-    const painLine = theme.success;
-    const legendStyle = {
-        paddingTop: 24,
-    };
-
     return (
         <S.HMBDashboard>
             <S.Actions>
@@ -307,127 +253,11 @@ function HMBDashboardPreview() {
                 </Button>
             </S.Actions>
 
-            <S.Grid>
-                <ChartCard<HMBStoryRow>
-                    title="Flow Volume"
-                    icon={<BarChartOutlined />}
-                    variant="bar"
-                    rows={success(hmbRows)}
-                    transform={(chartRows) => chartRows.map((row) => ({ x: row.label, y: row.flow }))}
-                    yDomain={[-0.5, 4.5]}
-                    yTicks={[0, 1, 2, 3, 4]}
-                    yTickFormatter={(value) => flowLabels[value] ?? String(value)}
-                    height={340}
-                    margin={{ top: 20, right: 20, bottom: 8, left: 12 }}
-                    gridProps={{ strokeDasharray: '4 4', stroke: theme.neutralPalette.gray_5 }}
-                    barProps={{ fill: lavender, radius: [0, 0, 0, 0], maxBarSize: 68, name: 'Flow Volume' }}
-                    tooltipProps={{
-                        content: makeHMBTooltip({
-                            valueFormatter: (value) => flowLabels[value] ?? String(value),
-                        }),
-                    }}
-                    xAxisProps={{ minTickGap: 12 }}
-                    yAxisProps={{ width: 'auto', tickMargin: 16 }}
-                />
-
-                <ChartCard<HMBStoryRow>
-                    title="Period Pain Score"
-                    icon={<ThunderboltOutlined />}
-                    variant="bar+line"
-                    rows={success(hmbRows)}
-                    transform={(chartRows) =>
-                        chartRows.map((row) => ({
-                            x: row.label,
-                            y: row.painSeverity,
-                            yLine: row.painScore,
-                        }))
-                    }
-                    yDomain={[-0.5, 4.5]}
-                    yTicks={[0, 1, 2, 3, 4]}
-                    yTickFormatter={(value) => painSeverityLabels[value] ?? String(value)}
-                    yLineDomain={[1, 10]}
-                    yLineTicks={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
-                    height={340}
-                    margin={{ top: 20, right: 20, bottom: 24, left: 12 }}
-                    gridProps={{ strokeDasharray: '4 4', stroke: theme.neutralPalette.gray_5 }}
-                    barProps={{ fill: lavender, opacity: 0.55, maxBarSize: 68, name: 'Pain Presence' }}
-                    lineProps={{
-                        stroke: painLine,
-                        strokeWidth: 2,
-                        dot: { r: 5, fill: theme.neutralPalette.gray_1, stroke: painLine, strokeWidth: 2 },
-                        activeDot: { r: 6, fill: theme.neutralPalette.gray_1, stroke: painLine, strokeWidth: 2 },
-                        name: 'Pain Score',
-                    }}
-                    legendProps={{ align: 'center', verticalAlign: 'bottom', iconSize: 12, wrapperStyle: legendStyle }}
-                    tooltipProps={{
-                        content: makeHMBTooltip({
-                            valueFormatter: (value, key) =>
-                                key === 'y' ? painSeverityLabels[value] ?? String(value) : String(value),
-                        }),
-                    }}
-                    xAxisProps={{ minTickGap: 12 }}
-                    yAxisProps={{ width: 'auto', tickMargin: 16 }}
-                    yLineAxisProps={{ width: 28, tickMargin: 8 }}
-                />
-
-                <ChartCard<HMBStoryRow>
-                    title="Impact of Period on Daily Activities"
-                    icon={<RocketOutlined />}
-                    variant="area"
-                    rows={success(hmbRows)}
-                    transform={(chartRows) => chartRows.map((row) => ({ x: row.label, y: row.impactScore }))}
-                    yDomain={[0, 10]}
-                    yTicks={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
-                    height={340}
-                    margin={{ top: 20, right: 20, bottom: 8, left: 12 }}
-                    gridProps={{ strokeDasharray: '4 4', stroke: theme.neutralPalette.gray_5 }}
-                    areaProps={{
-                        stroke: areaStroke,
-                        fill: areaStroke,
-                        fillOpacity: 0.16,
-                        strokeWidth: 2,
-                        dot: { r: 5, fill: theme.neutralPalette.gray_1, stroke: areaStroke, strokeWidth: 2 },
-                        activeDot: { r: 6, fill: theme.neutralPalette.gray_1, stroke: areaStroke, strokeWidth: 2 },
-                        name: 'Impact Score',
-                    }}
-                    tooltipProps={{
-                        content: makeHMBTooltip({
-                            valueFormatter: (value) => value.toFixed(1),
-                        }),
-                    }}
-                    xAxisProps={{ minTickGap: 12 }}
-                    yAxisProps={{ width: 28, tickMargin: 8 }}
-                />
-
-                <ChartCard<HMBStoryRow>
-                    title="Intensity of Menstrual Bleeding"
-                    icon={<AreaChartOutlined />}
-                    variant="area"
-                    rows={success(hmbRows)}
-                    transform={(chartRows) => chartRows.map((row) => ({ x: row.label, y: row.intensity }))}
-                    yDomain={[0, 10]}
-                    yTicks={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
-                    height={340}
-                    margin={{ top: 20, right: 20, bottom: 8, left: 12 }}
-                    gridProps={{ strokeDasharray: '4 4', stroke: theme.neutralPalette.gray_5 }}
-                    areaProps={{
-                        stroke: areaStroke,
-                        fill: areaStroke,
-                        fillOpacity: 0.16,
-                        strokeWidth: 2,
-                        dot: { r: 5, fill: theme.neutralPalette.gray_1, stroke: areaStroke, strokeWidth: 2 },
-                        activeDot: { r: 6, fill: theme.neutralPalette.gray_1, stroke: areaStroke, strokeWidth: 2 },
-                        name: 'Intensity',
-                    }}
-                    tooltipProps={{
-                        content: makeHMBTooltip({
-                            valueFormatter: (value) => value.toFixed(1),
-                        }),
-                    }}
-                    xAxisProps={{ minTickGap: 12 }}
-                    yAxisProps={{ width: 28, tickMargin: 8 }}
-                />
-            </S.Grid>
+            <HMBStyles.Grid>
+                {getHMBCharts().map((cfg, index) => (
+                    <ChartCard<HMBResponseRow, HMBChartDatum> key={index} rows={success(hmbRows)} {...cfg} />
+                ))}
+            </HMBStyles.Grid>
         </S.HMBDashboard>
     );
 }
@@ -459,46 +289,5 @@ const S = {
     `,
     Actions: styled.div`
         margin-bottom: 16px;
-    `,
-    Grid: styled.div`
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 16px;
-
-        @media (max-width: 1100px) {
-            grid-template-columns: 1fr;
-        }
-    `,
-    TooltipCard: styled.div`
-        min-width: 180px;
-        padding: 12px;
-        border: 1px solid ${({ theme }) => theme.neutralPalette.gray_5};
-        border-radius: 10px;
-        background: ${({ theme }) => theme.neutralPalette.gray_1};
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    `,
-    TooltipTitle: styled.div`
-        margin-bottom: 8px;
-        font-size: 12px;
-        color: ${({ theme }) => theme.neutralPalette.gray_8};
-    `,
-    TooltipRow: styled.div`
-        display: flex;
-        align-items: center;
-        gap: 8px;
-
-        & + & {
-            margin-top: 6px;
-        }
-
-        strong {
-            margin-left: auto;
-        }
-    `,
-    TooltipMarker: styled.span`
-        width: 10px;
-        height: 10px;
-        border-radius: 999px;
-        flex: 0 0 auto;
     `,
 };
