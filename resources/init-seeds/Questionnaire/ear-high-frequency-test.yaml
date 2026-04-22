@@ -1,0 +1,143 @@
+resourceType: Questionnaire
+id: ear-high-frequency-test
+url: ear-high-frequency-test
+name: ear-high-frequency-test
+title: High-Frequency Audiometry
+status: active
+description: High-frequency pure-tone audiometry screening
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+subjectType:
+  - Patient
+useContext:
+  - code:
+      code: questionnaire-type
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+    value:
+      CodeableConcept:
+        coding:
+          - code: form-library
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+item:
+- linkId: voice-data
+  type: group
+  itemControl:
+    coding:
+    - code: group-voice
+  item:
+  - linkId: high-frequency-audiometry-group
+    type: group
+    text: High-Frequency Audiometry
+    item:
+      - linkId: high-frequency-audiometry
+        text: Results
+        type: choice
+        required: true
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: result-normal
+              display: Normal hearing (high frequencies)
+          - valueCoding:
+              code: result-mild-loss
+              display: Mild high-frequency hearing loss
+          - valueCoding:
+              code: result-moderate-loss
+              display: Moderate high-frequency hearing loss
+          - valueCoding:
+              code: result-severe-loss
+              display: Severe high-frequency hearing loss
+          - valueCoding:
+              code: not-performed
+              display: Not performed
+  - linkId: ear-exam
+    text: Ear Examination
+    type: group
+    item:
+      - linkId: external-ear
+        text: External Ear
+        type: text
+      - linkId: otoscopic-exam
+        text: Otoscopic Examination
+        type: text
+  - linkId: hearing-assessment
+    type: group
+    text: Hearing Assessment
+    item:
+      - linkId: whisper-test
+        text: Whisper Test
+        type: choice
+        answerOption:
+          - valueCoding:
+              code: result-normal
+              display: Normal results
+          - valueCoding:
+              code: result-mild-hearing-loss
+              display: Mild hearing loss
+          - valueCoding:
+              code: result-moderate-hearing-loss
+              display: Moderate hearing loss
+          - valueCoding:
+              code: result-severe-hearing-loss
+              display: Severe hearing loss
+          - valueCoding:
+              code: result-profound-hearing-loss
+              display: Profound hearing loss
+          - valueCoding:
+              code: not-performed
+              display: Not performed
+      - linkId: tuning-fork-test
+        text: Tuning Fork Test
+        type: choice
+        answerOption:
+          - valueCoding:
+              code: result-normal
+              display: Normal results
+          - valueCoding:
+              code: result-mild-hearing-loss
+              display: Mild hearing loss
+          - valueCoding:
+              code: result-moderate-hearing-loss
+              display: Moderate hearing loss
+          - valueCoding:
+              code: result-severe-hearing-loss
+              display: Severe hearing loss
+          - valueCoding:
+              code: result-profound-hearing-loss
+              display: Profound hearing loss
+          - valueCoding:
+              code: not-performed
+              display: Not performed
+      - linkId: audiometry-test
+        text: Audiometry Results
+        type: choice
+        answerOption:
+          - valueCoding:
+              code: result-normal
+              display: Normal results
+          - valueCoding:
+              code: result-mild-hearing-loss
+              display: Mild hearing loss
+          - valueCoding:
+              code: result-moderate-hearing-loss
+              display: Moderate hearing loss
+          - valueCoding:
+              code: result-severe-hearing-loss
+              display: Severe hearing loss
+          - valueCoding:
+              code: result-profound-hearing-loss
+              display: Profound hearing loss
+          - valueCoding:
+              code: not-performed
+              display: Not performed
+      - linkId: hearing-note
+        text: Notes
+        type: text
+        helpText: Add additional context or observations not covered by the tests above

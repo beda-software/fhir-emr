@@ -56,6 +56,9 @@ item:
   - linkId: phq2phq9
     text: "Over the past 2 weeks, how often have you been bothered by:"
     type: group
+    itemControl:
+      coding:
+      - code: group-voice
     item:
       - linkId: 44250-9
         text: Little interest or pleasure in doing things
@@ -71,28 +74,28 @@ item:
               display: "Not at all"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 0 
+                  valueDecimal: 0
           - valueCoding:
               system: "http://loinc.org"
               code: "LA6569-3"
               display: "Several days"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 1 
+                  valueDecimal: 1
           - valueCoding:
               system: "http://loinc.org"
               code: "LA6570-1"
               display: "More than half the days"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 2 
+                  valueDecimal: 2
           - valueCoding:
               system: "http://loinc.org"
               code: "LA6571-9"
               display: "Nearly every day"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 3 
+                  valueDecimal: 3
 
       - linkId: 44255-8
         text: Feeling down, depressed, or hopeless
@@ -108,28 +111,28 @@ item:
               display: "Not at all"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 0 
+                  valueDecimal: 0
           - valueCoding:
               system: "http://loinc.org"
               code: "LA6569-3"
               display: "Several days"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 1 
+                  valueDecimal: 1
           - valueCoding:
               system: "http://loinc.org"
               code: "LA6570-1"
               display: "More than half the days"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 2 
+                  valueDecimal: 2
           - valueCoding:
               system: "http://loinc.org"
               code: "LA6571-9"
               display: "Nearly every day"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 3 
+                  valueDecimal: 3
 
       - linkId: 44259-0
         text: Trouble falling or staying asleep, or sleeping too much
@@ -145,14 +148,14 @@ item:
               display: "Not at all"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 0 
+                  valueDecimal: 0
           - valueCoding:
               system: "http://loinc.org"
               code: "LA6569-3"
               display: "Several days"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 1 
+                  valueDecimal: 1
           - valueCoding:
               system: "http://loinc.org"
               code: "LA6570-1"
@@ -166,7 +169,7 @@ item:
               display: "Nearly every day"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 3 
+                  valueDecimal: 3
 
       - linkId: 44254-1
         text: Feeling tired or having little energy
@@ -182,28 +185,28 @@ item:
               display: "Not at all"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 0 
+                  valueDecimal: 0
           - valueCoding:
               system: "http://loinc.org"
               code: "LA6569-3"
               display: "Several days"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 1 
+                  valueDecimal: 1
           - valueCoding:
               system: "http://loinc.org"
               code: "LA6570-1"
               display: "More than half the days"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 2 
+                  valueDecimal: 2
           - valueCoding:
               system: "http://loinc.org"
               code: "LA6571-9"
               display: "Nearly every day"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 3 
+                  valueDecimal: 3
 
       - linkId: 44251-7
         text: Poor appetite or overeating
@@ -219,28 +222,28 @@ item:
               display: "Not at all"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 0 
+                  valueDecimal: 0
           - valueCoding:
               system: "http://loinc.org"
               code: "LA6569-3"
               display: "Several days"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 1 
+                  valueDecimal: 1
           - valueCoding:
               system: "http://loinc.org"
               code: "LA6570-1"
               display: "More than half the days"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 2 
+                  valueDecimal: 2
           - valueCoding:
               system: "http://loinc.org"
               code: "LA6571-9"
               display: "Nearly every day"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 3 
+                  valueDecimal: 3
 
       - linkId: 44258-2
         text: Feeling bad about yourself-or that you are a failure or have let yourself or your family down
@@ -256,28 +259,28 @@ item:
               display: "Not at all"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 0 
+                  valueDecimal: 0
           - valueCoding:
               system: "http://loinc.org"
               code: "LA6569-3"
               display: "Several days"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 1 
+                  valueDecimal: 1
           - valueCoding:
               system: "http://loinc.org"
               code: "LA6570-1"
               display: "More than half the days"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 2 
+                  valueDecimal: 2
           - valueCoding:
               system: "http://loinc.org"
               code: "LA6571-9"
               display: "Nearly every day"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 3 
+                  valueDecimal: 3
 
       - linkId: 44252-5
         text: Trouble concentrating on things, such as reading the newspaper or watching television
@@ -293,28 +296,28 @@ item:
               display: "Not at all"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 0 
+                  valueDecimal: 0
           - valueCoding:
               system: "http://loinc.org"
               code: "LA6569-3"
               display: "Several days"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 1 
+                  valueDecimal: 1
           - valueCoding:
               system: "http://loinc.org"
               code: "LA6570-1"
               display: "More than half the days"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 2 
+                  valueDecimal: 2
           - valueCoding:
               system: "http://loinc.org"
               code: "LA6571-9"
               display: "Nearly every day"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 3 
+                  valueDecimal: 3
 
       - linkId: 44253-3
         text: Moving or speaking so slowly that other people could have noticed. Or the opposite-being so fidgety or restless that you have been moving around a lot more than usual
@@ -330,28 +333,28 @@ item:
               display: "Not at all"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 0 
+                  valueDecimal: 0
           - valueCoding:
               system: "http://loinc.org"
               code: "LA6569-3"
               display: "Several days"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 1 
+                  valueDecimal: 1
           - valueCoding:
               system: "http://loinc.org"
               code: "LA6570-1"
               display: "More than half the days"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 2 
+                  valueDecimal: 2
           - valueCoding:
               system: "http://loinc.org"
               code: "LA6571-9"
               display: "Nearly every day"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 3 
+                  valueDecimal: 3
 
       - linkId: 44260-8
         text: Thoughts that you would be better off dead, or of hurting yourself in some way
@@ -374,22 +377,21 @@ item:
               display: "Several days"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 1 
+                  valueDecimal: 1
           - valueCoding:
               system: "http://loinc.org"
               code: "LA6570-1"
               display: "More than half the days"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 2 
+                  valueDecimal: 2
           - valueCoding:
               system: "http://loinc.org"
               code: "LA6571-9"
               display: "Nearly every day"
               extension:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
-                  valueDecimal: 3 
-              
+                  valueDecimal: 3
       - linkId: phq9-total-score
         text: PHQ2/PHQ-9 Depression Severity Score
         required: true

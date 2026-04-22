@@ -13,11 +13,18 @@ launchContext:
       code: Patient
     type:
       - Patient
+useContext:
+- code:
+    code: questionnaire-type
+    system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+  value:
+    CodeableConcept:
+      coding:
+      - code: form-library
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
 url: https://aidbox.emr.beda.software/fhir/Questionnaire/vitals
-
 item:
   - text: PatientId
     type: string

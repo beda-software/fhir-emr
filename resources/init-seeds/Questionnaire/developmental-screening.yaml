@@ -1,0 +1,425 @@
+resourceType: Questionnaire
+id: developmental-screening
+url: developmental-screening
+name: developmental-screening
+title: Developmental Screening
+status: active
+description: >
+  Screens age-appropriate developmental milestones in infants and toddlers
+  at 9, 18, and 30 months. The questionnaire helps identify potential delays
+  in motor, communication, social, and cognitive development and supports
+  early detection of concerns that may require further assessment or follow-up.
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+subjectType:
+  - Patient
+useContext:
+  - code:
+      code: questionnaire-type
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+    value:
+      CodeableConcept:
+        coding:
+          - code: form-library
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+    description: Guardian is answering the questionnaire
+item:
+  - linkId: patient-id
+    text: PatientId
+    type: string
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.id"
+
+  - linkId: age-group
+    text: Select the patient's age group
+    type: choice
+    required: true
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: 9-months
+          display: 9 Months
+      - valueCoding:
+          code: 18-months
+          display: 18 Months / 1.5 Years
+      - valueCoding:
+          code: 30-months
+          display: 30 Months / 2.5 Years
+
+  - linkId: developmental-screening-9mo-group
+    text: Developmental Screening for 9 Months
+    type: group
+    itemControl:
+      coding:
+      - code: group-voice
+    enableWhen:
+      - question: age-group
+        operator: "="
+        answerCoding:
+          code: "9-months"
+    item:
+      - linkId: supports-head-sits-assisted
+        text: Can your child support their head and sit with assistance?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+        choiceOrientation: horizontal
+      - linkId: rolls-over
+        text: Does your child roll over from front to back or back to front?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+        choiceOrientation: horizontal
+      - linkId: starts-moving
+        text: Is your child beginning to move (e.g., crawling or scooting)?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+        choiceOrientation: horizontal
+      - linkId: responds-to-name
+        text: Does your child respond to their name?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+        choiceOrientation: horizontal
+      - linkId: tracks-objects
+        text: Does your child visually track moving objects?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+        choiceOrientation: horizontal
+      - linkId: vocalizes-imitates
+        text: Does your child make sounds or try to imitate sounds?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+        choiceOrientation: horizontal
+
+  - linkId: developmental-screening-18mo-group
+    text: Developmental Screening for 18 Months / 1.5 Years
+    type: group
+    itemControl:
+      coding:
+      - code: group-voice
+    enableWhen:
+      - question: age-group
+        operator: "="
+        answerCoding:
+          code: "18-months"
+    item:
+      - linkId: walk-independently
+        text: Does your child walk independently?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+        choiceOrientation: horizontal
+      - linkId: use-10-words
+        text: Does your child use at least 10 words?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+        choiceOrientation: horizontal
+      - linkId: point-to-wants
+        text: Does your child point to show what they want?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+        choiceOrientation: horizontal
+      - linkId: follow-simple-instructions
+        text: Does your child follow simple instructions (e.g., “give me the toy”)?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+        choiceOrientation: horizontal
+      - linkId: imitate-behavior
+        text: Does your child imitate behavior (e.g., pretend to talk on the phone)?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+        choiceOrientation: horizontal
+      - linkId: hand-to-mouth
+        text:
+          Does your child use both hands to feed themselves or bring things to their
+          mouth?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+        choiceOrientation: horizontal
+      - linkId: express-interest
+        text: Does your child show interest in others or try to get your attention?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+        choiceOrientation: horizontal
+      - linkId: concerns-about-development
+        text: Do you have any concerns about your child's development?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+        choiceOrientation: horizontal
+      - linkId: concerns-about-development-details-18mo
+        text: Describe your concerns
+        type: text
+        enableWhen:
+          - question: concerns-about-development-18mo
+            operator: "="
+            answerCoding:
+              code: "yes"
+
+  - linkId: developmental-screening-30mo-group
+    text: Developmental Screening for 30 Months / 2.5 Years
+    type: group
+    itemControl:
+      coding:
+      - code: group-voice
+    enableWhen:
+      - question: age-group
+        operator: "="
+        answerCoding:
+          code: "30-months"
+    item:
+      - linkId: speak-50-words
+        text: Does your child speak at least 50 words?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+        choiceOrientation: horizontal
+      - linkId: combine-2-3-words
+        text: Does your child combine 2 to 3 words into phrases or sentences?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+        choiceOrientation: horizontal
+      - linkId: follow-2-step-instructions
+        text:
+          Does your child follow two-step instructions (e.g., “pick up the toy and
+          put it in the box”)?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+        choiceOrientation: horizontal
+      - linkId: play-with-other-children
+        text: Does your child play with other children or show interest in social games?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+        choiceOrientation: horizontal
+      - linkId: copy-simple-actions
+        text:
+          Does your child copy simple actions like clapping, waving, or pretending
+          to cook?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+        choiceOrientation: horizontal
+      - linkId: build-tower
+        text: Can your child build a tower of at least 4 blocks?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+        choiceOrientation: horizontal
+      - linkId: draw-circles
+        text: Can your child draw circles or vertical lines?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+        choiceOrientation: horizontal
+      - linkId: concerns-about-development-30mo
+        text: Do you have any concerns about your child's development?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+        choiceOrientation: horizontal
+      - linkId: concerns-about-development-details
+        text: Describe your concerns
+        type: text
+        enableWhen:
+          - question: concerns-about-development-30mo
+            operator: "="
+            answerCoding:
+              code: "yes"
