@@ -5,6 +5,7 @@ import { ChartCardProps, createCategoricalAxis, formatAuthored, makeUniqueX } fr
 
 import { HMBChartDatum, HMBResponseRow } from './types';
 
+// Reuse the same x-axis metadata across all HMB charts so a clicked point can open the source document.
 export function toChartMeta(rows: HMBResponseRow[]): Array<Pick<HMBChartDatum, 'x' | 'xLabel' | 'xDate' | 'qrId'>> {
     return rows.map((row) => {
         const xLabel = formatAuthored(row.authored);
@@ -18,6 +19,7 @@ export function toChartMeta(rows: HMBResponseRow[]): Array<Pick<HMBChartDatum, '
     });
 }
 
+// Numeric questionnaire answers can be absent; undefined lets Recharts skip the point instead of rendering NaN.
 export function toNumericField(field: 'impact_score' | 'intensity') {
     return (rows: HMBResponseRow[]): HMBChartDatum[] => {
         return toChartMeta(rows).map((meta, index) => ({
@@ -36,6 +38,7 @@ export const flowAxis = () =>
         { key: 'very-heavy', label: t`Very Heavy` },
     ] as const);
 
+// Flow is stored as an ordered code, while the chart expects a numeric y value.
 export function toFlowVolume(rows: HMBResponseRow[]): HMBChartDatum[] {
     const axis = flowAxis();
 
@@ -54,6 +57,7 @@ export const severityAxis = () =>
         { key: 'very-severe', label: t`Very Severe` },
     ] as const);
 
+// The bar shows ordered pain severity; the right-axis line keeps the numeric pain score.
 export function toPainScore(rows: HMBResponseRow[]): HMBChartDatum[] {
     const axis = severityAxis();
 
@@ -69,6 +73,7 @@ type HMBChartConfig = Omit<ChartCardProps<HMBResponseRow, HMBChartDatum>, 'rows'
 const NUMERIC_DOMAIN: [number, number] = [0, 10];
 const NUMERIC_TICKS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
+// Recharts tooltip formatters receive mixed values, so only numbers get fixed precision.
 const numericFormatter = (value: unknown) => (typeof value === 'number' ? value.toFixed(1) : String(value ?? ''));
 
 export const getHMBCharts = (): HMBChartConfig[] => {
