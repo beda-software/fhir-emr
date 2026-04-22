@@ -2,9 +2,8 @@
 import { AreaChartOutlined, BarChartOutlined, CalendarOutlined, HeartOutlined } from '@ant-design/icons';
 import { i18n } from '@lingui/core';
 import { t } from '@lingui/macro';
-import type { DefaultTheme } from 'styled-components';
 
-import { chartActiveDotSpec, chartDotSpec, ChartCardProps } from 'src/components/Chart';
+import { ChartCardProps } from 'src/components/Chart';
 
 import { flowTooltip, numericTooltip, painTooltip } from './HMBTooltip';
 import { HMBChartDatum, HMBResponseRow } from './types';
@@ -132,21 +131,8 @@ type HMBChartConfig = Omit<ChartCardProps<HMBResponseRow, HMBChartDatum>, 'rows'
 const NUMERIC_DOMAIN: [number, number] = [0, 10];
 const NUMERIC_TICKS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-export const getHMBCharts = (theme: DefaultTheme): HMBChartConfig[] => {
-    const areaStroke = theme.primaryPalette.bcp_5;
-    const gray_1 = theme.neutralPalette.gray_1;
-
-    const areaSpec = {
-        stroke: areaStroke,
-        fill: areaStroke,
-        fillOpacity: 0.16,
-        strokeWidth: 1,
-        dot: chartDotSpec(areaStroke, gray_1),
-        activeDot: chartActiveDotSpec(areaStroke, gray_1),
-    };
-
+export const getHMBCharts = (): HMBChartConfig[] => {
     const flow = flowAxis();
-    console.log('flow', flow);
     const severity = severityAxis();
 
     const xAxisProps = { tickFormatter: getChartDisplayLabel, interval: 0 as const };
@@ -189,7 +175,7 @@ export const getHMBCharts = (theme: DefaultTheme): HMBChartConfig[] => {
             transform: toNumericField('impact_score'),
             yDomain: NUMERIC_DOMAIN,
             yTicks: NUMERIC_TICKS,
-            areaProps: { ...areaSpec, name: 'Impact Score' },
+            areaProps: { name: 'Impact Score' },
             tooltipProps: { content: numericTooltip },
         },
         {
@@ -200,7 +186,7 @@ export const getHMBCharts = (theme: DefaultTheme): HMBChartConfig[] => {
             transform: toNumericField('intensity'),
             yDomain: NUMERIC_DOMAIN,
             yTicks: NUMERIC_TICKS,
-            areaProps: { ...areaSpec, name: 'Intensity' },
+            areaProps: { name: 'Intensity' },
             tooltipProps: { content: numericTooltip },
         },
     ];

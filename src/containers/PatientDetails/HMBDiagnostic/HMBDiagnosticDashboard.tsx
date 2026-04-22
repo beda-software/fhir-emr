@@ -1,6 +1,5 @@
 import { Patient } from 'fhir/r4b';
 import { useNavigate } from 'react-router-dom';
-import { useTheme } from 'styled-components';
 
 import { ChartCard } from 'src/components/Chart';
 
@@ -11,14 +10,13 @@ import { HMBChartDatum, HMBResponseRow } from './types';
 
 export function HMBDiagnosticDashboard({ patient }: { patient: Patient }) {
     const navigate = useNavigate();
-    const theme = useTheme();
     const [responses] = useHMBResponses(patient.id);
 
     const onPointClick = (datum: HMBChartDatum) => navigate(`/patients/${patient.id}/documents/${datum.qrId}`);
 
     return (
         <S.Grid>
-            {getHMBCharts(theme).map((cfg, index) => (
+            {getHMBCharts().map((cfg, index) => (
                 <ChartCard<HMBResponseRow, HMBChartDatum>
                     key={index}
                     rows={responses}

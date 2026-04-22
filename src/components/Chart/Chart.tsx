@@ -60,7 +60,9 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
     } = props;
     const theme = useTheme();
     const gradientId = useId();
-    const areaColor = (areaProps?.fill as string | undefined) ?? theme.primary;
+    const areaStroke = theme.primaryPalette.bcp_5;
+    const dotFill = theme.neutralPalette.gray_1;
+    const areaColor = (areaProps?.stroke as string | undefined) ?? areaStroke;
 
     return (
         <ResponsiveContainer width="100%" height={height}>
@@ -142,9 +144,10 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
                         <Area
                             type="monotone"
                             dataKey="y"
-                            stroke={theme.primary}
-                            dot={false}
-                            activeDot={{ r: 4 }}
+                            stroke={areaStroke}
+                            strokeWidth={1}
+                            dot={renderHaloDot(areaStroke, dotFill, 4, 8)}
+                            activeDot={renderHaloDot(areaStroke, dotFill, 5, 10)}
                             {...areaProps}
                             fill={`url(#${gradientId})`}
                             fillOpacity={1}
