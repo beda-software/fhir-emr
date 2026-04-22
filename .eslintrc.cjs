@@ -33,6 +33,13 @@ module.exports = {
                 },
                 extensions: ['.js', '.jsx', '.ts', '.tsx'],
             },
+            'typescript': {
+                'alwaysTryTypes': true,
+                'project': './tsconfig.json'
+            },
+            'node': {
+                'extensions': ['.js', '.jsx', '.ts', '.tsx']
+            }
         },
     },
     plugins: ['react', '@typescript-eslint', 'react-refresh', 'prettier', 'import', 'string-to-lingui'],
