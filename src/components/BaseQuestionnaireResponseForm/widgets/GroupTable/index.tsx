@@ -1,4 +1,4 @@
-import { PlusOutlined } from '@ant-design/icons';
+import { ExpandAltOutlined, PlusOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 import { Alert, Button, Flex, Space, Switch, Table, Typography } from 'antd';
 
@@ -27,6 +27,10 @@ export function GroupTable(props: GroupTableProps) {
         snapshotDataSource,
         renderAsTable,
         handleRenderTypeToggle,
+        handleRowExpandAll,
+        handleRowCollapseAll,
+        hasExpandableRows,
+        isAllExpandableRowsExpanded,
         chartLinkIdX,
         chartLinkIdY,
         chartYRange,
@@ -47,6 +51,15 @@ export function GroupTable(props: GroupTableProps) {
                             <Switch checked={renderAsTable} onChange={handleRenderTypeToggle} />
                             <Typography.Text>{t`Table View`}</Typography.Text>
                         </Space>
+                    )}
+                    {hasExpandableRows && (
+                        <Button
+                            type="primary"
+                            icon={<ExpandAltOutlined />}
+                            onClick={isAllExpandableRowsExpanded ? handleRowCollapseAll : handleRowExpandAll}
+                        >
+                            {isAllExpandableRowsExpanded ? t`Collapse all` : t`Expand all`}
+                        </Button>
                     )}
                     <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>{t`Add entry`}</Button>
                 </Space>
