@@ -1,14 +1,16 @@
-import { Patient } from 'fhir/r4b';
+import type { Patient } from 'fhir/r4b';
 import { useNavigate } from 'react-router-dom';
+
+import type { WithId } from '@beda.software/fhir-react';
 
 import { ChartCard } from 'src/components/Chart';
 
 import { getHMBCharts } from './config';
 import { useHMBResponses } from './hooks';
 import { S } from './styles';
-import { HMBChartDatum, HMBResponseRow } from './types';
+import type { HMBChartDatum, HMBResponseRow } from './types';
 
-export function HMBDiagnosticDashboard({ patient }: { patient: Patient }) {
+export function HMBDiagnosticDashboard({ patient }: { patient: WithId<Patient> }) {
     const navigate = useNavigate();
     const [responses] = useHMBResponses(patient.id);
 
@@ -16,9 +18,9 @@ export function HMBDiagnosticDashboard({ patient }: { patient: Patient }) {
 
     return (
         <S.Grid>
-            {getHMBCharts().map((cfg, index) => (
+            {getHMBCharts().map(({ id, ...cfg }) => (
                 <ChartCard<HMBResponseRow, HMBChartDatum>
-                    key={index}
+                    key={id}
                     rows={responses}
                     onPointClick={onPointClick}
                     {...cfg}

@@ -254,8 +254,8 @@ function HMBDashboardPreview() {
             </S.Actions>
 
             <HMBStyles.Grid>
-                {getHMBCharts().map((cfg, index) => (
-                    <ChartCard<HMBResponseRow, HMBChartDatum> key={index} rows={success(hmbRows)} {...cfg} />
+                {getHMBCharts().map(({ id, ...cfg }) => (
+                    <ChartCard<HMBResponseRow, HMBChartDatum> key={id} rows={success(hmbRows)} {...cfg} />
                 ))}
             </HMBStyles.Grid>
         </S.HMBDashboard>

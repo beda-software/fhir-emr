@@ -1,4 +1,4 @@
-import { ChartDatumBase } from 'src/components/Chart';
+import type { ChartDatumBase } from 'src/components/Chart';
 
 export interface HMBResponseRow {
     id: string;
@@ -12,7 +12,5 @@ export interface HMBResponseRow {
 }
 
 export interface HMBChartDatum extends ChartDatumBase {
-    xLabel: string;
-    xDate: string;
     qrId: string;
 }
