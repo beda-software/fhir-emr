@@ -46,7 +46,6 @@ item:
       - valueCoding:
           code: "no"
           display: "No"
-    choiceOrientation: horizontal
   - linkId: foreign-born
     text: Was the child born in or has the child traveled to a country with high TB prevalence?
     type: choice
@@ -61,7 +60,6 @@ item:
       - valueCoding:
           code: "no"
           display: "No"
-    choiceOrientation: horizontal
   - linkId: household-risk
     text: Does the child live with or frequently see someone born in a high TB prevalence country?
     type: choice
@@ -76,7 +74,6 @@ item:
       - valueCoding:
           code: "no"
           display: "No"
-    choiceOrientation: horizontal
   - linkId: congregate-setting
     text: Does the child spend time in homeless shelters, correctional facilities, or similar congregate settings?
     type: choice
@@ -91,7 +88,6 @@ item:
       - valueCoding:
           code: "no"
           display: "No"
-    choiceOrientation: horizontal
   - linkId: immunosuppression
     text: Does the child have a weakened immune system (e.g., HIV, immunosuppressive therapy)?
     type: choice
@@ -106,7 +102,6 @@ item:
       - valueCoding:
           code: "no"
           display: "No"
-    choiceOrientation: horizontal
   - linkId: previous-bcg
     text: Has the child received the BCG vaccine?
     type: choice
@@ -120,7 +115,6 @@ item:
       - valueCoding:
           code: "no"
           display: "No"
-    choiceOrientation: horizontal
   - linkId: notes
     text: Notes or additional comments
     type: text

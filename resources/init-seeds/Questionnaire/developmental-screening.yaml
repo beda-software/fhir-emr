@@ -80,7 +80,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: rolls-over
         text: Does your child roll over from front to back or back to front?
         type: choice
@@ -94,7 +93,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: starts-moving
         text: Is your child beginning to move (e.g., crawling or scooting)?
         type: choice
@@ -108,7 +106,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: responds-to-name
         text: Does your child respond to their name?
         type: choice
@@ -122,7 +119,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: tracks-objects
         text: Does your child visually track moving objects?
         type: choice
@@ -136,7 +132,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: vocalizes-imitates
         text: Does your child make sounds or try to imitate sounds?
         type: choice
@@ -150,7 +145,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
 
   - linkId: developmental-screening-18mo-group
     text: Developmental Screening for 18 Months / 1.5 Years
@@ -177,7 +171,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: use-10-words
         text: Does your child use at least 10 words?
         type: choice
@@ -191,7 +184,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: point-to-wants
         text: Does your child point to show what they want?
         type: choice
@@ -205,7 +197,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: follow-simple-instructions
         text: Does your child follow simple instructions (e.g., “give me the toy”)?
         type: choice
@@ -219,7 +210,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: imitate-behavior
         text: Does your child imitate behavior (e.g., pretend to talk on the phone)?
         type: choice
@@ -233,7 +223,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: hand-to-mouth
         text:
           Does your child use both hands to feed themselves or bring things to their
@@ -249,7 +238,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: express-interest
         text: Does your child show interest in others or try to get your attention?
         type: choice
@@ -263,7 +251,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: concerns-about-development
         text: Do you have any concerns about your child's development?
         type: choice
@@ -277,7 +264,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: concerns-about-development-details-18mo
         text: Describe your concerns
         type: text
@@ -312,7 +298,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: combine-2-3-words
         text: Does your child combine 2 to 3 words into phrases or sentences?
         type: choice
@@ -326,7 +311,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: follow-2-step-instructions
         text:
           Does your child follow two-step instructions (e.g., “pick up the toy and
@@ -342,7 +326,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: play-with-other-children
         text: Does your child play with other children or show interest in social games?
         type: choice
@@ -356,7 +339,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: copy-simple-actions
         text:
           Does your child copy simple actions like clapping, waving, or pretending
@@ -372,7 +354,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: build-tower
         text: Can your child build a tower of at least 4 blocks?
         type: choice
@@ -386,7 +367,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: draw-circles
         text: Can your child draw circles or vertical lines?
         type: choice
@@ -400,7 +380,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: concerns-about-development-30mo
         text: Do you have any concerns about your child's development?
         type: choice
@@ -414,7 +393,6 @@ item:
           - valueCoding:
               code: "no"
               display: "No"
-        choiceOrientation: horizontal
       - linkId: concerns-about-development-details
         text: Describe your concerns
         type: text
