@@ -2,7 +2,7 @@ import { Button } from 'antd';
 import * as _ from 'lodash';
 import { QuestionItems, type GroupItemProps } from 'sdc-qrf';
 
-import { Paragraph } from 'src/components/Typography';
+import { Paragraph, Title } from 'src/components/Typography';
 
 import { S } from './GroupVoice.styles';
 import { useGroupVoice } from './hooks';
@@ -25,6 +25,9 @@ export function GroupVoice(props: GroupItemProps) {
     const { connection, startRecording, stopRecording, text, gen, isSpeaking } = useGroupVoice(props);
     return (
         <S.Root id={`group-${linkId}`}>
+            <Title level={5} style={{ paddingBottom: 10 }}>
+                {props.questionItem.text}
+            </Title>
             <S.Row>
                 {connection !== 'connected' ? (
                     <Button loading={connection == 'connecting'} onClick={() => startRecording()}>

@@ -21,6 +21,7 @@ export const S = {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        padding-bottom: 10px;
     `,
     Speaking: styled.span`
         display: inline-flex;
