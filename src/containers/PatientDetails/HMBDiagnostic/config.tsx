@@ -1,7 +1,12 @@
 import { AreaChartOutlined, BarChartOutlined, CalendarOutlined, HeartOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 
-import { createCategoricalAxis, formatAuthored, formatChartDateTime, makeUniqueX } from 'src/components/Chart';
+import {
+    createCategoricalAxis,
+    formatChartDateTime,
+    formatCompactChartDateTime,
+    makeUniqueX,
+} from 'src/components/Chart';
 import type { ChartCardProps } from 'src/components/Chart';
 
 import type { HMBChartDatum, HMBResponseRow } from './types';
@@ -10,16 +15,6 @@ type DistributiveOmit<T, K extends keyof T> = T extends unknown ? Omit<T, K> : n
 type HMBChartConfig = DistributiveOmit<ChartCardProps<HMBResponseRow, HMBChartDatum>, 'rows' | 'onPointClick'> & {
     id: string;
 };
-
-function toChartPointMeta(row: HMBResponseRow) {
-    const label = formatAuthored(row.authored);
-
-    return {
-        x: makeUniqueX(label, row.id),
-        xTooltipLabel: formatChartDateTime(row.authored),
-        qrId: row.id,
-    };
-}
 
 // Recharts tooltip formatters receive mixed values, so only numbers get fixed precision.
 const numericFormatter = (value: unknown) => (typeof value === 'number' ? value.toFixed(1) : String(value ?? ''));
@@ -52,7 +47,9 @@ export const getHMBCharts = (): HMBChartConfig[] => {
             ...flow.chartProps,
             transform: (rows) =>
                 rows.map((row) => ({
-                    ...toChartPointMeta(row),
+                    x: makeUniqueX(formatCompactChartDateTime(row.authored), row.id),
+                    xTooltipLabel: formatChartDateTime(row.authored),
+                    qrId: row.id,
                     y: flow.encode(row.flow),
                 })),
 
@@ -72,7 +69,9 @@ export const getHMBCharts = (): HMBChartConfig[] => {
             ...severity.chartProps,
             transform: (rows) =>
                 rows.map((row) => ({
-                    ...toChartPointMeta(row),
+                    x: makeUniqueX(formatCompactChartDateTime(row.authored), row.id),
+                    xTooltipLabel: formatChartDateTime(row.authored),
+                    qrId: row.id,
                     y: severity.encode(row.pain_severity),
                     yLine: row.pain_score ?? undefined,
                 })),
@@ -96,7 +95,9 @@ export const getHMBCharts = (): HMBChartConfig[] => {
             variant: 'area',
             transform: (rows) =>
                 rows.map((row) => ({
-                    ...toChartPointMeta(row),
+                    x: makeUniqueX(formatCompactChartDateTime(row.authored), row.id),
+                    xTooltipLabel: formatChartDateTime(row.authored),
+                    qrId: row.id,
                     y: row.impact_score ?? undefined,
                 })),
             yDomain: [0, 10],
@@ -112,7 +113,9 @@ export const getHMBCharts = (): HMBChartConfig[] => {
             variant: 'area',
             transform: (rows) =>
                 rows.map((row) => ({
-                    ...toChartPointMeta(row),
+                    x: makeUniqueX(formatCompactChartDateTime(row.authored), row.id),
+                    xTooltipLabel: formatChartDateTime(row.authored),
+                    qrId: row.id,
                     y: row.intensity ?? undefined,
                 })),
             yDomain: [0, 10],

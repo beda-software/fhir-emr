@@ -35,7 +35,7 @@ export function isToday(iso: string): boolean {
     return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate();
 }
 
-export function formatAuthored(iso: string): string {
+export function formatCompactChartDateTime(iso: string): string {
     return isToday(iso) ? formatChartTime(iso) : formatChartDate(iso);
 }
 
