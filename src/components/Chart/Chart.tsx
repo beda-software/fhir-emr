@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 import { useId } from 'react';
 import {
     Area,
@@ -20,9 +19,6 @@ import { getChartDisplayLabel, getDefaultChartTooltipLabel } from './formatters'
 
 type HaloDotProps = { cx?: number; cy?: number };
 
-const DEFAULT_CHART_HEIGHT = 340;
-const DEFAULT_CHART_MARGIN = { left: 0, right: 20, top: 20, bottom: 20 };
-
 const renderHaloDot = (stroke: string, fill: string, coreR: number, haloR: number) =>
     function HaloDot({ cx, cy }: HaloDotProps) {
         if (cx == null || cy == null) {
@@ -36,10 +32,6 @@ const renderHaloDot = (stroke: string, fill: string, coreR: number, haloR: numbe
         );
     };
 
-export const chartDotSpec = (stroke: string, fill: string) => renderHaloDot(stroke, fill, 4, 8);
-
-export const chartActiveDotSpec = (stroke: string, fill: string) => renderHaloDot(stroke, fill, 5, 10);
-
 export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: ChartProps<TDatum>) {
     const {
         variant,
@@ -52,8 +44,8 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
         yLineTickFormatter: lineYAxisTickFormatter,
         onPointClick,
         empty,
-        height = DEFAULT_CHART_HEIGHT,
-        margin = DEFAULT_CHART_MARGIN,
+        height = 340,
+        margin = { left: 0, right: 20, top: 20, bottom: 20 },
         xAxisProps,
         yAxisProps: primaryYAxisProps,
         yLineAxisProps: lineYAxisProps,
@@ -69,6 +61,8 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
     const areaStroke = theme.primaryPalette.bcp_5;
     const dotFill = theme.neutralPalette.gray_1;
     const areaColor = (areaSeriesProps?.stroke as string | undefined) ?? areaStroke;
+    const isAreaChart = variant === 'area';
+    const isBarLineChart = variant === 'bar+line';
 
     if (data.length === 0 && empty) {
         return <div style={{ width: '100%', height }}>{empty}</div>;
@@ -99,7 +93,7 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
                 <XAxis
                     dataKey="x"
                     fontSize={10}
-                    padding={variant === 'area' ? { left: 20, right: 20 } : undefined}
+                    padding={isAreaChart ? { left: 20, right: 20 } : undefined}
                     tickFormatter={getChartDisplayLabel}
                     {...xAxisProps}
                 />
@@ -113,21 +107,6 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
                     tickMargin={2}
                     {...primaryYAxisProps}
                 />
-                {variant === 'bar+line' && (
-                    <YAxis
-                        yAxisId="right"
-                        orientation="right"
-                        fontSize={10}
-                        domain={lineYAxisDomain}
-                        ticks={lineYAxisTicks}
-                        tickFormatter={lineYAxisTickFormatter}
-                        axisLine={false}
-                        tickLine={false}
-                        tickMargin={2}
-                        width={28}
-                        {...lineYAxisProps}
-                    />
-                )}
 
                 <Tooltip
                     cursor={{ fill: 'transparent' }}
@@ -135,11 +114,8 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
                     labelFormatter={getDefaultChartTooltipLabel}
                     {...tooltipProps}
                 />
-                {variant === 'bar+line' && (
-                    <Legend align="center" iconSize={8} wrapperStyle={{ fontSize: 10 }} {...legendProps} />
-                )}
 
-                {(variant === 'bar' || variant === 'bar+line') && (
+                {variant === 'bar' && (
                     <Bar
                         dataKey="y"
                         fill={theme.primaryPalette.bcp_6}
@@ -149,7 +125,7 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
                         {...barSeriesProps}
                     />
                 )}
-                {variant === 'area' && (
+                {isAreaChart && (
                     <>
                         <defs>
                             <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
@@ -170,20 +146,44 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
                         />
                     </>
                 )}
-                {variant === 'bar+line' && (
-                    <Line
-                        yAxisId="right"
-                        type="monotone"
-                        dataKey="yLine"
-                        stroke={theme.success}
-                        strokeWidth={2}
-                        connectNulls={false}
-                        dot={{
-                            fill: theme.success,
-                        }}
-                        activeDot={{ r: 4, stroke: theme.neutralPalette.gray_3, strokeWidth: 2 }}
-                        {...lineSeriesProps}
-                    />
+                {isBarLineChart && (
+                    <>
+                        <YAxis
+                            yAxisId="right"
+                            orientation="right"
+                            fontSize={10}
+                            domain={lineYAxisDomain}
+                            ticks={lineYAxisTicks}
+                            tickFormatter={lineYAxisTickFormatter}
+                            axisLine={false}
+                            tickLine={false}
+                            tickMargin={2}
+                            width={28}
+                            {...lineYAxisProps}
+                        />
+                        <Legend align="center" iconSize={8} wrapperStyle={{ fontSize: 10 }} {...legendProps} />
+                        <Bar
+                            dataKey="y"
+                            fill={theme.primaryPalette.bcp_6}
+                            opacity={0.4}
+                            minPointSize={5}
+                            activeBar={{ opacity: 1 }}
+                            {...barSeriesProps}
+                        />
+                        <Line
+                            yAxisId="right"
+                            type="monotone"
+                            dataKey="yLine"
+                            stroke={theme.success}
+                            strokeWidth={2}
+                            connectNulls={false}
+                            dot={{
+                                fill: theme.success,
+                            }}
+                            activeDot={{ r: 4, stroke: theme.neutralPalette.gray_3, strokeWidth: 2 }}
+                            {...lineSeriesProps}
+                        />
+                    </>
                 )}
             </ComposedChart>
         </ResponsiveContainer>
