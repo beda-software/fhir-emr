@@ -1,0 +1,85 @@
+resourceType: Questionnaire
+id: vitals-height-weight-infant
+url: vitals-height-weight-infant
+name: vitals-height-weight-infant
+title: Growth Metrics (Under 2 Years)
+status: active
+description: >
+  Growth metrics for infants and toddlers under 2 years, including height,
+  weight, head circumference, age in months, and BMI z-score. Supports pediatric
+  growth tracking using WHO standards.
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+subjectType:
+  - Patient
+useContext:
+- code:
+    code: questionnaire-type
+    system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+  value:
+    CodeableConcept:
+      coding:
+      - code: form-library
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+item:
+  - linkId: patientId
+    text: PatientId
+    type: string
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.id"
+  - linkId: patientName
+    text: PatientName
+    type: string
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.name.first().given.first() + ' ' +
+        %Patient.name.first().family"
+  - linkId: vitals-data
+    type: group
+    itemControl:
+      coding:
+      - code: group-voice
+    item:
+    - linkId: height
+      type: quantity
+      text: Height
+      unitOption:
+        - code: cm
+          system: http://unitsofmeasure.org
+          display: cm
+    - linkId: weight
+      type: quantity
+      text: Weight
+      unitOption:
+        - code: kg
+          system: http://unitsofmeasure.org
+          display: kg
+    - linkId: head-circumference
+      type: quantity
+      text: Head circumference (for infants)
+      unitOption:
+        - code: cm
+          system: http://unitsofmeasure.org
+          display: cm
+    - linkId: age-in-months
+      type: quantity
+      text: Age in months
+      unitOption:
+        - code: mo
+          system: http://unitsofmeasure.org
+          display: months
+    - linkId: bmi-z-score
+      type: quantity
+      text: BMI z-score (WHO)
+      unitOption:
+        - code: kg/m2
+          system: http://unitsofmeasure.org
+          display: kg/m2

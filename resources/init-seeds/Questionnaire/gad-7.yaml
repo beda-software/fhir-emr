@@ -55,6 +55,9 @@ item:
 
   - text: Over the last two weeks, how often have you been bothered by the following problems?
     type: group
+    itemControl:
+      coding:
+      - code: group-voice
     linkId: gad-7
     item:
       - linkId: 69725-0
@@ -316,7 +319,7 @@ item:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 3
 
-      - linkId: anxiety-score
+  -     linkId: anxiety-score
         text: GAD-7 Anxiety Severity Score
         required: true
         type: integer
