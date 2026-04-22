@@ -5,7 +5,7 @@ import { formatError, RenderRemoteData } from '@beda.software/fhir-react';
 import { DashboardCard } from 'src/components/DashboardCard';
 
 import { Chart } from './Chart';
-import { ChartCardProps, ChartDatumBase } from './Chart.types';
+import type { ChartCardProps, ChartDatumBase, ChartProps } from './Chart.types';
 
 export function ChartCard<TRow, TDatum extends ChartDatumBase = ChartDatumBase>(props: ChartCardProps<TRow, TDatum>) {
     const { title, icon, compactIcon = true, rows, transform, ...chartProps } = props;
@@ -17,7 +17,11 @@ export function ChartCard<TRow, TDatum extends ChartDatumBase = ChartDatumBase>(
                 renderLoading={() => <Spin style={{ display: 'block', padding: 24 }} />}
                 renderFailure={(error) => <Alert type="error" message={formatError(error)} style={{ margin: 24 }} />}
             >
-                {(data) => <Chart<TDatum> data={transform(data)} {...chartProps} />}
+                {(data) => {
+                    const chartPropsForChart = { ...chartProps, data: transform(data) } as ChartProps<TDatum>;
+
+                    return <Chart<TDatum> {...chartPropsForChart} />;
+                }}
             </RenderRemoteData>
         </DashboardCard>
     );

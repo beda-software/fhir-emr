@@ -14,11 +14,14 @@ import {
 } from 'recharts';
 import { useTheme } from 'styled-components';
 
-import { ChartDatumBase, ChartProps } from './Chart.types';
+import type { ChartDatumBase, ChartProps } from './Chart.types';
 import { ChartTooltip } from './ChartTooltip';
 import { getChartDisplayLabel } from './formatters';
 
 type HaloDotProps = { cx?: number; cy?: number };
+
+const DEFAULT_CHART_HEIGHT = 340;
+const DEFAULT_CHART_MARGIN = { left: 0, right: 20, top: 20, bottom: 20 };
 
 const renderHaloDot = (stroke: string, fill: string, coreR: number, haloR: number) =>
     function HaloDot({ cx, cy }: HaloDotProps) {
@@ -41,31 +44,31 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
     const {
         variant,
         data,
-        yDomain = ['auto', 'auto'],
-        yTicks,
-        yTickFormatter,
-        yLineDomain,
-        yLineTicks,
-        yLineTickFormatter,
+        yDomain: primaryYAxisDomain = ['auto', 'auto'],
+        yTicks: primaryYAxisTicks,
+        yTickFormatter: primaryYAxisTickFormatter,
+        yLineDomain: lineYAxisDomain,
+        yLineTicks: lineYAxisTicks,
+        yLineTickFormatter: lineYAxisTickFormatter,
         onPointClick,
         empty,
-        height = 340,
-        margin = { left: 0, right: 20, top: 20, bottom: 20 },
+        height = DEFAULT_CHART_HEIGHT,
+        margin = DEFAULT_CHART_MARGIN,
         xAxisProps,
-        yAxisProps,
-        yLineAxisProps,
+        yAxisProps: primaryYAxisProps,
+        yLineAxisProps: lineYAxisProps,
         gridProps,
         legendProps,
         tooltipProps,
-        barProps,
-        lineProps,
-        areaProps,
+        barProps: barSeriesProps,
+        lineProps: lineSeriesProps,
+        areaProps: areaSeriesProps,
     } = props;
     const theme = useTheme();
     const gradientId = useId();
     const areaStroke = theme.primaryPalette.bcp_5;
     const dotFill = theme.neutralPalette.gray_1;
-    const areaColor = (areaProps?.stroke as string | undefined) ?? areaStroke;
+    const areaColor = (areaSeriesProps?.stroke as string | undefined) ?? areaStroke;
 
     if (data.length === 0 && empty) {
         return <div style={{ width: '100%', height }}>{empty}</div>;
@@ -102,27 +105,27 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
                 />
                 <YAxis
                     fontSize={10}
-                    domain={yDomain}
-                    ticks={yTicks}
-                    tickFormatter={yTickFormatter}
+                    domain={primaryYAxisDomain}
+                    ticks={primaryYAxisTicks}
+                    tickFormatter={primaryYAxisTickFormatter}
                     axisLine={false}
                     tickLine={false}
                     tickMargin={2}
-                    {...yAxisProps}
+                    {...primaryYAxisProps}
                 />
                 {variant === 'bar+line' && (
                     <YAxis
                         yAxisId="right"
                         orientation="right"
                         fontSize={10}
-                        domain={yLineDomain}
-                        ticks={yLineTicks}
-                        tickFormatter={yLineTickFormatter}
+                        domain={lineYAxisDomain}
+                        ticks={lineYAxisTicks}
+                        tickFormatter={lineYAxisTickFormatter}
                         axisLine={false}
                         tickLine={false}
                         tickMargin={2}
                         width={28}
-                        {...yLineAxisProps}
+                        {...lineYAxisProps}
                     />
                 )}
 
@@ -145,7 +148,7 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
                         opacity={0.4}
                         minPointSize={5}
                         activeBar={{ opacity: 1 }}
-                        {...barProps}
+                        {...barSeriesProps}
                     />
                 )}
                 {variant === 'area' && (
@@ -163,7 +166,7 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
                             strokeWidth={1}
                             dot={renderHaloDot(areaStroke, dotFill, 4, 8)}
                             activeDot={renderHaloDot(areaStroke, dotFill, 5, 10)}
-                            {...areaProps}
+                            {...areaSeriesProps}
                             fill={`url(#${gradientId})`}
                             fillOpacity={1}
                         />
@@ -181,7 +184,7 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
                             fill: theme.success,
                         }}
                         activeDot={{ r: 4, stroke: theme.neutralPalette.gray_3, strokeWidth: 2 }}
-                        {...lineProps}
+                        {...lineSeriesProps}
                     />
                 )}
             </ComposedChart>
