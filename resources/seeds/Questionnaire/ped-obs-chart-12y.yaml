@@ -1,0 +1,1893 @@
+id: ped-obs-chart-12y
+resourceType: Questionnaire
+name: ped-obs-chart-12y
+title: Paediatric Observation Chart (12 Years and over)
+status: active
+subjectType:
+  - Patient
+  - Encounter
+url: ped-obs-chart-12y
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+useContext:
+  - code:
+      code: questionnaire-type
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+    value:
+      CodeableConcept:
+        coding:
+          - code: form-library
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+  - name:
+      code: Author
+    type:
+      - PractitionerRole
+      - Practitioner
+      - Patient
+      - Organization
+item:
+  - text: PatientId
+    type: string
+    linkId: patientId
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.id"
+
+  - text: PatientName
+    type: string
+    linkId: patientName
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.name.first().given.first() + ' ' + %Patient.name.first().family"
+
+  - linkId: observation-chart-tabs-view
+    type: group
+    itemControl:
+      coding:
+        - code: group-tabs
+    item:
+      - linkId: observations-graph-wizard-group
+        text: Observations
+        type: group
+        item:
+          - linkId: explanation-group
+            type: group
+            hidden: true
+            item:
+              - linkId: blue-zone-explanation
+                type: display
+                itemControl:
+                  coding:
+                    - code: markdown
+                text: >-
+                  :::info-alert
+
+                  ### **Blue Zone Response**
+
+                  If your patient has any **BLUE ZONE observations** you **MUST:**
+
+                  1. Initiate appropriate clinical care.
+
+                  2. Increase the frequency of observations, as indicated by your patient's condition.
+
+                  3. Manage anxiety, pain and review oxygenation in consultation with the **NURSE IN CHARGE**.
+
+                  4. You can make a call to escalate the care of your patient at any time if you are worried or unsure whether to call.
+
+
+                  **Consider the following:**
+
+                  1. What is usual for your patient and are there documented 'ALTERATIONS TO CALLING CRITERIA'?
+
+                  2. Does the abnormal observation reflect deterioration in your patient?
+
+                  3. Is there an adverse trend in observations?
+
+                  :::
+
+              - linkId: yellow-zone-explanation
+                type: display
+                itemControl:
+                  coding:
+                    - code: markdown
+                text: >-
+                  :::warning-alert
+
+                  ### **Yellow Zone Response**
+
+                  If your patient has any **YELLOW ZONE observations OR ADDITIONAL CRITERIA (*)** you **MUST:**
+
+                  1. Initiate appropriate clinical care.
+
+                  2. Repeat and increase the frequency of observations, as indicated by your patient's condition.
+
+                  3. Consult promptly with the **NURSE IN CHARGE** to decide whether a **CLINICAL REVIEW** (or other CERS) call should be made.
+
+
+                  **Consider the following:**
+
+                  - What is usual for your patient and are there documented 'ALTERATIONS TO CALLING CRITERIA'?
+
+                  - Does the trend in observations suggest deterioration?
+
+                  - Is there more than one Yellow Zone observation or additional criteria?
+
+                  - Are you concerned about your patient?
+
+
+                  **If a CLINICAL REVIEW is called:**
+
+                  1. Reassess your patient and escalate according to your local CERS if the call is not attended within 30 minutes or you are becoming more concerned.
+
+                  2. Document an A–G assessment, reason for escalation, treatment and outcome in your patient's health care record.
+
+                  3. Inform the Attending Medical Officer that a call was made as soon as it is practicable.
+
+
+                  **(*) Additional YELLOW ZONE Criteria:**
+
+                  - Increasing oxygen requirement
+
+                  - Poor peripheral circulation
+
+                  - Greater than expected fluid loss
+
+                  - Reduced urine output or anuria (< 1mL/kg/hr)
+
+                  - Altered mental state: Agitation, Combative or Inconsolable
+
+                  - New, increasing or uncontrolled pain
+
+                  - New onset of fever > 38.5°C
+
+                  - BGL 2–3 mmol/L
+
+                  - **Concern by you or any staff or family member**
+
+                  :::
+
+              - linkId: red-zone-explanation
+                type: display
+                itemControl:
+                  coding:
+                    - code: markdown
+                text: >-
+                  :::error-alert
+
+                  ### **Red Zone Response**
+
+                  If your patient has any **RED ZONE observations or ADDITIONAL CRITERIA (*)** you **MUST** call for a **RAPID RESPONSE** (as per local CERS) **AND:**
+
+                  1. **Initiate** appropriate clinical care.
+
+                  2. **Inform** the **NURSE IN CHARGE** that you have called for a Rapid Response.
+
+                  3. **Repeat and increase** the frequency of observations, as indicated by your patient's condition.
+
+                  4. **Document** an A–G assessment, reason for escalation, treatment and outcome in your patient's health care record.
+
+                  5. **Inform** the Attending Medical Officer that a call was made as soon as it is practicable.
+
+
+                  **(*) Additional RED ZONE Criteria:**
+
+                  - **Cardiac or respiratory arrest**
+
+                  - **Circulatory collapse**
+
+                  - **Patient unresponsive**
+
+                  - **New onset of stridor**
+
+                  - No change or signs of improvement within 1 hour of CERS
+
+                  - 3 or more simultaneous 'Yellow Zone' observations
+
+                  - Significant bleeding
+
+                  - Sudden decrease in Level of Consciousness (a drop of 2 or more points on the GCS)
+
+                  - New or prolonged seizure activity
+
+                  - BGL < 2 mmol/L or symptomatic
+
+                  - **Serious concern by you or any staff or family member**
+
+                  :::
+
+          # Patient / Family Concern
+
+          - linkId: patient-family-concern-table-group
+            text: Patient / Family Concern
+            type: group
+            repeats: true
+            enableChart:
+              linkIdX: patient-family-concern-date
+              linkIdY: patient-family-concern-value
+            chartHighlight:
+              # Yes (index 0) — yellow zone (warning border, translucent)
+              - from: -0.5
+                to: 0.5
+                color: "#ffe58f99"
+              # Not asked (index 2) — neutral row (theme gray_5, translucent)
+              - from: 1.5
+                to: 2.5
+                color: "#d9d9d999"
+            itemControl:
+              coding:
+                - code: group-table
+            variable:
+              - name: Concern
+                language: text/fhirpath
+                expression: "%context.item.where(linkId='patient-family-concern-value').answer.valueCoding.code"
+              - name: ConcernLevel
+                language: text/fhirpath
+                expression: >-
+                  iif(%Concern.exists() and %Concern.first() = 'yes', 'yellow-zone', {})
+            item:
+              - linkId: patient-family-concern-date
+                text: Date and Time
+                type: dateTime
+                entryFormat: Select date and time
+                columnWidth:
+                  value: 150
+                  unit: px
+                calculatedExpression:
+                  language: text/fhirpath
+                  expression: "iif(%context.answer.exists(), %context.answer.valueDateTime, now())"
+                unit:
+                  code: " "
+                  display: " "
+
+              - linkId: patient-family-concern-value
+                text: Are you worried they are getting worse?
+                type: choice
+                entryFormat: Select response
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      code: "yes"
+                      display: "Yes"
+                  - valueCoding:
+                      code: "no"
+                      display: "No"
+                  - valueCoding:
+                      code: not-asked
+                      display: Not asked
+
+              - linkId: patient-family-concern-explanation
+                type: display
+                itemControl:
+                  coding:
+                    - code: markdown
+                text: Explanation
+                _text:
+                  cqfExpression:
+                    language: text/fhirpath
+                    expression: >-
+                      %questionnaire.repeat(item).where(linkId=%ConcernLevel & '-explanation').text
+                enableWhenExpression:
+                  language: text/fhirpath
+                  expression: "%ConcernLevel.exists()"
+
+          # Respiratory Rate
+
+          - linkId: respiratory-rate-table-group
+            text: Respiratory Rate, breaths/min
+            type: group
+            repeats: true
+            enableChart:
+              linkIdX: respiratory-rate-date
+              linkIdY: respiratory-rate-value
+            chartYAxisRange:
+              low:
+                value: 0
+              high:
+                value: 60
+            chartHighlight:
+              # ≤5 red zone
+              - to: 5
+                color: "#ffccc799"
+              # 6–10 yellow zone
+              - from: 5
+                to: 10
+                color: "#ffe58f99"
+              # 11–15 blue zone
+              - from: 10
+                to: 15
+                color: "#adcaff99"
+              # 16–20 normal (no highlight)
+              # 21–30 blue zone
+              - from: 20
+                to: 30
+                color: "#adcaff99"
+              # 31–40 yellow zone
+              - from: 30
+                to: 40
+                color: "#ffe58f99"
+              # ≥41 red zone
+              - from: 40
+                color: "#ffccc799"
+            itemControl:
+              coding:
+                - code: group-table
+            variable:
+              - name: RRDate
+                language: text/fhirpath
+                expression: "%context.item.where(linkId='respiratory-rate-date').answer.valueDateTime.first()"
+              - name: RR
+                language: text/fhirpath
+                expression: "%context.item.where(linkId='respiratory-rate-value').answer.valueQuantity.value"
+              - name: RRDefaultLevel
+                language: text/fhirpath
+                expression: >-
+                  iif(%RR.exists(),
+                    iif(%RR.first() <= 5, 'red-zone',
+                      iif(%RR.first() <= 10, 'yellow-zone',
+                        iif(%RR.first() <= 15, 'blue-zone',
+                          iif(%RR.first() <= 20, {},
+                            iif(%RR.first() <= 30, 'blue-zone',
+                              iif(%RR.first() <= 40, 'yellow-zone', 'red-zone')))))),
+                    {}
+                  )
+              - name: RRModificationGroup
+                language: text/fhirpath
+                expression: >-
+                  %resource.repeat(item).where(linkId='modifications-amendments-table-group').where(
+                    item.where(linkId='modifications-amendments-measurement').answer.valueCoding.code = 'respiratory-rate' and
+                    item.where(linkId='modifications-amendments-date').answer.valueDateTime <= %RRDate.toDateTime() and
+                    item.where(linkId='modifications-amendments-valid-until').answer.valueDateTime >= %RRDate.toDateTime()
+                  ).last()
+              - name: RRModificationMinValue
+                language: text/fhirpath
+                expression: "%RRModificationGroup.item.where(linkId='modifications-amendments-value-min').answer.valueDecimal"
+              - name: RRModificationMaxValue
+                language: text/fhirpath
+                expression: "%RRModificationGroup.item.where(linkId='modifications-amendments-value-max').answer.valueDecimal"
+              - name: RRLevel
+                language: text/fhirpath
+                expression: >-
+                  iif(
+                    %RRModificationGroup.exists() and %RR >= %RRModificationMinValue and %RR <= %RRModificationMaxValue,
+                    {},
+                    %RRDefaultLevel
+                  )
+            item:
+              - linkId: respiratory-rate-date
+                text: Date and Time
+                type: dateTime
+                entryFormat: Select date and time
+                columnWidth:
+                  value: 150
+                  unit: px
+                calculatedExpression:
+                  language: text/fhirpath
+                  expression: "iif(%context.answer.exists(), %context.answer.valueDateTime, now())"
+                unit:
+                  code: " "
+                  display: " "
+
+              - linkId: respiratory-rate-value
+                text: Respiratory Rate, breaths/min
+                type: quantity
+                entryFormat: Enter value
+                unit:
+                  code: /min
+                  system: http://unitsofmeasure.org
+                  display: breaths/min
+
+              - linkId: respiratory-rate-explanation
+                type: display
+                itemControl:
+                  coding:
+                    - code: markdown
+                text: Explanation
+                _text:
+                  cqfExpression:
+                    language: text/fhirpath
+                    expression: >-
+                      %questionnaire.repeat(item).where(linkId=%RRLevel & '-explanation').text
+                enableWhenExpression:
+                  language: text/fhirpath
+                  expression: "%RRLevel.exists()"
+
+          # Respiratory Distress
+
+          - linkId: respiratory-distress-table-group
+            text: Respiratory Distress
+            type: group
+            repeats: true
+            enableChart:
+              linkIdX: respiratory-distress-date
+              linkIdY: respiratory-distress-value
+            chartHighlight:
+              # Mild (index 1) — blue zone
+              - from: 0.5
+                to: 1.5
+                color: "#adcaff99"
+              # Moderate (index 2) — yellow zone
+              - from: 1.5
+                to: 2.5
+                color: "#ffe58f99"
+              # Severe (index 3) — red zone
+              - from: 2.5
+                to: 3.5
+                color: "#ffccc799"
+            itemControl:
+              coding:
+                - code: group-table
+            variable:
+              - name: RespDistress
+                language: text/fhirpath
+                expression: "%context.item.where(linkId='respiratory-distress-value').answer.valueCoding.code"
+              - name: RespDistressLevel
+                language: text/fhirpath
+                expression: >-
+                  iif(%RespDistress.exists(),
+                    iif(%RespDistress.first() = 'normal', {},
+                      iif(%RespDistress.first() = 'mild', 'blue-zone',
+                        iif(%RespDistress.first() = 'moderate', 'yellow-zone', 'red-zone'))),
+                    {}
+                  )
+            item:
+              - linkId: respiratory-distress-date
+                text: Date and Time
+                type: dateTime
+                entryFormat: Select date and time
+                columnWidth:
+                  value: 150
+                  unit: px
+                calculatedExpression:
+                  language: text/fhirpath
+                  expression: "iif(%context.answer.exists(), %context.answer.valueDateTime, now())"
+                unit:
+                  code: " "
+                  display: " "
+
+              - linkId: respiratory-distress-value
+                text: Respiratory Distress
+                type: choice
+                entryFormat: Select level
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      code: normal
+                      display: Normal
+                  - valueCoding:
+                      code: mild
+                      display: Mild
+                  - valueCoding:
+                      code: moderate
+                      display: Moderate
+                  - valueCoding:
+                      code: severe
+                      display: Severe
+
+              - linkId: respiratory-distress-explanation
+                type: display
+                itemControl:
+                  coding:
+                    - code: markdown
+                text: Explanation
+                _text:
+                  cqfExpression:
+                    language: text/fhirpath
+                    expression: >-
+                      %questionnaire.repeat(item).where(linkId=%RespDistressLevel & '-explanation').text
+                enableWhenExpression:
+                  language: text/fhirpath
+                  expression: "%RespDistressLevel.exists()"
+
+          # SpO2
+
+          - linkId: spo2-table-group
+            text: SpO2, %
+            type: group
+            repeats: true
+            enableChart:
+              linkIdX: spo2-date
+              linkIdY: spo2-value
+            chartYAxisRange:
+              low:
+                value: 70
+              high:
+                value: 100
+            chartHighlight:
+              # ≤90 red zone
+              - to: 90
+                color: "#ffccc799"
+              # 91–95 yellow zone
+              - from: 90
+                to: 95
+                color: "#ffe58f99"
+              # >95 normal
+            itemControl:
+              coding:
+                - code: group-table
+            variable:
+              - name: SpO2Date
+                language: text/fhirpath
+                expression: "%context.item.where(linkId='spo2-date').answer.valueDateTime.first()"
+              - name: SpO2
+                language: text/fhirpath
+                expression: "%context.item.where(linkId='spo2-value').answer.valueQuantity.value"
+              - name: SpO2DefaultLevel
+                language: text/fhirpath
+                expression: >-
+                  iif(%SpO2.exists(),
+                    iif(%SpO2.first() <= 90, 'red-zone',
+                      iif(%SpO2.first() <= 95, 'yellow-zone', {})),
+                    {}
+                  )
+              - name: SpO2ModificationGroup
+                language: text/fhirpath
+                expression: >-
+                  %resource.repeat(item).where(linkId='modifications-amendments-table-group').where(
+                    item.where(linkId='modifications-amendments-measurement').answer.valueCoding.code = 'o2-saturation' and
+                    item.where(linkId='modifications-amendments-date').answer.valueDateTime <= %SpO2Date.toDateTime() and
+                    item.where(linkId='modifications-amendments-valid-until').answer.valueDateTime >= %SpO2Date.toDateTime()
+                  ).last()
+              - name: SpO2ModificationMinValue
+                language: text/fhirpath
+                expression: "%SpO2ModificationGroup.item.where(linkId='modifications-amendments-value-min').answer.valueDecimal"
+              - name: SpO2ModificationMaxValue
+                language: text/fhirpath
+                expression: "%SpO2ModificationGroup.item.where(linkId='modifications-amendments-value-max').answer.valueDecimal"
+              - name: SpO2Level
+                language: text/fhirpath
+                expression: >-
+                  iif(
+                    %SpO2ModificationGroup.exists() and %SpO2 >= %SpO2ModificationMinValue and %SpO2 <= %SpO2ModificationMaxValue,
+                    {},
+                    %SpO2DefaultLevel
+                  )
+            item:
+              - linkId: spo2-date
+                text: Date and Time
+                type: dateTime
+                entryFormat: Select date and time
+                columnWidth:
+                  value: 150
+                  unit: px
+                calculatedExpression:
+                  language: text/fhirpath
+                  expression: "iif(%context.answer.exists(), %context.answer.valueDateTime, now())"
+                unit:
+                  code: " "
+                  display: " "
+
+              - linkId: spo2-value
+                text: SpO2 %
+                type: quantity
+                entryFormat: Enter value
+                unit:
+                  code: "%"
+                  system: http://unitsofmeasure.org
+                  display: "%"
+
+              - linkId: spo2-explanation
+                type: display
+                itemControl:
+                  coding:
+                    - code: markdown
+                text: Explanation
+                _text:
+                  cqfExpression:
+                    language: text/fhirpath
+                    expression: >-
+                      %questionnaire.repeat(item).where(linkId=%SpO2Level & '-explanation').text
+                enableWhenExpression:
+                  language: text/fhirpath
+                  expression: "%SpO2Level.exists()"
+
+          # Oxygen
+
+          - linkId: oxygen-table-group
+            text: Oxygen
+            type: group
+            repeats: true
+            itemControl:
+              coding:
+                - code: group-table
+            item:
+              - linkId: oxygen-date
+                text: Date and Time
+                type: dateTime
+                entryFormat: Select date and time
+                columnWidth:
+                  value: 150
+                  unit: px
+                calculatedExpression:
+                  language: text/fhirpath
+                  expression: "iif(%context.answer.exists(), %context.answer.valueDateTime, now())"
+
+              - linkId: oxygen-flow-rate
+                text: O2 L/min or %
+                type: quantity
+                entryFormat: Enter value
+
+              - linkId: oxygen-device-mode
+                text: Device
+                type: string
+                entryFormat: Enter device
+
+          # Heart Rate
+
+          - linkId: heart-rate-table-group
+            text: Heart Rate, beats/min
+            type: group
+            repeats: true
+            enableChart:
+              linkIdX: heart-rate-date
+              linkIdY: heart-rate-value
+            chartYAxisRange:
+              low:
+                value: 30
+              high:
+                value: 180
+            chartHighlight:
+              # ≤40 red zone
+              - to: 40
+                color: "#ffccc799"
+              # 41–50 yellow zone
+              - from: 40
+                to: 50
+                color: "#ffe58f99"
+              # 51–60 blue zone
+              - from: 50
+                to: 60
+                color: "#adcaff99"
+              # 61–100 normal
+              # 101–130 blue zone
+              - from: 100
+                to: 130
+                color: "#adcaff99"
+              # 131–150 yellow zone
+              - from: 130
+                to: 150
+                color: "#ffe58f99"
+              # ≥151 red zone
+              - from: 150
+                color: "#ffccc799"
+            itemControl:
+              coding:
+                - code: group-table
+            variable:
+              - name: HRDate
+                language: text/fhirpath
+                expression: "%context.item.where(linkId='heart-rate-date').answer.valueDateTime.first()"
+              - name: HR
+                language: text/fhirpath
+                expression: "%context.item.where(linkId='heart-rate-value').answer.valueQuantity.value"
+              - name: HRDefaultLevel
+                language: text/fhirpath
+                expression: >-
+                  iif(%HR.exists(),
+                    iif(%HR.first() <= 40, 'red-zone',
+                      iif(%HR.first() <= 50, 'yellow-zone',
+                        iif(%HR.first() <= 60, 'blue-zone',
+                          iif(%HR.first() <= 100, {},
+                            iif(%HR.first() <= 130, 'blue-zone',
+                              iif(%HR.first() <= 150, 'yellow-zone', 'red-zone')))))),
+                    {}
+                  )
+              - name: HRModificationGroup
+                language: text/fhirpath
+                expression: >-
+                  %resource.repeat(item).where(linkId='modifications-amendments-table-group').where(
+                    item.where(linkId='modifications-amendments-measurement').answer.valueCoding.code = 'heart-rate' and
+                    item.where(linkId='modifications-amendments-date').answer.valueDateTime <= %HRDate.toDateTime() and
+                    item.where(linkId='modifications-amendments-valid-until').answer.valueDateTime >= %HRDate.toDateTime()
+                  ).last()
+              - name: HRModificationMinValue
+                language: text/fhirpath
+                expression: "%HRModificationGroup.item.where(linkId='modifications-amendments-value-min').answer.valueDecimal"
+              - name: HRModificationMaxValue
+                language: text/fhirpath
+                expression: "%HRModificationGroup.item.where(linkId='modifications-amendments-value-max').answer.valueDecimal"
+              - name: HRLevel
+                language: text/fhirpath
+                expression: >-
+                  iif(
+                    %HRModificationGroup.exists() and %HR >= %HRModificationMinValue and %HR <= %HRModificationMaxValue,
+                    {},
+                    %HRDefaultLevel
+                  )
+            item:
+              - linkId: heart-rate-date
+                text: Date and Time
+                type: dateTime
+                entryFormat: Select date and time
+                columnWidth:
+                  value: 150
+                  unit: px
+                calculatedExpression:
+                  language: text/fhirpath
+                  expression: "iif(%context.answer.exists(), %context.answer.valueDateTime, now())"
+                unit:
+                  code: " "
+                  display: " "
+
+              - linkId: heart-rate-value
+                text: Heart Rate, beats/min
+                type: quantity
+                entryFormat: Enter value
+                unit:
+                  code: /min
+                  system: http://unitsofmeasure.org
+                  display: beats/min
+
+              - linkId: heart-rate-explanation
+                type: display
+                itemControl:
+                  coding:
+                    - code: markdown
+                text: Explanation
+                _text:
+                  cqfExpression:
+                    language: text/fhirpath
+                    expression: >-
+                      %questionnaire.repeat(item).where(linkId=%HRLevel & '-explanation').text
+                enableWhenExpression:
+                  language: text/fhirpath
+                  expression: "%HRLevel.exists()"
+
+          # Capillary Refill
+
+          - linkId: capillary-refill-table-group
+            text: Capillary Refill
+            type: group
+            repeats: true
+            enableChart:
+              linkIdX: capillary-refill-date
+              linkIdY: capillary-refill-value
+            chartYAxisRange:
+              low:
+                value: 0
+              high:
+                value: 6
+            chartHighlight:
+              # ≥ 3 seconds — yellow zone
+              - from: 3
+                color: "#ffe58f99"
+            itemControl:
+              coding:
+                - code: group-table
+            variable:
+              - name: CapRefill
+                language: text/fhirpath
+                expression: "%context.item.where(linkId='capillary-refill-value').answer.valueQuantity.value"
+              - name: CapRefillDefaultLevel
+                language: text/fhirpath
+                expression: >-
+                  iif(%CapRefill.exists(),
+                    iif(%CapRefill.first() >= 3, 'yellow-zone', {}),
+                    {}
+                  )
+              - name: CapRefillDate
+                language: text/fhirpath
+                expression: "%context.item.where(linkId='capillary-refill-date').answer.valueDateTime.first()"
+              - name: CapRefillModificationGroup
+                language: text/fhirpath
+                expression: >-
+                  %resource.repeat(item).where(linkId='modifications-amendments-table-group').where(
+                    item.where(linkId='modifications-amendments-measurement').answer.valueCoding.code = 'capillary-refill' and
+                    item.where(linkId='modifications-amendments-date').answer.valueDateTime <= %CapRefillDate.toDateTime() and
+                    item.where(linkId='modifications-amendments-valid-until').answer.valueDateTime >= %CapRefillDate.toDateTime()
+                  ).last()
+              - name: CapRefillModificationMinValue
+                language: text/fhirpath
+                expression: "%CapRefillModificationGroup.item.where(linkId='modifications-amendments-value-min').answer.valueDecimal"
+              - name: CapRefillModificationMaxValue
+                language: text/fhirpath
+                expression: "%CapRefillModificationGroup.item.where(linkId='modifications-amendments-value-max').answer.valueDecimal"
+              - name: CapRefillLevel
+                language: text/fhirpath
+                expression: >-
+                  iif(
+                    %CapRefillModificationGroup.exists() and %CapRefill >= %CapRefillModificationMinValue and %CapRefill <= %CapRefillModificationMaxValue,
+                    {},
+                    %CapRefillDefaultLevel
+                  )
+            item:
+              - linkId: capillary-refill-date
+                text: Date and Time
+                type: dateTime
+                entryFormat: Select date and time
+                columnWidth:
+                  value: 150
+                  unit: px
+                calculatedExpression:
+                  language: text/fhirpath
+                  expression: "iif(%context.answer.exists(), %context.answer.valueDateTime, now())"
+                unit:
+                  code: " "
+                  display: " "
+
+              - linkId: capillary-refill-value
+                text: Capillary Refill, seconds
+                type: quantity
+                entryFormat: Enter value
+                unit:
+                  code: s
+                  system: http://unitsofmeasure.org
+                  display: s
+
+              - linkId: capillary-refill-explanation
+                type: display
+                itemControl:
+                  coding:
+                    - code: markdown
+                text: Explanation
+                _text:
+                  cqfExpression:
+                    language: text/fhirpath
+                    expression: >-
+                      %questionnaire.repeat(item).where(linkId=%CapRefillLevel & '-explanation').text
+                enableWhenExpression:
+                  language: text/fhirpath
+                  expression: "%CapRefillLevel.exists()"
+
+          # Systolic Blood Pressure
+
+          - linkId: systolic-blood-pressure-table-group
+            text: Systolic Blood Pressure, mmHg
+            type: group
+            repeats: true
+            enableChart:
+              linkIdX: systolic-blood-pressure-date
+              linkIdY: systolic-blood-pressure-value
+            chartYAxisRange:
+              low:
+                value: 40
+              high:
+                value: 200
+            chartHighlight:
+              # ≤80 red zone
+              - to: 80
+                color: "#ffccc799"
+              # 81–90 yellow zone
+              - from: 80
+                to: 90
+                color: "#ffe58f99"
+              # 91–120 normal
+              # 121–160 blue zone
+              - from: 120
+                to: 160
+                color: "#adcaff99"
+              # 161–200 yellow zone
+              - from: 160
+                to: 200
+                color: "#ffe58f99"
+              # ≥201 red zone
+              - from: 200
+                color: "#ffccc799"
+            itemControl:
+              coding:
+                - code: group-table
+            variable:
+              - name: SystolicBPDate
+                language: text/fhirpath
+                expression: "%context.item.where(linkId='systolic-blood-pressure-date').answer.valueDateTime.first()"
+              - name: SystolicBP
+                language: text/fhirpath
+                expression: "%context.item.where(linkId='systolic-blood-pressure-value').answer.valueQuantity.value"
+              - name: SystolicBPDefaultLevel
+                language: text/fhirpath
+                expression: >-
+                  iif(%SystolicBP.exists(),
+                    iif(%SystolicBP.first() <= 80, 'red-zone',
+                      iif(%SystolicBP.first() <= 90, 'yellow-zone',
+                        iif(%SystolicBP.first() <= 120, {},
+                          iif(%SystolicBP.first() <= 160, 'blue-zone',
+                            iif(%SystolicBP.first() <= 200, 'yellow-zone', 'red-zone'))))),
+                    {}
+                  )
+              - name: SystolicBPModificationGroup
+                language: text/fhirpath
+                expression: >-
+                  %resource.repeat(item).where(linkId='modifications-amendments-table-group').where(
+                    item.where(linkId='modifications-amendments-measurement').answer.valueCoding.code = 'systolic-blood-pressure' and
+                    item.where(linkId='modifications-amendments-date').answer.valueDateTime <= %SystolicBPDate.toDateTime() and
+                    item.where(linkId='modifications-amendments-valid-until').answer.valueDateTime >= %SystolicBPDate.toDateTime()
+                  ).last()
+              - name: SystolicBPModificationMinValue
+                language: text/fhirpath
+                expression: "%SystolicBPModificationGroup.item.where(linkId='modifications-amendments-value-min').answer.valueDecimal"
+              - name: SystolicBPModificationMaxValue
+                language: text/fhirpath
+                expression: "%SystolicBPModificationGroup.item.where(linkId='modifications-amendments-value-max').answer.valueDecimal"
+              - name: SystolicBPLevel
+                language: text/fhirpath
+                expression: >-
+                  iif(
+                    %SystolicBPModificationGroup.exists() and %SystolicBP >= %SystolicBPModificationMinValue and %SystolicBP <= %SystolicBPModificationMaxValue,
+                    {},
+                    %SystolicBPDefaultLevel
+                  )
+            item:
+              - linkId: systolic-blood-pressure-date
+                text: Date and Time
+                type: dateTime
+                entryFormat: Select date and time
+                columnWidth:
+                  value: 150
+                  unit: px
+                calculatedExpression:
+                  language: text/fhirpath
+                  expression: "iif(%context.answer.exists(), %context.answer.valueDateTime, now())"
+                unit:
+                  code: " "
+                  display: " "
+
+              - linkId: systolic-blood-pressure-value
+                text: Systolic BP, mmHg
+                type: quantity
+                entryFormat: Enter value
+                unit:
+                  code: mmHg
+                  system: http://unitsofmeasure.org
+                  display: mmHg
+
+              - linkId: systolic-blood-pressure-explanation
+                type: display
+                itemControl:
+                  coding:
+                    - code: markdown
+                text: Explanation
+                _text:
+                  cqfExpression:
+                    language: text/fhirpath
+                    expression: >-
+                      %questionnaire.repeat(item).where(linkId=%SystolicBPLevel & '-explanation').text
+                enableWhenExpression:
+                  language: text/fhirpath
+                  expression: "%SystolicBPLevel.exists()"
+
+          # Level of Consciousness
+
+          - linkId: level-of-consciousness-table-group
+            text: Level of Consciousness
+            type: group
+            repeats: true
+            enableChart:
+              linkIdX: level-of-consciousness-date
+              linkIdY: level-of-consciousness-value
+            chartYAxisRange:
+              low:
+                value: 0
+              high:
+                value: 4
+            # Zones rely on numeric indices matching answerOption order
+            # (0=A, 1=C, 2=V, 3=P, 4=U).
+            chartHighlight:
+              # C, V (indices 1–2) — yellow zone
+              - from: 0.5
+                to: 2.5
+                color: "#ffe58f99"
+              # P, U (indices 3–4) — red zone
+              - from: 2.5
+                to: 4.5
+                color: "#ffccc799"
+            itemControl:
+              coding:
+                - code: group-table
+            variable:
+              - name: LOC
+                language: text/fhirpath
+                expression: "%context.item.where(linkId='level-of-consciousness-value').answer.valueCoding.code"
+              - name: LOCLevel
+                language: text/fhirpath
+                expression: >-
+                  iif(%LOC.exists(),
+                    iif(%LOC.first() = 'alert', {},
+                      iif(%LOC.first() = 'change-in-behaviour' or %LOC.first() = 'voice', 'yellow-zone', 'red-zone')),
+                    {}
+                  )
+            item:
+              - linkId: level-of-consciousness-date
+                text: Date and Time
+                type: dateTime
+                entryFormat: Select date and time
+                columnWidth:
+                  value: 150
+                  unit: px
+                calculatedExpression:
+                  language: text/fhirpath
+                  expression: "iif(%context.answer.exists(), %context.answer.valueDateTime, now())"
+                unit:
+                  code: " "
+                  display: " "
+
+              - linkId: level-of-consciousness-value
+                text: Level of Consciousness
+                type: choice
+                entryFormat: Select value
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      code: alert
+                      display: A
+                  - valueCoding:
+                      code: change-in-behaviour
+                      display: C
+                  - valueCoding:
+                      code: voice
+                      display: V
+                  - valueCoding:
+                      code: pain
+                      display: P
+                  - valueCoding:
+                      code: unresponsive
+                      display: U
+
+              - linkId: level-of-consciousness-explanation
+                type: display
+                itemControl:
+                  coding:
+                    - code: markdown
+                text: Explanation
+                _text:
+                  cqfExpression:
+                    language: text/fhirpath
+                    expression: >-
+                      %questionnaire.repeat(item).where(linkId=%LOCLevel & '-explanation').text
+                enableWhenExpression:
+                  language: text/fhirpath
+                  expression: "%LOCLevel.exists()"
+
+          - linkId: level-of-consciousness-value-description
+            text: >-
+              **A** — Alert & appropriate for ability; **C** — Change in behaviour/new confusion; **V** — Rousable by voice; **P** — Rousable by pain; **U** — Unresponsive. Conduct an A–G assessment including GCS for C, V, P, or U.
+            type: display
+            itemControl:
+              coding:
+                - code: markdown
+
+          # Pain Score
+
+          - linkId: pain-score-table-group
+            text: Pain Score
+            type: group
+            repeats: true
+            enableChart:
+              linkIdX: pain-score-date
+              linkIdY: pain-score-value
+            chartYAxisRange:
+              low:
+                value: 0
+              high:
+                value: 10
+            chartHighlight:
+              # Mild (1–3) — blue
+              - from: 0.5
+                to: 3.5
+                color: "#adcaff99"
+              # Moderate / Severe (4–10) — yellow
+              - from: 3.5
+                to: 10
+                color: "#ffe58f99"
+            itemControl:
+              coding:
+                - code: group-table
+            variable:
+              - name: Pain
+                language: text/fhirpath
+                expression: "%context.item.where(linkId='pain-score-value').answer.valueQuantity.value"
+              - name: PainDefaultLevel
+                language: text/fhirpath
+                expression: >-
+                  iif(%Pain.exists(),
+                    iif(%Pain.first() <= 0, {},
+                      iif(%Pain.first() <= 3, 'blue-zone', 'yellow-zone')),
+                    {})
+              - name: PainDate
+                language: text/fhirpath
+                expression: "%context.item.where(linkId='pain-score-date').answer.valueDateTime.first()"
+              - name: PainModificationGroup
+                language: text/fhirpath
+                expression: >-
+                  %resource.repeat(item).where(linkId='modifications-amendments-table-group').where(
+                    item.where(linkId='modifications-amendments-measurement').answer.valueCoding.code = 'pain-score' and
+                    item.where(linkId='modifications-amendments-date').answer.valueDateTime <= %PainDate.toDateTime() and
+                    item.where(linkId='modifications-amendments-valid-until').answer.valueDateTime >= %PainDate.toDateTime()
+                  ).last()
+              - name: PainModificationMinValue
+                language: text/fhirpath
+                expression: "%PainModificationGroup.item.where(linkId='modifications-amendments-value-min').answer.valueDecimal"
+              - name: PainModificationMaxValue
+                language: text/fhirpath
+                expression: "%PainModificationGroup.item.where(linkId='modifications-amendments-value-max').answer.valueDecimal"
+              - name: PainLevel
+                language: text/fhirpath
+                expression: >-
+                  iif(
+                    %PainModificationGroup.exists() and %Pain >= %PainModificationMinValue and %Pain <= %PainModificationMaxValue,
+                    {},
+                    %PainDefaultLevel
+                  )
+            item:
+              - linkId: pain-score-description
+                text: >-
+                  Nil (0); Mild (1–3); Moderate (4–6); Severe (7–10)
+                type: display
+                itemControl:
+                  coding:
+                    - code: markdown
+
+              - linkId: pain-score-date
+                text: Date and Time
+                type: dateTime
+                entryFormat: Select date and time
+                columnWidth:
+                  value: 150
+                  unit: px
+                calculatedExpression:
+                  language: text/fhirpath
+                  expression: "iif(%context.answer.exists(), %context.answer.valueDateTime, now())"
+                unit:
+                  code: " "
+                  display: " "
+
+              - linkId: pain-score-value
+                text: Pain Score
+                type: quantity
+                entryFormat: Enter score (0–10)
+                unit:
+                  code: "{score}"
+                  system: http://unitsofmeasure.org
+                  display: score
+
+              - linkId: pain-score-explanation
+                type: display
+                itemControl:
+                  coding:
+                    - code: markdown
+                text: Explanation
+                _text:
+                  cqfExpression:
+                    language: text/fhirpath
+                    expression: >-
+                      %questionnaire.repeat(item).where(linkId=%PainLevel & '-explanation').text
+                enableWhenExpression:
+                  language: text/fhirpath
+                  expression: "%PainLevel.exists()"
+
+          # Temperature
+
+          - linkId: temperature-table-group
+            text: Temperature, °C
+            type: group
+            repeats: true
+            enableChart:
+              linkIdX: temperature-date
+              linkIdY: temperature-value
+            chartYAxisRange:
+              low:
+                value: 34
+              high:
+                value: 42
+            chartHighlight:
+              # ≤34.5 red zone
+              - to: 34.5
+                color: "#ffccc799"
+              # 34.6–35.5 yellow zone
+              - from: 34.5
+                to: 35.5
+                color: "#ffe58f99"
+              # 35.6–38.5 normal
+              # 38.5–41 yellow zone
+              - from: 38.5
+                to: 41
+                color: "#ffe58f99"
+              # >41 red zone
+              - from: 41
+                color: "#ffccc799"
+            itemControl:
+              coding:
+                - code: group-table
+            variable:
+              - name: TempDate
+                language: text/fhirpath
+                expression: "%context.item.where(linkId='temperature-date').answer.valueDateTime.first()"
+              - name: Temp
+                language: text/fhirpath
+                expression: "%context.item.where(linkId='temperature-value').answer.valueQuantity.value"
+              - name: TempDefaultLevel
+                language: text/fhirpath
+                expression: >-
+                  iif(%Temp.exists(),
+                    iif(%Temp.first() <= 34.5, 'red-zone',
+                      iif(%Temp.first() <= 35.5, 'yellow-zone',
+                        iif(%Temp.first() <= 38.5, {},
+                          iif(%Temp.first() >= 41.1, 'red-zone',
+                            iif(%Temp.first() > 38.5, 'yellow-zone', {}))))),
+                    {}
+                  )
+              - name: TempModificationGroup
+                language: text/fhirpath
+                expression: >-
+                  %resource.repeat(item).where(linkId='modifications-amendments-table-group').where(
+                    item.where(linkId='modifications-amendments-measurement').answer.valueCoding.code = 'temperature' and
+                    item.where(linkId='modifications-amendments-date').answer.valueDateTime <= %TempDate.toDateTime() and
+                    item.where(linkId='modifications-amendments-valid-until').answer.valueDateTime >= %TempDate.toDateTime()
+                  ).last()
+              - name: TempModificationMinValue
+                language: text/fhirpath
+                expression: "%TempModificationGroup.item.where(linkId='modifications-amendments-value-min').answer.valueDecimal"
+              - name: TempModificationMaxValue
+                language: text/fhirpath
+                expression: "%TempModificationGroup.item.where(linkId='modifications-amendments-value-max').answer.valueDecimal"
+              - name: TempLevel
+                language: text/fhirpath
+                expression: >-
+                  iif(
+                    %TempModificationGroup.exists() and %Temp >= %TempModificationMinValue and %Temp <= %TempModificationMaxValue,
+                    {},
+                    %TempDefaultLevel
+                  )
+            item:
+              - linkId: temperature-date
+                text: Date and Time
+                type: dateTime
+                entryFormat: Select date and time
+                columnWidth:
+                  value: 150
+                  unit: px
+                calculatedExpression:
+                  language: text/fhirpath
+                  expression: "iif(%context.answer.exists(), %context.answer.valueDateTime, now())"
+                unit:
+                  code: " "
+                  display: " "
+
+              - linkId: temperature-value
+                text: Temperature, °C
+                type: quantity
+                entryFormat: Enter value
+                unit:
+                  code: Cel
+                  system: http://unitsofmeasure.org
+                  display: °C
+
+              - linkId: temperature-explanation
+                type: display
+                itemControl:
+                  coding:
+                    - code: markdown
+                text: Explanation
+                _text:
+                  cqfExpression:
+                    language: text/fhirpath
+                    expression: >-
+                      %questionnaire.repeat(item).where(linkId=%TempLevel & '-explanation').text
+                enableWhenExpression:
+                  language: text/fhirpath
+                  expression: "%TempLevel.exists()"
+
+          # Lactate
+
+          - linkId: lactate-table-group
+            text: Lactate
+            type: group
+            repeats: true
+            enableChart:
+              linkIdX: lactate-date
+              linkIdY: lactate-value
+            chartYAxisRange:
+              low:
+                value: 0
+              high:
+                value: 6
+            chartHighlight:
+              # 2–3.9 mmol/L yellow zone
+              - from: 2
+                to: 4
+                color: "#ffe58f99"
+              # ≥ 4 mmol/L red zone
+              - from: 4
+                color: "#ffccc799"
+            itemControl:
+              coding:
+                - code: group-table
+            variable:
+              - name: LactateDate
+                language: text/fhirpath
+                expression: "%context.item.where(linkId='lactate-date').answer.valueDateTime.first()"
+              - name: Lactate
+                language: text/fhirpath
+                expression: "%context.item.where(linkId='lactate-value').answer.valueDecimal"
+              - name: LactateDefaultLevel
+                language: text/fhirpath
+                expression: >-
+                  iif(%Lactate.exists(),
+                    iif(%Lactate.first() >= 4, 'red-zone',
+                      iif(%Lactate.first() >= 2, 'yellow-zone', {})),
+                    {}
+                  )
+              - name: LactateModificationGroup
+                language: text/fhirpath
+                expression: >-
+                  %resource.repeat(item).where(linkId='modifications-amendments-table-group').where(
+                    item.where(linkId='modifications-amendments-measurement').answer.valueCoding.code = 'lactate' and
+                    item.where(linkId='modifications-amendments-date').answer.valueDateTime <= %LactateDate.toDateTime() and
+                    item.where(linkId='modifications-amendments-valid-until').answer.valueDateTime >= %LactateDate.toDateTime()
+                  ).last()
+              - name: LactateModificationMinValue
+                language: text/fhirpath
+                expression: "%LactateModificationGroup.item.where(linkId='modifications-amendments-value-min').answer.valueDecimal"
+              - name: LactateModificationMaxValue
+                language: text/fhirpath
+                expression: "%LactateModificationGroup.item.where(linkId='modifications-amendments-value-max').answer.valueDecimal"
+              - name: LactateLevel
+                language: text/fhirpath
+                expression: >-
+                  iif(
+                    %LactateModificationGroup.exists() and %Lactate >= %LactateModificationMinValue and %Lactate <= %LactateModificationMaxValue,
+                    {},
+                    %LactateDefaultLevel
+                  )
+            item:
+              - linkId: lactate-date
+                text: Date and Time
+                type: dateTime
+                entryFormat: Select date and time
+                columnWidth:
+                  value: 150
+                  unit: px
+                calculatedExpression:
+                  language: text/fhirpath
+                  expression: "iif(%context.answer.exists(), %context.answer.valueDateTime, now())"
+                unit:
+                  code: " "
+                  display: " "
+
+              - linkId: lactate-value
+                text: Lactate, mmol/L
+                type: quantity
+                entryFormat: Enter value
+                unit:
+                  code: mmol/L
+                  system: http://ucum.org/
+                  display: mmol/L
+
+              - linkId: lactate-explanation
+                type: display
+                itemControl:
+                  coding:
+                    - code: markdown
+                text: Explanation
+                _text:
+                  cqfExpression:
+                    language: text/fhirpath
+                    expression: >-
+                      %questionnaire.repeat(item).where(linkId=%LactateLevel & '-explanation').text
+                enableWhenExpression:
+                  language: text/fhirpath
+                  expression: "%LactateLevel.exists()"
+
+          # Blood Glucose Level
+
+          - linkId: bgl-table-group
+            text: Blood Glucose Level, mmol/L
+            type: group
+            repeats: true
+            enableChart:
+              linkIdX: bgl-date
+              linkIdY: bgl-value
+            itemControl:
+              coding:
+                - code: group-table
+            item:
+              - linkId: bgl-date
+                text: Date and Time
+                type: dateTime
+                entryFormat: Select date and time
+                columnWidth:
+                  value: 150
+                  unit: px
+                calculatedExpression:
+                  language: text/fhirpath
+                  expression: "iif(%context.answer.exists(), %context.answer.valueDateTime, now())"
+                unit:
+                  code: " "
+                  display: " "
+
+              - linkId: bgl-value
+                text: Blood Glucose Level, mmol/L
+                type: quantity
+                entryFormat: Enter value
+                unit:
+                  code: mmol/L
+                  system: http://unitsofmeasure.org
+                  display: mmol/L
+
+          # Weight
+
+          - linkId: weight-group
+            text: Weight, kg
+            type: group
+            repeats: true
+            enableChart:
+              linkIdX: weight-date
+              linkIdY: weight-value
+            itemControl:
+              coding:
+                - code: group-table
+            item:
+              - linkId: weight-date
+                text: Date and Time
+                type: dateTime
+                entryFormat: Select date and time
+                columnWidth:
+                  value: 150
+                  unit: px
+                calculatedExpression:
+                  language: text/fhirpath
+                  expression: "iif(%context.answer.exists(), %context.answer.valueDateTime, now())"
+
+              - linkId: weight-value
+                text: Weight, kg
+                type: quantity
+                entryFormat: Enter value
+                unit:
+                  code: kg
+                  system: http://unitsofmeasure.org
+                  display: kg
+
+      # Interventions
+
+      - linkId: interventions-wizard-group
+        text: Interventions
+        type: group
+        item:
+          - linkId: interventions-associated-with-abnormal-vital-signs-table-group
+            text: Interventions
+            type: group
+            repeats: true
+            itemControl:
+              coding:
+                - code: group-table
+            item:
+              - linkId: interventions-associated-with-abnormal-vital-signs-intervention-date
+                text: Date and Time
+                type: dateTime
+                entryFormat: Select date and time
+                columnWidth:
+                  value: 150
+                  unit: px
+                calculatedExpression:
+                  language: text/fhirpath
+                  expression: "iif(%context.answer.exists(), %context.answer.valueDateTime, now())"
+
+              - linkId: interventions-associated-with-abnormal-vital-signs-intervention
+                text: Intervention (initial if required)
+                type: text
+                entryFormat: Write here
+
+      # Modifications
+
+      - linkId: modifications-amendments-wizard-group
+        text: Modifications
+        type: group
+        item:
+          - linkId: modifications-amendments-table-group
+            text: Alterations to Calling Criteria
+            type: group
+            repeats: true
+            itemControl:
+              coding:
+                - code: group-table
+            variable:
+              - name: Measurement
+                language: text/fhirpath
+                expression: "%context.item.where(linkId='modifications-amendments-measurement').answer.valueCoding.code"
+            item:
+              - linkId: modifications-amendments-description
+                type: display
+                itemControl:
+                  coding:
+                    - code: markdown
+                text: |-
+                  :::info-alert
+
+                  ### **Alterations to Calling Criteria (ACC)**
+
+                  Acute ACC changes can be set for up to 12 hours. Chronic ACC changes apply for the episode of care.
+
+                  Any alterations **MUST** be signed by a Medical Officer and confirmed by the Attending Medical Officer.
+
+                  Document rationale for altering **CALLING CRITERIA** in the patient's health care record.
+
+                  :::
+
+              - linkId: modifications-amendments-date
+                text: Date and Time
+                type: dateTime
+                enableSort: true
+                enableFiltering: true
+                entryFormat: Select date and time
+                columnWidth:
+                  value: 155
+                  unit: px
+                calculatedExpression:
+                  language: text/fhirpath
+                  expression: "iif(%context.answer.exists(), %context.answer.valueDateTime, now())"
+
+              - linkId: modifications-amendments-valid-until
+                text: Valid Until
+                type: dateTime
+                enableSort: true
+                enableFiltering: true
+                entryFormat: Select date and time
+                columnWidth:
+                  value: 155
+                  unit: px
+
+              - linkId: modifications-amendments-next-review-due
+                text: Next Review
+                type: dateTime
+                enableSort: true
+                enableFiltering: true
+                entryFormat: Select date and time
+                columnWidth:
+                  value: 155
+                  unit: px
+
+              - linkId: modifications-amendments-measurement
+                text: Measurement
+                type: choice
+                enableSort: true
+                enableFiltering: true
+                entryFormat: Select measurement
+                columnWidth:
+                  value: 200
+                  unit: px
+                answerOption:
+                  - valueCoding:
+                      code: respiratory-rate
+                      display: Respiratory Rate (breaths/min)
+                  - valueCoding:
+                      code: o2-saturation
+                      display: SpO2 (%)
+                  - valueCoding:
+                      code: heart-rate
+                      display: Heart Rate (beats/min)
+                  - valueCoding:
+                      code: capillary-refill
+                      display: Capillary Refill (s)
+                  - valueCoding:
+                      code: systolic-blood-pressure
+                      display: Systolic Blood Pressure (mmHg)
+                  - valueCoding:
+                      code: temperature
+                      display: Temperature (°C)
+                  - valueCoding:
+                      code: lactate
+                      display: Lactate (mmol/L)
+                  - valueCoding:
+                      code: pain-score
+                      display: Pain Score (0–10)
+
+              - linkId: modifications-amendments-value-min
+                text: Value, min
+                type: decimal
+                entryFormat: Enter value
+                columnWidth:
+                  value: 90
+                  unit: px
+
+              - linkId: modifications-amendments-value-max
+                text: Value, max
+                type: decimal
+                entryFormat: Enter value
+                columnWidth:
+                  value: 90
+                  unit: px
+
+              - linkId: modifications-amendments-value-unit
+                text: Unit
+                type: choice
+                readOnly: true
+                columnWidth:
+                  value: 110
+                  unit: px
+                calculatedExpression:
+                  language: text/fhirpath
+                  expression: >-
+                    %qitem.answerOption.valueCoding.where(
+                      code=iif(
+                        %Measurement = 'respiratory-rate', '/min',
+                        iif(
+                          %Measurement = 'o2-saturation', '%',
+                          iif(
+                            %Measurement = 'heart-rate', '/min',
+                            iif(
+                              %Measurement = 'capillary-refill', 's',
+                              iif(
+                                %Measurement = 'systolic-blood-pressure', 'mmHg',
+                                iif(
+                                  %Measurement = 'temperature', 'Cel',
+                                  iif(
+                                    %Measurement = 'lactate', 'mmol/L',
+                                    iif(
+                                      %Measurement = 'pain-score', '{score}',
+                                      ''
+                                    )
+                                  )
+                                )
+                              )
+                            )
+                          )
+                        )
+                      )
+                    )
+                answerOption:
+                  - valueCoding:
+                      code: /min
+                      display: breaths/min
+                  - valueCoding:
+                      code: /min
+                      display: beats/min
+                  - valueCoding:
+                      code: "%"
+                      display: "%"
+                  - valueCoding:
+                      code: s
+                      display: s
+                  - valueCoding:
+                      code: mmHg
+                      display: mmHg
+                  - valueCoding:
+                      code: Cel
+                      display: °C
+                  - valueCoding:
+                      code: mmol/L
+                      display: mmol/L
+                  - valueCoding:
+                      code: "{score}"
+                      display: score
+
+              - linkId: modifications-amendments-doctor-name
+                text: Doctor
+                type: reference
+                enableSort: true
+                enableFiltering: true
+                columnWidth:
+                  value: 180
+                  unit: px
+                referenceResource:
+                  - PractitionerRole
+                answerExpression:
+                  language: application/x-fhir-query
+                  expression: "PractitionerRole?_assoc=practitioner"
+                choiceColumn:
+                  - forDisplay: true
+                    path: >-
+                      practitioner.resource.name.given.first() + ' ' +
+                      practitioner.resource.name.family + ' - ' + specialty.first().coding.display
+                itemControl:
+                  coding:
+                    - code: author-reference
+
+      # Instructions
+
+      - linkId: instructions-wizard-group
+        text: Instructions
+        type: group
+        item:
+          - linkId: instructions-display
+            type: display
+            itemControl:
+              coding:
+                - code: markdown
+            text: |-
+              ## General Instructions
+
+              **ALL OBSERVATIONS MUST BE GRAPHED**
+
+              Observations must be performed routinely at least **4th hourly**, unless advised below.
+
+              Consider earlier escalation for patients with:
+              - Chronic or complex conditions
+              - Disability
+              - Post-operative
+              - Opioid infusions
+
+              Refer to your local **Clinical Emergency Response System (CERS)** protocol for instructions on how to make a call to escalate care for your patient.
+
+              Check the health care record for an **end of life care plan** which may alter the management of your patient.
+
+              Consider if your patient's deterioration could be due to **sepsis, dehydration / hypovolaemia / haemorrhage, or an overdose / over sedation**.
+
+          - linkId: instructions-blue-zone-card
+            type: display
+            itemControl:
+              coding:
+                - code: markdown
+            text: |-
+              ::::info-card
+
+              ### **Blue Zone Response**
+
+              :::layout-inner
+
+              If your patient has any **BLUE ZONE observations** you **MUST:**
+
+              1. Initiate appropriate clinical care.
+
+              2. Increase the frequency of observations, as indicated by your patient's condition.
+
+              3. Manage anxiety, pain and review oxygenation in consultation with the **NURSE IN CHARGE**.
+
+              4. You can make a call to escalate the care of your patient at any time if you are worried or unsure whether to call.
+
+
+              **Consider the following:**
+
+              1. What is usual for your patient and are there documented 'ALTERATIONS TO CALLING CRITERIA'?
+
+              2. Does the abnormal observation reflect deterioration in your patient?
+
+              3. Is there an adverse trend in observations?
+
+              :::
+
+              ::::
+
+          - linkId: instructions-yellow-zone-card
+            type: display
+            itemControl:
+              coding:
+                - code: markdown
+            text: |-
+              ::::warning-card
+
+              ### **Yellow Zone Response**
+
+              :::layout-inner
+
+              If your patient has any **YELLOW ZONE observations OR ADDITIONAL CRITERIA (*)** you **MUST:**
+
+              1. Initiate appropriate clinical care.
+
+              2. Repeat and increase the frequency of observations, as indicated by your patient's condition.
+
+              3. Consult promptly with the **NURSE IN CHARGE** to decide whether a **CLINICAL REVIEW** (or other CERS) call should be made.
+
+
+              **Consider the following:**
+
+              - What is usual for your patient and are there documented 'ALTERATIONS TO CALLING CRITERIA'?
+
+              - Does the trend in observations suggest deterioration?
+
+              - Is there more than one Yellow Zone observation or additional criteria?
+
+              - Are you concerned about your patient?
+
+
+              **If a CLINICAL REVIEW is called:**
+
+              1. Reassess your patient and escalate according to your local CERS if the call is not attended within 30 minutes or you are becoming more concerned.
+
+              2. Document an A–G assessment, reason for escalation, treatment and outcome in your patient's health care record.
+
+              3. Inform the Attending Medical Officer that a call was made as soon as it is practicable.
+
+              :::
+
+              **(*) Additional YELLOW ZONE Criteria:**
+
+              :::layout-columns
+
+              - Increasing oxygen requirement
+
+              - Poor peripheral circulation
+
+              - Greater than expected fluid loss
+
+              - Reduced urine output or anuria (< 1mL/kg/hr)
+
+              - Altered mental state: Agitation, Combative or Inconsolable
+
+              - New, increasing or uncontrolled pain
+
+              - New onset of fever > 38.5°C
+
+              - BGL 2–3 mmol/L
+
+              - **Concern by you or any staff or family member**
+
+              :::
+
+              ::::
+
+          - linkId: instructions-red-zone-card
+            type: display
+            itemControl:
+              coding:
+                - code: markdown
+            text: |-
+              :::::error-card
+
+              ### **Red Zone Response**
+
+              ::::layout-inner
+
+              If your patient has any **RED ZONE observations or ADDITIONAL CRITERIA (*)** you **MUST** call for a **RAPID RESPONSE** (as per local CERS) **AND:**
+
+              1. **Initiate** appropriate clinical care.
+
+              2. **Inform** the **NURSE IN CHARGE** that you have called for a Rapid Response.
+
+              3. **Repeat and increase** the frequency of observations, as indicated by your patient's condition.
+
+              4. **Document** an A–G assessment, reason for escalation, treatment and outcome in your patient's health care record.
+
+              5. **Inform** the Attending Medical Officer that a call was made as soon as it is practicable.
+
+              ::::
+
+              **(*) Additional RED ZONE Criteria:**
+
+              ::::layout-columns
+
+              - **Cardiac or respiratory arrest**
+
+              - **Circulatory collapse**
+
+              - **Patient unresponsive**
+
+              - **New onset of stridor**
+
+              - No change or signs of improvement within 1 hour of CERS
+
+              - 3 or more simultaneous 'Yellow Zone' observations
+
+              - Significant bleeding
+
+              - Sudden decrease in Level of Consciousness (a drop of 2 or more points on the GCS)
+
+              - New or prolonged seizure activity
+
+              - BGL < 2 mmol/L or symptomatic
+
+              - **Serious concern by you or any staff or family member**
+
+              ::::
+
+              :::::
+
+          - linkId: respiratory-distress-reference-table
+            type: display
+            itemControl:
+              coding:
+                - code: markdown
+            text: |-
+              ## Assessment of Respiratory Distress
+
+              Respiratory distress is based on the most significant feature (Severe — Moderate — Mild)
+
+              | Feature | Mild | Moderate | Severe |
+              |---|---|---|---|
+              | Airway | Stridor on exertion | Stridor at rest | New onset of stridor; Absent breath sounds (silent chest) |
+              | Behaviour & posture | Normal; Can walk or crawl | Irritability; Lethargic; Tripod sitting | Agitated / confused / drowsy; Collapsed or exhausted |
+              | Speaking & feeding | Normal; Talks in sentences | Difficulty talking / vocalising or crying; Difficulty feeding or eating | Unable to talk / vocalise or cry; Unable to feed or eat |
+              | Respiratory rate | RR in the Blue Zone | RR in the Yellow Zone | RR in the Red Zone; Decreasing RR (exhaustion) |
+              | Respiratory effort | None / minimal | Moderate recession; Tracheal tug; Nasal flaring; Head bob | Severe recession; Seesaw / abdominal breathing; Gasping; Grunting |
+              | Apnoeic episodes | None | Irregular breathing pattern | Apnoeic episodes |
+              | Oxygen | No oxygen requirement | Commencement of oxygen; Increasing oxygen requirement | Hypoxaemia, may not be corrected by oxygen; Extreme pallor; Cyanosis |
