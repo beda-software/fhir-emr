@@ -2,10 +2,11 @@
 import { AreaChartOutlined, BarChartOutlined, CalendarOutlined, HeartOutlined } from '@ant-design/icons';
 import { i18n } from '@lingui/core';
 import { t } from '@lingui/macro';
+import type { ReactNode } from 'react';
+import type { ValueType, Payload } from 'recharts/types/component/DefaultTooltipContent';
 
 import { ChartCardProps } from 'src/components/Chart';
 
-import { flowTooltip, numericTooltip, painTooltip } from './HMBTooltip';
 import { HMBChartDatum, HMBResponseRow } from './types';
 
 const HMB_X_VALUE_SEPARATOR = '__hmb_qr__';
@@ -131,6 +132,12 @@ type HMBChartConfig = Omit<ChartCardProps<HMBResponseRow, HMBChartDatum>, 'rows'
 const NUMERIC_DOMAIN: [number, number] = [0, 10];
 const NUMERIC_TICKS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
+const labelFormatter = (label: ReactNode) =>
+    typeof label === 'string' || typeof label === 'number' ? getChartDisplayLabel(label) : label;
+
+const numericFormatter = (value: ValueType | undefined) =>
+    typeof value === 'number' ? value.toFixed(1) : String(value ?? '');
+
 export const getHMBCharts = (): HMBChartConfig[] => {
     const flow = flowAxis();
     const severity = severityAxis();
@@ -148,7 +155,11 @@ export const getHMBCharts = (): HMBChartConfig[] => {
             transform: toFlowVolume,
 
             barProps: { name: 'Flow Volume' },
-            tooltipProps: { content: flowTooltip },
+            tooltipProps: {
+                labelFormatter,
+                formatter: (value: ValueType | undefined) =>
+                    typeof value === 'number' ? flow.labelAt(value) : String(value ?? ''),
+            },
             yAxisProps: { width: 90 },
         },
         {
@@ -164,7 +175,11 @@ export const getHMBCharts = (): HMBChartConfig[] => {
             lineProps: {
                 name: 'Pain Score',
             },
-            tooltipProps: { content: painTooltip },
+            tooltipProps: {
+                labelFormatter,
+                formatter: (value: ValueType | undefined, _name, item: Payload<ValueType, string | number>) =>
+                    item.dataKey === 'y' && typeof value === 'number' ? severity.labelAt(value) : String(value ?? ''),
+            },
             yAxisProps: { width: 100 },
         },
         {
@@ -176,7 +191,7 @@ export const getHMBCharts = (): HMBChartConfig[] => {
             yDomain: NUMERIC_DOMAIN,
             yTicks: NUMERIC_TICKS,
             areaProps: { name: 'Impact Score' },
-            tooltipProps: { content: numericTooltip },
+            tooltipProps: { labelFormatter, formatter: numericFormatter },
         },
         {
             xAxisProps,
@@ -187,7 +202,7 @@ export const getHMBCharts = (): HMBChartConfig[] => {
             yDomain: NUMERIC_DOMAIN,
             yTicks: NUMERIC_TICKS,
             areaProps: { name: 'Intensity' },
-            tooltipProps: { content: numericTooltip },
+            tooltipProps: { labelFormatter, formatter: numericFormatter },
         },
     ];
 };
