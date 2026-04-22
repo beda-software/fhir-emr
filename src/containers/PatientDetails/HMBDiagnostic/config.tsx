@@ -6,7 +6,10 @@ import type { ChartCardProps } from 'src/components/Chart';
 
 import type { HMBChartDatum, HMBResponseRow } from './types';
 
-type HMBChartConfig = Omit<ChartCardProps<HMBResponseRow, HMBChartDatum>, 'rows' | 'onPointClick'> & { id: string };
+type DistributiveOmit<T, K extends keyof T> = T extends unknown ? Omit<T, K> : never;
+type HMBChartConfig = DistributiveOmit<ChartCardProps<HMBResponseRow, HMBChartDatum>, 'rows' | 'onPointClick'> & {
+    id: string;
+};
 
 function toChartPointMeta(row: HMBResponseRow) {
     const label = formatAuthored(row.authored);

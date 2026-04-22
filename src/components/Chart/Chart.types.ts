@@ -169,26 +169,7 @@ export type ChartProps<TDatum extends ChartDatumBase = ChartDatumBase> =
     | ChartAreaProps<TDatum>
     | ChartBarLineProps<TDatum>;
 
-export interface ChartConfigProps<TDatum extends ChartDatumBase = ChartDatumBase>
-    extends ChartBaseProps<TDatum>,
-        ChartPrimaryYAxisProps,
-        ChartLineYAxisProps {
-    /** Selects which series are rendered and which prop groups are meaningful. */
-    variant: ChartVariant;
-    /** Legend overrides. Rendered only for `bar+line`. */
-    legendProps?: ChartLegendProps;
-    /** Bar series overrides. Used by `bar` and `bar+line`. The data key is always `y`. */
-    barProps?: ChartBarSeriesProps;
-    /** Line series overrides. Used only by `bar+line`. The data key is always `yLine`. */
-    lineProps?: ChartLineSeriesProps;
-    /** Area series overrides. Used only by `area`. The data key is always `y`. */
-    areaProps?: ChartAreaSeriesProps;
-}
-
-export type ChartCardProps<TRow, TDatum extends ChartDatumBase = ChartDatumBase> = Omit<
-    ChartConfigProps<TDatum>,
-    'data'
-> & {
+type ChartCardBaseProps<TRow, TDatum extends ChartDatumBase> = {
     /** Card title rendered above the chart. */
     title: ReactNode;
     /** Card icon rendered near the title. */
@@ -200,3 +181,8 @@ export type ChartCardProps<TRow, TDatum extends ChartDatumBase = ChartDatumBase>
     /** Converts loaded rows into the Chart x/y/yLine data shape. */
     transform: (rows: TRow[]) => TDatum[];
 };
+
+type DistributiveOmit<T, K extends keyof T> = T extends unknown ? Omit<T, K> : never;
+
+export type ChartCardProps<TRow, TDatum extends ChartDatumBase = ChartDatumBase> = ChartCardBaseProps<TRow, TDatum> &
+    DistributiveOmit<ChartProps<TDatum>, 'data'>;
