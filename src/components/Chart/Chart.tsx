@@ -16,6 +16,7 @@ import { useTheme } from 'styled-components';
 
 import { ChartDatumBase, ChartProps } from './Chart.types';
 import { ChartTooltip } from './ChartTooltip';
+import { getChartDisplayLabel } from './formatters';
 
 type HaloDotProps = { cx?: number; cy?: number };
 
@@ -91,6 +92,7 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
                     dataKey="x"
                     fontSize={10}
                     padding={variant === 'area' ? { left: 20, right: 20 } : undefined}
+                    tickFormatter={getChartDisplayLabel}
                     {...xAxisProps}
                 />
                 <YAxis
@@ -119,7 +121,14 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
                     />
                 )}
 
-                <Tooltip cursor={{ fill: 'transparent' }} content={ChartTooltip} {...tooltipProps} />
+                <Tooltip
+                    cursor={{ fill: 'transparent' }}
+                    content={ChartTooltip}
+                    labelFormatter={(label) =>
+                        typeof label === 'string' || typeof label === 'number' ? getChartDisplayLabel(label) : label
+                    }
+                    {...tooltipProps}
+                />
                 {variant === 'bar+line' && (
                     <Legend align="center" iconSize={8} wrapperStyle={{ fontSize: 10 }} {...legendProps} />
                 )}
