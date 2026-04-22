@@ -4,27 +4,6 @@ import { SearchParams, formatFHIRDate } from '@beda.software/fhir-react';
 
 import { SearchBarColumn, SearchBarColumnType } from 'src/components/SearchBar/types';
 
-const HMB_SCREENING_QUESTIONNAIRE_ID = 'heavy-menstrual-bleeding-screening';
-
-function makeHmbAssessmentFilter(searchParam: string): SearchBarColumn {
-    return {
-        id: 'hmb-assessment',
-        searchParam,
-        type: SearchBarColumnType.CHOICE,
-        placeholder: t`HMB assessment`,
-        options: [
-            {
-                value: {
-                    Coding: {
-                        code: HMB_SCREENING_QUESTIONNAIRE_ID,
-                        display: t`Existing HMB assessment`,
-                    },
-                },
-            },
-        ],
-    };
-}
-
 export function makePatientListFilters(nameSearchParam: string, hmbSearchParam: string): SearchBarColumn[] {
     return [
         {
@@ -36,7 +15,22 @@ export function makePatientListFilters(nameSearchParam: string, hmbSearchParam: 
             searchBehavior: 'AND',
             separator: ' ',
         },
-        makeHmbAssessmentFilter(hmbSearchParam),
+        {
+            id: 'hmb-assessment',
+            searchParam: hmbSearchParam,
+            type: SearchBarColumnType.CHOICE,
+            placeholder: t`Passed assessment`,
+            options: [
+                {
+                    value: {
+                        Coding: {
+                            code: 'heavy-menstrual-bleeding-screening',
+                            display: t`HMB assessment`,
+                        },
+                    },
+                },
+            ],
+        },
     ];
 }
 
