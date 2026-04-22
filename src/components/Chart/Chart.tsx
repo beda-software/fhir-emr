@@ -48,6 +48,7 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
         yLineTicks,
         yLineTickFormatter,
         onPointClick,
+        empty,
         height = 340,
         margin = { left: 0, right: 20, top: 20, bottom: 20 },
         xAxisProps,
@@ -65,6 +66,10 @@ export function Chart<TDatum extends ChartDatumBase = ChartDatumBase>(props: Cha
     const areaStroke = theme.primaryPalette.bcp_5;
     const dotFill = theme.neutralPalette.gray_1;
     const areaColor = (areaProps?.stroke as string | undefined) ?? areaStroke;
+
+    if (data.length === 0 && empty) {
+        return <div style={{ width: '100%', height }}>{empty}</div>;
+    }
 
     return (
         <ResponsiveContainer width="100%" height={height}>

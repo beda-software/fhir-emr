@@ -10,6 +10,7 @@ import {
 import { Meta, StoryObj } from '@storybook/react';
 import { Button } from 'antd';
 import type { TooltipContentProps } from 'recharts';
+import type { ValueType } from 'recharts/types/component/DefaultTooltipContent';
 import styled, { useTheme } from 'styled-components';
 
 import { failure, loading, success } from '@beda.software/remote-data';
@@ -29,7 +30,7 @@ const categoricalLabels: Record<number, string> = {
 
 const chartDataBar = [
     { x: 'Jan 4', y: 1 },
-    { x: 'Jan 9', y: 2 },
+    { x: 'Jan 9', y: null },
     { x: 'Jan 14', y: 3 },
     { x: 'Jan 18', y: 2 },
     { x: 'Jan 23', y: 4 },
@@ -265,7 +266,7 @@ function makeHMBTooltip(props: {
     labelFormatter?: (label: string | number) => React.ReactNode;
     valueFormatter?: (value: number, key: string) => React.ReactNode;
 }) {
-    return function TooltipContent({ active, label, payload }: TooltipContentProps<any, any>) {
+    return function TooltipContent({ active, label, payload }: TooltipContentProps<ValueType, string | number>) {
         if (!active || !payload?.length) {
             return null;
         }

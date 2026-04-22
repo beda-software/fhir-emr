@@ -16,10 +16,12 @@ import type { RemoteData } from '@beda.software/remote-data';
 
 export type ChartVariant = 'bar' | 'area' | 'bar+line';
 
+export type ChartNumericValue = number | null | undefined;
+
 export interface ChartDatumBase {
     x: string;
-    y: number;
-    yLine?: number;
+    y: ChartNumericValue;
+    yLine?: ChartNumericValue;
 }
 
 export interface ChartMargin {
