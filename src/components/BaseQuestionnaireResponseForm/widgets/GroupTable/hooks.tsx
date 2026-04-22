@@ -187,6 +187,7 @@ export interface UseRowExpandabilityProps {
 
 export function useRowExpandability(props: UseRowExpandabilityProps) {
     const { expandableMaxHeight, dataSource } = props;
+    const ROW_EXPAND_OFFSET = 32;
 
     const rowRefs = useRef<Record<string, HTMLDivElement>>({});
     const rowObserverRef = useRef<ResizeObserver | null>(null);
@@ -207,7 +208,7 @@ export function useRowExpandability(props: UseRowExpandabilityProps) {
                     return;
                 }
                 const nextHeight = entry.contentRect.height;
-                if (nextHeight <= expandableMaxHeightRef.current + 32) {
+                if (nextHeight <= expandableMaxHeightRef.current + ROW_EXPAND_OFFSET) {
                     return;
                 }
                 setRowExpandableMap((prev) => {
@@ -227,7 +228,7 @@ export function useRowExpandability(props: UseRowExpandabilityProps) {
             observer.disconnect();
             rowObserverRef.current = null;
         };
-    }, []);
+    }, [ROW_EXPAND_OFFSET]);
 
     const observeRow = useCallback(
         (rowKey: string) => (node: HTMLDivElement | null) => {
@@ -266,10 +267,11 @@ export function useRowExpandability(props: UseRowExpandabilityProps) {
             });
             return changed ? next : prev;
         });
+        setIsRowExpanded((prev) => prev.filter((key) => keys.has(String(key))));
     }, [dataSource]);
 
     const recomputeRowExpandability = useCallback(() => {
-        const maxHeight = expandableMaxHeightRef.current + 32;
+        const maxHeight = expandableMaxHeightRef.current + ROW_EXPAND_OFFSET;
         const next: Record<string, boolean> = {};
         Object.entries(rowRefs.current).forEach(([rowKey, node]) => {
             if (node) {
@@ -285,7 +287,7 @@ export function useRowExpandability(props: UseRowExpandabilityProps) {
             const unchanged = prevKeys.every((key) => prev[key] === next[key]);
             return unchanged ? prev : next;
         });
-    }, []);
+    }, [ROW_EXPAND_OFFSET]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -302,9 +304,9 @@ export function useRowExpandability(props: UseRowExpandabilityProps) {
                 return cachedExpandable;
             }
             const rowHeight = rowRefs.current[rowKey]?.clientHeight ?? 0;
-            return rowHeight > expandableMaxHeight;
+            return rowHeight > expandableMaxHeight + ROW_EXPAND_OFFSET;
         },
-        [expandableMaxHeight, rowExpandableMap],
+        [ROW_EXPAND_OFFSET, expandableMaxHeight, rowExpandableMap],
     );
 
     const handleRowHeightRecompute = useCallback(() => {
@@ -313,19 +315,50 @@ export function useRowExpandability(props: UseRowExpandabilityProps) {
         });
     }, [recomputeRowExpandability]);
 
-    const handleRowExpand = useCallback(
-        (expanded: boolean, record: GroupTableRow) => {
-            setIsRowExpanded(expanded ? [...isRowExpanded, record.key] : isRowExpanded.filter((k) => k !== record.key));
-        },
-        [isRowExpanded],
+    const handleRowExpand = useCallback((expanded: boolean, rowKey: string) => {
+        setIsRowExpanded((prev) => {
+            if (expanded) {
+                if (prev.includes(rowKey)) {
+                    return prev;
+                }
+                return [...prev, rowKey];
+            }
+            return prev.filter((key) => key !== rowKey);
+        });
+    }, []);
+
+    const handleRowExpandAll = useCallback(() => {
+        const nextExpandedRowKeys = dataSource
+            .map((row) => row.key)
+            .filter((rowKey) => rowHeightExceedsMaxHeight(rowKey));
+        setIsRowExpanded(nextExpandedRowKeys);
+    }, [dataSource, rowHeightExceedsMaxHeight]);
+
+    const handleRowCollapseAll = useCallback(() => {
+        setIsRowExpanded([]);
+    }, []);
+
+    const expandableRowKeys = useMemo(
+        () => dataSource.map((row) => row.key).filter((rowKey) => rowHeightExceedsMaxHeight(rowKey)),
+        [dataSource, rowHeightExceedsMaxHeight],
     );
+    const hasExpandableRows = expandableRowKeys.length > 0;
+    const rowExpandedSet = useMemo(() => new Set(isRowExpanded.map(String)), [isRowExpanded]);
+    const isAllExpandableRowsExpanded =
+        hasExpandableRows && expandableRowKeys.every((rowKey) => rowExpandedSet.has(rowKey));
+    const hasExpandedRows = isRowExpanded.length > 0;
 
     return {
         observeRow,
         rowHeightExceedsMaxHeight,
         handleRowHeightRecompute,
         handleRowExpand,
+        handleRowExpandAll,
+        handleRowCollapseAll,
         isRowExpanded,
+        hasExpandableRows,
+        isAllExpandableRowsExpanded,
+        hasExpandedRows,
     };
 }
 
@@ -370,11 +403,21 @@ export function useGroupTable(props: GroupTableProps) {
 
     const dataSource: GroupTableRow[] = getDataSource(fields, formItems, questionItem);
 
-    const { observeRow, rowHeightExceedsMaxHeight, handleRowHeightRecompute, handleRowExpand, isRowExpanded } =
-        useRowExpandability({
-            expandableMaxHeight,
-            dataSource,
-        });
+    const {
+        observeRow,
+        rowHeightExceedsMaxHeight,
+        handleRowHeightRecompute,
+        handleRowExpand,
+        handleRowExpandAll,
+        handleRowCollapseAll,
+        isRowExpanded,
+        hasExpandableRows,
+        isAllExpandableRowsExpanded,
+        hasExpandedRows,
+    } = useRowExpandability({
+        expandableMaxHeight,
+        dataSource,
+    });
 
     const startEdit = useCallback(
         (index: number) => {
@@ -413,7 +456,7 @@ export function useGroupTable(props: GroupTableProps) {
         handleRowHeightRecompute();
     }, [getValues, handleRowHeightRecompute, reset]);
 
-    const populateValue = (existingItems: Array<any>) => [...existingItems, {}].map(populateItemKey);
+    const populateValue = (existingItems: FormItems[]) => [...existingItems, {}].map(populateItemKey);
 
     const handleAdd = useCallback(() => {
         if (dataSource.length === 0 && formItems.length !== 0) {
@@ -520,17 +563,18 @@ export function useGroupTable(props: GroupTableProps) {
 
         return {
             rowExpandable: (record) => rowHeightExceedsMaxHeight(record.key),
+            expandedRowKeys: isRowExpanded,
             expandedRowRender: (record) => (
                 <RenderFormItemReadOnly
                     formItem={record[expandableColumnKey]?.formItem}
                     questionnaireItem={record[expandableColumnKey]?.questionnaireItem}
                 />
             ),
-            onExpand: (expanded: boolean, record: GroupTableRow) => handleRowExpand(expanded, record),
+            onExpand: (expanded: boolean, record: GroupTableRow) => handleRowExpand(expanded, record.key),
             showExpandColumn: false,
             expandRowByClick: true,
         };
-    }, [handleRowExpand, rowHeightExceedsMaxHeight, visibleItem]);
+    }, [isRowExpanded, handleRowExpand, rowHeightExceedsMaxHeight, visibleItem]);
 
     const actionColumn = useMemo(() => {
         return {
@@ -571,6 +615,7 @@ export function useGroupTable(props: GroupTableProps) {
         if (!chartLinkIdX || !chartLinkIdY) {
             return undefined;
         }
+
         return (renderAsTable: boolean) => {
             setRenderAsTable(renderAsTable);
         };
@@ -591,6 +636,11 @@ export function useGroupTable(props: GroupTableProps) {
         snapshotDataSource,
         renderAsTable,
         handleRenderTypeToggle,
+        handleRowExpandAll,
+        handleRowCollapseAll,
+        hasExpandableRows,
+        isAllExpandableRowsExpanded,
+        hasExpandedRows,
         chartLinkIdX,
         chartLinkIdY,
         chartYRange,
