@@ -195,6 +195,13 @@ export function useRowExpandability(props: UseRowExpandabilityProps) {
     const expandableMaxHeightRef = useRef<number>(expandableMaxHeight);
     const [rowExpandableMap, setRowExpandableMap] = useState<Record<string, boolean>>({});
     const [isRowExpanded, setIsRowExpanded] = useState<readonly React.Key[]>([]);
+    const areRowKeyCollectionsEqual = useCallback((left: readonly React.Key[], right: readonly React.Key[]) => {
+        if (left.length !== right.length) {
+            return false;
+        }
+        const rightSet = new Set(right.map(String));
+        return left.every((key) => rightSet.has(String(key)));
+    }, []);
 
     useEffect(() => {
         expandableMaxHeightRef.current = expandableMaxHeight;
@@ -267,7 +274,10 @@ export function useRowExpandability(props: UseRowExpandabilityProps) {
             });
             return changed ? next : prev;
         });
-        setIsRowExpanded((prev) => prev.filter((key) => keys.has(String(key))));
+        setIsRowExpanded((prev) => {
+            const nextExpanded = prev.filter((key) => keys.has(String(key)));
+            return nextExpanded.length === prev.length ? prev : nextExpanded;
+        });
     }, [dataSource]);
 
     const recomputeRowExpandability = useCallback(() => {
@@ -323,6 +333,9 @@ export function useRowExpandability(props: UseRowExpandabilityProps) {
                 }
                 return [...prev, rowKey];
             }
+            if (!prev.includes(rowKey)) {
+                return prev;
+            }
             return prev.filter((key) => key !== rowKey);
         });
     }, []);
@@ -331,11 +344,11 @@ export function useRowExpandability(props: UseRowExpandabilityProps) {
         const nextExpandedRowKeys = dataSource
             .map((row) => row.key)
             .filter((rowKey) => rowHeightExceedsMaxHeight(rowKey));
-        setIsRowExpanded(nextExpandedRowKeys);
-    }, [dataSource, rowHeightExceedsMaxHeight]);
+        setIsRowExpanded((prev) => (areRowKeyCollectionsEqual(prev, nextExpandedRowKeys) ? prev : nextExpandedRowKeys));
+    }, [areRowKeyCollectionsEqual, dataSource, rowHeightExceedsMaxHeight]);
 
     const handleRowCollapseAll = useCallback(() => {
-        setIsRowExpanded([]);
+        setIsRowExpanded((prev) => (prev.length === 0 ? prev : []));
     }, []);
 
     const expandableRowKeys = useMemo(
@@ -401,7 +414,10 @@ export function useGroupTable(props: GroupTableProps) {
 
     const fields = useMemo(() => _.map(visibleItem, (item) => item.linkId), [visibleItem]);
 
-    const dataSource: GroupTableRow[] = getDataSource(fields, formItems, questionItem);
+    const dataSource: GroupTableRow[] = useMemo(
+        () => getDataSource(fields, formItems, questionItem),
+        [fields, formItems, questionItem],
+    );
 
     const {
         observeRow,

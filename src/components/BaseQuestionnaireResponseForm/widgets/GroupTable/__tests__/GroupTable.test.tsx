@@ -2,8 +2,8 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { FCEQuestionnaireItem, FormItems } from 'sdc-qrf';
 import { beforeAll, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { useGroupTable } from '../hooks';
-import type { GroupTableProps } from '../types';
+import { useGroupTable, useRowExpandability } from '../hooks';
+import type { GroupTableProps, GroupTableRow } from '../types';
 import { getColumnWidth, getDataSource } from '../utils';
 
 const fields = ['date', 'weight'];
@@ -223,6 +223,85 @@ describe('useGroupTable', () => {
         await waitFor(() => {
             expect(groupTableHookMocks.mockOnChange).toHaveBeenLastCalledWith({ items: [latestRow2, latestRow3] });
         });
+    });
+});
+
+describe('useRowExpandability', () => {
+    beforeAll(() => {
+        global.ResizeObserver = class {
+            observe(): void {
+                void 0;
+            }
+            unobserve(): void {
+                void 0;
+            }
+            disconnect(): void {
+                void 0;
+            }
+        };
+    });
+
+    test('keeps expanded keys reference stable when dataSource values are unchanged', async () => {
+        const initialRows = [{ key: 'row-1' }] as GroupTableRow[];
+        const { result, rerender } = renderHook(
+            ({ dataSource }) =>
+                useRowExpandability({
+                    expandableMaxHeight: 100,
+                    dataSource,
+                }),
+            { initialProps: { dataSource: initialRows } },
+        );
+
+        const initialExpandedKeys = result.current.isRowExpanded;
+
+        rerender({ dataSource: [{ key: 'row-1' }] as GroupTableRow[] });
+
+        await waitFor(() => {
+            expect(result.current.isRowExpanded).toBe(initialExpandedKeys);
+        });
+    });
+
+    test('repeated expand-all does not rewrite identical expanded state', () => {
+        const dataSource = [{ key: 'row-1' }] as GroupTableRow[];
+        const { result } = renderHook(() =>
+            useRowExpandability({
+                expandableMaxHeight: 100,
+                dataSource,
+            }),
+        );
+
+        const node = document.createElement('div');
+        Object.defineProperty(node, 'clientHeight', { value: 250, configurable: true });
+
+        act(() => {
+            result.current.observeRow('row-1')(node);
+            result.current.handleRowExpandAll();
+        });
+
+        const expandedRowKeysAfterFirstExpand = result.current.isRowExpanded;
+
+        act(() => {
+            result.current.handleRowExpandAll();
+        });
+
+        expect(result.current.isRowExpanded).toBe(expandedRowKeysAfterFirstExpand);
+    });
+
+    test('repeated collapse-all keeps empty expanded state reference stable', () => {
+        const { result } = renderHook(() =>
+            useRowExpandability({
+                expandableMaxHeight: 100,
+                dataSource: [] as GroupTableRow[],
+            }),
+        );
+
+        const initialExpandedState = result.current.isRowExpanded;
+
+        act(() => {
+            result.current.handleRowCollapseAll();
+        });
+
+        expect(result.current.isRowExpanded).toBe(initialExpandedState);
     });
 });
 
