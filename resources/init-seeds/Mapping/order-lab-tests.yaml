@@ -1,318 +1,342 @@
-id: order-lab-tests
 resourceType: Mapping
+id: order-lab-tests
+type: FHIRPath
 body:
-  $let:
-    answer:
-      $fn: ["linkId", "type"]
-      $name: answer
-      $body: $ fhirpath("QuestionnaireResponse.repeat(item).where(linkId='"+ linkId + "').answer."+type).0
-  $body:
-    $let:
-      patientId: $ answer('patientId', 'valueString')
-      patientName: $ answer('patientName', 'valueString')
-      encounterId: $ fhirpath("Encounter.id")
-      wbc: $ answer('wbc', 'valueBoolean')
-      neutrophils: $ answer('neutrophils', 'valueBoolean')
-      lymphocytes: $ answer('lymphocytes', 'valueBoolean')
-      platelets: $ answer('platelets', 'valueBoolean')
+  "{% assign %}":
+    - patientId: "{{ %QuestionnaireResponse.answers('patientId') }}"
+    - patientName: "{{ %QuestionnaireResponse.answers('patientName') }}"
+    - encounterId: "{{ %QuestionnaireResponse.answers('encounterId') }}"
 
-      sodium: $ answer('sodium', 'valueBoolean')
-      potassium: $ answer('potassium', 'valueBoolean')
-      co2: $ answer('co2', 'valueBoolean')
-      chloride: $ answer('chloride', 'valueBoolean')
-      bun: $ answer('bun', 'valueBoolean')
-      creatinine: $ answer('creatinine', 'valueBoolean')
-      albumin: $ answer('albumin', 'valueBoolean')
-      bilirubin: $ answer('bilirubin', 'valueBoolean')
+    - wbc: "{{ %QuestionnaireResponse.answers('wbc') }}"
+    - neutrophils: "{{ %QuestionnaireResponse.answers('neutrophils') }}"
+    - lymphocytes: "{{ %QuestionnaireResponse.answers('lymphocytes') }}"
+    - platelets: "{{ %QuestionnaireResponse.answers('platelets') }}"
+    - sodium: "{{ %QuestionnaireResponse.answers('sodium') }}"
+    - potassium: "{{ %QuestionnaireResponse.answers('potassium') }}"
+    - co2: "{{ %QuestionnaireResponse.answers('co2') }}"
+    - chloride: "{{ %QuestionnaireResponse.answers('chloride') }}"
+    - bun: "{{ %QuestionnaireResponse.answers('bun') }}"
+    - creatinine: "{{ %QuestionnaireResponse.answers('creatinine') }}"
+    - albumin: "{{ %QuestionnaireResponse.answers('albumin') }}"
+    - bilirubin: "{{ %QuestionnaireResponse.answers('bilirubin') }}"
+    - crp: "{{ %QuestionnaireResponse.answers('crp') }}"
+    - il6: "{{ %QuestionnaireResponse.answers('il6') }}"
+    - pct: "{{ %QuestionnaireResponse.answers('pct') }}"
 
-      crp: $ answer('crp', 'valueBoolean')
-      il6: $ answer('il6', 'valueBoolean')
-      pct: $ answer('pct', 'valueBoolean')
-    $body:
-      type: transaction
-      entry:
-        - $if: $ wbc
-          $then:
-            request:
-              url: $ "/ServiceRequest?encounter" + encounterId + "&code=26464-8"
-              method: POST
-            resource:
-              resourceType: ServiceRequest
-              status: active
-              intent: order
-              code:
-                coding:
-                  - code: 26464-8
-                    system: http://loinc.org
-                    display: WBC
-              subject:
-                reference: $ "Patient/" + patientId
-                display: $ patientName
-              encounter:
-                reference: $ "Encounter/" + encounterId
-        - $if: $ neutrophils
-          $then:
-            request:
-              url: $ "/ServiceRequest?encounter" + encounterId + "&code=26499-4"
-              method: POST
-            resource:
-              resourceType: ServiceRequest
-              status: active
-              intent: order
-              code:
-                coding:
-                  - code: 26499-4
-                    system: http://loinc.org
-                    display: Neutrophils
-              subject:
-                reference: $ "Patient/" + patientId
-                display: $ patientName
-              encounter:
-                reference: $ "Encounter/" + encounterId
-        - $if: $ lymphocytes
-          $then:
-            request:
-              url: $ "/ServiceRequest?encounter" + encounterId + "&code=26474-7"
-              method: POST
-            resource:
-              resourceType: ServiceRequest
-              status: active
-              intent: order
-              code:
-                coding:
-                  - code: 26474-7
-                    system: http://loinc.org
-                    display: Lymphocytes
-              subject:
-                reference: $ "Patient/" + patientId
-                display: $ patientName
-              encounter:
-                reference: $ "Encounter/" + encounterId
-        - $if: $ platelets
-          $then:
-            request:
-              url: $ "/ServiceRequest?encounter" + encounterId + "&code=26515-7"
-              method: POST
-            resource:
-              resourceType: ServiceRequest
-              status: active
-              intent: order
-              code:
-                coding:
-                  - code: 26515-7
-                    system: http://loinc.org
-                    display: Platelets
-              subject:
-                reference: $ "Patient/" + patientId
-                display: $ patientName
-              encounter:
-                reference: $ "Encounter/" + encounterId
-        - $if: $ sodium
-          $then:
-            request:
-              url: $ "/ServiceRequest?encounter" + encounterId + "&code=77139-4"
-              method: POST
-            resource:
-              resourceType: ServiceRequest
-              status: active
-              intent: order
-              code:
-                coding:
-                  - code: 77139-4
-                    system: http://loinc.org
-                    display: Sodium
-              subject:
-                reference: $ "Patient/" + patientId
-                display: $ patientName
-              encounter:
-                reference: $ "Encounter/" + encounterId
-        - $if: $ potassium
-          $then:
-            request:
-              url: $ "/ServiceRequest?encounter" + encounterId + "&code=77142-8"
-              method: POST
-            resource:
-              resourceType: ServiceRequest
-              status: active
-              intent: order
-              code:
-                coding:
-                  - code: 77142-8
-                    system: http://loinc.org
-                    display: Potassium
-              subject:
-                reference: $ "Patient/" + patientId
-                display: $ patientName
-              encounter:
-                reference: $ "Encounter/" + encounterId
-        - $if: $ co2
-          $then:
-            request:
-              url: $ "/ServiceRequest?encounter" + encounterId + "&code=2028-9"
-              method: POST
-            resource:
-              resourceType: ServiceRequest
-              status: active
-              intent: order
-              code:
-                coding:
-                  - code: 2028-9
-                    system: http://loinc.org
-                    display: CO2
-              subject:
-                reference: $ "Patient/" + patientId
-                display: $ patientName
-              encounter:
-                reference: $ "Encounter/" + encounterId
-        - $if: $ chloride
-          $then:
-            request:
-              url: $ "/ServiceRequest?encounter" + encounterId + "&code=77138-6"
-              method: POST
-            resource:
-              resourceType: ServiceRequest
-              status: active
-              intent: order
-              code:
-                coding:
-                  - code: 26464-8
-                    system: http://loinc.org
-                    display: Chloride
-              subject:
-                reference: $ "Patient/" + patientId
-                display: $ patientName
-              encounter:
-                reference: $ "Encounter/" + encounterId
-        - $if: $ bun
-          $then:
-            request:
-              url: $ "/ServiceRequest?encounter" + encounterId + "&code=6299-2"
-              method: POST
-            resource:
-              resourceType: ServiceRequest
-              status: active
-              intent: order
-              code:
-                coding:
-                  - code: 6299-2
-                    system: http://loinc.org
-                    display: BUN
-              subject:
-                reference: $ "Patient/" + patientId
-                display: $ patientName
-              encounter:
-                reference: $ "Encounter/" + encounterId
-        - $if: $ creatinine
-          $then:
-            request:
-              url: $ "/ServiceRequest?encounter" + encounterId + "&code=38483-4"
-              method: POST
-            resource:
-              resourceType: ServiceRequest
-              status: active
-              intent: order
-              code:
-                coding:
-                  - code: 38483-4
-                    system: http://loinc.org
-                    display: Creatinine
-              subject:
-                reference: $ "Patient/" + patientId
-                display: $ patientName
-              encounter:
-                reference: $ "Encounter/" + encounterId
-        - $if: $ albumin
-          $then:
-            request:
-              url: $ "/ServiceRequest?encounter" + encounterId + "&code=1751-7"
-              method: POST
-            resource:
-              resourceType: ServiceRequest
-              status: active
-              intent: order
-              code:
-                coding:
-                  - code: 1751-7
-                    system: http://loinc.org
-                    display: Albumin
-              subject:
-                reference: $ "Patient/" + patientId
-                display: $ patientName
-              encounter:
-                reference: $ "Encounter/" + encounterId
-        - $if: $ bilirubin
-          $then:
-            request:
-              url: $ "/ServiceRequest?encounter" + encounterId + "&code=1975-2"
-              method: POST
-            resource:
-              resourceType: ServiceRequest
-              status: active
-              intent: order
-              code:
-                coding:
-                  - code: 1975-2
-                    system: http://loinc.org
-                    display: Bilirubin
-              subject:
-                reference: $ "Patient/" + patientId
-                display: $ patientName
-              encounter:
-                reference: $ "Encounter/" + encounterId
-        - $if: $ il6
-          $then:
-            request:
-              url: $ "/ServiceRequest?encounter" + encounterId + "&code=LP16474-6"
-              method: POST
-            resource:
-              resourceType: ServiceRequest
-              status: active
-              intent: order
-              code:
-                coding:
-                  - code: LP16474-6
-                    system: http://loinc.org
-                    display: IL-6
-              subject:
-                reference: $ "Patient/" + patientId
-                display: $ patientName
-              encounter:
-                reference: $ "Encounter/" + encounterId
-        - $if: $ crp
-          $then:
-            request:
-              url: $ "/ServiceRequest?encounter" + encounterId + "&code=1988-5"
-              method: POST
-            resource:
-              resourceType: ServiceRequest
-              status: active
-              intent: order
-              code:
-                coding:
-                  - code: 1988-5
-                    system: http://loinc.org
-                    display: CRP
-              subject:
-                reference: $ "Patient/" + patientId
-                display: $ patientName
-              encounter:
-                reference: $ "Encounter/" + encounterId
-        - $if: $ pct
-          $then:
-            request:
-              url: $ "/ServiceRequest?encounter" + encounterId + "&code=33959-8"
-              method: POST
-            resource:
-              resourceType: ServiceRequest
-              status: active
-              intent: order
-              code:
-                coding:
-                  - code: 33959-8
-                    system: http://loinc.org
-                    display: PCT
-              subject:
-                reference: $ "Patient/" + patientId
-                display: $ patientName
-              encounter:
-                reference: $ "Encounter/" + encounterId
+  resourceType: Bundle
+  type: transaction
+  entry:
+    - "{% if %wbc = true %}":
+        request:
+          method: POST
+          url: /ServiceRequest
+        resource:
+          resourceType: ServiceRequest
+          status: active
+          intent: order
+          code:
+            coding:
+              - code: 26464-8
+                system: http://loinc.org
+                display: WBC
+          subject:
+            reference: "Patient/{{ %patientId }}"
+            display: "{{ %patientName }}"
+          "{% merge %}":
+            - "{% if %encounterId.exists() and %encounterId != '' %}":
+                encounter:
+                  reference: "Encounter/{{ %encounterId }}"
+
+    - "{% if %neutrophils = true %}":
+        request:
+          method: POST
+          url: /ServiceRequest
+        resource:
+          resourceType: ServiceRequest
+          status: active
+          intent: order
+          code:
+            coding:
+              - code: 26499-4
+                system: http://loinc.org
+                display: Neutrophils
+          subject:
+            reference: "Patient/{{ %patientId }}"
+            display: "{{ %patientName }}"
+          "{% merge %}":
+            - "{% if %encounterId.exists() and %encounterId != '' %}":
+                encounter:
+                  reference: "Encounter/{{ %encounterId }}"
+
+    - "{% if %lymphocytes = true %}":
+        request:
+          method: POST
+          url: /ServiceRequest
+        resource:
+          resourceType: ServiceRequest
+          status: active
+          intent: order
+          code:
+            coding:
+              - code: 26474-7
+                system: http://loinc.org
+                display: Lymphocytes
+          subject:
+            reference: "Patient/{{ %patientId }}"
+            display: "{{ %patientName }}"
+          "{% merge %}":
+            - "{% if %encounterId.exists() and %encounterId != '' %}":
+                encounter:
+                  reference: "Encounter/{{ %encounterId }}"
+
+    - "{% if %platelets = true %}":
+        request:
+          method: POST
+          url: /ServiceRequest
+        resource:
+          resourceType: ServiceRequest
+          status: active
+          intent: order
+          code:
+            coding:
+              - code: 26515-7
+                system: http://loinc.org
+                display: Platelets
+          subject:
+            reference: "Patient/{{ %patientId }}"
+            display: "{{ %patientName }}"
+          "{% merge %}":
+            - "{% if %encounterId.exists() and %encounterId != '' %}":
+                encounter:
+                  reference: "Encounter/{{ %encounterId }}"
+
+    - "{% if %sodium = true %}":
+        request:
+          method: POST
+          url: /ServiceRequest
+        resource:
+          resourceType: ServiceRequest
+          status: active
+          intent: order
+          code:
+            coding:
+              - code: 77139-4
+                system: http://loinc.org
+                display: Sodium
+          subject:
+            reference: "Patient/{{ %patientId }}"
+            display: "{{ %patientName }}"
+          "{% merge %}":
+            - "{% if %encounterId.exists() and %encounterId != '' %}":
+                encounter:
+                  reference: "Encounter/{{ %encounterId }}"
+
+    - "{% if %potassium = true %}":
+        request:
+          method: POST
+          url: /ServiceRequest
+        resource:
+          resourceType: ServiceRequest
+          status: active
+          intent: order
+          code:
+            coding:
+              - code: 77142-8
+                system: http://loinc.org
+                display: Potassium
+          subject:
+            reference: "Patient/{{ %patientId }}"
+            display: "{{ %patientName }}"
+          "{% merge %}":
+            - "{% if %encounterId.exists() and %encounterId != '' %}":
+                encounter:
+                  reference: "Encounter/{{ %encounterId }}"
+
+    - "{% if %co2 = true %}":
+        request:
+          method: POST
+          url: /ServiceRequest
+        resource:
+          resourceType: ServiceRequest
+          status: active
+          intent: order
+          code:
+            coding:
+              - code: 2028-9
+                system: http://loinc.org
+                display: CO2
+          subject:
+            reference: "Patient/{{ %patientId }}"
+            display: "{{ %patientName }}"
+          "{% merge %}":
+            - "{% if %encounterId.exists() and %encounterId != '' %}":
+                encounter:
+                  reference: "Encounter/{{ %encounterId }}"
+
+    - "{% if %chloride = true %}":
+        request:
+          method: POST
+          url: /ServiceRequest
+        resource:
+          resourceType: ServiceRequest
+          status: active
+          intent: order
+          code:
+            coding:
+              - code: 77138-6
+                system: http://loinc.org
+                display: Chloride
+          subject:
+            reference: "Patient/{{ %patientId }}"
+            display: "{{ %patientName }}"
+          "{% merge %}":
+            - "{% if %encounterId.exists() and %encounterId != '' %}":
+                encounter:
+                  reference: "Encounter/{{ %encounterId }}"
+
+    - "{% if %bun = true %}":
+        request:
+          method: POST
+          url: /ServiceRequest
+        resource:
+          resourceType: ServiceRequest
+          status: active
+          intent: order
+          code:
+            coding:
+              - code: 6299-2
+                system: http://loinc.org
+                display: BUN
+          subject:
+            reference: "Patient/{{ %patientId }}"
+            display: "{{ %patientName }}"
+          "{% merge %}":
+            - "{% if %encounterId.exists() and %encounterId != '' %}":
+                encounter:
+                  reference: "Encounter/{{ %encounterId }}"
+
+    - "{% if %creatinine = true %}":
+        request:
+          method: POST
+          url: /ServiceRequest
+        resource:
+          resourceType: ServiceRequest
+          status: active
+          intent: order
+          code:
+            coding:
+              - code: 38483-4
+                system: http://loinc.org
+                display: Creatinine
+          subject:
+            reference: "Patient/{{ %patientId }}"
+            display: "{{ %patientName }}"
+          "{% merge %}":
+            - "{% if %encounterId.exists() and %encounterId != '' %}":
+                encounter:
+                  reference: "Encounter/{{ %encounterId }}"
+
+    - "{% if %albumin = true %}":
+        request:
+          method: POST
+          url: /ServiceRequest
+        resource:
+          resourceType: ServiceRequest
+          status: active
+          intent: order
+          code:
+            coding:
+              - code: 1751-7
+                system: http://loinc.org
+                display: Albumin
+          subject:
+            reference: "Patient/{{ %patientId }}"
+            display: "{{ %patientName }}"
+          "{% merge %}":
+            - "{% if %encounterId.exists() and %encounterId != '' %}":
+                encounter:
+                  reference: "Encounter/{{ %encounterId }}"
+
+    - "{% if %bilirubin = true %}":
+        request:
+          method: POST
+          url: /ServiceRequest
+        resource:
+          resourceType: ServiceRequest
+          status: active
+          intent: order
+          code:
+            coding:
+              - code: 1975-2
+                system: http://loinc.org
+                display: Bilirubin
+          subject:
+            reference: "Patient/{{ %patientId }}"
+            display: "{{ %patientName }}"
+          "{% merge %}":
+            - "{% if %encounterId.exists() and %encounterId != '' %}":
+                encounter:
+                  reference: "Encounter/{{ %encounterId }}"
+
+    - "{% if %il6 = true %}":
+        request:
+          method: POST
+          url: /ServiceRequest
+        resource:
+          resourceType: ServiceRequest
+          status: active
+          intent: order
+          code:
+            coding:
+              - code: LP16474-6
+                system: http://loinc.org
+                display: IL-6
+          subject:
+            reference: "Patient/{{ %patientId }}"
+            display: "{{ %patientName }}"
+          "{% merge %}":
+            - "{% if %encounterId.exists() and %encounterId != '' %}":
+                encounter:
+                  reference: "Encounter/{{ %encounterId }}"
+
+    - "{% if %crp = true %}":
+        request:
+          method: POST
+          url: /ServiceRequest
+        resource:
+          resourceType: ServiceRequest
+          status: active
+          intent: order
+          code:
+            coding:
+              - code: 1988-5
+                system: http://loinc.org
+                display: CRP
+          subject:
+            reference: "Patient/{{ %patientId }}"
+            display: "{{ %patientName }}"
+          "{% merge %}":
+            - "{% if %encounterId.exists() and %encounterId != '' %}":
+                encounter:
+                  reference: "Encounter/{{ %encounterId }}"
+
+    - "{% if %pct = true %}":
+        request:
+          method: POST
+          url: /ServiceRequest
+        resource:
+          resourceType: ServiceRequest
+          status: active
+          intent: order
+          code:
+            coding:
+              - code: 33959-8
+                system: http://loinc.org
+                display: PCT
+          subject:
+            reference: "Patient/{{ %patientId }}"
+            display: "{{ %patientName }}"
+          "{% merge %}":
+            - "{% if %encounterId.exists() and %encounterId != '' %}":
+                encounter:
+                  reference: "Encounter/{{ %encounterId }}"
