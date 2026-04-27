@@ -61,5 +61,10 @@ export default defineConfig(({ command }) => ({
         globals: true, // To use the Vitest APIs globally like Jest
         environment: 'jsdom', // https://vitest.dev/config/#environment
         setupFiles: 'src/setupTests.ts', //  https://vitest.dev/config/#setupfiles
+        server: {
+            deps: {
+                inline: [/@beda\.software\/fhir-questionnaire/, /@beda\.software\/web-item-controls/],
+            },
+        },
     },
 }));

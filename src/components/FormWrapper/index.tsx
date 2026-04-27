@@ -4,9 +4,9 @@ import { ReactElement, useState } from 'react';
 import { GroupItemProps } from 'sdc-qrf';
 
 import { FormWrapperProps } from '@beda.software/fhir-questionnaire/components';
+import { BaseQuestionnaireResponseFormPropsContext } from '@beda.software/fhir-questionnaire/contexts';
 import { RemoteDataResult } from '@beda.software/remote-data';
 
-import { BaseQuestionnaireResponseFormPropsContext } from 'src/components/BaseQuestionnaireResponseForm/context';
 import { groupComponent } from 'src/components/BaseQuestionnaireResponseForm/controls';
 import { FormFooter } from 'src/components/BaseQuestionnaireResponseForm/FormFooter';
 import { isGroupWizard } from 'src/components/BaseQuestionnaireResponseForm/utils';
