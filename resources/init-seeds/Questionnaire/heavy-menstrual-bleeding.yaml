@@ -19,11 +19,8 @@ item:
     linkId: wizard
     itemControl:
       coding:
-        - code: wizard
+        - code: wizard-vertical
     item:
-      - linkId: g1
-        type: group
-        item:
           - linkId: demographics-group
             type: group
             text: Demographics
@@ -39,6 +36,7 @@ item:
                   - linkId: first-name
                     text: First name
                     type: string
+                    readOnly: true
                     initialExpression:
                       language: text/fhirpath
                       expression: "%Patient.name.first().given.first()"
@@ -47,12 +45,10 @@ item:
                     text: Surname
                     type: string
                     required: true
+                    readOnly: true
                     initialExpression:
                       language: text/fhirpath
                       expression: "%Patient.name.first().family"
-                  - linkId: preferred-name
-                    text: Preferred Name
-                    type: string
               - linkId: demographics-group-2
                 type: group
                 extension:
@@ -65,20 +61,28 @@ item:
                     text: Date of Birth
                     type: date
                     required: true
+                    readOnly: true
                     initialExpression:
                       language: text/fhirpath
                       expression: "%Patient.birthDate"
                   - linkId: email
                     text: Email
                     type: string
-                    required: true
+                    readOnly: true
                     initialExpression:
                       language: text/fhirpath
                       expression: "%Patient.telecom.where(system='email').value"
 
           - linkId: main-health-concerns-group
             type: group
+            text: Main health related consern
             item:
+            - linkId: main-health-concerns-group-voice
+              type: group
+              itemControl:
+                coding:
+                  - code: group-voice
+              item:
               - linkId: main-health-concerns-display
                 type: display
                 text: Please outline your main health related concern(s)
@@ -90,6 +94,12 @@ item:
             text: Past Medical History
             helpText: Please check any past or current medical conditions that apply to you
             item:
+            - linkId: past-medical-history-voice
+              type: group
+              itemControl:
+                coding:
+                - code: group-voice
+              item:
               - linkId: row-1
                 type: group
                 itemControl:
@@ -284,6 +294,12 @@ item:
             helpText: (FIGO AUB parameters, SAMANTA, VAS, PIPPA)
             type: group
             item:
+            - linkId: menstrual-history-voice
+              type: group
+              itemControl:
+                coding:
+                  - code: group-voice
+              item:
               - linkId: menstrual-history-group
                 type: group
                 extension:
@@ -442,6 +458,12 @@ item:
             text: Period Pain
             type: group
             item:
+            - linkId: period-pain-group-voice
+              type: group
+              itemControl:
+                coding:
+                  - code: group-voice
+              item:
               - linkId: period-pain-presence
                 text: Do you have period pain?
                 type: choice
@@ -552,14 +574,16 @@ item:
                       - valueCoding:
                           code: neber-tried
                           display: I have never tried these medications
-
-      - linkId: g2
-        type: group
-        item:
           - linkId: sexual-reproductive-history
             text: Sexual & Reproductive History
             type: group
             item:
+            - linkId: sexual-reproductive-history-voice
+              type: group
+              itemControl:
+                coding:
+                  - code: group-voice
+              item:
               - linkId: sexually-active
                 text: Are you currently sexually active?
                 type: choice
@@ -970,6 +994,12 @@ item:
             text: Associated or Systemic Symptoms
             type: group
             item:
+            - linkId: associated-systemic-symptoms-voice
+              type: group
+              itemControl:
+                coding:
+                  - code: group-voice
+              item:
               - linkId: pelvic-pain
                 text: Do you experience any pelvic pain?
                 type: choice
@@ -1295,15 +1325,17 @@ item:
                             text: Duration of Use
                             # helpText: For how long have you been taking this medication
                             type: string
-
-      - linkId: g3
-        type: group
-        item:
           - linkId: family-history
             text: Family History
             helpText: Indicate any conditions diagnosed in your family (parents, siblings, grandparents)
             type: group
             item:
+            - linkId: family-history-voice
+              type: group
+              itemControl:
+                coding:
+                  - code: group-voice
+              item:
               - linkId: family-history-details-row-4-blood-clotting-disorders
                 text: Blood and Clotting Disorders
                 type: choice
@@ -1437,6 +1469,12 @@ item:
             text: Social History
             type: group
             item:
+            - linkId: social-history-voice
+              type: group
+              itemControl:
+                coding:
+                  - code: group-voice
+              item:
               - linkId: partner
                 text: Do you currently have a partner(s)?
                 type: choice
@@ -1540,6 +1578,12 @@ item:
             text: Lifestyle
             type: group
             item:
+            - linkId: lifestyle-voice
+              type: group
+              itemControl:
+                coding:
+                  - code: group-voice
+              item:
               - linkId: smoking
                 text: Do you currently smoke?
                 type: choice
@@ -1686,6 +1730,12 @@ item:
             text: Surgical History
             type: group
             item:
+            - linkId: surgical-history-voice
+              type: group
+              itemControl:
+                coding:
+                  - code: group-voice
+              item:
               - linkId: had-surgeries
                 text: Have you had any surgeries in the past?
                 type: choice
@@ -1754,6 +1804,12 @@ item:
             text: Menopause
             type: group
             item:
+            - linkId: menopause-group-voice
+              type: group
+              itemControl:
+                coding:
+                  - code: group-voice
+              item:
               - linkId: menopause
                 text: Have you gone through menopause?
                 type: choice
@@ -2245,6 +2301,12 @@ item:
             text: Other Notes
             type: group
             item:
+            - linkId: other-notes-group-voice
+              type: group
+              itemControl:
+                coding:
+                  - code: group-voice
+              item:
               - linkId: other-notes
                 text: >-
                   Please use the space below to let us know of anything else we

@@ -1,0 +1,140 @@
+resourceType: Questionnaire
+id: tb-risk
+url: tb-risk
+name: tb-risk
+title: Tuberculosis (TB) Risk Assessment
+status: active
+description: >
+  Risk assessment questionnaire for tuberculosis exposure and high-risk
+  conditions. Used to determine the need for TB testing.
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+subjectType:
+  - Patient
+useContext:
+  - code:
+      code: questionnaire-type
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+    value:
+      CodeableConcept:
+        coding:
+          - code: form-library
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+item:
+- linkId: screening
+  type: group
+  itemControl:
+    coding:
+    - code: group-voice
+  item:
+  - linkId: exposure
+    text: Has the child had close contact with a person who has active TB disease?
+    type: choice
+    required: true
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+  - linkId: foreign-born
+    text: Was the child born in or has the child traveled to a country with high TB prevalence?
+    type: choice
+    required: true
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+  - linkId: household-risk
+    text: Does the child live with or frequently see someone born in a high TB prevalence country?
+    type: choice
+    required: true
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+  - linkId: congregate-setting
+    text: Does the child spend time in homeless shelters, correctional facilities, or similar congregate settings?
+    type: choice
+    required: true
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+  - linkId: immunosuppression
+    text: Does the child have a weakened immune system (e.g., HIV, immunosuppressive therapy)?
+    type: choice
+    required: true
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+  - linkId: previous-bcg
+    text: Has the child received the BCG vaccine?
+    type: choice
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+  - linkId: notes
+    text: Notes or additional comments
+    type: text
+- linkId: tb-risk-present
+  text: TB risk factors present
+  type: boolean
+  readOnly: true
+  enableWhenExpression:
+    language: text/fhirpath
+    expression: >
+      %resource.item.item.where(linkId='exposure').answer.exists() and
+      %resource.item.item.where(linkId='foreign-born').answer.exists() and
+      %resource.item.item.where(linkId='household-risk').answer.exists() and
+      %resource.item.item.where(linkId='congregate-setting').answer.exists() and
+      %resource.item.item.where(linkId='immunosuppression').answer.exists()
+  calculatedExpression:
+    language: text/fhirpath
+    expression: |
+      (%resource.item.item.where(linkId='exposure').answer.valueCoding.code = 'yes') or
+      (%resource.item.item.where(linkId='foreign-born').answer.valueCoding.code = 'yes') or
+      (%resource.item.item.where(linkId='household-risk').answer.valueCoding.code = 'yes') or
+      (%resource.item.item.where(linkId='congregate-setting').answer.valueCoding.code = 'yes') or
+      (%resource.item.item.where(linkId='immunosuppression').answer.valueCoding.code = 'yes')

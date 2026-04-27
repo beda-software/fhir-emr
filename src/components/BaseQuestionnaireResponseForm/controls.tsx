@@ -54,6 +54,8 @@ import {
     MarkdownDisplay,
 } from '@beda.software/web-item-controls/readonly-controls';
 
+import { GroupVoice } from './widgets/GroupVoice';
+
 export const itemComponents: QuestionItemComponentMapping = {
     text: QuestionText,
     string: QuestionString,
@@ -115,4 +117,5 @@ export const groupControlComponents: ItemControlGroupItemComponentMapping = {
     'group-tabs': GroupTabs,
     'group-table': GroupTable,
     'editable-group': EditableGroup,
+    'group-voice': GroupVoice,
 };

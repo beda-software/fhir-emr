@@ -1,0 +1,1060 @@
+resourceType: Questionnaire
+id: behavioral-screening
+url: behavioral-screening
+name: behavioral-screening
+title: Behavioral/Social/Emotional Screening
+status: active
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+useContext:
+  - code:
+      code: questionnaire-type
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+    value:
+      CodeableConcept:
+        coding:
+          - code: form-library
+subjectType:
+  - Patient
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+item:
+  - linkId: patient-id
+    text: PatientId
+    type: string
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.id"
+
+  - linkId: age-group
+    text: Select the patient's age group
+    type: choice
+    required: true
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "1"
+          display: "1 year"
+      - valueCoding:
+          code: "2"
+          display: "2 years"
+      - valueCoding:
+          code: "3"
+          display: "3 years"
+      - valueCoding:
+          code: "4"
+          display: "4 years"
+      - valueCoding:
+          code: "5-6"
+          display: "5-6 years"
+      - valueCoding:
+          code: "7-10"
+          display: "7-10 years"
+      - valueCoding:
+          code: "11-14"
+          display: "11-14 years"
+      - valueCoding:
+          code: "15-21"
+          display: "15-21 years"
+
+  # TODDLER SECTIONS (1-4 years)
+  # Screening for 1 year
+  - linkId: behavioral-screening-1yo-group
+    text: Behavioral/Social/Emotional Screening for 1 Year / 12 Months
+    type: group
+    itemControl:
+      coding:
+      - code: group-voice
+    enableWhen:
+      - question: age-group
+        operator: "="
+        answerCoding:
+          code: "1"
+    item:
+      - linkId: reaction-to-new-people
+        text: How does your child react to new people or situations?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: friendly-curious
+              display: Friendly and curious
+          - valueCoding:
+              code: shy-cautious
+              display: Shy or cautious
+          - valueCoding:
+              code: fearful-upset
+              display: Fearful or upset
+      - linkId: shows-affection
+        text: Does your child show affection to familiar people?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: favorite-people-or-toys
+        text: Does your child have favorite people or toys?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: shows-fear
+        text: Does your child show fear in some situations (e.g., loud sounds,
+          strangers)?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: notices-others-upset
+        text:
+          Does your child notice when others are upset (e.g., looks concerned or
+          frowns)?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: expresses-frustration
+        text: How does your child express frustration or anger?
+        type: text
+      - linkId: responds-to-comfort
+        text: Does your child calm down when comforted by a parent or caregiver?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: social-referencing
+        text: Does your child look to you when unsure about a new situation?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+
+  # Screening for 2 years
+  - linkId: behavioral-screening-2yo-group
+    text: Behavioral/Social/Emotional Screening for 2 Years / 24 Months
+    itemControl:
+      coding:
+      - code: group-voice
+    type: group
+    enableWhen:
+      - question: age-group
+        operator: "="
+        answerCoding:
+          code: "2"
+    item:
+      - linkId: recognize-familiar-people-2
+        text: Does your child recognize familiar people and show affection?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: play-with-others-2
+        text: Does your child show interest in playing with other children?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: calm-after-upset
+        text: Is your child able to calm themselves when upset?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: frustration-response
+        text: How does your child react when they can't do something they want?
+        type: text
+      - linkId: concern-peer-interaction
+        text: Are you concerned about your child's ability to interact with others?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+
+  # Screening for 3 years
+  - linkId: behavioral-screening-3yo-group
+    text: Behavioral/Social/Emotional Screening for 3 Years / 36 Months
+    type: group
+    itemControl:
+      coding:
+      - code: group-voice
+    enableWhen:
+      - question: age-group
+        operator: "="
+        answerCoding:
+          code: "3"
+    item:
+      - linkId: recognize-familiar-people-3
+        text: Does your child recognize familiar people and show affection?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: play-with-others-3
+        text: Does your child enjoy playing with other children and take turns?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: understand-express-emotions
+        text: Is your child beginning to understand and express emotions?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: easily-upset
+        text: Is your child easily upset or frustrated?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: reacts-to-change
+        text: Does your child have difficulty adjusting to changes in routine?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: sleep-concerns
+        text: Do you have concerns about your child's sleep or if they often seem tired?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: calm-after-tantrum
+        text: Is your child able to calm themselves after a tantrum with little help?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+
+  # Screening for 4 years
+  - linkId: behavioral-screening-4yo-group
+    text: Behavioral/Social/Emotional Screening for 4 Years / 48 Months
+    type: group
+    itemControl:
+      coding:
+      - code: group-voice
+    enableWhen:
+      - question: age-group
+        operator: "="
+        answerCoding:
+          code: "4"
+    item:
+      - linkId: play-with-others-4
+        text: Does your child play well with other children and take turns?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: show-empathy
+        text: Does your child show empathy and recognize others' emotions?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: dress-undress
+        text: Does your child dress and undress themselves with minimal help?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: use-utensils
+        text: Does your child use a fork and spoon properly?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: speech-hearing-movement-concerns
+        text: Do you have any concerns about your child's speech hearing or movement?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: speech-hearing-movement-concerns-details
+        text: Describe
+        type: text
+        enableWhen:
+          - question: speech-hearing-movement-concerns
+            operator: "="
+            answerCoding:
+              code: "yes"
+
+  # SCHOOL-AGE SECTIONS (5-6 years, 7-10 years)
+  # Screening for 5-6 years
+  - linkId: behavioral-screening-5-6yo-group
+    text: Behavioral/Social/Emotional Screening for 5-6 Years
+    type: group
+    itemControl:
+      coding:
+      - code: group-voice
+    enableWhen:
+      - question: age-group
+        operator: "="
+        answerCoding:
+          code: "5-6"
+    item:
+      - linkId: speak-clearly
+        text: Can your child speak clearly so others can understand?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: count-to-10
+        text: Can your child count to 10 or higher?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: follow-instructions
+        text: Can your child follow three-step instructions?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: play-with-others-5-6
+        text: Does your child play well with other children and share toys?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: show-independence
+        text: Does your child show independence and try to do things on their own?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: express-emotions
+        text:
+          Does your child express emotions in appropriate ways (e.g., not hitting
+          when angry)?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: follow-rules
+        text: Does your child follow simple rules or routines at home or school?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: attention-span
+        text: Can your child stay focused on an activity for at least 5 minutes?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+
+  # Screening for 7-10 years
+  - linkId: behavioral-screening-7-10yo-group
+    text: Behavioral/Social/Emotional Screening for 7-10 Years
+    type: group
+    itemControl:
+      coding:
+      - code: group-voice
+    enableWhen:
+      - question: age-group
+        operator: "="
+        answerCoding:
+          code: "7-10"
+    item:
+      - linkId: has-good-friend
+        text: Does your child have at least one good friend?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: handles-emotions
+        text: Does your child handle emotions appropriately most of the time?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: shows-curiosity
+        text: Does your child show curiosity and interest in learning?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: bullying-concerns
+        text: Are you concerned about bullying or peer relationships?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: bullying-concerns-details
+        text: Describe
+        type: text
+        enableWhen:
+          - answerCoding:
+              code: "yes"
+            operator: "="
+            question: bullying-concerns
+      - linkId: safety-rules
+        text:
+          Does your child know basic safety rules such as stranger danger and road
+          safety?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: trouble-sleeping-tired
+        text: Does your child have trouble sleeping or often feel tired?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: self-harm-thoughts-7-10
+        text: Has your child ever talked about or shown signs of wanting to hurt
+          themselves?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: self-harm-thoughts-7-10-details
+        text: Describe
+        type: text
+        enableWhen:
+          - question: self-harm-thoughts-7-10
+            operator: "="
+            answerCoding:
+              code: "yes"
+      - linkId: school-success-motivation
+        text: Does your child feel successful or motivated at school or in their
+          activities?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: self-esteem
+        text: Does your child seem satisfied with how they look or feel about themselves?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: risky-behavior-7-10
+        text: Has your child ever engaged in risky behavior (e.g. unsafe stunts,
+          breaking rules)?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: online-negative-emotions
+        text:
+          Does your child ever feel worse after spending time online or on social
+          media?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+
+  # ADOLESCENT SECTIONS (11-14 years, 15-21 years)
+  # Screening for 11-14 years
+  - linkId: behavioral-screening-11-14yo-group
+    text: Behavioral/Social/Emotional Screening for 11-14 Years
+    type: group
+    itemControl:
+      coding:
+      - code: group-voice
+    enableWhen:
+      - question: age-group
+        operator: "="
+        answerCoding:
+          code: "11-14"
+    item:
+      - linkId: feel-stressed-anxious-sad
+        text: Do you often feel stressed anxious or sad?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: trusted-person-to-talk
+        text: Do you have at least one trusted person to talk to about problems?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: trouble-sleeping
+        text: Do you have trouble sleeping or often feel tired?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: feel-successful
+        text: Do you feel successful or motivated at school?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: satisfied-with-self
+        text: Are you satisfied with how you look or feel about yourself?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: social-media-impact
+        text: Do you ever feel worse after spending time online or on social media?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: online-safety-cyberbullying
+        text: Do you know about online safety and how to protect yourself from
+          cyberbullying?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+
+  # Screening for 15-21 years
+  - linkId: behavioral-screening-15-21yo-group
+    text: Behavioral/Social/Emotional Screening for 15-21 Years
+    type: group
+    itemControl:
+      coding:
+      - code: group-voice
+    enableWhen:
+      - question: age-group
+        operator: "="
+        answerCoding:
+          code: "15-21"
+    item:
+      - linkId: feeling-stressed
+        text: Do you feel stressed anxious or overwhelmed often?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: trouble-sleeping-fatigue
+        text: Do you have trouble sleeping or often feel tired?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: self-harm-thoughts-15-21
+        text: Have you ever thought about hurting yourself?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: self-harm-thoughts-15-21-details
+        text: Describe
+        type: text
+        enableWhen:
+          - question: self-harm-thoughts-15-21
+            operator: "="
+            answerCoding:
+              code: "yes"
+      - linkId: success-motivation-school-work
+        text: Do you feel successful or motivated at school or work?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: self-image-satisfaction
+        text: Are you satisfied with how you look or feel about yourself?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: someone-to-talk-to
+        text: Do you have someone to talk to when you feel down?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: relationship-safety-concerns
+        text: Do you have any concerns about relationships or personal safety?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: relationship-safety-concerns-details
+        text: Describe
+        type: text
+        enableWhen:
+          - question: relationship-safety-concerns
+            operator: "="
+            answerCoding:
+              code: "yes"
+      - linkId: pressured-substance-use
+        text: Have you ever felt pressured to use alcohol tobacco or drugs?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: risky-behavior-15-21
+        text:
+          Have you ever done something risky (like unsafe sex, reckless driving,
+          etc.)?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: risky-behavior-15-21-details
+        text: Describe
+        type: text
+        enableWhen:
+          - question: risky-behavior-15-21
+            operator: "="
+            answerCoding:
+              code: "yes"
+      - linkId: negative-feelings-after-social-media
+        text: Do you ever feel worse after spending time online or on social media?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+
+  # GENERAL CONCERNS - relevant for toddlers (1-4 years)
+  - linkId: child-behavior-concerns-group
+    text: Concerns about Behavior
+    type: group
+    enableBehavior: any
+    enableWhen:
+      - question: age-group
+        operator: "="
+        answerCoding: { code: "1" }
+      - question: age-group
+        operator: "="
+        answerCoding: { code: "2" }
+      - question: age-group
+        operator: "="
+        answerCoding: { code: "3" }
+      - question: age-group
+        operator: "="
+        answerCoding: { code: "4" }
+    item:
+      - linkId: child-behavior-concerns
+        text: Do you have concerns about your child's behavior or overall well being?
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              code: "yes"
+              display: "Yes"
+          - valueCoding:
+              code: "no"
+              display: "No"
+      - linkId: child-behavior-concerns-details
+        text: Describe
+        type: text
+        enableWhen:
+          - question: child-behavior-concerns
+            operator: "="
+            answerCoding:
+              code: "yes"
