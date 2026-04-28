@@ -9,7 +9,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
       - name: Prepare config
         run: cp contrib/emr-config/config.local.js contrib/emr-config/config.js
       - name: Prepare secrets
@@ -46,7 +46,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
       - name: Prepare config
         run: cp contrib/emr-config/config.local.js contrib/emr-config/config.js
       - name: Prepare secrets
