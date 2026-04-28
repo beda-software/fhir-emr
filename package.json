@@ -27,10 +27,10 @@
         "@ant-design/colors": "^7.0.0",
         "@ant-design/icons": "^5.1.4",
         "@beda.software/emr-config": "*",
-        "@beda.software/fhir-questionnaire": "git+https://github.com/beda-software/fhir-questionnaire.git#sdc-service-provider",
+        "@beda.software/fhir-questionnaire": "git+https://github.com/beda-software/fhir-questionnaire.git#e1d68f1709b7",
         "@beda.software/fhir-react": "^1.11.0",
         "@beda.software/remote-data": "^1.1.4",
-        "@beda.software/web-item-controls": "git+https://github.com/beda-software/web-item-controls.git#master",
+        "@beda.software/web-item-controls": "git+https://github.com/beda-software/web-item-controls.git#c3d8bda521d4",
         "@fullcalendar/core": "^6.1.15",
         "@fullcalendar/daygrid": "^6.1.8",
         "@fullcalendar/interaction": "^6.1.8",
@@ -87,7 +87,7 @@
         "yup": "^1.7.0"
     },
     "peerDependencies": {
-        "@beda.software/fhir-questionnaire": "git+https://github.com/beda-software/fhir-questionnaire.git#sdc-service-provider",
+        "@beda.software/fhir-questionnaire": "git+https://github.com/beda-software/fhir-questionnaire.git#e1d68f1709b7",
         "@beda.software/fhir-react": "^1.11.0"
     },
     "devDependencies": {
