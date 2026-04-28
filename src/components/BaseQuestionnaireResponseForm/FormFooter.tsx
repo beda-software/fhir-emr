@@ -6,9 +6,8 @@ import { useFormContext } from 'react-hook-form';
 import { calcInitialContext } from 'sdc-qrf';
 
 import { BaseQuestionnaireResponseFormProps } from '@beda.software/fhir-questionnaire/components';
+import { BaseQuestionnaireResponseFormPropsContext } from '@beda.software/fhir-questionnaire/contexts';
 import { RemoteDataResult } from '@beda.software/remote-data';
-
-import { BaseQuestionnaireResponseFormPropsContext } from 'src/components/BaseQuestionnaireResponseForm/context';
 
 import { S } from './BaseQuestionnaireResponseForm.styles';
 

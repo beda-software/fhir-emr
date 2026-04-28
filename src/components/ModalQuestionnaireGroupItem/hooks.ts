@@ -2,7 +2,8 @@ import _ from 'lodash';
 import { useContext, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { BaseQuestionnaireResponseFormPropsContext } from 'src/components/BaseQuestionnaireResponseForm/context';
+import { BaseQuestionnaireResponseFormPropsContext } from '@beda.software/fhir-questionnaire/contexts';
+
 import { questionnaireItemsToValidationSchema } from 'src/utils';
 
 import { ModalQuestionnaireItemProps } from './types';

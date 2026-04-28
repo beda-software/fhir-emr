@@ -1,7 +1,8 @@
 import { t } from '@lingui/macro';
 import { useContext } from 'react';
 
-import { BaseQuestionnaireResponseFormPropsContext } from 'src/components/BaseQuestionnaireResponseForm/context';
+import { BaseQuestionnaireResponseFormPropsContext } from '@beda.software/fhir-questionnaire/contexts';
+
 import { FormFooter, FormFooterComponentProps } from 'src/components/BaseQuestionnaireResponseForm/FormFooter';
 
 import { S } from './styles';
