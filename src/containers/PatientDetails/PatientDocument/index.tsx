@@ -3,11 +3,11 @@ import { t } from '@lingui/macro';
 import { Button, Space, Splitter, Tooltip } from 'antd';
 import classNames from 'classnames';
 import { Organization, ParametersParameter, Patient, Person, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
-import { BaseQuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components';
+import { BaseQuestionnaireResponseForm, FormWrapperProps } from '@beda.software/fhir-questionnaire/components';
 import { formatError, RenderRemoteData, WithId } from '@beda.software/fhir-react';
 import { RemoteDataResult } from '@beda.software/remote-data';
 
@@ -117,6 +117,13 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
         encounterId,
     });
 
+    const PatientDocumentFormWrapper = useCallback(
+        (props: FormWrapperProps) => (
+            <FormWrapper {...props} onCancel={handleCancel} onSaveDraft={onSaveDraft} saveButtonTitle={`Complete`} />
+        ),
+        [handleCancel, onSaveDraft],
+    );
+
     return (
         <div className={classNames(s.container, 'app-patient-document')}>
             <S.Content $maxWidth={maxWidth}>
@@ -140,14 +147,7 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
                                         widgetsByGroupQuestionItemControl={groupControlComponents}
                                         fhirService={service}
                                         groupItemComponent={GroupItemComponent}
-                                        FormWrapper={(props) => (
-                                            <FormWrapper
-                                                {...props}
-                                                onCancel={handleCancel}
-                                                onSaveDraft={onSaveDraft}
-                                                saveButtonTitle={t`Complete`}
-                                            />
-                                        )}
+                                        FormWrapper={PatientDocumentFormWrapper}
                                     />
                                 </>
                             );
@@ -174,14 +174,7 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
                                                 widgetsByQuestionItemControl={itemControlComponents}
                                                 widgetsByGroupQuestionItemControl={groupControlComponents}
                                                 groupItemComponent={GroupItemComponent}
-                                                FormWrapper={(props) => (
-                                                    <FormWrapper
-                                                        {...props}
-                                                        onCancel={handleCancel}
-                                                        onSaveDraft={onSaveDraft}
-                                                        saveButtonTitle={t`Complete`}
-                                                    />
-                                                )}
+                                                FormWrapper={PatientDocumentFormWrapper}
                                                 fhirService={service}
                                             />
                                         </Splitter.Panel>
