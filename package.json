@@ -27,7 +27,7 @@
         "@ant-design/colors": "^7.0.0",
         "@ant-design/icons": "^5.1.4",
         "@beda.software/emr-config": "*",
-        "@beda.software/fhir-questionnaire": "git+https://github.com/beda-software/fhir-questionnaire.git#e1d68f1709b7",
+        "@beda.software/fhir-questionnaire": "git+https://github.com/beda-software/fhir-questionnaire.git#76f7e715e744",
         "@beda.software/fhir-react": "^1.11.0",
         "@beda.software/remote-data": "^1.1.4",
         "@beda.software/web-item-controls": "git+https://github.com/beda-software/web-item-controls.git#c3d8bda521d4",
@@ -81,15 +81,14 @@
         "react-dom": "^18.2.0",
         "sdc-qrf": "^1.1.0-alpha.3",
         "@types/react": "^18.0.37",
-        "@beda.software/fhir-questionnaire": "git+https://github.com/beda-software/fhir-questionnaire.git#e1d68f1709b7",
+        "@beda.software/fhir-questionnaire": "git+https://github.com/beda-software/fhir-questionnaire.git#76f7e715e744",
         "@beda.software/fhir-react": "1.11.0",
-        "eslint-visitor-keys": "^3.4.3",
         "react-hook-form": "^7.53.2",
         "rc-picker": "^4.11.3",
         "yup": "^1.7.0"
     },
     "peerDependencies": {
-        "@beda.software/fhir-questionnaire": "git+https://github.com/beda-software/fhir-questionnaire.git#e1d68f1709b7",
+        "@beda.software/fhir-questionnaire": "git+https://github.com/beda-software/fhir-questionnaire.git#76f7e715e744",
         "@beda.software/fhir-react": "^1.11.0"
     },
     "devDependencies": {
