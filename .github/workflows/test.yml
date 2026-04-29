@@ -4,19 +4,26 @@ jobs:
   StoryBook:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "yarn"
       - name: Prepare config
         run: cp contrib/emr-config/config.local.js contrib/emr-config/config.js
       - name: Prepare secrets
         run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
+      - name: Get yarn cache dir
+        id: yarn-cache-dir
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v4
+        with:
+          path: ${{ steps.yarn-cache-dir.outputs.dir }}
+          key: yarn-storybook-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: yarn-storybook-${{ runner.os }}-
       - name: Install deps
-        run: yarn install --frozen-lockfile --no-cache
+        run: yarn install --frozen-lockfile
       - run: yarn extract
       - run: yarn compile
       - name: Install Playwright
@@ -42,19 +49,26 @@ jobs:
       AIDBOX_LICENSE: ${{ secrets.AIDBOX_LICENSE }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "yarn"
       - name: Prepare config
         run: cp contrib/emr-config/config.local.js contrib/emr-config/config.js
       - name: Prepare secrets
         run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
+      - name: Get yarn cache dir
+        id: yarn-cache-dir
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v4
+        with:
+          path: ${{ steps.yarn-cache-dir.outputs.dir }}
+          key: yarn-tests-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: yarn-tests-${{ runner.os }}-
       - name: Install deps
-        run: yarn install --frozen-lockfile --no-cache
+        run: yarn install --frozen-lockfile
       - run: yarn extract
       - run: yarn compile
       - name: Check types
