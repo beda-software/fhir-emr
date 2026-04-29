@@ -15,8 +15,10 @@ jobs:
         run: cp contrib/emr-config/config.local.js contrib/emr-config/config.js
       - name: Prepare secrets
         run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
+      - name: Clear yarn cache
+        run: yarn cache clean
       - name: Install deps
-        run: yarn install --frozen-lockfile --no-cache
+        run: yarn install --frozen-lockfile
       - run: yarn extract
       - run: yarn compile
       - name: Install Playwright
@@ -53,8 +55,10 @@ jobs:
         run: cp contrib/emr-config/config.local.js contrib/emr-config/config.js
       - name: Prepare secrets
         run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
+      - name: Clear yarn cache
+        run: yarn cache clean
       - name: Install deps
-        run: yarn install --frozen-lockfile --no-cache
+        run: yarn install --frozen-lockfile
       - run: yarn extract
       - run: yarn compile
       - name: Check types
