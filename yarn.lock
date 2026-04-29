@@ -838,7 +838,7 @@
     tslib "^2.8.1"
     yup "^1.2.0"
 
-"@beda.software/fhir-react@1.11.0", "@beda.software/fhir-react@^1.11.0", "@beda.software/fhir-react@^1.11.1":
+"@beda.software/fhir-react@^1.11.0", "@beda.software/fhir-react@^1.11.1":
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/@beda.software/fhir-react/-/fhir-react-1.11.0.tgz#74955349889e3a3ea3b62b91f8ddd57913a0a642"
   integrity sha512-fn605FB2qHcT+IN07IezswxDE4etfhqsHpjDa0By8YKZ7TwLx6cRCGd+xpmVL5ZSvZMaagNeWnJ2J1bCVq/0jA==
