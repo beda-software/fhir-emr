@@ -10,14 +10,13 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 20
+          cache: "yarn"
       - name: Prepare config
         run: cp contrib/emr-config/config.local.js contrib/emr-config/config.js
       - name: Prepare secrets
         run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
       - name: Install deps
-        run: |
-          rm -rf "$RUNNER_TEMP/yarn-cache"
-          YARN_CACHE_FOLDER="$RUNNER_TEMP/yarn-cache" yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile
       - run: yarn extract
       - run: yarn compile
       - name: Install Playwright
@@ -49,14 +48,13 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 20
+          cache: "yarn"
       - name: Prepare config
         run: cp contrib/emr-config/config.local.js contrib/emr-config/config.js
       - name: Prepare secrets
         run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
       - name: Install deps
-        run: |
-          rm -rf "$RUNNER_TEMP/yarn-cache"
-          YARN_CACHE_FOLDER="$RUNNER_TEMP/yarn-cache" yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile
       - run: yarn extract
       - run: yarn compile
       - name: Check types
