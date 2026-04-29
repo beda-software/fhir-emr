@@ -818,7 +818,7 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@beda.software/fhir-questionnaire@git+https://github.com/beda-software/fhir-questionnaire.git#76f7e715e744", "@beda.software/fhir-questionnaire@git+https://github.com/beda-software/fhir-questionnaire.git#sdc-service-provider":
+"@beda.software/fhir-questionnaire@git+https://github.com/beda-software/fhir-questionnaire.git#76f7e715e744":
   version "2.0.0-alpha.0"
   resolved "git+https://github.com/beda-software/fhir-questionnaire.git#76f7e715e744ed4d8c2d428f780355b4e9583e61"
   dependencies:
@@ -872,46 +872,24 @@
     magic-string "^0.30.10"
     vue-tsc "2.0.19"
 
-"@beda.software/web-item-controls@git+https://github.com/beda-software/web-item-controls.git#c3d8bda521d4":
+"@beda.software/web-item-controls@git+https://github.com/beda-software/web-item-controls.git#59107ef372ee":
   version "0.1.0"
-  resolved "git+https://github.com/beda-software/web-item-controls.git#c3d8bda521d46bc339e070c90392aa35e4b9e823"
+  resolved "git+https://github.com/beda-software/web-item-controls.git#59107ef372ee668ef5d5769de93581d4e24f841b"
   dependencies:
     "@ant-design/colors" "^7.0.0"
     "@ant-design/icons" "^5.1.4"
     "@beda.software/emr-config" "*"
-    "@beda.software/fhir-questionnaire" "git+https://github.com/beda-software/fhir-questionnaire.git#sdc-service-provider"
-    "@beda.software/fhir-react" "^1.11.1"
     "@beda.software/remote-data" "^1.1.4"
     "@fullcalendar/core" "^6.1.15"
-    "@fullcalendar/daygrid" "^6.1.8"
-    "@fullcalendar/interaction" "^6.1.8"
-    "@fullcalendar/react" "^6.1.8"
-    "@fullcalendar/timegrid" "^6.1.8"
-    "@hookform/resolvers" "^3.1.1"
-    "@jitsi/react-sdk" "^1.3.0"
-    "@lingui/core" "^4.3.0"
-    "@lingui/react" "^4.3.0"
     "@mdxeditor/editor" "^3.11.0"
-    "@sentry/browser" "^7.57.0"
     aidbox-react "^1.11.2"
-    antd "5.24.7"
     classnames "^2.3.2"
-    date-fns "2.30.0"
     fhir "^4.10.3"
     fhirpath "^3.18.0"
-    fullcalendar "^6.1.8"
-    history "^5.3.0"
     jose "^4.14.4"
     lodash "^4.17.21"
-    make-plural "^7.3.0"
     moment "^2.29.4"
-    query-string "^8.1.0"
-    react "^18.2.0"
     react-audio-voice-recorder "^2.2.0"
-    react-dnd "^16.0.1"
-    react-dnd-html5-backend "^16.0.1"
-    react-dom "^18.2.0"
-    react-hook-form "^7.53.2"
     react-jsbarcode "1.0.1"
     react-markdown "^9.0.1"
     react-phone-input-2 "^2.15.1"
@@ -921,9 +899,6 @@
     rehype-raw "^7.0.0"
     remark-directive "^4.0.0"
     remark-gfm "^4.0.1"
-    sass "^1.63.6"
-    sdc-qrf "^1.1.0-alpha.3"
-    styled-components "^6.1.11"
     yup "^1.7.0"
 
 "@chromatic-com/storybook@^3.2.2":

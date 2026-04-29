@@ -30,7 +30,7 @@
         "@beda.software/fhir-questionnaire": "git+https://github.com/beda-software/fhir-questionnaire.git#76f7e715e744",
         "@beda.software/fhir-react": "^1.11.0",
         "@beda.software/remote-data": "^1.1.4",
-        "@beda.software/web-item-controls": "git+https://github.com/beda-software/web-item-controls.git#c3d8bda521d4",
+        "@beda.software/web-item-controls": "git+https://github.com/beda-software/web-item-controls.git#59107ef372ee",
         "@fullcalendar/core": "^6.1.15",
         "@fullcalendar/daygrid": "^6.1.8",
         "@fullcalendar/interaction": "^6.1.8",
