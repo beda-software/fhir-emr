@@ -16,7 +16,7 @@ jobs:
       - name: Prepare secrets
         run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
       - name: Install deps
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --no-cache
       - run: yarn extract
       - run: yarn compile
       - name: Install Playwright
@@ -54,7 +54,7 @@ jobs:
       - name: Prepare secrets
         run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
       - name: Install deps
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --no-cache
       - run: yarn extract
       - run: yarn compile
       - name: Check types
