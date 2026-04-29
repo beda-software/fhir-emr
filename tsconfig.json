@@ -19,7 +19,13 @@
       "baseUrl": ".",
       "paths": {
         "src/*": ["./src/*"],
-        "shared/src/contrib/aidbox": ["contrib/aidbox-types/index.d.ts"]
+        "shared/src/contrib/aidbox": ["contrib/aidbox-types/index.d.ts"],
+        "@beda.software/web-item-controls/controls": [
+          "node_modules/@beda-software/web-item-controls/dist/controls/index.d.ts"
+        ],
+        "@beda.software/web-item-controls/readonly-controls": [
+          "node_modules/@beda-software/web-item-controls/dist/readonly-controls/index.d.ts"
+        ]
       },
       "types": ["node", "vitest/globals", "jest", "@testing-library/jest-dom"],
   

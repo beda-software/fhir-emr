@@ -818,6 +818,36 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@beda-software/web-item-controls@^0.1.0":
+  version "0.1.0"
+  resolved "https://npm.pkg.github.com/download/@beda-software/web-item-controls/0.1.0/3f6d873a5631f1efaa83f131e2abf193f6c92a4f#3f6d873a5631f1efaa83f131e2abf193f6c92a4f"
+  integrity sha512-4647+225M6hkfXVjcyjBsD/6NG3eZRdWRNgZiiDzoBpvy0Rv3+gvo3Ii8jGPhaolcHpL6tSBtVeT+4YKRcda9A==
+  dependencies:
+    "@ant-design/colors" "^7.0.0"
+    "@ant-design/icons" "^5.1.4"
+    "@beda.software/emr-config" "*"
+    "@beda.software/remote-data" "^1.1.4"
+    "@fullcalendar/core" "^6.1.15"
+    "@mdxeditor/editor" "^3.11.0"
+    aidbox-react "^1.11.2"
+    classnames "^2.3.2"
+    fhir "^4.10.3"
+    fhirpath "^3.18.0"
+    jose "^4.14.4"
+    lodash "^4.17.21"
+    moment "^2.29.4"
+    react-audio-voice-recorder "^2.2.0"
+    react-jsbarcode "1.0.1"
+    react-markdown "^9.0.1"
+    react-phone-input-2 "^2.15.1"
+    react-router-dom "^6.14.1"
+    react-select "^5.7.3"
+    recharts "^3.8.0"
+    rehype-raw "^7.0.0"
+    remark-directive "^4.0.0"
+    remark-gfm "^4.0.1"
+    yup "^1.7.0"
+
 "@beda.software/fhir-questionnaire@git+https://github.com/beda-software/fhir-questionnaire.git#76f7e715e744":
   version "2.0.0-alpha.0"
   resolved "git+https://github.com/beda-software/fhir-questionnaire.git#76f7e715e744ed4d8c2d428f780355b4e9583e61"
@@ -871,35 +901,6 @@
     local-pkg "^0.5.0"
     magic-string "^0.30.10"
     vue-tsc "2.0.19"
-
-"@beda.software/web-item-controls@git+https://github.com/beda-software/web-item-controls.git#59107ef372ee":
-  version "0.1.0"
-  resolved "git+https://github.com/beda-software/web-item-controls.git#59107ef372ee668ef5d5769de93581d4e24f841b"
-  dependencies:
-    "@ant-design/colors" "^7.0.0"
-    "@ant-design/icons" "^5.1.4"
-    "@beda.software/emr-config" "*"
-    "@beda.software/remote-data" "^1.1.4"
-    "@fullcalendar/core" "^6.1.15"
-    "@mdxeditor/editor" "^3.11.0"
-    aidbox-react "^1.11.2"
-    classnames "^2.3.2"
-    fhir "^4.10.3"
-    fhirpath "^3.18.0"
-    jose "^4.14.4"
-    lodash "^4.17.21"
-    moment "^2.29.4"
-    react-audio-voice-recorder "^2.2.0"
-    react-jsbarcode "1.0.1"
-    react-markdown "^9.0.1"
-    react-phone-input-2 "^2.15.1"
-    react-router-dom "^6.14.1"
-    react-select "^5.7.3"
-    recharts "^3.8.0"
-    rehype-raw "^7.0.0"
-    remark-directive "^4.0.0"
-    remark-gfm "^4.0.1"
-    yup "^1.7.0"
 
 "@chromatic-com/storybook@^3.2.2":
   version "3.2.2"

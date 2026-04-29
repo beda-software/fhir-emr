@@ -29,7 +29,10 @@ export default defineConfig({
         externalizeDeps(),
     ],
     resolve: {
-        alias: [{ find: 'src', replacement: path.resolve(__dirname, './src/') }],
+        alias: [
+            { find: 'src', replacement: path.resolve(__dirname, './src/') },
+            { find: '@beda.software/web-item-controls', replacement: '@beda-software/web-item-controls' },
+        ],
     },
     build: {
         copyPublicDir: false,
