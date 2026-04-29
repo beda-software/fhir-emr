@@ -38,10 +38,7 @@ export default defineConfig(({ command }) => ({
         'process.env': {},
     },
     resolve: {
-        alias: [
-            { find: 'src', replacement: path.resolve(__dirname, './src/') },
-            { find: '@beda.software/web-item-controls', replacement: '@beda-software/web-item-controls' },
-        ],
+        alias: [{ find: 'src', replacement: path.resolve(__dirname, './src/') }],
     },
     build: {
         outDir: path.resolve(__dirname, 'build'),
@@ -66,11 +63,7 @@ export default defineConfig(({ command }) => ({
         setupFiles: 'src/setupTests.ts', //  https://vitest.dev/config/#setupfiles
         server: {
             deps: {
-                inline: [
-                    /@beda\.software\/fhir-questionnaire/,
-                    /@beda\.software\/web-item-controls/,
-                    /@beda-software\/web-item-controls/,
-                ],
+                inline: [/@beda\.software\/fhir-questionnaire/, /@beda\.software\/web-item-controls/],
             },
         },
     },
