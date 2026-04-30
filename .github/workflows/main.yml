@@ -12,10 +12,11 @@ jobs:
             BUILD_IMAGE: bedasoftware/fhir-emr:master
             DISABLE_ESLINT_PLUGIN: true
         steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-node@v3
+            - uses: actions/checkout@v6
+            - uses: actions/setup-node@v6
               with:
-                  node-version: 18
+                  node-version: 20
+                  cache: yarn
             - name: Prepare config
               run: cp contrib/emr-config/config.production.js contrib/emr-config/config.js
             - name: Prepare index.html
@@ -27,7 +28,7 @@ jobs:
             - run: yarn build
             - name: Set up Docker Buildx
               id: buildx
-              uses: docker/setup-buildx-action@v1
+              uses: docker/setup-buildx-action@v4
             - run: docker run --rm --privileged tonistiigi/binfmt --install all
             - name: Login to Docker Hub
               uses: docker/login-action@v1
@@ -43,7 +44,7 @@ jobs:
         needs: Release
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v6
             - name: Cleanup seeds
               uses: appleboy/ssh-action@master
               with:

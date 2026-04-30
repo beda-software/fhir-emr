@@ -4,23 +4,17 @@ jobs:
   StoryBook:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 20
+          cache: yarn
       - name: Prepare config
         run: cp contrib/emr-config/config.local.js contrib/emr-config/config.js
       - name: Prepare secrets
         run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
-      - name: Get yarn cache dir
-        id: yarn-cache-dir
-        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v4
-        with:
-          path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: yarn-storybook-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - name: Install deps
         run: yarn install --frozen-lockfile
       - run: yarn extract
@@ -37,7 +31,7 @@ jobs:
             "npx http-server storybook-static --port 6006 --silent" \
             "npx wait-on tcp:127.0.0.1:6006 && yarn test-storybook"
       - name: Publish to Chromatic
-        uses: chromaui/action@v1
+        uses: chromaui/action@latest
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"
         with:
@@ -48,23 +42,17 @@ jobs:
       AIDBOX_LICENSE: ${{ secrets.AIDBOX_LICENSE }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 20
+          cache: yarn
       - name: Prepare config
         run: cp contrib/emr-config/config.local.js contrib/emr-config/config.js
       - name: Prepare secrets
         run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
-      - name: Get yarn cache dir
-        id: yarn-cache-dir
-        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v4
-        with:
-          path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: yarn-tests-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - name: Install deps
         run: yarn install --frozen-lockfile
       - run: yarn extract
