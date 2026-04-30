@@ -35,13 +35,11 @@ import {
     TextWithInput,
     TimeRangePickerControl,
     UploadFile,
-} from '@beda.software/web-item-controls/readonly-controls';
-
-import {
     MarkdownCard,
     MarkdownDisplay,
     MarkdownRenderControl,
-} from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/MarkdownRender';
+} from '@beda.software/web-item-controls/readonly-controls';
+
 import { service } from 'src/services/fhir';
 import { evaluate } from 'src/utils/fhirpath';
 
