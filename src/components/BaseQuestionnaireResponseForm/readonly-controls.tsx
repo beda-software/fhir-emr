@@ -6,22 +6,31 @@ import {
 } from 'sdc-qrf';
 
 import { Barcode } from '@beda.software/web-item-controls/controls';
-
-import { AudioAttachment } from './readonly-widgets/AudioAttachment';
-import { QuestionBoolean } from './readonly-widgets/boolean';
-import { QuestionChoice } from './readonly-widgets/choice';
-import { QuestionDateTime } from './readonly-widgets/date';
-import { Display } from './readonly-widgets/display';
-import { Col, Group, Row } from './readonly-widgets/Group';
-import { NavigationGroup } from './readonly-widgets/Group/NavigationGroup';
-import { GroupWizardVertical } from './readonly-widgets/GroupWizard';
-import { MarkdownCard, MarkdownDisplay, MarkdownRenderControl } from './readonly-widgets/MarkdownRender';
-import { QuestionDecimal, QuestionInteger, QuestionQuantity } from './readonly-widgets/number';
-import { QuestionReference } from './readonly-widgets/reference';
-import { AnxietyScore, DepressionScore } from './readonly-widgets/score';
-import { QuestionText, TextWithInput } from './readonly-widgets/string';
-import { TimeRangePickerControl } from './readonly-widgets/TimeRangePickerControl';
-import { UploadFile } from './readonly-widgets/UploadFile';
+import {
+    AnxietyScore,
+    AudioAttachment,
+    Col,
+    DepressionScore,
+    Display,
+    Group,
+    GroupWizardVertical,
+    MarkdownCard,
+    MarkdownDisplay,
+    MarkdownRenderControl,
+    NavigationGroup,
+    QuestionBoolean,
+    QuestionChoice,
+    QuestionDateTime,
+    QuestionDecimal,
+    QuestionInteger,
+    QuestionQuantity,
+    QuestionReference,
+    QuestionText,
+    Row,
+    TextWithInput,
+    TimeRangePickerControl,
+    UploadFile,
+} from '@beda.software/web-item-controls/readonly-controls';
 
 export const itemComponents: QuestionItemComponentMapping = {
     text: QuestionText,
