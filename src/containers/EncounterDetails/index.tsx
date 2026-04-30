@@ -7,9 +7,11 @@ import { Link } from 'react-router-dom';
 
 import config from '@beda.software/emr-config';
 import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
+import { FormWrapperProps } from '@beda.software/fhir-questionnaire/components';
 import { RenderRemoteData } from '@beda.software/fhir-react';
 import { isLoading, isSuccess } from '@beda.software/remote-data';
 
+import { FormWrapper } from 'src/components/FormWrapper';
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
@@ -181,21 +183,37 @@ function ModalCompleteEncounter(props: { encounter: Encounter; onSuccess: () => 
             }
         >
             {({ closeModal }) => (
-                <QuestionnaireResponseForm
-                    questionnaireLoader={questionnaireIdLoader('complete-encounter')}
-                    launchContextParameters={[
-                        {
-                            name: 'CurrentEncounter',
-                            resource: encounter,
-                        },
-                    ]}
-                    onSuccess={() => {
-                        closeModal();
-                        notification.success({ message: t`Encounter was successfully completed` });
-                        onSuccess();
-                    }}
-                />
+                <CompleteEncounterForm encounter={encounter} onSuccess={onSuccess} closeModal={closeModal} />
             )}
         </ModalTrigger>
+    );
+}
+
+function CompleteEncounterForm(props: { encounter: Encounter; onSuccess: () => void; closeModal: () => void }) {
+    const { encounter, onSuccess, closeModal } = props;
+
+    const completeEncounterFormWrapper = useCallback(
+        (wrapperProps: FormWrapperProps) => (
+            <FormWrapper {...wrapperProps} onCancel={closeModal} saveButtonTitle={t`Complete encounter`} />
+        ),
+        [closeModal],
+    );
+
+    return (
+        <QuestionnaireResponseForm
+            questionnaireLoader={questionnaireIdLoader('complete-encounter')}
+            launchContextParameters={[
+                {
+                    name: 'CurrentEncounter',
+                    resource: encounter,
+                },
+            ]}
+            onSuccess={() => {
+                closeModal();
+                notification.success({ message: t`Encounter was successfully completed` });
+                onSuccess();
+            }}
+            FormWrapper={completeEncounterFormWrapper}
+        />
     );
 }

@@ -106,12 +106,7 @@ export function Builder(props: Props) {
                                             formData={formData}
                                             fhirService={service}
                                             groupItemComponent={GroupItemComponent}
-                                            FormWrapper={(props) => (
-                                                <FormWrapper
-                                                    {...props}
-                                                    // formData={formData}
-                                                />
-                                            )}
+                                            FormWrapper={FormWrapper}
                                             // onSubmit={async (values) =>
                                             //     console.log(
                                             //         'result',

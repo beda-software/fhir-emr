@@ -1,10 +1,12 @@
 import { PlusOutlined } from '@ant-design/icons';
+import { t } from '@lingui/macro';
 import { Button, notification } from 'antd';
 import { ParametersParameter, Reference } from 'fhir/r4b';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
 import {
+    FormWrapperProps,
     inMemorySaveQuestionnaireResponseService,
     persistSaveQuestionnaireReponseServiceFactory,
 } from '@beda.software/fhir-questionnaire/components';
@@ -31,17 +33,19 @@ export function QuestionanireModal({
     const [isModalVisible, setIsModalVisible] = useState(false);
     const title = questionnaire.display ?? questionnaire.reference ?? 'N/A';
 
-    const showModal = () => {
-        setIsModalVisible(true);
-    };
+    const showModal = () => setIsModalVisible(true);
+    const hideModal = useCallback(() => setIsModalVisible(false), []);
 
     const handleSuccess = () => {
-        setIsModalVisible(false);
-        notification.success({
-            message: `Successfully saved`,
-        });
+        hideModal();
+        notification.success({ message: t`Successfully saved` });
         onSuccess?.();
     };
+
+    const formWrapper = useCallback(
+        (wrapperProps: FormWrapperProps) => <FormWrapper {...wrapperProps} onCancel={hideModal} />,
+        [hideModal],
+    );
 
     return (
         <>
@@ -51,7 +55,7 @@ export function QuestionanireModal({
             <Modal
                 title={title}
                 open={isModalVisible}
-                onCancel={() => setIsModalVisible(false)}
+                onCancel={hideModal}
                 footer={null}
                 destroyOnClose
                 maskClosable={false}
@@ -70,7 +74,7 @@ export function QuestionanireModal({
                                 ? inMemorySaveQuestionnaireResponseService
                                 : persistSaveQuestionnaireReponseServiceFactory(service),
                     }}
-                    FormWrapper={(props) => <FormWrapper {...props} onCancel={() => setIsModalVisible(false)} />}
+                    FormWrapper={formWrapper}
                 />
             </Modal>
         </>

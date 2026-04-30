@@ -1,9 +1,14 @@
 import { t } from '@lingui/macro';
 import { PractitionerRole } from 'fhir/r4b';
+import { useCallback } from 'react';
 
 import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
-import { inMemorySaveQuestionnaireResponseService } from '@beda.software/fhir-questionnaire/components';
+import {
+    FormWrapperProps,
+    inMemorySaveQuestionnaireResponseService,
+} from '@beda.software/fhir-questionnaire/components';
 
+import { FormWrapper } from 'src/components/FormWrapper';
 import { Modal } from 'src/components/Modal';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 
@@ -17,6 +22,11 @@ interface Props {
 
 export function EditAppointmentModal(props: Props) {
     const { showModal, onClose, onSubmit, appointmentId, practitionerRole } = props;
+
+    const formWrapper = useCallback(
+        (wrapperProps: FormWrapperProps) => <FormWrapper {...wrapperProps} onCancel={onClose} />,
+        [onClose],
+    );
 
     return (
         <Modal open={showModal} title={t`Edit Appointment`} footer={null} onCancel={onClose}>
@@ -41,6 +51,7 @@ export function EditAppointmentModal(props: Props) {
                     },
                 ]}
                 onSuccess={() => onSubmit()}
+                FormWrapper={formWrapper}
             />
         </Modal>
     );

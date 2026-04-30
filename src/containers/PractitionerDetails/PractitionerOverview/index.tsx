@@ -2,11 +2,14 @@ import { ContactsOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
 import { Button, notification } from 'antd';
 import { HealthcareService, Practitioner, PractitionerRole } from 'fhir/r4b';
+import { useCallback } from 'react';
 
 import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
+import { FormWrapperProps } from '@beda.software/fhir-questionnaire/components';
 import { WithId } from '@beda.software/fhir-react';
 
 import { DashboardCard } from 'src/components/DashboardCard';
+import { FormWrapper } from 'src/components/FormWrapper';
 import { ModalTrigger } from 'src/components/ModalTrigger';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 
@@ -69,29 +72,11 @@ export function PractitionerOverview(props: Props) {
                         }
                     >
                         {({ closeModal }) => (
-                            <QuestionnaireResponseForm
-                                questionnaireLoader={questionnaireIdLoader('practitioner-edit')}
-                                launchContextParameters={[
-                                    {
-                                        name: 'Practitioner',
-                                        resource: practitioner,
-                                    },
-                                    ...(practitionerRole
-                                        ? [
-                                              {
-                                                  name: 'PractitionerRole',
-                                                  resource: practitionerRole,
-                                              },
-                                          ]
-                                        : []),
-                                ]}
-                                onSuccess={() => {
-                                    reload();
-                                    closeModal();
-                                    notification.success({
-                                        message: t`Clinician successfully updated`,
-                                    });
-                                }}
+                            <EditPractitionerForm
+                                practitioner={practitioner}
+                                practitionerRole={practitionerRole}
+                                reload={reload}
+                                closeModal={closeModal}
                             />
                         )}
                     </ModalTrigger>
@@ -109,5 +94,35 @@ export function PractitionerOverview(props: Props) {
                 </div>
             </DashboardCard>
         </div>
+    );
+}
+
+function EditPractitionerForm(props: {
+    practitioner: WithId<Practitioner>;
+    practitionerRole?: WithId<PractitionerRole>;
+    reload: () => void;
+    closeModal: () => void;
+}) {
+    const { practitioner, practitionerRole, reload, closeModal } = props;
+
+    const formWrapper = useCallback(
+        (wrapperProps: FormWrapperProps) => <FormWrapper {...wrapperProps} onCancel={closeModal} />,
+        [closeModal],
+    );
+
+    return (
+        <QuestionnaireResponseForm
+            questionnaireLoader={questionnaireIdLoader('practitioner-edit')}
+            launchContextParameters={[
+                { name: 'Practitioner', resource: practitioner },
+                ...(practitionerRole ? [{ name: 'PractitionerRole', resource: practitionerRole }] : []),
+            ]}
+            onSuccess={() => {
+                reload();
+                closeModal();
+                notification.success({ message: t`Clinician successfully updated` });
+            }}
+            FormWrapper={formWrapper}
+        />
     );
 }

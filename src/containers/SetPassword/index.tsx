@@ -1,8 +1,12 @@
 import { Trans, t } from '@lingui/macro';
+import { useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
-import { inMemorySaveQuestionnaireResponseService } from '@beda.software/fhir-questionnaire/components';
+import {
+    FormWrapperProps,
+    inMemorySaveQuestionnaireResponseService,
+} from '@beda.software/fhir-questionnaire/components';
 
 import { FormWrapper } from 'src/components/FormWrapper';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
@@ -17,6 +21,11 @@ interface SetPasswordProps {
 
 export function SetPassword(props: SetPasswordProps) {
     const { code } = useParams<{ code: string }>();
+
+    const saveFormWrapper = useCallback(
+        (wrapperProps: FormWrapperProps) => <FormWrapper {...wrapperProps} saveButtonTitle={t`Save`} />,
+        [],
+    );
 
     return (
         <S.Container>
@@ -47,7 +56,7 @@ export function SetPassword(props: SetPasswordProps) {
                             },
                         ],
                     }}
-                    FormWrapper={(props) => <FormWrapper {...props} saveButtonTitle={t`Save`} />}
+                    FormWrapper={saveFormWrapper}
                 />
             </S.Form>
         </S.Container>

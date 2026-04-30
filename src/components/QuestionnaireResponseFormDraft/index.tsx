@@ -2,7 +2,9 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 import { Button, Tooltip } from 'antd';
 import { Resource } from 'fhir/r4b';
+import { useCallback } from 'react';
 
+import { FormWrapperProps } from '@beda.software/fhir-questionnaire/components';
 import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { Spinner } from 'src/components';
@@ -35,6 +37,7 @@ type QuestionnaireResponseFormDraftProps =
     | BaseQuestionnaireResponseFormDraftLocalProps;
 
 export function QuestionnaireResponseFormDraft(props: QuestionnaireResponseFormDraftProps) {
+    const { qrDraftServiceType } = props;
     const { response, draftInfoMessage, deleteDraft, handleEdit, saveDraft } = useQuestionnaireResponseDraft(
         props.qrDraftServiceType === 'server'
             ? {
@@ -49,6 +52,13 @@ export function QuestionnaireResponseFormDraft(props: QuestionnaireResponseFormD
                   subject: props.subject,
                   questionnaireId: props.questionnaireId,
               },
+    );
+
+    const draftFormWrapper = useCallback(
+        (wrapperProps: FormWrapperProps) => (
+            <FormWrapper {...wrapperProps} onSaveDraft={qrDraftServiceType === 'server' ? saveDraft : undefined} />
+        ),
+        [qrDraftServiceType, saveDraft],
     );
 
     return (
@@ -81,12 +91,7 @@ export function QuestionnaireResponseFormDraft(props: QuestionnaireResponseFormD
                             props.onSuccess && props.onSuccess(resource);
                         }}
                         onEdit={handleEdit}
-                        FormWrapper={(formWrapperProps) => (
-                            <FormWrapper
-                                {...formWrapperProps}
-                                onSaveDraft={props.qrDraftServiceType === 'server' ? saveDraft : undefined}
-                            />
-                        )}
+                        FormWrapper={draftFormWrapper}
                     />
                 </>
             )}

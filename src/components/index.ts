@@ -5,7 +5,6 @@ export * from './BaseQuestionnaireResponseForm/FieldLabel';
 export * from './BaseQuestionnaireResponseForm/FormFooter';
 export * from './BaseQuestionnaireResponseForm/hooks';
 export * from './BaseQuestionnaireResponseForm/utils';
-export * from './BaseQuestionnaireResponseForm/context';
 export * from './BaseQuestionnaireResponseForm/controls';
 export * from './BaseQuestionnaireResponseForm/ItemHelpText';
 

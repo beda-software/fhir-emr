@@ -58,15 +58,7 @@ export function FormWrapper(
     );
 }
 
-export function ReadonlyFormWrapper(
-    props: FormWrapperProps & {
-        onCancel?: () => void;
-        onSaveDraft?: (
-            questionnaireResponse: QuestionnaireResponse,
-        ) => Promise<RemoteDataResult<QuestionnaireResponse>>;
-        saveButtonTitle?: string | ReactElement;
-    },
-) {
+export function ReadonlyFormWrapper(props: FormWrapperProps) {
     const { handleSubmit, items } = props;
     const [isSubmitting, setIsSubmitting] = useState(false);
 

@@ -9,12 +9,12 @@ import {
     QuestionnaireResponseFormProvider,
 } from 'sdc-qrf';
 
-import { Barcode } from '@beda.software/web-item-controls/controls';
-
 import {
     ItemControlGroupItemReadonlyWidgetsContext,
     ItemControlQuestionItemReadonlyWidgetsContext,
-} from 'src/components/BaseQuestionnaireResponseForm/context';
+} from '@beda.software/fhir-questionnaire/contexts';
+import { Barcode } from '@beda.software/web-item-controls/controls';
+
 import {
     MarkdownCard,
     MarkdownDisplay,

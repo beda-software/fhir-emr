@@ -1,11 +1,11 @@
 import { Bundle, Encounter } from 'fhir/r4b';
 
+import { inMemorySaveQuestionnaireResponseService } from '@beda.software/fhir-questionnaire/components';
 import { extractBundleResources, WithId } from '@beda.software/fhir-react';
 
 import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { useNavigateToEncounter } from 'src/containers/EncounterDetails/hooks';
 import { StartEncounterProps } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StartEncounter';
-import { inMemorySaveService } from 'src/hooks/questionnaire-response-form-data';
 
 export function useStartEncounter(props: StartEncounterProps) {
     const { appointmentId } = props;
@@ -14,7 +14,7 @@ export function useStartEncounter(props: StartEncounterProps) {
     const { response, onSubmit } = useQuestionnaireResponseForm({
         questionnaireLoader: { type: 'id', questionnaireId: 'encounter-create-from-appointment' },
         sdcServiceProvider: {
-            saveCompletedQuestionnaireResponse: inMemorySaveService,
+            saveCompletedQuestionnaireResponse: inMemorySaveQuestionnaireResponseService,
         },
         launchContextParameters: [
             {

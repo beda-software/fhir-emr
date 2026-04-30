@@ -2,9 +2,11 @@ import { t } from '@lingui/macro';
 import { Button, ModalProps, notification } from 'antd';
 import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 import { omit } from 'lodash';
+import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
+import { FormWrapperProps } from '@beda.software/fhir-questionnaire/components';
 
 import { FormWrapper } from 'src/components/FormWrapper';
 import { ModalTrigger } from 'src/components/ModalTrigger';
@@ -41,6 +43,11 @@ export function RecordQuestionnaireAction<R extends Resource>({
     reload: () => void;
     defaultLaunchContext: ParametersParameter[];
 }) {
+    const submitFormWrapper = useCallback(
+        (wrapperProps: FormWrapperProps) => <FormWrapper {...wrapperProps} saveButtonTitle={t`Submit`} />,
+        [],
+    );
+
     return (
         <ModalTrigger
             title={action.title}
@@ -65,7 +72,7 @@ export function RecordQuestionnaireAction<R extends Resource>({
                         reload();
                         closeModal();
                     }}
-                    FormWrapper={(props) => <FormWrapper {...props} saveButtonTitle={t`Submit`} />}
+                    FormWrapper={submitFormWrapper}
                     {...(action.extra?.qrfProps ?? {})}
                 />
             )}
@@ -91,20 +98,42 @@ export function HeaderQuestionnaireAction({ action, reload, defaultLaunchContext
             modalProps={action.extra?.modalProps}
         >
             {({ closeModal }) => (
-                <QuestionnaireResponseForm
-                    questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
-                    onSuccess={() => {
-                        closeModal();
-                        notification.success({ message: t`Successfully submitted` });
-                        reload();
-                    }}
-                    launchContextParameters={defaultLaunchContext}
-                    onCancel={closeModal}
-                    FormWrapper={(props) => <FormWrapper {...props} saveButtonTitle={t`Submit`} />}
-                    {...(action.extra?.qrfProps ?? {})}
+                <HeaderQuestionnaireForm
+                    action={action}
+                    reload={reload}
+                    defaultLaunchContext={defaultLaunchContext}
+                    closeModal={closeModal}
                 />
             )}
         </ModalTrigger>
+    );
+}
+
+function HeaderQuestionnaireForm({
+    action,
+    reload,
+    defaultLaunchContext,
+    closeModal,
+}: HeaderQuestionnaireActionProps & { closeModal: () => void }) {
+    const formWrapper = useCallback(
+        (wrapperProps: FormWrapperProps) => (
+            <FormWrapper {...wrapperProps} onCancel={closeModal} saveButtonTitle={t`Submit`} />
+        ),
+        [closeModal],
+    );
+
+    return (
+        <QuestionnaireResponseForm
+            questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
+            onSuccess={() => {
+                closeModal();
+                notification.success({ message: t`Successfully submitted` });
+                reload();
+            }}
+            launchContextParameters={defaultLaunchContext}
+            FormWrapper={formWrapper}
+            {...(action.extra?.qrfProps ?? {})}
+        />
     );
 }
 
@@ -133,24 +162,12 @@ export function BatchQuestionnaireAction<R extends Resource>({
                 modalProps={action.extra?.modalProps}
             >
                 {({ closeModal }) => (
-                    <QuestionnaireResponseForm
-                        questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
-                        launchContextParameters={[
-                            ...defaultLaunchContext,
-                            ...(action.extra?.qrfProps?.launchContextParameters ?? []),
-                            {
-                                name: 'Bundle',
-                                resource: bundle as Bundle,
-                            },
-                        ]}
-                        onSuccess={() => {
-                            closeModal();
-                            notification.success({ message: t`Successfully submitted` });
-                            reload();
-                        }}
-                        onCancel={closeModal}
-                        FormWrapper={(props) => <FormWrapper {...props} saveButtonTitle={t`Submit`} />}
-                        {...(action.extra?.qrfProps ? omit(action.extra?.qrfProps, 'launchContextParameters') : {})}
+                    <BatchQuestionnaireForm
+                        action={action}
+                        bundle={bundle}
+                        reload={reload}
+                        defaultLaunchContext={defaultLaunchContext}
+                        closeModal={closeModal}
                     />
                 )}
             </ModalTrigger>
@@ -158,6 +175,48 @@ export function BatchQuestionnaireAction<R extends Resource>({
     }
 
     return action.control;
+}
+
+function BatchQuestionnaireForm<R extends Resource>({
+    action,
+    bundle,
+    reload,
+    defaultLaunchContext,
+    closeModal,
+}: {
+    action: QuestionnaireActionType;
+    bundle: Bundle<R>;
+    reload: () => void;
+    defaultLaunchContext: ParametersParameter[];
+    closeModal: () => void;
+}) {
+    const formWrapper = useCallback(
+        (wrapperProps: FormWrapperProps) => (
+            <FormWrapper {...wrapperProps} onCancel={closeModal} saveButtonTitle={t`Submit`} />
+        ),
+        [closeModal],
+    );
+
+    return (
+        <QuestionnaireResponseForm
+            questionnaireLoader={questionnaireIdLoader(action.questionnaireId)}
+            launchContextParameters={[
+                ...defaultLaunchContext,
+                ...(action.extra?.qrfProps?.launchContextParameters ?? []),
+                {
+                    name: 'Bundle',
+                    resource: bundle as Bundle,
+                },
+            ]}
+            onSuccess={() => {
+                closeModal();
+                notification.success({ message: t`Successfully submitted` });
+                reload();
+            }}
+            FormWrapper={formWrapper}
+            {...(action.extra?.qrfProps ? omit(action.extra?.qrfProps, 'launchContextParameters') : {})}
+        />
+    );
 }
 
 export function NavigationAction<R extends Resource>({
