@@ -20,6 +20,7 @@ interface SetPasswordProps {
 }
 
 export function SetPassword(props: SetPasswordProps) {
+    const { customYupTests } = props;
     const { code } = useParams<{ code: string }>();
 
     const saveFormWrapper = useCallback(
@@ -34,7 +35,7 @@ export function SetPassword(props: SetPasswordProps) {
                     <Trans>Set password</Trans>
                 </Title>
                 <QuestionnaireResponseForm
-                    // customYupTests={props.customYupTests}
+                    customYupTests={customYupTests}
                     questionnaireLoader={questionnaireIdLoader('set-password')}
                     sdcServiceProvider={{
                         saveCompletedQuestionnaireResponse: inMemorySaveQuestionnaireResponseService,
