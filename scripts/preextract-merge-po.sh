@@ -6,8 +6,8 @@ ROOT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
 LOCALES="en es ru de"
 
 if ! command -v msgcat >/dev/null 2>&1; then
-  echo "[preextract] warning: msgcat is not installed; skipping PO merge"
-  exit 0
+  echo "[preextract] error: msgcat is not installed; install gettext and retry" >&2
+  exit 1
 fi
 
 for locale in $LOCALES; do
@@ -44,6 +44,7 @@ for locale in $LOCALES; do
   if msgcat "$@" -o "$target_file"; then
     echo "[preextract] $locale: merged $count files into $target_file"
   else
-    echo "[preextract] warning: $locale merge failed, continuing"
+    echo "[preextract] error: $locale merge failed" >&2
+    exit 1
   fi
 done

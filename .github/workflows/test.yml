@@ -17,6 +17,8 @@ jobs:
         run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
       - name: Install deps
         run: yarn install
+      - name: Install gettext
+        run: sudo apt-get install -y gettext
       - run: yarn extract
       - run: yarn compile
       - name: Install Playwright
@@ -55,6 +57,8 @@ jobs:
         run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
       - name: Install deps
         run: yarn install
+      - name: Install gettext
+        run: sudo apt-get install -y gettext
       - run: yarn extract
       - run: yarn compile
       - name: Check types
