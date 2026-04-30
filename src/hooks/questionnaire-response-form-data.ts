@@ -116,19 +116,6 @@ export function getQuestionnaireResponseDraftServices(type: QuestionnaireRespons
     }
 }
 
-export const inMemorySaveService: QuestionnaireResponseSaveService = (qr: FHIRQuestionnaireResponse) =>
-    Promise.resolve(success(qr));
-
-type FHIRResourceSaveService = <R_6 extends Resource>(resource: R_6) => Promise<RemoteDataResult<WithId<R_6>>>;
-
-export const inMemorySaveFHIRResourceService: FHIRResourceSaveService = <R_6 extends Resource>(resource: R_6) =>
-    Promise.resolve(
-        success({
-            ...resource,
-            id: resource.id ?? uuid4(),
-        } as WithId<R_6>),
-    );
-
 export const persistSaveService: QuestionnaireResponseSaveService = async (qr: FHIRQuestionnaireResponse) =>
     await saveFHIRResource(qr);
 
