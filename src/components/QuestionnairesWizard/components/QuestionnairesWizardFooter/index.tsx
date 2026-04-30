@@ -36,12 +36,11 @@ export function QuestionnairesWizardFooter(props: QuestionnairesWizardFooterProp
     return (
         <>
             <S.Footer goBack={goBack} goForward={goForward} canGoBack={canGoBack} canGoForward={canGoForward}>
-                {baseQRFPropsContext && baseQRFPropsContext.formData && (
+                {baseQRFPropsContext && (
                     <FormFooter
                         submitting={submitting}
                         submitDisabled={submitDisabled}
                         onCancel={onCancel}
-                        // formData={baseQRFPropsContext.formData}
                         saveButtonTitle={
                             canComplete ? finishButtonTitle || t`Complete` : nextButtonTitle || t`Submit and Go Forward`
                         }
