@@ -21,7 +21,6 @@ jobs:
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
           key: yarn-storybook-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: yarn-storybook-${{ runner.os }}-
       - name: Install deps
         run: yarn install --frozen-lockfile
       - run: yarn extract
@@ -66,7 +65,6 @@ jobs:
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
           key: yarn-tests-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: yarn-tests-${{ runner.os }}-
       - name: Install deps
         run: yarn install --frozen-lockfile
       - run: yarn extract
