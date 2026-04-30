@@ -873,9 +873,9 @@
     vue-tsc "2.0.19"
 
 "@beda.software/web-item-controls@^0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@beda.software/web-item-controls/-/web-item-controls-0.1.2.tgz#a83e212313e009d9b0e2db3f58152dfcf5692290"
-  integrity sha512-k4EKpbN2J04ur9uMpF9xw2UdZLrXL7Ecy/6le203HkWQmuja0qeVIpdnPPkVDbQi37qRlZs9PtCl5+xTpkHT2g==
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@beda.software/web-item-controls/-/web-item-controls-0.1.5.tgz#151196fd4a930ed958d40d1d703c4e2061b33300"
+  integrity sha512-7tPhGvq9y+im/zV0l+wn/FpQarVkwREBy0qpffW2W/sMYzvtumQtPCNbXdde/Myl94Pl2VsFByl7vUk2Yev3xQ==
   dependencies:
     "@ant-design/colors" "^7.0.0"
     "@ant-design/icons" "^5.1.4"
