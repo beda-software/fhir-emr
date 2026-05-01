@@ -63,7 +63,7 @@ export function PublicAppointment() {
                                 },
                             },
                         ]}
-                        widgetsByQuestionItemControl={{
+                        itemControlQuestionItemComponents={{
                             ...itemControlComponents,
                             'date-time-slot': (props) => (
                                 <DateTimeSlotPicker {...props} practitionerRolePath={practitionerRolePath} />

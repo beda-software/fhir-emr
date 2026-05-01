@@ -37,7 +37,7 @@ type QuestionnaireResponseFormDraftProps =
     | BaseQuestionnaireResponseFormDraftLocalProps;
 
 export function QuestionnaireResponseFormDraft(props: QuestionnaireResponseFormDraftProps) {
-    const { qrDraftServiceType } = props;
+    const { qrDraftServiceType, onCancel } = props;
     const { response, draftInfoMessage, deleteDraft, handleEdit, saveDraft } = useQuestionnaireResponseDraft(
         props.qrDraftServiceType === 'server'
             ? {
@@ -56,9 +56,13 @@ export function QuestionnaireResponseFormDraft(props: QuestionnaireResponseFormD
 
     const draftFormWrapper = useCallback(
         (wrapperProps: FormWrapperProps) => (
-            <FormWrapper {...wrapperProps} onSaveDraft={qrDraftServiceType === 'server' ? saveDraft : undefined} />
+            <FormWrapper
+                {...wrapperProps}
+                onCancel={onCancel}
+                onSaveDraft={qrDraftServiceType === 'server' ? saveDraft : undefined}
+            />
         ),
-        [qrDraftServiceType, saveDraft],
+        [onCancel, qrDraftServiceType, saveDraft],
     );
 
     return (

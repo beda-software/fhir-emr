@@ -21,7 +21,7 @@ export interface QRFProps extends QuestionnaireResponseFormProps {
     onSaveDraft?: (questionnaireResponse: QuestionnaireResponse) => Promise<RemoteDataResult<QuestionnaireResponse>>;
 
     FormFooterComponent?: React.ElementType<FormFooterComponentProps>;
-    saveButtonTitle?: React.ReactNode;
-    cancelButtonTitle?: React.ReactNode;
+    saveButtonTitle?: React.ReactElement | string;
+    cancelButtonTitle?: React.ReactElement | string;
     customYupTests?: CustomYupTestsMap;
 }

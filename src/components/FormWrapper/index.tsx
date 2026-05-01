@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { QuestionnaireResponse } from 'fhir/r4b';
-import { ReactElement, useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { GroupItemProps } from 'sdc-qrf';
 
 import { FormWrapperProps } from '@beda.software/fhir-questionnaire/components';
@@ -8,7 +8,7 @@ import { BaseQuestionnaireResponseFormPropsContext } from '@beda.software/fhir-q
 import { RemoteDataResult } from '@beda.software/remote-data';
 
 import { groupComponent } from 'src/components/BaseQuestionnaireResponseForm/controls';
-import { FormFooter } from 'src/components/BaseQuestionnaireResponseForm/FormFooter';
+import { FormFooter, FormFooterComponentProps } from 'src/components/BaseQuestionnaireResponseForm/FormFooter';
 import { isGroupWizard } from 'src/components/BaseQuestionnaireResponseForm/utils';
 
 import s from './FormWrapper.module.scss';
@@ -19,7 +19,9 @@ export function FormWrapper(
         onSaveDraft?: (
             questionnaireResponse: QuestionnaireResponse,
         ) => Promise<RemoteDataResult<QuestionnaireResponse>>;
-        saveButtonTitle?: string | ReactElement;
+        saveButtonTitle?: ReactElement | string;
+        cancelButtonTitle?: ReactElement | string;
+        FormFooterComponent?: React.ElementType<FormFooterComponentProps>;
     },
 ) {
     const { handleSubmit, items, onCancel, onSaveDraft, saveButtonTitle, formData } = props;
