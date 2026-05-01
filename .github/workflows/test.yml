@@ -16,7 +16,7 @@ jobs:
       - name: Prepare secrets
         run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
       - name: Install deps
-        run: yarn install
+        run: yarn install --frozen-lockfile --prefer-offline || (yarn cache clean && yarn install --frozen-lockfile)
       - name: Install gettext
         run: sudo apt-get install -y gettext
       - run: yarn extract
@@ -56,7 +56,7 @@ jobs:
       - name: Prepare secrets
         run: echo AIDBOX_LICENSE=${AIDBOX_LICENSE} > .env
       - name: Install deps
-        run: yarn install
+        run: yarn install --frozen-lockfile --prefer-offline || (yarn cache clean && yarn install --frozen-lockfile)
       - name: Install gettext
         run: sudo apt-get install -y gettext
       - run: yarn extract

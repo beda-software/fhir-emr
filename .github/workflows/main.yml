@@ -22,7 +22,7 @@ jobs:
             - name: Prepare index.html
               run: cp public/index.production.html index.html
             - name: Install deps
-              run: yarn install
+              run: yarn install --frozen-lockfile --prefer-offline || (yarn cache clean && yarn install --frozen-lockfile)
             - name: Install gettext
               run: sudo apt-get install -y gettext
             - run: yarn extract
