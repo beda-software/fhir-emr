@@ -872,10 +872,10 @@
     magic-string "^0.30.10"
     vue-tsc "2.0.19"
 
-"@beda.software/web-item-controls@^0.1.2":
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/@beda.software/web-item-controls/-/web-item-controls-0.1.5.tgz#151196fd4a930ed958d40d1d703c4e2061b33300"
-  integrity sha512-7tPhGvq9y+im/zV0l+wn/FpQarVkwREBy0qpffW2W/sMYzvtumQtPCNbXdde/Myl94Pl2VsFByl7vUk2Yev3xQ==
+"@beda.software/web-item-controls@^0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@beda.software/web-item-controls/-/web-item-controls-0.1.6.tgz#3512026f79e41c3d5e5e261f4fe4000d82691fec"
+  integrity sha512-bYgY8SVg4INHxhMGgM05H5U7OzS7TkLB1OEXe17+vOwnFv9lGZ4GOXoy9hwmhS1BSt4g8tXfkti7OY5jrGP6ww==
   dependencies:
     "@ant-design/colors" "^7.0.0"
     "@ant-design/icons" "^5.1.4"
@@ -885,7 +885,7 @@
     "@mdxeditor/editor" "^3.11.0"
     aidbox-react "^1.11.2"
     classnames "^2.3.2"
-    fhir "^4.10.3"
+    fhir-tool "^5.0.2"
     fhirpath "^3.18.0"
     jose "^4.14.4"
     lodash "^4.17.21"
@@ -7853,6 +7853,13 @@ fdir@^6.5.0:
   resolved "https://registry.yarnpkg.com/fdir/-/fdir-6.5.0.tgz#ed2ab967a331ade62f18d077dae192684d50d350"
   integrity sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==
 
+fhir-tool@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/fhir-tool/-/fhir-tool-5.0.2.tgz#7ad3a5aa4711b7674cbb7b72da430053edab5e44"
+  integrity sha512-ZwWoadHyjoM9F5nRJeJozR1MPZqDdlmdJC5svUzH4otGAiu27tBaRQpXKYwM2em5KJYVHlm8qo5PmT7RxPMSDQ==
+  dependencies:
+    xml-js "^1.6.11"
+
 fhir@^4.10.3:
   version "4.12.0"
   resolved "https://registry.yarnpkg.com/fhir/-/fhir-4.12.0.tgz#fc352c401cc3876a18b6c18f8700ebdfa6d85236"
@@ -14377,7 +14384,7 @@ ws@^8.13.0, ws@^8.2.3:
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.13.0.tgz#9a9fb92f93cf41512a0735c8f4dd09b8a1211cd0"
   integrity sha512-x9vcZYTrFPC7aSIbj7sRCYo7L/Xb8Iy+pW0ng0wt2vCJv7M9HOMy0UoN3rr+IFC7hb7vXoqS+P9ktyLLLhO+LA==
 
-xml-js@^1.6.8:
+xml-js@^1.6.11, xml-js@^1.6.8:
   version "1.6.11"
   resolved "https://registry.yarnpkg.com/xml-js/-/xml-js-1.6.11.tgz#927d2f6947f7f1c19a316dd8eea3614e8b18f8e9"
   integrity sha512-7rVi2KMfwfWFl+GpPg6m80IVMWXLRjO+PxTq7V2CDhoGak0wzYzFgUY2m4XJ47OGdXd8eLE8EmwfAmdjw7lC1g==
