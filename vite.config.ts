@@ -40,6 +40,13 @@ export default defineConfig(({ command }) => ({
     resolve: {
         alias: [{ find: 'src', replacement: path.resolve(__dirname, './src/') }],
     },
+    css: {
+        preprocessorOptions: {
+            scss: {
+                silenceDeprecations: ['legacy-js-api'],
+            },
+        },
+    },
     build: {
         outDir: path.resolve(__dirname, 'build'),
         commonjsOptions: {
