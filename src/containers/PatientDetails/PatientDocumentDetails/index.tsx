@@ -18,8 +18,8 @@ import { QuestionnaireResponseFormData } from 'sdc-qrf';
 import { extractBundleResources, RenderRemoteData, useService, WithId } from '@beda.software/fhir-react';
 import { failure, isFailure, isSuccess, mapSuccess } from '@beda.software/remote-data';
 
-import { ReadonlyQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm/ReadonlyQuestionnaireResponseForm';
 import { ConfirmActionButton } from 'src/components/ConfirmActionButton';
+import { ReadonlyQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Spinner } from 'src/components/Spinner';
 import { Paragraph, Title } from 'src/components/Typography';
 import { DocumentHistory } from 'src/containers/PatientDetails/DocumentHistory';

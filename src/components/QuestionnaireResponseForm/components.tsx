@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
 import {
+    BaseQuestionnaireResponseForm,
     FormWrapperProps,
     fromQuestionnaireResponseFormData,
     Props,
@@ -110,15 +111,32 @@ export function QuestionnaireResponseForm({
     );
 }
 
-export function ReadonlyQuestionnaireResponseForm(props: Pick<Props, 'questionnaireLoader'> & Partial<Props>) {
+type ReadonlyQRFFormDataProps = {
+    formData: QuestionnaireResponseFormData;
+};
+
+type ReadonlyQRFLoaderProps = Pick<Props, 'questionnaireLoader'> & Partial<Props>;
+
+export function ReadonlyQuestionnaireResponseForm(props: ReadonlyQRFFormDataProps | ReadonlyQRFLoaderProps) {
+    if ('formData' in props) {
+        return (
+            <BaseQuestionnaireResponseForm
+                formData={props.formData}
+                readOnly={true}
+                fhirService={service}
+                FormWrapper={ReadonlyFormWrapper}
+                groupItemComponent={GroupItemComponent}
+                widgetsByQuestionType={readonlyItemComponents}
+                widgetsByQuestionItemControl={readonlyItemControlComponents}
+                widgetsByGroupQuestionItemControl={readonlyGroupControlComponents}
+            />
+        );
+    }
+
     return (
         <FHIRQuestionnaireResponseForm
             {...props}
-            serviceProvider={
-                props.serviceProvider ?? {
-                    service,
-                }
-            }
+            serviceProvider={props.serviceProvider ?? { service }}
             fhirService={props.fhirService ?? service}
             sdcServiceProvider={props.sdcServiceProvider}
             FormWrapper={props.FormWrapper ?? ReadonlyFormWrapper}
