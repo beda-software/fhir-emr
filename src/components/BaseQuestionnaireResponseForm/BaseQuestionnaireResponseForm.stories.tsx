@@ -37,9 +37,9 @@ const Template = (args: BaseQuestionnaireResponseFormProps) => (
     <I18nProvider i18n={i18n}>
         <BaseQuestionnaireResponseForm
             {...args}
-            widgetsByQuestionType={itemComponents}
-            widgetsByQuestionItemControl={itemControlComponents}
-            widgetsByGroupQuestionItemControl={groupControlComponents}
+            questionItemComponents={itemComponents}
+            itemControlQuestionItemComponents={itemControlComponents}
+            itemControlGroupItemComponents={groupControlComponents}
             fhirService={service}
             groupItemComponent={GroupItemComponent}
             FormWrapper={FormWrapper}

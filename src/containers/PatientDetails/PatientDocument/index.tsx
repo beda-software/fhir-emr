@@ -142,9 +142,9 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
                                         formData={formData}
                                         onSubmit={onSubmit}
                                         onEdit={onEdit}
-                                        widgetsByQuestionType={itemComponents}
-                                        widgetsByQuestionItemControl={itemControlComponents}
-                                        widgetsByGroupQuestionItemControl={groupControlComponents}
+                                        questionItemComponents={itemComponents}
+                                        itemControlQuestionItemComponents={itemControlComponents}
+                                        itemControlGroupItemComponents={groupControlComponents}
                                         fhirService={service}
                                         groupItemComponent={GroupItemComponent}
                                         FormWrapper={PatientDocumentFormWrapper}
@@ -170,9 +170,9 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
                                                 formData={formData}
                                                 onSubmit={onSubmit}
                                                 onEdit={onEdit}
-                                                widgetsByQuestionType={itemComponents}
-                                                widgetsByQuestionItemControl={itemControlComponents}
-                                                widgetsByGroupQuestionItemControl={groupControlComponents}
+                                                questionItemComponents={itemComponents}
+                                                itemControlQuestionItemComponents={itemControlComponents}
+                                                itemControlGroupItemComponents={groupControlComponents}
                                                 groupItemComponent={GroupItemComponent}
                                                 FormWrapper={PatientDocumentFormWrapper}
                                                 fhirService={service}

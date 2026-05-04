@@ -7,10 +7,10 @@ import {
 
 import { Barcode } from '@beda.software/web-item-controls/controls';
 import {
-    itemComponents as defaultItemComponents,
-    groupComponent as defaultGroupComponent,
-    itemControlComponents as defaultItemControlComponents,
-    groupControlComponents as defaultGroupControlComponents,
+    questionItemComponents as defaultItemComponents,
+    groupItemComponent as defaultGroupComponent,
+    itemControlQuestionItemComponents as defaultItemControlComponents,
+    itemControlGroupItemComponents as defaultGroupControlComponents,
 } from '@beda.software/web-item-controls/readonly-controls';
 
 export const itemComponents: QuestionItemComponentMapping = {

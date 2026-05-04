@@ -20,8 +20,10 @@ export function useQuestionnaireResponseForm(props: Pick<Props, 'questionnaireLo
         fhirService: props.fhirService ?? service,
         FormWrapper: props.FormWrapper ?? FormWrapper,
         groupItemComponent: props.groupItemComponent ?? GroupItemComponent,
-        widgetsByQuestionType: props.widgetsByQuestionType ?? itemComponents,
-        widgetsByQuestionItemControl: props.widgetsByQuestionItemControl ?? itemControlComponents,
-        widgetsByGroupQuestionItemControl: props.widgetsByGroupQuestionItemControl ?? groupControlComponents,
+        questionItemComponents: props.questionItemComponents ?? props.widgetsByQuestionType ?? itemComponents,
+        itemControlQuestionItemComponents:
+            props.itemControlQuestionItemComponents ?? props.widgetsByQuestionItemControl ?? itemControlComponents,
+        itemControlGroupItemComponents:
+            props.itemControlGroupItemComponents ?? props.widgetsByGroupQuestionItemControl ?? groupControlComponents,
     });
 }

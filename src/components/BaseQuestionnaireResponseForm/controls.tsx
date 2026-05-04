@@ -6,10 +6,10 @@ import {
 } from 'sdc-qrf';
 
 import {
-    groupComponent as defaultGroupComponent,
-    itemComponents as defaultItemComponents,
-    itemControlComponents as defaultItemControlComponents,
-    groupControlComponents as defaultGroupControlComponents,
+    groupItemComponent as defaultGroupComponent,
+    questionItemComponents as defaultItemComponents,
+    itemControlQuestionItemComponents as defaultItemControlComponents,
+    itemControlGroupItemComponents as defaultGroupControlComponents,
 } from '@beda.software/web-item-controls/controls';
 import {
     AnxietyScore,

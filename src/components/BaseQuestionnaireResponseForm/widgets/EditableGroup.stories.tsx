@@ -44,9 +44,9 @@ export const Example: Story = {
                     },
                     formValues,
                 }}
-                widgetsByQuestionType={itemComponents}
-                widgetsByQuestionItemControl={itemControlComponents}
-                widgetsByGroupQuestionItemControl={groupControlComponents}
+                questionItemComponents={itemComponents}
+                itemControlQuestionItemComponents={itemControlComponents}
+                itemControlGroupItemComponents={groupControlComponents}
                 fhirService={service}
                 groupItemComponent={GroupItemComponent}
                 FormWrapper={FormWrapper}
@@ -72,9 +72,9 @@ export const Readonly: Story = {
                     },
                     formValues,
                 }}
-                widgetsByQuestionType={itemComponents}
-                widgetsByQuestionItemControl={itemControlComponents}
-                widgetsByGroupQuestionItemControl={groupControlComponents}
+                questionItemComponents={itemComponents}
+                itemControlQuestionItemComponents={itemControlComponents}
+                itemControlGroupItemComponents={groupControlComponents}
                 fhirService={service}
                 groupItemComponent={GroupItemComponent}
                 FormWrapper={FormWrapper}

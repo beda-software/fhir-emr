@@ -39,9 +39,9 @@ export const Default: Story = {
                     },
                     formValues,
                 }}
-                widgetsByQuestionType={itemComponents}
-                widgetsByQuestionItemControl={itemControlComponents}
-                widgetsByGroupQuestionItemControl={groupControlComponents}
+                questionItemComponents={itemComponents}
+                itemControlQuestionItemComponents={itemControlComponents}
+                itemControlGroupItemComponents={groupControlComponents}
                 fhirService={service}
                 groupItemComponent={GroupItemComponent}
                 FormWrapper={FormWrapper}
@@ -63,9 +63,9 @@ export const WithTooltip: Story = {
                     },
                     formValues,
                 }}
-                widgetsByQuestionType={itemComponents}
-                widgetsByQuestionItemControl={itemControlComponents}
-                widgetsByGroupQuestionItemControl={groupControlComponents}
+                questionItemComponents={itemComponents}
+                itemControlQuestionItemComponents={itemControlComponents}
+                itemControlGroupItemComponents={groupControlComponents}
                 fhirService={service}
                 groupItemComponent={GroupItemComponent}
                 FormWrapper={(props) => (
@@ -94,9 +94,9 @@ export const inModal: Story = {
                         },
                         formValues,
                     }}
-                    widgetsByQuestionType={itemComponents}
-                    widgetsByQuestionItemControl={itemControlComponents}
-                    widgetsByGroupQuestionItemControl={groupControlComponents}
+                    questionItemComponents={itemComponents}
+                    itemControlQuestionItemComponents={itemControlComponents}
+                    itemControlGroupItemComponents={groupControlComponents}
                     fhirService={service}
                     groupItemComponent={GroupItemComponent}
                     FormWrapper={FormWrapper}
@@ -120,9 +120,9 @@ export const inModalVertical: Story = {
                         },
                         formValues,
                     }}
-                    widgetsByQuestionType={itemComponents}
-                    widgetsByQuestionItemControl={itemControlComponents}
-                    widgetsByGroupQuestionItemControl={groupControlComponents}
+                    questionItemComponents={itemComponents}
+                    itemControlQuestionItemComponents={itemControlComponents}
+                    itemControlGroupItemComponents={groupControlComponents}
                     fhirService={service}
                     groupItemComponent={GroupItemComponent}
                     FormWrapper={FormWrapper}
@@ -145,9 +145,9 @@ export const Vertical: Story = {
                     },
                     formValues,
                 }}
-                widgetsByQuestionType={itemComponents}
-                widgetsByQuestionItemControl={itemControlComponents}
-                widgetsByGroupQuestionItemControl={groupControlComponents}
+                questionItemComponents={itemComponents}
+                itemControlQuestionItemComponents={itemControlComponents}
+                itemControlGroupItemComponents={groupControlComponents}
                 fhirService={service}
                 groupItemComponent={GroupItemComponent}
                 FormWrapper={(props) => (
