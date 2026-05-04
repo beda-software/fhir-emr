@@ -4,7 +4,15 @@ import { Meta, StoryObj } from '@storybook/react';
 import { en, ru } from 'make-plural';
 import { fromFirstClassExtension, QuestionnaireResponseFormData } from 'sdc-qrf';
 
-import { BaseQuestionnaireResponseForm, BaseQuestionnaireResponseFormProps } from './index';
+import {
+    BaseQuestionnaireResponseForm,
+    BaseQuestionnaireResponseFormProps,
+} from '@beda.software/fhir-questionnaire/components';
+
+import { service } from 'src/services';
+
+import { groupControlComponents, itemComponents, itemControlComponents } from './controls';
+import { FormWrapper, GroupItemComponent } from '../FormWrapper';
 
 i18n.loadLocaleData({
     en: { plurals: en },
@@ -27,7 +35,15 @@ type Story = StoryObj<typeof BaseQuestionnaireResponseForm>;
 
 const Template = (args: BaseQuestionnaireResponseFormProps) => (
     <I18nProvider i18n={i18n}>
-        <BaseQuestionnaireResponseForm {...args} />
+        <BaseQuestionnaireResponseForm
+            {...args}
+            widgetsByQuestionType={itemComponents}
+            widgetsByQuestionItemControl={itemControlComponents}
+            widgetsByGroupQuestionItemControl={groupControlComponents}
+            fhirService={service}
+            groupItemComponent={GroupItemComponent}
+            FormWrapper={FormWrapper}
+        />
     </I18nProvider>
 );
 

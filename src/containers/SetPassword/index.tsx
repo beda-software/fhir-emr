@@ -1,9 +1,16 @@
 import { Trans, t } from '@lingui/macro';
+import { useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 
+import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
+import {
+    FormWrapperProps,
+    inMemorySaveQuestionnaireResponseService,
+} from '@beda.software/fhir-questionnaire/components';
+
+import { FormWrapper } from 'src/components/FormWrapper';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Title } from 'src/components/Typography';
-import { inMemorySaveService, questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 import { CustomYupTestsMap } from 'src/utils';
 
 import { S } from './SetPassword.styles';
@@ -13,7 +20,13 @@ interface SetPasswordProps {
 }
 
 export function SetPassword(props: SetPasswordProps) {
+    const { customYupTests } = props;
     const { code } = useParams<{ code: string }>();
+
+    const saveFormWrapper = useCallback(
+        (wrapperProps: FormWrapperProps) => <FormWrapper {...wrapperProps} saveButtonTitle={t`Save`} />,
+        [],
+    );
 
     return (
         <S.Container>
@@ -22,13 +35,14 @@ export function SetPassword(props: SetPasswordProps) {
                     <Trans>Set password</Trans>
                 </Title>
                 <QuestionnaireResponseForm
-                    customYupTests={props.customYupTests}
+                    customYupTests={customYupTests}
                     questionnaireLoader={questionnaireIdLoader('set-password')}
-                    questionnaireResponseSaveService={inMemorySaveService}
+                    sdcServiceProvider={{
+                        saveCompletedQuestionnaireResponse: inMemorySaveQuestionnaireResponseService,
+                    }}
                     onSuccess={() => {
                         window.location.href = '/';
                     }}
-                    saveButtonTitle={t`Save`}
                     initialQuestionnaireResponse={{
                         id: 'reset-password',
                         resourceType: 'QuestionnaireResponse',
@@ -43,6 +57,7 @@ export function SetPassword(props: SetPasswordProps) {
                             },
                         ],
                     }}
+                    FormWrapper={saveFormWrapper}
                 />
             </S.Form>
         </S.Container>

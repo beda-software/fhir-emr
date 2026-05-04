@@ -1,4 +1,5 @@
 import { ControllerFieldState, ControllerRenderProps } from 'react-hook-form';
+import { FCEQuestionnaire } from 'sdc-qrf';
 
 export function getFieldErrorMessage(
     field: ControllerRenderProps<any, any>,
@@ -18,4 +19,15 @@ export function getFieldErrorMessage(
     const errorMessageWithHumanReadableFieldName = errorMessageWithInternalFieldName.replace(field.name, text ?? '');
 
     return errorMessageWithHumanReadableFieldName;
+}
+
+export function isGroupWizard(q: FCEQuestionnaire) {
+    return q.item?.some((i) => {
+        const itemControlCode = i.itemControl?.coding?.[0]?.code;
+
+        return (
+            itemControlCode &&
+            ['wizard', 'wizard-with-tooltips', 'wizard-vertical', 'wizard-navigation-group'].includes(itemControlCode)
+        );
+    });
 }

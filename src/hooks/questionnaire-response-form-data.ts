@@ -116,9 +116,6 @@ export function getQuestionnaireResponseDraftServices(type: QuestionnaireRespons
     }
 }
 
-export const inMemorySaveService: QuestionnaireResponseSaveService = (qr: FHIRQuestionnaireResponse) =>
-    Promise.resolve(success(qr));
-
 export const persistSaveService: QuestionnaireResponseSaveService = async (qr: FHIRQuestionnaireResponse) =>
     await saveFHIRResource(qr);
 
@@ -133,8 +130,8 @@ export const persistWithProvenanceSaveService: QuestionnaireResponseSaveService 
         author.resourceType === 'Organization'
             ? author.name
             : compileAsFirst<typeof author, string>(
-                `${author.resourceType}.name.given.first() + ' ' + ${author.resourceType}.name.family`,
-            )(author);
+                  `${author.resourceType}.name.given.first() + ' ' + ${author.resourceType}.name.family`,
+              )(author);
     if (isSuccess(qrSaveResponse)) {
         const provenanceResponse = await saveFHIRResource<Provenance>({
             resourceType: 'Provenance',
@@ -163,7 +160,9 @@ export const persistWithProvenanceSaveService: QuestionnaireResponseSaveService 
                 {
                     role: 'source',
                     what: {
-                        reference: `QuestionnaireResponse/${qrSaveResponse.data.id}/_history/${qrSaveResponse.data.meta!.versionId}`,
+                        reference: `QuestionnaireResponse/${qrSaveResponse.data.id}/_history/${
+                            qrSaveResponse.data.meta!.versionId
+                        }`,
                     },
                 },
             ],

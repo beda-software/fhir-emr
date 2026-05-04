@@ -23,7 +23,7 @@ export const PractitionerDetails = () => {
             await getFHIRResources<Practitioner | PractitionerRole | HealthcareService>('Practitioner', {
                 _id: params.id,
                 _revinclude: ['PractitionerRole:practitioner'],
-                _include: ['PractitionerRole:service:HealthcareService'],
+                '_include:iterate': ['PractitionerRole:service:HealthcareService'],
             }),
             (bundle) => {
                 const resources = extractBundleResources(bundle);

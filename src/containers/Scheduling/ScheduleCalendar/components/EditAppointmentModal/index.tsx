@@ -1,13 +1,16 @@
 import { t } from '@lingui/macro';
 import { PractitionerRole } from 'fhir/r4b';
+import { useCallback } from 'react';
 
-import { RenderRemoteData } from '@beda.software/fhir-react';
+import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
+import {
+    FormWrapperProps,
+    inMemorySaveQuestionnaireResponseService,
+} from '@beda.software/fhir-questionnaire/components';
 
-import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
+import { FormWrapper } from 'src/components/FormWrapper';
 import { Modal } from 'src/components/Modal';
-import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
-import { Spinner } from 'src/components/Spinner';
-import { inMemorySaveService } from 'src/hooks/questionnaire-response-form-data';
+import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 
 interface Props {
     practitionerRole: PractitionerRole;
@@ -18,35 +21,38 @@ interface Props {
 }
 
 export function EditAppointmentModal(props: Props) {
-    const { showModal, onClose, appointmentId, practitionerRole } = props;
+    const { showModal, onClose, onSubmit, appointmentId, practitionerRole } = props;
 
-    const { response, onSubmit } = useQuestionnaireResponseForm({
-        questionnaireLoader: { type: 'id', questionnaireId: 'edit-appointment' },
-        questionnaireResponseSaveService: inMemorySaveService,
-        launchContextParameters: [
-            {
-                name: 'CurrentAppointment',
-                resource: {
-                    resourceType: 'Appointment',
-                    id: appointmentId,
-                    status: 'booked',
-                    participant: [{ status: 'accepted' }],
-                },
-            },
-            {
-                name: 'practitionerRole',
-                resource: practitionerRole,
-            },
-        ],
-        onSuccess: props.onSubmit,
-        onCancel: onClose,
-    });
+    const formWrapper = useCallback(
+        (wrapperProps: FormWrapperProps) => <FormWrapper {...wrapperProps} onCancel={onClose} />,
+        [onClose],
+    );
 
     return (
         <Modal open={showModal} title={t`Edit Appointment`} footer={null} onCancel={onClose}>
-            <RenderRemoteData remoteData={response} renderLoading={Spinner}>
-                {(formData) => <BaseQuestionnaireResponseForm formData={formData} onSubmit={onSubmit} />}
-            </RenderRemoteData>
+            <QuestionnaireResponseForm
+                questionnaireLoader={questionnaireIdLoader('edit-appointment')}
+                sdcServiceProvider={{
+                    saveCompletedQuestionnaireResponse: inMemorySaveQuestionnaireResponseService,
+                }}
+                launchContextParameters={[
+                    {
+                        name: 'CurrentAppointment',
+                        resource: {
+                            resourceType: 'Appointment',
+                            id: appointmentId,
+                            status: 'booked',
+                            participant: [{ status: 'accepted' }],
+                        },
+                    },
+                    {
+                        name: 'practitionerRole',
+                        resource: practitionerRole,
+                    },
+                ]}
+                onSuccess={() => onSubmit()}
+                FormWrapper={formWrapper}
+            />
         </Modal>
     );
 }

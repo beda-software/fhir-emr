@@ -1,7 +1,8 @@
 import { t } from '@lingui/macro';
 import { useContext } from 'react';
 
-import { BaseQuestionnaireResponseFormPropsContext } from 'src/components/BaseQuestionnaireResponseForm/context';
+import { BaseQuestionnaireResponseFormPropsContext } from '@beda.software/fhir-questionnaire/contexts';
+
 import { FormFooter, FormFooterComponentProps } from 'src/components/BaseQuestionnaireResponseForm/FormFooter';
 
 import { S } from './styles';
@@ -35,12 +36,11 @@ export function QuestionnairesWizardFooter(props: QuestionnairesWizardFooterProp
     return (
         <>
             <S.Footer goBack={goBack} goForward={goForward} canGoBack={canGoBack} canGoForward={canGoForward}>
-                {baseQRFPropsContext && baseQRFPropsContext.formData && (
+                {baseQRFPropsContext && (
                     <FormFooter
                         submitting={submitting}
                         submitDisabled={submitDisabled}
                         onCancel={onCancel}
-                        formData={baseQRFPropsContext.formData}
                         saveButtonTitle={
                             canComplete ? finishButtonTitle || t`Complete` : nextButtonTitle || t`Submit and Go Forward`
                         }

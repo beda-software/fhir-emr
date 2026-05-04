@@ -6,21 +6,25 @@ import {
 } from 'sdc-qrf';
 
 import {
-    MarkdownCard,
-    MarkdownDisplay,
-} from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/MarkdownRender';
-import { GroupTable } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable';
-import { TextWithMacroFill } from 'src/components/TextWithMacroFill';
-
-import {
+    AudioRecorderUploader,
+    Barcode,
     BloodPressure,
     Col,
+    Display,
+    EditableGroup,
     Grid,
     Group,
+    GroupTable,
+    GroupTabs,
+    GroupWizard,
+    GroupWizardVertical,
+    GroupWizardWithTooltips,
     Gtable,
     InlineChoice,
-    MDEditorControl,
+    InlineReference,
     MainCard,
+    MDEditorControl,
+    PasswordInput,
     QuestionBoolean,
     QuestionChoice,
     QuestionDateTime,
@@ -30,6 +34,7 @@ import {
     QuestionInteger,
     QuestionPhone,
     QuestionQuantity,
+    QuestionReference,
     QuestionSlider,
     QuestionSolidRadio,
     QuestionString,
@@ -38,19 +43,18 @@ import {
     Section,
     SectionWithDivider,
     SubCard,
+    TextWithMacroFill,
     TimeRangePickerControl,
-} from './widgets';
-import { AudioRecorderUploader } from './widgets/AudioRecorderUploader';
-import { Barcode } from './widgets/barcode';
-import { Display } from './widgets/display';
-import { EditableGroup } from './widgets/EditableGroup';
-import { GroupTabs } from './widgets/GroupTabs';
+    UploadFileControl,
+} from '@beda.software/web-item-controls/controls';
+import {
+    AnxietyScore,
+    DepressionScore,
+    MarkdownCard,
+    MarkdownDisplay,
+} from '@beda.software/web-item-controls/readonly-controls';
+
 import { GroupVoice } from './widgets/GroupVoice';
-import { GroupWizard, GroupWizardVertical, GroupWizardWithTooltips } from './widgets/GroupWizard';
-import { InlineReference } from './widgets/inline-reference';
-import { PasswordInput } from './widgets/PasswordInput';
-import { QuestionReference } from './widgets/reference';
-import { UploadFileControl } from './widgets/UploadFileControl';
 
 export const itemComponents: QuestionItemComponentMapping = {
     text: QuestionText,
@@ -90,6 +94,8 @@ export const itemControlComponents: ItemControlQuestionItemComponentMapping = {
     'markdown-card': MarkdownCard,
     // reference-radio-button is deprecated, use inline-reference instead
     'reference-radio-button': InlineReference,
+    'anxiety-score': AnxietyScore,
+    'depression-score': DepressionScore,
 };
 
 export const groupControlComponents: ItemControlGroupItemComponentMapping = {

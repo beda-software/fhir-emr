@@ -1,7 +1,13 @@
 export * from '../uberComponents/ResourceListPage';
 export * from './BaseLayout';
 export * from './BaseLayout/PageContainer';
-export * from './BaseQuestionnaireResponseForm';
+export * from './BaseQuestionnaireResponseForm/FieldLabel';
+export * from './BaseQuestionnaireResponseForm/FormFooter';
+export * from './BaseQuestionnaireResponseForm/hooks';
+export * from './BaseQuestionnaireResponseForm/utils';
+export * from './BaseQuestionnaireResponseForm/controls';
+export * from './BaseQuestionnaireResponseForm/ItemHelpText';
+
 export * from './Breadcrumbs';
 export * from './Calendar';
 export * from './ChangesDiff';

@@ -4,6 +4,8 @@ import { Patient, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { BaseQuestionnaireResponseFormProps } from '@beda.software/fhir-questionnaire/components';
+
 import { QuestionnairesWizardFooterProps } from 'src/components/QuestionnairesWizard/components/QuestionnairesWizardFooter';
 import { WizardItem, WizardProps } from 'src/components/Wizard';
 import {
@@ -11,14 +13,13 @@ import {
     QuestionnaireResponseFormSaveResponse,
 } from 'src/hooks/questionnaire-response-form-data';
 
-import { BaseQuestionnaireResponseFormProps } from '../BaseQuestionnaireResponseForm';
-
 export interface QuestionnairesWizardProps
     extends Omit<BaseQuestionnaireResponseFormProps, 'formData' | 'FormFooterComponent'>,
         Omit<QuestionnaireResponseFormProps, 'questionnaireLoader'> {
     onSuccess?: (response: QuestionnaireResponseFormSaveResponse) => void;
     onFailure?: (error: any) => void;
     onStepSuccess?: (response: QuestionnaireResponseFormSaveResponse) => void;
+    onCancel?: () => void;
 
     FormFooterComponent?: React.ElementType<QuestionnairesWizardFooterProps>;
 
