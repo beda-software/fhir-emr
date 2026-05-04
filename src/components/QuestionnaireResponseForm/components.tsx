@@ -51,6 +51,7 @@ export function QuestionnaireResponseForm({
 
     onEdit: onEditProp,
     FormWrapper: FormWrapperProp,
+    serviceProvider: serviceProviderProp,
     sdcServiceProvider: sdcServiceProviderProp,
 
     questionnaireLoader,
@@ -69,7 +70,7 @@ export function QuestionnaireResponseForm({
             ...(itemControlQuestionItemComponents ?? defaultItemControlComponents),
             ...ItemControlQuestionItemWidgetsFromContext,
         }),
-        [ItemControlQuestionItemWidgetsFromContext],
+        [ItemControlQuestionItemWidgetsFromContext, itemControlQuestionItemComponents],
     );
 
     const mergedGroupControlComponents = useMemo(
@@ -77,7 +78,7 @@ export function QuestionnaireResponseForm({
             ...(itemControlGroupItemComponents ?? defaultGroupControlComponents),
             ...ItemControlGroupItemWidgetsFromContext,
         }),
-        [ItemControlGroupItemWidgetsFromContext],
+        [ItemControlGroupItemWidgetsFromContext, itemControlGroupItemComponents],
     );
 
     const onEditHandler = useCallback(
@@ -123,7 +124,7 @@ export function QuestionnaireResponseForm({
             onFailure={onFailure}
             readOnly={readOnly}
             customYupTests={customYupTests}
-            serviceProvider={{ service }}
+            serviceProvider={serviceProviderProp ?? { service }}
             fhirService={service}
             sdcServiceProvider={sdcServiceProvider}
             FormWrapper={FormWrapperProp ?? qrfFormWrapper}
@@ -153,7 +154,7 @@ export function ReadonlyQuestionnaireResponseForm(props: ReadonlyQRFFormDataProp
                 : props.itemControlQuestionItemComponents ?? readonlyItemControlComponents),
             ...ItemControlQuestionItemReadonlyWidgetsFromContext,
         }),
-        [ItemControlQuestionItemReadonlyWidgetsFromContext],
+        [ItemControlQuestionItemReadonlyWidgetsFromContext, props],
     );
 
     const mergedGroupControlComponents = useMemo(
@@ -163,7 +164,7 @@ export function ReadonlyQuestionnaireResponseForm(props: ReadonlyQRFFormDataProp
                 : props.itemControlGroupItemComponents ?? readonlyGroupControlComponents),
             ...ItemControlGroupItemReadonlyWidgetsFromContext,
         }),
-        [ItemControlGroupItemReadonlyWidgetsFromContext],
+        [ItemControlGroupItemReadonlyWidgetsFromContext, props],
     );
 
     if ('formData' in props) {

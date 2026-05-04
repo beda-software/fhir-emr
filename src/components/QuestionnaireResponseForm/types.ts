@@ -10,7 +10,8 @@ import {
 } from 'src/hooks/questionnaire-response-form-data';
 import { CustomYupTestsMap } from 'src/utils/questionnaire';
 
-export interface QRFProps extends QuestionnaireResponseFormProps {
+export interface QRFProps extends Omit<QuestionnaireResponseFormProps, 'serviceProvider'> {
+    serviceProvider?: QuestionnaireResponseFormProps['serviceProvider'];
     onSuccess?: (response: QuestionnaireResponseFormSaveResponse) => void;
     onFailure?: (error: any) => void;
     readOnly?: boolean;

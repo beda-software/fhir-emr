@@ -15,7 +15,8 @@ import {
 
 export interface QuestionnairesWizardProps
     extends Omit<BaseQuestionnaireResponseFormProps, 'formData' | 'FormFooterComponent'>,
-        Omit<QuestionnaireResponseFormProps, 'questionnaireLoader'> {
+        Omit<QuestionnaireResponseFormProps, 'questionnaireLoader' | 'fhirService' | 'serviceProvider'> {
+    serviceProvider?: QuestionnaireResponseFormProps['serviceProvider'];
     onSuccess?: (response: QuestionnaireResponseFormSaveResponse) => void;
     onFailure?: (error: any) => void;
     onStepSuccess?: (response: QuestionnaireResponseFormSaveResponse) => void;
