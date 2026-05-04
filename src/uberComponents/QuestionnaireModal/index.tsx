@@ -8,7 +8,7 @@ import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
 import {
     FormWrapperProps,
     inMemorySaveQuestionnaireResponseService,
-    persistSaveQuestionnaireReponseServiceFactory,
+    persistSaveQuestionnaireResponseServiceFactory,
 } from '@beda.software/fhir-questionnaire/components';
 import { parseFHIRReference } from '@beda.software/fhir-react';
 
@@ -72,7 +72,7 @@ export function QuestionanireModal({
                         saveCompletedQuestionnaireResponse:
                             typeof subject === 'undefined'
                                 ? inMemorySaveQuestionnaireResponseService
-                                : persistSaveQuestionnaireReponseServiceFactory(service),
+                                : persistSaveQuestionnaireResponseServiceFactory(service),
                     }}
                     FormWrapper={formWrapper}
                 />
