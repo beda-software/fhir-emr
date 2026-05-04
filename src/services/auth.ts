@@ -167,7 +167,8 @@ export async function signinWithIdentityToken(
                         name: 'questionnaire_response',
                         resource: {
                             resourceType: 'QuestionnaireResponse',
-                            questionnaire: 'federated-identity-signin',
+                            questionnaire:
+                                'https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/federated-identity-signin',
                             item: [
                                 {
                                     linkId: 'firstname',

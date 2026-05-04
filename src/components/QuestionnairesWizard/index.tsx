@@ -43,12 +43,12 @@ export function QuestionnairesWizard(props: QuestionnairesWizardProps) {
                 onSuccess={(result) => {
                     setStepStatus(currentQuestionnaireIndex, 'finish');
                     setQuestionnaireResponses((qrList) => {
-                        const filledQIds = qrList.map((qr) => qr.questionnaire);
-                        const questionnaireId = result.questionnaireResponse.questionnaire;
+                        const filledQuestionaireURLs = qrList.map((qr) => qr.questionnaire);
+                        const questionnaireUrl = result.questionnaireResponse.questionnaire;
 
-                        if (questionnaireId && filledQIds.includes(questionnaireId)) {
+                        if (questionnaireUrl && filledQuestionaireURLs.includes(questionnaireUrl)) {
                             return qrList.map((qr) => {
-                                if (qr.questionnaire === questionnaireId) {
+                                if (qr.questionnaire === questionnaireUrl) {
                                     return result.questionnaireResponse;
                                 } else {
                                     return qr;
@@ -71,7 +71,7 @@ export function QuestionnairesWizard(props: QuestionnairesWizardProps) {
                     currentQuestionnaireResponse || {
                         ...initialQuestionnaireResponse,
                         resourceType: 'QuestionnaireResponse',
-                        questionnaire: currentQuestionnaire?.id,
+                        questionnaire: currentQuestionnaire?.url,
                     }
                 }
                 FormFooterComponent={(passedProps: FormFooterComponentProps) => {

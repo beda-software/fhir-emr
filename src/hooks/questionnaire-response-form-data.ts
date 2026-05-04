@@ -133,8 +133,8 @@ export const persistWithProvenanceSaveService: QuestionnaireResponseSaveService 
         author.resourceType === 'Organization'
             ? author.name
             : compileAsFirst<typeof author, string>(
-                `${author.resourceType}.name.given.first() + ' ' + ${author.resourceType}.name.family`,
-            )(author);
+                  `${author.resourceType}.name.given.first() + ' ' + ${author.resourceType}.name.family`,
+              )(author);
     if (isSuccess(qrSaveResponse)) {
         const provenanceResponse = await saveFHIRResource<Provenance>({
             resourceType: 'Provenance',
@@ -163,7 +163,9 @@ export const persistWithProvenanceSaveService: QuestionnaireResponseSaveService 
                 {
                     role: 'source',
                     what: {
-                        reference: `QuestionnaireResponse/${qrSaveResponse.data.id}/_history/${qrSaveResponse.data.meta!.versionId}`,
+                        reference: `QuestionnaireResponse/${qrSaveResponse.data.id}/_history/${
+                            qrSaveResponse.data.meta!.versionId
+                        }`,
                     },
                 },
             ],
@@ -341,8 +343,6 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
 
     const fceQuestionnaire = toFirstClassExtension(questionnaireRemoteData.data);
 
-    const questionnaireId = fceQuestionnaire.id ?? fceQuestionnaire.assembledFrom;
-
     const params: Parameters = {
         resourceType: 'Parameters',
         parameter: [
@@ -362,7 +362,7 @@ export async function loadQuestionnaireResponseFormData(props: QuestionnaireResp
                 url: '/Questionnaire/$populate',
                 data: params,
             }),
-            (qr) => ({ ...qr, id: qr.id ?? uuid4(), questionnaire: questionnaireId }),
+            (qr) => ({ ...qr, id: qr.id ?? uuid4(), questionnaire: fceQuestionnaire.url }),
         );
     }
 

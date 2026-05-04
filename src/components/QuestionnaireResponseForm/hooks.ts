@@ -17,7 +17,7 @@ export function useQuestionnaireResponseForm(props: QRFProps) {
         const modifiedFormData = _.merge({}, formData, {
             context: {
                 questionnaireResponse: {
-                    questionnaire: initialQuestionnaireResponse?.questionnaire,
+                    questionnaire: initialQuestionnaireResponse?.questionnaire ?? formData.context.questionnaire.url,
                 },
             },
         });

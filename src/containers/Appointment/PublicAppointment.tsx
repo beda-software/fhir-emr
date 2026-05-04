@@ -55,9 +55,6 @@ export function PublicAppointment() {
                                 <DateTimeSlotPicker {...props} practitionerRolePath={practitionerRolePath} />
                             ),
                         }}
-                        initialQuestionnaireResponse={{
-                            questionnaire: 'public-appointment',
-                        }}
                         launchContextParameters={[
                             {
                                 name: 'Patient',

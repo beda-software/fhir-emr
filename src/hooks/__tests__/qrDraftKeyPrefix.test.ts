@@ -124,6 +124,7 @@ describe('makeLocalStorageDraftVersionedKey', () => {
             status: 'active',
             name: 'questionnaire-1',
             id: 'questionnaire-1',
+            url: 'https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/questionnaire-1',
             meta: {
                 versionId: '1',
             },

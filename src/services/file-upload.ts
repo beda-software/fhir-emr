@@ -43,14 +43,14 @@ export async function generateDownloadUrl(key: string) {
 }
 
 export async function generateDownloadHeaders(key: string) {
-    return aidboxService<{[key: string]: string}>({
-            baseURL: config.baseURL,
-            url: '/$generate-download-headers',
-            method: 'POST',
-            data: {
-                key,
-            },
-        })
+    return aidboxService<{ [key: string]: string }>({
+        baseURL: config.baseURL,
+        url: '/$generate-download-headers',
+        method: 'POST',
+        data: {
+            key,
+        },
+    });
 }
 
 export type CustomUploadRequestOption = Pick<UploadRequestOption, 'file' | 'onProgress' | 'onError' | 'onSuccess'>;
