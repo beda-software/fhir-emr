@@ -52,13 +52,15 @@ export function PageTabs<R extends Resource, Extra = unknown>({ tabs }: PageTabs
 }
 
 export function ResourceDetailPage<R extends Resource>(props: DetailPageProps<R>) {
-    const { getTitle, tabs, maxWidth } = props;
+    const { getTitle, getTitleLeftElement, getTitleRightElement, tabs, maxWidth } = props;
 
     return (
         <RenderBundleResourceContext<R> {...props}>
             {(context) => (
                 <PageContainer
                     title={getTitle(context)}
+                    titleLeftElement={getTitleLeftElement ? getTitleLeftElement(context) : undefined}
+                    titleRightElement={getTitleRightElement ? getTitleRightElement(context) : undefined}
                     layoutVariant="with-tabs"
                     headerContent={<PageTabs tabs={tabs} />}
                     maxWidth={maxWidth}

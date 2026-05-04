@@ -5,7 +5,7 @@ subjectType:
   - Encounter
 id: review-of-systems
 resourceType: Questionnaire
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/review-of-systems
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/review-of-systems
 item:
   - code:
       - code: 71406-3

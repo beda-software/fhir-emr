@@ -59,7 +59,7 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
 
     if (answerValueSet) {
         return (
-            <Form.Item {...formItem} data-testid="question-choice">
+            <Form.Item {...formItem} data-testid="question-choice" data-linkid={linkId}>
                 <ChoiceQuestionValueSet
                     answerValueSet={answerValueSet}
                     value={value ?? []}
@@ -75,7 +75,7 @@ export function QuestionChoice({ parentPath, questionItem }: QuestionItemProps) 
     }
 
     return (
-        <Form.Item {...formItem} data-testid="question-choice">
+        <Form.Item {...formItem} data-testid="question-choice" data-linkid={linkId}>
             <ChoiceQuestionSelect
                 options={answerOption ?? []}
                 value={value ?? []}

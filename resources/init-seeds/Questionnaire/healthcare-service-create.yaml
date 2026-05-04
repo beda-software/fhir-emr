@@ -44,4 +44,4 @@ item:
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/healthcare-service-create
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/healthcare-service-create

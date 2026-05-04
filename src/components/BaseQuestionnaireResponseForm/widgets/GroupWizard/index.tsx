@@ -1,7 +1,14 @@
 import _ from 'lodash';
 import { useContext, useMemo, useState } from 'react';
 import { useFormState, useWatch } from 'react-hook-form';
-import { FCEQuestionnaireItem, FormItems, GroupItemProps, ItemContext, QuestionItems } from 'sdc-qrf';
+import {
+    FCEQuestionnaireItem,
+    FormItems,
+    GroupItemProps,
+    ItemContext,
+    QuestionItems,
+    getEnabledQuestions,
+} from 'sdc-qrf';
 
 import { createBus } from '@beda.software/fhir-react';
 
@@ -67,9 +74,10 @@ export function GroupWizard(props: GroupWizardProps) {
     const formValues = useWatch();
 
     const { isSubmitted } = useFormState();
+    const item = getEnabledQuestions(questionItem.item ?? [], parentPath, formValues, groupContext);
 
-    const wizardItems = useMemo(() => (questionItem.item ?? []).filter((i) => !i.hidden), [questionItem.item]);
-    const hiddenItems = useMemo(() => (questionItem.item ?? []).filter((i) => i.hidden), [questionItem.item]);
+    const wizardItems = useMemo(() => item.filter((i) => !i.hidden), [item]);
+    const hiddenItems = useMemo(() => item.filter((i) => i.hidden), [item]);
 
     const itemsCount = wizardItems.length;
     const isLastStepActive = itemsCount === currentIndex + 1;
@@ -80,7 +88,7 @@ export function GroupWizard(props: GroupWizardProps) {
         item: FCEQuestionnaireItem,
         groupStats: GroupStats,
     ): 'wait' | 'process' | 'finish' | 'error' => {
-        const groupValues = formValues?.[linkId]?.items?.[item.linkId].items;
+        const groupValues = formValues?.[linkId]?.items?.[item.linkId]?.items ?? {};
         const hasError =
             questionnaireItemsToValidationSchema(item.item!, baseQRFPropsContext?.customYupTests).isValidSync(
                 groupValues,

@@ -10,6 +10,8 @@ services:
       - ./env/file-uploader
       - .env
     tty: true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   sdc-ide:
     image: bedasoftware/sdc-ide:master
     depends_on:

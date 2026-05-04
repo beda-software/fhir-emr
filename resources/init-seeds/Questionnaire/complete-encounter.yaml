@@ -130,7 +130,7 @@ item:
       - text: Are you sure you want to finish this encounter?
         type: display
         linkId: are-you-sure-message
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/complete-encounter
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/complete-encounter
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire

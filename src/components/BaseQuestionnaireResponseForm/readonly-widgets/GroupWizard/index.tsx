@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useWatch } from 'react-hook-form';
-import { FCEQuestionnaireItem, GroupItemProps, QuestionItems } from 'sdc-qrf';
+import { FCEQuestionnaireItem, getEnabledQuestions, GroupItemProps, QuestionItems } from 'sdc-qrf';
 
 import {
     getGroupStats,
@@ -30,12 +30,11 @@ export function GroupWizardVertical(props: GroupWizardProps) {
 
 export function GroupWizard(props: GroupWizardProps) {
     const { parentPath, questionItem, context, wizard } = props;
-
+    const groupContext = context[0]!;
     const [currentIndex, setCurrentIndex] = useState(0);
-    const { item = [], linkId } = questionItem;
-
+    const { linkId } = questionItem;
     const formValues = useWatch();
-
+    const item = getEnabledQuestions(questionItem.item ?? [], parentPath, formValues, groupContext);
     const showDescription = wizard?.direction === 'vertical';
 
     const getGroupStatus = (groupStats: GroupStats): 'wait' | 'process' | 'finish' | 'error' => {
@@ -51,7 +50,7 @@ export function GroupWizard(props: GroupWizardProps) {
     };
 
     const getStepItem = (item: FCEQuestionnaireItem) => {
-        const groupStats = getGroupStats(item, [...parentPath, linkId], formValues, context[0]!);
+        const groupStats = getGroupStats(item, [...parentPath, linkId], formValues, groupContext);
         const description = showDescription
             ? `${groupStats.finishedQuestions} of ${groupStats.totalQuestions}`
             : undefined;

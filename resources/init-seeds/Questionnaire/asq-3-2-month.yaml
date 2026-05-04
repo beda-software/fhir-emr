@@ -1,0 +1,1493 @@
+id: asq-3-2-month
+resourceType: Questionnaire
+name: asq-3-2-month
+title: "ASQ-3: 2 Month Questionnaire"
+status: active
+subjectType:
+  - Patient
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/asq-3-2-month
+useContext:
+  - code:
+      code: questionnaire-type
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+    value:
+      CodeableConcept:
+        coding:
+          - code: form-library
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+item:
+  - linkId: wizard
+    type: group
+    itemControl:
+      coding:
+        - code: wizard
+
+    item:
+    # ============================================================
+    # STEP 1: COMMUNICATION
+    # ============================================================
+    - linkId: communication
+      text: Communication
+      type: group
+      item:
+      - linkId: communication-voice
+        type: group
+        itemControl:
+          coding:
+          - code: group-voice
+        item:
+          - linkId: comm-1
+            text: "1. Does your baby sometimes make throaty or gurgling sounds?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: comm-2
+            text: '2. Does your baby make cooing sounds such as "ooo," "gah," and "aah"?'
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: comm-3
+            text: "3. When you speak to your baby, does she make sounds back to you?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: comm-4
+            text: "4. Does your baby smile when you talk to him?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: comm-5
+            text: "5. Does your baby chuckle softly?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: comm-6
+            text: "6. After you have been out of sight, does your baby smile or get excited when she sees you?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: communication-section-total
+            type: display
+            itemControl:
+              coding:
+                - code: markdown
+            variable:
+              - name: commSectionTotal
+                language: text/fhirpath
+                expression: "(%resource.repeat(item).where(linkId.startsWith('comm-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('comm-')).answer.valueCoding.where(code='sometimes').count() * 5)"
+            _text:
+              cqfExpression:
+                language: text/fhirpath
+                expression: "'**Total Score:** ' & %commSectionTotal.toString()"
+
+    # ============================================================
+    # STEP 2: GROSS MOTOR
+    # ============================================================
+    - linkId: gross-motor
+      text: Gross Motor
+      type: group
+      item:
+      - linkId: gross-motor-voice
+        itemControl:
+          coding:
+          - code: group-voice
+        type: group
+        item:
+          - linkId: gm-1
+            text: "1. While your baby is on his back, does he wave his arms and legs, wiggle, and squirm?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: gm-2
+            text: "2. When your baby is on her tummy, does she turn her head to the side?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: gm-3
+            text: "3. When your baby is on his tummy, does he hold his head up longer than a few seconds?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: gm-4
+            text: "4. When your baby is on her back, does she kick her legs?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: gm-5
+            text: "5. While your baby is on his back, does he move his head from side to side?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: gm-6
+            text: "6. After holding her head up while on her tummy, does your baby lay her head back down on the floor, rather than let it drop or fall forward?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: gross-motor-section-total
+            type: display
+            itemControl:
+              coding:
+                - code: markdown
+            variable:
+              - name: gmSectionTotal
+                language: text/fhirpath
+                expression: "(%resource.repeat(item).where(linkId.startsWith('gm-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('gm-')).answer.valueCoding.where(code='sometimes').count() * 5)"
+            _text:
+              cqfExpression:
+                language: text/fhirpath
+                expression: "'**Total Score:** ' & %gmSectionTotal.toString()"
+
+    # ============================================================
+    # STEP 3: FINE MOTOR
+    # ============================================================
+    - linkId: fine-motor
+      text: Fine Motor
+      type: group
+      item:
+      - linkId: fine-motor-voice
+        itemControl:
+          coding:
+          - code: group-voice
+        type: group
+        item:
+          - linkId: fm-1
+            text: '1. Is your baby''s hand usually tightly closed when he is awake? (If your baby used to do this but no longer does, mark "yes.")'
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: fm-2
+            text: "2. Does your baby grasp your finger if you touch the palm of her hand?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: fm-3
+            text: "3. When you put a toy in his hand, does your baby hold it in his hand briefly?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: fm-4
+            text: "4. Does your baby touch her face with her hands?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: fm-5
+            text: "5. Does your baby hold his hands open or partly open when he is awake (rather than in fists, as they were when he was a newborn)?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: fm-6
+            text: "6. Does your baby grab or scratch at her clothes?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: fine-motor-section-total
+            type: display
+            itemControl:
+              coding:
+                - code: markdown
+            variable:
+              - name: fmSectionTotal
+                language: text/fhirpath
+                expression: "(%resource.repeat(item).where(linkId.startsWith('fm-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('fm-')).answer.valueCoding.where(code='sometimes').count() * 5)"
+            _text:
+              cqfExpression:
+                language: text/fhirpath
+                expression: "'**Total Score:** ' & %fmSectionTotal.toString()"
+
+    # ============================================================
+    # STEP 4: PROBLEM SOLVING
+    # ============================================================
+    - linkId: problem-solving
+      text: Problem Solving
+      type: group
+      item:
+      - linkId: problem-solving-voice
+        itemControl:
+          coding:
+          - code: group-voice
+        type: group
+        item:
+          - linkId: ps-1
+            text: "1. Does your baby look at objects that are 8–10 inches away?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: ps-2
+            text: "2. When you move around, does your baby follow you with his eyes?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: ps-3
+            text: "3. When you move a toy slowly from side to side in front of your baby's face (about 10 inches away), does your baby follow the toy with her eyes, sometimes turning her head?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: ps-4
+            text: "4. When you move a small toy up and down slowly in front of your baby's face (about 10 inches away), does your baby follow the toy with his eyes?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: ps-5
+            text: "5. When you hold your baby in a sitting position, does she look at a toy (about the size of a cup or rattle) that you place on the table or floor in front of her?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: ps-6
+            text: "6. When you dangle a toy above your baby while he is lying on his back, does he wave his arms toward the toy?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: problem-solving-section-total
+            type: display
+            itemControl:
+              coding:
+                - code: markdown
+            variable:
+              - name: psSectionTotal
+                language: text/fhirpath
+                expression: "(%resource.repeat(item).where(linkId.startsWith('ps-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('ps-')).answer.valueCoding.where(code='sometimes').count() * 5)"
+            _text:
+              cqfExpression:
+                language: text/fhirpath
+                expression: "'**Total Score:** ' & %psSectionTotal.toString()"
+
+    # ============================================================
+    # STEP 5: PERSONAL-SOCIAL
+    # ============================================================
+    - linkId: personal-social
+      type: group
+      text: Personal-Social
+      item:
+      - linkId: personal-social-voice
+        type: group
+        itemControl:
+          coding:
+          - code: group-voice
+        item:
+          - linkId: pso-1
+            text: "1. Does your baby sometimes try to suck, even when she's not feeding?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: pso-2
+            text: "2. Does your baby cry when he is hungry, wet, tired, or wants to be held?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: pso-3
+            text: "3. Does your baby smile at you?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: pso-4
+            text: "4. When you smile at your baby, does she smile back?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: pso-5
+            text: "5. Does your baby watch his hands?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: pso-6
+            text: "6. When your baby sees the breast or bottle, does she seem to know she is about to be fed?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 10
+              - valueCoding:
+                  code: "sometimes"
+                  display: "Sometimes"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 5
+              - valueCoding:
+                  code: "not-yet"
+                  display: "Not yet"
+                extension:
+                  - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                    valueDecimal: 0
+
+          - linkId: personal-social-section-total
+            type: display
+            itemControl:
+              coding:
+                - code: markdown
+            variable:
+              - name: psoSectionTotal
+                language: text/fhirpath
+                expression: "(%resource.repeat(item).where(linkId.startsWith('pso-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('pso-')).answer.valueCoding.where(code='sometimes').count() * 5)"
+            _text:
+              cqfExpression:
+                language: text/fhirpath
+                expression: "'**Total Score:** ' & %psoSectionTotal.toString()"
+
+      # ============================================================
+      # STEP 6: OVERALL QUESTIONS
+      # ============================================================
+    - linkId: overall-voice
+      text: Overall
+      type: group
+      item:
+      - linkId: overall
+        itemControl:
+          coding:
+          - code: group-voice
+        type: group
+        item:
+          - linkId: overall-note
+            text: "Parents and providers may use the space below for additional comments."
+            type: display
+
+          - linkId: overall-1
+            text: "1. Did your baby pass the newborn hearing screening test?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            extension:
+              - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                valueString: horizontal
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+              - valueCoding:
+                  code: "no"
+                  display: "No"
+
+          - linkId: overall-1-comment
+            text: "If no, explain:"
+            type: text
+            enableWhen:
+              - question: overall-1
+                operator: "="
+                answerCoding:
+                  code: "no"
+
+          - linkId: overall-2
+            text: "2. Does your baby move both hands and both legs equally well?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            extension:
+              - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                valueString: horizontal
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+              - valueCoding:
+                  code: "no"
+                  display: "No"
+
+          - linkId: overall-2-comment
+            text: "If no, explain:"
+            type: text
+            enableWhen:
+              - question: overall-2
+                operator: "="
+                answerCoding:
+                  code: "no"
+
+          - linkId: overall-3
+            text: "3. Does either parent have a family history of childhood deafness, hearing impairment, or vision problems?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            extension:
+              - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                valueString: horizontal
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+              - valueCoding:
+                  code: "no"
+                  display: "No"
+
+          - linkId: overall-3-comment
+            text: "If yes, explain:"
+            type: text
+            enableWhen:
+              - question: overall-3
+                operator: "="
+                answerCoding:
+                  code: "yes"
+
+          - linkId: overall-4
+            text: "4. Has your baby had any medical problems?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            extension:
+              - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                valueString: horizontal
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+              - valueCoding:
+                  code: "no"
+                  display: "No"
+
+          - linkId: overall-4-comment
+            text: "If yes, explain:"
+            type: text
+            enableWhen:
+              - question: overall-4
+                operator: "="
+                answerCoding:
+                  code: "yes"
+
+          - linkId: overall-5
+            text: "5. Do you have concerns about your baby's behavior (for example, eating, sleeping)?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            extension:
+              - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                valueString: horizontal
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+              - valueCoding:
+                  code: "no"
+                  display: "No"
+
+          - linkId: overall-5-comment
+            text: "If yes, explain:"
+            type: text
+            enableWhen:
+              - question: overall-5
+                operator: "="
+                answerCoding:
+                  code: "yes"
+
+          - linkId: overall-6
+            text: "6. Does anything about your baby worry you?"
+            type: choice
+            required: true
+            itemControl:
+              coding:
+                - code: inline-choice
+            extension:
+              - url: https://emr-core.beda.software/StructureDefinition/inline-choice-direction
+                valueString: horizontal
+            answerOption:
+              - valueCoding:
+                  code: "yes"
+                  display: "Yes"
+              - valueCoding:
+                  code: "no"
+                  display: "No"
+
+          - linkId: overall-6-comment
+            text: "If yes, explain:"
+            type: text
+            enableWhen:
+              - question: overall-6
+                operator: "="
+                answerCoding:
+                  code: "yes"
+
+    # ============================================================
+    # STEP 7: RESULTS
+    # ============================================================
+    -   linkId: results
+        text: Results
+        type: group
+        item:
+          # --------------- SCORE INTERPRETATION LEGEND ---------------
+          - linkId: score-legend
+            type: display
+            itemControl:
+              coding:
+                - code: markdown
+            text: |
+              ### 2 Month ASQ-3 Information Summary (1 month 0 days through 2 months 30 days)
+              ### ASQ Score Interpretation
+
+              Score each item: **YES = 10**, **SOMETIMES = 5**, **NOT YET = 0**
+
+              **ASQ SCORE INTERPRETATION AND RECOMMENDATION FOR FOLLOW-UP:** You must consider total area scores, overall responses, and other considerations, such as opportunities to practice skills, to determine appropriate follow-up.
+
+              - 🟢 If the baby's total score is in the □ area, it is above the cutoff, and the baby's development appears to be on schedule.
+              - 🟡 If the baby's total score is in the ▒ area, it is close to the cutoff. Provide learning activities and monitor.
+              - 🔴 If the baby's total score is in the ■ area, it is below the cutoff. Further assessment with a professional may be needed.
+
+              The **Results** table below uses the same **🟢 / 🟡 / 🔴** labels for each domain.
+
+              **Transcription**
+
+              | Symbol | On the paper form | Here |
+              | --- | --- | --- |
+              | □ | White / open box — score above the cutoff | 🟢 On schedule |
+              | ▒ | Shaded / gray box — score close to the cutoff | 🟡 Close to cutoff |
+              | ■ | Filled / black box — score below the cutoff | 🔴 Below cutoff |
+
+              **Area Total Scores**
+
+              | Area | Below (■) | Close (▒) | On schedule (□) |
+              | --- | --- | --- | --- |
+              | Communication | 0–20 | 25–35 | 40–60 |
+              | Gross motor | 0–40 | 45 | 50–60 |
+              | Fine motor | 0–30 | 35 | 40–60 |
+              | Problem solving | 0–20 | 25–30 | 35–60 |
+              | Personal–social | 0–30 | 35–40 | 45–60 |
+
+          # --------------- SCORES TABLE ---------------
+          - linkId: scores-table
+            type: display
+            itemControl:
+              coding:
+                - code: markdown
+            variable:
+              - name: commTotal
+                language: text/fhirpath
+                expression: "(%resource.repeat(item).where(linkId.startsWith('comm-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('comm-')).answer.valueCoding.where(code='sometimes').count() * 5)"
+              - name: commLevel
+                language: text/fhirpath
+                expression: "iif(%commTotal < 22.77, 'below', iif(%commTotal < 40, 'close', 'above'))"
+              - name: gmTotal
+                language: text/fhirpath
+                expression: "(%resource.repeat(item).where(linkId.startsWith('gm-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('gm-')).answer.valueCoding.where(code='sometimes').count() * 5)"
+              - name: gmLevel
+                language: text/fhirpath
+                expression: "iif(%gmTotal < 41.84, 'below', iif(%gmTotal < 50, 'close', 'above'))"
+              - name: fmTotal
+                language: text/fhirpath
+                expression: "(%resource.repeat(item).where(linkId.startsWith('fm-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('fm-')).answer.valueCoding.where(code='sometimes').count() * 5)"
+              - name: fmLevel
+                language: text/fhirpath
+                expression: "iif(%fmTotal < 30.16, 'below', iif(%fmTotal < 40, 'close', 'above'))"
+              - name: psTotal
+                language: text/fhirpath
+                expression: "(%resource.repeat(item).where(linkId.startsWith('ps-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('ps-')).answer.valueCoding.where(code='sometimes').count() * 5)"
+              - name: psLevel
+                language: text/fhirpath
+                expression: "iif(%psTotal < 24.62, 'below', iif(%psTotal < 35, 'close', 'above'))"
+              - name: psoTotal
+                language: text/fhirpath
+                expression: "(%resource.repeat(item).where(linkId.startsWith('pso-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('pso-')).answer.valueCoding.where(code='sometimes').count() * 5)"
+              - name: psoLevel
+                language: text/fhirpath
+                expression: "iif(%psoTotal < 33.71, 'below', iif(%psoTotal < 45, 'close', 'above'))"
+            _text:
+              cqfExpression:
+                language: text/fhirpath
+                expression: >-
+                  '| Area | Cutoff | Total Score | Status |'
+                  & '\n| --- | --- | --- | --- |'
+                  & '\n| Communication | 22.77 | **' & %commTotal.toString() & '** | '
+                  & iif(%commLevel = 'below', '🔴 Below cutoff', iif(%commLevel = 'close', '🟡 Close to cutoff', '🟢 On schedule'))
+                  & ' |'
+                  & '\n| Gross Motor | 41.84 | **' & %gmTotal.toString() & '** | '
+                  & iif(%gmLevel = 'below', '🔴 Below cutoff', iif(%gmLevel = 'close', '🟡 Close to cutoff', '🟢 On schedule'))
+                  & ' |'
+                  & '\n| Fine Motor | 30.16 | **' & %fmTotal.toString() & '** | '
+                  & iif(%fmLevel = 'below', '🔴 Below cutoff', iif(%fmLevel = 'close', '🟡 Close to cutoff', '🟢 On schedule'))
+                  & ' |'
+                  & '\n| Problem Solving | 24.62 | **' & %psTotal.toString() & '** | '
+                  & iif(%psLevel = 'below', '🔴 Below cutoff', iif(%psLevel = 'close', '🟡 Close to cutoff', '🟢 On schedule'))
+                  & ' |'
+                  & '\n| Personal-Social | 33.71 | **' & %psoTotal.toString() & '** | '
+                  & iif(%psoLevel = 'below', '🔴 Below cutoff', iif(%psoLevel = 'close', '🟡 Close to cutoff', '🟢 On schedule'))
+                  & ' |'
+
+          # --------------- ALERT: BELOW CUTOFF ---------------
+          - linkId: below-cutoff-alert
+            type: display
+            itemControl:
+              coding:
+                - code: markdown
+            enableWhenExpression:
+              language: text/fhirpath
+              expression: >-
+                ((%resource.repeat(item).where(linkId.startsWith('comm-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('comm-')).answer.valueCoding.where(code='sometimes').count() * 5)) < 22.77
+                or
+                ((%resource.repeat(item).where(linkId.startsWith('gm-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('gm-')).answer.valueCoding.where(code='sometimes').count() * 5)) < 41.84
+                or
+                ((%resource.repeat(item).where(linkId.startsWith('fm-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('fm-')).answer.valueCoding.where(code='sometimes').count() * 5)) < 30.16
+                or
+                ((%resource.repeat(item).where(linkId.startsWith('ps-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('ps-')).answer.valueCoding.where(code='sometimes').count() * 5)) < 24.62
+                or
+                ((%resource.repeat(item).where(linkId.startsWith('pso-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('pso-')).answer.valueCoding.where(code='sometimes').count() * 5)) < 33.71
+            text: |
+              :::clinical-review-alert
+
+              ### **Further Assessment Needed**
+
+              One or more areas scored **below the cutoff**. Further assessment with a professional may be needed.
+
+              **Recommended Actions:**
+              - Refer to primary health care provider
+              - Consider referral to early intervention/early childhood special education
+              - Refer for hearing, vision, and/or behavioral screening if applicable
+
+              :::
+
+          # --------------- ALERT: CLOSE TO CUTOFF ---------------
+          - linkId: close-to-cutoff-alert
+            type: display
+            itemControl:
+              coding:
+                - code: markdown
+            enableWhenExpression:
+              language: text/fhirpath
+              expression: >-
+                (
+                  (
+                    ((%resource.repeat(item).where(linkId.startsWith('comm-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('comm-')).answer.valueCoding.where(code='sometimes').count() * 5)) >= 22.77
+                    and
+                    ((%resource.repeat(item).where(linkId.startsWith('comm-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('comm-')).answer.valueCoding.where(code='sometimes').count() * 5)) < 40
+                  )
+                  or
+                  (
+                    ((%resource.repeat(item).where(linkId.startsWith('gm-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('gm-')).answer.valueCoding.where(code='sometimes').count() * 5)) >= 41.84
+                    and
+                    ((%resource.repeat(item).where(linkId.startsWith('gm-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('gm-')).answer.valueCoding.where(code='sometimes').count() * 5)) < 50
+                  )
+                  or
+                  (
+                    ((%resource.repeat(item).where(linkId.startsWith('fm-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('fm-')).answer.valueCoding.where(code='sometimes').count() * 5)) >= 30.16
+                    and
+                    ((%resource.repeat(item).where(linkId.startsWith('fm-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('fm-')).answer.valueCoding.where(code='sometimes').count() * 5)) < 40
+                  )
+                  or
+                  (
+                    ((%resource.repeat(item).where(linkId.startsWith('ps-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('ps-')).answer.valueCoding.where(code='sometimes').count() * 5)) >= 24.62
+                    and
+                    ((%resource.repeat(item).where(linkId.startsWith('ps-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('ps-')).answer.valueCoding.where(code='sometimes').count() * 5)) < 35
+                  )
+                  or
+                  (
+                    ((%resource.repeat(item).where(linkId.startsWith('pso-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('pso-')).answer.valueCoding.where(code='sometimes').count() * 5)) >= 33.71
+                    and
+                    ((%resource.repeat(item).where(linkId.startsWith('pso-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('pso-')).answer.valueCoding.where(code='sometimes').count() * 5)) < 45
+                  )
+                )
+                and (
+                  ((%resource.repeat(item).where(linkId.startsWith('comm-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('comm-')).answer.valueCoding.where(code='sometimes').count() * 5)) >= 22.77
+                  and
+                  ((%resource.repeat(item).where(linkId.startsWith('gm-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('gm-')).answer.valueCoding.where(code='sometimes').count() * 5)) >= 41.84
+                  and
+                  ((%resource.repeat(item).where(linkId.startsWith('fm-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('fm-')).answer.valueCoding.where(code='sometimes').count() * 5)) >= 30.16
+                  and
+                  ((%resource.repeat(item).where(linkId.startsWith('ps-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('ps-')).answer.valueCoding.where(code='sometimes').count() * 5)) >= 24.62
+                  and
+                  ((%resource.repeat(item).where(linkId.startsWith('pso-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('pso-')).answer.valueCoding.where(code='sometimes').count() * 5)) >= 33.71
+                )
+            text: |
+              :::increased-surveillance-alert
+
+              ### **Monitoring Recommended**
+
+              One or more areas scored **close to the cutoff**. Provide learning activities and monitor.
+
+              **Recommended Actions:**
+              - Provide activities and rescreen in 2-4 months
+              - Share results with primary health care provider
+
+              :::
+
+          # --------------- ALERT: ON SCHEDULE ---------------
+          - linkId: on-schedule-alert
+            type: display
+            itemControl:
+              coding:
+                - code: markdown
+            enableWhenExpression:
+              language: text/fhirpath
+              expression: >-
+                ((%resource.repeat(item).where(linkId.startsWith('comm-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('comm-')).answer.valueCoding.where(code='sometimes').count() * 5)) >= 40
+                and
+                ((%resource.repeat(item).where(linkId.startsWith('gm-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('gm-')).answer.valueCoding.where(code='sometimes').count() * 5)) >= 50
+                and
+                ((%resource.repeat(item).where(linkId.startsWith('fm-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('fm-')).answer.valueCoding.where(code='sometimes').count() * 5)) >= 40
+                and
+                ((%resource.repeat(item).where(linkId.startsWith('ps-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('ps-')).answer.valueCoding.where(code='sometimes').count() * 5)) >= 35
+                and
+                ((%resource.repeat(item).where(linkId.startsWith('pso-')).answer.valueCoding.where(code='yes').count() * 10) + (%resource.repeat(item).where(linkId.startsWith('pso-')).answer.valueCoding.where(code='sometimes').count() * 5)) >= 45
+            text: |
+              :::info-alert
+
+              ### **Development On Schedule**
+
+              All areas scored **above the cutoff**. Baby's development appears to be on schedule.
+
+              **Recommended Actions:**
+              - Continue regular developmental monitoring
+              - No further action needed at this time
+
+              :::
+
+          # --------------- OVERALL RESPONSES ---------------
+          - linkId: overall-responses-header
+            type: display
+            itemControl:
+              coding:
+                - code: markdown
+            text: "### Transfer Overall Responses"
+
+          - linkId: overall-responses-table
+            type: display
+            itemControl:
+              coding:
+                - code: markdown
+            _text:
+              cqfExpression:
+                language: text/fhirpath
+                expression: >-
+                  '| Question | Response | Follow-up |'
+                  & '\n| --- | --- | --- |'
+                  & '\n| Passed newborn hearing test? | '
+                  & iif(%resource.repeat(item).where(linkId='overall-1').answer.valueCoding.code.first() = 'yes', 'Yes', iif(%resource.repeat(item).where(linkId='overall-1').answer.valueCoding.code.first() = 'no', '**NO**', '—'))
+                  & ' | '
+                  & iif(%resource.repeat(item).where(linkId='overall-1').answer.valueCoding.code.first() = 'no', '⚠️ Required', '—')
+                  & ' |'
+                  & '\n| Moves both hands and legs equally? | '
+                  & iif(%resource.repeat(item).where(linkId='overall-2').answer.valueCoding.code.first() = 'yes', 'Yes', iif(%resource.repeat(item).where(linkId='overall-2').answer.valueCoding.code.first() = 'no', '**NO**', '—'))
+                  & ' | '
+                  & iif(%resource.repeat(item).where(linkId='overall-2').answer.valueCoding.code.first() = 'no', '⚠️ Required', '—')
+                  & ' |'
+                  & '\n| Family history of hearing/vision problems? | '
+                  & iif(%resource.repeat(item).where(linkId='overall-3').answer.valueCoding.code.first() = 'no', 'No', iif(%resource.repeat(item).where(linkId='overall-3').answer.valueCoding.code.first() = 'yes', '**YES**', '—'))
+                  & ' | '
+                  & iif(%resource.repeat(item).where(linkId='overall-3').answer.valueCoding.code.first() = 'yes', '⚠️ Required', '—')
+                  & ' |'
+                  & '\n| Any medical problems? | '
+                  & iif(%resource.repeat(item).where(linkId='overall-4').answer.valueCoding.code.first() = 'no', 'No', iif(%resource.repeat(item).where(linkId='overall-4').answer.valueCoding.code.first() = 'yes', '**YES**', '—'))
+                  & ' | '
+                  & iif(%resource.repeat(item).where(linkId='overall-4').answer.valueCoding.code.first() = 'yes', '⚠️ Required', '—')
+                  & ' |'
+                  & '\n| Concerns about behavior? | '
+                  & iif(%resource.repeat(item).where(linkId='overall-5').answer.valueCoding.code.first() = 'no', 'No', iif(%resource.repeat(item).where(linkId='overall-5').answer.valueCoding.code.first() = 'yes', '**YES**', '—'))
+                  & ' | '
+                  & iif(%resource.repeat(item).where(linkId='overall-5').answer.valueCoding.code.first() = 'yes', '⚠️ Required', '—')
+                  & ' |'
+                  & '\n| Other concerns? | '
+                  & iif(%resource.repeat(item).where(linkId='overall-6').answer.valueCoding.code.first() = 'no', 'No', iif(%resource.repeat(item).where(linkId='overall-6').answer.valueCoding.code.first() = 'yes', '**YES**', '—'))
+                  & ' | '
+                  & iif(%resource.repeat(item).where(linkId='overall-6').answer.valueCoding.code.first() = 'yes', '⚠️ Required', '—')
+                  & ' |'
+
+          # --------------- FOLLOW-UP ACTION ---------------
+          - linkId: follow-up-header
+            type: display
+            itemControl:
+              coding:
+                - code: markdown
+            text: "### Follow-up Action Taken"
+
+          - linkId: follow-up-action
+            text: "Select all that apply:"
+            type: choice
+            repeats: true
+            itemControl:
+              coding:
+                - code: check-box
+            answerOption:
+              - valueCoding:
+                  code: "rescreen"
+                  display: "Provide activities and rescreen"
+              - valueCoding:
+                  code: "share-results"
+                  display: "Share results with primary health care provider"
+              - valueCoding:
+                  code: "refer-screening"
+                  display: "Refer for hearing, vision, and/or behavioral screening"
+              - valueCoding:
+                  code: "refer-provider"
+                  display: "Refer to primary health care provider or other community agency"
+              - valueCoding:
+                  code: "refer-early-intervention"
+                  display: "Refer to early intervention/early childhood special education"
+              - valueCoding:
+                  code: "no-action"
+                  display: "No further action taken at this time"
+              - valueCoding:
+                  code: "other"
+                  display: "Other"
+
+          - linkId: follow-up-other
+            text: "Other (specify):"
+            type: text
+            enableWhen:
+              - question: follow-up-action
+                operator: "="
+                answerCoding:
+                  code: "other"
+
+          - linkId: rescreen-months
+            text: "Rescreen in (months):"
+            type: integer
+            enableWhen:
+              - question: follow-up-action
+                operator: "="
+                answerCoding:
+                  code: "rescreen"
+

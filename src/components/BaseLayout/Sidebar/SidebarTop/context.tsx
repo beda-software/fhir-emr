@@ -21,7 +21,7 @@ interface Layout {
 
 export type MenuLayoutValue = () => Array<Layout>;
 
-const defaultMenuLayout: MenuLayoutValue = () =>
+export const defaultMenuLayout: MenuLayoutValue = () =>
     matchCurrentUserRole({
         [Role.Admin]: () => [
             { label: t`Invoices`, path: '/invoices', icon: <InvoicesIcon /> },
@@ -30,12 +30,14 @@ const defaultMenuLayout: MenuLayoutValue = () =>
             { label: t`Patients`, path: '/patients', icon: <PatientsIcon /> },
             { label: t`Practitioners`, path: '/practitioners', icon: <PractitionersIcon /> },
             { label: t`Questionnaires`, path: '/questionnaires', icon: <QuestionnairesIcon /> },
+            { label: t`Forms Library`, path: '/forms', icon: <QuestionnairesIcon /> },
             { label: t`Magic Search`, path: '/magic-search', icon: <MagicSearchIcon /> },
         ],
         [Role.Practitioner]: () => [
             { label: t`Encounters`, path: '/encounters', icon: <EncountersIcon /> },
             { label: t`Patients`, path: '/patients', icon: <PatientsIcon /> },
             { label: t`Questionnaires`, path: '/questionnaires', icon: <QuestionnairesIcon /> },
+            { label: t`Forms Library`, path: '/forms', icon: <QuestionnairesIcon /> },
         ],
         [Role.Patient]: (patient: Patient) => [
             { label: t`Patient`, path: `/patients/${patient!.id}`, icon: <PatientsIcon /> },

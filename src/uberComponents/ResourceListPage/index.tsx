@@ -1,9 +1,10 @@
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Trans } from '@lingui/macro';
-import { Empty } from 'antd';
+import { Empty, Flex } from 'antd';
 import type { ColumnsType, FilterValue, SorterResult, TablePaginationConfig } from 'antd/es/table/interface';
 import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 import React, { useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { formatError } from '@beda.software/fhir-react';
 import { isFailure, isLoading, isSuccess, RemoteData } from '@beda.software/remote-data';
@@ -34,7 +35,7 @@ import {
 import { BatchActions } from './BatchActions';
 import { useResourceListPage, useTableSorter } from './hooks';
 import { S } from './styles';
-import { ReportColumn, ResourceListProps, TableManager } from './types';
+import { ReportColumn, ResourceListProps, TableManager, TableProps } from './types';
 
 export { customAction, navigationAction, questionnaireAction } from './actions';
 
@@ -70,9 +71,15 @@ export function ResourceListPage<R extends Resource>({
     getTableColumns,
     defaultLaunchContext,
     getReportColumns,
-}: ResourceListPageProps<R>) {
+    tableProps,
+    uniqueOrderSortSearchParam,
+}: ResourceListPageProps<R> & { tableProps?: TableProps<R> }) {
     const allFilters = getFilters?.() ?? [];
     const allSorters = useMemo(() => getSorters?.() ?? [], [getSorters]);
+    const navigate = useNavigate();
+    const goBack = useCallback(() => {
+        navigate(-1);
+    }, [navigate]);
 
     const { columnsFilterValues, onChangeColumnFilter, onResetFilters } = useSearchBar({
         columns: allFilters ?? [],
@@ -84,11 +91,18 @@ export function ResourceListPage<R extends Resource>({
 
     const { sortSearchParam, setCurrentSorter, currentSorter } = useTableSorter(allSorters, defaultSearchParams);
 
-    const { recordResponse, reload, pagination, selectedRowKeys, setSelectedRowKeys, selectedResourcesBundle, goBack } =
-        useResourceListPage(resourceType, extractPrimaryResources, extractChildrenResources, columnsFilterValues, {
-            ...defaultSearchParams,
-            _sort: sortSearchParam,
-        });
+    const { recordResponse, reload, pagination, selectedRowKeys, setSelectedRowKeys, selectedResourcesBundle } =
+        useResourceListPage(
+            resourceType,
+            extractPrimaryResources,
+            extractChildrenResources,
+            columnsFilterValues,
+            {
+                ...defaultSearchParams,
+                _sort: sortSearchParam,
+            },
+            uniqueOrderSortSearchParam,
+        );
 
     const handleTableChange = useCallback(
         (
@@ -132,25 +146,29 @@ export function ResourceListPage<R extends Resource>({
             title={title}
             maxWidth={maxWidth}
             titleLeftElement={backButtonVisible ? <ArrowLeftOutlined onClick={goBack} /> : null}
-            titleRightElement={headerActions.map((action, index) => {
-                if (isQuestionnaireAction(action)) {
-                    return (
-                        <React.Fragment key={index}>
-                            <HeaderQuestionnaireAction
-                                action={action}
-                                reload={reload}
-                                defaultLaunchContext={defaultLaunchContext ?? []}
-                            />
-                        </React.Fragment>
-                    );
-                } else if (isNavigationAction(action)) {
-                    return (
-                        <React.Fragment key={index}>
-                            <HeaderNavigationAction action={action} />
-                        </React.Fragment>
-                    );
-                }
-            })}
+            titleRightElement={
+                <Flex gap={16}>
+                    {headerActions.map((action, index) => {
+                        if (isQuestionnaireAction(action)) {
+                            return (
+                                <React.Fragment key={index}>
+                                    <HeaderQuestionnaireAction
+                                        action={action}
+                                        reload={reload}
+                                        defaultLaunchContext={defaultLaunchContext ?? []}
+                                    />
+                                </React.Fragment>
+                            );
+                        } else if (isNavigationAction(action)) {
+                            return (
+                                <React.Fragment key={index}>
+                                    <HeaderNavigationAction action={action} />
+                                </React.Fragment>
+                            );
+                        }
+                    })}
+                </Flex>
+            }
             headerContent={
                 columnsFilterValues.length ? (
                     <SearchBar
@@ -210,6 +228,7 @@ export function ResourceListPage<R extends Resource>({
                         : []),
                 ]}
                 loading={isLoading(recordResponse) && { indicator: SpinIndicator }}
+                {...tableProps}
             />
         </PageContainer>
     );

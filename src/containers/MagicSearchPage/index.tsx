@@ -1,16 +1,16 @@
 import { SearchOutlined } from '@ant-design/icons';
 import { t, Trans } from '@lingui/macro';
-import { Input, Button, Space } from 'antd';
+import { Button, Input, Radio } from 'antd';
 import type { ColumnsType } from 'antd/es/table/interface';
 import { Resource } from 'fhir/r4b';
 import fhirpath_r4_model from 'fhirpath/fhir-context/r4';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-import { formatError, RenderRemoteData } from '@beda.software/fhir-react';
-import { isLoading, loading, notAsked, RemoteData } from '@beda.software/remote-data';
+import { formatError, RenderRemoteData, useService } from '@beda.software/fhir-react';
+import { isLoading, mapSuccess, success } from '@beda.software/remote-data';
 
-import { performMagicSearch, MagicSearchResponse, TableColumnConfig } from 'src/services';
+import { MagicSearchResponse, performMagicSearch, TableColumnConfig } from 'src/services';
 import { RecordType } from 'src/uberComponents/ResourceListPage/types.ts';
 import { ResourceListPageContent } from 'src/uberComponents/ResourceListPageContent';
 import { compileAsFirst, formatHumanDate, renderHumanName } from 'src/utils';
@@ -58,15 +58,51 @@ function buildDynamicColumns<R extends Resource>(columnConfigs: TableColumnConfi
     });
 }
 
+interface MagicSearchUIResponse {
+    result: MagicSearchResponse | null;
+}
+
 export function MagicSearchPage() {
-    const [response, setResponse] = useState<RemoteData<MagicSearchResponse>>(notAsked);
     const [searchQuery, setSearchQuery] = useState('');
+    const [mcpServer, setMcpServer] = useState<'tx-tools' | 'semmatch'>('tx-tools');
+
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const urlParams = new URLSearchParams(location.search);
+    const urlPrompt = urlParams.get('prompt') ?? '';
+    const urlMcpServer = urlParams.get('mcpServer') === 'semmatch' ? 'semmatch' : 'tx-tools';
+
+    const [response] = useService<MagicSearchUIResponse>(async () => {
+        setSearchQuery(urlPrompt);
+        setMcpServer(urlMcpServer);
+
+        if (!urlPrompt) {
+            return Promise.resolve(success({ result: null }));
+        }
+
+        return mapSuccess(await performMagicSearch(urlPrompt, urlMcpServer), (data) => ({
+            result: data,
+        }));
+    }, [urlPrompt, urlMcpServer]);
+
+    const isDataLoading = isLoading(response);
+
+    const performSearch = (prompt: string, server: 'tx-tools' | 'semmatch') => {
+        const params = new URLSearchParams();
+        params.set('prompt', prompt);
+        params.set('mcpServer', server);
+        navigate({ pathname: location.pathname, search: params.toString() }, { replace: false });
+
+        setSearchQuery(prompt);
+        setMcpServer(server);
+    };
 
     const handleSearch = async () => {
-        setResponse(loading);
-
-        const data = await performMagicSearch(searchQuery);
-        setResponse(data);
+        if (!searchQuery.trim()) {
+            return;
+        }
+        performSearch(searchQuery.trim(), mcpServer);
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -75,31 +111,46 @@ export function MagicSearchPage() {
         }
     };
 
-    const isDataLoading = isLoading(response);
-
     return (
         <div>
-            <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
-                <Space.Compact style={{ width: '100%' }}>
-                    <Input
-                        placeholder={t`Enter your search query`}
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onKeyPress={handleKeyPress}
-                        size="large"
-                        disabled={isDataLoading}
-                    />
-                    <Button
-                        type="primary"
-                        icon={<SearchOutlined />}
-                        onClick={handleSearch}
-                        size="large"
-                        disabled={!searchQuery.trim() || isDataLoading}
-                        loading={isDataLoading}
-                    >
-                        {isDataLoading ? <Trans>Searching...</Trans> : <Trans>Search</Trans>}
-                    </Button>
-                </Space.Compact>
+            <div style={{ padding: '20px', maxWidth: '900px', margin: '0 auto' }}>
+                <div style={{ display: 'flex', gap: 15, alignItems: 'center' }}>
+                    <div style={{ flex: 1 }}>
+                        <Input
+                            placeholder={t`Enter your search query`}
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyPress={handleKeyPress}
+                            size="large"
+                            disabled={isDataLoading}
+                        />
+                    </div>
+                    <div>
+                        <Radio.Group
+                            value={mcpServer}
+                            onChange={(e) => setMcpServer(e.target.value)}
+                            optionType="button"
+                            buttonStyle="solid"
+                            size="large"
+                            disabled={isDataLoading}
+                        >
+                            <Radio.Button value="tx-tools">tx-tools</Radio.Button>
+                            <Radio.Button value="semmatch">semmatch</Radio.Button>
+                        </Radio.Group>
+                    </div>
+                    <div>
+                        <Button
+                            type="primary"
+                            icon={<SearchOutlined />}
+                            onClick={handleSearch}
+                            size="large"
+                            disabled={!searchQuery.trim() || isDataLoading}
+                            loading={isDataLoading}
+                        >
+                            {isDataLoading ? <Trans>Searching...</Trans> : <Trans>Search</Trans>}
+                        </Button>
+                    </div>
+                </div>
             </div>
 
             <RenderRemoteData
@@ -111,17 +162,21 @@ export function MagicSearchPage() {
                     </div>
                 )}
             >
-                {(data) => {
+                {({ result }) => {
+                    if (!result) {
+                        return <div></div>;
+                    }
+
                     const getTableColumns = (): ColumnsType<RecordType<Resource>> =>
-                        buildDynamicColumns<Resource>(data.tableColumns);
+                        buildDynamicColumns<Resource>(result.tableColumns);
 
                     return (
                         <ResourceListPageContent
-                            resourceType={data.resourceType as any}
+                            resourceType={result.resourceType as any}
                             searchParams={{
                                 _sort: '-_lastUpdated,_id',
                                 _count: 10,
-                                ...data.searchParams,
+                                ...result.searchParams,
                             }}
                             getTableColumns={getTableColumns}
                         />

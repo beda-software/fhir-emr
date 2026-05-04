@@ -1,5 +1,5 @@
 resourceType: Questionnaire
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/place-referral
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/place-referral
 meta:
     profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire

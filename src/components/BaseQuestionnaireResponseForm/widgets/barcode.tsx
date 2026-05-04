@@ -9,7 +9,7 @@ export function Barcode({ parentPath, questionItem }: QuestionItemProps) {
     const fieldName = [...parentPath, linkId, 0, 'value', 'string'];
     const { value, formItem } = useFieldController<string>(fieldName, questionItem);
     return (
-        <Form.Item {...formItem} data-testid={linkId}>
+        <Form.Item {...formItem} data-testid={linkId} data-linkid={linkId}>
             <ReactBarcode value={value ?? ''} />
         </Form.Item>
     );

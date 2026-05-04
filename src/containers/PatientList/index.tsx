@@ -6,28 +6,15 @@ import type { Resource } from 'fhir/r4b';
 
 import { parseFHIRReference, SearchParams } from '@beda.software/fhir-react';
 
-import { SearchBarColumn, SearchBarColumnType } from 'src/components/SearchBar/types';
+import { SearchBarColumn } from 'src/components/SearchBar/types';
 import { ResourceListPage, navigationAction, questionnaireAction } from 'src/uberComponents/ResourceListPage';
-import { RecordType, TableManager } from 'src/uberComponents/ResourceListPage/types';
+import { RecordType } from 'src/uberComponents/ResourceListPage/types';
 import { compileAsFirst } from 'src/utils';
 import { formatHumanDate } from 'src/utils/date';
 import { renderHumanName } from 'src/utils/fhir';
 import { matchCurrentUserRole, Role } from 'src/utils/role';
 
-import { getPatientSearchParamsForPractitioner } from './utils';
-
-// Shared helpers to remove duplication
-const makeFilters = (searchParam: string): SearchBarColumn[] => [
-    {
-        id: 'name',
-        searchParam,
-        type: SearchBarColumnType.SPLITSTRING,
-        placeholder: t`Find patient`,
-        placement: ['search-bar', 'table'],
-        searchBehavior: 'AND',
-        separator: ' ',
-    },
-];
+import { getPatientSearchParamsForPractitioner, makePatientListFilters } from './utils';
 
 const getHeaderActions = () => [
     questionnaireAction(<Trans>Add patient</Trans>, 'patient-create', { icon: <PlusOutlined /> }),
@@ -92,14 +79,19 @@ function buildColumns<R extends Resource>(
 }
 
 function PatientListConsent(props: { searchParams: SearchParams }) {
-    const getFilters = (): SearchBarColumn[] => makeFilters('patient:Patient.name:contains');
-    const getTableColumns = (_manager: TableManager): ColumnsType<RecordType<Consent>> =>
+    const getFilters = (): SearchBarColumn[] =>
+        makePatientListFilters(
+            'patient:Patient.name:contains',
+            'patient:Patient._has:QuestionnaireResponse:subject:questionnaire',
+        );
+    const getTableColumns = (): ColumnsType<RecordType<Consent>> =>
         buildColumns<Consent>((record) => getPatientFromConsent(record.resource, record.bundle));
 
-    const getRecordActions = (record: RecordType<Consent>, _manager: TableManager) => {
+    const getRecordActions = (record: RecordType<Consent>) => {
         const patient = getPatientFromConsent(record.resource, record.bundle);
         return [
-            navigationAction(<Trans>Open</Trans>, `/patients/${patient?.id}`),
+            navigationAction(<Trans>Chart</Trans>, `/patients/${patient?.id}`),
+            navigationAction(<Trans>Forms</Trans>, `/patients/${patient?.id}/forms`),
             questionnaireAction(<Trans>Edit</Trans>, 'patient-edit'),
         ];
     };
@@ -122,12 +114,13 @@ function PatientListConsent(props: { searchParams: SearchParams }) {
 }
 
 function PatientListDefault(props: { searchParams: SearchParams }) {
-    const getFilters = (): SearchBarColumn[] => makeFilters('name:contains');
-    const getTableColumns = (_manager: TableManager): ColumnsType<RecordType<Patient>> =>
-        buildColumns<Patient>((record) => record.resource);
+    const getFilters = (): SearchBarColumn[] =>
+        makePatientListFilters('name:contains', '_has:QuestionnaireResponse:subject:questionnaire');
+    const getTableColumns = (): ColumnsType<RecordType<Patient>> => buildColumns<Patient>((record) => record.resource);
 
-    const getRecordActions = (record: RecordType<Patient>, _manager: TableManager) => [
-        navigationAction(<Trans>Open</Trans>, `/patients/${record.resource.id}`),
+    const getRecordActions = (record: RecordType<Patient>) => [
+        navigationAction(<Trans>Chart</Trans>, `/patients/${record.resource.id}`),
+        navigationAction(<Trans>Forms</Trans>, `/patients/${record.resource.id}/forms`),
         questionnaireAction(<Trans>Edit</Trans>, 'patient-edit'),
     ];
 
@@ -168,7 +161,7 @@ export function PatientList() {
         [Role.Admin]: () => {
             return false;
         },
-        [Role.Practitioner]: (practitioner) => {
+        [Role.Practitioner]: () => {
             return true;
         },
         [Role.Receptionist]: () => {

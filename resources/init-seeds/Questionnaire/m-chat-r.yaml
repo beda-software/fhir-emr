@@ -1,0 +1,379 @@
+resourceType: Questionnaire
+id: m-chat-r
+url: m-chat-r
+name: m-chat-r
+title: M-CHAT-R Autism Screening
+status: active
+description: >
+  Modified Checklist for Autism in Toddlers (Revised). Autism screening tool for
+  children aged 16-30 months. To be filled by parent or caregiver.
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+subjectType:
+  - Patient
+useContext:
+  - code:
+      code: questionnaire-type
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+    value:
+      CodeableConcept:
+        coding:
+          - code: form-library
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+item:
+- linkId: screening
+  type: group
+  itemControl:
+    coding:
+    - code: group-voice
+  item:
+  - linkId: autism-q1
+    text: If you point at something across the room, does your child look at it?
+    type: choice
+    required: true
+    helpText: E.g. if you point at a toy or an animal, does your child look at the
+      toy or animal?
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+  - linkId: autism-q2
+    text: Does your child consistently respond to sounds and voices?
+    type: choice
+    required: true
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+  - linkId: autism-q3
+    text: Does your child play pretend or make-believe?
+    type: choice
+    required: true
+    helpText: E.g. pretend to drink from an empty cup, pretend to talk on a phone,
+      or pretend to feed a doll or stuffed animal?
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+  - linkId: autism-q4
+    text: Does your child like climbing on things?
+    type: choice
+    required: true
+    helpText: E.g. furniture, playground equipment, or stairs
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+  - linkId: autism-q5
+    text: Does your child use typical hand and finger movements near their face?
+    type: choice
+    required: true
+    helpText: E.g. typical behavior means no repetitive finger wiggling near the
+      eyes or unusual hand movements close to the face.
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+  - linkId: autism-q6
+    text: Does your child point with one finger to ask for something or to get help?
+    type: choice
+    required: true
+    helpText: E.g. pointing to a snack or toy that is out of reach
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+  - linkId: autism-q7
+    text: Does your child point with one finger to show you something interesting?
+    type: choice
+    required: true
+    helpText: E.g. pointing to an airplane in the sky or a big truck in the road
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+  - linkId: autism-q8
+    text: Is your child interested in other children?
+    type: choice
+    required: true
+    helpText: E.g. does your child watch other children, smile at them, or go to them?
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+  - linkId: autism-q9
+    text: Does your child show you things by bringing them to you or holding them up
+      for you to see - not to get help, but just to share?
+    type: choice
+    required: true
+    helpText: E.g. showing you a flower, a stuffed animal, or a toy truck
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+  - linkId: autism-q10
+    text: Does your child respond when you call his or her name?
+    type: choice
+    required: true
+    helpText: E.g. does he or she look up, talk or babble, or stop what he or she is
+      doing when you call his or her name?
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+  - linkId: autism-q11
+    text: When you smile at your child, does he or she smile back at you?
+    type: choice
+    required: true
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+  - linkId: autism-q12
+    text: Does your child tolerate everyday noises?
+    type: choice
+    required: true
+    helpText: E.g. vacuum cleaner, loud music
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+  - linkId: autism-q13
+    text: Does your child walk?
+    type: choice
+    required: true
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+  - linkId: autism-q14
+    text: Does your child look you in the eye when you are talking to him or her,
+      playing with him or her, or dressing him or her?
+    type: choice
+    required: true
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+  - linkId: autism-q15
+    text: Does your child try to copy what you do?
+    type: choice
+    required: true
+    helpText: E.g. wave bye-bye, clap, or make a funny noise when you do
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+  - linkId: autism-q16
+    text: If you turn your head to look at something, does your child look around to
+      see what you are looking at?
+    type: choice
+    required: true
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+  - linkId: autism-q17
+    text: Does your child try to get you to watch him or her?
+    type: choice
+    required: true
+    helpText: E.g. does your child look at you for praise, or say “look” or “watch me”?
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+  - linkId: autism-q18
+    text: Does your child understand when you tell him or her to do something?
+    type: choice
+    required: true
+    helpText: E.g. if you don't point, can your child understand “put the book on
+      the chair” or “bring me the blanket”?
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+  - linkId: autism-q19
+    text: If something new happens, does your child look at your face to see how you
+      feel about it?
+    type: choice
+    required: true
+    helpText: E.g. if he or she hears a strange or funny noise, or sees a new toy,
+      will he or she look at your face?
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+  - linkId: autism-q20
+    text: Does your child like movement activities?
+    type: choice
+    required: true
+    helpText: E.g. being swung or bounced on your knee
+    itemControl:
+      coding:
+        - code: inline-choice
+    answerOption:
+      - valueCoding:
+          code: "yes"
+          display: "Yes"
+      - valueCoding:
+          code: "no"
+          display: "No"
+- linkId: total-score
+  text: Total Score
+  type: integer
+  readOnly: true
+  calculatedExpression:
+    language: text/fhirpath
+    expression: |
+      %QuestionnaireResponse.item.where(linkId='screening').item.answer.valueCoding.where(code='no').count()
+- linkId: risk-category
+  text: Risk Category
+  type: choice
+  readOnly: true
+  calculatedExpression:
+    language: text/fhirpath
+    expression: >
+      iif(
+        %QuestionnaireResponse.item.where(linkId='screening').item.answer.valueCoding.where(code='no').count() <= 2,
+        'Low risk',
+        iif(
+          %QuestionnaireResponse.item.where(linkId='screening').item.answer.valueCoding.where(code='no').count() <= 7,
+          'Medium risk',
+          'High risk'
+        )
+      )
+- linkId: action-recommendation
+  text: Recommended Action
+  type: string
+  readOnly: true
+  calculatedExpression:
+    language: text/fhirpath
+    expression: >
+      iif(
+        %QuestionnaireResponse.item.where(linkId='screening').item.answer.valueCoding.where(code='no').count() <= 2,
+        'Reassure and provide regular follow-up.',
+        iif(
+          %QuestionnaireResponse.item.where(linkId='screening').item.answer.valueCoding.where(code='no').count() <= 7,
+          'Refer to Neurodevelopmental Clinic.',
+          'Refer to Autism Multidisciplinary Team Diagnostic Clinic for further evaluation.'
+        )
+      )

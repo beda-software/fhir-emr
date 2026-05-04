@@ -1,0 +1,36 @@
+resourceType: ViewDefinition
+id: hmb-screening-responses
+name: hmb_screening_responses
+status: active
+resource: QuestionnaireResponse
+description: >-
+  One row per Heavy Menstrual Bleeding screening QuestionnaireResponse,
+  extracting the signals needed by the HMB diagnostic dashboard.
+where:
+  - path: questionnaire = 'heavy-menstrual-bleeding-screening'
+select:
+  - column:
+      - name: id
+        path: getResourceKey()
+        type: string
+      - name: patient_id
+        path: subject.getReferenceKey(Patient)
+        type: string
+      - name: authored
+        path: authored
+        type: dateTime
+      - name: flow
+        path: item.item.where(linkId = 'menstrual-bleeding-flow').answer.value.ofType(Coding).code.first()
+        type: code
+      - name: pain_severity
+        path: item.item.where(linkId = 'menstrual-pain-severity').answer.value.ofType(Coding).code.first()
+        type: code
+      - name: pain_score
+        path: item.item.where(linkId = 'menstrual-pain-score').answer.value.ofType(integer).first()
+        type: integer
+      - name: impact_score
+        path: item.item.where(linkId = 'activity-impact-score').answer.value.ofType(integer).first()
+        type: integer
+      - name: intensity
+        path: item.item.where(linkId = 'intensity-menstrual-bleeding').answer.value.ofType(integer).first()
+        type: integer

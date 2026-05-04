@@ -6,42 +6,51 @@ import {
 } from 'sdc-qrf';
 
 import {
+    MarkdownCard,
+    MarkdownDisplay,
+} from 'src/components/BaseQuestionnaireResponseForm/readonly-widgets/MarkdownRender';
+import { GroupTable } from 'src/components/BaseQuestionnaireResponseForm/widgets/GroupTable';
+import { TextWithMacroFill } from 'src/components/TextWithMacroFill';
+
+import {
+    BloodPressure,
     Col,
+    Grid,
     Group,
+    Gtable,
     InlineChoice,
-    TimeRangePickerControl,
+    MDEditorControl,
+    MainCard,
     QuestionBoolean,
     QuestionChoice,
     QuestionDateTime,
     QuestionDecimal,
+    QuestionEmail,
+    QuestionInputInsideText,
     QuestionInteger,
     QuestionPhone,
+    QuestionQuantity,
     QuestionSlider,
     QuestionSolidRadio,
     QuestionString,
     QuestionText,
-    QuestionInputInsideText,
     Row,
-    BloodPressure,
-    Gtable,
-    QuestionQuantity,
-    Grid,
-    MDEditorControl,
     Section,
     SectionWithDivider,
-    MainCard,
     SubCard,
-    QuestionEmail,
+    TimeRangePickerControl,
 } from './widgets';
 import { AudioRecorderUploader } from './widgets/AudioRecorderUploader';
 import { Barcode } from './widgets/barcode';
 import { Display } from './widgets/display';
+import { EditableGroup } from './widgets/EditableGroup';
+import { GroupTabs } from './widgets/GroupTabs';
+import { GroupVoice } from './widgets/GroupVoice';
 import { GroupWizard, GroupWizardVertical, GroupWizardWithTooltips } from './widgets/GroupWizard';
+import { InlineReference } from './widgets/inline-reference';
 import { PasswordInput } from './widgets/PasswordInput';
 import { QuestionReference } from './widgets/reference';
-import { ReferenceRadioButton } from './widgets/ReferenceRadioButton';
 import { UploadFileControl } from './widgets/UploadFileControl';
-import { TextWithMacroFill } from '../TextWithMacroFill';
 
 export const itemComponents: QuestionItemComponentMapping = {
     text: QuestionText,
@@ -69,14 +78,18 @@ export const itemControlComponents: ItemControlQuestionItemComponentMapping = {
     slider: QuestionSlider,
     'solid-radio-button': QuestionSolidRadio,
     'inline-choice': InlineChoice,
+    'inline-reference': InlineReference,
     'text-with-macro': TextWithMacroFill,
     'radio-button': InlineChoice,
-    'reference-radio-button': ReferenceRadioButton,
     'check-box': InlineChoice,
     'input-inside-text': QuestionInputInsideText,
     'markdown-editor': MDEditorControl,
     'audio-recorder-uploader': AudioRecorderUploader,
     barcode: Barcode,
+    markdown: MarkdownDisplay,
+    'markdown-card': MarkdownCard,
+    // reference-radio-button is deprecated, use inline-reference instead
+    'reference-radio-button': InlineReference,
 };
 
 export const groupControlComponents: ItemControlGroupItemComponentMapping = {
@@ -95,4 +108,8 @@ export const groupControlComponents: ItemControlGroupItemComponentMapping = {
     'wizard-with-tooltips': GroupWizardWithTooltips,
     'wizard-navigation-group': GroupWizard,
     'wizard-vertical': GroupWizardVertical,
+    'group-tabs': GroupTabs,
+    'group-table': GroupTable,
+    'editable-group': EditableGroup,
+    'group-voice': GroupVoice,
 };

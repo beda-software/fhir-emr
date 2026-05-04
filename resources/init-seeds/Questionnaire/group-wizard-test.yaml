@@ -7,7 +7,7 @@ meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
 url: >-
-  https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/group-wizard-test
+  https://aidbox.emr.beda.software/fhir/Questionnaire/group-wizard-test
 item:
   - type: group
     linkId: wizard

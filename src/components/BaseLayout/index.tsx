@@ -1,10 +1,11 @@
 import { Layout } from 'antd';
 import classNames from 'classnames';
-import { ReactNode } from 'react';
+import { ReactNode, useContext } from 'react';
+
+import { FooterLayout } from 'src/components/BaseLayout/Footer/context';
 
 import s from './BaseLayout.module.scss';
 import { S } from './BaseLayout.styles';
-import { AppFooter } from './Footer';
 import { AppSidebar } from './Sidebar';
 import { AppTabBar } from './TabBar';
 
@@ -14,25 +15,29 @@ interface Props {
 }
 
 export function BaseLayout({ children, style }: Props) {
+    const footer = useContext(FooterLayout);
+
     return (
         <S.Container style={style}>
             <AppSidebar />
             <AppTabBar />
             <Layout className={s.content}>
                 {children}
-                <AppFooter />
+                {footer}
             </Layout>
         </S.Container>
     );
 }
 
 export function AnonymousLayout({ children, style }: Props) {
+    const footer = useContext(FooterLayout);
+
     return (
         <S.Container style={style}>
             <AppSidebar />
             <Layout className={s.content}>
                 {children}
-                <AppFooter />
+                {footer}
             </Layout>
         </S.Container>
     );

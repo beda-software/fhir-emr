@@ -12,7 +12,7 @@ export function QuestionString({ parentPath, questionItem }: QuestionItemProps) 
     );
 
     return (
-        <Form.Item {...formItem} data-testid={linkId}>
+        <Form.Item {...formItem} data-testid={linkId} data-linkid={linkId}>
             <Input value={value} disabled={disabled} onChange={onChange} onBlur={onBlur} placeholder={placeholder} />
         </Form.Item>
     );
@@ -26,7 +26,7 @@ export function QuestionEmail({ parentPath, questionItem }: QuestionItemProps) {
     );
 
     return (
-        <Form.Item {...formItem} data-testid={linkId}>
+        <Form.Item {...formItem} data-testid={linkId} data-linkid={linkId}>
             <Input
                 value={value}
                 disabled={disabled}
@@ -44,7 +44,7 @@ export function QuestionText({ parentPath, questionItem }: QuestionItemProps) {
     const { value, onChange, disabled, formItem, placeholder } = useFieldController<string>(fieldName, questionItem);
 
     return (
-        <Form.Item {...formItem} data-testid={linkId}>
+        <Form.Item {...formItem} data-testid={linkId} data-linkid={linkId}>
             <Input.TextArea
                 value={value}
                 rows={rowsNumber}

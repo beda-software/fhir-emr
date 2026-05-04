@@ -7,9 +7,13 @@ import { RepeatableGroups } from './RepeatableGroups';
 
 function Flex(props: GroupItemProps & { type?: 'row' | 'col' }) {
     const { parentPath, questionItem, context } = props;
-    const { linkId, item, repeats, text } = questionItem;
+    const { linkId, item, repeats, text, hidden } = questionItem;
 
     if (!item) {
+        return null;
+    }
+
+    if (hidden) {
         return null;
     }
 

@@ -1,0 +1,81 @@
+resourceType: Questionnaire
+id: vitals-height-weight-children
+url: vitals-height-weight-children
+name: vitals-height-weight-children
+title: Growth Metrics (2+ Years)
+status: active
+description: >
+  Growth metrics for children aged 2 years and older, including height, weight,
+  and calculated BMI. Used to monitor growth patterns and detect deviations from
+  expected development.
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+subjectType:
+  - Patient
+useContext:
+- code:
+    code: questionnaire-type
+    system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+  value:
+    CodeableConcept:
+      coding:
+      - code: form-library
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+item:
+  - linkId: patientId
+    text: PatientId
+    type: string
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.id"
+  - linkId: patientName
+    text: PatientName
+    type: string
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.name.first().given.first() + ' ' +
+        %Patient.name.first().family"
+  - linkId: vitals-data
+    type: group
+    itemControl:
+      coding:
+      - code: group-voice
+    item:
+    - linkId: height
+      type: quantity
+      text: Height
+      unitOption:
+        - code: cm
+          system: http://unitsofmeasure.org
+          display: cm
+    - linkId: weight
+      type: quantity
+      text: Weight
+      unitOption:
+        - code: kg
+          system: http://unitsofmeasure.org
+          display: kg
+  - linkId: bmi
+    text: BMI
+    type: decimal
+    required: true
+    readOnly: true
+    calculatedExpression:
+      language: text/fhirpath
+      expression: >-
+        (
+          %QuestionnaireResponse.item.item.where(linkId='weight').answer.valueQuantity.value.toDecimal()
+          /
+          (
+            (%QuestionnaireResponse.item.item.where(linkId='height').answer.valueQuantity.value.toDecimal() / 100)
+            *
+            (%QuestionnaireResponse.item.item.where(linkId='height').answer.valueQuantity.value.toDecimal() / 100)
+          )
+        ).round(2)

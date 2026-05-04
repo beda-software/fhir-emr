@@ -1,5 +1,5 @@
 resourceType: Questionnaire
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/place-order
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/place-order
 meta:
     profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire

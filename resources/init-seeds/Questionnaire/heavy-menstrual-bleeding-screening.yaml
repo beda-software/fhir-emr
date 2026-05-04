@@ -10,12 +10,26 @@ subjectType:
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+useContext:
+- code:
+    code: questionnaire-type
+    system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+  value:
+    CodeableConcept:
+      coding:
+      - code: form-library
 launchContext:
   - name:
       code: Patient
     type:
       - Patient
 item:
+- linkId: voice
+  type: group
+  itemControl:
+   coding:
+   - code: group-voice
+  item:
   - linkId: menstrual-bleeding-flow
     text: How would you describe the flow of your menstrual bleeding in the past month?
     type: choice
@@ -67,7 +81,7 @@ item:
 
   - linkId: intensity-menstrual-bleeding
     text: "Please assess the intensity of your menstrual bleeding, generally:"
-    helpText: Use the slider to indicate how heavy your menstrual bleeding is, from 1 (No bleeding at all) to 10 (the heaviest you've experienced)
+    helpText: Use the slider to indicate how heavy your menstrual bleeding is, from 0 (No bleeding at all) to 10 (the heaviest you've experienced)
     type: integer
     extension:
       - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
@@ -75,7 +89,7 @@ item:
           coding:
             - code: slider
       - url: https://emr-core.beda.software/StructureDefinition/slider-start
-        valueInteger: 1
+        valueInteger: 0
       - url: https://emr-core.beda.software/StructureDefinition/slider-stop
         valueInteger: 10
       - url: http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue
@@ -192,6 +206,22 @@ item:
           code: "no-pain"
           display: No pain
 
+  - linkId: menstrual-pain-score
+    text: "Rate your menstrual pain intensity (1 = none, 10 = worst imaginable):"
+    type: integer
+    required: true
+    extension:
+      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+        valueCodeableConcept:
+          coding:
+            - code: slider
+      - url: https://emr-core.beda.software/StructureDefinition/slider-start
+        valueInteger: 1
+      - url: https://emr-core.beda.software/StructureDefinition/slider-stop
+        valueInteger: 10
+      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue
+        valueInteger: 1
+
   - linkId: blood-clots-count
     text: During the past month, how many times did you pass blood clots (clumps of blood)?
     type: choice
@@ -277,6 +307,23 @@ item:
       - valueCoding:
           code: "9-12"
           display: "9-12"
+
+  - linkId: activity-impact-score
+    text: >-
+      Overall, how much did your period affect your daily activities this month?
+      (1 = not at all, 10 = completely)
+    type: integer
+    extension:
+      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl
+        valueCodeableConcept:
+          coding:
+            - code: slider
+      - url: https://emr-core.beda.software/StructureDefinition/slider-start
+        valueInteger: 1
+      - url: https://emr-core.beda.software/StructureDefinition/slider-stop
+        valueInteger: 10
+      - url: http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue
+        valueInteger: 1
 
   - linkId: soaking-display
     text: Soaking is defined as completely saturating a high absorbency sanitary product (e.g. a pad or tampon).

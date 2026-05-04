@@ -1,6 +1,6 @@
 id: allergies
 resourceType: Questionnaire
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/allergies
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/allergies
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire

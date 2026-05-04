@@ -17,9 +17,15 @@ export interface QuestionnaireModalProps {
     questionnaire: Reference;
     subject?: Reference;
     launchContextParameters?: ParametersParameter[];
+    onSuccess?: () => void;
 }
 
-export function QuestionanireModal({ questionnaire, subject, launchContextParameters }: QuestionnaireModalProps) {
+export function QuestionanireModal({
+    questionnaire,
+    subject,
+    launchContextParameters,
+    onSuccess,
+}: QuestionnaireModalProps) {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const title = questionnaire.display ?? questionnaire.reference ?? 'N/A';
 
@@ -32,6 +38,7 @@ export function QuestionanireModal({ questionnaire, subject, launchContextParame
         notification.success({
             message: `Successfully saved`,
         });
+        onSuccess?.();
     };
 
     return (

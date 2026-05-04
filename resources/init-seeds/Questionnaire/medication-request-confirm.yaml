@@ -36,7 +36,7 @@ item:
       - text: Are you sure to confirm this request?
         linkId: are-you-sure
         type: display
-url: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/medication-request-confirm
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/medication-request-confirm
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire

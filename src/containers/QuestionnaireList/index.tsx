@@ -15,9 +15,11 @@ import { S } from './styles';
 const getFilters = (): SearchBarColumn[] => [
     {
         id: 'questionnaire',
-        searchParam: 'name',
-        type: SearchBarColumnType.STRING,
+        searchParam: 'name:contains',
+        type: SearchBarColumnType.SPLITSTRING,
         placeholder: t`Find questionnaire`,
+        searchBehavior: 'AND',
+        separator: ' ',
     },
 ];
 
