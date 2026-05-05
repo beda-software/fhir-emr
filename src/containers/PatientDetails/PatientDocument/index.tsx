@@ -3,11 +3,15 @@ import { t } from '@lingui/macro';
 import { Button, Space, Splitter, Tooltip } from 'antd';
 import classNames from 'classnames';
 import { Organization, ParametersParameter, Patient, Person, Practitioner, QuestionnaireResponse } from 'fhir/r4b';
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
 import { BaseQuestionnaireResponseForm, FormWrapperProps } from '@beda.software/fhir-questionnaire/components';
+import {
+    ItemControlGroupItemWidgetsContext,
+    ItemControlQuestionItemWidgetsContext,
+} from '@beda.software/fhir-questionnaire/contexts';
 import { formatError, RenderRemoteData, WithId } from '@beda.software/fhir-react';
 import { RemoteDataResult } from '@beda.software/remote-data';
 
@@ -124,6 +128,25 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
         [handleCancel, onSaveDraft],
     );
 
+    const ItemControlQuestionItemWidgetsFromContext = useContext(ItemControlQuestionItemWidgetsContext);
+    const ItemControlGroupItemWidgetsFromContext = useContext(ItemControlGroupItemWidgetsContext);
+
+    const mergedItemControlComponents = useMemo(
+        () => ({
+            ...itemControlComponents,
+            ...ItemControlQuestionItemWidgetsFromContext,
+        }),
+        [ItemControlQuestionItemWidgetsFromContext],
+    );
+
+    const mergedGroupControlComponents = useMemo(
+        () => ({
+            ...groupControlComponents,
+            ...ItemControlGroupItemWidgetsFromContext,
+        }),
+        [ItemControlGroupItemWidgetsFromContext],
+    );
+
     return (
         <div className={classNames(s.container, 'app-patient-document')}>
             <S.Content $maxWidth={maxWidth}>
@@ -143,8 +166,8 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
                                         onSubmit={onSubmit}
                                         onEdit={onEdit}
                                         questionItemComponents={itemComponents}
-                                        itemControlQuestionItemComponents={itemControlComponents}
-                                        itemControlGroupItemComponents={groupControlComponents}
+                                        itemControlQuestionItemComponents={mergedItemControlComponents}
+                                        itemControlGroupItemComponents={mergedGroupControlComponents}
                                         fhirService={service}
                                         groupItemComponent={GroupItemComponent}
                                         FormWrapper={PatientDocumentFormWrapper}
@@ -171,8 +194,8 @@ function PatientDocumentContent(props: PatientDocumentContentProps) {
                                                 onSubmit={onSubmit}
                                                 onEdit={onEdit}
                                                 questionItemComponents={itemComponents}
-                                                itemControlQuestionItemComponents={itemControlComponents}
-                                                itemControlGroupItemComponents={groupControlComponents}
+                                                itemControlQuestionItemComponents={mergedItemControlComponents}
+                                                itemControlGroupItemComponents={mergedGroupControlComponents}
                                                 groupItemComponent={GroupItemComponent}
                                                 FormWrapper={PatientDocumentFormWrapper}
                                                 fhirService={service}
