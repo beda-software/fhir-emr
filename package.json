@@ -75,10 +75,6 @@
         "styled-components": "^6.1.11",
         "yup": "^1.7.0"
     },
-    "peerDependencies": {
-        "@beda.software/fhir-questionnaire": "git+https://github.com/beda-software/fhir-questionnaire.git#76f7e715e744",
-        "@beda.software/fhir-react": "^1.11.0"
-    },
     "devDependencies": {
         "@babel/preset-typescript": "^7.26.0",
         "@beda.software/vite-plugin-dts": "4.0.0-beta.1",
