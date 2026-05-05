@@ -35,15 +35,34 @@ for locale in $LOCALES; do
 
   mkdir -p "$target_dir"
 
+  tmp_dir="$(mktemp -d)"
+
+  i=0
+  deduped=""
+  for src in $existing_files; do
+    i=$((i + 1))
+    tmp_src="$tmp_dir/$i.po"
+    msguniq --use-first "$src" -o "$tmp_src" 2>/dev/null
+    if [ ! -s "$tmp_src" ]; then
+      cp "$src" "$tmp_src"
+    fi
+    deduped="$deduped $tmp_src"
+  done
+  set -- $deduped
+
   if [ "$count" -eq 1 ]; then
     cp "$1" "$target_file"
-    echo "[preextract] $locale: copied $1 -> $target_file"
+    rm -rf "$tmp_dir"
+    echo "[preextract] $locale: copied (deduplicated) -> $target_file"
     continue
   fi
 
-  if msgcat "$@" -o "$target_file"; then
+  if msgcat "$@" -o "$tmp_dir/merged.po"; then
+    mv "$tmp_dir/merged.po" "$target_file"
+    rm -rf "$tmp_dir"
     echo "[preextract] $locale: merged $count files into $target_file"
   else
+    rm -rf "$tmp_dir"
     echo "[preextract] error: $locale merge failed" >&2
     exit 1
   fi
