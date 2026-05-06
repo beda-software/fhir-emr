@@ -1,6 +1,6 @@
 import {
-    UseControllerReturn,
-    UseFieldArrayReturn,
+    type UseControllerReturn,
+    type UseFieldArrayReturn,
     useController,
     useFieldArray,
     useFormContext,
