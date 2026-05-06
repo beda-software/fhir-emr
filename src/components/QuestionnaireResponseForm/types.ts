@@ -35,10 +35,4 @@ export type QuestionnaireResponseFormProps = QRFProps & {
     questionItemComponents?: Props['questionItemComponents'];
     itemControlQuestionItemComponents?: Props['itemControlQuestionItemComponents'];
     itemControlGroupItemComponents?: Props['itemControlGroupItemComponents'];
-    /** @deprecated use questionItemComponents instead */
-    widgetsByQuestionType?: Props['widgetsByQuestionType'];
-    /** @deprecated use itemControlQuestionItemComponents instead */
-    widgetsByQuestionItemControl?: Props['widgetsByQuestionItemControl'];
-    /** @deprecated use itemControlGroupItemComponents instead */
-    widgetsByGroupQuestionItemControl?: Props['widgetsByGroupQuestionItemControl'];
 };

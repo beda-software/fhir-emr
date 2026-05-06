@@ -19,10 +19,8 @@ export function useQuestionnaireResponseForm(props: QuestionnaireResponseFormPro
         fhirService: props.fhirService ?? service,
         FormWrapper: props.FormWrapper ?? FormWrapper,
         groupItemComponent: props.groupItemComponent ?? GroupItemComponent,
-        questionItemComponents: props.questionItemComponents ?? props.widgetsByQuestionType ?? itemComponents,
-        itemControlQuestionItemComponents:
-            props.itemControlQuestionItemComponents ?? props.widgetsByQuestionItemControl ?? itemControlComponents,
-        itemControlGroupItemComponents:
-            props.itemControlGroupItemComponents ?? props.widgetsByGroupQuestionItemControl ?? groupControlComponents,
+        questionItemComponents: props.questionItemComponents ?? itemComponents,
+        itemControlQuestionItemComponents: props.itemControlQuestionItemComponents ?? itemControlComponents,
+        itemControlGroupItemComponents: props.itemControlGroupItemComponents ?? groupControlComponents,
     });
 }
