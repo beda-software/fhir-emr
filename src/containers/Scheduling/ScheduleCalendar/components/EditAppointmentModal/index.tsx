@@ -3,14 +3,12 @@ import { PractitionerRole } from 'fhir/r4b';
 import { useCallback } from 'react';
 
 import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
-import {
-    FormWrapperProps,
-    inMemorySaveQuestionnaireResponseService,
-} from '@beda.software/fhir-questionnaire/components';
+import { FormWrapperProps } from '@beda.software/fhir-questionnaire/components';
 
 import { FormWrapper } from 'src/components/FormWrapper';
 import { Modal } from 'src/components/Modal';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { inMemorySaveService } from 'src/hooks';
 
 interface Props {
     practitionerRole: PractitionerRole;
@@ -32,9 +30,7 @@ export function EditAppointmentModal(props: Props) {
         <Modal open={showModal} title={t`Edit Appointment`} footer={null} onCancel={onClose}>
             <QuestionnaireResponseForm
                 questionnaireLoader={questionnaireIdLoader('edit-appointment')}
-                sdcServiceProvider={{
-                    saveCompletedQuestionnaireResponse: inMemorySaveQuestionnaireResponseService,
-                }}
+                questionnaireResponseSaveService={inMemorySaveService}
                 launchContextParameters={[
                     {
                         name: 'CurrentAppointment',
