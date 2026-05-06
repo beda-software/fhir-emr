@@ -8,15 +8,15 @@ import { useParams } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
 import { BaseQuestionnaireResponseForm, FormWrapperProps } from '@beda.software/fhir-questionnaire/components';
-import {
-    ItemControlGroupItemWidgetsContext,
-    ItemControlQuestionItemWidgetsContext,
-} from '@beda.software/fhir-questionnaire/contexts';
 import { formatError, RenderRemoteData, WithId } from '@beda.software/fhir-react';
 import { RemoteDataResult } from '@beda.software/remote-data';
 
 import { Text } from 'src/components';
 import { AlertMessage } from 'src/components/AlertMessage';
+import {
+    ItemControlGroupItemWidgetsContext,
+    ItemControlQuestionItemWidgetsContext,
+} from 'src/components/BaseQuestionnaireResponseForm/context';
 import {
     groupControlComponents,
     itemComponents,

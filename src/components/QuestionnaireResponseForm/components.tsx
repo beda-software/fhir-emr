@@ -8,13 +8,13 @@ import {
     Props,
     QuestionnaireResponseForm as FHIRQuestionnaireResponseForm,
 } from '@beda.software/fhir-questionnaire/components';
+
 import {
     ItemControlGroupItemReadonlyWidgetsContext,
     ItemControlGroupItemWidgetsContext,
     ItemControlQuestionItemReadonlyWidgetsContext,
     ItemControlQuestionItemWidgetsContext,
-} from '@beda.software/fhir-questionnaire/contexts';
-
+} from 'src/components/BaseQuestionnaireResponseForm/context';
 import {
     itemComponents as defaultItemComponents,
     itemControlComponents as defaultItemControlComponents,
