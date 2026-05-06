@@ -1,7 +1,4 @@
-import {
-    useQuestionnaireResponseForm as useFHIRQuestionnaireResponseForm,
-    Props,
-} from '@beda.software/fhir-questionnaire/components';
+import { useQuestionnaireResponseForm as useFHIRQuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components';
 
 import {
     groupControlComponents,
@@ -11,7 +8,9 @@ import {
 import { FormWrapper, GroupItemComponent } from 'src/components/FormWrapper';
 import { service } from 'src/services';
 
-export function useQuestionnaireResponseForm(props: Pick<Props, 'questionnaireLoader'> & Partial<Props>) {
+import { QuestionnaireResponseFormProps } from './types';
+
+export function useQuestionnaireResponseForm(props: QuestionnaireResponseFormProps) {
     return useFHIRQuestionnaireResponseForm({
         ...props,
         serviceProvider: props.serviceProvider ?? {

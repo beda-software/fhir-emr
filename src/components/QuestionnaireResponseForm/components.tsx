@@ -27,13 +27,7 @@ import {
 import { FormWrapper, GroupItemComponent, ReadonlyFormWrapper } from 'src/components/FormWrapper';
 import { service } from 'src/services';
 
-import { QRFProps } from './types';
-
-type QuestionnaireResponseFormProps = QRFProps & {
-    onEdit?: Props['onEdit'];
-    FormWrapper?: Props['FormWrapper'];
-    sdcServiceProvider?: Props['sdcServiceProvider'];
-};
+import { QuestionnaireResponseFormProps } from './types';
 
 export function QuestionnaireResponseForm({
     onCancel,

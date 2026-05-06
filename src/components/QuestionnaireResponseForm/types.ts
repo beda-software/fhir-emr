@@ -1,17 +1,18 @@
 import { QuestionnaireResponse } from 'fhir/r4b';
 import { ItemControlGroupItemComponentMapping, ItemControlQuestionItemComponentMapping } from 'sdc-qrf';
 
+import { Props } from '@beda.software/fhir-questionnaire/components';
 import { RemoteDataResult } from '@beda.software/remote-data';
 
 import { FormFooterComponentProps } from 'src/components/BaseQuestionnaireResponseForm/FormFooter';
 import {
-    QuestionnaireResponseFormProps,
+    QuestionnaireResponseFormProps as FhirQuestionnaireResponseFormProps,
     QuestionnaireResponseFormSaveResponse,
 } from 'src/hooks/questionnaire-response-form-data';
 import { CustomYupTestsMap } from 'src/utils/questionnaire';
 
-export interface QRFProps extends Omit<QuestionnaireResponseFormProps, 'serviceProvider'> {
-    serviceProvider?: QuestionnaireResponseFormProps['serviceProvider'];
+export interface QRFProps extends Omit<FhirQuestionnaireResponseFormProps, 'serviceProvider'> {
+    serviceProvider?: FhirQuestionnaireResponseFormProps['serviceProvider'];
     onSuccess?: (response: QuestionnaireResponseFormSaveResponse) => void;
     onFailure?: (error: any) => void;
     readOnly?: boolean;
@@ -25,3 +26,19 @@ export interface QRFProps extends Omit<QuestionnaireResponseFormProps, 'serviceP
     cancelButtonTitle?: React.ReactElement | string;
     customYupTests?: CustomYupTestsMap;
 }
+
+export type QuestionnaireResponseFormProps = QRFProps & {
+    onEdit?: Props['onEdit'];
+    FormWrapper?: Props['FormWrapper'];
+    sdcServiceProvider?: Props['sdcServiceProvider'];
+    groupItemComponent?: Props['groupItemComponent'];
+    questionItemComponents?: Props['questionItemComponents'];
+    itemControlQuestionItemComponents?: Props['itemControlQuestionItemComponents'];
+    itemControlGroupItemComponents?: Props['itemControlGroupItemComponents'];
+    /** @deprecated use questionItemComponents instead */
+    widgetsByQuestionType?: Props['widgetsByQuestionType'];
+    /** @deprecated use itemControlQuestionItemComponents instead */
+    widgetsByQuestionItemControl?: Props['widgetsByQuestionItemControl'];
+    /** @deprecated use itemControlGroupItemComponents instead */
+    widgetsByGroupQuestionItemControl?: Props['widgetsByGroupQuestionItemControl'];
+};

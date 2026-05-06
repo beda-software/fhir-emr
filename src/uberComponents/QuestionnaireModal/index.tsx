@@ -1,21 +1,17 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { t } from '@lingui/macro';
 import { Button, notification } from 'antd';
 import { ParametersParameter, Reference } from 'fhir/r4b';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 
-import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
-import {
-    FormWrapperProps,
-    inMemorySaveQuestionnaireResponseService,
-    persistSaveQuestionnaireResponseServiceFactory,
-} from '@beda.software/fhir-questionnaire/components';
 import { parseFHIRReference } from '@beda.software/fhir-react';
 
-import { FormWrapper } from 'src/components/FormWrapper';
 import { Modal } from 'src/components/Modal';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
-import { service } from 'src/services';
+import {
+    inMemorySaveService,
+    persistSaveService,
+    questionnaireIdLoader,
+} from 'src/hooks/questionnaire-response-form-data';
 
 export interface QuestionnaireModalProps {
     questionnaire: Reference;
@@ -33,19 +29,17 @@ export function QuestionanireModal({
     const [isModalVisible, setIsModalVisible] = useState(false);
     const title = questionnaire.display ?? questionnaire.reference ?? 'N/A';
 
-    const showModal = () => setIsModalVisible(true);
-    const hideModal = useCallback(() => setIsModalVisible(false), []);
-
-    const handleSuccess = () => {
-        hideModal();
-        notification.success({ message: t`Successfully saved` });
-        onSuccess?.();
+    const showModal = () => {
+        setIsModalVisible(true);
     };
 
-    const formWrapper = useCallback(
-        (wrapperProps: FormWrapperProps) => <FormWrapper {...wrapperProps} onCancel={hideModal} />,
-        [hideModal],
-    );
+    const handleSuccess = () => {
+        setIsModalVisible(false);
+        notification.success({
+            message: `Successfully saved`,
+        });
+        onSuccess?.();
+    };
 
     return (
         <>
@@ -55,7 +49,7 @@ export function QuestionanireModal({
             <Modal
                 title={title}
                 open={isModalVisible}
-                onCancel={hideModal}
+                onCancel={() => setIsModalVisible(false)}
                 footer={null}
                 destroyOnClose
                 maskClosable={false}
@@ -68,13 +62,10 @@ export function QuestionanireModal({
                     questionnaireLoader={questionnaireIdLoader(parseFHIRReference(questionnaire).id!)}
                     onSuccess={handleSuccess}
                     launchContextParameters={launchContextParameters}
-                    sdcServiceProvider={{
-                        saveCompletedQuestionnaireResponse:
-                            typeof subject === 'undefined'
-                                ? inMemorySaveQuestionnaireResponseService
-                                : persistSaveQuestionnaireResponseServiceFactory(service),
-                    }}
-                    FormWrapper={formWrapper}
+                    onCancel={() => setIsModalVisible(false)}
+                    questionnaireResponseSaveService={
+                        typeof subject === 'undefined' ? inMemorySaveService : persistSaveService
+                    }
                 />
             </Modal>
         </>
