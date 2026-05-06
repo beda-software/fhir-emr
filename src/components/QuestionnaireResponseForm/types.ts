@@ -18,7 +18,6 @@ export interface QRFProps extends Omit<QuestionnaireResponseFormProps, 'serviceP
     itemControlQuestionItemComponents?: ItemControlQuestionItemComponentMapping;
     itemControlGroupItemComponents?: ItemControlGroupItemComponentMapping;
     onCancel?: () => void;
-    onQRFUpdate?: (questionnaireResponse: QuestionnaireResponse) => void;
     onSaveDraft?: (questionnaireResponse: QuestionnaireResponse) => Promise<RemoteDataResult<QuestionnaireResponse>>;
 
     FormFooterComponent?: React.ElementType<FormFooterComponentProps>;

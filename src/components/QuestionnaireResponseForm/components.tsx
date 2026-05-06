@@ -4,7 +4,6 @@ import { QuestionnaireResponseFormData } from 'sdc-qrf';
 import {
     BaseQuestionnaireResponseForm,
     FormWrapperProps,
-    fromQuestionnaireResponseFormData,
     Props,
     QuestionnaireResponseForm as FHIRQuestionnaireResponseForm,
 } from '@beda.software/fhir-questionnaire/components';
@@ -43,13 +42,12 @@ export function QuestionnaireResponseForm({
     cancelButtonTitle,
     FormFooterComponent,
 
-    onQRFUpdate,
     itemControlQuestionItemComponents,
     itemControlGroupItemComponents,
     questionnaireResponseSaveService,
     questionnaireResponseDraftService,
 
-    onEdit: onEditProp,
+    onEdit,
     FormWrapper: FormWrapperProp,
     serviceProvider: serviceProviderProp,
     sdcServiceProvider: sdcServiceProviderProp,
@@ -79,14 +77,6 @@ export function QuestionnaireResponseForm({
             ...ItemControlGroupItemWidgetsFromContext,
         }),
         [ItemControlGroupItemWidgetsFromContext, itemControlGroupItemComponents],
-    );
-
-    const onEditHandler = useCallback(
-        async (formData: QuestionnaireResponseFormData) => {
-            const { questionnaireResponse } = fromQuestionnaireResponseFormData(formData);
-            onQRFUpdate!(questionnaireResponse);
-        },
-        [onQRFUpdate],
     );
 
     const qrfFormWrapper = useCallback(
@@ -132,7 +122,7 @@ export function QuestionnaireResponseForm({
             questionItemComponents={defaultItemComponents}
             itemControlQuestionItemComponents={mergedItemControlComponents}
             itemControlGroupItemComponents={mergedGroupControlComponents}
-            onEdit={onEditProp ?? (onQRFUpdate ? onEditHandler : undefined)}
+            onEdit={onEdit}
         />
     );
 }

@@ -23,7 +23,6 @@ export interface PatientDocumentProps {
     onSubmit?: (formData: QuestionnaireResponseFormData) => Promise<any>;
     onSuccess?: (resource: QuestionnaireResponseFormSaveResponse) => void;
     onCancel?: () => void;
-    onQRFUpdate?: (questionnaireResponse: QuestionnaireResponse) => void;
     autoSave?: boolean;
     qrDraftServiceType?: QuestionnaireResponseDraftService;
     alertComponent?: React.ReactNode | (() => React.ReactNode);
