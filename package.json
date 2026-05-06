@@ -136,6 +136,23 @@
         "vite-plugin-turbosnap": "^1.0.2",
         "vitest": "^0.34.6"
     },
+    "peerDependencies": {
+        "@beda.software/fhir-questionnaire": "*",
+        "@beda.software/web-item-controls": "*",
+        "@beda.software/fhir-react": "*",
+        "@lingui/cli": "*",
+        "@lingui/core": "*",
+        "@lingui/macro": "*",
+        "@lingui/react": "*",
+        "antd": "*",
+        "axios": "*",
+        "rc-picker": "*",
+        "react": "*",
+        "react-dom": "*",
+        "react-hook-form": "*",
+        "sdc-qrf": "*",
+        "styled-components": "*"
+    },
     "main": "./dist/index.js",
     "module": "./dist/index.js",
     "files": [
