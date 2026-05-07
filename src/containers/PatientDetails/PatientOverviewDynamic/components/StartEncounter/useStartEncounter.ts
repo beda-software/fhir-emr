@@ -5,7 +5,7 @@ import { extractBundleResources, WithId } from '@beda.software/fhir-react';
 import { useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { useNavigateToEncounter } from 'src/containers/EncounterDetails/hooks';
 import { StartEncounterProps } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StartEncounter';
-import { inMemorySaveService } from 'src/hooks/questionnaire-response-form-data';
+import { inMemorySaveService } from 'src/hooks';
 
 export function useStartEncounter(props: StartEncounterProps) {
     const { appointmentId } = props;

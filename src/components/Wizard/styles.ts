@@ -237,9 +237,9 @@ export const S = {
         ${({ $status }) => $status === 'wait' && disabledColors}
 
         ${({ $active }) => $active && activeColors}
-        
+
         ${({ $disabled }) => $disabled && disabledColors}
-        
+
         ${({ $size }) =>
             $size === 'small' &&
             css`
@@ -261,8 +261,7 @@ export const S = {
             border-top: 1px solid ${({ theme }) => theme.neutralPalette.gray_3};
         }
 
-        .ant-modal &,
-        .app-patient-document & {
+        .ant-modal & {
             padding: 20px 24px !important;
         }
     `,

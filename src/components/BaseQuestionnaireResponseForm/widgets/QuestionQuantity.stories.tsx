@@ -1,9 +1,9 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { ItemContext } from 'sdc-qrf';
 
-import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
+import { QuestionQuantity } from '@beda.software/web-item-controls/controls';
 
-import { QuestionQuantity } from './index';
+import { WithQuestionFormProviderDecorator, withColorSchemeDecorator } from 'src/storybook/decorators';
 
 const meta: Meta<typeof QuestionQuantity> = {
     title: 'Questionnaire / questions / quantity',

@@ -1,7 +1,8 @@
+import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
+
 import { FormFooterComponentProps } from 'src/components/BaseQuestionnaireResponseForm/FormFooter';
 import { QuestionnaireResponseFormDraft } from 'src/components/QuestionnaireResponseFormDraft';
 import { Wizard } from 'src/components/Wizard';
-import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 
 import { QuestionnairesWizardFooter } from './components/QuestionnairesWizardFooter';
 import { QuestionnairesWizardProps, useQuestionnairesWizard } from './hooks';

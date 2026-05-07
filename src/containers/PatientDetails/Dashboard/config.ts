@@ -14,12 +14,12 @@ import {
     prepareMedications,
     prepareReferral,
 } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare';
+import { AppointmentCardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/AppointmentCardContainer';
 import { CreatinineDashboardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/CreatinineDashboardContainer';
 import { GeneralInformationDashboardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer';
+import { PatientNoteListCardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/PatientNoteListCardContainer';
 import { StandardCardContainerFabric } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/StandardCardContainerFabric';
 import { SummaryContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/SummaryCardContainer';
-
-import { AppointmentCardContainer } from '../PatientOverviewDynamic/containers/AppointmentCardContainer';
 
 export const patientDashboardConfig: DashboardInstance = {
     top: [
@@ -61,6 +61,17 @@ export const patientDashboardConfig: DashboardInstance = {
                 }),
             },
             widget: StandardCardContainerFabric(prepareReferral),
+        },
+        {
+            widget: PatientNoteListCardContainer,
+            query: {
+                resourceType: 'Observation',
+                search: (patient: Patient) => ({
+                    patient: patient.id,
+                    status: 'final',
+                    code: '866145009',
+                }),
+            },
         },
     ],
     left: [

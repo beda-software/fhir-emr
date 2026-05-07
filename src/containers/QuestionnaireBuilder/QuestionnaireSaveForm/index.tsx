@@ -3,7 +3,7 @@ import { Trans, t } from '@lingui/macro';
 import { Button, Form, Input, Select } from 'antd';
 import { Questionnaire } from 'fhir/r4b';
 import { useMemo } from 'react';
-import { FormProvider, UseControllerReturn, useController, useForm, useFormContext } from 'react-hook-form';
+import { FormProvider, type UseControllerReturn, useController, useForm, useFormContext } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { WithId } from '@beda.software/fhir-react';

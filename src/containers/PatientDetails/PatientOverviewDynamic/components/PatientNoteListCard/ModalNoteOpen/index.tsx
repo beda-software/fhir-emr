@@ -2,7 +2,8 @@ import { Trans } from '@lingui/macro';
 import { Button } from 'antd';
 import { Observation } from 'fhir/r4b';
 
-import { MarkDownEditor } from 'src/components/BaseQuestionnaireResponseForm/widgets/MDEditorControl/MarkDownEditor';
+import { MarkDownEditor } from '@beda.software/web-item-controls/controls';
+
 import { ModalTrigger } from 'src/components/ModalTrigger';
 
 import { S } from './styles';

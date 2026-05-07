@@ -8,13 +8,15 @@ import { useCallback, useState } from 'react';
 import { extractCreatedAtFromMeta } from 'sdc-qrf';
 import styled from 'styled-components';
 
+import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
+import { FormWrapperProps } from '@beda.software/fhir-questionnaire/components';
 import { WithId } from '@beda.software/fhir-react';
 
+import { FormWrapper } from 'src/components/FormWrapper';
 import { LinkToEdit } from 'src/components/LinkToEdit';
 import { Modal } from 'src/components/Modal';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { ResourceTable } from 'src/components/ResourceTable';
-import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
 import { formatHumanDate } from 'src/utils/date';
 import { selectCurrentUserRoleResource } from 'src/utils/role';
 
@@ -127,6 +129,11 @@ function useOrders() {
 
 export function PatientOrders({ patient }: Props) {
     const { key, author, questionnaire, setQuestionnaire, reloadListAndClose, close } = useOrders();
+
+    const orderFormWrapper = useCallback(
+        (wrapperProps: FormWrapperProps) => <FormWrapper {...wrapperProps} onCancel={close} />,
+        [close],
+    );
     const items: MenuProps['items'] = [
         {
             key: '1',
@@ -207,7 +214,7 @@ export function PatientOrders({ patient }: Props) {
                         { name: 'Author', resource: author },
                     ]}
                     onSuccess={reloadListAndClose}
-                    onCancel={close}
+                    FormWrapper={orderFormWrapper}
                 />
             </Modal>
             <ResourceTable<Observation>

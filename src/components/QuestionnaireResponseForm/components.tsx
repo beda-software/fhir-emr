@@ -1,24 +1,183 @@
-import { RenderRemoteData } from '@beda.software/fhir-react';
+import { useCallback, useContext, useMemo } from 'react';
+import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
-import { BaseQuestionnaireResponseForm } from 'src/components/BaseQuestionnaireResponseForm';
-import { QRFProps, useQuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import {
+    BaseQuestionnaireResponseForm,
+    FormWrapperProps,
+    Props,
+    QuestionnaireResponseForm as FHIRQuestionnaireResponseForm,
+} from '@beda.software/fhir-questionnaire/components';
 
-import { Spinner } from '../Spinner';
+import {
+    ItemControlGroupItemReadonlyWidgetsContext,
+    ItemControlGroupItemWidgetsContext,
+    ItemControlQuestionItemReadonlyWidgetsContext,
+    ItemControlQuestionItemWidgetsContext,
+} from 'src/components/BaseQuestionnaireResponseForm/context';
+import {
+    itemComponents as defaultItemComponents,
+    itemControlComponents as defaultItemControlComponents,
+    groupControlComponents as defaultGroupControlComponents,
+} from 'src/components/BaseQuestionnaireResponseForm/controls';
+import {
+    itemComponents as readonlyItemComponents,
+    itemControlComponents as readonlyItemControlComponents,
+    groupControlComponents as readonlyGroupControlComponents,
+} from 'src/components/BaseQuestionnaireResponseForm/readonly-controls';
+import { FormWrapper, GroupItemComponent, ReadonlyFormWrapper } from 'src/components/FormWrapper';
+import { service } from 'src/services';
 
-export function QuestionnaireResponseForm(props: QRFProps) {
-    const { response, onSubmit, readOnly, onCancel } = useQuestionnaireResponseForm(props);
+import { QuestionnaireResponseFormProps } from './types';
+
+export function QuestionnaireResponseForm({
+    onCancel,
+    onSaveDraft,
+    saveButtonTitle,
+    cancelButtonTitle,
+    FormFooterComponent,
+
+    itemControlQuestionItemComponents,
+    itemControlGroupItemComponents,
+    questionnaireResponseSaveService,
+    questionnaireResponseDraftService,
+
+    onEdit,
+    FormWrapper: FormWrapperProp,
+    serviceProvider: serviceProviderProp,
+    sdcServiceProvider: sdcServiceProviderProp,
+
+    questionnaireLoader,
+    initialQuestionnaireResponse,
+    launchContextParameters,
+    onSuccess,
+    onFailure,
+    readOnly,
+    customYupTests,
+}: QuestionnaireResponseFormProps) {
+    const ItemControlQuestionItemWidgetsFromContext = useContext(ItemControlQuestionItemWidgetsContext);
+    const ItemControlGroupItemWidgetsFromContext = useContext(ItemControlGroupItemWidgetsContext);
+
+    const mergedItemControlComponents = useMemo(
+        () => ({
+            ...(itemControlQuestionItemComponents ?? defaultItemControlComponents),
+            ...ItemControlQuestionItemWidgetsFromContext,
+        }),
+        [ItemControlQuestionItemWidgetsFromContext, itemControlQuestionItemComponents],
+    );
+
+    const mergedGroupControlComponents = useMemo(
+        () => ({
+            ...(itemControlGroupItemComponents ?? defaultGroupControlComponents),
+            ...ItemControlGroupItemWidgetsFromContext,
+        }),
+        [ItemControlGroupItemWidgetsFromContext, itemControlGroupItemComponents],
+    );
+
+    const qrfFormWrapper = useCallback(
+        (wrapperProps: FormWrapperProps) => (
+            <FormWrapper
+                {...wrapperProps}
+                onCancel={onCancel}
+                onSaveDraft={onSaveDraft}
+                saveButtonTitle={saveButtonTitle}
+                cancelButtonTitle={cancelButtonTitle}
+                FormFooterComponent={FormFooterComponent}
+            />
+        ),
+        [onCancel, onSaveDraft, saveButtonTitle, cancelButtonTitle, FormFooterComponent],
+    );
+
+    const sdcServiceProvider =
+        sdcServiceProviderProp ??
+        (questionnaireResponseSaveService || questionnaireResponseDraftService
+            ? {
+                  saveCompletedQuestionnaireResponse: questionnaireResponseSaveService,
+                  saveInProgressQuestionnaireResponse: questionnaireResponseDraftService
+                      ? (qr: Parameters<typeof questionnaireResponseDraftService>[0]) =>
+                            questionnaireResponseDraftService(qr, undefined)
+                      : undefined,
+              }
+            : undefined);
 
     return (
-        <RenderRemoteData remoteData={response} renderLoading={Spinner}>
-            {(formData) => (
-                <BaseQuestionnaireResponseForm
-                    formData={formData}
-                    onSubmit={onSubmit}
-                    readOnly={readOnly}
-                    onCancel={onCancel}
-                    {...props}
-                />
-            )}
-        </RenderRemoteData>
+        <FHIRQuestionnaireResponseForm
+            questionnaireLoader={questionnaireLoader}
+            initialQuestionnaireResponse={initialQuestionnaireResponse}
+            launchContextParameters={launchContextParameters}
+            onSuccess={onSuccess as Props['onSuccess']}
+            onFailure={onFailure}
+            readOnly={readOnly}
+            customYupTests={customYupTests}
+            serviceProvider={serviceProviderProp ?? { service }}
+            fhirService={service}
+            sdcServiceProvider={sdcServiceProvider}
+            FormWrapper={FormWrapperProp ?? qrfFormWrapper}
+            groupItemComponent={GroupItemComponent}
+            questionItemComponents={defaultItemComponents}
+            itemControlQuestionItemComponents={mergedItemControlComponents}
+            itemControlGroupItemComponents={mergedGroupControlComponents}
+            onEdit={onEdit}
+        />
+    );
+}
+
+type ReadonlyQRFFormDataProps = {
+    formData: QuestionnaireResponseFormData;
+};
+
+type ReadonlyQRFLoaderProps = Pick<Props, 'questionnaireLoader'> & Partial<Props>;
+
+export function ReadonlyQuestionnaireResponseForm(props: ReadonlyQRFFormDataProps | ReadonlyQRFLoaderProps) {
+    const ItemControlQuestionItemReadonlyWidgetsFromContext = useContext(ItemControlQuestionItemReadonlyWidgetsContext);
+    const ItemControlGroupItemReadonlyWidgetsFromContext = useContext(ItemControlGroupItemReadonlyWidgetsContext);
+
+    const mergedItemControlComponents = useMemo(
+        () => ({
+            ...('formData' in props
+                ? readonlyItemComponents
+                : props.itemControlQuestionItemComponents ?? readonlyItemControlComponents),
+            ...ItemControlQuestionItemReadonlyWidgetsFromContext,
+        }),
+        [ItemControlQuestionItemReadonlyWidgetsFromContext, props],
+    );
+
+    const mergedGroupControlComponents = useMemo(
+        () => ({
+            ...('formData' in props
+                ? readonlyGroupControlComponents
+                : props.itemControlGroupItemComponents ?? readonlyGroupControlComponents),
+            ...ItemControlGroupItemReadonlyWidgetsFromContext,
+        }),
+        [ItemControlGroupItemReadonlyWidgetsFromContext, props],
+    );
+
+    if ('formData' in props) {
+        return (
+            <BaseQuestionnaireResponseForm
+                formData={props.formData}
+                readOnly={true}
+                fhirService={service}
+                FormWrapper={ReadonlyFormWrapper}
+                groupItemComponent={GroupItemComponent}
+                questionItemComponents={readonlyItemComponents}
+                itemControlQuestionItemComponents={mergedItemControlComponents}
+                itemControlGroupItemComponents={mergedGroupControlComponents}
+            />
+        );
+    }
+
+    return (
+        <FHIRQuestionnaireResponseForm
+            {...props}
+            serviceProvider={props.serviceProvider ?? { service }}
+            fhirService={props.fhirService ?? service}
+            sdcServiceProvider={props.sdcServiceProvider}
+            FormWrapper={props.FormWrapper ?? ReadonlyFormWrapper}
+            groupItemComponent={props.groupItemComponent ?? GroupItemComponent}
+            questionItemComponents={props.questionItemComponents ?? readonlyItemComponents}
+            itemControlQuestionItemComponents={mergedItemControlComponents}
+            itemControlGroupItemComponents={mergedGroupControlComponents}
+            readOnly={true}
+        />
     );
 }

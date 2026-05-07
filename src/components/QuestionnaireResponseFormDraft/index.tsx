@@ -2,12 +2,15 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { t } from '@lingui/macro';
 import { Button, Tooltip } from 'antd';
 import { Resource } from 'fhir/r4b';
+import { useCallback } from 'react';
 
+import { FormWrapperProps } from '@beda.software/fhir-questionnaire/components';
 import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { Spinner } from 'src/components';
 import { AlertMessage } from 'src/components/AlertMessage';
-import { QRFProps, QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
+import { FormWrapper } from 'src/components/FormWrapper';
+import { QuestionnaireResponseForm, QRFProps } from 'src/components/QuestionnaireResponseForm';
 import {
     QuestionnaireResponseDraftService,
     QuestionnaireResponseFormSaveResponse,
@@ -34,7 +37,8 @@ type QuestionnaireResponseFormDraftProps =
     | BaseQuestionnaireResponseFormDraftLocalProps;
 
 export function QuestionnaireResponseFormDraft(props: QuestionnaireResponseFormDraftProps) {
-    const { response, draftInfoMessage, updateDraft, deleteDraft, saveDraft } = useQuestionnaireResponseDraft(
+    const { qrDraftServiceType, onCancel } = props;
+    const { response, draftInfoMessage, deleteDraft, handleEdit, saveDraft } = useQuestionnaireResponseDraft(
         props.qrDraftServiceType === 'server'
             ? {
                   autoSave: props.autoSave,
@@ -48,6 +52,17 @@ export function QuestionnaireResponseFormDraft(props: QuestionnaireResponseFormD
                   subject: props.subject,
                   questionnaireId: props.questionnaireId,
               },
+    );
+
+    const draftFormWrapper = useCallback(
+        (wrapperProps: FormWrapperProps) => (
+            <FormWrapper
+                {...wrapperProps}
+                onCancel={onCancel}
+                onSaveDraft={qrDraftServiceType === 'server' ? saveDraft : undefined}
+            />
+        ),
+        [onCancel, qrDraftServiceType, saveDraft],
     );
 
     return (
@@ -79,8 +94,8 @@ export function QuestionnaireResponseFormDraft(props: QuestionnaireResponseFormD
                             await deleteDraft();
                             props.onSuccess && props.onSuccess(resource);
                         }}
-                        onQRFUpdate={updateDraft}
-                        onSaveDraft={props.qrDraftServiceType === 'server' ? saveDraft : undefined}
+                        onEdit={handleEdit}
+                        FormWrapper={draftFormWrapper}
                     />
                 </>
             )}

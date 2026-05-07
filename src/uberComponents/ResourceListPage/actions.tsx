@@ -4,9 +4,10 @@ import { Bundle, ParametersParameter, Resource } from 'fhir/r4b';
 import { omit } from 'lodash';
 import { useNavigate } from 'react-router-dom';
 
+import { questionnaireIdLoader } from '@beda.software/fhir-questionnaire';
+
 import { ModalTrigger } from 'src/components/ModalTrigger';
-import { QRFProps, QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
-import { questionnaireIdLoader } from 'src/hooks/questionnaire-response-form-data';
+import { QuestionnaireResponseForm, QRFProps } from 'src/components/QuestionnaireResponseForm';
 
 import { S } from './styles';
 import {

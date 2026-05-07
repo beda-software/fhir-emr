@@ -8,7 +8,7 @@ import { FieldSource, FieldTarget } from './DragAndDrop';
 import { OnItemDrag } from '../hooks';
 
 interface Props {
-    children: React.ReactNode;
+    children?: React.ReactNode;
     item: GroupItemProps;
     activeQuestionItem?: GroupItemProps;
     onEditClick?: (item: GroupItemProps | undefined) => void;
