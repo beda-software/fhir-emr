@@ -1,4 +1,4 @@
-questionnaire: medication-request
+questionnaire: https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/medication-request
 meta:
   lastUpdated: "2023-12-03T09:27:37.174177Z"
   createdAt: "2023-12-03T09:27:37.174177Z"

@@ -9,6 +9,7 @@ import {
     Patient,
     Practitioner,
     Provenance,
+    Questionnaire,
     QuestionnaireResponse,
 } from 'fhir/r4b';
 import { ReactElement, useContext } from 'react';
@@ -95,15 +96,23 @@ function usePatientDocumentDetails(patientId: string) {
 
     const [response, manager] = useService(async () => {
         const mappedResponse = mapSuccess(
-            await getFHIRResources<QuestionnaireResponse | Encounter>('QuestionnaireResponse', {
+            await getFHIRResources<QuestionnaireResponse | Encounter | Questionnaire>('QuestionnaireResponse', {
                 id: qrId,
                 subject: patientId,
-                _include: ['QuestionnaireResponse:encounter:Encounter'],
+                _include: [
+                    'QuestionnaireResponse:encounter:Encounter',
+                    'QuestionnaireResponse:questionnaire:Questionnaire',
+                ],
             }),
-            (bundle) => ({
-                questionnaireResponse: extractBundleResources(bundle).QuestionnaireResponse[0]!,
-                encounter: extractBundleResources(bundle).Encounter[0],
-            }),
+            (bundle) => {
+                const questionnaireResponse = extractBundleResources(bundle).QuestionnaireResponse[0]!;
+                const encounter = extractBundleResources(bundle).Encounter[0];
+                const questionnaire = extractBundleResources(bundle).Questionnaire[0];
+                if (questionnaire) {
+                    questionnaireResponse.questionnaire = questionnaire.id;
+                }
+                return { questionnaireResponse, encounter };
+            },
         );
         if (isSuccess(mappedResponse) && !mappedResponse.data.questionnaireResponse) {
             return failure(t`The document does not exist`);

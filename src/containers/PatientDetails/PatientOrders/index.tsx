@@ -198,7 +198,6 @@ export function PatientOrders({ patient }: Props) {
                 <QuestionnaireResponseForm
                     initialQuestionnaireResponse={{
                         resourceType: 'QuestionnaireResponse',
-                        questionnaire: 'creatinine',
                         subject: { reference: `Patient/${patient.id}` },
                     }}
                     questionnaireLoader={questionnaireIdLoader(questionnaire!)}

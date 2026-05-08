@@ -49,7 +49,7 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
                 ? questionnaires.findIndex((q) => q.id === initialQuestionnaireId)
                 : 0;
 
-            if (initialQuestionnaireResponses.some((qr) => qr.questionnaire === q.id)) {
+            if (initialQuestionnaireResponses.some((qr) => qr.questionnaire === q.url)) {
                 return 'finish';
             }
 
@@ -67,7 +67,7 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
 
     const currentQuestionnaire = questionnaires[currentQuestionnaireIndex];
     const currentQuestionnaireResponse = questionnaireResponses.find(
-        (qr) => qr.questionnaire === currentQuestionnaire?.id,
+        (qr) => qr.questionnaire === currentQuestionnaire?.url,
     );
 
     const setStepStatus = useCallback((index: number, status: StepProps['status']) => {
@@ -86,7 +86,7 @@ export function useQuestionnairesWizard(props: QuestionnairesWizardProps) {
 
             const unfinishedSteps = questionnaires.filter(
                 (q) =>
-                    !questionnaireResponses.some((qr) => qr.questionnaire === q.id) &&
+                    !questionnaireResponses.some((qr) => qr.questionnaire === q.url) &&
                     q.id !== questionnaires[exceptQuestionnaireIndex]?.id,
             );
 

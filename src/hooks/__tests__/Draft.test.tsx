@@ -14,11 +14,13 @@ import { createPatient, createPractitionerRole, loginAdminUser, waitForAPIProces
 import { ThemeProvider } from 'src/theme';
 
 const questionnaireId = 'test-draft-flow-q';
+const questionnaireUrl = `https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/${questionnaireId}`;
 const questionnaireLinkId = 'test-draft-flow-q-text';
 const questionnaireDefinition: WithId<Questionnaire> = {
     resourceType: 'Questionnaire',
     status: 'active',
     id: questionnaireId,
+    url: questionnaireUrl,
     name: questionnaireId,
     title: questionnaireId,
     meta: {
@@ -101,7 +103,7 @@ describe('Draft questionnaire response saves correctly with server backend', asy
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
                 getFHIRResources('QuestionnaireResponse', {
-                    questionnaire: questionnaireId,
+                    questionnaire: questionnaireUrl,
                     status: 'in-progress',
                     _sort: ['-createdAt', '_id'],
                 }),
@@ -114,7 +116,7 @@ describe('Draft questionnaire response saves correctly with server backend', asy
         const qrs = ensure(
             mapSuccess(
                 await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
-                    questionnaire: questionnaireId,
+                    questionnaire: questionnaireUrl,
                     status: 'in-progress',
                     _sort: ['-createdAt', '_id'],
                 }),
@@ -158,7 +160,7 @@ describe('Draft questionnaire response saves correctly with server backend', asy
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
                 getFHIRResources('QuestionnaireResponse', {
-                    questionnaire: questionnaireId,
+                    questionnaire: questionnaireUrl,
                     _sort: ['-createdAt', '_id'],
                 }),
             resolver: (result) => {
@@ -170,7 +172,7 @@ describe('Draft questionnaire response saves correctly with server backend', asy
         const qrs = ensure(
             mapSuccess(
                 await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
-                    questionnaire: questionnaireId,
+                    questionnaire: questionnaireUrl,
                     _sort: ['-createdAt', '_id'],
                 }),
                 (result) => extractBundleResources<QuestionnaireResponse>(result).QuestionnaireResponse,
@@ -202,7 +204,7 @@ describe('Draft questionnaire response saves correctly with server backend', asy
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
                 getFHIRResources('QuestionnaireResponse', {
-                    questionnaire: questionnaireId,
+                    questionnaire: questionnaireUrl,
                     status: 'in-progress',
                     _sort: ['-createdAt', '_id'],
                 }),
@@ -232,7 +234,7 @@ describe('Draft questionnaire response saves correctly with server backend', asy
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
                 getFHIRResources('QuestionnaireResponse', {
-                    questionnaire: questionnaireId,
+                    questionnaire: questionnaireUrl,
                     status: 'completed',
                     _sort: ['-createdAt', '_id'],
                 }),
@@ -300,7 +302,7 @@ describe('Draft questionnaire response saves correctly with local storage backen
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
                 getFHIRResources('QuestionnaireResponse', {
-                    questionnaire: questionnaireId,
+                    questionnaire: questionnaireUrl,
                     status: 'in-progress',
                     _sort: ['-createdAt', '_id'],
                 }),
@@ -350,7 +352,7 @@ describe('Draft questionnaire response saves correctly with local storage backen
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
                 getFHIRResources('QuestionnaireResponse', {
-                    questionnaire: questionnaireId,
+                    questionnaire: questionnaireUrl,
                     _sort: ['-createdAt', '_id'],
                 }),
             resolver: (result) => {
@@ -427,7 +429,7 @@ describe('Draft questionnaire response saves correctly with local storage backen
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
                 getFHIRResources('QuestionnaireResponse', {
-                    questionnaire: questionnaireId,
+                    questionnaire: questionnaireUrl,
                     status: 'completed',
                     _sort: ['-createdAt', '_id'],
                 }),
@@ -461,7 +463,7 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
                 getFHIRResources('QuestionnaireResponse', {
-                    questionnaire: questionnaireId,
+                    questionnaire: questionnaireUrl,
                     status: 'in-progress',
                     _sort: ['-createdAt', '_id'],
                 }),
@@ -474,7 +476,7 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
         const qrs = ensure(
             mapSuccess(
                 await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
-                    questionnaire: questionnaireId,
+                    questionnaire: questionnaireUrl,
                     status: 'in-progress',
                     _sort: ['-createdAt', '_id'],
                 }),
@@ -516,7 +518,7 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
                 getFHIRResources<WithId<QuestionnaireResponse>>('QuestionnaireResponse', {
-                    questionnaire: questionnaireId,
+                    questionnaire: questionnaireUrl,
                     _sort: ['-createdAt', '_id'],
                 }),
             resolver: (result) => {
@@ -528,7 +530,7 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
         const qrs = ensure(
             mapSuccess(
                 await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
-                    questionnaire: questionnaireId,
+                    questionnaire: questionnaireUrl,
                     _sort: ['-createdAt', '_id'],
                 }),
                 (result) => extractBundleResources<QuestionnaireResponse>(result).QuestionnaireResponse,
@@ -560,7 +562,7 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
                 getFHIRResources('QuestionnaireResponse', {
-                    questionnaire: questionnaireId,
+                    questionnaire: questionnaireUrl,
                     status: 'in-progress',
                     _sort: ['-createdAt', '_id'],
                 }),
@@ -590,7 +592,7 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
         await waitForAPIProcess<RemoteDataResult<Bundle<WithId<QuestionnaireResponse>>>>({
             service: () =>
                 getFHIRResources('QuestionnaireResponse', {
-                    questionnaire: questionnaireId,
+                    questionnaire: questionnaireUrl,
                     status: 'completed',
                     _sort: ['-createdAt', '_id'],
                 }),
@@ -602,7 +604,7 @@ describe('Draft questionnaire response not saved when autoSave is disabled', asy
         const qrs = ensure(
             mapSuccess(
                 await getFHIRResources<QuestionnaireResponse>('QuestionnaireResponse', {
-                    questionnaire: questionnaireId,
+                    questionnaire: questionnaireUrl,
                     _sort: ['-createdAt', '_id'],
                 }),
                 (result) => extractBundleResources<QuestionnaireResponse>(result).QuestionnaireResponse,

@@ -62,7 +62,7 @@ async function onFormSubmit(
     const modifiedFormData = _.merge({}, formData, {
         context: {
             questionnaireResponse: {
-                questionnaire: initialQuestionnaireResponse?.questionnaire,
+                questionnaire: initialQuestionnaireResponse?.questionnaire ?? formData.context.questionnaire.url,
             },
         },
     });
@@ -102,7 +102,6 @@ function prepareFormInitialParams(
         {
             subject: getReference(patient),
             encounter: encounterId ? getReference({ resourceType: 'Encounter', id: encounterId }) : undefined,
-            questionnaire: questionnaireId,
         },
         questionnaireResponse,
     );
