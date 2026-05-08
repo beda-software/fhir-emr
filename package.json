@@ -54,6 +54,7 @@
         "lodash": "^4.17.21",
         "make-plural": "^7.3.0",
         "moment": "^2.30.1",
+        "qrcode.react": "^4.2.0",
         "query-string": "^8.1.0",
         "react": "^18.2.0",
         "react-audio-voice-recorder": "^2.2.0",
@@ -138,8 +139,8 @@
     },
     "peerDependencies": {
         "@beda.software/fhir-questionnaire": "*",
-        "@beda.software/web-item-controls": "*",
         "@beda.software/fhir-react": "*",
+        "@beda.software/web-item-controls": "*",
         "@lingui/cli": "*",
         "@lingui/core": "*",
         "@lingui/macro": "*",

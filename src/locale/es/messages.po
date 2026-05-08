@@ -263,8 +263,7 @@ msgstr ""
 msgid "Add break"
 msgstr "Añadir pausa"
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:64
-#: src/controls/GroupTable/index.tsx:64
+#: src/controls/GroupTable/index.tsx:68
 #~ msgid "Add entry"
 #~ msgstr ""
 
@@ -405,6 +404,10 @@ msgstr "Servicios disponibles"
 #~ msgid "Available units"
 #~ msgstr "Unidades disponibles"
 
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:132
+msgid "Back"
+msgstr ""
+
 #: src/containers/InvoiceList/components/InvoiceStatus.tsx:14
 msgid "Balanced"
 msgstr "Saldada"
@@ -448,7 +451,7 @@ msgid "Calories"
 msgstr "Calorías"
 
 #: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:87
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:56
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:72
 #: src/containers/InvoiceList/index.tsx:108
 #: src/containers/InvoiceList/index.tsx:113
 #: src/containers/InvoiceList/index.tsx:117
@@ -517,6 +520,7 @@ msgstr "Limpiar filtros"
 msgid "Clinician successfully updated"
 msgstr "Profesional actualizado exitosamente"
 
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:146
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteOpen/index.tsx:33
 msgid "Close"
 msgstr "Cerrar"
@@ -530,8 +534,7 @@ msgstr "Código"
 msgid "Col (default)"
 msgstr "Columna (predeterminado)"
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:61
-#: src/controls/GroupTable/index.tsx:61
+#: src/controls/GroupTable/index.tsx:65
 #~ msgid "Collapse all"
 #~ msgstr ""
 
@@ -585,6 +588,10 @@ msgstr "Consulta"
 msgid "Contact the patient to obtain their consent for accessing activity data"
 msgstr "Contactar al paciente para obtener su consentimiento para acceder a los datos de esta prestación"
 
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:143
+msgid "Copy link"
+msgstr ""
+
 #: src/containers/MedicationManagement/index.tsx:38
 #: src/containers/MedicationManagementDetail/index.tsx:66
 msgid "Cost"
@@ -594,11 +601,11 @@ msgstr "Costo"
 #~ msgid "Could not find image source in markdown"
 #~ msgstr ""
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:88
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:104
 msgid "Create"
 msgstr "Crear"
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:53
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:69
 #: src/containers/EncounterDetails/hooks.ts:31
 #: src/containers/PatientDetails/PatientDocuments/index.tsx:29
 msgid "Create document"
@@ -802,7 +809,7 @@ msgstr "Duración (minutos)"
 msgid "Edit"
 msgstr "Editar"
 
-#: src/containers/Scheduling/ScheduleCalendar/components/EditAppointmentModal/index.tsx:32
+#: src/containers/Scheduling/ScheduleCalendar/components/EditAppointmentModal/index.tsx:30
 msgid "Edit Appointment"
 msgstr "Editar agendamiento"
 
@@ -890,8 +897,7 @@ msgstr "Error mientras se modifica el documento"
 #~ msgid "Error while extracting"
 #~ msgstr "Error durante la extracción"
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:61
-#: src/controls/GroupTable/index.tsx:61
+#: src/controls/GroupTable/index.tsx:65
 #~ msgid "Expand all"
 #~ msgstr ""
 
@@ -1177,8 +1183,7 @@ msgstr "Apellido"
 msgid "Light"
 msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:94
-#: src/controls/GroupTable/index.tsx:94
+#: src/controls/GroupTable/index.tsx:98
 #~ msgid "linkIdX or linkIdY not defined"
 #~ msgstr ""
 
@@ -1529,6 +1534,11 @@ msgstr "Propiedades"
 msgid "Provider"
 msgstr "Proveedor"
 
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:94
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:127
+msgid "QR code"
+msgstr ""
+
 #: src/containers/InvoiceDetails/index.tsx:62
 msgid "Quantity"
 msgstr "Cantidad"
@@ -1627,7 +1637,7 @@ msgstr "Sábado"
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:130
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:98
 #: src/containers/Scheduling/Availability/index.tsx:73
-#: src/containers/SetPassword/index.tsx:27
+#: src/containers/SetPassword/index.tsx:25
 msgid "Save"
 msgstr "Guardar"
 
@@ -1732,7 +1742,7 @@ msgstr "Selecciona hora"
 #: src/components/BaseQuestionnaireResponseForm/widgets/choice/index.tsx:26
 #: src/components/BaseQuestionnaireResponseForm/widgets/choice/index.tsx:56
 #: src/controls/Choice/index.tsx:NaN
-#: src/controls/Choice/index.tsx:55
+#: src/controls/Choice/index.tsx:25
 #~ msgid "Select..."
 #~ msgstr "Seleccionar..."
 
@@ -1752,7 +1762,7 @@ msgstr "Solicitud de servicios"
 msgid "Services"
 msgstr "Servicios"
 
-#: src/containers/SetPassword/index.tsx:35
+#: src/containers/SetPassword/index.tsx:33
 msgid "Set password"
 msgstr "Establecer contraseña"
 
@@ -1764,7 +1774,7 @@ msgstr ""
 msgid "Sex"
 msgstr "Sexo"
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:78
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:87
 msgid "Share link"
 msgstr "Compartir enlace"
 
@@ -1877,8 +1887,11 @@ msgid "Submit and Go Forward"
 msgstr "Presentar y seguir adelante"
 
 #: src/uberComponents/QuestionnaireModal/index.tsx:41
-msgid "Successfully saved"
-msgstr "Guardado exitosamente"
+#: src/uberComponents/ResourceListPage/actions.tsx:78
+#: src/uberComponents/ResourceListPage/actions.tsx:105
+#: src/uberComponents/ResourceListPage/actions.tsx:146
+#~ msgid "Successfully saved"
+#~ msgstr "Guardado exitosamente"
 
 #: src/uberComponents/ResourceListPage/actions.tsx:62
 #: src/uberComponents/ResourceListPage/actions.tsx:98
@@ -1898,8 +1911,7 @@ msgstr "Domingo"
 msgid "System"
 msgstr "Sistema"
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:52
-#: src/controls/GroupTable/index.tsx:52
+#: src/controls/GroupTable/index.tsx:56
 #~ msgid "Table View"
 #~ msgstr ""
 
@@ -1936,7 +1948,8 @@ msgstr "El documento no existe"
 msgid "The document successfully amended"
 msgstr "El documento fue modificado exitosamente"
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:73
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:82
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:139
 msgid "The link was copied to clipboard"
 msgstr "El enlace fue copiado al portapapeles"
 
@@ -1957,12 +1970,11 @@ msgstr "Aún no hay documentos"
 msgid "This audio cannot be played in Safari, please download the audio or use the Chrome browser"
 msgstr "Este audio no se puede reproducir en Safari, por favor descarga el audio o usa el navegador Chrome"
 
-#: src/controls/EditableGroup/index.tsx:50
+#: src/controls/EditableGroup/index.tsx:52
 #~ msgid "This itemControl is designed for non-repeatable groups"
 #~ msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:99
-#: src/controls/GroupTable/index.tsx:99
+#: src/controls/GroupTable/index.tsx:103
 #~ msgid "This itemControl is designed for repeatable groups, but this group is not repeatable"
 #~ msgstr ""
 
@@ -2039,7 +2051,7 @@ msgstr "Desconocido"
 msgid "Upcoming appointment"
 msgstr "Próxima cita"
 
-#: src/controls/EditableGroup/index.tsx:34
+#: src/controls/EditableGroup/index.tsx:36
 #~ msgid "Update"
 #~ msgstr ""
 

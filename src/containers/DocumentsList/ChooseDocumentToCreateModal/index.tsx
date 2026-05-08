@@ -1,7 +1,8 @@
 import { t, Trans } from '@lingui/macro';
-import { Button, ModalProps, notification, Radio, Space } from 'antd';
+import { Button, Flex, ModalProps, notification, Radio, Space } from 'antd';
 import { Encounter, Patient, Questionnaire } from 'fhir/r4b';
 import _ from 'lodash';
+import { QRCodeSVG } from 'qrcode.react';
 import { useCallback, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -25,6 +26,7 @@ interface Props extends ModalProps {
 export const ChooseDocumentToCreateModal = (props: Props) => {
     const { subjectType, patient, encounter, onCancel, context, openNewTab, displayShareButton = true } = props;
     const [questionnaireId, setQuestionnaireId] = useState();
+    const [qrCodeModalIsVisible, setQRCodeModalIsVisible] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
     const routeToOpen = `${location.pathname}/new/${questionnaireId}`;
@@ -47,6 +49,20 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
         setQuestionnaireId(undefined);
     }, [onCancel]);
 
+    const onCloseQRCodeModal = useCallback(() => {
+        setQRCodeModalIsVisible(false);
+        onCloseModal();
+    }, [onCloseModal]);
+
+    const buildShareLink = useCallback(() => {
+        const params = _.compact([
+            `patient=${patient.id}`,
+            `questionnaire=${questionnaireId}`,
+            encounter?.id ? `encounter=${encounter.id}` : null,
+        ]);
+        return `${window.location.origin}/questionnaire?${params.join('&')}`;
+    }, [patient.id, questionnaireId, encounter?.id]);
+
     return (
         <>
             <Modal
@@ -61,14 +77,7 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
                                   key="share-link"
                                   disabled={!questionnaireId}
                                   onClick={() => {
-                                      const questionnaireParams = _.compact([
-                                          `patient=${patient.id}`,
-                                          `questionnaire=${questionnaireId}`,
-                                          encounter?.id ? `encounter=${encounter.id}` : null,
-                                      ]);
-                                      navigator.clipboard.writeText(
-                                          `${window.location.origin}/questionnaire?${questionnaireParams.join('&')}`,
-                                      );
+                                      navigator.clipboard.writeText(buildShareLink());
                                       notification.success({
                                           message: t`The link was copied to clipboard`,
                                       });
@@ -76,6 +85,13 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
                                   }}
                               >
                                   <Trans>Share link</Trans>
+                              </Button>,
+                              <Button
+                                  key="qr-code"
+                                  disabled={!questionnaireId}
+                                  onClick={() => setQRCodeModalIsVisible(true)}
+                              >
+                                  <Trans>QR code</Trans>
                               </Button>,
                           ]
                         : []),
@@ -89,6 +105,7 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
                     </Button>,
                 ]}
                 {...props}
+                open={(props.open ?? false) && !qrCodeModalIsVisible}
             >
                 <RenderRemoteData renderLoading={Spinner} remoteData={questionnairesResponse}>
                     {(questionnaires) => (
@@ -105,6 +122,34 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
                         </>
                     )}
                 </RenderRemoteData>
+            </Modal>
+            <Modal
+                title={t`QR code`}
+                open={qrCodeModalIsVisible}
+                onCancel={onCloseQRCodeModal}
+                footer={[
+                    <Button key="back" onClick={() => setQRCodeModalIsVisible(false)}>
+                        <Trans>Back</Trans>
+                    </Button>,
+                    <Button
+                        key="copy"
+                        onClick={() => {
+                            navigator.clipboard.writeText(buildShareLink());
+                            notification.success({
+                                message: t`The link was copied to clipboard`,
+                            });
+                        }}
+                    >
+                        <Trans>Copy link</Trans>
+                    </Button>,
+                    <Button key="close" type="primary" onClick={onCloseQRCodeModal}>
+                        <Trans>Close</Trans>
+                    </Button>,
+                ]}
+            >
+                <Flex justify="center">
+                    <QRCodeSVG value={buildShareLink()} size={256} />
+                </Flex>
             </Modal>
         </>
     );
