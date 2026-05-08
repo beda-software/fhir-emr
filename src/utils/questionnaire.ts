@@ -67,6 +67,10 @@ export function getDisplay(
         return value.Reference.display;
     }
 
+    if (value.Quantity) {
+        return `${value.Quantity.value} ${value?.Quantity?.unit}`;
+    }
+
     console.warn(`There is not implementation for getDisplay of ${JSON.stringify(value)}`);
 
     return '';
