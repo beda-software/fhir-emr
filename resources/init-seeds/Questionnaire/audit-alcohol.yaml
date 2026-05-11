@@ -1,0 +1,554 @@
+id: audit-alcohol
+resourceType: Questionnaire
+name: audit-alcohol-screening
+title: AUDIT Alcohol Screening Tool
+status: active
+subjectType:
+  - Encounter
+  - Patient
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/audit-alcohol
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire  
+useContext:
+  - code:
+      code: questionnaire-type
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+    value:
+      CodeableConcept:
+        coding:
+          - code: form-library
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+  - name:
+      code: Author
+    type:
+      - PractitionerRole
+      - Practitioner
+      - Patient
+      - Organization
+item:
+  - linkId: dateTime
+    text: DateTime
+    type: dateTime
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "now()"
+
+  - linkId: patientId
+    text: Patient ID
+    type: string
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.id"
+
+  - linkId: patientName
+    text: Patient Name
+    type: string
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.name.first().given.first() + ' ' + %Patient.name.first().family"
+
+  - linkId: audit-intro
+    text: "The AUDIT (Alcohol Use Disorders Identification Test) is an effective and reliable screening tool for detecting risky and harmful drinking patterns. Answer the following questions about your alcohol use during the past 12 months."
+    type: display
+
+  - linkId: audit-questions
+    text: Alcohol Use Questions
+    type: group
+    itemControl:
+      coding:
+        - code: group-voice
+    item:
+      - linkId: audit-q1
+        text: "1. How often do you have a drink containing alcohol?"
+        required: true
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA6270-8"
+              display: "Never"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 0
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18926-8"
+              display: "Monthly or less"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 1
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18927-6"
+              display: "2-4 times a month"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 2
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18928-4"
+              display: "2-3 times a week"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 3
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18929-2"
+              display: "4+ times a week"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 4
+
+      - linkId: audit-q2
+        text: "2. How many drinks containing alcohol do you have on a typical day when you are drinking?"
+        required: true
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18930-0"
+              display: "1 or 2"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 0
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18931-8"
+              display: "3 or 4"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 1
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18932-6"
+              display: "5 or 6"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 2
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18933-4"
+              display: "7 to 9"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 3
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18934-2"
+              display: "10 or more"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 4
+
+      - linkId: audit-q3
+        text: "3. How often do you have six or more standard drinks on one occasion?"
+        required: true
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA6270-8"
+              display: "Never"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 0
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18935-9"
+              display: "Less than monthly"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 1
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18876-5"
+              display: "Monthly"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 2
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18891-4"
+              display: "Weekly"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 3
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18936-7"
+              display: "Daily or almost daily"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 4
+
+      - linkId: audit-q4
+        text: "4. How often during the last year have you found that you were not able to stop drinking once you had started?"
+        required: true
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA6270-8"
+              display: "Never"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 0
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18935-9"
+              display: "Less than monthly"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 1
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18876-5"
+              display: "Monthly"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 2
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18891-4"
+              display: "Weekly"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 3
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18936-7"
+              display: "Daily or almost daily"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 4
+
+      - linkId: audit-q5
+        text: "5. How often during the last year have you failed to do what was normally expected of you because of drinking?"
+        required: true
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA6270-8"
+              display: "Never"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 0
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18935-9"
+              display: "Less than monthly"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 1
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18876-5"
+              display: "Monthly"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 2
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18891-4"
+              display: "Weekly"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 3
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18936-7"
+              display: "Daily or almost daily"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 4
+
+      - linkId: audit-q6
+        text: "6. How often during the last year have you needed a drink first thing in the morning to get yourself going after a heavy drinking session?"
+        required: true
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA6270-8"
+              display: "Never"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 0
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18935-9"
+              display: "Less than monthly"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 1
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18876-5"
+              display: "Monthly"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 2
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18891-4"
+              display: "Weekly"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 3
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18936-7"
+              display: "Daily or almost daily"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 4
+
+      - linkId: audit-q7
+        text: "7. How often during the last year have you had a feeling of guilt or remorse after drinking?"
+        required: true
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA6270-8"
+              display: "Never"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 0
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18935-9"
+              display: "Less than monthly"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 1
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18876-5"
+              display: "Monthly"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 2
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18891-4"
+              display: "Weekly"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 3
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18936-7"
+              display: "Daily or almost daily"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 4
+
+      - linkId: audit-q8
+        text: "8. How often during the last year have you been unable to remember what happened the night before because of your drinking?"
+        required: true
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA6270-8"
+              display: "Never"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 0
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18935-9"
+              display: "Less than monthly"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 1
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18876-5"
+              display: "Monthly"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 2
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18891-4"
+              display: "Weekly"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 3
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18936-7"
+              display: "Daily or almost daily"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 4
+
+      - linkId: audit-q9
+        text: "9. Have you or someone else been injured because of your drinking?"
+        required: true
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA32-8"
+              display: "No"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 0
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18937-5"
+              display: "Yes, but not in the last year"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 2
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18938-3"
+              display: "Yes, during the last year"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 4
+
+      - linkId: audit-q10
+        text: "10. Has a relative, friend, doctor or other healthcare worker been concerned about your drinking or suggested you cut down?"
+        required: true
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA32-8"
+              display: "No"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 0
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18937-5"
+              display: "Yes, but not in the last year"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 2
+          - valueCoding:
+              system: "http://loinc.org"
+              code: "LA18938-3"
+              display: "Yes, during the last year"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 4
+
+  - linkId: audit-results
+    text: Results
+    type: group
+    variable:
+      - name: AuditScore
+        language: text/fhirpath
+        expression: >-
+          %resource.repeat(item)
+            .answer.valueCoding.extension
+            .where(url = 'http://hl7.org/fhir/StructureDefinition/itemWeight')
+            .valueDecimal
+            .sum()
+      - name: RiskLevel
+        language: text/fhirpath
+        expression: >-
+          iif(%AuditScore = 0, 'no-risk',
+            iif(%AuditScore <= 7, 'low-risk',
+              iif(%AuditScore <= 12, 'risky', 'high-risk')))
+    item:
+      - linkId: audit-total-score
+        text: AUDIT Total Score
+        type: integer
+        readOnly: true
+        itemControl:
+          coding:
+            - code: alcohol-score
+        calculatedExpression:
+          language: text/fhirpath
+          expression: "%AuditScore"
+
+      - linkId: audit-guidance-display
+        text: Intervention Guidance
+        type: display
+        itemControl:
+          coding:
+            - code: markdown
+        _text:
+          cqfExpression:
+            language: text/fhirpath
+            expression: >-
+              iif(%AuditScore.exists().not(), '',
+                iif(%RiskLevel = 'no-risk',
+                    'Provide **positive reinforcement** and offer relevant literature (may be helpful to others).',
+                  iif(%RiskLevel = 'low-risk',
+                    '### Low Risk\n\n'
+                    & 'Discuss AUDIT score. **Discuss benefits of low-risk drinking:**\n\n'
+                    & '- No more than **2 standard drinks per day**\n'
+                    & '- No more than **4 standard drinks** on a single occasion\n'
+                    & '- Aim for at least **2 alcohol free days** per week\n'
+                    & '- If pregnant or breastfeeding, **NO alcohol** is the safest option\n\n'
+                    & 'Offer *Alcohol & my health* resource.',
+                  iif(%RiskLevel = 'risky',
+                    '### Risky\n\n'
+                    & 'Discuss AUDIT score.\n\n'
+                    & '**If client is interested, discuss:**\n\n'
+                    & '- Harms associated with **moderate risk** alcohol consumption\n'
+                    & '- Tips and benefits for reducing alcohol consumption:\n'
+                    & '  - No more than **2 standard drinks per day**\n'
+                    & '  - No more than **4 standard drinks** on a single occasion\n'
+                    & '  - Aim for at least **2 alcohol free days** per week\n'
+                    & '  - If pregnant or breastfeeding, **NO alcohol** is the safest option\n\n'
+                    & '**Follow-up and referral** and/or offer alcohol resource.',
+                    '### High Risk\n\n'
+                    & 'Discuss AUDIT score.\n\n'
+                    & '**If client is interested, discuss:**\n\n'
+                    & '- Harms associated with **high-risk** alcohol consumption\n'
+                    & '- Tips and benefits for reducing alcohol consumption\n\n'
+                    & '> **CAUTION:** If score is **13 or over**, advise client to **seek medical advice** before making any changes to their alcohol consumption. This is due to the risk of medical complications such as **seizure and death** from alcohol withdrawal in people who are dependent on alcohol.\n\n'
+                    & '**Further medical assessment is recommended**\n\n'
+                    & 'Follow-up and referral and/or offer alcohol resource.\n\n'
+                    & '**Recommended referral to:**\n'
+                    & '- GP\n'
+                    & '- Alcohol & Drug Support Line for support and services in your area'))))
+
