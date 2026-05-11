@@ -2,14 +2,14 @@ name: Release & Deploy
 on:
     workflow_run:
         workflows: [test]
-        branches: [master]
+        branches: [main]
         types: [completed]
 
 jobs:
     Release:
         runs-on: ubuntu-latest
         env:
-            BUILD_IMAGE: bedasoftware/fhir-emr:master
+            BUILD_IMAGE: bedasoftware/fhir-emr:main
             DISABLE_ESLINT_PLUGIN: true
         steps:
             - uses: actions/checkout@v6
@@ -44,7 +44,7 @@ jobs:
                   -f Dockerfile.web.release
                   --push -t ${{ env.BUILD_IMAGE }} .
     Deploy:
-        if: github.ref == 'refs/heads/master' && ${{ github.event.workflow_run.conclusion == 'success' }}
+        if: github.ref == 'refs/heads/main' && ${{ github.event.workflow_run.conclusion == 'success' }}
         needs: Release
         runs-on: ubuntu-latest
         steps:
