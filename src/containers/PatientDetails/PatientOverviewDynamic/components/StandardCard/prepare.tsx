@@ -1,4 +1,11 @@
-import { AlertOutlined, ExperimentOutlined, HeartOutlined, TeamOutlined, ThunderboltOutlined } from '@ant-design/icons';
+import {
+    AlertOutlined,
+    ExperimentOutlined,
+    HeartOutlined,
+    SubnodeOutlined,
+    TeamOutlined,
+    ThunderboltOutlined,
+} from '@ant-design/icons';
 import { t } from '@lingui/macro';
 import {
     AllergyIntolerance,
@@ -8,6 +15,7 @@ import {
     Encounter,
     Immunization,
     MedicationStatement,
+    Procedure,
     Provenance,
     Consent,
     Observation,
@@ -29,14 +37,14 @@ import { OverviewCard } from 'src/containers/PatientDetails/PatientOverviewDynam
 import medicationIcon from 'src/containers/PatientDetails/PatientOverviewDynamic/images/medication.svg';
 import { QuestionanireModal } from 'src/uberComponents/QuestionnaireModal';
 import { compileAsFirst, compileAsArray, selectCurrentUserRoleResource } from 'src/utils';
-import { formatHumanDate } from 'src/utils/date';
+import { formatHumanDate, formatPeriodDateTime } from 'src/utils/date';
 
 export function prepareAllergies(
     allergies: AllergyIntolerance[],
     bundle: Bundle<AllergyIntolerance | Provenance>,
 ): OverviewCard<AllergyIntolerance> {
     return {
-        title: t`Allergies`,
+        title: t`Allergy & Intolerance`,
         key: 'allergies',
         icon: <ExperimentOutlined />,
         data: allergies,
@@ -73,7 +81,7 @@ export function prepareConditions(
     bundle: Bundle<Condition | Provenance>,
 ): OverviewCard<Condition> {
     return {
-        title: t`Conditions`,
+        title: t`Problems`,
         key: 'conditions',
         icon: <AlertOutlined />,
         data: conditions,
@@ -213,12 +221,53 @@ export function prepareImmunizations(
     };
 }
 
+export function prepareProcedures(
+    procedures: Procedure[],
+    bundle: Bundle<Procedure | Provenance>,
+): OverviewCard<Procedure> {
+    return {
+        title: t`Procedures`,
+        key: 'procedures',
+        icon: <SubnodeOutlined />,
+        data: procedures,
+        total: bundle.total!,
+        getKey: (r: Procedure) => r.id!,
+        columns: [
+            {
+                title: t`Title`,
+                key: 'title',
+                render: (resource: Procedure) => (
+                    <LinkToEdit
+                        name={resource.code?.coding?.[0]?.display ?? resource.code?.text}
+                        resource={resource}
+                        provenanceList={extractBundleResources(bundle).Provenance}
+                    />
+                ),
+            },
+            {
+                title: t`Date`,
+                key: 'date',
+                render: (r: Procedure) => {
+                    if (r.performedDateTime) {
+                        return formatHumanDate(r.performedDateTime);
+                    }
+                    if (r.performedPeriod) {
+                        return formatPeriodDateTime(r.performedPeriod);
+                    }
+                    return '';
+                },
+                width: 120,
+            },
+        ],
+    };
+}
+
 export function prepareMedications(
     observations: MedicationStatement[],
     bundle: Bundle<MedicationStatement | Provenance>,
 ): OverviewCard<MedicationStatement> {
     return {
-        title: t`Active Medications`,
+        title: t`Medication`,
         key: 'active-medications',
         icon: <img src={medicationIcon} />,
         data: observations,
