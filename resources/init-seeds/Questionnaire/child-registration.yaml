@@ -1,0 +1,397 @@
+resourceType: Questionnaire
+id: child-registration
+name: child-registration
+title: Child Registration
+status: active
+subjectType:
+  - Patient
+url: "http://example.org/fhir/Questionnaire/child-registration"
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+useContext:
+  - code:
+      code: questionnaire-type
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+    value:
+      CodeableConcept:
+        coding:
+          - code: form-library
+extension:
+  - url: >-
+      http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext
+    extension:
+      - url: name
+        valueCoding:
+          code: Patient
+      - url: type
+        valueCode: Patient
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+item:
+  - linkId: patientId
+    text: PatientId
+    type: string
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: '%Patient.id'
+
+  - linkId: wizard
+    type: group
+    itemControl:
+      coding:
+        - code: wizard-vertical
+    item:
+      - linkId: child-information
+        text: Child Information
+        type: group
+        item:
+          - linkId: child-surname
+            text: Child's Surname
+            type: string
+            entryFormat: Enter surname
+
+          - linkId: child-nickname
+            text: 'Known as: (Nickname)'
+            type: string
+            entryFormat: Enter nickname
+
+          - linkId: child-given-name
+            text: Child's Given name
+            type: string
+            entryFormat: Enter given name
+
+          - linkId: languages-spoken
+            text: Language/s spoken
+            type: string
+            entryFormat: e.g. English, Spanish
+
+          - linkId: date-of-birth
+            text: Date of Birth
+            type: date
+            entryFormat: DD/MM/YYYY
+
+          - linkId: current-age
+            text: Current Age
+            type: integer
+            entryFormat: Age in years
+
+          - linkId: sex
+            text: Sex
+            type: choice
+            answerOption:
+              - valueCoding:
+                  code: M
+                  system: http://hl7.org/fhir/administrative-gender
+                  display: Male
+              - valueCoding:
+                  code: F
+                  system: http://hl7.org/fhir/administrative-gender
+                  display: Female
+
+          - linkId: court-orders-legal-status
+            text: Court Orders / Legal Status
+            type: choice
+            answerOption:
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "N"
+                  display: "No"
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "Y"
+                  display: "Yes"
+
+          - linkId: court-orders-legal-status-description
+            text: If yes, please describe
+            type: text
+            entryFormat: Describe court orders or legal status details
+            enableWhen:
+              - question: court-orders-legal-status
+                operator: "="
+                answerCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "Y"
+                  display: "Yes"
+
+          - linkId: child-residential-address
+            text: Child's Residential Address/s
+            type: string
+            entryFormat: Enter full address
+
+      - linkId: mother-guardian-information
+        text: Mother/Guardian Information
+        type: group
+        item:
+          - linkId: mother-full-name
+            text: Mother/Guardian's Full Name
+            type: string
+            entryFormat: Enter full name
+
+          - linkId: mother-date-of-birth
+            text: Date of Birth (for online claiming)
+            type: date
+            entryFormat: DD/MM/YYYY
+
+          - linkId: mother-contact-number
+            text: Home / Mobile No.
+            type: string
+            entryFormat: Enter phone number
+
+          - linkId: mother-occupation
+            text: Occupation
+            type: string
+            entryFormat: Enter occupation
+
+          - linkId: mother-residential-address
+            text: 'Residential Address: (If different from child)'
+            type: string
+            entryFormat: Enter full address
+
+          - linkId: mother-email-address
+            text: Email Address
+            type: string
+            entryFormat: email@example.com
+
+          - linkId: mother-work-phone
+            text: Work Phone
+            type: string
+            entryFormat: Enter phone number
+
+      - linkId: father-guardian-information
+        text: Father/Guardian Information
+        type: group
+        item:
+          - linkId: father-full-name
+            text: Father/Guardian's Full Name
+            type: string
+            entryFormat: Enter full name
+
+          - linkId: father-date-of-birth
+            text: Date of Birth (for online claiming)
+            type: date
+            entryFormat: DD/MM/YYYY
+
+          - linkId: father-contact-number
+            text: Home / Mobile No.
+            type: string
+            entryFormat: Enter phone number
+
+          - linkId: father-occupation
+            text: Occupation
+            type: string
+            entryFormat: Enter occupation
+
+          - linkId: father-residential-address
+            text: 'Residential Address: (If different from child)'
+            type: string
+            entryFormat: Enter full address
+
+          - linkId: father-email-address
+            text: Email Address
+            type: string
+            entryFormat: email@example.com
+
+          - linkId: father-work-phone
+            text: Work Phone
+            type: string
+            entryFormat: Enter phone number
+
+      - linkId: medicare-details
+        text: Medicare Details
+        type: group
+        item:
+          - linkId: appointment-reminder
+            text: Would you like an SMS reminder of your appointment?
+            type: choice
+            answerOption:
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "N"
+                  display: "No"
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "Y"
+                  display: "Yes"
+
+          - linkId: sms-reminder-recipient
+            text: 'If yes (1 only):'
+            type: choice
+            enableWhen:
+              - question: appointment-reminder
+                operator: "="
+                answerCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "Y"
+                  display: "Yes"
+            answerOption:
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "M"
+                  display: "Mother"
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "F"
+                  display: "Father"
+
+          - linkId: medicare-number
+            text: Medicare number
+            type: string
+            entryFormat: Enter Medicare number
+
+          - linkId: father-reference-no
+            text: Father Reference No.
+            type: string
+            entryFormat: Enter Father Reference No.
+
+          - linkId: expiry-date
+            text: Expiry Date
+            type: date
+            entryFormat: DD/MM/YYYY
+
+          - linkId: mother-reference-no
+            text: Mother Reference No.
+            type: string
+            entryFormat: Enter Mother Reference No.
+
+          - linkId: child-reference-no
+            text: Child's Reference No.
+            type: string
+            entryFormat: Enter Child's Reference No.
+
+      - linkId: private-health-insurance-group
+        text: Private Health Insurance
+        type: group
+        item:
+          - linkId: private-health-insurance
+            text: Private Health Insurance
+            type: choice
+            answerOption:
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "N"
+                  display: "No"
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "Y"
+                  display: "Yes"
+
+          - linkId: extras
+            text: Extras
+            type: choice
+            answerOption:
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "N"
+                  display: "No"
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "Y"
+                  display: "Yes"
+
+          - linkId: fund
+            text: Fund
+            type: string
+            entryFormat: Enter insurance fund name
+
+          - linkId: membership-no
+            text: Membership No.
+            type: string
+            entryFormat: Enter membership number
+
+      - linkId: background-information
+        text: Background Information
+        type: group
+        item:
+          - linkId: referring-gp
+            text: Referring General Practitioner
+            type: string
+            entryFormat: Enter GP name and practice
+
+          - linkId: other-health-professionals
+            text: Other Health Professionals / Services Involved
+            type: string
+            entryFormat: e.g. Speech therapist, OT
+
+          - linkId: allergies
+            text: Allergies
+            type: string
+            entryFormat: List any known allergies
+
+          - linkId: medications
+            text: Medications
+            type: string
+            entryFormat: List current medications
+
+          - linkId: school-childcare-name
+            text: School / Childcare Name
+            type: string
+            entryFormat: Enter school or childcare name
+
+          - linkId: siblings-ages
+            text: Siblings / Ages
+            type: choice
+            answerOption:
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "N"
+                  display: "No"
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "Y"
+                  display: "Yes"
+
+          - linkId: immunisations-up-to-date
+            text: Immunisations up to date
+            type: choice
+            answerOption:
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "N"
+                  display: "No"
+              - valueCoding:
+                  system: http://terminology.hl7.org/CodeSystem/v2-0136
+                  code: "Y"
+                  display: "Yes"
+
+          - linkId: year-level
+            text: Year Level
+            type: string
+            entryFormat: e.g. Year 3, Prep, Kindergarten
+
+          - linkId: current-concerns
+            text: Current Concerns/ reason(s) for attending Northern Beaches Paediatrics
+            type: string
+            entryFormat: Enter current concerns or reason(s) for attending Northern Beaches Paediatrics
+
+      - linkId: privacy-information-and-consent
+        text: Privacy Information and Consent
+        type: group
+        item:
+          - linkId: consent-acknowledgement
+            text: Parent/Guardian Acknowledgement
+            type: display
+
+          - linkId: name-of-patient
+            text: Name of Patient
+            type: string
+            entryFormat: Enter child's full name
+
+          - linkId: name-of-parent-guardian
+            text: Name of Parent/Guardian
+            type: string
+            entryFormat: Enter parent/guardian full name
+
+          - linkId: signature-of-parent-guardian
+            text: Signature of Parent/Guardian
+            type: string
+            entryFormat: Type full name as signature
+
+          - linkId: date
+            text: Date
+            type: date
+            entryFormat: DD/MM/YYYY
