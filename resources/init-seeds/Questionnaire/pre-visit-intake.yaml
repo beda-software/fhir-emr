@@ -1,0 +1,853 @@
+resourceType: Questionnaire
+id: pre-visit-intake
+name: pre-visit-intake
+title: Pre-visit Intake
+status: active
+subjectType:
+  - Patient
+url: "http://example.org/fhir/Questionnaire/pre-visit-intake"
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+useContext:
+  - code:
+      code: questionnaire-type
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+    value:
+      CodeableConcept:
+        coding:
+          - code: form-library
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+item:
+  - linkId: patient-id
+    text: Patient ID
+    type: string
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: '%Patient.id'
+
+  - linkId: wizard
+    type: group
+    itemControl:
+      coding:
+        - code: wizard-vertical
+    item:
+      # Step 1: Medical History
+
+      - linkId: medical-history
+        text: Medical History
+        type: group
+        item:
+          # Past Illnesses/Chronic Conditions (repeatable group)
+          - linkId: past-illnesses-group
+            text: Past Illnesses / Chronic Conditions
+            type: group
+            item:
+              - linkId: has-past-illnesses
+                text: Do you have any past illnesses or chronic conditions?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "Y"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "N"
+                      display: "No"
+
+              - linkId: past-illnesses
+                text: Condition
+                type: group
+                repeats: true
+                enableWhen:
+                  - question: has-past-illnesses
+                    operator: "="
+                    answerCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "Y"
+                item:
+                  - linkId: illness-name
+                    text: Condition Name
+                    type: string
+                    required: true
+                    entryFormat: e.g. Diabetes, High blood pressure, Asthma
+
+                  - linkId: illness-clinical-status
+                    text: Current Status
+                    type: choice
+                    required: true
+                    answerOption:
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/condition-clinical
+                          code: active
+                          display: Active
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/condition-clinical
+                          code: recurrence
+                          display: Recurrence
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/condition-clinical
+                          code: relapse
+                          display: Relapse
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/condition-clinical
+                          code: inactive
+                          display: Inactive
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/condition-clinical
+                          code: remission
+                          display: Remission
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/condition-clinical
+                          code: resolved
+                          display: Resolved
+
+                  - linkId: illness-onset-date
+                    text: Date Diagnosed / Onset
+                    type: date
+                    entryFormat: dd/mm/yyyy
+
+                  - linkId: illness-abatement-date
+                    text: Date Resolved / Ended
+                    type: date
+                    entryFormat: dd/mm/yyyy
+                    enableWhen:
+                      - question: illness-clinical-status
+                        operator: "="
+                        answerCoding:
+                          system: http://terminology.hl7.org/CodeSystem/condition-clinical
+                          code: resolved
+
+                  - linkId: illness-note
+                    text: Notes
+                    type: text
+                    entryFormat: Additional details
+
+          # Surgeries & Procedures (repeatable group)
+
+          - linkId: surgeries-group
+            text: Surgeries & Procedures
+            type: group
+            item:
+              - linkId: has-surgeries
+                text: Have you had any surgeries or medical procedures?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "Y"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "N"
+                      display: "No"
+
+              - linkId: surgeries-list
+                text: Surgery / Procedure
+                type: group
+                repeats: true
+                enableWhen:
+                  - question: has-surgeries
+                    operator: "="
+                    answerCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "Y"
+                item:
+                  - linkId: surgery-name
+                    text: Surgery / Procedure Name
+                    type: string
+                    required: true
+                    entryFormat: e.g. Appendectomy, Knee replacement, Colonoscopy
+
+                  - linkId: surgery-reason
+                    text: Reason for Surgery / Procedure
+                    type: string
+                    entryFormat: e.g. Appendicitis, Arthritis, Screening
+
+                  - linkId: surgery-date
+                    text: Date of Surgery / Procedure
+                    type: date
+                    entryFormat: dd/mm/yyyy
+
+                  - linkId: surgery-hospital
+                    text: Hospital / Clinic
+                    type: string
+                    entryFormat: Name of hospital or clinic
+
+                  - linkId: surgery-note
+                    text: Notes
+                    type: text
+                    entryFormat: Additional details
+
+          # Hospitalizations (repeatable group)
+
+          - linkId: hospitalizations-group
+            text: Hospitalizations
+            type: group
+            item:
+              - linkId: has-hospitalizations
+                text: Have you been hospitalized for reasons other than surgery?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "Y"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "N"
+                      display: "No"
+
+              - linkId: hospitalizations-list
+                text: Hospitalization
+                type: group
+                repeats: true
+                enableWhen:
+                  - question: has-hospitalizations
+                    operator: "="
+                    answerCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "Y"
+                item:
+                  - linkId: hospitalization-reason
+                    text: Reason for Hospitalization
+                    type: string
+                    required: true
+                    entryFormat: e.g. Pneumonia, Heart attack, Childbirth
+
+                  - linkId: hospitalization-date
+                    text: Date of Hospitalization
+                    type: date
+                    entryFormat: dd/mm/yyyy
+
+                  - linkId: hospitalization-duration
+                    text: Duration of Hospitalization
+                    type: string
+                    entryFormat: e.g. 3 days, 1 week
+
+                  - linkId: hospitalization-hospital
+                    text: Hospital / Facility Name
+                    type: string
+                    entryFormat: Name of hospital
+
+                  - linkId: hospitalization-note
+                    text: Notes
+                    type: text
+                    entryFormat: Additional details
+
+          # Allergies
+
+          - linkId: allergies-group
+            text: Allergies & Reactions
+            type: group
+            item:
+              - linkId: has-allergies
+                text: Do you have any known allergies?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "Y"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "N"
+                      display: "No"
+
+              - linkId: allergies
+                text: Allergy
+                type: group
+                repeats: true
+                enableWhen:
+                  - question: has-allergies
+                    operator: "="
+                    answerCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "Y"
+                item:
+                  - linkId: allergy-substance
+                    text: Substance
+                    type: string
+                    required: true
+                    entryFormat: e.g. Penicillin, Peanuts, Latex
+
+                  - linkId: allergy-category
+                    text: Category
+                    type: choice
+                    answerOption:
+                      - valueCoding:
+                          system: http://hl7.org/fhir/allergy-intolerance-category
+                          code: medication
+                          display: Medication
+                      - valueCoding:
+                          system: http://hl7.org/fhir/allergy-intolerance-category
+                          code: food
+                          display: Food
+                      - valueCoding:
+                          system: http://hl7.org/fhir/allergy-intolerance-category
+                          code: environment
+                          display: Environmental
+                      - valueCoding:
+                          system: http://hl7.org/fhir/allergy-intolerance-category
+                          code: biologic
+                          display: Biologic
+
+                  - linkId: allergy-clinical-status
+                    text: Current Status
+                    type: choice
+                    answerOption:
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical
+                          code: active
+                          display: Active
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical
+                          code: inactive
+                          display: Inactive
+                      - valueCoding:
+                          system: http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical
+                          code: resolved
+                          display: Resolved
+
+                  - linkId: allergy-reaction
+                    text: Reaction
+                    type: string
+                    required: true
+                    entryFormat: e.g. Rash, Anaphylaxis, Swelling
+
+                  - linkId: allergy-note
+                    text: Notes
+                    type: text
+                    entryFormat: Additional details
+
+          # Previous Treatments or Ongoing Care
+
+          - linkId: previous-treatments-group
+            text: Previous Treatments / Ongoing Care
+            type: group
+            item:
+              - linkId: has-ongoing-treatments
+                text: Are you currently receiving any ongoing treatment or care from other healthcare providers?
+                type: choice
+                helpText: e.g. physiotherapy, mental health, specialist care
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "Y"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "N"
+                      display: "No"
+
+              - linkId: ongoing-treatments-list
+                text: Treatment / Care
+                type: group
+                repeats: true
+                enableWhen:
+                  - question: has-ongoing-treatments
+                    operator: "="
+                    answerCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "Y"
+                item:
+                  - linkId: treatment-type
+                    text: Type of Treatment / Care
+                    type: string
+                    required: true
+                    entryFormat: e.g. Physiotherapy, Psychology, Cardiology follow-up
+
+                  - linkId: treatment-provider
+                    text: Healthcare Provider / Clinic
+                    type: string
+                    entryFormat: Name of specialist or clinic
+
+                  - linkId: treatment-reason
+                    text: Reason for Treatment
+                    type: string
+                    entryFormat: e.g. Back pain, Anxiety, Heart condition
+
+                  - linkId: treatment-start-date
+                    text: Date of Treatment Start
+                    type: date
+                    entryFormat: dd/mm/yyyy
+
+                  - linkId: treatment-frequency
+                    text: Frequency of Treatment
+                    type: string
+                    entryFormat: e.g. Weekly, Monthly, Every 3 months, etc.
+
+          # Vaccinations/Immunizations
+
+          - linkId: vaccinations-group
+            text: Vaccinations / Immunizations
+            type: group
+            item:
+              - linkId: has-vaccination-records
+                text: Do you have records of any vaccinations you've received?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "Y"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "N"
+                      display: "No"
+
+              - linkId: vaccinations-list
+                text: Recent Vaccinations
+                type: group
+                repeats: true
+                enableWhen:
+                  - question: has-vaccination-records
+                    operator: "="
+                    answerCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "Y"
+                item:
+                  - linkId: vaccination-name
+                    text: Vaccine Name
+                    type: string
+                    required: true
+                    entryFormat: e.g. COVID-19, Flu, Tetanus, Hepatitis B
+
+                  - linkId: vaccination-date
+                    text: Date Received
+                    type: date
+                    required: true
+                    entryFormat: dd/mm/yyyy
+
+                  - linkId: vaccination-lot-number
+                    text: Lot / Batch Number (if known)
+                    type: string
+                    entryFormat: Vaccine batch/lot number
+
+                  - linkId: vaccination-note
+                    text: Notes
+                    type: text
+                    entryFormat: Any additional information
+
+          # Date of Last General Check-up
+
+          - linkId: last-checkup-group
+            text: Last General Check-up
+            type: group
+            item:
+              - linkId: last-checkup-date
+                text: Date of your last general health check-up
+                type: date
+                entryFormat: dd/mm/yyyy
+
+              - linkId: last-checkup-provider
+                text: Healthcare Provider / Clinic
+                type: string
+                entryFormat: Name of GP or clinic
+
+      # Step 2: Lifestyle and Social History
+
+      - linkId: lifestyle-social-history
+        text: Lifestyle & Social History
+        type: group
+        item:
+          # Smoking
+          - linkId: smoking-group
+            text: Smoking
+            type: group
+            item:
+              - linkId: smoking-status
+                text: What is your smoking status?
+                type: choice
+                required: true
+                answerValueSet: https://healthterminologies.gov.au/fhir/ValueSet/smoking-status-1
+                preferredTerminologyServer: https://tx.dev.hl7.org.au/fhir
+
+          # Alcohol Use
+          - linkId: alcohol-group
+            text: Alcohol Use
+            type: group
+            item:
+              - linkId: alcohol-status
+                text: What is your alcohol consumption status?
+                type: choice
+                required: true
+                answerValueSet: https://healthterminologies.gov.au/fhir/ValueSet/alcohol-intake-status-1
+                preferredTerminologyServer: https://tx.dev.hl7.org.au/fhir
+
+          # Recreational Drug Use
+          - linkId: recreational-drugs-group
+            text: Recreational Drug Use
+            type: group
+            item:
+              - linkId: recreational-drugs-status
+                text: Do you use recreational drugs?
+                type: choice
+                required: true
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      code: never
+                      display: Never
+                  - valueCoding:
+                      code: past
+                      display: Past use
+                  - valueCoding:
+                      code: current
+                      display: Current use
+
+              - linkId: recreational-drugs-details-group
+                text: Drug Use Details
+                type: group
+                enableBehavior: any
+                enableWhen:
+                  - question: recreational-drugs-status
+                    operator: "="
+                    answerCoding:
+                      code: past
+                  - question: recreational-drugs-status
+                    operator: "="
+                    answerCoding:
+                      code: current
+                item:
+                  - linkId: recreational-drugs-type
+                    text: Type of substance(s)
+                    type: choice
+                    repeats: true
+                    answerOption:
+                      - valueCoding:
+                          code: cannabis
+                          display: Cannabis / Marijuana
+                      - valueCoding:
+                          code: cocaine
+                          display: Cocaine
+                      - valueCoding:
+                          code: amphetamines
+                          display: Amphetamines / Methamphetamine
+                      - valueCoding:
+                          code: opioids
+                          display: Opioids (non-prescribed)
+                      - valueCoding:
+                          code: mdma
+                          display: MDMA / Ecstasy
+                      - valueCoding:
+                          code: hallucinogens
+                          display: Hallucinogens
+                      - valueCoding:
+                          code: other
+                          display: Other
+
+                  - linkId: recreational-drugs-other
+                    text: Please specify other substance(s)
+                    type: string
+                    entryFormat: Other substance(s)
+                    enableWhen:
+                      - question: recreational-drugs-type
+                        operator: "="
+                        answerCoding:
+                          code: other
+
+                  - linkId: recreational-drugs-frequency
+                    text: Frequency of use
+                    type: choice
+                    answerOption:
+                      - valueCoding:
+                          code: rarely
+                          display: Rarely (a few times a year)
+                      - valueCoding:
+                          code: occasionally
+                          display: Occasionally (monthly)
+                      - valueCoding:
+                          code: regularly
+                          display: Regularly (weekly)
+                      - valueCoding:
+                          code: daily
+                          display: Daily or almost daily
+
+          # Exercise
+          - linkId: exercise-group
+            text: Exercise
+            type: group
+            item:
+              - linkId: exercise-regular
+                text: Do you exercise regularly?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "Y"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "N"
+                      display: "No"
+
+              - linkId: exercise-details-group
+                text: Exercise Details
+                type: group
+                enableWhen:
+                  - question: exercise-regular
+                    operator: "="
+                    answerCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "Y"
+                item:
+                  - linkId: exercise-types
+                    text: What types of physical activity do you do?
+                    type: text
+                    entryFormat: e.g. Walking, Swimming, Gym, Running, Cycling
+
+                  - linkId: exercise-frequency
+                    text: How often do you exercise?
+                    type: choice
+                    answerOption:
+                      - valueCoding:
+                          code: 1-2-times-week
+                          display: 1-2 times per week
+                      - valueCoding:
+                          code: 3-4-times-week
+                          display: 3-4 times per week
+                      - valueCoding:
+                          code: 5-or-more-times-week
+                          display: 5 or more times per week
+
+                  - linkId: exercise-duration
+                    text: Typical duration per session
+                    type: choice
+                    answerOption:
+                      - valueCoding:
+                          code: less-than-30
+                          display: Less than 30 minutes
+                      - valueCoding:
+                          code: 30-60
+                          display: 30-60 minutes
+                      - valueCoding:
+                          code: more-than-60
+                          display: More than 60 minutes
+
+      # Step 3: Current Health Concerns
+
+      - linkId: current-health-concerns
+        text: Current Health Concerns
+        type: group
+        item:
+          # Reason for visit
+          - linkId: reason-for-visit-group
+            text: Reason for Visit
+            type: group
+            item:
+              - linkId: reason-for-visit
+                text: >-
+                  Please describe the primary issue, symptoms, or reason for your upcoming visit in your own words
+                type: text
+                required: true
+                entryFormat: Describe your main concern or reason for this visit
+
+          # Other symptoms
+          - linkId: other-symptoms-group
+            text: Other Symptoms
+            type: group
+            item:
+              - linkId: other-symptoms
+                text: >-
+                  List any other symptoms, changes in health, or relevant information related to your concern
+                type: text
+                entryFormat: Describe any additional symptoms or health changes
+
+              - linkId: symptoms-affecting-daily-life
+                text: Are these symptoms affecting your daily life?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "Y"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "N"
+                      display: "No"
+
+              - linkId: symptoms-affecting-daily-life-description
+                text: Please describe how these symptoms are affecting your daily life
+                type: text
+                entryFormat: e.g. Difficulty sleeping, Pain in the morning, etc.
+                enableWhen:
+                  - question: symptoms-affecting-daily-life
+                    operator: "="
+                    answerCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "Y"
+
+      # Step 4: Medications & Supplements
+      
+      - linkId: medications-supplements
+        text: Medications & Supplements
+        type: group
+        item:
+          # Current Medications
+          - linkId: current-medications-group
+            text: Current Medications
+            type: group
+            item:
+              - linkId: takes-medications
+                text: Are you currently taking any medications (prescription or over-the-counter)?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "Y"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "N"
+                      display: "No"
+
+              - linkId: medications
+                text: Medication
+                type: group
+                repeats: true
+                enableWhen:
+                  - question: takes-medications
+                    operator: "="
+                    answerCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "Y"
+                item:
+                  - linkId: medication-name
+                    text: Medication Name
+                    type: string
+                    required: true
+                    entryFormat: e.g. Metformin, Aspirin, Ibuprofen
+
+                  - linkId: medication-dose
+                    text: Dose
+                    type: string
+                    required: true
+                    entryFormat: e.g. 500mg, 100mg
+
+                  - linkId: medication-frequency
+                    text: Frequency
+                    type: choice
+                    required: true
+                    answerOption:
+                      - valueCoding:
+                          code: once-daily
+                          display: Once daily
+                      - valueCoding:
+                          code: twice-daily
+                          display: Twice daily
+                      - valueCoding:
+                          code: three-times-daily
+                          display: Three times daily
+                      - valueCoding:
+                          code: four-times-daily
+                          display: Four times daily
+                      - valueCoding:
+                          code: as-needed
+                          display: As needed
+                      - valueCoding:
+                          code: weekly
+                          display: Weekly
+                      - valueCoding:
+                          code: other
+                          display: Other
+
+                  - linkId: medication-reason
+                    text: Reason for taking
+                    type: string
+                    entryFormat: e.g. Blood pressure, Pain relief
+
+          # Supplements/Vitamins
+          - linkId: supplements-group
+            text: Supplements / Vitamins
+            type: group
+            item:
+              - linkId: takes-supplements
+                text: Are you currently taking any supplements or vitamins?
+                type: choice
+                itemControl:
+                  coding:
+                    - code: inline-choice
+                answerOption:
+                  - valueCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "Y"
+                      display: "Yes"
+                  - valueCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "N"
+                      display: "No"
+
+              - linkId: supplements
+                text: Supplement / Vitamin
+                type: group
+                repeats: true
+                enableWhen:
+                  - question: takes-supplements
+                    operator: "="
+                    answerCoding:
+                      system: http://terminology.hl7.org/CodeSystem/v2-0136
+                      code: "Y"
+                item:
+                  - linkId: supplement-name
+                    text: Name
+                    type: string
+                    required: true
+                    entryFormat: e.g. Vitamin D, Fish Oil, Iron
+
+                  - linkId: supplement-dose
+                    text: Dose
+                    type: string
+                    entryFormat: e.g. 1000 IU, 500mg
+
+                  - linkId: supplement-frequency
+                    text: Frequency
+                    type: choice
+                    answerOption:
+                      - valueCoding:
+                          code: once-daily
+                          display: Once daily
+                      - valueCoding:
+                          code: twice-daily
+                          display: Twice daily
+                      - valueCoding:
+                          code: as-needed
+                          display: As needed
+                      - valueCoding:
+                          code: other
+                          display: Other
