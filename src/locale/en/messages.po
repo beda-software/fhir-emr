@@ -292,8 +292,7 @@ msgstr ""
 msgid "Add break"
 msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:64
-#: src/controls/GroupTable/index.tsx:64
+#: src/controls/GroupTable/index.tsx:68
 #~ msgid "Add entry"
 #~ msgstr ""
 
@@ -422,6 +421,10 @@ msgstr ""
 msgid "Available services"
 msgstr ""
 
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:132
+msgid "Back"
+msgstr ""
+
 #: src/containers/InvoiceList/components/InvoiceStatus.tsx:14
 msgid "Balanced"
 msgstr ""
@@ -465,7 +468,7 @@ msgid "Calories"
 msgstr ""
 
 #: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:87
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:56
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:72
 #: src/containers/InvoiceList/index.tsx:108
 #: src/containers/InvoiceList/index.tsx:113
 #: src/containers/InvoiceList/index.tsx:117
@@ -513,6 +516,7 @@ msgstr ""
 msgid "Clinician successfully updated"
 msgstr ""
 
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:146
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteOpen/index.tsx:33
 msgid "Close"
 msgstr ""
@@ -526,8 +530,7 @@ msgstr ""
 msgid "Col (default)"
 msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:61
-#: src/controls/GroupTable/index.tsx:61
+#: src/controls/GroupTable/index.tsx:65
 #~ msgid "Collapse all"
 #~ msgstr ""
 
@@ -577,6 +580,10 @@ msgstr ""
 msgid "Contact the patient to obtain their consent for accessing activity data"
 msgstr ""
 
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:143
+msgid "Copy link"
+msgstr ""
+
 #: src/containers/MedicationManagement/index.tsx:38
 #: src/containers/MedicationManagementDetail/index.tsx:66
 msgid "Cost"
@@ -586,11 +593,11 @@ msgstr ""
 #~ msgid "Could not find image source in markdown"
 #~ msgstr ""
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:88
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:104
 msgid "Create"
 msgstr ""
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:53
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:69
 #: src/containers/EncounterDetails/hooks.ts:31
 #: src/containers/PatientDetails/PatientDocuments/index.tsx:29
 msgid "Create document"
@@ -766,7 +773,7 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: src/containers/Scheduling/ScheduleCalendar/components/EditAppointmentModal/index.tsx:32
+#: src/containers/Scheduling/ScheduleCalendar/components/EditAppointmentModal/index.tsx:30
 msgid "Edit Appointment"
 msgstr ""
 
@@ -833,8 +840,7 @@ msgstr ""
 msgid "Error while amending the document"
 msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:61
-#: src/controls/GroupTable/index.tsx:61
+#: src/controls/GroupTable/index.tsx:65
 #~ msgid "Expand all"
 #~ msgstr ""
 
@@ -854,7 +860,6 @@ msgstr ""
 msgid "Extract medical documents"
 msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/readonly-widgets/boolean.tsx:22
 #: src/readonly-controls/Boolean/index.tsx:21
 #~ msgid "False"
 #~ msgstr ""
@@ -1076,8 +1081,7 @@ msgstr ""
 msgid "Light"
 msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:94
-#: src/controls/GroupTable/index.tsx:94
+#: src/controls/GroupTable/index.tsx:98
 #~ msgid "linkIdX or linkIdY not defined"
 #~ msgstr ""
 
@@ -1395,6 +1399,11 @@ msgstr ""
 msgid "Provider"
 msgstr ""
 
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:94
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:127
+msgid "QR code"
+msgstr ""
+
 #: src/containers/InvoiceDetails/index.tsx:62
 msgid "Quantity"
 msgstr ""
@@ -1481,7 +1490,7 @@ msgstr ""
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:130
 #: src/containers/QuestionnaireBuilder/QuestionnaireSaveForm/index.tsx:98
 #: src/containers/Scheduling/Availability/index.tsx:73
-#: src/containers/SetPassword/index.tsx:27
+#: src/containers/SetPassword/index.tsx:25
 msgid "Save"
 msgstr ""
 
@@ -1591,7 +1600,7 @@ msgstr ""
 msgid "Services"
 msgstr ""
 
-#: src/containers/SetPassword/index.tsx:35
+#: src/containers/SetPassword/index.tsx:33
 msgid "Set password"
 msgstr ""
 
@@ -1603,7 +1612,7 @@ msgstr ""
 msgid "Sex"
 msgstr ""
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:78
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:87
 msgid "Share link"
 msgstr ""
 
@@ -1712,8 +1721,8 @@ msgid "Submit and Go Forward"
 msgstr ""
 
 #: src/uberComponents/QuestionnaireModal/index.tsx:41
-msgid "Successfully saved"
-msgstr ""
+#~ msgid "Successfully saved"
+#~ msgstr ""
 
 #: src/uberComponents/ResourceListPage/actions.tsx:62
 #: src/uberComponents/ResourceListPage/actions.tsx:98
@@ -1733,8 +1742,7 @@ msgstr ""
 msgid "System"
 msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:52
-#: src/controls/GroupTable/index.tsx:52
+#: src/controls/GroupTable/index.tsx:56
 #~ msgid "Table View"
 #~ msgstr ""
 
@@ -1771,7 +1779,8 @@ msgstr ""
 msgid "The document successfully amended"
 msgstr ""
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:73
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:82
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:139
 msgid "The link was copied to clipboard"
 msgstr ""
 
@@ -1792,12 +1801,11 @@ msgstr ""
 msgid "This audio cannot be played in Safari, please download the audio or use the Chrome browser"
 msgstr ""
 
-#: src/controls/EditableGroup/index.tsx:50
+#: src/controls/EditableGroup/index.tsx:52
 #~ msgid "This itemControl is designed for non-repeatable groups"
 #~ msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/widgets/GroupTable/index.tsx:99
-#: src/controls/GroupTable/index.tsx:99
+#: src/controls/GroupTable/index.tsx:103
 #~ msgid "This itemControl is designed for repeatable groups, but this group is not repeatable"
 #~ msgstr ""
 
@@ -1838,7 +1846,6 @@ msgstr ""
 msgid "Total"
 msgstr ""
 
-#: src/components/BaseQuestionnaireResponseForm/readonly-widgets/boolean.tsx:22
 #: src/readonly-controls/Boolean/index.tsx:21
 #~ msgid "True"
 #~ msgstr ""
@@ -1870,7 +1877,7 @@ msgstr ""
 msgid "Upcoming appointment"
 msgstr ""
 
-#: src/controls/EditableGroup/index.tsx:34
+#: src/controls/EditableGroup/index.tsx:36
 #~ msgid "Update"
 #~ msgstr ""
 
