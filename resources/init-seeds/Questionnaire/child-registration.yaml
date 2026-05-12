@@ -44,7 +44,7 @@ item:
     type: group
     itemControl:
       coding:
-        - code: wizard-vertical
+        - code: wizard
     item:
       - linkId: child-information
         text: Child Information
