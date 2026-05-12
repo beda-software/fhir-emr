@@ -1,6 +1,4 @@
-import { Button } from 'antd';
-
-import { Paragraph } from 'src/components/Typography';
+import { Button, Tooltip } from 'antd';
 
 import { S } from './Assistant.styles';
 import { useVoice } from './hooks';
@@ -28,12 +26,13 @@ export function Assistant() {
                         Start filling by voice
                     </Button>
                 ) : (
-                    <Button onClick={() => stopRecording()}>Stop</Button>
+                    <Tooltip title={text}>
+                        <Button onClick={() => stopRecording()} color="red">
+                            {isSpeaking ? <Speaking /> : null}
+                            Stop
+                        </Button>
+                    </Tooltip>
                 )}
-                <Paragraph>
-                    {isSpeaking ? <Speaking /> : null}
-                    {text}
-                </Paragraph>
             </S.Row>
         </S.Root>
     );
