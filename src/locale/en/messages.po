@@ -423,7 +423,7 @@ msgstr ""
 msgid "Available services"
 msgstr ""
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:132
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:141
 msgid "Back"
 msgstr ""
 
@@ -470,7 +470,7 @@ msgid "Calories"
 msgstr ""
 
 #: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:87
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:72
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:88
 #: src/containers/InvoiceList/index.tsx:108
 #: src/containers/InvoiceList/index.tsx:113
 #: src/containers/InvoiceList/index.tsx:117
@@ -518,7 +518,7 @@ msgstr ""
 msgid "Clinician successfully updated"
 msgstr ""
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:146
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:155
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteOpen/index.tsx:33
 msgid "Close"
 msgstr ""
@@ -535,6 +535,10 @@ msgstr ""
 #: src/controls/GroupTable/index.tsx:65
 #~ msgid "Collapse all"
 #~ msgstr ""
+
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/categories.ts:17
+msgid "Common"
+msgstr ""
 
 #: src/components/QuestionnairesWizard/components/QuestionnairesWizardFooter/index.tsx:45
 msgid "Complete"
@@ -581,7 +585,7 @@ msgstr ""
 msgid "Contact the patient to obtain their consent for accessing activity data"
 msgstr ""
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:143
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:152
 msgid "Copy link"
 msgstr ""
 
@@ -594,13 +598,13 @@ msgstr ""
 #~ msgid "Could not find image source in markdown"
 #~ msgstr ""
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:104
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:120
 msgid "Create"
 msgstr ""
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:69
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:85
 #: src/containers/EncounterDetails/hooks.ts:31
-#: src/containers/PatientDetails/PatientDocuments/index.tsx:29
+#: src/containers/PatientDetails/PatientDocuments/index.tsx:31
 msgid "Create document"
 msgstr ""
 
@@ -937,6 +941,10 @@ msgstr ""
 msgid "Go to the encounter"
 msgstr ""
 
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/categories.ts:16
+msgid "GP"
+msgstr ""
+
 #: src/controls/Group/GroupCard/index.tsx:67
 #: src/controls/Group/GroupCard/index.tsx:97
 #~ msgid "Group"
@@ -1146,6 +1154,10 @@ msgstr ""
 msgid "Medications"
 msgstr ""
 
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/categories.ts:15
+msgid "Mental Health"
+msgstr ""
+
 #: src/containers/PractitionerDetails/PractitionerOverview/index.tsx:39
 msgid "Middle name"
 msgstr ""
@@ -1224,6 +1236,10 @@ msgstr ""
 msgid "No prepared text"
 msgstr ""
 
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:204
+msgid "No questionnaires available"
+msgstr ""
+
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteCreate/index.tsx:68
 msgid "Note successfully created"
 msgstr ""
@@ -1287,6 +1303,10 @@ msgstr ""
 msgid "Orders"
 msgstr ""
 
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/categories.ts:18
+msgid "Others"
+msgstr ""
+
 #: src/containers/MedicationManagementDetail/index.tsx:100
 #: src/containers/PatientDetails/PatientHeader/index.tsx:49
 #: src/containers/PatientDetails/PatientHeader/index.tsx:92
@@ -1298,6 +1318,10 @@ msgstr ""
 
 #: src/containers/MedicationManagementDetail/index.tsx:59
 msgid "Packaging"
+msgstr ""
+
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/categories.ts:14
+msgid "Paediatrics"
 msgstr ""
 
 #: src/containers/PatientDetails/HMBDiagnostic/config.tsx:123
@@ -1412,8 +1436,8 @@ msgstr ""
 msgid "Provider"
 msgstr ""
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:94
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:127
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:110
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:136
 msgid "QR code"
 msgstr ""
 
@@ -1625,7 +1649,7 @@ msgstr ""
 msgid "Sex"
 msgstr ""
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:87
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:103
 msgid "Share link"
 msgstr ""
 
@@ -1788,8 +1812,8 @@ msgstr ""
 msgid "The document successfully amended"
 msgstr ""
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:82
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:139
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:98
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:148
 msgid "The link was copied to clipboard"
 msgstr ""
 

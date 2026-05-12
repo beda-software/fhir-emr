@@ -10,6 +10,7 @@ import { PageContainer } from 'src/components/BaseLayout/PageContainer';
 import { RouteItem } from 'src/components/BaseLayout/Sidebar/SidebarTop';
 import { PatientEncounter } from 'src/components/PatientEncounter';
 import { Spinner } from 'src/components/Spinner';
+import { getFormLibraryDocumentCategories } from 'src/containers/DocumentsList/ChooseDocumentToCreateModal/categories';
 import { PatientReloadProvider } from 'src/containers/PatientDetails/Dashboard/contexts';
 import { PatientDocumentDetailsReadonlyContext } from 'src/containers/PatientDetails/PatientDocumentDetails/context';
 import { PatientDocumentWizard } from 'src/containers/PatientDetails/PatientDocumentWizard';
@@ -152,6 +153,7 @@ export const PatientDetails = (props: PatientDetailsProps) => {
                                                         key={`forms-${patient.id}`}
                                                         patient={patient}
                                                         context="form-library"
+                                                        categories={getFormLibraryDocumentCategories()}
                                                     />
                                                 }
                                             />
