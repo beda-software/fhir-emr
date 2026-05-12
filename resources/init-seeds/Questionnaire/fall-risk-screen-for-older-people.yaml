@@ -1,6 +1,23 @@
 resourceType: Questionnaire
 title: Fall Risk Screen for Older People
 status: active
+description: Screens older adults for risk factors associated with falls, including mobility, medications, and environmental hazards.
+useContext:
+  - code:
+      code: questionnaire-type
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+    value:
+      CodeableConcept:
+        coding:
+          - code: form-library
+  - code:
+      code: category
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+    value:
+      CodeableConcept:
+        coding:
+          - code: common
+            system: https://beda.software/FHIR/CodeSystem/questionnaire-category
 id: fall-risk-screen-for-older-people
 url: fall-risk-screen-for-older-people
 name: fall-risk-screen-for-older-people

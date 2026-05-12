@@ -3,6 +3,7 @@ id: preadmission
 name: preadmission
 title: New Patient Registration
 status: active
+description: Captures registration and intake details for new patients prior to their visit.
 subjectType:
   - Patient
   - Encounter
@@ -18,6 +19,14 @@ useContext:
       CodeableConcept:
         coding:
           - code: form-library
+  - code:
+      code: category
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+    value:
+      CodeableConcept:
+        coding:
+          - code: common
+            system: https://beda.software/FHIR/CodeSystem/questionnaire-category
 launchContext:
   - name:
       code: Patient
