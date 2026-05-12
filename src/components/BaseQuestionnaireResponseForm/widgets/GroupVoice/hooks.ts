@@ -1,23 +1,21 @@
 import { notification } from 'antd';
 import { Questionnaire, QuestionnaireItem } from 'fhir/r4b';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { mapResponseToForm, type GroupItemProps } from 'sdc-qrf';
 
 import { isFailure } from '@beda.software/remote-data';
 
+import { assistant } from 'src/components/Assistant/bus';
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { aiService } from 'src/services/ai';
 import { getToken } from 'src/services/auth';
 import { compileAsFirst } from 'src/utils';
 
-import { RealtimeVoiceSession, startRealtimeVoice } from './connection';
 import { merge, normalize } from './utils';
 
 const getByLinkId = compileAsFirst<Questionnaire, QuestionnaireItem>(
     'Questionnaire.repeat(item).where(linkId=%linkId)',
 );
-
-type ConnectionStatus = 'notStarted' | 'connecting' | 'connected';
 
 export function useGroupVoice(props: GroupItemProps) {
     const { parentPath, questionItem, context } = props;
@@ -32,48 +30,6 @@ export function useGroupVoice(props: GroupItemProps) {
     const [gen, setGen] = useState(0);
     const rootContext = context[0];
     const questionItemFHIR = getByLinkId(rootContext!.questionnaire!, { linkId });
-    const voice = useRef<RealtimeVoiceSession>();
-    const [connection, setConnection] = useState<ConnectionStatus>('notStarted');
-    const [text, setText] = useState('');
-    const [isSpeaking, setIsSpeaking] = useState(false);
-
-    async function startRecording() {
-        setConnection('connecting');
-        voice.current = await startRealtimeVoice(aiService);
-        function _handleEvent(evt: any) {
-            if (evt.type == 'input_audio_buffer.speech_started') {
-                setIsSpeaking(true);
-            }
-            if (evt.type == 'input_audio_buffer.speech_stopped') {
-                setIsSpeaking(false);
-            }
-            if (evt.type === 'session.updated') {
-                setConnection('connected');
-            }
-            if (evt.type == 'conversation.item.input_audio_transcription.delta') {
-                setText((t) => t + evt.delta);
-            }
-            if (evt.type == 'debug') {
-                console.log(evt);
-            }
-            if (evt.type === 'conversation.item.input_audio_transcription.completed') {
-                populate(evt.transcript);
-            }
-        }
-        voice.current?.onEvent(_handleEvent);
-        voice.current?.clearAudioBuffer();
-        voice.current?.unmuteAudio();
-    }
-
-    function stopRecording() {
-        setConnection('notStarted');
-        voice.current?.stop();
-        voice.current = undefined;
-    }
-
-    useEffect(() => {
-        return () => stopRecording();
-    }, []);
 
     async function populate(textFromAudio: string) {
         const questionnaire: Questionnaire = {
@@ -105,15 +61,11 @@ export function useGroupVoice(props: GroupItemProps) {
         );
         onChange(result[linkId] ?? {});
         setGen((g) => g + 1);
-        setText('');
     }
 
+    assistant.useBus('new-sentence', ({ text }) => populate(text), []);
+
     return {
-        connection,
-        startRecording,
-        stopRecording,
-        text,
         gen,
-        isSpeaking,
     };
 }
