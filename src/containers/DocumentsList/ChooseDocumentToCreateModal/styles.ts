@@ -12,7 +12,11 @@ export const S = {
         gap: 16px;
     `,
     CategorySelector: styled(Radio.Group)`
+        flex-wrap: wrap;
+        row-gap: 8px;
+
         .ant-radio-button-wrapper {
+            flex: 1 1 150px;
             min-height: 40px;
             display: inline-flex;
             align-items: center;

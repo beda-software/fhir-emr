@@ -120,7 +120,7 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
                         <Trans>Create</Trans>
                     </Button>,
                 ]}
-                width={880}
+                width="min(880px, calc(100vw - 32px))"
                 {...props}
                 open={(props.open ?? false) && !qrCodeModalIsVisible}
             >
