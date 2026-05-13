@@ -6,6 +6,8 @@ status: active
 subjectType:
   - Patient
 url: "http://example.org/fhir/Questionnaire/pre-visit-intake"
+mapping:
+  - reference: urn:uuid:Mapping:pre-visit-intake-medical-history-extract
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
@@ -35,7 +37,7 @@ item:
     type: group
     itemControl:
       coding:
-        - code: wizard-vertical
+        - code: wizard
     item:
       # Step 1: Medical History
 
@@ -43,13 +45,13 @@ item:
         text: Medical History
         type: group
         item:
-          # Past Illnesses/Chronic Conditions (repeatable group)
-          - linkId: past-illnesses-group
-            text: Past Illnesses / Chronic Conditions
+          # Past / Chronic Conditions (repeatable group)
+          - linkId: conditions-group
+            text: Past / Chronic Conditions
             type: group
             item:
-              - linkId: has-past-illnesses
-                text: Do you have any past illnesses or chronic conditions?
+              - linkId: has-conditions
+                text: Do you have any past or chronic conditions?
                 type: choice
                 itemControl:
                   coding:
@@ -64,24 +66,25 @@ item:
                       code: "N"
                       display: "No"
 
-              - linkId: past-illnesses
+              - linkId: conditions
                 text: Condition
                 type: group
                 repeats: true
                 enableWhen:
-                  - question: has-past-illnesses
+                  - question: has-conditions
                     operator: "="
                     answerCoding:
                       system: http://terminology.hl7.org/CodeSystem/v2-0136
                       code: "Y"
                 item:
-                  - linkId: illness-name
+                  - linkId: condition-name
                     text: Condition Name
-                    type: string
+                    type: choice
                     required: true
-                    entryFormat: e.g. Diabetes, High blood pressure, Asthma
+                    answerValueSet: https://healthterminologies.gov.au/fhir/ValueSet/clinical-condition-1
+                    preferredTerminologyServer: https://tx.dev.hl7.org.au/fhir
 
-                  - linkId: illness-clinical-status
+                  - linkId: condition-clinical-status
                     text: Current Status
                     type: choice
                     required: true
@@ -111,23 +114,23 @@ item:
                           code: resolved
                           display: Resolved
 
-                  - linkId: illness-onset-date
+                  - linkId: condition-onset-date
                     text: Date Diagnosed / Onset
                     type: date
                     entryFormat: dd/mm/yyyy
 
-                  - linkId: illness-abatement-date
+                  - linkId: condition-abatement-date
                     text: Date Resolved / Ended
                     type: date
                     entryFormat: dd/mm/yyyy
                     enableWhen:
-                      - question: illness-clinical-status
+                      - question: condition-clinical-status
                         operator: "="
                         answerCoding:
                           system: http://terminology.hl7.org/CodeSystem/condition-clinical
                           code: resolved
 
-                  - linkId: illness-note
+                  - linkId: condition-note
                     text: Notes
                     type: text
                     entryFormat: Additional details
@@ -167,9 +170,10 @@ item:
                 item:
                   - linkId: surgery-name
                     text: Surgery / Procedure Name
-                    type: string
+                    type: choice
                     required: true
-                    entryFormat: e.g. Appendectomy, Knee replacement, Colonoscopy
+                    answerValueSet: https://healthterminologies.gov.au/fhir/ValueSet/procedure-1
+                    preferredTerminologyServer: https://tx.dev.hl7.org.au/fhir
 
                   - linkId: surgery-reason
                     text: Reason for Surgery / Procedure
@@ -285,9 +289,10 @@ item:
                 item:
                   - linkId: allergy-substance
                     text: Substance
-                    type: string
+                    type: choice
                     required: true
-                    entryFormat: e.g. Penicillin, Peanuts, Latex
+                    answerValueSet: https://healthterminologies.gov.au/fhir/ValueSet/indicator-hypersensitivity-intolerance-to-substance-2
+                    preferredTerminologyServer: https://tx.dev.hl7.org.au/fhir
 
                   - linkId: allergy-category
                     text: Category
@@ -329,9 +334,10 @@ item:
 
                   - linkId: allergy-reaction
                     text: Reaction
-                    type: string
+                    type: choice
                     required: true
-                    entryFormat: e.g. Rash, Anaphylaxis, Swelling
+                    answerValueSet: https://healthterminologies.gov.au/fhir/ValueSet/clinical-finding-1
+                    preferredTerminologyServer: https://tx.dev.hl7.org.au/fhir
 
                   - linkId: allergy-note
                     text: Notes
@@ -433,9 +439,10 @@ item:
                 item:
                   - linkId: vaccination-name
                     text: Vaccine Name
-                    type: string
+                    type: choice
                     required: true
-                    entryFormat: e.g. COVID-19, Flu, Tetanus, Hepatitis B
+                    answerValueSet: https://healthterminologies.gov.au/fhir/ValueSet/australian-immunisation-register-vaccine-1
+                    preferredTerminologyServer: https://tx.dev.hl7.org.au/fhir
 
                   - linkId: vaccination-date
                     text: Date Received
@@ -711,7 +718,7 @@ item:
                       code: "Y"
 
       # Step 4: Medications & Supplements
-      
+
       - linkId: medications-supplements
         text: Medications & Supplements
         type: group
@@ -750,9 +757,10 @@ item:
                 item:
                   - linkId: medication-name
                     text: Medication Name
-                    type: string
+                    type: choice
+                    answerValueSet: https://healthterminologies.gov.au/fhir/ValueSet/medication-1
+                    preferredTerminologyServer: https://tx.dev.hl7.org.au/fhir
                     required: true
-                    entryFormat: e.g. Metformin, Aspirin, Ibuprofen
 
                   - linkId: medication-dose
                     text: Dose
@@ -826,9 +834,10 @@ item:
                 item:
                   - linkId: supplement-name
                     text: Name
-                    type: string
+                    type: choice
+                    answerValueSet: https://healthterminologies.gov.au/fhir/ValueSet/supplement-1
+                    preferredTerminologyServer: https://tx.dev.hl7.org.au/fhir
                     required: true
-                    entryFormat: e.g. Vitamin D, Fish Oil, Iron
 
                   - linkId: supplement-dose
                     text: Dose
