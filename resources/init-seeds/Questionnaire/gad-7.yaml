@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: gad-7
 title: GAD-7
 status: active
+description: Generalised Anxiety Disorder 7-item scale; screens severity of anxiety symptoms over the past two weeks.
 subjectType:
   - Encounter
   - Patient
@@ -14,6 +15,14 @@ useContext:
       CodeableConcept:
         coding:
           - code: form-library
+  - code:
+      code: category
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+    value:
+      CodeableConcept:
+        coding:
+          - code: mental-health
+            system: https://beda.software/FHIR/CodeSystem/questionnaire-category
 mapping:
   - reference: urn:uuid:Mapping:gad-7-extract
 launchContext:

@@ -33,6 +33,23 @@ meta:
 name: SOAP (Subjective, Objective, Assessment, Plan)
 title: SOAP (Subjective, Objective, Assessment, Plan)
 status: active
+description: Subjective, Objective, Assessment, Plan — structured progress note for clinical encounters.
+useContext:
+  - code:
+      code: questionnaire-type
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+    value:
+      CodeableConcept:
+        coding:
+          - code: form-library
+  - code:
+      code: category
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+    value:
+      CodeableConcept:
+        coding:
+          - code: gp
+            system: https://beda.software/FHIR/CodeSystem/questionnaire-category
 subjectType:
   - Encounter
 resourceType: Questionnaire

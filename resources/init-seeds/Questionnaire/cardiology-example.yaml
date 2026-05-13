@@ -42,6 +42,23 @@ item:
 name: cardiology-example
 title: Cardiologist consultation
 status: active
+description: Captures a cardiologist consultation including presenting complaint, examination, investigations, and management plan.
+useContext:
+  - code:
+      code: questionnaire-type
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+    value:
+      CodeableConcept:
+        coding:
+          - code: form-library
+  - code:
+      code: category
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+    value:
+      CodeableConcept:
+        coding:
+          - code: other
+            system: https://beda.software/FHIR/CodeSystem/questionnaire-category
 subjectType:
   - Encounter
 id: cardiology-example

@@ -21,6 +21,23 @@ meta:
 name: HOPC (History of Present Illness, Onset, Provocation, Characterization)
 title: HOPC (History of Present Illness, Onset, Provocation, Characterization)
 status: active
+description: History of Present Complaint — captures onset, characterization, provocation, and other clinical attributes of the presenting issue.
+useContext:
+  - code:
+      code: questionnaire-type
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+    value:
+      CodeableConcept:
+        coding:
+          - code: form-library
+  - code:
+      code: category
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+    value:
+      CodeableConcept:
+        coding:
+          - code: gp
+            system: https://beda.software/FHIR/CodeSystem/questionnaire-category
 subjectType:
   - Encounter
 resourceType: Questionnaire

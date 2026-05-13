@@ -1,6 +1,23 @@
 title: Review of Systems
 name: review-of-systems
 status: active
+description: Systematic head-to-toe review of symptoms across body systems.
+useContext:
+  - code:
+      code: questionnaire-type
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+    value:
+      CodeableConcept:
+        coding:
+          - code: form-library
+  - code:
+      code: category
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+    value:
+      CodeableConcept:
+        coding:
+          - code: gp
+            system: https://beda.software/FHIR/CodeSystem/questionnaire-category
 subjectType:
   - Encounter
 id: review-of-systems

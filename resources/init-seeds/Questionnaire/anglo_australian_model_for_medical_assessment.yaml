@@ -166,6 +166,23 @@ meta:
 name: Anglo-Australian model for Medical Assessment
 title: Anglo-Australian model for Medical Assessment
 status: active
+description: Structured medical assessment following the Anglo-Australian general practice model, covering history, examination, and plan.
+useContext:
+  - code:
+      code: questionnaire-type
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+    value:
+      CodeableConcept:
+        coding:
+          - code: form-library
+  - code:
+      code: category
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+    value:
+      CodeableConcept:
+        coding:
+          - code: gp
+            system: https://beda.software/FHIR/CodeSystem/questionnaire-category
 subjectType:
   - Encounter
 resourceType: Questionnaire

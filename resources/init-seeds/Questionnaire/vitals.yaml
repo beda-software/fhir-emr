@@ -3,6 +3,7 @@ name: vitals
 title: Vitals
 resourceType: Questionnaire
 status: active
+description: Records routine vital signs including blood pressure, heart rate, respiratory rate, temperature, and oxygen saturation.
 mapping:
   - reference: urn:uuid:Mapping:vitals
 subjectType:
@@ -21,6 +22,16 @@ useContext:
     CodeableConcept:
       coding:
       - code: form-library
+- code:
+    code: category
+    system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+  value:
+    CodeableConcept:
+      coding:
+      - code: paediatrics
+        system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+      - code: common
+        system: https://beda.software/FHIR/CodeSystem/questionnaire-category
 meta:
   profile:
     - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire

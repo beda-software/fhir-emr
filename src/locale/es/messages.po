@@ -406,7 +406,7 @@ msgstr "Servicios disponibles"
 #~ msgid "Available units"
 #~ msgstr "Unidades disponibles"
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:132
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:141
 msgid "Back"
 msgstr ""
 
@@ -453,7 +453,7 @@ msgid "Calories"
 msgstr "Calorías"
 
 #: src/components/BaseQuestionnaireResponseForm/FormFooter.tsx:87
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:72
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:88
 #: src/containers/InvoiceList/index.tsx:108
 #: src/containers/InvoiceList/index.tsx:113
 #: src/containers/InvoiceList/index.tsx:117
@@ -522,7 +522,7 @@ msgstr "Limpiar filtros"
 msgid "Clinician successfully updated"
 msgstr "Profesional actualizado exitosamente"
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:146
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:155
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteOpen/index.tsx:33
 msgid "Close"
 msgstr "Cerrar"
@@ -539,6 +539,10 @@ msgstr "Columna (predeterminado)"
 #: src/controls/GroupTable/index.tsx:65
 #~ msgid "Collapse all"
 #~ msgstr ""
+
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/categories.ts:17
+msgid "Common"
+msgstr ""
 
 #: src/components/QuestionnairesWizard/components/QuestionnairesWizardFooter/index.tsx:45
 msgid "Complete"
@@ -589,7 +593,7 @@ msgstr "Consulta"
 msgid "Contact the patient to obtain their consent for accessing activity data"
 msgstr "Contactar al paciente para obtener su consentimiento para acceder a los datos de esta prestación"
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:143
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:152
 msgid "Copy link"
 msgstr ""
 
@@ -602,13 +606,13 @@ msgstr "Costo"
 #~ msgid "Could not find image source in markdown"
 #~ msgstr ""
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:104
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:120
 msgid "Create"
 msgstr "Crear"
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:69
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:85
 #: src/containers/EncounterDetails/hooks.ts:31
-#: src/containers/PatientDetails/PatientDocuments/index.tsx:29
+#: src/containers/PatientDetails/PatientDocuments/index.tsx:31
 msgid "Create document"
 msgstr "Crear documento"
 
@@ -1011,6 +1015,10 @@ msgstr "Glucosa"
 msgid "Go to the encounter"
 msgstr "Ir al encuentro"
 
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/categories.ts:16
+msgid "GP"
+msgstr ""
+
 #: src/components/BaseQuestionnaireResponseForm/widgets/Group/GroupCard/index.tsx:67
 #: src/components/BaseQuestionnaireResponseForm/widgets/Group/GroupCard/index.tsx:97
 #: src/controls/Group/GroupCard/index.tsx:67
@@ -1264,6 +1272,10 @@ msgstr "Medicación"
 msgid "Medications"
 msgstr "Medicaciones"
 
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/categories.ts:15
+msgid "Mental Health"
+msgstr ""
+
 #: src/containers/PractitionerDetails/PractitionerOverview/index.tsx:39
 msgid "Middle name"
 msgstr "Segundo nombre"
@@ -1342,6 +1354,10 @@ msgstr ""
 msgid "No prepared text"
 msgstr "Sin texto preparado"
 
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:204
+msgid "No questionnaires available"
+msgstr ""
+
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/PatientNoteListCard/ModalNoteCreate/index.tsx:68
 msgid "Note successfully created"
 msgstr "Nota creada exitosamente"
@@ -1409,6 +1425,10 @@ msgstr "Orden añadida"
 msgid "Orders"
 msgstr "Resultados"
 
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/categories.ts:18
+msgid "Others"
+msgstr ""
+
 #: src/containers/MedicationManagementDetail/index.tsx:100
 #: src/containers/PatientDetails/PatientHeader/index.tsx:49
 #: src/containers/PatientDetails/PatientHeader/index.tsx:92
@@ -1421,6 +1441,10 @@ msgstr "Descripción general"
 #: src/containers/MedicationManagementDetail/index.tsx:59
 msgid "Packaging"
 msgstr "Envase"
+
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/categories.ts:14
+msgid "Paediatrics"
+msgstr ""
 
 #: src/containers/PatientDetails/HMBDiagnostic/config.tsx:123
 msgid "Pain Score"
@@ -1547,8 +1571,8 @@ msgstr "Propiedades"
 msgid "Provider"
 msgstr "Proveedor"
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:94
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:127
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:110
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:136
 msgid "QR code"
 msgstr ""
 
@@ -1787,7 +1811,7 @@ msgstr ""
 msgid "Sex"
 msgstr "Sexo"
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:87
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:103
 msgid "Share link"
 msgstr "Compartir enlace"
 
@@ -1961,8 +1985,8 @@ msgstr "El documento no existe"
 msgid "The document successfully amended"
 msgstr "El documento fue modificado exitosamente"
 
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:82
-#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:139
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:98
+#: src/containers/DocumentsList/ChooseDocumentToCreateModal/index.tsx:148
 msgid "The link was copied to clipboard"
 msgstr "El enlace fue copiado al portapapeles"
 
