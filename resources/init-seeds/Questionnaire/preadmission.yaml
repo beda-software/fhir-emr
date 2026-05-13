@@ -45,7 +45,7 @@ item:
     type: group
     itemControl:
       coding:
-        - code: wizard-vertical
+        - code: wizard
     item:
       # Header
       - linkId: instructions
