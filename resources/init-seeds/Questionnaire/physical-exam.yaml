@@ -22,6 +22,7 @@ useContext:
             system: https://beda.software/FHIR/CodeSystem/questionnaire-category
 subjectType:
   - Encounter
+  - Patient
 launchContext:
   - name:
       code: Patient

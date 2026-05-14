@@ -61,6 +61,7 @@ useContext:
             system: https://beda.software/FHIR/CodeSystem/questionnaire-category
 subjectType:
   - Encounter
+  - Patient
 id: cardiology-example
 resourceType: Questionnaire
 meta:
