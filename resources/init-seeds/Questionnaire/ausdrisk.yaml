@@ -1,0 +1,545 @@
+id: ausdrisk
+resourceType: Questionnaire
+name: ausdrisk
+title: The Australian Type 2 Diabetes Risk Assessment Tool (AUSDRISK)
+status: active
+description: >-
+  The Australian Type 2 Diabetes Risk Assessment Tool (AUSDRISK) estimates a person's
+  risk of developing type 2 diabetes over the next 5 years. Developed by the Baker IDI
+  Heart and Diabetes Institute on behalf of the Australian Government.
+subjectType:
+  - Encounter
+  - Patient
+url: https://aidbox.emr.beda.software/fhir/Questionnaire/ausdrisk
+meta:
+  profile:
+    - https://emr-core.beda.software/StructureDefinition/fhir-emr-questionnaire
+useContext:
+  - code:
+      code: questionnaire-type
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-type
+    value:
+      CodeableConcept:
+        coding:
+          - code: form-library
+  - code:
+      code: category
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+    value:
+      CodeableConcept:
+        coding:
+          - code: common
+            system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+launchContext:
+  - name:
+      code: Patient
+    type:
+      - Patient
+  - name:
+      code: Author
+    type:
+      - PractitionerRole
+      - Practitioner
+      - Patient
+      - Organization
+item:
+  - linkId: dateTime
+    text: DateTime
+    type: dateTime
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "now()"
+
+  - linkId: patientId
+    text: Patient ID
+    type: string
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.id"
+
+  - linkId: patientName
+    text: Patient Name
+    type: string
+    hidden: true
+    initialExpression:
+      language: text/fhirpath
+      expression: "%Patient.name.first().given.first() + ' ' + %Patient.name.first().family"
+
+  - linkId: ausdrisk-intro
+    text: >-
+      The AUSDRISK tool estimates your risk of developing type 2 diabetes over the
+      next 5 years. Please answer all 10 questions. Your total score determines your
+      risk level: **5 or less** — Low risk; **6–11** — Intermediate risk;
+      **12 or more** — High risk.
+    type: display
+    itemControl:
+      coding:
+        - code: markdown
+
+  - linkId: ausdrisk-questions
+    text: AUSDRISK Questions
+    type: group
+    itemControl:
+      coding:
+        - code: group-voice
+    variable:
+      - name: WaistValue
+        language: text/fhirpath
+        expression: >-
+          %resource.repeat(item).where(linkId='ausdrisk-q10-waist-cm')
+            .answer.valueQuantity.value.first()
+      - name: IsMale
+        language: text/fhirpath
+        expression: >-
+          %resource.repeat(item).where(linkId='ausdrisk-q2-gender')
+            .answer.valueCoding.code.first() = 'male'
+      - name: HasGender
+        language: text/fhirpath
+        expression: >-
+          %resource.repeat(item).where(linkId='ausdrisk-q2-gender')
+            .answer.valueCoding.code.exists()
+      - name: HasQ3a
+        language: text/fhirpath
+        expression: >-
+          %resource.repeat(item).where(linkId='ausdrisk-q3a-indigenous')
+            .answer.valueCoding.code.exists()
+      - name: IsAsianOrIndigenous
+        language: text/fhirpath
+        expression: >-
+          %resource.repeat(item).where(linkId='ausdrisk-q3a-indigenous')
+            .answer.valueCoding.code.first() = 'yes'
+    item:
+      # Q1 — Age group
+      - linkId: ausdrisk-q1-age
+        text: "1. Your age group"
+        required: true
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              system: https://aidbox.emr.beda.software/fhir/CodeSystem/ausdrisk
+              code: "age-under-35"
+              display: "Under 35 years"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 0
+          - valueCoding:
+              system: https://aidbox.emr.beda.software/fhir/CodeSystem/ausdrisk
+              code: "age-35-44"
+              display: "35–44 years"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 2
+          - valueCoding:
+              system: https://aidbox.emr.beda.software/fhir/CodeSystem/ausdrisk
+              code: "age-45-54"
+              display: "45–54 years"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 4
+          - valueCoding:
+              system: https://aidbox.emr.beda.software/fhir/CodeSystem/ausdrisk
+              code: "age-55-64"
+              display: "55–64 years"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 6
+          - valueCoding:
+              system: https://aidbox.emr.beda.software/fhir/CodeSystem/ausdrisk
+              code: "age-65-plus"
+              display: "65 years or over"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 8
+
+      # Q2 — Gender.
+      # Pre-filled from Patient.gender (administrative-gender system matches
+      # our answerOption codes 'female'/'male'). If Patient.gender is
+      # 'other'/'unknown'/absent the .where() returns empty and nothing is
+      # preselected, so the user must choose explicitly.
+      # Backend initialExpression: %Questionnaire, not %qitem.
+      - linkId: ausdrisk-q2-gender
+        text: "2. Your gender"
+        required: true
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              system: http://hl7.org/fhir/administrative-gender
+              code: female
+              display: Female
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 0
+          - valueCoding:
+              system: http://hl7.org/fhir/administrative-gender
+              code: male
+              display: Male
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 3
+        initialExpression:
+          language: text/fhirpath
+          expression: >-
+            %Questionnaire.repeat(item).where(linkId='ausdrisk-q2-gender')
+              .answerOption.valueCoding.where(code = %Patient.gender)
+
+      # Q3a — Indigenous / Pacific Islander / Maori descent
+      - linkId: ausdrisk-q3a-indigenous
+        text: "3a. Are you of Aboriginal, Torres Strait Islander, Pacific Islander or Maori descent?"
+        required: true
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              system: https://aidbox.emr.beda.software/fhir/CodeSystem/ausdrisk
+              code: "no"
+              display: "No"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 0
+          - valueCoding:
+              system: https://aidbox.emr.beda.software/fhir/CodeSystem/ausdrisk
+              code: "yes"
+              display: "Yes"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 2
+
+      # Q3b — Country of birth
+      - linkId: ausdrisk-q3b-country-of-birth
+        text: "3b. Where were you born?"
+        required: true
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              system: https://aidbox.emr.beda.software/fhir/CodeSystem/ausdrisk
+              code: "born-australia"
+              display: "Australia"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 0
+          - valueCoding:
+              system: https://aidbox.emr.beda.software/fhir/CodeSystem/ausdrisk
+              code: "born-asia-mena-se-europe"
+              display: "Asia (including the Indian sub-continent), Middle East, North Africa, Southern Europe"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 2
+          - valueCoding:
+              system: https://aidbox.emr.beda.software/fhir/CodeSystem/ausdrisk
+              code: "born-other"
+              display: "Other"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 0
+
+      # Q4 — Family history of diabetes
+      - linkId: ausdrisk-q4-family-history
+        text: "4. Have either of your parents, or any of your brothers or sisters been diagnosed with diabetes (type 1 or type 2)?"
+        required: true
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              system: https://aidbox.emr.beda.software/fhir/CodeSystem/ausdrisk
+              code: "no"
+              display: "No"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 0
+          - valueCoding:
+              system: https://aidbox.emr.beda.software/fhir/CodeSystem/ausdrisk
+              code: "yes"
+              display: "Yes"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 3
+
+      # Q5 — High blood glucose history
+      - linkId: ausdrisk-q5-high-glucose
+        text: "5. Have you ever been found to have high blood glucose (sugar) (for example, in a health examination, during an illness, during pregnancy)?"
+        required: true
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              system: https://aidbox.emr.beda.software/fhir/CodeSystem/ausdrisk
+              code: "no"
+              display: "No"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 0
+          - valueCoding:
+              system: https://aidbox.emr.beda.software/fhir/CodeSystem/ausdrisk
+              code: "yes"
+              display: "Yes"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 6
+
+      # Q6 — Blood pressure medication
+      - linkId: ausdrisk-q6-bp-medication
+        text: "6. Are you currently taking medication for high blood pressure?"
+        required: true
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              system: https://aidbox.emr.beda.software/fhir/CodeSystem/ausdrisk
+              code: "no"
+              display: "No"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 0
+          - valueCoding:
+              system: https://aidbox.emr.beda.software/fhir/CodeSystem/ausdrisk
+              code: "yes"
+              display: "Yes"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 2
+
+      # Q7 — Smoking
+      - linkId: ausdrisk-q7-smoking
+        text: "7. Do you currently smoke cigarettes or any other tobacco products on a daily basis?"
+        required: true
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              system: https://aidbox.emr.beda.software/fhir/CodeSystem/ausdrisk
+              code: "no"
+              display: "No"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 0
+          - valueCoding:
+              system: https://aidbox.emr.beda.software/fhir/CodeSystem/ausdrisk
+              code: "yes"
+              display: "Yes"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 2
+
+      # Q8 — Vegetables / fruit
+      - linkId: ausdrisk-q8-vegetables-fruit
+        text: "8. How often do you eat vegetables or fruit?"
+        required: true
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              system: https://aidbox.emr.beda.software/fhir/CodeSystem/ausdrisk
+              code: "every-day"
+              display: "Every day"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 0
+          - valueCoding:
+              system: https://aidbox.emr.beda.software/fhir/CodeSystem/ausdrisk
+              code: "not-every-day"
+              display: "Not every day"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 1
+
+      # Q9 — Physical activity
+      - linkId: ausdrisk-q9-physical-activity
+        text: "9. On average, would you say you do at least 2.5 hours of physical activity per week (for example, 30 minutes a day on 5 or more days a week)?"
+        required: true
+        type: choice
+        itemControl:
+          coding:
+            - code: inline-choice
+        answerOption:
+          - valueCoding:
+              system: https://aidbox.emr.beda.software/fhir/CodeSystem/ausdrisk
+              code: "yes"
+              display: "Yes"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 0
+          - valueCoding:
+              system: https://aidbox.emr.beda.software/fhir/CodeSystem/ausdrisk
+              code: "no"
+              display: "No"
+              extension:
+                - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
+                  valueDecimal: 2
+
+      # Q10 — waist cm; points 0/4/7 from gender + Q3a (variables on ausdrisk-questions).
+      - linkId: ausdrisk-q10-waist-cm
+        text: "10. Waist measurement"
+        required: true
+        type: quantity
+        unitOption:
+          - code: cm
+            system: http://unitsofmeasure.org
+            display: cm
+
+      - linkId: ausdrisk-q10-waist-help
+        text: Taken below the ribs (usually at the level of the navel), and while standing.
+        type: display
+        itemControl:
+          coding:
+            - code: markdown
+
+      - linkId: ausdrisk-q10-waist-points
+        text: Waist points
+        type: integer
+        readOnly: true
+        hidden: true
+        calculatedExpression:
+          language: text/fhirpath
+          expression: >-
+            iif(%WaistValue.empty() or %HasGender.not() or %HasQ3a.not(), {},
+              iif(%IsAsianOrIndigenous,
+                iif(%IsMale,
+                  iif(%WaistValue < 90, 0,
+                    iif(%WaistValue <= 100, 4, 7)),
+                  iif(%WaistValue < 80, 0,
+                    iif(%WaistValue <= 90, 4, 7))),
+                iif(%IsMale,
+                  iif(%WaistValue < 102, 0,
+                    iif(%WaistValue <= 110, 4, 7)),
+                  iif(%WaistValue < 88, 0,
+                    iif(%WaistValue <= 100, 4, 7)))))
+
+  # Results — total score and risk interpretation.
+  #
+  # Total = ChoiceScore (sum of itemWeight on Q1–Q9 selections) + WaistScore (Q10).
+  # Risk bands: 0–5 = Low, 6–11 = Intermediate, 12+ = High.
+  #
+  # Why the %HasAnyScore guard:
+  #   .sum() on an empty collection returns 0, so without a guard an unanswered
+  #   form would report Total = 0 → Low risk. We instead emit {} (empty) until
+  #   at least one scoring answer is given, so neither Total nor Risk category
+  #   are shown for a blank form.
+  - linkId: ausdrisk-results
+    text: Results
+    type: group
+    variable:
+      # True if at least one Q1–Q9 answer with itemWeight exists, or Q10 was scored.
+      - name: HasAnyScore
+        language: text/fhirpath
+        expression: >-
+          %resource.repeat(item).answer.valueCoding.extension
+            .where(url = 'http://hl7.org/fhir/StructureDefinition/itemWeight')
+            .exists()
+          or
+          %resource.repeat(item).where(linkId='ausdrisk-q10-waist-points')
+            .answer.valueInteger.exists()
+      # Sum of itemWeight extensions across all selected coding answers.
+      # Returns 0 for an empty collection — that's why we need %HasAnyScore.
+      - name: ChoiceScore
+        language: text/fhirpath
+        expression: >-
+          %resource.repeat(item)
+            .answer.valueCoding.extension
+            .where(url = 'http://hl7.org/fhir/StructureDefinition/itemWeight')
+            .valueDecimal
+            .sum()
+      # Points from the hidden Q10 helper field (0 / 4 / 7), or empty.
+      - name: WaistScore
+        language: text/fhirpath
+        expression: >-
+          %resource.repeat(item)
+            .where(linkId='ausdrisk-q10-waist-points')
+            .answer.valueInteger.first()
+      # Final total. Empty when the form is untouched; otherwise the sum.
+      # iif() with an empty %WaistScore falls back to 0 so partial fills work.
+      - name: TotalScore
+        language: text/fhirpath
+        expression: >-
+          iif(%HasAnyScore,
+            %ChoiceScore + iif(%WaistScore.exists(), %WaistScore, 0),
+            {})
+      # Risk band derived from TotalScore. The outer guard is required because
+      # in FHIRPath {} <= 5 returns {}, and iif({}, A, B) always picks B —
+      # without the guard an empty Total would surface as "high-risk".
+      - name: RiskLevel
+        language: text/fhirpath
+        expression: >-
+          iif(%TotalScore.exists().not(), {},
+            iif(%TotalScore <= 5, 'low-risk',
+              iif(%TotalScore <= 11, 'intermediate-risk', 'high-risk')))
+    item:
+      # Numeric total — blank until the patient answers something.
+      - linkId: ausdrisk-total-score
+        text: AUSDRISK Total Score
+        type: integer
+        readOnly: true
+        calculatedExpression:
+          language: text/fhirpath
+          expression: "%TotalScore"
+
+      # Human-readable risk label that mirrors %RiskLevel.
+      - linkId: ausdrisk-risk-level
+        text: Risk category
+        type: string
+        readOnly: true
+        calculatedExpression:
+          language: text/fhirpath
+          expression: >-
+            iif(%TotalScore.exists().not(), {},
+              iif(%RiskLevel = 'low-risk', '5 or less — Low risk',
+                iif(%RiskLevel = 'intermediate-risk', '6–11 — Intermediate risk',
+                  '12 or more — High risk')))
+
+      # Markdown interpretation with band-specific guidance (Baker IDI wording).
+      # Each branch returns a multi-line markdown string built via the FHIRPath
+      # string-concat operator (&).
+      - linkId: ausdrisk-guidance-display
+        text: Interpretation
+        type: display
+        itemControl:
+          coding:
+            - code: markdown
+        _text:
+          cqfExpression:
+            language: text/fhirpath
+            expression: >-
+              iif(%TotalScore.exists().not(), '',
+                iif(%RiskLevel = 'low-risk',
+                  '### Low risk (5 or less)\n\n'
+                  & 'Approximately **one person in every 100** will develop diabetes.\n\n'
+                  & 'Maintain a healthy lifestyle — eat plenty of vegetables, legumes and '
+                  & 'high fibre wholegrain products, stay physically active, and avoid '
+                  & 'smoking.',
+                iif(%RiskLevel = 'intermediate-risk',
+                  '### Intermediate risk (6–11)\n\n'
+                  & 'You may be at increased risk of type 2 diabetes.\n\n'
+                  & '- For scores of **6–8**, approximately one person in every **50** will develop diabetes.\n'
+                  & '- For scores of **9–11**, approximately one person in every **30** will develop diabetes.\n\n'
+                  & 'Discuss your score and individual risk with your doctor. Improving '
+                  & 'your lifestyle may help reduce your risk of developing type 2 diabetes.',
+                  '### High risk (12 or more)\n\n'
+                  & 'You may have undiagnosed type 2 diabetes or be at high risk of developing the disease.\n\n'
+                  & '- For scores of **12–15**, approximately one person in every **14** will develop diabetes.\n'
+                  & '- For scores of **16–19**, approximately one person in every **7** will develop diabetes.\n'
+                  & '- For scores of **20 and above**, approximately one person in every **3** will develop diabetes.\n\n'
+                  & '> **See your doctor about having a blood test.** Act now to prevent type 2 diabetes.\n\n'
+                  & '*Note: the overall score may overestimate the risk of diabetes in those aged less than 25 years.*')))
+
