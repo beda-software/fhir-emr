@@ -8,11 +8,22 @@ import {
     prepareMedications,
     prepareProcedures,
 } from 'src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare';
+import { AppointmentCardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/AppointmentCardContainer';
 import { GeneralInformationDashboardContainer } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/GeneralIInformationDashboardContainer';
 import { StandardCardContainerFabric } from 'src/containers/PatientDetails/PatientOverviewDynamic/containers/StandardCardContainerFabric';
 
 export const patientDashboardConfig: DashboardInstance = {
     top: [
+        {
+            widget: AppointmentCardContainer,
+            query: {
+                resourceType: 'Appointment',
+                search: (patient: Patient) => ({
+                    patient: patient.id,
+                    status: ['arrived,booked'],
+                }),
+            },
+        },
         {
             widget: GeneralInformationDashboardContainer,
         },
