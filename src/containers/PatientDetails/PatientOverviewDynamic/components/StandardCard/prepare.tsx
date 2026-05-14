@@ -86,9 +86,8 @@ export function prepareAllergies(
                 title: t`Date`,
                 key: 'date',
                 render: (r: AllergyIntolerance) => {
-                    const createdAt = extractCreatedAtFromMeta(r.meta);
-
-                    return createdAt ? formatHumanDate(r.recordedDate || createdAt) : null;
+                    const date = r.recordedDate || extractCreatedAtFromMeta(r.meta);
+                    return date ? formatHumanDate(date) : null;
                 },
                 width: 120,
             },
@@ -123,9 +122,8 @@ export function prepareConditions(
                 title: t`Date`,
                 key: 'date',
                 render: (r: Condition) => {
-                    const createdAt = extractCreatedAtFromMeta(r.meta);
-
-                    return createdAt ? formatHumanDate(r.recordedDate || createdAt) : null;
+                    const date = r.recordedDate || extractCreatedAtFromMeta(r.meta);
+                    return date ? formatHumanDate(date) : null;
                 },
                 width: 120,
             },
