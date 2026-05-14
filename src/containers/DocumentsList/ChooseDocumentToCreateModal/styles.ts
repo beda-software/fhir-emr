@@ -96,4 +96,18 @@ export const S = {
         text-align: center;
         color: ${({ theme }) => theme.neutral.secondaryText};
     `,
+    FooterButtons: styled.div`
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 8px;
+
+        @media (max-width: 480px) {
+            flex-direction: column;
+
+            > button {
+                width: 100%;
+            }
+        }
+    `,
 };
