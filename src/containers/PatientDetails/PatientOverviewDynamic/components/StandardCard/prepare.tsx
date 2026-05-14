@@ -63,12 +63,31 @@ export function prepareAllergies(
                 ),
             },
             {
+                title: t`Reaction`,
+                key: 'reaction',
+                render: (r: AllergyIntolerance) =>
+                    r.reaction
+                        ?.flatMap((reaction) =>
+                            (reaction.manifestation ?? []).map((m) => m.coding?.[0]?.display ?? m.text),
+                        )
+                        .filter(Boolean)
+                        .join(', ') || null,
+            },
+            {
+                title: t`Note`,
+                key: 'note',
+                render: (r: AllergyIntolerance) =>
+                    r.note
+                        ?.map((n) => n.text)
+                        .filter(Boolean)
+                        .join(' ') || null,
+            },
+            {
                 title: t`Date`,
                 key: 'date',
                 render: (r: AllergyIntolerance) => {
-                    const createdAt = extractCreatedAtFromMeta(r.meta);
-
-                    return createdAt ? formatHumanDate(r.recordedDate || createdAt) : null;
+                    const date = r.recordedDate || extractCreatedAtFromMeta(r.meta);
+                    return date ? formatHumanDate(date) : null;
                 },
                 width: 120,
             },
@@ -103,9 +122,8 @@ export function prepareConditions(
                 title: t`Date`,
                 key: 'date',
                 render: (r: Condition) => {
-                    const createdAt = extractCreatedAtFromMeta(r.meta);
-
-                    return createdAt ? formatHumanDate(r.recordedDate || createdAt) : null;
+                    const date = r.recordedDate || extractCreatedAtFromMeta(r.meta);
+                    return date ? formatHumanDate(date) : null;
                 },
                 width: 120,
             },
@@ -256,7 +274,7 @@ export function prepareProcedures(
                     }
                     return '';
                 },
-                width: 120,
+                width: 220,
             },
         ],
     };
