@@ -83,43 +83,45 @@ export const ChooseDocumentToCreateModal = (props: Props) => {
         <>
             <Modal
                 title={t`Create document`}
-                footer={[
-                    <Button key="back" onClick={onCloseModal}>
-                        <Trans>Cancel</Trans>
-                    </Button>,
-                    ...(displayShareButton
-                        ? [
-                              <Button
-                                  key="share-link"
-                                  disabled={!questionnaireId}
-                                  onClick={() => {
-                                      navigator.clipboard.writeText(buildShareLink());
-                                      notification.success({
-                                          message: t`The link was copied to clipboard`,
-                                      });
-                                      onCloseModal();
-                                  }}
-                              >
-                                  <Trans>Share link</Trans>
-                              </Button>,
-                              <Button
-                                  key="qr-code"
-                                  disabled={!questionnaireId}
-                                  onClick={() => setQRCodeModalIsVisible(true)}
-                              >
-                                  <Trans>QR code</Trans>
-                              </Button>,
-                          ]
-                        : []),
-                    <Button
-                        key="create"
-                        disabled={!questionnaireId}
-                        onClick={() => (openNewTab ? window.open(routeToOpen, '_blank') : navigate(routeToOpen))}
-                        type="primary"
-                    >
-                        <Trans>Create</Trans>
-                    </Button>,
-                ]}
+                footer={
+                    <S.FooterButtons>
+                        <Button key="back" onClick={onCloseModal}>
+                            <Trans>Cancel</Trans>
+                        </Button>
+                        {displayShareButton ? (
+                            <>
+                                <Button
+                                    key="share-link"
+                                    disabled={!questionnaireId}
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(buildShareLink());
+                                        notification.success({
+                                            message: t`The link was copied to clipboard`,
+                                        });
+                                        onCloseModal();
+                                    }}
+                                >
+                                    <Trans>Share link</Trans>
+                                </Button>
+                                <Button
+                                    key="qr-code"
+                                    disabled={!questionnaireId}
+                                    onClick={() => setQRCodeModalIsVisible(true)}
+                                >
+                                    <Trans>QR code</Trans>
+                                </Button>
+                            </>
+                        ) : null}
+                        <Button
+                            key="create"
+                            disabled={!questionnaireId}
+                            onClick={() => (openNewTab ? window.open(routeToOpen, '_blank') : navigate(routeToOpen))}
+                            type="primary"
+                        >
+                            <Trans>Create</Trans>
+                        </Button>
+                    </S.FooterButtons>
+                }
                 width="min(880px, calc(100vw - 32px))"
                 {...props}
                 open={(props.open ?? false) && !qrCodeModalIsVisible}
