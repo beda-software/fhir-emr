@@ -3,6 +3,7 @@ id: new-appointment
 name: new-appointment
 title: New appointment
 status: active
+description: Books a new patient appointment.
 mapping:
   - reference: urn:uuid:Mapping:new-appointment-extract
 launchContext:

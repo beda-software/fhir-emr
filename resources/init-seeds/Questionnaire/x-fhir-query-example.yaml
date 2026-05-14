@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: x-fhir-query-example
 title: X-FHIR Query usage example
 status: active
+description: Demo questionnaire showing X-FHIR-Query usage.
 item:
   - linkId: text
     type: string
