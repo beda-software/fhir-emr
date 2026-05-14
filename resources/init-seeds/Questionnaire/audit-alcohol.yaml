@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: audit-alcohol-screening
 title: AUDIT Alcohol Screening Tool
 status: active
+description: Alcohol Use Disorders Identification Test (AUDIT) — screens for hazardous and harmful patterns of alcohol consumption.
 subjectType:
   - Encounter
   - Patient
@@ -18,6 +19,14 @@ useContext:
       CodeableConcept:
         coding:
           - code: form-library
+  - code:
+      code: category
+      system: https://beda.software/FHIR/CodeSystem/questionnaire-category
+    value:
+      CodeableConcept:
+        coding:
+          - code: common
+            system: https://beda.software/FHIR/CodeSystem/questionnaire-category
 launchContext:
   - name:
       code: Patient

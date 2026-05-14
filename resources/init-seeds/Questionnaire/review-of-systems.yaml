@@ -20,6 +20,7 @@ useContext:
             system: https://beda.software/FHIR/CodeSystem/questionnaire-category
 subjectType:
   - Encounter
+  - Patient
 id: review-of-systems
 resourceType: Questionnaire
 url: https://aidbox.emr.beda.software/fhir/Questionnaire/review-of-systems
