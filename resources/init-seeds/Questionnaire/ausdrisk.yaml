@@ -84,6 +84,32 @@ item:
     itemControl:
       coding:
         - code: group-voice
+    variable:
+      - name: WaistValue
+        language: text/fhirpath
+        expression: >-
+          %resource.repeat(item).where(linkId='ausdrisk-q10-waist-cm')
+            .answer.valueQuantity.value.first()
+      - name: IsMale
+        language: text/fhirpath
+        expression: >-
+          %resource.repeat(item).where(linkId='ausdrisk-q2-gender')
+            .answer.valueCoding.code.first() = 'male'
+      - name: HasGender
+        language: text/fhirpath
+        expression: >-
+          %resource.repeat(item).where(linkId='ausdrisk-q2-gender')
+            .answer.valueCoding.code.exists()
+      - name: HasQ3a
+        language: text/fhirpath
+        expression: >-
+          %resource.repeat(item).where(linkId='ausdrisk-q3a-indigenous')
+            .answer.valueCoding.code.exists()
+      - name: IsAsianOrIndigenous
+        language: text/fhirpath
+        expression: >-
+          %resource.repeat(item).where(linkId='ausdrisk-q3a-indigenous')
+            .answer.valueCoding.code.first() = 'yes'
     item:
       # Q1 — Age group
       - linkId: ausdrisk-q1-age
@@ -363,52 +389,7 @@ item:
                 - url: "http://hl7.org/fhir/StructureDefinition/itemWeight"
                   valueDecimal: 2
 
-  # Q10 — Waist measurement.
-  # Q10 unlike Q1–Q9 isn't a fixed choice/weight pair: the score (0 / 4 / 7)
-  # depends on waist cm, gender (Q2), and whether Q3a = Yes (AUSDRISK paper:
-  # lower male/female cm bands only when 3a is Yes). Q3b still adds itemWeight
-  # to ChoiceScore but does not switch the waist table (per official form).
-  # Waist points are not emitted until Q3a is answered — otherwise we cannot
-  # know which cm table applies (and must not silently use the Q3a=No table).
-  - linkId: ausdrisk-q10-waist
-    type: group
-    variable:
-      # Waist value in cm. .first() is required because FHIRPath would otherwise
-      # return a collection and break arithmetic comparisons below.
-      - name: WaistValue
-        language: text/fhirpath
-        expression: >-
-          %resource.repeat(item).where(linkId='ausdrisk-q10-waist-cm')
-            .answer.valueQuantity.value.first()
-      # Gender flag — true only when Q2 is explicitly answered as "male".
-      # If Q2 is empty, IsMale is false; we no longer use that alone for waist
-      # scoring (see %HasGender + ausdrisk-q10-waist-points).
-      - name: IsMale
-        language: text/fhirpath
-        expression: >-
-          %resource.repeat(item).where(linkId='ausdrisk-q2-gender')
-            .answer.valueCoding.code.first() = 'male'
-      # True when Q2 has any choice answer (male or female). Waist points stay
-      # empty until this is true so we never apply female bands by default.
-      - name: HasGender
-        language: text/fhirpath
-        expression: >-
-          %resource.repeat(item).where(linkId='ausdrisk-q2-gender')
-            .answer.valueCoding.code.exists()
-      # True when Q3a (Indigenous / Pacific / Maori) has been answered — required
-      # before waist can contribute points (which cm table: Yes vs No branch).
-      - name: HasQ3a
-        language: text/fhirpath
-        expression: >-
-          %resource.repeat(item).where(linkId='ausdrisk-q3a-indigenous')
-            .answer.valueCoding.code.exists()
-      # Lower waist thresholds (90/100 male, 80/90 female) — paper AUSDRISK: only when Q3a = Yes.
-      - name: IsAsianOrIndigenous
-        language: text/fhirpath
-        expression: >-
-          %resource.repeat(item).where(linkId='ausdrisk-q3a-indigenous')
-            .answer.valueCoding.code.first() = 'yes'
-    item:
+      # Q10 — waist cm; points 0/4/7 from gender + Q3a (variables on ausdrisk-questions).
       - linkId: ausdrisk-q10-waist-cm
         text: "10. Waist measurement"
         required: true
@@ -425,16 +406,6 @@ item:
           coding:
             - code: markdown
 
-      # Waist score (0 / 4 / 7) — hidden helper field consumed by the Results group.
-      # Preconditions (all must pass or result is {} — waist does not affect total):
-      #   1) Waist value entered
-      #   2) Q2 (gender) answered
-      #   3) Q3a answered — otherwise the Yes vs No waist table is undefined
-      # Decision tree when all pass — by Q3a (paper) × gender × cm range:
-      #     Q3a Yes  Male   : <90    -> 0 ; 90–100  -> 4 ; >100  -> 7
-      #     Q3a Yes  Female : <80    -> 0 ; 80–90   -> 4 ; >90   -> 7
-      #     Q3a No   Male   : <102   -> 0 ; 102–110 -> 4 ; >110  -> 7
-      #     Q3a No   Female : <88    -> 0 ; 88–100  -> 4 ; >100  -> 7
       - linkId: ausdrisk-q10-waist-points
         text: Waist points
         type: integer
