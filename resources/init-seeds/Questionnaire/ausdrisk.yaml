@@ -81,6 +81,9 @@ item:
   - linkId: ausdrisk-questions
     text: AUSDRISK Questions
     type: group
+    itemControl:
+      coding:
+        - code: group-voice
     item:
       # Q1 — Age group
       - linkId: ausdrisk-q1-age
