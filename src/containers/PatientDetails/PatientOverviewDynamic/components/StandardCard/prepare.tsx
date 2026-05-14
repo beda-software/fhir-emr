@@ -63,6 +63,26 @@ export function prepareAllergies(
                 ),
             },
             {
+                title: t`Reaction`,
+                key: 'reaction',
+                render: (r: AllergyIntolerance) =>
+                    r.reaction
+                        ?.flatMap((reaction) =>
+                            (reaction.manifestation ?? []).map((m) => m.coding?.[0]?.display ?? m.text),
+                        )
+                        .filter(Boolean)
+                        .join(', ') || null,
+            },
+            {
+                title: t`Note`,
+                key: 'note',
+                render: (r: AllergyIntolerance) =>
+                    r.note
+                        ?.map((n) => n.text)
+                        .filter(Boolean)
+                        .join(' ') || null,
+            },
+            {
                 title: t`Date`,
                 key: 'date',
                 render: (r: AllergyIntolerance) => {
