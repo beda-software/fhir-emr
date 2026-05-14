@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: public-appointment
 title: Public appointment
 status: active
+description: Books an appointment via the public-facing portal.
 mapping:
   - reference: urn:uuid:Mapping:public-appointment-extract
 item:

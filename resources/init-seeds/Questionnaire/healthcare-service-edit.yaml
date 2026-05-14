@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: healthcare-service-edit
 title: healthcare-service edit
 status: active
+description: Edits an existing healthcare service.
 launchContext:
   - name:
       code: HealthcareService

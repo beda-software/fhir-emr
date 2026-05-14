@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: encounter-create
 title: Encounter create
 status: active
+description: Creates a new clinical encounter.
 mapping:
   - reference: urn:uuid:Mapping:encounter-create-extract
 launchContext:

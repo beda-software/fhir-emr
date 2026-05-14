@@ -3,6 +3,7 @@ resourceType: Questionnaire
 status: active
 name: group-tabs-demo
 title: Group Tabs Demo
+description: Demo questionnaire showing tabbed group layouts.
 subjectType:
   - Encounter
   - Patient

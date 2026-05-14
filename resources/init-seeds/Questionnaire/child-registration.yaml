@@ -3,6 +3,7 @@ id: child-registration
 name: child-registration
 title: Child Registration
 status: active
+description: Captures registration details for a new paediatric patient.
 subjectType:
   - Patient
 url: "http://example.org/fhir/Questionnaire/child-registration"

@@ -3,6 +3,7 @@ resourceType: Questionnaire
 name: edit-patient
 title: Edit patient
 status: active
+description: Edits an existing patient's demographic and contact details.
 launchContext:
   - name:
       code: Patient

@@ -3,6 +3,7 @@ id: pre-visit-intake
 name: pre-visit-intake
 title: Pre-visit Intake
 status: active
+description: Pre-visit intake form capturing patient history before the appointment.
 subjectType:
   - Patient
 url: "http://example.org/fhir/Questionnaire/pre-visit-intake"

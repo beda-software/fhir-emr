@@ -2,6 +2,7 @@ resourceType: Questionnaire
 id: pay-invoice
 status: active
 title: Pay invoice
+description: Records payment against an existing invoice.
 mapping:
   - reference: urn:uuid:Mapping:pay-invoice-extract
 launchContext:
