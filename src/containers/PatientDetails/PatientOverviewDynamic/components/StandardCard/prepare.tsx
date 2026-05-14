@@ -274,7 +274,7 @@ export function prepareProcedures(
                     }
                     return '';
                 },
-                width: 120,
+                width: 220,
             },
         ],
     };
