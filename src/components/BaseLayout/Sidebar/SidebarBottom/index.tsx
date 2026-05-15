@@ -28,14 +28,16 @@ export function SidebarBottom(props: Props) {
 
     return (
         <S.Container
+            $collapsed={collapsed}
             className={classNames(s.container, {
                 _collapsed: collapsed,
             })}
             {...other}
         >
-            <Assistant />
-            <S.Divider $hidden={collapsed} />
-            {enableLocaleSwitcher && <LocaleSwitcher onItemClick={onItemClick} />}
+            <S.FullWidthDivider $collapsed={collapsed} />
+            <Assistant variant={collapsed ? 'sidebarFolded' : 'sidebarExpanded'} />
+            <S.FullWidthDivider $collapsed={collapsed} />
+            {enableLocaleSwitcher && !collapsed && <LocaleSwitcher onItemClick={onItemClick} />}
             {!isAnonymousUser ? (
                 <>
                     <S.Divider $hidden={collapsed} />

@@ -2,6 +2,7 @@ import { Layout } from 'antd';
 import classNames from 'classnames';
 import { ReactNode, useContext } from 'react';
 
+import { AssistantSessionProvider } from 'src/components/Assistant';
 import { FooterLayout } from 'src/components/BaseLayout/Footer/context';
 
 import s from './BaseLayout.module.scss';
@@ -18,14 +19,16 @@ export function BaseLayout({ children, style }: Props) {
     const footer = useContext(FooterLayout);
 
     return (
-        <S.Container style={style}>
-            <AppSidebar />
-            <AppTabBar />
-            <Layout className={s.content}>
-                {children}
-                {footer}
-            </Layout>
-        </S.Container>
+        <AssistantSessionProvider>
+            <S.Container style={style}>
+                <AppSidebar />
+                <AppTabBar />
+                <Layout className={s.content}>
+                    {children}
+                    {footer}
+                </Layout>
+            </S.Container>
+        </AssistantSessionProvider>
     );
 }
 
@@ -33,13 +36,15 @@ export function AnonymousLayout({ children, style }: Props) {
     const footer = useContext(FooterLayout);
 
     return (
-        <S.Container style={style}>
-            <AppSidebar />
-            <Layout className={s.content}>
-                {children}
-                {footer}
-            </Layout>
-        </S.Container>
+        <AssistantSessionProvider>
+            <S.Container style={style}>
+                <AppSidebar />
+                <Layout className={s.content}>
+                    {children}
+                    {footer}
+                </Layout>
+            </S.Container>
+        </AssistantSessionProvider>
     );
 }
 

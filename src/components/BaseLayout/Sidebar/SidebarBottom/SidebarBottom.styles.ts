@@ -1,11 +1,11 @@
 import { Divider } from 'antd';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const S = {
-    Container: styled.div`
+    Container: styled.div<{ $collapsed: boolean }>`
         display: flex;
         flex-direction: column;
-        padding: 24px;
+        padding: ${({ $collapsed }) => ($collapsed ? '16px' : '24px')};
         gap: 8px;
 
         .ant-menu {
@@ -89,6 +89,25 @@ export const S = {
                 font-size: 14px !important;
             }
         }
+
+        ${({ $collapsed }) =>
+            $collapsed &&
+            css`
+                .ant-menu-item,
+                .ant-menu-submenu-title {
+                    justify-content: center !important;
+                }
+
+                .ant-menu-title-content,
+                .ant-menu-submenu-arrow,
+                .ant-menu-submenu-title > span {
+                    display: none !important;
+                }
+
+                > .ant-btn {
+                    align-self: center;
+                }
+            `}
     `,
     Icon: styled.div`
         background-color: ${({ theme }) =>
@@ -108,5 +127,11 @@ export const S = {
         margin: 0;
         transition: all 0s;
         opacity: ${({ $hidden }) => ($hidden ? 0 : 1)};
+    `,
+    FullWidthDivider: styled(Divider)<{ $collapsed: boolean }>`
+        margin: ${({ $collapsed }) => ($collapsed ? '0 -16px' : '0 -24px')};
+        width: auto;
+        min-width: ${({ $collapsed }) => ($collapsed ? 'calc(100% + 32px)' : 'calc(100% + 48px)')};
+        transition: all 0s;
     `,
 };

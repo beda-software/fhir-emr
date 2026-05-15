@@ -47,6 +47,30 @@ declare module 'styled-components' {
         bcs_9: string;
         bcs_10: string;
     };
+    errorPalette: {
+        ep_1: string;
+        ep_2: string;
+        ep_3: string;
+        ep_4: string;
+        ep_5: string;
+        ep_6: string;
+        ep_7: string;
+        ep_8: string;
+        ep_9: string;
+        ep_10: string;
+    };
+    warningPalette: {
+        wp_1: string;
+        wp_2: string;
+        wp_3: string;
+        wp_4: string;
+        wp_5: string;
+        wp_6: string;
+        wp_7: string;
+        wp_8: string;
+        wp_9: string;
+        wp_10: string;
+    };
     neutralPalette: {
         gray_1: string;
         gray_2: string;

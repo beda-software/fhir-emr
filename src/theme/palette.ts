@@ -93,6 +93,16 @@ export function getPalette({ dark }: { dark?: boolean }): DefaultTheme {
             theme: dark ? 'dark' : undefined,
         }).map((c, index) => [`bcs_${index + 1}`, c]),
     ) as DefaultTheme['secondaryPalette'];
+    const errorPalette = _.fromPairs(
+        ANTDColors.generate(fcColors.error, {
+            theme: dark ? 'dark' : undefined,
+        }).map((c, index) => [`ep_${index + 1}`, c]),
+    ) as DefaultTheme['errorPalette'];
+    const warningPalette = _.fromPairs(
+        ANTDColors.generate(fcColors.warning, {
+            theme: dark ? 'dark' : undefined,
+        }).map((c, index) => [`wp_${index + 1}`, c]),
+    ) as DefaultTheme['warningPalette'];
     const iconColors: {
         light: DefaultTheme['iconColors'];
         dark: DefaultTheme['iconColors'];
@@ -129,5 +139,7 @@ export function getPalette({ dark }: { dark?: boolean }): DefaultTheme {
         },
         primaryPalette,
         secondaryPalette,
+        errorPalette,
+        warningPalette,
     } as DefaultTheme;
 }
