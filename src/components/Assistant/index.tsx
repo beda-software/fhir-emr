@@ -13,7 +13,7 @@ interface Props {
 export { AssistantSessionProvider } from './SessionProvider';
 
 const EXPANDED_WAVE_BARS = 28;
-const FOLDED_WAVE_BARS = 5;
+const FOLDED_WAVE_BARS = 3;
 const HEADER_WAVE_BARS = 3;
 const EXPANDED_BAR_MAX_HEIGHT = 24;
 const FOLDED_BAR_MAX_HEIGHT = 24;
@@ -152,7 +152,7 @@ function FoldedView() {
                     </S.FoldedBottom>
                 ) : (
                     <S.FoldedBottom onClick={() => stop()} aria-label={t`Stop`}>
-                        <S.StopSquare $size={8} />
+                        <S.StopSquare $size={16} />
                     </S.FoldedBottom>
                 )}
             </S.FoldedActiveTile>

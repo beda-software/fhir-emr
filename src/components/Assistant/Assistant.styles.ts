@@ -164,7 +164,7 @@ export const S = {
         width: 32px;
         height: 32px;
         border-radius: 6px;
-        border: 1px solid ${({ theme }) => theme.primaryPalette.bcp_3};
+        border: 1px solid transparent;
         background: ${({ theme }) => theme.primaryPalette.bcp_1};
         color: ${({ theme }) => theme.primary};
         display: flex;
@@ -182,8 +182,9 @@ export const S = {
         width: 100%;
         border-radius: 6px;
         overflow: hidden;
-        border: 1px solid
-            ${({ $tone, theme }) => ($tone === 'red' ? theme.errorPalette.ep_3 : theme.warningPalette.wp_3)};
+        box-shadow:
+            0 0 0 2px transparent,
+            0 0 0 5px ${({ $tone, theme }) => ($tone === 'red' ? theme.errorPalette.ep_2 : theme.warningPalette.wp_2)};
         background: ${({ $tone, theme }) => ($tone === 'red' ? theme.errorPalette.ep_6 : theme.warningPalette.wp_6)};
         color: ${({ $tone, theme }) => ($tone === 'red' ? theme.errorPalette.ep_1 : theme.warningPalette.wp_1)};
         display: flex;
@@ -207,9 +208,13 @@ export const S = {
     FoldedMiniWave: styled.div`
         display: flex;
         align-items: center;
-        gap: 1px;
+        gap: 3px;
         height: 24px;
         color: inherit;
+
+        & > span {
+            border-radius: 100px;
+        }
     `,
     FoldedDivider: styled.div<{ $tone: ActiveTone }>`
         height: 1px;
@@ -219,37 +224,44 @@ export const S = {
         background: transparent;
         border: 0;
         color: inherit;
-        padding: 16px;
+        height: 40px;
+        padding: 0;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        font-size: 12px;
+        font-size: 16px;
     `,
     FoldedProcessing: styled.div`
         width: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 4px;
+        gap: 2px;
+        padding: 8px;
         color: ${({ theme }) => theme.primary};
-        font-size: 12px;
+        font-size: 10px;
+        line-height: 14px;
         font-variant-numeric: tabular-nums;
         font-weight: 600;
+
+        .anticon {
+            font-size: 16px;
+        }
     `,
     FoldedLabel: styled.div<{ $tone: Tone }>`
         margin-top: 6px;
         font-size: 10px;
         line-height: 14px;
-        font-weight: 500;
+        font-weight: 600;
         color: ${({ theme, $tone }) => {
             if ($tone === 'red') {
-                return theme.errorPalette.ep_7;
+                return theme.errorPalette.ep_6;
             }
             if ($tone === 'amber') {
-                return theme.warningPalette.wp_7;
+                return theme.warningPalette.wp_6;
             }
-            return theme.neutralPalette.gray_13;
+            return theme.neutralPalette.gray_10;
         }};
     `,
     HeaderPill: styled.div<{ $tone: Tone }>`
