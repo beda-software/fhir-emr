@@ -18,6 +18,7 @@ export const S = {
         display: flex;
         flex-direction: column;
         gap: 12px;
+        margin: 0 -12px;
         padding: 14px 16px;
         border-radius: 8px;
         ${({ $tone, theme }) => {
@@ -57,9 +58,9 @@ export const S = {
         font-weight: 600;
         font-size: 14px;
     `,
-    StatusDot: styled.span<{ $tone?: ActiveTone }>`
-        width: 8px;
-        height: 8px;
+    StatusDot: styled.span<{ $tone?: ActiveTone; $size?: number }>`
+        width: ${({ $size = 8 }) => $size}px;
+        height: ${({ $size = 8 }) => $size}px;
         border-radius: 50%;
         background: ${({ theme }) => theme.neutralPalette.gray_1};
         animation: ${recordingPulse} 1.4s ease-in-out infinite;
@@ -100,9 +101,9 @@ export const S = {
         align-items: center;
         justify-content: flex-end;
         gap: 2px;
-        height: 22px;
+        height: 24px;
         overflow: hidden;
-        color: ${({ $tone, theme }) => ($tone === 'red' ? theme.errorPalette.ep_6 : theme.warningPalette.wp_6)};
+        color: ${({ $tone, theme }) => ($tone === 'red' ? theme.neutralPalette.gray_13 : theme.warningPalette.wp_6)};
     `,
     Bar: styled.span<{ $h: number }>`
         width: 3px;
@@ -119,6 +120,7 @@ export const S = {
         flex: 1 1 0;
         min-width: 0;
         background: ${({ theme }) => theme.neutralPalette.gray_1};
+        gap: 4px;
     `,
     StopButton: styled(Button)`
         flex: 1 1 0;
@@ -156,7 +158,7 @@ export const S = {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 8px;
+        margin: 0 -4px;
     `,
     FoldedIdleTile: styled.button`
         width: 32px;
@@ -177,8 +179,8 @@ export const S = {
         }
     `,
     FoldedActiveTile: styled.div<{ $tone: ActiveTone }>`
-        width: 48px;
-        border-radius: 10px;
+        width: 100%;
+        border-radius: 6px;
         overflow: hidden;
         border: 1px solid
             ${({ $tone, theme }) => ($tone === 'red' ? theme.errorPalette.ep_3 : theme.warningPalette.wp_3)};
@@ -197,11 +199,16 @@ export const S = {
         font-size: 11px;
         font-variant-numeric: tabular-nums;
     `,
+    FoldedTimer: styled.span`
+        font-size: 14px;
+        line-height: 22px;
+        font-variant-numeric: tabular-nums;
+    `,
     FoldedMiniWave: styled.div`
         display: flex;
         align-items: center;
         gap: 1px;
-        height: 14px;
+        height: 24px;
         color: inherit;
     `,
     FoldedDivider: styled.div<{ $tone: ActiveTone }>`
@@ -212,7 +219,7 @@ export const S = {
         background: transparent;
         border: 0;
         color: inherit;
-        padding: 8px 0;
+        padding: 16px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -220,7 +227,7 @@ export const S = {
         font-size: 12px;
     `,
     FoldedProcessing: styled.div`
-        width: 48px;
+        width: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -231,6 +238,7 @@ export const S = {
         font-weight: 600;
     `,
     FoldedLabel: styled.div<{ $tone: Tone }>`
+        margin-top: 6px;
         font-size: 10px;
         line-height: 14px;
         font-weight: 500;
@@ -240,9 +248,6 @@ export const S = {
             }
             if ($tone === 'amber') {
                 return theme.warningPalette.wp_7;
-            }
-            if ($tone === 'blue') {
-                return theme.primary;
             }
             return theme.neutralPalette.gray_13;
         }};

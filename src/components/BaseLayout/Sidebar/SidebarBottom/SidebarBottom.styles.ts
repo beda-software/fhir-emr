@@ -129,9 +129,9 @@ export const S = {
         opacity: ${({ $hidden }) => ($hidden ? 0 : 1)};
     `,
     FullWidthDivider: styled(Divider)<{ $collapsed: boolean }>`
-        margin: ${({ $collapsed }) => ($collapsed ? '0 -16px' : '0 -24px')};
+        margin: ${({ $collapsed }) => ($collapsed ? '0 -12px' : '0 -20px')};
         width: auto;
-        min-width: ${({ $collapsed }) => ($collapsed ? 'calc(100% + 32px)' : 'calc(100% + 48px)')};
+        min-width: ${({ $collapsed }) => ($collapsed ? 'calc(100% + 24px)' : 'calc(100% + 40px)')};
         transition: all 0s;
     `,
 };

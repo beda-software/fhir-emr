@@ -15,7 +15,8 @@ export { AssistantSessionProvider } from './SessionProvider';
 const EXPANDED_WAVE_BARS = 28;
 const FOLDED_WAVE_BARS = 5;
 const HEADER_WAVE_BARS = 3;
-const EXPANDED_BAR_MAX_HEIGHT = 18;
+const EXPANDED_BAR_MAX_HEIGHT = 24;
+const FOLDED_BAR_MAX_HEIGHT = 24;
 const COMPACT_BAR_MAX_HEIGHT = 12;
 
 function formatTimer(ms: number): string {
@@ -97,7 +98,7 @@ function ExpandedView() {
                         {t`Pause`}
                     </S.SecondaryButton>
                 )}
-                <S.StopButton onClick={() => stop()} icon={<S.StopSquare $size={8} />}>
+                <S.StopButton onClick={() => stop()} icon={<S.StopSquare $size={10} />}>
                     {t`Stop`}
                 </S.StopButton>
             </S.Actions>
@@ -138,9 +139,10 @@ function FoldedView() {
         <S.FoldedWrapper>
             <S.FoldedActiveTile $tone={activeTone}>
                 <S.FoldedTop>
-                    <span>{formatTimer(elapsedMs)}</span>
+                    {!isPaused && <S.StatusDot $size={6} />}
+                    <S.FoldedTimer>{formatTimer(elapsedMs)}</S.FoldedTimer>
                     <S.FoldedMiniWave>
-                        <WaveBars levels={levels} count={FOLDED_WAVE_BARS} maxHeight={COMPACT_BAR_MAX_HEIGHT} />
+                        <WaveBars levels={levels} count={FOLDED_WAVE_BARS} maxHeight={FOLDED_BAR_MAX_HEIGHT} />
                     </S.FoldedMiniWave>
                 </S.FoldedTop>
                 <S.FoldedDivider $tone={activeTone} />
@@ -150,7 +152,7 @@ function FoldedView() {
                     </S.FoldedBottom>
                 ) : (
                     <S.FoldedBottom onClick={() => stop()} aria-label={t`Stop`}>
-                        <S.StopSquare $size={10} />
+                        <S.StopSquare $size={8} />
                     </S.FoldedBottom>
                 )}
             </S.FoldedActiveTile>
