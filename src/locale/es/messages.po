@@ -387,6 +387,13 @@ msgstr "¿Estás seguro de que quieres eliminar el documento?"
 msgid "Are you sure you want to delete this item?"
 msgstr "¿Estás seguro que deseas eliminar este ítem?"
 
+#: src/components/Assistant/index.tsx:128
+#: src/components/Assistant/index.tsx:139
+#: src/components/Assistant/index.tsx:151
+#: src/components/Assistant/index.tsx:180
+msgid "Assistant"
+msgstr ""
+
 #: src/containers/PractitionerDetails/PractitionerDetailsTabs/index.tsx:26
 #: src/containers/PractitionerDetails/PractitionerHeader/index.tsx:43
 #: src/containers/PractitionerDetails/PractitionerHeader/index.tsx:83
@@ -476,6 +483,7 @@ msgstr "Cancelar"
 msgid "Cancelled"
 msgstr "Cancelada"
 
+#: src/components/Assistant/index.tsx:93
 #: src/components/AudioRecorder/index.tsx:41
 #: src/containers/EncounterDetails/AIScribe/index.tsx:112
 msgid "Capture in progress"
@@ -575,6 +583,11 @@ msgstr "Confirmar"
 #: src/containers/Prescriptions/ModalMedicationRequestConfirm.tsx:18
 #~ msgid "Confirm Medication Request"
 #~ msgstr "Confirmar solicitud de medicamento"
+
+#: src/components/Assistant/index.tsx:136
+#: src/components/Assistant/index.tsx:201
+msgid "Connecting…"
+msgstr ""
 
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:118
 #: src/containers/PatientDetails/PatientResources/utils.tsx:235
@@ -1470,6 +1483,14 @@ msgstr "Paciente guardado"
 msgid "Patients"
 msgstr "Pacientes"
 
+#: src/components/Assistant/index.tsx:108
+msgid "Pause"
+msgstr ""
+
+#: src/components/Assistant/index.tsx:93
+msgid "Paused"
+msgstr ""
+
 #: src/containers/InvoiceList/index.tsx:109
 #: src/containers/InvoiceList/index.tsx:114
 #: src/containers/InvoiceList/index.tsx:118
@@ -1537,6 +1558,10 @@ msgstr ""
 #: src/containers/PatientDetails/PatientOverviewDynamic/components/StandardCard/prepare.tsx:229
 #: src/containers/PatientDetails/PatientResources/utils.tsx:192
 msgid "Procedures"
+msgstr ""
+
+#: src/components/Assistant/index.tsx:81
+msgid "Processing recording"
 msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/index.tsx:93
@@ -1636,6 +1661,12 @@ msgstr "No se proporcionó el ID del recurso"
 #: src/containers/PatientDetails/PatientHeader/index.tsx:96
 msgid "Resources"
 msgstr "Recursos"
+
+#: src/components/Assistant/index.tsx:104
+#: src/components/Assistant/index.tsx:171
+#: src/components/Assistant/index.tsx:228
+msgid "Resume"
+msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:64
 msgid "Row"
@@ -1755,7 +1786,7 @@ msgstr "Selecciona hora"
 #: src/components/BaseQuestionnaireResponseForm/widgets/choice/index.tsx:26
 #: src/components/BaseQuestionnaireResponseForm/widgets/choice/index.tsx:56
 #: src/controls/Choice/index.tsx:NaN
-#: src/controls/Choice/index.tsx:25
+#: src/controls/Choice/index.tsx:55
 #~ msgid "Select..."
 #~ msgstr "Seleccionar..."
 
@@ -1825,6 +1856,13 @@ msgstr "NSS"
 msgid "Start"
 msgstr "Comenzar"
 
+#: src/components/Assistant/index.tsx:61
+#: src/components/Assistant/index.tsx:71
+#: src/components/Assistant/index.tsx:125
+#: src/components/Assistant/index.tsx:191
+msgid "Start Assistant"
+msgstr ""
+
 #: src/containers/EncounterList/searchBarUtils.ts:23
 msgid "Start date"
 msgstr "Fecha de inicio"
@@ -1866,6 +1904,12 @@ msgstr "Estado"
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:125
 msgid "Step"
 msgstr "Paso"
+
+#: src/components/Assistant/index.tsx:112
+#: src/components/Assistant/index.tsx:175
+#: src/components/Assistant/index.tsx:232
+msgid "Stop"
+msgstr ""
 
 #: src/containers/QuestionnaireBuilder/QuestionnaireItemSettings/controls.tsx:132
 msgid "Stop label"

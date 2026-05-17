@@ -58,7 +58,17 @@ function ExpandedView() {
         return (
             <S.ExpandedCard $tone="idle">
                 <S.StartButton type="default" icon={<AudioOutlined />} onClick={() => start()}>
-                    {t`Start Scriber`}
+                    {t`Start Assistant`}
+                </S.StartButton>
+            </S.ExpandedCard>
+        );
+    }
+
+    if (state === 'connecting') {
+        return (
+            <S.ExpandedCard $tone="idle">
+                <S.StartButton type="default" icon={<LoadingOutlined spin />} disabled>
+                    {t`Start Assistant`}
                 </S.StartButton>
             </S.ExpandedCard>
         );
@@ -109,13 +119,24 @@ function ExpandedView() {
 function FoldedView() {
     const { state, elapsedMs, levels, start, resume, stop } = useAssistantSession();
 
-    if (state === 'idle' || state === 'connecting') {
+    if (state === 'idle') {
         return (
             <S.FoldedWrapper>
-                <S.FoldedIdleTile onClick={() => start()} aria-label={t`Start Scriber`}>
+                <S.FoldedIdleTile onClick={() => start()} aria-label={t`Start Assistant`}>
                     <AudioOutlined />
                 </S.FoldedIdleTile>
-                <S.FoldedLabel $tone="idle">{t`Scriber`}</S.FoldedLabel>
+                <S.FoldedLabel $tone="idle">{t`Assistant`}</S.FoldedLabel>
+            </S.FoldedWrapper>
+        );
+    }
+
+    if (state === 'connecting') {
+        return (
+            <S.FoldedWrapper>
+                <S.FoldedIdleTile disabled aria-label={t`Connecting…`}>
+                    <LoadingOutlined spin />
+                </S.FoldedIdleTile>
+                <S.FoldedLabel $tone="idle">{t`Assistant`}</S.FoldedLabel>
             </S.FoldedWrapper>
         );
     }
@@ -127,7 +148,7 @@ function FoldedView() {
                     <span>{formatTimer(elapsedMs)}</span>
                     <LoadingOutlined spin />
                 </S.FoldedProcessing>
-                <S.FoldedLabel $tone="blue">{t`Scriber`}</S.FoldedLabel>
+                <S.FoldedLabel $tone="blue">{t`Assistant`}</S.FoldedLabel>
             </S.FoldedWrapper>
         );
     }
@@ -156,7 +177,7 @@ function FoldedView() {
                     </S.FoldedBottom>
                 )}
             </S.FoldedActiveTile>
-            <S.FoldedLabel $tone={activeTone}>{t`Scriber`}</S.FoldedLabel>
+            <S.FoldedLabel $tone={activeTone}>{t`Assistant`}</S.FoldedLabel>
         </S.FoldedWrapper>
     );
 }
@@ -164,11 +185,21 @@ function FoldedView() {
 function HeaderView() {
     const { state, elapsedMs, levels, start, resume, stop } = useAssistantSession();
 
-    if (state === 'idle' || state === 'connecting') {
+    if (state === 'idle') {
         return (
             <S.HeaderPill $tone="idle">
-                <S.HeaderIconButton onClick={() => start()} aria-label={t`Start Scriber`}>
+                <S.HeaderIconButton onClick={() => start()} aria-label={t`Start Assistant`}>
                     <AudioOutlined />
+                </S.HeaderIconButton>
+            </S.HeaderPill>
+        );
+    }
+
+    if (state === 'connecting') {
+        return (
+            <S.HeaderPill $tone="idle">
+                <S.HeaderIconButton disabled aria-label={t`Connecting…`}>
+                    <LoadingOutlined spin />
                 </S.HeaderIconButton>
             </S.HeaderPill>
         );
