@@ -1,4 +1,5 @@
 export * from '../uberComponents/ResourceListPage';
+export * from './Assistant';
 export * from './BaseLayout';
 export * from './BaseLayout/PageContainer';
 export * from './BaseQuestionnaireResponseForm/FieldLabel';

@@ -4,6 +4,7 @@ import type { ItemType } from 'antd/es/menu/interface';
 import classNames from 'classnames';
 import { useContext } from 'react';
 
+import { Assistant } from 'src/components/Assistant';
 import { MenuIcon } from 'src/icons/general/Menu';
 import { getToken } from 'src/services/auth';
 import { dynamicActivate, setCurrentLocale, getCurrentLocale, localesConfig } from 'src/services/i18n';
@@ -27,13 +28,16 @@ export function SidebarBottom(props: Props) {
 
     return (
         <S.Container
+            $collapsed={collapsed}
             className={classNames(s.container, {
                 _collapsed: collapsed,
             })}
             {...other}
         >
-            <S.Divider $hidden={collapsed} />
-            {enableLocaleSwitcher && <LocaleSwitcher onItemClick={onItemClick} />}
+            <S.FullWidthDivider $collapsed={collapsed} />
+            <Assistant variant={collapsed ? 'sidebarFolded' : 'sidebarExpanded'} />
+            <S.FullWidthDivider $collapsed={collapsed} />
+            {enableLocaleSwitcher && !collapsed && <LocaleSwitcher onItemClick={onItemClick} />}
             {!isAnonymousUser ? (
                 <>
                     <S.Divider $hidden={collapsed} />

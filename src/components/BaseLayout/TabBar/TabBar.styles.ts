@@ -16,10 +16,17 @@ export const S = {
         border-bottom: 1px solid ${({ theme }) => theme.neutralPalette.gray_4};
         display: flex;
         justify-content: space-between;
+        align-items: center;
 
         @media screen and (min-width: 768px) {
             display: none;
         }
+    `,
+    RightGroup: styled.div`
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding-right: 12px;
     `,
     LogoWrapper: styled(Link)`
         height: 50px;
@@ -48,7 +55,8 @@ export const S = {
     `,
     Button: styled(Button)`
         height: 50px;
-        width: 75px !important;
+        width: auto !important;
+        min-width: 0 !important;
         padding: 0 !important;
 
         &:hover {
