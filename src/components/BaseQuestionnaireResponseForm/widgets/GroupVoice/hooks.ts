@@ -11,7 +11,7 @@ import { aiService } from 'src/services/ai';
 import { getToken } from 'src/services/auth';
 import { compileAsFirst } from 'src/utils';
 
-import { merge, normalize } from './utils';
+import { merge, normalize, fixChoice } from './utils';
 
 const getByLinkId = compileAsFirst<Questionnaire, QuestionnaireItem>(
     'Questionnaire.repeat(item).where(linkId=%linkId)',
@@ -53,7 +53,8 @@ export function useGroupVoice(props: GroupItemProps) {
         }
 
         const old = { [linkId]: value };
-        const newValue = mapResponseToForm(extractResponse.data, questionnaire);
+        const fixedResponse = fixChoice(questionnaire, extractResponse.data);
+        const newValue = mapResponseToForm(fixedResponse, questionnaire);
         const mergedValue = merge(old, newValue);
         const result = normalize(
             mergedValue,

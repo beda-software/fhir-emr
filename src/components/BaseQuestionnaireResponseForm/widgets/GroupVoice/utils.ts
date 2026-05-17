@@ -1,6 +1,8 @@
-import { QuestionnaireItem } from 'fhir/r4b';
+import { Coding, Questionnaire, QuestionnaireItem, QuestionnaireResponse, QuestionnaireResponseItem } from 'fhir/r4b';
 import * as _ from 'lodash';
 import { FormAnswerItems, FormGroupItems, type FormItems } from 'sdc-qrf';
+
+import { compileAsFirst, compileAsArray } from 'src/utils';
 
 function customizer<T>(objValue: T, srcValue: T): T | undefined {
     if (_.isArray(objValue)) {
@@ -86,4 +88,39 @@ export function normalize(qr: FormItems, getDefinition: (linkId: string) => Ques
         }
     }
     return result;
+}
+
+const getChoices = compileAsArray<Questionnaire, QuestionnaireItem>(
+    "Questionnaire.repeat(item).where(type='choice' and answerOption.empty().not())",
+);
+const getAswers = compileAsArray<QuestionnaireResponse, QuestionnaireResponseItem>(
+    'QuestionnaireResponse.repeat(item).where(answer.empty().not())',
+);
+const getCode = compileAsFirst<QuestionnaireItem, Coding>('answerOption.valueCoding.where(code=%code)');
+
+export function fixChoice(q: Questionnaire, qr: QuestionnaireResponse) {
+    const choices: Record<string, QuestionnaireItem> = {};
+    for (const item of getChoices(q)) {
+        choices[item.linkId] = item;
+    }
+    for (const answerItem of getAswers(qr)) {
+        const updated = answerItem.answer?.map((a) => {
+            const code = a.valueCoding?.code;
+            if (typeof code === 'undefined') {
+                return a;
+            }
+            const qi = choices[answerItem.linkId];
+            if (typeof qi === 'undefined') {
+                return a;
+            }
+            const originalAnswer = getCode(qi, { code });
+            if (typeof originalAnswer === 'undefined') {
+                return a;
+            }
+            return { valueCoding: originalAnswer };
+        });
+        answerItem.answer = updated;
+    }
+
+    return qr;
 }
