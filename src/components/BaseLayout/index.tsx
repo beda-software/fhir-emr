@@ -39,6 +39,7 @@ export function AnonymousLayout({ children, style }: Props) {
         <AssistantSessionProvider>
             <S.Container style={style}>
                 <AppSidebar />
+                <AppTabBar />
                 <Layout className={s.content}>
                     {children}
                     {footer}
