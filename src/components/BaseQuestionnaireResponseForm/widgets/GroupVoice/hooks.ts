@@ -1,5 +1,5 @@
 import { notification } from 'antd';
-import { Questionnaire, QuestionnaireItem } from 'fhir/r4b';
+import { Questionnaire, QuestionnaireItem, QuestionnaireResponse } from 'fhir/r4b';
 import { useMemo, useState } from 'react';
 import { mapResponseToForm, type GroupItemProps } from 'sdc-qrf';
 
@@ -8,7 +8,6 @@ import { isFailure } from '@beda.software/remote-data';
 import { assistant } from 'src/components/Assistant/bus';
 import { useFieldController } from 'src/components/BaseQuestionnaireResponseForm/hooks';
 import { aiService } from 'src/services/ai';
-import { getToken } from 'src/services/auth';
 import { compileAsFirst } from 'src/utils';
 
 import { merge, normalize, fixChoice } from './utils';
@@ -37,14 +36,13 @@ export function useGroupVoice(props: GroupItemProps) {
             status: 'active',
             item: [questionItemFHIR!],
         };
-        const extractResponse = await aiService<any>({
+        const extractResponse = await aiService<QuestionnaireResponse>({
             method: 'POST',
             url: '/populate',
             data: {
                 text: textFromAudio,
                 questionnaire,
             },
-            headers: { Authorization: `Bearer ${getToken()}` },
         });
 
         if (isFailure(extractResponse)) {
