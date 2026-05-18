@@ -123,36 +123,6 @@ item:
                 - code: mmHg
                   system: http://unitsofmeasure.org
                   display: mmHg
-        - linkId: blood-pressure-positions
-          text: Positions
-          type: choice
-          itemControl:
-            coding:
-              - code: inline-choice
-          answerOption:
-            - valueCoding:
-                code: sitting
-                display: Sitting
-            - valueCoding:
-                code: lying
-                display: Lying
-            - valueCoding:
-                code: standing
-                display: Standing
-        - linkId: blood-pressure-arm
-          text: Arm
-          type: choice
-          itemControl:
-            coding:
-              - code: inline-choice
-          answerOption:
-            - valueCoding:
-                code: biceps-left
-                display: Biceps left
-            - valueCoding:
-                code: biceps-right
-                display: Biceps right
-
   - linkId: bmi
     text: BMI
     type: decimal
