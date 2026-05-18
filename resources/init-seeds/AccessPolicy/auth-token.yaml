@@ -1,0 +1,6 @@
+id: auth-token
+engine: matcho
+matcho:
+  uri: /auth/token
+  request-method: post
+resourceType: AccessPolicy
