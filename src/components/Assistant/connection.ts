@@ -45,7 +45,7 @@ export async function startRealtimeVoice(
     const response = await service<{ client_secret: { value: string } }>({
         method: 'POST',
         url: 'real-time-session',
-        data: { model: 'gpt-4o-realtime-preview', voice: 'verse', modalities: ['audio', 'text'] },
+        data: { model: 'gpt-realtime', voice: 'verse', modalities: ['audio', 'text'] },
     });
 
     if (!isSuccess(response)) {
@@ -177,7 +177,7 @@ export async function startRealtimeVoice(
         pc.addEventListener('icegatheringstatechange', check);
         setTimeout(() => resolve(), 2500);
     });
-    const resp = await fetch('https://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview', {
+    const resp = await fetch('https://api.openai.com/v1/realtime?model=gpt-realtime', {
         method: 'POST',
         headers: {
             Authorization: `Bearer ${client_secret.value}`,
