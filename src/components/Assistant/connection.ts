@@ -1,6 +1,8 @@
 import { initServices } from '@beda.software/fhir-react';
 import { isSuccess } from '@beda.software/remote-data';
 
+const REALTIME_MODEL = 'gpt-realtime';
+
 const NOIZE_LEVEL_SAMPLE_INTERVAL_MS = 80;
 const NOIZE_LEVEL_FFT_SIZE = 1024;
 const NOIZE_LEVEL_GAIN = 5;
@@ -45,7 +47,7 @@ export async function startRealtimeVoice(
     const response = await service<{ client_secret: { value: string } }>({
         method: 'POST',
         url: 'real-time-session',
-        data: { model: 'gpt-realtime', voice: 'verse', modalities: ['audio', 'text'] },
+        data: { model: REALTIME_MODEL },
     });
 
     if (!isSuccess(response)) {
@@ -100,7 +102,7 @@ export async function startRealtimeVoice(
                 emit({ type: 'debug', message: `Error from API: ${JSON.stringify(evt)}` });
             } else if (evt.type === 'conversation.item.input_audio_transcription.completed') {
                 emit({ type: 'debug', message: `Transcription: ${evt.transcript}` });
-            } else if (evt.type === 'response.audio_transcript.delta') {
+            } else if (evt.type === 'response.output_audio_transcript.delta') {
                 emit({ type: 'debug', message: `AI response: ${evt.delta}` });
             }
         } catch (e) {
@@ -113,13 +115,16 @@ export async function startRealtimeVoice(
             const sessionConfig = {
                 type: 'session.update',
                 session: {
-                    modalities: ['text'],
-                    input_audio_format: 'pcm16',
-                    input_audio_transcription: {
-                        model: 'whisper-1',
-                        language: 'en',
+                    type: 'realtime',
+                    model: REALTIME_MODEL,
+                    output_modalities: ['text'],
+                    audio: {
+                        input: {
+                            format: { type: 'audio/pcm', rate: 24000 },
+                            transcription: { model: 'whisper-1', language: 'en' },
+                            turn_detection: { type: 'server_vad', silence_duration_ms: 800 },
+                        },
                     },
-                    turn_detection: { type: 'server_vad', silence_duration_ms: 800 },
                 },
             };
             eventsChannel.send(JSON.stringify(sessionConfig));
@@ -177,7 +182,7 @@ export async function startRealtimeVoice(
         pc.addEventListener('icegatheringstatechange', check);
         setTimeout(() => resolve(), 2500);
     });
-    const resp = await fetch('https://api.openai.com/v1/realtime?model=gpt-realtime', {
+    const resp = await fetch('https://api.openai.com/v1/realtime/calls', {
         method: 'POST',
         headers: {
             Authorization: `Bearer ${client_secret.value}`,
