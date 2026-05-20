@@ -43,6 +43,12 @@ item:
         text: Demographics
         type: group
         item:
+        - linkId: g1-voice-group
+          type: group
+          itemControl:
+            coding:
+              - code: group-voice
+          item:
           - linkId: demographics-group
             text: Demographics
             type: group
@@ -215,6 +221,12 @@ item:
         text: Service Use
         type: group
         item:
+        - linkId: g2-voice-group
+          type: group
+          itemControl:
+            coding:
+              - code: group-voice
+          item:
           - linkId: services-use-group
             text: Recent health / community services use
             type: group
@@ -660,6 +672,12 @@ item:
         text: Falls risk pt 1
         type: group
         item:
+        - linkId: g3-voice-group
+          type: group
+          itemControl:
+            coding:
+              - code: group-voice
+          item:
           - linkId: history-of-falls-group
             text: History of falls
             type: group
@@ -902,6 +920,12 @@ item:
         text: Falls risk pt 2
         type: group
         item:
+        - linkId: g4-voice-group
+          type: group
+          itemControl:
+            coding:
+              - code: group-voice
+          item:
           - linkId: sensory-loss-group
             text: Sensory loss
             type: group
@@ -1013,6 +1037,12 @@ item:
         text: Falls risk pt 3
         type: group
         item:
+        - linkId: g5-voice-group
+          type: group
+          itemControl:
+            coding:
+              - code: group-voice
+          item:
           - linkId: continence-group
             text: Continence
             type: group
@@ -1127,6 +1157,12 @@ item:
         text: Falls risk pt 4
         type: group
         item:
+        - linkId: g6-voice-group
+          type: group
+          itemControl:
+            coding:
+              - code: group-voice
+          item:
           - linkId: function-group
             text: Function
             type: group
