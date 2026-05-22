@@ -1,7 +1,6 @@
 APP_INIT_CLIENT_ID=root
 APP_INIT_CLIENT_SECRET=secret
 APP_INIT_URL=http://devbox:8080
-BASE_URL=http://devbox:8080/fhir
 
 APP_ID=sdc
 APP_SECRET=secret
