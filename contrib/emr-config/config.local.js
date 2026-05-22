@@ -17,6 +17,7 @@ const config = {
 
     metriportIdentifierSystem: 'https://api.sandbox.metriport.com',
     aiAssistantServiceUrl: 'http://localhost:3002/',
+    localAiAssistant: false,
 };
 
 export { config as default };
