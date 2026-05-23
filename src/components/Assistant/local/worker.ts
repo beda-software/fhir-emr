@@ -1,4 +1,9 @@
-import { pipeline, env } from '@huggingface/transformers';
+import {
+    pipeline,
+    env,
+    type AutomaticSpeechRecognitionPipeline,
+    type ProgressCallback,
+} from '@huggingface/transformers';
 
 env.allowLocalModels = false;
 if (env.backends?.onnx?.wasm) {
@@ -18,7 +23,7 @@ type WorkerOutbound =
     | { type: 'result'; id: number; text: string }
     | { type: 'error'; id?: number; message: string };
 
-let asr: any = null;
+let asr: AutomaticSpeechRecognitionPipeline | null = null;
 let loadPromise: Promise<void> | null = null;
 let processQueue: Promise<void> = Promise.resolve();
 
@@ -28,15 +33,13 @@ function post(message: WorkerOutbound) {
     self.postMessage(message);
 }
 
-function handleProgress(info: any) {
-    if (info && typeof info.file === 'string') {
-        if (info.status === 'progress' && typeof info.progress === 'number') {
-            fileProgress.set(info.file, info.progress);
-        } else if (info.status === 'done') {
-            fileProgress.set(info.file, 100);
-        } else if (info.status === 'initiate') {
-            fileProgress.set(info.file, fileProgress.get(info.file) ?? 0);
-        }
+const handleProgress: ProgressCallback = (info) => {
+    if (info.status === 'progress') {
+        fileProgress.set(info.file, info.progress);
+    } else if (info.status === 'done') {
+        fileProgress.set(info.file, 100);
+    } else if (info.status === 'initiate') {
+        fileProgress.set(info.file, fileProgress.get(info.file) ?? 0);
     }
     if (fileProgress.size > 0) {
         let sum = 0;
@@ -45,7 +48,7 @@ function handleProgress(info: any) {
         });
         post({ type: 'progress', fraction: sum / fileProgress.size / 100 });
     }
-}
+};
 
 async function load() {
     if (asr) {
@@ -66,13 +69,12 @@ async function load() {
 }
 
 async function transcribe(audio: Float32Array): Promise<string> {
-    const output: any = await asr(audio, { chunk_length_s: 30, stride_length_s: 5 });
-    const text = Array.isArray(output) ? output.map((part: any) => part?.text ?? '').join(' ') : output?.text;
-    if (typeof text !== 'string') {
+    if (!asr) {
         return '';
     }
+    const output = await asr(audio, { chunk_length_s: 30, stride_length_s: 5 });
     // Whisper emits non-speech annotations like [BLANK_AUDIO] or (coughing) — drop them.
-    return text
+    return output.text
         .replace(/\[[^\]]*\]|\([^)]*\)/g, '')
         .replace(/\s+/g, ' ')
         .trim();
