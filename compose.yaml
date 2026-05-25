@@ -22,7 +22,7 @@ services:
     env_file:
       - ./env/sdc-ide
   sdc:
-    image: bedasoftware/fhir-sdc:1.0.0a14
+    image: bedasoftware/fhir-sdc:2.1.0a1
     depends_on:
       devbox-healthcheck:
         condition: service_healthy
@@ -207,11 +207,3 @@ services:
       interval: 5s
       timeout: 30s
       retries: 50
-
-  fhir-converters-app:
-    image: bedasoftware/aidbox-fhir-converter:main
-    depends_on:
-      devbox-healthcheck:
-        condition: service_healthy
-    env_file:
-      - ./env/fhir-converters-app
