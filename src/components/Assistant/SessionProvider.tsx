@@ -1,16 +1,20 @@
+import { t } from '@lingui/macro';
+import { notification } from 'antd';
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
-import { aiService } from 'src/services/ai';
+import config from '@beda.software/emr-config';
 
 import { assistant, newSentence } from './bus';
-import { RealtimeVoiceSession, startRealtimeVoice } from './connection';
+import { AssistantEngineSession } from './engine';
+import { createRealtimeEngine } from './realtimeEngine';
 
-type RecordingState = 'idle' | 'connecting' | 'recording' | 'paused' | 'processing';
+type RecordingState = 'idle' | 'connecting' | 'loading' | 'recording' | 'paused' | 'processing';
 
 interface AssistantSession {
     state: RecordingState;
     elapsedMs: number;
     levels: number[];
+    loadProgress: number;
     start: () => Promise<void>;
     pause: () => void;
     resume: () => Promise<void>;
@@ -19,9 +23,16 @@ interface AssistantSession {
 
 const AssistantSessionContext = createContext<AssistantSession | null>(null);
 
-const PROCESSING_TIMEOUT_MS = 4000;
 const HISTORY_SIZE = 64;
 const initialLevels = (): number[] => Array.from({ length: HISTORY_SIZE }, () => 0);
+
+async function createEngine(): Promise<AssistantEngineSession> {
+    if (config.localAiAssistant) {
+        const { createLocalEngine } = await import('./local/localEngine');
+        return createLocalEngine();
+    }
+    return createRealtimeEngine();
+}
 
 export function useAssistantSession(): AssistantSession {
     const ctx = useContext(AssistantSessionContext);
@@ -32,19 +43,20 @@ export function useAssistantSession(): AssistantSession {
 }
 
 export function AssistantSessionProvider({ children }: { children: ReactNode }) {
-    const voiceRef = useRef<RealtimeVoiceSession>();
+    const engineRef = useRef<AssistantEngineSession>();
     const stateRef = useRef<RecordingState>('idle');
+    const cancelledRef = useRef(false);
     const [state, setStateValue] = useState<RecordingState>('idle');
     const [elapsedMs, setElapsedMs] = useState(0);
     const [levels, setLevels] = useState<number[]>(initialLevels);
+    const [loadProgress, setLoadProgress] = useState(0);
 
     const tickRef = useRef<number | null>(null);
     const tickStartRef = useRef<number>(0);
     const tickBaselineRef = useRef<number>(0);
 
-    const unsubscribeEventsRef = useRef<(() => void) | null>(null);
+    const unsubscribersRef = useRef<Array<() => void>>([]);
     const unsubscribeLevelRef = useRef<(() => void) | null>(null);
-    const processingTimeoutRef = useRef<number | null>(null);
 
     const setState = useCallback((next: RecordingState) => {
         stateRef.current = next;
@@ -89,12 +101,12 @@ export function AssistantSessionProvider({ children }: { children: ReactNode }) 
     }, []);
 
     const subscribeLevel = useCallback(() => {
-        const session = voiceRef.current;
-        if (!session) {
+        const engine = engineRef.current;
+        if (!engine) {
             return;
         }
         unsubscribeLevelRef.current?.();
-        unsubscribeLevelRef.current = session.subscribeLevel(pushLevel);
+        unsubscribeLevelRef.current = engine.subscribeLevel(pushLevel);
     }, [pushLevel]);
 
     const unsubscribeLevel = useCallback(() => {
@@ -103,24 +115,21 @@ export function AssistantSessionProvider({ children }: { children: ReactNode }) 
     }, []);
 
     const teardown = useCallback(() => {
-        if (processingTimeoutRef.current !== null) {
-            window.clearTimeout(processingTimeoutRef.current);
-            processingTimeoutRef.current = null;
-        }
+        unsubscribersRef.current.forEach((unsubscribe) => unsubscribe());
+        unsubscribersRef.current = [];
         unsubscribeLevelRef.current?.();
         unsubscribeLevelRef.current = null;
-        unsubscribeEventsRef.current?.();
-        unsubscribeEventsRef.current = null;
         stopTimer();
         try {
-            voiceRef.current?.stop();
+            engineRef.current?.stop();
         } catch (e) {
             console.error(e);
         }
-        voiceRef.current = undefined;
+        engineRef.current = undefined;
         tickBaselineRef.current = 0;
         setElapsedMs(0);
         setLevels(initialLevels());
+        setLoadProgress(0);
         setState('idle');
     }, [setState, stopTimer]);
 
@@ -129,43 +138,69 @@ export function AssistantSessionProvider({ children }: { children: ReactNode }) 
             return;
         }
         setState('connecting');
+        cancelledRef.current = false;
         tickBaselineRef.current = 0;
         setElapsedMs(0);
         setLevels(initialLevels());
+        setLoadProgress(0);
 
-        let session: RealtimeVoiceSession;
+        let engine: AssistantEngineSession;
         try {
-            session = await startRealtimeVoice(aiService);
+            engine = await createEngine();
         } catch (e) {
-            console.error('[Assistant] Failed to start realtime voice', e);
+            console.error('[Assistant] Failed to start engine', e);
+            notification.error({ message: t`Failed to start the assistant` });
             setState('idle');
             return;
         }
-        voiceRef.current = session;
 
-        unsubscribeEventsRef.current = session.onEvent((evt: any) => {
-            if (evt.type === 'session.updated' && stateRef.current === 'connecting') {
-                setState('recording');
-                startTimer();
-                subscribeLevel();
+        if (cancelledRef.current) {
+            try {
+                engine.stop();
+            } catch (e) {
+                console.error(e);
             }
-            if (evt.type === 'conversation.item.input_audio_transcription.completed') {
-                assistant.dispatch(newSentence(evt.transcript));
-                if (stateRef.current === 'processing') {
-                    teardown();
+            setState('idle');
+            return;
+        }
+
+        engineRef.current = engine;
+
+        unsubscribersRef.current.push(
+            engine.onStateChange((phase) => {
+                if (phase === 'loading' && stateRef.current === 'connecting') {
+                    setState('loading');
                 }
-            }
-        });
-
-        session.clearAudioBuffer();
-        await session.unmuteAudio();
+                if (phase === 'recording' && (stateRef.current === 'connecting' || stateRef.current === 'loading')) {
+                    setState('recording');
+                    startTimer();
+                    subscribeLevel();
+                }
+            }),
+            engine.onProgress((fraction) => {
+                setLoadProgress(fraction);
+            }),
+            engine.onTranscript((text) => {
+                const trimmed = text.trim();
+                if (trimmed) {
+                    assistant.dispatch(newSentence(trimmed));
+                }
+            }),
+            engine.onError((error) => {
+                console.error('[Assistant] Engine error', error);
+                if (stateRef.current !== 'processing') {
+                    notification.error({ message: t`Assistant error` });
+                }
+                teardown();
+            }),
+        );
     }, [setState, startTimer, subscribeLevel, teardown]);
 
     const pause = useCallback(() => {
         if (stateRef.current !== 'recording') {
             return;
         }
-        voiceRef.current?.muteAudio();
+        engineRef.current?.pause();
         freezeTimer();
         unsubscribeLevel();
         setState('paused');
@@ -175,36 +210,48 @@ export function AssistantSessionProvider({ children }: { children: ReactNode }) 
         if (stateRef.current !== 'paused') {
             return;
         }
-        await voiceRef.current?.unmuteAudio();
+        try {
+            await engineRef.current?.resume();
+        } catch (e) {
+            console.error('[Assistant] Failed to resume', e);
+            notification.error({ message: t`Assistant error` });
+            teardown();
+            return;
+        }
         setState('recording');
         startTimer();
         subscribeLevel();
-    }, [setState, startTimer, subscribeLevel]);
+    }, [setState, startTimer, subscribeLevel, teardown]);
 
     const stop = useCallback(() => {
         const current = stateRef.current;
+        if (current === 'connecting') {
+            cancelledRef.current = true;
+            if (engineRef.current) {
+                teardown();
+            }
+            return;
+        }
+        if (current === 'loading') {
+            teardown();
+            return;
+        }
         if (current !== 'recording' && current !== 'paused') {
             return;
         }
         freezeTimer();
         unsubscribeLevel();
         setState('processing');
-        try {
-            voiceRef.current?.muteAudio();
-            voiceRef.current?.commitAudioBuffer();
-        } catch (e) {
-            console.error(e);
+        const engine = engineRef.current;
+        if (!engine) {
+            teardown();
+            return;
         }
-        // Safety net: we move to `processing` and wait for one final
-        // transcription.completed event before teardown. If the server never
-        // emits it (dropped data channel, pure silence, transient error), the
-        // UI would hang on the spinner with the WebRTC session still open.
-        // Force-teardown after this delay so the user can always recover.
-        processingTimeoutRef.current = window.setTimeout(() => {
+        engine.finalize().finally(() => {
             if (stateRef.current === 'processing') {
                 teardown();
             }
-        }, PROCESSING_TIMEOUT_MS);
+        });
     }, [freezeTimer, setState, teardown, unsubscribeLevel]);
 
     useEffect(() => {
@@ -220,8 +267,8 @@ export function AssistantSessionProvider({ children }: { children: ReactNode }) 
     }, [resetTimer, state]);
 
     const value = useMemo<AssistantSession>(
-        () => ({ state, elapsedMs, levels, start, pause, resume, stop }),
-        [state, elapsedMs, levels, start, pause, resume, stop],
+        () => ({ state, elapsedMs, levels, loadProgress, start, pause, resume, stop }),
+        [state, elapsedMs, levels, loadProgress, start, pause, resume, stop],
     );
 
     return <AssistantSessionContext.Provider value={value}>{children}</AssistantSessionContext.Provider>;

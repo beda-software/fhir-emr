@@ -28,6 +28,7 @@ declare const config: {
     wearablesDataStreamService: string;
     metriportIdentifierSystem: string;
     aiAssistantServiceUrl: string;
+    localAiAssistant?: boolean;
     inactiveMapping?: Record<string, {
         searchField: string;
         statusField: string;

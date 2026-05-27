@@ -4,9 +4,22 @@ import * as path from 'path';
 import { lingui } from '@lingui/vite-plugin';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 import turbosnap from 'vite-plugin-turbosnap';
 
 const require = createRequire(import.meta.url);
+
+function ortWasmCopyTargets() {
+    try {
+        const ortDist = path.dirname(require.resolve('onnxruntime-web'));
+        return [{ src: path.join(ortDist, 'ort-wasm-simd-threaded*.{wasm,mjs}'), dest: 'ort' }];
+    } catch {
+        console.warn(
+            '[vite] onnxruntime-web not resolved — ORT wasm not copied; the local Assistant engine will not work.',
+        );
+        return [];
+    }
+}
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => ({
@@ -31,6 +44,7 @@ export default defineConfig(({ command }) => ({
                 },
             }),
             lingui(),
+            viteStaticCopy({ targets: ortWasmCopyTargets() }),
         ],
         command === 'build' ? [turbosnap({ rootDir: process.cwd() })] : [],
     ],

@@ -52,7 +52,7 @@ function WaveBars({ levels, count, maxHeight }: WaveBarsProps) {
 }
 
 function ExpandedView() {
-    const { state, elapsedMs, levels, start, pause, resume, stop } = useAssistantSession();
+    const { state, elapsedMs, levels, loadProgress, start, pause, resume, stop } = useAssistantSession();
 
     if (state === 'idle') {
         return (
@@ -70,6 +70,20 @@ function ExpandedView() {
                 <S.StartButton type="default" icon={<LoadingOutlined spin />} disabled>
                     {t`Start Assistant`}
                 </S.StartButton>
+            </S.ExpandedCard>
+        );
+    }
+
+    if (state === 'loading') {
+        return (
+            <S.ExpandedCard $tone="idle">
+                <S.ExpandedHeader>
+                    <LoadingOutlined spin />
+                    {t`Loading models… ${Math.round(loadProgress * 100)}%`}
+                </S.ExpandedHeader>
+                <S.SecondaryButton icon={<S.StopSquare $size={10} />} onClick={() => stop()}>
+                    {t`Cancel`}
+                </S.SecondaryButton>
             </S.ExpandedCard>
         );
     }
@@ -117,7 +131,7 @@ function ExpandedView() {
 }
 
 function FoldedView() {
-    const { state, elapsedMs, levels, start, resume, stop } = useAssistantSession();
+    const { state, elapsedMs, levels, loadProgress, start, resume, stop } = useAssistantSession();
 
     if (state === 'idle') {
         return (
@@ -137,6 +151,18 @@ function FoldedView() {
                     <LoadingOutlined spin />
                 </S.FoldedIdleTile>
                 <S.FoldedLabel $tone="idle">{t`Assistant`}</S.FoldedLabel>
+            </S.FoldedWrapper>
+        );
+    }
+
+    if (state === 'loading') {
+        return (
+            <S.FoldedWrapper>
+                <S.FoldedProcessing>
+                    <span>{Math.round(loadProgress * 100)}%</span>
+                    <LoadingOutlined spin />
+                </S.FoldedProcessing>
+                <S.FoldedLabel $tone="blue">{t`Assistant`}</S.FoldedLabel>
             </S.FoldedWrapper>
         );
     }
@@ -183,7 +209,7 @@ function FoldedView() {
 }
 
 function HeaderView() {
-    const { state, elapsedMs, levels, start, resume, stop } = useAssistantSession();
+    const { state, elapsedMs, levels, loadProgress, start, resume, stop } = useAssistantSession();
 
     if (state === 'idle') {
         return (
@@ -201,6 +227,15 @@ function HeaderView() {
                 <S.HeaderIconButton disabled aria-label={t`Connecting…`}>
                     <LoadingOutlined spin />
                 </S.HeaderIconButton>
+            </S.HeaderPill>
+        );
+    }
+
+    if (state === 'loading') {
+        return (
+            <S.HeaderPill $tone="blue">
+                <span>{Math.round(loadProgress * 100)}%</span>
+                <LoadingOutlined spin />
             </S.HeaderPill>
         );
     }
