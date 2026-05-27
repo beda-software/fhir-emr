@@ -1,5 +1,6 @@
 export * from './auth.ts';
 export * from './fhir.ts';
+export * from './file-upload.ts';
 export * from './history.ts';
 export * from './i18n.ts';
 export * from './initialize.ts';
