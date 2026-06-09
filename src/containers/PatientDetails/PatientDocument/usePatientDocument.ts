@@ -110,8 +110,13 @@ function prepareFormInitialParams(
         questionnaireLoader: questionnaireIdLoader(questionnaireId),
         launchContextParameters: [
             { name: 'Patient', resource: patient },
+            { name: 'patient', resource: patient },
             {
                 name: 'Author',
+                resource: author,
+            },
+            {
+                name: 'user',
                 resource: author,
             },
             ...(encounterId
@@ -119,6 +124,10 @@ function prepareFormInitialParams(
                       {
                           name: 'Encounter',
                           resource: { resourceType: 'Encounter', id: encounterId } as Encounter,
+                      },
+                      {
+                          name: 'encounter',
+                          valueReference: { reference: `Encounter/${encounterId}` },
                       },
                   ]
                 : [
