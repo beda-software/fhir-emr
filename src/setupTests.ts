@@ -257,7 +257,7 @@ beforeEach(async () => {
             url: '/$psql',
             data: { query: 'SELECT last_value from transaction_id_seq;' },
         });
-        txId = response.data.result[0].last_value;
+        txId = response.data.result[0].data[0].last_value;
 
         return response;
     });
