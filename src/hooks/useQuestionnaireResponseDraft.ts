@@ -16,7 +16,7 @@ import {
 import { failure, isFailure, isSuccess, RemoteData, RemoteDataResult, success } from '@beda.software/remote-data';
 
 import { getFHIRResources } from 'src/services/fhir';
-import { formatHumanDateTime } from 'src/utils';
+import { evaluate, formatHumanDateTime } from 'src/utils';
 
 import {
     getQuestionnaireResponseDraftServices,
@@ -171,7 +171,7 @@ export const useQuestionnaireResponseDraft = (
                 return Promise.resolve();
             }
 
-            const rootContext = calcInitialContext(formData.context, formData.formValues);
+            const rootContext = calcInitialContext(formData.context, formData.formValues, evaluate);
             if (!isRunningDebouncedSaveDraftRef.current) {
                 return debouncedSaveDraftRef.current?.(rootContext?.resource);
             }
