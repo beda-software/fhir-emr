@@ -27,7 +27,7 @@ declare const config: {
     jitsiMeetServer: string;
     wearablesDataStreamService: string;
     metriportIdentifierSystem: string;
-    aiAssistantServiceUrl: string;
+    aiAssistantServiceUrl?: string;
     inactiveMapping?: Record<string, {
         searchField: string;
         statusField: string;
