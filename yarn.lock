@@ -439,10 +439,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@beda.software/fhir-questionnaire@^0.1.0-alpha.7":
-  version "0.1.0-alpha.7"
-  resolved "https://registry.yarnpkg.com/@beda.software/fhir-questionnaire/-/fhir-questionnaire-0.1.0-alpha.7.tgz#b102ca9e53476fa532bef898dfabb40a4b605048"
-  integrity sha512-d/dru3s4kPReOBQaJD9cK1O4wfH15A9yJ9w4F38hAJoLd7Jo3bl4zhBuNYfc4rkyboHJKY/1F+1cAiwqtrE+DA==
+"@beda.software/fhir-questionnaire@^0.1.0-alpha.8":
+  version "0.1.0-alpha.8"
+  resolved "https://registry.yarnpkg.com/@beda.software/fhir-questionnaire/-/fhir-questionnaire-0.1.0-alpha.8.tgz#9bc71a03604c74cb474b9150e968e472603b3664"
+  integrity sha512-3dQc4NmWBsPw3sAMw78fYjqqJYAgVt3+SkyC9Ls/ZkLAynw85LF8uMHv0lPiVpxw+J09EuLMIURNaet8WOyhGA==
   dependencies:
     "@beda.software/fhir-react" "^1.11.1"
     "@beda.software/remote-data" "^1.1.4"
@@ -494,10 +494,10 @@
     magic-string "^0.30.10"
     vue-tsc "2.0.19"
 
-"@beda.software/web-item-controls@^0.1.18":
-  version "0.1.18"
-  resolved "https://registry.yarnpkg.com/@beda.software/web-item-controls/-/web-item-controls-0.1.18.tgz#f970d00698fb7cb6654c9f811037980b98f28e21"
-  integrity sha512-E9f8KrZxrqC1s1QUkQ+rbO4946UmgDHnmy6Np0cl0SIL9YF6URCaGBSDXb8Ue0MBJwe4cw3tmSVVKiJ9XHtsyQ==
+"@beda.software/web-item-controls@^0.1.19":
+  version "0.1.19"
+  resolved "https://registry.yarnpkg.com/@beda.software/web-item-controls/-/web-item-controls-0.1.19.tgz#361423989102bc3a5b2d28d93487337d25e257ba"
+  integrity sha512-loG+yjOb4i62rr5D/I8kIuvPwCW41e5pvF574nuhfGNWgal72jmq/iS4GFbyruGzzKCOgfXTaZWBLJw7vnr4hQ==
   dependencies:
     "@ant-design/colors" "^7.0.0"
     "@ant-design/icons" "^5.1.4"
