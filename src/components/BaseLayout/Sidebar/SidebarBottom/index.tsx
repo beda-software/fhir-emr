@@ -27,7 +27,7 @@ export function SidebarBottom(props: Props) {
     const { collapsed, toggleCollapsed, onItemClick, enableLocaleSwitcher = true, ...other } = props;
     const appToken = getToken();
     const isAnonymousUser = !appToken;
-    const enableAssistant = config.aiAssistantServiceUrl !== undefined;
+    const enableAssistant = !!config.aiAssistantServiceUrl;
 
     return (
         <S.Container
