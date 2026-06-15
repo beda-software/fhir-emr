@@ -27,7 +27,7 @@
         "@ant-design/colors": "^7.0.0",
         "@ant-design/icons": "^5.1.4",
         "@beda.software/emr-config": "*",
-        "@beda.software/fhir-questionnaire": "^0.1.0-alpha.6",
+        "@beda.software/fhir-questionnaire": "^0.1.0-alpha.7",
         "@beda.software/fhir-react": "^1.11.0",
         "@beda.software/remote-data": "^1.1.4",
         "@beda.software/web-item-controls": "^0.1.18",
