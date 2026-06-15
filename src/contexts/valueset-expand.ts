@@ -1,5 +1,1 @@
-import { createContext } from 'react';
-
-import { expandEMRValueSet } from 'src/services';
-
-export const ValueSetExpandProvider = createContext(expandEMRValueSet);
+export { ValueSetExpandProvider } from '@beda.software/web-item-controls/contexts';
