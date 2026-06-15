@@ -9,8 +9,6 @@ import { BaseQuestionnaireResponseFormProps } from '@beda.software/fhir-question
 import { BaseQuestionnaireResponseFormPropsContext } from '@beda.software/fhir-questionnaire/contexts';
 import { RemoteDataResult } from '@beda.software/remote-data';
 
-import { evaluate } from 'src/utils';
-
 import { S } from './BaseQuestionnaireResponseForm.styles';
 
 export interface FormFooterComponentProps {
@@ -55,7 +53,7 @@ export function FormFooter(props: Props) {
     const handleSaveDraft = useCallback(async () => {
         const qrfDataContext = baseQRFPropsContext?.formData?.context;
         const formValues = formContext.getValues();
-        const rootContext = qrfDataContext ? calcInitialContext(qrfDataContext, formValues, evaluate) : undefined;
+        const rootContext = qrfDataContext ? calcInitialContext(qrfDataContext, formValues) : undefined;
 
         if (rootContext?.resource) {
             await onSaveDraft?.(rootContext.resource);
