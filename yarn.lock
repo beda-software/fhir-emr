@@ -494,10 +494,10 @@
     magic-string "^0.30.10"
     vue-tsc "2.0.19"
 
-"@beda.software/web-item-controls@^0.1.17":
-  version "0.1.17"
-  resolved "https://registry.yarnpkg.com/@beda.software/web-item-controls/-/web-item-controls-0.1.17.tgz#7c753b6338d133b388c7e3ea5d97e159a4efd456"
-  integrity sha512-h0EiV8M+NSR0pJj0qcFi3iJRsRyIJ8FRY8BSG2cVQAPi4Oyd5+Y59zEWwkw7atb9JizvScWszH+xhPUUELxVRg==
+"@beda.software/web-item-controls@^0.1.18":
+  version "0.1.18"
+  resolved "https://registry.yarnpkg.com/@beda.software/web-item-controls/-/web-item-controls-0.1.18.tgz#f970d00698fb7cb6654c9f811037980b98f28e21"
+  integrity sha512-E9f8KrZxrqC1s1QUkQ+rbO4946UmgDHnmy6Np0cl0SIL9YF6URCaGBSDXb8Ue0MBJwe4cw3tmSVVKiJ9XHtsyQ==
   dependencies:
     "@ant-design/colors" "^7.0.0"
     "@ant-design/icons" "^5.1.4"
