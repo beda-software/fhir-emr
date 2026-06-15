@@ -1,6 +1,8 @@
 import { CloseOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 
+import config from '@beda.software/emr-config';
+
 import { Assistant } from 'src/components/Assistant';
 import { CompanyName } from 'src/icons/brand/CompanyName';
 import { LogoSmall } from 'src/icons/brand/LogoSmall';
@@ -12,6 +14,7 @@ import { SidebarTop } from '../Sidebar/SidebarTop';
 
 export function AppTabBar() {
     const [menuOpened, toggleMenuOpened] = useState(false);
+    const enableAssistant = !!config.aiAssistantServiceUrl;
 
     return (
         <>
@@ -21,7 +24,7 @@ export function AppTabBar() {
                     <CompanyName style={{ minWidth: 89 }} />
                 </S.LogoWrapper>
                 <S.RightGroup>
-                    <Assistant variant="headerCompact" />
+                    {enableAssistant && <Assistant variant="headerCompact" />}
                     <S.Button icon={<MenuIcon />} type="text" onClick={() => toggleMenuOpened((v) => !v)} />
                 </S.RightGroup>
             </S.TabBar>
