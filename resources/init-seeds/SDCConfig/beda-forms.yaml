@@ -10,4 +10,3 @@ builder:
       url: https://beda-forms.emr.beda.software/
       default: true
   hide-preview-renderer-selector: false
-  hide-back-button: true
