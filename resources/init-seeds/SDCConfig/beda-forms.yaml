@@ -1,0 +1,12 @@
+id: beda-forms
+resourceType: SDCConfig
+name: Beda Forms
+default: true
+builder:
+  custom-renderers:
+    - name: Beda Forms
+      title: Beda Forms
+      source: https://beda-forms.emr.beda.software/
+      url: https://beda-forms.emr.beda.software/
+      default: true
+  hide-preview-renderer-selector: false
