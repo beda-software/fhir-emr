@@ -15,7 +15,12 @@ import { renderTextWithInput } from 'src/utils/renderTextWithInput';
 import { usePatientDocumentPrint } from './hooks';
 import { PrintablePages } from './PrintablePages';
 import { S } from './styles';
-import { flattenQuestionnaireGroupItems, getQuestionnaireItemValue, qItemIsHidden } from './utils';
+import {
+    flattenFlexColumnsForPaging,
+    flattenQuestionnaireGroupItems,
+    getQuestionnaireItemValue,
+    qItemIsHidden,
+} from './utils';
 
 function renderPrintableElement(
     element: FCEPrintableElement,
@@ -152,6 +157,12 @@ function DocumentPrintContent({ formData }: { formData: QuestionnaireResponseFor
             );
         }
         const dynamicStyles = { [window.location.href]: dynamicParts.join('\n') };
+
+        const flowContent = containerRef.current.querySelector<HTMLElement>('.print-flow');
+        if (flowContent) {
+            flattenFlexColumnsForPaging(flowContent);
+        }
+
         const paged = new Previewer();
 
         paged
