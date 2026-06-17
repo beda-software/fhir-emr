@@ -1,5 +1,6 @@
 import { Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import { useParams } from 'react-router-dom';
+import { mapResponseToForm, toFirstClassExtension } from 'sdc-qrf';
 
 import { useService } from '@beda.software/fhir-react';
 import { success, isSuccess } from '@beda.software/remote-data';
@@ -24,9 +25,20 @@ export function usePatientDocumentPrint() {
                 // TODO: it is better to use '_include' to get questionnaire, but currently server does not return it
                 // Maybe this thread can help (https://github.com/hapifhir/hapi-fhir/issues/2843)
             });
+
             if (isSuccess(qRD)) {
                 const questionnaire = evaluate(qRD.data, 'entry.resource')[0];
-                return success({ questionnaireResponse, questionnaire });
+                const formValues = mapResponseToForm(questionnaireResponse, questionnaire);
+
+                return success({
+                    context: {
+                        fceQuestionnaire: toFirstClassExtension(questionnaire),
+                        questionnaire,
+                        questionnaireResponse,
+                        launchContextParameters: [],
+                    },
+                    formValues,
+                });
             }
             return questionnaireResponse;
         }
