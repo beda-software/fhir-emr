@@ -134,7 +134,7 @@ export function ReadonlyQuestionnaireResponseForm(props: ReadonlyQRFFormDataProp
     const mergedItemControlComponents = useMemo(
         () => ({
             ...('formData' in props
-                ? readonlyItemComponents
+                ? readonlyItemControlComponents
                 : props.itemControlQuestionItemComponents ?? readonlyItemControlComponents),
             ...ItemControlQuestionItemReadonlyWidgetsFromContext,
         }),
