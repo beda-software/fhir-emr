@@ -1,5 +1,9 @@
 import { useCallback, useContext, useMemo } from 'react';
-import { QuestionnaireResponseFormData } from 'sdc-qrf';
+import {
+    ItemControlGroupItemComponentMapping,
+    ItemControlQuestionItemComponentMapping,
+    QuestionnaireResponseFormData,
+} from 'sdc-qrf';
 
 import {
     BaseQuestionnaireResponseForm,
@@ -123,6 +127,8 @@ export function QuestionnaireResponseForm({
 
 type ReadonlyQRFFormDataProps = {
     formData: QuestionnaireResponseFormData;
+    itemControlQuestionItemComponents?: ItemControlQuestionItemComponentMapping;
+    itemControlGroupItemComponents?: ItemControlGroupItemComponentMapping;
 };
 
 type ReadonlyQRFLoaderProps = Pick<Props, 'questionnaireLoader'> & Partial<Props>;
@@ -133,9 +139,8 @@ export function ReadonlyQuestionnaireResponseForm(props: ReadonlyQRFFormDataProp
 
     const mergedItemControlComponents = useMemo(
         () => ({
-            ...('formData' in props
-                ? readonlyItemControlComponents
-                : props.itemControlQuestionItemComponents ?? readonlyItemControlComponents),
+            ...readonlyItemControlComponents,
+            ...(props.itemControlQuestionItemComponents ?? {}),
             ...ItemControlQuestionItemReadonlyWidgetsFromContext,
         }),
         [ItemControlQuestionItemReadonlyWidgetsFromContext, props],
@@ -143,9 +148,8 @@ export function ReadonlyQuestionnaireResponseForm(props: ReadonlyQRFFormDataProp
 
     const mergedGroupControlComponents = useMemo(
         () => ({
-            ...('formData' in props
-                ? readonlyGroupControlComponents
-                : props.itemControlGroupItemComponents ?? readonlyGroupControlComponents),
+            ...readonlyGroupControlComponents,
+            ...(props.itemControlGroupItemComponents ?? {}),
             ...ItemControlGroupItemReadonlyWidgetsFromContext,
         }),
         [ItemControlGroupItemReadonlyWidgetsFromContext, props],

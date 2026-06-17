@@ -5,7 +5,7 @@ import { ReactBarcode } from 'react-jsbarcode';
 import { FCEPrintableElement, QuestionnaireResponseFormData } from 'sdc-qrf';
 
 import { RenderRemoteData } from '@beda.software/fhir-react';
-import { MarkdownRender } from '@beda.software/web-item-controls/readonly-controls';
+import { Group, MarkdownRender } from '@beda.software/web-item-controls/readonly-controls';
 
 import { ReadonlyQuestionnaireResponseForm } from 'src/components';
 import { Spinner } from 'src/components/Spinner';
@@ -199,7 +199,13 @@ function DocumentPrintContent({ formData }: { formData: QuestionnaireResponseFor
                                 undefined
                             }
                         >
-                            <ReadonlyQuestionnaireResponseForm formData={formData} />
+                            <ReadonlyQuestionnaireResponseForm
+                                formData={formData}
+                                itemControlGroupItemComponents={{
+                                    'group-wizard': Group,
+                                    'wizard-vertical': Group,
+                                }}
+                            />
                         </PrintablePages>
                     </S.PrintWrapper>
                 </div>
