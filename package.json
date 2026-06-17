@@ -54,6 +54,7 @@
         "lodash": "^4.17.21",
         "make-plural": "^7.3.0",
         "moment": "^2.30.1",
+        "pagedjs": "^0.4.3",
         "qrcode.react": "^4.2.0",
         "query-string": "^8.1.0",
         "react": "^18.2.0",
@@ -72,7 +73,7 @@
         "remark-directive": "^4.0.0",
         "remark-gfm": "^4.0.1",
         "sass": "^1.63.6",
-        "sdc-qrf": "^1.1.0-alpha.9",
+        "sdc-qrf": "^1.1.0-alpha.11",
         "styled-components": "^6.1.11",
         "yup": "^1.7.0"
     },
