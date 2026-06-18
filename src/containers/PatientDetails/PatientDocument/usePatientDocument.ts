@@ -16,6 +16,7 @@ import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { QuestionnaireResponseFormData } from 'sdc-qrf';
 
+import { getParameterAsFirst, useClinicalContext } from '@beda.software/fhir-questionnaire';
 import { getReference, ServiceManager, useService, WithId } from '@beda.software/fhir-react';
 import {
     isSuccess,
@@ -82,6 +83,7 @@ async function onFormSubmit(
 
 function prepareFormInitialParams(
     props: Props & {
+        clinicalParams: ParametersParameter[];
         provenance?: WithId<Provenance>;
         author?: WithId<Practitioner | Patient | Organization | Person>;
         provenanceBundle?: Bundle<WithId<Provenance>>;
@@ -94,9 +96,32 @@ function prepareFormInitialParams(
         encounterId,
         provenance,
         author,
+        clinicalParams,
         launchContextParameters = [],
         provenanceBundle,
     } = props;
+
+    const fallbackParams: ParametersParameter[] = [];
+    if (!getParameterAsFirst(clinicalParams, 'Patient')) {
+        fallbackParams.push({ name: 'Patient', resource: patient });
+    }
+    if (!getParameterAsFirst(clinicalParams, 'Author') && author) {
+        fallbackParams.push({ name: 'Author', resource: author });
+    }
+    if (!getParameterAsFirst(clinicalParams, 'Encounter')) {
+        fallbackParams.push({
+            name: 'Encounter',
+            resource: encounterId
+                ? ({ resourceType: 'Encounter', id: encounterId } as Encounter)
+                : ({ resourceType: 'Encounter' } as Encounter),
+        });
+    }
+
+    const extraParams: ParametersParameter[] = [
+        ...(provenance ? [{ name: 'Provenance', resource: provenance }] : []),
+        ...(provenanceBundle ? [{ name: 'ProvenanceBundle', resource: provenanceBundle }] : []),
+        ...launchContextParameters,
+    ];
 
     const initialQuestionnaireResponse = _.merge(
         {
@@ -106,45 +131,10 @@ function prepareFormInitialParams(
         },
         questionnaireResponse,
     );
+
     const params: QuestionnaireResponseFormProps = {
         questionnaireLoader: questionnaireIdLoader(questionnaireId),
-        launchContextParameters: [
-            { name: 'Patient', resource: patient },
-            {
-                name: 'Author',
-                resource: author,
-            },
-            ...(encounterId
-                ? [
-                      {
-                          name: 'Encounter',
-                          resource: { resourceType: 'Encounter', id: encounterId } as Encounter,
-                      },
-                  ]
-                : [
-                      {
-                          name: 'Encounter',
-                          resource: { resourceType: 'Encounter' } as Encounter,
-                      },
-                  ]),
-            ...(provenance
-                ? [
-                      {
-                          name: 'Provenance',
-                          resource: provenance,
-                      },
-                  ]
-                : []),
-            ...(provenanceBundle
-                ? [
-                      {
-                          name: 'ProvenanceBundle',
-                          resource: provenanceBundle,
-                      },
-                  ]
-                : []),
-            ...launchContextParameters,
-        ],
+        launchContextParameters: [...clinicalParams, ...fallbackParams, ...extraParams],
         initialQuestionnaireResponse,
         serviceProvider: { service },
     };
@@ -174,6 +164,7 @@ export function usePatientDocument(props: Props): {
     const { questionnaireResponse, questionnaireId, onSuccess, onCancel } = props;
 
     const navigate = useNavigate();
+    const { parameters: clinicalParams } = useClinicalContext();
 
     const [response, manager] = useService<PatientDocumentData>(async () => {
         let provenanceResponse: RemoteDataResult<WithId<Provenance>[]> = success([]);
@@ -198,6 +189,7 @@ export function usePatientDocument(props: Props): {
 
             const formInitialParams = prepareFormInitialParams({
                 ...props,
+                clinicalParams,
                 provenance: lastProvenance,
                 provenanceBundle: provenanceBundle,
             });
@@ -224,7 +216,7 @@ export function usePatientDocument(props: Props): {
         }
 
         return failure({});
-    }, [questionnaireResponse]);
+    }, [questionnaireResponse, clinicalParams]);
 
     const [sourceResponse] = useService(async () => {
         const result = await getFHIRResources<Provenance>('Provenance', {

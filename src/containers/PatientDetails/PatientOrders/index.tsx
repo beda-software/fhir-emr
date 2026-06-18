@@ -18,8 +18,6 @@ import { Modal } from 'src/components/Modal';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { ResourceTable } from 'src/components/ResourceTable';
 import { formatHumanDate } from 'src/utils/date';
-import { selectCurrentUserRoleResource } from 'src/utils/role';
-
 const { Search } = Input;
 
 interface Props {
@@ -102,7 +100,6 @@ const Pannel = styled.div`
 
 function useOrders() {
     const [key, setKey] = useState(0);
-    const author = selectCurrentUserRoleResource();
     const [questionnaire, setQuestionnaire] = useState<string | undefined>(undefined);
 
     const close = useCallback(() => {
@@ -118,7 +115,6 @@ function useOrders() {
     }, [close]);
 
     return {
-        author,
         key,
         questionnaire,
         setQuestionnaire,
@@ -128,7 +124,7 @@ function useOrders() {
 }
 
 export function PatientOrders({ patient }: Props) {
-    const { key, author, questionnaire, setQuestionnaire, reloadListAndClose, close } = useOrders();
+    const { key, questionnaire, setQuestionnaire, reloadListAndClose, close } = useOrders();
 
     const orderFormWrapper = useCallback(
         (wrapperProps: FormWrapperProps) => <FormWrapper {...wrapperProps} onCancel={close} />,
@@ -209,10 +205,6 @@ export function PatientOrders({ patient }: Props) {
                         subject: { reference: `Patient/${patient.id}` },
                     }}
                     questionnaireLoader={questionnaireIdLoader(questionnaire!)}
-                    launchContextParameters={[
-                        { name: 'Patient', resource: patient },
-                        { name: 'Author', resource: author },
-                    ]}
                     onSuccess={reloadListAndClose}
                     FormWrapper={orderFormWrapper}
                 />

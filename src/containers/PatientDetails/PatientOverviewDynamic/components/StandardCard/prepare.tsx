@@ -15,13 +15,13 @@ import {
     Encounter,
     Immunization,
     MedicationStatement,
+    Patient,
     Procedure,
     Provenance,
     Consent,
     Observation,
     ServiceRequest,
     Reference,
-    Patient,
     QuestionnaireResponse,
 } from 'fhir/r4b';
 import _ from 'lodash';

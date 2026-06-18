@@ -12,4 +12,10 @@ export const sharedAuthorizedPractitionerRoles = createSharedState<WithId<Practi
 
 export const sharedAuthorizedOrganization = createSharedState<WithId<Organization> | undefined>(undefined);
 
+/** The FHIR resource for the currently authenticated user (Practitioner, Patient, or Organization).
+ *  Initialized to null so useSharedState() never throws before auth completes. */
+export const sharedCurrentUserRoleResource = createSharedState<WithId<Patient | Practitioner | Organization> | null>(
+    null,
+);
+
 export const sharedJitsiAuthToken = createSharedState<string>('');

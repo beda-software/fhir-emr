@@ -17,7 +17,7 @@ export interface StandardCardProps<T extends Resource> {
 }
 
 export function StandardCard<T extends Resource>({
-    patient,
+    patient: _patient,
     card,
     reload,
     to,
@@ -48,10 +48,7 @@ export function StandardCard<T extends Resource>({
                         <HeaderQuestionnaireAction
                             action={action}
                             reload={reload}
-                            defaultLaunchContext={[
-                                { name: 'Patient', resource: patient },
-                                ...(getLaunchContext ? getLaunchContext() : []),
-                            ]}
+                            defaultLaunchContext={getLaunchContext ? getLaunchContext() : []}
                         />
                     ) : null}
                 </>

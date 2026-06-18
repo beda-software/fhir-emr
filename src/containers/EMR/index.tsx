@@ -1,11 +1,12 @@
 import queryString from 'query-string';
-import { ReactElement, useEffect } from 'react';
+import { ReactElement, useEffect, useMemo } from 'react';
 import { BrowserRouter, Routes, Navigate, Route, useLocation } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
 
 import { User } from '@beda.software/aidbox-types';
+import { ClinicalContext } from '@beda.software/fhir-questionnaire';
 import { RemoteDataResult, success } from '@beda.software/remote-data';
 
 import { BaseLayout } from 'src/components/BaseLayout';
@@ -16,7 +17,9 @@ import { DefaultUserWithNoRoles } from 'src/containers/App/DefaultUserWithNoRole
 import { restoreUserSession } from 'src/containers/App/utils';
 import { PublicAppointment } from 'src/containers/Appointment/PublicAppointment';
 import { DocumentPrint } from 'src/containers/PatientDetails/DocumentPrint';
+import { PrintPatientClinicalContext } from 'src/containers/PatientDetails/DocumentPrint/PrintPatientClinicalContext';
 import { getToken, parseOAuthState, setToken } from 'src/services/auth';
+import { sharedCurrentUserRoleResource } from 'src/sharedState';
 
 interface EMRProps {
     authenticatedRoutes?: ReactElement;
@@ -95,22 +98,51 @@ interface RouteProps {
 
 function AuthenticatedUserEMR({ defaultRoute, extra }: RouteProps) {
     return (
-        <Routes>
-            <Route path={`/print-patient-document/:id/:qrId`} element={<DocumentPrint />} />
-            <Route path="/appointment/book" element={<PublicAppointment />} />
-            <Route
-                path="*"
-                element={
-                    <BaseLayout>
-                        <Routes>
-                            {extra}
-                            <Route path="*" element={<Navigate to={defaultRoute} />} />
-                        </Routes>
-                    </BaseLayout>
-                }
-            />
-        </Routes>
+        <UserClinicalContext>
+            <Routes>
+                <Route
+                    path={`/print-patient-document/:id/:qrId`}
+                    element={
+                        <PrintPatientClinicalContext>
+                            <DocumentPrint />
+                        </PrintPatientClinicalContext>
+                    }
+                />
+                <Route path="/appointment/book" element={<PublicAppointment />} />
+                <Route
+                    path="*"
+                    element={
+                        <BaseLayout>
+                            <Routes>
+                                {extra}
+                                <Route path="*" element={<Navigate to={defaultRoute} />} />
+                            </Routes>
+                        </BaseLayout>
+                    }
+                />
+            </Routes>
+        </UserClinicalContext>
     );
+}
+
+function UserClinicalContext({ children }: { children: ReactElement }) {
+    const [resource] = sharedCurrentUserRoleResource.useSharedState();
+
+    const context = useMemo(() => {
+        if (!resource) {
+            return [];
+        }
+        return [
+            { name: 'User', resource },
+            { name: 'user', resource },
+            { name: resource.resourceType, resource },
+            { name: resource.resourceType.toLowerCase(), resource },
+            { name: 'Author', resource },
+            { name: 'author', resource },
+        ];
+    }, [resource]);
+
+    return <ClinicalContext context={context}>{children}</ClinicalContext>;
 }
 
 export function Auth() {

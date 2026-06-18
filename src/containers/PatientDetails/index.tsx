@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { useParams, Outlet, Route, Routes, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
+import { ClinicalContext } from '@beda.software/fhir-questionnaire';
 import { RenderRemoteData } from '@beda.software/fhir-react';
 import { isSuccess } from '@beda.software/remote-data';
 
@@ -28,6 +29,7 @@ import { PatientDocuments } from './PatientDocuments';
 import { PatientOverview } from './PatientOverviewDynamic';
 import { PatientResources } from './PatientResources';
 import { EncounterDetails } from '../EncounterDetails';
+import { EncounterClinicalContext } from '../EncounterDetails/EncounterClinicalContext';
 
 export interface PatientDetailsEmbeddedPageDefinition extends RouteItem {
     routes: Array<ReturnType<typeof Route>>;
@@ -64,170 +66,189 @@ export const PatientDetails = (props: PatientDetailsProps) => {
         <RenderRemoteData remoteData={patientResponse} renderLoading={Spinner}>
             {({ patient }) => {
                 return (
-                    <PatientReloadProvider reload={manager.softReloadAsync}>
-                        <PageContainer
-                            title={renderHumanName(patient.name?.[0])}
-                            layoutVariant="with-tabs"
-                            headerContent={
-                                <PatientDetailsTabs
-                                    extraMenuItems={embeddedPages}
-                                    isDefaultRoutesDisabled={isDefaultRoutesDisabled}
-                                />
-                            }
-                        >
-                            <Routes>
-                                <Route
-                                    path="/"
-                                    element={
-                                        <>
-                                            <Outlet />
-                                        </>
-                                    }
-                                >
-                                    {!props.isDefaultRoutesDisabled && (
-                                        <>
-                                            <Route path="/" element={<PatientOverview patient={patient} />} />
-                                            <Route
-                                                path="/encounters"
-                                                element={
-                                                    <PatientEncounter
-                                                        patient={patient}
-                                                        searchParams={matchCurrentUserRole({
-                                                            [Role.Admin]: () => {
-                                                                return {};
-                                                            },
-                                                            [Role.Practitioner]: () => {
-                                                                return {
-                                                                    participant: (
-                                                                        sharedAuthorizedPractitionerRoles.getSharedState() ||
-                                                                        []
-                                                                    )
-                                                                        .map((pr) => `PractitionerRole/${pr.id}`)
-                                                                        .join(','),
-                                                                };
-                                                            },
-                                                            [Role.Patient]: () => {
-                                                                return {};
-                                                            },
-                                                            [Role.Receptionist]: () => {
-                                                                return {};
-                                                            },
-                                                        })}
+                    <ClinicalContext
+                        context={[
+                            { name: 'Patient', resource: patient },
+                            { name: 'patient', resource: patient },
+                        ]}
+                    >
+                        <PatientReloadProvider reload={manager.softReloadAsync}>
+                            <PageContainer
+                                title={renderHumanName(patient.name?.[0])}
+                                layoutVariant="with-tabs"
+                                headerContent={
+                                    <PatientDetailsTabs
+                                        extraMenuItems={embeddedPages}
+                                        isDefaultRoutesDisabled={isDefaultRoutesDisabled}
+                                    />
+                                }
+                            >
+                                <Routes>
+                                    <Route
+                                        path="/"
+                                        element={
+                                            <>
+                                                <Outlet />
+                                            </>
+                                        }
+                                    >
+                                        {!props.isDefaultRoutesDisabled && (
+                                            <>
+                                                <Route path="/" element={<PatientOverview patient={patient} />} />
+                                                <Route
+                                                    path="/encounters"
+                                                    element={
+                                                        <PatientEncounter
+                                                            patient={patient}
+                                                            searchParams={matchCurrentUserRole({
+                                                                [Role.Admin]: () => {
+                                                                    return {};
+                                                                },
+                                                                [Role.Practitioner]: () => {
+                                                                    return {
+                                                                        participant: (
+                                                                            sharedAuthorizedPractitionerRoles.getSharedState() ||
+                                                                            []
+                                                                        )
+                                                                            .map((pr) => `PractitionerRole/${pr.id}`)
+                                                                            .join(','),
+                                                                    };
+                                                                },
+                                                                [Role.Patient]: () => {
+                                                                    return {};
+                                                                },
+                                                                [Role.Receptionist]: () => {
+                                                                    return {};
+                                                                },
+                                                            })}
+                                                        />
+                                                    }
+                                                />
+                                                <Route
+                                                    path="/encounters/:encounterId/*"
+                                                    element={
+                                                        <EncounterClinicalContext>
+                                                            <Outlet />
+                                                        </EncounterClinicalContext>
+                                                    }
+                                                >
+                                                    <Route index element={<EncounterDetails patient={patient} />} />
+                                                    <Route
+                                                        path="new/:questionnaireId"
+                                                        element={
+                                                            <PatientDocument
+                                                                patient={patient}
+                                                                author={author}
+                                                                autoSave={true}
+                                                                onSuccess={() => {
+                                                                    navigate(-1);
+                                                                }}
+                                                            />
+                                                        }
                                                     />
-                                                }
-                                            />
-                                            <Route
-                                                path="/encounters/:encounterId"
-                                                element={<EncounterDetails patient={patient} />}
-                                            />
-                                            <Route
-                                                path="/encounters/:encounterId/new/:questionnaireId"
-                                                element={
-                                                    <PatientDocument
-                                                        patient={patient}
-                                                        author={author}
-                                                        autoSave={true}
-                                                        onSuccess={() => {
-                                                            navigate(-1);
-                                                        }}
+                                                    <Route
+                                                        path=":qrId/*"
+                                                        element={<PatientDocumentDetails patient={patient} />}
                                                     />
-                                                }
-                                            />
-                                            <Route
-                                                path="/encounters/:encounterId/:qrId/*"
-                                                element={<PatientDocumentDetails patient={patient} />}
-                                            />
-                                            <Route
-                                                path="/documents"
-                                                element={
-                                                    <PatientDocuments
-                                                        key={`documents-${patient.id}`}
-                                                        patient={patient}
-                                                    />
-                                                }
-                                            />
-                                            <Route
-                                                path="/forms"
-                                                element={
-                                                    <PatientDocuments
-                                                        key={`forms-${patient.id}`}
-                                                        patient={patient}
-                                                        context="form-library"
-                                                        categories={getFormLibraryDocumentCategories()}
-                                                    />
-                                                }
-                                            />
-                                            <Route
-                                                path="/documents/new/:questionnaireId"
-                                                element={
-                                                    <PatientDocument
-                                                        patient={patient}
-                                                        author={author}
-                                                        autoSave={true}
-                                                        onSuccess={() => {
-                                                            navigate(-1);
-                                                        }}
-                                                    />
-                                                }
-                                            />
-                                            <Route
-                                                path="/forms/new/:questionnaireId"
-                                                element={
-                                                    <PatientDocument
-                                                        patient={patient}
-                                                        author={author}
-                                                        autoSave={true}
-                                                        onSuccess={() => {
-                                                            navigate(-1);
-                                                        }}
-                                                        maxWidth={'100%'}
-                                                    />
-                                                }
-                                            />
-                                            <Route
-                                                path="/documents/new-by-questionnaires/:questionnairesIds"
-                                                element={
-                                                    <PatientDocumentWizard
-                                                        patient={patient}
-                                                        author={author}
-                                                        autoSave={true}
-                                                        onSuccess={() => {
-                                                            navigate(-1);
-                                                        }}
-                                                    />
-                                                }
-                                            />
-                                            <Route
-                                                path="/documents/:qrId/*"
-                                                element={<PatientDocumentDetails patient={patient} />}
-                                            />
-                                            <Route
-                                                path="/forms/:qrId/*"
-                                                element={
-                                                    <PatientDocumentDetailsReadonlyContext.Provider
-                                                        value={{ styles: formsStyles }}
-                                                    >
-                                                        <PatientDocumentDetails patient={patient} maxWidth={'100%'} />
-                                                    </PatientDocumentDetailsReadonlyContext.Provider>
-                                                }
-                                            />
-                                            <Route
-                                                path="/resources/:type"
-                                                element={<PatientResources patient={patient} />}
-                                            />
-                                            <Route path="/resources" element={<PatientResources patient={patient} />} />
-                                            <Route path="/apps" element={<PatientApps patient={patient} />} />
-                                            <Route
-                                                path="/hmb-diagnostic"
-                                                element={<HMBDiagnosticDashboard patient={patient} />}
-                                            />
-                                        </>
-                                    )}
-                                    {embeddedPages?.flatMap(({ routes }) => routes)}
-                                </Route>
-                            </Routes>
-                        </PageContainer>
-                    </PatientReloadProvider>
+                                                </Route>
+                                                <Route
+                                                    path="/documents"
+                                                    element={
+                                                        <PatientDocuments
+                                                            key={`documents-${patient.id}`}
+                                                            patient={patient}
+                                                        />
+                                                    }
+                                                />
+                                                <Route
+                                                    path="/forms"
+                                                    element={
+                                                        <PatientDocuments
+                                                            key={`forms-${patient.id}`}
+                                                            patient={patient}
+                                                            context="form-library"
+                                                            categories={getFormLibraryDocumentCategories()}
+                                                        />
+                                                    }
+                                                />
+                                                <Route
+                                                    path="/documents/new/:questionnaireId"
+                                                    element={
+                                                        <PatientDocument
+                                                            patient={patient}
+                                                            author={author}
+                                                            autoSave={true}
+                                                            onSuccess={() => {
+                                                                navigate(-1);
+                                                            }}
+                                                        />
+                                                    }
+                                                />
+                                                <Route
+                                                    path="/forms/new/:questionnaireId"
+                                                    element={
+                                                        <PatientDocument
+                                                            patient={patient}
+                                                            author={author}
+                                                            autoSave={true}
+                                                            onSuccess={() => {
+                                                                navigate(-1);
+                                                            }}
+                                                            maxWidth={'100%'}
+                                                        />
+                                                    }
+                                                />
+                                                <Route
+                                                    path="/documents/new-by-questionnaires/:questionnairesIds"
+                                                    element={
+                                                        <PatientDocumentWizard
+                                                            patient={patient}
+                                                            author={author}
+                                                            autoSave={true}
+                                                            onSuccess={() => {
+                                                                navigate(-1);
+                                                            }}
+                                                        />
+                                                    }
+                                                />
+                                                <Route
+                                                    path="/documents/:qrId/*"
+                                                    element={<PatientDocumentDetails patient={patient} />}
+                                                />
+                                                <Route
+                                                    path="/forms/:qrId/*"
+                                                    element={
+                                                        <PatientDocumentDetailsReadonlyContext.Provider
+                                                            value={{ styles: formsStyles }}
+                                                        >
+                                                            <PatientDocumentDetails
+                                                                patient={patient}
+                                                                maxWidth={'100%'}
+                                                            />
+                                                        </PatientDocumentDetailsReadonlyContext.Provider>
+                                                    }
+                                                />
+                                                <Route
+                                                    path="/resources/:type"
+                                                    element={<PatientResources patient={patient} />}
+                                                />
+                                                <Route
+                                                    path="/resources"
+                                                    element={<PatientResources patient={patient} />}
+                                                />
+                                                <Route path="/apps" element={<PatientApps patient={patient} />} />
+                                                <Route
+                                                    path="/hmb-diagnostic"
+                                                    element={<HMBDiagnosticDashboard patient={patient} />}
+                                                />
+                                            </>
+                                        )}
+                                        {embeddedPages?.flatMap(({ routes }) => routes)}
+                                    </Route>
+                                </Routes>
+                            </PageContainer>
+                        </PatientReloadProvider>
+                    </ClinicalContext>
                 );
             }}
         </RenderRemoteData>

@@ -127,11 +127,7 @@ export const EncounterDetails = (props: EncounterDetailsProps) => {
                                                 </span>
                                             </Button>
                                         ) : (
-                                            <ModalCompleteEncounter
-                                                onSuccess={manager.reload}
-                                                encounter={encounter}
-                                                disabled={false}
-                                            />
+                                            <ModalCompleteEncounter onSuccess={manager.reload} disabled={false} />
                                         )}
                                     </S.EncounterControls>
                                 </S.Controls>
@@ -168,8 +164,8 @@ export const EncounterDetails = (props: EncounterDetailsProps) => {
     );
 };
 
-function ModalCompleteEncounter(props: { encounter: Encounter; onSuccess: () => void; disabled: boolean }) {
-    const { encounter, disabled, onSuccess } = props;
+function ModalCompleteEncounter(props: { onSuccess: () => void; disabled: boolean }) {
+    const { disabled, onSuccess } = props;
 
     return (
         <ModalTrigger
@@ -182,15 +178,13 @@ function ModalCompleteEncounter(props: { encounter: Encounter; onSuccess: () => 
                 </Button>
             }
         >
-            {({ closeModal }) => (
-                <CompleteEncounterForm encounter={encounter} onSuccess={onSuccess} closeModal={closeModal} />
-            )}
+            {({ closeModal }) => <CompleteEncounterForm onSuccess={onSuccess} closeModal={closeModal} />}
         </ModalTrigger>
     );
 }
 
-function CompleteEncounterForm(props: { encounter: Encounter; onSuccess: () => void; closeModal: () => void }) {
-    const { encounter, onSuccess, closeModal } = props;
+function CompleteEncounterForm(props: { onSuccess: () => void; closeModal: () => void }) {
+    const { onSuccess, closeModal } = props;
 
     const completeEncounterFormWrapper = useCallback(
         (wrapperProps: FormWrapperProps) => (
@@ -202,12 +196,6 @@ function CompleteEncounterForm(props: { encounter: Encounter; onSuccess: () => v
     return (
         <QuestionnaireResponseForm
             questionnaireLoader={questionnaireIdLoader('complete-encounter')}
-            launchContextParameters={[
-                {
-                    name: 'CurrentEncounter',
-                    resource: encounter,
-                },
-            ]}
             onSuccess={() => {
                 closeModal();
                 notification.success({ message: t`Encounter was successfully completed` });

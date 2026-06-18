@@ -11,7 +11,6 @@ import { RenderRemoteData, WithId } from '@beda.software/fhir-react';
 import { RemoteData, isSuccess } from '@beda.software/remote-data';
 
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
-import { selectCurrentUserRoleResource } from 'src/utils/role';
 
 import { S } from './DashboardCard.styles';
 
@@ -41,7 +40,6 @@ function CustomTooltip({ payload, label }: Partial<TooltipContentProps<number, n
 }
 
 export function CreatinineDashboard({ observationsRemoteData, patient, reload }: Props) {
-    const author = selectCurrentUserRoleResource();
     const total = isSuccess(observationsRemoteData) && observationsRemoteData.data.length;
     return (
         <S.Wrapper>
@@ -108,10 +106,6 @@ export function CreatinineDashboard({ observationsRemoteData, patient, reload }:
                                 subject: { reference: `Patient/${patient.id}` },
                             }}
                             questionnaireLoader={questionnaireIdLoader('creatinine')}
-                            launchContextParameters={[
-                                { name: 'Patient', resource: patient },
-                                { name: 'Author', resource: author },
-                            ]}
                             onSuccess={reload}
                         />
                     </div>

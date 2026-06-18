@@ -20,7 +20,7 @@ export function GeneralInformationDashboard({ patientDetails, patient }: Props) 
     return (
         <DashboardCard
             title={t`General Information`}
-            extra={role.resourceType !== 'Patient' ? <EditPatient patient={patient} /> : null}
+            extra={role.resourceType !== 'Patient' ? <EditPatient /> : null}
             icon={<ContactsOutlined />}
         >
             <S.DetailsRow>

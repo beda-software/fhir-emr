@@ -6,8 +6,6 @@ import { SearchBarColumn, SearchBarColumnType, SorterColumn } from 'src/componen
 import { ResourceListPage, questionnaireAction } from 'src/uberComponents/ResourceListPage';
 import { RecordType, TableManager } from 'src/uberComponents/ResourceListPage/types';
 import { compileAsFirst } from 'src/utils';
-import { selectCurrentUserRoleResource } from 'src/utils/role';
-
 // FHIRPath compiled expressions
 const getName = compileAsFirst<HealthcareService, string>('HealthcareService.name');
 const getDuration = compileAsFirst<HealthcareService, number>(
@@ -72,17 +70,7 @@ export function HealthcareServiceList() {
     };
 
     const getHeaderActions = () => {
-        const author = selectCurrentUserRoleResource();
-
-        return [
-            questionnaireAction(<Trans>Add healthcare service</Trans>, 'healthcare-service-create', {
-                extra: {
-                    qrfProps: {
-                        launchContextParameters: [{ name: 'Author', resource: author }],
-                    },
-                },
-            }),
-        ];
+        return [questionnaireAction(<Trans>Add healthcare service</Trans>, 'healthcare-service-create')];
     };
 
     return (

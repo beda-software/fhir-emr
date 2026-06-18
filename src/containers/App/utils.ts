@@ -13,6 +13,7 @@ import {
     sharedAuthorizedPractitioner,
     sharedAuthorizedPractitionerRoles,
     sharedAuthorizedUser,
+    sharedCurrentUserRoleResource,
     sharedJitsiAuthToken,
 } from 'src/sharedState';
 import { Role, selectUserRole } from 'src/utils/role';
@@ -26,6 +27,7 @@ export async function fetchUserRoleDetails(user: User) {
             });
             if (isSuccess(organizationResponse)) {
                 sharedAuthorizedOrganization.setSharedState(organizationResponse.data);
+                sharedCurrentUserRoleResource.setSharedState(organizationResponse.data);
             } else {
                 console.error(organizationResponse.error);
             }
@@ -38,6 +40,7 @@ export async function fetchUserRoleDetails(user: User) {
 
             if (isSuccess(practitionerResponse)) {
                 sharedAuthorizedPractitioner.setSharedState(practitionerResponse.data);
+                sharedCurrentUserRoleResource.setSharedState(practitionerResponse.data);
             } else {
                 console.error(practitionerResponse.error);
             }
@@ -60,6 +63,7 @@ export async function fetchUserRoleDetails(user: User) {
             });
             if (isSuccess(practitionerResponse)) {
                 sharedAuthorizedPractitioner.setSharedState(practitionerResponse.data);
+                sharedCurrentUserRoleResource.setSharedState(practitionerResponse.data);
             } else {
                 console.error(practitionerResponse.error);
             }
@@ -71,6 +75,7 @@ export async function fetchUserRoleDetails(user: User) {
             });
             if (isSuccess(patientResponse)) {
                 sharedAuthorizedPatient.setSharedState(patientResponse.data);
+                sharedCurrentUserRoleResource.setSharedState(patientResponse.data);
             } else {
                 console.error(patientResponse.error);
             }

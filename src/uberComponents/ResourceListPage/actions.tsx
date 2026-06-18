@@ -33,12 +33,12 @@ export function RecordQuestionnaireAction<R extends Resource>({
     action,
     resource,
     reload,
-    defaultLaunchContext,
+    defaultLaunchContext = [],
 }: {
     action: QuestionnaireActionType;
     resource: R;
     reload: () => void;
-    defaultLaunchContext: ParametersParameter[];
+    defaultLaunchContext?: ParametersParameter[];
 }) {
     return (
         <ModalTrigger
@@ -56,6 +56,7 @@ export function RecordQuestionnaireAction<R extends Resource>({
                     launchContextParameters={[
                         ...defaultLaunchContext,
                         { name: resource.resourceType, resource: resource as any },
+                        ...(action.extra?.qrfProps?.launchContextParameters ?? []),
                     ]}
                     onSuccess={() => {
                         notification.success({
@@ -66,7 +67,7 @@ export function RecordQuestionnaireAction<R extends Resource>({
                     }}
                     onCancel={closeModal}
                     saveButtonTitle={t`Submit`}
-                    {...(action.extra?.qrfProps ?? {})}
+                    {...(action.extra?.qrfProps ? omit(action.extra.qrfProps, 'launchContextParameters') : {})}
                 />
             )}
         </ModalTrigger>
@@ -76,10 +77,14 @@ export function RecordQuestionnaireAction<R extends Resource>({
 interface HeaderQuestionnaireActionProps {
     action: QuestionnaireActionType;
     reload: () => void;
-    defaultLaunchContext: ParametersParameter[];
+    defaultLaunchContext?: ParametersParameter[];
 }
 
-export function HeaderQuestionnaireAction({ action, reload, defaultLaunchContext }: HeaderQuestionnaireActionProps) {
+export function HeaderQuestionnaireAction({
+    action,
+    reload,
+    defaultLaunchContext = [],
+}: HeaderQuestionnaireActionProps) {
     return (
         <ModalTrigger
             title={action.title}
@@ -113,13 +118,13 @@ export function BatchQuestionnaireAction<R extends Resource>({
     bundle,
     reload,
     disabled,
-    defaultLaunchContext,
+    defaultLaunchContext = [],
 }: {
     action: QuestionnaireActionType | CustomActionType;
     bundle: Bundle<R>;
     reload: () => void;
     disabled?: boolean;
-    defaultLaunchContext: ParametersParameter[];
+    defaultLaunchContext?: ParametersParameter[];
 }) {
     if (action.type === 'questionnaire') {
         return (
